@@ -1,0 +1,8 @@
+{
+    "linters": {
+        "java" : {
+            "type" : "checkstyle",
+            "include" : "(\\.java$)"
+        }
+    }
+}
