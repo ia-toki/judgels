@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel;
+package org.iatoki.judgels.gabriel.blackbox;
 
 public final class TestCase {
     private final String input;
