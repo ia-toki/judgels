@@ -61,7 +61,7 @@ public abstract class BlackBoxGradingExecutor implements GradingExecutor {
                 EvaluationVerdict evaluationVerdict = getEvaluationExecutor().evaluate(evaluationSandbox, context, testDataFiles.get(testCase.getInput()));
                 ScoringVerdict scoringVerdict;
 
-                if (evaluationVerdict.getExecutionVerdict().getStatus() != ExecutionStatus.OK) {
+                if (evaluationVerdict.getExecutionVerdict().getStatus() == ExecutionStatus.OK) {
 
                     Sandbox scoringSandbox = sandboxProvider.newSandbox();
                     for (String filename : evaluationVerdict.getNeededOutputFiles()) {
@@ -90,7 +90,7 @@ public abstract class BlackBoxGradingExecutor implements GradingExecutor {
 
         OverallVerdict overallVerdict = OverallVerdict.OK;
         double overallScore = subtaskScores.stream().mapToDouble(e -> e).sum();
-        GradingVerdictDetails details = new GradingVerdictDetails(compilationVerdict.getExecutionVerdict(), testSetVerdicts.build(), subtaskScores);
+        GradingVerdictDetails details = new GradingVerdictDetails("Grading OK", compilationVerdict.getExecutionVerdict(), testSetVerdicts.build(), subtaskScores);
 
         return new GradingVerdict(overallVerdict, overallScore, details);
     }

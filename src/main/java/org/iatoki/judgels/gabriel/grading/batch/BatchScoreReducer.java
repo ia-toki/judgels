@@ -4,12 +4,12 @@ import org.iatoki.judgels.gabriel.blackbox.ScoringStatus;
 import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
 import org.iatoki.judgels.gabriel.blackbox.ScoreReducer;
 
-import java.util.List;
+import java.util.Set;
 
 public final class BatchScoreReducer implements ScoreReducer {
 
     @Override
-    public double reduce(List<ScoringVerdict> verdicts, double subtaskScore, String subtaskParam) {
+    public double reduce(Set<ScoringVerdict> verdicts, double subtaskScore, String subtaskParam) {
         for (ScoringVerdict verdict : verdicts) {
             if (verdict.getStatus() != ScoringStatus.OK) {
                 return 0.0;

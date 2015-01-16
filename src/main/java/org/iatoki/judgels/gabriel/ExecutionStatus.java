@@ -9,12 +9,4 @@ public enum ExecutionStatus {
     MEMORY_LIMIT_EXCEEDED,
     FORBIDDEN_ACCESS,
     INTERNAL_ERROR;
-
-    public static final class MoeIsolateSandboxProvider implements SandboxProvider {
-
-        @Override
-        public Sandbox newSandbox() {
-            return new FakeSandbox();
-        }
-    }
 }

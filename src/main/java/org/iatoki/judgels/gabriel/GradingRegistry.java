@@ -37,7 +37,7 @@ public final class GradingRegistry {
 
     private void populateGradingTypes() {
         for (GradingExecutor gradingExecutor : ServiceLoader.load(GradingExecutor.class)) {
-            registry.put(gradingExecutor.getClass().getName(), gradingExecutor);
+            registry.put(gradingExecutor.getClass().getSimpleName(), gradingExecutor);
         }
     }
 }
