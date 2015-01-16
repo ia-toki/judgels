@@ -3,7 +3,6 @@ package org.iatoki.judgels.gabriel.blackbox;
 public final class GradingVerdict {
     private final OverallVerdict overallVerdict;
     private final double overallScore;
-
     private final GradingVerdictDetails details;
 
     public GradingVerdict(OverallVerdict overallVerdict, double overallScore, GradingVerdictDetails details) {
