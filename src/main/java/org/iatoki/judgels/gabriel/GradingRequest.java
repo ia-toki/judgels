@@ -1,6 +1,17 @@
 package org.iatoki.judgels.gabriel;
 
-public interface GradingRequest {
+import java.util.Map;
 
-    String getSenderChannel();
+public interface GradingRequest {
+    String getSubmissionJid();
+
+    String getProblemJid();
+
+    long getProblemLastUpdate();
+
+    GradingType getGradingType();
+
+    GradingLanguage getGradingLanguage();
+
+    Map<String, byte[]> getSourceFiles();
 }

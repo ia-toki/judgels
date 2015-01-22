@@ -7,6 +7,8 @@ public interface Sandbox {
 
     void addFile(File file);
 
+    boolean containsFile(String filename);
+
     File getFile(String filename);
 
     void addAllowedDirectory(File directory);
@@ -15,7 +17,7 @@ public interface Sandbox {
 
     void setMemoryLimitInKilobytes(int memoryLimit);
 
-    void setStackSize(int stackSizeInKilobytes);
+    void setStackSizeInKilobytes(int stackSizeInKilobytes);
 
     void setMaxProcesses(int maxProcesses);
 
@@ -25,5 +27,7 @@ public interface Sandbox {
 
     void setStandardError(String standardError);
 
-    ExecutionVerdict execute(List<String> command);
+    void cleanUp();
+
+    ExecutionResult execute(List<String> command);
 }

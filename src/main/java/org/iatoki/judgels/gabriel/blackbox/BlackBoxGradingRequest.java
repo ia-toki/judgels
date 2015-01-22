@@ -1,48 +1,54 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
+import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.GradingRequest;
+import org.iatoki.judgels.gabriel.GradingType;
 
-import java.util.List;
 import java.util.Map;
 
 public final class BlackBoxGradingRequest implements GradingRequest {
-    private final String senderChannel;
     private final String submissionJid;
     private final String problemJid;
-    private final String gradingType;
-    private final String language;
+    private final long problemLastUpdate;
+    private final GradingType gradingType;
+    private final GradingLanguage gradingLanguage;
     private final Map<String, byte[]> sourceFiles;
 
-    public BlackBoxGradingRequest(String senderChannel, String submissionJid, String problemJid, String gradingType, String language, Map<String, byte[]> sourceFiles) {
-        this.senderChannel = senderChannel;
+    public BlackBoxGradingRequest(String submissionJid, String problemJid, long problemLastUpdate, GradingType gradingType, GradingLanguage gradingLanguage, Map<String, byte[]> sourceFiles) {
         this.submissionJid = submissionJid;
         this.problemJid = problemJid;
+        this.problemLastUpdate = problemLastUpdate;
         this.gradingType = gradingType;
-        this.language = language;
+        this.gradingLanguage = gradingLanguage;
         this.sourceFiles = sourceFiles;
     }
 
     @Override
-    public String getSenderChannel() {
-        return senderChannel;
-    }
-
     public String getSubmissionJid() {
         return submissionJid;
     }
 
+    @Override
     public String getProblemJid() {
         return problemJid;
     }
 
-    public String getGradingType() {
+    @Override
+    public long getProblemLastUpdate() {
+        return problemLastUpdate;
+    }
+
+    @Override
+    public GradingType getGradingType() {
         return gradingType;
     }
 
-    public String getLanguage() {
-        return language;
+    @Override
+    public GradingLanguage getGradingLanguage() {
+        return gradingLanguage;
     }
 
+    @Override
     public Map<String, byte[]> getSourceFiles() {
         return sourceFiles;
     }

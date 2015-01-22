@@ -1,5 +1,9 @@
 package org.iatoki.judgels.gabriel;
 
 public interface GradingResult {
-    // empty
+    Verdict getVerdict();
+
+    int getScore();
+
+    String getMessage();
 }

@@ -13,7 +13,9 @@ scalaVersion := "2.11.1"
 
 libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.4",
-  "com.google.guava" % "guava" % "r05"
+  "org.apache.commons" % "commons-lang3" % "3.3.2",
+  "com.google.guava" % "guava" % "r05",
+  "com.google.code.gson" % "gson" % "2.3.1"
 )
 
 TestNGPlugin.testNGSettings

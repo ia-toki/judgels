@@ -2,9 +2,9 @@ package org.iatoki.judgels.gabriel.sandboxes;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.ExecutionStatus;
-import org.iatoki.judgels.gabriel.ExecutionVerdict;
+import org.iatoki.judgels.gabriel.ExecutionResult;
 import org.iatoki.judgels.gabriel.Sandbox;
+import org.iatoki.judgels.gabriel.Verdict;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,7 @@ public final class FakeSandbox implements Sandbox {
     private final File baseDir;
     private String standardInput;
     private String standardOutput;
+    private String standardError;
 
     public FakeSandbox(File baseDir) {
         this.baseDir = baseDir;
@@ -50,7 +51,7 @@ public final class FakeSandbox implements Sandbox {
     }
 
     @Override
-    public void setStackSize(int stackSizeInKilobytes) {
+    public void setStackSizeInKilobytes(int stackSizeInKilobytes) {
         // nothing
     }
 
@@ -71,11 +72,11 @@ public final class FakeSandbox implements Sandbox {
 
     @Override
     public void setStandardError(String standardError) {
-        // nothing
+        this.standardError = standardError;
     }
 
     @Override
-    public ExecutionVerdict execute(List<String> command) {
+    public ExecutionResult execute(List<String> command) {
 
         ImmutableList.Builder<String> commandBuilder = ImmutableList.builder();
         commandBuilder.addAll(command);
@@ -86,6 +87,13 @@ public final class FakeSandbox implements Sandbox {
         if (standardOutput != null) {
             commandBuilder.add(">", standardOutput);
         }
+        if (standardError != null) {
+            if (standardError == standardOutput) {
+                commandBuilder.add("2>&1");
+            } else {
+                commandBuilder.add("2>", standardError);
+            }
+        }
 
         List<String> newCommand = commandBuilder.build();
 
@@ -94,6 +102,16 @@ public final class FakeSandbox implements Sandbox {
         } catch (IOException | InterruptedException e) {
 
         }
-        return new ExecutionVerdict(0, 1, 1024, ExecutionStatus.OK, "ok");
+        return new ExecutionResult(0, 1, 1024, Verdict.OK, "ok");
+    }
+
+    @Override
+    public boolean containsFile(String filename) {
+        return true;
+    }
+
+    @Override
+    public void cleanUp() {
+
     }
 }

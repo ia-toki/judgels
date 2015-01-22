@@ -14,11 +14,6 @@ public final class CppLanguage implements Language {
     }
 
     @Override
-    public String getName() {
-        return "C++";
-    }
-
-    @Override
     public String getExecutableFilename(String sourceFilename) {
         return sourceFilename.substring(0, sourceFilename.lastIndexOf('.'));
     }
