@@ -9,7 +9,7 @@ lazy val gabriel = (project in file(".")).dependsOn(gabrielcommons)
 
 lazy val gabrielcommons = RootProject(file("../gabriel-commons"))
 
-mainClass in (Compile, run) := Some("org.iatoki.judgels.gabriel.Grader")
+mainClass in (Compile, run) := Some("org.iatoki.judgels.gabriel.Main")
 
 autoScalaLibrary := false
 

@@ -1,106 +1,138 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.FakeSealtiel;
-import org.iatoki.judgels.gabriel.GraderProperties;
-import org.iatoki.judgels.gabriel.GradingExecutor;
-import org.iatoki.judgels.gabriel.GradingRegistry;
+import org.iatoki.judgels.gabriel.GabrielConfig;
+import org.iatoki.judgels.gabriel.GraderRegistry;
+import org.iatoki.judgels.gabriel.GradingException;
+import org.iatoki.judgels.gabriel.GradingHandler;
 import org.iatoki.judgels.gabriel.GradingRunner;
 import org.iatoki.judgels.gabriel.Language;
 import org.iatoki.judgels.gabriel.LanguageRegistry;
 import org.iatoki.judgels.gabriel.SandboxProvider;
-import org.iatoki.judgels.gabriel.grading.batch.BatchCompilationExecutor;
-import org.iatoki.judgels.gabriel.grading.batch.BatchGradingConfig;
 import org.iatoki.judgels.gabriel.sandboxes.FakeSandboxProvider;
-import org.iatoki.judgels.sealtiel.client.ClientMessage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public final class BlackBoxGradingRunner implements GradingRunner {
-
-    private final long id;
-    private final FakeSealtiel sealtiel;
+    private final String id;
+    private final String senderChannel;
     private final BlackBoxGradingRequest request;
+    private final GradingHandler handler;
 
-    public BlackBoxGradingRunner(long id, FakeSealtiel sealtiel, BlackBoxGradingRequest request) {
+    public BlackBoxGradingRunner(String id, String senderChannel, BlackBoxGradingRequest request, GradingHandler handler) {
         this.id = id;
-        this.sealtiel = sealtiel;
+        this.senderChannel = senderChannel;
         this.request = request;
+        this.handler = handler;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
     public void run() {
-        GradingVerdict verdict = grade();
-        BlackBoxGradingResult result = new BlackBoxGradingResult(request.getSubmissionJid(), verdict);
-        ClientMessage message = new ClientMessage(request.getSenderChannel(), "BlackBoxGradingResult", new Gson().toJson(result));
-        sealtiel.sendMessage(message);
-    }
-
-    private GradingVerdict grade() {
-        Language language;
-        BlackBoxGradingExecutor executor;
+        BlackBoxGradingResult result;
 
         try {
-            language = loadLanguage(request.getLanguage());
-            executor = (BlackBoxGradingExecutor) loadGradingExecutor(request.getGradingType());
-        } catch (IllegalArgumentException | ClassCastException e) {
-            return createInternalErrorVerdict(e.getMessage());
-        }
+            try {
+                BlackBoxGrader grader = (BlackBoxGrader) GraderRegistry.getInstance().getGrader(request.getGradingType());
+                Language language = LanguageRegistry.getInstance().getLanguage(request.getGradingLanguage());
 
-        GraderProperties prop = GraderProperties.getInstance();
+                File runnerDir = getRunnerDir();
+                Map<String, File> sourceFiles = generateSourceFiles(runnerDir);
+                SandboxProvider sandboxProvider = getSandboxProvider(runnerDir);
+                File tempDir = getTempDir(runnerDir);
 
-        SandboxProvider sandboxProvider = new FakeSandboxProvider(prop.getSandboxDir());
+                File problemGradingDir = getProblemGradingDir(request.getProblemJid(), request.getProblemLastUpdate());
+                Map<String, File> helperFiles = generateHelperFiles(problemGradingDir);
+                Map<String, File> testDataFiles = generateTestDataFiles(problemGradingDir);
+                BlackBoxGradingConfig config = parseGradingConfig(problemGradingDir, grader);
 
-        File gradingDir = new File(prop.getGradingCacheDir(), request.getProblemJid());
-
-        gradingDir = new File(gradingDir, "grading");
-
-        BatchGradingConfig config;
-
-        try {
-            String configAsJson = FileUtils.readFileToString(new File(gradingDir, "config.json"));
-            config = new Gson().fromJson(configAsJson, BatchGradingConfig.class);
-        } catch (IOException | JsonSyntaxException e) {
-            return createInternalErrorVerdict("Cannot read config.json");
-        }
-
-        File sourceDir = new File(new File(prop.getTempDir(), "" + id), "source");
-
-        try {
-
-            FileUtils.forceMkdir(sourceDir);
-            for (Map.Entry<String, byte[]> entry : request.getSourceFiles().entrySet()) {
-                FileUtils.writeByteArrayToFile(new File(sourceDir, entry.getKey()), entry.getValue());
+                result = grader.grade(sandboxProvider, tempDir, language, sourceFiles, helperFiles, testDataFiles, config);
+            } catch (IOException | IllegalArgumentException e) {
+                throw new InitializationException(e.getMessage());
             }
-        } catch (IOException e) {
-            return createInternalErrorVerdict("Cannot save submission file");
+        } catch (CompilationException e) {
+            result = BlackBoxGradingResult.compileError(e.getMessage());
+        } catch (GradingException e) {
+            System.out.println("Grading id " + id + " error : " + e.getMessage());
+
+            result = BlackBoxGradingResult.internalError();
         }
 
-
-        File testDataDir = new File(gradingDir, "testData");
-        File helperDir = new File(gradingDir, "helper");
-
-        return executor.grade(sandboxProvider, language, sourceDir, helperDir, testDataDir, config);
+        handler.onComplete(senderChannel, request.getSubmissionJid(), result);
     }
 
-    @Override
-    public long getId() {
-        return id;
+    private File getRunnerDir() throws IOException {
+        File runnerDir = new File(GabrielConfig.getInstance().getTempDir(), id);
+        FileUtils.forceMkdir(runnerDir);
+        return runnerDir;
     }
 
-    private Language loadLanguage(String languageName) throws IllegalArgumentException {
-        return LanguageRegistry.getInstance().getLanguage(languageName);
+    private SandboxProvider getSandboxProvider(File runnerDir) throws IOException {
+        File sandboxesDir = new File(runnerDir, "sandboxes");
+        FileUtils.forceMkdir(sandboxesDir);
+
+        return new FakeSandboxProvider(sandboxesDir);
     }
 
-    private GradingExecutor loadGradingExecutor(String gradingType) throws IllegalArgumentException {
-        return GradingRegistry.getInstance().getGradingExecutor(gradingType);
+    private File getTempDir(File runnerDir) throws IOException {
+        File tempDir = new File(runnerDir, "temp");
+        FileUtils.forceMkdir(tempDir);
+
+        return tempDir;
     }
 
-    private GradingVerdict createInternalErrorVerdict(String message) {
-        return new GradingVerdict(OverallVerdict.INTERNAL_ERROR, 0, new GradingVerdictDetails(message, null, null, null));
+    private File getProblemGradingDir(String problemJid, long problemLastUpdate) throws IOException {
+        return new File(GabrielConfig.getInstance().getProblemDir(), problemJid);
+    }
+
+    private Map<String, File> generateHelperFiles(File problemGradingDir) throws FileNotFoundException {
+        File helperDir = new File(problemGradingDir, "helpers");
+        return listFilesAsMap(helperDir);
+    }
+
+    private Map<String, File> generateTestDataFiles(File problemGradingDir) throws FileNotFoundException {
+        File testDatDir = new File(problemGradingDir, "testdata");
+        return listFilesAsMap(testDatDir);
+    }
+
+    private BlackBoxGradingConfig parseGradingConfig(File problemGradirDir, BlackBoxGrader grader) throws IOException {
+        File config = new File(problemGradirDir, "config.json");
+        String configAsJson = FileUtils.readFileToString(config);
+        return grader.parseGradingConfigFromJson(configAsJson);
+    }
+
+    private Map<String, File> generateSourceFiles(File runnerDir) throws IOException {
+        File sourceDir = new File(runnerDir, "source");
+        FileUtils.forceMkdir(sourceDir);
+
+        ImmutableMap.Builder<String, File> sourceFiles = ImmutableMap.builder();
+
+        for (Map.Entry<String, byte[]> entry : request.getSourceFiles().entrySet()) {
+            File sourceFile = new File(sourceDir, entry.getKey());
+            FileUtils.writeByteArrayToFile(sourceFile, entry.getValue());
+
+            sourceFiles.put(entry.getKey(), sourceFile);
+        }
+        return sourceFiles.build();
+    }
+
+    private Map<String, File> listFilesAsMap(File dir) throws FileNotFoundException {
+        File[] files = dir.listFiles();
+
+        if (files == null) {
+            throw new FileNotFoundException(dir.getAbsolutePath() + "not found");
+        }
+
+        return Arrays.asList(files).stream().collect(Collectors.toMap(e -> e.getName(), e -> e));
     }
 }
