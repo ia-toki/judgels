@@ -1,17 +1,17 @@
 package org.iatoki.judgels.gabriel;
 
-public final class ExecutionVerdict {
+public final class ExecutionResult {
     private final int exitCode;
     private final int timeInMilliseconds;
     private final int memoryInKilobytes;
-    private final ExecutionStatus status;
+    private final Verdict verdict;
     private final String message;
 
-    public ExecutionVerdict(int exitCode, int timeInMilliseconds, int memoryInKilobytes, ExecutionStatus status, String message) {
+    public ExecutionResult(int exitCode, int timeInMilliseconds, int memoryInKilobytes, Verdict verdict, String message) {
         this.exitCode = exitCode;
         this.timeInMilliseconds = timeInMilliseconds;
         this.memoryInKilobytes = memoryInKilobytes;
-        this.status = status;
+        this.verdict = verdict;
         this.message = message;
     }
 
@@ -27,8 +27,8 @@ public final class ExecutionVerdict {
         return memoryInKilobytes;
     }
 
-    public ExecutionStatus getStatus() {
-        return status;
+    public Verdict getVerdict() {
+        return verdict;
     }
 
     public String getMessage() {

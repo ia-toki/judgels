@@ -1,12 +1,10 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-public interface GradingConfig {
-    int getTimeLimitInMilliseconds();
-
-    int getMemoryLimitInKilobytes();
+public interface BlackBoxGradingConfig {
+    List<TestSet> getSampleTestData();
 
     List<TestSet> getTestData();
 

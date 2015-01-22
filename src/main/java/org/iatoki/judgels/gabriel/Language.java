@@ -5,8 +5,6 @@ import java.util.List;
 
 public interface Language {
 
-    String getName();
-
     List<String> getCompilationCommand(String sourceFilename);
 
     String getExecutableFilename(String sourceFilename);

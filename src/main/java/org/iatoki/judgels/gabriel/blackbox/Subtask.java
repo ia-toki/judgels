@@ -1,15 +1,15 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
 public final class Subtask {
-    private final double points;
+    private final int points;
     private final String param;
 
-    public Subtask(double points, String param) {
+    public Subtask(int points, String param) {
         this.points = points;
         this.param = param;
     }
 
-    public double getPoints() {
+    public int getPoints() {
         return points;
     }
 
