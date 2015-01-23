@@ -52,7 +52,6 @@ public final class SimpleEvaluator implements Evaluator {
         Map<String, File> evaluationOutputFiles;
 
         if (executionResult.getVerdict() == Verdict.OK) {
-
             try {
                 FileUtils.copyFileToDirectory(sandbox.getFile(EVALUATION_OUTPUT_FILENAME), tempDir);
             } catch (IOException e) {

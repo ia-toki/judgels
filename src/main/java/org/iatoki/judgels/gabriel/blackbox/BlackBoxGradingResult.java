@@ -1,5 +1,6 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
+import com.google.gson.Gson;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.Verdict;
 
@@ -48,7 +49,8 @@ public final class BlackBoxGradingResult implements GradingResult {
         return message;
     }
 
-    public BlackBoxGradingResultDetails getDetails() {
-        return details;
+    @Override
+    public String getDetails() {
+        return new Gson().toJson(details);
     }
 }

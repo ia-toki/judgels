@@ -1,6 +1,7 @@
 package org.iatoki.judgels.gabriel.sandboxes;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.ExecutionResult;
 import org.iatoki.judgels.gabriel.Sandbox;
@@ -9,6 +10,7 @@ import org.iatoki.judgels.gabriel.Verdict;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public final class FakeSandbox implements Sandbox {
 
@@ -17,14 +19,18 @@ public final class FakeSandbox implements Sandbox {
     private String standardOutput;
     private String standardError;
 
+    private final Set<String> files;
+
     public FakeSandbox(File baseDir) {
         this.baseDir = baseDir;
+        this.files = Sets.newHashSet();
     }
 
     @Override
     public void addFile(File file) {
         try {
             FileUtils.copyFileToDirectory(file, baseDir);
+            files.add(file.getName());
         } catch (IOException e) {
 
         }
@@ -78,36 +84,33 @@ public final class FakeSandbox implements Sandbox {
     @Override
     public ExecutionResult execute(List<String> command) {
 
-        ImmutableList.Builder<String> commandBuilder = ImmutableList.builder();
-        commandBuilder.addAll(command);
+        String[] commandArray = command.toArray(new String[command.size()]);
+
+        ProcessBuilder pb = new ProcessBuilder(commandArray);
+        pb.directory(baseDir);
 
         if (standardInput != null) {
-            commandBuilder.add("<", standardInput);
+            pb.redirectInput(new File(baseDir, standardInput));
         }
         if (standardOutput != null) {
-            commandBuilder.add(">", standardOutput);
+            pb.redirectOutput(new File(baseDir, standardOutput));
         }
         if (standardError != null) {
-            if (standardError == standardOutput) {
-                commandBuilder.add("2>&1");
-            } else {
-                commandBuilder.add("2>", standardError);
-            }
+            pb.redirectError(new File(baseDir, standardError));
         }
 
-        List<String> newCommand = commandBuilder.build();
-
         try {
-            Runtime.getRuntime().exec(newCommand.toArray(new String[newCommand.size()]), null, baseDir).waitFor();
+            pb.start().waitFor();
         } catch (IOException | InterruptedException e) {
 
         }
+
         return new ExecutionResult(0, 1, 1024, Verdict.OK, "ok");
     }
 
     @Override
     public boolean containsFile(String filename) {
-        return true;
+        return files.contains(filename);
     }
 
     @Override
