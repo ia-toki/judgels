@@ -8,9 +8,9 @@ public final class GradingRunners {
         // prevent instantiation
     }
 
-    public static GradingRunner newRunner(String senderChannel, GradingRequest request, GradingHandler handler) {
+    public static GradingRunner newRunner(String senderChannel, GradingRequest request, FakeSealtiel sealtiel) {
         if (request instanceof BlackBoxGradingRequest) {
-            return new BlackBoxGradingRunner(request.getSubmissionJid(), senderChannel, (BlackBoxGradingRequest) request, handler);
+            return new BlackBoxGradingRunner(senderChannel, (BlackBoxGradingRequest) request, sealtiel);
         } else {
             throw new IllegalStateException("Illegal grading request");
         }

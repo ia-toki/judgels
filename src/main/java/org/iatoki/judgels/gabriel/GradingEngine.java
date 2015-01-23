@@ -1,8 +1,9 @@
 package org.iatoki.judgels.gabriel;
 
 import com.google.gson.Gson;
-import org.iatoki.judgels.sealtiel.client.ClientMessage;
+import com.google.gson.JsonSyntaxException;
 
+import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -10,23 +11,12 @@ public final class GradingEngine {
 
     private final ThreadPoolExecutor threadPoolExecutor;
     private final FakeSealtiel sealtiel;
-    private final GradingHandler handler;
 
-    public GradingEngine(String fakeMessage) {
+    public GradingEngine() {
         int threadPool = (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2;
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadPool);
 
-        this.sealtiel = new FakeSealtiel(fakeMessage);
-
-        this.handler = new GradingHandler() {
-            @Override
-            public void onComplete(String senderChannel, String submissionJid, GradingResult result) {
-                GradingResponse response = new GradingResponse(submissionJid, result);
-
-                ClientMessage message = new ClientMessage(senderChannel, "GradingResponse", new Gson().toJson(response));
-                sealtiel.sendMessage(message);
-            }
-        };
+        this.sealtiel = new FakeSealtiel(new File("/Users/fushar/grading-responses"), new File("/Users/fushar/grading-requests"));
 
         System.out.println("Starting Gabriel using "+threadPool+" threads.");
     }
@@ -35,7 +25,7 @@ public final class GradingEngine {
         while (true) {
             waitUntilAvailable();
 
-            ClientMessage message = sealtiel.fetchMessage();
+            FakeClientMessage message = sealtiel.fetchMessage();
             processMessage(message);
 
             Thread.sleep(200);
@@ -48,16 +38,17 @@ public final class GradingEngine {
         }
     }
 
-    private void processMessage(ClientMessage message) {
+    private void processMessage(FakeClientMessage message) {
         if (message == null) {
             return;
         }
 
         try {
-            GradingRequest request = GradingRequests.newRequestFromJson(message.getMessageType(), message.getMessage());
-            GradingRunner runner = GradingRunners.newRunner(message.getSourceClientChannel(), request, handler);
+            GradingRequest request = GradingRequests.parseFromJson(message.getMessageType(), message.getMessage());
+            GradingRunner runner = GradingRunners.newRunner("sourcechannel", request, sealtiel);
+            runner.run();
 
-            threadPoolExecutor.submit(runner);
+            //threadPoolExecutor.submit(runner);
         } catch (BadGradingRequestException e) {
             System.out.println(e.getMessage());
         }

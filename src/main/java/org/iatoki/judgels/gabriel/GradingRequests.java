@@ -9,12 +9,12 @@ public final class GradingRequests {
         // prevent instantiation
     }
 
-    public static GradingRequest newRequestFromJson(String type, String json) throws BadGradingRequestException {
+    public static GradingRequest parseFromJson(String type, String json) throws BadGradingRequestException {
         if (type.equals("BlackBoxGradingRequest")) {
             try {
                 return new Gson().fromJson(json, BlackBoxGradingRequest.class);
             } catch (JsonSyntaxException e) {
-                throw new BadGradingRequestException("Malformed BlackBoxGradingRequest JSON");
+                throw new BadGradingRequestException("Malformed BlackBoxGradingParam JSON");
             }
         } else {
             throw new BadGradingRequestException("Grading request type unknown: " + type);

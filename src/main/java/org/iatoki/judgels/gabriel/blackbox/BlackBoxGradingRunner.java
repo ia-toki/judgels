@@ -1,11 +1,13 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
+import org.iatoki.judgels.gabriel.FakeClientMessage;
+import org.iatoki.judgels.gabriel.FakeSealtiel;
 import org.iatoki.judgels.gabriel.GabrielConfig;
 import org.iatoki.judgels.gabriel.GraderRegistry;
 import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.GradingHandler;
 import org.iatoki.judgels.gabriel.GradingRunner;
 import org.iatoki.judgels.gabriel.Language;
 import org.iatoki.judgels.gabriel.LanguageRegistry;
@@ -20,25 +22,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class BlackBoxGradingRunner implements GradingRunner {
-    private final String id;
     private final String senderChannel;
     private final BlackBoxGradingRequest request;
-    private final GradingHandler handler;
+    private final FakeSealtiel sealtiel;
 
-    public BlackBoxGradingRunner(String id, String senderChannel, BlackBoxGradingRequest request, GradingHandler handler) {
-        this.id = id;
+    public BlackBoxGradingRunner(String senderChannel, BlackBoxGradingRequest request, FakeSealtiel sealtiel) {
         this.senderChannel = senderChannel;
         this.request = request;
-        this.handler = handler;
+        this.sealtiel = sealtiel;
     }
 
     @Override
     public String getId() {
-        return id;
+        return request.getSubmissionJid();
     }
 
     @Override
     public void run() {
+
         BlackBoxGradingResult result;
 
         try {
@@ -63,16 +64,19 @@ public final class BlackBoxGradingRunner implements GradingRunner {
         } catch (CompilationException e) {
             result = BlackBoxGradingResult.compileError(e.getMessage());
         } catch (GradingException e) {
-            System.out.println("Grading id " + id + " error : " + e.getMessage());
+            System.out.println("Grading id " + getId() + " error : " + e.getMessage());
 
             result = BlackBoxGradingResult.internalError();
         }
 
-        handler.onComplete(senderChannel, request.getSubmissionJid(), result);
+        BlackBoxGradingResponse response = new BlackBoxGradingResponse(request.getSubmissionJid(), result);
+        FakeClientMessage message = new FakeClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
+
+        sealtiel.sendMessage(message);
     }
 
     private File getRunnerDir() throws IOException {
-        File runnerDir = new File(GabrielConfig.getInstance().getTempDir(), id);
+        File runnerDir = new File(GabrielConfig.getInstance().getTempDir(), getId());
         FileUtils.forceMkdir(runnerDir);
         return runnerDir;
     }
@@ -130,7 +134,7 @@ public final class BlackBoxGradingRunner implements GradingRunner {
         File[] files = dir.listFiles();
 
         if (files == null) {
-            throw new FileNotFoundException(dir.getAbsolutePath() + "not found");
+            throw new FileNotFoundException(dir.getAbsolutePath() + " not found");
         }
 
         return Arrays.asList(files).stream().collect(Collectors.toMap(e -> e.getName(), e -> e));

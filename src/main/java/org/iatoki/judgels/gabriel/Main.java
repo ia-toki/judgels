@@ -1,5 +1,8 @@
 package org.iatoki.judgels.gabriel;
 
+import java.io.File;
+import java.io.IOException;
+
 public final class Main {
     private Main() {
         // prevent instantiation
@@ -8,7 +11,7 @@ public final class Main {
     public static void main(String[] args) {
         init();
 
-        GradingEngine engine = new GradingEngine(args[0]);
+        GradingEngine engine = new GradingEngine();
 
         try {
             engine.run();
