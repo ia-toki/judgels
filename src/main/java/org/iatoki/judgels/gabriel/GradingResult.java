@@ -6,4 +6,6 @@ public interface GradingResult {
     int getScore();
 
     String getMessage();
+
+    String getDetails();
 }

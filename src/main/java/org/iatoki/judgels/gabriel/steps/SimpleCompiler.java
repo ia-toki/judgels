@@ -50,6 +50,9 @@ public final class SimpleCompiler implements org.iatoki.judgels.gabriel.blackbox
 
                 FileUtils.copyFileToDirectory(sandbox.getFile(executableFilename), tempDir);
                 File executableFile = new File(tempDir, executableFilename);
+                if (!executableFile.setExecutable(true)) {
+                    throw new CompilationException("Cannot set " + executableFile.getAbsolutePath() + " as executable");
+                }
 
                 Map<String, File> executableFiles = ImmutableMap.of(executableFilename, executableFile);
 

@@ -24,11 +24,12 @@ public final class SubtaskScorer implements Scorer {
         File evaluationOutputFile = evaluationOutputFiles.get(EVALUATION_OUTPUT_FILENAME);
         File scoringOutputFile = new File(tempDir, SCORING_OUTPUT_FILENAME);
 
-        String[] scoringCommand = new String[]{"/usr/bin/diff", testCaseOutput.getAbsolutePath(), evaluationOutputFile.getAbsolutePath(), ">", scoringOutputFile.getAbsolutePath()};
+        String[] scoringCommand = new String[]{"/usr/bin/diff", testCaseOutput.getAbsolutePath(), evaluationOutputFile.getAbsolutePath()};
+        ProcessBuilder pb = new ProcessBuilder(scoringCommand);
 
         int exitCode;
         try {
-            exitCode = Runtime.getRuntime().exec(scoringCommand).waitFor();
+            exitCode = pb.start().waitFor();
         } catch (IOException | InterruptedException e) {
             throw new ScoringException(e.getMessage());
         }

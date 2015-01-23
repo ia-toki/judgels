@@ -22,7 +22,7 @@ public final class BatchGrader extends BlackBoxGrader {
 
     @Override
     public BlackBoxGradingConfig parseGradingConfigFromJson(String json) {
-        return new Gson().fromJson(json, BlackBoxGradingConfig.class);
+        return new Gson().fromJson(json, BatchGradingConfig.class);
     }
 
     @Override

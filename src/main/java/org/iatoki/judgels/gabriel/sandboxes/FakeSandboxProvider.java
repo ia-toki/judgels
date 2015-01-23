@@ -1,9 +1,11 @@
 package org.iatoki.judgels.gabriel.sandboxes;
 
+import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.Sandbox;
 import org.iatoki.judgels.gabriel.SandboxProvider;
 
 import java.io.File;
+import java.io.IOException;
 
 public class FakeSandboxProvider implements SandboxProvider {
 
@@ -18,6 +20,13 @@ public class FakeSandboxProvider implements SandboxProvider {
     @Override
     public Sandbox newSandbox() {
         sandboxId++;
-        return new FakeSandbox(new File(baseDir, "" + sandboxId));
+        File dir = new File(baseDir, "" + sandboxId);
+
+        try {
+            FileUtils.forceMkdir(dir);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return new FakeSandbox(dir);
     }
 }

@@ -55,4 +55,8 @@ public final class BatchGradingConfig implements BlackBoxGradingConfig {
     public List<Subtask> getSubtasks() {
         return subtasks;
     }
+
+    public String getScoringExecutorFilename() {
+        return scoringExecutorFilename;
+    }
 }
