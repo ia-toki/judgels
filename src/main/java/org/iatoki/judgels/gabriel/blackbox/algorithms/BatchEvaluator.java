@@ -1,10 +1,12 @@
 package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.Language;
 import org.iatoki.judgels.gabriel.Sandbox;
+import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.EvaluationException;
 import org.iatoki.judgels.gabriel.blackbox.EvaluationResult;
 import org.iatoki.judgels.gabriel.blackbox.Evaluator;
@@ -43,6 +45,10 @@ public final class BatchEvaluator implements Evaluator {
     public EvaluationResult evaluate(File testCaseInputFile, Set<Integer> subtaskNumbers) throws EvaluationException {
         if (!sandbox.containsFile(executableFilename)) {
             sandbox.addFile(new File(compilationDir, executableFilename));
+            File executableFile = sandbox.getFile(executableFilename);
+            if (!executableFile.setExecutable(true)) {
+                throw new EvaluationException("Cannot set " + executableFile.getAbsolutePath() + " as executable");
+            }
         }
 
         sandbox.addFile(testCaseInputFile);
@@ -58,6 +64,8 @@ public final class BatchEvaluator implements Evaluator {
             } catch (IOException e) {
                 throw new EvaluationException(e.getMessage());
             }
+        } else if (executionResult.getStatus() == SandboxExecutionStatus.INTERNAL_ERROR) {
+            throw new EvaluationException(Joiner.on(" ").join(evaluationCommand) + " resulted in " + executionResult.getDetails());
         }
 
         sandbox.removeAllFilesExcept(ImmutableSet.of(executableFilename));

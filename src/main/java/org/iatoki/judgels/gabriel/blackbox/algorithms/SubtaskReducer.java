@@ -37,7 +37,7 @@ public final class SubtaskReducer implements Reducer {
         Collections.sort(evaluationVerdicts);
         Collections.sort(scoringVerdicts);
 
-        if (evaluationVerdicts.isEmpty()) {
+        if (!evaluationVerdicts.isEmpty()) {
             return new SubtaskResult(evaluationVerdicts.get(evaluationVerdicts.size() - 1), score);
         } else {
             return new SubtaskResult(scoringVerdicts.get(scoringVerdicts.size() - 1), score);

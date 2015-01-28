@@ -48,13 +48,7 @@ public final class SingleSourceFileCompiler implements org.iatoki.judgels.gabrie
             try {
                 String compilationOutput = FileUtils.readFileToString(compilationOutputFile);
                 FileUtils.forceDelete(compilationOutputFile);
-
                 FileUtils.copyFileToDirectory(sandbox.getFile(executableFilename), compilationDir);
-                File executableFile = new File(compilationDir, executableFilename);
-                if (!executableFile.setExecutable(true)) {
-                    throw new CompilationException("Cannot set " + executableFile.getAbsolutePath() + " as executable");
-                }
-
                 return new CompilationResult(CompilationVerdict.OK, compilationOutput);
             } catch (IOException e) {
                 throw new CompilationException(e.getMessage());

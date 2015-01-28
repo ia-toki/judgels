@@ -37,7 +37,11 @@ public final class BlackBoxGradingResult implements GradingResult {
     }
 
     @Override
-    public String getDetails() {
+    public String getDetailsAsJson() {
         return new Gson().toJson(details);
+    }
+
+    public BlackBoxGradingResultDetails getDetails() {
+        return details;
     }
 }

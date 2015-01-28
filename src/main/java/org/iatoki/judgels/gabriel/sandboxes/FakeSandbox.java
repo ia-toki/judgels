@@ -19,20 +19,25 @@ public final class FakeSandbox implements Sandbox {
     private String standardOutput;
     private String standardError;
 
-    private final Set<String> files;
+    private final Set<String> filenames;
+    private final List<SandboxExecutionStatus> arrangedStatuses;
 
-    public FakeSandbox(File baseDir) {
+    private int executionsCount;
+
+
+    public FakeSandbox(File baseDir, List<SandboxExecutionStatus> arrangedStatuses) {
         this.baseDir = baseDir;
-        this.files = Sets.newHashSet();
+        this.filenames = Sets.newHashSet();
+        this.arrangedStatuses = arrangedStatuses;
     }
 
     @Override
     public void addFile(File file) {
         try {
             FileUtils.copyFileToDirectory(file, baseDir);
-            files.add(file.getName());
+            filenames.add(file.getName());
         } catch (IOException e) {
-
+            // should never happen
         }
     }
 
@@ -83,7 +88,6 @@ public final class FakeSandbox implements Sandbox {
 
     @Override
     public SandboxExecutionResult execute(List<String> command) {
-
         String[] commandArray = command.toArray(new String[command.size()]);
 
         ProcessBuilder pb = new ProcessBuilder(commandArray);
@@ -99,27 +103,54 @@ public final class FakeSandbox implements Sandbox {
             pb.redirectError(new File(baseDir, standardError));
         }
 
-        try {
-            pb.start().waitFor();
-        } catch (IOException | InterruptedException e) {
+        executionsCount++;
 
+        int exitCode;
+        try {
+            exitCode = pb.start().waitFor();
+        } catch (IOException | InterruptedException e) {
+            return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, new SandboxExecutionResultDetails(1, 100, 1000, "Execution error"));
         }
 
-        return new SandboxExecutionResult(SandboxExecutionStatus.OK, new SandboxExecutionResultDetails(0, 100, 1000, "OK"));
+        if (executionsCount >= arrangedStatuses.size()) {
+            SandboxExecutionStatus status;
+            if (exitCode == 0) {
+                status = SandboxExecutionStatus.OK;
+            } else {
+                status = SandboxExecutionStatus.RUNTIME_ERROR;
+            }
+            return new SandboxExecutionResult(status, new SandboxExecutionResultDetails(0, 100, 1000, "OK"));
+        } else {
+            return new SandboxExecutionResult(arrangedStatuses.get(executionsCount - 1), new SandboxExecutionResultDetails(0, 100, 1000, "?"));
+        }
     }
 
     @Override
     public boolean containsFile(String filename) {
-        return files.contains(filename);
+        return filenames.contains(filename);
     }
 
     @Override
     public void cleanUp() {
-
+        try {
+            FileUtils.deleteDirectory(baseDir);
+        } catch (IOException e) {
+            // should never happen
+        }
     }
 
     @Override
     public void removeAllFilesExcept(Set<String> filenamesToRetain) {
-        files.removeIf(f -> !filenamesToRetain.contains(f));
+        for (String filename : filenames) {
+            if (!filenamesToRetain.contains(filename)) {
+                try {
+                    FileUtils.forceDelete(new File(baseDir, filename));
+                } catch (IOException e) {
+                    // should never happen
+                }
+            }
+        }
+
+        filenames.removeIf(f -> !filenamesToRetain.contains(f));
     }
 }
