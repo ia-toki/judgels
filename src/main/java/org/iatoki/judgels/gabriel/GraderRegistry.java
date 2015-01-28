@@ -1,12 +1,9 @@
 package org.iatoki.judgels.gabriel;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.text.WordUtils;
-import org.iatoki.judgels.gabriel.graders.BatchGrader;
+import org.iatoki.judgels.gabriel.graders.BatchWithSubtaskGrader;
 
 import java.util.EnumMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public final class GraderRegistry {
     private static GraderRegistry INSTANCE;
@@ -26,10 +23,6 @@ public final class GraderRegistry {
         return registry.get(gradingType);
     }
 
-    public Map<String, String> getGradingTypes() {
-        return registry.keySet().stream().collect(Collectors.toMap(e -> e.toString(), e -> e.getName()));
-    }
-
     public static GraderRegistry getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new GraderRegistry();
@@ -38,6 +31,6 @@ public final class GraderRegistry {
     }
 
     private void populateGraders() {
-        registry.put(GradingType.BATCH_SUBTASK, new BatchGrader());
+        registry.put(GradingType.BATCH_SUBTASK, new BatchWithSubtaskGrader());
     }
 }

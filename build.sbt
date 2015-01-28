@@ -14,7 +14,7 @@ scalaVersion := "2.11.1"
 libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.4",
   "org.apache.commons" % "commons-lang3" % "3.3.2",
-  "com.google.guava" % "guava" % "r05",
+  "com.google.guava" % "guava" % "18.0",
   "com.google.code.gson" % "gson" % "2.3.1"
 )
 

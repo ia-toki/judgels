@@ -1,9 +1,11 @@
 package org.iatoki.judgels.gabriel.languages;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import org.iatoki.judgels.gabriel.Language;
 
 import java.util.List;
+import java.util.Set;
 
 public final class CppLanguage implements Language {
 
@@ -11,6 +13,11 @@ public final class CppLanguage implements Language {
 
     public CppLanguage(String compilerPath) {
         this.compilerPath = compilerPath;
+    }
+
+    @Override
+    public Set<String> getAllowedExtensions() {
+        return ImmutableSet.of("cpp", "cc");
     }
 
     @Override

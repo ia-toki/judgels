@@ -1,24 +1,47 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import org.iatoki.judgels.gabriel.ExecutionResult;
-
-import java.io.File;
-import java.util.Map;
+import org.iatoki.judgels.gabriel.SandboxExecutionResult;
+import org.iatoki.judgels.gabriel.SandboxExecutionResultDetails;
 
 public final class EvaluationResult {
-    private final ExecutionResult executionResult;
-    private final Map<String, File> evaluationOutputFiles;
+    private final EvaluationVerdict verdict;
+    private final SandboxExecutionResultDetails details;
 
-    public EvaluationResult(ExecutionResult executionResult, Map<String, File> evaluationOutputFiles) {
-        this.executionResult = executionResult;
-        this.evaluationOutputFiles = evaluationOutputFiles;
+    private EvaluationResult(EvaluationVerdict verdict, SandboxExecutionResultDetails details) {
+        this.verdict = verdict;
+        this.details = details;
     }
 
-    public ExecutionResult getExecutionResult() {
-        return executionResult;
+    public static EvaluationResult executedResult(SandboxExecutionResult result) {
+        EvaluationVerdict verdict;
+        switch (result.getStatus()) {
+            case OK:
+                verdict = EvaluationVerdict.OK;
+                break;
+            case RUNTIME_ERROR:
+                verdict = EvaluationVerdict.RUNTIME_ERROR;
+                break;
+            case TIME_LIMIT_EXCEEDED:
+                verdict = EvaluationVerdict.TIME_LIMIT_EXCEEDED;
+                break;
+            case MEMORY_LIMIT_EXCEEDED:
+                verdict = EvaluationVerdict.MEMORY_LIMIT_EXCEEDED;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        return new EvaluationResult(verdict, result.getDetails());
     }
 
-    public Map<String, File> getEvaluationOutputFiles() {
-        return evaluationOutputFiles;
+    public static EvaluationResult skippedResult() {
+        return new EvaluationResult(EvaluationVerdict.SKIPPED, null);
+    }
+
+    public EvaluationVerdict getVerdict() {
+        return verdict;
+    }
+
+    public SandboxExecutionResultDetails getDetails() {
+        return details;
     }
 }

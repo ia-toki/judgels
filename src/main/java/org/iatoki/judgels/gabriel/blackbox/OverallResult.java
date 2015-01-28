@@ -1,10 +1,10 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-public final class SubtaskResult {
+public final class OverallResult {
     private final NormalVerdict verdict;
-    private final double score;
+    private final int score;
 
-    public SubtaskResult(NormalVerdict verdict, double score) {
+    public OverallResult(NormalVerdict verdict, int score) {
         this.verdict = verdict;
         this.score = score;
     }
@@ -13,7 +13,7 @@ public final class SubtaskResult {
         return verdict;
     }
 
-    public double getScore() {
+    public int getScore() {
         return score;
     }
 }

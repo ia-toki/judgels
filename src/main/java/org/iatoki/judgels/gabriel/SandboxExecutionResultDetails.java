@@ -1,17 +1,17 @@
 package org.iatoki.judgels.gabriel;
 
-public final class ExecutionResult {
+import com.google.common.base.MoreObjects;
+
+public final class SandboxExecutionResultDetails {
     private final int exitCode;
     private final int timeInMilliseconds;
     private final int memoryInKilobytes;
-    private final Verdict verdict;
     private final String message;
 
-    public ExecutionResult(int exitCode, int timeInMilliseconds, int memoryInKilobytes, Verdict verdict, String message) {
+    public SandboxExecutionResultDetails(int exitCode, int timeInMilliseconds, int memoryInKilobytes, String message) {
         this.exitCode = exitCode;
         this.timeInMilliseconds = timeInMilliseconds;
         this.memoryInKilobytes = memoryInKilobytes;
-        this.verdict = verdict;
         this.message = message;
     }
 
@@ -27,11 +27,17 @@ public final class ExecutionResult {
         return memoryInKilobytes;
     }
 
-    public Verdict getVerdict() {
-        return verdict;
-    }
-
     public String getMessage() {
         return message;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("exitCode", exitCode)
+                .add("timeInMilliseconds", timeInMilliseconds)
+                .add("memoryInKilobytes", memoryInKilobytes)
+                .add("message", message)
+                .toString();
     }
 }

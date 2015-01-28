@@ -10,8 +10,4 @@ public interface GradingRequest {
     long getProblemLastUpdate();
 
     GradingType getGradingType();
-
-    GradingLanguage getGradingLanguage();
-
-    Map<String, byte[]> getSourceFiles();
 }

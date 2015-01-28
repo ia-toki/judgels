@@ -1,5 +1,5 @@
 package org.iatoki.judgels.gabriel;
 
-public interface SandboxProvider {
+public interface SandboxFactory {
     Sandbox newSandbox();
 }

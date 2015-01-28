@@ -12,9 +12,9 @@ public final class BlackBoxGradingRequest implements GradingRequest {
     private final long problemLastUpdate;
     private final GradingType gradingType;
     private final GradingLanguage gradingLanguage;
-    private final Map<String, byte[]> sourceFiles;
+    private final Map<String, SourceFile> sourceFiles;
 
-    public BlackBoxGradingRequest(String submissionJid, String problemJid, long problemLastUpdate, GradingType gradingType, GradingLanguage gradingLanguage, Map<String, byte[]> sourceFiles) {
+    public BlackBoxGradingRequest(String submissionJid, String problemJid, long problemLastUpdate, GradingType gradingType, GradingLanguage gradingLanguage, Map<String, SourceFile> sourceFiles) {
         this.submissionJid = submissionJid;
         this.problemJid = problemJid;
         this.problemLastUpdate = problemLastUpdate;
@@ -43,13 +43,11 @@ public final class BlackBoxGradingRequest implements GradingRequest {
         return gradingType;
     }
 
-    @Override
     public GradingLanguage getGradingLanguage() {
         return gradingLanguage;
     }
 
-    @Override
-    public Map<String, byte[]> getSourceFiles() {
+    public Map<String, SourceFile> getSourceFiles() {
         return sourceFiles;
     }
 }

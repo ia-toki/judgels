@@ -2,6 +2,7 @@ package org.iatoki.judgels.gabriel;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 public interface Sandbox {
 
@@ -27,7 +28,9 @@ public interface Sandbox {
 
     void setStandardError(String standardError);
 
+    void removeAllFilesExcept(Set<String> filenamesToRetain);
+
     void cleanUp();
 
-    ExecutionResult execute(List<String> command);
+    SandboxExecutionResult execute(List<String> command);
 }
