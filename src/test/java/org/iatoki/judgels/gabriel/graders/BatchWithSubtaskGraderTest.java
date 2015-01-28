@@ -63,7 +63,7 @@ public final class BatchWithSubtaskGraderTest extends BlackBoxGraderTest {
             assertEquals(result.getVerdict(), CompilationVerdict.COMPILATION_ERROR);
             assertEquals(result.getScore(), 0);
             assertTrue(result.getDetails().getCompilationOutput().contains("'b'"));
-        } catch(GradingException e) {
+        } catch (GradingException e) {
             fail();
         }
     }
@@ -82,7 +82,7 @@ public final class BatchWithSubtaskGraderTest extends BlackBoxGraderTest {
                     new SubtaskResult(ScoringVerdict.ACCEPTED, 30.0),
                     new SubtaskResult(ScoringVerdict.ACCEPTED, 70.0))
             );
-        } catch(GradingException e) {
+        } catch (GradingException e) {
             fail();
         }
     }
@@ -101,7 +101,7 @@ public final class BatchWithSubtaskGraderTest extends BlackBoxGraderTest {
                             new SubtaskResult(ScoringVerdict.ACCEPTED, 30.0),
                             new SubtaskResult(ScoringVerdict.WRONG_ANSWER, 0.0))
             );
-        } catch(GradingException e) {
+        } catch (GradingException e) {
             fail();
         }
     }
@@ -120,7 +120,7 @@ public final class BatchWithSubtaskGraderTest extends BlackBoxGraderTest {
                             new SubtaskResult(ScoringVerdict.ACCEPTED, 30.0),
                             new SubtaskResult(ScoringVerdict.WRONG_ANSWER, 0.0))
             );
-        } catch(GradingException e) {
+        } catch (GradingException e) {
             fail();
         }
     }
@@ -140,8 +140,31 @@ public final class BatchWithSubtaskGraderTest extends BlackBoxGraderTest {
                             new SubtaskResult(ScoringVerdict.WRONG_ANSWER, 0.0),
                             new SubtaskResult(ScoringVerdict.WRONG_ANSWER, 0.0))
             );
-        } catch(GradingException e) {
+        } catch (GradingException e) {
             fail();
         }
+    }
+
+    @Test
+    public void testOKWithCustomScorer() {
+        addSourceFile("source", "aplusb-OK-scorer.cpp");
+
+        config.customScorer = "scorer.cpp";
+
+        try {
+            BlackBoxGradingResult result = runGrader(grader, config);
+            assertEquals(result.getVerdict(), ScoringVerdict.OK);
+            assertEquals(result.getScore(), 100);
+
+            BlackBoxGradingResultDetails details = result.getDetails();
+            assertEquals(details.getSubtaskResults(), ImmutableList.of(
+                            new SubtaskResult(ScoringVerdict.ACCEPTED, 30.0),
+                            new SubtaskResult(ScoringVerdict.ACCEPTED, 70.0))
+            );
+        } catch (GradingException e) {
+            fail();
+        }
+
+        config.customScorer = null;
     }
 }
