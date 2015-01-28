@@ -1,12 +1,20 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
 import java.util.List;
-import java.util.Map;
 
 public interface BlackBoxGradingConfig {
-    List<TestSet> getSampleTestData();
 
-    List<TestSet> getTestData();
+    List<String> getRequiredSourceFileKeys();
+
+    LanguageRestriction getLanguageRestriction();
+
+    int getTimeLimitInMilliseconds();
+
+    int getMemoryLimitInKilobytes();
+
+    List<SampleTestCase> getSampleTestData();
+
+    List<TestGroup> getTestData();
 
     List<Subtask> getSubtasks();
 }

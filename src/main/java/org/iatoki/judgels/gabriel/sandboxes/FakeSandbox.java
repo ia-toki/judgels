@@ -1,11 +1,11 @@
 package org.iatoki.judgels.gabriel.sandboxes;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.ExecutionResult;
+import org.iatoki.judgels.gabriel.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.Sandbox;
-import org.iatoki.judgels.gabriel.Verdict;
+import org.iatoki.judgels.gabriel.SandboxExecutionResultDetails;
+import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,7 +82,7 @@ public final class FakeSandbox implements Sandbox {
     }
 
     @Override
-    public ExecutionResult execute(List<String> command) {
+    public SandboxExecutionResult execute(List<String> command) {
 
         String[] commandArray = command.toArray(new String[command.size()]);
 
@@ -105,7 +105,7 @@ public final class FakeSandbox implements Sandbox {
 
         }
 
-        return new ExecutionResult(0, 1, 1024, Verdict.OK, "ok");
+        return new SandboxExecutionResult(SandboxExecutionStatus.OK, new SandboxExecutionResultDetails(0, 100, 1000, "OK"));
     }
 
     @Override
@@ -116,5 +116,10 @@ public final class FakeSandbox implements Sandbox {
     @Override
     public void cleanUp() {
 
+    }
+
+    @Override
+    public void removeAllFilesExcept(Set<String> filenamesToRetain) {
+        files.removeIf(f -> !filenamesToRetain.contains(f));
     }
 }

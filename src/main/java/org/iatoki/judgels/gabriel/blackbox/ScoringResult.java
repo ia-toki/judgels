@@ -1,17 +1,15 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import org.iatoki.judgels.gabriel.Verdict;
-
 public final class ScoringResult {
-    private final Verdict verdict;
+    private final ScoringVerdict verdict;
     private final String score;
 
-    public ScoringResult(Verdict verdict, String score) {
+    public ScoringResult(ScoringVerdict verdict, String score) {
         this.verdict = verdict;
         this.score = score;
     }
 
-    public Verdict getVerdict() {
+    public ScoringVerdict getVerdict() {
         return verdict;
     }
 
