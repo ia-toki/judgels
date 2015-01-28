@@ -83,6 +83,8 @@ public final class SubtaskCustomScorer implements Scorer {
 
         sandbox.removeAllFilesExcept(ImmutableSet.of(scorerExecutableFilename));
 
+        scoringOutput = scoringOutput.trim();
+
         switch (scoringOutput) {
             case "AC":
                 return new ScoringResult(ScoringVerdict.ACCEPTED, "");
