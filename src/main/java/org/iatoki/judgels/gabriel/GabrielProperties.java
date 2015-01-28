@@ -7,21 +7,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public final class GabrielConfig {
-    private static GabrielConfig INSTANCE;
+public final class GabrielProperties {
+    private static GabrielProperties INSTANCE;
 
     private final File problemDir;
-    private final File sandboxDir;
     private final File tempDir;
+    private final File workerDir;
 
-    private GabrielConfig(File baseDir) {
+    private GabrielProperties(File baseDir) {
         try {
-            problemDir = new File(baseDir, "problems");
+            problemDir = new File(baseDir, "problem");
             FileUtils.forceMkdir(problemDir);
-            sandboxDir = new File(baseDir, "sandboxes");
-            FileUtils.forceMkdir(sandboxDir);
-            tempDir = new File(baseDir, "temp");
+            tempDir = new File(baseDir, "sandbox");
             FileUtils.forceMkdir(tempDir);
+            workerDir = new File(baseDir, "temp");
+            FileUtils.forceMkdir(workerDir);
 
         } catch (IOException e) {
             throw new RuntimeException("Cannot create folder inside " + baseDir.getAbsolutePath());
@@ -32,15 +32,15 @@ public final class GabrielConfig {
         return problemDir;
     }
 
-    public File getSandboxDir() {
-        return sandboxDir;
-    }
-
     public File getTempDir() {
         return tempDir;
     }
 
-    public static GabrielConfig getInstance() {
+    public File getWorkerDir() {
+        return workerDir;
+    }
+
+    public static GabrielProperties getInstance() {
         if (INSTANCE == null) {
             InputStream config = ClassLoader.getSystemClassLoader().getResourceAsStream("conf/application.conf");
 
@@ -68,7 +68,7 @@ public final class GabrielConfig {
                 throw new RuntimeException("gabriel.baseDir: " + baseDirName + " does not exist");
             }
 
-            INSTANCE = new GabrielConfig(baseDir);
+            INSTANCE = new GabrielProperties(baseDir);
         }
         return INSTANCE;
     }

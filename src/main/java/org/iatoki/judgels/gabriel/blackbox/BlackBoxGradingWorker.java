@@ -1,18 +1,19 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.FakeClientMessage;
 import org.iatoki.judgels.gabriel.FakeSealtiel;
-import org.iatoki.judgels.gabriel.GabrielConfig;
+import org.iatoki.judgels.gabriel.GabrielProperties;
 import org.iatoki.judgels.gabriel.GraderRegistry;
 import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.GradingRunner;
+import org.iatoki.judgels.gabriel.GradingWorker;
 import org.iatoki.judgels.gabriel.Language;
 import org.iatoki.judgels.gabriel.LanguageRegistry;
-import org.iatoki.judgels.gabriel.SandboxProvider;
-import org.iatoki.judgels.gabriel.sandboxes.FakeSandboxProvider;
+import org.iatoki.judgels.gabriel.SandboxFactory;
+import org.iatoki.judgels.gabriel.sandboxes.FakeSandboxFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,12 +22,21 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class BlackBoxGradingRunner implements GradingRunner {
+public final class BlackBoxGradingWorker implements GradingWorker {
     private final String senderChannel;
     private final BlackBoxGradingRequest request;
     private final FakeSealtiel sealtiel;
 
-    public BlackBoxGradingRunner(String senderChannel, BlackBoxGradingRequest request, FakeSealtiel sealtiel) {
+    private File graderDir;
+    private BlackBoxGrader grader;
+    private BlackBoxGradingConfig config;
+    private Language language;
+    private SandboxFactory sandboxFactory;
+    private Map<String, File> sourceFiles;
+    private Map<String, File> helperFiles;
+    private Map<String, File> testDataFiles;
+
+    public BlackBoxGradingWorker(String senderChannel, BlackBoxGradingRequest request, FakeSealtiel sealtiel) {
         this.senderChannel = senderChannel;
         this.request = request;
         this.sealtiel = sealtiel;
@@ -39,35 +49,17 @@ public final class BlackBoxGradingRunner implements GradingRunner {
 
     @Override
     public void run() {
-
         BlackBoxGradingResult result;
 
         try {
-            try {
-                BlackBoxGrader grader = (BlackBoxGrader) GraderRegistry.getInstance().getGrader(request.getGradingType());
-                Language language = LanguageRegistry.getInstance().getLanguage(request.getGradingLanguage());
-
-                File runnerDir = getRunnerDir();
-                Map<String, File> sourceFiles = generateSourceFiles(runnerDir);
-                SandboxProvider sandboxProvider = getSandboxProvider(runnerDir);
-                File tempDir = getTempDir(runnerDir);
-
-                File problemGradingDir = getProblemGradingDir(request.getProblemJid(), request.getProblemLastUpdate());
-                Map<String, File> helperFiles = generateHelperFiles(problemGradingDir);
-                Map<String, File> testDataFiles = generateTestDataFiles(problemGradingDir);
-                BlackBoxGradingConfig config = parseGradingConfig(problemGradingDir, grader);
-
-                result = grader.grade(sandboxProvider, tempDir, language, sourceFiles, helperFiles, testDataFiles, config);
-            } catch (IOException | IllegalArgumentException e) {
-                throw new InitializationException(e.getMessage());
-            }
-        } catch (CompilationException e) {
-            result = BlackBoxGradingResult.compileError(e.getMessage());
+            initialize();
+            result = grader.gradeAfterInitialization(sandboxFactory, graderDir, language, sourceFiles, helperFiles, testDataFiles, config);
         } catch (GradingException e) {
             System.out.println("Grading id " + getId() + " error : " + e.getMessage());
-
-            result = BlackBoxGradingResult.internalError();
+            result = BlackBoxGradingResult.internalErrorResult();
         }
+
+        grader.cleanUp();
 
         BlackBoxGradingResponse response = new BlackBoxGradingResponse(request.getSubmissionJid(), result);
         FakeClientMessage message = new FakeClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
@@ -75,32 +67,51 @@ public final class BlackBoxGradingRunner implements GradingRunner {
         sealtiel.sendMessage(message);
     }
 
-    private File getRunnerDir() throws IOException {
-        File runnerDir = new File(GabrielConfig.getInstance().getTempDir(), getId());
+    private void initialize() throws InitializationException {
+        try {
+            grader = (BlackBoxGrader) GraderRegistry.getInstance().getGrader(request.getGradingType());
+            language = LanguageRegistry.getInstance().getLanguage(request.getGradingLanguage());
+
+            File workerDir = getWorkerDir();
+            sourceFiles = generateSourceFiles(workerDir);
+            sandboxFactory = getSandboxProvider(workerDir);
+            graderDir = getGraderDir(workerDir);
+
+            File problemGradingDir = getProblemGradingDir(request.getProblemJid(), request.getProblemLastUpdate());
+            helperFiles = generateHelperFiles(problemGradingDir);
+            testDataFiles = generateTestDataFiles(problemGradingDir);
+            config = parseGradingConfig(problemGradingDir, grader);
+        } catch (IOException | IllegalArgumentException e) {
+            throw new InitializationException(e.getMessage());
+        }
+    }
+
+    private File getWorkerDir() throws IOException {
+        File runnerDir = new File(GabrielProperties.getInstance().getWorkerDir(), getId());
         FileUtils.forceMkdir(runnerDir);
         return runnerDir;
     }
 
-    private SandboxProvider getSandboxProvider(File runnerDir) throws IOException {
-        File sandboxesDir = new File(runnerDir, "sandboxes");
+    private SandboxFactory getSandboxProvider(File workerDir) throws IOException {
+        File sandboxesDir = new File(workerDir, "sandbox");
         FileUtils.forceMkdir(sandboxesDir);
 
-        return new FakeSandboxProvider(sandboxesDir);
+        return new FakeSandboxFactory(sandboxesDir, ImmutableList.of());
     }
 
-    private File getTempDir(File runnerDir) throws IOException {
-        File tempDir = new File(runnerDir, "temp");
+    private File getGraderDir(File workerDir) throws IOException {
+        File tempDir = new File(workerDir, "grader");
         FileUtils.forceMkdir(tempDir);
 
         return tempDir;
     }
 
     private File getProblemGradingDir(String problemJid, long problemLastUpdate) throws IOException {
-        return new File(GabrielConfig.getInstance().getProblemDir(), problemJid);
+        return new File(GabrielProperties.getInstance().getProblemDir(), problemJid);
     }
 
     private Map<String, File> generateHelperFiles(File problemGradingDir) throws FileNotFoundException {
-        File helperDir = new File(problemGradingDir, "helpers");
+        File helperDir = new File(problemGradingDir, "helper");
         return listFilesAsMap(helperDir);
     }
 
@@ -121,11 +132,11 @@ public final class BlackBoxGradingRunner implements GradingRunner {
 
         ImmutableMap.Builder<String, File> sourceFiles = ImmutableMap.builder();
 
-        for (Map.Entry<String, byte[]> entry : request.getSourceFiles().entrySet()) {
-            File sourceFile = new File(sourceDir, entry.getKey());
-            FileUtils.writeByteArrayToFile(sourceFile, entry.getValue());
+        for (Map.Entry<String, SourceFile> entry : request.getSourceFiles().entrySet()) {
+            File file = new File(sourceDir, entry.getValue().getName());
+            FileUtils.writeByteArrayToFile(file, entry.getValue().getContent());
 
-            sourceFiles.put(entry.getKey(), sourceFile);
+            sourceFiles.put(entry.getKey(), file);
         }
         return sourceFiles.build();
     }

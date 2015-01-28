@@ -1,8 +1,5 @@
 package org.iatoki.judgels.gabriel;
 
-import java.io.File;
-import java.io.IOException;
-
 public final class Main {
     private Main() {
         // prevent instantiation
@@ -21,6 +18,6 @@ public final class Main {
     }
 
     private static void init() {
-        GabrielConfig.getInstance();
+        GabrielProperties.getInstance();
     }
 }

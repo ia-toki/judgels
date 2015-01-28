@@ -1,5 +1,5 @@
 package org.iatoki.judgels.gabriel;
 
-public interface GradingRunner extends Runnable {
+public interface GradingWorker extends Runnable {
     String getId();
 }

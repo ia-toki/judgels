@@ -1,8 +1,5 @@
 package org.iatoki.judgels.gabriel;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-
 import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -45,7 +42,7 @@ public final class GradingEngine {
 
         try {
             GradingRequest request = GradingRequests.parseFromJson(message.getMessageType(), message.getMessage());
-            GradingRunner runner = GradingRunners.newRunner("sourcechannel", request, sealtiel);
+            GradingWorker runner = GradingWorkers.newWorker("sourcechannel", request, sealtiel);
             runner.run();
 
             //threadPoolExecutor.submit(runner);

@@ -21,7 +21,7 @@ resolvers += "IA TOKI Artifactory" at "http://artifactory.ia-toki.org/artifactor
 
 libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.4",
-  "com.google.guava" % "guava" % "r05",
+  "com.google.guava" % "guava" % "18.0",
   "com.google.code.gson" % "gson" % "2.3.1",
   "org.iatoki.judgels.sealtiel" % "sealtielMessage" % "1.0.0"
 )
