@@ -20,7 +20,6 @@ import org.iatoki.judgels.gabriel.blackbox.algorithms.BatchEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskCustomScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskScorer;
-import org.iatoki.judgels.gabriel.languages.CppLanguage;
 
 import java.io.File;
 import java.io.IOException;

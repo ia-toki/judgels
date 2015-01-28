@@ -5,5 +5,5 @@ public interface GradingResult {
 
     int getScore();
 
-    String getDetails();
+    String getDetailsAsJson();
 }

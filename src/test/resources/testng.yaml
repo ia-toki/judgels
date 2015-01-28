@@ -1,0 +1,7 @@
+name: TestNG
+
+tests:
+  - name: All
+    packages:
+      - package:
+          - name: .*

@@ -5,8 +5,6 @@ import com.google.common.collect.Lists;
 import org.iatoki.judgels.gabriel.Grader;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.Language;
-import org.iatoki.judgels.gabriel.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
 import org.iatoki.judgels.gabriel.SandboxFactory;
 
 import java.io.File;
