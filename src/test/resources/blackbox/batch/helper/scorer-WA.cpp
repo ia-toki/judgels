@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     fscanf(con, "%lf", &con_ans);
 
     if (fabs(out_ans - con_ans) < 0.5)
-        puts("AC");
+        puts("HELLO");
     else
-        puts("WA");
+        puts("WORLD");
 }

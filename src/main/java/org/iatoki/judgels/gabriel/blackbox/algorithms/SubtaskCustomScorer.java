@@ -91,7 +91,7 @@ public final class SubtaskCustomScorer implements Scorer {
             case "WA":
                 return new ScoringResult(ScoringVerdict.WRONG_ANSWER, "");
             default:
-                throw new ScoringException(Joiner.on(" ").join(scoringCommand) + "output unknown scoring format: " + scoringOutput);
+                throw new ScoringException(Joiner.on(" ").join(scoringCommand) + " output unknown scoring format: " + scoringOutput);
         }
     }
 }
