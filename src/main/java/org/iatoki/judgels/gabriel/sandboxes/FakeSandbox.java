@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Set;
 
 public final class FakeSandbox implements Sandbox {
+    private static final int TLE_EXIT_CODE = 10;
+    private static final int MLE_EXIT_CODE = 20;
+    private static final int RTE_EXIT_CODE = 30;
 
     private final File baseDir;
     private String standardInput;
@@ -20,15 +23,10 @@ public final class FakeSandbox implements Sandbox {
     private String standardError;
 
     private final Set<String> filenames;
-    private final List<SandboxExecutionStatus> arrangedStatuses;
 
-    private int executionsCount;
-
-
-    public FakeSandbox(File baseDir, List<SandboxExecutionStatus> arrangedStatuses) {
+    public FakeSandbox(File baseDir) {
         this.baseDir = baseDir;
         this.filenames = Sets.newHashSet();
-        this.arrangedStatuses = arrangedStatuses;
     }
 
     @Override
@@ -103,8 +101,6 @@ public final class FakeSandbox implements Sandbox {
             pb.redirectError(new File(baseDir, standardError));
         }
 
-        executionsCount++;
-
         int exitCode;
         try {
             exitCode = pb.start().waitFor();
@@ -112,17 +108,21 @@ public final class FakeSandbox implements Sandbox {
             return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, new SandboxExecutionResultDetails(1, 100, 1000, "Execution error"));
         }
 
-        if (executionsCount >= arrangedStatuses.size()) {
-            SandboxExecutionStatus status;
-            if (exitCode == 0) {
+        SandboxExecutionStatus status;
+        switch (exitCode) {
+            case 0:
                 status = SandboxExecutionStatus.OK;
-            } else {
+                break;
+            case TLE_EXIT_CODE:
+                status = SandboxExecutionStatus.TIME_LIMIT_EXCEEDED;
+                break;
+            case MLE_EXIT_CODE:
+                status = SandboxExecutionStatus.MEMORY_LIMIT_EXCEEDED;
+                break;
+            default:
                 status = SandboxExecutionStatus.RUNTIME_ERROR;
-            }
-            return new SandboxExecutionResult(status, new SandboxExecutionResultDetails(0, 100, 1000, "OK"));
-        } else {
-            return new SandboxExecutionResult(arrangedStatuses.get(executionsCount - 1), new SandboxExecutionResultDetails(0, 100, 1000, "?"));
         }
+        return new SandboxExecutionResult(status, new SandboxExecutionResultDetails(0, 100, 1000, "OK"));
     }
 
     @Override

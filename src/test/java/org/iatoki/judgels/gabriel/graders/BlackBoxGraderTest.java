@@ -25,9 +25,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class BlackBoxGraderTest {
-
-    private ImmutableList.Builder<List<SandboxExecutionStatus>> arrangedStatusesListBuilder;
-
     private Language language;
 
     private File workerDir;
@@ -57,8 +54,6 @@ public abstract class BlackBoxGraderTest {
 
     @BeforeMethod
     public void setUp() {
-        arrangedStatusesListBuilder = ImmutableList.builder();
-
         workerDir = Files.createTempDir();
 
         graderDir = new File(workerDir, "grader");
@@ -87,12 +82,8 @@ public abstract class BlackBoxGraderTest {
         sourceFiles.put(key, new File(sourceDir, filename));
     }
 
-    protected final void addFakeSandbox(List<SandboxExecutionStatus> arrangedStatuses) {
-        arrangedStatusesListBuilder.add(arrangedStatuses);
-    }
-
     protected final BlackBoxGradingResult runGrader(BlackBoxGrader grader, BlackBoxGradingConfig config) throws GradingException {
-        SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir, arrangedStatusesListBuilder.build());
+        SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
         return grader.gradeAfterInitialization(sandboxFactory, graderDir, language, sourceFiles, helperFiles, testDataFiles, config);
     }
 

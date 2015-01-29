@@ -14,12 +14,10 @@ public class FakeSandboxFactory implements SandboxFactory {
 
     private final File baseDir;
     private int sandboxesCount;
-    private final List<List<SandboxExecutionStatus>> arrangedStatusesList;
 
-    public FakeSandboxFactory(File baseDir, List<List<SandboxExecutionStatus>> arrangedStatusesList) {
+    public FakeSandboxFactory(File baseDir) {
         this.baseDir = baseDir;
         this.sandboxesCount = 0;
-        this.arrangedStatusesList = arrangedStatusesList;
     }
 
     @Override
@@ -33,10 +31,6 @@ public class FakeSandboxFactory implements SandboxFactory {
             throw new RuntimeException(e);
         }
 
-        if (sandboxesCount >= arrangedStatusesList.size()) {
-            return new FakeSandbox(sandboxDir, ImmutableList.of());
-        } else {
-            return new FakeSandbox(sandboxDir, arrangedStatusesList.get(sandboxesCount - 1));
-        }
+        return new FakeSandbox(sandboxDir);
     }
 }
