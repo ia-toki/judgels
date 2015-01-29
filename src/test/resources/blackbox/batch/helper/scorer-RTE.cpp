@@ -17,4 +17,6 @@ int main(int argc, char* argv[])
         puts("AC");
     else
         puts("WA");
+
+    return 1;
 }
