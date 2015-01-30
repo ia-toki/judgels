@@ -89,10 +89,15 @@ public final class InteractiveEvaluator implements Evaluator {
         File pipe1 = new File(evaluationDir, "pipe1");
         File pipe2 = new File(evaluationDir, "pipe2");
 
+        int exitCode1, exitCode2;
         try {
-            new ProcessBuilder(new String[]{"/usr/bin/mkfifo", pipe1.getAbsolutePath()}).start().waitFor();
-            new ProcessBuilder(new String[]{"/usr/bin/mkfifo", pipe2.getAbsolutePath()}).start().waitFor();
+            exitCode1 = new ProcessBuilder(new String[]{"/usr/bin/mkfifo", pipe1.getAbsolutePath()}).start().waitFor();
+            exitCode2 = new ProcessBuilder(new String[]{"/usr/bin/mkfifo", pipe2.getAbsolutePath()}).start().waitFor();
         } catch (IOException | InterruptedException e) {
+            throw new EvaluationException(e.getMessage());
+        }
+
+        if (exitCode1 != 0 || exitCode2 != 0) {
             throw new EvaluationException("Cannot create pipes in " + evaluationDir.getAbsolutePath() + " for evaluation");
         }
 
