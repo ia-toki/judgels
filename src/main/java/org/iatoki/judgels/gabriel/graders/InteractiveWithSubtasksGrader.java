@@ -16,13 +16,10 @@ import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.BatchEvaluator;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentitySubtaskScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskCustomScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskScorer;
-import org.iatoki.judgels.gabriel.languages.CppLanguage;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +34,6 @@ public final class InteractiveWithSubtasksGrader extends BlackBoxGrader {
     private Sandbox compilerSandbox;
     private Sandbox evaluatorContestantSandbox;
     private Sandbox evaluatorCommunicatorSandbox;
-    private Sandbox scorerSandbox;
 
     @Override
     public String getName() {
@@ -77,15 +73,7 @@ public final class InteractiveWithSubtasksGrader extends BlackBoxGrader {
         Language cppLanguage = LanguageRegistry.getInstance().getLanguage(GradingLanguage.CPP);
 
         evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, compilationDir, evaluationDir, language, cppLanguage, contestantSourceFile, communicatorSourceFile,  10000, 100 * 1024, thisConfig.getTimeLimitInMilliseconds(), thisConfig.getMemoryLimitInKilobytes());
-
-        if (thisConfig.getCustomScorer() != null) {
-            scorerSandbox = sandboxFactory.newSandbox();
-            File scorerFile = helperFiles.get(thisConfig.getCustomScorer());
-            scorer = new SubtaskCustomScorer(scorerSandbox, evaluationDir, scoringDir, cppLanguage, scorerFile, 10000, 100 * 1024, 10000, 100 * 1024);
-        } else {
-            scorer = new SubtaskScorer(evaluationDir);
-        }
-
+        scorer = new IdentitySubtaskScorer(evaluationDir);
         reducer = new SubtaskReducer();
     }
 
@@ -136,9 +124,5 @@ public final class InteractiveWithSubtasksGrader extends BlackBoxGrader {
         compilerSandbox.cleanUp();
         evaluatorContestantSandbox.cleanUp();
         evaluatorCommunicatorSandbox.cleanUp();
-
-        if (scorerSandbox != null) {
-            scorerSandbox.cleanUp();
-        }
     }
 }

@@ -17,7 +17,6 @@ public final class InteractiveWithSubtasksGradingConfig implements BlackBoxGradi
     public List<TestGroup> testData;
     public List<Integer> subtaskPoints;
     public String communicator;
-    public String customScorer;
 
     @Override
     public int getTimeLimitInMilliseconds() {
@@ -46,10 +45,6 @@ public final class InteractiveWithSubtasksGradingConfig implements BlackBoxGradi
 
     public String getCommunicator() {
         return communicator;
-    }
-
-    public String getCustomScorer() {
-        return customScorer;
     }
 
     @Override
