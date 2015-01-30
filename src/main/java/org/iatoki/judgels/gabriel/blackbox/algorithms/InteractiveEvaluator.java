@@ -86,6 +86,12 @@ public final class InteractiveEvaluator implements Evaluator {
             }
         }
 
+        try {
+            FileUtils.cleanDirectory(evaluationDir);
+        } catch (IOException e) {
+            throw new EvaluationException(e.getMessage());
+        }
+
         File pipe1 = new File(evaluationDir, "pipe1");
         File pipe2 = new File(evaluationDir, "pipe2");
 
@@ -126,8 +132,6 @@ public final class InteractiveEvaluator implements Evaluator {
 
         try {
             FileUtils.copyFileToDirectory(communicatorSandbox.getFile(EVALUATION_OUTPUT_FILENAME), evaluationDir);
-            FileUtils.forceDelete(pipe1);
-            FileUtils.forceDelete(pipe2);
         } catch (IOException e) {
             throw new EvaluationException(e.getMessage());
         }
