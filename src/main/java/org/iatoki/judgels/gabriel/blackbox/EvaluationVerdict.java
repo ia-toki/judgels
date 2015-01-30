@@ -5,7 +5,7 @@ import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
 public enum EvaluationVerdict implements NormalVerdict {
     OK {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "OK";
         }
 
@@ -17,7 +17,7 @@ public enum EvaluationVerdict implements NormalVerdict {
 
     RUNTIME_ERROR {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "RTE";
         }
 
@@ -29,7 +29,7 @@ public enum EvaluationVerdict implements NormalVerdict {
 
     TIME_LIMIT_EXCEEDED {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "TLE";
         }
 
@@ -41,7 +41,7 @@ public enum EvaluationVerdict implements NormalVerdict {
 
     MEMORY_LIMIT_EXCEEDED {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "MLE";
         }
 
@@ -53,7 +53,7 @@ public enum EvaluationVerdict implements NormalVerdict {
 
     SKIPPED {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "SKP";
         }
 

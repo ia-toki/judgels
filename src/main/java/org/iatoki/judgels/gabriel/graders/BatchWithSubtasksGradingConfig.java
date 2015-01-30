@@ -10,7 +10,7 @@ import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 
 import java.util.List;
 
-public final class BatchWithSubtaskGradingConfig implements BlackBoxGradingConfig {
+public final class BatchWithSubtasksGradingConfig implements BlackBoxGradingConfig {
     public int timeLimitInMilliseconds;
     public int memoryLimitInKilobytes;
     public List<SampleTestCase> sampleTestData;
