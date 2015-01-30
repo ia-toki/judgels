@@ -20,15 +20,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-public final class BatchWithSubtaskGraderTest extends BlackBoxGraderTest {
+public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
 
-    private final BatchWithSubtaskGrader grader;
-    private final BatchWithSubtaskGradingConfig config;
+    private final BatchWithSubtasksGrader grader;
+    private final BatchWithSubtasksGradingConfig config;
 
-    public BatchWithSubtaskGraderTest() {
+    public BatchWithSubtasksGraderTest() {
         super("blackbox/batch");
 
-        BatchWithSubtaskGradingConfig config = new BatchWithSubtaskGradingConfig();
+        BatchWithSubtasksGradingConfig config = new BatchWithSubtasksGradingConfig();
 
         config.timeLimitInMilliseconds = 1000;
         config.memoryLimitInKilobytes = 65536;
@@ -54,7 +54,7 @@ public final class BatchWithSubtaskGraderTest extends BlackBoxGraderTest {
         config.subtaskPoints = ImmutableList.of(30, 70);
 
         this.config = config;
-        this.grader = new BatchWithSubtaskGrader();
+        this.grader = new BatchWithSubtasksGrader();
     }
 
     @Test

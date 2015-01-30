@@ -5,7 +5,7 @@ import org.iatoki.judgels.gabriel.Verdict;
 public enum CompilationVerdict implements BlackBoxVerdict {
     OK {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "OK";
         }
 
@@ -17,7 +17,7 @@ public enum CompilationVerdict implements BlackBoxVerdict {
 
     COMPILATION_ERROR {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "CE";
         }
 

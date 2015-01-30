@@ -8,7 +8,6 @@ import org.iatoki.judgels.gabriel.Language;
 import org.iatoki.judgels.gabriel.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.Sandbox;
 import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
-import org.iatoki.judgels.gabriel.Verdict;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
 import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
@@ -44,6 +43,10 @@ public final class SubtaskCustomScorer implements Scorer {
 
         this.scorerExecutableFilename = language.getExecutableFilename(scorerFile.getName());
         sandbox.addFile(new File(scoringDir, scorerExecutableFilename));
+        File scorerExecutableFile = sandbox.getFile(scorerExecutableFilename);
+        if (!scorerExecutableFile.setExecutable(true)) {
+            throw new PreparationException("Cannot set " + scorerExecutableFile.getAbsolutePath() + " as executable");
+        }
         sandbox.setTimeLimitInMilliseconds(scoringTimeLimitInMilliseconds);
         sandbox.setMemoryLimitInKilobytes(scoringMemoryLimitInKilobytes);
 

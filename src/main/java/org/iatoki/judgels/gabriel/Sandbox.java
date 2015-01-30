@@ -22,11 +22,17 @@ public interface Sandbox {
 
     void setMaxProcesses(int maxProcesses);
 
-    void setStandardInput(String standardInput);
+    void setStandardInput(String filenameInsideThisSandbox);
 
-    void setStandardOutput(String standardOutput);
+    void setStandardOutput(String filenameInsideThisSandbox);
 
-    void setStandardError(String standardError);
+    void setStandardError(String filenameInsideThisSandbox);
+
+    void setStandardInput(File file);
+
+    void setStandardOutput(File file);
+
+    void setStandardError(File file);
 
     void removeAllFilesExcept(Set<String> filenamesToRetain);
 

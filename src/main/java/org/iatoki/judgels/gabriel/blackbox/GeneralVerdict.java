@@ -3,7 +3,7 @@ package org.iatoki.judgels.gabriel.blackbox;
 public enum GeneralVerdict implements BlackBoxVerdict {
     PENDING {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "?";
         }
 
@@ -15,7 +15,7 @@ public enum GeneralVerdict implements BlackBoxVerdict {
 
     INTERNAL_ERROR {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "!!!";
         }
 

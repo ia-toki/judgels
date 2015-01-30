@@ -3,7 +3,7 @@ package org.iatoki.judgels.gabriel.blackbox;
 public enum ScoringVerdict implements NormalVerdict {
     ACCEPTED {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "AC";
         }
 
@@ -15,7 +15,7 @@ public enum ScoringVerdict implements NormalVerdict {
 
     OK {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "OK";
         }
 
@@ -27,7 +27,7 @@ public enum ScoringVerdict implements NormalVerdict {
 
     WRONG_ANSWER {
         @Override
-        public String getAbbreviatedName() {
+        public String getCode() {
             return "WA";
         }
 

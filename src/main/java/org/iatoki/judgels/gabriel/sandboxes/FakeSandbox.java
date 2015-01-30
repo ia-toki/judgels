@@ -18,9 +18,9 @@ public final class FakeSandbox implements Sandbox {
     private static final int RTE_EXIT_CODE = 30;
 
     private final File baseDir;
-    private String standardInput;
-    private String standardOutput;
-    private String standardError;
+    private File standardInput;
+    private File standardOutput;
+    private File standardError;
 
     private final Set<String> filenames;
 
@@ -70,18 +70,33 @@ public final class FakeSandbox implements Sandbox {
     }
 
     @Override
-    public void setStandardInput(String standardInput) {
-        this.standardInput = standardInput;
+    public void setStandardInput(String filenameInsideThisSandbox) {
+        this.standardInput = new File(baseDir, filenameInsideThisSandbox);
     }
 
     @Override
-    public void setStandardOutput(String standardOutput) {
-        this.standardOutput = standardOutput;
+    public void setStandardOutput(String filenameInsideThisSandbox) {
+        this.standardOutput = new File(baseDir, filenameInsideThisSandbox);
     }
 
     @Override
-    public void setStandardError(String standardError) {
-        this.standardError = standardError;
+    public void setStandardError(String filenameInsideThisSandbox) {
+        this.standardError = new File(baseDir, filenameInsideThisSandbox);
+    }
+
+    @Override
+    public void setStandardInput(File file) {
+        this.standardInput = file;
+    }
+
+    @Override
+    public void setStandardOutput(File file) {
+        this.standardOutput = file;
+    }
+
+    @Override
+    public void setStandardError(File file) {
+        this.standardError = file;
     }
 
     @Override
@@ -92,13 +107,13 @@ public final class FakeSandbox implements Sandbox {
         pb.directory(baseDir);
 
         if (standardInput != null) {
-            pb.redirectInput(new File(baseDir, standardInput));
+            pb.redirectInput(standardInput);
         }
         if (standardOutput != null) {
-            pb.redirectOutput(new File(baseDir, standardOutput));
+            pb.redirectOutput(standardOutput);
         }
         if (standardError != null) {
-            pb.redirectError(new File(baseDir, standardError));
+            pb.redirectError(standardError);
         }
 
         int exitCode;

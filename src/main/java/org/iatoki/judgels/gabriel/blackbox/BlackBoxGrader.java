@@ -2,6 +2,7 @@ package org.iatoki.judgels.gabriel.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import org.iatoki.judgels.gabriel.Grader;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.Language;
@@ -61,11 +62,7 @@ public abstract class BlackBoxGrader implements Grader {
         return BlackBoxGradingResult.normalResult(result, details);
     }
 
-    public abstract BlackBoxGradingConfig parseGradingConfigFromJson(String json);
-
-    public abstract BlackBoxGradingConfig createDefaultGradingConfig();
-
-    protected abstract void prepare(SandboxFactory provider, File workingDir, BlackBoxGradingConfig config, Language language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException;
+    protected abstract void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, Language language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException;
 
     protected abstract Compiler getCompiler();
 

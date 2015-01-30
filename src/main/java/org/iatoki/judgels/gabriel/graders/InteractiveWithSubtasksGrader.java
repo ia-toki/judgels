@@ -3,6 +3,7 @@ package org.iatoki.judgels.gabriel.graders;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
+import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.Language;
 import org.iatoki.judgels.gabriel.LanguageRegistry;
@@ -15,52 +16,42 @@ import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.BatchEvaluator;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskCustomScorer;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskScorer;
+import org.iatoki.judgels.gabriel.languages.CppLanguage;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-public final class BatchWithSubtaskGrader extends BlackBoxGrader {
+public final class InteractiveWithSubtasksGrader extends BlackBoxGrader {
     private Compiler compiler;
     private Evaluator evaluator;
     private Scorer scorer;
     private Reducer reducer;
 
     private Sandbox compilerSandbox;
-    private Sandbox evaluatorSandbox;
+    private Sandbox evaluatorContestantSandbox;
+    private Sandbox evaluatorCommunicatorSandbox;
     private Sandbox scorerSandbox;
 
     @Override
-    public BlackBoxGradingConfig parseGradingConfigFromJson(String json) {
-        return new Gson().fromJson(json, BatchWithSubtaskGradingConfig.class);
-    }
-
-    @Override
-    public BlackBoxGradingConfig createDefaultGradingConfig() {
-        BatchWithSubtaskGradingConfig config = new BatchWithSubtaskGradingConfig();
-        config.timeLimitInMilliseconds = 2000;
-        config.memoryLimitInKilobytes = 65536;
-        config.sampleTestData = ImmutableList.of();
-        config.testData = ImmutableList.of();
-
-        ImmutableList.Builder<Integer> subtaskPoints = ImmutableList.builder();
-        for (int i = 0; i < 10; i++) {
-            subtaskPoints.add(0);
-        }
-        config.subtaskPoints = subtaskPoints.build();
-
-        return config;
+    public String getName() {
+        return "Interactive with Subtasks";
     }
 
     @Override
     protected void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, Language language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException {
-        File sourceFile = sourceFiles.get("source");
-        BatchWithSubtaskGradingConfig thisConfig = (BatchWithSubtaskGradingConfig) config;
+        InteractiveWithSubtasksGradingConfig thisConfig = (InteractiveWithSubtasksGradingConfig) config;
+        if (thisConfig.getCommunicator() == null) {
+            throw new PreparationException("Communicator not specified");
+        }
+        File contestantSourceFile = sourceFiles.get("source");
+        File communicatorSourceFile = helperFiles.get(thisConfig.getCommunicator());
 
         File compilationDir;
         File evaluationDir;
@@ -78,15 +69,18 @@ public final class BatchWithSubtaskGrader extends BlackBoxGrader {
         }
 
         compilerSandbox = sandboxFactory.newSandbox();
-        compiler = new SingleSourceFileCompiler(compilerSandbox, compilationDir, language, sourceFile, 10000, 100 * 1024);
+        compiler = new SingleSourceFileCompiler(compilerSandbox, compilationDir, language, contestantSourceFile, 10000, 100 * 1024);
 
-        evaluatorSandbox = sandboxFactory.newSandbox();
-        evaluator = new BatchEvaluator(evaluatorSandbox, compilationDir, evaluationDir, language, sourceFile, thisConfig.getTimeLimitInMilliseconds(), thisConfig.getMemoryLimitInKilobytes());
+        evaluatorContestantSandbox = sandboxFactory.newSandbox();
+        evaluatorCommunicatorSandbox = sandboxFactory.newSandbox();
+
+        Language cppLanguage = LanguageRegistry.getInstance().getLanguage(GradingLanguage.CPP);
+
+        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, compilationDir, evaluationDir, language, cppLanguage, contestantSourceFile, communicatorSourceFile,  10000, 100 * 1024, thisConfig.getTimeLimitInMilliseconds(), thisConfig.getMemoryLimitInKilobytes());
 
         if (thisConfig.getCustomScorer() != null) {
             scorerSandbox = sandboxFactory.newSandbox();
-            Language cppLanguage = LanguageRegistry.getInstance().getLanguage(GradingLanguage.CPP);
-            File scorerFile = helperFiles.get(((BatchWithSubtaskGradingConfig) config).getCustomScorer());
+            File scorerFile = helperFiles.get(thisConfig.getCustomScorer());
             scorer = new SubtaskCustomScorer(scorerSandbox, evaluationDir, scoringDir, cppLanguage, scorerFile, 10000, 100 * 1024, 10000, 100 * 1024);
         } else {
             scorer = new SubtaskScorer(evaluationDir);
@@ -116,9 +110,32 @@ public final class BatchWithSubtaskGrader extends BlackBoxGrader {
     }
 
     @Override
+    public GradingConfig createDefaultGradingConfig() {
+        InteractiveWithSubtasksGradingConfig config = new InteractiveWithSubtasksGradingConfig();
+        config.timeLimitInMilliseconds = 2000;
+        config.memoryLimitInKilobytes = 65536;
+        config.sampleTestData = ImmutableList.of();
+        config.testData = ImmutableList.of();
+
+        ImmutableList.Builder<Integer> subtaskPoints = ImmutableList.builder();
+        for (int i = 0; i < 10; i++) {
+            subtaskPoints.add(0);
+        }
+        config.subtaskPoints = subtaskPoints.build();
+
+        return config;
+    }
+
+    @Override
+    public GradingConfig createGradingConfigFromJson(String json) {
+        return new Gson().fromJson(json, InteractiveWithSubtasksGradingConfig.class);
+    }
+
+    @Override
     public void cleanUp() {
         compilerSandbox.cleanUp();
-        evaluatorSandbox.cleanUp();
+        evaluatorContestantSandbox.cleanUp();
+        evaluatorCommunicatorSandbox.cleanUp();
 
         if (scorerSandbox != null) {
             scorerSandbox.cleanUp();
