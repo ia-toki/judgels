@@ -6,11 +6,11 @@ import java.util.List;
 
 public final class BlackBoxGradingResultDetails {
     private final String compilationOutput;
-    private final List<TestCaseDetailedResult> sampleTestDataResults;
-    private final List<List<TestCaseDetailedResult>> testDataResults;
-    private final List<SubtaskResult> subtaskResults;
+    private final List<TestCaseFinalResult> sampleTestDataResults;
+    private final List<List<TestCaseFinalResult>> testDataResults;
+    private final List<SubtaskFinalResult> subtaskResults;
 
-    public BlackBoxGradingResultDetails(String compilationOutput, List<TestCaseDetailedResult> sampleTestDataResults, List<List<TestCaseDetailedResult>> testDataResults, List<SubtaskResult> subtaskResults) {
+    public BlackBoxGradingResultDetails(String compilationOutput, List<TestCaseFinalResult> sampleTestDataResults, List<List<TestCaseFinalResult>> testDataResults, List<SubtaskFinalResult> subtaskResults) {
         this.compilationOutput = compilationOutput;
         this.sampleTestDataResults = sampleTestDataResults;
         this.testDataResults = testDataResults;
@@ -20,15 +20,15 @@ public final class BlackBoxGradingResultDetails {
         return compilationOutput;
     }
 
-    public List<TestCaseDetailedResult> getSampleTestDataResults() {
+    public List<TestCaseFinalResult> getSampleTestDataResults() {
         return sampleTestDataResults;
     }
 
-    public List<List<TestCaseDetailedResult>> getTestDataResults() {
+    public List<List<TestCaseFinalResult>> getTestDataResults() {
         return testDataResults;
     }
 
-    public List<SubtaskResult> getSubtaskResults() {
+    public List<SubtaskFinalResult> getSubtaskResults() {
         return subtaskResults;
     }
 

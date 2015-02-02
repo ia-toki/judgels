@@ -1,20 +1,20 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import org.iatoki.judgels.gabriel.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.SandboxExecutionResultDetails;
+import org.iatoki.judgels.gabriel.Verdict;
 
-public final class TestCaseDetailedResult {
-    private final NormalVerdict verdict;
+public final class TestCaseFinalResult {
+    private final Verdict verdict;
     private final String score;
     private final SandboxExecutionResultDetails details;
 
-    public TestCaseDetailedResult(TestCaseResult testCaseResult, SandboxExecutionResultDetails details) {
-        this.verdict = testCaseResult.getVerdict();
+    public TestCaseFinalResult(TestCaseResult testCaseResult, SandboxExecutionResultDetails details) {
+        this.verdict = new Verdict(testCaseResult.getVerdict().getCode(), testCaseResult.getVerdict().getName());
         this.score = testCaseResult.getScore();
         this.details = details;
     }
 
-    public NormalVerdict getVerdict() {
+    public Verdict getVerdict() {
         return verdict;
     }
 
