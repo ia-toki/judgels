@@ -5,7 +5,7 @@ name := """gabriel"""
 
 version := "1.0-SNAPSHOT"
 
-lazy val gabriel = (project in file(".")).dependsOn(gabrielcommons)
+lazy val gabriel = (project in file(".")).dependsOn(gabrielcommons).aggregate(gabrielcommons)
 
 lazy val gabrielcommons = RootProject(file("../gabriel-commons"))
 

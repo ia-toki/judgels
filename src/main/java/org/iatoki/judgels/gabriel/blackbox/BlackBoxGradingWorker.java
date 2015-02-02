@@ -1,6 +1,5 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
@@ -30,6 +29,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     private File graderDir;
     private BlackBoxGrader grader;
     private BlackBoxGradingConfig config;
+    private BlackBoxGradingSource source;
     private Language language;
     private SandboxFactory sandboxFactory;
     private Map<String, File> sourceFiles;
@@ -68,9 +68,11 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     private void initialize() throws InitializationException {
+        source = (BlackBoxGradingSource) request.getGradingSource();
+
         try {
             grader = (BlackBoxGrader) GraderRegistry.getInstance().getGrader(request.getGradingType());
-            language = LanguageRegistry.getInstance().getLanguage(request.getGradingLanguage());
+            language = LanguageRegistry.getInstance().getLanguage(source.getGradingLanguage());
 
             File workerDir = getWorkerDir();
             sourceFiles = generateSourceFiles(workerDir);
@@ -96,7 +98,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         File sandboxesDir = new File(workerDir, "sandbox");
         FileUtils.forceMkdir(sandboxesDir);
 
-        return new FakeSandboxFactory(sandboxesDir, ImmutableList.of());
+        return new FakeSandboxFactory(sandboxesDir);
     }
 
     private File getGraderDir(File workerDir) throws IOException {
@@ -123,7 +125,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     private BlackBoxGradingConfig parseGradingConfig(File problemGradirDir, BlackBoxGrader grader) throws IOException {
         File config = new File(problemGradirDir, "config.json");
         String configAsJson = FileUtils.readFileToString(config);
-        return grader.parseGradingConfigFromJson(configAsJson);
+        return (BlackBoxGradingConfig) grader.createGradingConfigFromJson(configAsJson);
     }
 
     private Map<String, File> generateSourceFiles(File runnerDir) throws IOException {
@@ -132,7 +134,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
         ImmutableMap.Builder<String, File> sourceFiles = ImmutableMap.builder();
 
-        for (Map.Entry<String, SourceFile> entry : request.getSourceFiles().entrySet()) {
+        for (Map.Entry<String, SourceFile> entry : source.getSourceFiles().entrySet()) {
             File file = new File(sourceDir, entry.getValue().getName());
             FileUtils.writeByteArrayToFile(file, entry.getValue().getContent());
 

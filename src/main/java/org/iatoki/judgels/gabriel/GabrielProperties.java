@@ -42,7 +42,7 @@ public final class GabrielProperties {
 
     public static GabrielProperties getInstance() {
         if (INSTANCE == null) {
-            InputStream config = ClassLoader.getSystemClassLoader().getResourceAsStream("conf/application.conf");
+            InputStream config = GabrielProperties.class.getClassLoader().getResourceAsStream("conf/application.conf");
 
             if (config == null) {
                 throw new RuntimeException("Missing conf/application.conf file");

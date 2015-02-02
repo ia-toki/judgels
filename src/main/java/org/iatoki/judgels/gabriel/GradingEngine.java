@@ -43,9 +43,8 @@ public final class GradingEngine {
         try {
             GradingRequest request = GradingRequests.parseFromJson(message.getMessageType(), message.getMessage());
             GradingWorker runner = GradingWorkers.newWorker("sourcechannel", request, sealtiel);
-            runner.run();
 
-            //threadPoolExecutor.submit(runner);
+            threadPoolExecutor.submit(runner);
         } catch (BadGradingRequestException e) {
             System.out.println(e.getMessage());
         }
