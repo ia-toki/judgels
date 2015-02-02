@@ -5,9 +5,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.Language;
+import org.iatoki.judgels.gabriel.NativeSandboxesInteractor;
 import org.iatoki.judgels.gabriel.Sandbox;
 import org.iatoki.judgels.gabriel.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
+import org.iatoki.judgels.gabriel.SandboxesInteractor;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
 import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
@@ -35,6 +37,8 @@ public final class InteractiveEvaluator implements Evaluator {
 
     private final List<String> contestantEvaluationCommand;
     private final List<String> communicatorExecutionCommand;
+
+    private final int evaluationTimeLimitInMilliseconds;
 
     public InteractiveEvaluator(Sandbox contestantSandbox, Sandbox communicatorSandbox, File compilationDir, File evaluationDir, Language contestantLanguage, Language communicatorLanguage, File contestantSourceFile, File communicatorSourceFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int evaluationTimeLimitInMilliseconds, int evaluationMemoryLimitInMilliseconds) throws PreparationException {
         try {
@@ -74,6 +78,8 @@ public final class InteractiveEvaluator implements Evaluator {
 
         this.contestantEvaluationCommand = contestantLanguage.getExecutionCommand(contestantSourceFile.getName());
         this.communicatorExecutionCommand = communicatorLanguage.getExecutionCommand(communicatorSourceFile.getName());
+
+        this.evaluationTimeLimitInMilliseconds = evaluationTimeLimitInMilliseconds;
     }
 
     @Override
@@ -107,12 +113,7 @@ public final class InteractiveEvaluator implements Evaluator {
             throw new EvaluationException("Cannot create pipes in " + evaluationDir.getAbsolutePath() + " for evaluation");
         }
 
-        communicatorSandbox.setStandardInput(pipe1);
-        communicatorSandbox.setStandardOutput(pipe2);
         communicatorSandbox.setStandardError(EVALUATION_OUTPUT_FILENAME);
-
-        contestantSandbox.setStandardInput(pipe2);
-        contestantSandbox.setStandardOutput(pipe1);
 
         ImmutableList.Builder<String> communicatorEvaluationCommandBuilder = ImmutableList.builder();
         communicatorEvaluationCommandBuilder.addAll(communicatorExecutionCommand);
@@ -120,8 +121,13 @@ public final class InteractiveEvaluator implements Evaluator {
 
         List<String> communicatorEvaluationCommand = communicatorEvaluationCommandBuilder.build();
 
-        SandboxExecutionResult communicatorExecutionResult = communicatorSandbox.execute(communicatorEvaluationCommand);
-        SandboxExecutionResult contestantExecutionResult = contestantSandbox.execute(contestantEvaluationCommand);
+        SandboxesInteractor interactor = new NativeSandboxesInteractor();
+
+        SandboxExecutionResult[] results = interactor.runInteraction(communicatorSandbox, communicatorExecutionCommand, contestantSandbox, contestantEvaluationCommand);
+
+        SandboxExecutionResult communicatorExecutionResult = results[0];
+        SandboxExecutionResult contestantExecutionResult = results[1];
+
 
         // Note that if communicator resulted in TLE, it is impossible to tell whether it is communicator's fault or contestant's.
         // Just return TLE anyway.

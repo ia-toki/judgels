@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public final class FakeSandbox implements Sandbox {
+public final class FakeSandbox extends Sandbox {
     private static final int TLE_EXIT_CODE = 10;
     private static final int MLE_EXIT_CODE = 20;
     private static final int RTE_EXIT_CODE = 30;
@@ -85,62 +85,6 @@ public final class FakeSandbox implements Sandbox {
     }
 
     @Override
-    public void setStandardInput(File file) {
-        this.standardInput = file;
-    }
-
-    @Override
-    public void setStandardOutput(File file) {
-        this.standardOutput = file;
-    }
-
-    @Override
-    public void setStandardError(File file) {
-        this.standardError = file;
-    }
-
-    @Override
-    public SandboxExecutionResult execute(List<String> command) {
-        String[] commandArray = command.toArray(new String[command.size()]);
-
-        ProcessBuilder pb = new ProcessBuilder(commandArray);
-        pb.directory(baseDir);
-
-        if (standardInput != null) {
-            pb.redirectInput(standardInput);
-        }
-        if (standardOutput != null) {
-            pb.redirectOutput(standardOutput);
-        }
-        if (standardError != null) {
-            pb.redirectError(standardError);
-        }
-
-        int exitCode;
-        try {
-            exitCode = pb.start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, new SandboxExecutionResultDetails(1, 100, 1000, "Execution error"));
-        }
-
-        SandboxExecutionStatus status;
-        switch (exitCode) {
-            case 0:
-                status = SandboxExecutionStatus.OK;
-                break;
-            case TLE_EXIT_CODE:
-                status = SandboxExecutionStatus.TIME_LIMIT_EXCEEDED;
-                break;
-            case MLE_EXIT_CODE:
-                status = SandboxExecutionStatus.MEMORY_LIMIT_EXCEEDED;
-                break;
-            default:
-                status = SandboxExecutionStatus.RUNTIME_ERROR;
-        }
-        return new SandboxExecutionResult(status, new SandboxExecutionResultDetails(0, 100, 1000, "OK"));
-    }
-
-    @Override
     public boolean containsFile(String filename) {
         return filenames.contains(filename);
     }
@@ -168,4 +112,46 @@ public final class FakeSandbox implements Sandbox {
 
         filenames.removeIf(f -> !filenamesToRetain.contains(f));
     }
+
+    @Override
+    protected ProcessBuilder getProcessBuilder(List<String> command) {
+        String[] commandArray = command.toArray(new String[command.size()]);
+
+        ProcessBuilder pb = new ProcessBuilder(commandArray);
+        pb.directory(baseDir);
+
+        if (standardInput != null) {
+            pb.redirectInput(standardInput);
+        }
+
+        if (standardOutput != null) {
+            pb.redirectOutput(standardOutput);
+        }
+
+        if (standardError != null) {
+            pb.redirectError(standardError);
+        }
+
+        return pb;
+    }
+
+    @Override
+    protected SandboxExecutionResult getResult(int exitCode) {
+        SandboxExecutionStatus status;
+        switch (exitCode) {
+            case 0:
+                status = SandboxExecutionStatus.OK;
+                break;
+            case TLE_EXIT_CODE:
+                status = SandboxExecutionStatus.TIME_LIMIT_EXCEEDED;
+                break;
+            case MLE_EXIT_CODE:
+                status = SandboxExecutionStatus.MEMORY_LIMIT_EXCEEDED;
+                break;
+            default:
+                status = SandboxExecutionStatus.RUNTIME_ERROR;
+        }
+        return new SandboxExecutionResult(status, new SandboxExecutionResultDetails(0, 100, 1000, "OK"));
+    }
+
 }
