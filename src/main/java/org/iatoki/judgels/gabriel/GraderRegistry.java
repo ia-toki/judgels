@@ -31,7 +31,7 @@ public final class GraderRegistry {
         return INSTANCE;
     }
 
-    public  Map<String, String> getGradingTypes() {
+    public Map<String, String> getGradingTypes() {
         return registry.keySet().stream().collect(Collectors.toMap(e -> e, e -> registry.get(e).getName()));
     }
 

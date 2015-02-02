@@ -1,7 +1,5 @@
 package org.iatoki.judgels.gabriel;
 
-import java.util.Map;
-
 public interface GradingRequest {
     String getSubmissionJid();
 
@@ -9,5 +7,7 @@ public interface GradingRequest {
 
     long getProblemLastUpdate();
 
-    GradingType getGradingType();
+    String getGradingType();
+
+    GradingSource getGradingSource();
 }

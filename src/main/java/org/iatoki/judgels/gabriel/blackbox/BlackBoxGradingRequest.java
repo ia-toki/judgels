@@ -1,26 +1,21 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.GradingRequest;
-import org.iatoki.judgels.gabriel.GradingType;
-
-import java.util.Map;
+import org.iatoki.judgels.gabriel.GradingSource;
 
 public final class BlackBoxGradingRequest implements GradingRequest {
     private final String submissionJid;
     private final String problemJid;
     private final long problemLastUpdate;
-    private final GradingType gradingType;
-    private final GradingLanguage gradingLanguage;
-    private final Map<String, SourceFile> sourceFiles;
+    private final String gradingType;
+    private final BlackBoxGradingSource gradingSource;
 
-    public BlackBoxGradingRequest(String submissionJid, String problemJid, long problemLastUpdate, GradingType gradingType, GradingLanguage gradingLanguage, Map<String, SourceFile> sourceFiles) {
+    public BlackBoxGradingRequest(String submissionJid, String problemJid, long problemLastUpdate, String gradingType, BlackBoxGradingSource gradingSource) {
         this.submissionJid = submissionJid;
         this.problemJid = problemJid;
         this.problemLastUpdate = problemLastUpdate;
         this.gradingType = gradingType;
-        this.gradingLanguage = gradingLanguage;
-        this.sourceFiles = sourceFiles;
+        this.gradingSource = gradingSource;
     }
 
     @Override
@@ -39,15 +34,12 @@ public final class BlackBoxGradingRequest implements GradingRequest {
     }
 
     @Override
-    public GradingType getGradingType() {
+    public String getGradingType() {
         return gradingType;
     }
 
-    public GradingLanguage getGradingLanguage() {
-        return gradingLanguage;
-    }
-
-    public Map<String, SourceFile> getSourceFiles() {
-        return sourceFiles;
+    @Override
+    public GradingSource getGradingSource() {
+        return gradingSource;
     }
 }
