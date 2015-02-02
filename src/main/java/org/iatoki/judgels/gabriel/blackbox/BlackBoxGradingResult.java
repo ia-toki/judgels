@@ -5,12 +5,12 @@ import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.Verdict;
 
 public final class BlackBoxGradingResult implements GradingResult {
-    private final BlackBoxVerdict verdict;
+    private final Verdict verdict;
     private final int score;
     private final BlackBoxGradingResultDetails details;
 
     private BlackBoxGradingResult(BlackBoxVerdict verdict, int score, BlackBoxGradingResultDetails details) {
-        this.verdict = verdict;
+        this.verdict = new Verdict(verdict.getCode(), verdict.getName());
         this.score = score;
         this.details = details;
     }

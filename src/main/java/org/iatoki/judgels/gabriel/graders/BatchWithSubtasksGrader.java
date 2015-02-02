@@ -48,12 +48,7 @@ public final class BatchWithSubtasksGrader extends BlackBoxGrader {
         config.memoryLimitInKilobytes = 65536;
         config.sampleTestData = ImmutableList.of();
         config.testData = ImmutableList.of();
-
-        ImmutableList.Builder<Integer> subtaskPoints = ImmutableList.builder();
-        for (int i = 0; i < 10; i++) {
-            subtaskPoints.add(0);
-        }
-        config.subtaskPoints = subtaskPoints.build();
+        config.subtaskPoints = ImmutableList.of();
 
         return config;
     }
