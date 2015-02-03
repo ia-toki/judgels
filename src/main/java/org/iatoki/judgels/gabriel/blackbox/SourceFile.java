@@ -2,9 +2,9 @@ package org.iatoki.judgels.gabriel.blackbox;
 
 public final class SourceFile {
     private final String name;
-    private final byte[] content;
+    private final String content;
 
-    public SourceFile(String name, byte[] content) {
+    public SourceFile(String name, String content) {
         this.name = name;
         this.content = content;
     }
@@ -13,7 +13,7 @@ public final class SourceFile {
         return name;
     }
 
-    public byte[] getContent() {
+    public String getContent() {
         return content;
     }
 }
