@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableSet;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
-import org.iatoki.judgels.gabriel.blackbox.SampleTestCase;
 import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
+import org.iatoki.judgels.gabriel.blackbox.SubtaskConcreteResult;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
@@ -27,23 +27,22 @@ public final class InteractiveWithSubtasksGraderTest extends BlackBoxGraderTest 
 
         config.timeLimitInMilliseconds = 1000;
         config.memoryLimitInKilobytes = 65536;
-        config.sampleTestData = ImmutableList.of(
-                new SampleTestCase("sample_1.in", null, ImmutableSet.of(0)),
-                new SampleTestCase("sample_2.in", null, ImmutableSet.of(0)),
-                new SampleTestCase("sample_3.in", null, ImmutableSet.of(1))
-        );
-
         config.testData = ImmutableList.of(
-                new TestGroup(ImmutableList.of(
-                        new TestCase("1_1.in", null),
-                        new TestCase("1_2.in", null)
-                ), ImmutableSet.of(0, 1)),
+                new TestGroup(0, ImmutableList.of(
+                        new TestCase("sample_1.in", "sample_1.out", ImmutableSet.of(0, 1, 2)),
+                        new TestCase("sample_2.in", "sample_2.out", ImmutableSet.of(0, 1, 2)),
+                        new TestCase("sample_3.in", "sample_3.out", ImmutableSet.of(0, 2))
+                )),
+                new TestGroup(1, ImmutableList.of(
+                        new TestCase("1_1.in", "1_1.out", ImmutableSet.of(1, 2)),
+                        new TestCase("1_2.in", "1_2.out", ImmutableSet.of(1, 2))
+                )),
 
-                new TestGroup(ImmutableList.of(
-                        new TestCase("2_1.in", null),
-                        new TestCase("2_2.in", null),
-                        new TestCase("2_3.in", null)
-                ), ImmutableSet.of(1))
+                new TestGroup(2, ImmutableList.of(
+                        new TestCase("2_1.in", "2_1.out", ImmutableSet.of(2)),
+                        new TestCase("2_2.in", "2_2.out", ImmutableSet.of(2)),
+                        new TestCase("2_3.in", "2_3.out", ImmutableSet.of(2))
+                ))
         );
 
         config.subtaskPoints = ImmutableList.of(30, 70);
@@ -59,13 +58,13 @@ public final class InteractiveWithSubtasksGraderTest extends BlackBoxGraderTest 
 
         try {
             BlackBoxGradingResult result = runGrader(grader, config);
-            assertEquals(result.getVerdict(), ScoringVerdict.OK);
+            assertEquals(result.getVerdict(), makeConcrete(ScoringVerdict.OK));
             assertEquals(result.getScore(), 100);
 
             BlackBoxGradingResultDetails details = result.getDetails();
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
-                            new SubtaskResult(ScoringVerdict.ACCEPTED, 30.0),
-                            new SubtaskResult(ScoringVerdict.ACCEPTED, 70.0))
+                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
+                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 70.0))
             );
         } catch (GradingException e) {
             fail();

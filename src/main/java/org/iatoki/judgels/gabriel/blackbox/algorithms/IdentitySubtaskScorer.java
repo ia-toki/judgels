@@ -1,7 +1,5 @@
 package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.ScoringException;

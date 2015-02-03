@@ -9,9 +9,11 @@ import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.Language;
 import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
 import org.iatoki.judgels.gabriel.SandboxFactory;
+import org.iatoki.judgels.gabriel.Verdict;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGrader;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
+import org.iatoki.judgels.gabriel.blackbox.BlackBoxVerdict;
 import org.iatoki.judgels.gabriel.languages.CppLanguage;
 import org.iatoki.judgels.gabriel.sandboxes.FakeSandboxFactory;
 import org.testng.annotations.AfterMethod;
@@ -20,9 +22,10 @@ import org.testng.annotations.BeforeMethod;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.testng.Assert.assertEquals;
 
 public abstract class BlackBoxGraderTest {
     private Language language;
@@ -39,7 +42,7 @@ public abstract class BlackBoxGraderTest {
     private final Map<String, File> helperFiles;
 
     protected BlackBoxGraderTest(String resourceDirname) {
-        File resourceDir = new File(this.getClass().getClassLoader().getResource(resourceDirname).getPath());
+        File resourceDir = new File(BlackBoxGraderTest.class.getClassLoader().getResource(resourceDirname).getPath());
 
         this.sourceDir = new File(resourceDir, "source");
 
@@ -85,6 +88,10 @@ public abstract class BlackBoxGraderTest {
     protected final BlackBoxGradingResult runGrader(BlackBoxGrader grader, BlackBoxGradingConfig config) throws GradingException {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
         return grader.gradeAfterInitialization(sandboxFactory, graderDir, language, sourceFiles, helperFiles, testDataFiles, config);
+    }
+
+    protected static Verdict makeConcrete(BlackBoxVerdict verdict) {
+        return new Verdict(verdict.getCode(), verdict.getName());
     }
 
     private Map<String, File> listFilesAsMap(File dir) {

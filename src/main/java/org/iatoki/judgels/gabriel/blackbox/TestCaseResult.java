@@ -24,32 +24,4 @@ public final class TestCaseResult {
     public String getScore() {
         return score;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        TestCaseResult that = (TestCaseResult) o;
-
-        if (!score.equals(that.score)) {
-            return false;
-        }
-        if (!verdict.equals(that.verdict)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = verdict.hashCode();
-        result = 31 * result + score.hashCode();
-        return result;
-    }
 }

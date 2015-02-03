@@ -1,7 +1,6 @@
 package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
 import com.google.common.collect.Lists;
-import org.iatoki.judgels.gabriel.blackbox.EvaluationResult;
 import org.iatoki.judgels.gabriel.blackbox.EvaluationVerdict;
 import org.iatoki.judgels.gabriel.blackbox.NormalVerdict;
 import org.iatoki.judgels.gabriel.blackbox.OverallResult;
@@ -39,8 +38,10 @@ public final class SubtaskReducer implements Reducer {
 
         if (!evaluationVerdicts.isEmpty()) {
             return new SubtaskResult(evaluationVerdicts.get(evaluationVerdicts.size() - 1), score);
-        } else {
+        } else if (!scoringVerdicts.isEmpty()) {
             return new SubtaskResult(scoringVerdicts.get(scoringVerdicts.size() - 1), score);
+        } else {
+            return new SubtaskResult(ScoringVerdict.OK, 0.0);
         }
     }
 

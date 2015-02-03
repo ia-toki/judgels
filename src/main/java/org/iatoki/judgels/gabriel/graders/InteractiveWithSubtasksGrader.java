@@ -16,6 +16,7 @@ import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
+import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentitySubtaskScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
@@ -102,8 +103,7 @@ public final class InteractiveWithSubtasksGrader extends BlackBoxGrader {
         InteractiveWithSubtasksGradingConfig config = new InteractiveWithSubtasksGradingConfig();
         config.timeLimitInMilliseconds = 2000;
         config.memoryLimitInKilobytes = 65536;
-        config.sampleTestData = ImmutableList.of();
-        config.testData = ImmutableList.of();
+        config.testData = ImmutableList.of(new TestGroup(0, ImmutableList.of()));
 
         ImmutableList.Builder<Integer> subtaskPoints = ImmutableList.builder();
         for (int i = 0; i < 10; i++) {

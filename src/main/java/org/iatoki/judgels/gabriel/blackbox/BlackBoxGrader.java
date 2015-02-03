@@ -10,7 +10,6 @@ import org.iatoki.judgels.gabriel.SandboxFactory;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public abstract class BlackBoxGrader implements Grader {
 
@@ -29,22 +28,13 @@ public abstract class BlackBoxGrader implements Grader {
             testCaseResultsBySubtaskCollector.add(ImmutableList.builder());
         }
 
-        ImmutableList.Builder<TestCaseFinalResult> sampleTestDataResults = ImmutableList.builder();
-        for (SampleTestCase testCase : config.getSampleTestData()) {
-            File testCaseInput = testDataFiles.get(testCase.getInput());
-            File testCaseOutput = testDataFiles.get(testCase.getOutput());
-            sampleTestDataResults.add(evaluateAndScore(testCaseInput, testCaseOutput, testCase.getSubtaskNumbers(), testCaseResultsBySubtaskCollector));
-        }
-
-        ImmutableList.Builder<List<TestCaseFinalResult>> testDataResults = ImmutableList.builder();
+        ImmutableList.Builder<List<TestCaseConcreteResult>> testDataConcreteResults = ImmutableList.builder();
         for (TestGroup testGroup : config.getTestData()) {
-            ImmutableList.Builder<TestCaseFinalResult> testGroupResults = ImmutableList.builder();
+            ImmutableList.Builder<TestCaseConcreteResult> testGroupResults = ImmutableList.builder();
             for (TestCase testCase : testGroup.getTestCases()) {
-                File testCaseInput = testDataFiles.get(testCase.getInput());
-                File testCaseOutput = testDataFiles.get(testCase.getOutput());
-                testGroupResults.add(evaluateAndScore(testCaseInput, testCaseOutput, testGroup.getSubtaskNumbers(), testCaseResultsBySubtaskCollector));
+                testGroupResults.add(evaluateAndScore(testCase, testDataFiles, testCaseResultsBySubtaskCollector));
             }
-            testDataResults.add(testGroupResults.build());
+            testDataConcreteResults.add(testGroupResults.build());
         }
 
         ImmutableList.Builder<SubtaskResult> subtaskResultsBuilder = ImmutableList.builder();
@@ -58,8 +48,8 @@ public abstract class BlackBoxGrader implements Grader {
         List<SubtaskResult> subtaskResults = subtaskResultsBuilder.build();
         OverallResult result = getReducer().reduceSubtasks(subtaskResults);
 
-        List<SubtaskFinalResult> subtaskFinalResults = Lists.transform(subtaskResults, s -> new SubtaskFinalResult(s));
-        BlackBoxGradingResultDetails details = new BlackBoxGradingResultDetails(compilationOutput, sampleTestDataResults.build(), testDataResults.build(), subtaskFinalResults);
+        List<SubtaskConcreteResult> subtaskConcreteResults = Lists.transform(subtaskResults, s -> new SubtaskConcreteResult(s));
+        BlackBoxGradingResultDetails details = new BlackBoxGradingResultDetails(compilationOutput, testDataConcreteResults.build(), subtaskConcreteResults);
 
         return BlackBoxGradingResult.normalResult(result, details);
     }
@@ -74,8 +64,10 @@ public abstract class BlackBoxGrader implements Grader {
 
     protected abstract Reducer getReducer();
 
-    private TestCaseFinalResult evaluateAndScore(File testCaseInput, File testCaseOutput, Set<Integer> subtaskNumbers, List<ImmutableList.Builder<TestCaseResult>> testCaseResultsBySubtaskCollector) throws EvaluationException, ScoringException {
-        EvaluationResult evaluationResult = getEvaluator().evaluate(testCaseInput, subtaskNumbers);
+    private TestCaseConcreteResult evaluateAndScore(TestCase testCase, Map<String, File> testDataFiles, List<ImmutableList.Builder<TestCaseResult>> testCaseResultsBySubtaskCollector) throws EvaluationException, ScoringException {
+        File testCaseInput = testDataFiles.get(testCase.getInput());
+        File testCaseOutput = testDataFiles.get(testCase.getOutput());
+        EvaluationResult evaluationResult = getEvaluator().evaluate(testCaseInput, testCase.getSubtaskIds());
 
         TestCaseResult testCaseResult;
         if (evaluationResult.getVerdict() == EvaluationVerdict.OK) {
@@ -85,10 +77,12 @@ public abstract class BlackBoxGrader implements Grader {
             testCaseResult = TestCaseResult.fromEvaluationResult(evaluationResult);
         }
 
-        for (int subtaskNumber : subtaskNumbers) {
-            testCaseResultsBySubtaskCollector.get(subtaskNumber).add(testCaseResult);
+        for (int subtaskId : testCase.getSubtaskIds()) {
+            if (subtaskId > 0) {
+                testCaseResultsBySubtaskCollector.get(subtaskId - 1).add(testCaseResult);
+            }
         }
 
-        return new TestCaseFinalResult(testCaseResult, evaluationResult.getDetails());
+        return new TestCaseConcreteResult(testCaseResult, evaluationResult.getDetails());
     }
 }
