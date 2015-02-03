@@ -1,22 +1,21 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
 import java.util.List;
-import java.util.Set;
 
 public final class TestGroup {
+    private final int id;
     private final List<TestCase> testCases;
-    private final Set<Integer> subtaskNumbers;
 
-    public TestGroup(List<TestCase> testCases, Set<Integer> subtaskNumbers) {
+    public TestGroup(int id, List<TestCase> testCases) {
+        this.id = id;
         this.testCases = testCases;
-        this.subtaskNumbers = subtaskNumbers;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public List<TestCase> getTestCases() {
         return testCases;
-    }
-
-    public Set<Integer> getSubtaskNumbers() {
-        return subtaskNumbers;
     }
 }

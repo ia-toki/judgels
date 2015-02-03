@@ -6,13 +6,11 @@ import java.util.List;
 
 public final class BlackBoxGradingResultDetails {
     private final String compilationOutput;
-    private final List<TestCaseFinalResult> sampleTestDataResults;
-    private final List<List<TestCaseFinalResult>> testDataResults;
-    private final List<SubtaskFinalResult> subtaskResults;
+    private final List<List<TestCaseConcreteResult>> testDataResults;
+    private final List<SubtaskConcreteResult> subtaskResults;
 
-    public BlackBoxGradingResultDetails(String compilationOutput, List<TestCaseFinalResult> sampleTestDataResults, List<List<TestCaseFinalResult>> testDataResults, List<SubtaskFinalResult> subtaskResults) {
+    public BlackBoxGradingResultDetails(String compilationOutput, List<List<TestCaseConcreteResult>> testDataResults, List<SubtaskConcreteResult> subtaskResults) {
         this.compilationOutput = compilationOutput;
-        this.sampleTestDataResults = sampleTestDataResults;
         this.testDataResults = testDataResults;
         this.subtaskResults = subtaskResults;
     }
@@ -20,23 +18,19 @@ public final class BlackBoxGradingResultDetails {
         return compilationOutput;
     }
 
-    public List<TestCaseFinalResult> getSampleTestDataResults() {
-        return sampleTestDataResults;
-    }
-
-    public List<List<TestCaseFinalResult>> getTestDataResults() {
+    public List<List<TestCaseConcreteResult>> getTestDataResults() {
         return testDataResults;
     }
 
-    public List<SubtaskFinalResult> getSubtaskResults() {
+    public List<SubtaskConcreteResult> getSubtaskResults() {
         return subtaskResults;
     }
 
     public static BlackBoxGradingResultDetails internalErrorDetails() {
-        return new BlackBoxGradingResultDetails("(not compiled yet)", ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
+        return new BlackBoxGradingResultDetails("(not compiled yet)", ImmutableList.of(), ImmutableList.of());
     }
 
     public static BlackBoxGradingResultDetails compilationErrorDetails(String compilationOutput) {
-        return new BlackBoxGradingResultDetails(compilationOutput, ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
+        return new BlackBoxGradingResultDetails(compilationOutput, ImmutableList.of(), ImmutableList.of());
     }
 }

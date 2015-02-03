@@ -14,8 +14,6 @@ public interface BlackBoxGradingConfig extends GradingConfig {
 
     int getMemoryLimitInKilobytes();
 
-    List<SampleTestCase> getSampleTestData();
-
     List<TestGroup> getTestData();
 
     List<Subtask> getSubtasks();
