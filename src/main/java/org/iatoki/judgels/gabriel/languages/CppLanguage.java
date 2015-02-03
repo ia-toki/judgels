@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 public final class CppLanguage implements Language {
-
-    private final String compilerPath;
-
-    public CppLanguage(String compilerPath) {
-        this.compilerPath = compilerPath;
+    @Override
+    public String getName() {
+        return "C++";
     }
 
     @Override
@@ -28,7 +26,7 @@ public final class CppLanguage implements Language {
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
         String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of(compilerPath, "-o", executableFilename, sourceFilename);
+        return ImmutableList.of("/usr/bin/g++", "-o", executableFilename, sourceFilename);
     }
 
     @Override

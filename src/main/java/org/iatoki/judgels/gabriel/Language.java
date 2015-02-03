@@ -1,10 +1,11 @@
 package org.iatoki.judgels.gabriel;
 
-import java.io.File;
 import java.util.List;
 import java.util.Set;
 
 public interface Language {
+
+    String getName();
 
     Set<String> getAllowedExtensions();
 
