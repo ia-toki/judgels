@@ -1,13 +1,11 @@
 package org.iatoki.judgels.gabriel.graders;
 
 import com.beust.jcommander.internal.Maps;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.Language;
-import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
 import org.iatoki.judgels.gabriel.SandboxFactory;
 import org.iatoki.judgels.gabriel.Verdict;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGrader;
@@ -24,8 +22,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.testng.Assert.assertEquals;
 
 public abstract class BlackBoxGraderTest {
     private Language language;
@@ -52,7 +48,7 @@ public abstract class BlackBoxGraderTest {
         this.testDataFiles = listFilesAsMap(testDataDir);
         this.helperFiles = listFilesAsMap(helperDir);
 
-        this.language = new CppLanguage("/usr/bin/g++");
+        this.language = new CppLanguage();
     }
 
     @BeforeMethod

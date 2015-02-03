@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingConfig;
-import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.Language;
 import org.iatoki.judgels.gabriel.LanguageRegistry;
 import org.iatoki.judgels.gabriel.Sandbox;
@@ -71,7 +70,7 @@ public final class InteractiveWithSubtasksGrader extends BlackBoxGrader {
         evaluatorContestantSandbox = sandboxFactory.newSandbox();
         evaluatorCommunicatorSandbox = sandboxFactory.newSandbox();
 
-        Language cppLanguage = LanguageRegistry.getInstance().getLanguage(GradingLanguage.CPP);
+        Language cppLanguage = LanguageRegistry.getInstance().getLanguage("Cpp");
 
         evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, compilationDir, evaluationDir, language, cppLanguage, contestantSourceFile, communicatorSourceFile,  10000, 100 * 1024, thisConfig.getTimeLimitInMilliseconds(), thisConfig.getMemoryLimitInKilobytes());
         scorer = new IdentitySubtaskScorer(evaluationDir);

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingConfig;
-import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.Language;
 import org.iatoki.judgels.gabriel.LanguageRegistry;
 import org.iatoki.judgels.gabriel.Sandbox;
@@ -86,7 +85,7 @@ public final class BatchWithSubtasksGrader extends BlackBoxGrader {
 
         if (thisConfig.getCustomScorer() != null) {
             scorerSandbox = sandboxFactory.newSandbox();
-            Language cppLanguage = LanguageRegistry.getInstance().getLanguage(GradingLanguage.CPP);
+            Language cppLanguage = LanguageRegistry.getInstance().getLanguage("Cpp");
             File scorerFile = helperFiles.get(thisConfig.getCustomScorer());
             scorer = new SubtaskCustomScorer(scorerSandbox, evaluationDir, scoringDir, cppLanguage, scorerFile, 10000, 100 * 1024, 10000, 100 * 1024);
         } else {

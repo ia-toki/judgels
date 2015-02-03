@@ -1,26 +1,23 @@
 package org.iatoki.judgels.gabriel;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.text.WordUtils;
-import org.iatoki.judgels.gabriel.languages.CppLanguage;
 
-import java.util.EnumMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 public final class LanguageRegistry {
-
     private static LanguageRegistry INSTANCE;
 
-    private final EnumMap<GradingLanguage, Language> registry;
+    private final Map<String, Language> registry;
 
     private LanguageRegistry() {
-        this.registry = Maps.newEnumMap(GradingLanguage.class);
+        this.registry = Maps.newHashMap();
 
         populateLanguages();
     }
 
-    public Language getLanguage(GradingLanguage gradingLanguage) {
+    public Language getLanguage(String gradingLanguage) {
         if (!registry.containsKey(gradingLanguage)) {
             throw new IllegalArgumentException("Grading language " + gradingLanguage + " not found");
         }
@@ -28,7 +25,7 @@ public final class LanguageRegistry {
     }
 
     public Map<String, String> getGradingLanguages() {
-        return registry.keySet().stream().collect(Collectors.toMap(e -> e.toString(), e -> e.getName()));
+        return registry.keySet().stream().collect(Collectors.toMap(e -> e, e -> registry.get(e).getName()));
     }
 
     public static LanguageRegistry getInstance() {
@@ -39,6 +36,13 @@ public final class LanguageRegistry {
     }
 
     private void populateLanguages() {
-        registry.put(GradingLanguage.CPP, new CppLanguage("/usr/bin/g++"));
+        for (Language language : ServiceLoader.load(Language.class)) {
+            registry.put(getLanguageSimpleName(language), language);
+        }
+    }
+
+    private String getLanguageSimpleName(Language language) {
+        String name = language.getClass().getSimpleName();
+        return name.substring(0, name.length() - "Language".length());
     }
 }
