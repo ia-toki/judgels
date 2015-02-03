@@ -14,7 +14,7 @@ public final class GradingRequests {
             try {
                 return new Gson().fromJson(json, BlackBoxGradingRequest.class);
             } catch (JsonSyntaxException e) {
-                throw new BadGradingRequestException("Malformed BlackBoxGradingParam JSON");
+                throw new BadGradingRequestException("Malformed BlackBoxGradingRequest JSON");
             }
         } else {
             throw new BadGradingRequestException("Grading request type unknown: " + type);

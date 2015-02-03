@@ -136,7 +136,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
         for (Map.Entry<String, SourceFile> entry : source.getSourceFiles().entrySet()) {
             File file = new File(sourceDir, entry.getValue().getName());
-            FileUtils.writeByteArrayToFile(file, entry.getValue().getContent());
+            FileUtils.writeStringToFile(file, entry.getValue().getContent());
 
             sourceFiles.put(entry.getKey(), file);
         }
