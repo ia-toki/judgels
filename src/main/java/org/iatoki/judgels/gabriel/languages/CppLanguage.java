@@ -7,7 +7,7 @@ import org.iatoki.judgels.gabriel.Language;
 import java.util.List;
 import java.util.Set;
 
-public final class CppLanguage implements Language {
+public final class CppLanguage extends Language {
     @Override
     public String getName() {
         return "C++";
