@@ -1,8 +1,5 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import org.iatoki.judgels.gabriel.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.SandboxExecutionResultDetails;
-
 public final class EvaluationResult {
     private final EvaluationVerdict verdict;
     private final SandboxExecutionResultDetails details;

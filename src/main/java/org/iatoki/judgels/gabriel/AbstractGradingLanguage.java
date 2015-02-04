@@ -2,19 +2,9 @@ package org.iatoki.judgels.gabriel;
 
 import com.google.common.base.Joiner;
 
-import java.util.List;
 import java.util.Set;
 
-public abstract class Language {
-
-    public abstract String getName();
-
-    public abstract List<String> getCompilationCommand(String sourceFilename);
-
-    public abstract String getExecutableFilename(String sourceFilename);
-
-    public abstract List<String> getExecutionCommand(String sourceFilename);
-
+public abstract class AbstractGradingLanguage implements GradingLanguage {
     public final String verifyFile(String filename, String content) {
         String byExtension = verifyFileExtension(filename);
         String byContent = verifyFileContent(content);

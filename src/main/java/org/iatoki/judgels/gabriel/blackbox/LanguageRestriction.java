@@ -1,15 +1,15 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
 import com.google.common.collect.ImmutableSet;
-import org.iatoki.judgels.gabriel.Language;
+import org.iatoki.judgels.gabriel.GradingLanguage;
 
 import java.util.Set;
 
 public final class LanguageRestriction {
-    private final Set<Language> languages;
+    private final Set<GradingLanguage> languages;
     private final Type type;
 
-    public LanguageRestriction(Set<Language> languages, Type type) {
+    public LanguageRestriction(Set<GradingLanguage> languages, Type type) {
         this.languages = languages;
         this.type = type;
     }
@@ -18,7 +18,7 @@ public final class LanguageRestriction {
         return new LanguageRestriction(ImmutableSet.of(), Type.DISALLOW);
     }
 
-    public Set<Language> getLanguages() {
+    public Set<GradingLanguage> getLanguages() {
         return languages;
     }
 

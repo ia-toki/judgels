@@ -1,19 +1,21 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
+import java.util.Map;
+
 public final class CompilationResult {
     private final CompilationVerdict verdict;
-    private final String output;
+    private final Map<String, String> outputs;
 
-    public CompilationResult(CompilationVerdict verdict, String output) {
+    public CompilationResult(CompilationVerdict verdict, Map<String, String> output) {
         this.verdict = verdict;
-        this.output = output;
+        this.outputs = output;
     }
 
     public CompilationVerdict getVerdict() {
         return verdict;
     }
 
-    public String getOutput() {
-        return output;
+    public Map<String, String> getOutputs() {
+        return outputs;
     }
 }

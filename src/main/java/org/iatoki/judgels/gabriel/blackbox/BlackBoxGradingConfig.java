@@ -3,10 +3,11 @@ package org.iatoki.judgels.gabriel.blackbox;
 import org.iatoki.judgels.gabriel.GradingConfig;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BlackBoxGradingConfig extends GradingConfig {
 
-    List<String> getRequiredSourceFileKeys();
+    Map<String, String> getSourceFileFields();
 
     LanguageRestriction getLanguageRestriction();
 

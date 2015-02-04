@@ -10,27 +10,29 @@ import org.iatoki.judgels.gabriel.blackbox.EvaluationVerdict;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.ScoringException;
 import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
-import org.iatoki.judgels.gabriel.blackbox.SubtaskConcreteResult;
+import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
+import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
+import org.iatoki.judgels.gabriel.engines.BatchWithSubtasksGradingEngine;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
+public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGraderTest {
 
-    private final BatchWithSubtasksGrader grader;
+    private final BatchWithSubtasksGradingEngine grader;
     private final BatchWithSubtasksGradingConfig config;
 
-    public BatchWithSubtasksGraderTest() {
+    public BatchWithSubtasksGradingEngineTest() {
         super("blackbox/batch");
 
         BatchWithSubtasksGradingConfig config = new BatchWithSubtasksGradingConfig();
 
-        config.timeLimitInMilliseconds = 1000;
-        config.memoryLimitInKilobytes = 65536;
+        config.timeLimit = 1000;
+        config.memoryLimit = 65536;
 
         config.testData = ImmutableList.of(
                 new TestGroup(0, ImmutableList.of(
@@ -53,7 +55,7 @@ public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
         config.subtaskPoints = ImmutableList.of(30, 70);
 
         this.config = config;
-        this.grader = new BatchWithSubtasksGrader();
+        this.grader = new BatchWithSubtasksGradingEngine();
     }
 
     @Test
@@ -81,8 +83,8 @@ public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
 
             BlackBoxGradingResultDetails details = result.getDetails();
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
-                    new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
-                    new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 70.0))
+                    new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
+                    new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 70.0))
             );
         } catch (GradingException e) {
             fail();
@@ -100,8 +102,8 @@ public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
 
             BlackBoxGradingResultDetails details = result.getDetails();
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0))
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0))
             );
         } catch (GradingException e) {
             fail();
@@ -119,8 +121,8 @@ public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
 
             BlackBoxGradingResultDetails details = result.getDetails();
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
-                            new SubtaskConcreteResult(makeConcrete(EvaluationVerdict.TIME_LIMIT_EXCEEDED), 0.0))
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
+                            new SubtaskFinalResult(makeConcrete(EvaluationVerdict.TIME_LIMIT_EXCEEDED), 0.0))
             );
         } catch (GradingException e) {
             fail();
@@ -138,8 +140,8 @@ public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
 
             BlackBoxGradingResultDetails details = result.getDetails();
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0))
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0))
             );
         } catch (GradingException e) {
             fail();
@@ -158,8 +160,8 @@ public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
 
             BlackBoxGradingResultDetails details = result.getDetails();
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0),
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0))
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0),
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0))
             );
         } catch (GradingException e) {
             fail();
@@ -179,8 +181,8 @@ public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
 
             BlackBoxGradingResultDetails details = result.getDetails();
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 70.0))
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 70.0))
             );
         } catch (GradingException e) {
             fail();
@@ -202,8 +204,8 @@ public final class BatchWithSubtasksGraderTest extends BlackBoxGraderTest {
 
             BlackBoxGradingResultDetails details = result.getDetails();
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0))
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.WRONG_ANSWER), 0.0))
             );
         } catch (GradingException e) {
             fail();

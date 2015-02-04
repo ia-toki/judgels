@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.Verdict;
 
+import java.util.Map;
+
 public final class BlackBoxGradingResult implements GradingResult {
     private final Verdict verdict;
     private final int score;
@@ -19,7 +21,7 @@ public final class BlackBoxGradingResult implements GradingResult {
         return new BlackBoxGradingResult(GeneralVerdict.INTERNAL_ERROR, 0, BlackBoxGradingResultDetails.internalErrorDetails());
     }
 
-    public static BlackBoxGradingResult compilationErrorResult(String compilationOutput) {
+    public static BlackBoxGradingResult compilationErrorResult(Map<String, String> compilationOutput) {
         return new BlackBoxGradingResult(CompilationVerdict.COMPILATION_ERROR, 0, BlackBoxGradingResultDetails.compilationErrorDetails(compilationOutput));
     }
     public static BlackBoxGradingResult normalResult(OverallResult result, BlackBoxGradingResultDetails details) {

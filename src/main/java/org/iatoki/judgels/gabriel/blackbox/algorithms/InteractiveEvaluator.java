@@ -4,12 +4,12 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.Language;
-import org.iatoki.judgels.gabriel.NativeSandboxesInteractor;
-import org.iatoki.judgels.gabriel.Sandbox;
-import org.iatoki.judgels.gabriel.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
-import org.iatoki.judgels.gabriel.SandboxesInteractor;
+import org.iatoki.judgels.gabriel.GradingLanguage;
+import org.iatoki.judgels.gabriel.blackbox.NativeSandboxesInteractor;
+import org.iatoki.judgels.gabriel.blackbox.Sandbox;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
+import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractor;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
 import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
@@ -40,12 +40,12 @@ public final class InteractiveEvaluator implements Evaluator {
 
     private final int evaluationTimeLimitInMilliseconds;
 
-    public InteractiveEvaluator(Sandbox contestantSandbox, Sandbox communicatorSandbox, File compilationDir, File evaluationDir, Language contestantLanguage, Language communicatorLanguage, File contestantSourceFile, File communicatorSourceFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int evaluationTimeLimitInMilliseconds, int evaluationMemoryLimitInMilliseconds) throws PreparationException {
+    public InteractiveEvaluator(Sandbox contestantSandbox, Sandbox communicatorSandbox, File compilationDir, File evaluationDir, GradingLanguage contestantLanguage, GradingLanguage communicatorLanguage, File contestantSourceFile, File communicatorSourceFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int evaluationTimeLimitInMilliseconds, int evaluationMemoryLimitInMilliseconds) throws PreparationException {
         try {
-            SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(communicatorSandbox, evaluationDir, communicatorLanguage, communicatorSourceFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
+            SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(communicatorSandbox, evaluationDir, communicatorLanguage, "comunicator", communicatorSourceFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
             CompilationResult result = compiler.compile();
             if (result.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
-                throw new PreparationException("Compilation of the communicator resulted in compilation error:\n " + result.getOutput());
+                throw new PreparationException("Compilation of the communicator resulted in compilation error:\n " + result.getOutputs().get("comumunicator"));
             }
         } catch (CompilationException e) {
             throw new PreparationException(e.getMessage());

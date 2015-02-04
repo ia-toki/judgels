@@ -5,15 +5,15 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.Language;
-import org.iatoki.judgels.gabriel.SandboxFactory;
+import org.iatoki.judgels.gabriel.GradingLanguage;
+import org.iatoki.judgels.gabriel.blackbox.SandboxFactory;
 import org.iatoki.judgels.gabriel.Verdict;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGrader;
+import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxVerdict;
-import org.iatoki.judgels.gabriel.languages.CppLanguage;
-import org.iatoki.judgels.gabriel.sandboxes.FakeSandboxFactory;
+import org.iatoki.judgels.gabriel.languages.CppGradingLanguage;
+import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class BlackBoxGraderTest {
-    private Language language;
+    private GradingLanguage language;
 
     private File workerDir;
 
@@ -48,7 +48,7 @@ public abstract class BlackBoxGraderTest {
         this.testDataFiles = listFilesAsMap(testDataDir);
         this.helperFiles = listFilesAsMap(helperDir);
 
-        this.language = new CppLanguage();
+        this.language = new CppGradingLanguage();
     }
 
     @BeforeMethod
@@ -81,7 +81,7 @@ public abstract class BlackBoxGraderTest {
         sourceFiles.put(key, new File(sourceDir, filename));
     }
 
-    protected final BlackBoxGradingResult runGrader(BlackBoxGrader grader, BlackBoxGradingConfig config) throws GradingException {
+    protected final BlackBoxGradingResult runGrader(BlackBoxGradingEngine grader, BlackBoxGradingConfig config) throws GradingException {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
         return grader.gradeAfterInitialization(sandboxFactory, graderDir, language, sourceFiles, helperFiles, testDataFiles, config);
     }

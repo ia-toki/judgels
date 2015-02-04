@@ -7,7 +7,7 @@ public interface GradingRequest {
 
     long getGradingLastUpdateTime();
 
-    String getGradingType();
+    String getGradingEngine();
 
     GradingSource getGradingSource();
 }

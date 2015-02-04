@@ -1,7 +1,5 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
-
 public enum EvaluationVerdict implements NormalVerdict {
     OK {
         @Override

@@ -6,21 +6,22 @@ import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
-import org.iatoki.judgels.gabriel.blackbox.SubtaskConcreteResult;
-import org.iatoki.judgels.gabriel.blackbox.SubtaskResult;
+import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
+import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
+import org.iatoki.judgels.gabriel.engines.InteractiveWithSubtasksGradingEngine;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
-public final class InteractiveWithSubtasksGraderTest extends BlackBoxGraderTest {
+public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGraderTest {
 
-    private final InteractiveWithSubtasksGrader grader;
+    private final InteractiveWithSubtasksGradingEngine grader;
     private final InteractiveWithSubtasksGradingConfig config;
 
-    public InteractiveWithSubtasksGraderTest() {
+    public InteractiveWithSubtasksGradingEngineTest() {
         super("blackbox/interactive");
 
         InteractiveWithSubtasksGradingConfig config = new InteractiveWithSubtasksGradingConfig();
@@ -49,7 +50,7 @@ public final class InteractiveWithSubtasksGraderTest extends BlackBoxGraderTest 
         config.communicator = "communicator.cpp";
 
         this.config = config;
-        this.grader = new InteractiveWithSubtasksGrader();
+        this.grader = new InteractiveWithSubtasksGradingEngine();
     }
 
     @Test
@@ -63,8 +64,8 @@ public final class InteractiveWithSubtasksGraderTest extends BlackBoxGraderTest 
 
             BlackBoxGradingResultDetails details = result.getDetails();
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
-                            new SubtaskConcreteResult(makeConcrete(ScoringVerdict.ACCEPTED), 70.0))
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 30.0),
+                            new SubtaskFinalResult(makeConcrete(ScoringVerdict.ACCEPTED), 70.0))
             );
         } catch (GradingException e) {
             fail();

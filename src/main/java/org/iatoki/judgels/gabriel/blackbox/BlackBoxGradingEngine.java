@@ -2,22 +2,21 @@ package org.iatoki.judgels.gabriel.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import org.iatoki.judgels.gabriel.Grader;
+import org.iatoki.judgels.gabriel.GradingEngine;
 import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.Language;
-import org.iatoki.judgels.gabriel.SandboxFactory;
+import org.iatoki.judgels.gabriel.GradingLanguage;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BlackBoxGrader implements Grader {
+public abstract class BlackBoxGradingEngine implements GradingEngine {
 
-    public final BlackBoxGradingResult gradeAfterInitialization(SandboxFactory sandboxFactory, File workingDir, Language language, Map<String, File> sourceFiles, Map<String, File> helperFiles, Map<String, File> testDataFiles, BlackBoxGradingConfig config) throws GradingException {
+    public final BlackBoxGradingResult gradeAfterInitialization(SandboxFactory sandboxFactory, File workingDir, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, Map<String, File> testDataFiles, BlackBoxGradingConfig config) throws GradingException {
         prepare(sandboxFactory, workingDir, config, language, sourceFiles, helperFiles);
 
         CompilationResult compilationResult = getCompiler().compile();
-        String compilationOutput = compilationResult.getOutput();
+        Map<String, String> compilationOutput = compilationResult.getOutputs();
 
         if (compilationResult.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
             return BlackBoxGradingResult.compilationErrorResult(compilationOutput);
@@ -28,13 +27,13 @@ public abstract class BlackBoxGrader implements Grader {
             testCaseResultsBySubtaskCollector.add(ImmutableList.builder());
         }
 
-        ImmutableList.Builder<List<TestCaseConcreteResult>> testDataConcreteResults = ImmutableList.builder();
+        ImmutableList.Builder<TestGroupFinalResult> testGroupFinalResults = ImmutableList.builder();
         for (TestGroup testGroup : config.getTestData()) {
-            ImmutableList.Builder<TestCaseConcreteResult> testGroupResults = ImmutableList.builder();
+            ImmutableList.Builder<TestCaseFinalResult> testCaseFinalResults = ImmutableList.builder();
             for (TestCase testCase : testGroup.getTestCases()) {
-                testGroupResults.add(evaluateAndScore(testCase, testDataFiles, testCaseResultsBySubtaskCollector));
+                testCaseFinalResults.add(evaluateAndScore(testCase, testDataFiles, testCaseResultsBySubtaskCollector));
             }
-            testDataConcreteResults.add(testGroupResults.build());
+            testGroupFinalResults.add(new TestGroupFinalResult(testGroup.getId(), testCaseFinalResults.build()));
         }
 
         ImmutableList.Builder<SubtaskResult> subtaskResultsBuilder = ImmutableList.builder();
@@ -48,13 +47,17 @@ public abstract class BlackBoxGrader implements Grader {
         List<SubtaskResult> subtaskResults = subtaskResultsBuilder.build();
         OverallResult result = getReducer().reduceSubtasks(subtaskResults);
 
-        List<SubtaskConcreteResult> subtaskConcreteResults = Lists.transform(subtaskResults, s -> new SubtaskConcreteResult(s));
-        BlackBoxGradingResultDetails details = new BlackBoxGradingResultDetails(compilationOutput, testDataConcreteResults.build(), subtaskConcreteResults);
+        ImmutableList.Builder<SubtaskFinalResult> subtaskFinalResults = ImmutableList.builder();
+        for (int i = 0; i < config.getSubtasks().size(); i++) {
+            subtaskFinalResults.add(new SubtaskFinalResult(config.getSubtasks().get(i).getId(), subtaskResults.get(i)));
+        }
+
+        BlackBoxGradingResultDetails details = new BlackBoxGradingResultDetails(compilationOutput, testGroupFinalResults.build(), subtaskFinalResults.build());
 
         return BlackBoxGradingResult.normalResult(result, details);
     }
 
-    protected abstract void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, Language language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException;
+    protected abstract void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException;
 
     protected abstract Compiler getCompiler();
 
@@ -64,7 +67,7 @@ public abstract class BlackBoxGrader implements Grader {
 
     protected abstract Reducer getReducer();
 
-    private TestCaseConcreteResult evaluateAndScore(TestCase testCase, Map<String, File> testDataFiles, List<ImmutableList.Builder<TestCaseResult>> testCaseResultsBySubtaskCollector) throws EvaluationException, ScoringException {
+    private TestCaseFinalResult evaluateAndScore(TestCase testCase, Map<String, File> testDataFiles, List<ImmutableList.Builder<TestCaseResult>> testCaseResultsBySubtaskCollector) throws EvaluationException, ScoringException {
         File testCaseInput = testDataFiles.get(testCase.getInput());
         File testCaseOutput = testDataFiles.get(testCase.getOutput());
         EvaluationResult evaluationResult = getEvaluator().evaluate(testCaseInput, testCase.getSubtaskIds());
@@ -83,6 +86,6 @@ public abstract class BlackBoxGrader implements Grader {
             }
         }
 
-        return new TestCaseConcreteResult(testCaseResult, evaluationResult.getDetails());
+        return new TestCaseFinalResult(testCaseResult, evaluationResult.getDetails(), testCase.getSubtaskIds());
     }
 }
