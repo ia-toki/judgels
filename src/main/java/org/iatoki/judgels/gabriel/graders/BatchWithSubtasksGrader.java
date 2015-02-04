@@ -59,7 +59,7 @@ public final class BatchWithSubtasksGrader extends BlackBoxGrader {
 
     @Override
     protected void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, Language language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException {
-        File sourceFile = sourceFiles.get("source");
+        File sourceFile = sourceFiles.get("Source");
         BatchWithSubtasksGradingConfig thisConfig = (BatchWithSubtasksGradingConfig) config;
 
         File compilationDir;

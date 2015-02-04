@@ -46,7 +46,7 @@ public final class BatchWithSubtasksGradingConfig implements BlackBoxGradingConf
 
     @Override
     public List<String> getRequiredSourceFileKeys() {
-        return ImmutableList.of("source");
+        return ImmutableList.of("Source");
     }
 
     @Override
