@@ -9,5 +9,7 @@ public interface GradingRequest {
 
     String getGradingEngine();
 
+    String getGradingLanguage();
+
     GradingSource getGradingSource();
 }

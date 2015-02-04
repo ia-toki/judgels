@@ -8,13 +8,15 @@ public final class BlackBoxGradingRequest implements GradingRequest {
     private final String problemJid;
     private final long gradingLastUpdateTime;
     private final String gradingEngine;
+    private final String gradingLanguage;
     private final BlackBoxGradingSource gradingSource;
 
-    public BlackBoxGradingRequest(String submissionJid, String problemJid, long gradingLastUpdateTime, String gradingEngine, BlackBoxGradingSource gradingSource) {
+    public BlackBoxGradingRequest(String submissionJid, String problemJid, long gradingLastUpdateTime, String gradingEngine, String gradingLanguage, BlackBoxGradingSource gradingSource) {
         this.submissionJid = submissionJid;
         this.problemJid = problemJid;
         this.gradingLastUpdateTime = gradingLastUpdateTime;
         this.gradingEngine = gradingEngine;
+        this.gradingLanguage = gradingLanguage;
         this.gradingSource = gradingSource;
     }
 
@@ -36,6 +38,11 @@ public final class BlackBoxGradingRequest implements GradingRequest {
     @Override
     public String getGradingEngine() {
         return gradingEngine;
+    }
+
+    @Override
+    public String getGradingLanguage() {
+        return gradingLanguage;
     }
 
     @Override
