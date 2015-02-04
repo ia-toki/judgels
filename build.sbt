@@ -20,6 +20,7 @@ scalaVersion := "2.11.1"
 resolvers += "IA TOKI Artifactory" at "http://artifactory.ia-toki.org/artifactory/repo"
 
 libraryDependencies ++= Seq(
+  "org.apache.httpcomponents" % "httpclient" % "4.4",
   "commons-io" % "commons-io" % "2.4",
   "com.google.guava" % "guava" % "18.0",
   "com.google.code.gson" % "gson" % "2.3.1",
