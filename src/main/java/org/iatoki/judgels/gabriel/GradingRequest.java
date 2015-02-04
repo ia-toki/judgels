@@ -5,7 +5,7 @@ public interface GradingRequest {
 
     String getProblemJid();
 
-    long getProblemLastUpdate();
+    long getGradingLastUpdateTime();
 
     String getGradingType();
 
