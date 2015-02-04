@@ -78,7 +78,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
         try {
             engine = (BlackBoxGradingEngine) GradingEngineRegistry.getInstance().getEngine(request.getGradingEngine());
-            language = GradingLanguageRegistry.getInstance().getLanguage(source.getGradingLanguage());
+            language = GradingLanguageRegistry.getInstance().getLanguage(request.getGradingLanguage());
 
             File workerDir = getWorkerDir();
             sourceFiles = generateSourceFiles(workerDir);

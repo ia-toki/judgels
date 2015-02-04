@@ -25,6 +25,10 @@ public final class GabrielProperties {
     private String sandalphonClientJid;
     private String sandalphonClientSecret;
 
+    private GabrielProperties() {
+
+    }
+
     public File getProblemDir() {
         return problemDir;
     }
