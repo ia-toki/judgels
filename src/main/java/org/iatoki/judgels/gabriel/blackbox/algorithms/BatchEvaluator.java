@@ -3,14 +3,13 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.Language;
-import org.iatoki.judgels.gabriel.Sandbox;
-import org.iatoki.judgels.gabriel.blackbox.CompilationException;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
+import org.iatoki.judgels.gabriel.GradingLanguage;
+import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.EvaluationException;
 import org.iatoki.judgels.gabriel.blackbox.EvaluationResult;
 import org.iatoki.judgels.gabriel.blackbox.Evaluator;
-import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +27,7 @@ public final class BatchEvaluator implements Evaluator {
 
     private final List<String> evaluationCommand;
 
-    public BatchEvaluator(Sandbox sandbox, File compilationDir, File evaluationDir, Language language, File sourceFile, int timeLimitInMilliseconds, int memoryLimitInKilobytes) {
+    public BatchEvaluator(Sandbox sandbox, File compilationDir, File evaluationDir, GradingLanguage language, File sourceFile, int timeLimitInMilliseconds, int memoryLimitInKilobytes) {
         this.compilationDir = compilationDir;
         this.evaluationDir = evaluationDir;
         this.executableFilename = language.getExecutableFilename(sourceFile.getName());

@@ -2,18 +2,25 @@ package org.iatoki.judgels.gabriel.blackbox;
 
 import org.iatoki.judgels.gabriel.Verdict;
 
-public final class SubtaskConcreteResult {
+public final class SubtaskFinalResult {
+    private final int id;
     private final Verdict verdict;
     private final double score;
 
-    public SubtaskConcreteResult(Verdict verdict, double score) {
+    public SubtaskFinalResult(int id, Verdict verdict, double score) {
+        this.id = id;
         this.verdict = verdict;
         this.score = score;
     }
 
-    public SubtaskConcreteResult(SubtaskResult result) {
+    public SubtaskFinalResult(int id, SubtaskResult result) {
+        this.id = id;
         this.verdict = new Verdict(result.getVerdict().getCode(), result.getVerdict().getName());
         this.score = result.getScore();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Verdict getVerdict() {
@@ -33,7 +40,7 @@ public final class SubtaskConcreteResult {
             return false;
         }
 
-        SubtaskConcreteResult that = (SubtaskConcreteResult) o;
+        SubtaskFinalResult that = (SubtaskFinalResult) o;
 
         if (Double.compare(that.score, score) != 0) {
             return false;

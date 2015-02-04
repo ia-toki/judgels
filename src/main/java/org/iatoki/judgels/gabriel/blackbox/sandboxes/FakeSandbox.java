@@ -1,11 +1,11 @@
-package org.iatoki.judgels.gabriel.sandboxes;
+package org.iatoki.judgels.gabriel.blackbox.sandboxes;
 
 import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.Sandbox;
-import org.iatoki.judgels.gabriel.SandboxExecutionResultDetails;
-import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
+import org.iatoki.judgels.gabriel.blackbox.Sandbox;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResultDetails;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
 
 import java.io.File;
 import java.io.IOException;

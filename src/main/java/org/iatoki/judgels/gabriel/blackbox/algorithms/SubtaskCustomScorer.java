@@ -4,10 +4,10 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.Language;
-import org.iatoki.judgels.gabriel.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.Sandbox;
-import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
+import org.iatoki.judgels.gabriel.GradingLanguage;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
+import org.iatoki.judgels.gabriel.blackbox.Sandbox;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
 import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
@@ -30,12 +30,12 @@ public final class SubtaskCustomScorer implements Scorer {
     private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
     private static final String SCORING_OUTPUT_FILENAME = "_scoring.out";
 
-    public SubtaskCustomScorer(Sandbox sandbox, File evaluationDir, File scoringDir, Language language, File scorerFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int scoringTimeLimitInMilliseconds, int scoringMemoryLimitInKilobytes) throws PreparationException {
+    public SubtaskCustomScorer(Sandbox sandbox, File evaluationDir, File scoringDir, GradingLanguage language, File scorerFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int scoringTimeLimitInMilliseconds, int scoringMemoryLimitInKilobytes) throws PreparationException {
         try {
-            SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(sandbox, scoringDir, language, scorerFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
+            SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(sandbox, scoringDir, language, "customScorer", scorerFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
             CompilationResult result = compiler.compile();
             if (result.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
-                throw new PreparationException("Compilation of custom scorer resulted in compilation error:\n " + result.getOutput());
+                throw new PreparationException("Compilation of custom scorer resulted in compilation error:\n " + result.getOutputs().get("customScorer"));
             }
         } catch (CompilationException e) {
             throw new PreparationException(e.getMessage());

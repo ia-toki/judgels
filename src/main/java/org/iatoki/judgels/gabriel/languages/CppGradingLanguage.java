@@ -2,12 +2,12 @@ package org.iatoki.judgels.gabriel.languages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.iatoki.judgels.gabriel.Language;
+import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
 
 import java.util.List;
 import java.util.Set;
 
-public final class CppLanguage extends Language {
+public final class CppGradingLanguage extends AbstractGradingLanguage {
     @Override
     public String getName() {
         return "C++";

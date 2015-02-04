@@ -1,14 +1,11 @@
-package org.iatoki.judgels.gabriel.sandboxes;
+package org.iatoki.judgels.gabriel.blackbox.sandboxes;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.Sandbox;
-import org.iatoki.judgels.gabriel.SandboxExecutionStatus;
-import org.iatoki.judgels.gabriel.SandboxFactory;
+import org.iatoki.judgels.gabriel.blackbox.Sandbox;
+import org.iatoki.judgels.gabriel.blackbox.SandboxFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class FakeSandboxFactory implements SandboxFactory {
 
