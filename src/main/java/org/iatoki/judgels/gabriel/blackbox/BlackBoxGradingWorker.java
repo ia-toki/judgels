@@ -10,13 +10,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.iatoki.judgels.gabriel.FakeClientMessage;
 import org.iatoki.judgels.gabriel.FakeSealtiel;
 import org.iatoki.judgels.gabriel.GabrielProperties;
-import org.iatoki.judgels.gabriel.GraderRegistry;
+import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingWorker;
-import org.iatoki.judgels.gabriel.Language;
-import org.iatoki.judgels.gabriel.LanguageRegistry;
-import org.iatoki.judgels.gabriel.SandboxFactory;
-import org.iatoki.judgels.gabriel.sandboxes.FakeSandboxFactory;
+import org.iatoki.judgels.gabriel.GradingLanguage;
+import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
+import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,11 +32,11 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     private final BlackBoxGradingRequest request;
     private final FakeSealtiel sealtiel;
 
-    private File graderDir;
-    private BlackBoxGrader grader;
+    private File engineDir;
+    private BlackBoxGradingEngine engine;
     private BlackBoxGradingConfig config;
     private BlackBoxGradingSource source;
-    private Language language;
+    private GradingLanguage language;
     private SandboxFactory sandboxFactory;
     private Map<String, File> sourceFiles;
     private Map<String, File> helperFiles;
@@ -60,13 +59,13 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
         try {
             initialize();
-            result = grader.gradeAfterInitialization(sandboxFactory, graderDir, language, sourceFiles, helperFiles, testDataFiles, config);
+            result = engine.gradeAfterInitialization(sandboxFactory, engineDir, language, sourceFiles, helperFiles, testDataFiles, config);
         } catch (GradingException e) {
             System.out.println("Grading id " + getId() + " error : " + e.getMessage());
             result = BlackBoxGradingResult.internalErrorResult();
         }
 
-        grader.cleanUp();
+        engine.cleanUp();
 
         BlackBoxGradingResponse response = new BlackBoxGradingResponse(request.getSubmissionJid(), result);
         FakeClientMessage message = new FakeClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
@@ -78,18 +77,18 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         source = (BlackBoxGradingSource) request.getGradingSource();
 
         try {
-            grader = (BlackBoxGrader) GraderRegistry.getInstance().getGrader(request.getGradingType());
-            language = LanguageRegistry.getInstance().getLanguage(source.getGradingLanguage());
+            engine = (BlackBoxGradingEngine) GradingEngineRegistry.getInstance().getEngine(request.getGradingEngine());
+            language = GradingLanguageRegistry.getInstance().getLanguage(source.getGradingLanguage());
 
             File workerDir = getWorkerDir();
             sourceFiles = generateSourceFiles(workerDir);
             sandboxFactory = getSandboxProvider(workerDir);
-            graderDir = getGraderDir(workerDir);
+            engineDir = getEngineDir(workerDir);
 
             File problemGradingDir = getProblemGradingDir(request.getProblemJid(), request.getGradingLastUpdateTime());
             helperFiles = generateHelperFiles(problemGradingDir);
             testDataFiles = generateTestDataFiles(problemGradingDir);
-            config = parseGradingConfig(problemGradingDir, grader);
+            config = parseGradingConfig(problemGradingDir, engine);
         } catch (IOException | IllegalArgumentException e) {
             throw new InitializationException(e.getMessage());
         }
@@ -108,8 +107,8 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         return new FakeSandboxFactory(sandboxesDir);
     }
 
-    private File getGraderDir(File workerDir) throws IOException {
-        File tempDir = new File(workerDir, "grader");
+    private File getEngineDir(File workerDir) throws IOException {
+        File tempDir = new File(workerDir, "engine");
         FileUtils.forceMkdir(tempDir);
 
         return tempDir;
@@ -191,10 +190,10 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         return listFilesAsMap(testDatDir);
     }
 
-    private BlackBoxGradingConfig parseGradingConfig(File problemGradirDir, BlackBoxGrader grader) throws IOException {
+    private BlackBoxGradingConfig parseGradingConfig(File problemGradirDir, BlackBoxGradingEngine engine) throws IOException {
         File config = new File(problemGradirDir, "config.json");
         String configAsJson = FileUtils.readFileToString(config);
-        return (BlackBoxGradingConfig) grader.createGradingConfigFromJson(configAsJson);
+        return (BlackBoxGradingConfig) engine.createGradingConfigFromJson(configAsJson);
     }
 
     private Map<String, File> generateSourceFiles(File runnerDir) throws IOException {

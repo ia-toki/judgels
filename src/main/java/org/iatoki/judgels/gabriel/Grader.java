@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public final class GradingEngine {
+public final class Grader {
 
     private final ThreadPoolExecutor threadPoolExecutor;
     private final FakeSealtiel sealtiel;
 
-    public GradingEngine() {
+    public Grader() {
         int threadPool = (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2;
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadPool);
 
@@ -42,9 +42,9 @@ public final class GradingEngine {
 
         try {
             GradingRequest request = GradingRequests.parseFromJson(message.getMessageType(), message.getMessage());
-            GradingWorker runner = GradingWorkers.newWorker("sourcechannel", request, sealtiel);
+            GradingWorker worker = GradingWorkers.newWorker("sourcechannel", request, sealtiel);
 
-            threadPoolExecutor.submit(runner);
+            threadPoolExecutor.submit(worker);
         } catch (BadGradingRequestException e) {
             System.out.println(e.getMessage());
         }

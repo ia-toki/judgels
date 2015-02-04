@@ -8,10 +8,10 @@ public final class Main {
     public static void main(String[] args) {
         init();
 
-        GradingEngine engine = new GradingEngine();
+        Grader grader = new Grader();
 
         try {
-            engine.run();
+            grader.run();
         } catch (InterruptedException e) {
             // nothing
         }
