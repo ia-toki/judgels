@@ -11,25 +11,20 @@ const int MAX_GUESSES = 10;
 
 void ac()
 {
-    fprintf(stderr, "AC");
+    fprintf(stderr, "AC\n");
     exit(0);
 }
 
 void wa()
 {
-    fprintf(stderr, "WA");
+    fprintf(stderr, "WA\n");
     exit(0);
 }
 
 int main(int argc, char* argv[])
 {
-ac();
     FILE* in = fopen(argv[1], "r");
-
     fscanf(in, "%d", &N);
-
-    printf("%d\n", N);
-    fflush(stdout);
 
     while (true)
     {
@@ -40,7 +35,11 @@ ac();
         scanf("%d", &guess);
 
         if (guess == N)
+        {
+            printf("yes\n");
+            fflush(stdout);
             ac();
+        }
         else if (guess < N)
             printf("too_low\n");
         else

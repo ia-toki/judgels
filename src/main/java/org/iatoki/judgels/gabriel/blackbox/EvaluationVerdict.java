@@ -37,18 +37,6 @@ public enum EvaluationVerdict implements NormalVerdict {
         }
     },
 
-    MEMORY_LIMIT_EXCEEDED {
-        @Override
-        public String getCode() {
-            return "MLE";
-        }
-
-        @Override
-        public String getName() {
-            return "Memory Limit Exceeded";
-        }
-    },
-
     SKIPPED {
         @Override
         public String getCode() {
@@ -60,17 +48,4 @@ public enum EvaluationVerdict implements NormalVerdict {
             return "Skipped";
         }
     };
-
-    static EvaluationVerdict fromSandboxExecutionStatus(SandboxExecutionStatus status) {
-        switch (status) {
-            case RUNTIME_ERROR:
-                return EvaluationVerdict.RUNTIME_ERROR;
-            case TIME_LIMIT_EXCEEDED:
-                return EvaluationVerdict.TIME_LIMIT_EXCEEDED;
-            case MEMORY_LIMIT_EXCEEDED:
-                return EvaluationVerdict.MEMORY_LIMIT_EXCEEDED;
-            default:
-                return EvaluationVerdict.OK;
-        }
-    }
 }

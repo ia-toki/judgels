@@ -27,11 +27,14 @@ public final class SingleSourceFileCompiler implements org.iatoki.judgels.gabrie
 
     public SingleSourceFileCompiler(Sandbox sandbox, File compilationDir, GradingLanguage language, String sourceKey, File sourceFile, int timeLimitInMilliseconds, int memoryLimitInKilobytes) {
         sandbox.addFile(sourceFile);
+
         sandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
         sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
         sandbox.setStackSizeInKilobytes(memoryLimitInKilobytes);
-        sandbox.setStandardOutput(COMPILATION_OUTPUT_FILENAME);
-        sandbox.setStandardError(COMPILATION_OUTPUT_FILENAME);
+
+        sandbox.resetRedirections();
+        sandbox.redirectStandardOutput(COMPILATION_OUTPUT_FILENAME);
+        sandbox.redirectStandardError(COMPILATION_OUTPUT_FILENAME);
 
         this.sandbox = sandbox;
         this.compilationDir = compilationDir;
@@ -45,7 +48,7 @@ public final class SingleSourceFileCompiler implements org.iatoki.judgels.gabrie
     public CompilationResult compile() throws CompilationException {
         SandboxExecutionResult executionResult = sandbox.execute(compilationCommand);
 
-        if (executionResult.getStatus() == SandboxExecutionStatus.OK) {
+        if (executionResult.getStatus() == SandboxExecutionStatus.ZERO_EXIT_CODE) {
             File compilationOutputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
             try {
                 String compilationOutput = FileUtils.readFileToString(compilationOutputFile);
@@ -56,7 +59,7 @@ public final class SingleSourceFileCompiler implements org.iatoki.judgels.gabrie
                 throw new CompilationException(e.getMessage());
             }
 
-        } else if (executionResult.getStatus() == SandboxExecutionStatus.RUNTIME_ERROR) {
+        } else if (executionResult.getStatus() == SandboxExecutionStatus.NONZERO_EXIT_CODE) {
             File compilationOutputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
             try {
                 String compilationOutput = FileUtils.readFileToString(compilationOutputFile);

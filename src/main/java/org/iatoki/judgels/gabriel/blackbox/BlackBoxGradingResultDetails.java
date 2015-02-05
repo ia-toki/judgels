@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 public final class BlackBoxGradingResultDetails {
-    private final Map<String, String> compilationOutput;
+    private final Map<String, String> compilationOutputs;
     private final List<TestGroupFinalResult> testDataResults;
     private final List<SubtaskFinalResult> subtaskResults;
 
-    public BlackBoxGradingResultDetails(Map<String, String> compilationOutput, List<TestGroupFinalResult> testDataResults, List<SubtaskFinalResult> subtaskResults) {
-        this.compilationOutput = compilationOutput;
+    public BlackBoxGradingResultDetails(Map<String, String> compilationOutputs, List<TestGroupFinalResult> testDataResults, List<SubtaskFinalResult> subtaskResults) {
+        this.compilationOutputs = compilationOutputs;
         this.testDataResults = testDataResults;
         this.subtaskResults = subtaskResults;
     }
-    public Map<String, String> getCompilationOutput() {
-        return compilationOutput;
+    public Map<String, String> getCompilationOutputs() {
+        return compilationOutputs;
     }
 
     public List<TestGroupFinalResult> getTestDataResults() {
