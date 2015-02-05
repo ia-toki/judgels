@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.graders;
+package org.iatoki.judgels.gabriel.engines;
 
 import com.beust.jcommander.internal.Maps;
 import com.google.common.collect.ImmutableMap;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class BlackBoxGraderTest {
+public abstract class BlackBoxGradingEngineTest {
     private GradingLanguage language;
 
     private File workerDir;
@@ -37,8 +37,15 @@ public abstract class BlackBoxGraderTest {
     private final Map<String, File> testDataFiles;
     private final Map<String, File> helperFiles;
 
-    protected BlackBoxGraderTest(String resourceDirname) {
-        File resourceDir = new File(BlackBoxGraderTest.class.getClassLoader().getResource(resourceDirname).getPath());
+    protected static final Verdict VERDICT_CE = new Verdict("CE", "Compilation Error");
+    protected static final Verdict VERDICT_OK = new Verdict("OK", "OK");
+    protected static final Verdict VERDICT_AC = new Verdict("AC", "Accepted");
+    protected static final Verdict VERDICT_WA = new Verdict("WA", "Wrong Answer");
+    protected static final Verdict VERDICT_TLE = new Verdict("TLE", "Time Limit Exceeded");
+    protected static final Verdict VERDICT_RTE = new Verdict("RTE", "Runtime Error");
+
+    protected BlackBoxGradingEngineTest(String resourceDirname) {
+        File resourceDir = new File(BlackBoxGradingEngineTest.class.getClassLoader().getResource("blackbox/" + resourceDirname).getPath());
 
         this.sourceDir = new File(resourceDir, "source");
 
@@ -81,13 +88,9 @@ public abstract class BlackBoxGraderTest {
         sourceFiles.put(key, new File(sourceDir, filename));
     }
 
-    protected final BlackBoxGradingResult runGrader(BlackBoxGradingEngine grader, BlackBoxGradingConfig config) throws GradingException {
+    protected final BlackBoxGradingResult runEngine(BlackBoxGradingEngine grader, BlackBoxGradingConfig config) throws GradingException {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
         return grader.gradeAfterInitialization(sandboxFactory, graderDir, language, sourceFiles, helperFiles, testDataFiles, config);
-    }
-
-    protected static Verdict makeConcrete(BlackBoxVerdict verdict) {
-        return new Verdict(verdict.getCode(), verdict.getName());
     }
 
     private Map<String, File> listFilesAsMap(File dir) {

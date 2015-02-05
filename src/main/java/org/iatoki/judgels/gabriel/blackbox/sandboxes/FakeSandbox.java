@@ -2,8 +2,8 @@ package org.iatoki.judgels.gabriel.blackbox.sandboxes;
 
 import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
+import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
 
@@ -13,9 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 public final class FakeSandbox extends Sandbox {
-    private static final int TLE_EXIT_CODE = 10;
-    private static final int MLE_EXIT_CODE = 20;
-    private static final int RTE_EXIT_CODE = 30;
+    private static final int FAKE_TIMED_OUT_EXIT_CODE = 10;
+    private static final int FAKE_KILLED_ON_SIGNAL_EXIT_CODE = 20;
 
     private final File baseDir;
     private File standardInput;
@@ -70,18 +69,25 @@ public final class FakeSandbox extends Sandbox {
     }
 
     @Override
-    public void setStandardInput(String filenameInsideThisSandbox) {
-        this.standardInput = new File(baseDir, filenameInsideThisSandbox);
+    public void resetRedirections() {
+        standardInput = null;
+        standardOutput = null;
+        standardError = null;
     }
 
     @Override
-    public void setStandardOutput(String filenameInsideThisSandbox) {
-        this.standardOutput = new File(baseDir, filenameInsideThisSandbox);
+    public void redirectStandardInput(String filenameInsideThisSandbox) {
+        standardInput = new File(baseDir, filenameInsideThisSandbox);
     }
 
     @Override
-    public void setStandardError(String filenameInsideThisSandbox) {
-        this.standardError = new File(baseDir, filenameInsideThisSandbox);
+    public void redirectStandardOutput(String filenameInsideThisSandbox) {
+        standardOutput = new File(baseDir, filenameInsideThisSandbox);
+    }
+
+    @Override
+    public void redirectStandardError(String filenameInsideThisSandbox) {
+        standardError = new File(baseDir, filenameInsideThisSandbox);
     }
 
     @Override
@@ -114,7 +120,7 @@ public final class FakeSandbox extends Sandbox {
     }
 
     @Override
-    protected ProcessBuilder getProcessBuilder(List<String> command) {
+    public ProcessBuilder getProcessBuilder(List<String> command) {
         String[] commandArray = command.toArray(new String[command.size()]);
 
         ProcessBuilder pb = new ProcessBuilder(commandArray);
@@ -136,22 +142,22 @@ public final class FakeSandbox extends Sandbox {
     }
 
     @Override
-    protected SandboxExecutionResult getResult(int exitCode) {
+    public SandboxExecutionResult getResult(int exitCode) {
         SandboxExecutionStatus status;
         switch (exitCode) {
             case 0:
-                status = SandboxExecutionStatus.OK;
+                status = SandboxExecutionStatus.ZERO_EXIT_CODE;
                 break;
-            case TLE_EXIT_CODE:
-                status = SandboxExecutionStatus.TIME_LIMIT_EXCEEDED;
+            case FAKE_TIMED_OUT_EXIT_CODE:
+                status = SandboxExecutionStatus.TIMED_OUT;
                 break;
-            case MLE_EXIT_CODE:
-                status = SandboxExecutionStatus.MEMORY_LIMIT_EXCEEDED;
+            case FAKE_KILLED_ON_SIGNAL_EXIT_CODE:
+                status = SandboxExecutionStatus.KILLED_ON_SIGNAL;
                 break;
             default:
-                status = SandboxExecutionStatus.RUNTIME_ERROR;
+                status = SandboxExecutionStatus.NONZERO_EXIT_CODE;
         }
-        return new SandboxExecutionResult(status, new SandboxExecutionResultDetails(0, 100, 1000, "OK"));
+        return new SandboxExecutionResult(status, new SandboxExecutionResultDetails(100, 1000, "OK"));
     }
 
 }

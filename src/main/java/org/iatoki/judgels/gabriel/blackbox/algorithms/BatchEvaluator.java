@@ -51,13 +51,15 @@ public final class BatchEvaluator implements Evaluator {
         }
 
         sandbox.addFile(testCaseInputFile);
-        sandbox.setStandardInput(testCaseInputFile.getName());
-        sandbox.setStandardOutput(EVALUATION_OUTPUT_FILENAME);
-        sandbox.setStandardError(EVALUATION_OUTPUT_FILENAME);
+
+        sandbox.resetRedirections();
+        sandbox.redirectStandardInput(testCaseInputFile.getName());
+        sandbox.redirectStandardOutput(EVALUATION_OUTPUT_FILENAME);
+        sandbox.redirectStandardError(EVALUATION_OUTPUT_FILENAME);
 
         SandboxExecutionResult executionResult = sandbox.execute(evaluationCommand);
 
-        if (executionResult.getStatus() == SandboxExecutionStatus.OK) {
+        if (executionResult.getStatus() == SandboxExecutionStatus.ZERO_EXIT_CODE) {
             try {
                 FileUtils.copyFileToDirectory(sandbox.getFile(EVALUATION_OUTPUT_FILENAME), evaluationDir);
             } catch (IOException e) {

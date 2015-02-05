@@ -67,12 +67,12 @@ public final class SubtaskCustomScorer implements Scorer {
         scoringCommandBuilder.add(testCaseOutput.getName());
         scoringCommandBuilder.add(EVALUATION_OUTPUT_FILENAME);
 
-        sandbox.setStandardOutput(SCORING_OUTPUT_FILENAME);
+        sandbox.redirectStandardOutput(SCORING_OUTPUT_FILENAME);
 
         List<String> scoringCommand = scoringCommandBuilder.build();
         SandboxExecutionResult executionResult = sandbox.execute(scoringCommand);
 
-        if (executionResult.getStatus() != SandboxExecutionStatus.OK) {
+        if (executionResult.getStatus() != SandboxExecutionStatus.ZERO_EXIT_CODE) {
             throw new ScoringException(Joiner.on(" ").join(scoringCommand) + " resulted in " + executionResult.getDetails());
         }
 

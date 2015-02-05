@@ -12,20 +12,18 @@ public final class EvaluationResult {
     public static EvaluationResult executedResult(SandboxExecutionResult result) {
         EvaluationVerdict verdict;
         switch (result.getStatus()) {
-            case OK:
+            case ZERO_EXIT_CODE:
                 verdict = EvaluationVerdict.OK;
                 break;
-            case RUNTIME_ERROR:
+            case NONZERO_EXIT_CODE:
+            case KILLED_ON_SIGNAL:
                 verdict = EvaluationVerdict.RUNTIME_ERROR;
                 break;
-            case TIME_LIMIT_EXCEEDED:
+            case TIMED_OUT:
                 verdict = EvaluationVerdict.TIME_LIMIT_EXCEEDED;
                 break;
-            case MEMORY_LIMIT_EXCEEDED:
-                verdict = EvaluationVerdict.MEMORY_LIMIT_EXCEEDED;
-                break;
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalStateException();
         }
         return new EvaluationResult(verdict, result.getDetails());
     }

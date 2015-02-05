@@ -23,11 +23,13 @@ public abstract class Sandbox {
 
     public abstract void setMaxProcesses(int maxProcesses);
 
-    public abstract void setStandardInput(String filenameInsideThisSandbox);
+    public abstract void resetRedirections();
 
-    public abstract void setStandardOutput(String filenameInsideThisSandbox);
+    public abstract void redirectStandardInput(String filenameInsideThisSandbox);
 
-    public abstract void setStandardError(String filenameInsideThisSandbox);
+    public abstract void redirectStandardOutput(String filenameInsideThisSandbox);
+
+    public abstract void redirectStandardError(String filenameInsideThisSandbox);
 
     public abstract void removeAllFilesExcept(Set<String> filenamesToRetain);
 
@@ -39,13 +41,13 @@ public abstract class Sandbox {
         try {
             exitCode = pb.start().waitFor();
         } catch (IOException | InterruptedException e) {
-            return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, new SandboxExecutionResultDetails(1, 100, 1000, "Execution error"));
+            return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, SandboxExecutionResultDetails.internalError(e.getMessage()));
         }
 
         return getResult(exitCode);
     }
 
-    protected abstract ProcessBuilder getProcessBuilder(List<String> command);
+    public abstract ProcessBuilder getProcessBuilder(List<String> command);
 
-    protected abstract SandboxExecutionResult getResult(int exitCode);
+    public abstract SandboxExecutionResult getResult(int exitCode);
 }

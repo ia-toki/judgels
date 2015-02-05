@@ -1,11 +1,10 @@
 #include <cstdio>
-#include <cstring>
 
 char response[100];
 
 int main()
 {
-    int lo = 1, hi = 100;
+    int lo = 1, hi = 1000;
     while (lo <= hi)
     {
         int mid = (lo + hi) / 2;

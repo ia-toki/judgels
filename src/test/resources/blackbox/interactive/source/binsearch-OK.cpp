@@ -5,10 +5,7 @@ char response[100];
 
 int main()
 {
-    printf("3\n");
-    fflush(stdout);
-    return 0;
-    int lo = 1, hi = 100;
+    int lo = 1, hi = 1000;
     while (lo <= hi)
     {
         int mid = (lo + hi) / 2;

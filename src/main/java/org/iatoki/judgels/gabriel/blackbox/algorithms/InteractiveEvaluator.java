@@ -5,11 +5,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.blackbox.NativeSandboxesInteractor;
+import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxesInteractionWrapper;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
-import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractor;
+import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractionWrapper;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
 import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
@@ -42,10 +42,11 @@ public final class InteractiveEvaluator implements Evaluator {
 
     public InteractiveEvaluator(Sandbox contestantSandbox, Sandbox communicatorSandbox, File compilationDir, File evaluationDir, GradingLanguage contestantLanguage, GradingLanguage communicatorLanguage, File contestantSourceFile, File communicatorSourceFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int evaluationTimeLimitInMilliseconds, int evaluationMemoryLimitInMilliseconds) throws PreparationException {
         try {
-            SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(communicatorSandbox, evaluationDir, communicatorLanguage, "comunicator", communicatorSourceFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
+            SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(communicatorSandbox, evaluationDir, communicatorLanguage, "communicator", communicatorSourceFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
             CompilationResult result = compiler.compile();
+
             if (result.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
-                throw new PreparationException("Compilation of the communicator resulted in compilation error:\n " + result.getOutputs().get("comumunicator"));
+                throw new PreparationException("Compilation of the communicator resulted in compilation error:\n " + result.getOutputs().get("communicator"));
             }
         } catch (CompilationException e) {
             throw new PreparationException(e.getMessage());
@@ -98,22 +99,10 @@ public final class InteractiveEvaluator implements Evaluator {
             throw new EvaluationException(e.getMessage());
         }
 
-        File pipe1 = new File(evaluationDir, "pipe1");
-        File pipe2 = new File(evaluationDir, "pipe2");
+        communicatorSandbox.resetRedirections();
+        communicatorSandbox.redirectStandardError(EVALUATION_OUTPUT_FILENAME);
 
-        int exitCode1, exitCode2;
-        try {
-            exitCode1 = new ProcessBuilder(new String[]{"/usr/bin/mkfifo", pipe1.getAbsolutePath()}).start().waitFor();
-            exitCode2 = new ProcessBuilder(new String[]{"/usr/bin/mkfifo", pipe2.getAbsolutePath()}).start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            throw new EvaluationException(e.getMessage());
-        }
-
-        if (exitCode1 != 0 || exitCode2 != 0) {
-            throw new EvaluationException("Cannot create pipes in " + evaluationDir.getAbsolutePath() + " for evaluation");
-        }
-
-        communicatorSandbox.setStandardError(EVALUATION_OUTPUT_FILENAME);
+        communicatorSandbox.addFile(testCaseInput);
 
         ImmutableList.Builder<String> communicatorEvaluationCommandBuilder = ImmutableList.builder();
         communicatorEvaluationCommandBuilder.addAll(communicatorExecutionCommand);
@@ -121,18 +110,17 @@ public final class InteractiveEvaluator implements Evaluator {
 
         List<String> communicatorEvaluationCommand = communicatorEvaluationCommandBuilder.build();
 
-        SandboxesInteractor interactor = new NativeSandboxesInteractor();
+        SandboxesInteractionWrapper interactor = new FakeSandboxesInteractionWrapper();
 
-        SandboxExecutionResult[] results = interactor.runInteraction(communicatorSandbox, communicatorExecutionCommand, contestantSandbox, contestantEvaluationCommand);
+        SandboxExecutionResult[] results = interactor.executeInteraction(contestantSandbox, contestantEvaluationCommand, communicatorSandbox, communicatorEvaluationCommand);
 
-        SandboxExecutionResult communicatorExecutionResult = results[0];
-        SandboxExecutionResult contestantExecutionResult = results[1];
-
+        SandboxExecutionResult contestantExecutionResult = results[0];
+        SandboxExecutionResult communicatorExecutionResult = results[1];
 
         // Note that if communicator resulted in TLE, it is impossible to tell whether it is communicator's fault or contestant's.
         // Just return TLE anyway.
 
-        if (communicatorExecutionResult.getStatus() != SandboxExecutionStatus.OK && communicatorExecutionResult.getStatus() != SandboxExecutionStatus.TIME_LIMIT_EXCEEDED) {
+        if (communicatorExecutionResult.getStatus() != SandboxExecutionStatus.ZERO_EXIT_CODE && communicatorExecutionResult.getStatus() != SandboxExecutionStatus.TIMED_OUT) {
             throw new EvaluationException(Joiner.on(" ").join(communicatorEvaluationCommand) + " resulted in " + communicatorExecutionResult.getDetails());
         }
 
