@@ -35,7 +35,7 @@ public final class GradingEngineRegistry {
     }
 
     public Map<String, String> getGradingEngines() {
-        return registry.keySet().stream().collect(Collectors.toMap(e -> e, e -> registry.get(e).getName()));
+        return Maps.transformValues(registry, engine -> engine.getName());
     }
 
     private void populateEngines() {
