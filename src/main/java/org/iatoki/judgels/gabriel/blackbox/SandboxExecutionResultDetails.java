@@ -29,6 +29,6 @@ public final class SandboxExecutionResultDetails {
 
     @Override
     public String toString() {
-        return "[message: " + message + "; time: " + time + " ms; memory: " + memory + " KB]";
+        return message;
     }
 }
