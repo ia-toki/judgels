@@ -13,6 +13,8 @@ import java.util.Map;
 public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     public final BlackBoxGradingResult gradeAfterInitialization(SandboxFactory sandboxFactory, File workingDir, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, Map<String, File> testDataFiles, BlackBoxGradingConfig config) throws GradingException {
+        verifySourceFiles(sourceFiles, config);
+
         prepare(sandboxFactory, workingDir, config, language, sourceFiles, helperFiles);
 
         CompilationResult compilationResult = getCompiler().compile();
@@ -87,5 +89,14 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         }
 
         return new TestCaseFinalResult(testCaseResult, evaluationResult.getDetails(), testCase.getSubtaskIds());
+    }
+
+
+    private void verifySourceFiles(Map<String, File> sourceFiles, BlackBoxGradingConfig config) throws PreparationException {
+        for (String fieldKey : config.getSourceFileFields().keySet()) {
+            if (!sourceFiles.containsKey(fieldKey)) {
+                throw new PreparationException("No source file found for '" + fieldKey + "'");
+            }
+        }
     }
 }

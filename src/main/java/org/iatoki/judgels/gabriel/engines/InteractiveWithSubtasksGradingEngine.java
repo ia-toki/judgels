@@ -47,7 +47,7 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
         if (thisConfig.getCommunicator() == null) {
             throw new PreparationException("Communicator not specified");
         }
-        File contestantSourceFile = sourceFiles.get("source");
+        File contestantSourceFile = sourceFiles.get(config.getSourceFileFields().keySet().iterator().next());
         File communicatorSourceFile = helperFiles.get(thisConfig.getCommunicator());
 
         File compilationDir;
@@ -110,8 +110,14 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
 
     @Override
     public void cleanUp() {
-        compilerSandbox.cleanUp();
-        evaluatorContestantSandbox.cleanUp();
-        evaluatorCommunicatorSandbox.cleanUp();
+        if (compilerSandbox != null) {
+            compilerSandbox.cleanUp();
+        }
+        if (evaluatorContestantSandbox != null) {
+            evaluatorContestantSandbox.cleanUp();
+        }
+        if (evaluatorCommunicatorSandbox != null) {
+            evaluatorCommunicatorSandbox.cleanUp();
+        }
     }
 }
