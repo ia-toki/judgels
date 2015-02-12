@@ -25,6 +25,11 @@ public final class GabrielProperties {
     private String sandalphonClientJid;
     private String sandalphonClientSecret;
 
+    private String isolatePath;
+
+    private String sealtielFakeSendMedium;
+    private String sealtielFakeReceiveMedium;
+
     private GabrielProperties() {
 
     }
@@ -39,6 +44,18 @@ public final class GabrielProperties {
 
     public File getWorkerDir() {
         return workerDir;
+    }
+
+    public String getIsolatePath() {
+        return isolatePath;
+    }
+
+    public String getSealtielFakeSendMedium() {
+        return sealtielFakeSendMedium;
+    }
+
+    public String getSealtielFakeReceiveMedium() {
+        return sealtielFakeReceiveMedium;
     }
 
     public HttpPost getFetchProblemGradingFilesRequest(String problemJid) throws UnsupportedEncodingException {
@@ -98,6 +115,11 @@ public final class GabrielProperties {
             INSTANCE.sandalphonBaseUrl = properties.getProperty("sandalphon.baseUrl").replaceAll("\"", "");
             INSTANCE.sandalphonClientJid = properties.getProperty("sandalphon.clientJid");
             INSTANCE.sandalphonClientSecret = properties.getProperty("sandalphon.clientSecret");
+
+            INSTANCE.isolatePath = properties.getProperty("moe.isolatePath");
+            System.out.println("SDFSF " + INSTANCE.isolatePath);
+            INSTANCE.sealtielFakeSendMedium = properties.getProperty("sealtiel.fakeSendMedium");
+            INSTANCE.sealtielFakeReceiveMedium = properties.getProperty("sealtiel.fakeReceiveMedium");
         }
         return INSTANCE;
     }

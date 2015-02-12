@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -16,6 +17,7 @@ import org.iatoki.judgels.gabriel.GradingWorker;
 import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
 import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
+import org.iatoki.judgels.gabriel.blackbox.sandboxes.MoeIsolateSandboxFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -101,10 +103,13 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     private SandboxFactory getSandboxProvider(File workerDir) throws IOException {
-        File sandboxesDir = new File(workerDir, "sandbox");
-        FileUtils.forceMkdir(sandboxesDir);
-
-        return new FakeSandboxFactory(sandboxesDir);
+        if (GabrielProperties.getInstance().getIsolatePath() != null) {
+            return new MoeIsolateSandboxFactory(GabrielProperties.getInstance().getIsolatePath());
+        } else {
+            File sandboxesDir = new File(workerDir, "sandbox");
+            FileUtils.forceMkdir(sandboxesDir);
+            return new FakeSandboxFactory(sandboxesDir);
+        }
     }
 
     private File getEngineDir(File workerDir) throws IOException {
@@ -114,7 +119,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         return tempDir;
     }
 
-    private File getProblemGradingDir(String problemJid, long problemLastUpdate) throws IOException {
+    private File getProblemGradingDir(String problemJid, long problemLastUpdate) throws InitializationException, IOException {
         File problemGradingDir = new File(GabrielProperties.getInstance().getProblemDir(), problemJid);
 
         if (mustFetchProblemGradingFiles(problemGradingDir, problemLastUpdate)) {
@@ -126,8 +131,8 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
             HttpResponse response = client.execute(post);
 
-            if (response.getStatusLine().getStatusCode() != 200) {
-                throw new IOException("Cannot fetch problem grading files");
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new InitializationException("Cannot fetch problem grading files");
             }
 
             byte[] buffer = new byte[4096];
@@ -204,8 +209,8 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
         for (Map.Entry<String, SourceFile> entry : source.getSourceFiles().entrySet()) {
             File file = new File(sourceDir, entry.getValue().getName());
-            FileUtils.writeStringToFile(file, entry.getValue().getContent());
 
+            FileUtils.writeStringToFile(file, entry.getValue().getContent());
             sourceFiles.put(entry.getKey(), file);
         }
         return sourceFiles.build();

@@ -13,7 +13,14 @@ public final class Grader {
         int threadPool = (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2;
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadPool);
 
-        this.sealtiel = new FakeSealtiel(new File("/Users/fushar/grading-responses"), new File("/Users/fushar/grading-requests"));
+        if (GabrielProperties.getInstance().getSealtielFakeSendMedium() != null) {
+            File sendMedium = new File(GabrielProperties.getInstance().getSealtielFakeSendMedium());
+            File receiveMedium = new File(GabrielProperties.getInstance().getSealtielFakeReceiveMedium());
+
+            this.sealtiel = new FakeSealtiel(sendMedium, receiveMedium);
+        } else {
+            throw new RuntimeException("No sealtiel info found");
+        }
 
         System.out.println("Starting Gabriel using "+threadPool+" threads.");
     }
