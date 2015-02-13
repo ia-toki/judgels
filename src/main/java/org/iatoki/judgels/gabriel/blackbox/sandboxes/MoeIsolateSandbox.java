@@ -133,7 +133,6 @@ public class MoeIsolateSandbox extends Sandbox {
     @Override
     public void cleanUp() {
         cleanUpIsolate();
-        deleteControlGroups();
     }
 
     @Override
@@ -169,15 +168,15 @@ public class MoeIsolateSandbox extends Sandbox {
         }
 
         if (standardInput != null) {
-            sandboxedCommand.add("-i" + standardInput.getAbsolutePath());
+            sandboxedCommand.add("-i" + standardInput.getName());
         }
 
         if (standardOutput != null) {
-            sandboxedCommand.add("-o" + standardOutput.getAbsolutePath());
+            sandboxedCommand.add("-o" + standardOutput.getName());
         }
 
         if (standardError != null) {
-            sandboxedCommand.add("-r" + standardError.getAbsolutePath());
+            sandboxedCommand.add("-r" + standardError.getName());
         }
 
         sandboxedCommand.add("-M" + new File(boxDir, "_isolate.meta").getAbsolutePath());
@@ -207,7 +206,7 @@ public class MoeIsolateSandbox extends Sandbox {
             }
 
             int time = (int) (Double.parseDouble(items.get("time")) * 1000);
-            int memory = (int) (Double.parseDouble(items.get("memory")));
+            int memory = (int) (Double.parseDouble(items.get("cg-mem")));
             String status = items.get("status");
 
             SandboxExecutionResultDetails details = new SandboxExecutionResultDetails(time, memory, meta);
@@ -234,17 +233,6 @@ public class MoeIsolateSandbox extends Sandbox {
             int exitCode = new ProcessBuilder("cgcreate", "-g", "cpuset,cpuacct,memory:/box-" + boxId).start().waitFor();
             if (exitCode != 0) {
                 throw new SandboxException("Cannot create control groups");
-            }
-        } catch (IOException | InterruptedException e) {
-            throw new SandboxException(e);
-        }
-    }
-
-    private void deleteControlGroups() {
-        try {
-            int exitCode = new ProcessBuilder("cgdelete", "" + boxId).start().waitFor();
-            if (exitCode != 0) {
-                throw new SandboxException("Cannot delete control groups");
             }
         } catch (IOException | InterruptedException e) {
             throw new SandboxException(e);
