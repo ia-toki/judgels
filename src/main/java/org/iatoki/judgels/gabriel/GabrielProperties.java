@@ -2,7 +2,6 @@ package org.iatoki.judgels.gabriel;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
@@ -27,6 +26,10 @@ public final class GabrielProperties {
 
     private String isolatePath;
 
+    private String sealtielBaseUrl;
+    private String sealtielClientJid;
+    private String sealtielClientSecret;
+
     private String sealtielFakeSendMedium;
     private String sealtielFakeReceiveMedium;
 
@@ -48,6 +51,18 @@ public final class GabrielProperties {
 
     public String getIsolatePath() {
         return isolatePath;
+    }
+
+    public String getSealtielBaseUrl() {
+        return sealtielBaseUrl;
+    }
+
+    public String getSealtielClientJid() {
+        return sealtielClientJid;
+    }
+
+    public String getSealtielClientSecret() {
+        return sealtielClientSecret;
     }
 
     public String getSealtielFakeSendMedium() {
@@ -120,6 +135,10 @@ public final class GabrielProperties {
             System.out.println("SDFSF " + INSTANCE.isolatePath);
             INSTANCE.sealtielFakeSendMedium = properties.getProperty("sealtiel.fakeSendMedium");
             INSTANCE.sealtielFakeReceiveMedium = properties.getProperty("sealtiel.fakeReceiveMedium");
+
+            INSTANCE.sealtielBaseUrl = properties.getProperty("sealtiel.baseUrl");
+            INSTANCE.sealtielClientJid = properties.getProperty("sealtiel.clientJid");
+            INSTANCE.sealtielClientSecret = properties.getProperty("sealtiel.clientSecret");
         }
         return INSTANCE;
     }
@@ -129,7 +148,10 @@ public final class GabrielProperties {
                 "gabriel.baseDir",
                 "sandalphon.baseUrl",
                 "sandalphon.clientJid",
-                "sandalphon.clientSecret"
+                "sandalphon.clientSecret",
+                "sealtiel.baseUrl",
+                "sealtiel.clientJid",
+                "sealtiel.clientSecret"
         );
 
         for (String key : requiredKeys) {

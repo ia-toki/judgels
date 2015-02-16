@@ -8,16 +8,11 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.iatoki.judgels.gabriel.FakeClientMessage;
-import org.iatoki.judgels.gabriel.FakeSealtiel;
-import org.iatoki.judgels.gabriel.GabrielProperties;
-import org.iatoki.judgels.gabriel.GradingEngineRegistry;
-import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.GradingWorker;
-import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
+import org.iatoki.judgels.gabriel.*;
 import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
 import org.iatoki.judgels.gabriel.blackbox.sandboxes.MoeIsolateSandboxFactory;
+import org.iatoki.judgels.sealtiel.client.ClientMessage;
+import org.iatoki.judgels.sealtiel.client.Sealtiel;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,7 +27,7 @@ import java.util.zip.ZipInputStream;
 public final class BlackBoxGradingWorker implements GradingWorker {
     private final String senderChannel;
     private final BlackBoxGradingRequest request;
-    private final FakeSealtiel sealtiel;
+    private final Sealtiel sealtiel;
 
     private File engineDir;
     private BlackBoxGradingEngine engine;
@@ -44,7 +39,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     private Map<String, File> helperFiles;
     private Map<String, File> testDataFiles;
 
-    public BlackBoxGradingWorker(String senderChannel, BlackBoxGradingRequest request, FakeSealtiel sealtiel) {
+    public BlackBoxGradingWorker(String senderChannel, BlackBoxGradingRequest request, Sealtiel sealtiel) {
         this.senderChannel = senderChannel;
         this.request = request;
         this.sealtiel = sealtiel;
@@ -58,7 +53,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     @Override
     public void run() {
         BlackBoxGradingResult result;
-
+        // TODO please confirm message and extend timeout
         try {
             initialize();
             result = engine.gradeAfterInitialization(sandboxFactory, engineDir, language, sourceFiles, helperFiles, testDataFiles, config);
@@ -70,9 +65,13 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         engine.cleanUp();
 
         BlackBoxGradingResponse response = new BlackBoxGradingResponse(request.getSubmissionJid(), result);
-        FakeClientMessage message = new FakeClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
+        try {
+            ClientMessage message = new ClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
 
-        sealtiel.sendMessage(message);
+            sealtiel.sendMessage(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void initialize() throws InitializationException {

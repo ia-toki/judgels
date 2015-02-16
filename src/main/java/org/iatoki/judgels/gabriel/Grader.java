@@ -1,13 +1,17 @@
 package org.iatoki.judgels.gabriel;
 
+import org.iatoki.judgels.sealtiel.client.ClientMessage;
+import org.iatoki.judgels.sealtiel.client.Sealtiel;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public final class Grader {
 
     private final ThreadPoolExecutor threadPoolExecutor;
-    private final FakeSealtiel sealtiel;
+    private final Sealtiel sealtiel;
 
     public Grader() {
         int threadPool = (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2;
@@ -17,7 +21,7 @@ public final class Grader {
             File sendMedium = new File(GabrielProperties.getInstance().getSealtielFakeSendMedium());
             File receiveMedium = new File(GabrielProperties.getInstance().getSealtielFakeReceiveMedium());
 
-            this.sealtiel = new FakeSealtiel(sendMedium, receiveMedium);
+            this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret(), GabrielProperties.getInstance().getSealtielBaseUrl());
         } else {
             throw new RuntimeException("No sealtiel info found");
         }
@@ -29,8 +33,12 @@ public final class Grader {
         while (true) {
             waitUntilAvailable();
 
-            FakeClientMessage message = sealtiel.fetchMessage();
-            processMessage(message);
+            try {
+                ClientMessage message = sealtiel.fetchMessage();
+                processMessage(message);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             Thread.sleep(200);
         }
@@ -42,7 +50,7 @@ public final class Grader {
         }
     }
 
-    private void processMessage(FakeClientMessage message) {
+    private void processMessage(ClientMessage message) {
         if (message == null) {
             return;
         }
