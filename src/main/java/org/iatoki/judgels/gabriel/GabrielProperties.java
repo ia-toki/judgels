@@ -77,8 +77,8 @@ public final class GabrielProperties {
         HttpPost post = new HttpPost(sandalphonBaseUrl + "/problem/programming/download/grading");
 
         List<BasicNameValuePair> nameValuePairs = ImmutableList.of(
-                new BasicNameValuePair("graderClientJid", sandalphonClientJid),
-                new BasicNameValuePair("graderClientSecret", sandalphonClientSecret),
+                new BasicNameValuePair("graderJid", sandalphonClientJid),
+                new BasicNameValuePair("graderSecret", sandalphonClientSecret),
                 new BasicNameValuePair("problemJid", problemJid)
         );
         post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -128,17 +128,16 @@ public final class GabrielProperties {
             }
 
             INSTANCE.sandalphonBaseUrl = properties.getProperty("sandalphon.baseUrl").replaceAll("\"", "");
-            INSTANCE.sandalphonClientJid = properties.getProperty("sandalphon.clientJid");
-            INSTANCE.sandalphonClientSecret = properties.getProperty("sandalphon.clientSecret");
+            INSTANCE.sandalphonClientJid = properties.getProperty("sandalphon.clientJid").replaceAll("\"", "");
+            INSTANCE.sandalphonClientSecret = properties.getProperty("sandalphon.clientSecret").replaceAll("\"", "");
 
             INSTANCE.isolatePath = properties.getProperty("moe.isolatePath");
-            System.out.println("SDFSF " + INSTANCE.isolatePath);
             INSTANCE.sealtielFakeSendMedium = properties.getProperty("sealtiel.fakeSendMedium");
             INSTANCE.sealtielFakeReceiveMedium = properties.getProperty("sealtiel.fakeReceiveMedium");
 
-            INSTANCE.sealtielBaseUrl = properties.getProperty("sealtiel.baseUrl");
-            INSTANCE.sealtielClientJid = properties.getProperty("sealtiel.clientJid");
-            INSTANCE.sealtielClientSecret = properties.getProperty("sealtiel.clientSecret");
+            INSTANCE.sealtielBaseUrl = properties.getProperty("sealtiel.baseUrl").replaceAll("\"", "");
+            INSTANCE.sealtielClientJid = properties.getProperty("sealtiel.clientJid").replaceAll("\"", "");
+            INSTANCE.sealtielClientSecret = properties.getProperty("sealtiel.clientSecret").replaceAll("\"", "");
         }
         return INSTANCE;
     }

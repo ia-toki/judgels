@@ -3,7 +3,6 @@ package org.iatoki.judgels.gabriel;
 import org.iatoki.judgels.sealtiel.client.ClientMessage;
 import org.iatoki.judgels.sealtiel.client.Sealtiel;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -17,9 +16,9 @@ public final class Grader {
         int threadPool = (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2;
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadPool);
 
-        if (GabrielProperties.getInstance().getSealtielFakeSendMedium() != null) {
-            File sendMedium = new File(GabrielProperties.getInstance().getSealtielFakeSendMedium());
-            File receiveMedium = new File(GabrielProperties.getInstance().getSealtielFakeReceiveMedium());
+        if (GabrielProperties.getInstance().getSealtielBaseUrl() != null) {
+//            File sendMedium = new File(GabrielProperties.getInstance().getSealtielFakeSendMedium());
+//            File receiveMedium = new File(GabrielProperties.getInstance().getSealtielFakeReceiveMedium());
 
             this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret(), GabrielProperties.getInstance().getSealtielBaseUrl());
         } else {
@@ -57,7 +56,7 @@ public final class Grader {
 
         try {
             GradingRequest request = GradingRequests.parseFromJson(message.getMessageType(), message.getMessage());
-            GradingWorker worker = GradingWorkers.newWorker("sourcechannel", request, sealtiel);
+            GradingWorker worker = GradingWorkers.newWorker(message.getSourceClientJid(), request, sealtiel);
 
             threadPoolExecutor.submit(worker);
         } catch (BadGradingRequestException e) {
