@@ -45,6 +45,8 @@ public class MoeIsolateSandbox extends Sandbox {
 
         createControlGroups();
         initIsolate();
+
+        setMaxProcesses(6);
     }
 
     @Override
@@ -132,6 +134,7 @@ public class MoeIsolateSandbox extends Sandbox {
     @Override
     public void cleanUp() {
         cleanUpIsolate();
+        deleteControlGroups();
     }
 
     @Override
@@ -259,6 +262,17 @@ public class MoeIsolateSandbox extends Sandbox {
             int exitCode = new ProcessBuilder(isolatePath, "-b" + boxId, "--cleanup").start().waitFor();
             if (exitCode != 0) {
                 throw new SandboxException("Cannot clean up isolate");
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new SandboxException(e);
+        }
+    }
+
+    private void deleteControlGroups() {
+        try {
+            int exitCode = new ProcessBuilder("cgdelete", "-g", "cpuset,cpuacct,memory:/box-" + boxId).start().waitFor();
+            if (exitCode != 0) {
+                throw new SandboxException("Cannot delete control groups");
             }
         } catch (IOException | InterruptedException e) {
             throw new SandboxException(e);
