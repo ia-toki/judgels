@@ -35,16 +35,19 @@ public final class SubtaskReducer implements Reducer {
     @Override
     public OverallResult reduceSubtasks(List<SubtaskResult> subtaskResults) {
         if (subtaskResults.size() == 1) {
-            return new OverallResult(subtaskResults.get(0).getVerdict(), null, (int) subtaskResults.get(0).getScore());
+            return new OverallResult(subtaskResults.get(0).getVerdict(), null, (int) Math.round(subtaskResults.get(0).getScore()));
         } else {
             double score = 0;
             for (SubtaskResult result : subtaskResults) {
                 score += result.getScore();
             }
 
-            String message = "worst: " + getWorstVerdict(Lists.transform(subtaskResults, r -> r.getVerdict())).getCode();
-
-            return new OverallResult(ScoringVerdict.OK, message, (int) score);
+            NormalVerdict worstVerdict = getWorstVerdict(Lists.transform(subtaskResults, r -> r.getVerdict()));
+            if (worstVerdict == ScoringVerdict.ACCEPTED) {
+                return new OverallResult(ScoringVerdict.ACCEPTED, null, (int) Math.round(score));
+            } else {
+                return new OverallResult(ScoringVerdict.OK, "worst: " + worstVerdict.getCode(), (int) Math.round(score));
+            }
         }
     }
 

@@ -16,6 +16,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -66,6 +67,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         try {
             BlackBoxGradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_CE);
+            assertNull(result.getMessage());
             assertEquals(result.getScore(), 0);
             assertTrue(result.getDetails().getCompilationOutputs().get("source").contains("b"));
         } catch (GradingException e) {
@@ -74,12 +76,13 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
     }
 
     @Test
-    public void testOK100() {
+    public void testAC() {
         addSourceFile("source", "aplusb-OK.cpp");
 
         try {
             BlackBoxGradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getVerdict(), VERDICT_AC);
+            assertNull(result.getMessage());
             assertEquals(result.getScore(), 100);
 
             BlackBoxGradingResultDetails details = result.getDetails();
@@ -99,6 +102,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         try {
             BlackBoxGradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getMessage(), "worst: WA");
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = result.getDetails();
@@ -118,6 +122,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         try {
             BlackBoxGradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getMessage(), "worst: TLE");
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = result.getDetails();
@@ -137,6 +142,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         try {
             BlackBoxGradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getMessage(), "worst: WA");
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = result.getDetails();
@@ -157,6 +163,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         try {
             BlackBoxGradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getMessage(), "worst: WA");
             assertEquals(result.getScore(), 0);
 
             BlackBoxGradingResultDetails details = result.getDetails();
@@ -170,12 +177,13 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
     }
 
     @Test
-    public void testOK100WithCustomScorer() {
+    public void testACWithCustomScorer() {
         addSourceFile("source", "aplusb-OK-scorer.cpp");
 
         try {
             BlackBoxGradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-OK.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getVerdict(), VERDICT_AC);
+            assertNull(result.getMessage());
             assertEquals(result.getScore(), 100);
 
             BlackBoxGradingResultDetails details = result.getDetails();
@@ -195,6 +203,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         try {
             BlackBoxGradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-OK.cpp"));
             assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getMessage(), "worst: WA");
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = result.getDetails();
