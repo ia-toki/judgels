@@ -21,11 +21,11 @@ public final class SandboxExecutionResult {
         return status;
     }
 
-    public int getTime() {
+    public int getTimeInMilliseconds() {
         return time;
     }
 
-    public int getMemory() {
+    public int getMemoryInKilobytes() {
         return memory;
     }
 
