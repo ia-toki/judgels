@@ -30,9 +30,6 @@ public final class GabrielProperties {
     private String sealtielClientJid;
     private String sealtielClientSecret;
 
-    private String sealtielFakeSendMedium;
-    private String sealtielFakeReceiveMedium;
-
     private GabrielProperties() {
 
     }
@@ -63,14 +60,6 @@ public final class GabrielProperties {
 
     public String getSealtielClientSecret() {
         return sealtielClientSecret;
-    }
-
-    public String getSealtielFakeSendMedium() {
-        return sealtielFakeSendMedium;
-    }
-
-    public String getSealtielFakeReceiveMedium() {
-        return sealtielFakeReceiveMedium;
     }
 
     public HttpPost getFetchProblemGradingFilesRequest(String problemJid) throws UnsupportedEncodingException {
@@ -132,8 +121,6 @@ public final class GabrielProperties {
             INSTANCE.sandalphonClientSecret = properties.getProperty("sandalphon.clientSecret").replaceAll("\"", "");
 
             INSTANCE.isolatePath = properties.getProperty("moe.isolatePath");
-            INSTANCE.sealtielFakeSendMedium = properties.getProperty("sealtiel.fakeSendMedium");
-            INSTANCE.sealtielFakeReceiveMedium = properties.getProperty("sealtiel.fakeReceiveMedium");
 
             INSTANCE.sealtielBaseUrl = properties.getProperty("sealtiel.baseUrl").replaceAll("\"", "");
             INSTANCE.sealtielClientJid = properties.getProperty("sealtiel.clientJid").replaceAll("\"", "");

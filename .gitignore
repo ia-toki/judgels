@@ -14,5 +14,5 @@ dist
 /RUNNING_PID
 /.settings
 projectFilesBackup/
-conf/*.conf
-!conf/*_default.conf
+src/main/resources/conf/*.conf
+!src/main/resources/conf/*_default.conf
