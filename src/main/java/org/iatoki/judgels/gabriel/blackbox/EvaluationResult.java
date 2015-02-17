@@ -2,11 +2,11 @@ package org.iatoki.judgels.gabriel.blackbox;
 
 public final class EvaluationResult {
     private final EvaluationVerdict verdict;
-    private final SandboxExecutionResultDetails details;
+    private final SandboxExecutionResult executionResult;
 
-    private EvaluationResult(EvaluationVerdict verdict, SandboxExecutionResultDetails details) {
+    private EvaluationResult(EvaluationVerdict verdict, SandboxExecutionResult executionResult) {
         this.verdict = verdict;
-        this.details = details;
+        this.executionResult = executionResult;
     }
 
     public static EvaluationResult executedResult(SandboxExecutionResult result) {
@@ -25,7 +25,7 @@ public final class EvaluationResult {
             default:
                 throw new IllegalStateException();
         }
-        return new EvaluationResult(verdict, result.getDetails());
+        return new EvaluationResult(verdict, result);
     }
 
     public static EvaluationResult skippedResult() {
@@ -36,7 +36,7 @@ public final class EvaluationResult {
         return verdict;
     }
 
-    public SandboxExecutionResultDetails getDetails() {
-        return details;
+    public SandboxExecutionResult getExecutionResult() {
+        return executionResult;
     }
 }

@@ -70,7 +70,7 @@ public final class SingleSourceFileCompiler implements org.iatoki.judgels.gabrie
                 throw new CompilationException(e.getMessage());
             }
         } else {
-            throw new CompilationException(Joiner.on(" ").join(compilationCommand) + " resulted in " + executionResult.getDetails());
+            throw new CompilationException(Joiner.on(" ").join(compilationCommand) + " resulted in " + executionResult);
         }
     }
 }

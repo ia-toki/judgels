@@ -2,8 +2,6 @@ package org.iatoki.judgels.gabriel.blackbox.sandboxes;
 
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResultDetails;
-import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
 import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractionWrapper;
 
 import java.io.IOException;
@@ -28,8 +26,8 @@ public final class FakeSandboxesInteractionWrapper implements SandboxesInteracti
             p2 = pb2.start();
         } catch (IOException e) {
             return new SandboxExecutionResult[]{
-                    new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, SandboxExecutionResultDetails.internalError(e.getMessage())),
-                    new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, SandboxExecutionResultDetails.internalError(e.getMessage()))
+                    SandboxExecutionResult.internalError(e.getMessage()),
+                    SandboxExecutionResult.internalError(e.getMessage())
             };
         }
 
@@ -51,8 +49,8 @@ public final class FakeSandboxesInteractionWrapper implements SandboxesInteracti
             exitCode1 = p1.waitFor();
         } catch (InterruptedException e) {
             return new SandboxExecutionResult[]{
-                    new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, SandboxExecutionResultDetails.internalError(e.getMessage())),
-                    new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, SandboxExecutionResultDetails.internalError(e.getMessage()))
+                    SandboxExecutionResult.internalError(e.getMessage()),
+                    SandboxExecutionResult.internalError(e.getMessage())
             };
         }
 

@@ -66,7 +66,7 @@ public final class BatchEvaluator implements Evaluator {
                 throw new EvaluationException(e.getMessage());
             }
         } else if (executionResult.getStatus() == SandboxExecutionStatus.INTERNAL_ERROR) {
-            throw new EvaluationException(Joiner.on(" ").join(evaluationCommand) + " resulted in " + executionResult.getDetails());
+            throw new EvaluationException(Joiner.on(" ").join(evaluationCommand) + " resulted in " + executionResult);
         }
 
         sandbox.removeAllFilesExcept(ImmutableSet.of(executableFilename));

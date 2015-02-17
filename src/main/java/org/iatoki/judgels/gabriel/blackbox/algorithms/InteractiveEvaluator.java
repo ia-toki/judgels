@@ -121,7 +121,7 @@ public final class InteractiveEvaluator implements Evaluator {
         // Just return TLE anyway.
 
         if (communicatorExecutionResult.getStatus() != SandboxExecutionStatus.ZERO_EXIT_CODE && communicatorExecutionResult.getStatus() != SandboxExecutionStatus.TIMED_OUT) {
-            throw new EvaluationException(Joiner.on(" ").join(communicatorEvaluationCommand) + " resulted in " + communicatorExecutionResult.getDetails());
+            throw new EvaluationException(Joiner.on(" ").join(communicatorEvaluationCommand) + " resulted in " + communicatorExecutionResult);
         }
 
         try {

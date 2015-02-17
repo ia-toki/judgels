@@ -18,14 +18,41 @@ public final class SubtaskReducer implements Reducer {
 
     @Override
     public SubtaskResult reduceTestCases(List<TestCaseResult> testCaseResults, Subtask subtask) throws ReductionException {
-        double score = subtask.getPoints();
+        if (testCaseResults.isEmpty()) {
+            return new SubtaskResult(ScoringVerdict.OK, 0.0);
+        } else {
+            double score = subtask.getPoints();
+            for (TestCaseResult result : testCaseResults) {
+                NormalVerdict verdict = result.getVerdict();
+                if (verdict != ScoringVerdict.ACCEPTED) {
+                    score = 0.0;
+                }
+            }
+            return new SubtaskResult(getWorstVerdict(Lists.transform(testCaseResults, r -> r.getVerdict())), score);
+        }
+    }
+
+    @Override
+    public OverallResult reduceSubtasks(List<SubtaskResult> subtaskResults) {
+        if (subtaskResults.size() == 1) {
+            return new OverallResult(subtaskResults.get(0).getVerdict(), null, (int) subtaskResults.get(0).getScore());
+        } else {
+            double score = 0;
+            for (SubtaskResult result : subtaskResults) {
+                score += result.getScore();
+            }
+
+            String message = "worst: " + getWorstVerdict(Lists.transform(subtaskResults, r -> r.getVerdict())).getCode();
+
+            return new OverallResult(ScoringVerdict.OK, message, (int) score);
+        }
+    }
+
+    private NormalVerdict getWorstVerdict(List<NormalVerdict> verdicts) {
         List<EvaluationVerdict> evaluationVerdicts = Lists.newArrayList();
         List<ScoringVerdict> scoringVerdicts = Lists.newArrayList();
-        for (TestCaseResult result : testCaseResults) {
-            NormalVerdict verdict = result.getVerdict();
-            if (verdict != ScoringVerdict.ACCEPTED) {
-                score = 0.0;
-            }
+
+        for (NormalVerdict verdict : verdicts) {
             if (verdict instanceof EvaluationVerdict) {
                 evaluationVerdicts.add((EvaluationVerdict) verdict);
             } else {
@@ -37,20 +64,11 @@ public final class SubtaskReducer implements Reducer {
         Collections.sort(scoringVerdicts);
 
         if (!evaluationVerdicts.isEmpty()) {
-            return new SubtaskResult(evaluationVerdicts.get(evaluationVerdicts.size() - 1), score);
+            return evaluationVerdicts.get(evaluationVerdicts.size() - 1);
         } else if (!scoringVerdicts.isEmpty()) {
-            return new SubtaskResult(scoringVerdicts.get(scoringVerdicts.size() - 1), score);
+            return scoringVerdicts.get(scoringVerdicts.size() - 1);
         } else {
-            return new SubtaskResult(ScoringVerdict.OK, 0.0);
+            return ScoringVerdict.OK;
         }
-    }
-
-    @Override
-    public OverallResult reduceSubtasks(List<SubtaskResult> subtaskResults) {
-        double score = 0;
-        for (SubtaskResult result : subtaskResults) {
-            score += result.getScore();
-        }
-        return new OverallResult(ScoringVerdict.OK, (int) score);
     }
 }
