@@ -41,7 +41,7 @@ public abstract class Sandbox {
         try {
             exitCode = pb.start().waitFor();
         } catch (IOException | InterruptedException e) {
-            return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, SandboxExecutionResultDetails.internalError(e.getMessage()));
+            return SandboxExecutionResult.internalError(e.getMessage());
         }
 
         return getResult(exitCode);

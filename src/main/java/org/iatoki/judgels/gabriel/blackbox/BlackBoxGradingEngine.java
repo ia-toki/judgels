@@ -88,7 +88,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
             }
         }
 
-        return new TestCaseFinalResult(testCaseResult, evaluationResult.getDetails(), testCase.getSubtaskIds());
+        return new TestCaseFinalResult(testCaseResult, evaluationResult.getExecutionResult(), testCase.getSubtaskIds());
     }
 
 

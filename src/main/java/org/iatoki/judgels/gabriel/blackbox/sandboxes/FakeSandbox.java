@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
 
 import java.io.File;
@@ -157,7 +156,6 @@ public final class FakeSandbox extends Sandbox {
             default:
                 status = SandboxExecutionStatus.NONZERO_EXIT_CODE;
         }
-        return new SandboxExecutionResult(status, new SandboxExecutionResultDetails(100, 1000, "OK"));
+        return new SandboxExecutionResult(status, 100, 1000, "OK");
     }
-
 }

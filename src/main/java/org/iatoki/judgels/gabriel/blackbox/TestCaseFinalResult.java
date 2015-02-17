@@ -9,13 +9,13 @@ import java.util.Set;
 public final class TestCaseFinalResult {
     private final Verdict verdict;
     private final String score;
-    private final SandboxExecutionResultDetails details;
+    private final SandboxExecutionResult executionResult;
     private final List<Integer> subtaskIds;
 
-    public TestCaseFinalResult(TestCaseResult result, SandboxExecutionResultDetails details, Set<Integer> subtaskIds) {
+    public TestCaseFinalResult(TestCaseResult result, SandboxExecutionResult executionResult, Set<Integer> subtaskIds) {
         this.verdict = new Verdict(result.getVerdict().getCode(), result.getVerdict().getName());
         this.score = result.getScore();
-        this.details = details;
+        this.executionResult = executionResult;
         this.subtaskIds = Lists.newArrayList(subtaskIds);
     }
 
@@ -27,8 +27,8 @@ public final class TestCaseFinalResult {
         return score;
     }
 
-    public SandboxExecutionResultDetails getDetails() {
-        return details;
+    public SandboxExecutionResult getExecutionResult() {
+        return executionResult;
     }
 
     public List<Integer> getSubtaskIds() {

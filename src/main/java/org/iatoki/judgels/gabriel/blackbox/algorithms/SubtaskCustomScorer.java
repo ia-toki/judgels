@@ -73,7 +73,7 @@ public final class SubtaskCustomScorer implements Scorer {
         SandboxExecutionResult executionResult = sandbox.execute(scoringCommand);
 
         if (executionResult.getStatus() != SandboxExecutionStatus.ZERO_EXIT_CODE) {
-            throw new ScoringException(Joiner.on(" ").join(scoringCommand) + " resulted in " + executionResult.getDetails());
+            throw new ScoringException(Joiner.on(" ").join(scoringCommand) + " resulted in " + executionResult);
         }
 
         String scoringOutput;

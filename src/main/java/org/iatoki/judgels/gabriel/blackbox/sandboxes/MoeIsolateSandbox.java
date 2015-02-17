@@ -7,7 +7,6 @@ import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.SandboxException;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
 
 import java.io.BufferedReader;
@@ -190,7 +189,7 @@ public class MoeIsolateSandbox extends Sandbox {
     @Override
     public SandboxExecutionResult getResult(int exitCode) {
         if (exitCode != 0) {
-            return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, SandboxExecutionResultDetails.internalError("Isolate returns nonzero exit code: " + exitCode));
+            return SandboxExecutionResult.internalError("Isolate returns nonzero exit code: " + exitCode);
         }
 
         try {
@@ -209,21 +208,19 @@ public class MoeIsolateSandbox extends Sandbox {
             int memory = (int) (Double.parseDouble(items.get("cg-mem")));
             String status = items.get("status");
 
-            SandboxExecutionResultDetails details = new SandboxExecutionResultDetails(time, memory, meta);
-
             if (status == null) {
-                return new SandboxExecutionResult(SandboxExecutionStatus.ZERO_EXIT_CODE, details);
+                return new SandboxExecutionResult(SandboxExecutionStatus.ZERO_EXIT_CODE, time, memory, meta);
             } else if (status.equals("RE")) {
-                return new SandboxExecutionResult(SandboxExecutionStatus.NONZERO_EXIT_CODE, details);
+                return new SandboxExecutionResult(SandboxExecutionStatus.NONZERO_EXIT_CODE, time, memory, meta);
             } else if (status.equals("SG")) {
-                return new SandboxExecutionResult(SandboxExecutionStatus.KILLED_ON_SIGNAL, details);
+                return new SandboxExecutionResult(SandboxExecutionStatus.KILLED_ON_SIGNAL, time, memory, meta);
             } else if (status.equals("TO")) {
-                return new SandboxExecutionResult(SandboxExecutionStatus.TIMED_OUT, details);
+                return new SandboxExecutionResult(SandboxExecutionStatus.TIMED_OUT, time, memory, meta);
             } else {
-                return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, details);
+                return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, time, memory, meta);
             }
         } catch (IOException e) {
-            return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, SandboxExecutionResultDetails.internalError("Isolate did not produce readable meta file"));
+            return SandboxExecutionResult.internalError("Isolate did not produce readable meta file");
         }
 
     }
