@@ -191,8 +191,8 @@ public class MoeIsolateSandbox extends Sandbox {
 
     @Override
     public SandboxExecutionResult getResult(int exitCode) {
-        if (exitCode != 0) {
-            return SandboxExecutionResult.internalError("Isolate returns nonzero exit code: " + exitCode);
+        if (exitCode != 0 && exitCode != 1) {
+            return SandboxExecutionResult.internalError("Isolate returns nonzero and non-one exit code: " + exitCode);
         }
 
         try {
