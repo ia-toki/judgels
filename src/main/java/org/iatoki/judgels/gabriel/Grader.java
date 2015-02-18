@@ -48,7 +48,7 @@ public final class Grader {
 
         try {
             GradingRequest request = GradingRequests.parseFromJson(message.getMessageType(), message.getMessage());
-            GradingWorker worker = GradingWorkers.newWorker(message.getSourceClientJid(), request, sealtiel);
+            GradingWorker worker = GradingWorkers.newWorker(message.getSourceClientJid(), request, sealtiel, message.getId());
 
             threadPoolExecutor.submit(worker);
         } catch (BadGradingRequestException e) {

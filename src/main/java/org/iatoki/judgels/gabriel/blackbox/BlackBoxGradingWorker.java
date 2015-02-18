@@ -29,6 +29,8 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     private final BlackBoxGradingRequest request;
     private final Sealtiel sealtiel;
 
+    private final long messageId;
+
     private File engineDir;
     private BlackBoxGradingEngine engine;
     private BlackBoxGradingConfig config;
@@ -39,10 +41,11 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     private Map<String, File> helperFiles;
     private Map<String, File> testDataFiles;
 
-    public BlackBoxGradingWorker(String senderChannel, BlackBoxGradingRequest request, Sealtiel sealtiel) {
+    public BlackBoxGradingWorker(String senderChannel, BlackBoxGradingRequest request, Sealtiel sealtiel, long messageId) {
         this.senderChannel = senderChannel;
         this.request = request;
         this.sealtiel = sealtiel;
+        this.messageId = messageId;
     }
 
     @Override
@@ -69,7 +72,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
             ClientMessage message = new ClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
 
             sealtiel.sendMessage(message);
-            sealtiel.sendConfirmation(message.getId());
+            sealtiel.sendConfirmation(messageId);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -103,8 +106,8 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     private SandboxFactory getSandboxProvider(File workerDir) throws IOException {
-        if (GabrielProperties.getInstance().getIsolatePath() != null) {
-            return new MoeIsolateSandboxFactory(GabrielProperties.getInstance().getIsolatePath());
+        if (GabrielProperties.getInstance().getIsolatePath() != null && GabrielProperties.getInstance().getIwrapperPath() != null) {
+            return new MoeIsolateSandboxFactory(GabrielProperties.getInstance().getIsolatePath(), GabrielProperties.getInstance().getIwrapperPath());
         } else {
             File sandboxesDir = new File(workerDir, "sandbox");
             FileUtils.forceMkdir(sandboxesDir);

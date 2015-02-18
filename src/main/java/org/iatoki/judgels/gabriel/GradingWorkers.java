@@ -9,9 +9,9 @@ public final class GradingWorkers {
         // prevent instantiation
     }
 
-    public static GradingWorker newWorker(String senderChannel, GradingRequest request, Sealtiel sealtiel) {
+    public static GradingWorker newWorker(String senderChannel, GradingRequest request, Sealtiel sealtiel, long messageId) {
         if (request instanceof BlackBoxGradingRequest) {
-            return new BlackBoxGradingWorker(senderChannel, (BlackBoxGradingRequest) request, sealtiel);
+            return new BlackBoxGradingWorker(senderChannel, (BlackBoxGradingRequest) request, sealtiel, messageId);
         } else {
             throw new IllegalArgumentException("Illegal grading request");
         }
