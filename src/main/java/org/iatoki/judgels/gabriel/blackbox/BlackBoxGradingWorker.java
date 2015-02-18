@@ -69,6 +69,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
             ClientMessage message = new ClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
 
             sealtiel.sendMessage(message);
+            sealtiel.sendConfirmation(message.getId());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

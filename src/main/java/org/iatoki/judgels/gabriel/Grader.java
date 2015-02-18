@@ -15,7 +15,7 @@ public final class Grader {
     public Grader() {
         int threadPool = (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2;
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadPool);
-    this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret(), GabrielProperties.getInstance().getSealtielBaseUrl());
+        this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret(), GabrielProperties.getInstance().getSealtielBaseUrl());
 
         System.out.println("Starting Gabriel using "+threadPool+" threads.");
     }
