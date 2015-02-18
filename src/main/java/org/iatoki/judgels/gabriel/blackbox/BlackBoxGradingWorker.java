@@ -57,7 +57,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         try {
             initialize();
             result = engine.gradeAfterInitialization(sandboxFactory, engineDir, language, sourceFiles, helperFiles, testDataFiles, config);
-        } catch (GradingException e) {
+        } catch (GradingException | SandboxException e) {
             System.out.println("Grading id " + getId() + " error : " + e.getMessage());
             result = BlackBoxGradingResult.internalErrorResult();
         }
