@@ -5,11 +5,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxesInteractionWrapper;
+import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxesInteractor;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
-import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractionWrapper;
+import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractor;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
 import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
@@ -27,6 +27,8 @@ public final class InteractiveEvaluator implements Evaluator {
     private final Sandbox contestantSandbox;
     private final Sandbox communicatorSandbox;
 
+    private final SandboxesInteractor sandboxesInteractor;
+
     private final File compilationDir;
     private final File evaluationDir;
 
@@ -38,9 +40,7 @@ public final class InteractiveEvaluator implements Evaluator {
     private final List<String> contestantEvaluationCommand;
     private final List<String> communicatorExecutionCommand;
 
-    private final int evaluationTimeLimitInMilliseconds;
-
-    public InteractiveEvaluator(Sandbox contestantSandbox, Sandbox communicatorSandbox, File compilationDir, File evaluationDir, GradingLanguage contestantLanguage, GradingLanguage communicatorLanguage, File contestantSourceFile, File communicatorSourceFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int evaluationTimeLimitInMilliseconds, int evaluationMemoryLimitInMilliseconds) throws PreparationException {
+    public InteractiveEvaluator(Sandbox contestantSandbox, Sandbox communicatorSandbox, SandboxesInteractor sandboxesInteractor, File compilationDir, File evaluationDir, GradingLanguage contestantLanguage, GradingLanguage communicatorLanguage, File contestantSourceFile, File communicatorSourceFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int evaluationTimeLimitInMilliseconds, int evaluationMemoryLimitInMilliseconds) throws PreparationException {
         try {
             SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(communicatorSandbox, evaluationDir, communicatorLanguage, "communicator", communicatorSourceFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
             CompilationResult result = compiler.compile();
@@ -77,10 +77,10 @@ public final class InteractiveEvaluator implements Evaluator {
         this.contestantSandbox = contestantSandbox;
         this.communicatorSandbox = communicatorSandbox;
 
+        this.sandboxesInteractor  = sandboxesInteractor;
+
         this.contestantEvaluationCommand = contestantLanguage.getExecutionCommand(contestantSourceFile.getName());
         this.communicatorExecutionCommand = communicatorLanguage.getExecutionCommand(communicatorSourceFile.getName());
-
-        this.evaluationTimeLimitInMilliseconds = evaluationTimeLimitInMilliseconds;
     }
 
     @Override
@@ -110,9 +110,7 @@ public final class InteractiveEvaluator implements Evaluator {
 
         List<String> communicatorEvaluationCommand = communicatorEvaluationCommandBuilder.build();
 
-        SandboxesInteractionWrapper interactor = new FakeSandboxesInteractionWrapper();
-
-        SandboxExecutionResult[] results = interactor.executeInteraction(contestantSandbox, contestantEvaluationCommand, communicatorSandbox, communicatorEvaluationCommand);
+        SandboxExecutionResult[] results = sandboxesInteractor.executeInteraction(contestantSandbox, contestantEvaluationCommand, communicatorSandbox, communicatorEvaluationCommand);
 
         SandboxExecutionResult contestantExecutionResult = results[0];
         SandboxExecutionResult communicatorExecutionResult = results[1];
