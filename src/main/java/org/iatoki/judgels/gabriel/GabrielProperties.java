@@ -25,6 +25,7 @@ public final class GabrielProperties {
     private String sandalphonClientSecret;
 
     private String isolatePath;
+    private String iwrapperPath;
 
     private String sealtielBaseUrl;
     private String sealtielClientJid;
@@ -48,6 +49,10 @@ public final class GabrielProperties {
 
     public String getIsolatePath() {
         return isolatePath;
+    }
+
+    public String getIwrapperPath() {
+        return iwrapperPath;
     }
 
     public String getSealtielBaseUrl() {
@@ -121,6 +126,7 @@ public final class GabrielProperties {
             INSTANCE.sandalphonClientSecret = properties.getProperty("sandalphon.clientSecret").replaceAll("\"", "");
 
             INSTANCE.isolatePath = properties.getProperty("moe.isolatePath");
+            INSTANCE.iwrapperPath = properties.getProperty("moe.iwrapperPath");
 
             INSTANCE.sealtielBaseUrl = properties.getProperty("sealtiel.baseUrl").replaceAll("\"", "");
             INSTANCE.sealtielClientJid = properties.getProperty("sealtiel.clientJid").replaceAll("\"", "");
