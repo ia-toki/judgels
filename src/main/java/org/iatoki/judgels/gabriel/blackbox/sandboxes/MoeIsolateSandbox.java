@@ -249,7 +249,7 @@ public class MoeIsolateSandbox extends Sandbox {
                 throw new SandboxException("Cannot init isolate");
             }
 
-            if (!boxDir.setWritable(true) || boxDir.setReadable(true) || boxDir.setExecutable(true)) {
+            if (!boxDir.setWritable(true) || !boxDir.setReadable(true) || !boxDir.setExecutable(true)) {
                 throw new SandboxException("Cannot set box directory to rwx");
             }
         } catch (IOException | InterruptedException e) {
