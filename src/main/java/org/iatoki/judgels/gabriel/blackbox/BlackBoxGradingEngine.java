@@ -47,7 +47,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         }
 
         List<SubtaskResult> subtaskResults = subtaskResultsBuilder.build();
-        OverallResult result = getReducer().reduceSubtasks(subtaskResults);
+        ReductionResult result = getReducer().reduceSubtasks(subtaskResults);
 
         ImmutableList.Builder<SubtaskFinalResult> subtaskFinalResults = ImmutableList.builder();
         for (int i = 0; i < config.getSubtasks().size(); i++) {

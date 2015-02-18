@@ -8,7 +8,7 @@ public enum EvaluationVerdict implements NormalVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "OK";
         }
     },
@@ -20,7 +20,7 @@ public enum EvaluationVerdict implements NormalVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "Runtime Error";
         }
     },
@@ -32,7 +32,7 @@ public enum EvaluationVerdict implements NormalVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "Time Limit Exceeded";
         }
     },
@@ -44,7 +44,7 @@ public enum EvaluationVerdict implements NormalVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "Skipped";
         }
     };
