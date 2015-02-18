@@ -2,7 +2,7 @@ package org.iatoki.judgels.gabriel.blackbox.sandboxes;
 
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractionWrapper;
+import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public final class FakeSandboxesInteractionWrapper implements SandboxesInteractionWrapper {
+public final class FakeSandboxesInteractor implements SandboxesInteractor {
     @Override
     public SandboxExecutionResult[] executeInteraction(Sandbox sandbox1, List<String> command1, Sandbox sandbox2, List<String> command2) {
 

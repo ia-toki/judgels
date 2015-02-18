@@ -3,6 +3,7 @@ package org.iatoki.judgels.gabriel.blackbox.sandboxes;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxFactory;
+import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractor;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,5 +30,10 @@ public class FakeSandboxFactory implements SandboxFactory {
         }
 
         return new FakeSandbox(sandboxDir);
+    }
+
+    @Override
+    public SandboxesInteractor newSandboxesInteractor() {
+        return new FakeSandboxesInteractor();
     }
 }
