@@ -8,7 +8,7 @@ public enum ScoringVerdict implements NormalVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "Accepted";
         }
     },
@@ -20,7 +20,7 @@ public enum ScoringVerdict implements NormalVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "OK";
         }
     },
@@ -32,7 +32,7 @@ public enum ScoringVerdict implements NormalVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "Wrong Answer";
         }
     }

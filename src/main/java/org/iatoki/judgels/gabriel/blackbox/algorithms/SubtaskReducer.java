@@ -3,9 +3,10 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 import com.google.common.collect.Lists;
 import org.iatoki.judgels.gabriel.blackbox.EvaluationVerdict;
 import org.iatoki.judgels.gabriel.blackbox.NormalVerdict;
-import org.iatoki.judgels.gabriel.blackbox.OverallResult;
+import org.iatoki.judgels.gabriel.blackbox.ReductionResult;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.ReductionException;
+import org.iatoki.judgels.gabriel.blackbox.ReductionVerdict;
 import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
 import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskResult;
@@ -33,9 +34,9 @@ public final class SubtaskReducer implements Reducer {
     }
 
     @Override
-    public OverallResult reduceSubtasks(List<SubtaskResult> subtaskResults) {
+    public ReductionResult reduceSubtasks(List<SubtaskResult> subtaskResults) {
         if (subtaskResults.size() == 1) {
-            return new OverallResult(subtaskResults.get(0).getVerdict(), null, (int) Math.round(subtaskResults.get(0).getScore()));
+            return new ReductionResult(subtaskResults.get(0).getVerdict(), (int) Math.round(subtaskResults.get(0).getScore()));
         } else {
             double score = 0;
             for (SubtaskResult result : subtaskResults) {
@@ -43,10 +44,11 @@ public final class SubtaskReducer implements Reducer {
             }
 
             NormalVerdict worstVerdict = getWorstVerdict(Lists.transform(subtaskResults, r -> r.getVerdict()));
-            if (worstVerdict == ScoringVerdict.ACCEPTED) {
-                return new OverallResult(ScoringVerdict.ACCEPTED, null, (int) Math.round(score));
+
+            if (worstVerdict == ScoringVerdict.ACCEPTED || worstVerdict == ScoringVerdict.OK) {
+                return new ReductionResult(worstVerdict, (int) Math.round(score));
             } else {
-                return new OverallResult(ScoringVerdict.OK, "worst: " + worstVerdict.getCode(), (int) Math.round(score));
+                return new ReductionResult(ReductionVerdict.okWithWorstVerdict(worstVerdict), (int) Math.round(score));
             }
         }
     }

@@ -10,7 +10,7 @@ public enum CompilationVerdict implements BlackBoxVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "OK";
         }
     },
@@ -22,7 +22,7 @@ public enum CompilationVerdict implements BlackBoxVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "Compilation Error";
         }
     }

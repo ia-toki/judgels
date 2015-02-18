@@ -8,7 +8,7 @@ public enum GeneralVerdict implements BlackBoxVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "Pending";
         }
     },
@@ -20,7 +20,7 @@ public enum GeneralVerdict implements BlackBoxVerdict {
         }
 
         @Override
-        public String getName() {
+        public String getDescription() {
             return "Internal Error";
         }
     }

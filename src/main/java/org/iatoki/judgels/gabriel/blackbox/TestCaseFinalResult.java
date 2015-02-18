@@ -13,7 +13,7 @@ public final class TestCaseFinalResult {
     private final List<Integer> subtaskIds;
 
     public TestCaseFinalResult(TestCaseResult result, SandboxExecutionResult executionResult, Set<Integer> subtaskIds) {
-        this.verdict = new Verdict(result.getVerdict().getCode(), result.getVerdict().getName());
+        this.verdict = new Verdict(result.getVerdict().getCode(), result.getVerdict().getDescription());
         this.score = result.getScore();
         this.executionResult = executionResult;
         this.subtaskIds = Lists.newArrayList(subtaskIds);

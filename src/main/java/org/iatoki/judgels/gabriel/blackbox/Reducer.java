@@ -5,5 +5,5 @@ import java.util.List;
 public interface Reducer {
     SubtaskResult reduceTestCases(List<TestCaseResult> testCaseResults, Subtask subtask) throws ReductionException;
 
-    OverallResult reduceSubtasks(List<SubtaskResult> subtaskResults);
+    ReductionResult reduceSubtasks(List<SubtaskResult> subtaskResults) throws ReductionException;
 }

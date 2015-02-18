@@ -15,7 +15,7 @@ public final class SubtaskFinalResult {
 
     public SubtaskFinalResult(int id, SubtaskResult result) {
         this.id = id;
-        this.verdict = new Verdict(result.getVerdict().getCode(), result.getVerdict().getName());
+        this.verdict = new Verdict(result.getVerdict().getCode(), result.getVerdict().getDescription());
         this.score = result.getScore();
     }
 

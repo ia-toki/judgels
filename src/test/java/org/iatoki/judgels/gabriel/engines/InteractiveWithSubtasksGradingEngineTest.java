@@ -66,7 +66,6 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
         try {
             BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-OK.cpp"));
             assertEquals(result.getVerdict(), VERDICT_CE);
-            assertNull(result.getMessage());
             assertEquals(result.getScore(), 0);
             assertTrue(result.getDetails().getCompilationOutputs().get("source").contains("strcmp"));
         } catch (GradingException e) {
@@ -119,7 +118,6 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
         try {
             BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-OK.cpp"));
             assertEquals(result.getVerdict(), VERDICT_AC);
-            assertNull(result.getMessage());
             assertEquals(result.getScore(), 100);
 
             BlackBoxGradingResultDetails details = result.getDetails();
@@ -138,8 +136,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
 
         try {
             BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-OK.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_OK);
-            assertEquals(result.getMessage(), "worst: WA");
+            assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = result.getDetails();
@@ -159,8 +156,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
 
         try {
             BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-OK.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_OK);
-            assertEquals(result.getMessage(), "worst: RTE");
+            assertEquals(result.getVerdict(), VERDICT_OK_WORST_RTE);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = result.getDetails();
