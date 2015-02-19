@@ -50,7 +50,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
     @Override
     public String getId() {
-        return request.getSubmissionJid();
+        return request.getGradingJid();
     }
 
     @Override
@@ -67,7 +67,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
         engine.cleanUp();
 
-        BlackBoxGradingResponse response = new BlackBoxGradingResponse(request.getSubmissionJid(), result);
+        BlackBoxGradingResponse response = new BlackBoxGradingResponse(request.getGradingJid(), result);
         try {
             ClientMessage message = new ClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
 
