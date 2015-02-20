@@ -7,15 +7,15 @@ import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
 import java.util.List;
 import java.util.Set;
 
-public final class CppGradingLanguage extends AbstractGradingLanguage {
+public final class CGradingLanguage extends AbstractGradingLanguage {
     @Override
     public String getName() {
-        return "C++";
+        return "C";
     }
 
     @Override
     public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("cpp", "cc");
+        return ImmutableSet.of("c");
     }
 
     @Override
@@ -26,7 +26,7 @@ public final class CppGradingLanguage extends AbstractGradingLanguage {
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
         String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("/usr/bin/g++", "-o", executableFilename, sourceFilename);
+        return ImmutableList.of("/usr/bin/gcc", "-std=gnu99", "-o", executableFilename, sourceFilename);
     }
 
     @Override
