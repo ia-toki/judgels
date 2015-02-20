@@ -1,7 +1,7 @@
 package org.iatoki.judgels.gabriel;
 
 public interface GradingRequest {
-    String getSubmissionJid();
+    String getGradingJid();
 
     String getProblemJid();
 
