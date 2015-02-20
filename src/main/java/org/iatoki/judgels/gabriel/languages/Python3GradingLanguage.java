@@ -25,7 +25,7 @@ public final class Python3GradingLanguage extends AbstractGradingLanguage {
 
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
-        return ImmutableList.of("true");
+        return ImmutableList.of("/bin/true");
     }
 
     @Override
