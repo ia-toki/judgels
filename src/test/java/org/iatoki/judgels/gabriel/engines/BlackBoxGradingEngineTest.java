@@ -11,8 +11,7 @@ import org.iatoki.judgels.gabriel.Verdict;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxVerdict;
-import org.iatoki.judgels.gabriel.languages.CppGradingLanguage;
+import org.iatoki.judgels.gabriel.languages.CppElevenGradingLanguage;
 import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -58,7 +57,7 @@ public abstract class BlackBoxGradingEngineTest {
         this.testDataFiles = listFilesAsMap(testDataDir);
         this.helperFiles = listFilesAsMap(helperDir);
 
-        this.language = new CppGradingLanguage();
+        this.language = new CppElevenGradingLanguage();
     }
 
     @BeforeMethod

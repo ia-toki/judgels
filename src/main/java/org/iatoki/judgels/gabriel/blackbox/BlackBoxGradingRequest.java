@@ -4,15 +4,15 @@ import org.iatoki.judgels.gabriel.GradingRequest;
 import org.iatoki.judgels.gabriel.GradingSource;
 
 public final class BlackBoxGradingRequest implements GradingRequest {
-    private final String submissionJid;
+    private final String gradingJid;
     private final String problemJid;
     private final long gradingLastUpdateTime;
     private final String gradingEngine;
     private final String gradingLanguage;
     private final BlackBoxGradingSource gradingSource;
 
-    public BlackBoxGradingRequest(String submissionJid, String problemJid, long gradingLastUpdateTime, String gradingEngine, String gradingLanguage, BlackBoxGradingSource gradingSource) {
-        this.submissionJid = submissionJid;
+    public BlackBoxGradingRequest(String gradingJid, String problemJid, long gradingLastUpdateTime, String gradingEngine, String gradingLanguage, BlackBoxGradingSource gradingSource) {
+        this.gradingJid = gradingJid;
         this.problemJid = problemJid;
         this.gradingLastUpdateTime = gradingLastUpdateTime;
         this.gradingEngine = gradingEngine;
@@ -21,8 +21,8 @@ public final class BlackBoxGradingRequest implements GradingRequest {
     }
 
     @Override
-    public String getSubmissionJid() {
-        return submissionJid;
+    public String getGradingJid() {
+        return gradingJid;
     }
 
     @Override
