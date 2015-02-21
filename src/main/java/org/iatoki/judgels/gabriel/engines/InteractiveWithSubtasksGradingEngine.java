@@ -66,14 +66,14 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
         }
 
         compilerSandbox = sandboxFactory.newSandbox();
-        compiler = new SingleSourceFileCompiler(compilerSandbox, compilationDir, language, "source", contestantSourceFile, 10000, 100 * 1024);
+        compiler = new SingleSourceFileCompiler(compilerSandbox, compilationDir, language, "source", contestantSourceFile, 10000, 1024 * 1024);
 
         evaluatorContestantSandbox = sandboxFactory.newSandbox();
         evaluatorCommunicatorSandbox = sandboxFactory.newSandbox();
 
         GradingLanguage cppLanguage = GradingLanguageRegistry.getInstance().getLanguage("Cpp");
 
-        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), compilationDir, evaluationDir, language, cppLanguage, contestantSourceFile, communicatorSourceFile,  10000, 100 * 1024, thisConfig.getTimeLimitInMilliseconds(), thisConfig.getMemoryLimitInKilobytes());
+        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), compilationDir, evaluationDir, language, cppLanguage, contestantSourceFile, communicatorSourceFile,  10000, 1024 * 1024, thisConfig.getTimeLimitInMilliseconds(), thisConfig.getMemoryLimitInKilobytes());
         scorer = new IdentitySubtaskScorer(evaluationDir);
         reducer = new SubtaskReducer();
     }

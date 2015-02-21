@@ -26,7 +26,7 @@ public final class CppElevenGradingLanguage extends AbstractGradingLanguage {
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
         String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("/usr/bin/g++", "-std=c++11", "-o", executableFilename, sourceFilename);
+        return ImmutableList.of("/usr/bin/g++", "-std=c++11", "-o", executableFilename, sourceFilename, "-O2", "-s", "-static", "-lm");
     }
 
     @Override
