@@ -80,7 +80,7 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
 
         if (thisConfig.getCustomScorer() != null) {
             scorerSandbox = sandboxFactory.newSandbox();
-            GradingLanguage cppLanguage = GradingLanguageRegistry.getInstance().getLanguage("Cpp");
+            GradingLanguage cppLanguage = GradingLanguageRegistry.getInstance().getLanguage("CppEleven");
             File scorerFile = helperFiles.get(thisConfig.getCustomScorer());
             scorer = new SubtaskCustomScorer(scorerSandbox, evaluationDir, scoringDir, cppLanguage, scorerFile, 10000, 1024 * 1024, 10000, 1024 * 1024);
         } else {
