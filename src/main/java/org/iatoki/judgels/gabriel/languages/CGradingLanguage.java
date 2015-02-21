@@ -26,7 +26,7 @@ public final class CGradingLanguage extends AbstractGradingLanguage {
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
         String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("/usr/bin/gcc", "-std=gnu99", "-o", executableFilename, sourceFilename, "-O2", "-s", "-static", "-lm");
+        return ImmutableList.of("/usr/bin/gcc", "-std=gnu99", "-o", executableFilename, sourceFilename, "-s", "-static", "-lm");
     }
 
     @Override
