@@ -73,7 +73,7 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
         }
 
         compilerSandbox = sandboxFactory.newSandbox();
-        compiler = new SingleSourceFileCompiler(compilerSandbox, compilationDir, language, "source", sourceFile, 10000, 100 * 1024);
+        compiler = new SingleSourceFileCompiler(compilerSandbox, compilationDir, language, "source", sourceFile, 10000, 1024 * 1024);
 
         evaluatorSandbox = sandboxFactory.newSandbox();
         evaluator = new BatchEvaluator(evaluatorSandbox, compilationDir, evaluationDir, language, sourceFile, thisConfig.getTimeLimitInMilliseconds(), thisConfig.getMemoryLimitInKilobytes());
@@ -82,7 +82,7 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
             scorerSandbox = sandboxFactory.newSandbox();
             GradingLanguage cppLanguage = GradingLanguageRegistry.getInstance().getLanguage("Cpp");
             File scorerFile = helperFiles.get(thisConfig.getCustomScorer());
-            scorer = new SubtaskCustomScorer(scorerSandbox, evaluationDir, scoringDir, cppLanguage, scorerFile, 10000, 100 * 1024, 10000, 100 * 1024);
+            scorer = new SubtaskCustomScorer(scorerSandbox, evaluationDir, scoringDir, cppLanguage, scorerFile, 10000, 1024 * 1024, 10000, 1024 * 1024);
         } else {
             scorer = new SubtaskScorer(evaluationDir);
         }

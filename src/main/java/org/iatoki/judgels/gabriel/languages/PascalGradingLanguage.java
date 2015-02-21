@@ -26,7 +26,7 @@ public final class PascalGradingLanguage extends AbstractGradingLanguage {
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
         String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("/usr/bin/fpc", sourceFilename);
+        return ImmutableList.of("/usr/bin/fpc", sourceFilename, "-O2", "-XS", "-Sg");
     }
 
     @Override
