@@ -1,2 +1,3 @@
+org.iatoki.judgels.gabriel.engines.BatchGradingEngine
 org.iatoki.judgels.gabriel.engines.BatchWithSubtasksGradingEngine
 org.iatoki.judgels.gabriel.engines.InteractiveWithSubtasksGradingEngine

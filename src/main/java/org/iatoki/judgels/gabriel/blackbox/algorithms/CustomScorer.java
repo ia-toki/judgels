@@ -12,16 +12,13 @@ import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
 import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
-import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.ScoringException;
-import org.iatoki.judgels.gabriel.blackbox.ScoringResult;
-import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public final class SubtaskCustomScorer implements Scorer {
+public final class CustomScorer extends AbstractScorer {
     private final Sandbox sandbox;
     private final File evaluationDir;
     private final String scorerExecutableFilename;
@@ -30,7 +27,7 @@ public final class SubtaskCustomScorer implements Scorer {
     private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
     private static final String SCORING_OUTPUT_FILENAME = "_scoring.out";
 
-    public SubtaskCustomScorer(Sandbox sandbox, File evaluationDir, File scoringDir, GradingLanguage language, File scorerFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int scoringTimeLimitInMilliseconds, int scoringMemoryLimitInKilobytes) throws PreparationException {
+    public CustomScorer(Sandbox sandbox, File evaluationDir, File scoringDir, GradingLanguage language, File scorerFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int scoringTimeLimitInMilliseconds, int scoringMemoryLimitInKilobytes) throws PreparationException {
         try {
             SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(sandbox, scoringDir, language, "customScorer", scorerFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
             CompilationResult result = compiler.compile();
@@ -56,7 +53,7 @@ public final class SubtaskCustomScorer implements Scorer {
     }
 
     @Override
-    public ScoringResult score(File testCaseInput, File testCaseOutput) throws ScoringException {
+    protected String executeScoring(File testCaseInput, File testCaseOutput) throws ScoringException {
         sandbox.addFile(new File(evaluationDir, EVALUATION_OUTPUT_FILENAME));
         sandbox.addFile(testCaseInput);
         sandbox.addFile(testCaseOutput);
@@ -86,15 +83,6 @@ public final class SubtaskCustomScorer implements Scorer {
 
         sandbox.removeAllFilesExcept(ImmutableSet.of(scorerExecutableFilename));
 
-        scoringOutput = scoringOutput.trim();
-
-        switch (scoringOutput) {
-            case "AC":
-                return new ScoringResult(ScoringVerdict.ACCEPTED, "");
-            case "WA":
-                return new ScoringResult(ScoringVerdict.WRONG_ANSWER, "");
-            default:
-                throw new ScoringException(Joiner.on(" ").join(scoringCommand) + " output unknown scoring format: " + scoringOutput);
-        }
+        return scoringOutput;
     }
 }
