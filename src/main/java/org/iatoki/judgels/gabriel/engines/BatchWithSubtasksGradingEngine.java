@@ -19,8 +19,8 @@ import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.BatchEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskCustomScorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskScorer;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
 
 import java.io.File;
@@ -82,9 +82,9 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
             scorerSandbox = sandboxFactory.newSandbox();
             GradingLanguage cppLanguage = GradingLanguageRegistry.getInstance().getLanguage("CppEleven");
             File scorerFile = helperFiles.get(thisConfig.getCustomScorer());
-            scorer = new SubtaskCustomScorer(scorerSandbox, evaluationDir, scoringDir, cppLanguage, scorerFile, 10000, 1024 * 1024, 10000, 1024 * 1024);
+            scorer = new CustomScorer(scorerSandbox, evaluationDir, scoringDir, cppLanguage, scorerFile, 10000, 1024 * 1024, 10000, 1024 * 1024);
         } else {
-            scorer = new SubtaskScorer(evaluationDir);
+            scorer = new DiffScorer(evaluationDir);
         }
 
         reducer = new SubtaskReducer();

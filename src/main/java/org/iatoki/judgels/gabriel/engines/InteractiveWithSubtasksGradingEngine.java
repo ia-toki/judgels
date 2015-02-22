@@ -16,7 +16,7 @@ import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentitySubtaskScorer;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
@@ -74,7 +74,7 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
         GradingLanguage cppLanguage = GradingLanguageRegistry.getInstance().getLanguage("CppEleven");
 
         evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), compilationDir, evaluationDir, language, cppLanguage, contestantSourceFile, communicatorSourceFile,  10000, 1024 * 1024, thisConfig.getTimeLimitInMilliseconds(), thisConfig.getMemoryLimitInKilobytes());
-        scorer = new IdentitySubtaskScorer(evaluationDir);
+        scorer = new IdentityScorer(evaluationDir);
         reducer = new SubtaskReducer();
     }
 

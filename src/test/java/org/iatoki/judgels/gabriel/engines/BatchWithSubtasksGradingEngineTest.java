@@ -242,7 +242,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
             fail();
         } catch (GradingException e) {
             assertTrue(e instanceof ScoringException);
-            assertTrue(e.getMessage().contains("unknown scoring format"));
+            assertTrue(e.getMessage().contains("Unknown scoring format"));
         }
     }
 
