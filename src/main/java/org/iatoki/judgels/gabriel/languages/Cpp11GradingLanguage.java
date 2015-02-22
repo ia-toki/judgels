@@ -7,7 +7,7 @@ import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
 import java.util.List;
 import java.util.Set;
 
-public final class CppElevenGradingLanguage extends AbstractGradingLanguage {
+public final class Cpp11GradingLanguage extends AbstractGradingLanguage {
     @Override
     public String getName() {
         return "C++11";

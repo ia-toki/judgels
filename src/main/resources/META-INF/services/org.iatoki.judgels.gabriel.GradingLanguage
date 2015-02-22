@@ -1,4 +1,4 @@
 org.iatoki.judgels.gabriel.languages.CGradingLanguage
-org.iatoki.judgels.gabriel.languages.CppElevenGradingLanguage
+org.iatoki.judgels.gabriel.languages.Cpp11GradingLanguage
 org.iatoki.judgels.gabriel.languages.PascalGradingLanguage
 org.iatoki.judgels.gabriel.languages.Python3GradingLanguage

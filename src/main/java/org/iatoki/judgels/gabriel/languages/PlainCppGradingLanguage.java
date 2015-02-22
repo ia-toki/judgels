@@ -7,29 +7,31 @@ import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
 import java.util.List;
 import java.util.Set;
 
-public final class Python3GradingLanguage extends AbstractGradingLanguage {
+public final class PlainCppGradingLanguage extends AbstractGradingLanguage {
     @Override
     public String getName() {
-        return "Python 3";
+        return "C++";
     }
 
     @Override
     public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("py");
+        return ImmutableSet.of("cpp", "cc");
     }
 
     @Override
     public String getExecutableFilename(String sourceFilename) {
-        return sourceFilename;
+        return sourceFilename.substring(0, sourceFilename.lastIndexOf('.'));
     }
 
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
-        return ImmutableList.of("/usr/bin/true");
+        String executableFilename = getExecutableFilename(sourceFilename);
+        return ImmutableList.of("/usr/bin/g++", "-o", executableFilename, sourceFilename);
     }
 
     @Override
     public List<String> getExecutionCommand(String sourceFilename) {
-        return ImmutableList.of("/usr/bin/python3", sourceFilename);
+        String executableFilename = getExecutableFilename(sourceFilename);
+        return ImmutableList.of("./" + executableFilename);
     }
 }
