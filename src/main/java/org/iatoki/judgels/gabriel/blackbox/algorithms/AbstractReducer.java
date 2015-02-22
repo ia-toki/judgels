@@ -14,7 +14,7 @@ import java.util.List;
 
 public abstract class AbstractReducer implements Reducer {
     @Override
-    public ReductionResult reduceSubtasks(List<SubtaskResult> subtaskResults) {
+    public ReductionResult reduceSubtaskResults(List<SubtaskResult> subtaskResults) {
         if (subtaskResults.size() == 1) {
             return new ReductionResult(subtaskResults.get(0).getVerdict(), (int) Math.round(subtaskResults.get(0).getScore()));
         } else {
@@ -54,6 +54,14 @@ public abstract class AbstractReducer implements Reducer {
             return scoringVerdicts.get(scoringVerdicts.size() - 1);
         } else {
             return ScoringVerdict.OK;
+        }
+    }
+
+    protected final String improveScore(String score, String originalScore) {
+        if (originalScore.isEmpty()) {
+            return score;
+        } else {
+            return score + " (" + originalScore + ")";
         }
     }
 }

@@ -1,5 +1,6 @@
 package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.iatoki.judgels.gabriel.blackbox.NormalVerdict;
 import org.iatoki.judgels.gabriel.blackbox.ReductionException;
@@ -12,7 +13,28 @@ import java.util.List;
 
 public final class SubtaskReducer extends AbstractReducer {
     @Override
-    public SubtaskResult reduceTestCases(List<TestCaseResult> testCaseResults, Subtask subtask) throws ReductionException {
+    public List<TestCaseResult> improveTestCaseResults(List<TestCaseResult> testCaseResults, Subtask subtask) {
+        if (testCaseResults.isEmpty()) {
+            return testCaseResults;
+        }
+
+        ImmutableList.Builder<TestCaseResult> results = ImmutableList.builder();
+
+        for (TestCaseResult result : testCaseResults) {
+            NormalVerdict verdict = result.getVerdict();
+            String score = result.getScore();
+
+            if (verdict == ScoringVerdict.ACCEPTED) {
+                results.add(new TestCaseResult(verdict, improveScore("√", score)));
+            } else {
+                results.add(new TestCaseResult(verdict, improveScore("X", score)));
+            }
+        }
+
+        return results.build();
+    }
+    @Override
+    public SubtaskResult reduceTestCaseResults(List<TestCaseResult> testCaseResults, Subtask subtask) throws ReductionException {
         if (testCaseResults.isEmpty()) {
             return new SubtaskResult(ScoringVerdict.OK, 0.0);
         }

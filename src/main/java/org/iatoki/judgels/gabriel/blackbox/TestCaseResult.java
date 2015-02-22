@@ -4,7 +4,7 @@ public final class TestCaseResult {
     private final NormalVerdict verdict;
     private final String score;
 
-    private TestCaseResult(NormalVerdict verdict, String score) {
+    public TestCaseResult(NormalVerdict verdict, String score) {
         this.verdict = verdict;
         this.score = score;
     }
@@ -14,7 +14,7 @@ public final class TestCaseResult {
     }
 
     public static TestCaseResult fromEvaluationResult(EvaluationResult evaluationResult) {
-        return new TestCaseResult(evaluationResult.getVerdict(), "-");
+        return new TestCaseResult(evaluationResult.getVerdict(), "");
     }
 
     public NormalVerdict getVerdict() {

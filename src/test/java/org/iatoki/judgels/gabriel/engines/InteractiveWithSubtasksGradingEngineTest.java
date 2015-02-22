@@ -11,6 +11,7 @@ import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
+import org.iatoki.judgels.gabriel.languages.PlainCppGradingLanguage;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -24,16 +25,16 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
 
     private final InteractiveWithSubtasksGradingEngine engine;
 
-    private final int timeLimitInMilliseconds;
-    private final int memoryLimitInKilobytes;
+    private final int timeLimit;
+    private final int memoryLimit;
     private final List<TestGroup> testData;
     private final List<Integer> subtaskPoints;
 
     public InteractiveWithSubtasksGradingEngineTest() {
         super("interactive");
 
-        this.timeLimitInMilliseconds = 1000;
-        this.memoryLimitInKilobytes = 65536;
+        this.timeLimit = 1000;
+        this.memoryLimit = 65536;
 
         this.testData = ImmutableList.of(
                 new TestGroup(0, ImmutableList.of(
@@ -56,8 +57,8 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
         this.subtaskPoints = ImmutableList.of(30, 70);
 
         this.engine = new InteractiveWithSubtasksGradingEngine();
+        this.engine.setCommunicatorLanguage(new PlainCppGradingLanguage());
     }
-
 
     @Test
     public void testCE() {
@@ -170,6 +171,6 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
     }
 
     private InteractiveWithSubtasksGradingConfig createConfigWithCommunicator(String communicator) {
-        return new InteractiveWithSubtasksGradingConfig(timeLimitInMilliseconds, memoryLimitInKilobytes, testData, subtaskPoints, communicator);
+        return new InteractiveWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, subtaskPoints, communicator);
     }
 }

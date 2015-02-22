@@ -11,6 +11,7 @@ import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
+import org.iatoki.judgels.gabriel.languages.PlainCppGradingLanguage;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -25,16 +26,16 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
     private final BatchWithSubtasksGradingEngine engine;
     private final BatchWithSubtasksGradingConfig config;
 
-    private final int timeLimitInMilliseconds;
-    private final int memoryLimitInKilobytes;
+    private final int timeLimit;
+    private final int memoryLimit;
     private final List<TestGroup> testData;
     private final List<Integer> subtaskPoints;
 
     public BatchWithSubtasksGradingEngineTest() {
         super("batch");
 
-        this.timeLimitInMilliseconds = 1000;
-        this.memoryLimitInKilobytes = 65536;
+        this.timeLimit = 1000;
+        this.memoryLimit = 65536;
 
         this.testData = ImmutableList.of(
                 new TestGroup(0, ImmutableList.of(
@@ -56,8 +57,9 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
         this.subtaskPoints = ImmutableList.of(30, 70);
 
-        this.config = new BatchWithSubtasksGradingConfig(timeLimitInMilliseconds, memoryLimitInKilobytes, testData, subtaskPoints, null);
+        this.config = new BatchWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, subtaskPoints, null);
         this.engine = new BatchWithSubtasksGradingEngine();
+        this.engine.setScorerLanguage(new PlainCppGradingLanguage());
     }
 
     @Test
@@ -68,7 +70,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
             BlackBoxGradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_CE);
             assertEquals(result.getScore(), 0);
-            assertTrue(result.getDetails().getCompilationOutputs().get("source").contains("b"));
+            assertTrue(result.getDetails().getCompilationOutputs().get("source").contains("BB"));
         } catch (GradingException e) {
             fail();
         }
@@ -76,7 +78,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
     @Test
     public void testAC() {
-        addSourceFile("source", "aplusb-OK.cpp");
+        addSourceFile("source", "aplusb-AC.cpp");
 
         try {
             BlackBoxGradingResult result = runEngine(engine, config);
@@ -172,10 +174,10 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
     @Test
     public void testACWithCustomScorer() {
-        addSourceFile("source", "aplusb-OK-scorer.cpp");
+        addSourceFile("source", "aplusb-AC-scorer.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-OK.cpp"));
+            BlackBoxGradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_AC);
             assertEquals(result.getScore(), 100);
 
@@ -194,7 +196,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         addSourceFile("source", "aplusb-WA-at-2_3-scorer.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-OK.cpp"));
+            BlackBoxGradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
             assertEquals(result.getScore(), 30);
 
@@ -210,7 +212,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
     @Test
     public void testInternalErrorBecauseCustomScorerCE() {
-        addSourceFile("source", "aplusb-OK-scorer.cpp");
+        addSourceFile("source", "aplusb-AC-scorer.cpp");
 
         try {
             runEngine(engine, createConfigWithCustomScorer("scorer-CE.cpp"));
@@ -223,7 +225,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
     @Test
     public void testInternalErrorBecauseCustomScorerRTE() {
-        addSourceFile("source", "aplusb-OK-scorer.cpp");
+        addSourceFile("source", "aplusb-AC-scorer.cpp");
 
         try {
             runEngine(engine, createConfigWithCustomScorer("scorer-RTE.cpp"));
@@ -235,7 +237,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
     @Test
     public void testInternalErrorBecauseCustomScorerOutputUnknownFormat() {
-        addSourceFile("source", "aplusb-OK-scorer.cpp");
+        addSourceFile("source", "aplusb-AC-scorer.cpp");
 
         try {
             runEngine(engine, createConfigWithCustomScorer("scorer-WA.cpp"));
@@ -247,6 +249,6 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
     }
 
     private BatchWithSubtasksGradingConfig createConfigWithCustomScorer(String customScorer) {
-        return new BatchWithSubtasksGradingConfig(timeLimitInMilliseconds, memoryLimitInKilobytes, testData, subtaskPoints, customScorer);
+        return new BatchWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, subtaskPoints, customScorer);
     }
 }

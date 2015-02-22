@@ -3,7 +3,9 @@ package org.iatoki.judgels.gabriel.blackbox;
 import java.util.List;
 
 public interface Reducer {
-    SubtaskResult reduceTestCases(List<TestCaseResult> testCaseResults, Subtask subtask) throws ReductionException;
+    SubtaskResult reduceTestCaseResults(List<TestCaseResult> testCaseResults, Subtask subtask) throws ReductionException;
 
-    ReductionResult reduceSubtasks(List<SubtaskResult> subtaskResults) throws ReductionException;
+    List<TestCaseResult> improveTestCaseResults(List<TestCaseResult> testCaseResults, Subtask subtask);
+
+    ReductionResult reduceSubtaskResults(List<SubtaskResult> subtaskResults) throws ReductionException;
 }

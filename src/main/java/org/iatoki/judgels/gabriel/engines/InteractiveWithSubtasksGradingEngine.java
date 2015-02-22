@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxFactory;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
@@ -21,6 +20,7 @@ import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
 import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
+import org.iatoki.judgels.gabriel.languages.Cpp11GradingLanguage;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +36,12 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
     private Sandbox evaluatorContestantSandbox;
     private Sandbox evaluatorCommunicatorSandbox;
 
+    private GradingLanguage communicatorLanguage;
+
+    public InteractiveWithSubtasksGradingEngine() {
+        this.communicatorLanguage = new Cpp11GradingLanguage();
+    }
+
     @Override
     public String getName() {
         return "Interactive with Subtasks";
@@ -43,39 +49,31 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
 
     @Override
     protected void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException {
-        InteractiveWithSubtasksGradingConfig thisConfig = (InteractiveWithSubtasksGradingConfig) config;
-        if (thisConfig.getCommunicator() == null) {
+        InteractiveWithSubtasksGradingConfig castConfig = (InteractiveWithSubtasksGradingConfig) config;
+        if (castConfig.getCommunicator() == null) {
             throw new PreparationException("Communicator not specified");
         }
-        File contestantSourceFile = sourceFiles.get(config.getSourceFileFields().keySet().iterator().next());
-        File communicatorSourceFile = helperFiles.get(thisConfig.getCommunicator());
 
-        File compilationDir;
-        File evaluationDir;
-        File scoringDir;
+        String sourceFieldKey = config.getSourceFileFields().keySet().iterator().next();
 
-        try {
-            compilationDir = new File(workingDir, "compilation");
-            FileUtils.forceMkdir(compilationDir);
-            evaluationDir = new File(workingDir, "evaluation");
-            FileUtils.forceMkdir(evaluationDir);
-            scoringDir = new File(workingDir, "scoring");
-            FileUtils.forceMkdir(scoringDir);
-        } catch (IOException e) {
-            throw new PreparationException("Cannot make directories inside " + workingDir.getAbsolutePath());
-        }
+        File contestantSourceFile = sourceFiles.get(sourceFieldKey);
+        File communicatorSourceFile = helperFiles.get(castConfig.getCommunicator());
+
+        prepareWorkingDirs(workingDir);
 
         compilerSandbox = sandboxFactory.newSandbox();
-        compiler = new SingleSourceFileCompiler(compilerSandbox, compilationDir, language, "source", contestantSourceFile, 10000, 1024 * 1024);
+        compiler = new SingleSourceFileCompiler(compilerSandbox, getCompilationDir(), language, sourceFieldKey, contestantSourceFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());
 
         evaluatorContestantSandbox = sandboxFactory.newSandbox();
         evaluatorCommunicatorSandbox = sandboxFactory.newSandbox();
 
-        GradingLanguage cppLanguage = GradingLanguageRegistry.getInstance().getLanguage("CppEleven");
-
-        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), compilationDir, evaluationDir, language, cppLanguage, contestantSourceFile, communicatorSourceFile,  10000, 1024 * 1024, thisConfig.getTimeLimitInMilliseconds(), thisConfig.getMemoryLimitInKilobytes());
-        scorer = new IdentityScorer(evaluationDir);
+        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile,  getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes());
+        scorer = new IdentityScorer(getEvaluationDir());
         reducer = new SubtaskReducer();
+    }
+
+    public void setCommunicatorLanguage(GradingLanguage communicatorLanguage) {
+        this.communicatorLanguage = communicatorLanguage;
     }
 
     @Override
@@ -100,7 +98,7 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new InteractiveWithSubtasksGradingConfig(2000, 65536, ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), null);
+        return new InteractiveWithSubtasksGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), null);
     }
 
     @Override

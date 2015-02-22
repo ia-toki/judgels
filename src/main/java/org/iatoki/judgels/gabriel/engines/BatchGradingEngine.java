@@ -2,10 +2,8 @@ package org.iatoki.judgels.gabriel.engines;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
-import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
@@ -22,7 +20,7 @@ import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SimpleReducer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
-import org.iatoki.judgels.gabriel.languages.CppElevenGradingLanguage;
+import org.iatoki.judgels.gabriel.languages.Cpp11GradingLanguage;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,43 +37,51 @@ public final class BatchGradingEngine extends BlackBoxGradingEngine {
     private Sandbox evaluatorSandbox;
     private Sandbox scorerSandbox;
 
+    private int scoringTimeLimit;
+    private int scoringMemoryLimit;
+    private GradingLanguage scorerLanguage;
+
+    public BatchGradingEngine() {
+        this.scoringMemoryLimit = 10000;
+        this.scoringMemoryLimit = 1024 * 1024;
+        this.scorerLanguage = new Cpp11GradingLanguage();
+    }
+
     @Override
     protected void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException {
-
-        File sourceFile = sourceFiles.get(config.getSourceFileFields().keySet().iterator().next());
+        String sourceFieldKey = config.getSourceFileFields().keySet().iterator().next();
+        File sourceFile = sourceFiles.get(sourceFieldKey);
         BatchGradingConfig castConfig = (BatchGradingConfig) config;
 
-        File compilationDir;
-        File evaluationDir;
-        File scoringDir;
-
-        try {
-            compilationDir = new File(workingDir, "compilation");
-            FileUtils.forceMkdir(compilationDir);
-            evaluationDir = new File(workingDir, "evaluation");
-            FileUtils.forceMkdir(evaluationDir);
-            scoringDir = new File(workingDir, "scoring");
-            FileUtils.forceMkdir(scoringDir);
-        } catch (IOException e) {
-            throw new PreparationException("Cannot make directories inside " + workingDir.getAbsolutePath());
-        }
+        prepareWorkingDirs(workingDir);
 
         compilerSandbox = sandboxFactory.newSandbox();
-        compiler = new SingleSourceFileCompiler(compilerSandbox, compilationDir, language, "source", sourceFile, 10000, 1024 * 1024);
+        compiler = new SingleSourceFileCompiler(compilerSandbox, getCompilationDir(), language, sourceFieldKey, sourceFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());
 
         evaluatorSandbox = sandboxFactory.newSandbox();
-        evaluator = new BatchEvaluator(evaluatorSandbox, compilationDir, evaluationDir, language, sourceFile, castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes());
+        evaluator = new BatchEvaluator(evaluatorSandbox, getCompilationDir(), getEvaluationDir(), language, sourceFile, castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes());
 
         if (castConfig.getCustomScorer() != null) {
             scorerSandbox = sandboxFactory.newSandbox();
-            GradingLanguage cppLanguage = GradingLanguageRegistry.getInstance().getLanguage("CppEleven");
             File scorerFile = helperFiles.get(castConfig.getCustomScorer());
-            scorer = new CustomScorer(scorerSandbox, evaluationDir, scoringDir, cppLanguage, scorerFile, 10000, 1024 * 1024, 10000, 1024 * 1024);
+            scorer = new CustomScorer(scorerSandbox, getEvaluationDir(), getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
         } else {
-            scorer = new DiffScorer(evaluationDir);
+            scorer = new DiffScorer(getEvaluationDir());
         }
 
         reducer = new SimpleReducer();
+    }
+
+    public void setScoringTimeLimit(int scoringTimeLimit) {
+        this.scoringTimeLimit = scoringTimeLimit;
+    }
+
+    public void setScoringMemoryLimit(int scoringMemoryLimit) {
+        this.scoringMemoryLimit = scoringMemoryLimit;
+    }
+
+    public void setScorerLanguage(GradingLanguage scorerLanguage) {
+        this.scorerLanguage = scorerLanguage;
     }
 
     @Override
@@ -105,7 +111,7 @@ public final class BatchGradingEngine extends BlackBoxGradingEngine {
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new BatchGradingConfig(2000, 65536, ImmutableList.of(new TestGroup(0, ImmutableList.of()), new TestGroup(-1, ImmutableList.of())), null);
+        return new BatchGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of()), new TestGroup(-1, ImmutableList.of())), null);
     }
 
     @Override
