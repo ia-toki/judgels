@@ -80,6 +80,19 @@ public final class GabrielProperties {
         return post;
     }
 
+    public HttpPost getGetGradingLastUpdateTimeRequest(String problemJid) throws UnsupportedEncodingException {
+        HttpPost post = new HttpPost(sandalphonBaseUrl + "/problem/programming/getGradingLastUpdateTime");
+
+        List<BasicNameValuePair> nameValuePairs = ImmutableList.of(
+                new BasicNameValuePair("graderJid", sandalphonClientJid),
+                new BasicNameValuePair("graderSecret", sandalphonClientSecret),
+                new BasicNameValuePair("problemJid", problemJid)
+        );
+        post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+        return post;
+    }
+
     public static GabrielProperties getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new GabrielProperties();

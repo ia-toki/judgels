@@ -3,6 +3,7 @@ package org.iatoki.judgels.gabriel.blackbox;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -111,7 +112,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
             sandboxFactory = getSandboxProvider(workerDir);
             engineDir = getEngineDir(workerDir);
 
-            File problemGradingDir = getProblemGradingDir(request.getProblemJid(), request.getGradingLastUpdateTime());
+            File problemGradingDir = getProblemGradingDir(request.getProblemJid());
             helperFiles = generateHelperFiles(problemGradingDir);
             testDataFiles = generateTestDataFiles(problemGradingDir);
             config = parseGradingConfig(problemGradingDir, engine);
@@ -143,61 +144,25 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         return tempDir;
     }
 
-    private File getProblemGradingDir(String problemJid, long problemLastUpdate) throws InitializationException, IOException {
+    private File getProblemGradingDir(String problemJid) throws InitializationException, IOException {
         File problemGradingDir = new File(GabrielProperties.getInstance().getProblemDir(), problemJid);
 
-        if (mustFetchProblemGradingFiles(problemGradingDir, problemLastUpdate)) {
-            GabrielLogger.getLogger().info("Fetching test data files from Sandalphon started.");
-            FileUtils.deleteDirectory(problemGradingDir);
-            FileUtils.forceMkdir(problemGradingDir);
-
-            HttpPost post = GabrielProperties.getInstance().getFetchProblemGradingFilesRequest(problemJid);
-            HttpClient client = HttpClientBuilder.create().build();
-
-            HttpResponse response = client.execute(post);
-
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new InitializationException("Cannot fetch problem grading files");
-            }
-
-            byte[] buffer = new byte[4096];
-            ZipInputStream zis = new ZipInputStream(response.getEntity().getContent());
-            ZipEntry ze = zis.getNextEntry();
-            while (ze!=null) {
-                String filename = ze.getName();
-                File file = new File(problemGradingDir, filename);
-                FileUtils.forceMkdir(file.getParentFile());
-
-                FileOutputStream fos = new FileOutputStream(file);
-
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
-                }
-
-                fos.close();
-                ze = zis.getNextEntry();
-            }
-
-            zis.closeEntry();
-            zis.close();
-
-            FileUtils.forceMkdir(new File(problemGradingDir, "helper"));
-            FileUtils.forceMkdir(new File(problemGradingDir, "testdata"));
-
-            GabrielLogger.getLogger().info("Fetching test data files from Sandalphon finished.");
+        if (mustFetchProblemGradingFiles(problemJid, problemGradingDir)) {
+            fetchProblemGradingFiles(problemJid, problemGradingDir);
         }
 
         return problemGradingDir;
     }
 
-    private boolean mustFetchProblemGradingFiles(File problemGradingDir, long gradingLastUpdateTime) {
+    private boolean mustFetchProblemGradingFiles(String problemJid, File problemGradingDir) throws InitializationException, IOException {
         if (!problemGradingDir.exists()) {
+            GabrielLogger.getLogger().info("Problem grading files cache not found. Must fetch grading files.");
             return true;
         }
 
         File gradingLastUpdateTimeFile = new File(problemGradingDir, "lastUpdateTime.txt");
         if (!gradingLastUpdateTimeFile.exists()) {
+            GabrielLogger.getLogger().info("{} not found. Must fetch grading files.", gradingLastUpdateTimeFile.getAbsolutePath());
             return true;
         }
 
@@ -206,10 +171,68 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         try {
             cachedGradingLastUpdateTime = Long.parseLong(FileUtils.readFileToString(gradingLastUpdateTimeFile));
         } catch (IOException e) {
+            GabrielLogger.getLogger().info("Cannot parse {}. Must fetch grading files.", gradingLastUpdateTimeFile.getAbsolutePath());
             return true;
         }
 
-        return gradingLastUpdateTime != cachedGradingLastUpdateTime;
+        HttpPost post = GabrielProperties.getInstance().getGetGradingLastUpdateTimeRequest(problemJid);
+        HttpClient client = HttpClientBuilder.create().build();
+
+        HttpResponse response = client.execute(post);
+
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            throw new InitializationException("Cannot fetch problem grading files");
+        }
+
+        long gradingLastUpdateTime = Long.parseLong(IOUtils.toString(response.getEntity().getContent()));
+
+        if (gradingLastUpdateTime != cachedGradingLastUpdateTime) {
+            GabrielLogger.getLogger().info("Problem grading last update time = {}, whereas the cached one = {}. Must fetch grading files.", gradingLastUpdateTime, cachedGradingLastUpdateTime);
+            return true;
+        }
+        return false;
+    }
+
+    private void fetchProblemGradingFiles(String problemJid, File problemGradingDir) throws InitializationException, IOException  {
+        GabrielLogger.getLogger().info("Fetching test data files from Sandalphon started.");
+        FileUtils.deleteDirectory(problemGradingDir);
+        FileUtils.forceMkdir(problemGradingDir);
+
+        HttpPost post = GabrielProperties.getInstance().getFetchProblemGradingFilesRequest(problemJid);
+        HttpClient client = HttpClientBuilder.create().build();
+
+        HttpResponse response = client.execute(post);
+
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            throw new InitializationException("Cannot fetch problem grading files");
+        }
+
+        byte[] buffer = new byte[4096];
+        ZipInputStream zis = new ZipInputStream(response.getEntity().getContent());
+        ZipEntry ze = zis.getNextEntry();
+        while (ze!=null) {
+            String filename = ze.getName();
+            File file = new File(problemGradingDir, filename);
+            FileUtils.forceMkdir(file.getParentFile());
+
+            FileOutputStream fos = new FileOutputStream(file);
+
+            int len;
+            while ((len = zis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+
+            fos.close();
+            ze = zis.getNextEntry();
+        }
+
+        zis.closeEntry();
+        zis.close();
+
+        FileUtils.forceMkdir(new File(problemGradingDir, "helper"));
+        FileUtils.forceMkdir(new File(problemGradingDir, "testdata"));
+
+        GabrielLogger.getLogger().info("Fetching test data files from Sandalphon finished.");
     }
 
     private Map<String, File> generateHelperFiles(File problemGradingDir) throws FileNotFoundException {
