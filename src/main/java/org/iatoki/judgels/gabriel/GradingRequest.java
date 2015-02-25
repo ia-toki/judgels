@@ -5,8 +5,6 @@ public interface GradingRequest {
 
     String getProblemJid();
 
-    long getGradingLastUpdateTime();
-
     String getGradingEngine();
 
     String getGradingLanguage();

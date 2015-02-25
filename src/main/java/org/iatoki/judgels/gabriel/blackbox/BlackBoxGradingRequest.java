@@ -6,15 +6,13 @@ import org.iatoki.judgels.gabriel.GradingSource;
 public final class BlackBoxGradingRequest implements GradingRequest {
     private final String gradingJid;
     private final String problemJid;
-    private final long gradingLastUpdateTime;
     private final String gradingEngine;
     private final String gradingLanguage;
     private final BlackBoxGradingSource gradingSource;
 
-    public BlackBoxGradingRequest(String gradingJid, String problemJid, long gradingLastUpdateTime, String gradingEngine, String gradingLanguage, BlackBoxGradingSource gradingSource) {
+    public BlackBoxGradingRequest(String gradingJid, String problemJid, String gradingEngine, String gradingLanguage, BlackBoxGradingSource gradingSource) {
         this.gradingJid = gradingJid;
         this.problemJid = problemJid;
-        this.gradingLastUpdateTime = gradingLastUpdateTime;
         this.gradingEngine = gradingEngine;
         this.gradingLanguage = gradingLanguage;
         this.gradingSource = gradingSource;
@@ -28,11 +26,6 @@ public final class BlackBoxGradingRequest implements GradingRequest {
     @Override
     public String getProblemJid() {
         return problemJid;
-    }
-
-    @Override
-    public long getGradingLastUpdateTime() {
-        return gradingLastUpdateTime;
     }
 
     @Override
