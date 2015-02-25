@@ -4,9 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.FileUtils;
+import org.iatoki.judgels.gabriel.GabrielLogger;
 import org.iatoki.judgels.gabriel.GradingEngine;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingLanguage;
+import org.slf4j.MDC;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +31,18 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
     public final BlackBoxGradingResult gradeAfterInitialization(SandboxFactory sandboxFactory, File workingDir, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, Map<String, File> testDataFiles, BlackBoxGradingConfig config) throws GradingException {
         verifySourceFiles(sourceFiles, config);
 
-        prepare(sandboxFactory, workingDir, config, language, sourceFiles, helperFiles);
+        MDC.put("phase", "Preparation");
 
+        GabrielLogger.getLogger().info("Preparation started.");
+        prepare(sandboxFactory, workingDir, config, language, sourceFiles, helperFiles);
+        GabrielLogger.getLogger().info("Preparation finished.");
+
+        MDC.put("phase", "Compilation");
+
+        GabrielLogger.getLogger().info("Compilation started.");
         CompilationResult compilationResult = getCompiler().compile();
+        GabrielLogger.getLogger().info("Compilation finished.");
+
         Map<String, String> compilationOutput = compilationResult.getOutputs();
 
         if (compilationResult.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
@@ -50,6 +61,9 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
             testCaseIndicesBySubtaskIds.add(Lists.newArrayList());
         }
 
+        MDC.put("phase", "Evaluation & Scoring");
+
+        GabrielLogger.getLogger().info("Evaluation & scoring started.");
         for (int i = 0; i < config.getTestData().size(); i++) {
             TestGroup testGroup = config.getTestData().get(i);
 
@@ -80,7 +94,11 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
                 }
             }
         }
+        GabrielLogger.getLogger().info("Evaluation & scoring finished.");
 
+        MDC.put("phase", "Reduction");
+
+        GabrielLogger.getLogger().info("Reduction started.");
         ImmutableList.Builder<SubtaskResult> subtaskResultsBuilder = ImmutableList.builder();
         for (Subtask subtask : config.getSubtasks()) {
             List<TestCaseResult> testCaseResults = ImmutableList.copyOf(testCaseResultsBySubtaskIds.get(subtask.getId() + 1));
@@ -99,6 +117,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
         List<SubtaskResult> subtaskResults = subtaskResultsBuilder.build();
         ReductionResult result = getReducer().reduceSubtaskResults(subtaskResults);
+        GabrielLogger.getLogger().info("Reduction finished.");
 
         ImmutableList.Builder<SubtaskFinalResult> subtaskFinalResults = ImmutableList.builder();
         for (int i = 0; i < config.getSubtasks().size(); i++) {

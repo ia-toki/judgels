@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxesInteractor;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;

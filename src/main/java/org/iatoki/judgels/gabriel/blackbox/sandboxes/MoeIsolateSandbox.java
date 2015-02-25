@@ -4,15 +4,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
+import org.iatoki.judgels.gabriel.GabrielLogger;
+import org.iatoki.judgels.gabriel.GabrielUtils;
 import org.iatoki.judgels.gabriel.SandboxException;
+import org.iatoki.judgels.gabriel.blackbox.ProcessExecutionResult;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,12 +40,21 @@ public class MoeIsolateSandbox extends Sandbox {
         this.boxId = boxId;
 
         this.allowedDirs = Sets.newHashSet();
-        this.allowedDirs.add(new File("/etc"));
 
         this.filenames = Sets.newHashSet();
 
+
+        GabrielLogger.getLogger().info("Creation of control groups of box {} started.", boxId);
         createControlGroups();
+        GabrielLogger.getLogger().info("Creation of control groups of box {} finished", boxId);
+
+
+        GabrielLogger.getLogger().info("Initialization of Isolate box {} started.", boxId);
         initIsolate();
+        GabrielLogger.getLogger().info("Initialization of Isolate box {} finished.", boxId);
+
+        this.allowedDirs.add(new File("/etc"));
+        this.allowedDirs.add(this.boxDir);
 
         setMaxProcesses(6);
     }
@@ -133,8 +143,13 @@ public class MoeIsolateSandbox extends Sandbox {
 
     @Override
     public void cleanUp() {
+        GabrielLogger.getLogger().info("Cleanup of Isolate box {} started.", boxId);
         cleanUpIsolate();
+        GabrielLogger.getLogger().info("Cleanup of Isolate box {} finished.", boxId);
+
+        GabrielLogger.getLogger().info("Deletion of control groups of box {} started.", boxId);
         deleteControlGroups();
+        GabrielLogger.getLogger().info("Deletion of control groups of box {} finished.", boxId);
     }
 
     @Override
@@ -223,16 +238,18 @@ public class MoeIsolateSandbox extends Sandbox {
                 return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, time, memory, meta);
             }
         } catch (IOException e) {
-            return SandboxExecutionResult.internalError("Isolate did not produce readable meta file");
+            return SandboxExecutionResult.internalError("Isolate did not produce readable meta file!");
         }
 
     }
 
     private void createControlGroups() {
+        ProcessBuilder pb = new ProcessBuilder("cgcreate", "-g", "cpuset,cpuacct,memory:/box-" + boxId).redirectErrorStream(true);
+
         try {
-            int exitCode = new ProcessBuilder("cgcreate", "-g", "cpuset,cpuacct,memory:/box-" + boxId).start().waitFor();
-            if (exitCode != 0) {
-                throw new SandboxException("Cannot create control groups");
+            ProcessExecutionResult result = GabrielUtils.executeProcessBuilder(pb);
+            if (result.getExitCode() != 0) {
+                throw new SandboxException("Cannot create control groups!");
             }
         } catch (IOException | InterruptedException e) {
             throw new SandboxException(e);
@@ -240,28 +257,27 @@ public class MoeIsolateSandbox extends Sandbox {
     }
 
     private void initIsolate() {
+        ProcessBuilder pb = new ProcessBuilder(isolatePath, "-b" + boxId, "--init").redirectErrorStream(true);
+
         try {
-            Process p = new ProcessBuilder(isolatePath, "-b" + boxId, "--init").start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            boxDir = new File(reader.readLine(), "box");
-            int exitCode = p.waitFor();
-            if (exitCode != 0) {
-                throw new SandboxException("Cannot init isolate");
+            ProcessExecutionResult result = GabrielUtils.executeProcessBuilder(pb);
+            if (result.getExitCode() != 0) {
+                throw new SandboxException("Cannot initialize Isolate!");
             }
 
-            if (!boxDir.setWritable(true) || !boxDir.setReadable(true) || !boxDir.setExecutable(true)) {
-                throw new SandboxException("Cannot set box directory to rwx");
-            }
+            boxDir = new File(result.getOutputLines().get(0), "box");
         } catch (IOException | InterruptedException e) {
             throw new SandboxException(e);
         }
     }
 
     private void cleanUpIsolate() {
+        ProcessBuilder pb = new ProcessBuilder(isolatePath, "-b" + boxId, "--cleanup").redirectErrorStream(true);
+
         try {
-            int exitCode = new ProcessBuilder(isolatePath, "-b" + boxId, "--cleanup").start().waitFor();
-            if (exitCode != 0) {
-                throw new SandboxException("Cannot clean up isolate");
+            ProcessExecutionResult result = GabrielUtils.executeProcessBuilder(pb);
+            if (result.getExitCode() != 0) {
+                throw new SandboxException("Cannot clean up Isolate!");
             }
         } catch (IOException | InterruptedException e) {
             throw new SandboxException(e);
@@ -269,10 +285,12 @@ public class MoeIsolateSandbox extends Sandbox {
     }
 
     private void deleteControlGroups() {
+        ProcessBuilder pb = new ProcessBuilder("cgdelete", "-g", "cpuset,cpuacct,memory:/box-" + boxId).redirectErrorStream(true);
+
         try {
-            int exitCode = new ProcessBuilder("cgdelete", "-g", "cpuset,cpuacct,memory:/box-" + boxId).start().waitFor();
-            if (exitCode != 0) {
-                throw new SandboxException("Cannot delete control groups");
+            ProcessExecutionResult result = GabrielUtils.executeProcessBuilder(pb);
+            if (result.getExitCode() != 0) {
+                throw new SandboxException("Cannot delete control groups!");
             }
         } catch (IOException | InterruptedException e) {
             throw new SandboxException(e);

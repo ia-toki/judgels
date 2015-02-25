@@ -1,5 +1,7 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
+import org.iatoki.judgels.gabriel.GabrielUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -36,15 +38,15 @@ public abstract class Sandbox {
     public abstract void cleanUp();
 
     public final SandboxExecutionResult execute(List<String> command) {
-        ProcessBuilder pb = getProcessBuilder(command);
-        int exitCode;
+        ProcessBuilder pb = getProcessBuilder(command).redirectErrorStream(true);
+
         try {
-            exitCode = pb.start().waitFor();
+            ProcessExecutionResult result = GabrielUtils.executeProcessBuilder(pb);
+            return getResult(result.getExitCode());
+
         } catch (IOException | InterruptedException e) {
             return SandboxExecutionResult.internalError(e.getMessage());
         }
-
-        return getResult(exitCode);
     }
 
     public abstract ProcessBuilder getProcessBuilder(List<String> command);
