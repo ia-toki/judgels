@@ -13,6 +13,7 @@ import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
 import org.iatoki.judgels.gabriel.blackbox.sandboxes.MoeIsolateSandboxFactory;
 import org.iatoki.judgels.sealtiel.client.ClientMessage;
 import org.iatoki.judgels.sealtiel.client.Sealtiel;
+import org.slf4j.MDC;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,24 +50,41 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     @Override
-    public String getId() {
-        return request.getGradingJid();
-    }
-
-    @Override
     public void run() {
+        MDC.put("gradingJID", request.getGradingJid());
+
+        GabrielLogger.getLogger().info("Grading worker started.");
+
         BlackBoxGradingResult result;
-        // TODO please confirm message and extend timeout
+        // TODO extend timeout
         try {
+            GabrielLogger.getLogger().info("Grading started.");
+
+            MDC.put("phase", "Initialization");
+
+            GabrielLogger.getLogger().info("Initialization started.");
             initialize();
+            GabrielLogger.getLogger().info("Initialization finished.");
+
             result = engine.gradeAfterInitialization(sandboxFactory, engineDir, language, sourceFiles, helperFiles, testDataFiles, config);
-        } catch (GradingException | SandboxException e) {
-            System.out.println("Grading id " + getId() + " error : " + e.getMessage());
+
+            GabrielLogger.getLogger().info("Grading done. Result: {} {}", result.getVerdict().getCode(), result.getScore());
+
+        } catch (Exception e) {
+            GabrielLogger.getLogger().error("Grading failed!", e);
             result = BlackBoxGradingResult.internalErrorResult();
         }
 
-        engine.cleanUp();
 
+        MDC.put("phase", "Cleanup");
+
+        GabrielLogger.getLogger().info("Cleanup started.");
+        engine.cleanUp();
+        GabrielLogger.getLogger().info("Cleanup finished.");
+
+        MDC.remove("phase");
+
+        GabrielLogger.getLogger().info("Sending grading response started.");
         BlackBoxGradingResponse response = new BlackBoxGradingResponse(request.getGradingJid(), result);
         try {
             ClientMessage message = new ClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
@@ -76,6 +94,9 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        GabrielLogger.getLogger().info("Sending grading response finished.");
+
+        GabrielLogger.getLogger().info("Grading worker finished.");
     }
 
     private void initialize() throws InitializationException {
@@ -100,7 +121,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     private File getWorkerDir() throws IOException {
-        File runnerDir = new File(GabrielProperties.getInstance().getWorkerDir(), getId());
+        File runnerDir = new File(GabrielProperties.getInstance().getWorkerDir(), request.getGradingJid());
         FileUtils.forceMkdir(runnerDir);
         return runnerDir;
     }
@@ -126,6 +147,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         File problemGradingDir = new File(GabrielProperties.getInstance().getProblemDir(), problemJid);
 
         if (mustFetchProblemGradingFiles(problemGradingDir, problemLastUpdate)) {
+            GabrielLogger.getLogger().info("Fetching test data files from Sandalphon started.");
             FileUtils.deleteDirectory(problemGradingDir);
             FileUtils.forceMkdir(problemGradingDir);
 
@@ -162,6 +184,8 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
             FileUtils.forceMkdir(new File(problemGradingDir, "helper"));
             FileUtils.forceMkdir(new File(problemGradingDir, "testdata"));
+
+            GabrielLogger.getLogger().info("Fetching test data files from Sandalphon finished.");
         }
 
         return problemGradingDir;

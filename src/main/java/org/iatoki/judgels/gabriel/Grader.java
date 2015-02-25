@@ -13,11 +13,11 @@ public final class Grader {
     private final Sealtiel sealtiel;
 
     public Grader() {
-        int threadPool = (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2;
+        int threadPool = Math.max(1, (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2);
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadPool);
         this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret(), GabrielProperties.getInstance().getSealtielBaseUrl());
 
-        System.out.println("Starting Gabriel using "+threadPool+" threads.");
+        GabrielLogger.getLogger().info("Gabriel started; using " + threadPool + " threads.");
     }
 
     public void run() throws InterruptedException {
@@ -26,7 +26,9 @@ public final class Grader {
 
             try {
                 ClientMessage message = sealtiel.fetchMessage();
-                processMessage(message);
+                if (message != null) {
+                    processMessage(message);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -42,17 +44,15 @@ public final class Grader {
     }
 
     private void processMessage(ClientMessage message) {
-        if (message == null) {
-            return;
-        }
-
         try {
             GradingRequest request = GradingRequests.parseFromJson(message.getMessageType(), message.getMessage());
+            GabrielLogger.getLogger().info("New grading request: {}", request.getGradingJid());
+
             GradingWorker worker = GradingWorkers.newWorker(message.getSourceClientJid(), request, sealtiel, message.getId());
 
             threadPoolExecutor.submit(worker);
         } catch (BadGradingRequestException e) {
-            System.out.println(e.getMessage());
+            GabrielLogger.getLogger().warn("Bad grading request: " + e.getMessage());
         }
     }
 }
