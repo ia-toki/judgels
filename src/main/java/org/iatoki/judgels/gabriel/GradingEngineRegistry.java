@@ -1,5 +1,6 @@
 package org.iatoki.judgels.gabriel;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -12,10 +13,13 @@ import java.util.stream.Collectors;
 public final class GradingEngineRegistry {
     private static GradingEngineRegistry INSTANCE;
 
-    private final Map<String, GradingEngine> registry;
+    private final Map<String, Class<? extends GradingEngine>> registry;
+
+    private final Map<String, String> gradingEngineNames;
 
     private GradingEngineRegistry() {
         this.registry = Maps.newLinkedHashMap();
+        this.gradingEngineNames = Maps.newLinkedHashMap();
 
         populateEngines();
     }
@@ -24,7 +28,14 @@ public final class GradingEngineRegistry {
         if (!registry.containsKey(gradingEngine)) {
             throw new IllegalArgumentException("Grading engine " + gradingEngine + " unknown");
         }
-        return registry.get(gradingEngine);
+
+        Class<? extends GradingEngine> clazz = registry.get(gradingEngine);
+
+        try {
+            return clazz.newInstance();
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static GradingEngineRegistry getInstance() {
@@ -35,7 +46,7 @@ public final class GradingEngineRegistry {
     }
 
     public Map<String, String> getGradingEngines() {
-        return Maps.transformValues(registry, engine -> engine.getName());
+        return ImmutableMap.copyOf(gradingEngineNames);
     }
 
     private void populateEngines() {
@@ -44,7 +55,8 @@ public final class GradingEngineRegistry {
         Collections.sort(engines, (GradingEngine o1, GradingEngine o2) -> o1.getName().compareTo(o2.getName()));
 
         for (GradingEngine engine : engines) {
-            registry.put(getEngineSimpleName(engine), engine);
+            registry.put(getEngineSimpleName(engine), engine.getClass());
+            gradingEngineNames.put(getEngineSimpleName(engine), engine.getName());
         }
     }
 
