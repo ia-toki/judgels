@@ -69,13 +69,14 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
             result = engine.gradeAfterInitialization(sandboxFactory, engineDir, language, sourceFiles, helperFiles, testDataFiles, config);
 
+            MDC.remove("phase");
+
             GabrielLogger.getLogger().info("Grading done. Result: {} {}", result.getVerdict().getCode(), result.getScore());
 
         } catch (Exception e) {
             GabrielLogger.getLogger().error("Grading failed!", e);
             result = BlackBoxGradingResult.internalErrorResult();
         }
-
 
         MDC.put("phase", "Cleanup");
 
