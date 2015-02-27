@@ -41,7 +41,7 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
 
     public BatchWithSubtasksGradingEngine() {
         this.scoringMemoryLimit = 10000;
-        this.scoringMemoryLimit = 200 * 1024;
+        this.scoringMemoryLimit = 1024 * 1024;
         this.scorerLanguage = new Cpp11GradingLanguage();
     }
 
