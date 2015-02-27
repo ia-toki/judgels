@@ -94,14 +94,14 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
                 if (evaluationResult.getVerdict() == EvaluationVerdict.OK) {
                     ScoringResult scoringResult = getScorer().score(testCaseInput, testCaseOutput);
                     testCaseResult = TestCaseResult.fromScoringResult(scoringResult);
-
-                    if (testCaseResult.getVerdict() != ScoringVerdict.ACCEPTED) {
-                        alreadyFailedSubtaskIds.addAll(testCase.getSubtaskIds());
-                        alreadyFailedSubtaskIds.remove(0);
-                        alreadyFailedSubtaskIds.remove(-1);
-                    }
                 } else {
                     testCaseResult = TestCaseResult.fromEvaluationResult(evaluationResult);
+                }
+
+                if (testCaseResult.getVerdict() != ScoringVerdict.ACCEPTED) {
+                    alreadyFailedSubtaskIds.addAll(testCase.getSubtaskIds());
+                    alreadyFailedSubtaskIds.remove(0);
+                    alreadyFailedSubtaskIds.remove(-1);
                 }
 
                 testGroupResults.get(i).add(testCaseResult);
