@@ -28,7 +28,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     protected BlackBoxGradingEngine() {
         this.compilationTimeLimit = 10000;
-        this.compilationMemoryLimit = 200 * 1024;
+        this.compilationMemoryLimit = 1024 * 1024;
     }
 
     public final BlackBoxGradingResult gradeAfterInitialization(SandboxFactory sandboxFactory, File workingDir, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, Map<String, File> testDataFiles, BlackBoxGradingConfig config) throws GradingException {
