@@ -8,7 +8,7 @@ public final class MoeIsolateBoxIdFactory {
     }
 
     public static synchronized int newBoxId() {
-        int currentBoxId = BOX_ID + 1;
+        int currentBoxId = BOX_ID;
         BOX_ID = (BOX_ID + 1) % 100;
 
         return currentBoxId;
