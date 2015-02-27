@@ -28,8 +28,6 @@ public class MoeIwrapperSandboxesInteractor implements SandboxesInteractor {
         commandBuilder.add("@@");
         commandBuilder.addAll(pb2.command());
 
-        GabrielLogger.getLogger().info("JALANIN {}", commandBuilder.build());
-
         try {
             new ProcessBuilder(commandBuilder.build()).start().waitFor();
         } catch (IOException | InterruptedException e) {
@@ -38,8 +36,6 @@ public class MoeIwrapperSandboxesInteractor implements SandboxesInteractor {
                     SandboxExecutionResult.internalError(e.getMessage())
             };
         }
-
-        GabrielLogger.getLogger().info("BERES NICHHHHHHH");
 
         return new SandboxExecutionResult[]{
                 sandbox1.getResult(0),
