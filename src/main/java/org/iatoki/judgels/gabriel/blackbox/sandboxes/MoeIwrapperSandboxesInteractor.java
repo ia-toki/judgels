@@ -1,6 +1,7 @@
 package org.iatoki.judgels.gabriel.blackbox.sandboxes;
 
 import com.google.common.collect.ImmutableList;
+import org.iatoki.judgels.gabriel.GabrielLogger;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractor;
@@ -27,6 +28,8 @@ public class MoeIwrapperSandboxesInteractor implements SandboxesInteractor {
         commandBuilder.add("@@");
         commandBuilder.addAll(pb2.command());
 
+        GabrielLogger.getLogger().info("JALANIN {}", commandBuilder.build());
+
         try {
             new ProcessBuilder(commandBuilder.build()).start().waitFor();
         } catch (IOException | InterruptedException e) {
@@ -35,6 +38,8 @@ public class MoeIwrapperSandboxesInteractor implements SandboxesInteractor {
                     SandboxExecutionResult.internalError(e.getMessage())
             };
         }
+
+        GabrielLogger.getLogger().info("BERES NICHHHHHHH");
 
         return new SandboxExecutionResult[]{
                 sandbox1.getResult(0),

@@ -2,7 +2,6 @@ package org.iatoki.judgels.gabriel.engines;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
-import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
