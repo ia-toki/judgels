@@ -26,7 +26,7 @@ public final class SubtaskReducer extends AbstractReducer {
             String score = result.getScore();
 
             if (verdict == ScoringVerdict.ACCEPTED) {
-                results.add(new TestCaseResult(verdict, improveScore("√", score)));
+                results.add(new TestCaseResult(verdict, improveScore("*", score)));
             } else if (verdict == EvaluationVerdict.SKIPPED) {
                 results.add(new TestCaseResult(verdict, improveScore("?", score)));
             } else {
