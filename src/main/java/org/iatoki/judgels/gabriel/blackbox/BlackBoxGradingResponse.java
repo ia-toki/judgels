@@ -4,17 +4,17 @@ import org.iatoki.judgels.gabriel.GradingResponse;
 import org.iatoki.judgels.gabriel.GradingResult;
 
 public final class BlackBoxGradingResponse implements GradingResponse {
-    private final String submissionJid;
+    private final String gradingJid;
     private final BlackBoxGradingResult result;
 
-    public BlackBoxGradingResponse(String submissionJid, BlackBoxGradingResult result) {
-        this.submissionJid = submissionJid;
+    public BlackBoxGradingResponse(String gradingJid, BlackBoxGradingResult result) {
+        this.gradingJid = gradingJid;
         this.result = result;
     }
 
     @Override
-    public String getSubmissionJid() {
-        return submissionJid;
+    public String getGradingJid() {
+        return gradingJid;
     }
 
     @Override
