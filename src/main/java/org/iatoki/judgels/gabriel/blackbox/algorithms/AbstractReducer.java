@@ -38,7 +38,9 @@ public abstract class AbstractReducer implements Reducer {
         List<ScoringVerdict> scoringVerdicts = Lists.newArrayList();
 
         for (NormalVerdict verdict : verdicts) {
-            if (verdict instanceof EvaluationVerdict) {
+            if (verdict == EvaluationVerdict.SKIPPED) {
+                continue;
+            } else if (verdict instanceof EvaluationVerdict) {
                 evaluationVerdicts.add((EvaluationVerdict) verdict);
             } else {
                 scoringVerdicts.add((ScoringVerdict) verdict);
