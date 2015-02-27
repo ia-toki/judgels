@@ -56,7 +56,7 @@ public final class InteractiveEvaluator implements Evaluator {
         this.communicatorExecutableName = communicatorLanguage.getExecutableFilename(communicatorSourceFile.getName());
 
         contestantSandbox.setTimeLimitInMilliseconds(evaluationTimeLimitInMilliseconds);
-        contestantSandbox.setMemoryLimitInKilobytes(evaluationTimeLimitInMilliseconds);
+        contestantSandbox.setMemoryLimitInKilobytes(evaluationMemoryLimitInMilliseconds);
         contestantSandbox.setStackSizeInKilobytes(evaluationMemoryLimitInMilliseconds);
 
         communicatorSandbox.addFile(new File(evaluationDir, communicatorExecutableName));
@@ -66,7 +66,7 @@ public final class InteractiveEvaluator implements Evaluator {
         }
 
         communicatorSandbox.setTimeLimitInMilliseconds(evaluationTimeLimitInMilliseconds);
-        communicatorSandbox.setMemoryLimitInKilobytes(evaluationTimeLimitInMilliseconds);
+        communicatorSandbox.setMemoryLimitInKilobytes(evaluationMemoryLimitInMilliseconds);
         communicatorSandbox.setStackSizeInKilobytes(evaluationMemoryLimitInMilliseconds);
 
         contestantSandbox.addAllowedDirectory(evaluationDir);
