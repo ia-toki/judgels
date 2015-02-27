@@ -2,6 +2,7 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import org.iatoki.judgels.gabriel.blackbox.EvaluationVerdict;
 import org.iatoki.judgels.gabriel.blackbox.NormalVerdict;
 import org.iatoki.judgels.gabriel.blackbox.ReductionException;
 import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
@@ -26,6 +27,8 @@ public final class SubtaskReducer extends AbstractReducer {
 
             if (verdict == ScoringVerdict.ACCEPTED) {
                 results.add(new TestCaseResult(verdict, improveScore("√", score)));
+            } else if (verdict == EvaluationVerdict.SKIPPED) {
+                results.add(new TestCaseResult(verdict, improveScore("?", score)));
             } else {
                 results.add(new TestCaseResult(verdict, improveScore("X", score)));
             }

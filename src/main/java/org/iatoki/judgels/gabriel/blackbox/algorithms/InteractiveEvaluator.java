@@ -20,7 +20,6 @@ import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 public final class InteractiveEvaluator implements Evaluator {
     private final Sandbox contestantSandbox;
@@ -83,7 +82,7 @@ public final class InteractiveEvaluator implements Evaluator {
     }
 
     @Override
-    public EvaluationResult evaluate(File testCaseInput, Set<Integer> subtaskNumbers) throws EvaluationException {
+    public EvaluationResult evaluate(File testCaseInput) throws EvaluationException {
         if (!contestantSandbox.containsFile(contestantExecutableName)) {
             contestantSandbox.addFile(new File(compilationDir, contestantExecutableName));
             File contestantExecutableFile = contestantSandbox.getFile(contestantExecutableName);

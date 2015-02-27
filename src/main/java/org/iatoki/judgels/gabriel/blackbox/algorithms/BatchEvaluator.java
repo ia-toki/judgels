@@ -14,7 +14,6 @@ import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 public final class BatchEvaluator implements Evaluator {
     private final Sandbox sandbox;
@@ -41,7 +40,7 @@ public final class BatchEvaluator implements Evaluator {
     }
 
     @Override
-    public EvaluationResult evaluate(File testCaseInputFile, Set<Integer> subtaskNumbers) throws EvaluationException {
+    public EvaluationResult evaluate(File testCaseInputFile) throws EvaluationException {
         if (!sandbox.containsFile(executableFilename)) {
             sandbox.addFile(new File(compilationDir, executableFilename));
             File executableFile = sandbox.getFile(executableFilename);

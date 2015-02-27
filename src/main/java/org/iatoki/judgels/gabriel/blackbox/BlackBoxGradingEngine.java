@@ -2,7 +2,7 @@ package org.iatoki.judgels.gabriel.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GabrielLogger;
 import org.iatoki.judgels.gabriel.GradingEngine;
@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class BlackBoxGradingEngine implements GradingEngine {
     private File compilationDir;
@@ -23,9 +24,11 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
     private int compilationTimeLimit;
     private int compilationMemoryLimit;
 
+    private Set<Integer> alreadyFailedSubtaskIds;
+
     protected BlackBoxGradingEngine() {
-        compilationTimeLimit = 10000;
-        compilationMemoryLimit = 1024 * 1024;
+        this.compilationTimeLimit = 10000;
+        this.compilationMemoryLimit = 1024 * 1024;
     }
 
     public final BlackBoxGradingResult gradeAfterInitialization(SandboxFactory sandboxFactory, File workingDir, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, Map<String, File> testDataFiles, BlackBoxGradingConfig config) throws GradingException {
@@ -63,6 +66,9 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
         MDC.put("phase", "Evaluation & Scoring");
 
+
+        alreadyFailedSubtaskIds = Sets.newHashSet();
+
         GabrielLogger.getLogger().info("Evaluation & scoring started.");
         for (int i = 0; i < config.getTestData().size(); i++) {
             TestGroup testGroup = config.getTestData().get(i);
@@ -75,12 +81,25 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
                 File testCaseInput = testDataFiles.get(testCase.getInput());
                 File testCaseOutput = testDataFiles.get(testCase.getOutput());
-                EvaluationResult evaluationResult = getEvaluator().evaluate(testCaseInput, testCase.getSubtaskIds());
+
+                EvaluationResult evaluationResult;
+
+                if (alreadyFailedSubtaskIds.containsAll(testCase.getSubtaskIds())) {
+                    evaluationResult = EvaluationResult.skippedResult();
+                } else {
+                    evaluationResult = getEvaluator().evaluate(testCaseInput);
+                }
 
                 TestCaseResult testCaseResult;
                 if (evaluationResult.getVerdict() == EvaluationVerdict.OK) {
                     ScoringResult scoringResult = getScorer().score(testCaseInput, testCaseOutput);
                     testCaseResult = TestCaseResult.fromScoringResult(scoringResult);
+
+                    if (testCaseResult.getVerdict() != ScoringVerdict.ACCEPTED) {
+                        alreadyFailedSubtaskIds.addAll(testCase.getSubtaskIds());
+                        alreadyFailedSubtaskIds.remove(0);
+                        alreadyFailedSubtaskIds.remove(-1);
+                    }
                 } else {
                     testCaseResult = TestCaseResult.fromEvaluationResult(evaluationResult);
                 }
