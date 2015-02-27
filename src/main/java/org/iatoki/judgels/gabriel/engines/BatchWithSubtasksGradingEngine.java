@@ -52,7 +52,7 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new BatchWithSubtasksGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), null);
+        return new BatchWithSubtasksGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), null);
     }
 
     @Override
