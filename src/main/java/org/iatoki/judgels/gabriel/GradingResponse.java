@@ -1,7 +1,7 @@
 package org.iatoki.judgels.gabriel;
 
 public interface GradingResponse {
-    String getSubmissionJid();
+    String getGradingJid();
 
     GradingResult getResult();
 }
