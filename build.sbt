@@ -1,7 +1,7 @@
 import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
-name := """gabriel-commons"""
+name := """gabrielcommons"""
 
 version := "1.0-SNAPSHOT"
 
