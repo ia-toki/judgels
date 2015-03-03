@@ -7,7 +7,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val gabriel = (project in file(".")).dependsOn(gabrielcommons).aggregate(gabrielcommons)
 
-lazy val gabrielcommons = RootProject(file("../gabriel-commons"))
+lazy val gabrielcommons = RootProject(file("../judgels-gabriel-commons"))
 
 mainClass in (Compile, run) := Some("org.iatoki.judgels.gabriel.Main")
 
