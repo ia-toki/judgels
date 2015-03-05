@@ -24,7 +24,7 @@ libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.4",
   "com.google.guava" % "guava" % "18.0",
   "com.google.code.gson" % "gson" % "2.3.1",
-  "org.iatoki.judgels.sealtiel" % "sealtiel-message" % "1.0.3"
+  "org.iatoki.judgels.sealtiel" % "sealtiel-message" % "1.0.4"
 )
 
 TestNGPlugin.testNGSettings
