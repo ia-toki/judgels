@@ -108,10 +108,12 @@ public final class BlackBoxGradingWorker implements GradingWorker {
             engine = (BlackBoxGradingEngine) GradingEngineRegistry.getInstance().getEngine(request.getGradingEngine());
             language = GradingLanguageRegistry.getInstance().getLanguage(request.getGradingLanguage());
 
+            GabrielUtils.getGradingReadLock().lock();
             File workerDir = getWorkerDir();
             sourceFiles = generateSourceFiles(workerDir);
             sandboxFactory = getSandboxProvider(workerDir);
             engineDir = getEngineDir(workerDir);
+            GabrielUtils.getGradingReadLock().unlock();
 
             File problemGradingDir = getProblemGradingDir(request.getProblemJid());
             helperFiles = generateHelperFiles(problemGradingDir);
@@ -148,9 +150,13 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     private File getProblemGradingDir(String problemJid) throws InitializationException, IOException {
         File problemGradingDir = new File(GabrielProperties.getInstance().getProblemDir(), problemJid);
 
+        GabrielUtils.getGradingFetchCheckLock().lock();
         if (mustFetchProblemGradingFiles(problemJid, problemGradingDir)) {
+            GabrielUtils.getGradingWriteLock().lock();
             fetchProblemGradingFiles(problemJid, problemGradingDir);
+            GabrielUtils.getGradingWriteLock().unlock();
         }
+        GabrielUtils.getGradingFetchCheckLock().unlock();
 
         return problemGradingDir;
     }
