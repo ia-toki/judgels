@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GabrielLogger;
-import org.iatoki.judgels.gabriel.GabrielUtils;
+import org.iatoki.judgels.gabriel.blackbox.SandboxUtils;
 import org.iatoki.judgels.gabriel.SandboxException;
 import org.iatoki.judgels.gabriel.blackbox.ProcessExecutionResult;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
@@ -248,7 +248,7 @@ public class MoeIsolateSandbox extends Sandbox {
         ProcessBuilder pb = new ProcessBuilder("cgcreate", "-g", "cpuset,cpuacct,memory:/box-" + boxId).redirectErrorStream(true);
 
         try {
-            ProcessExecutionResult result = GabrielUtils.executeProcessBuilder(pb);
+            ProcessExecutionResult result = SandboxUtils.executeProcessBuilder(pb);
             if (result.getExitCode() != 0) {
                 throw new SandboxException("Cannot create control groups!");
             }
@@ -261,7 +261,7 @@ public class MoeIsolateSandbox extends Sandbox {
         ProcessBuilder pb = new ProcessBuilder(isolatePath, "-b" + boxId, "--init").redirectErrorStream(true);
 
         try {
-            ProcessExecutionResult result = GabrielUtils.executeProcessBuilder(pb);
+            ProcessExecutionResult result = SandboxUtils.executeProcessBuilder(pb);
             if (result.getExitCode() != 0) {
                 throw new SandboxException("Cannot initialize Isolate!");
             }
@@ -276,7 +276,7 @@ public class MoeIsolateSandbox extends Sandbox {
         ProcessBuilder pb = new ProcessBuilder(isolatePath, "-b" + boxId, "--cleanup").redirectErrorStream(true);
 
         try {
-            ProcessExecutionResult result = GabrielUtils.executeProcessBuilder(pb);
+            ProcessExecutionResult result = SandboxUtils.executeProcessBuilder(pb);
             if (result.getExitCode() != 0) {
                 throw new SandboxException("Cannot clean up Isolate!");
             }
@@ -289,7 +289,7 @@ public class MoeIsolateSandbox extends Sandbox {
         ProcessBuilder pb = new ProcessBuilder("cgdelete", "-g", "cpuset,cpuacct,memory:/box-" + boxId).redirectErrorStream(true);
 
         try {
-            ProcessExecutionResult result = GabrielUtils.executeProcessBuilder(pb);
+            ProcessExecutionResult result = SandboxUtils.executeProcessBuilder(pb);
             if (result.getExitCode() != 0) {
                 throw new SandboxException("Cannot delete control groups!");
             }
