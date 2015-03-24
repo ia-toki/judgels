@@ -3,7 +3,7 @@ import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
 name := """gabrielcommons"""
 
-version := "1.0-SNAPSHOT"
+version := "0.1.0"
 
 autoScalaLibrary := false
 
