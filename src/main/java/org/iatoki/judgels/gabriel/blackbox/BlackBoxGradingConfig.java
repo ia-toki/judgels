@@ -9,8 +9,6 @@ public interface BlackBoxGradingConfig extends GradingConfig {
 
     Map<String, String> getSourceFileFields();
 
-    LanguageRestriction getLanguageRestriction();
-
     int getTimeLimitInMilliseconds();
 
     int getMemoryLimitInKilobytes();
