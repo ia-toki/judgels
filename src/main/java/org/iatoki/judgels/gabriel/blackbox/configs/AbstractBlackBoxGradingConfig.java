@@ -1,7 +1,6 @@
 package org.iatoki.judgels.gabriel.blackbox.configs;
 
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
-import org.iatoki.judgels.gabriel.blackbox.LanguageRestriction;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 
 import java.util.List;
@@ -30,10 +29,5 @@ public abstract class AbstractBlackBoxGradingConfig implements BlackBoxGradingCo
     @Override
     public final List<TestGroup> getTestData() {
         return testData;
-    }
-
-    @Override
-    public LanguageRestriction getLanguageRestriction() {
-        return LanguageRestriction.noRestriction();
     }
 }

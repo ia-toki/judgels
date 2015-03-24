@@ -1,5 +1,6 @@
 package org.iatoki.judgels.gabriel;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -27,7 +28,7 @@ public final class GradingLanguageRegistry {
     }
 
     public Map<String, String> getGradingLanguages() {
-        return Maps.transformValues(registry, language -> language.getName());
+        return ImmutableMap.copyOf(Maps.transformValues(registry, language -> language.getName()));
     }
 
     public static GradingLanguageRegistry getInstance() {
