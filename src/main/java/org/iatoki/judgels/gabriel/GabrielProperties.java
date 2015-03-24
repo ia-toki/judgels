@@ -113,25 +113,25 @@ public final class GabrielProperties {
 
             verifyProperties(properties);
 
-            String baseDirName = properties.getProperty("gabriel.baseDir").replaceAll("\"", "");
+            String baseDataDirName = properties.getProperty("gabriel.baseDataDir").replaceAll("\"", "");
 
-            File baseDir = new File(baseDirName);
-            if (!baseDir.isDirectory()) {
-                throw new RuntimeException("gabriel.baseDir: " + baseDirName + " does not exist");
+            File baseDataDir = new File(baseDataDirName);
+            if (!baseDataDir.isDirectory()) {
+                throw new RuntimeException("gabriel.baseDataDir: " + baseDataDirName + " does not exist");
             }
 
             try {
-                INSTANCE.problemDir = new File(baseDir, "problem");
+                INSTANCE.problemDir = new File(baseDataDir, "problem");
                 FileUtils.forceMkdir(INSTANCE.problemDir);
 
-                INSTANCE.tempDir = new File(baseDir, "sandbox");
+                INSTANCE.tempDir = new File(baseDataDir, "sandbox");
                 FileUtils.forceMkdir(INSTANCE.tempDir);
 
-                INSTANCE.workerDir = new File(baseDir, "temp");
+                INSTANCE.workerDir = new File(baseDataDir, "temp");
                 FileUtils.forceMkdir(INSTANCE.workerDir);
 
             } catch (IOException e) {
-                throw new RuntimeException("Cannot create folder inside " + baseDir.getAbsolutePath());
+                throw new RuntimeException("Cannot create folder inside " + baseDataDir.getAbsolutePath());
             }
 
             INSTANCE.sandalphonBaseUrl = properties.getProperty("sandalphon.baseUrl").replaceAll("\"", "");
@@ -150,7 +150,7 @@ public final class GabrielProperties {
 
     private static void verifyProperties(Properties properties) {
         List<String> requiredKeys = ImmutableList.of(
-                "gabriel.baseDir",
+                "gabriel.baseDataDir",
                 "sandalphon.baseUrl",
                 "sandalphon.clientJid",
                 "sandalphon.clientSecret",
