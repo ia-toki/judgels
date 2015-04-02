@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 public final class GradingEngineRegistry {
     private static GradingEngineRegistry INSTANCE;
+    private static final String DEFAULT_GRADING_ENGINE = "BatchWithSubtasks";
 
     private final Map<String, Class<? extends GradingEngine>> registry;
 
@@ -47,6 +48,14 @@ public final class GradingEngineRegistry {
 
     public Map<String, String> getGradingEngines() {
         return ImmutableMap.copyOf(gradingEngineNames);
+    }
+
+    public String getDefaultEngine() {
+        if (gradingEngineNames.containsKey(DEFAULT_GRADING_ENGINE)) {
+            return DEFAULT_GRADING_ENGINE;
+        } else {
+            throw new IllegalStateException("Default grading engine " + DEFAULT_GRADING_ENGINE + " must be present");
+        }
     }
 
     private void populateEngines() {
