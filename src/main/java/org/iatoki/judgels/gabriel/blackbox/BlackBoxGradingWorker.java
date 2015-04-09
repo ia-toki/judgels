@@ -237,14 +237,14 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         zis.closeEntry();
         zis.close();
 
-        FileUtils.forceMkdir(new File(problemGradingDir, "helper"));
+        FileUtils.forceMkdir(new File(problemGradingDir, "helpers"));
         FileUtils.forceMkdir(new File(problemGradingDir, "testdata"));
 
         GabrielLogger.getLogger().info("Fetching test data files from Sandalphon finished.");
     }
 
     private Map<String, File> generateHelperFiles(File problemGradingDir) throws FileNotFoundException {
-        File helperDir = new File(problemGradingDir, "helper");
+        File helperDir = new File(problemGradingDir, "helpers");
         return listFilesAsMap(helperDir);
     }
 

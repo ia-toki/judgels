@@ -17,7 +17,6 @@ public final class GabrielProperties {
     private static GabrielProperties INSTANCE;
 
     private File problemDir;
-    private File tempDir;
     private File workerDir;
 
     private String sandalphonBaseUrl;
@@ -37,10 +36,6 @@ public final class GabrielProperties {
 
     public File getProblemDir() {
         return problemDir;
-    }
-
-    public File getTempDir() {
-        return tempDir;
     }
 
     public File getWorkerDir() {
@@ -121,11 +116,8 @@ public final class GabrielProperties {
             }
 
             try {
-                INSTANCE.problemDir = new File(baseDataDir, "problem");
+                INSTANCE.problemDir = new File(baseDataDir, "problems");
                 FileUtils.forceMkdir(INSTANCE.problemDir);
-
-                INSTANCE.tempDir = new File(baseDataDir, "sandbox");
-                FileUtils.forceMkdir(INSTANCE.tempDir);
 
                 INSTANCE.workerDir = new File(baseDataDir, "temp");
                 FileUtils.forceMkdir(INSTANCE.workerDir);
