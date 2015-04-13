@@ -38,7 +38,7 @@ public final class GabrielProperties {
         return problemDir;
     }
 
-    public File getWorkerDir() {
+    public File getTempDir() {
         return workerDir;
     }
 

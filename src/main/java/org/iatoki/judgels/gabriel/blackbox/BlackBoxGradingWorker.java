@@ -34,6 +34,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     private final long messageId;
 
     private File engineDir;
+    private File workerDir;
     private BlackBoxGradingEngine engine;
     private BlackBoxGradingConfig config;
     private BlackBoxGradingSource source;
@@ -82,7 +83,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         MDC.put("phase", "Cleanup");
 
         GabrielLogger.getLogger().info("Cleanup started.");
-        engine.cleanUp();
+        cleanUp();
         GabrielLogger.getLogger().info("Cleanup finished.");
 
         MDC.remove("phase");
@@ -110,7 +111,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
             language = GradingLanguageRegistry.getInstance().getLanguage(request.getGradingLanguage());
 
             GabrielUtils.getGradingReadLock().lock();
-            File workerDir = getWorkerDir();
+            workerDir = getWorkerDir();
             sourceFiles = generateSourceFiles(workerDir);
             sandboxFactory = getSandboxProvider(workerDir);
             engineDir = getEngineDir(workerDir);
@@ -125,10 +126,19 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         }
     }
 
+    private void cleanUp() {
+        engine.cleanUp();
+        try {
+            FileUtils.forceDelete(workerDir);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private File getWorkerDir() throws IOException {
-        File runnerDir = new File(GabrielProperties.getInstance().getWorkerDir(), request.getGradingJid());
-        FileUtils.forceMkdir(runnerDir);
-        return runnerDir;
+        File workerDir = new File(GabrielProperties.getInstance().getTempDir(), request.getGradingJid());
+        FileUtils.forceMkdir(workerDir);
+        return workerDir;
     }
 
     private SandboxFactory getSandboxProvider(File workerDir) throws IOException {
