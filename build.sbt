@@ -3,7 +3,7 @@ import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
 name := """gabriel"""
 
-version := "0.2.0"
+version := "0.2.1"
 
 lazy val gabriel = (project in file(".")).dependsOn(gabrielcommons).aggregate(gabrielcommons)
 
