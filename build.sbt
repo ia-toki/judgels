@@ -1,39 +1,30 @@
 import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
-name := """gabriel"""
-
-version := "0.2.1"
-
-lazy val gabriel = (project in file(".")).dependsOn(gabrielcommons).aggregate(gabrielcommons)
+lazy val gabriel = (project in file("."))
+    .dependsOn(gabrielcommons)
+    .aggregate(gabrielcommons)
+    .settings(
+        name := "gabriel",
+        version := "0.2.1",
+        scalaVersion := "2.11.1",
+        autoScalaLibrary := false,
+        crossPaths := false,
+        mainClass in (Compile, run) := Some("org.iatoki.judgels.gabriel.Main"),
+        libraryDependencies ++= Seq(
+            "org.apache.httpcomponents" % "httpclient" % "4.4"
+        )
+    )
+    .settings(TestNGPlugin.testNGSettings: _*)
+    .settings(
+        aggregate in test := false,
+        aggregate in jacoco.cover := false,
+        TestNGPlugin.testNGSuites := Seq("src/test/resources/testng.xml")
+    )
+    .settings(jacoco.settings: _*)
+    .settings(
+        parallelExecution in jacoco.Config := false
+    )
 
 lazy val gabrielcommons = RootProject(file("../judgels-gabriel-commons"))
-
-mainClass in (Compile, run) := Some("org.iatoki.judgels.gabriel.Main")
-
-autoScalaLibrary := false
-
-crossPaths := false
-
-scalaVersion := "2.11.1"
-
-resolvers += "IA TOKI Artifactory" at "http://artifactory.ia-toki.org/artifactory/repo"
-
-libraryDependencies ++= Seq(
-  "org.apache.httpcomponents" % "httpclient" % "4.4",
-  "commons-io" % "commons-io" % "2.4",
-  "com.google.guava" % "guava" % "18.0",
-  "com.google.code.gson" % "gson" % "2.3.1",
-  "org.iatoki.judgels.sealtiel" % "sealtiel-message" % "1.0.4"
-)
-
-TestNGPlugin.testNGSettings
-
-TestNGPlugin.testNGSuites := Seq("testng.xml")
-
-TestNGPlugin.testNGOutputDirectory := "target/testng"
-
-jacoco.settings
-
-parallelExecution in jacoco.Config := false
 
