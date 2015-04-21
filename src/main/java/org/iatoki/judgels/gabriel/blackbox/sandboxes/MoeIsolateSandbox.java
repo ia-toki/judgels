@@ -33,6 +33,8 @@ public class MoeIsolateSandbox extends Sandbox {
     private int timeLimit;
     private int memoryLimit;
     private int stackSize;
+    private int blocksQuota;
+    private int inodesQuota;
     private int maxProcesses;
 
     public MoeIsolateSandbox(String isolatePath, int boxId) {
@@ -56,6 +58,7 @@ public class MoeIsolateSandbox extends Sandbox {
         this.allowedDirs.add(new File("/etc"));
         this.allowedDirs.add(this.boxDir);
 
+        setQuota(100 * 1024, 20); // 100 MB, 20 files
         setMaxProcesses(6);
     }
 
@@ -102,6 +105,12 @@ public class MoeIsolateSandbox extends Sandbox {
     @Override
     public void setMaxProcesses(int maxProcesses) {
         this.maxProcesses = maxProcesses;
+    }
+
+    @Override
+    public void setQuota(int blocks, int inodes) {
+        this.blocksQuota = blocks;
+        this.inodesQuota = inodes;
     }
 
     @Override
@@ -195,6 +204,10 @@ public class MoeIsolateSandbox extends Sandbox {
 
         if (standardError != null) {
             sandboxedCommand.add("-r" + standardError.getName());
+        }
+
+        if (blocksQuota > 0) {
+            sandboxedCommand.add("-q" + blocksQuota + "," + inodesQuota);
         }
 
         sandboxedCommand.add("-M" + new File(boxDir, "_isolate.meta").getAbsolutePath());

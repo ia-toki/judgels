@@ -23,6 +23,8 @@ public abstract class Sandbox {
 
     public abstract void setMaxProcesses(int maxProcesses);
 
+    public abstract void setQuota(int blocks, int inodes);
+
     public abstract void resetRedirections();
 
     public abstract void redirectStandardInput(String filenameInsideThisSandbox);
