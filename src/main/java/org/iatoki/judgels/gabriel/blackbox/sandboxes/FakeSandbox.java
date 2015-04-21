@@ -68,6 +68,11 @@ public final class FakeSandbox extends Sandbox {
     }
 
     @Override
+    public void setQuota(int blocks, int inodes) {
+        // nothing
+    }
+
+    @Override
     public void resetRedirections() {
         standardInput = null;
         standardOutput = null;
