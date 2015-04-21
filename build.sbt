@@ -4,7 +4,7 @@ import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 lazy val gabrielcommons = (project in file("."))
     .settings(
         name := "gabrielcommons",
-        version := "0.2.1",
+        version := IO.read(file("version.properties")),
         scalaVersion := "2.11.1",
         autoScalaLibrary := false,
         crossPaths := false,
