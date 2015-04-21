@@ -6,7 +6,7 @@ lazy val gabriel = (project in file("."))
     .aggregate(gabrielcommons)
     .settings(
         name := "gabriel",
-        version := "0.2.1",
+        version := IO.read(file("version.properties")),
         scalaVersion := "2.11.1",
         autoScalaLibrary := false,
         crossPaths := false,
