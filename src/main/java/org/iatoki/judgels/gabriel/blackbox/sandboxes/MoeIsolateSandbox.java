@@ -206,10 +206,6 @@ public class MoeIsolateSandbox extends Sandbox {
             sandboxedCommand.add("-r" + standardError.getName());
         }
 
-        if (blocksQuota > 0) {
-            sandboxedCommand.add("-q" + blocksQuota + "," + inodesQuota);
-        }
-
         sandboxedCommand.add("-M" + new File(boxDir, "_isolate.meta").getAbsolutePath());
         sandboxedCommand.add("--run").add("--");
 
@@ -271,7 +267,16 @@ public class MoeIsolateSandbox extends Sandbox {
     }
 
     private void initIsolate() {
-        ProcessBuilder pb = new ProcessBuilder(isolatePath, "-b" + boxId, "--init").redirectErrorStream(true);
+        ImmutableList.Builder<String> command = ImmutableList.builder();
+        command.add(isolatePath, "-b" + boxId);
+
+        if (blocksQuota > 0) {
+            command.add("-q" + blocksQuota + "," + inodesQuota);
+        }
+
+        command.add("--init");
+
+        ProcessBuilder pb = new ProcessBuilder(command.build()).redirectErrorStream(true);
 
         try {
             ProcessExecutionResult result = SandboxUtils.executeProcessBuilder(pb);
