@@ -28,3 +28,8 @@ lazy val gabrielcommons = (project in file("."))
     .settings(
         parallelExecution in jacoco.Config := false
     )
+    .settings(
+        publishArtifact in (Compile, packageDoc) := false,
+        publishArtifact in packageDoc := false,
+        sources in (Compile,doc) := Seq.empty
+    )
