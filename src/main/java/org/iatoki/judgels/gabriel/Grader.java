@@ -30,6 +30,8 @@ public final class Grader {
                 if (message != null) {
                     processMessage(message);
                 }
+            } catch (JsonSyntaxException e) {
+                GabrielLogger.getLogger().warn("Bad grading request: " + e.getMessage());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
