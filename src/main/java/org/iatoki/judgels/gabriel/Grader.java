@@ -1,5 +1,6 @@
 package org.iatoki.judgels.gabriel;
 
+import com.google.gson.JsonSyntaxException;
 import org.iatoki.judgels.sealtiel.client.ClientMessage;
 import org.iatoki.judgels.sealtiel.client.Sealtiel;
 
@@ -51,7 +52,7 @@ public final class Grader {
             GradingWorker worker = GradingWorkers.newWorker(message.getSourceClientJid(), request, sealtiel, message.getId());
 
             threadPoolExecutor.submit(worker);
-        } catch (BadGradingRequestException e) {
+        } catch (BadGradingRequestException | JsonSyntaxException e) {
             GabrielLogger.getLogger().warn("Bad grading request: " + e.getMessage());
         }
     }
