@@ -142,8 +142,8 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     private SandboxFactory getSandboxProvider(File workerDir) throws IOException {
-        if (GabrielProperties.getInstance().getIsolatePath() != null && GabrielProperties.getInstance().getIwrapperPath() != null) {
-            return new MoeIsolateSandboxFactory(GabrielProperties.getInstance().getIsolatePath(), GabrielProperties.getInstance().getIwrapperPath());
+        if (GabrielProperties.getInstance().getMoeIsolatePath() != null && GabrielProperties.getInstance().getMoeIwrapperPath() != null) {
+            return new MoeIsolateSandboxFactory(GabrielProperties.getInstance().getMoeIsolatePath(), GabrielProperties.getInstance().getMoeIwrapperPath());
         } else {
             File sandboxesDir = new File(workerDir, "sandbox");
             FileUtils.forceMkdir(sandboxesDir);

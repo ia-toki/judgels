@@ -1,5 +1,10 @@
 package org.iatoki.judgels.gabriel;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+
+import java.io.File;
+
 public final class Main {
     private Main() {
         // prevent instantiation
@@ -18,6 +23,8 @@ public final class Main {
     }
 
     private static void init() {
-        GabrielProperties.getInstance();
+        Config config = ConfigFactory.load(Main.class.getClassLoader(), "conf/application.conf");
+
+        GabrielProperties.buildInstance(config);
     }
 }

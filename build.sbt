@@ -12,7 +12,8 @@ lazy val gabriel = (project in file("."))
         crossPaths := false,
         mainClass in (Compile, run) := Some("org.iatoki.judgels.gabriel.Main"),
         libraryDependencies ++= Seq(
-            "org.apache.httpcomponents" % "httpclient" % "4.4"
+            "org.apache.httpcomponents" % "httpclient" % "4.4",
+            "com.typesafe" % "config" % "1.2.1"
         )
     )
     .settings(TestNGPlugin.testNGSettings: _*)
