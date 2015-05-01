@@ -3,8 +3,6 @@ package org.iatoki.judgels.gabriel;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
-import java.io.File;
-
 public final class Main {
     private Main() {
         // prevent instantiation
@@ -13,7 +11,14 @@ public final class Main {
     public static void main(String[] args) {
         init();
 
-        Grader grader = new Grader();
+        int threads;
+        if (args.length > 0) {
+            threads = Integer.parseInt(args[0]);
+        } else {
+            threads = getDefaultThreadsCount();
+        }
+
+        Grader grader = new Grader(threads);
 
         try {
             grader.run();
@@ -26,5 +31,9 @@ public final class Main {
         Config config = ConfigFactory.load(Main.class.getClassLoader(), "conf/application.conf");
 
         GabrielProperties.buildInstance(config);
+    }
+
+    private static int getDefaultThreadsCount() {
+        return Math.max(1, (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2);
     }
 }

@@ -10,18 +10,19 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public final class Grader {
 
+    private final int threads;
     private final ThreadPoolExecutor threadPoolExecutor;
     private final Sealtiel sealtiel;
 
-    public Grader() {
-        int threadPool = Math.max(1, (Runtime.getRuntime().availableProcessors() - 1) * 1 * 2);
-        this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threadPool);
+    public Grader(int threads) {
+        this.threads = threads;
+        this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threads);
         this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret(), GabrielProperties.getInstance().getSealtielBaseUrl());
-
-        GabrielLogger.getLogger().info("Gabriel started; using " + threadPool + " threads.");
     }
 
     public void run() throws InterruptedException {
+        GabrielLogger.getLogger().info("Gabriel started; using " + threads + " threads.");
+
         while (true) {
             waitUntilAvailable();
 
