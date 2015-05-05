@@ -65,7 +65,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
         addSourceFile("source", "binsearch-CE.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-OK.cpp"));
+            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_CE);
             assertEquals(result.getScore(), 0);
             assertTrue(result.getDetails().getCompilationOutputs().get("source").contains("strcmp"));
@@ -117,7 +117,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
         addSourceFile("source", "binsearch-OK.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-OK.cpp"));
+            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_AC);
             assertEquals(result.getScore(), 100);
 
@@ -136,7 +136,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
         addSourceFile("source", "linsearch-WA-at-subtask_2.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-OK.cpp"));
+            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
             assertEquals(result.getScore(), 30);
 
@@ -156,7 +156,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
         addSourceFile("source", "linsearch-RTE-at-subtask_2.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-OK.cpp"));
+            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_OK_WORST_RTE);
             assertEquals(result.getScore(), 30);
 
