@@ -41,8 +41,6 @@ public final class GradingLanguageRegistry {
     private void populateLanguages() {
         List<GradingLanguage> languages = Lists.newArrayList(ServiceLoader.load(GradingLanguage.class));
 
-        Collections.sort(languages, (GradingLanguage o1, GradingLanguage o2) -> o1.getName().compareTo(o2.getName()));
-
         for (GradingLanguage language : languages) {
             registry.put(getLanguageSimpleName(language), language);
         }
