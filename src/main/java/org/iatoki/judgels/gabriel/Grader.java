@@ -33,7 +33,7 @@ public final class Grader {
                 }
             } catch (JsonSyntaxException | IOException e) {
                 GabrielLogger.getLogger().error("Bad grading request", e);
-                if (!e.getMessage().isEmpty()) {
+                if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                     GabrielLogger.getLogger().error("Message:", e.getMessage());
                 }
             }
@@ -58,7 +58,7 @@ public final class Grader {
             threadPoolExecutor.submit(worker);
         } catch (BadGradingRequestException | JsonSyntaxException e) {
             GabrielLogger.getLogger().error("Bad grading request", e);
-            if (!e.getMessage().isEmpty()) {
+            if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                 GabrielLogger.getLogger().error("Message:", e.getMessage());
             }
         }

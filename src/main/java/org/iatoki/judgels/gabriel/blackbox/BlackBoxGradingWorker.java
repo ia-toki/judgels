@@ -76,7 +76,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
         } catch (Exception e) {
             GabrielLogger.getLogger().error("Grading failed!", e);
-            if (!e.getMessage().isEmpty()) {
+            if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                 GabrielLogger.getLogger().error("Message:", e.getMessage());
             }
             result = BlackBoxGradingResult.internalErrorResult();
