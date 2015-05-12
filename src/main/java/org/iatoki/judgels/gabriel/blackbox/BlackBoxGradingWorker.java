@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.iatoki.judgels.gabriel.*;
@@ -196,7 +197,14 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         }
 
         HttpPost post = GabrielProperties.getInstance().getGetGradingLastUpdateTimeRequest(problemJid);
-        HttpClient client = HttpClientBuilder.create().build();
+
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectionRequestTimeout(30 * 1000)
+                .setSocketTimeout(30 * 1000)
+                .setConnectTimeout(30 * 1000)
+                .build();
+
+        HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 
         HttpResponse response = client.execute(post);
 
@@ -219,7 +227,14 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         FileUtils.forceMkdir(problemGradingDir);
 
         HttpPost post = GabrielProperties.getInstance().getFetchProblemGradingFilesRequest(problemJid);
-        HttpClient client = HttpClientBuilder.create().build();
+
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectionRequestTimeout(30 * 1000)
+                .setSocketTimeout(30 * 1000)
+                .setConnectTimeout(30 * 1000)
+                .build();
+
+        HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 
         HttpResponse response = client.execute(post);
 
