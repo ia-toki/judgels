@@ -17,8 +17,8 @@ public final class BlackBoxGradingResult implements GradingResult {
         this.details = details;
     }
 
-    public static BlackBoxGradingResult internalErrorResult() {
-        return new BlackBoxGradingResult(GeneralVerdict.INTERNAL_ERROR, 0, BlackBoxGradingResultDetails.internalErrorDetails());
+    public static BlackBoxGradingResult internalErrorResult(String errorMessage) {
+        return new BlackBoxGradingResult(GeneralVerdict.INTERNAL_ERROR, 0, BlackBoxGradingResultDetails.internalErrorDetails(errorMessage));
     }
 
     public static BlackBoxGradingResult compilationErrorResult(Map<String, String> compilationOutput) {
