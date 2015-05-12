@@ -80,7 +80,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
             if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                 GabrielLogger.getLogger().error("Message:", e.getMessage());
             }
-            result = BlackBoxGradingResult.internalErrorResult();
+            result = BlackBoxGradingResult.internalErrorResult(e.getMessage());
         }
 
         MDC.put("phase", "Cleanup");
