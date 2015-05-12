@@ -1,9 +1,9 @@
 package org.iatoki.judgels.gabriel.blackbox.sandboxes;
 
 import com.google.common.collect.ImmutableList;
-import org.iatoki.judgels.gabriel.GabrielLogger;
 import org.iatoki.judgels.gabriel.blackbox.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
+import org.iatoki.judgels.gabriel.blackbox.SandboxUtils;
 import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractor;
 
 import java.io.IOException;
@@ -29,7 +29,8 @@ public class MoeIwrapperSandboxesInteractor implements SandboxesInteractor {
         commandBuilder.addAll(pb2.command());
 
         try {
-            new ProcessBuilder(commandBuilder.build()).start().waitFor();
+            ProcessBuilder pb = new ProcessBuilder(commandBuilder.build());
+            SandboxUtils.executeProcessBuilder(pb);
         } catch (IOException | InterruptedException e) {
             return new SandboxExecutionResult[]{
                     SandboxExecutionResult.internalError(e.getMessage()),
