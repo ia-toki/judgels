@@ -2,15 +2,15 @@ import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
 lazy val gabrielcommons = (project in file("."))
+    .dependsOn(sealtielcommons)
+    .aggregate(sealtielcommons)
     .settings(
         name := "gabrielcommons",
         version := IO.read(file("version.properties")).trim,
         scalaVersion := "2.11.1",
         autoScalaLibrary := false,
         crossPaths := false,
-        resolvers += "IA TOKI Artifactory" at "http://artifactory.ia-toki.org/artifactory/repo",
         libraryDependencies ++= Seq(
-            "org.iatoki.judgels.sealtiel" % "sealtiel-message" % "1.0.4",
             "org.apache.commons" % "commons-lang3" % "3.3.2",
             "com.google.code.gson" % "gson" % "2.3.1",
             "commons-io" % "commons-io" % "2.4",
@@ -22,6 +22,8 @@ lazy val gabrielcommons = (project in file("."))
     )
     .settings(TestNGPlugin.testNGSettings: _*)
     .settings(
+        aggregate in test := false,
+        aggregate in jacoco.cover := false,
         TestNGPlugin.testNGSuites := Seq("src/test/resources/testng.xml")
     )
     .settings(jacoco.settings: _*)
@@ -33,3 +35,5 @@ lazy val gabrielcommons = (project in file("."))
         publishArtifact in packageDoc := false,
         sources in (Compile,doc) := Seq.empty
     )
+
+lazy val sealtielcommons = RootProject(file("../judgels-sealtiel-commons"))
