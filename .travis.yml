@@ -3,5 +3,9 @@ language: java
 jdk:
   - oraclejdk8
 
+install:
+  - git clone https://github.com/ia-toki/judgels-gabriel-commons.git ../judgels-gabriel-commons
+  - git clone https://github.com/ia-toki/judgels-sealtiel-commons.git ../judgels-sealtiel-commons
+
 script:
   - ./activator test
