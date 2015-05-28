@@ -1,4 +1,6 @@
-#Judgels Gabriel 
+#Judgels Gabriel
+
+[![Build Status](https://travis-ci.org/ia-toki/judgels-gabriel.svg?branch=master)](https://travis-ci.org/ia-toki/judgels-gabriel)
 
 ##Description
 Gabriel is an application built using Java and [SBT](http://www.scala-sbt.org/) to grade any programming problems.
@@ -15,7 +17,7 @@ To set up Gabriel, you need to:
         - gabriel-commons
         - judgels-gabriel
 
-2. Copy src/main/resources/conf/application_default.conf into src/main/resources/conf/application.conf and change the configuration accordingly. **Refer to the default configuration file for explanation of the configuration keys.** In the application configuration, Gabriel need to connect to running Sandalphon (to fetch grading resources) and Sealtiel (to accept grading requests) application. In order to connect Gabriel to running Sandalphon and Sealtiel, Gabriel must be registered as Sandalphon and Sealtiel clients. 
+2. Copy src/main/resources/conf/application_default.conf into src/main/resources/conf/application.conf and change the configuration accordingly. **Refer to the default configuration file for explanation of the configuration keys.** In the application configuration, Gabriel need to connect to running Sandalphon (to fetch grading resources) and Sealtiel (to accept grading requests) application. In order to connect Gabriel to running Sandalphon and Sealtiel, Gabriel must be registered as Sandalphon and Sealtiel clients.
 
 To run Gabriel, just run "sbt" then it will check and download all dependencies and enter SBT Console.
 In sbt console use "run" command to run Gabriel. By default it will run on several threads depending on your CPU cores (**It is still not configurable at the moment**).
