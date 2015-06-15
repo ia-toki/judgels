@@ -13,8 +13,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.iatoki.judgels.gabriel.*;
 import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
 import org.iatoki.judgels.gabriel.blackbox.sandboxes.MoeIsolateSandboxFactory;
-import org.iatoki.judgels.sealtiel.client.ClientMessage;
-import org.iatoki.judgels.sealtiel.client.Sealtiel;
+import org.iatoki.judgels.sealtiel.ClientMessage;
+import org.iatoki.judgels.sealtiel.Sealtiel;
 import org.slf4j.MDC;
 
 import java.io.File;

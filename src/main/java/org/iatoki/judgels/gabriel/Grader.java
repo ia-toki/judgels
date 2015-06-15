@@ -1,8 +1,8 @@
 package org.iatoki.judgels.gabriel;
 
 import com.google.gson.JsonSyntaxException;
-import org.iatoki.judgels.sealtiel.client.ClientMessage;
-import org.iatoki.judgels.sealtiel.client.Sealtiel;
+import org.iatoki.judgels.sealtiel.ClientMessage;
+import org.iatoki.judgels.sealtiel.Sealtiel;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;

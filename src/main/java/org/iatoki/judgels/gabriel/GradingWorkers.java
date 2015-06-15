@@ -2,7 +2,7 @@ package org.iatoki.judgels.gabriel;
 
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingRequest;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingWorker;
-import org.iatoki.judgels.sealtiel.client.Sealtiel;
+import org.iatoki.judgels.sealtiel.Sealtiel;
 
 public final class GradingWorkers {
     private GradingWorkers() {
