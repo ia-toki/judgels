@@ -2,8 +2,8 @@ import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
 lazy val gabriel = (project in file("."))
-    .dependsOn(gabrielcommons)
-    .aggregate(gabrielcommons)
+    .dependsOn(gabrielcommons, sealtielcommons)
+    .aggregate(gabrielcommons, sealtielcommons)
     .settings(
         name := "gabriel",
         version := IO.read(file("version.properties")).trim,
@@ -29,3 +29,4 @@ lazy val gabriel = (project in file("."))
 
 lazy val gabrielcommons = RootProject(file("../judgels-gabriel-commons"))
 
+lazy val sealtielcommons = RootProject(file("../judgels-sealtiel-commons"))
