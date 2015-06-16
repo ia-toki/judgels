@@ -11,10 +11,6 @@ lazy val gabrielcommons = (project in file("."))
         autoScalaLibrary := false,
         crossPaths := false,
         libraryDependencies ++= Seq(
-            "org.apache.commons" % "commons-lang3" % "3.3.2",
-            "com.google.code.gson" % "gson" % "2.3.1",
-            "commons-io" % "commons-io" % "2.4",
-            "com.google.guava" % "guava" % "r05",
             "org.slf4j" % "slf4j-api" % "1.7.10",
             "ch.qos.logback" % "logback-classic" % "1.1.1",
             "ch.qos.logback" % "logback-core" % "1.1.1"
