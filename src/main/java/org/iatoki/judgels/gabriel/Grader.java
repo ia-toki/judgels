@@ -17,7 +17,7 @@ public final class Grader {
     public Grader(int threads) {
         this.threads = threads;
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threads);
-        this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret(), GabrielProperties.getInstance().getSealtielBaseUrl());
+        this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielBaseUrl(), GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret());
     }
 
     public void run() throws InterruptedException {
