@@ -7,7 +7,7 @@ lazy val gabrielcommons = (project in file("."))
     .settings(
         name := "gabrielcommons",
         version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.1",
+        scalaVersion := "2.11.7",
         autoScalaLibrary := false,
         crossPaths := false,
         libraryDependencies ++= Seq(
