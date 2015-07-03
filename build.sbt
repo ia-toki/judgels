@@ -7,12 +7,11 @@ lazy val gabriel = (project in file("."))
     .settings(
         name := "gabriel",
         version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.1",
+        scalaVersion := "2.11.7",
         autoScalaLibrary := false,
         crossPaths := false,
         mainClass in (Compile, run) := Some("org.iatoki.judgels.gabriel.Main"),
         libraryDependencies ++= Seq(
-            "org.apache.httpcomponents" % "httpclient" % "4.4",
             "com.typesafe" % "config" % "1.2.1"
         )
     )
