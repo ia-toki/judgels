@@ -4,7 +4,7 @@ jdk:
   - oraclejdk8
 
 install:
-  - git clone https://github.com/ia-toki/judgels-commons.git ../judgels-commons
+  - git clone https://github.com/judgels/commons.git ../commons
 
 script:
   - ./activator test
