@@ -4,9 +4,12 @@ jdk:
   - oraclejdk8
 
 install:
+  - git clone https://github.com/judgels/judgels.git ../judgels
   - git clone https://github.com/judgels/commons.git ../commons
   - git clone https://github.com/judgels/gabrielcommons.git ../gabrielcommons
   - git clone https://github.com/judgels/sealtielcommons.git ../sealtielcommons
 
 script:
-  - ./activator test
+  - ../judgels/scripts/download-activator.sh
+  - export PATH=$PATH:~/activator
+  - activator test
