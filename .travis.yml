@@ -5,6 +5,10 @@ jdk:
 
 install:
   - git clone https://github.com/judgels/commons.git ../commons
+  - git clone https://github.com/judgels/judgels.git ../judgels
 
 script:
-  - ./activator test
+  - ../judgels/scripts/download-activator.sh
+  - export PATH=$PATH:~/activator
+  - activator test
+
