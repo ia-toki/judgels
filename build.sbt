@@ -26,6 +26,6 @@ lazy val gabriel = (project in file("."))
         parallelExecution in jacoco.Config := false
     )
 
-lazy val gabrielcommons = RootProject(file("../judgels-gabriel-commons"))
+lazy val gabrielcommons = RootProject(file("../gabrielcommons"))
 
-lazy val sealtielcommons = RootProject(file("../judgels-sealtiel-commons"))
+lazy val sealtielcommons = RootProject(file("../sealtielcommons"))
