@@ -23,7 +23,6 @@ import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
 import org.iatoki.judgels.gabriel.languages.Cpp11GradingLanguage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 public final class BatchGradingEngine extends BlackBoxGradingEngine {

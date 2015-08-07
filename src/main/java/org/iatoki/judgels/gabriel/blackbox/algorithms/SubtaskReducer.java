@@ -13,6 +13,7 @@ import org.iatoki.judgels.gabriel.blackbox.TestCaseResult;
 import java.util.List;
 
 public final class SubtaskReducer extends AbstractReducer {
+
     @Override
     public List<TestCaseResult> improveTestCaseResults(List<TestCaseResult> testCaseResults, Subtask subtask) {
         if (testCaseResults.isEmpty()) {
@@ -36,6 +37,7 @@ public final class SubtaskReducer extends AbstractReducer {
 
         return results.build();
     }
+
     @Override
     public SubtaskResult reduceTestCaseResults(List<TestCaseResult> testCaseResults, Subtask subtask) throws ReductionException {
         if (testCaseResults.isEmpty()) {

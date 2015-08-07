@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class FakeSandboxesInteractor implements SandboxesInteractor {
+
     @Override
     public SandboxExecutionResult[] executeInteraction(Sandbox sandbox1, List<String> command1, Sandbox sandbox2, List<String> command2) {
 
@@ -60,36 +61,35 @@ public final class FakeSandboxesInteractor implements SandboxesInteractor {
         };
     }
 
-}
+    class UnidirectionalPipe implements Runnable {
+        private final InputStream in;
+        private final OutputStream out;
 
-class UnidirectionalPipe implements Runnable {
-    private final InputStream in;
-    private final OutputStream out;
+        public UnidirectionalPipe(InputStream in, OutputStream out) {
+            this.in = in;
+            this.out = out;
+        }
 
-    public UnidirectionalPipe(InputStream in, OutputStream out) {
-        this.in = in;
-        this.out = out;
-    }
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    byte[] buffer = new byte[4096];
+                    int len = in.read(buffer);
+                    if (len == -1) {
+                        break;
+                    }
 
-    @Override
-    public void run() {
-        try {
-            while (true) {
-                byte[] buffer = new byte[4096];
-                int len = in.read(buffer);
-                if (len == -1) {
-                    break;
+                    out.write(buffer, 0, len);
+                    out.flush();
                 }
 
-                out.write(buffer, 0, len);
-                out.flush();
+                in.close();
+                out.close();
+
+            } catch (IOException e) {
+
             }
-
-            in.close();
-            out.close();
-
-        } catch (IOException e) {
-
         }
     }
 }

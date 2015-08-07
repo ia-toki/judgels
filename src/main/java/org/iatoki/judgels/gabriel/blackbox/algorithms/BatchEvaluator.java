@@ -16,13 +16,14 @@ import java.io.IOException;
 import java.util.List;
 
 public final class BatchEvaluator implements Evaluator {
+
+    private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
+
     private final Sandbox sandbox;
     private final File compilationDir;
     private final File evaluationDir;
 
     private final String executableFilename;
-
-    private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
 
     private final List<String> evaluationCommand;
 

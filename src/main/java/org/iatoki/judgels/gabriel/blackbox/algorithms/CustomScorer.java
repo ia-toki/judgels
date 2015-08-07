@@ -19,13 +19,14 @@ import java.io.IOException;
 import java.util.List;
 
 public final class CustomScorer extends AbstractScorer {
+
+    private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
+    private static final String SCORING_OUTPUT_FILENAME = "_scoring.out";
+
     private final Sandbox sandbox;
     private final File evaluationDir;
     private final String scorerExecutableFilename;
     private final List<String> customScorerExecutionCommand;
-
-    private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
-    private static final String SCORING_OUTPUT_FILENAME = "_scoring.out";
 
     public CustomScorer(Sandbox sandbox, File evaluationDir, File scoringDir, GradingLanguage language, File scorerFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int scoringTimeLimitInMilliseconds, int scoringMemoryLimitInKilobytes) throws PreparationException {
         try {

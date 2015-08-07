@@ -7,6 +7,7 @@ import org.iatoki.judgels.gabriel.Verdict;
 import java.util.Map;
 
 public final class BlackBoxGradingResult implements GradingResult {
+
     private final Verdict verdict;
     private final int score;
     private final BlackBoxGradingResultDetails details;
@@ -24,6 +25,7 @@ public final class BlackBoxGradingResult implements GradingResult {
     public static BlackBoxGradingResult compilationErrorResult(Map<String, String> compilationOutput) {
         return new BlackBoxGradingResult(CompilationVerdict.COMPILATION_ERROR, 0, BlackBoxGradingResultDetails.compilationErrorDetails(compilationOutput));
     }
+
     public static BlackBoxGradingResult normalResult(ReductionResult result, BlackBoxGradingResultDetails details) {
         return new BlackBoxGradingResult(result.getVerdict(), result.getScore(), details);
     }

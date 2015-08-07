@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public final class PlainCppGradingLanguage extends AbstractGradingLanguage {
+
     @Override
     public String getName() {
         return "C++";

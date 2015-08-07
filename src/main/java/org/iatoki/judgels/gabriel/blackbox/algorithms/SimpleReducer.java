@@ -12,6 +12,7 @@ import org.iatoki.judgels.gabriel.blackbox.TestCaseResult;
 import java.util.List;
 
 public final class SimpleReducer extends AbstractReducer {
+
     @Override
     public List<TestCaseResult> improveTestCaseResults(List<TestCaseResult> testCaseResults, Subtask subtask) {
         if (testCaseResults.isEmpty()) {
@@ -52,8 +53,7 @@ public final class SimpleReducer extends AbstractReducer {
 
             if (verdict == ScoringVerdict.ACCEPTED) {
                 score += testCaseFullScore;
-            }
-            else if (verdict == ScoringVerdict.OK) {
+            } else if (verdict == ScoringVerdict.OK) {
                 score += getOkScore(result.getScore());
             }
         }

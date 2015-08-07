@@ -16,11 +16,12 @@ import java.io.IOException;
 import java.util.List;
 
 public final class SingleSourceFileCompiler implements org.iatoki.judgels.gabriel.blackbox.Compiler {
+
+    private static final String COMPILATION_OUTPUT_FILENAME = "_compilation.out";
+
     private final Sandbox sandbox;
     private final File compilationDir;
     private final String sourceKey;
-
-    private static final String COMPILATION_OUTPUT_FILENAME = "_compilation.out";
 
     private List<String> compilationCommand;
     private String executableFilename;

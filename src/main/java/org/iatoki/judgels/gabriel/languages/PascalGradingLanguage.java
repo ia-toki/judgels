@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public final class PascalGradingLanguage extends AbstractGradingLanguage {
+
     @Override
     public String getName() {
         return "Pascal";
