@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.util.List;
 
 public final class InteractiveEvaluator implements Evaluator {
+
+    private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
+
     private final Sandbox contestantSandbox;
     private final Sandbox communicatorSandbox;
 
@@ -32,8 +35,6 @@ public final class InteractiveEvaluator implements Evaluator {
 
     private final String contestantExecutableName;
     private final String communicatorExecutableName;
-
-    private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
 
     private final List<String> contestantEvaluationCommand;
     private final List<String> communicatorExecutionCommand;

@@ -1,18 +1,16 @@
 package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.ScoringException;
-import org.iatoki.judgels.gabriel.blackbox.ScoringResult;
-import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
 
 import java.io.File;
 import java.io.IOException;
 
 public final class IdentityScorer extends AbstractScorer {
-    private final File evaluationDir;
 
     private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
+
+    private final File evaluationDir;
 
     public IdentityScorer(File evaluationDir) {
         this.evaluationDir = evaluationDir;

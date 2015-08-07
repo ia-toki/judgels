@@ -6,12 +6,11 @@ import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.blackbox.SandboxFactory;
 import org.iatoki.judgels.gabriel.Verdict;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
-import org.iatoki.judgels.gabriel.languages.Cpp11GradingLanguage;
+import org.iatoki.judgels.gabriel.blackbox.SandboxFactory;
 import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
 import org.iatoki.judgels.gabriel.languages.PlainCppGradingLanguage;
 import org.testng.annotations.AfterMethod;
@@ -24,6 +23,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class BlackBoxGradingEngineTest {
+
+    protected static final Verdict VERDICT_CE = new Verdict("CE", "Compilation Error");
+    protected static final Verdict VERDICT_OK = new Verdict("OK", "OK");
+    protected static final Verdict VERDICT_OK_WORST_WA = new Verdict("OK", "OK (worst: WA)");
+    protected static final Verdict VERDICT_OK_WORST_TLE = new Verdict("OK", "OK (worst: TLE)");
+    protected static final Verdict VERDICT_OK_WORST_RTE = new Verdict("OK", "OK (worst: RTE)");
+    protected static final Verdict VERDICT_AC = new Verdict("AC", "Accepted");
+    protected static final Verdict VERDICT_WA = new Verdict("WA", "Wrong Answer");
+    protected static final Verdict VERDICT_TLE = new Verdict("TLE", "Time Limit Exceeded");
+    protected static final Verdict VERDICT_RTE = new Verdict("RTE", "Runtime Error");
+
     private GradingLanguage language;
 
     private File workerDir;
@@ -36,16 +46,6 @@ public abstract class BlackBoxGradingEngineTest {
 
     private final Map<String, File> testDataFiles;
     private final Map<String, File> helperFiles;
-
-    protected static final Verdict VERDICT_CE = new Verdict("CE", "Compilation Error");
-    protected static final Verdict VERDICT_OK = new Verdict("OK", "OK");
-    protected static final Verdict VERDICT_OK_WORST_WA = new Verdict("OK", "OK (worst: WA)");
-    protected static final Verdict VERDICT_OK_WORST_TLE = new Verdict("OK", "OK (worst: TLE)");
-    protected static final Verdict VERDICT_OK_WORST_RTE = new Verdict("OK", "OK (worst: RTE)");
-    protected static final Verdict VERDICT_AC = new Verdict("AC", "Accepted");
-    protected static final Verdict VERDICT_WA = new Verdict("WA", "Wrong Answer");
-    protected static final Verdict VERDICT_TLE = new Verdict("TLE", "Time Limit Exceeded");
-    protected static final Verdict VERDICT_RTE = new Verdict("RTE", "Runtime Error");
 
     protected BlackBoxGradingEngineTest(String resourceDirname) {
         File resourceDir = new File(BlackBoxGradingEngineTest.class.getClassLoader().getResource("blackbox/" + resourceDirname).getPath());

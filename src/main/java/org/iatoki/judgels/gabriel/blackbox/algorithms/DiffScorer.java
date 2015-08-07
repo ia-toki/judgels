@@ -9,10 +9,11 @@ import java.io.File;
 import java.io.IOException;
 
 public final class DiffScorer implements Scorer {
-    private final File evaluationDir;
 
     private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
     private static final String DIFF_EXECUTABLE_FILENAME = "/usr/bin/diff";
+
+    private final File evaluationDir;
 
     public DiffScorer(File evaluationDir) {
         this.evaluationDir = evaluationDir;

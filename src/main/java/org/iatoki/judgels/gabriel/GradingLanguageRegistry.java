@@ -4,12 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
 public final class GradingLanguageRegistry {
+
     private static GradingLanguageRegistry INSTANCE;
 
     private final Map<String, GradingLanguage> registry;

@@ -1,8 +1,7 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import org.iatoki.judgels.gabriel.Verdict;
-
 public enum CompilationVerdict implements BlackBoxVerdict {
+
     OK {
         @Override
         public String getCode() {

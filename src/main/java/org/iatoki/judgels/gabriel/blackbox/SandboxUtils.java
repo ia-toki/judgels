@@ -3,13 +3,13 @@ package org.iatoki.judgels.gabriel.blackbox;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.gabriel.GabrielLogger;
-import org.iatoki.judgels.gabriel.blackbox.ProcessExecutionResult;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public final class SandboxUtils {
+
     private SandboxUtils() {
         // prevent instantiation
     }

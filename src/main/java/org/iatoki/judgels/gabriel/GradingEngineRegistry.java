@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.stream.Collectors;
 
 public final class GradingEngineRegistry {
+
     private static GradingEngineRegistry INSTANCE;
     private static final String DEFAULT_GRADING_ENGINE = "BatchWithSubtasks";
 
