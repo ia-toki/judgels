@@ -42,7 +42,7 @@ public final class Grader {
         }
     }
 
-    private void waitUntilAvailable() throws InterruptedException{
+    private void waitUntilAvailable() throws InterruptedException {
         while (threadPoolExecutor.getActiveCount() == threadPoolExecutor.getMaximumPoolSize()) {
             Thread.sleep(50);
         }

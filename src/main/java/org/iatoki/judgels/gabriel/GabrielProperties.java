@@ -13,10 +13,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public final class GabrielProperties {
+
     private static GabrielProperties INSTANCE;
-    
+
     private Config config;
-    
+
     private File gabrielBaseDataDir;
 
     private File gabrielProblemDir;
@@ -113,7 +114,7 @@ public final class GabrielProperties {
         try {
             gabrielProblemDir = new File(gabrielBaseDataDir, "problems");
             FileUtils.forceMkdir(gabrielProblemDir);
-            
+
             gabrielWorkerDir = new File(gabrielBaseDataDir, "temp");
             FileUtils.forceMkdir(gabrielWorkerDir);
         } catch (IOException e) {

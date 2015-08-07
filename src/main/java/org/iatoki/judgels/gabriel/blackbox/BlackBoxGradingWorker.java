@@ -34,6 +34,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public final class BlackBoxGradingWorker implements GradingWorker {
+
     private final String senderChannel;
     private final BlackBoxGradingRequest request;
     private final Sealtiel sealtiel;
@@ -145,9 +146,9 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     private File getWorkerDir() throws IOException {
-        File workerDir = new File(GabrielProperties.getInstance().getTempDir(), request.getGradingJid());
-        FileUtils.forceMkdir(workerDir);
-        return workerDir;
+        File dir = new File(GabrielProperties.getInstance().getTempDir(), request.getGradingJid());
+        FileUtils.forceMkdir(dir);
+        return dir;
     }
 
     private SandboxFactory getSandboxProvider(File workerDir) throws IOException {
@@ -251,7 +252,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         byte[] buffer = new byte[4096];
         ZipInputStream zis = new ZipInputStream(response.getEntity().getContent());
         ZipEntry ze = zis.getNextEntry();
-        while (ze!=null) {
+        while (ze != null) {
             String filename = ze.getName();
             File file = new File(problemGradingDir, filename);
             FileUtils.forceMkdir(file.getParentFile());
@@ -287,8 +288,8 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     private BlackBoxGradingConfig parseGradingConfig(File problemGradirDir, BlackBoxGradingEngine engine) throws IOException {
-        File config = new File(problemGradirDir, "config.json");
-        String configAsJson = FileUtils.readFileToString(config);
+        File gradingConfig = new File(problemGradirDir, "config.json");
+        String configAsJson = FileUtils.readFileToString(gradingConfig);
         return (BlackBoxGradingConfig) engine.createGradingConfigFromJson(configAsJson);
     }
 
@@ -296,15 +297,15 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         File sourceDir = new File(runnerDir, "source");
         FileUtils.forceMkdir(sourceDir);
 
-        ImmutableMap.Builder<String, File> sourceFiles = ImmutableMap.builder();
+        ImmutableMap.Builder<String, File> sourceFilesBuilder = ImmutableMap.builder();
 
         for (Map.Entry<String, SourceFile> entry : source.getSourceFiles().entrySet()) {
             File file = new File(sourceDir, entry.getValue().getName());
 
             FileUtils.writeStringToFile(file, entry.getValue().getContent());
-            sourceFiles.put(entry.getKey(), file);
+            sourceFilesBuilder.put(entry.getKey(), file);
         }
-        return sourceFiles.build();
+        return sourceFilesBuilder.build();
     }
 
     private Map<String, File> listFilesAsMap(File dir) throws FileNotFoundException {
