@@ -6,8 +6,8 @@ jdk:
 install:
   - git clone https://github.com/judgels/judgels.git ../judgels
   - git clone https://github.com/judgels/commons.git ../commons
-  - git clone https://github.com/judgels/gabrielcommons.git ../gabrielcommons
-  - git clone https://github.com/judgels/sealtielcommons.git ../sealtielcommons
+  - git clone https://github.com/judgels/gabriel-commons.git ../gabriel-commons
+  - git clone https://github.com/judgels/sealtiel-commons.git ../sealtiel-commons
 
 script:
   - ../judgels/scripts/download-activator.sh
