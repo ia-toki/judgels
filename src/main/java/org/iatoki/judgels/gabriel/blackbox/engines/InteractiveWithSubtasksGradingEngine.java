@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.engines;
+package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
@@ -16,16 +16,17 @@ import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SimpleReducer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
-import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveGradingConfig;
-import org.iatoki.judgels.gabriel.languages.Cpp11GradingLanguage;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
+import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.languages.Cpp11GradingLanguage;
 
 import java.io.File;
 import java.util.Map;
 
-public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
-    private org.iatoki.judgels.gabriel.blackbox.Compiler compiler;
+public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingEngine {
+
+    private Compiler compiler;
     private Evaluator evaluator;
     private Scorer scorer;
     private Reducer reducer;
@@ -36,18 +37,18 @@ public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
 
     private GradingLanguage communicatorLanguage;
 
-    public InteractiveGradingEngine() {
+    public InteractiveWithSubtasksGradingEngine() {
         this.communicatorLanguage = new Cpp11GradingLanguage();
     }
 
     @Override
     public String getName() {
-        return "Interactive";
+        return "Interactive with Subtasks";
     }
 
     @Override
     protected void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException {
-        InteractiveGradingConfig castConfig = (InteractiveGradingConfig) config;
+        InteractiveWithSubtasksGradingConfig castConfig = (InteractiveWithSubtasksGradingConfig) config;
         if (castConfig.getCommunicator() == null) {
             throw new PreparationException("Communicator not specified");
         }
@@ -67,7 +68,7 @@ public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
 
         evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile,  getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes());
         scorer = new IdentityScorer(getEvaluationDir());
-        reducer = new SimpleReducer();
+        reducer = new SubtaskReducer();
     }
 
     public void setCommunicatorLanguage(GradingLanguage communicatorLanguage) {
@@ -96,12 +97,12 @@ public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new InteractiveGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of())), null);
+        return new InteractiveWithSubtasksGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), null);
     }
 
     @Override
     public GradingConfig createGradingConfigFromJson(String json) {
-        return new Gson().fromJson(json, InteractiveGradingConfig.class);
+        return new Gson().fromJson(json, InteractiveWithSubtasksGradingConfig.class);
     }
 
     @Override

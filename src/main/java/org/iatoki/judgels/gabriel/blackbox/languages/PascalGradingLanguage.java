@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.languages;
+package org.iatoki.judgels.gabriel.blackbox.languages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -7,16 +7,16 @@ import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
 import java.util.List;
 import java.util.Set;
 
-public final class CGradingLanguage extends AbstractGradingLanguage {
+public final class PascalGradingLanguage extends AbstractGradingLanguage {
 
     @Override
     public String getName() {
-        return "C";
+        return "Pascal";
     }
 
     @Override
     public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("c");
+        return ImmutableSet.of("pas");
     }
 
     @Override
@@ -27,7 +27,7 @@ public final class CGradingLanguage extends AbstractGradingLanguage {
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
         String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("/usr/bin/gcc", "-std=gnu99", "-o", executableFilename, sourceFilename, "-O2", "-lm");
+        return ImmutableList.of("/usr/bin/fpc", sourceFilename, "-O2", "-XS", "-Sg");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.engines;
+package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -9,7 +9,7 @@ import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveGradingConfig;
-import org.iatoki.judgels.gabriel.languages.PlainCppGradingLanguage;
+import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
 import org.testng.annotations.Test;
 
 import java.util.List;

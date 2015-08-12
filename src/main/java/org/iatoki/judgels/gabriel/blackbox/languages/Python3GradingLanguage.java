@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.languages;
+package org.iatoki.judgels.gabriel.blackbox.languages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -7,32 +7,29 @@ import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
 import java.util.List;
 import java.util.Set;
 
-public final class PascalGradingLanguage extends AbstractGradingLanguage {
-
+public final class Python3GradingLanguage extends AbstractGradingLanguage {
     @Override
     public String getName() {
-        return "Pascal";
+        return "Python 3";
     }
 
     @Override
     public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("pas");
+        return ImmutableSet.of("py");
     }
 
     @Override
     public String getExecutableFilename(String sourceFilename) {
-        return sourceFilename.substring(0, sourceFilename.lastIndexOf('.'));
+        return sourceFilename;
     }
 
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
-        String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("/usr/bin/fpc", sourceFilename, "-O2", "-XS", "-Sg");
+        return ImmutableList.of("/bin/true");
     }
 
     @Override
     public List<String> getExecutionCommand(String sourceFilename) {
-        String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("./" + executableFilename);
+        return ImmutableList.of("/usr/bin/python3", sourceFilename);
     }
 }

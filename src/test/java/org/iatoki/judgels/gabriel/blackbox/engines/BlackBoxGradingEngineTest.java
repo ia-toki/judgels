@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.engines;
+package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.beust.jcommander.internal.Maps;
 import com.google.common.collect.ImmutableMap;
@@ -12,7 +12,7 @@ import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
 import org.iatoki.judgels.gabriel.blackbox.SandboxFactory;
 import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
-import org.iatoki.judgels.gabriel.languages.PlainCppGradingLanguage;
+import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 

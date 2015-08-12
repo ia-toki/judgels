@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.languages;
+package org.iatoki.judgels.gabriel.blackbox.languages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
