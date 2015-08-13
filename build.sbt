@@ -5,7 +5,7 @@ lazy val gabrielblackbox = (project in file("."))
     .dependsOn(gabrielcommons)
     .aggregate(gabrielcommons)
     .settings(
-        name := "blackbox",
+        name := "gabriel-blackbox",
         version := IO.read(file("version.properties")).trim,
         scalaVersion := "2.11.7",
         autoScalaLibrary := false,
