@@ -1,0 +1,16 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+install:
+  - git clone https://github.com/judgels/judgels.git ../judgels
+  - git clone https://github.com/judgels/commons.git ../commons
+  - git clone https://github.com/judgels/gabriel-commons.git ../gabriel-commons
+
+script:
+  - ../judgels/scripts/download-activator.sh
+  - ../judgels/scripts/download-checkstyle.sh
+  - export PATH=$PATH:~/activator
+  - activator test
+  - activator checkstyle
