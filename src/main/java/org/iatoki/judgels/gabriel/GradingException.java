@@ -6,9 +6,7 @@ public class GradingException extends Exception {
         super(message);
     }
 
-    @Override
-    public String getMessage() {
-        String message = super.getMessage();
-        return getClass().getSimpleName() + ": " + message;
+    public GradingException(Throwable cause) {
+        super(cause);
     }
 }
