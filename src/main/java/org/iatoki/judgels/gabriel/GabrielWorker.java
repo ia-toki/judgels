@@ -32,15 +32,14 @@ public final class GabrielWorker implements Runnable {
     private final String senderChannel;
     private final GradingRequest request;
     private final Sealtiel sealtiel;
-
     private final long messageId;
 
     private File engineDir;
     private File workerDir;
+
     private GradingEngine engine;
     private GradingConfig config;
     private GradingLanguage language;
-
     private SubmissionSource source;
 
     private SandboxFactory sandboxFactory;
@@ -48,6 +47,8 @@ public final class GabrielWorker implements Runnable {
     private Map<String, File> sourceFiles;
     private Map<String, File> helperFiles;
     private Map<String, File> testDataFiles;
+
+    private GradingResult result;
 
     public GabrielWorker(String senderChannel, GradingRequest request, Sealtiel sealtiel, long messageId) {
         this.senderChannel = senderChannel;
@@ -62,55 +63,35 @@ public final class GabrielWorker implements Runnable {
 
         GabrielLogger.getLogger().info("Gabriel worker started.");
 
-        GradingResult result;
         // TODO extend timeout
+
         try {
-            GabrielLogger.getLogger().info("Grading started.");
-
-            MDC.put("phase", "Initialization");
-
-            GabrielLogger.getLogger().info("Initialization started.");
-            initialize();
-            GabrielLogger.getLogger().info("Initialization finished.");
-
-            result = engine.grade(engineDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
-
-            MDC.remove("phase");
-
-            GabrielLogger.getLogger().info("Grading done. Result: {} {}", result.getVerdict().getCode(), result.getScore());
-
+            initializeWorker();
+            gradeRequest();
+            respond();
         } catch (Exception e) {
             GabrielLogger.getLogger().error("Grading failed!", e);
             if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                 GabrielLogger.getLogger().error("Message:", e.getMessage());
             }
-            result = GradingResult.internalErrorResult(e.getMessage());
+            result = GradingResult.internalErrorResult(e.toString());
+        } finally {
+
+            try {
+                finalizeWorker();
+            } catch (FinalizationException e) {
+                throw new RuntimeException(e);
+            }
         }
-
-        MDC.put("phase", "Cleanup");
-
-        GabrielLogger.getLogger().info("Cleanup started.");
-        cleanUp();
-        GabrielLogger.getLogger().info("Cleanup finished.");
-
-        MDC.remove("phase");
-
-        GabrielLogger.getLogger().info("Sending grading response started.");
-        GradingResponse response = new GradingResponse(request.getGradingJid(), result);
-        try {
-            ClientMessage message = new ClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
-
-            sealtiel.sendMessage(message);
-            sealtiel.sendConfirmation(messageId);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        GabrielLogger.getLogger().info("Sending grading response finished.");
 
         GabrielLogger.getLogger().info("Grading worker finished.");
     }
 
-    private void initialize() throws InitializationException {
+    private void initializeWorker() throws InitializationException {
+        MDC.put("workerPhase", "INITIALIZE");
+
+        GabrielLogger.getLogger().info("Worker initialization started.");
+
         source = request.getSubmissionSource();
 
         try {
@@ -129,16 +110,51 @@ public final class GabrielWorker implements Runnable {
             testDataFiles = generateTestDataFiles(problemGradingDir);
             config = parseGradingConfig(problemGradingDir, engine);
         } catch (IOException | IllegalArgumentException e) {
-            throw new InitializationException(e.getMessage());
+            GabrielLogger.getLogger().error("Worker initialization failed!");
+            throw new InitializationException(e);
         }
+
+        GabrielLogger.getLogger().info("Worker finalization started.");
     }
 
-    private void cleanUp() {
+    private void gradeRequest() throws GradingException {
+        MDC.put("workerPhase", "GRADE");
+        result = engine.grade(engineDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
+
+        GabrielLogger.getLogger().info("Grading done. Result: {} {}", result.getVerdict().getCode(), result.getScore());
+    }
+
+    private void respond() throws ResponseException {
+        MDC.put("workerPhase", "RESPOND");
+
+        GabrielLogger.getLogger().info("Grading result ready to send.");
+        GradingResponse response = new GradingResponse(request.getGradingJid(), result);
+
+        try {
+            ClientMessage message = new ClientMessage(senderChannel, "GradingResponse", new Gson().toJson(response));
+
+            sealtiel.sendMessage(message);
+            sealtiel.sendConfirmation(messageId);
+
+        } catch (IOException e) {
+            throw new ResponseException(e);
+        }
+
+        GabrielLogger.getLogger().info("Grading result sent.");
+    }
+
+    private void finalizeWorker() throws FinalizationException {
+        MDC.put("workerPhase", "FINALIZE");
+
+        GabrielLogger.getLogger().info("Worker finalization started.");
         try {
             FileUtils.forceDelete(workerDir);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            GabrielLogger.getLogger().error("Worker finalization failed!");
+            throw new FinalizationException(e);
         }
+
+        GabrielLogger.getLogger().info("Worker finalization finished.");
     }
 
     private File getWorkerDir() throws IOException {
