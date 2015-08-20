@@ -5,9 +5,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GabrielLogger;
+import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingEngine;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingLanguage;
+import org.iatoki.judgels.gabriel.GradingResult;
+import org.iatoki.judgels.gabriel.GradingSource;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.slf4j.MDC;
 
@@ -32,13 +35,83 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         this.compilationMemoryLimit = 1024 * 1024;
     }
 
-    public final BlackBoxGradingResult gradeAfterInitialization(SandboxFactory sandboxFactory, File workingDir, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, Map<String, File> testDataFiles, BlackBoxGradingConfig config) throws GradingException {
-        verifySourceFiles(sourceFiles, config);
+    @Override
+    public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException {
+        try {
+            return tryGrading(gradingDir, (BlackBoxGradingConfig) config, language, source, sandboxFactory);
+        } finally {
+            cleanUp();
+        }
+    }
+
+    protected final File getCompilationDir() {
+        return compilationDir;
+    }
+
+    protected final File getEvaluationDir() {
+        return evaluationDir;
+    }
+
+    protected final File getScoringDir() {
+        return scoringDir;
+    }
+
+    protected final int getCompilationTimeLimitInMilliseconds() {
+        return compilationTimeLimit;
+    }
+
+    protected final int getCompilationMemoryLimitInKilobytes() {
+        return compilationMemoryLimit;
+    }
+
+    protected final int getDefaultCompilationTimeLimitInMilliseconds() {
+        return 2000;
+    }
+
+    protected final int getDefaultMemoryLimitInKilobytes() {
+        return 65536;
+    }
+
+    public final void setCompilationTimeLimitInMilliseconds(int compilationTimeLimit) {
+        this.compilationTimeLimit = compilationTimeLimit;
+    }
+
+    public final void setCompilationMemoryLimitInKilobytes(int compilationMemoryLimit) {
+        this.compilationMemoryLimit = compilationMemoryLimit;
+    }
+
+    protected final void prepareWorkingDirs(File workingDir) throws PreparationException {
+        try {
+            compilationDir = new File(workingDir, "compilation");
+            FileUtils.forceMkdir(compilationDir);
+            evaluationDir = new File(workingDir, "evaluation");
+            FileUtils.forceMkdir(evaluationDir);
+            scoringDir = new File(workingDir, "scoring");
+            FileUtils.forceMkdir(scoringDir);
+        } catch (IOException e) {
+            throw new PreparationException("Cannot make directories inside " + workingDir.getAbsolutePath());
+        }
+    }
+
+    protected abstract void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException;
+
+    protected abstract void cleanUp();
+
+    protected abstract Compiler getCompiler();
+
+    protected abstract Evaluator getEvaluator();
+
+    protected abstract Scorer getScorer();
+
+    protected abstract Reducer getReducer();
+
+    private GradingResult tryGrading(File gradingDir, BlackBoxGradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException {
+        verifySourceFiles(source.getSourceFiles(), config);
 
         MDC.put("phase", "Preparation");
 
         GabrielLogger.getLogger().info("Preparation started.");
-        prepare(sandboxFactory, workingDir, config, language, sourceFiles, helperFiles);
+        prepare(sandboxFactory, gradingDir, config, language, source.getSourceFiles(), source.getHelperFiles());
         GabrielLogger.getLogger().info("Preparation finished.");
 
         MDC.put("phase", "Compilation");
@@ -50,7 +123,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         Map<String, String> compilationOutput = compilationResult.getOutputs();
 
         if (compilationResult.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
-            return BlackBoxGradingResult.compilationErrorResult(compilationOutput);
+            return BlackBoxGradingResults.compilationErrorResult(compilationOutput);
         }
 
         List<List<TestCaseResult>> testGroupResults = Lists.newArrayList();
@@ -80,8 +153,8 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
             for (int j = 0; j < testGroup.getTestCases().size(); j++) {
                 TestCase testCase = testGroup.getTestCases().get(j);
 
-                File testCaseInput = testDataFiles.get(testCase.getInput());
-                File testCaseOutput = testDataFiles.get(testCase.getOutput());
+                File testCaseInput = source.getTestDataFiles().get(testCase.getInput());
+                File testCaseOutput = source.getTestDataFiles().get(testCase.getOutput());
 
                 EvaluationResult evaluationResult;
 
@@ -159,67 +232,8 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
         BlackBoxGradingResultDetails details = new BlackBoxGradingResultDetails(compilationOutput, testGroupFinalResults.build(), subtaskFinalResults.build());
 
-        return BlackBoxGradingResult.normalResult(result, details);
+        return BlackBoxGradingResults.normalResult(result, details);
     }
-
-    protected final File getCompilationDir() {
-        return compilationDir;
-    }
-
-    protected final File getEvaluationDir() {
-        return evaluationDir;
-    }
-
-    protected final File getScoringDir() {
-        return scoringDir;
-    }
-
-    protected final int getCompilationTimeLimitInMilliseconds() {
-        return compilationTimeLimit;
-    }
-
-    protected final int getCompilationMemoryLimitInKilobytes() {
-        return compilationMemoryLimit;
-    }
-
-    protected final int getDefaultCompilationTimeLimitInMilliseconds() {
-        return 2000;
-    }
-
-    protected final int getDefaultMemoryLimitInKilobytes() {
-        return 65536;
-    }
-
-    public final void setCompilationTimeLimitInMilliseconds(int compilationTimeLimit) {
-        this.compilationTimeLimit = compilationTimeLimit;
-    }
-
-    public final void setCompilationMemoryLimitInKilobytes(int compilationMemoryLimit) {
-        this.compilationMemoryLimit = compilationMemoryLimit;
-    }
-
-    protected final void prepareWorkingDirs(File workingDir) throws PreparationException {
-        try {
-            compilationDir = new File(workingDir, "compilation");
-            FileUtils.forceMkdir(compilationDir);
-            evaluationDir = new File(workingDir, "evaluation");
-            FileUtils.forceMkdir(evaluationDir);
-            scoringDir = new File(workingDir, "scoring");
-            FileUtils.forceMkdir(scoringDir);
-        } catch (IOException e) {
-            throw new PreparationException("Cannot make directories inside " + workingDir.getAbsolutePath());
-        }
-    }
-
-    protected abstract void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException;
-
-    protected abstract Compiler getCompiler();
-
-    protected abstract Evaluator getEvaluator();
-
-    protected abstract Scorer getScorer();
-
-    protected abstract Reducer getReducer();
 
     private void verifySourceFiles(Map<String, File> sourceFiles, BlackBoxGradingConfig config) throws PreparationException {
         for (String fieldKey : config.getSourceFileFields().keySet()) {

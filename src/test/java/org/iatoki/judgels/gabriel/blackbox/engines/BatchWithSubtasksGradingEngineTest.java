@@ -2,8 +2,9 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
 import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
+import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.ScoringException;
@@ -66,10 +67,12 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         addSourceFile("source", "aplusb-CE.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, config);
+            GradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_CE);
             assertEquals(result.getScore(), 0);
-            assertTrue(result.getDetails().getCompilationOutputs().get("source").contains("BB"));
+
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
+            assertTrue(details.getCompilationOutputs().get("source").contains("BB"));
         } catch (GradingException e) {
             fail();
         }
@@ -80,11 +83,11 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         addSourceFile("source", "aplusb-AC.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, config);
+            GradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_AC);
             assertEquals(result.getScore(), 100);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                     new SubtaskFinalResult(1, VERDICT_AC, 30.0),
                     new SubtaskFinalResult(2, VERDICT_AC, 70.0))
@@ -99,11 +102,11 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         addSourceFile("source", "aplusb-WA-at-2_3.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, config);
+            GradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
             assertEquals(result.getScore(), 30);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                             new SubtaskFinalResult(1, VERDICT_AC, 30.0),
                             new SubtaskFinalResult(2, VERDICT_WA, 0.0))
@@ -118,11 +121,11 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         addSourceFile("source", "aplusb-TLE-at-2_3.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, config);
+            GradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_OK_WORST_TLE);
             assertEquals(result.getScore(), 30);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                             new SubtaskFinalResult(1, VERDICT_AC, 30.0),
                             new SubtaskFinalResult(2, VERDICT_TLE, 0.0))
@@ -137,11 +140,11 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         addSourceFile("source", "aplusb-WA-at-sample_3.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, config);
+            GradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
             assertEquals(result.getScore(), 30);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                             new SubtaskFinalResult(1, VERDICT_AC, 30.0),
                             new SubtaskFinalResult(2, VERDICT_WA, 0.0))
@@ -157,11 +160,11 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         addSourceFile("source", "aplusb-WA-at-1_1.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, config);
+            GradingResult result = runEngine(engine, config);
             assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
             assertEquals(result.getScore(), 0);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                             new SubtaskFinalResult(1, VERDICT_WA, 0.0),
                             new SubtaskFinalResult(2, VERDICT_WA, 0.0))
@@ -176,11 +179,11 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         addSourceFile("source", "aplusb-AC-scorer.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
+            GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_AC);
             assertEquals(result.getScore(), 100);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                             new SubtaskFinalResult(1, VERDICT_AC, 30.0),
                             new SubtaskFinalResult(2, VERDICT_AC, 70.0))
@@ -195,11 +198,11 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
         addSourceFile("source", "aplusb-WA-at-2_3-scorer.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
+            GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
             assertEquals(result.getScore(), 30);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                             new SubtaskFinalResult(1, VERDICT_AC, 30.0),
                             new SubtaskFinalResult(2, VERDICT_WA, 0.0))

@@ -2,8 +2,9 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
 import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
+import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
@@ -55,11 +56,11 @@ public final class InteractiveGradingEngineTest extends BlackBoxGradingEngineTes
         addSourceFile("source", "binsearch-OK.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
+            GradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_AC);
             assertEquals(result.getScore(), 100);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                             new SubtaskFinalResult(-1, VERDICT_AC, 100.0))
             );
@@ -73,11 +74,11 @@ public final class InteractiveGradingEngineTest extends BlackBoxGradingEngineTes
         addSourceFile("source", "linsearch-WA-at-subtask_2.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
+            GradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
             assertEquals(result.getVerdict(), VERDICT_WA);
             assertEquals(result.getScore(), 40);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                             new SubtaskFinalResult(-1, VERDICT_WA, 40.0))
             );
@@ -91,11 +92,11 @@ public final class InteractiveGradingEngineTest extends BlackBoxGradingEngineTes
         addSourceFile("source", "binsearch-OK.cpp");
 
         try {
-            BlackBoxGradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-nonbinary-OK10-at-1_1.cpp"));
+            GradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-nonbinary-OK10-at-1_1.cpp"));
             assertEquals(result.getVerdict(), VERDICT_OK);
             assertEquals(result.getScore(), 90);
 
-            BlackBoxGradingResultDetails details = result.getDetails();
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
             assertEquals(details.getSubtaskResults(), ImmutableList.of(
                             new SubtaskFinalResult(-1, VERDICT_OK, 90.0))
             );

@@ -6,11 +6,11 @@ import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingLanguage;
+import org.iatoki.judgels.gabriel.GradingResult;
+import org.iatoki.judgels.gabriel.GradingSource;
 import org.iatoki.judgels.gabriel.Verdict;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResult;
-import org.iatoki.judgels.gabriel.sandboxes.FakeSandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.FakeSandboxFactory;
 import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
@@ -92,9 +92,9 @@ public abstract class BlackBoxGradingEngineTest {
         sourceFiles.put(key, new File(sourceDir, filename));
     }
 
-    protected final BlackBoxGradingResult runEngine(BlackBoxGradingEngine grader, BlackBoxGradingConfig config) throws GradingException {
+    protected final GradingResult runEngine(BlackBoxGradingEngine grader, BlackBoxGradingConfig config) throws GradingException {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
-        return grader.gradeAfterInitialization(sandboxFactory, graderDir, language, sourceFiles, helperFiles, testDataFiles, config);
+        return grader.grade(graderDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
     }
 
     private Map<String, File> listFilesAsMap(File dir) {
