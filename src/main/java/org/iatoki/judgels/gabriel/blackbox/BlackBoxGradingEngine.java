@@ -276,7 +276,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
             testGroupFinalResults.add(new TestGroupFinalResult(testGroup.getId(), testCaseFinalResults.build()));
         }
 
-        BlackBoxGradingResultDetails details = new BlackBoxGradingResultDetails(compilationResult.getOutputs(), testGroupFinalResults.build(), subtaskFinalResults.build());
+        BlackBoxGradingResultDetails details = BlackBoxGradingResultDetails.normalDetails(compilationResult.getOutputs(), testGroupFinalResults.build(), subtaskFinalResults.build());
 
         return BlackBoxGradingResults.normalResult(reductionResult, details);
     }

@@ -7,27 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 public final class BlackBoxGradingResultDetails {
-    private final String errorMessage;
     private final Map<String, String> compilationOutputs;
     private final List<TestGroupFinalResult> testDataResults;
     private final List<SubtaskFinalResult> subtaskResults;
 
-    public BlackBoxGradingResultDetails(String errorMessage) {
-        this.errorMessage = errorMessage;
-        this.compilationOutputs = ImmutableMap.of();
-        this.testDataResults = ImmutableList.of();
-        this.subtaskResults = ImmutableList.of();
-    }
-
-    public BlackBoxGradingResultDetails(Map<String, String> compilationOutputs, List<TestGroupFinalResult> testDataResults, List<SubtaskFinalResult> subtaskResults) {
-        this.errorMessage = null;
+    private BlackBoxGradingResultDetails(Map<String, String> compilationOutputs, List<TestGroupFinalResult> testDataResults, List<SubtaskFinalResult> subtaskResults) {
         this.compilationOutputs = compilationOutputs;
         this.testDataResults = testDataResults;
         this.subtaskResults = subtaskResults;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
     }
 
     public Map<String, String> getCompilationOutputs() {
@@ -42,11 +29,15 @@ public final class BlackBoxGradingResultDetails {
         return subtaskResults;
     }
 
-    public static BlackBoxGradingResultDetails internalErrorDetails(String errorMessage) {
-        return new BlackBoxGradingResultDetails(errorMessage);
+    public static BlackBoxGradingResultDetails emptyDetails() {
+        return new BlackBoxGradingResultDetails(ImmutableMap.of(), ImmutableList.of(), ImmutableList.of());
     }
 
     public static BlackBoxGradingResultDetails compilationErrorDetails(Map<String, String> compilationOutput) {
         return new BlackBoxGradingResultDetails(compilationOutput, ImmutableList.of(), ImmutableList.of());
+    }
+
+    public static BlackBoxGradingResultDetails normalDetails(Map<String, String> compilationOutputs, List<TestGroupFinalResult> testDataResults, List<SubtaskFinalResult> subtaskResults) {
+        return new BlackBoxGradingResultDetails(compilationOutputs, testDataResults, subtaskResults);
     }
 }
