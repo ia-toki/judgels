@@ -105,7 +105,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     protected abstract Reducer getReducer();
 
-    private GradingResult tryGrading(File gradingDir, BlackBoxGradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException {
+    private GradingResult tryGrading(File gradingDir, BlackBoxGradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws BlackBoxGradingException {
         verifySourceFiles(source.getSourceFiles(), config);
 
         MDC.put("phase", "Preparation");

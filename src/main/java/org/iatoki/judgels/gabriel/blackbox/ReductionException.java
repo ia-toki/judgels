@@ -1,9 +1,12 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import org.iatoki.judgels.gabriel.GradingException;
+public final class ReductionException extends BlackBoxGradingException {
 
-public final class ReductionException extends GradingException {
     public ReductionException(String message) {
         super(message);
+    }
+
+    public ReductionException(Throwable cause) {
+        super(cause);
     }
 }

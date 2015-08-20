@@ -1,9 +1,12 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
-import org.iatoki.judgels.gabriel.GradingException;
+public final class PreparationException extends BlackBoxGradingException {
 
-public final class PreparationException extends GradingException {
     public PreparationException(String message) {
         super(message);
+    }
+
+    public PreparationException(Throwable cause) {
+        super(cause);
     }
 }
