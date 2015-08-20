@@ -1,10 +1,10 @@
-package org.iatoki.judgels.gabriel.blackbox.sandboxes;
+package org.iatoki.judgels.gabriel.sandboxes.impls;
 
 import com.google.common.collect.ImmutableList;
-import org.iatoki.judgels.gabriel.blackbox.Sandbox;
-import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.blackbox.SandboxUtils;
-import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractor;
+import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxUtils;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxesInteractor;
 
 import java.io.IOException;
 import java.util.List;

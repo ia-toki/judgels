@@ -1,9 +1,9 @@
-package org.iatoki.judgels.gabriel.blackbox.sandboxes;
+package org.iatoki.judgels.gabriel.sandboxes.impls;
 
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.blackbox.Sandbox;
-import org.iatoki.judgels.gabriel.blackbox.SandboxFactory;
-import org.iatoki.judgels.gabriel.blackbox.SandboxesInteractor;
+import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxesInteractor;
 
 import java.io.File;
 import java.io.IOException;

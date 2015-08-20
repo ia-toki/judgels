@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.blackbox;
+package org.iatoki.judgels.gabriel.sandboxes;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;

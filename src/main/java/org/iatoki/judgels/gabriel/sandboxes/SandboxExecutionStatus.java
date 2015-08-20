@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.blackbox;
+package org.iatoki.judgels.gabriel.sandboxes;
 
 public enum SandboxExecutionStatus {
     ZERO_EXIT_CODE,

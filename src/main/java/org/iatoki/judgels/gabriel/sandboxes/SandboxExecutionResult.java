@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.blackbox;
+package org.iatoki.judgels.gabriel.sandboxes;
 
 public final class SandboxExecutionResult {
     private final SandboxExecutionStatus status;

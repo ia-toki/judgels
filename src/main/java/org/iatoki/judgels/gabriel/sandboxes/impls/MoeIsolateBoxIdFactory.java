@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.blackbox.sandboxes;
+package org.iatoki.judgels.gabriel.sandboxes.impls;
 
 public final class MoeIsolateBoxIdFactory {
     private static int BOX_ID;

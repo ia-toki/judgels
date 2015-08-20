@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.blackbox;
+package org.iatoki.judgels.gabriel.sandboxes;
 
 import java.io.File;
 import java.io.IOException;

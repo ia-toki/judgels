@@ -1,16 +1,16 @@
-package org.iatoki.judgels.gabriel.blackbox.sandboxes;
+package org.iatoki.judgels.gabriel.sandboxes.impls;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GabrielLogger;
-import org.iatoki.judgels.gabriel.blackbox.SandboxUtils;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxUtils;
 import org.iatoki.judgels.gabriel.SandboxException;
-import org.iatoki.judgels.gabriel.blackbox.ProcessExecutionResult;
-import org.iatoki.judgels.gabriel.blackbox.Sandbox;
-import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.blackbox.SandboxExecutionStatus;
+import org.iatoki.judgels.gabriel.sandboxes.ProcessExecutionResult;
+import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionStatus;
 
 import java.io.File;
 import java.io.IOException;
