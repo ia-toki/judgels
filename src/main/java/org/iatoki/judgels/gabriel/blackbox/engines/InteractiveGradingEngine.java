@@ -46,7 +46,7 @@ public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
     }
 
     @Override
-    protected void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException {
+    protected void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
         InteractiveGradingConfig castConfig = (InteractiveGradingConfig) config;
         if (castConfig.getCommunicator() == null) {
             throw new PreparationException("Communicator not specified");
@@ -56,8 +56,6 @@ public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
 
         File contestantSourceFile = sourceFiles.get(sourceFieldKey);
         File communicatorSourceFile = helperFiles.get(castConfig.getCommunicator());
-
-        prepareWorkingDirs(workingDir);
 
         compilerSandbox = sandboxFactory.newSandbox();
         compiler = new SingleSourceFileCompiler(compilerSandbox, getCompilationDir(), language, sourceFieldKey, contestantSourceFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());

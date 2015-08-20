@@ -61,12 +61,10 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
     }
 
     @Override
-    protected void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException {
+    protected void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
         String sourceFieldKey = config.getSourceFileFields().keySet().iterator().next();
         File sourceFile = sourceFiles.get(sourceFieldKey);
         BatchWithSubtasksGradingConfig castConfig = (BatchWithSubtasksGradingConfig) config;
-
-        prepareWorkingDirs(workingDir);
 
         compilerSandbox = sandboxFactory.newSandbox();
         compiler = new SingleSourceFileCompiler(compilerSandbox, getCompilationDir(), language, sourceFieldKey, sourceFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());

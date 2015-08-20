@@ -28,7 +28,22 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
     private int compilationTimeLimit;
     private int compilationMemoryLimit;
 
-    private Set<Integer> alreadyFailedSubtaskIds;
+    private File gradingDir;
+    private BlackBoxGradingConfig config;
+    private GradingLanguage language;
+    private GradingSource source;
+    private SandboxFactory sandboxFactory;
+
+    private CompilationResult compilationResult;
+
+    private List<List<TestCaseResult>> testGroupResults;
+    private List<List<EvaluationResult>> testGroupEvaluationResults;
+
+    private List<SubtaskResult> subtaskResults;
+    private ReductionResult reductionResult;
+
+    private List<List<TestCaseResult>> testCaseResultsBySubtaskIds;
+    private List<List<Integer[]>> testCaseIndicesBySubtaskIds;
 
     protected BlackBoxGradingEngine() {
         this.compilationTimeLimit = 10000;
@@ -37,10 +52,18 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     @Override
     public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException {
+        this.gradingDir = gradingDir;
+        this.config = (BlackBoxGradingConfig) config;
+        this.language = language;
+        this.source = source;
+        this.sandboxFactory = sandboxFactory;
+
         try {
-            return tryGrading(gradingDir, (BlackBoxGradingConfig) config, language, source, sandboxFactory);
+            return tryGrading();
         } finally {
             cleanUp();
+
+            MDC.remove("gradingPhase");
         }
     }
 
@@ -80,20 +103,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         this.compilationMemoryLimit = compilationMemoryLimit;
     }
 
-    protected final void prepareWorkingDirs(File workingDir) throws PreparationException {
-        try {
-            compilationDir = new File(workingDir, "compilation");
-            FileUtils.forceMkdir(compilationDir);
-            evaluationDir = new File(workingDir, "evaluation");
-            FileUtils.forceMkdir(evaluationDir);
-            scoringDir = new File(workingDir, "scoring");
-            FileUtils.forceMkdir(scoringDir);
-        } catch (IOException e) {
-            throw new PreparationException("Cannot make directories inside " + workingDir.getAbsolutePath());
-        }
-    }
-
-    protected abstract void prepare(SandboxFactory sandboxFactory, File workingDir, BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles) throws PreparationException;
+    protected abstract void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException;
 
     protected abstract void cleanUp();
 
@@ -105,32 +115,69 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     protected abstract Reducer getReducer();
 
-    private GradingResult tryGrading(File gradingDir, BlackBoxGradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws BlackBoxGradingException {
-        verifySourceFiles(source.getSourceFiles(), config);
-
-        MDC.put("phase", "Preparation");
-
-        GabrielLogger.getLogger().info("Preparation started.");
-        prepare(sandboxFactory, gradingDir, config, language, source.getSourceFiles(), source.getHelperFiles());
-        GabrielLogger.getLogger().info("Preparation finished.");
-
-        MDC.put("phase", "Compilation");
-
-        GabrielLogger.getLogger().info("Compilation started.");
-        CompilationResult compilationResult = getCompiler().compile();
-        GabrielLogger.getLogger().info("Compilation finished.");
-
-        Map<String, String> compilationOutput = compilationResult.getOutputs();
+    private GradingResult tryGrading() throws GradingException {
+        verify();
+        prepare();
+        compile();
 
         if (compilationResult.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
-            return BlackBoxGradingResults.compilationErrorResult(compilationOutput);
+            return BlackBoxGradingResults.compilationErrorResult(compilationResult.getOutputs());
         }
 
-        List<List<TestCaseResult>> testGroupResults = Lists.newArrayList();
-        List<List<EvaluationResult>> testGroupEvaluationResults = Lists.newArrayList();
+        evaluateAndScore();
+        reduce();
 
-        List<List<TestCaseResult>> testCaseResultsBySubtaskIds = Lists.newArrayList();
-        List<List<Integer[]>> testCaseIndicesBySubtaskIds = Lists.newArrayList();
+        return buildResult();
+    }
+
+    private void verify() throws VerificationException {
+        MDC.put("gradingPhase", "VERIFY");
+        GabrielLogger.getLogger().info("Verification started.");
+        for (String fieldKey : config.getSourceFileFields().keySet()) {
+            if (!source.getSourceFiles().containsKey(fieldKey)) {
+                throw new VerificationException("No source file found for '" + fieldKey + "'");
+            }
+        }
+        GabrielLogger.getLogger().info("Verification finished.");
+    }
+
+    private void prepare() throws PreparationException {
+        MDC.put("gradingPhase", "PREPARE");
+        GabrielLogger.getLogger().info("Preparation started.");
+        prepareGradingDirs();
+        prepareAlgorithms(config, language, source.getSourceFiles(), source.getHelperFiles(), sandboxFactory);
+        GabrielLogger.getLogger().info("Preparation finished.");
+    }
+
+    private void prepareGradingDirs() throws PreparationException {
+        try {
+            compilationDir = new File(gradingDir, "compilation");
+            FileUtils.forceMkdir(compilationDir);
+            evaluationDir = new File(gradingDir, "evaluation");
+            FileUtils.forceMkdir(evaluationDir);
+            scoringDir = new File(gradingDir, "scoring");
+            FileUtils.forceMkdir(scoringDir);
+        } catch (IOException e) {
+            throw new PreparationException(e);
+        }
+    }
+
+    private void compile() throws CompilationException {
+        MDC.put("gradingPhase", "COMPILE");
+        GabrielLogger.getLogger().info("Compilation started.");
+        compilationResult = getCompiler().compile();
+        GabrielLogger.getLogger().info("Compilation finished.");
+    }
+
+    private void evaluateAndScore() throws EvaluationException, ScoringException {
+        MDC.put("gradingPhase", "EVALUATE-SCORE");
+        GabrielLogger.getLogger().info("Evaluation & scoring started.");
+
+        testGroupResults = Lists.newArrayList();
+        testGroupEvaluationResults = Lists.newArrayList();
+
+        testCaseResultsBySubtaskIds = Lists.newArrayList();
+        testCaseIndicesBySubtaskIds = Lists.newArrayList();
 
         // +2 because: ids are 1-based, and we can have id=-1 (so we need additional +1 offset)
         for (int i = 0; i < config.getSubtasks().size() + 2; i++) {
@@ -138,12 +185,8 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
             testCaseIndicesBySubtaskIds.add(Lists.newArrayList());
         }
 
-        MDC.put("phase", "Evaluation & Scoring");
+        Set<Integer> alreadyFailedSubtaskIds = Sets.newHashSet();
 
-
-        alreadyFailedSubtaskIds = Sets.newHashSet();
-
-        GabrielLogger.getLogger().info("Evaluation & scoring started.");
         for (int i = 0; i < config.getTestData().size(); i++) {
             TestGroup testGroup = config.getTestData().get(i);
 
@@ -188,9 +231,10 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
             }
         }
         GabrielLogger.getLogger().info("Evaluation & scoring finished.");
+    }
 
-        MDC.put("phase", "Reduction");
-
+    private void reduce() throws ReductionException {
+        MDC.put("gradingPhase", "REDUCE");
         GabrielLogger.getLogger().info("Reduction started.");
         ImmutableList.Builder<SubtaskResult> subtaskResultsBuilder = ImmutableList.builder();
         for (Subtask subtask : config.getSubtasks()) {
@@ -208,10 +252,12 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
             }
         }
 
-        List<SubtaskResult> subtaskResults = subtaskResultsBuilder.build();
-        ReductionResult result = getReducer().reduceSubtaskResults(subtaskResults);
+        subtaskResults = subtaskResultsBuilder.build();
+        reductionResult = getReducer().reduceSubtaskResults(subtaskResults);
         GabrielLogger.getLogger().info("Reduction finished.");
+    }
 
+    private GradingResult buildResult() {
         ImmutableList.Builder<SubtaskFinalResult> subtaskFinalResults = ImmutableList.builder();
         for (int i = 0; i < config.getSubtasks().size(); i++) {
             Subtask subtask = config.getSubtasks().get(i);
@@ -230,16 +276,8 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
             testGroupFinalResults.add(new TestGroupFinalResult(testGroup.getId(), testCaseFinalResults.build()));
         }
 
-        BlackBoxGradingResultDetails details = new BlackBoxGradingResultDetails(compilationOutput, testGroupFinalResults.build(), subtaskFinalResults.build());
+        BlackBoxGradingResultDetails details = new BlackBoxGradingResultDetails(compilationResult.getOutputs(), testGroupFinalResults.build(), subtaskFinalResults.build());
 
-        return BlackBoxGradingResults.normalResult(result, details);
-    }
-
-    private void verifySourceFiles(Map<String, File> sourceFiles, BlackBoxGradingConfig config) throws PreparationException {
-        for (String fieldKey : config.getSourceFileFields().keySet()) {
-            if (!sourceFiles.containsKey(fieldKey)) {
-                throw new PreparationException("No source file found for '" + fieldKey + "'");
-            }
-        }
+        return BlackBoxGradingResults.normalResult(reductionResult, details);
     }
 }
