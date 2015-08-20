@@ -18,10 +18,10 @@ public final class Main {
             threads = getDefaultThreadsCount();
         }
 
-        Grader grader = new Grader(threads);
+        Gabriel gabriel = new Gabriel(threads);
 
         try {
-            grader.run();
+            gabriel.run();
         } catch (InterruptedException e) {
             // nothing
         }

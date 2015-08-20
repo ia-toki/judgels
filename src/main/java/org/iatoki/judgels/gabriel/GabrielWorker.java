@@ -1,4 +1,4 @@
-package org.iatoki.judgels.gabriel.blackbox;
+package org.iatoki.judgels.gabriel;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -10,15 +10,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.iatoki.judgels.gabriel.GabrielLogger;
-import org.iatoki.judgels.gabriel.GabrielProperties;
-import org.iatoki.judgels.gabriel.GabrielUtils;
-import org.iatoki.judgels.gabriel.GradingEngineRegistry;
-import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
-import org.iatoki.judgels.gabriel.GradingWorker;
-import org.iatoki.judgels.gabriel.blackbox.sandboxes.FakeSandboxFactory;
-import org.iatoki.judgels.gabriel.blackbox.sandboxes.MoeIsolateSandboxFactory;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
+import org.iatoki.judgels.gabriel.sandboxes.impls.FakeSandboxFactory;
+import org.iatoki.judgels.gabriel.sandboxes.impls.MoeIsolateSandboxFactory;
 import org.iatoki.judgels.sealtiel.ClientMessage;
 import org.iatoki.judgels.sealtiel.Sealtiel;
 import org.slf4j.MDC;
@@ -33,26 +27,29 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public final class BlackBoxGradingWorker implements GradingWorker {
+public final class GabrielWorker implements Runnable {
 
     private final String senderChannel;
-    private final BlackBoxGradingRequest request;
+    private final GradingRequest request;
     private final Sealtiel sealtiel;
 
     private final long messageId;
 
     private File engineDir;
     private File workerDir;
-    private BlackBoxGradingEngine engine;
-    private BlackBoxGradingConfig config;
-    private BlackBoxGradingSource source;
+    private GradingEngine engine;
+    private GradingConfig config;
     private GradingLanguage language;
+
+    private SubmissionSource source;
+
     private SandboxFactory sandboxFactory;
+
     private Map<String, File> sourceFiles;
     private Map<String, File> helperFiles;
     private Map<String, File> testDataFiles;
 
-    public BlackBoxGradingWorker(String senderChannel, BlackBoxGradingRequest request, Sealtiel sealtiel, long messageId) {
+    public GabrielWorker(String senderChannel, GradingRequest request, Sealtiel sealtiel, long messageId) {
         this.senderChannel = senderChannel;
         this.request = request;
         this.sealtiel = sealtiel;
@@ -63,9 +60,9 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     public void run() {
         MDC.put("gradingJID", request.getGradingJid());
 
-        GabrielLogger.getLogger().info("Grading worker started.");
+        GabrielLogger.getLogger().info("Gabriel worker started.");
 
-        BlackBoxGradingResult result;
+        GradingResult result;
         // TODO extend timeout
         try {
             GabrielLogger.getLogger().info("Grading started.");
@@ -76,7 +73,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
             initialize();
             GabrielLogger.getLogger().info("Initialization finished.");
 
-            result = engine.gradeAfterInitialization(sandboxFactory, engineDir, language, sourceFiles, helperFiles, testDataFiles, config);
+            result = engine.grade(engineDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
 
             MDC.remove("phase");
 
@@ -87,7 +84,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
             if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                 GabrielLogger.getLogger().error("Message:", e.getMessage());
             }
-            result = BlackBoxGradingResult.internalErrorResult(e.getMessage());
+            result = GradingResult.internalErrorResult(e.getMessage());
         }
 
         MDC.put("phase", "Cleanup");
@@ -99,7 +96,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         MDC.remove("phase");
 
         GabrielLogger.getLogger().info("Sending grading response started.");
-        BlackBoxGradingResponse response = new BlackBoxGradingResponse(request.getGradingJid(), result);
+        GradingResponse response = new GradingResponse(request.getGradingJid(), result);
         try {
             ClientMessage message = new ClientMessage(senderChannel, "BlackBoxGradingResponse", new Gson().toJson(response));
 
@@ -114,10 +111,10 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     private void initialize() throws InitializationException {
-        source = (BlackBoxGradingSource) request.getGradingSource();
+        source = request.getSubmissionSource();
 
         try {
-            engine = (BlackBoxGradingEngine) GradingEngineRegistry.getInstance().getEngine(request.getGradingEngine());
+            engine = GradingEngineRegistry.getInstance().getEngine(request.getGradingEngine());
             language = GradingLanguageRegistry.getInstance().getLanguage(request.getGradingLanguage());
 
             GabrielUtils.getGradingReadLock().lock();
@@ -137,7 +134,6 @@ public final class BlackBoxGradingWorker implements GradingWorker {
     }
 
     private void cleanUp() {
-        engine.cleanUp();
         try {
             FileUtils.forceDelete(workerDir);
         } catch (IOException e) {
@@ -287,10 +283,10 @@ public final class BlackBoxGradingWorker implements GradingWorker {
         return listFilesAsMap(testDatDir);
     }
 
-    private BlackBoxGradingConfig parseGradingConfig(File problemGradirDir, BlackBoxGradingEngine engine) throws IOException {
+    private GradingConfig parseGradingConfig(File problemGradirDir, GradingEngine engine) throws IOException {
         File gradingConfig = new File(problemGradirDir, "config.json");
         String configAsJson = FileUtils.readFileToString(gradingConfig);
-        return (BlackBoxGradingConfig) engine.createGradingConfigFromJson(configAsJson);
+        return engine.createGradingConfigFromJson(configAsJson);
     }
 
     private Map<String, File> generateSourceFiles(File runnerDir) throws IOException {
@@ -299,7 +295,7 @@ public final class BlackBoxGradingWorker implements GradingWorker {
 
         ImmutableMap.Builder<String, File> sourceFilesBuilder = ImmutableMap.builder();
 
-        for (Map.Entry<String, SourceFile> entry : source.getSourceFiles().entrySet()) {
+        for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
             File file = new File(sourceDir, entry.getValue().getName());
 
             FileUtils.writeStringToFile(file, entry.getValue().getContent());

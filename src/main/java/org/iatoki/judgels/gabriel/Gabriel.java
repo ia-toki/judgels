@@ -1,5 +1,6 @@
 package org.iatoki.judgels.gabriel;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.iatoki.judgels.sealtiel.ClientMessage;
 import org.iatoki.judgels.sealtiel.Sealtiel;
@@ -8,13 +9,13 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public final class Grader {
+public final class Gabriel {
 
     private final int threads;
     private final ThreadPoolExecutor threadPoolExecutor;
     private final Sealtiel sealtiel;
 
-    public Grader(int threads) {
+    public Gabriel(int threads) {
         this.threads = threads;
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threads);
         this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielBaseUrl(), GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret());
@@ -50,13 +51,14 @@ public final class Grader {
 
     private void processMessage(ClientMessage message) {
         try {
-            GradingRequest request = GradingRequests.parseFromJson(message.getMessageType(), message.getMessage());
+            GradingRequest request = new Gson().fromJson(message.getMessage(), GradingRequest.class);
+
             GabrielLogger.getLogger().info("New grading request: {}", request.getGradingJid());
 
-            GradingWorker worker = GradingWorkers.newWorker(message.getSourceClientJid(), request, sealtiel, message.getId());
+            GabrielWorker worker = new GabrielWorker(message.getSourceClientJid(), request, sealtiel,  message.getId());
 
             threadPoolExecutor.submit(worker);
-        } catch (BadGradingRequestException | JsonSyntaxException e) {
+        } catch (JsonSyntaxException e) {
             GabrielLogger.getLogger().error("Bad grading request", e);
             if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                 GabrielLogger.getLogger().error("Message:", e.getMessage());
