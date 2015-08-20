@@ -8,6 +8,7 @@ import org.iatoki.judgels.gabriel.GabrielLogger;
 import org.iatoki.judgels.gabriel.GradingEngine;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingLanguage;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.slf4j.MDC;
 
 import java.io.File;

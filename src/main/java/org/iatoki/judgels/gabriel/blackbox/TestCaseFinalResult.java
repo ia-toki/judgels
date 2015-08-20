@@ -2,6 +2,7 @@ package org.iatoki.judgels.gabriel.blackbox;
 
 import com.google.common.collect.Lists;
 import org.iatoki.judgels.gabriel.Verdict;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
 
 import java.util.List;
 import java.util.Set;
