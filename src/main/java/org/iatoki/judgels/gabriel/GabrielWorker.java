@@ -113,7 +113,7 @@ public final class GabrielWorker implements Runnable {
             throw new InitializationException(e);
         }
 
-        GabrielLogger.getLogger().info("Worker finalization started.");
+        GabrielLogger.getLogger().info("Worker initialization finished.");
     }
 
     private void gradeRequest() throws GradingException {
