@@ -13,7 +13,7 @@ public final class GradingResult {
     }
 
     public static GradingResult internalErrorResult(String errorMessage) {
-        return new GradingResult(new Verdict("!!!", "InternalError"), 0, null);
+        return new GradingResult(new Verdict("!!!", "Internal Error"), 0, null);
     }
 
     public Verdict getVerdict() {
