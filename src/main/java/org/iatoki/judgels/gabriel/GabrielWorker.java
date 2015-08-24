@@ -68,7 +68,6 @@ public final class GabrielWorker implements Runnable {
         try {
             initializeWorker();
             gradeRequest();
-            respond();
         } catch (Exception e) {
             GabrielLogger.getLogger().error("Grading failed!", e);
             if (e.getMessage() != null && !e.getMessage().isEmpty()) {
@@ -76,10 +75,10 @@ public final class GabrielWorker implements Runnable {
             }
             result = GradingResult.internalErrorResult(e.toString());
         } finally {
-
             try {
+                respond();
                 finalizeWorker();
-            } catch (FinalizationException e) {
+            } catch (ResponseException | FinalizationException e) {
                 throw new RuntimeException(e);
             }
         }
