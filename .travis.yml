@@ -11,5 +11,5 @@ script:
   - ../judgels/scripts/download-activator.sh
   - ../judgels/scripts/download-checkstyle.sh
   - export PATH=$PATH:~/activator
-  - activator test
   - activator checkstyle
+  - activator test
