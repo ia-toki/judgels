@@ -10,11 +10,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.iatoki.judgels.api.JudgelsAPIClientException;
+import org.iatoki.judgels.api.sealtiel.SealtielAPI;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.FakeSandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.MoeIsolateSandboxFactory;
-import org.iatoki.judgels.sealtiel.ClientMessage;
-import org.iatoki.judgels.sealtiel.Sealtiel;
 import org.slf4j.MDC;
 
 import java.io.File;
@@ -31,7 +31,7 @@ public final class GabrielWorker implements Runnable {
 
     private final String senderChannel;
     private final GradingRequest request;
-    private final Sealtiel sealtiel;
+    private final SealtielAPI sealtielAPI;
     private final long messageId;
 
     private File engineDir;
@@ -50,10 +50,10 @@ public final class GabrielWorker implements Runnable {
 
     private GradingResult result;
 
-    public GabrielWorker(String senderChannel, GradingRequest request, Sealtiel sealtiel, long messageId) {
+    public GabrielWorker(String senderChannel, GradingRequest request, SealtielAPI sealtielAPI, long messageId) {
         this.senderChannel = senderChannel;
         this.request = request;
-        this.sealtiel = sealtiel;
+        this.sealtielAPI = sealtielAPI;
         this.messageId = messageId;
     }
 
@@ -128,12 +128,9 @@ public final class GabrielWorker implements Runnable {
         GradingResponse response = new GradingResponse(request.getGradingJid(), result);
 
         try {
-            ClientMessage message = new ClientMessage(senderChannel, "GradingResponse", new Gson().toJson(response));
-
-            sealtiel.sendMessage(message);
-            sealtiel.sendConfirmation(messageId);
-
-        } catch (IOException e) {
+            sealtielAPI.sendMessage(senderChannel, "GradingResponse", new Gson().toJson(response));
+            sealtielAPI.acknowledgeMessage(messageId);
+        } catch (JudgelsAPIClientException e) {
             throw new ResponseException(e);
         }
 

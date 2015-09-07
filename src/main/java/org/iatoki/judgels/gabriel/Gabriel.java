@@ -2,10 +2,11 @@ package org.iatoki.judgels.gabriel;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import org.iatoki.judgels.sealtiel.ClientMessage;
-import org.iatoki.judgels.sealtiel.Sealtiel;
+import org.iatoki.judgels.api.JudgelsAPIClientException;
+import org.iatoki.judgels.api.sealtiel.SealtielAPI;
+import org.iatoki.judgels.api.sealtiel.SealtielFactory;
+import org.iatoki.judgels.api.sealtiel.SealtielMessage;
 
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -13,12 +14,17 @@ public final class Gabriel {
 
     private final int threads;
     private final ThreadPoolExecutor threadPoolExecutor;
-    private final Sealtiel sealtiel;
+    private final SealtielAPI sealtielAPI;
 
     public Gabriel(int threads) {
         this.threads = threads;
         this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(threads);
-        this.sealtiel = new Sealtiel(GabrielProperties.getInstance().getSealtielBaseUrl(), GabrielProperties.getInstance().getSealtielClientJid(), GabrielProperties.getInstance().getSealtielClientSecret());
+
+        String sealtielBaseUrl = GabrielProperties.getInstance().getSealtielBaseUrl();
+        String sealtielClientJid = GabrielProperties.getInstance().getSealtielClientJid();
+        String sealtielClientSecret = GabrielProperties.getInstance().getSealtielClientSecret();
+
+        this.sealtielAPI = SealtielFactory.createSealtiel(sealtielBaseUrl).connectWithBasicAuth(sealtielClientJid, sealtielClientSecret);
     }
 
     public void run() throws InterruptedException {
@@ -27,16 +33,18 @@ public final class Gabriel {
         while (true) {
             waitUntilAvailable();
 
+            SealtielMessage message = null;
+
             try {
-                ClientMessage message = sealtiel.fetchMessage();
-                if (message != null) {
-                    processMessage(message);
-                }
-            } catch (JsonSyntaxException | IOException e) {
+                message = sealtielAPI.fetchMessage();
+            } catch (JudgelsAPIClientException e) {
                 GabrielLogger.getLogger().error("Bad grading request", e);
                 if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                     GabrielLogger.getLogger().error("Message:", e.getMessage());
                 }
+            }
+            if (message != null) {
+                processMessage(message);
             }
 
             Thread.sleep(200);
@@ -49,13 +57,13 @@ public final class Gabriel {
         }
     }
 
-    private void processMessage(ClientMessage message) {
+    private void processMessage(SealtielMessage message) {
         try {
             GradingRequest request = new Gson().fromJson(message.getMessage(), GradingRequest.class);
 
             GabrielLogger.getLogger().info("New grading request: {}", request.getGradingJid());
 
-            GabrielWorker worker = new GabrielWorker(message.getSourceClientJid(), request, sealtiel,  message.getId());
+            GabrielWorker worker = new GabrielWorker(message.getSourceClientJid(), request, sealtielAPI, message.getId());
 
             threadPoolExecutor.submit(worker);
         } catch (JsonSyntaxException e) {

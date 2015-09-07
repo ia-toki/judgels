@@ -8,7 +8,7 @@ install:
   - git clone https://github.com/judgels/commons.git ../commons
   - git clone https://github.com/judgels/gabriel-commons.git ../gabriel-commons
   - git clone https://github.com/judgels/gabriel-blackbox.git ../gabriel-blackbox
-  - git clone https://github.com/judgels/sealtiel-commons.git ../sealtiel-commons
+  - git clone https://github.com/judgels/api.git ../api
 
 script:
   - ../judgels/scripts/download-activator.sh
