@@ -11,7 +11,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.iatoki.judgels.api.JudgelsAPIClientException;
-import org.iatoki.judgels.api.sealtiel.SealtielAPI;
+import org.iatoki.judgels.api.sealtiel.SealtielClientAPI;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.FakeSandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.MoeIsolateSandboxFactory;
@@ -31,7 +31,7 @@ public final class GabrielWorker implements Runnable {
 
     private final String senderChannel;
     private final GradingRequest request;
-    private final SealtielAPI sealtielAPI;
+    private final SealtielClientAPI sealtielAPI;
     private final long messageId;
 
     private File engineDir;
@@ -50,7 +50,7 @@ public final class GabrielWorker implements Runnable {
 
     private GradingResult result;
 
-    public GabrielWorker(String senderChannel, GradingRequest request, SealtielAPI sealtielAPI, long messageId) {
+    public GabrielWorker(String senderChannel, GradingRequest request, SealtielClientAPI sealtielAPI, long messageId) {
         this.senderChannel = senderChannel;
         this.request = request;
         this.sealtielAPI = sealtielAPI;
