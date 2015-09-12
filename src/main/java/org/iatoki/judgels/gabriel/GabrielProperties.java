@@ -70,6 +70,18 @@ public final class GabrielProperties {
         return moeIwrapperPath;
     }
 
+    public String getSandalphonBaseUrl() {
+        return sandalphonBaseUrl;
+    }
+
+    public String getSandalphonClientJid() {
+        return sandalphonClientJid;
+    }
+
+    public String getSandalphonClientSecret() {
+        return sandalphonClientSecret;
+    }
+
     public String getSealtielBaseUrl() {
         return sealtielBaseUrl;
     }

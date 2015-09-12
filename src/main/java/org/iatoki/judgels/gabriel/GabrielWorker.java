@@ -3,14 +3,9 @@ package org.iatoki.judgels.gabriel;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.iatoki.judgels.api.JudgelsAPIClientException;
+import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
+import org.iatoki.judgels.api.sandalphon.SandalphonProgrammingProblemInfo;
 import org.iatoki.judgels.api.sealtiel.SealtielClientAPI;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.FakeSandboxFactory;
@@ -21,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +28,7 @@ public final class GabrielWorker implements Runnable {
     private final String senderChannel;
     private final GradingRequest request;
     private final SealtielClientAPI sealtielAPI;
+    private final SandalphonClientAPI sandalphonClientAPI;
     private final long messageId;
 
     private File engineDir;
@@ -50,10 +47,11 @@ public final class GabrielWorker implements Runnable {
 
     private GradingResult result;
 
-    public GabrielWorker(String senderChannel, GradingRequest request, SealtielClientAPI sealtielAPI, long messageId) {
+    public GabrielWorker(String senderChannel, GradingRequest request, SealtielClientAPI sealtielAPI, SandalphonClientAPI sandalphonClientAPI, long messageId) {
         this.senderChannel = senderChannel;
         this.request = request;
         this.sealtielAPI = sealtielAPI;
+        this.sandalphonClientAPI = sandalphonClientAPI;
         this.messageId = messageId;
     }
 
@@ -208,23 +206,17 @@ public final class GabrielWorker implements Runnable {
                 return true;
             }
 
-            HttpPost post = GabrielProperties.getInstance().getGetGradingLastUpdateTimeRequest(problemJid);
+            SandalphonProgrammingProblemInfo sandalphonProgrammingProblemInfo;
 
-            RequestConfig requestConfig = RequestConfig.custom()
-                    .setConnectionRequestTimeout(30 * 1000)
-                    .setSocketTimeout(30 * 1000)
-                    .setConnectTimeout(30 * 1000)
-                    .build();
-
-            HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-
-            HttpResponse response = client.execute(post);
-
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new InitializationException("Cannot fetch problem grading files");
+            try {
+                sandalphonProgrammingProblemInfo = sandalphonClientAPI.getProgrammingProblemInfo(problemJid);
+            } catch (JudgelsAPIClientException e) {
+                System.out.println(e.toString());
+                System.out.println(e.getClass());
+                throw new InitializationException("Cannot fetch problem info");
             }
 
-            long gradingLastUpdateTime = Long.parseLong(IOUtils.toString(response.getEntity().getContent()));
+            long gradingLastUpdateTime = sandalphonProgrammingProblemInfo.getGradingLastUpdateTime().getTime();
 
             if (gradingLastUpdateTime != cachedGradingLastUpdateTime) {
                 GabrielLogger.getLogger().info("Problem grading last update time = {}, whereas the cached one = {}. Must fetch grading files.", gradingLastUpdateTime, cachedGradingLastUpdateTime);
@@ -245,24 +237,16 @@ public final class GabrielWorker implements Runnable {
             FileUtils.deleteDirectory(problemGradingDir);
             FileUtils.forceMkdir(problemGradingDir);
 
-            HttpPost post = GabrielProperties.getInstance().getFetchProblemGradingFilesRequest(problemJid);
 
-            RequestConfig requestConfig = RequestConfig.custom()
-                    .setConnectionRequestTimeout(30 * 1000)
-                    .setSocketTimeout(30 * 1000)
-                    .setConnectTimeout(30 * 1000)
-                    .build();
-
-            HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-
-            HttpResponse response = client.execute(post);
-
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            InputStream gradingFiles;
+            try {
+                gradingFiles = sandalphonClientAPI.downloadProgrammingProblemGradingFiles(problemJid);
+            } catch (JudgelsAPIClientException e) {
                 throw new InitializationException("Cannot fetch problem grading files");
             }
 
             byte[] buffer = new byte[4096];
-            ZipInputStream zis = new ZipInputStream(response.getEntity().getContent());
+            ZipInputStream zis = new ZipInputStream(gradingFiles);
             ZipEntry ze = zis.getNextEntry();
             while (ze != null) {
                 String filename = ze.getName();
