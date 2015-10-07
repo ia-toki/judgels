@@ -1,16 +1,10 @@
 package org.iatoki.judgels.gabriel;
 
-import com.google.common.collect.ImmutableList;
 import com.typesafe.config.Config;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 public final class GabrielProperties {
 
@@ -92,32 +86,6 @@ public final class GabrielProperties {
 
     public String getSealtielClientSecret() {
         return sealtielClientSecret;
-    }
-
-    public HttpPost getFetchProblemGradingFilesRequest(String problemJid) throws UnsupportedEncodingException {
-        HttpPost post = new HttpPost(sandalphonBaseUrl + "/problem/programming/download/grading");
-
-        List<BasicNameValuePair> nameValuePairs = ImmutableList.of(
-                new BasicNameValuePair("graderJid", sandalphonClientJid),
-                new BasicNameValuePair("graderSecret", sandalphonClientSecret),
-                new BasicNameValuePair("problemJid", problemJid)
-        );
-        post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-        return post;
-    }
-
-    public HttpPost getGetGradingLastUpdateTimeRequest(String problemJid) throws UnsupportedEncodingException {
-        HttpPost post = new HttpPost(sandalphonBaseUrl + "/problem/programming/getGradingLastUpdateTime");
-
-        List<BasicNameValuePair> nameValuePairs = ImmutableList.of(
-                new BasicNameValuePair("graderJid", sandalphonClientJid),
-                new BasicNameValuePair("graderSecret", sandalphonClientSecret),
-                new BasicNameValuePair("problemJid", problemJid)
-        );
-        post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-        return post;
     }
 
     private void build() {
