@@ -17,6 +17,7 @@ public final class GabrielProperties {
     private File gabrielProblemDir;
     private File gabrielWorkerDir;
 
+    private String sandalphonLocalBaseDataDir;
     private String sandalphonBaseUrl;
     private String sandalphonClientJid;
     private String sandalphonClientSecret;
@@ -64,6 +65,10 @@ public final class GabrielProperties {
         return moeIwrapperPath;
     }
 
+    public String getSandalphonLocalBaseDataDir() {
+        return sandalphonLocalBaseDataDir;
+    }
+
     public String getSandalphonBaseUrl() {
         return sandalphonBaseUrl;
     }
@@ -100,6 +105,9 @@ public final class GabrielProperties {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
+        sandalphonLocalBaseDataDir = getStringValue("sandalphon.localBaseDataDir");
 
         sandalphonBaseUrl = requireStringValue("sandalphon.baseUrl");
         sandalphonClientJid = requireStringValue("sandalphon.clientJid");

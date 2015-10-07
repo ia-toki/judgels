@@ -173,10 +173,17 @@ public final class GabrielWorker implements Runnable {
     }
 
     private File getProblemGradingDir(String problemJid) throws InitializationException, IOException {
-        File problemGradingDir = new File(GabrielProperties.getInstance().getProblemDir(), problemJid);
+        File problemGradingDir;
 
-        if (mustFetchProblemGradingFiles(problemJid, problemGradingDir)) {
-            fetchProblemGradingFiles(problemJid, problemGradingDir);
+        if (GabrielProperties.getInstance().getSandalphonLocalBaseDataDir() != null) {
+            problemGradingDir = FileUtils.getFile(GabrielProperties.getInstance().getSandalphonLocalBaseDataDir(), "problems", problemJid, "grading");
+        } else {
+            problemGradingDir = new File(GabrielProperties.getInstance().getProblemDir(), problemJid);
+
+            if (mustFetchProblemGradingFiles(problemJid, problemGradingDir)) {
+                fetchProblemGradingFiles(problemJid, problemGradingDir);
+            }
+
         }
 
         return problemGradingDir;
