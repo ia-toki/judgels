@@ -27,7 +27,7 @@ public final class GabrielWorker implements Runnable {
 
     private final String senderChannel;
     private final GradingRequest request;
-    private final SealtielClientAPI sealtielAPI;
+    private final SealtielClientAPI sealtielClientAPI;
     private final SandalphonClientAPI sandalphonClientAPI;
     private final long messageId;
 
@@ -47,10 +47,10 @@ public final class GabrielWorker implements Runnable {
 
     private GradingResult result;
 
-    public GabrielWorker(String senderChannel, GradingRequest request, SealtielClientAPI sealtielAPI, SandalphonClientAPI sandalphonClientAPI, long messageId) {
+    public GabrielWorker(String senderChannel, GradingRequest request, SealtielClientAPI sealtielClientAPI, SandalphonClientAPI sandalphonClientAPI, long messageId) {
         this.senderChannel = senderChannel;
         this.request = request;
-        this.sealtielAPI = sealtielAPI;
+        this.sealtielClientAPI = sealtielClientAPI;
         this.sandalphonClientAPI = sandalphonClientAPI;
         this.messageId = messageId;
     }
@@ -126,8 +126,8 @@ public final class GabrielWorker implements Runnable {
         GradingResponse response = new GradingResponse(request.getGradingJid(), result);
 
         try {
-            sealtielAPI.sendMessage(senderChannel, "GradingResponse", new Gson().toJson(response));
-            sealtielAPI.acknowledgeMessage(messageId);
+            sealtielClientAPI.sendMessage(senderChannel, "GradingResponse", new Gson().toJson(response));
+            sealtielClientAPI.acknowledgeMessage(messageId);
         } catch (JudgelsAPIClientException e) {
             throw new ResponseException(e);
         }
