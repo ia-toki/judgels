@@ -59,7 +59,7 @@ public class MoeIsolateSandbox extends Sandbox {
         this.allowedDirs.add(this.boxDir);
 
         setQuota(100 * 1024, 20); // 100 MB, 20 files
-        setMaxProcesses(6);
+        setMaxProcesses(10);
     }
 
     @Override
