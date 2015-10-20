@@ -3,6 +3,7 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.FileUtils;
+import org.iatoki.judgels.gabriel.blackbox.languages.JavaGradingLanguage;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
@@ -35,6 +36,11 @@ public final class BatchEvaluator implements Evaluator {
         sandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
         sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
         sandbox.setStackSizeInKilobytes(memoryLimitInKilobytes);
+
+        if (language instanceof JavaGradingLanguage) {
+            sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes + 8000);
+            sandbox.setStackSizeInKilobytes(memoryLimitInKilobytes + 8000);
+        }
 
         this.sandbox = sandbox;
         this.evaluationCommand = language.getExecutionCommand(sourceFile.getName());

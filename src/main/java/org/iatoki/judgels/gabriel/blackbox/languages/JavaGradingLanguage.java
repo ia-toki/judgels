@@ -8,31 +8,31 @@ import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
 import java.util.List;
 import java.util.Set;
 
-public final class PascalGradingLanguage extends AbstractGradingLanguage {
+public final class JavaGradingLanguage extends AbstractGradingLanguage {
 
     @Override
     public String getName() {
-        return "Pascal";
+        return "Java";
     }
 
     @Override
     public Set<String> getAllowedExtensions() {
-        return ImmutableSet.of("pas");
+        return ImmutableSet.of("java");
     }
 
     @Override
     public String getExecutableFilename(String sourceFilename) {
-        return FilenameUtils.removeExtension(sourceFilename);
+        return FilenameUtils.removeExtension(sourceFilename) + ".class";
     }
 
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
-        return ImmutableList.of("/usr/bin/fpc", sourceFilename, "-O2", "-XS", "-Sg");
+        return ImmutableList.of("/usr/bin/javac", sourceFilename);
     }
 
     @Override
     public List<String> getExecutionCommand(String sourceFilename) {
-        String executableFilename = getExecutableFilename(sourceFilename);
-        return ImmutableList.of("./" + executableFilename);
+        String executableClassname = FilenameUtils.removeExtension(sourceFilename);
+        return ImmutableList.of("/usr/bin/java", executableClassname);
     }
 }

@@ -2,6 +2,7 @@ package org.iatoki.judgels.gabriel.blackbox.languages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import org.apache.commons.io.FilenameUtils;
 import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public final class CGradingLanguage extends AbstractGradingLanguage {
 
     @Override
     public String getExecutableFilename(String sourceFilename) {
-        return sourceFilename.substring(0, sourceFilename.lastIndexOf('.'));
+        return FilenameUtils.removeExtension(sourceFilename);
     }
 
     @Override
