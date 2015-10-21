@@ -12,7 +12,7 @@ public final class JavaGradingLanguage extends AbstractGradingLanguage {
 
     @Override
     public String getName() {
-        return "Java";
+        return "Java 8";
     }
 
     @Override
