@@ -46,9 +46,9 @@ public class MoeIsolateSandbox extends Sandbox {
         this.filenames = Sets.newHashSet();
 
 
-        GabrielLogger.getLogger().info("Creation of control groups of box {} started.", boxId);
-        createControlGroups();
-        GabrielLogger.getLogger().info("Creation of control groups of box {} finished", boxId);
+        // GabrielLogger.getLogger().info("Creation of control groups of box {} started.", boxId);
+        // createControlGroups();
+        // GabrielLogger.getLogger().info("Creation of control groups of box {} finished", boxId);
 
 
         GabrielLogger.getLogger().info("Initialization of Isolate box {} started.", boxId);
@@ -59,7 +59,7 @@ public class MoeIsolateSandbox extends Sandbox {
         this.allowedDirs.add(this.boxDir);
 
         setQuota(100 * 1024, 20); // 100 MB, 20 files
-        setMaxProcesses(10);
+        setMaxProcesses(20);
     }
 
     @Override
@@ -156,9 +156,9 @@ public class MoeIsolateSandbox extends Sandbox {
         cleanUpIsolate();
         GabrielLogger.getLogger().info("Cleanup of Isolate box {} finished.", boxId);
 
-        GabrielLogger.getLogger().info("Deletion of control groups of box {} started.", boxId);
-        deleteControlGroups();
-        GabrielLogger.getLogger().info("Deletion of control groups of box {} finished.", boxId);
+        // GabrielLogger.getLogger().info("Deletion of control groups of box {} started.", boxId);
+        // deleteControlGroups();
+        // GabrielLogger.getLogger().info("Deletion of control groups of box {} finished.", boxId);
     }
 
     @Override
@@ -269,6 +269,7 @@ public class MoeIsolateSandbox extends Sandbox {
     private void initIsolate() {
         ImmutableList.Builder<String> command = ImmutableList.builder();
         command.add(isolatePath, "-b" + boxId);
+        command.add("--cg");
 
         if (blocksQuota > 0) {
             command.add("-q" + blocksQuota + "," + inodesQuota);
