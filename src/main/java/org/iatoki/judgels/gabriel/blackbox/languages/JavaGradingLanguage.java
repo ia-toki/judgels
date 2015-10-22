@@ -22,17 +22,17 @@ public final class JavaGradingLanguage extends AbstractGradingLanguage {
 
     @Override
     public String getExecutableFilename(String sourceFilename) {
-        return FilenameUtils.removeExtension(sourceFilename) + ".class";
+        return FilenameUtils.removeExtension(sourceFilename) + ".jar";
     }
 
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
-        return ImmutableList.of("/usr/bin/javac", sourceFilename);
+        String mainClassName = FilenameUtils.removeExtension(sourceFilename);
+        return ImmutableList.of("/bin/bash", "-c", "/usr/bin/javac " + sourceFilename + " ; /usr/bin/jar cfe " + getExecutableFilename(sourceFilename) + " " + mainClassName + " *.class");
     }
 
     @Override
     public List<String> getExecutionCommand(String sourceFilename) {
-        String executableClassname = FilenameUtils.removeExtension(sourceFilename);
-        return ImmutableList.of("/usr/bin/java", executableClassname);
+        return ImmutableList.of("/usr/bin/java", "-jar", getExecutableFilename(sourceFilename));
     }
 }
