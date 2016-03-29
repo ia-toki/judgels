@@ -61,7 +61,7 @@ public final class SimpleReducer extends AbstractReducer {
     }
 
     private double getOkScore(String score) throws ReductionException {
-        String[] tokens = score.split(" ", 1);
+        String[] tokens = score.split(" ", 2);
         if (tokens.length == 0) {
             throw new ReductionException("Invalid score for OK: " + score);
         }
