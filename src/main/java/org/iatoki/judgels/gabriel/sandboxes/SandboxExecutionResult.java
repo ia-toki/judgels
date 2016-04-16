@@ -13,6 +13,10 @@ public final class SandboxExecutionResult {
         this.message = message;
     }
 
+    public static SandboxExecutionResult plainMessage(String message) {
+        return new SandboxExecutionResult(SandboxExecutionStatus.ZERO_EXIT_CODE, 0, 0, message);
+    }
+
     public static SandboxExecutionResult internalError(String message) {
         return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, -1, -1, message);
     }
