@@ -120,7 +120,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         prepare();
         compile();
 
-        if (compilationResult.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
+        if ((getCompiler() != null) && (compilationResult.getVerdict() == CompilationVerdict.COMPILATION_ERROR)) {
             return BlackBoxGradingResults.compilationErrorResult(compilationResult.getOutputs());
         }
 
