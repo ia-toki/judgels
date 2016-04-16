@@ -16,6 +16,7 @@ import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 
 import java.io.File;
@@ -49,7 +50,7 @@ public final class OutputOnlyWithSubtasksGradingEngine extends BlackBoxGradingEn
     protected void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
         String sourceFieldKey = config.getSourceFileFields().keySet().iterator().next();
         File sourceFile = sourceFiles.get(sourceFieldKey);
-        BatchWithSubtasksGradingConfig castConfig = (BatchWithSubtasksGradingConfig) config;
+        OutputOnlyWithSubtasksGradingConfig castConfig = (OutputOnlyWithSubtasksGradingConfig) config;
 
         evaluator = new IdentityEvaluator(getEvaluationDir(), sourceFile);
 
