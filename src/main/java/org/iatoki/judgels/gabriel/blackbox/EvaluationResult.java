@@ -11,6 +11,10 @@ public final class EvaluationResult {
         this.executionResult = executionResult;
     }
 
+    public static EvaluationResult plainResult(String result) {
+        return new EvaluationResult(EvaluationVerdict.OK, SandboxExecutionResult.plainMessage(result));
+    }
+
     public static EvaluationResult executedResult(SandboxExecutionResult result) {
         EvaluationVerdict verdict;
         switch (result.getStatus()) {

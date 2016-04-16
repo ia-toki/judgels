@@ -61,9 +61,9 @@ public final class BatchGradingEngine extends BlackBoxGradingEngine {
         if (castConfig.getCustomScorer() != null) {
             scorerSandbox = sandboxFactory.newSandbox();
             File scorerFile = helperFiles.get(castConfig.getCustomScorer());
-            scorer = new CustomScorer(scorerSandbox, getEvaluationDir(), getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
+            scorer = new CustomScorer(scorerSandbox, getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
         } else {
-            scorer = new DiffScorer(getEvaluationDir());
+            scorer = new DiffScorer();
         }
 
         reducer = new SimpleReducer();

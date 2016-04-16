@@ -131,4 +131,9 @@ public final class InteractiveEvaluator implements Evaluator {
 
         return EvaluationResult.executedResult(contestantExecutionResult);
     }
+
+    @Override
+    public String getEvaluationResultFilename(File testcaseInputFile) {
+        return EVALUATION_OUTPUT_FILENAME;
+    }
 }

@@ -79,4 +79,9 @@ public final class BatchEvaluator implements Evaluator {
 
         return EvaluationResult.executedResult(executionResult);
     }
+
+    @Override
+    public String getEvaluationResultFilename(File testcaseInputFile) {
+        return EVALUATION_OUTPUT_FILENAME;
+    }
 }

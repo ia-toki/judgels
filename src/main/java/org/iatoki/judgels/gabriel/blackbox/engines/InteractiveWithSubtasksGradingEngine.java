@@ -65,7 +65,7 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
         evaluatorCommunicatorSandbox = sandboxFactory.newSandbox();
 
         evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile,  getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes());
-        scorer = new IdentityScorer(getEvaluationDir());
+        scorer = new IdentityScorer();
         reducer = new SubtaskReducer();
     }
 

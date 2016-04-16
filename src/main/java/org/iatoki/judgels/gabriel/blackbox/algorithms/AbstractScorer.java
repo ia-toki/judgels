@@ -10,8 +10,8 @@ import java.io.File;
 public abstract class AbstractScorer implements Scorer {
 
     @Override
-    public final ScoringResult score(File testCaseInput, File testCaseOutput) throws ScoringException {
-        String scoringOutput = executeScoring(testCaseInput, testCaseOutput);
+    public final ScoringResult score(File testCaseInput, File testCaseOutput, File evaluationOutputFile) throws ScoringException {
+        String scoringOutput = executeScoring(testCaseInput, testCaseOutput, evaluationOutputFile);
 
         String[] lines = scoringOutput.split("\n");
 
@@ -40,5 +40,5 @@ public abstract class AbstractScorer implements Scorer {
         }
     }
 
-    protected abstract String executeScoring(File testCaseInput, File testCaseOutput) throws ScoringException;
+    protected abstract String executeScoring(File testCaseInput, File testCaseOutput, File evaluationOutputFile) throws ScoringException;
 }

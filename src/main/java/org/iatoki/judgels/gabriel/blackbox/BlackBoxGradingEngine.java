@@ -165,7 +165,11 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
     private void compile() throws CompilationException {
         MDC.put("gradingPhase", "COMPILE");
         GabrielLogger.getLogger().info("Compilation started.");
-        compilationResult = getCompiler().compile();
+        if (getCompiler() != null) {
+            compilationResult = getCompiler().compile();
+        } else {
+            GabrielLogger.getLogger().info("No compiler is used.");
+        }
         GabrielLogger.getLogger().info("Compilation finished.");
     }
 
@@ -209,7 +213,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
                 TestCaseResult testCaseResult;
                 if (evaluationResult.getVerdict() == EvaluationVerdict.OK) {
-                    ScoringResult scoringResult = getScorer().score(testCaseInput, testCaseOutput);
+                    ScoringResult scoringResult = getScorer().score(testCaseInput, testCaseOutput, new File(getEvaluationDir(), getEvaluator().getEvaluationResultFilename(testCaseInput)));
                     testCaseResult = TestCaseResult.fromScoringResult(scoringResult);
                 } else {
                     testCaseResult = TestCaseResult.fromEvaluationResult(evaluationResult);

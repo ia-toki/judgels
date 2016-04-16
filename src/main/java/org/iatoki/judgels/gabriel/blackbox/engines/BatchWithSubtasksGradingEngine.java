@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.Map;
 
 public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine {
+
     private Compiler compiler;
     private Evaluator evaluator;
     private Scorer scorer;
@@ -75,9 +76,9 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
         if (castConfig.getCustomScorer() != null) {
             scorerSandbox = sandboxFactory.newSandbox();
             File scorerFile = helperFiles.get(castConfig.getCustomScorer());
-            scorer = new CustomScorer(scorerSandbox, getEvaluationDir(), getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
+            scorer = new CustomScorer(scorerSandbox, getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
         } else {
-            scorer = new DiffScorer(getEvaluationDir());
+            scorer = new DiffScorer();
         }
 
         reducer = new SubtaskReducer();

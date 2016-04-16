@@ -10,19 +10,14 @@ import java.io.IOException;
 
 public final class DiffScorer implements Scorer {
 
-    private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
     private static final String DIFF_EXECUTABLE_FILENAME = "/usr/bin/diff";
 
-    private final File evaluationDir;
-
-    public DiffScorer(File evaluationDir) {
-        this.evaluationDir = evaluationDir;
+    public DiffScorer() {
     }
 
-    @Override
-    public ScoringResult score(File testCaseInput, File testCaseOutput) throws ScoringException {
-        File evaluationOutputFile = new File(evaluationDir, EVALUATION_OUTPUT_FILENAME);
 
+    @Override
+    public ScoringResult score(File testCaseInput, File testCaseOutput, File evaluationOutputFile) throws ScoringException {
         String[] scoringCommand = new String[]{DIFF_EXECUTABLE_FILENAME, "--brief", testCaseOutput.getAbsolutePath(), evaluationOutputFile.getAbsolutePath()};
         ProcessBuilder pb = new ProcessBuilder(scoringCommand);
 
