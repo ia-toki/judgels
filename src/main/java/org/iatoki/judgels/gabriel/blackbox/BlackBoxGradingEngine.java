@@ -1,6 +1,7 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.io.FileUtils;
@@ -280,7 +281,14 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
             testGroupFinalResults.add(new TestGroupFinalResult(testGroup.getId(), testCaseFinalResults.build()));
         }
 
-        BlackBoxGradingResultDetails details = BlackBoxGradingResultDetails.normalDetails(compilationResult.getOutputs(), testGroupFinalResults.build(), subtaskFinalResults.build());
+        Map<String, String> compilationOutput;
+        if (getCompiler() != null) {
+            compilationOutput = compilationResult.getOutputs();
+        } else {
+            compilationOutput = ImmutableMap.of("source", "");
+        }
+
+        BlackBoxGradingResultDetails details = BlackBoxGradingResultDetails.normalDetails(compilationOutput, testGroupFinalResults.build(), subtaskFinalResults.build());
 
         return BlackBoxGradingResults.normalResult(reductionResult, details);
     }
