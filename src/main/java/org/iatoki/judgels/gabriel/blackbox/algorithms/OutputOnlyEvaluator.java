@@ -11,11 +11,11 @@ import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import java.io.File;
 import java.io.IOException;
 
-public final class IdentityEvaluator implements Evaluator {
+public final class OutputOnlyEvaluator implements Evaluator {
 
     private final File evaluationDir;
 
-    public IdentityEvaluator(File evaluationDir, File sourceFile) {
+    public OutputOnlyEvaluator(File evaluationDir, File sourceFile) {
         this.evaluationDir = evaluationDir;
 
         FileSystemProvider fileSystemProvider = new LocalFileSystemProvider(evaluationDir);
