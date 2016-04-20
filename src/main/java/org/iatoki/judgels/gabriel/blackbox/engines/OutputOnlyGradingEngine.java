@@ -13,7 +13,7 @@ import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityEvaluator;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.OutputOnlyEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SimpleReducer;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyGradingConfig;
@@ -28,16 +28,13 @@ public final class OutputOnlyGradingEngine extends BlackBoxGradingEngine {
     private Scorer scorer;
     private Reducer reducer;
 
-    public OutputOnlyGradingEngine() {
-    }
-
     @Override
     protected void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
         String sourceFieldKey = config.getSourceFileFields().keySet().iterator().next();
         File sourceFile = sourceFiles.get(sourceFieldKey);
         OutputOnlyGradingConfig castConfig = (OutputOnlyGradingConfig) config;
 
-        evaluator = new IdentityEvaluator(getEvaluationDir(), sourceFile);
+        evaluator = new OutputOnlyEvaluator(getEvaluationDir(), sourceFile);
 
         scorer = new DiffScorer();
 

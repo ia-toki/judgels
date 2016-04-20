@@ -12,10 +12,6 @@ public final class DiffScorer implements Scorer {
 
     private static final String DIFF_EXECUTABLE_FILENAME = "/usr/bin/diff";
 
-    public DiffScorer() {
-    }
-
-
     @Override
     public ScoringResult score(File testCaseInput, File testCaseOutput, File evaluationOutputFile) throws ScoringException {
         String[] scoringCommand = new String[]{DIFF_EXECUTABLE_FILENAME, "--brief", testCaseOutput.getAbsolutePath(), evaluationOutputFile.getAbsolutePath()};

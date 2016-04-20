@@ -13,7 +13,7 @@ import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityEvaluator;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.OutputOnlyEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
 import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyWithSubtasksGradingConfig;
@@ -27,9 +27,6 @@ public final class OutputOnlyWithSubtasksGradingEngine extends BlackBoxGradingEn
     private Evaluator evaluator;
     private Scorer scorer;
     private Reducer reducer;
-
-    public OutputOnlyWithSubtasksGradingEngine() {
-    }
 
     @Override
     public String getName() {
@@ -52,7 +49,7 @@ public final class OutputOnlyWithSubtasksGradingEngine extends BlackBoxGradingEn
         File sourceFile = sourceFiles.get(sourceFieldKey);
         OutputOnlyWithSubtasksGradingConfig castConfig = (OutputOnlyWithSubtasksGradingConfig) config;
 
-        evaluator = new IdentityEvaluator(getEvaluationDir(), sourceFile);
+        evaluator = new OutputOnlyEvaluator(getEvaluationDir(), sourceFile);
 
         scorer = new DiffScorer();
         reducer = new SubtaskReducer();

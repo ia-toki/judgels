@@ -8,9 +8,6 @@ import java.io.IOException;
 
 public final class IdentityScorer extends AbstractScorer {
 
-    public IdentityScorer() {
-    }
-
     @Override
     protected String executeScoring(File testCaseInput, File testCaseOutput, File scoringOutputFile) throws ScoringException {
         try {
