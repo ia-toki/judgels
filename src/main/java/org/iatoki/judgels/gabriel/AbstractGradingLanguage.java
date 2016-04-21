@@ -5,7 +5,7 @@ import com.google.common.base.Joiner;
 import java.util.Set;
 
 public abstract class AbstractGradingLanguage implements GradingLanguage {
-    public final String verifyFile(String filename, String content) {
+    public final String verifyFile(String filename, byte[] content) {
         String byExtension = verifyFileExtension(filename);
         String byContent = verifyFileContent(content);
 
@@ -20,7 +20,7 @@ public abstract class AbstractGradingLanguage implements GradingLanguage {
 
     protected abstract Set<String> getAllowedExtensions();
 
-    protected String verifyFileContent(String content) {
+    protected String verifyFileContent(byte[] content) {
         return null;
     }
 

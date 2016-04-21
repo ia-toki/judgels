@@ -3,9 +3,9 @@ package org.iatoki.judgels.gabriel;
 public final class SourceFile {
 
     private final String name;
-    private final String content;
+    private final byte[] content;
 
-    public SourceFile(String name, String content) {
+    public SourceFile(String name, byte[] content) {
         this.name = name;
         this.content = content;
     }
@@ -14,7 +14,7 @@ public final class SourceFile {
         return name;
     }
 
-    public String getContent() {
+    public byte[] getContent() {
         return content;
     }
 }

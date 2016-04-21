@@ -12,5 +12,5 @@ public interface GradingLanguage {
 
     List<String> getExecutionCommand(String sourceFilename);
 
-    String verifyFile(String filename, String content);
+    String verifyFile(String filename, byte[] content);
 }
