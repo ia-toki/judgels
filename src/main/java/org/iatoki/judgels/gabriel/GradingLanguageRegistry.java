@@ -21,6 +21,9 @@ public final class GradingLanguageRegistry {
     }
 
     public GradingLanguage getLanguage(String language) {
+        if (language.equals(OutputOnlyMagic.KEY)) {
+            return OutputOnlyMagic.LANGUAGE;
+        }
         if (!registry.containsKey(language)) {
             throw new IllegalArgumentException("Grading language " + language + " not found");
         }
@@ -28,7 +31,10 @@ public final class GradingLanguageRegistry {
     }
 
     public Map<String, String> getGradingLanguages() {
-        return ImmutableMap.copyOf(Maps.transformValues(registry, language -> language.getName()));
+        return new ImmutableMap.Builder<String, String>()
+                .putAll(Maps.transformValues(registry, language -> language.getName()))
+                .put(OutputOnlyMagic.KEY, OutputOnlyMagic.DISPLAY_NAME)
+                .build();
     }
 
     public static GradingLanguageRegistry getInstance() {
