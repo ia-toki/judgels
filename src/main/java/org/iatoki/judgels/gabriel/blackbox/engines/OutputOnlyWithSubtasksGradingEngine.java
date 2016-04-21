@@ -15,7 +15,6 @@ import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.OutputOnlyEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
-import org.iatoki.judgels.gabriel.blackbox.configs.BatchWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 
@@ -35,12 +34,12 @@ public final class OutputOnlyWithSubtasksGradingEngine extends BlackBoxGradingEn
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new BatchWithSubtasksGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), null);
+        return new OutputOnlyWithSubtasksGradingConfig(ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of());
     }
 
     @Override
     public GradingConfig createGradingConfigFromJson(String json) {
-        return new Gson().fromJson(json, BatchWithSubtasksGradingConfig.class);
+        return new Gson().fromJson(json, OutputOnlyWithSubtasksGradingConfig.class);
     }
 
     @Override
