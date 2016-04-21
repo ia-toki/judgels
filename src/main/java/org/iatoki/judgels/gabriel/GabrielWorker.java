@@ -309,7 +309,7 @@ public final class GabrielWorker implements Runnable {
         for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
             File file = new File(sourceDir, entry.getValue().getName());
 
-            FileUtils.writeStringToFile(file, entry.getValue().getContent());
+            FileUtils.writeByteArrayToFile(file, entry.getValue().getContent());
             sourceFilesBuilder.put(entry.getKey(), file);
         }
         return sourceFilesBuilder.build();
