@@ -10,6 +10,7 @@ import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyGradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -42,8 +43,9 @@ public final class OutputOnlyGradingEngineTest extends BlackBoxGradingEngineTest
                 ))
         );
 
-        this.config = new OutputOnlyGradingConfig(testData);
+        this.config = new OutputOnlyGradingConfig(testData, null);
         this.engine = new OutputOnlyGradingEngine();
+        this.engine.setScorerLanguage(new PlainCppGradingLanguage());
     }
 
     @Test
@@ -98,5 +100,27 @@ public final class OutputOnlyGradingEngineTest extends BlackBoxGradingEngineTest
         } catch (GradingException e) {
             fail();
         }
+    }
+
+    @Test
+    public void testOK90WithCustomScorer() {
+        addSourceFile("source", "WA-at-1_1.zip");
+
+        try {
+            GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-nonbinary-OK10-at-1_1.cpp"));
+            assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getScore(), 90);
+
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
+            assertEquals(details.getSubtaskResults(), ImmutableList.of(
+                    new SubtaskFinalResult(-1, VERDICT_OK, 90))
+            );
+        } catch (GradingException e) {
+            fail();
+        }
+    }
+
+    private OutputOnlyGradingConfig createConfigWithCustomScorer(String customScorer) {
+        return new OutputOnlyGradingConfig(testData, customScorer);
     }
 }

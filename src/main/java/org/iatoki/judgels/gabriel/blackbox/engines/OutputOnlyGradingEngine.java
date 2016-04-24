@@ -12,10 +12,13 @@ import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.OutputOnlyEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SimpleReducer;
 import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyGradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.languages.Cpp11GradingLanguage;
+import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 
 import java.io.File;
@@ -27,6 +30,18 @@ public final class OutputOnlyGradingEngine extends BlackBoxGradingEngine {
     private Scorer scorer;
     private Reducer reducer;
 
+    private Sandbox scorerSandbox;
+
+    private int scoringTimeLimit;
+    private int scoringMemoryLimit;
+    private GradingLanguage scorerLanguage;
+
+    public OutputOnlyGradingEngine() {
+        this.scoringTimeLimit = 10000;
+        this.scoringMemoryLimit = 1024 * 1024;
+        this.scorerLanguage = new Cpp11GradingLanguage();
+    }
+
     @Override
     protected void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
         String sourceFieldKey = config.getSourceFileFields().keySet().iterator().next();
@@ -35,9 +50,19 @@ public final class OutputOnlyGradingEngine extends BlackBoxGradingEngine {
 
         evaluator = new OutputOnlyEvaluator(getEvaluationDir(), sourceFile);
 
-        scorer = new DiffScorer();
+        if (castConfig.getCustomScorer() != null) {
+            scorerSandbox = sandboxFactory.newSandbox();
+            File scorerFile = helperFiles.get(castConfig.getCustomScorer());
+            scorer = new CustomScorer(scorerSandbox, getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
+        } else {
+            scorer = new DiffScorer();
+        }
 
         reducer = new SimpleReducer();
+    }
+
+    public void setScorerLanguage(GradingLanguage scorerLanguage) {
+        this.scorerLanguage = scorerLanguage;
     }
 
     @Override
@@ -67,7 +92,7 @@ public final class OutputOnlyGradingEngine extends BlackBoxGradingEngine {
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new OutputOnlyGradingConfig(ImmutableList.of(new TestGroup(0, ImmutableList.of()), new TestGroup(-1, ImmutableList.of())));
+        return new OutputOnlyGradingConfig(ImmutableList.of(new TestGroup(0, ImmutableList.of()), new TestGroup(-1, ImmutableList.of())), null);
     }
 
     @Override
@@ -77,5 +102,8 @@ public final class OutputOnlyGradingEngine extends BlackBoxGradingEngine {
 
     @Override
     public void cleanUp() {
+        if (scorerSandbox != null) {
+            scorerSandbox.cleanUp();
+        }
     }
 }

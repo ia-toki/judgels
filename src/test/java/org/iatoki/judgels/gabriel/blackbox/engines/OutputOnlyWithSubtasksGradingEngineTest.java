@@ -10,6 +10,7 @@ import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyWithSubtasksGradingConfig;
+import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -48,8 +49,9 @@ public final class OutputOnlyWithSubtasksGradingEngineTest extends BlackBoxGradi
 
         this.subtaskPoints = ImmutableList.of(30, 70);
 
-        this.config = new OutputOnlyWithSubtasksGradingConfig(testData, subtaskPoints);
+        this.config = new OutputOnlyWithSubtasksGradingConfig(testData, subtaskPoints, null);
         this.engine = new OutputOnlyWithSubtasksGradingEngine();
+        this.engine.setScorerLanguage(new PlainCppGradingLanguage());
     }
 
     @Test
@@ -127,5 +129,47 @@ public final class OutputOnlyWithSubtasksGradingEngineTest extends BlackBoxGradi
         } catch (GradingException e) {
             fail();
         }
+    }
+
+    @Test
+    public void testACWithCustomScorer() {
+        addSourceFile("source", "AC-scorer.zip");
+
+        try {
+            GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
+            assertEquals(result.getVerdict(), VERDICT_AC);
+            assertEquals(result.getScore(), 100);
+
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
+            assertEquals(details.getSubtaskResults(), ImmutableList.of(
+                    new SubtaskFinalResult(1, VERDICT_AC, 30.0),
+                    new SubtaskFinalResult(2, VERDICT_AC, 70.0))
+            );
+        } catch (GradingException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testOK30WithCustomScorer() {
+        addSourceFile("source", "WA-at-2_3-scorer.zip");
+
+        try {
+            GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
+            assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
+            assertEquals(result.getScore(), 30);
+
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
+            assertEquals(details.getSubtaskResults(), ImmutableList.of(
+                    new SubtaskFinalResult(1, VERDICT_AC, 30.0),
+                    new SubtaskFinalResult(2, VERDICT_WA, 0.0))
+            );
+        } catch (GradingException e) {
+            fail();
+        }
+    }
+
+    private OutputOnlyWithSubtasksGradingConfig createConfigWithCustomScorer(String customScorer) {
+        return new OutputOnlyWithSubtasksGradingConfig(testData, subtaskPoints, customScorer);
     }
 }
