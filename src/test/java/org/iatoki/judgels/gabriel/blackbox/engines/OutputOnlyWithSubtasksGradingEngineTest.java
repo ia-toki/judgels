@@ -113,6 +113,26 @@ public final class OutputOnlyWithSubtasksGradingEngineTest extends BlackBoxGradi
 
 
     @Test
+    public void testOK30BecauseSomeFilesAreMissing() {
+        addSourceFile("source", "WA-missing-at-2_3.zip");
+
+        try {
+            GradingResult result = runEngine(engine, config);
+            assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
+            assertEquals(result.getScore(), 30);
+
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
+            assertEquals(details.getSubtaskResults(), ImmutableList.of(
+                    new SubtaskFinalResult(1, VERDICT_AC, 30.0),
+                    new SubtaskFinalResult(2, VERDICT_WA, 0.0))
+            );
+        } catch (GradingException e) {
+            fail();
+        }
+    }
+
+
+    @Test
     public void testOK0() {
         addSourceFile("source", "WA-at-1_1.zip");
 

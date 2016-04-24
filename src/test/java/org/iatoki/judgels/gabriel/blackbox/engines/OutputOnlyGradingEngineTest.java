@@ -85,6 +85,24 @@ public final class OutputOnlyGradingEngineTest extends BlackBoxGradingEngineTest
     }
 
     @Test
+    public void testWA80BecauseSomeOutputFilesAreMissing() {
+        addSourceFile("source", "WA-missing-at-2_3.zip");
+
+        try {
+            GradingResult result = runEngine(engine, config);
+            assertEquals(result.getVerdict(), VERDICT_WA);
+            assertEquals(result.getScore(), 80);
+
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
+            assertEquals(details.getSubtaskResults(), ImmutableList.of(
+                    new SubtaskFinalResult(-1, VERDICT_WA, 80))
+            );
+        } catch (GradingException e) {
+            fail();
+        }
+    }
+
+    @Test
     public void testWA80() {
         addSourceFile("source", "WA-at-1_1.zip");
 

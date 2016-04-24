@@ -37,9 +37,10 @@ public abstract class AbstractReducer implements Reducer {
         List<EvaluationVerdict> evaluationVerdicts = Lists.newArrayList();
         List<ScoringVerdict> scoringVerdicts = Lists.newArrayList();
 
+        boolean hasSkipped = false;
         for (NormalVerdict verdict : verdicts) {
             if (verdict == EvaluationVerdict.SKIPPED) {
-                continue;
+                hasSkipped = true;
             } else if (verdict instanceof EvaluationVerdict) {
                 evaluationVerdicts.add((EvaluationVerdict) verdict);
             } else {
@@ -53,7 +54,11 @@ public abstract class AbstractReducer implements Reducer {
         if (!evaluationVerdicts.isEmpty()) {
             return evaluationVerdicts.get(evaluationVerdicts.size() - 1);
         } else if (!scoringVerdicts.isEmpty()) {
-            return scoringVerdicts.get(scoringVerdicts.size() - 1);
+            ScoringVerdict verdict = scoringVerdicts.get(scoringVerdicts.size() - 1);
+            if (verdict == ScoringVerdict.ACCEPTED && hasSkipped) {
+                return ScoringVerdict.WRONG_ANSWER;
+            }
+            return verdict;
         } else {
             return ScoringVerdict.OK;
         }

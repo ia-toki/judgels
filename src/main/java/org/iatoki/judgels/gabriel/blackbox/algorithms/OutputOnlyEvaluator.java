@@ -38,7 +38,12 @@ public final class OutputOnlyEvaluator implements Evaluator {
 
     @Override
     public EvaluationResult evaluate(File testCaseInputFile) throws EvaluationException {
-        return EvaluationResult.plainResult(FilenameUtils.getBaseName(testCaseInputFile.getName()) + ".out");
+        File testCaseOutputFile = new File(evaluationDir, getEvaluationResultFilename(testCaseInputFile));
+        if (testCaseOutputFile.exists()) {
+            return EvaluationResult.plainResult(FilenameUtils.getBaseName(testCaseInputFile.getName()));
+        } else {
+            return EvaluationResult.skippedResult();
+        }
     }
 
     @Override
