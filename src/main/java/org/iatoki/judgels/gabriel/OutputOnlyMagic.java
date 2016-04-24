@@ -44,4 +44,8 @@ public final class OutputOnlyMagic {
             return ImmutableSet.of("zip");
         }
     }
+
+    private OutputOnlyMagic() {
+        
+    }
 }
