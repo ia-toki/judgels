@@ -46,6 +46,6 @@ public final class OutputOnlyMagic {
     }
 
     private OutputOnlyMagic() {
-        
+
     }
 }
