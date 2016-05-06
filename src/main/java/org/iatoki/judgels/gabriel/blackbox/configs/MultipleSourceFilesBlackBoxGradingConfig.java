@@ -16,6 +16,10 @@ public abstract class MultipleSourceFilesBlackBoxGradingConfig extends AbstractB
         this.sourceFileFieldKeys = sourceFileFieldKeys;
     }
 
+    public List<String> getSourceFileFieldKeys() {
+        return sourceFileFieldKeys;
+    }
+
     @Override
     public Map<String, String> getSourceFileFields() {
         if (sourceFileFieldKeys.size() == 1) {

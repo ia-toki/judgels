@@ -1,5 +1,7 @@
 org.iatoki.judgels.gabriel.blackbox.engines.BatchGradingEngine
 org.iatoki.judgels.gabriel.blackbox.engines.BatchWithSubtasksGradingEngine
+org.iatoki.judgels.gabriel.blackbox.engines.FunctionalGradingEngine
+org.iatoki.judgels.gabriel.blackbox.engines.FunctionalWithSubtasksGradingEngine
 org.iatoki.judgels.gabriel.blackbox.engines.OutputOnlyGradingEngine
 org.iatoki.judgels.gabriel.blackbox.engines.OutputOnlyWithSubtasksGradingEngine
 org.iatoki.judgels.gabriel.blackbox.engines.InteractiveGradingEngine

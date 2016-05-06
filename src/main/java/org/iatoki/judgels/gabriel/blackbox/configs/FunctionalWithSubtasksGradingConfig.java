@@ -6,10 +6,10 @@ import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 
 import java.util.List;
 
-public final class FunctionalWithSubtasksBlackBoxGradingConfig extends MultipleSourceFilesBlackBoxGradingConfig {
+public final class FunctionalWithSubtasksGradingConfig extends MultipleSourceFilesBlackBoxGradingConfig {
     private final List<Integer> subtaskPoints;
 
-    public FunctionalWithSubtasksBlackBoxGradingConfig(int timeLimitInMilliseconds, int memoryLimitInKilobytes, List<TestGroup> testData, List<String> sourceFileFieldKeys, List<Integer> subtaskPoints) {
+    public FunctionalWithSubtasksGradingConfig(int timeLimitInMilliseconds, int memoryLimitInKilobytes, List<TestGroup> testData, List<String> sourceFileFieldKeys, List<Integer> subtaskPoints) {
         super(timeLimitInMilliseconds, memoryLimitInKilobytes, testData, sourceFileFieldKeys);
         this.subtaskPoints = subtaskPoints;
     }
