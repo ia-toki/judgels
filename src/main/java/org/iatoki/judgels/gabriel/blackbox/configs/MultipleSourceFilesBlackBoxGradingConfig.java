@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public abstract class MultipleSourceFilesBlackBoxGradingConfig extends AbstractBlackBoxGradingConfig {
     private final List<String> sourceFileFieldKeys;
@@ -26,7 +26,11 @@ public abstract class MultipleSourceFilesBlackBoxGradingConfig extends AbstractB
             return ImmutableMap.of(sourceFileFieldKeys.get(0), "Source Code");
         }
 
-        return sourceFileFieldKeys.stream()
-                .collect(Collectors.toMap(key -> key, key -> StringUtils.capitalize(key)));
+        Map<String, String> sourceFileFields = new LinkedHashMap<>();
+        for (String key : sourceFileFieldKeys) {
+            sourceFileFields.put(key, StringUtils.capitalize(key));
+        }
+
+        return ImmutableMap.copyOf(sourceFileFields);
     }
 }
