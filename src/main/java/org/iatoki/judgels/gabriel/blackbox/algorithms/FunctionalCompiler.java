@@ -101,7 +101,7 @@ public class FunctionalCompiler implements Compiler {
                         "/usr/bin/g++", "-o", executableFilename, "-c", sourceFilename);
             } else {
                 compilationCommand = ImmutableList.of(
-                        "/usr/bin/g++", "-std=c++11", "-o", executableFilename, "-c", sourceFilename, "-O2", "-lm");
+                        "/usr/bin/g++", "-std=c++11", "-o", executableFilename, "-c", sourceFilename, "-O2");
             }
             SandboxExecutionResult executionResult = sandbox.execute(compilationCommand);
 
