@@ -8,10 +8,12 @@ import java.util.List;
 
 public final class FunctionalWithSubtasksGradingConfig extends MultipleSourceFilesBlackBoxGradingConfig {
     private final List<Integer> subtaskPoints;
+    private final String customScorer;
 
-    public FunctionalWithSubtasksGradingConfig(int timeLimitInMilliseconds, int memoryLimitInKilobytes, List<TestGroup> testData, List<String> sourceFileFieldKeys, List<Integer> subtaskPoints) {
+    public FunctionalWithSubtasksGradingConfig(int timeLimitInMilliseconds, int memoryLimitInKilobytes, List<TestGroup> testData, List<String> sourceFileFieldKeys, List<Integer> subtaskPoints, String customScorer) {
         super(timeLimitInMilliseconds, memoryLimitInKilobytes, testData, sourceFileFieldKeys);
         this.subtaskPoints = subtaskPoints;
+        this.customScorer = customScorer;
     }
 
     @Override
@@ -21,5 +23,9 @@ public final class FunctionalWithSubtasksGradingConfig extends MultipleSourceFil
             subtasks.add(new Subtask(i + 1, subtaskPoints.get(i), ""));
         }
         return subtasks.build();
+    }
+
+    public String getCustomScorer() {
+        return customScorer;
     }
 }

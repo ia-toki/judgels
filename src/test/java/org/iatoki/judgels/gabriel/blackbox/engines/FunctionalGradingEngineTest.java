@@ -47,9 +47,10 @@ public final class FunctionalGradingEngineTest extends BlackBoxGradingEngineTest
                 ))
         );
 
-        this.config = new FunctionalGradingConfig(timeLimit, memoryLimit, testData, ImmutableList.of("encoder", "decoder"));
+        this.config = new FunctionalGradingConfig(timeLimit, memoryLimit, testData, ImmutableList.of("encoder", "decoder"), null);
         this.engine = new FunctionalGradingEngine();
         this.engine.setGradingLanguage(new PlainCppGradingLanguage());
+        this.engine.setScorerLanguage(new PlainCppGradingLanguage());
     }
 
     @Test
@@ -97,5 +98,23 @@ public final class FunctionalGradingEngineTest extends BlackBoxGradingEngineTest
         } catch (GradingException e) {
             fail();
         }
+    }
+
+    @Test
+    public void testOK90WithCustomScorer() {
+        addSourceFile("encoder", "encoder-AC.cpp");
+        addSourceFile("decoder", "decoder-AC.cpp");
+
+        try {
+            GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-nonbinary-OK10-at-1_1.cpp"));
+            assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getScore(), 90);
+        } catch (GradingException e) {
+            fail();
+        }
+    }
+
+    private FunctionalGradingConfig createConfigWithCustomScorer(String customScorer) {
+        return new FunctionalGradingConfig(timeLimit, memoryLimit, testData, ImmutableList.of("encoder", "decoder"), customScorer);
     }
 }

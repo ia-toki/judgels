@@ -19,7 +19,6 @@ static int bits[16000000], nb;
 static int curbit = 0;
 
 void wa() {
-    puts("WA");
     exit(0);
 }
 
@@ -49,6 +48,6 @@ int main(int argc, char **argv) {
  if (hcnt != nv) {
     wa();
  }
- puts("AC");
+ puts("SECRET_KEY");
  return 0;
 }

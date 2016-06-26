@@ -12,9 +12,10 @@ import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
+import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.FunctionalCompiler;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.FunctionalEvaluator;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
 import org.iatoki.judgels.gabriel.blackbox.configs.FunctionalWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.languages.Cpp11GradingLanguage;
@@ -31,13 +32,22 @@ public final class FunctionalWithSubtasksGradingEngine extends BlackBoxGradingEn
     private Scorer scorer;
     private Reducer reducer;
 
+    private int scoringTimeLimit;
+    private int scoringMemoryLimit;
+
     private GradingLanguage gradingLanguage;
+    private GradingLanguage scorerLanguage;
 
     private Sandbox compilerSandbox;
     private Sandbox evaluatorSandbox;
+    private Sandbox scorerSandbox;
 
     public FunctionalWithSubtasksGradingEngine() {
+        this.scoringTimeLimit = 10000;
+        this.scoringMemoryLimit = 1024 * 1024;
+
         this.gradingLanguage = new Cpp11GradingLanguage();
+        this.scorerLanguage = new Cpp11GradingLanguage();
     }
 
     @Override
@@ -47,7 +57,7 @@ public final class FunctionalWithSubtasksGradingEngine extends BlackBoxGradingEn
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new FunctionalWithSubtasksGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), ImmutableList.of());
+        return new FunctionalWithSubtasksGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), ImmutableList.of(), null);
     }
 
     @Override
@@ -63,12 +73,24 @@ public final class FunctionalWithSubtasksGradingEngine extends BlackBoxGradingEn
         compiler = new FunctionalCompiler(compilerSandbox, getCompilationDir(), gradingLanguage, sourceFiles, helperFiles, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());
         evaluatorSandbox = sandboxFactory.newSandbox();
         evaluator = new FunctionalEvaluator(evaluatorSandbox, getCompilationDir(), getEvaluationDir(), castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes());
-        scorer = new IdentityScorer();
+
+        if (castConfig.getCustomScorer() != null) {
+            scorerSandbox = sandboxFactory.newSandbox();
+            File scorerFile = helperFiles.get(castConfig.getCustomScorer());
+            scorer = new CustomScorer(scorerSandbox, getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
+        } else {
+            scorer = new DiffScorer();
+        }
+
         reducer = new SubtaskReducer();
     }
 
     void setGradingLanguage(GradingLanguage gradingLanguage) {
         this.gradingLanguage = gradingLanguage;
+    }
+
+    void setScorerLanguage(GradingLanguage scorerLanguage) {
+        this.scorerLanguage = scorerLanguage;
     }
 
     @Override
@@ -98,6 +120,9 @@ public final class FunctionalWithSubtasksGradingEngine extends BlackBoxGradingEn
         }
         if (evaluatorSandbox != null) {
             evaluatorSandbox.cleanUp();
+        }
+        if (scorerSandbox != null) {
+            scorerSandbox.cleanUp();
         }
     }
 }

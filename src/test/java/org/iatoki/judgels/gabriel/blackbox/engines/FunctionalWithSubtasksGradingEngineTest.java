@@ -53,9 +53,10 @@ public final class FunctionalWithSubtasksGradingEngineTest extends BlackBoxGradi
 
         this.subtaskPoints = ImmutableList.of(30, 70);
 
-        this.config = new FunctionalWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, ImmutableList.of("encoder", "decoder"), subtaskPoints);
+        this.config = new FunctionalWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, ImmutableList.of("encoder", "decoder"), subtaskPoints, null);
         this.engine = new FunctionalWithSubtasksGradingEngine();
         this.engine.setGradingLanguage(new PlainCppGradingLanguage());
+        this.engine.setScorerLanguage(new PlainCppGradingLanguage());
     }
 
     @Test
@@ -110,5 +111,29 @@ public final class FunctionalWithSubtasksGradingEngineTest extends BlackBoxGradi
         } catch (GradingException e) {
             fail();
         }
+    }
+
+    @Test
+    public void testOK30WithCustomScorer() {
+        addSourceFile("encoder", "encoder-AC.cpp");
+        addSourceFile("decoder", "decoder-AC.cpp");
+
+        try {
+            GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
+            assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
+            assertEquals(result.getScore(), 30);
+
+            BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
+            assertEquals(details.getSubtaskResults(), ImmutableList.of(
+                    new SubtaskFinalResult(1, VERDICT_AC, 30.0),
+                    new SubtaskFinalResult(2, VERDICT_WA, 0.0))
+            );
+        } catch (GradingException e) {
+            fail();
+        }
+    }
+
+    private FunctionalWithSubtasksGradingConfig createConfigWithCustomScorer(String customScorer) {
+        return new FunctionalWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, ImmutableList.of("encoder", "decoder"), subtaskPoints, customScorer);
     }
 }
