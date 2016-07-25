@@ -178,8 +178,9 @@ public class MoeIsolateSandbox extends Sandbox {
         }
 
         if (timeLimit > 0) {
-            sandboxedCommand.add("-t" + timeLimit / 1000.0);
-            sandboxedCommand.add("-w" + timeLimit / 500.0);
+            double timeLimitInSeconds = timeLimit / 1000.0;
+            sandboxedCommand.add("-t" + timeLimitInSeconds);
+            sandboxedCommand.add("-w" + (timeLimitInSeconds + Math.max(8.0, timeLimitInSeconds)));
         }
 
         if (memoryLimit > 0) {
