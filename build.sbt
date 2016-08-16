@@ -2,6 +2,7 @@ import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
 lazy val gabriel = (project in file("."))
+    .enablePlugins(JavaAppPackaging)
     .dependsOn(gabrielcommons, gabrielblackbox, api)
     .aggregate(gabrielcommons, gabrielblackbox, api)
     .settings(
