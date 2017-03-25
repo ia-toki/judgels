@@ -47,7 +47,9 @@ public final class SubtaskReducer extends AbstractReducer {
         double score = subtask.getPoints();
         for (TestCaseResult result : testCaseResults) {
             NormalVerdict verdict = result.getVerdict();
-            if (verdict != ScoringVerdict.ACCEPTED) {
+            if (verdict == ScoringVerdict.OK) {
+                score = Math.min(score, getOkScore(result.getScore()));
+            } else if (verdict != ScoringVerdict.ACCEPTED) {
                 score = 0.0;
             }
         }

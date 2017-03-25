@@ -175,6 +175,20 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
     }
 
     @Test
+    public void testOKWithMinimumScore() throws GradingException {
+        addSourceFile("source", "aplusb-WA-at-2_3.cpp");
+        GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-nonbinary-OK10.cpp"));
+        assertEquals(result.getVerdict(), VERDICT_OK);
+        assertEquals(result.getScore(), 40);
+
+        BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
+        assertEquals(details.getSubtaskResults(), ImmutableList.of(
+                new SubtaskFinalResult(1, VERDICT_AC, 30.0),
+                new SubtaskFinalResult(2, VERDICT_OK, 10.0))
+        );
+    }
+
+    @Test
     public void testACWithCustomScorer() {
         addSourceFile("source", "aplusb-AC-scorer.cpp");
 

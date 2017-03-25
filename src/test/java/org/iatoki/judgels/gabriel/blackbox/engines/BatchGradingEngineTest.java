@@ -112,7 +112,7 @@ public final class BatchGradingEngineTest extends BlackBoxGradingEngineTest {
         addSourceFile("source", "aplusb-WA-at-1_1.cpp");
 
         try {
-            GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-nonbinary-OK10-at-1_1.cpp"));
+            GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-nonbinary-OK10.cpp"));
             assertEquals(result.getVerdict(), VERDICT_OK);
             assertEquals(result.getScore(), 90);
 

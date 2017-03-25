@@ -60,19 +60,6 @@ public final class SimpleReducer extends AbstractReducer {
         return new SubtaskResult(getWorstVerdict(Lists.transform(testCaseResults, r -> r.getVerdict())), score);
     }
 
-    private double getOkScore(String score) throws ReductionException {
-        String[] tokens = score.split(" ", 2);
-        if (tokens.length == 0) {
-            throw new ReductionException("Invalid score for OK: " + score);
-        }
-
-        try {
-            return Double.parseDouble(tokens[0]);
-        } catch (NumberFormatException e) {
-            throw new ReductionException("Invalid score for OK: " + score + "(must contain a number in the beginning of the second line)");
-        }
-    }
-
     private String improveScore(double score, String originalScore) {
         if (originalScore.isEmpty()) {
             return "" + score;

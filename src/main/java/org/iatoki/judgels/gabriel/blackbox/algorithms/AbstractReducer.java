@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.iatoki.judgels.gabriel.blackbox.EvaluationVerdict;
 import org.iatoki.judgels.gabriel.blackbox.NormalVerdict;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
+import org.iatoki.judgels.gabriel.blackbox.ReductionException;
 import org.iatoki.judgels.gabriel.blackbox.ReductionResult;
 import org.iatoki.judgels.gabriel.blackbox.ReductionVerdict;
 import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
@@ -30,6 +31,19 @@ public abstract class AbstractReducer implements Reducer {
             } else {
                 return new ReductionResult(ReductionVerdict.okWithWorstVerdict(worstVerdict), (int) Math.round(score));
             }
+        }
+    }
+
+    protected final double getOkScore(String score) throws ReductionException {
+        String[] tokens = score.split(" ", 2);
+        if (tokens.length == 0) {
+            throw new ReductionException("Invalid score for OK: " + score);
+        }
+
+        try {
+            return Double.parseDouble(tokens[0]);
+        } catch (NumberFormatException e) {
+            throw new ReductionException("Invalid score for OK: " + score + "(must contain a number in the beginning of the second line)");
         }
     }
 
