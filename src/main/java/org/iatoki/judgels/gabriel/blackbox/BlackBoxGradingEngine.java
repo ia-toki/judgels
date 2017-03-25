@@ -220,7 +220,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
                     testCaseResult = TestCaseResult.fromEvaluationResult(evaluationResult);
                 }
 
-                if (testCaseResult.getVerdict() != ScoringVerdict.ACCEPTED) {
+                if (testCaseResult.getVerdict() != ScoringVerdict.ACCEPTED && testCaseResult.getVerdict() != ScoringVerdict.OK) {
                     alreadyFailedSubtaskIds.addAll(testCase.getSubtaskIds());
                     alreadyFailedSubtaskIds.remove(0);
                     alreadyFailedSubtaskIds.remove(-1);
