@@ -1,0 +1,5 @@
+dependencies {
+    compile "com.rabbitmq:amqp-client:$rabbitmqClientVersion"
+
+    processor "org.immutables:value:$immutablesVersion"
+}

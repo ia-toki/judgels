@@ -1,0 +1,9 @@
+plugins {
+    id 'com.palantir.sls-java-service-distribution' version '2.6.0'
+}
+
+distribution {
+    serviceName 'sealtiel'
+    serviceGroup 'judgels'
+    mainClass 'judgels.sealtiel.SealtielServer'
+}

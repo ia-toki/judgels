@@ -1,0 +1,47 @@
+buildscript {
+    repositories {
+        mavenCentral()
+
+        maven {
+            url 'http://palantir.bintray.com/releases'
+        }
+    }
+
+    dependencies {
+        classpath "com.palantir.baseline:gradle-baseline-java:$gradleBaselineVersion"
+    }
+}
+
+plugins {
+    id 'idea'
+
+    id 'com.palantir.git-version' version '0.8.0'
+    id 'org.inferred.processors' version '1.2.15'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+
+        maven {
+            url 'http://palantir.bintray.com/releases'
+        }
+    }
+
+    version '0.1.0'
+}
+
+apply plugin: 'com.palantir.baseline-config'
+
+dependencies {
+    baseline "com.palantir.baseline:gradle-baseline-java-config:$gradleBaselineVersion@zip"
+}
+
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+
+    apply plugin: 'com.palantir.baseline-checkstyle'
+    apply plugin: 'com.palantir.baseline-idea'
+    apply plugin: 'org.inferred.processors'
+}
