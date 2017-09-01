@@ -1,4 +1,4 @@
 rootProject.name = "sealtiel"
 
-include "sealtiel-distribution"
-include "sealtiel-server"
+include "sealtiel-dist"
+include "sealtiel-app"
