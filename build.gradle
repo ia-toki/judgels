@@ -28,7 +28,7 @@ allprojects {
         }
     }
 
-    version '0.1.0'
+    version gitVersion()
 }
 
 apply plugin: 'com.palantir.baseline-config'
