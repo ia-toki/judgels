@@ -1,0 +1,18 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9003
+
+sealtiel:
+  clients:
+    - jid: JIDSECL-alice
+      secret: bob
+    - jid: JIDSECL-charles
+      secret: darwin
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtualHost: "/"

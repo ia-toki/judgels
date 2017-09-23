@@ -1,5 +1,18 @@
 dependencies {
-    compile "com.rabbitmq:amqp-client:$rabbitmqClientVersion"
+    compile project(':sealtiel-api')
 
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
+    compile "com.rabbitmq:amqp-client:$rabbitmqClientVersion"
+    compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
+    compile "org.iatoki.judgels:judgels-client-commons:$judgelsClientVersion"
+
+    testCompile "org.assertj:assertj-core:$assertJVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+
+    processor "com.google.dagger:dagger-compiler:$daggerVersion"
     processor "org.immutables:value:$immutablesVersion"
 }

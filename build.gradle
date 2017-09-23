@@ -9,6 +9,7 @@ buildscript {
 
     dependencies {
         classpath "com.palantir.baseline:gradle-baseline-java:$gradleBaselineVersion"
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
     }
 }
 
@@ -21,14 +22,34 @@ plugins {
 
 allprojects {
     repositories {
+        jcenter()
         mavenCentral()
 
         maven {
             url 'http://palantir.bintray.com/releases'
         }
+        maven {
+            url 'https://dl.bintray.com/judgels/releases'
+        }
     }
 
     version gitVersion()
+
+    configurations {
+        compile.resolutionStrategy {
+            eachDependency { details ->
+                if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+                    details.useVersion $jacksonVersion
+                }
+            }
+        }
+    }
+
+    apply plugin: 'org.junit.platform.gradle.plugin'
+
+    dependencies {
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    }
 }
 
 apply plugin: 'com.palantir.baseline-config'

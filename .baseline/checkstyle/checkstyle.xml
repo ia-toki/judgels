@@ -48,7 +48,7 @@
     <module name="TreeWalker">
         <module name="AbbreviationAsWordInName"> <!-- Java Style Guide: Camel case : defined -->
             <property name="ignoreFinal" value="false"/>
-            <property name="allowedAbbreviationLength" value="1"/>
+            <property name="allowedAbbreviationLength" value="2"/>
         </module>
         <module name="AnnotationLocation"> <!-- Java Style Guide: Annotations -->
             <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF"/>
@@ -68,18 +68,6 @@
             <property name="allowInSwitchCase" value="true"/>
         </module>
         <module name="AvoidStarImport"/> <!-- Java Style Guide: No wildcard imports -->
-        <module name="AvoidStaticImport"> <!-- Java Style Guide: No static imports -->
-            <property name="excludes" value="
-                java.util.Collections.*,java.util.stream.Collectors.*,
-                org.junit.Assert.*,org.junit.Assume.*,
-                org.hamcrest.CoreMatchers.*,org.hamcrest.Matchers.*,org.hamcrest.MatcherAssert.*,
-                org.hamcrest.core.AllOf.*,org.hamcrest.core.Is.*,org.hamcrest.core.StringContains.*,org.hamcrest.core.IsEqual.*,
-                org.hamcrest.collection.IsMapContaining.*,
-                org.mockito.ArgumentMatchers.*,org.mockito.Mockito.*,org.mockito.Matchers.*,
-                org.assertj.core.api.Assertions.*,
-                com.google.common.base.Preconditions.*,com.google.common.truth.Truth.*,
-                org.apache.commons.lang3.Validate.*"/>
-        </module>
         <module name="ClassTypeParameterName"> <!-- Java Style Guide: Type variable names -->
             <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
             <message key="name.invalidPattern" value="Class type name ''{0}'' must match pattern ''{1}''."/>
@@ -357,6 +345,7 @@
         <module name="SuppressWarningsHolder" />  <!-- Required for SuppressWarningsFilter -->
         <module name="TypeName"> <!-- Java Style Guide: Class names -->
             <message key="name.invalidPattern" value="Type name ''{0}'' must match pattern ''{1}''."/>
+            <property name="applyToPackage" value="false"/>
         </module>
         <module name="TypecastParenPad"/> <!-- Java Style Guide: Horizontal whitespace -->
         <module name="UnnecessaryParentheses"/>
@@ -383,7 +372,6 @@
             <property name="target" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
         </module>
         <module name="CyclomaticComplexity"/> <!-- Java Coding Guidelines: Reduce Cyclomatic Complexity -->
-        <module name="DesignForExtension"/> <!-- Java Coding Guidelines: Design for extension -->
         <module name="JavadocMethod"> <!-- Java Style Guide: Where Javadoc is used -->
             <property name="scope" value="public"/>
             <property name="allowMissingParamTags" value="true"/>
