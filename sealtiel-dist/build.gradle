@@ -2,8 +2,13 @@ plugins {
     id 'com.palantir.sls-java-service-distribution' version '2.6.0'
 }
 
+dependencies {
+    runtime project(':sealtiel-app')
+}
+
 distribution {
     serviceName 'sealtiel'
     serviceGroup 'judgels'
-    mainClass 'judgels.sealtiel.SealtielServer'
+    mainClass 'judgels.sealtiel.SealtielApplication'
+    args 'server', 'var/conf/sealtiel.yml'
 }
