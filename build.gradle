@@ -34,22 +34,6 @@ allprojects {
     }
 
     version gitVersion()
-
-    configurations {
-        compile.resolutionStrategy {
-            eachDependency { details ->
-                if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-                    details.useVersion $jacksonVersion
-                }
-            }
-        }
-    }
-
-    apply plugin: 'org.junit.platform.gradle.plugin'
-
-    dependencies {
-        testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    }
 }
 
 apply plugin: 'com.palantir.baseline-config'
@@ -65,4 +49,19 @@ subprojects {
     apply plugin: 'com.palantir.baseline-checkstyle'
     apply plugin: 'com.palantir.baseline-idea'
     apply plugin: 'org.inferred.processors'
+    apply plugin: 'org.junit.platform.gradle.plugin'
+
+    dependencies {
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    }
+
+    configurations {
+        compile.resolutionStrategy {
+            eachDependency { details ->
+                if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+                    details.useVersion $jacksonVersion
+                }
+            }
+        }
+    }
 }
