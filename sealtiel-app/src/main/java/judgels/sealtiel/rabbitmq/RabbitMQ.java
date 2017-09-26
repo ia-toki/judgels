@@ -7,8 +7,12 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import judgels.sealtiel.queue.Queue;
 import judgels.sealtiel.queue.QueueChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RabbitMQ implements Queue {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQ.class);
+
     private final ConnectionFactory connectionFactory;
 
     private volatile Connection connection;
@@ -29,9 +33,11 @@ public class RabbitMQ implements Queue {
     public synchronized QueueChannel createChannel() throws IOException, TimeoutException {
         if (connection == null || !connection.isOpen()) {
             connection = connectionFactory.newConnection();
+            LOGGER.info("Created a new connection to RabbitMQ");
         }
         if (channel == null || !channel.isOpen()) {
             channel = connection.createChannel();
+            LOGGER.info("Created a new channel to RabbitMQ");
         }
         return new RabbitMQChannel(channel);
     }

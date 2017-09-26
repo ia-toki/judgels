@@ -3,6 +3,15 @@ server:
     - type: http
       port: 9003
 
+logging:
+  appenders:
+    - type: console
+      threshold: INFO
+    - type: file
+      currentLogFilename: var/log/sealtiel.log
+      archivedLogFilenamePattern: var/log/sealtiel-%d.log.gz
+      archivedFileCount: 14
+
 sealtiel:
   clients:
     - jid: JIDSECL-alice
