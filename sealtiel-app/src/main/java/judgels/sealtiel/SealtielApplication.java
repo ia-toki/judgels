@@ -25,6 +25,7 @@ public class SealtielApplication extends Application<SealtielApplicationConfigur
                 .rabbitMQModule(new RabbitMQModule(sealtielConfig.getRabbitMQConfig()))
                 .build();
 
+        env.jersey().register(component.versionResource());
         env.jersey().register(component.messageResource());
 
         env.healthChecks().register("rabbitmq", component.rabbitmqHealthCheck());

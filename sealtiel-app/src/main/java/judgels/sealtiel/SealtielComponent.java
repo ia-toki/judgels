@@ -11,6 +11,7 @@ import judgels.sealtiel.rabbitmq.RabbitMQModule;
         RabbitMQModule.class})
 @Singleton
 public interface SealtielComponent {
+    VersionResource versionResource();
     MessageResource messageResource();
     RabbitMQHealthCheck rabbitmqHealthCheck();
 }
