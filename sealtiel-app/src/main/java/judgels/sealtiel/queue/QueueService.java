@@ -9,8 +9,12 @@ import java.util.concurrent.TimeoutException;
 import javax.inject.Inject;
 import judgels.sealtiel.api.message.Message;
 import org.immutables.value.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class QueueService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueueService.class);
+
     private final Queue queue;
     private final ObjectMapper objectMapper;
 
@@ -29,6 +33,7 @@ public class QueueService {
             try {
                 clientMessage = objectMapper.readValue(queueMessage.getMessage(), ClientMessage.class);
             } catch (IOException e) {
+                LOGGER.warn("Could not deserialize client message", e);
                 return Optional.empty();
             }
 
