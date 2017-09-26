@@ -21,32 +21,30 @@ public class QueueService {
     }
 
     public Optional<Message> receiveMessage(String clientJid) throws IOException, TimeoutException {
-        try (QueueChannel channel = queue.createChannel()) {
-            channel.declareQueue(clientJid);
+        QueueChannel channel = queue.createChannel();
+        channel.declareQueue(clientJid);
 
-            return channel.popMessage(clientJid).flatMap(queueMessage -> {
-                ClientMessage clientMessage;
-                try {
-                    clientMessage = objectMapper.readValue(queueMessage.getMessage(), ClientMessage.class);
-                } catch (IOException e) {
-                    return Optional.empty();
-                }
+        return channel.popMessage(clientJid).flatMap(queueMessage -> {
+            ClientMessage clientMessage;
+            try {
+                clientMessage = objectMapper.readValue(queueMessage.getMessage(), ClientMessage.class);
+            } catch (IOException e) {
+                return Optional.empty();
+            }
 
-                Message message = new Message.Builder()
-                        .id(queueMessage.getId())
-                        .sourceJid(clientMessage.getSourceJid())
-                        .type(clientMessage.getType())
-                        .content(clientMessage.getContent())
-                        .build();
-                return Optional.of(message);
-            });
-        }
+            Message message = new Message.Builder()
+                    .id(queueMessage.getId())
+                    .sourceJid(clientMessage.getSourceJid())
+                    .type(clientMessage.getType())
+                    .content(clientMessage.getContent())
+                    .build();
+            return Optional.of(message);
+        });
     }
 
     public void confirmMessage(long messageId) throws IOException, TimeoutException {
-        try (QueueChannel channel = queue.createChannel()) {
-            channel.ackMessage(messageId);
-        }
+        QueueChannel channel = queue.createChannel();
+        channel.ackMessage(messageId);
     }
 
     public void sendMessage(String sourceJid, String targetJid, String type, String content)
@@ -65,10 +63,9 @@ public class QueueService {
             throw new RuntimeException(e);
         }
 
-        try (QueueChannel channel = queue.createChannel()) {
-            channel.declareQueue(targetJid);
-            channel.pushMessage(targetJid, message);
-        }
+        QueueChannel channel = queue.createChannel();
+        channel.declareQueue(targetJid);
+        channel.pushMessage(targetJid, message);
     }
 
     @Value.Immutable

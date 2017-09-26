@@ -6,7 +6,6 @@ import com.rabbitmq.client.MessageProperties;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.concurrent.TimeoutException;
 import judgels.sealtiel.queue.QueueChannel;
 import judgels.sealtiel.queue.QueueMessage;
 
@@ -37,10 +36,5 @@ public class RabbitMQChannel implements QueueChannel {
     @Override
     public void ackMessage(long messageId) throws IOException {
         channel.basicAck(messageId, false);
-    }
-
-    @Override
-    public void close() throws IOException, TimeoutException {
-        channel.close();
     }
 }
