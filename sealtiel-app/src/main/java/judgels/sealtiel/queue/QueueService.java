@@ -33,7 +33,7 @@ public class QueueService {
             try {
                 clientMessage = objectMapper.readValue(queueMessage.getMessage(), ClientMessage.class);
             } catch (IOException e) {
-                LOGGER.warn("Could not deserialize client message", e);
+                LOGGER.error("Could not deserialize client message", e);
                 return Optional.empty();
             }
 
