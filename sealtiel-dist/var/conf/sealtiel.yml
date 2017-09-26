@@ -5,6 +5,12 @@ server:
   adminConnectors:
     - type: http
       port: 9013
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/sealtiel-request.log
+      archivedLogFilenamePattern: var/log/sealtiel-request-%d.log.gz
+      archivedFileCount: 14
 
 logging:
   appenders:
