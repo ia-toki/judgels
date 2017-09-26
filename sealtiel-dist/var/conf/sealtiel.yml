@@ -2,6 +2,9 @@ server:
   applicationConnectors:
     - type: http
       port: 9003
+  adminConnectors:
+    - type: http
+      port: 9013
 
 logging:
   appenders:
