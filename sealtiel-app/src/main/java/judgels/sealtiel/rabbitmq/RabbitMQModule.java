@@ -16,4 +16,9 @@ public class RabbitMQModule {
     public Queue queue() {
         return new RabbitMQ(config);
     }
+
+    @Provides
+    public RabbitMQHealthCheck rabbitmqHealthCheck() {
+        return new RabbitMQHealthCheck(config);
+    }
 }

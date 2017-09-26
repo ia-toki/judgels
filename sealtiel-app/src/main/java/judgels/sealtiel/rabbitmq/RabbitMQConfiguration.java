@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 public interface RabbitMQConfiguration {
     String getHost();
     int getPort();
+    int getManagementPort();
     String getUsername();
     String getPassword();
     String getVirtualHost();

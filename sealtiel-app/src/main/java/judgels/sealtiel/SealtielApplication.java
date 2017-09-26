@@ -26,6 +26,8 @@ public class SealtielApplication extends Application<SealtielApplicationConfigur
                 .build();
 
         env.jersey().register(component.messageResource());
+
+        env.healthChecks().register("rabbitmq", component.rabbitmqHealthCheck());
     }
 
     // https://github.com/palantir/http-remoting/issues/427
