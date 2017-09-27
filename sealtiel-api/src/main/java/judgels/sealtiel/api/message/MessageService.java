@@ -12,15 +12,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import judgels.client.api.auth.BasicAuthHeader;
 
-@Path("/api/v1/messages")
+@Path("/api/v2/messages")
 public interface MessageService {
     @POST
-    @Path("/fetch")
+    @Path("/retrieve")
     @Produces(APPLICATION_JSON)
     Optional<Message> receiveMessage(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader);
 
     @POST
-    @Path("/{messageId}/acknowledge")
+    @Path("/{messageId}/confirm")
     void confirmMessage(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, @PathParam("messageId") long messageId);
 
     @POST
