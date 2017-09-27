@@ -1,6 +1,5 @@
 dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "com.google.guava:guava:$guavaVersion"
     compile "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
     compile "org.iatoki.judgels:judgels-client-api:$judgelsClientVersion"
 

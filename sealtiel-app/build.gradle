@@ -3,7 +3,6 @@ dependencies {
 
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
-    compile "com.google.guava:guava:$guavaVersion"
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "com.rabbitmq:amqp-client:$rabbitmqAmqpClientVersion"
     compile "com.rabbitmq:http-client:$rabbitmqHttpClientVersion"
