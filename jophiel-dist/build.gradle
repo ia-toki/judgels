@@ -1,0 +1,14 @@
+plugins {
+    id 'com.palantir.sls-java-service-distribution' version '2.6.0'
+}
+
+dependencies {
+    runtime project(':jophiel-app')
+}
+
+distribution {
+    serviceName 'jophiel'
+    serviceGroup 'judgels'
+    mainClass 'judgels.jophiel.JophielApplication'
+    args 'server', 'var/conf/jophiel.yml'
+}
