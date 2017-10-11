@@ -12,6 +12,16 @@ server:
       archivedLogFilenamePattern: var/log/jophiel-request-%d.log.gz
       archivedFileCount: 14
 
+database:
+  driverClass: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost/judgels-ng_jophiel?useSSL=false
+  user: jophiel
+  password: jophiel
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQLDialect
+    hibernate.hbm2ddl.auto: update
+
 logging:
   appenders:
     - type: console
