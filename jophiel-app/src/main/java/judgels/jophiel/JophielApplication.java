@@ -22,6 +22,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
     @Override
     public void initialize(Bootstrap<JophielApplicationConfiguration> bootstrap) {
         bootstrap.addBundle(hibernateBundle);
+        bootstrap.addBundle(new JophielMigrationsBundle());
     }
 
     @Override
