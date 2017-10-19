@@ -18,8 +18,8 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public User getUserById(BasicAuthHeader authHeader, long userId) {
-        return userStore.findById(userId).orElseThrow(() -> new ServiceException(ErrorType.NOT_FOUND));
+    public User getUserByJid(BasicAuthHeader authHeader, String userJid) {
+        return userStore.findByJid(userJid).orElseThrow(() -> new ServiceException(ErrorType.NOT_FOUND));
     }
 
     @Override

@@ -15,9 +15,9 @@ import judgels.client.api.auth.BasicAuthHeader;
 @Path("/api/v2/users")
 public interface UserService {
     @GET
-    @Path("/{userId}")
+    @Path("/{userJid}")
     @Produces(APPLICATION_JSON)
-    User getUserById(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, @PathParam("userId") long userId);
+    User getUserByJid(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, @PathParam("userJid") String userJid);
 
     @POST
     @Path("/")

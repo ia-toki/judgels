@@ -15,5 +15,6 @@ dependencies {
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
     processor "com.google.dagger:dagger-compiler:$daggerVersion"
+    processor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     processor "org.immutables:value:$immutablesVersion"
 }
