@@ -2,9 +2,11 @@ package judgels.jophiel.hibernate;
 
 import dagger.Module;
 import dagger.Provides;
+import java.time.Clock;
 import javax.inject.Singleton;
-import judgels.jophiel.hibernate.user.UserHibernateStore;
-import judgels.jophiel.user.UserStore;
+import judgels.jophiel.hibernate.user.UserHibernateDao;
+import judgels.jophiel.user.UserDao;
+import judgels.model.ActorProvider;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -17,7 +19,12 @@ public class JophielHibernateModule {
 
     @Provides
     @Singleton
-    public UserStore userDao() {
-        return new UserHibernateStore(sessionFactory);
+    SessionFactory sessionFactory() {
+        return sessionFactory;
+    }
+
+    @Provides
+    @Singleton UserDao userDao(Clock clock, ActorProvider actorProvider) {
+        return new UserHibernateDao(sessionFactory, clock, actorProvider);
     }
 }

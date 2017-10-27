@@ -6,6 +6,7 @@ import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.user.UserResource;
 
 @Component(modules = {
+        JophielModule.class,
         JophielHibernateModule.class})
 @Singleton
 public interface JophielComponent {

@@ -5,11 +5,15 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUser.class)
-public interface User {
+public interface User extends UserBase {
+    long getId();
     String getJid();
-    String getUsername();
-    String getName();
-    String getEmail();
 
     class Builder extends ImmutableUser.Builder {}
+
+    @Value.Immutable
+    @JsonDeserialize(as = ImmutableData.class)
+    interface Data extends UserBase {
+        class Builder extends ImmutableData.Builder {}
+    }
 }

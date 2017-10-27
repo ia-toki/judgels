@@ -5,13 +5,14 @@ dependencies {
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
-    compile "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
-    compile "org.iatoki.judgels:judgels-client-commons:$judgelsClientVersion"
+    compile "org.iatoki.judgels:judgels-client-core:$judgelsClientVersion"
+    compile "org.iatoki.judgels:judgels-persistence-core:$judgelsPersistenceVersion"
 
     runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
 
     testCompile "org.assertj:assertj-core:$assertJVersion"
+    testCompile "org.iatoki.judgels:judgels-persistence-testing:$judgelsPersistenceVersion"
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
