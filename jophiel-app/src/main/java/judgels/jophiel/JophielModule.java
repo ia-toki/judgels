@@ -6,6 +6,7 @@ import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
+import judgels.service.actor.PerRequestActorProvider;
 
 @Module
 public class JophielModule {
@@ -23,12 +24,12 @@ public class JophielModule {
         return new ActorProvider() {
             @Override
             public Optional<String> getJid() {
-                return Optional.empty();
+                return PerRequestActorProvider.getJid();
             }
 
             @Override
             public String getIpAddress() {
-                return "jid";
+                return PerRequestActorProvider.getIpAddress();
             }
         };
     }

@@ -11,6 +11,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import judgels.jophiel.hibernate.JophielHibernateBundle;
 import judgels.jophiel.hibernate.JophielHibernateModule;
+import judgels.service.actor.ActorFilter;
 
 public class JophielApplication extends Application<JophielApplicationConfiguration> {
     private final HibernateBundle<JophielApplicationConfiguration> hibernateBundle = new JophielHibernateBundle();
@@ -33,6 +34,8 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         JophielComponent component = DaggerJophielComponent.builder()
                 .jophielHibernateModule(new JophielHibernateModule(hibernateBundle.getSessionFactory()))
                 .build();
+
+        env.jersey().register(new ActorFilter());
 
         env.jersey().register(component.versionResource());
         env.jersey().register(component.userResource());

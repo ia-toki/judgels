@@ -6,8 +6,8 @@ dependencies {
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
-    compile "org.iatoki.judgels:judgels-client-core:$judgelsClientVersion"
     compile "org.iatoki.judgels:judgels-persistence-core:$judgelsPersistenceVersion"
+    compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
 
     runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
 
