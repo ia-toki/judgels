@@ -7,7 +7,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-@Path("/api/version")
+@Path("/api/v2/version")
 public class VersionResource {
     @Inject
     public VersionResource() {}
