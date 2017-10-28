@@ -1,6 +1,5 @@
 package judgels.jophiel.user;
 
-import judgels.jophiel.hibernate.user.UserModel;
-import judgels.model.JudgelsDao;
+import judgels.persistence.JudgelsDao;
 
 public interface UserDao extends JudgelsDao<UserModel> {}

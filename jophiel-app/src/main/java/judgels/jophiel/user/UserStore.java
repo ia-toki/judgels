@@ -3,7 +3,6 @@ package judgels.jophiel.user;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.hibernate.user.UserModel;
 
 public class UserStore {
     private final UserDao userDao;

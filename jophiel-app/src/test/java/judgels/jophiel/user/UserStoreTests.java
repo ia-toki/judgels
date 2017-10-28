@@ -3,12 +3,11 @@ package judgels.jophiel.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import judgels.hibernate.WithHibernateSession;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.hibernate.user.UserHibernateDao;
-import judgels.jophiel.hibernate.user.UserModel;
-import judgels.model.FixedActorProvider;
-import judgels.model.FixedClock;
+import judgels.jophiel.hibernate.UserHibernateDao;
+import judgels.persistence.FixedActorProvider;
+import judgels.persistence.FixedClock;
+import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,7 @@ class UserStoreTests {
     private UserStore store;
 
     @BeforeEach void before(SessionFactory sessionFactory) {
-        UserDao dao = new UserHibernateDao(sessionFactory, new FixedClock(42), new FixedActorProvider());
+        UserDao dao = new UserHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
         store = new UserStore(dao);
     }
 

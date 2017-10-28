@@ -4,9 +4,8 @@ import dagger.Module;
 import dagger.Provides;
 import java.time.Clock;
 import javax.inject.Singleton;
-import judgels.jophiel.hibernate.user.UserHibernateDao;
 import judgels.jophiel.user.UserDao;
-import judgels.model.ActorProvider;
+import judgels.persistence.ActorProvider;
 import org.hibernate.SessionFactory;
 
 @Module

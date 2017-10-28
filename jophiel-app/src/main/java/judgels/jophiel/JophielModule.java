@@ -5,7 +5,7 @@ import dagger.Provides;
 import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Singleton;
-import judgels.model.ActorProvider;
+import judgels.persistence.ActorProvider;
 
 @Module
 public class JophielModule {
@@ -22,13 +22,13 @@ public class JophielModule {
     static ActorProvider ipProvider() {
         return new ActorProvider() {
             @Override
-            public String getIpAddress() {
-                return "ip";
+            public Optional<String> getJid() {
+                return Optional.empty();
             }
 
             @Override
-            public Optional<String> getUserJid() {
-                return Optional.of("actor");
+            public String getIpAddress() {
+                return "jid";
             }
         };
     }

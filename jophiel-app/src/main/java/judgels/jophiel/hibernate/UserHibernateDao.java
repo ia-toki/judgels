@@ -1,10 +1,11 @@
-package judgels.jophiel.hibernate.user;
+package judgels.jophiel.hibernate;
 
 import java.time.Clock;
 import javax.inject.Inject;
-import judgels.hibernate.model.JudgelsHibernateDao;
 import judgels.jophiel.user.UserDao;
-import judgels.model.ActorProvider;
+import judgels.jophiel.user.UserModel;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import org.hibernate.SessionFactory;
 
 public class UserHibernateDao extends JudgelsHibernateDao<UserModel> implements UserDao {

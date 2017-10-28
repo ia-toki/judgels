@@ -1,9 +1,9 @@
-package judgels.jophiel.hibernate.user;
+package judgels.jophiel.user;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import judgels.model.JidPrefix;
-import judgels.model.JudgelsModel;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jophiel_user")
