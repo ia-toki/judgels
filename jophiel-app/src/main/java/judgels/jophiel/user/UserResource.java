@@ -6,12 +6,16 @@ import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserService;
+import judgels.service.actor.ActorChecker;
+import judgels.service.actor.AuthHeader;
 
 public class UserResource implements UserService {
+    private final ActorChecker actorChecker;
     private final UserStore userStore;
 
     @Inject
-    public UserResource(UserStore userStore) {
+    public UserResource(ActorChecker actorChecker, UserStore userStore) {
+        this.actorChecker = actorChecker;
         this.userStore = userStore;
     }
 
@@ -35,7 +39,8 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public void updateUser(String userJid, User.Data userData) {
+    public void updateUser(AuthHeader authHeader, String userJid, User.Data userData) {
+        actorChecker.check(authHeader);
         userStore.updateUser(userJid, userData);
     }
 }

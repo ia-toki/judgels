@@ -6,6 +6,7 @@ import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
+import judgels.service.actor.ActorChecker;
 import judgels.service.actor.PerRequestActorProvider;
 
 @Module
@@ -20,7 +21,7 @@ public class JophielModule {
 
     @Provides
     @Singleton
-    static ActorProvider ipProvider() {
+    static ActorProvider actorProvider() {
         return new ActorProvider() {
             @Override
             public Optional<String> getJid() {
@@ -32,5 +33,11 @@ public class JophielModule {
                 return PerRequestActorProvider.getIpAddress();
             }
         };
+    }
+
+    @Provides
+    @Singleton
+    static ActorChecker actorChecker() {
+        return new ActorChecker($ -> Optional.of("actorJid"));
     }
 }
