@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserService;
 import judgels.service.actor.ActorChecker;
-import judgels.service.actor.AuthHeader;
+import judgels.service.api.actor.AuthHeader;
 
 public class UserResource implements UserService {
     private final ActorChecker actorChecker;
