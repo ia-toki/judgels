@@ -11,7 +11,7 @@ import judgels.client.ClientChecker;
 import judgels.client.api.Client;
 import judgels.client.api.auth.BasicAuthHeader;
 import judgels.sealtiel.api.message.Message;
-import judgels.sealtiel.api.message.SendMessageRequest;
+import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.queue.QueueService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -57,12 +57,12 @@ class MessageResourceTests {
 
     @Nested class sendMessage {
         @Test void sends() throws Exception {
-            SendMessageRequest request = new SendMessageRequest.Builder()
+            MessageData messageData = new MessageData.Builder()
                     .targetJid(CLIENT_2.getJid())
                     .type("the-type")
                     .content("the-content")
                     .build();
-            resource.sendMessage(AUTH_HEADER_1, request);
+            resource.sendMessage(AUTH_HEADER_1, messageData);
             verify(queueService).sendMessage(CLIENT_1.getJid(), CLIENT_2.getJid(), "the-type", "the-content");
         }
     }

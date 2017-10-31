@@ -8,8 +8,8 @@ import judgels.client.ClientChecker;
 import judgels.client.api.Client;
 import judgels.client.api.auth.BasicAuthHeader;
 import judgels.sealtiel.api.message.Message;
+import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
-import judgels.sealtiel.api.message.SendMessageRequest;
 import judgels.sealtiel.queue.QueueService;
 
 public class MessageResource implements MessageService {
@@ -47,16 +47,16 @@ public class MessageResource implements MessageService {
     }
 
     @Override
-    public void sendMessage(BasicAuthHeader authHeader, SendMessageRequest request) {
+    public void sendMessage(BasicAuthHeader authHeader, MessageData messageData) {
         Client client = authHeader.getClient();
         clientChecker.check(client);
 
         try {
             queueService.sendMessage(
                     client.getJid(),
-                    request.getTargetJid(),
-                    request.getType(),
-                    request.getContent());
+                    messageData.getTargetJid(),
+                    messageData.getType(),
+                    messageData.getContent());
         } catch (IOException | TimeoutException e) {
             throw new RuntimeException(e);
         }
