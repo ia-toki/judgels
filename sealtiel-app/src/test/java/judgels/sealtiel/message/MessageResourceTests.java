@@ -7,12 +7,12 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.Optional;
-import judgels.client.ClientChecker;
-import judgels.client.api.Client;
-import judgels.client.api.auth.BasicAuthHeader;
 import judgels.sealtiel.api.message.Message;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.queue.QueueService;
+import judgels.service.api.client.BasicAuthHeader;
+import judgels.service.api.client.Client;
+import judgels.service.client.ClientChecker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -31,6 +31,9 @@ class MessageResourceTests {
         initMocks(this);
 
         resource = new MessageResource(clientChecker, queueService);
+
+        when(clientChecker.check(AUTH_HEADER_1))
+                .thenReturn(CLIENT_1);
     }
 
     @Nested class receiveMessage {

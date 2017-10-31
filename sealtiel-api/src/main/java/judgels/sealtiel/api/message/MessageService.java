@@ -10,7 +10,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import judgels.client.api.auth.BasicAuthHeader;
+import judgels.service.api.client.BasicAuthHeader;
 
 @Path("/api/v2/messages")
 public interface MessageService {

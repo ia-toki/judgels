@@ -7,7 +7,7 @@ dependencies {
     compile "com.rabbitmq:amqp-client:$rabbitmqAmqpClientVersion"
     compile "com.rabbitmq:http-client:$rabbitmqHttpClientVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
-    compile "org.iatoki.judgels:judgels-client-commons:$judgelsClientVersion"
+    compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
 
     testCompile "org.assertj:assertj-core:$assertJVersion"
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitVersion"

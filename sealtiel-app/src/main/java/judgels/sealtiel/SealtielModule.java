@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.jackson.Jackson;
 import javax.inject.Singleton;
-import judgels.client.ClientChecker;
+import judgels.service.client.ClientChecker;
 
 @Module
 public class SealtielModule {
