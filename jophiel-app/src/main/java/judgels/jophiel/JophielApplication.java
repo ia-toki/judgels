@@ -1,6 +1,7 @@
 package judgels.jophiel;
 
 import com.palantir.remoting3.servers.jersey.HttpRemotingJerseyFeature;
+import com.palantir.websecurity.WebSecurityBundle;
 import io.dropwizard.Application;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jersey.optional.EmptyOptionalException;
@@ -24,6 +25,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
     public void initialize(Bootstrap<JophielApplicationConfiguration> bootstrap) {
         bootstrap.addBundle(hibernateBundle);
         bootstrap.addBundle(new JophielMigrationsBundle());
+        bootstrap.addBundle(new WebSecurityBundle());
     }
 
     @Override

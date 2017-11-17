@@ -4,6 +4,7 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
+    compile "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
     compile "org.iatoki.judgels:judgels-persistence-core:$judgelsPersistenceVersion"

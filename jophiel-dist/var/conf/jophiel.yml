@@ -35,3 +35,7 @@ logging:
   loggers:
     org.hibernate.type.BasicTypeRegistry:
       level: OFF
+
+webSecurity:
+  cors:
+    allowedOrigins: "*"
