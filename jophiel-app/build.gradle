@@ -1,3 +1,58 @@
+sourceSets {
+    integTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integTest/java')
+        }
+        resources.srcDir file('src/integTest/resources')
+    }
+}
+
+configurations {
+    integTestCompile.extendsFrom testCompile
+    integTestRuntime.extendsFrom testRuntime
+}
+
+idea.module {
+    scopes.TEST.plus += [configurations.integTestRuntimeClasspath, configurations.integTestCompileClasspath]
+
+    testSourceDirs += file('src/integTest/java')
+    testSourceDirs += file('src/integTest/resources')
+
+    iml.withXml {
+        def content = it.asNode().component.find { it.'@name' == 'NewModuleRootManager' }.content[0]
+        content.sourceFolder.each { sourceFolder ->
+            if (sourceFolder.@url?.endsWith('/resources')) {
+                sourceFolder.attributes().with {
+                    boolean isTestSource = (remove('isTestSource') == 'true')
+                    put('type', isTestSource ? 'java-test-resource' : 'java-resource')
+                }
+            }
+        }
+    }
+}
+
+task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
+    group 'Verification'
+    description 'Runs integration tests on the JUnit Platform.'
+
+    dependencies {
+        testRuntime "org.junit.platform:junit-platform-console:$junitPlatformVersion"
+    }
+
+    classpath = sourceSets.integTest.runtimeClasspath
+    systemProperties['jar.path'] = jar.archivePath
+
+    main 'org.junit.platform.console.ConsoleLauncher'
+    args = [
+            '--scan-classpath', sourceSets.integTest.output.classesDirs.asPath,
+            '--reports-dir', "${buildDir}/test-results/junit-platform-integ"
+    ]
+}
+
+test.dependsOn junitPlatformIntegTest
+
 dependencies {
     compile project(':jophiel-api')
 
@@ -16,6 +71,8 @@ dependencies {
     testCompile "org.iatoki.judgels:judgels-persistence-testing:$judgelsPersistenceVersion"
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
+
+    integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
 
     processor "com.google.dagger:dagger-compiler:$daggerVersion"
     processor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"

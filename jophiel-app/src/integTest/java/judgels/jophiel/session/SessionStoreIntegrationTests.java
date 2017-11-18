@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {SessionModel.class})
-public class SessionStoreTests {
+public class SessionStoreIntegrationTests {
     private SessionStore store;
 
     @BeforeEach void before(SessionFactory sessionFactory) {
@@ -30,7 +30,6 @@ public class SessionStoreTests {
         Session session = store.findSessionByToken("token123").get();
         assertThat(session.getToken()).isEqualTo("token123");
         assertThat(session.getUserJid()).isEqualTo("userJid");
-
     }
 
     @Test void token_has_unique_constraint() {

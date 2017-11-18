@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserModel.class})
-class UserStoreTests {
+class UserStoreIntegrationTests {
     private UserStore store;
 
     @BeforeEach void before(SessionFactory sessionFactory) {
