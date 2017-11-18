@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.time.Clock;
 import javax.inject.Singleton;
+import judgels.jophiel.session.SessionDao;
 import judgels.jophiel.user.UserDao;
 import judgels.persistence.ActorProvider;
 import org.hibernate.SessionFactory;
@@ -22,8 +23,16 @@ public class JophielHibernateModule {
         return sessionFactory;
     }
 
+
     @Provides
-    @Singleton UserDao userDao(Clock clock, ActorProvider actorProvider) {
+    @Singleton
+    SessionDao sessionDao(Clock clock, ActorProvider actorProvider) {
+        return new SessionHibernateDao(sessionFactory, clock, actorProvider);
+    }
+
+    @Provides
+    @Singleton
+    UserDao userDao(Clock clock, ActorProvider actorProvider) {
         return new UserHibernateDao(sessionFactory, clock, actorProvider);
     }
 }
