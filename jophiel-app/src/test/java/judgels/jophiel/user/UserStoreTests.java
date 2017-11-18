@@ -22,7 +22,9 @@ class UserStoreTests {
         store = new UserStore(dao);
     }
 
-    @Test void can_create_find_update() {
+    @Test void can_do_basic_crud() {
+        assertThat(store.findUserByUsername("username")).isEmpty();
+
         User.Data userData = new User.Data.Builder()
                 .username("username")
                 .email("email@domain.com")
@@ -30,8 +32,7 @@ class UserStoreTests {
                 .build();
         store.createUser(userData);
 
-        User user = store.findUserById(1).get();
-        assertThat(user.getId()).isEqualTo(1);
+        User user = store.findUserByUsername("username").get();
         assertThat(user.getJid()).isNotEmpty();
         assertThat(user.getUsername()).isEqualTo("username");
         assertThat(user.getEmail()).isEqualTo("email@domain.com");

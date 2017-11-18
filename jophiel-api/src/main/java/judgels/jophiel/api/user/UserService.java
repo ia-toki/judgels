@@ -21,9 +21,9 @@ public interface UserService {
     User getUser(@PathParam("userJid") String userJid);
 
     @GET
-    @Path("/id/{userId}")
+    @Path("/username/{username}")
     @Produces(APPLICATION_JSON)
-    User getUserById(@PathParam("userId") long userJid);
+    User getUserByUsername(@PathParam("username") String username);
 
     @POST
     @Path("/")

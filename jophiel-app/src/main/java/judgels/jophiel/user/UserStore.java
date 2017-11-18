@@ -12,18 +12,18 @@ public class UserStore {
         this.userDao = userDao;
     }
 
-    public Optional<User> findUserById(long userId) {
-        return userDao.select(userId).map(UserStore::fromModel);
+    public User createUser(User.Data userData) {
+        UserModel model = new UserModel();
+        toModel(userData, model);
+        return fromModel(userDao.insert(model));
     }
 
     public Optional<User> findUserByJid(String userJid) {
         return userDao.selectByJid(userJid).map(UserStore::fromModel);
     }
 
-    public User createUser(User.Data userData) {
-        UserModel model = new UserModel();
-        toModel(userData, model);
-        return fromModel(userDao.insert(model));
+    public Optional<User> findUserByUsername(String username) {
+        return userDao.selectByUsername(username).map(UserStore::fromModel);
     }
 
     public Optional<User> updateUser(String userJid, User.Data userData) {
