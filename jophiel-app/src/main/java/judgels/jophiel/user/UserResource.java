@@ -20,13 +20,13 @@ public class UserResource implements UserService {
     }
 
     @Override
-    @UnitOfWork
+    @UnitOfWork(readOnly = true)
     public User getUser(String userJid) {
         return userStore.findUserByJid(userJid).orElseThrow(() -> new ServiceException(ErrorType.NOT_FOUND));
     }
 
     @Override
-    @UnitOfWork
+    @UnitOfWork(readOnly = true)
     public User getUserByUsername(String username) {
         return userStore.findUserByUsername(username).orElseThrow(() -> new ServiceException(ErrorType.NOT_FOUND));
     }

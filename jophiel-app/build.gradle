@@ -73,6 +73,8 @@ dependencies {
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
     integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
+    integTestCompile "com.palantir.remoting-api:test-utils:$httpRemotingApiVersion"
+    integTestCompile "com.palantir.remoting3:jaxrs-clients:$httpRemotingVersion"
 
     processor "com.google.dagger:dagger-compiler:$daggerVersion"
     processor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
