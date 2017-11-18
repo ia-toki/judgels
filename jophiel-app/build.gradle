@@ -14,7 +14,7 @@ dependencies {
 
     testCompile "org.assertj:assertj-core:$assertJVersion"
     testCompile "org.iatoki.judgels:judgels-persistence-testing:$judgelsPersistenceVersion"
-    testCompile "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
     processor "com.google.dagger:dagger-compiler:$daggerVersion"
