@@ -9,6 +9,7 @@ import com.palantir.remoting.api.config.service.ServiceConfiguration;
 import com.palantir.remoting.api.config.ssl.SslConfiguration;
 import com.palantir.remoting3.clients.ClientConfiguration;
 import com.palantir.remoting3.clients.ClientConfigurations;
+import com.palantir.remoting3.clients.UserAgent;
 import com.palantir.remoting3.jaxrs.JaxRsClient;
 import com.palantir.websecurity.WebSecurityConfiguration;
 import io.dropwizard.db.DataSourceFactory;
@@ -56,7 +57,8 @@ public abstract class AbstractServiceIntegrationTests {
                 .security(SslConfiguration.of(testTrustStore))
                 .build();
 
+        UserAgent userAgent = UserAgent.of(UserAgent.Agent.of("test", UserAgent.Agent.DEFAULT_VERSION));
         ClientConfiguration clientConfig = ClientConfigurations.of(serviceConfig);
-        return JaxRsClient.create(serviceClass, "test", clientConfig);
+        return JaxRsClient.create(serviceClass, userAgent, clientConfig);
     }
 }

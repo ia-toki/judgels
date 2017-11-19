@@ -49,11 +49,11 @@ subprojects {
     apply plugin: 'com.palantir.baseline-idea'
     apply plugin: 'org.inferred.processors'
 
-    configurations {
-        compile.resolutionStrategy {
+    configurations.each {
+        it.resolutionStrategy {
             eachDependency { details ->
                 if (details.requested.group.startsWith('com.fasterxml.jackson')) {
-                    details.useVersion $jacksonVersion
+                    force "${details.requested.group}:${details.requested.name}:$jacksonVersion"
                 }
             }
         }

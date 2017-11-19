@@ -33,8 +33,8 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public void createUser(User.Data userData) {
-        userStore.createUser(userData);
+    public User createUser(User.Data userData) {
+        return userStore.createUser(userData);
     }
 
     @Override

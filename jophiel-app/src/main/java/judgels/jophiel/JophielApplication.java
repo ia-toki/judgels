@@ -39,8 +39,9 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
 
         env.jersey().register(new IpAddressFilter());
 
-        env.jersey().register(component.versionResource());
+        env.jersey().register(component.accountResource());
         env.jersey().register(component.userResource());
+        env.jersey().register(component.versionResource());
     }
 
     // https://github.com/palantir/http-remoting/issues/427

@@ -8,22 +8,23 @@ import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import org.junit.jupiter.api.Test;
 
 class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
-    private UserService service = createService(UserService.class);
+    private UserService userService = createService(UserService.class);
 
     @Test void basic_flow() {
-        assertThatRemoteExceptionThrownBy(() -> service.getUser("userJid"))
+        assertThatRemoteExceptionThrownBy(() -> userService.getUser("userJid"))
                 .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
-        assertThatRemoteExceptionThrownBy(() -> service.getUserByUsername("username"))
+        assertThatRemoteExceptionThrownBy(() -> userService.getUserByUsername("username"))
                 .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
 
-        service.createUser(new User.Data.Builder()
+        User user = userService.createUser(new User.Data.Builder()
                 .username("username")
                 .email("email@domain.com")
                 .name("First Last")
                 .build());
 
-        User user = service.getUserByUsername("username");
+        assertThat(user).isEqualTo(userService.getUserByUsername("username"));
         assertThat(user.getUsername()).isEqualTo("username");
-        assertThat(service.getUser(user.getJid()).getUsername()).isEqualTo("username");
+
+        assertThat(userService.getUser(user.getJid())).isEqualTo(user);
     }
 }

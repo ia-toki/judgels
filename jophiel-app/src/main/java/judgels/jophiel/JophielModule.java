@@ -5,6 +5,8 @@ import dagger.Provides;
 import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Singleton;
+import judgels.jophiel.api.session.Session;
+import judgels.jophiel.session.SessionStore;
 import judgels.persistence.ActorProvider;
 import judgels.service.actor.ActorChecker;
 import judgels.service.actor.PerRequestActorProvider;
@@ -37,7 +39,8 @@ public class JophielModule {
 
     @Provides
     @Singleton
-    static ActorChecker actorChecker() {
-        return new ActorChecker($ -> Optional.of("actorJid"));
+    static ActorChecker actorChecker(SessionStore sessionStore) {
+        return new ActorChecker(authHeader ->
+                sessionStore.findSessionByToken(authHeader.getBearerToken()).map(Session::getUserJid));
     }
 }

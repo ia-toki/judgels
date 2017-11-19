@@ -28,7 +28,8 @@ public interface UserService {
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
-    void createUser(User.Data userData);
+    @Produces(APPLICATION_JSON)
+    User createUser(User.Data userData);
 
     @PUT
     @Path("/{userJid}")
