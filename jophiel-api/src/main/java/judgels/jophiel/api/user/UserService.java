@@ -34,7 +34,7 @@ public interface UserService {
     @Path("/")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    User createUser(User.Data userData);
+    User createUser(UserData userData);
 
     @PUT
     @Path("/{userJid}")
@@ -42,5 +42,5 @@ public interface UserService {
     void updateUser(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("userJid") String userJid,
-            User.Data userData);
+            UserData userData);
 }

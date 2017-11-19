@@ -29,7 +29,7 @@ public class AccountResource implements AccountService {
     @Override
     @UnitOfWork
     public Session logIn(Credentials credentials) {
-        User user = userStore.findUserByUsername(credentials.getUsername())
+        User user = userStore.findUserByUsernameAndPassword(credentials.getUsername(), credentials.getPassword())
                 .orElseThrow(() -> new ServiceException(ErrorType.PERMISSION_DENIED));
 
         return sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());

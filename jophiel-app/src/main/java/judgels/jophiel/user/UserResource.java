@@ -5,6 +5,7 @@ import com.palantir.remoting.api.errors.ServiceException;
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -40,13 +41,13 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public User createUser(User.Data userData) {
+    public User createUser(UserData userData) {
         return userStore.createUser(userData);
     }
 
     @Override
     @UnitOfWork
-    public void updateUser(AuthHeader authHeader, String userJid, User.Data userData) {
+    public void updateUser(AuthHeader authHeader, String userJid, UserData userData) {
         actorChecker.check(authHeader);
         userStore.updateUser(userJid, userData);
     }

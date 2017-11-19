@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableUser.class)
-public interface User {
-    String getJid();
+@JsonDeserialize(as = ImmutableUserData.class)
+public interface UserData {
     String getUsername();
+    String getPassword();
     String getName();
     String getEmail();
 
-    class Builder extends ImmutableUser.Builder {}
+    class Builder extends ImmutableUserData.Builder {}
 }

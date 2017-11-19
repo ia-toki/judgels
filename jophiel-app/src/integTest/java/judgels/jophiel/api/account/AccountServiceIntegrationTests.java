@@ -8,6 +8,7 @@ import com.palantir.remoting.api.errors.ErrorType;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
 import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
@@ -20,11 +21,15 @@ class AccountServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThatRemoteExceptionThrownBy(() -> accountService.logIn(Credentials.of("user", "password")))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
-        User user = userService.createUser(new User.Data.Builder()
+        User user = userService.createUser(new UserData.Builder()
                 .username("user")
+                .password("password")
                 .email("user@domain.com")
                 .name("User")
                 .build());
+
+        assertThatRemoteExceptionThrownBy(() -> accountService.logIn(Credentials.of("user", "wrong")))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
         Session session = accountService.logIn(Credentials.of("user", "password"));
         assertThat(session.getUserJid()).isEqualTo(user.getJid());

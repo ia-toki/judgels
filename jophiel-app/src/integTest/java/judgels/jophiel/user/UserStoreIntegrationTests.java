@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.hibernate.UserHibernateDao;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
@@ -25,8 +26,9 @@ class UserStoreIntegrationTests {
     @Test void can_do_basic_crud() {
         assertThat(store.findUserByUsername("username")).isEmpty();
 
-        User.Data userData = new User.Data.Builder()
+        UserData userData = new UserData.Builder()
                 .username("username")
+                .password("password")
                 .email("email@domain.com")
                 .name("First Last")
                 .build();
@@ -40,8 +42,9 @@ class UserStoreIntegrationTests {
 
         assertThat(store.findUserByJid(user.getJid())).contains(user);
 
-        userData = new User.Data.Builder()
+        userData = new UserData.Builder()
                 .username("new.username")
+                .password("new.password")
                 .email("new.email@domain.com")
                 .name("First Middle Last")
                 .build();
@@ -53,15 +56,17 @@ class UserStoreIntegrationTests {
     }
 
     @Test void username_has_unique_constraint() {
-        User.Data userData = new User.Data.Builder()
+        UserData userData = new UserData.Builder()
                 .username("username")
+                .password("password")
                 .email("email@domain.com")
                 .name("First Last")
                 .build();
         store.createUser(userData);
 
-        User.Data newUserData = new User.Data.Builder()
+        UserData newUserData = new UserData.Builder()
                 .username("username")
+                .password("password")
                 .email("new.email@domain.com")
                 .name("First Middle Last")
                 .build();
@@ -70,15 +75,17 @@ class UserStoreIntegrationTests {
     }
 
     @Test void email_has_unique_constraint() {
-        User.Data userData = new User.Data.Builder()
+        UserData userData = new UserData.Builder()
                 .username("username")
+                .password("password")
                 .email("email@domain.com")
                 .name("First Last")
                 .build();
         store.createUser(userData);
 
-        User.Data newUserData = new User.Data.Builder()
+        UserData newUserData = new UserData.Builder()
                 .username("new.username")
+                .password("new.password")
                 .email("email@domain.com")
                 .name("First Middle Last")
                 .build();
