@@ -3,9 +3,6 @@ package judgels.jophiel.hibernate;
 import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.jophiel.session.SessionDao;
 import judgels.jophiel.session.SessionModel;
 import judgels.jophiel.session.SessionModel_;
@@ -21,10 +18,6 @@ public class SessionHibernateDao extends HibernateDao<SessionModel> implements S
 
     @Override
     public Optional<SessionModel> findByToken(String token) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<SessionModel> cq = cb.createQuery(getEntityClass());
-        Root<SessionModel> root = cq.from(getEntityClass());
-        cq.where(cb.equal(root.get(SessionModel_.token), token));
-        return currentSession().createQuery(cq).uniqueResultOptional();
+        return selectByUniqueColumn(SessionModel_.token, token);
     }
 }
