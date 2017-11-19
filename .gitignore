@@ -3,6 +3,7 @@
 build/
 out/
 generated_src/
+generated_testSrc/
 
 *.iml
 *.ipr

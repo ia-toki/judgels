@@ -1,7 +1,7 @@
 sourceSets {
     integTest {
         java {
-            compileClasspath += main.output + test.output
+            compileClasspath += main.output + test.output + project.configurations.processor
             runtimeClasspath += main.output + test.output
             srcDir file('src/integTest/java')
         }
