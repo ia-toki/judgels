@@ -12,14 +12,18 @@ public class SessionStore {
         this.sessionDao = sessionDao;
     }
 
-    public Optional<Session> findSessionByToken(String token) {
-        return sessionDao.findByToken(token).map(SessionStore::fromModel);
-    }
-
     public Session createSession(String token, String userJid) {
         SessionModel model = new SessionModel();
         toModel(token, userJid, model);
         return fromModel(sessionDao.insert(model));
+    }
+
+    public Optional<Session> findSessionByToken(String token) {
+        return sessionDao.findByToken(token).map(SessionStore::fromModel);
+    }
+
+    public void deleteSessionByToken(String token) {
+        sessionDao.findByToken(token).ifPresent(sessionDao::delete);
     }
 
     private static Session fromModel(SessionModel model) {

@@ -32,6 +32,13 @@ public class UserResource implements UserService {
     }
 
     @Override
+    @UnitOfWork(readOnly = true)
+    public User getMyself(AuthHeader authHeader) {
+        String actorJid = actorChecker.check(authHeader);
+        return getUser(actorJid);
+    }
+
+    @Override
     @UnitOfWork
     public User createUser(User.Data userData) {
         return userStore.createUser(userData);

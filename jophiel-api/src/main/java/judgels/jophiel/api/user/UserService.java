@@ -25,6 +25,11 @@ public interface UserService {
     @Produces(APPLICATION_JSON)
     User getUserByUsername(@PathParam("username") String username);
 
+    @GET
+    @Path("/me")
+    @Produces(APPLICATION_JSON)
+    User getMyself(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
+
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)

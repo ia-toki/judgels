@@ -11,13 +11,17 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
+import judgels.service.actor.ActorChecker;
+import judgels.service.api.actor.AuthHeader;
 
 public class AccountResource implements AccountService {
+    private final ActorChecker actorChecker;
     private UserStore userStore;
     private SessionStore sessionStore;
 
     @Inject
-    public AccountResource(UserStore userStore, SessionStore sessionStore) {
+    public AccountResource(ActorChecker actorChecker, UserStore userStore, SessionStore sessionStore) {
+        this.actorChecker = actorChecker;
         this.userStore = userStore;
         this.sessionStore = sessionStore;
     }
@@ -29,5 +33,12 @@ public class AccountResource implements AccountService {
                 .orElseThrow(() -> new ServiceException(ErrorType.PERMISSION_DENIED));
 
         return sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
+    }
+
+    @Override
+    @UnitOfWork
+    public void logOut(AuthHeader authHeader) {
+        actorChecker.check(authHeader);
+        sessionStore.deleteSessionByToken(authHeader.getBearerToken());
     }
 }

@@ -7,6 +7,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jersey.optional.EmptyOptionalException;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -32,6 +33,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
     public void run(JophielApplicationConfiguration config, Environment env) throws Exception {
         env.jersey().register(HttpRemotingJerseyFeature.INSTANCE);
         env.jersey().register(new EmptyOptionalExceptionMapper());
+        env.jersey().register(new NotAuthorizedExceptionMapper());
 
         JophielComponent component = DaggerJophielComponent.builder()
                 .jophielHibernateModule(new JophielHibernateModule(hibernateBundle.getSessionFactory()))
@@ -50,6 +52,14 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         @Override
         public Response toResponse(EmptyOptionalException exception) {
             return Response.noContent().build();
+        }
+    }
+
+    @Provider
+    private static class NotAuthorizedExceptionMapper implements ExceptionMapper<NotAuthorizedException> {
+        @Override
+        public Response toResponse(NotAuthorizedException exception) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
 }
