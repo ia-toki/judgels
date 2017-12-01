@@ -1,4 +1,4 @@
-package judgels.jophiel.api.account;
+package judgels.jophiel.api.session;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -8,11 +8,10 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import judgels.jophiel.api.session.Session;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/account")
-public interface AccountService {
+@Path("/api/v2/session")
+public interface SessionService {
     @POST
     @Path("/login")
     @Consumes(APPLICATION_JSON)
