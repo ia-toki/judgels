@@ -62,6 +62,7 @@ dependencies {
     compile "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
+    compile "org.apache.commons:commons-email:$commonsEmailVersion"
     compile "org.iatoki.judgels:judgels-persistence-core:$judgelsPersistenceVersion"
     compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
 

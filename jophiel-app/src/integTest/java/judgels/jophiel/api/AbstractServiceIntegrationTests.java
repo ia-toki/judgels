@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import judgels.jophiel.JophielApplication;
 import judgels.jophiel.JophielApplicationConfiguration;
+import judgels.jophiel.JophielConfiguration;
 import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
@@ -39,7 +40,8 @@ public abstract class AbstractServiceIntegrationTests {
 
         JophielApplicationConfiguration config = new JophielApplicationConfiguration(
                 dbConfig,
-                WebSecurityConfiguration.DEFAULT);
+                WebSecurityConfiguration.DEFAULT,
+                JophielConfiguration.DEFAULT);
 
         support = new DropwizardTestSupport<>(JophielApplication.class, config);
         support.before();
