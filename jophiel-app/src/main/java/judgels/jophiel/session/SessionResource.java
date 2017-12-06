@@ -1,4 +1,4 @@
-package judgels.jophiel.account;
+package judgels.jophiel.session;
 
 import com.palantir.remoting.api.errors.ErrorType;
 import com.palantir.remoting.api.errors.ServiceException;
@@ -8,8 +8,6 @@ import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.session.SessionStore;
-import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
