@@ -34,7 +34,7 @@ public interface UserService {
     @Path("/")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    User createUser(UserData userData);
+    User createUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, UserData userData);
 
     @PUT
     @Path("/{userJid}")

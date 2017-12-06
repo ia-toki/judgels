@@ -41,7 +41,8 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public User createUser(UserData userData) {
+    public User createUser(AuthHeader authHeader, UserData userData) {
+        actorChecker.check(authHeader);
         return userStore.createUser(userData);
     }
 

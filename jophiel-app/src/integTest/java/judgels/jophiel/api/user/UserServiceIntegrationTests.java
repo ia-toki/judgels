@@ -16,7 +16,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThatRemoteExceptionThrownBy(() -> userService.getUserByUsername("username"))
                 .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
 
-        User user = userService.createUser(new UserData.Builder()
+        User user = userService.createUser(adminHeader, new UserData.Builder()
                 .username("username")
                 .password("password")
                 .email("email@domain.com")

@@ -39,3 +39,7 @@ logging:
 webSecurity:
   cors:
     allowedOrigins: "*"
+
+jophiel:
+  masterUsers:
+    - master

@@ -31,7 +31,7 @@ public class JophielModule {
             }
 
             @Override
-            public String getIpAddress() {
+            public Optional<String> getIpAddress() {
                 return PerRequestActorProvider.getIpAddress();
             }
         };

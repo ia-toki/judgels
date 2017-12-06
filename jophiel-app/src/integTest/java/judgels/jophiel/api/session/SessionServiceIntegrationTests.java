@@ -17,10 +17,12 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private UserService userService = createService(UserService.class);
 
     @Test void login_logout_flow() {
-        assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(Credentials.of("user", "password")))
+        Credentials userCredentials = Credentials.of("user", "password");
+
+        assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(userCredentials))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
-        User user = userService.createUser(new UserData.Builder()
+        User user = userService.createUser(adminHeader, new UserData.Builder()
                 .username("user")
                 .password("password")
                 .email("user@domain.com")
@@ -30,7 +32,7 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(Credentials.of("user", "wrong")))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
-        Session session = sessionService.logIn(Credentials.of("user", "password"));
+        Session session = sessionService.logIn(userCredentials);
         assertThat(session.getUserJid()).isEqualTo(user.getJid());
 
         String sessionToken = session.getToken();

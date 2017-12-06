@@ -20,6 +20,9 @@ import java.util.UUID;
 import judgels.jophiel.JophielApplication;
 import judgels.jophiel.JophielApplicationConfiguration;
 import judgels.jophiel.JophielConfiguration;
+import judgels.jophiel.api.session.Credentials;
+import judgels.jophiel.api.session.SessionService;
+import judgels.service.api.actor.AuthHeader;
 import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
@@ -27,6 +30,8 @@ import org.junit.jupiter.api.BeforeAll;
 
 public abstract class AbstractServiceIntegrationTests {
     private static DropwizardTestSupport<JophielApplicationConfiguration> support;
+
+    protected static AuthHeader adminHeader;
 
     @BeforeAll public static void beforeAll() {
         DataSourceFactory dbConfig = new DataSourceFactory();
@@ -38,13 +43,21 @@ public abstract class AbstractServiceIntegrationTests {
                 .put(GENERATE_STATISTICS, "false")
                 .build());
 
+        JophielConfiguration jophielConfig = new JophielConfiguration.Builder()
+                .addMasterUsers("admin")
+                .build();
+
         JophielApplicationConfiguration config = new JophielApplicationConfiguration(
                 dbConfig,
                 WebSecurityConfiguration.DEFAULT,
-                JophielConfiguration.DEFAULT);
+                jophielConfig);
 
         support = new DropwizardTestSupport<>(JophielApplication.class, config);
         support.before();
+
+        adminHeader = AuthHeader.of(createService(SessionService.class)
+                .logIn(Credentials.of("admin", "master"))
+                .getToken());
     }
 
     @AfterAll public static void afterAll() {

@@ -7,6 +7,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import judgels.jophiel.hibernate.JophielHibernateBundle;
 import judgels.jophiel.hibernate.JophielHibernateModule;
+import judgels.jophiel.user.master.MasterUsersModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 
 public class JophielApplication extends Application<JophielApplicationConfiguration> {
@@ -25,11 +26,14 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
 
     @Override
     public void run(JophielApplicationConfiguration config, Environment env) throws Exception {
-        env.jersey().register(JudgelsJerseyFeature.INSTANCE);
-
         JophielComponent component = DaggerJophielComponent.builder()
-                .jophielHibernateModule(new JophielHibernateModule(hibernateBundle.getSessionFactory()))
+                .jophielHibernateModule(new JophielHibernateModule(hibernateBundle))
+                .masterUsersModule(new MasterUsersModule(config.getJophielConfig().getMasterUsers()))
                 .build();
+
+        component.masterUsersCreator().create();
+
+        env.jersey().register(JudgelsJerseyFeature.INSTANCE);
 
         env.jersey().register(component.accountResource());
         env.jersey().register(component.userResource());
