@@ -22,6 +22,7 @@ import judgels.jophiel.JophielApplicationConfiguration;
 import judgels.jophiel.JophielConfiguration;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
+import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.service.api.actor.AuthHeader;
 import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
@@ -45,6 +46,14 @@ public abstract class AbstractServiceIntegrationTests {
 
         JophielConfiguration jophielConfig = new JophielConfiguration.Builder()
                 .addMasterUsers("admin")
+                .mailerConfig(new MailerConfiguration.Builder()
+                        .host("localhost")
+                        .port(2500)
+                        .useSsl(false)
+                        .username("wiser")
+                        .password("wiser")
+                        .sender("noreply@wiser.com")
+                        .build())
                 .build();
 
         JophielApplicationConfiguration config = new JophielApplicationConfiguration(

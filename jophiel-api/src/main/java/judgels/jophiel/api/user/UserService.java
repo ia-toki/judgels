@@ -36,6 +36,16 @@ public interface UserService {
     @Produces(APPLICATION_JSON)
     User createUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, UserData userData);
 
+    @POST
+    @Path("/register")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    User registerUser(UserData userData);
+
+    @POST
+    @Path("/verifyEmail/{emailCode}")
+    void verifyUserEmail(@PathParam("emailCode") String emailCode);
+
     @PUT
     @Path("/{userJid}")
     @Consumes(APPLICATION_JSON)

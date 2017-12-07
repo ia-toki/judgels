@@ -43,3 +43,10 @@ webSecurity:
 jophiel:
   masterUsers:
     - master
+  mailer:
+    host: xxx
+    port: 25
+    useSsl: false
+    username: xxx
+    password: xxx
+    sender: noreply@jophiel.judgels

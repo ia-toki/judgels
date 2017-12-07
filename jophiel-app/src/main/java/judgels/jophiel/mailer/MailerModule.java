@@ -2,19 +2,20 @@ package judgels.jophiel.mailer;
 
 import dagger.Module;
 import dagger.Provides;
+import java.util.Optional;
 import javax.inject.Singleton;
 
 @Module
 public class MailerModule {
-    private MailerConfiguration config;
+    private Optional<MailerConfiguration> config;
 
-    public MailerModule(MailerConfiguration config) {
+    public MailerModule(Optional<MailerConfiguration> config) {
         this.config = config;
     }
 
     @Provides
     @Singleton
-    public Mailer mailer() {
-        return new Mailer(config);
+    public Optional<Mailer> mailer() {
+        return config.map(Mailer::new);
     }
 }

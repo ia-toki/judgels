@@ -8,6 +8,7 @@ import java.time.Clock;
 import javax.inject.Singleton;
 import judgels.jophiel.session.SessionDao;
 import judgels.jophiel.user.UserDao;
+import judgels.jophiel.user.email.UserVerificationEmailDao;
 import judgels.persistence.ActorProvider;
 import org.hibernate.SessionFactory;
 
@@ -43,5 +44,11 @@ public class JophielHibernateModule {
     @Singleton
     UserDao userDao(Clock clock, ActorProvider actorProvider) {
         return new UserHibernateDao(sessionFactory, clock, actorProvider);
+    }
+
+    @Provides
+    @Singleton
+    UserVerificationEmailDao userRegistrationEmailDao(Clock clock, ActorProvider actorProvider) {
+        return new UserVerificationEmailHibernateDao(sessionFactory, clock, actorProvider);
     }
 }

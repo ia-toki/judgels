@@ -12,4 +12,6 @@ public interface MailerConfiguration {
     String getUsername();
     String getPassword();
     String getSender();
+
+    class Builder extends ImmutableMailerConfiguration.Builder {}
 }

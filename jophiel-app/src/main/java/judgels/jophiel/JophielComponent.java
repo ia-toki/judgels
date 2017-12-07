@@ -6,6 +6,7 @@ import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.session.SessionResource;
 import judgels.jophiel.user.UserResource;
+import judgels.jophiel.user.email.UserMailerModule;
 import judgels.jophiel.user.master.MasterUsersCreator;
 import judgels.jophiel.user.master.MasterUsersModule;
 
@@ -13,7 +14,8 @@ import judgels.jophiel.user.master.MasterUsersModule;
         JophielModule.class,
         JophielHibernateModule.class,
         MailerModule.class,
-        MasterUsersModule.class})
+        MasterUsersModule.class,
+        UserMailerModule.class})
 @Singleton
 public interface JophielComponent {
     MasterUsersCreator masterUsersCreator();
