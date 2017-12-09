@@ -3,10 +3,10 @@ package judgels.jophiel.user.email;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.mailer.Mailer;
 
-public class UserVerificationEmailMailer {
+public class UserRegistrationEmailMailer {
     private final Mailer mailer;
 
-    public UserVerificationEmailMailer(Mailer mailer) {
+    public UserRegistrationEmailMailer(Mailer mailer) {
         this.mailer = mailer;
     }
 

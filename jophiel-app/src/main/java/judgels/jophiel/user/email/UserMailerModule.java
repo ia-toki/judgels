@@ -12,7 +12,7 @@ public class UserMailerModule {
 
     @Provides
     @Singleton
-    static Optional<UserVerificationEmailMailer> userVerificationEmailMailer(Optional<Mailer> mailer) {
-        return mailer.map(UserVerificationEmailMailer::new);
+    static Optional<UserRegistrationEmailMailer> userVerificationEmailMailer(Optional<Mailer> mailer) {
+        return mailer.map(UserRegistrationEmailMailer::new);
     }
 }

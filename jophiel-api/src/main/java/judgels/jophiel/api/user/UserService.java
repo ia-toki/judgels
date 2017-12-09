@@ -43,8 +43,8 @@ public interface UserService {
     User registerUser(UserData userData);
 
     @POST
-    @Path("/verifyEmail/{emailCode}")
-    void verifyUserEmail(@PathParam("emailCode") String emailCode);
+    @Path("/activate/{emailCode}")
+    void activateUser(@PathParam("emailCode") String emailCode);
 
     @PUT
     @Path("/{userJid}")

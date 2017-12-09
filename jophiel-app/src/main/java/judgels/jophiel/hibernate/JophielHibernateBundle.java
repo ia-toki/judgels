@@ -5,14 +5,14 @@ import io.dropwizard.hibernate.HibernateBundle;
 import judgels.jophiel.JophielApplicationConfiguration;
 import judgels.jophiel.session.SessionModel;
 import judgels.jophiel.user.UserModel;
-import judgels.jophiel.user.email.UserVerificationEmailModel;
+import judgels.jophiel.user.email.UserRegistrationEmailModel;
 
 public class JophielHibernateBundle extends HibernateBundle<JophielApplicationConfiguration> {
     public JophielHibernateBundle() {
         super(
                 SessionModel.class,
                 UserModel.class,
-                UserVerificationEmailModel.class);
+                UserRegistrationEmailModel.class);
     }
 
     @Override

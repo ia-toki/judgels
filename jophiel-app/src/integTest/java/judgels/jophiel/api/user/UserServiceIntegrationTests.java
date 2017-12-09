@@ -60,7 +60,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         String[] lines = new String(wiser.getMessages().get(0).getData()).split("\n");
         String emailCode = lines[lines.length - 1];
 
-        userService.verifyUserEmail(emailCode);
+        userService.activateUser(emailCode);
         assertThatCode(() -> sessionService.logIn(credentials))
                 .doesNotThrowAnyException();
 

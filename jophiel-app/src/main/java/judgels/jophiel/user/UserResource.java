@@ -8,27 +8,27 @@ import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
-import judgels.jophiel.user.email.UserVerificationEmailMailer;
-import judgels.jophiel.user.email.UserVerificationEmailStore;
+import judgels.jophiel.user.email.UserRegistrationEmailMailer;
+import judgels.jophiel.user.email.UserRegistrationEmailStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class UserResource implements UserService {
     private final ActorChecker actorChecker;
     private final UserStore userStore;
-    private final UserVerificationEmailStore userVerificationEmailStore;
-    private final Optional<UserVerificationEmailMailer> userVerificationEmailMailer;
+    private final UserRegistrationEmailStore userRegistrationEmailStore;
+    private final Optional<UserRegistrationEmailMailer> userVerificationEmailMailer;
 
     @Inject
     public UserResource(
             ActorChecker actorChecker,
             UserStore userStore,
-            UserVerificationEmailStore userVerificationEmailStore,
-            Optional<UserVerificationEmailMailer> userVerificationEmailMailer) {
+            UserRegistrationEmailStore userRegistrationEmailStore,
+            Optional<UserRegistrationEmailMailer> userVerificationEmailMailer) {
 
         this.actorChecker = actorChecker;
         this.userStore = userStore;
-        this.userVerificationEmailStore = userVerificationEmailStore;
+        this.userRegistrationEmailStore = userRegistrationEmailStore;
         this.userVerificationEmailMailer = userVerificationEmailMailer;
     }
 
@@ -63,7 +63,7 @@ public class UserResource implements UserService {
     public User registerUser(UserData userData) {
         User user = userStore.createUser(userData);
         userVerificationEmailMailer.ifPresent(mailer -> {
-            String emailCode = userVerificationEmailStore.generateEmailCode(user.getJid());
+            String emailCode = userRegistrationEmailStore.generateEmailCode(user.getJid());
             mailer.sendVerificationEmail(user, emailCode);
         });
         return user;
@@ -71,8 +71,8 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public void verifyUserEmail(String emailCode) {
-        if (!userVerificationEmailStore.verifyEmailCode(emailCode)) {
+    public void activateUser(String emailCode) {
+        if (!userRegistrationEmailStore.verifyEmailCode(emailCode)) {
             throw new ServiceException(ErrorType.NOT_FOUND);
         }
     }
