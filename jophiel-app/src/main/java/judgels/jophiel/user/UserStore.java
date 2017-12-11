@@ -35,6 +35,10 @@ public class UserStore {
                 .map(UserStore::fromModel);
     }
 
+    public Optional<User> findUserByEmail(String email) {
+        return userDao.selectByEmail(email).map(UserStore::fromModel);
+    }
+
     public Optional<User> updateUser(String userJid, UserData userData) {
         return userDao.selectByJid(userJid).map(model -> {
             toModel(userData, model);

@@ -20,18 +20,18 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     @Test void basic_flow() {
         assertThatRemoteExceptionThrownBy(() -> userService.getUser("userJid"))
                 .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
-        assertThatRemoteExceptionThrownBy(() -> userService.getUserByUsername("username"))
+        assertThatRemoteExceptionThrownBy(() -> userService.getUserByUsername("alpha"))
                 .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
 
         User user = userService.createUser(adminHeader, new UserData.Builder()
-                .username("username")
-                .password("password")
+                .username("alpha")
+                .password("pass")
                 .email("email@domain.com")
                 .name("First Last")
                 .build());
 
-        assertThat(user).isEqualTo(userService.getUserByUsername("username"));
-        assertThat(user.getUsername()).isEqualTo("username");
+        assertThat(user).isEqualTo(userService.getUserByUsername("alpha"));
+        assertThat(user.getUsername()).isEqualTo("alpha");
 
         assertThat(userService.getUser(user.getJid())).isEqualTo(user);
     }
@@ -41,13 +41,16 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         wiser.setPort(2500);
         wiser.start();
 
+        assertThat(userService.usernameExists("beta")).isFalse();
+        assertThat(userService.emailExists("beta@domain.com")).isFalse();
+
         userService.registerUser(new UserData.Builder()
-                .username("useruser")
-                .password("password")
-                .email("user@domain.com")
-                .name("User User")
+                .username("beta")
+                .password("pass")
+                .email("beta@domain.com")
+                .name("First Last")
                 .build());
-        Credentials credentials = Credentials.of("useruser", "password");
+        Credentials credentials = Credentials.of("beta", "pass");
 
         await()
                 .atMost(30, TimeUnit.SECONDS)
@@ -63,6 +66,9 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         userService.activateUser(emailCode);
         assertThatCode(() -> sessionService.logIn(credentials))
                 .doesNotThrowAnyException();
+
+        assertThat(userService.usernameExists("beta")).isTrue();
+        assertThat(userService.emailExists("beta@domain.com")).isTrue();
 
         wiser.stop();
     }

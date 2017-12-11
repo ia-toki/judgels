@@ -20,4 +20,9 @@ public class UserHibernateDao extends JudgelsHibernateDao<UserModel> implements 
     public Optional<UserModel> selectByUsername(String username) {
         return selectByUniqueColumn(UserModel_.username, username);
     }
+
+    @Override
+    public Optional<UserModel> selectByEmail(String email) {
+        return selectByUniqueColumn(UserModel_.email, email);
+    }
 }

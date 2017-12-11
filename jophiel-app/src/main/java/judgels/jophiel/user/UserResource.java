@@ -46,6 +46,18 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork(readOnly = true)
+    public boolean usernameExists(String username) {
+        return userStore.findUserByUsername(username).isPresent();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public boolean emailExists(String email) {
+        return userStore.findUserByEmail(email).isPresent();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
     public User getMyself(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
         return getUser(actorJid);

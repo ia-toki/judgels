@@ -26,6 +26,16 @@ public interface UserService {
     User getUserByUsername(@PathParam("username") String username);
 
     @GET
+    @Path("/username/{username}/exists")
+    @Produces(APPLICATION_JSON)
+    boolean usernameExists(@PathParam("username") String username);
+
+    @GET
+    @Path("/email/{email}/exists")
+    @Produces(APPLICATION_JSON)
+    boolean emailExists(@PathParam("email") String email);
+
+    @GET
     @Path("/me")
     @Produces(APPLICATION_JSON)
     User getMyself(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
