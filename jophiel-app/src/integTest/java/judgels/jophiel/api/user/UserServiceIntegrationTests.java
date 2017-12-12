@@ -27,7 +27,6 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .username("alpha")
                 .password("pass")
                 .email("email@domain.com")
-                .name("First Last")
                 .build());
 
         assertThat(user).isEqualTo(userService.getUserByUsername("alpha"));
@@ -48,7 +47,6 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .username("beta")
                 .password("pass")
                 .email("beta@domain.com")
-                .name("First Last")
                 .build());
         Credentials credentials = Credentials.of("beta", "pass");
 

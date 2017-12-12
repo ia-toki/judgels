@@ -8,7 +8,6 @@ import org.immutables.value.Value;
 public interface UserData {
     String getUsername();
     String getPassword();
-    String getName();
     String getEmail();
 
     class Builder extends ImmutableUserData.Builder {}
