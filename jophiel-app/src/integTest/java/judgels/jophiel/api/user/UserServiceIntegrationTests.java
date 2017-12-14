@@ -34,6 +34,19 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(user.getUsername()).isEqualTo("alpha");
 
         assertThat(userService.getUser(user.getJid())).isEqualTo(user);
+
+        UserInfo userInfo = new UserInfo.Builder()
+                .gender("MALE")
+                .streetAddress("address")
+                .postalCode("code")
+                .institution("university")
+                .city("town")
+                .provinceOrState("province")
+                .country("nation")
+                .shirtSize("L")
+                .build();
+        userService.updateUserInfo(adminHeader, user.getJid(), userInfo);
+        assertThat(userService.getUserInfo(adminHeader, user.getJid())).isEqualTo(userInfo);
     }
 
     @Test void register_flow() {

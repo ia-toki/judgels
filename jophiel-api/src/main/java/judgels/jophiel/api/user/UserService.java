@@ -63,4 +63,17 @@ public interface UserService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("userJid") String userJid,
             UserData userData);
+
+    @GET
+    @Path("/{userJid}/info")
+    @Produces(APPLICATION_JSON)
+    UserInfo getUserInfo(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
+
+    @PUT
+    @Path("/{userJid}/info")
+    @Consumes(APPLICATION_JSON)
+    void updateUserInfo(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("userJid") String userJid,
+            UserInfo userInfo);
 }

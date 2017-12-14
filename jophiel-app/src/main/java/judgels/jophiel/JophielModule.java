@@ -1,7 +1,9 @@
 package judgels.jophiel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
+import io.dropwizard.jackson.Jackson;
 import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Singleton;
@@ -14,6 +16,12 @@ import judgels.service.actor.PerRequestActorProvider;
 @Module
 public class JophielModule {
     private JophielModule() {}
+
+    @Provides
+    @Singleton
+    static ObjectMapper objectMapper() {
+        return Jackson.newObjectMapper();
+    }
 
     @Provides
     @Singleton
