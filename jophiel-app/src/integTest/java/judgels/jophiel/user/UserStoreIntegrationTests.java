@@ -30,6 +30,7 @@ class UserStoreIntegrationTests {
                 .username("username")
                 .password("password")
                 .email("email@domain.com")
+                .name("First Last")
                 .build();
         store.createUser(userData);
 
@@ -37,6 +38,7 @@ class UserStoreIntegrationTests {
         assertThat(user.getJid()).isNotEmpty();
         assertThat(user.getUsername()).isEqualTo("username");
         assertThat(user.getEmail()).isEqualTo("email@domain.com");
+        assertThat(user.getName()).isEqualTo("First Last");
 
         assertThat(store.findUserByJid(user.getJid())).contains(user);
 
@@ -44,11 +46,13 @@ class UserStoreIntegrationTests {
                 .username("new.username")
                 .password("new.password")
                 .email("new.email@domain.com")
+                .name("First Middle Last")
                 .build();
 
         user = store.updateUser(user.getJid(), userData).get();
         assertThat(user.getUsername()).isEqualTo("new.username");
         assertThat(user.getEmail()).isEqualTo("new.email@domain.com");
+        assertThat(user.getName()).isEqualTo("First Middle Last");
     }
 
     @Test void username_has_unique_constraint() {
@@ -56,6 +60,7 @@ class UserStoreIntegrationTests {
                 .username("username")
                 .password("password")
                 .email("email@domain.com")
+                .name("First Last")
                 .build();
         store.createUser(userData);
 
@@ -63,6 +68,7 @@ class UserStoreIntegrationTests {
                 .username("username")
                 .password("password")
                 .email("new.email@domain.com")
+                .name("First Middle Last")
                 .build();
         assertThatExceptionOfType(ConstraintViolationException.class)
                 .isThrownBy(() -> store.createUser(newUserData));
@@ -73,6 +79,7 @@ class UserStoreIntegrationTests {
                 .username("username")
                 .password("password")
                 .email("email@domain.com")
+                .name("First Last")
                 .build();
         store.createUser(userData);
 
@@ -80,6 +87,7 @@ class UserStoreIntegrationTests {
                 .username("new.username")
                 .password("new.password")
                 .email("email@domain.com")
+                .name("First Middle Last")
                 .build();
         assertThatExceptionOfType(ConstraintViolationException.class)
                 .isThrownBy(() -> store.createUser(newUserData));

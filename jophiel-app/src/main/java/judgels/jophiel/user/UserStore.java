@@ -50,6 +50,7 @@ public class UserStore {
         return new User.Builder()
                 .jid(model.jid)
                 .username(model.username)
+                .name(model.name)
                 .email(model.email)
                 .build();
     }
@@ -57,6 +58,7 @@ public class UserStore {
     private static void toModel(UserData data, UserModel model) {
         model.username = data.getUsername();
         model.password = hashPassword(data.getPassword());
+        model.name = data.getName();
         model.email = data.getEmail();
     }
 

@@ -42,11 +42,13 @@ class MasterUsersCreatorTests {
                 .username(USER1)
                 .password(DEFAULT_PASSWORD)
                 .email("user1@jophiel.judgels")
+                .name(USER1)
                 .build());
         verify(userStore).createUser(new UserData.Builder()
                 .username(USER3)
                 .password(DEFAULT_PASSWORD)
                 .email("user3@jophiel.judgels")
+                .name(USER3)
                 .build());
 
         verify(userStore, times(2)).createUser(any());

@@ -17,4 +17,7 @@ public class UserModel extends JudgelsModel {
 
     @Column(nullable = false)
     public String password;
+
+    @Column(nullable = false)
+    public String name;
 }

@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 public interface User {
     String getJid();
     String getUsername();
+    String getName();
     String getEmail();
 
     class Builder extends ImmutableUser.Builder {}

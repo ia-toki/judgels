@@ -30,6 +30,7 @@ public class MasterUsersCreator {
                 userStore.createUser(new UserData.Builder()
                         .username(username)
                         .password(DEFAULT_PASSWORD)
+                        .name(username)
                         .email(username + "@jophiel.judgels")
                         .build());
                 LOGGER.info("Created master user {}.", username);
