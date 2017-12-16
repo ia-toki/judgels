@@ -26,7 +26,6 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .username("user")
                 .password("password")
                 .email("user@domain.com")
-                .name("User")
                 .build());
 
         assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(Credentials.of("user", "wrong")))
