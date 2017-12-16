@@ -50,7 +50,7 @@ public interface UserService {
     @Path("/register")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    User registerUser(UserData userData);
+    User registerUser(UserRegistrationData userRegistrationData);
 
     @POST
     @Path("/activate/{emailCode}")

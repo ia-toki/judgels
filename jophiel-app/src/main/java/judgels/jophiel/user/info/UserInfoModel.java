@@ -10,6 +10,8 @@ public class UserInfoModel extends Model {
     @Column(unique = true, nullable = false)
     public String userJid;
 
+    public String name;
+
     public String gender;
 
     @Column(columnDefinition = "TEXT")

@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserInfo;
+import judgels.jophiel.api.user.UserRegistrationData;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.user.email.UserRegistrationEmailMailer;
 import judgels.jophiel.user.email.UserRegistrationEmailStore;
@@ -77,8 +78,19 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public User registerUser(UserData userData) {
+    public User registerUser(UserRegistrationData userRegistrationData) {
+        UserData userData = new UserData.Builder()
+                .username(userRegistrationData.getUsername())
+                .password(userRegistrationData.getPassword())
+                .email(userRegistrationData.getEmail())
+                .build();
         User user = userStore.createUser(userData);
+
+        UserInfo userInfo = new UserInfo.Builder()
+                .name(userRegistrationData.getName())
+                .build();
+        userInfoStore.upsertUserInfo(user.getJid(), userInfo);
+
         userVerificationEmailMailer.ifPresent(mailer -> {
             String emailCode = userRegistrationEmailStore.generateEmailCode(user.getJid());
             mailer.sendVerificationEmail(user, emailCode);

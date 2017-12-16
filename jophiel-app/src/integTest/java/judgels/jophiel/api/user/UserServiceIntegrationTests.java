@@ -35,6 +35,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(userService.getUser(user.getJid())).isEqualTo(user);
 
         UserInfo userInfo = new UserInfo.Builder()
+                .name("Alpha")
                 .gender("MALE")
                 .streetAddress("address")
                 .postalCode("code")
@@ -56,8 +57,9 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(userService.usernameExists("beta")).isFalse();
         assertThat(userService.emailExists("beta@domain.com")).isFalse();
 
-        userService.registerUser(new UserData.Builder()
+        userService.registerUser(new UserRegistrationData.Builder()
                 .username("beta")
+                .name("Beta")
                 .password("pass")
                 .email("beta@domain.com")
                 .build());
@@ -80,6 +82,10 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         assertThat(userService.usernameExists("beta")).isTrue();
         assertThat(userService.emailExists("beta@domain.com")).isTrue();
+
+        User user = userService.getUserByUsername("beta");
+        UserInfo userInfo = userService.getUserInfo(adminHeader, user.getJid());
+        assertThat(userInfo.getName()).contains("Beta");
 
         wiser.stop();
     }

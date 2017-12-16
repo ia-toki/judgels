@@ -33,6 +33,7 @@ public class UserInfoStore {
 
     private static void toModel(String userJid, UserInfo info, UserInfoModel model) {
         model.userJid = userJid;
+        model.name = info.getName().orElse(null);
         model.gender = info.getGender().orElse(null);
         model.streetAddress = info.getStreetAddress().orElse(null);
         model.postalCode = info.getPostalCode().orElse(null);
@@ -45,6 +46,7 @@ public class UserInfoStore {
 
     private static UserInfo fromModel(UserInfoModel model) {
         return new UserInfo.Builder()
+                .name(Optional.ofNullable(model.name))
                 .gender(Optional.ofNullable(model.gender))
                 .streetAddress(Optional.ofNullable(model.streetAddress))
                 .postalCode(Optional.ofNullable(model.postalCode))

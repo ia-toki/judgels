@@ -27,6 +27,7 @@ class UserInfoStoreIntegrationTests {
                 .isEqualTo(new UserInfo.Builder().build());
 
         UserInfo userInfo = new UserInfo.Builder()
+                .name("First Last")
                 .gender("MALE")
                 .streetAddress("address")
                 .postalCode("code")
