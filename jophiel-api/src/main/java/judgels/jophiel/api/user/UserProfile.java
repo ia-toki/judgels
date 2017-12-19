@@ -6,18 +6,20 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableUserInfo.class)
+@JsonDeserialize(as = ImmutableUserProfile.class)
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
-public interface UserInfo {
+public interface UserProfile {
     Optional<String> getName();
     Optional<String> getGender();
-    Optional<String> getStreetAddress();
-    Optional<String> getPostalCode();
+    Optional<String> getNationality();
+    Optional<String> getHomeAddress();
+
     Optional<String> getInstitution();
     Optional<String> getCity();
     Optional<String> getProvinceOrState();
     Optional<String> getCountry();
+
     Optional<String> getShirtSize();
 
-    class Builder extends ImmutableUserInfo.Builder {}
+    class Builder extends ImmutableUserProfile.Builder {}
 }

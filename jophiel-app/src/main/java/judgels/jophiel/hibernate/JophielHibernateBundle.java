@@ -6,14 +6,14 @@ import judgels.jophiel.JophielApplicationConfiguration;
 import judgels.jophiel.session.SessionModel;
 import judgels.jophiel.user.UserModel;
 import judgels.jophiel.user.email.UserRegistrationEmailModel;
-import judgels.jophiel.user.info.UserInfoModel;
+import judgels.jophiel.user.profile.UserProfileModel;
 
 public class JophielHibernateBundle extends HibernateBundle<JophielApplicationConfiguration> {
     public JophielHibernateBundle() {
         super(
                 SessionModel.class,
                 UserModel.class,
-                UserInfoModel.class,
+                UserProfileModel.class,
                 UserRegistrationEmailModel.class);
     }
 

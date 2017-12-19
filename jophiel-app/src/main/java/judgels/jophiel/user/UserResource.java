@@ -7,19 +7,19 @@ import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
-import judgels.jophiel.api.user.UserInfo;
+import judgels.jophiel.api.user.UserProfile;
 import judgels.jophiel.api.user.UserRegistrationData;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.user.email.UserRegistrationEmailMailer;
 import judgels.jophiel.user.email.UserRegistrationEmailStore;
-import judgels.jophiel.user.info.UserInfoStore;
+import judgels.jophiel.user.profile.UserProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class UserResource implements UserService {
     private final ActorChecker actorChecker;
     private final UserStore userStore;
-    private final UserInfoStore userInfoStore;
+    private final UserProfileStore userProfileStore;
     private final UserRegistrationEmailStore userRegistrationEmailStore;
     private final Optional<UserRegistrationEmailMailer> userVerificationEmailMailer;
 
@@ -27,13 +27,13 @@ public class UserResource implements UserService {
     public UserResource(
             ActorChecker actorChecker,
             UserStore userStore,
-            UserInfoStore userInfoStore,
+            UserProfileStore userProfileStore,
             UserRegistrationEmailStore userRegistrationEmailStore,
             Optional<UserRegistrationEmailMailer> userVerificationEmailMailer) {
 
         this.actorChecker = actorChecker;
         this.userStore = userStore;
-        this.userInfoStore = userInfoStore;
+        this.userProfileStore = userProfileStore;
         this.userRegistrationEmailStore = userRegistrationEmailStore;
         this.userVerificationEmailMailer = userVerificationEmailMailer;
     }
@@ -86,10 +86,10 @@ public class UserResource implements UserService {
                 .build();
         User user = userStore.createUser(userData);
 
-        UserInfo userInfo = new UserInfo.Builder()
+        UserProfile userProfile = new UserProfile.Builder()
                 .name(userRegistrationData.getName())
                 .build();
-        userInfoStore.upsertUserInfo(user.getJid(), userInfo);
+        userProfileStore.upsertUserProfile(user.getJid(), userProfile);
 
         userVerificationEmailMailer.ifPresent(mailer -> {
             String emailCode = userRegistrationEmailStore.generateEmailCode(user.getJid());
@@ -115,18 +115,18 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public UserInfo getUserInfo(AuthHeader authHeader, String userJid) {
+    public UserProfile getUserProfile(AuthHeader authHeader, String userJid) {
         actorChecker.check(authHeader);
-        return userInfoStore.getUserInfo(userJid);
+        return userProfileStore.getUserProfile(userJid);
     }
 
     @Override
     @UnitOfWork
-    public void updateUserInfo(AuthHeader authHeader, String userJid, UserInfo userInfo) {
+    public void updateUserProfile(AuthHeader authHeader, String userJid, UserProfile userProfile) {
         actorChecker.check(authHeader);
         if (!userStore.findUserByJid(userJid).isPresent()) {
             throw new ServiceException(ErrorType.NOT_FOUND);
         }
-        userInfoStore.upsertUserInfo(userJid, userInfo);
+        userProfileStore.upsertUserProfile(userJid, userProfile);
     }
 }

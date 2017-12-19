@@ -65,15 +65,15 @@ public interface UserService {
             UserData userData);
 
     @GET
-    @Path("/{userJid}/info")
+    @Path("/{userJid}/profile")
     @Produces(APPLICATION_JSON)
-    UserInfo getUserInfo(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
+    UserProfile getUserProfile(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
 
     @PUT
-    @Path("/{userJid}/info")
+    @Path("/{userJid}/profile")
     @Consumes(APPLICATION_JSON)
-    void updateUserInfo(
+    void updateUserProfile(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("userJid") String userJid,
-            UserInfo userInfo);
+            UserProfile userProfile);
 }

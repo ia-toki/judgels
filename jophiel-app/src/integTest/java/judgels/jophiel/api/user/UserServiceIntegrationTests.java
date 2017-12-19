@@ -34,19 +34,19 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         assertThat(userService.getUser(user.getJid())).isEqualTo(user);
 
-        UserInfo userInfo = new UserInfo.Builder()
+        UserProfile userProfile = new UserProfile.Builder()
                 .name("Alpha")
                 .gender("MALE")
-                .streetAddress("address")
-                .postalCode("code")
+                .nationality("id")
+                .homeAddress("address")
                 .institution("university")
-                .city("town")
-                .provinceOrState("province")
                 .country("nation")
+                .provinceOrState("province")
+                .city("town")
                 .shirtSize("L")
                 .build();
-        userService.updateUserInfo(adminHeader, user.getJid(), userInfo);
-        assertThat(userService.getUserInfo(adminHeader, user.getJid())).isEqualTo(userInfo);
+        userService.updateUserProfile(adminHeader, user.getJid(), userProfile);
+        assertThat(userService.getUserProfile(adminHeader, user.getJid())).isEqualTo(userProfile);
     }
 
     @Test void register_flow() {
@@ -84,8 +84,8 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(userService.emailExists("beta@domain.com")).isTrue();
 
         User user = userService.getUserByUsername("beta");
-        UserInfo userInfo = userService.getUserInfo(adminHeader, user.getJid());
-        assertThat(userInfo.getName()).contains("Beta");
+        UserProfile userProfile = userService.getUserProfile(adminHeader, user.getJid());
+        assertThat(userProfile.getName()).contains("Beta");
 
         wiser.stop();
     }
