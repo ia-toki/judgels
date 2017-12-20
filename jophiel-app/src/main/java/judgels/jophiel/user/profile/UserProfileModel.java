@@ -19,6 +19,8 @@ public class UserProfileModel extends Model {
     @Column(columnDefinition = "TEXT")
     public String homeAddress;
 
+    public String shirtSize;
+
     @Column(columnDefinition = "TEXT")
     public String institution;
 
@@ -27,6 +29,4 @@ public class UserProfileModel extends Model {
     public String provinceOrState;
 
     public String city;
-
-    public String shirtSize;
 }

@@ -39,11 +39,11 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .gender("MALE")
                 .nationality("id")
                 .homeAddress("address")
+                .shirtSize("L")
                 .institution("university")
                 .country("nation")
                 .provinceOrState("province")
                 .city("town")
-                .shirtSize("L")
                 .build();
         userService.updateUserProfile(adminHeader, user.getJid(), userProfile);
         assertThat(userService.getUserProfile(adminHeader, user.getJid())).isEqualTo(userProfile);

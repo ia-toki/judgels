@@ -31,11 +31,11 @@ class UserProfileStoreIntegrationTests {
                 .gender("MALE")
                 .nationality("id")
                 .homeAddress("address")
+                .shirtSize("L")
                 .institution("university")
                 .country("nation")
                 .provinceOrState("province")
                 .city("town")
-                .shirtSize("L")
                 .build();
         store.upsertUserProfile(USER_JID, userProfile);
         assertThat(store.getUserProfile(USER_JID)).isEqualTo(userProfile);

@@ -13,13 +13,12 @@ public interface UserProfile {
     Optional<String> getGender();
     Optional<String> getNationality();
     Optional<String> getHomeAddress();
+    Optional<String> getShirtSize();
 
     Optional<String> getInstitution();
     Optional<String> getCity();
     Optional<String> getProvinceOrState();
     Optional<String> getCountry();
-
-    Optional<String> getShirtSize();
 
     class Builder extends ImmutableUserProfile.Builder {}
 }
