@@ -46,6 +46,12 @@ public class UserStore {
         });
     }
 
+    public boolean validateUserPassword(String userJid, String password) {
+        return userDao.selectByJid(userJid)
+                .flatMap(model -> validatePassword(password, model.password) ? Optional.of(true) : Optional.empty())
+                .isPresent();
+    }
+
     private static User fromModel(UserModel model) {
         return new User.Builder()
                 .jid(model.jid)

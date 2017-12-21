@@ -41,6 +41,11 @@ public interface UserService {
     User getMyself(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
 
     @POST
+    @Path("/me/password")
+    @Consumes(APPLICATION_JSON)
+    void updateMyPassword(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, PasswordUpdateData passwordUpdateData);
+
+    @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)

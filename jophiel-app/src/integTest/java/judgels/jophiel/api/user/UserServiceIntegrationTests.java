@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
+import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
 
@@ -88,5 +89,33 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(userProfile.getName()).contains("Beta");
 
         wiser.stop();
+    }
+
+    @Test void update_password_flow() {
+        userService.createUser(adminHeader, new UserData.Builder()
+                .username("charlie")
+                .password("pass")
+                .email("charlie@domain.com")
+                .build());
+        AuthHeader authHeader = AuthHeader.of(sessionService.logIn(Credentials.of("charlie", "pass")).getToken());
+
+        PasswordUpdateData wrongData = PasswordUpdateData.of("wrongPass", "newPass");
+        assertThatRemoteExceptionThrownBy(() -> userService.updateMyPassword(authHeader, wrongData))
+                .isGeneratedFromErrorType(ErrorType.INVALID_ARGUMENT);
+
+        assertThatCode(() -> sessionService.logIn(Credentials.of("charlie", "pass")))
+                .doesNotThrowAnyException();
+
+        assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(Credentials.of("charlie", "newPass")))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+
+        PasswordUpdateData correctData = PasswordUpdateData.of("pass", "newPass");
+        userService.updateMyPassword(authHeader, correctData);
+
+        assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(Credentials.of("charlie", "pass")))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+
+        assertThatCode(() -> sessionService.logIn(Credentials.of("charlie", "newPass")))
+                .doesNotThrowAnyException();
     }
 }

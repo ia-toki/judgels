@@ -5,6 +5,7 @@ import com.palantir.remoting.api.errors.ServiceException;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.jophiel.api.user.PasswordUpdateData;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserProfile;
@@ -67,6 +68,22 @@ public class UserResource implements UserService {
     public User getMyself(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
         return getUser(actorJid);
+    }
+
+    @Override
+    @UnitOfWork
+    public void updateMyPassword(AuthHeader authHeader, PasswordUpdateData passwordUpdateData) {
+        String actorJid = actorChecker.check(authHeader);
+        if (!userStore.validateUserPassword(actorJid, passwordUpdateData.getOldPassword())) {
+            throw new ServiceException(ErrorType.INVALID_ARGUMENT);
+        }
+
+        User user = getUser(actorJid);
+        userStore.updateUser(actorJid, new UserData.Builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .password(passwordUpdateData.getNewPassword())
+                .build());
     }
 
     @Override
