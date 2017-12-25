@@ -1,4 +1,4 @@
-package judgels.jophiel.user.email;
+package judgels.jophiel.user.registration;
 
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.mailer.Mailer;
@@ -10,7 +10,7 @@ public class UserRegistrationEmailMailer {
         this.mailer = mailer;
     }
 
-    public void sendVerificationEmail(User user, String emailCode) {
+    public void sendActivationEmail(User user, String emailCode) {
         mailer.send(user.getEmail(), "Verify Your Email", emailCode);
     }
 }

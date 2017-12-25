@@ -1,7 +1,8 @@
-package judgels.jophiel.user.email;
+package judgels.jophiel.user.registration;
 
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.jophiel.user.email.EmailCodeGenerator;
 
 public class UserRegistrationEmailStore {
     private final UserRegistrationEmailDao userRegistrationEmailDao;

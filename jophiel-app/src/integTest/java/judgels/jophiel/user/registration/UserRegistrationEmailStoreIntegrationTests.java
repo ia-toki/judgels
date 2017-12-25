@@ -1,4 +1,4 @@
-package judgels.jophiel.user.email;
+package judgels.jophiel.user.registration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

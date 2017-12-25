@@ -9,7 +9,7 @@ import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.email.UserRegistrationEmailStore;
+import judgels.jophiel.user.registration.UserRegistrationEmailStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 

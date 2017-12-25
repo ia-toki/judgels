@@ -3,26 +3,34 @@ package judgels.jophiel.user;
 import com.palantir.remoting.api.errors.ErrorType;
 import com.palantir.remoting.api.errors.ServiceException;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.jophiel.api.user.PasswordResetData;
 import judgels.jophiel.api.user.PasswordUpdateData;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserProfile;
 import judgels.jophiel.api.user.UserRegistrationData;
 import judgels.jophiel.api.user.UserService;
-import judgels.jophiel.user.email.UserRegistrationEmailMailer;
-import judgels.jophiel.user.email.UserRegistrationEmailStore;
+import judgels.jophiel.user.password.UserForgotPasswordMailer;
+import judgels.jophiel.user.password.UserForgotPasswordStore;
 import judgels.jophiel.user.profile.UserProfileStore;
+import judgels.jophiel.user.registration.UserRegistrationEmailMailer;
+import judgels.jophiel.user.registration.UserRegistrationEmailStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class UserResource implements UserService {
+    private static final Duration FORGOT_PASSWORD_EXPIRATION = Duration.ofHours(1);
+
     private final ActorChecker actorChecker;
     private final UserStore userStore;
     private final UserProfileStore userProfileStore;
     private final UserRegistrationEmailStore userRegistrationEmailStore;
-    private final Optional<UserRegistrationEmailMailer> userVerificationEmailMailer;
+    private final Optional<UserRegistrationEmailMailer> userRegistrationEmailMailer;
+    private final UserForgotPasswordStore userForgotPasswordStore;
+    private final Optional<UserForgotPasswordMailer> userForgotPasswordMailer;
 
     @Inject
     public UserResource(
@@ -30,13 +38,17 @@ public class UserResource implements UserService {
             UserStore userStore,
             UserProfileStore userProfileStore,
             UserRegistrationEmailStore userRegistrationEmailStore,
-            Optional<UserRegistrationEmailMailer> userVerificationEmailMailer) {
+            Optional<UserRegistrationEmailMailer> userRegistrationEmailMailer,
+            UserForgotPasswordStore userForgotPasswordStore,
+            Optional<UserForgotPasswordMailer> userForgotPasswordMailer) {
 
         this.actorChecker = actorChecker;
         this.userStore = userStore;
         this.userProfileStore = userProfileStore;
         this.userRegistrationEmailStore = userRegistrationEmailStore;
-        this.userVerificationEmailMailer = userVerificationEmailMailer;
+        this.userRegistrationEmailMailer = userRegistrationEmailMailer;
+        this.userForgotPasswordStore = userForgotPasswordStore;
+        this.userForgotPasswordMailer = userForgotPasswordMailer;
     }
 
     @Override
@@ -77,13 +89,7 @@ public class UserResource implements UserService {
         if (!userStore.validateUserPassword(actorJid, passwordUpdateData.getOldPassword())) {
             throw new ServiceException(ErrorType.INVALID_ARGUMENT);
         }
-
-        User user = getUser(actorJid);
-        userStore.updateUser(actorJid, new UserData.Builder()
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .password(passwordUpdateData.getNewPassword())
-                .build());
+        userStore.updateUserPassword(actorJid, passwordUpdateData.getNewPassword());
     }
 
     @Override
@@ -108,9 +114,9 @@ public class UserResource implements UserService {
                 .build();
         userProfileStore.upsertUserProfile(user.getJid(), userProfile);
 
-        userVerificationEmailMailer.ifPresent(mailer -> {
+        userRegistrationEmailMailer.ifPresent(mailer -> {
             String emailCode = userRegistrationEmailStore.generateEmailCode(user.getJid());
-            mailer.sendVerificationEmail(user, emailCode);
+            mailer.sendActivationEmail(user, emailCode);
         });
         return user;
     }
@@ -145,5 +151,31 @@ public class UserResource implements UserService {
             throw new ServiceException(ErrorType.NOT_FOUND);
         }
         userProfileStore.upsertUserProfile(userJid, userProfile);
+    }
+
+    @Override
+    @UnitOfWork
+    public void requestToResetUserPassword(String email) {
+        Optional<User> maybeUser = userStore.findUserByEmail(email);
+        if (!maybeUser.isPresent()) {
+            throw new ServiceException(ErrorType.NOT_FOUND);
+        }
+        userForgotPasswordMailer.ifPresent(mailer -> {
+            User user = maybeUser.get();
+            String emailCode = userForgotPasswordStore.generateEmailCode(user.getJid(), FORGOT_PASSWORD_EXPIRATION);
+            mailer.sendRequestEmail(user, emailCode);
+        });
+    }
+
+    @Override
+    @UnitOfWork
+    public void resetUserPassword(PasswordResetData passwordResetData) {
+        String emailCode = passwordResetData.getEmailCode();
+        Optional<String> maybeUserJid = userForgotPasswordStore.consumeEmailCode(emailCode);
+        if (!maybeUserJid.isPresent()) {
+            throw new ServiceException(ErrorType.INVALID_ARGUMENT);
+        }
+
+        userStore.updateUserPassword(maybeUserJid.get(), passwordResetData.getNewPassword());
     }
 }

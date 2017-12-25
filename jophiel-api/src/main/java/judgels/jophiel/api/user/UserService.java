@@ -81,4 +81,13 @@ public interface UserService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("userJid") String userJid,
             UserProfile userProfile);
+
+    @POST
+    @Path("/request-reset-password/{email}")
+    void requestToResetUserPassword(@PathParam("email") String email);
+
+    @POST
+    @Path("/reset-password")
+    @Consumes(APPLICATION_JSON)
+    void resetUserPassword(PasswordResetData passwordResetData);
 }

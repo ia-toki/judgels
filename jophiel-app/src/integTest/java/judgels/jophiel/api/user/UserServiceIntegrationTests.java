@@ -118,4 +118,42 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThatCode(() -> sessionService.logIn(Credentials.of("charlie", "newPass")))
                 .doesNotThrowAnyException();
     }
+
+    @Test void reset_password_flow() {
+        Wiser wiser = new Wiser();
+        wiser.setPort(2500);
+        wiser.start();
+
+        userService.createUser(adminHeader, new UserData.Builder()
+                .username("delta")
+                .password("pass")
+                .email("delta@domain.com")
+                .build());
+
+        userService.requestToResetUserPassword("delta@domain.com");
+
+        await()
+                .atMost(30, TimeUnit.SECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .until(() -> !wiser.getMessages().isEmpty());
+
+        String[] lines = new String(wiser.getMessages().get(0).getData()).split("\n");
+        String emailCode = lines[lines.length - 1];
+
+        userService.resetUserPassword(PasswordResetData.of(emailCode, "newPass"));
+
+        userService.requestToResetUserPassword("delta@domain.com");
+
+        await()
+                .atMost(30, TimeUnit.SECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .until(() -> wiser.getMessages().size() > 1);
+
+        lines = new String(wiser.getMessages().get(1).getData()).split("\n");
+        String emailCode2 = lines[lines.length - 1];
+
+        assertThat(emailCode2).isNotEqualTo(emailCode);
+
+        wiser.stop();
+    }
 }

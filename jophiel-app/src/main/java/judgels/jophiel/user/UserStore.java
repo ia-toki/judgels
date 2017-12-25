@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
+import judgels.jophiel.user.password.PasswordHash;
 
 public class UserStore {
     private final UserDao userDao;
@@ -50,6 +51,16 @@ public class UserStore {
         return userDao.selectByJid(userJid)
                 .flatMap(model -> validatePassword(password, model.password) ? Optional.of(true) : Optional.empty())
                 .isPresent();
+    }
+
+    public void updateUserPassword(String userJid, String newPassword) {
+        userDao.selectByJid(userJid).ifPresent(user -> {
+            updateUser(userJid, new UserData.Builder()
+                    .username(user.username)
+                    .email(user.email)
+                    .password(newPassword)
+                    .build());
+        });
     }
 
     private static User fromModel(UserModel model) {
