@@ -8,7 +8,7 @@ import java.time.Clock;
 import javax.inject.Singleton;
 import judgels.jophiel.session.SessionDao;
 import judgels.jophiel.user.UserDao;
-import judgels.jophiel.user.password.UserForgotPasswordDao;
+import judgels.jophiel.user.password.UserResetPasswordDao;
 import judgels.jophiel.user.profile.UserProfileDao;
 import judgels.jophiel.user.registration.UserRegistrationEmailDao;
 import judgels.persistence.ActorProvider;
@@ -62,7 +62,7 @@ public class JophielHibernateModule {
 
     @Provides
     @Singleton
-    UserForgotPasswordDao userForgotPasswordDao(Clock clock, ActorProvider actorProvider) {
-        return new UserForgotPasswordHibernateDao(sessionFactory, clock, actorProvider);
+    UserResetPasswordDao userResetPasswordDao(Clock clock, ActorProvider actorProvider) {
+        return new UserResetPasswordHibernateDao(sessionFactory, clock, actorProvider);
     }
 }

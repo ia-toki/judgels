@@ -5,7 +5,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import judgels.jophiel.JophielApplicationConfiguration;
 import judgels.jophiel.session.SessionModel;
 import judgels.jophiel.user.UserModel;
-import judgels.jophiel.user.password.UserForgotPasswordModel;
+import judgels.jophiel.user.password.UserResetPasswordModel;
 import judgels.jophiel.user.profile.UserProfileModel;
 import judgels.jophiel.user.registration.UserRegistrationEmailModel;
 
@@ -16,7 +16,7 @@ public class JophielHibernateBundle extends HibernateBundle<JophielApplicationCo
                 UserModel.class,
                 UserProfileModel.class,
                 UserRegistrationEmailModel.class,
-                UserForgotPasswordModel.class);
+                UserResetPasswordModel.class);
     }
 
     @Override

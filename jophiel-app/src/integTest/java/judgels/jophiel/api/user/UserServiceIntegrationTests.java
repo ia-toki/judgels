@@ -66,16 +66,12 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .build());
         Credentials credentials = Credentials.of("beta", "pass");
 
-        await()
-                .atMost(30, TimeUnit.SECONDS)
-                .pollInterval(1, TimeUnit.SECONDS)
-                .until(() -> !wiser.getMessages().isEmpty());
+        String email = readEmail(wiser, 0);
 
         assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(credentials))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
-        String[] lines = new String(wiser.getMessages().get(0).getData()).split("\n");
-        String emailCode = lines[lines.length - 1];
+        String emailCode = extractEmailCode(email);
 
         userService.activateUser(emailCode);
         assertThatCode(() -> sessionService.logIn(credentials))
@@ -132,28 +128,35 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         userService.requestToResetUserPassword("delta@domain.com");
 
-        await()
-                .atMost(30, TimeUnit.SECONDS)
-                .pollInterval(1, TimeUnit.SECONDS)
-                .until(() -> !wiser.getMessages().isEmpty());
+        assertThatCode(() -> sessionService.logIn(Credentials.of("delta", "pass")))
+                .doesNotThrowAnyException();
 
-        String[] lines = new String(wiser.getMessages().get(0).getData()).split("\n");
-        String emailCode = lines[lines.length - 1];
+        String email = readEmail(wiser, 0);
+        String emailCode = extractEmailCode(email);
 
         userService.resetUserPassword(PasswordResetData.of(emailCode, "newPass"));
 
+        readEmail(wiser, 1);
+
         userService.requestToResetUserPassword("delta@domain.com");
-
-        await()
-                .atMost(30, TimeUnit.SECONDS)
-                .pollInterval(1, TimeUnit.SECONDS)
-                .until(() -> wiser.getMessages().size() > 1);
-
-        lines = new String(wiser.getMessages().get(1).getData()).split("\n");
-        String emailCode2 = lines[lines.length - 1];
-
+        String email2 = readEmail(wiser, 2);
+        String emailCode2 = extractEmailCode(email2);
         assertThat(emailCode2).isNotEqualTo(emailCode);
 
         wiser.stop();
+    }
+
+    private static String readEmail(Wiser wiser, int index) {
+        await()
+                .atMost(30, TimeUnit.SECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .until(() -> wiser.getMessages().size() > index);
+
+        return new String(wiser.getMessages().get(index).getData());
+    }
+
+    private static String extractEmailCode(String email) {
+        String[] lines = email.split("\n");
+        return lines[lines.length - 1];
     }
 }

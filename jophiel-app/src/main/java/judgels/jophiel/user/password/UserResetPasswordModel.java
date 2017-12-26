@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import judgels.persistence.Model;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
-@Entity(name = "jophiel_user_forgot_password")
-public class UserForgotPasswordModel extends Model {
+@Entity(name = "jophiel_user_reset_password")
+public class UserResetPasswordModel extends Model {
     @Column(nullable = false)
     public String userJid;
 

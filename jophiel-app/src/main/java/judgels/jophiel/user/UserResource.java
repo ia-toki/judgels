@@ -13,8 +13,8 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserProfile;
 import judgels.jophiel.api.user.UserRegistrationData;
 import judgels.jophiel.api.user.UserService;
-import judgels.jophiel.user.password.UserForgotPasswordMailer;
-import judgels.jophiel.user.password.UserForgotPasswordStore;
+import judgels.jophiel.user.password.UserResetPasswordMailer;
+import judgels.jophiel.user.password.UserResetPasswordStore;
 import judgels.jophiel.user.profile.UserProfileStore;
 import judgels.jophiel.user.registration.UserRegistrationEmailMailer;
 import judgels.jophiel.user.registration.UserRegistrationEmailStore;
@@ -29,8 +29,8 @@ public class UserResource implements UserService {
     private final UserProfileStore userProfileStore;
     private final UserRegistrationEmailStore userRegistrationEmailStore;
     private final Optional<UserRegistrationEmailMailer> userRegistrationEmailMailer;
-    private final UserForgotPasswordStore userForgotPasswordStore;
-    private final Optional<UserForgotPasswordMailer> userForgotPasswordMailer;
+    private final UserResetPasswordStore userResetPasswordStore;
+    private final Optional<UserResetPasswordMailer> userResetPasswordMailer;
 
     @Inject
     public UserResource(
@@ -39,16 +39,16 @@ public class UserResource implements UserService {
             UserProfileStore userProfileStore,
             UserRegistrationEmailStore userRegistrationEmailStore,
             Optional<UserRegistrationEmailMailer> userRegistrationEmailMailer,
-            UserForgotPasswordStore userForgotPasswordStore,
-            Optional<UserForgotPasswordMailer> userForgotPasswordMailer) {
+            UserResetPasswordStore userResetPasswordStore,
+            Optional<UserResetPasswordMailer> userResetPasswordMailer) {
 
         this.actorChecker = actorChecker;
         this.userStore = userStore;
         this.userProfileStore = userProfileStore;
         this.userRegistrationEmailStore = userRegistrationEmailStore;
         this.userRegistrationEmailMailer = userRegistrationEmailMailer;
-        this.userForgotPasswordStore = userForgotPasswordStore;
-        this.userForgotPasswordMailer = userForgotPasswordMailer;
+        this.userResetPasswordStore = userResetPasswordStore;
+        this.userResetPasswordMailer = userResetPasswordMailer;
     }
 
     @Override
@@ -160,9 +160,10 @@ public class UserResource implements UserService {
         if (!maybeUser.isPresent()) {
             throw new ServiceException(ErrorType.NOT_FOUND);
         }
-        userForgotPasswordMailer.ifPresent(mailer -> {
+
+        userResetPasswordMailer.ifPresent(mailer -> {
             User user = maybeUser.get();
-            String emailCode = userForgotPasswordStore.generateEmailCode(user.getJid(), FORGOT_PASSWORD_EXPIRATION);
+            String emailCode = userResetPasswordStore.generateEmailCode(user.getJid(), FORGOT_PASSWORD_EXPIRATION);
             mailer.sendRequestEmail(user, emailCode);
         });
     }
@@ -171,11 +172,16 @@ public class UserResource implements UserService {
     @UnitOfWork
     public void resetUserPassword(PasswordResetData passwordResetData) {
         String emailCode = passwordResetData.getEmailCode();
-        Optional<String> maybeUserJid = userForgotPasswordStore.consumeEmailCode(emailCode);
-        if (!maybeUserJid.isPresent()) {
-            throw new ServiceException(ErrorType.INVALID_ARGUMENT);
-        }
+        String userJid = userResetPasswordStore.consumeEmailCode(emailCode, FORGOT_PASSWORD_EXPIRATION)
+                .orElseThrow(() -> new ServiceException(ErrorType.INVALID_ARGUMENT));
 
-        userStore.updateUserPassword(maybeUserJid.get(), passwordResetData.getNewPassword());
+        User user = userStore.findUserByJid(userJid)
+                .orElseThrow(() -> new ServiceException(ErrorType.INVALID_ARGUMENT));
+
+        userStore.updateUserPassword(user.getJid(), passwordResetData.getNewPassword());
+
+        userResetPasswordMailer.ifPresent(mailer -> {
+            mailer.sendResetEmail(user);
+        });
     }
 }

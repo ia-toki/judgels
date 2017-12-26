@@ -6,7 +6,7 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import judgels.jophiel.hibernate.UserForgotPasswordHibernateDao;
+import judgels.jophiel.hibernate.UserResetPasswordHibernateDao;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.Session;
@@ -14,32 +14,32 @@ import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(models = {UserForgotPasswordModel.class})
-class UserForgotPasswordStoreIntegrationTests {
+@WithHibernateSession(models = {UserResetPasswordModel.class})
+class UserResetPasswordStoreIntegrationTests {
     private static final String USER_JID = "userJid";
 
     private Session currentSession;
-    private UserForgotPasswordStore store;
+    private UserResetPasswordStore store;
 
     @BeforeEach void before(SessionFactory sessionFactory) {
         currentSession = sessionFactory.getCurrentSession();
 
-        UserForgotPasswordDao dao =
-                new UserForgotPasswordHibernateDao(sessionFactory, Clock.systemUTC(), new FixedActorProvider());
-        store = new UserForgotPasswordStore(dao);
+        UserResetPasswordDao dao =
+                new UserResetPasswordHibernateDao(sessionFactory, Clock.systemUTC(), new FixedActorProvider());
+        store = new UserResetPasswordStore(dao);
     }
 
     @Test void can_generate_find_consume_code() {
-        assertThat(store.consumeEmailCode("code")).isEmpty();
+        assertThat(store.consumeEmailCode("code", Duration.ofHours(1))).isEmpty();
 
         store.generateEmailCode("userJid2", Duration.ofHours(1));
 
         String code = store.generateEmailCode(USER_JID, Duration.ofHours(1));
-        assertThat(store.consumeEmailCode(code)).contains(USER_JID);
+        assertThat(store.consumeEmailCode(code, Duration.ofHours(1))).contains(USER_JID);
 
         currentSession.flush();
 
-        assertThat(store.consumeEmailCode(code)).isEmpty();
+        assertThat(store.consumeEmailCode(code, Duration.ofHours(1))).isEmpty();
         String newCode = store.generateEmailCode(USER_JID, Duration.ofHours(1));
         assertThat(newCode).isNotEqualTo(code);
     }

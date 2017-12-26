@@ -5,7 +5,7 @@ import dagger.Provides;
 import java.util.Optional;
 import javax.inject.Singleton;
 import judgels.jophiel.mailer.Mailer;
-import judgels.jophiel.user.password.UserForgotPasswordMailer;
+import judgels.jophiel.user.password.UserResetPasswordMailer;
 import judgels.jophiel.user.registration.UserRegistrationEmailMailer;
 
 @Module
@@ -20,7 +20,7 @@ public class UserMailerModule {
 
     @Provides
     @Singleton
-    static Optional<UserForgotPasswordMailer> userForgotPasswordMailer(Optional<Mailer> mailer) {
-        return mailer.map(UserForgotPasswordMailer::new);
+    static Optional<UserResetPasswordMailer> userResetPasswordMailer(Optional<Mailer> mailer) {
+        return mailer.map(UserResetPasswordMailer::new);
     }
 }
