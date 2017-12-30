@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableUserRegistrationData.class)
 public interface UserRegistrationData {
     String getUsername();
-    Optional<String> getName();
+    String getName();
     String getPassword();
     String getEmail();
     Optional<String> getRecaptchaResponse();
