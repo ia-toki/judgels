@@ -4,11 +4,13 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.mailer.MailerModule;
+import judgels.jophiel.recaptcha.RecaptchaModule;
 import judgels.jophiel.session.SessionResource;
 import judgels.jophiel.user.UserResource;
-import judgels.jophiel.user.email.UserMailerModule;
 import judgels.jophiel.user.master.MasterUsersCreator;
 import judgels.jophiel.user.master.MasterUsersModule;
+import judgels.jophiel.user.password.UserResetPasswordModule;
+import judgels.jophiel.user.registration.UserRegistrationModule;
 import judgels.jophiel.web.WebModule;
 import judgels.jophiel.web.WebResource;
 
@@ -17,7 +19,9 @@ import judgels.jophiel.web.WebResource;
         JophielHibernateModule.class,
         MailerModule.class,
         MasterUsersModule.class,
-        UserMailerModule.class,
+        RecaptchaModule.class,
+        UserRegistrationModule.class,
+        UserResetPasswordModule.class,
         WebModule.class})
 @Singleton
 public interface JophielComponent {
@@ -25,6 +29,6 @@ public interface JophielComponent {
 
     SessionResource accountResource();
     UserResource userResource();
-    WebResource webResource();
     VersionResource versionResource();
+    WebResource webResource();
 }

@@ -8,7 +8,9 @@ import io.dropwizard.setup.Environment;
 import judgels.jophiel.hibernate.JophielHibernateBundle;
 import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.mailer.MailerModule;
+import judgels.jophiel.recaptcha.RecaptchaModule;
 import judgels.jophiel.user.master.MasterUsersModule;
+import judgels.jophiel.user.registration.UserRegistrationModule;
 import judgels.jophiel.web.WebConfiguration;
 import judgels.jophiel.web.WebModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
@@ -34,6 +36,8 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
                 .jophielHibernateModule(new JophielHibernateModule(hibernateBundle))
                 .masterUsersModule(new MasterUsersModule(jophielConfig.getMasterUsers()))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
+                .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
+                .userRegistrationModule(new UserRegistrationModule(jophielConfig.getUserRegistrationConfig()))
                 .webModule(new WebModule(WebConfiguration.fromServerConfig(jophielConfig)))
                 .build();
 

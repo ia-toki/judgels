@@ -56,4 +56,5 @@ jophiel:
     secretKey: xxx
 
   userRegistration:
+    enabled: true
     useRecaptcha: false
