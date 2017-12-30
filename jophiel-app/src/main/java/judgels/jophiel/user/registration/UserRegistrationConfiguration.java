@@ -1,0 +1,16 @@
+package judgels.jophiel.user.registration;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
+
+@Value.Immutable
+@JsonDeserialize(as = ImmutableUserRegistrationConfiguration.class)
+public interface UserRegistrationConfiguration {
+    UserRegistrationConfiguration DEFAULT = new UserRegistrationConfiguration.Builder()
+            .useRecaptcha(false)
+            .build();
+
+    boolean getUseRecaptcha();
+
+    class Builder extends ImmutableUserRegistrationConfiguration.Builder {}
+}

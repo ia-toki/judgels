@@ -11,6 +11,7 @@ public interface UserRegistrationData {
     Optional<String> getName();
     String getPassword();
     String getEmail();
+    Optional<String> getRecaptchaResponse();
 
     class Builder extends ImmutableUserRegistrationData.Builder {}
 }

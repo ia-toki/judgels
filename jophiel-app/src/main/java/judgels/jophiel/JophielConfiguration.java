@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import java.util.Set;
 import judgels.jophiel.mailer.MailerConfiguration;
+import judgels.jophiel.recaptcha.RecaptchaConfiguration;
+import judgels.jophiel.user.registration.UserRegistrationConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -16,6 +18,12 @@ public interface JophielConfiguration {
 
     @JsonProperty("mailer")
     Optional<MailerConfiguration> getMailerConfig();
+
+    @JsonProperty("recaptcha")
+    Optional<RecaptchaConfiguration> getRecaptchaConfig();
+
+    @JsonProperty("userRegistration")
+    UserRegistrationConfiguration getUserRegistrationConfig();
 
     class Builder extends ImmutableJophielConfiguration.Builder {}
 }

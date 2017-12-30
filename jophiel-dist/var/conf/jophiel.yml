@@ -50,3 +50,10 @@ jophiel:
     username: xxx
     password: xxx
     sender: noreply@jophiel.judgels
+
+  recaptcha:
+    siteKey: xxx
+    secretKey: xxx
+
+  userRegistration:
+    useRecaptcha: false
