@@ -43,18 +43,22 @@ webSecurity:
 jophiel:
   masterUsers:
     - master
-  mailer:
-    host: xxx
-    port: 25
-    useSsl: false
-    username: xxx
-    password: xxx
-    sender: noreply@jophiel.judgels
 
-  recaptcha:
-    siteKey: xxx
-    secretKey: xxx
+#  mailer:
+#    host: xxx
+#    port: 25
+#    useSsl: false
+#    username: xxx
+#    password: xxx
+#    sender: noreply@jophiel.judgels
+
+#  recaptcha:
+#    siteKey: xxx
+#    secretKey: xxx
 
   userRegistration:
-    enabled: true
+    enabled: false
     useRecaptcha: false
+
+  userResetPassword:
+    enabled: false

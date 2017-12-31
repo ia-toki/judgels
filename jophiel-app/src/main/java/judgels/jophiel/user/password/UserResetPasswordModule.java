@@ -9,15 +9,26 @@ import judgels.jophiel.user.UserStore;
 
 @Module
 public class UserResetPasswordModule {
-    private UserResetPasswordModule() {}
+    private final UserResetPasswordConfiguration config;
+
+    public UserResetPasswordModule(UserResetPasswordConfiguration config) {
+        this.config = config;
+    }
 
     @Provides
     @Singleton
-    static UserPasswordResetter userPasswordResetter(
+    Optional<UserPasswordResetter> userPasswordResetter(
             UserStore userStore,
             UserResetPasswordStore userResetPasswordStore,
             Optional<Mailer> mailer) {
 
-        return new UserPasswordResetter(userStore, userResetPasswordStore, new UserResetPasswordMailer(mailer.get()));
+        if (!config.getEnabled()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new UserPasswordResetter(
+                userStore,
+                userResetPasswordStore,
+                new UserResetPasswordMailer(mailer.get())));
     }
 }

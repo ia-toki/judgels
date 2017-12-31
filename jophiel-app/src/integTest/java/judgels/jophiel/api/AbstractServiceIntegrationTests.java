@@ -23,6 +23,7 @@ import judgels.jophiel.JophielConfiguration;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.mailer.MailerConfiguration;
+import judgels.jophiel.user.password.UserResetPasswordConfiguration;
 import judgels.jophiel.user.registration.UserRegistrationConfiguration;
 import judgels.service.api.actor.AuthHeader;
 import org.h2.Driver;
@@ -55,7 +56,13 @@ public abstract class AbstractServiceIntegrationTests {
                         .password("wiser")
                         .sender("noreply@wiser.com")
                         .build())
-                .userRegistrationConfig(UserRegistrationConfiguration.DEFAULT)
+                .userRegistrationConfig(new UserRegistrationConfiguration.Builder()
+                        .enabled(true)
+                        .useRecaptcha(false)
+                        .build())
+                .userResetPasswordConfig(new UserResetPasswordConfiguration.Builder()
+                        .enabled(true)
+                        .build())
                 .build();
 
         JophielApplicationConfiguration config = new JophielApplicationConfiguration(

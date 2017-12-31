@@ -23,7 +23,7 @@ public class UserResource implements UserService {
     private final UserStore userStore;
     private final UserProfileStore userProfileStore;
     private final Optional<UserRegisterer> userRegisterer;
-    private final UserPasswordResetter userPasswordResetter;
+    private final Optional<UserPasswordResetter> userPasswordResetter;
 
     @Inject
     public UserResource(
@@ -31,7 +31,7 @@ public class UserResource implements UserService {
             UserStore userStore,
             UserProfileStore userProfileStore,
             Optional<UserRegisterer> userRegisterer,
-            UserPasswordResetter userPasswordResetter) {
+            Optional<UserPasswordResetter> userPasswordResetter) {
 
         this.actorChecker = actorChecker;
         this.userStore = userStore;
@@ -127,12 +127,12 @@ public class UserResource implements UserService {
     @Override
     @UnitOfWork
     public void requestToResetUserPassword(String email) {
-        userPasswordResetter.request(email);
+        userPasswordResetter.orElseThrow(NotFoundException::new).request(email);
     }
 
     @Override
     @UnitOfWork
     public void resetUserPassword(PasswordResetData passwordResetData) {
-        userPasswordResetter.reset(passwordResetData);
+        userPasswordResetter.orElseThrow(NotFoundException::new).reset(passwordResetData);
     }
 }

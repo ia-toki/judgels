@@ -7,7 +7,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableUserRegistrationConfiguration.class)
 public interface UserRegistrationConfiguration {
     UserRegistrationConfiguration DEFAULT = new UserRegistrationConfiguration.Builder()
-            .enabled(true)
+            .enabled(false)
             .useRecaptcha(false)
             .build();
 
