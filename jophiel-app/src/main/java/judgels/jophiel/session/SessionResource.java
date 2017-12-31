@@ -1,9 +1,8 @@
 package judgels.jophiel.session;
 
-import com.palantir.remoting.api.errors.ErrorType;
-import com.palantir.remoting.api.errors.ServiceException;
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
+import javax.ws.rs.ForbiddenException;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.api.session.SessionService;
@@ -36,10 +35,10 @@ public class SessionResource implements SessionService {
     @UnitOfWork
     public Session logIn(Credentials credentials) {
         User user = userStore.findUserByUsernameAndPassword(credentials.getUsername(), credentials.getPassword())
-                .orElseThrow(() -> new ServiceException(ErrorType.PERMISSION_DENIED));
+                .orElseThrow(ForbiddenException::new);
 
         if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
-            throw new ServiceException(ErrorType.PERMISSION_DENIED);
+            throw new ForbiddenException();
         }
 
         return sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());

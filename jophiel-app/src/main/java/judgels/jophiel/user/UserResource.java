@@ -1,7 +1,5 @@
 package judgels.jophiel.user;
 
-import com.palantir.remoting.api.errors.ErrorType;
-import com.palantir.remoting.api.errors.ServiceException;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -45,13 +43,13 @@ public class UserResource implements UserService {
     @Override
     @UnitOfWork(readOnly = true)
     public User getUser(String userJid) {
-        return userStore.findUserByJid(userJid).orElseThrow(() -> new ServiceException(ErrorType.NOT_FOUND));
+        return userStore.findUserByJid(userJid).orElseThrow(NotFoundException::new);
     }
 
     @Override
     @UnitOfWork(readOnly = true)
     public User getUserByUsername(String username) {
-        return userStore.findUserByUsername(username).orElseThrow(() -> new ServiceException(ErrorType.NOT_FOUND));
+        return userStore.findUserByUsername(username).orElseThrow(NotFoundException::new);
     }
 
     @Override
@@ -78,7 +76,7 @@ public class UserResource implements UserService {
     public void updateMyPassword(AuthHeader authHeader, PasswordUpdateData passwordUpdateData) {
         String actorJid = actorChecker.check(authHeader);
         if (!userStore.validateUserPassword(actorJid, passwordUpdateData.getOldPassword())) {
-            throw new ServiceException(ErrorType.INVALID_ARGUMENT);
+            throw new IllegalArgumentException();
         }
         userStore.updateUserPassword(actorJid, passwordUpdateData.getNewPassword());
     }
@@ -121,7 +119,7 @@ public class UserResource implements UserService {
     public void updateUserProfile(AuthHeader authHeader, String userJid, UserProfile userProfile) {
         actorChecker.check(authHeader);
         if (!userStore.findUserByJid(userJid).isPresent()) {
-            throw new ServiceException(ErrorType.NOT_FOUND);
+            throw new NotFoundException();
         }
         userProfileStore.upsertUserProfile(userJid, userProfile);
     }
