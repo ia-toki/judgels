@@ -9,7 +9,6 @@ import judgels.jophiel.hibernate.JophielHibernateBundle;
 import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.recaptcha.RecaptchaModule;
-import judgels.jophiel.user.master.MasterUsersModule;
 import judgels.jophiel.user.password.UserResetPasswordModule;
 import judgels.jophiel.user.registration.UserRegistrationModule;
 import judgels.jophiel.web.WebConfiguration;
@@ -35,7 +34,6 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         JophielConfiguration jophielConfig = config.getJophielConfig();
         JophielComponent component = DaggerJophielComponent.builder()
                 .jophielHibernateModule(new JophielHibernateModule(hibernateBundle))
-                .masterUsersModule(new MasterUsersModule(jophielConfig.getMasterUsers()))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
                 .userRegistrationModule(new UserRegistrationModule(jophielConfig.getUserRegistrationConfig()))
@@ -43,7 +41,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
                 .webModule(new WebModule(WebConfiguration.fromServerConfig(jophielConfig)))
                 .build();
 
-        component.masterUsersCreator().create();
+        component.superadminCreator().create();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
 

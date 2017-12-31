@@ -41,9 +41,6 @@ webSecurity:
     allowedOrigins: "*"
 
 jophiel:
-  masterUsers:
-    - master
-
 #  mailer:
 #    host: xxx
 #    port: 25

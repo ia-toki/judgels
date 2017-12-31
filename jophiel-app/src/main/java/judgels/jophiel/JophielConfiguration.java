@@ -3,7 +3,6 @@ package judgels.jophiel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
-import java.util.Set;
 import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.recaptcha.RecaptchaConfiguration;
 import judgels.jophiel.user.password.UserResetPasswordConfiguration;
@@ -13,8 +12,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJophielConfiguration.class)
 public interface JophielConfiguration {
-    Set<String> getMasterUsers();
-
     @JsonProperty("mailer")
     Optional<MailerConfiguration> getMailerConfig();
 

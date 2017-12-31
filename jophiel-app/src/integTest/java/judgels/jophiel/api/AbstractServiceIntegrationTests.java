@@ -47,7 +47,6 @@ public abstract class AbstractServiceIntegrationTests {
                 .build());
 
         JophielConfiguration jophielConfig = new JophielConfiguration.Builder()
-                .addMasterUsers("admin")
                 .mailerConfig(new MailerConfiguration.Builder()
                         .host("localhost")
                         .port(2500)
@@ -74,7 +73,7 @@ public abstract class AbstractServiceIntegrationTests {
         support.before();
 
         adminHeader = AuthHeader.of(createService(SessionService.class)
-                .logIn(Credentials.of("admin", "master"))
+                .logIn(Credentials.of("superadmin", "superadmin"))
                 .getToken());
     }
 
