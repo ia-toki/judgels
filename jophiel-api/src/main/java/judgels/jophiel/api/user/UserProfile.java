@@ -17,7 +17,7 @@ public interface UserProfile {
 
     Optional<String> getInstitution();
     Optional<String> getCity();
-    Optional<String> getProvinceOrState();
+    Optional<String> getProvince();
     Optional<String> getCountry();
 
     class Builder extends ImmutableUserProfile.Builder {}

@@ -39,7 +39,7 @@ public class UserProfileStore {
         model.homeAddress = profile.getHomeAddress().orElse(null);
         model.institution = profile.getInstitution().orElse(null);
         model.country = profile.getCountry().orElse(null);
-        model.provinceOrState = profile.getProvinceOrState().orElse(null);
+        model.province = profile.getProvince().orElse(null);
         model.city = profile.getCity().orElse(null);
         model.shirtSize = profile.getShirtSize().orElse(null);
     }
@@ -52,7 +52,7 @@ public class UserProfileStore {
                 .homeAddress(Optional.ofNullable(model.homeAddress))
                 .institution(Optional.ofNullable(model.institution))
                 .country(Optional.ofNullable(model.country))
-                .provinceOrState(Optional.ofNullable(model.provinceOrState))
+                .province(Optional.ofNullable(model.province))
                 .city(Optional.ofNullable(model.city))
                 .shirtSize(Optional.ofNullable(model.shirtSize))
                 .build();

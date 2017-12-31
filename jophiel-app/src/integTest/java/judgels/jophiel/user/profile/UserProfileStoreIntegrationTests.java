@@ -34,7 +34,7 @@ class UserProfileStoreIntegrationTests {
                 .shirtSize("L")
                 .institution("university")
                 .country("nation")
-                .provinceOrState("province")
+                .province("province")
                 .city("town")
                 .build();
         store.upsertUserProfile(USER_JID, userProfile);

@@ -21,12 +21,11 @@ public class UserProfileModel extends Model {
 
     public String shirtSize;
 
-    @Column(columnDefinition = "TEXT")
     public String institution;
 
     public String country;
 
-    public String provinceOrState;
+    public String province;
 
     public String city;
 }

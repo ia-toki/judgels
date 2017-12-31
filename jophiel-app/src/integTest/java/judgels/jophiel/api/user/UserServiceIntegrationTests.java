@@ -43,7 +43,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .shirtSize("L")
                 .institution("university")
                 .country("nation")
-                .provinceOrState("province")
+                .province("province")
                 .city("town")
                 .build();
         userService.updateUserProfile(adminHeader, user.getJid(), userProfile);
