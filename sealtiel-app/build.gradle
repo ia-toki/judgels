@@ -10,7 +10,7 @@ dependencies {
     compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
 
     testCompile "org.assertj:assertj-core:$assertJVersion"
-    testCompile "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
     processor "com.google.dagger:dagger-compiler:$daggerVersion"

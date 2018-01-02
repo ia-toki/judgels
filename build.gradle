@@ -9,7 +9,6 @@ buildscript {
 
     dependencies {
         classpath "com.palantir.baseline:gradle-baseline-java:$gradleBaselineVersion"
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
     }
 }
 
@@ -49,11 +48,6 @@ subprojects {
     apply plugin: 'com.palantir.baseline-checkstyle'
     apply plugin: 'com.palantir.baseline-idea'
     apply plugin: 'org.inferred.processors'
-    apply plugin: 'org.junit.platform.gradle.plugin'
-
-    dependencies {
-        testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-    }
 
     configurations {
         compile.resolutionStrategy {
@@ -73,4 +67,25 @@ subprojects {
                     "Implementation-Vendor": "Ikatan Alumni TOKI")
         }
     }
+
+    task junitPlatformTest(type: JavaExec, dependsOn: jar) {
+        group 'Verification'
+        description 'Runs tests on the JUnit Platform.'
+
+        dependencies {
+            testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+            testRuntime "org.junit.platform:junit-platform-console:$junitPlatformVersion"
+        }
+
+        classpath = sourceSets.test.runtimeClasspath
+        systemProperties['jar.path'] = jar.archivePath
+
+        main 'org.junit.platform.console.ConsoleLauncher'
+        args = [
+                '--scan-classpath', sourceSets.test.output.classesDirs.asPath,
+                '--reports-dir', "${buildDir}/test-results/junit-platform"
+        ]
+    }
+
+    test.dependsOn junitPlatformTest
 }
