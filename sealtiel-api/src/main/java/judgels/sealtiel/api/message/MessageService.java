@@ -15,7 +15,7 @@ import judgels.service.api.client.BasicAuthHeader;
 @Path("/api/v2/messages")
 public interface MessageService {
     @POST
-    @Path("/retrieve")
+    @Path("/receive")
     @Produces(APPLICATION_JSON)
     Optional<Message> receiveMessage(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader);
 
