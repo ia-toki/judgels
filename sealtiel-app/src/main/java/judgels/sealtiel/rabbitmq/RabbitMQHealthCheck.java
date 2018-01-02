@@ -3,10 +3,12 @@ package judgels.sealtiel.rabbitmq;
 import com.codahale.metrics.health.HealthCheck;
 import com.rabbitmq.http.client.Client;
 import java.net.URL;
+import javax.inject.Inject;
 
 public class RabbitMQHealthCheck extends HealthCheck {
     private final RabbitMQConfiguration config;
 
+    @Inject
     public RabbitMQHealthCheck(RabbitMQConfiguration config) {
         this.config = config;
     }

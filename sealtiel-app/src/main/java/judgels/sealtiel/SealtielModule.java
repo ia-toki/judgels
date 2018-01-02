@@ -17,13 +17,13 @@ public class SealtielModule {
 
     @Provides
     @Singleton
-    public ClientChecker clientChecker() {
+    ClientChecker clientChecker() {
         return new ClientChecker(sealtielConfig.getClients());
     }
 
     @Provides
     @Singleton
-    public ObjectMapper objectMapper() {
+    ObjectMapper objectMapper() {
         return Jackson.newObjectMapper();
     }
 }

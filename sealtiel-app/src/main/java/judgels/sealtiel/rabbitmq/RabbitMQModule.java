@@ -2,6 +2,7 @@ package judgels.sealtiel.rabbitmq;
 
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 import judgels.sealtiel.queue.Queue;
 
 @Module
@@ -13,12 +14,14 @@ public class RabbitMQModule {
     }
 
     @Provides
-    public Queue queue() {
-        return new RabbitMQ(config);
+    @Singleton
+    RabbitMQConfiguration rabbitMQConfig() {
+        return config;
     }
 
     @Provides
-    public RabbitMQHealthCheck rabbitmqHealthCheck() {
-        return new RabbitMQHealthCheck(config);
+    @Singleton
+    Queue queue() {
+        return new RabbitMQ(config);
     }
 }
