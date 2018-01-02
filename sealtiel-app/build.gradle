@@ -5,7 +5,6 @@ dependencies {
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "com.rabbitmq:amqp-client:$rabbitmqAmqpClientVersion"
-    compile "com.rabbitmq:http-client:$rabbitmqHttpClientVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
 

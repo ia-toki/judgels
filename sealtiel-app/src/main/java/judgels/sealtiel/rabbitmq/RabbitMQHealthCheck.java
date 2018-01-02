@@ -1,9 +1,16 @@
 package judgels.sealtiel.rabbitmq;
 
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import com.codahale.metrics.health.HealthCheck;
-import com.rabbitmq.http.client.Client;
-import java.net.URL;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.core.GenericType;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 
 public class RabbitMQHealthCheck extends HealthCheck {
     private final RabbitMQConfiguration config;
@@ -15,13 +22,23 @@ public class RabbitMQHealthCheck extends HealthCheck {
 
     @Override
     protected Result check() throws Exception {
-        URL url = new URL("http", config.getHost(), config.getManagementPort(), "/api/");
-        Client client = new Client(url, config.getUsername(), config.getPassword());
+        String url = "http://" + config.getHost() + ":" + config.getManagementPort() + "/api/healthchecks/node";
+        String creds = config.getUsername() + ":" + config.getPassword();
+        String authHeader = "Basic " + Base64.getEncoder().encodeToString(creds.getBytes());
 
-        if (client.alivenessTest(config.getVirtualHost())) {
+        Client client = new JerseyClientBuilder().build();
+
+        Map<String, String> result = client
+                .target(url)
+                .request(APPLICATION_JSON)
+                .header(AUTHORIZATION, authHeader)
+                .get()
+                .readEntity(new GenericType<HashMap<String, String>>() {});
+
+        if (result.get("status").equals("ok")) {
             return Result.healthy();
         } else {
-            return Result.unhealthy("RabbitMQ node is not alive");
+            return Result.unhealthy(result.get("reason"));
         }
     }
 }
