@@ -26,5 +26,5 @@ public interface MessageService {
     @POST
     @Path("/send")
     @Consumes(APPLICATION_JSON)
-    void sendMessage(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, MessageData request);
+    void sendMessage(@HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader, MessageData messageData);
 }
