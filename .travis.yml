@@ -1,4 +1,8 @@
 language: java
+sudo: required
+
+services:
+  - docker
 
 script:
   - ./gradlew check

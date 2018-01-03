@@ -2,6 +2,7 @@
 
 build/
 generated_src/
+out/
 
 *.iml
 *.ipr

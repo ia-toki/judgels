@@ -14,4 +14,6 @@ public interface SealtielConfiguration {
 
     @JsonProperty("rabbitmq")
     RabbitMQConfiguration getRabbitMQConfig();
+
+    class Builder extends ImmutableSealtielConfiguration.Builder {}
 }
