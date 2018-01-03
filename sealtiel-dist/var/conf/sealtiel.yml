@@ -23,10 +23,11 @@ logging:
 
 sealtiel:
   clients:
-    - jid: JIDSECL-alice
-      secret: bob
-    - jid: JIDSECL-charles
-      secret: darwin
+    - jid: JIDSECL-client1
+      secret: secret1
+
+    - jid: JIDSECL-client2
+      secret: secret2
 
   rabbitmq:
     host: localhost
