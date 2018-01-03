@@ -3,7 +3,7 @@ package judgels.jophiel.mailer;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
+import org.apache.commons.mail.HtmlEmail;
 
 public class Mailer {
     private MailerConfiguration config;
@@ -15,7 +15,7 @@ public class Mailer {
     public void send(String recipient, String subject, String body) {
         new Thread(() -> {
             try {
-                Email email = new SimpleEmail();
+                Email email = new HtmlEmail();
                 email.setHostName(config.getHost());
                 email.setSmtpPort(config.getPort());
                 email.setAuthenticator(new DefaultAuthenticator(config.getUsername(), config.getPassword()));

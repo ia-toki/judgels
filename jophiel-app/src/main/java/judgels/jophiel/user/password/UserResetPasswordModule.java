@@ -29,6 +29,9 @@ public class UserResetPasswordModule {
         return Optional.of(new UserPasswordResetter(
                 userStore,
                 userResetPasswordStore,
-                new UserResetPasswordMailer(mailer.get())));
+                new UserResetPasswordMailer(
+                        mailer.get(),
+                        config.getRequestEmailTemplate(),
+                        config.getResetEmailTemplate())));
     }
 }

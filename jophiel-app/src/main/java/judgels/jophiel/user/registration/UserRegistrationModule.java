@@ -39,7 +39,7 @@ public class UserRegistrationModule {
                 userStore,
                 userProfileStore,
                 userRegistrationEmailStore,
-                new UserRegistrationEmailMailer(mailer.get()),
+                new UserRegistrationEmailMailer(mailer.get(), config.getActivationEmailTemplate()),
                 actualRecaptchaVerifier));
     }
 }

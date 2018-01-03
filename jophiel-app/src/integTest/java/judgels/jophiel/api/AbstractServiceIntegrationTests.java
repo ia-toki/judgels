@@ -55,13 +55,8 @@ public abstract class AbstractServiceIntegrationTests {
                         .password("wiser")
                         .sender("noreply@wiser.com")
                         .build())
-                .userRegistrationConfig(new UserRegistrationConfiguration.Builder()
-                        .enabled(true)
-                        .useRecaptcha(false)
-                        .build())
-                .userResetPasswordConfig(new UserResetPasswordConfiguration.Builder()
-                        .enabled(true)
-                        .build())
+                .userRegistrationConfig(UserRegistrationConfiguration.DEFAULT)
+                .userResetPasswordConfig(UserResetPasswordConfiguration.DEFAULT)
                 .build();
 
         JophielApplicationConfiguration config = new JophielApplicationConfiguration(

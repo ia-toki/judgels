@@ -7,6 +7,8 @@ import static org.awaitility.Awaitility.await;
 
 import com.palantir.remoting.api.errors.ErrorType;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
@@ -156,7 +158,9 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     }
 
     private static String extractEmailCode(String email) {
-        String[] lines = email.split("\n");
-        return lines[lines.length - 1];
+        Pattern pattern = Pattern.compile("^.*#(\\w*)#.*$", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(email);
+        matcher.matches();
+        return matcher.group(1);
     }
 }

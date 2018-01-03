@@ -1,20 +1,36 @@
 package judgels.jophiel.user.password;
 
+import judgels.jophiel.EmailTemplate;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.mailer.Mailer;
 
 public class UserResetPasswordMailer {
     private final Mailer mailer;
+    private final EmailTemplate requestEmailTemplate;
+    private final EmailTemplate resetEmailTemplate;
 
-    public UserResetPasswordMailer(Mailer mailer) {
+    public UserResetPasswordMailer(
+            Mailer mailer,
+            EmailTemplate requestEmailTemplate,
+            EmailTemplate resetEmailTemplate) {
+
         this.mailer = mailer;
+        this.requestEmailTemplate = requestEmailTemplate;
+        this.resetEmailTemplate = resetEmailTemplate;
     }
 
     public void sendRequestEmail(User user, String emailCode) {
-        mailer.send(user.getEmail(), "Request to Reset Password", emailCode);
+        String subject = requestEmailTemplate.getSubject();
+        String body = requestEmailTemplate.getBody()
+                .replace("{{username}}", user.getUsername())
+                .replace("{{emailCode}}", emailCode);
+        mailer.send(user.getEmail(), subject, body);
     }
 
     public void sendResetEmail(User user) {
-        mailer.send(user.getEmail(), "Your password has been reset", "Reset");
+        String subject = resetEmailTemplate.getSubject();
+        String body = resetEmailTemplate.getBody()
+                .replace("{{username}}", user.getUsername());
+        mailer.send(user.getEmail(), subject, body);
     }
 }

@@ -1,16 +1,23 @@
 package judgels.jophiel.user.registration;
 
+import judgels.jophiel.EmailTemplate;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.mailer.Mailer;
 
 public class UserRegistrationEmailMailer {
     private final Mailer mailer;
+    private final EmailTemplate activationEmailTemplate;
 
-    public UserRegistrationEmailMailer(Mailer mailer) {
+    public UserRegistrationEmailMailer(Mailer mailer, EmailTemplate activationEmailTemplate) {
         this.mailer = mailer;
+        this.activationEmailTemplate = activationEmailTemplate;
     }
 
     public void sendActivationEmail(User user, String emailCode) {
-        mailer.send(user.getEmail(), "Verify Your Email", emailCode);
+        String subject = activationEmailTemplate.getSubject();
+        String body = activationEmailTemplate.getBody()
+                .replace("{{username}}", user.getUsername())
+                .replace("{{emailCode}}", emailCode);
+        mailer.send(user.getEmail(), subject, body);
     }
 }
