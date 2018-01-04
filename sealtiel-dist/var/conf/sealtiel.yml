@@ -4,7 +4,7 @@ server:
       port: 9003
   adminConnectors:
     - type: http
-      port: 9013
+      port: 9103
   requestLog:
     appenders:
     - type: file
