@@ -21,14 +21,14 @@ public class SuperadminCreator {
     @UnitOfWork
     public void create() {
         if (userStore.findUserByUsername(USERNAME).isPresent()) {
-            LOGGER.info("superadmin user already exists.");
+            LOGGER.info("superadmin user already exists");
         } else {
             userStore.createUser(new UserData.Builder()
                     .username(USERNAME)
                     .password(PASSWORD)
                     .email(USERNAME + "@jophiel.judgels")
                     .build());
-            LOGGER.info("Created superadmin user.");
+            LOGGER.info("Created superadmin user");
         }
     }
 }
