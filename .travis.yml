@@ -1,4 +1,4 @@
 language: java
 
-script:
-  - ./gradlew check
+git:
+  depth: false
