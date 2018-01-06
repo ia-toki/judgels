@@ -5,9 +5,9 @@ import dagger.Provides;
 import java.util.Optional;
 import javax.inject.Singleton;
 import judgels.jophiel.mailer.Mailer;
-import judgels.jophiel.recaptcha.RecaptchaVerifier;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.profile.UserProfileStore;
+import judgels.recaptcha.RecaptchaVerifier;
 
 @Module
 public class UserRegistrationModule {

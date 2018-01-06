@@ -1,4 +1,4 @@
-package judgels.jophiel.recaptcha;
+package judgels.recaptcha;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;

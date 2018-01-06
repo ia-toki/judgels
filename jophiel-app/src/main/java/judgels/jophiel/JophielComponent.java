@@ -4,7 +4,6 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.mailer.MailerModule;
-import judgels.jophiel.recaptcha.RecaptchaModule;
 import judgels.jophiel.session.SessionResource;
 import judgels.jophiel.user.UserResource;
 import judgels.jophiel.user.password.UserResetPasswordModule;
@@ -13,6 +12,7 @@ import judgels.jophiel.user.superadmin.SuperadminCreator;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.web.WebModule;
 import judgels.jophiel.web.WebResource;
+import judgels.recaptcha.RecaptchaModule;
 
 @Component(modules = {
         JophielModule.class,

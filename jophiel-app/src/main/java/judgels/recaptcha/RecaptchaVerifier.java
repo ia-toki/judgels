@@ -1,4 +1,4 @@
-package judgels.jophiel.recaptcha;
+package judgels.recaptcha;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 

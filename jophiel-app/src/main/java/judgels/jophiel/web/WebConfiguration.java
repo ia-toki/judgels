@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.jophiel.JophielConfiguration;
-import judgels.jophiel.recaptcha.RecaptchaWebConfiguration;
 import judgels.jophiel.user.registration.UserRegistrationWebConfiguration;
+import judgels.recaptcha.RecaptchaWebConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable

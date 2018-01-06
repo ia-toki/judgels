@@ -6,9 +6,9 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserProfile;
 import judgels.jophiel.api.user.UserRegistrationData;
-import judgels.jophiel.recaptcha.RecaptchaVerifier;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.profile.UserProfileStore;
+import judgels.recaptcha.RecaptchaVerifier;
 
 public class UserRegisterer {
     private final UserStore userStore;
