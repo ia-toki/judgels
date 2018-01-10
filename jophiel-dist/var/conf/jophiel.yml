@@ -53,6 +53,17 @@ jophiel:
 #    siteKey: xxx
 #    secretKey: xxx
 
+#  aws:
+#    accessKey: xxx
+#    secretKey: xxx
+#    s3BucketRegionId: ap-southeast-1
+#    cloudFrontBaseUrl: https://xxx.cloudfront.net
+
+  userAvatar:
+    fs:
+      type: local
+      # s3BucketName: judgels-jophiel-avatars
+
   userRegistration:
     enabled: true
     useRecaptcha: false

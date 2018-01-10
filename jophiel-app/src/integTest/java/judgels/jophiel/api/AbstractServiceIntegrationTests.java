@@ -23,6 +23,7 @@ import judgels.jophiel.JophielConfiguration;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.mailer.MailerConfiguration;
+import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.password.UserResetPasswordConfiguration;
 import judgels.jophiel.user.registration.UserRegistrationConfiguration;
 import judgels.service.api.actor.AuthHeader;
@@ -57,6 +58,7 @@ public abstract class AbstractServiceIntegrationTests {
                         .build())
                 .userRegistrationConfig(UserRegistrationConfiguration.DEFAULT)
                 .userResetPasswordConfig(UserResetPasswordConfiguration.DEFAULT)
+                .userAvatarConfig(UserAvatarConfiguration.DEFAULT)
                 .build();
 
         JophielApplicationConfiguration config = new JophielApplicationConfiguration(

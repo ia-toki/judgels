@@ -17,4 +17,6 @@ public class UserModel extends JudgelsModel {
 
     @Column(nullable = false)
     public String password;
+
+    public String avatarFilename;
 }

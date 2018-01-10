@@ -3,6 +3,9 @@ package judgels.jophiel.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.io.InputStream;
+import java.util.List;
+import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.hibernate.UserHibernateDao;
@@ -20,7 +23,7 @@ class UserStoreIntegrationTests {
 
     @BeforeEach void before(SessionFactory sessionFactory) {
         UserDao dao = new UserHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        store = new UserStore(dao);
+        store = new UserStore(dao, new FakeFs());
     }
 
     @Test void can_do_basic_crud() {
@@ -37,6 +40,7 @@ class UserStoreIntegrationTests {
         assertThat(user.getJid()).isNotEmpty();
         assertThat(user.getUsername()).isEqualTo("username");
         assertThat(user.getEmail()).isEqualTo("email@domain.com");
+        assertThat(user.getAvatarUrl()).isEmpty();
 
         assertThat(store.findUserByJid(user.getJid())).contains(user);
 
@@ -49,6 +53,20 @@ class UserStoreIntegrationTests {
         user = store.updateUser(user.getJid(), userData).get();
         assertThat(user.getUsername()).isEqualTo("new.username");
         assertThat(user.getEmail()).isEqualTo("new.email@domain.com");
+    }
+
+    @Test void can_update_avatar() {
+        UserData userData = new UserData.Builder()
+                .username("username")
+                .password("password")
+                .email("email@domain.com")
+                .build();
+        User user = store.createUser(userData);
+
+        store.updateUserAvatar(user.getJid(), "avatar.jpg");
+
+        user = store.findUserByJid(user.getJid()).get();
+        assertThat(user.getAvatarUrl()).contains("/fake/avatar.jpg");
     }
 
     @Test void username_has_unique_constraint() {
@@ -83,5 +101,15 @@ class UserStoreIntegrationTests {
                 .build();
         assertThatExceptionOfType(ConstraintViolationException.class)
                 .isThrownBy(() -> store.createUser(newUserData));
+    }
+
+    static class FakeFs implements FileSystem {
+        @Override
+        public void uploadPublicFile(InputStream file, List<String> destDirPath, String destFilename) {}
+
+        @Override
+        public String getPublicFileUrl(List<String> filePath) {
+            return "/fake/" + filePath.get(0);
+        }
     }
 }

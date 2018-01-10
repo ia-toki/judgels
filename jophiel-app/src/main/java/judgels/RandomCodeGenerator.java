@@ -1,4 +1,4 @@
-package judgels.jophiel.user.email;
+package judgels;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -6,8 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import javax.xml.bind.DatatypeConverter;
 
-public class EmailCodeGenerator {
-    private EmailCodeGenerator() {}
+public class RandomCodeGenerator {
+    private RandomCodeGenerator() {}
 
     public static String newCode() {
         String uuid = UUID.randomUUID().toString();

@@ -1,19 +1,24 @@
 package judgels.jophiel.user;
 
+import com.google.common.collect.ImmutableList;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
+import judgels.jophiel.user.avatar.UserAvatarFs;
 import judgels.jophiel.user.password.PasswordHash;
 
 public class UserStore {
     private final UserDao userDao;
+    private final FileSystem userAvatarFs;
 
     @Inject
-    public UserStore(UserDao userDao) {
+    public UserStore(UserDao userDao, @UserAvatarFs FileSystem userAvatarFs) {
         this.userDao = userDao;
+        this.userAvatarFs = userAvatarFs;
     }
 
     public User createUser(UserData userData) {
@@ -23,21 +28,21 @@ public class UserStore {
     }
 
     public Optional<User> findUserByJid(String userJid) {
-        return userDao.selectByJid(userJid).map(UserStore::fromModel);
+        return userDao.selectByJid(userJid).map(this::fromModel);
     }
 
     public Optional<User> findUserByUsername(String username) {
-        return userDao.selectByUsername(username).map(UserStore::fromModel);
+        return userDao.selectByUsername(username).map(this::fromModel);
     }
 
     public Optional<User> findUserByUsernameAndPassword(String username, String password) {
         return userDao.selectByUsername(username)
                 .filter(model -> validatePassword(password, model.password))
-                .map(UserStore::fromModel);
+                .map(this::fromModel);
     }
 
     public Optional<User> findUserByEmail(String email) {
-        return userDao.selectByEmail(email).map(UserStore::fromModel);
+        return userDao.selectByEmail(email).map(this::fromModel);
     }
 
     public Optional<User> updateUser(String userJid, UserData userData) {
@@ -54,20 +59,32 @@ public class UserStore {
     }
 
     public void updateUserPassword(String userJid, String newPassword) {
-        userDao.selectByJid(userJid).ifPresent(user -> {
+        userDao.selectByJid(userJid).ifPresent(model -> {
             updateUser(userJid, new UserData.Builder()
-                    .username(user.username)
-                    .email(user.email)
+                    .username(model.username)
+                    .email(model.email)
                     .password(newPassword)
                     .build());
         });
     }
 
-    private static User fromModel(UserModel model) {
+    public void updateUserAvatar(String userJid, String newAvatarFilename) {
+        userDao.selectByJid(userJid).ifPresent(model -> {
+            model.avatarFilename = newAvatarFilename;
+            userDao.update(model);
+        });
+    }
+
+    private User fromModel(UserModel model) {
+        Optional<String> avatarUrl = Optional.ofNullable(model.avatarFilename)
+                .map(ImmutableList::of)
+                .map(userAvatarFs::getPublicFileUrl);
+
         return new User.Builder()
                 .jid(model.jid)
                 .username(model.username)
                 .email(model.email)
+                .avatarUrl(avatarUrl)
                 .build();
     }
 

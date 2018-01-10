@@ -2,7 +2,7 @@ package judgels.jophiel.user.registration;
 
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.jophiel.user.email.EmailCodeGenerator;
+import judgels.RandomCodeGenerator;
 
 public class UserRegistrationEmailStore {
     private final UserRegistrationEmailDao userRegistrationEmailDao;
@@ -21,7 +21,7 @@ public class UserRegistrationEmailStore {
     public String generateEmailCode(String userJid) {
         UserRegistrationEmailModel model = new UserRegistrationEmailModel();
         model.userJid = userJid;
-        model.emailCode = EmailCodeGenerator.newCode();
+        model.emailCode = RandomCodeGenerator.newCode();
         userRegistrationEmailDao.insert(model);
         return model.emailCode;
     }

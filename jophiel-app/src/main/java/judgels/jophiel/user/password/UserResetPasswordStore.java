@@ -3,7 +3,7 @@ package judgels.jophiel.user.password;
 import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.jophiel.user.email.EmailCodeGenerator;
+import judgels.RandomCodeGenerator;
 
 public class UserResetPasswordStore {
     private final UserResetPasswordDao userResetPasswordDao;
@@ -21,7 +21,7 @@ public class UserResetPasswordStore {
 
         UserResetPasswordModel model = new UserResetPasswordModel();
         model.userJid = userJid;
-        model.emailCode = EmailCodeGenerator.newCode();
+        model.emailCode = RandomCodeGenerator.newCode();
         userResetPasswordDao.insert(model);
         return model.emailCode;
     }
