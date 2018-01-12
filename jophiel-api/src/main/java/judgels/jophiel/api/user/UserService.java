@@ -4,6 +4,7 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -81,6 +82,10 @@ public interface UserService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("userJid") String userJid,
             UserProfile userProfile);
+
+    @DELETE
+    @Path("/{userJid}/avatar")
+    void deleteUserAvatar(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
 
     @POST
     @Path("/request-reset-password/{email}")

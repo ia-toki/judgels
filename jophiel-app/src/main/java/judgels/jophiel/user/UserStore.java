@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
@@ -68,7 +69,7 @@ public class UserStore {
         });
     }
 
-    public void updateUserAvatar(String userJid, String newAvatarFilename) {
+    public void updateUserAvatar(String userJid, @Nullable String newAvatarFilename) {
         userDao.selectByJid(userJid).ifPresent(model -> {
             model.avatarFilename = newAvatarFilename;
             userDao.update(model);

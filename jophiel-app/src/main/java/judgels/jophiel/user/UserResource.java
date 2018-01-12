@@ -126,6 +126,13 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
+    public void deleteUserAvatar(AuthHeader authHeader, String userJid) {
+        actorChecker.check(authHeader);
+        userStore.updateUserAvatar(userJid, null);
+    }
+
+    @Override
+    @UnitOfWork
     public void requestToResetUserPassword(String email) {
         userPasswordResetter.orElseThrow(NotFoundException::new).request(email);
     }
