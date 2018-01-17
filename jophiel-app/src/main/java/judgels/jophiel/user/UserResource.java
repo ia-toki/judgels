@@ -1,9 +1,11 @@
 package judgels.jophiel.user;
 
+import static judgels.service.ServiceUtils.checkAllowed;
+import static judgels.service.ServiceUtils.checkFound;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
 import judgels.jophiel.api.user.PasswordResetData;
 import judgels.jophiel.api.user.PasswordUpdateData;
 import judgels.jophiel.api.user.User;
@@ -11,6 +13,7 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserProfile;
 import judgels.jophiel.api.user.UserRegistrationData;
 import judgels.jophiel.api.user.UserService;
+import judgels.jophiel.role.RoleChecker;
 import judgels.jophiel.user.password.UserPasswordResetter;
 import judgels.jophiel.user.profile.UserProfileStore;
 import judgels.jophiel.user.registration.UserRegisterer;
@@ -20,6 +23,7 @@ import judgels.service.api.actor.AuthHeader;
 public class UserResource implements UserService {
 
     private final ActorChecker actorChecker;
+    private final RoleChecker roleChecker;
     private final UserStore userStore;
     private final UserProfileStore userProfileStore;
     private final Optional<UserRegisterer> userRegisterer;
@@ -28,12 +32,14 @@ public class UserResource implements UserService {
     @Inject
     public UserResource(
             ActorChecker actorChecker,
+            RoleChecker roleChecker,
             UserStore userStore,
             UserProfileStore userProfileStore,
             Optional<UserRegisterer> userRegisterer,
             Optional<UserPasswordResetter> userPasswordResetter) {
 
         this.actorChecker = actorChecker;
+        this.roleChecker = roleChecker;
         this.userStore = userStore;
         this.userProfileStore = userProfileStore;
         this.userRegisterer = userRegisterer;
@@ -42,14 +48,11 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public User getUser(String userJid) {
-        return userStore.findUserByJid(userJid).orElseThrow(NotFoundException::new);
-    }
+    public User getUser(AuthHeader authHeader, String userJid) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canReadUser(actorJid, userJid));
 
-    @Override
-    @UnitOfWork(readOnly = true)
-    public User getUserByUsername(String username) {
-        return userStore.findUserByUsername(username).orElseThrow(NotFoundException::new);
+        return checkFound(userStore.findUserByJid(userJid));
     }
 
     @Override
@@ -68,13 +71,15 @@ public class UserResource implements UserService {
     @UnitOfWork(readOnly = true)
     public User getMyself(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        return getUser(actorJid);
+
+        return checkFound(userStore.findUserByJid(actorJid));
     }
 
     @Override
     @UnitOfWork
     public void updateMyPassword(AuthHeader authHeader, PasswordUpdateData passwordUpdateData) {
         String actorJid = actorChecker.check(authHeader);
+
         userStore.validateUserPassword(actorJid, passwordUpdateData.getOldPassword());
         userStore.updateUserPassword(actorJid, passwordUpdateData.getNewPassword());
     }
@@ -82,64 +87,72 @@ public class UserResource implements UserService {
     @Override
     @UnitOfWork
     public User createUser(AuthHeader authHeader, UserData userData) {
-        actorChecker.check(authHeader);
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canCreateUser(actorJid));
+
         return userStore.createUser(userData);
     }
 
     @Override
     @UnitOfWork
     public User registerUser(UserRegistrationData userRegistrationData) {
-        return userRegisterer.orElseThrow(NotFoundException::new).register(userRegistrationData);
+        return checkFound(userRegisterer).register(userRegistrationData);
     }
 
     @Override
     @UnitOfWork
     public void activateUser(String emailCode) {
-        userRegisterer.orElseThrow(NotFoundException::new).activate(emailCode);
+        checkFound(userRegisterer).activate(emailCode);
     }
 
     @Override
     @UnitOfWork
     public User updateUser(AuthHeader authHeader, String userJid, UserData userData) {
-        actorChecker.check(authHeader);
-        return userStore.updateUser(userJid, userData).orElseThrow(NotFoundException::new);
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
+
+        return checkFound(userStore.updateUser(userJid, userData));
     }
 
     @Override
     @UnitOfWork(readOnly = true)
     public UserProfile getUserProfile(AuthHeader authHeader, String userJid) {
-        actorChecker.check(authHeader);
-        User user = userStore.findUserByJid(userJid).orElseThrow(NotFoundException::new);
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canReadUser(actorJid, userJid));
+
+        User user = checkFound(userStore.findUserByJid(userJid));
         return userProfileStore.getUserProfile(user.getJid());
     }
 
     @Override
     @UnitOfWork
     public UserProfile updateUserProfile(AuthHeader authHeader, String userJid, UserProfile userProfile) {
-        actorChecker.check(authHeader);
-        User user = userStore.findUserByJid(userJid).orElseThrow(NotFoundException::new);
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
+
+        User user = checkFound(userStore.findUserByJid(userJid));
         return userProfileStore.upsertUserProfile(user.getJid(), userProfile);
     }
 
     @Override
     @UnitOfWork
     public void deleteUserAvatar(AuthHeader authHeader, String userJid) {
-        actorChecker.check(authHeader);
-        if (!userStore.updateUserAvatar(userJid, null).isPresent()) {
-            throw new NotFoundException();
-        }
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
+
+        checkFound(userStore.updateUserAvatar(userJid, null));
     }
 
     @Override
     @UnitOfWork
     public void requestToResetUserPassword(String email) {
-        User user = userStore.findUserByEmail(email).orElseThrow(NotFoundException::new);
-        userPasswordResetter.orElseThrow(NotFoundException::new).request(user);
+        User user = checkFound(userStore.findUserByEmail(email));
+        checkFound(userPasswordResetter).request(user);
     }
 
     @Override
     @UnitOfWork
     public void resetUserPassword(PasswordResetData passwordResetData) {
-        userPasswordResetter.orElseThrow(NotFoundException::new).reset(passwordResetData);
+        checkFound(userPasswordResetter).reset(passwordResetData);
     }
 }

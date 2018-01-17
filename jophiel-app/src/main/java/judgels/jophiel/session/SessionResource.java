@@ -1,5 +1,7 @@
 package judgels.jophiel.session;
 
+import static judgels.service.ServiceUtils.checkAllowed;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
 import javax.ws.rs.ForbiddenException;
@@ -37,9 +39,7 @@ public class SessionResource implements SessionService {
         User user = userStore.findUserByUsernameAndPassword(credentials.getUsername(), credentials.getPassword())
                 .orElseThrow(ForbiddenException::new);
 
-        if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
-            throw new ForbiddenException();
-        }
+        checkAllowed(userRegistrationEmailStore.isUserActivated(user.getJid()));
 
         return sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
     }

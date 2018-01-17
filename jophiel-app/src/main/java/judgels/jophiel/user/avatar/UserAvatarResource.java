@@ -3,6 +3,8 @@ package judgels.jophiel.user.avatar;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static judgels.service.ServiceUtils.checkAllowed;
+import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
@@ -11,12 +13,12 @@ import java.io.InputStream;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.role.RoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.service.RandomCodeGenerator;
 import judgels.service.actor.ActorChecker;
@@ -27,12 +29,19 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @Path("/api/v2/users")
 public class UserAvatarResource {
     private final ActorChecker actorChecker;
+    private final RoleChecker roleChecker;
     private final UserStore userStore;
     private final FileSystem avatarFs;
 
     @Inject
-    public UserAvatarResource(ActorChecker actorChecker, UserStore userStore, @UserAvatarFs FileSystem avatarFs) {
+    public UserAvatarResource(
+            ActorChecker actorChecker,
+            RoleChecker roleChecker,
+            UserStore userStore,
+            @UserAvatarFs FileSystem avatarFs) {
+
         this.actorChecker = actorChecker;
+        this.roleChecker = roleChecker;
         this.avatarFs = avatarFs;
         this.userStore = userStore;
     }
@@ -48,8 +57,10 @@ public class UserAvatarResource {
             @FormDataParam("file") InputStream fileStream,
             @FormDataParam("file") FormDataContentDisposition fileDetails) {
 
-        actorChecker.check(authHeader);
-        User user = userStore.findUserByJid(userJid).orElseThrow(NotFoundException::new);
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
+
+        User user = checkFound(userStore.findUserByJid(userJid));
 
         String extension = Files.getFileExtension(fileDetails.getFileName());
         String destFilename = user.getJid() + "-" + RandomCodeGenerator.newCode() + "." + extension;

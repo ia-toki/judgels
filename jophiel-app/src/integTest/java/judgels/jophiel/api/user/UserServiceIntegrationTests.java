@@ -21,9 +21,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private SessionService sessionService = createService(SessionService.class);
 
     @Test void basic_flow() {
-        assertThatRemoteExceptionThrownBy(() -> userService.getUser("userJid"))
-                .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
-        assertThatRemoteExceptionThrownBy(() -> userService.getUserByUsername("alpha"))
+        assertThatRemoteExceptionThrownBy(() -> userService.getUser(adminHeader, "userJid"))
                 .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
 
         User user = userService.createUser(adminHeader, new UserData.Builder()
@@ -32,10 +30,9 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .email("email@domain.com")
                 .build());
 
-        assertThat(user).isEqualTo(userService.getUserByUsername("alpha"));
         assertThat(user.getUsername()).isEqualTo("alpha");
 
-        assertThat(userService.getUser(user.getJid())).isEqualTo(user);
+        assertThat(userService.getUser(adminHeader, user.getJid())).isEqualTo(user);
 
         UserProfile userProfile = new UserProfile.Builder()
                 .name("Alpha")
@@ -60,7 +57,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(userService.usernameExists("beta")).isFalse();
         assertThat(userService.emailExists("beta@domain.com")).isFalse();
 
-        userService.registerUser(new UserRegistrationData.Builder()
+        User beta = userService.registerUser(new UserRegistrationData.Builder()
                 .username("beta")
                 .name("Beta")
                 .password("pass")
@@ -79,11 +76,9 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThatCode(() -> sessionService.logIn(credentials))
                 .doesNotThrowAnyException();
 
-        assertThat(userService.usernameExists("beta")).isTrue();
         assertThat(userService.emailExists("beta@domain.com")).isTrue();
 
-        User user = userService.getUserByUsername("beta");
-        UserProfile userProfile = userService.getUserProfile(adminHeader, user.getJid());
+        UserProfile userProfile = userService.getUserProfile(adminHeader, beta.getJid());
         assertThat(userProfile.getName()).contains("Beta");
 
         wiser.stop();

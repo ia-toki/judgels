@@ -19,12 +19,7 @@ public interface UserService {
     @GET
     @Path("/{userJid}")
     @Produces(APPLICATION_JSON)
-    User getUser(@PathParam("userJid") String userJid);
-
-    @GET
-    @Path("/username/{username}")
-    @Produces(APPLICATION_JSON)
-    User getUserByUsername(@PathParam("username") String username);
+    User getUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
 
     @GET
     @Path("/username/{username}/exists")
