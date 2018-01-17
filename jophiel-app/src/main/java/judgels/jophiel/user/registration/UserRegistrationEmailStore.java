@@ -2,7 +2,7 @@ package judgels.jophiel.user.registration;
 
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.RandomCodeGenerator;
+import judgels.service.RandomCodeGenerator;
 
 public class UserRegistrationEmailStore {
     private final UserRegistrationEmailDao userRegistrationEmailDao;

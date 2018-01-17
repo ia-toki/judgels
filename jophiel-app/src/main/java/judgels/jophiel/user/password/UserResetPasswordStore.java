@@ -3,7 +3,7 @@ package judgels.jophiel.user.password;
 import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.RandomCodeGenerator;
+import judgels.service.RandomCodeGenerator;
 
 public class UserResetPasswordStore {
     private final UserResetPasswordDao userResetPasswordDao;
