@@ -1,4 +1,6 @@
 rootProject.name = "judgels-commons"
 
+include "judgels-persistence-core"
+include "judgels-persistence-testing"
 include "judgels-service-api"
 include "judgels-service-core"
