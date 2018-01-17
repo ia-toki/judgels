@@ -18,16 +18,16 @@ public class UserProfileStore {
                 .orElse(new UserProfile.Builder().build());
     }
 
-    public void upsertUserProfile(String userJid, UserProfile userProfile) {
+    public UserProfile upsertUserProfile(String userJid, UserProfile userProfile) {
         Optional<UserProfileModel> maybeModel = userProfileDao.selectByUserJid(userJid);
         if (maybeModel.isPresent()) {
             UserProfileModel model = maybeModel.get();
             toModel(userJid, userProfile, model);
-            userProfileDao.update(model);
+            return fromModel(userProfileDao.update(model));
         } else {
             UserProfileModel model = new UserProfileModel();
             toModel(userJid, userProfile, model);
-            userProfileDao.insert(model);
+            return fromModel(userProfileDao.insert(model));
         }
     }
 

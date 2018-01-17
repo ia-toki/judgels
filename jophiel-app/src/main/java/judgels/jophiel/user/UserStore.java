@@ -53,10 +53,12 @@ public class UserStore {
         });
     }
 
-    public boolean validateUserPassword(String userJid, String password) {
-        return userDao.selectByJid(userJid)
-                .flatMap(model -> validatePassword(password, model.password) ? Optional.of(true) : Optional.empty())
-                .isPresent();
+    public void validateUserPassword(String userJid, String password) {
+        userDao.selectByJid(userJid).ifPresent(model -> {
+            if (!validatePassword(password, model.password)) {
+                throw new IllegalArgumentException();
+            }
+        });
     }
 
     public void updateUserPassword(String userJid, String newPassword) {
@@ -69,10 +71,10 @@ public class UserStore {
         });
     }
 
-    public void updateUserAvatar(String userJid, @Nullable String newAvatarFilename) {
-        userDao.selectByJid(userJid).ifPresent(model -> {
+    public Optional<User> updateUserAvatar(String userJid, @Nullable String newAvatarFilename) {
+        return userDao.selectByJid(userJid).map(model -> {
             model.avatarFilename = newAvatarFilename;
-            userDao.update(model);
+            return fromModel(userDao.update(model));
         });
     }
 

@@ -1,7 +1,6 @@
 package judgels.jophiel.user.password;
 
 import java.time.Duration;
-import javax.ws.rs.NotFoundException;
 import judgels.jophiel.api.user.PasswordResetData;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.user.UserStore;
@@ -23,10 +22,7 @@ public class UserPasswordResetter {
         this.userResetPasswordMailer = userResetPasswordMailer;
     }
 
-    public void request(String email) {
-        User user = userStore.findUserByEmail(email)
-                .orElseThrow(NotFoundException::new);
-
+    public void request(User user) {
         String emailCode = userResetPasswordStore.generateEmailCode(user.getJid(), FORGOT_PASSWORD_EXPIRATION);
         userResetPasswordMailer.sendRequestEmail(user, emailCode);
     }
@@ -37,7 +33,7 @@ public class UserPasswordResetter {
         String userJid = userResetPasswordStore.consumeEmailCode(emailCode, FORGOT_PASSWORD_EXPIRATION)
                 .orElseThrow(IllegalArgumentException::new);
         User user = userStore.findUserByJid(userJid)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(IllegalStateException::new);
 
         userStore.updateUserPassword(user.getJid(), data.getNewPassword());
 

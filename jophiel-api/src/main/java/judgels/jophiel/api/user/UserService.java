@@ -65,7 +65,8 @@ public interface UserService {
     @PUT
     @Path("/{userJid}")
     @Consumes(APPLICATION_JSON)
-    void updateUser(
+    @Produces(APPLICATION_JSON)
+    User updateUser(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("userJid") String userJid,
             UserData userData);
@@ -78,7 +79,8 @@ public interface UserService {
     @PUT
     @Path("/{userJid}/profile")
     @Consumes(APPLICATION_JSON)
-    void updateUserProfile(
+    @Produces(APPLICATION_JSON)
+    UserProfile updateUserProfile(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("userJid") String userJid,
             UserProfile userProfile);

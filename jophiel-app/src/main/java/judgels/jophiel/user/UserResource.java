@@ -75,9 +75,7 @@ public class UserResource implements UserService {
     @UnitOfWork
     public void updateMyPassword(AuthHeader authHeader, PasswordUpdateData passwordUpdateData) {
         String actorJid = actorChecker.check(authHeader);
-        if (!userStore.validateUserPassword(actorJid, passwordUpdateData.getOldPassword())) {
-            throw new IllegalArgumentException();
-        }
+        userStore.validateUserPassword(actorJid, passwordUpdateData.getOldPassword());
         userStore.updateUserPassword(actorJid, passwordUpdateData.getNewPassword());
     }
 
@@ -102,39 +100,41 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public void updateUser(AuthHeader authHeader, String userJid, UserData userData) {
+    public User updateUser(AuthHeader authHeader, String userJid, UserData userData) {
         actorChecker.check(authHeader);
-        userStore.updateUser(userJid, userData);
+        return userStore.updateUser(userJid, userData).orElseThrow(NotFoundException::new);
     }
 
     @Override
     @UnitOfWork(readOnly = true)
     public UserProfile getUserProfile(AuthHeader authHeader, String userJid) {
         actorChecker.check(authHeader);
-        return userProfileStore.getUserProfile(userJid);
+        User user = userStore.findUserByJid(userJid).orElseThrow(NotFoundException::new);
+        return userProfileStore.getUserProfile(user.getJid());
     }
 
     @Override
     @UnitOfWork
-    public void updateUserProfile(AuthHeader authHeader, String userJid, UserProfile userProfile) {
+    public UserProfile updateUserProfile(AuthHeader authHeader, String userJid, UserProfile userProfile) {
         actorChecker.check(authHeader);
-        if (!userStore.findUserByJid(userJid).isPresent()) {
-            throw new NotFoundException();
-        }
-        userProfileStore.upsertUserProfile(userJid, userProfile);
+        User user = userStore.findUserByJid(userJid).orElseThrow(NotFoundException::new);
+        return userProfileStore.upsertUserProfile(user.getJid(), userProfile);
     }
 
     @Override
     @UnitOfWork
     public void deleteUserAvatar(AuthHeader authHeader, String userJid) {
         actorChecker.check(authHeader);
-        userStore.updateUserAvatar(userJid, null);
+        if (!userStore.updateUserAvatar(userJid, null).isPresent()) {
+            throw new NotFoundException();
+        }
     }
 
     @Override
     @UnitOfWork
     public void requestToResetUserPassword(String email) {
-        userPasswordResetter.orElseThrow(NotFoundException::new).request(email);
+        User user = userStore.findUserByEmail(email).orElseThrow(NotFoundException::new);
+        userPasswordResetter.orElseThrow(NotFoundException::new).request(user);
     }
 
     @Override
