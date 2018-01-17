@@ -1,0 +1,10 @@
+apply from: '../gradle/publishing.gradle'
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+
+    testCompile "org.assertj:assertj-core:$assertJVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+
+    processor "org.immutables:value:$immutablesVersion"
+}

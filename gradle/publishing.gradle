@@ -1,0 +1,47 @@
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing.publications {
+    maven(MavenPublication) {
+        from components.java
+        artifact sourceJar {
+            classifier "sources"
+        }
+
+        pom.withXml {
+            def dependenciesNode = asNode().appendNode('dependencies')
+            configurations.compile.allDependencies.each {
+                def dependencyNode = dependenciesNode.appendNode('dependency')
+                dependencyNode.appendNode('groupId', it.group)
+                dependencyNode.appendNode('artifactId', it.name)
+                dependencyNode.appendNode('version', it.version)
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.env.BINTRAY_USER
+    key = System.env.BINTRAY_KEY
+    publications = ['maven']
+
+    pkg {
+        repo = 'releases'
+        name = project.name
+        userOrg = 'judgels'
+
+        version {
+            name = project.version
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version,
+                "Implementation-Vendor": "Ikatan Alumni TOKI")
+    }
+}

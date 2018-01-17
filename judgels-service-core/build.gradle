@@ -1,0 +1,16 @@
+apply from: '../gradle/publishing.gradle'
+
+dependencies {
+    compile project(':judgels-service-api')
+
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
+    compile "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
+
+    testCompile "com.google.guava:guava:$guavaVersion"
+    testCompile "org.assertj:assertj-core:$assertJVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+
+    processor "org.immutables:value:$immutablesVersion"
+}

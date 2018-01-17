@@ -48,7 +48,7 @@
     <module name="TreeWalker">
         <module name="AbbreviationAsWordInName"> <!-- Java Style Guide: Camel case : defined -->
             <property name="ignoreFinal" value="false"/>
-            <property name="allowedAbbreviationLength" value="2"/>
+            <property name="allowedAbbreviationLength" value="1"/>
         </module>
         <module name="AnnotationLocation"> <!-- Java Style Guide: Annotations -->
             <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF"/>
@@ -343,10 +343,6 @@
             <property name="format" value="serial"/>
         </module>
         <module name="SuppressWarningsHolder" />  <!-- Required for SuppressWarningsFilter -->
-        <module name="TypeName"> <!-- Java Style Guide: Class names -->
-            <message key="name.invalidPattern" value="Type name ''{0}'' must match pattern ''{1}''."/>
-            <property name="applyToPackage" value="false"/>
-        </module>
         <module name="TypecastParenPad"/> <!-- Java Style Guide: Horizontal whitespace -->
         <module name="UnnecessaryParentheses"/>
         <module name="UnusedImports"> <!-- Java Style Guide: No unused imports -->
@@ -374,7 +370,6 @@
         <module name="CyclomaticComplexity"/> <!-- Java Coding Guidelines: Reduce Cyclomatic Complexity -->
         <module name="JavadocMethod"> <!-- Java Style Guide: Where Javadoc is used -->
             <property name="scope" value="public"/>
-            <property name="allowMissingJavadoc" value="true"/>
             <property name="allowMissingParamTags" value="true"/>
             <property name="allowMissingThrowsTags" value="true"/>
             <property name="allowMissingReturnTag" value="true"/>
