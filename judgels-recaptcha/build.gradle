@@ -1,0 +1,10 @@
+apply from: '../gradle/publishing.gradle'
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
+    compile "org.glassfish.jersey.core:jersey-client:$jerseyClientVersion"
+
+    processor "com.google.dagger:dagger-compiler:$daggerVersion"
+    processor "org.immutables:value:$immutablesVersion"
+}
