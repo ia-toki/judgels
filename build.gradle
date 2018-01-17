@@ -33,6 +33,7 @@ allprojects {
         }
     }
 
+    group 'org.iatoki.judgels'
     version gitVersion()
 }
 
