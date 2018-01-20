@@ -56,7 +56,6 @@ test.dependsOn junitPlatformIntegTest
 dependencies {
     compile project(':jophiel-api')
 
-    compile 'com.amazonaws:aws-java-sdk-s3:1.11.258'
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
