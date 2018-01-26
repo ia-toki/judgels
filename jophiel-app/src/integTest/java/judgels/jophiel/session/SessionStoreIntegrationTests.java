@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.hibernate.SessionHibernateDao;
+import judgels.jophiel.legacy.session.LegacySessionDao;
+import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;
@@ -14,12 +16,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {SessionModel.class})
-public class SessionStoreIntegrationTests {
+class SessionStoreIntegrationTests {
     private SessionStore store;
 
     @BeforeEach void before(SessionFactory sessionFactory) {
-        SessionDao dao = new SessionHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        store = new SessionStore(dao);
+        SessionDao sessionDao = new SessionHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
+        LegacySessionDao legacySssionDao =
+                new LegacySessionHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
+        store = new SessionStore(sessionDao, legacySssionDao);
     }
 
     @Test void can_do_basic_crud() {

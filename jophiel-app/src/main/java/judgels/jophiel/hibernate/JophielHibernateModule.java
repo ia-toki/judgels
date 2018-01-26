@@ -6,6 +6,8 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import java.time.Clock;
 import javax.inject.Singleton;
+import judgels.jophiel.legacy.session.LegacySessionDao;
+import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
 import judgels.jophiel.role.AdminRoleDao;
 import judgels.jophiel.session.SessionDao;
 import judgels.jophiel.user.UserDao;
@@ -41,6 +43,12 @@ public class JophielHibernateModule {
     @Singleton
     AdminRoleDao adminRoleDao(Clock clock, ActorProvider actorProvider) {
         return new AdminRoleHibernateDao(sessionFactory, clock, actorProvider);
+    }
+
+    @Provides
+    @Singleton
+    LegacySessionDao legacySessionDao(Clock clock, ActorProvider actorProvider) {
+        return new LegacySessionHibernateDao(sessionFactory, clock, actorProvider);
     }
 
     @Provides
