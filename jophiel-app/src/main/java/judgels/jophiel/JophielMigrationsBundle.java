@@ -8,9 +8,4 @@ public class JophielMigrationsBundle extends MigrationsBundle<JophielApplication
     public PooledDataSourceFactory getDataSourceFactory(JophielApplicationConfiguration config) {
         return config.getDatabaseConfig();
     }
-
-    @Override
-    public String getMigrationsFileName() {
-        return "migrations.yml";
-    }
 }

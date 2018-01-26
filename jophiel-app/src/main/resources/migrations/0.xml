@@ -1,0 +1,195 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="fushar (generated)" id="1516960060183-1">
+        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_legacy_session">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="createdAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(255)"/>
+            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="authCode" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-2">
+        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_role_admin">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="createdAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(255)"/>
+            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="userJid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-3">
+        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_session">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="createdAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(255)"/>
+            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="userJid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-4">
+        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="createdAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(255)"/>
+            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="updatedAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedBy" type="VARCHAR(255)"/>
+            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="jid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="avatarFilename" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-5">
+        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_user_profile">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="createdAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(255)"/>
+            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="updatedAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedBy" type="VARCHAR(255)"/>
+            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="city" type="VARCHAR(255)"/>
+            <column name="country" type="VARCHAR(255)"/>
+            <column name="gender" type="VARCHAR(255)"/>
+            <column name="homeAddress" type="TEXT"/>
+            <column name="institution" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="nationality" type="VARCHAR(255)"/>
+            <column name="province" type="VARCHAR(255)"/>
+            <column name="shirtSize" type="VARCHAR(255)"/>
+            <column name="userJid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-6">
+        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_user_registration_email">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="createdAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(255)"/>
+            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="updatedAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedBy" type="VARCHAR(255)"/>
+            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="emailCode" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="userJid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="verified" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-7">
+        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_user_reset_password">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="createdAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(255)"/>
+            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="updatedAt" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedBy" type="VARCHAR(255)"/>
+            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="consumed" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="emailCode" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="userJid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-8">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="emailCode" constraintName="UK_182batmj4apn57hbeqrjp4csx" schemaName="judgels-ng_jophiel" tableName="jophiel_user_registration_email"/>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-9">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="emailCode" constraintName="UK_6ojinylilqf7oxyoqk4xmaep9" schemaName="judgels-ng_jophiel" tableName="jophiel_user_reset_password"/>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-10">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="jid" constraintName="UK_990nwskba209lgnrln3hdbmuj" schemaName="judgels-ng_jophiel" tableName="jophiel_user"/>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-11">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="userJid" constraintName="UK_a1ffn9y9mjdd8raybfmhe5fex" schemaName="judgels-ng_jophiel" tableName="jophiel_user_profile"/>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-12">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="userJid" constraintName="UK_aggiw33f76edbvrh1hd8cmxnx" schemaName="judgels-ng_jophiel" tableName="jophiel_user_registration_email"/>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-13">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="username" constraintName="UK_gt1tdf5crsjxx7c6wpixw7281" schemaName="judgels-ng_jophiel" tableName="jophiel_user"/>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-14">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="token" constraintName="UK_j25qdncs4y6riyko47srhev6c" schemaName="judgels-ng_jophiel" tableName="jophiel_session"/>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-15">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="email" constraintName="UK_omt4771rdn2y8qevqywnhh1s6" schemaName="judgels-ng_jophiel" tableName="jophiel_user"/>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-16">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="userJid" constraintName="UK_rrb560env6n1xq83uogmlwux0" schemaName="judgels-ng_jophiel" tableName="jophiel_role_admin"/>
+    </changeSet>
+    <changeSet author="fushar (generated)" id="1516960060183-17">
+        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="authCode" constraintName="UK_t7erlkyp9gewyfu5dwpt4n0w0" schemaName="judgels-ng_jophiel" tableName="jophiel_legacy_session"/>
+    </changeSet>
+</databaseChangeLog>
