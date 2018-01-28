@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <changeSet author="fushar (generated)" id="1517143021855-1">
-        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_legacy_session">
+    <changeSet author="fushar (generated)" id="1517146898844-1">
+        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_legacy_session">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -18,8 +18,8 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-2">
-        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_role_admin">
+    <changeSet author="fushar (generated)" id="1517146898844-2">
+        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_role_admin">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -33,8 +33,8 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-3">
-        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_session">
+    <changeSet author="fushar (generated)" id="1517146898844-3">
+        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_session">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -51,8 +51,8 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-4">
-        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_user">
+    <changeSet author="fushar (generated)" id="1517146898844-4">
+        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -81,8 +81,8 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-5">
-        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_user_profile">
+    <changeSet author="fushar (generated)" id="1517146898844-5">
+        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user_profile">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -110,8 +110,8 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-6">
-        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_user_registration_email">
+    <changeSet author="fushar (generated)" id="1517146898844-6">
+        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user_registration_email">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -136,8 +136,8 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-7">
-        <createTable catalogName="judgels-ng_jophiel" schemaName="judgels-ng_jophiel" tableName="jophiel_user_reset_password">
+    <changeSet author="fushar (generated)" id="1517146898844-7">
+        <createTable catalogName="judgels_jophiel" schemaName="judgels_jophiel" tableName="jophiel_user_reset_password">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -162,58 +162,58 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-8">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="emailCode" constraintName="UK_182batmj4apn57hbeqrjp4csx" schemaName="judgels-ng_jophiel" tableName="jophiel_user_registration_email"/>
+    <changeSet author="fushar (generated)" id="1517146898844-8">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="emailCode" constraintName="UK_182batmj4apn57hbeqrjp4csx" schemaName="judgels_jophiel" tableName="jophiel_user_registration_email"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-9">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="emailCode" constraintName="UK_6ojinylilqf7oxyoqk4xmaep9" schemaName="judgels-ng_jophiel" tableName="jophiel_user_reset_password"/>
+    <changeSet author="fushar (generated)" id="1517146898844-9">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="emailCode" constraintName="UK_6ojinylilqf7oxyoqk4xmaep9" schemaName="judgels_jophiel" tableName="jophiel_user_reset_password"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-10">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="jid" constraintName="UK_990nwskba209lgnrln3hdbmuj" schemaName="judgels-ng_jophiel" tableName="jophiel_user"/>
+    <changeSet author="fushar (generated)" id="1517146898844-10">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="jid" constraintName="UK_990nwskba209lgnrln3hdbmuj" schemaName="judgels_jophiel" tableName="jophiel_user"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-11">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="userJid" constraintName="UK_a1ffn9y9mjdd8raybfmhe5fex" schemaName="judgels-ng_jophiel" tableName="jophiel_user_profile"/>
+    <changeSet author="fushar (generated)" id="1517146898844-11">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="userJid" constraintName="UK_a1ffn9y9mjdd8raybfmhe5fex" schemaName="judgels_jophiel" tableName="jophiel_user_profile"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-12">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="userJid" constraintName="UK_aggiw33f76edbvrh1hd8cmxnx" schemaName="judgels-ng_jophiel" tableName="jophiel_user_registration_email"/>
+    <changeSet author="fushar (generated)" id="1517146898844-12">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="userJid" constraintName="UK_aggiw33f76edbvrh1hd8cmxnx" schemaName="judgels_jophiel" tableName="jophiel_user_registration_email"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-13">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="username" constraintName="UK_gt1tdf5crsjxx7c6wpixw7281" schemaName="judgels-ng_jophiel" tableName="jophiel_user"/>
+    <changeSet author="fushar (generated)" id="1517146898844-13">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="username" constraintName="UK_gt1tdf5crsjxx7c6wpixw7281" schemaName="judgels_jophiel" tableName="jophiel_user"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-14">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="token" constraintName="UK_j25qdncs4y6riyko47srhev6c" schemaName="judgels-ng_jophiel" tableName="jophiel_session"/>
+    <changeSet author="fushar (generated)" id="1517146898844-14">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="token" constraintName="UK_j25qdncs4y6riyko47srhev6c" schemaName="judgels_jophiel" tableName="jophiel_session"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-15">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="email" constraintName="UK_omt4771rdn2y8qevqywnhh1s6" schemaName="judgels-ng_jophiel" tableName="jophiel_user"/>
+    <changeSet author="fushar (generated)" id="1517146898844-15">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="email" constraintName="UK_omt4771rdn2y8qevqywnhh1s6" schemaName="judgels_jophiel" tableName="jophiel_user"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-16">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="userJid" constraintName="UK_rrb560env6n1xq83uogmlwux0" schemaName="judgels-ng_jophiel" tableName="jophiel_role_admin"/>
+    <changeSet author="fushar (generated)" id="1517146898844-16">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="userJid" constraintName="UK_rrb560env6n1xq83uogmlwux0" schemaName="judgels_jophiel" tableName="jophiel_role_admin"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-17">
-        <addUniqueConstraint catalogName="judgels-ng_jophiel" columnNames="authCode" constraintName="UK_t7erlkyp9gewyfu5dwpt4n0w0" schemaName="judgels-ng_jophiel" tableName="jophiel_legacy_session"/>
+    <changeSet author="fushar (generated)" id="1517146898844-17">
+        <addUniqueConstraint catalogName="judgels_jophiel" columnNames="authCode" constraintName="UK_t7erlkyp9gewyfu5dwpt4n0w0" schemaName="judgels_jophiel" tableName="jophiel_legacy_session"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-18">
-        <createIndex catalogName="judgels-ng_jophiel" indexName="IDX4yfaevhf56wm4axogmj9y48b3" schemaName="judgels-ng_jophiel" tableName="jophiel_user_profile">
+    <changeSet author="fushar (generated)" id="1517146898844-18">
+        <createIndex catalogName="judgels_jophiel" indexName="IDX4yfaevhf56wm4axogmj9y48b3" schemaName="judgels_jophiel" tableName="jophiel_user_profile">
             <column name="institution"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-19">
-        <createIndex catalogName="judgels-ng_jophiel" indexName="IDX60f3wc4ei0h9khu4q67pv5yel" schemaName="judgels-ng_jophiel" tableName="jophiel_user_profile">
+    <changeSet author="fushar (generated)" id="1517146898844-19">
+        <createIndex catalogName="judgels_jophiel" indexName="IDX60f3wc4ei0h9khu4q67pv5yel" schemaName="judgels_jophiel" tableName="jophiel_user_profile">
             <column name="country"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-20">
-        <createIndex catalogName="judgels-ng_jophiel" indexName="IDXgkff82ehn2mrkychm2yfkxryi" schemaName="judgels-ng_jophiel" tableName="jophiel_user_profile">
+    <changeSet author="fushar (generated)" id="1517146898844-20">
+        <createIndex catalogName="judgels_jophiel" indexName="IDXgkff82ehn2mrkychm2yfkxryi" schemaName="judgels_jophiel" tableName="jophiel_user_profile">
             <column name="city"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-21">
-        <createIndex catalogName="judgels-ng_jophiel" indexName="IDXk2sww1ui7vh781tuch3d1sxug" schemaName="judgels-ng_jophiel" tableName="jophiel_user_profile">
+    <changeSet author="fushar (generated)" id="1517146898844-21">
+        <createIndex catalogName="judgels_jophiel" indexName="IDXk2sww1ui7vh781tuch3d1sxug" schemaName="judgels_jophiel" tableName="jophiel_user_profile">
             <column name="nationality"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1517143021855-22">
-        <createIndex catalogName="judgels-ng_jophiel" indexName="IDXndhleeenyc8uksxw7jfcoe679" schemaName="judgels-ng_jophiel" tableName="jophiel_user_profile">
+    <changeSet author="fushar (generated)" id="1517146898844-22">
+        <createIndex catalogName="judgels_jophiel" indexName="IDXndhleeenyc8uksxw7jfcoe679" schemaName="judgels_jophiel" tableName="jophiel_user_profile">
             <column name="province"/>
         </createIndex>
     </changeSet>
