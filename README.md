@@ -22,8 +22,6 @@ User account management and authentication for the [Judgment Angels](https://git
 
         ./gradlew run
 
-1. Go to http://localhost:9001 to see the app in action.
-
 ### Running the tests
 
     ./gradlew check
