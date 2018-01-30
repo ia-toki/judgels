@@ -6,10 +6,11 @@ WORKDIR /judgels/sealtiel
 
 EXPOSE 9003 9103
 
-COPY build/distributions/*.tgz /tmp
-RUN tar -xf /tmp/*.tgz -C . --strip-components=1 && rm /tmp/*.tgz
+COPY build/distributions/sealtiel-* .
 
 RUN addgroup -S judgels && adduser -S -g judgels judgels && chown -R judgels var
 USER judgels
+
+VOLUME var/conf
 
 CMD ["service/bin/init.sh", "console"]
