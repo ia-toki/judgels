@@ -1,4 +1,4 @@
-import { ForbiddenError } from '../../../../modules/api/error';
+import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 
 export const loginActions = {
@@ -10,6 +10,8 @@ export const loginActions = {
       } catch (error) {
         if (error instanceof ForbiddenError) {
           throw new Error('Invalid username/password.');
+        } else if (error instanceof BadRequestError) {
+          throw new Error('For security reasons, please reset your password using the "Forgot password" link.');
         } else {
           throw error;
         }
