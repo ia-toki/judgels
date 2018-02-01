@@ -11,6 +11,7 @@ User account management and authentication for the [Judgment Angels](https://git
 
 ## Stack
 
+- [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 - [Dropwizard](http://www.dropwizard.io/)
 
 ## Development
