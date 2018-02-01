@@ -1,0 +1,40 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9004
+  adminConnectors:
+    - type: http
+      port: 9014
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/uriel-request.log
+      archivedLogFilenamePattern: var/log/uriel-request-%d.log.gz
+      archivedFileCount: 14
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost/judgels_uriel?useSSL=false
+  user: uriel
+  password: uriel
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
+    hibernate.generate_statistics: false
+
+logging:
+  appenders:
+    - type: console
+      threshold: INFO
+    - type: file
+      currentLogFilename: var/log/uriel.log
+      archivedLogFilenamePattern: var/log/uriel-%d.log.gz
+      archivedFileCount: 14
+
+  loggers:
+    org.hibernate.type.BasicTypeRegistry:
+      level: OFF
+
+webSecurity:
+  cors:
+    allowedOrigins: "*"

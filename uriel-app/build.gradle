@@ -1,0 +1,84 @@
+sourceSets {
+    integTest {
+        java {
+            compileClasspath += main.output + test.output + project.configurations.processor
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integTest/java')
+        }
+        resources.srcDir file('src/integTest/resources')
+    }
+}
+
+configurations {
+    integTestCompile.extendsFrom testCompile
+    integTestRuntime.extendsFrom testRuntime
+}
+
+idea.module {
+    scopes.TEST.plus += [configurations.integTestRuntimeClasspath, configurations.integTestCompileClasspath]
+
+    testSourceDirs += file('src/integTest/java')
+    testSourceDirs += file('src/integTest/resources')
+
+    iml.withXml {
+        def content = it.asNode().component.find { it.'@name' == 'NewModuleRootManager' }.content[0]
+        content.sourceFolder.each { sourceFolder ->
+            if (sourceFolder.@url?.endsWith('/resources')) {
+                sourceFolder.attributes().with {
+                    boolean isTestSource = (remove('isTestSource') == 'true')
+                    put('type', isTestSource ? 'java-test-resource' : 'java-resource')
+                }
+            }
+        }
+    }
+}
+
+task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
+    group 'Verification'
+    description 'Runs integration tests on the JUnit Platform.'
+
+    dependencies {
+        testRuntime "org.junit.platform:junit-platform-console:$junitPlatformVersion"
+    }
+
+    classpath = sourceSets.integTest.runtimeClasspath
+    systemProperties['jar.path'] = jar.archivePath
+
+    main 'org.junit.platform.console.ConsoleLauncher'
+    args = [
+            '--scan-classpath', sourceSets.integTest.output.classesDirs.asPath,
+            '--reports-dir', "${buildDir}/test-results/junit-platform-integ"
+    ]
+}
+
+test.dependsOn junitPlatformIntegTest
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
+    compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
+    compile "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
+    compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
+    compile "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+    compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
+    compile "org.iatoki.judgels:judgels-fs:$judgelsFsVersion"
+    compile "org.iatoki.judgels:judgels-persistence-core:$judgelsPersistenceVersion"
+    compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
+
+    runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
+
+    testCompile "org.assertj:assertj-core:$assertJVersion"
+    testCompile "org.awaitility:awaitility:$awaitilityVersion"
+    testCompile "org.iatoki.judgels:judgels-persistence-testing:$judgelsPersistenceVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+
+
+    integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
+    integTestCompile "com.palantir.remoting-api:test-utils:$httpRemotingApiVersion"
+    integTestCompile "com.palantir.remoting3:jaxrs-clients:$httpRemotingVersion"
+
+    processor "com.google.dagger:dagger-compiler:$daggerVersion"
+    processor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    processor "org.immutables:value:$immutablesVersion"
+}

@@ -1,0 +1,4 @@
+rootProject.name = "uriel"
+
+include "uriel-app"
+include "uriel-dist"

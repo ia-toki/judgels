@@ -1,0 +1,91 @@
+buildscript {
+    repositories {
+        mavenCentral()
+
+        maven {
+            url 'http://palantir.bintray.com/releases'
+        }
+    }
+
+    dependencies {
+        classpath "com.palantir.baseline:gradle-baseline-java:$gradleBaselineVersion"
+    }
+}
+
+plugins {
+    id 'idea'
+
+    id 'com.palantir.git-version' version '0.8.0'
+    id 'org.inferred.processors' version '1.2.15'
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+
+        maven {
+            url 'http://palantir.bintray.com/releases'
+        }
+        maven {
+            url 'https://dl.bintray.com/judgels/releases'
+        }
+    }
+
+    version gitVersion()
+}
+
+apply plugin: 'com.palantir.baseline-config'
+
+dependencies {
+    baseline "com.palantir.baseline:gradle-baseline-java-config:$gradleBaselineVersion@zip"
+}
+
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+
+    apply plugin: 'com.palantir.baseline-checkstyle'
+    apply plugin: 'com.palantir.baseline-idea'
+    apply plugin: 'org.inferred.processors'
+
+    configurations.each {
+        it.resolutionStrategy {
+            eachDependency { details ->
+                if (details.requested.group.startsWith('com.fasterxml.jackson')) {
+                    force "${details.requested.group}:${details.requested.name}:$jacksonVersion"
+                }
+            }
+        }
+    }
+
+    jar {
+        manifest {
+            attributes(
+                    "Implementation-Title": project.name,
+                    "Implementation-Version": project.version,
+                    "Implementation-Vendor": "Ikatan Alumni TOKI")
+        }
+    }
+
+    task junitPlatformTest(type: JavaExec, dependsOn: jar) {
+        group 'Verification'
+        description 'Runs tests on the JUnit Platform.'
+
+        dependencies {
+            testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+            testRuntime "org.junit.platform:junit-platform-console:$junitPlatformVersion"
+        }
+
+        classpath = sourceSets.test.runtimeClasspath
+        systemProperties['jar.path'] = jar.archivePath
+
+        main 'org.junit.platform.console.ConsoleLauncher'
+        args = [
+                '--scan-classpath', sourceSets.test.output.classesDirs.asPath,
+                '--reports-dir', "${buildDir}/test-results/junit-platform"
+        ]
+    }
+
+    test.dependsOn junitPlatformTest
+}
