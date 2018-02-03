@@ -8,3 +8,7 @@ generated_testSrc/
 *.iml
 *.ipr
 *.iws
+
+.idea/
+*.log
+*.log.gz
