@@ -25,6 +25,7 @@ script:
   - tar -xf jophiel-dist/build/distributions/jophiel-* -C jophiel-dist/dockerfiles/jophiel/build/distributions
 
 deploy:
+  skip_cleanup: true
   provider: script
   script: scripts/deploy.sh
   on:
