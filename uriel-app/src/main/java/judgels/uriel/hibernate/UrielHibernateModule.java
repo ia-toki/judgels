@@ -8,6 +8,7 @@ import java.time.Clock;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
 import judgels.uriel.contest.ContestDao;
+import judgels.uriel.contest.ContestScoreboardDao;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -36,5 +37,11 @@ public class UrielHibernateModule {
     @Singleton
     ContestDao contestDao(Clock clock, ActorProvider actorProvider) {
         return new ContestHibernateDao(sessionFactory, clock, actorProvider);
+    }
+
+    @Provides
+    @Singleton
+    ContestScoreboardDao contestScoreboardDao(Clock clock, ActorProvider actorProvider) {
+        return new ContestScoreboardHibernateDao(sessionFactory, clock, actorProvider);
     }
 }
