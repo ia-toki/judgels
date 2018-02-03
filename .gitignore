@@ -14,3 +14,7 @@ jophiel.yml
 
 *.log
 *.log.gz
+
+dockerfiles/
+!dockerfiles/**/Dockerfile
+!dockerfiles/**/.dockerignore

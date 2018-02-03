@@ -1,0 +1,25 @@
+server {
+  listen 80;
+  server_name {{ jophiel_url }};
+  root /var/www/html;
+
+  location ~ /\. {
+    deny all;
+  }
+  location ^~ /.well-known/ {
+    allow all;
+  }
+
+  location / {
+    proxy_pass              http://localhost:{{ jophiel_listen_port }};
+    proxy_set_header        Host $host;
+    proxy_set_header        X-Real-IP $remote_addr;
+    proxy_set_header        X-Forwarded-Proto https;
+    proxy_set_header        X-Forwarded-Ssl on;
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_connect_timeout   150;
+    proxy_send_timeout      100;
+    proxy_read_timeout      100;
+    client_max_body_size    512M;
+  }
+}

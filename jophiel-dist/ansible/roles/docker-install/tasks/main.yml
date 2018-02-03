@@ -1,0 +1,13 @@
+---
+- block:
+  - name: "Install docker-py"
+    pip:
+      name: "docker-py"
+
+  - name: "Install docker.io"
+    apt:
+      name: "docker.io"
+      state: "present"
+
+  tags:
+    - "docker-install"

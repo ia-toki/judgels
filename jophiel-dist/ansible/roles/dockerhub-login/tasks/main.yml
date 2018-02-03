@@ -1,0 +1,10 @@
+---
+- block:
+  - name: "Log into DockerHub"
+    docker_login:
+      username: "{{ dockerhub_email }}"
+      password: "{{ dockerhub_token }}"
+      email: "{{ dockerhub_email }}"
+
+  tags:
+    - "dockerhub-login"

@@ -1,0 +1,11 @@
+---
+- block:
+  - name: "Build jophiel image and push it to dockerhub"
+    docker_image:
+      path: "{{ playbook_dir }}/../../dockerfiles/jophiel"
+      name: "judgels/jophiel"
+      tag: "{{ jophiel_version }}"
+      push: yes
+
+  tags:
+    - "jophiel-build"

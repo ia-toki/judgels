@@ -2,3 +2,30 @@ language: java
 
 git:
   depth: false
+
+addons:
+  ssh_known_hosts: test3.ia-toki.org
+
+env:
+  - secure: Qo5MpD9dIUMHJlY99nYXhvnR/NwzjAilSmba9RAQHA3GOtmbzZ9Y3kyt90Avddxa0sEaR7vSMPj7B1UoAGlBCbseapEkTVDBpIzvDG1XvhHUROFPkBPAn6BNpixcUqDcxHnkSBg2WkjzGIzO4VHSXmRb92sRvg2tfRweMgctVi2dbDPmok3PmQh6+QHhFkgJIgarwCSPAhGjT+9u9x3K125aj6KtUk6a+9ONLswuocFwjWw5sRfKIrtBRULsCyGGRNyeu9qodE1SM5UOWkEsK3Pc8ybJy4siqZmMMscMpwDx6eMAz4/CUMD7iAoYgg+/wMK+JpPRac81zS0CcvfCCQ237t5J47nahmXujvy+9tf3RNG6cpT+I1uHZhbP98BUFza9WLIkkYRk59s0YTBwJ803cebuT2rWUg+8K28CoygzgLUQMAYkDXCAPO88poerdJ7NULNBe9lPLteL4Q3BwWkAXf7c0+QmO1/VI/v+apBUJuVcrTTOxwvQFGlnhh6w+4DwOT5C6Ms2ri5g3rAf1mtspT6oU9epKGaxZrLEOTAts3I4jA0YRxw6sIe2P35Kw/XwxfEayyDRO2f/6EKj268O2aca98uSXQn1dFWWBjOB5mAFOYEUpwSyUYnJPCQW6VFiCbanfDvOPDZvY0c8q+5lZMwAewqW3SSgykSwu30=
+  - secure: dj1dQEzaOirkRX+UtyERLoTaHDz9CdcUQ6qISmP/ONjald4PxoRBFpki4V5B8v76OiGe4jXtheAhzZGVZX4DckgLmq4jG4iyZRuxgQyuboIS0wAj9xtQzkZbiM4EzrYS5MeXWWTd9FR+wEwGC17K5nkQnO99ox7X37I8akXzDGFSMgWlr9SvNhDnFcCB85BUsrNmAyE4RgsZtmF38hAAvmMEqV4C43G36bCpNlc63JJQi593AoZSFXSkhkndO2LUU/LiKeh8hFVzC3txXFHoiL8utRIbgZZLJ8h6hCFDB7AT95OEaqTD/qIpRoxf6gCSgi/Q0Th7hQn6fanlRIokCp/aSsgyKHSAPEbZUWZjMWNw/Jh2x3XF2FpxiklL092NFaMEE92+SBkKXqDNlQXP2hzudN5Y5Uu3WKhaGObdsRFEg9tEdNXHjpvHSRVB1bnJKeaNP7SihmM97gfx3Oef1xT+kqTtissVh1AOY64u9Evy6IGbYJs4S9DwUmFdH9w5nZXEyaFttNTPd45i9gKiABkWX7NQ8ry9qCQXWHvGHgrFRqBk/UXoqPBXpsmeMAPKcpXRiRGe+HJatz/6UrRA2SAxZZxa9bCIMyEkbKwoaosvwPCHOXoQQ+jI+riZzeyAgAQh3AngteZIe17+K5LzjiXu+xf1flt4f+YThxmZCWg=
+  - secure: P9DWO3wkGqwfRdXLELIw4HSeK46uRY5c/A+hUjJ9YEca2SrzJyzbAc1znDcjGdw0pF4NOxANM0EiLvwo0zQ6TDxXF0KlrphrsqwZ2jUt/p+1UL0grII+xZkM8sFCF/JAJ3arykk513+Ruufj6qrCl+XI/IWKLi5RoJ+Ftlq74BxNYeybCio0Ze4o2s316Gh+vEM3ogFqXB52RHwDbWbjwJdbSjAZarpkcWyqko/St1Fke/br+NkiGPD3QYPhhOhxM1XwNEDC9DcErrr1xO9WB+Y7QoEfKzy9y1KRJMeLHqVXvii0T8z/xfQzO79x79xc8Tuwkv7RZZENj2kIM18jaakmR5qJ+opu/+hYcEu6Jo6Bcs9JvOIzcmO2yRgTODSrpWfL480CpBKO/nXxlpcsBsdcyrbqXK/7oQsr3idbkSj3eES+caEN5HZ4I/TOZKUzfBf3RuA2abfUN8NX0EcLNnIcy2br/otK19WHidhyj81MigPfF/+7XWFfFkL8oTjaoc71yZ1YqWrpWv3INSl29dKft7vriaLXfyB3iO+AYaT7p0Xfkrhf21q9gcY1S/2trsZ5Vyuru4k6RGQJ9mP0NkRFzKJzC2/se4UdO8chGW++JEnsBdCztsrvnvCKM1XzTkszKJlUT4Sb+ugFRHjhXSlqK6mLCujT2M/H8ejbr94=
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_bd46b89c8fce_key -iv $encrypted_bd46b89c8fce_iv -in jophiel-dist/deploy_rsa.enc -out /tmp/deploy_rsa -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/deploy_rsa
+  - ssh-add /tmp/deploy_rsa
+  - sudo apt-get -qq update
+  - sudo apt-get install -y ansible docker.io
+
+script:
+  - "./gradlew clean distTar"
+  - mkdir -p jophiel-dist/dockerfiles/jophiel/build/distributions
+  - tar -xf jophiel-dist/build/distributions/jophiel-* -C jophiel-dist/dockerfiles/jophiel/build/distributions
+
+deploy:
+  provider: script
+  script: scripts/deploy.sh
+  on:
+    branch: test
