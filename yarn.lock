@@ -83,6 +83,12 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-paginate@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@types/react-paginate/-/react-paginate-4.3.1.tgz#04c558a67751c38c24160df8f812f6b57600081a"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-redux@^5.0.12":
   version "5.0.12"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-5.0.12.tgz#c066812eb970009b373372f439d08265ed2a6f8e"
@@ -2362,7 +2368,7 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "^2.0.0"
 
-fbjs@^0.8.0, fbjs@^0.8.16:
+fbjs@^0.8.0, fbjs@^0.8.16, fbjs@^0.8.4:
   version "0.8.16"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
   dependencies:
@@ -5435,6 +5441,14 @@ rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-addons-create-fragment@^15.0.0:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react-addons-create-fragment/-/react-addons-create-fragment-15.6.2.tgz#a394de7c2c7becd6b5475ba1b97ac472ce7c74f8"
+  dependencies:
+    fbjs "^0.8.4"
+    loose-envify "^1.3.1"
+    object-assign "^4.1.0"
+
 react-addons-css-transition-group@^15.0.1:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/react-addons-css-transition-group/-/react-addons-css-transition-group-15.6.2.tgz#9e4376bcf40b5217d14ec68553081cee4b08a6d6"
@@ -5502,6 +5516,14 @@ react-google-recaptcha@^0.9.9:
   resolved "https://registry.yarnpkg.com/react-google-recaptcha/-/react-google-recaptcha-0.9.9.tgz#3b6c32fcf09893cf55200a179e337cf578d4ecd4"
   dependencies:
     prop-types ">=15.5.0"
+
+react-paginate@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/react-paginate/-/react-paginate-5.0.0.tgz#b5c12191ea81adc6d4d1b339b805e81841eaa8ea"
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.6.0"
+    react-addons-create-fragment "^15.0.0"
 
 react-redux@^5.0.6:
   version "5.0.6"

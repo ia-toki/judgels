@@ -54,3 +54,25 @@ select {
 table {
   width: 100%;
 }
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.justify-content-flex-end {
+  justify-content: flex-end;
+}
+
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.dispay-block {
+  display: block;
+}

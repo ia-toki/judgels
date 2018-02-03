@@ -1,0 +1,17 @@
+.pagination-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 1rem;
+}
+
+.pagination-link {
+    display: block;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-decoration: none !important;
+}
