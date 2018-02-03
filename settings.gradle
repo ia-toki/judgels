@@ -2,3 +2,4 @@ rootProject.name = "uriel"
 
 include "uriel-app"
 include "uriel-dist"
+include "uriel-api"
