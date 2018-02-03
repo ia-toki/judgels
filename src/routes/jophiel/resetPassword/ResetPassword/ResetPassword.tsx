@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import ResetPasswordForm, { ResetPasswordFormData } from '../ResetPasswordForm/ResetPasswordForm';
-import { SingleColumnLayout } from 'components/layouts/SingleColumnLayout/SingleColumnLayout';
+import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
 import { resetPasswordActions as injectedResetPasswordActions } from '../modules/resetPasswordActions';
 
 export interface ResetPasswordProps {
