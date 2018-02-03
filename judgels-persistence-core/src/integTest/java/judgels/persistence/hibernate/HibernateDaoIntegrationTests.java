@@ -9,7 +9,7 @@ import java.util.Optional;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
-import judgels.persistence.Page;
+import judgels.persistence.api.Page;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

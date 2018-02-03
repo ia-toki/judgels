@@ -1,6 +1,7 @@
 package judgels.persistence;
 
 import java.util.Optional;
+import judgels.persistence.api.Page;
 
 public interface UnmodifiableDao<M extends UnmodifiableModel> {
     M insert(M model);

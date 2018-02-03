@@ -57,6 +57,7 @@ task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
 }
 
 dependencies {
+    compile project(':judgels-persistence-api')
     compile "org.apache.commons:commons-rng-core:$apacheCommonsRngVersion"
     compile "org.apache.commons:commons-rng-simple:$apacheCommonsRngVersion"
     compile "org.apache.commons:commons-text:$apacheCommonsTextVersion"
