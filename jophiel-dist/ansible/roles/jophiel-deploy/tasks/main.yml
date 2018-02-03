@@ -8,7 +8,7 @@
       mode: "0755"
 
   - name: "Generate jophiel configurations"
-    templates:
+    template:
       src: "jophiel.yml.j2"
       dest: "/var/judgels/jophiel/conf/jophiel.yml"
 
