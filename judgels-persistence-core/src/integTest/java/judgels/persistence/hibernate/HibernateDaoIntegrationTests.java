@@ -9,6 +9,7 @@ import java.util.Optional;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
+import judgels.persistence.Page;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -84,6 +85,53 @@ class HibernateDaoIntegrationTests {
         assertThat(dao1.select(2)).isEmpty();
     }
 
+    @Nested class selectAll {
+        @Test void succeeds(SessionFactory sessionFactory) {
+            ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory,
+                    new FixedClock(),
+                    new FixedActorProvider());
+
+            Page<ExampleModel> page1 = dao.selectAll(1, 10);
+            assertThat(page1.getTotalItems()).isZero();
+            assertThat(page1.getTotalPages()).isZero();
+            assertThat(page1.getData()).isEmpty();
+
+            ExampleModel model1 = new ExampleModel();
+            model1.column = "value1";
+            model1.uniqueColumn = "unique1";
+            dao.insert(model1);
+
+            ExampleModel model2 = new ExampleModel();
+            model2.column = "value2";
+            model2.uniqueColumn = "unique2";
+            dao.insert(model2);
+
+            Page<ExampleModel> page2 = dao.selectAll(1, 1);
+            assertThat(page2.getTotalItems()).isEqualTo(2);
+            assertThat(page2.getTotalPages()).isEqualTo(2);
+            assertThat(page2.getData()).contains(model1);
+            assertThat(page2.getData()).doesNotContain(model2);
+
+            Page<ExampleModel> page3 = dao.selectAll(2, 1);
+            assertThat(page3.getTotalItems()).isEqualTo(2);
+            assertThat(page3.getTotalPages()).isEqualTo(2);
+            assertThat(page3.getData()).contains(model2);
+            assertThat(page3.getData()).doesNotContain(model1);
+
+            Page<ExampleModel> page4 = dao.selectAll(1, 2);
+            assertThat(page4.getTotalItems()).isEqualTo(2);
+            assertThat(page4.getTotalPages()).isEqualTo(1);
+            assertThat(page4.getData()).contains(model1);
+            assertThat(page4.getData()).contains(model2);
+
+            Page<ExampleModel> page5 = dao.selectAll(1, 10);
+            assertThat(page5.getTotalItems()).isEqualTo(2);
+            assertThat(page5.getTotalPages()).isEqualTo(1);
+            assertThat(page5.getData()).contains(model1);
+            assertThat(page5.getData()).contains(model2);
+        }
+    }
+
     @Nested class selectByUniqueColumn {
         @Test void succeeds(SessionFactory sessionFactory) {
             ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory,
@@ -105,6 +153,7 @@ class HibernateDaoIntegrationTests {
             assertThat(dao.selectByUniqueColumn("value1")).isEmpty();
         }
     }
+
 
     private static class ExampleHibernateDao extends HibernateDao<ExampleModel> {
         ExampleHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {

@@ -3,15 +3,20 @@ package judgels.persistence.hibernate;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.sql.Date;
 import java.time.Clock;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.Page;
 import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.UnmodifiableModel;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.query.Query;
 
 public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M>
         implements UnmodifiableDao<M> {
@@ -37,6 +42,35 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     @Override
     public Optional<M> select(long id) {
         return Optional.ofNullable(get(id));
+    }
+
+    @Override
+    public long selectCount() {
+        Criteria cr = criteria();
+        cr.setProjection(Projections.rowCount());
+
+        return (long) cr.uniqueResult();
+    }
+
+    @Override
+    public Page<M> selectAll(int page, int pageSize) {
+        CriteriaQuery<M> cq = criteriaQuery();
+        Root<M> root = cq.from(getEntityClass());
+
+        Query<M> query = currentSession().createQuery(cq);
+
+        query.setFirstResult((page - 1) * pageSize);
+        query.setMaxResults(pageSize);
+
+        List<M> data = query.list();
+        long totalItems = selectCount();
+        long totalPages = (totalItems + pageSize - 1) / pageSize;
+
+        return new Page.Builder<M>()
+                .totalItems(totalItems)
+                .totalPages(totalPages)
+                .data(data)
+                .build();
     }
 
     @Override
