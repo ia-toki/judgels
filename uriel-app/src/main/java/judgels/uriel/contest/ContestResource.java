@@ -4,6 +4,7 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
+import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestService;
@@ -21,6 +22,12 @@ public class ContestResource implements ContestService {
     @UnitOfWork(readOnly = true)
     public Contest getContest(String contestJid) {
         return checkFound(contestStore.findContestByJid(contestJid));
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Page<Contest> getContests(int page, int pageSize) {
+        return contestStore.getContests(page, pageSize);
     }
 
     @Override

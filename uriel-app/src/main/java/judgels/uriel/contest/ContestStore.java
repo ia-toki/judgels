@@ -1,7 +1,10 @@
 package judgels.uriel.contest;
 
+import com.google.common.collect.Lists;
+import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 
@@ -13,12 +16,20 @@ public class ContestStore {
         this.contestDao = contestDao;
     }
 
-    private static void toModel(ContestData data, ContestModel model) {
-        model.name = data.getName();
+    public Optional<Contest> findContestByJid(String contestJid) {
+        return contestDao.selectByJid(contestJid).map(ContestStore::fromModel);
     }
 
-    public Optional<Contest> findContestByJid(String contestJid) {
-        return contestDao.selectByJid(contestJid).map(this::fromModel);
+    public Page<Contest> getContests(int page, int pageSize) {
+        Page<ContestModel> contestModelsPage = contestDao.selectAll(page, pageSize);
+
+        List<Contest> contests = Lists.transform(contestModelsPage.getData(), ContestStore::fromModel);
+
+        return new Page.Builder<Contest>()
+                .totalItems(contestModelsPage.getTotalItems())
+                .totalPages(contestModelsPage.getTotalPages())
+                .data(contests)
+                .build();
     }
 
     public Contest createContest(ContestData contestData) {
@@ -27,10 +38,14 @@ public class ContestStore {
         return fromModel(contestDao.insert(model));
     }
 
-    private Contest fromModel(ContestModel model) {
+    private static Contest fromModel(ContestModel model) {
         return new Contest.Builder()
                 .jid(model.jid)
                 .name(model.name)
                 .build();
+    }
+
+    private static void toModel(ContestData data, ContestModel model) {
+        model.name = data.getName();
     }
 }
