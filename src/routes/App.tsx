@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { Route, Switch, withRouter } from 'react-router';
 import DocumentTitle from 'react-document-title';
 
 import HeaderContainer from '../components/Header/Header';
+import LabsContainer from './labs/Labs';
 import JophielContainer from './jophiel/Jophiel';
 import LegacyJophielContainer from './legacyJophiel/LegacyJophiel';
 import { AppContent } from '../components/AppContent/AppContent';
@@ -32,8 +33,11 @@ class AppContainer extends React.Component<AppContainerConnectedProps> {
           <Menubar />
           <AppContent>
             <BreadcrumbsContainer />
-            <JophielContainer />
-            <LegacyJophielContainer />
+            <Switch>
+              <Route path="/labs" component={LabsContainer} />
+              <Route component={JophielContainer} />
+              <Route component={LegacyJophielContainer} />
+            </Switch>
             <Footer />
           </AppContent>
         </div>
