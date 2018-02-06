@@ -9,3 +9,5 @@ generated_testSrc/
 *.iml
 *.ipr
 *.iws
+
+.idea/

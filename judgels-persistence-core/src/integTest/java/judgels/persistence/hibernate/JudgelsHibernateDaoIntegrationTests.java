@@ -2,7 +2,10 @@ package judgels.persistence.hibernate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
+import java.util.Map;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import judgels.persistence.ActorProvider;
@@ -57,6 +60,38 @@ class JudgelsHibernateDaoIntegrationTests {
         assertThat(model.column).isEqualTo("value3");
 
         assertThat(dao.selectByJid("JIDEXAMnotfound")).isEmpty();
+    }
+
+    @Test void can_select_multiple_jids(SessionFactory sessionFactory) {
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
+
+        ExampleModel model1 = new ExampleModel();
+        model1.column = "value4";
+        model1 = dao.insert(model1);
+
+        ExampleModel model2 = new ExampleModel();
+        model2.column = "value4";
+        model2 = dao.insert(model2);
+
+        Set<String> jids = ImmutableSet.of(model1.jid, model2.jid);
+        Map<String, ExampleModel> models = dao.selectByJids(jids);
+        assertThat(models).hasSize(2);
+
+        assertThat(models).containsKeys(model1.jid, model2.jid);
+        assertThat(models.get(model1.jid)).isEqualTo(model1);
+        assertThat(models.get(model2.jid)).isEqualTo(model2);
+
+        // assert to only return found jids
+        jids = ImmutableSet.of(model1.jid, "1234");
+        models = dao.selectByJids(jids);
+        assertThat(models).hasSize(1);
+        assertThat(models).containsKey(model1.jid);
+        assertThat(models.get(model1.jid)).isEqualTo(model1);
+
+        // assert to ignore empty list
+        jids = ImmutableSet.of();
+        models = dao.selectByJids(jids);
+        assertThat(models).isEmpty();
     }
 
     @Entity
