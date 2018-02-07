@@ -5,11 +5,14 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.sealtiel.queue.Queue;
 import judgels.sealtiel.queue.QueueChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Singleton
 public class RabbitMQ implements Queue {
     private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQ.class);
 
@@ -18,6 +21,7 @@ public class RabbitMQ implements Queue {
     private volatile Connection connection;
     private volatile Channel channel;
 
+    @Inject
     public RabbitMQ(RabbitMQConfiguration config) {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(config.getHost());

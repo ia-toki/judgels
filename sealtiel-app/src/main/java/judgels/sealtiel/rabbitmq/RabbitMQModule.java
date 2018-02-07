@@ -20,8 +20,7 @@ public class RabbitMQModule {
     }
 
     @Provides
-    @Singleton
-    Queue queue() {
-        return new RabbitMQ(config);
+    Queue queue(RabbitMQ rabbitMQ) {
+        return rabbitMQ;
     }
 }
