@@ -19,8 +19,8 @@ class SealtielApplicationConfigurationTests {
 
     @Test
     void can_deserialize_sealtiel_yml() {
-        File jophielYml = Paths.get("..", "sealtiel-dist", "var", "conf", "sealtiel.yml").toFile();
-        assertThatCode(() -> factory.build(jophielYml))
+        File sealtielYml = Paths.get("..", "sealtiel-dist", "var", "conf", "sealtiel.yml").toFile();
+        assertThatCode(() -> factory.build(sealtielYml))
                 .doesNotThrowAnyException();
     }
 }
