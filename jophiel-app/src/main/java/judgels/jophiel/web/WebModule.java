@@ -2,7 +2,6 @@ package judgels.jophiel.web;
 
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Singleton;
 
 @Module
 public class WebModule {
@@ -13,7 +12,6 @@ public class WebModule {
     }
 
     @Provides
-    @Singleton
     WebConfiguration webConfiguration() {
         return config;
     }

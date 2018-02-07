@@ -5,6 +5,8 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -17,11 +19,13 @@ import judgels.persistence.Model_;
 import judgels.persistence.hibernate.HibernateDao;
 import org.hibernate.SessionFactory;
 
+@Singleton
 public class UserResetPasswordHibernateDao extends HibernateDao<UserResetPasswordModel>
         implements UserResetPasswordDao {
 
     private final Clock clock;
 
+    @Inject
     public UserResetPasswordHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
         this.clock = clock;

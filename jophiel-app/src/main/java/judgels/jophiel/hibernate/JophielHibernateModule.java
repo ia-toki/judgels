@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import java.time.Clock;
 import javax.inject.Singleton;
 import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
@@ -14,7 +13,6 @@ import judgels.jophiel.user.UserDao;
 import judgels.jophiel.user.password.UserResetPasswordDao;
 import judgels.jophiel.user.profile.UserProfileDao;
 import judgels.jophiel.user.registration.UserRegistrationEmailDao;
-import judgels.persistence.ActorProvider;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -28,7 +26,6 @@ public class JophielHibernateModule {
     }
 
     @Provides
-    @Singleton
     SessionFactory sessionFactory() {
         return sessionFactory;
     }
@@ -40,44 +37,37 @@ public class JophielHibernateModule {
     }
 
     @Provides
-    @Singleton
-    AdminRoleDao adminRoleDao(Clock clock, ActorProvider actorProvider) {
-        return new AdminRoleHibernateDao(sessionFactory, clock, actorProvider);
+    AdminRoleDao adminRoleDao(AdminRoleHibernateDao dao) {
+        return dao;
     }
 
     @Provides
-    @Singleton
-    LegacySessionDao legacySessionDao(Clock clock, ActorProvider actorProvider) {
-        return new LegacySessionHibernateDao(sessionFactory, clock, actorProvider);
+    LegacySessionDao legacySessionDao(LegacySessionHibernateDao dao) {
+        return dao;
     }
 
     @Provides
-    @Singleton
-    SessionDao sessionDao(Clock clock, ActorProvider actorProvider) {
-        return new SessionHibernateDao(sessionFactory, clock, actorProvider);
+    SessionDao sessionDao(SessionHibernateDao dao) {
+        return dao;
     }
 
     @Provides
-    @Singleton
-    UserDao userDao(Clock clock, ActorProvider actorProvider) {
-        return new UserHibernateDao(sessionFactory, clock, actorProvider);
+    UserDao userDao(UserHibernateDao dao) {
+        return dao;
     }
 
     @Provides
-    @Singleton
-    UserProfileDao userProfileDao(Clock clock, ActorProvider actorProvider) {
-        return new UserProfileHibernateDao(sessionFactory, clock, actorProvider);
+    UserProfileDao userProfileDao(UserProfileHibernateDao dao) {
+        return dao;
     }
 
     @Provides
-    @Singleton
-    UserRegistrationEmailDao userRegistrationEmailDao(Clock clock, ActorProvider actorProvider) {
-        return new UserRegistrationEmailHibernateDao(sessionFactory, clock, actorProvider);
+    UserRegistrationEmailDao userRegistrationEmailDao(UserRegistrationEmailHibernateDao dao) {
+        return dao;
     }
 
     @Provides
-    @Singleton
-    UserResetPasswordDao userResetPasswordDao(Clock clock, ActorProvider actorProvider) {
-        return new UserResetPasswordHibernateDao(sessionFactory, clock, actorProvider);
+    UserResetPasswordDao userResetPasswordDao(UserResetPasswordHibernateDao dao) {
+        return dao;
     }
 }
