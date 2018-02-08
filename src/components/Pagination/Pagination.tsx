@@ -51,7 +51,7 @@ export class Pagination extends React.Component<PaginationProps, {}> {
 
     return (
       <ReactPaginate
-        initialPage={currentPage}
+        initialPage={currentPage - 1}
         pageCount={this.getTotalPages()}
         pageRangeDisplayed={3}
         marginPagesDisplayed={1}

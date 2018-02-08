@@ -1,0 +1,14 @@
+.contest-list-container > :not(:last-child) {
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(16, 22, 26, 0.15);
+}
+.contest-list-container > :last-child {
+  margin-bottom: -20px;
+}
+
+.contest-list-item-container {
+  margin-left: -20px;
+  margin-right: -20px;
+  padding: 20px;
+  padding-top: 0px;
+}
