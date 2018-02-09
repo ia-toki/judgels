@@ -3,6 +3,8 @@
 build/
 node_modules/
 
+raphael.js
+
 *.css
 
 .idea/
