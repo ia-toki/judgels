@@ -39,7 +39,7 @@
     "watch:css": "node-sass-chokidar --quiet src/ -o src/ --watch --recursive",
     "lint:ts": "tslint --exclude '**/*.d.ts' 'src/**/*.ts' 'src/**/*.tsx'",
     "lint:prettier": "prettier --list-different 'src/**/*.ts' 'src/**/*.tsx'",
-    "fix-lint:prettier": "prettier --write 'src/**/*.ts' 'src/**/*.tsx'",
+    "format:prettier": "prettier --write 'src/**/*.ts' 'src/**/*.tsx'",
     "test:ts": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
