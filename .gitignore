@@ -5,10 +5,12 @@ out/
 generated_src/
 generated_testSrc/
 
+uriel.yml
+
+.idea/
 *.iml
 *.ipr
 *.iws
 
-.idea/
 *.log
 *.log.gz
