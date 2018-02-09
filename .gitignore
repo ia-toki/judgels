@@ -5,6 +5,8 @@ out/
 generated_src/
 generated_testSrc/
 
+jophiel.yml
+
 *.iml
 *.ipr
 *.iws

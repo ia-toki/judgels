@@ -6,7 +6,7 @@ WORKDIR /judgels/jophiel
 
 EXPOSE 9001 9101
 
-COPY build/distributions/jophiel-* .
+COPY build/distributions .
 
 RUN addgroup -S judgels && adduser -S -g judgels judgels && chown -R judgels var
 USER judgels
