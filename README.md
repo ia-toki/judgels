@@ -13,25 +13,12 @@ User account management and authentication for the [Judgment Angels](https://git
 
 - [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 - [Dropwizard](http://www.dropwizard.io/)
+- [Dagger 2](https://google.github.io/dagger/)
+- [Immutables](https://immutables.github.io/)
 
-## Development
+## Documentation
 
-### Running locally
-
-1. Edit the config file at `jophiel-dist/var/conf/jophiel.yml` as necessary.
-1. Start the development server:
-
-        ./gradlew run
-
-### Running the tests
-
-    ./gradlew check
-
-### Building docker image
-
-    ./scripts/build_docker_image.sh <TAG>
-
-The docker image will be built as `judgels/jophiel:<TAG>`.
+See [Judgels wiki](https://github.com/judgels-dev/judgels/wiki).
 
 ## License
 
