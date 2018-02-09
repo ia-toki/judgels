@@ -19,33 +19,33 @@ export interface RegisterFormData {
   recaptchaResponse?: string;
 }
 
-const usernameField = {
+const usernameField: any = {
   name: 'username',
   label: 'Username',
   required: true,
   validate: [Required, Username],
 };
 
-const nameField = {
+const nameField: any = {
   name: 'name',
   label: 'Name',
   validate: [Required],
 };
 
-const emailField = {
+const emailField: any = {
   name: 'email',
   label: 'Email',
   validate: [Required, EmailAddress],
 };
 
-const passwordField = {
+const passwordField: any = {
   name: 'password',
   label: 'Password',
   type: 'password',
   validate: [Required],
 };
 
-const confirmPasswordField = {
+const confirmPasswordField: any = {
   name: 'confirmPassword',
   label: 'Confirm password',
   type: 'password',
@@ -60,7 +60,7 @@ export interface RegisterFormProps extends InjectedFormProps<RegisterFormData> {
 const RegisterForm = (props: RegisterFormProps) => {
   let recaptchaChallengeField;
   if (props.useRecaptcha) {
-    const recaptchaField = {
+    const recaptchaField: any = {
       name: 'recaptchaResponse',
       siteKey: props.recaptchaSiteKey!,
       validate: [Required],

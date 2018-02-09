@@ -12,21 +12,21 @@ export interface ChangePasswordFormData {
   confirmPassword: string;
 }
 
-const oldPasswordField = {
+const oldPasswordField: any = {
   name: 'oldPassword',
   label: 'Old password',
   type: 'password',
   validate: [Required],
 };
 
-const newPasswordField = {
+const newPasswordField: any = {
   name: 'password',
   label: 'New password',
   type: 'password',
   validate: [Required],
 };
 
-const confirmNewPasswordField = {
+const confirmNewPasswordField: any = {
   name: 'confirmPassword',
   label: 'Confirm new password',
   type: 'password',

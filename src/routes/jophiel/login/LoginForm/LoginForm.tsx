@@ -14,13 +14,13 @@ export interface LoginFormData {
   password: string;
 }
 
-const usernameField = {
+const usernameField: any = {
   name: 'username',
   label: 'Username',
   validate: [Required],
-};
+} as any;
 
-const passwordField = {
+const passwordField: any = {
   name: 'password',
   label: 'Password',
   type: 'password',

@@ -12,14 +12,14 @@ export interface ResetPasswordFormData {
   confirmPassword: string;
 }
 
-const newPasswordField = {
+const newPasswordField: any = {
   name: 'password',
   label: 'New Password',
   type: 'password',
   validate: [Required],
 };
 
-const confirmNewPasswordField = {
+const confirmNewPasswordField: any = {
   name: 'confirmPassword',
   label: 'Confirm New Password',
   type: 'password',

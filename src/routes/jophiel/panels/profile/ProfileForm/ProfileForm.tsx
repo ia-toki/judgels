@@ -12,49 +12,49 @@ import { FormTableTextArea } from '../../../../../components/forms/FormTableText
 import { FormTableSelect } from '../../../../../components/forms/FormTableSelect/FormTableSelect';
 import { UserProfile } from '../../../../../modules/api/jophiel/user';
 
-const nameField = {
+const nameField: any = {
   name: 'name',
   label: 'Name',
   labelHelper: 'required',
   validate: [Required],
 };
 
-const genderField = {
+const genderField: any = {
   name: 'gender',
   label: 'Gender',
 };
 
-const nationalityField = {
+const nationalityField: any = {
   name: 'nationality',
   label: 'Nationality',
 };
 
-const homeAddressField = {
+const homeAddressField: any = {
   name: 'homeAddress',
   label: 'Home address',
 };
 
-const shirtSizeField = {
+const shirtSizeField: any = {
   name: 'shirtSize',
   label: 'Shirt size',
 };
 
-const institutionField = {
+const institutionField: any = {
   name: 'institution',
   label: 'Name',
 };
 
-const countryField = {
+const countryField: any = {
   name: 'country',
   label: 'Country',
 };
 
-const provinceField = {
+const provinceField: any = {
   name: 'province',
   label: 'Province/state',
 };
 
-const cityField = {
+const cityField: any = {
   name: 'city',
   label: 'City',
 };

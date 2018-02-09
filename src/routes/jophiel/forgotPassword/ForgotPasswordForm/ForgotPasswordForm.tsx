@@ -11,7 +11,7 @@ export interface ForgotPasswordFormData {
   email: string;
 }
 
-const emailField = {
+const emailField: any = {
   name: 'email',
   label: 'Email',
   validate: [Required, EmailAddress],
