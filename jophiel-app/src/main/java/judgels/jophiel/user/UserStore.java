@@ -3,7 +3,10 @@ package judgels.jophiel.user;
 import com.google.common.collect.ImmutableList;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import judgels.fs.FileSystem;
@@ -30,6 +33,11 @@ public class UserStore {
 
     public Optional<User> findUserByJid(String userJid) {
         return userDao.selectByJid(userJid).map(this::fromModel);
+    }
+
+    public Map<String, User> findUsersByJids(Set<String> userJids) {
+        Map<String, UserModel> userModels = userDao.selectByJids(userJids);
+        return userModels.values().stream().map(this::fromModel).collect(Collectors.toMap(User::getJid, p -> p));
     }
 
     public Optional<User> findUserByUsername(String username) {

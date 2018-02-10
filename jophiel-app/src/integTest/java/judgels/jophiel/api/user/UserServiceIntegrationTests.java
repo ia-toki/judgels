@@ -5,7 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.awaitility.Awaitility.await;
 
+import com.google.common.collect.ImmutableSet;
 import com.palantir.remoting.api.errors.ErrorType;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -141,6 +145,30 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(emailCode2).isNotEqualTo(emailCode);
 
         wiser.stop();
+    }
+
+    @Test void get_username_by_jids() {
+        User user1 = userService.createUser(adminHeader, new UserData.Builder()
+                .username("gama")
+                .password("pass")
+                .email("alpha@domain.com")
+                .build());
+
+        User user2 = userService.createUser(adminHeader, new UserData.Builder()
+                .username("goma")
+                .password("pass")
+                .email("goma@domain.com")
+                .build());
+
+        Set<String> jids = ImmutableSet.of(user1.getJid(), user2.getJid());
+        Map<String, String> usernames = userService.findUsernamesByJids(jids);
+        assertThat(usernames).containsOnly(
+                new SimpleEntry(user1.getJid(), user1.getUsername()),
+                new SimpleEntry(user2.getJid(), user2.getUsername()));
+        // must ignore not found jids
+        jids = ImmutableSet.of(user1.getJid(), "88888");
+        usernames = userService.findUsernamesByJids(jids);
+        assertThat(usernames).containsExactly(new SimpleEntry(user1.getJid(), user1.getUsername()));
     }
 
     private static String readEmail(Wiser wiser, int index) {

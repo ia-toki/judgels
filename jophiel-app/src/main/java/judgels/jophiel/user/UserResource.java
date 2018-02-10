@@ -4,7 +4,10 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.PasswordResetData;
 import judgels.jophiel.api.user.PasswordUpdateData;
@@ -21,7 +24,6 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class UserResource implements UserService {
-
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
     private final UserStore userStore;
@@ -154,5 +156,12 @@ public class UserResource implements UserService {
     @UnitOfWork
     public void resetUserPassword(PasswordResetData passwordResetData) {
         checkFound(userPasswordResetter).reset(passwordResetData);
+    }
+
+    @Override
+    @UnitOfWork
+    public Map<String, String> findUsernamesByJids(Set<String> jids) {
+        Map<String, User> users = userStore.findUsersByJids(jids);
+        return users.values().stream().collect(Collectors.toMap(User::getJid, User::getUsername));
     }
 }

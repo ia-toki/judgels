@@ -3,6 +3,8 @@ package judgels.jophiel.api.user;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.util.Map;
+import java.util.Set;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -92,4 +94,10 @@ public interface UserService {
     @Path("/reset-password")
     @Consumes(APPLICATION_JSON)
     void resetUserPassword(PasswordResetData passwordResetData);
+
+    @POST
+    @Path("/usernames")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Map<String, String> findUsernamesByJids(Set<String> jids);
 }
