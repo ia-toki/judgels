@@ -1,9 +1,16 @@
 .gradle/
 
 build/
-generated_src/
 out/
+generated_src/
+generated_testSrc/
 
+sealtiel.yml
+
+.idea/
 *.iml
 *.ipr
 *.iws
+
+*.log
+*.log.gz

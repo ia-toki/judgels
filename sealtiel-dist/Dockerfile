@@ -6,7 +6,7 @@ WORKDIR /judgels/sealtiel
 
 EXPOSE 9003 9103
 
-COPY build/distributions/sealtiel-* .
+COPY build/distributions .
 
 RUN addgroup -S judgels && adduser -S -g judgels judgels && chown -R judgels var
 USER judgels
