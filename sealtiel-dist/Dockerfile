@@ -11,6 +11,6 @@ COPY build/distributions .
 RUN addgroup -S judgels && adduser -S -g judgels judgels && chown -R judgels var
 USER judgels
 
-VOLUME var/conf
+VOLUME var
 
 CMD ["service/bin/init.sh", "console"]
