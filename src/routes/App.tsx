@@ -36,8 +36,8 @@ class AppContainer extends React.Component<AppContainerConnectedProps> {
             <Switch>
               <Route path="/labs" component={LabsContainer} />
               <Route component={JophielContainer} />
-              <Route component={LegacyJophielContainer} />
             </Switch>
+            <Route component={LegacyJophielContainer} />
             <Footer />
           </AppContent>
         </div>
