@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router';
 import DocumentTitle from 'react-document-title';
 
+import Competition from './competition/Competition';
 import HeaderContainer from '../components/Header/Header';
 import LabsContainer from './labs/Labs';
-import JophielContainer from './jophiel/Jophiel';
 import LegacyJophielContainer from './legacyJophiel/LegacyJophiel';
+import JophielContainer from './jophiel/Jophiel';
 import { AppContent } from '../components/AppContent/AppContent';
-import { Menubar } from '../components/Menubar/Menubar';
+import Menubar from '../components/Menubar/Menubar';
 import BreadcrumbsContainer from '../components/Breadcrumbs/Breadcrumbs';
 import { Footer } from '../components/Footer/Footer';
 import { webConfigActions as injectedWebConfigActions } from './jophiel/modules/webConfigActions';
@@ -20,6 +21,25 @@ interface AppContainerConnectedProps {
   onGetWebConfig: () => Promise<void>;
 }
 
+const routeDefs = [
+  {
+    id: 'competition',
+    title: 'Competition',
+    route: {
+      path: '/competition',
+      component: Competition,
+    },
+  },
+];
+
+const homeRoute = {
+  id: 'home',
+  title: 'Home',
+  route: {
+    component: JophielContainer,
+  },
+};
+
 class AppContainer extends React.Component<AppContainerConnectedProps> {
   async componentDidMount() {
     await this.props.onGetWebConfig();
@@ -30,12 +50,13 @@ class AppContainer extends React.Component<AppContainerConnectedProps> {
       <DocumentTitle title={this.props.title}>
         <div>
           <HeaderContainer />
-          <Menubar />
+          <Menubar items={routeDefs} homeRoute={homeRoute} />
           <AppContent>
             <BreadcrumbsContainer />
             <Switch>
-              <Route path="/labs" component={LabsContainer} />
-              <Route component={JophielContainer} />
+              {routeDefs.map(item => <Route key={item.id} {...item.route} />)}{' '}
+              <Route key="labs" path="/labs" component={LabsContainer} />
+              <Route key={homeRoute.id} {...homeRoute.route} />
             </Switch>
             <Route component={LegacyJophielContainer} />
             <Footer />

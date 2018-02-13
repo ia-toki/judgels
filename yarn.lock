@@ -83,6 +83,12 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-loadable@^5.3.2":
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/@types/react-loadable/-/react-loadable-5.3.2.tgz#dd6febf7fa76e15ac0168bdd79b971c4b1b41f93"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-paginate@^4.3.1":
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/@types/react-paginate/-/react-paginate-4.3.1.tgz#04c558a67751c38c24160df8f812f6b57600081a"
@@ -5526,6 +5532,12 @@ react-google-recaptcha@^0.9.9:
   resolved "https://registry.yarnpkg.com/react-google-recaptcha/-/react-google-recaptcha-0.9.9.tgz#3b6c32fcf09893cf55200a179e337cf578d4ecd4"
   dependencies:
     prop-types ">=15.5.0"
+
+react-loadable@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.3.1.tgz#9699e9a08fed49bacd69caaa282034b62a76bcdd"
+  dependencies:
+    prop-types "^15.5.0"
 
 react-paginate@^5.0.0:
   version "5.0.0"
