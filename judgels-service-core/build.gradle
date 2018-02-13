@@ -4,6 +4,7 @@ dependencies {
     compile project(':judgels-service-api')
 
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.palantir.remoting3:jaxrs-clients:$httpRemotingVersion"
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
 
