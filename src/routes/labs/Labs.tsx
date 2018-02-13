@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route, Switch, withRouter } from 'react-router';
 
 import { Example } from './routes/example/Example/Example';
-import ScoreboardContainer from '../jophiel/scoreboard/ScoreboardContainer/ScoreboardContainer';
+import ScoreboardContainer from './routes/scoreboard/ScoreboardContainer/ScoreboardContainer';
 
 const LabsContainer = () => (
   <div>

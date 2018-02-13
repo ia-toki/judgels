@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { FullPageLayout } from '../../../../components/layouts/FullPageLayout/FullPageLayout';
-import { Scoreboard, ScoreboardEntry } from '../../scoreboard/Scoreboard/Scoreboard';
+import { FullPageLayout } from '../../../../../components/layouts/FullPageLayout/FullPageLayout';
+import { Scoreboard, ScoreboardEntry } from '../Scoreboard/Scoreboard';
 
 import mockScoreboardEntries from './mockScoreboardEntries';
 

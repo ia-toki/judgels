@@ -1,7 +1,7 @@
 import * as React from 'react';
 import FlagIcon from 'react-flag-kit/lib/FlagIcon';
 
-import { ScoreboardCell, ScoreboardElement } from '../../scoreboard/ScoreboardCell/ScoreboardCell';
+import { ScoreboardCell, ScoreboardElement } from '../ScoreboardCell/ScoreboardCell';
 
 import './Scoreboard.css';
 
