@@ -8,6 +8,8 @@ import org.immutables.value.Value;
 public interface Contest {
     String getJid();
     String getName();
+    String getDescription();
+    ContestStyle getStyle();
 
     class Builder extends ImmutableContest.Builder {}
 }

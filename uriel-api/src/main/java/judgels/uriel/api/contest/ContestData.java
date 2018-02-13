@@ -7,6 +7,8 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestData.class)
 public interface ContestData {
     String getName();
+    String getDescription();
+    ContestStyle getStyle();
 
     class Builder extends ImmutableContestData.Builder {}
 }

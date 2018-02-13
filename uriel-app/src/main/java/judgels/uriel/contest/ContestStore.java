@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestStyle;
 
 public class ContestStore {
     private final ContestDao contestDao;
@@ -42,10 +43,14 @@ public class ContestStore {
         return new Contest.Builder()
                 .jid(model.jid)
                 .name(model.name)
+                .description(model.description)
+                .style(ContestStyle.valueOf(model.style))
                 .build();
     }
 
     private static void toModel(ContestData data, ContestModel model) {
         model.name = data.getName();
+        model.description = data.getDescription();
+        model.style = data.getStyle().name();
     }
 }

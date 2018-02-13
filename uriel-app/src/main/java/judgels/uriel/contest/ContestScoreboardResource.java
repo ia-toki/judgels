@@ -17,7 +17,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestScoreboard getContestOfficialScoreboard(String contestJid) {
+    public ContestScoreboard getOfficialContestScoreboard(String contestJid) {
         return checkFound(contestScoreboardStore.findContestScoreboard(contestJid, true));
     }
 

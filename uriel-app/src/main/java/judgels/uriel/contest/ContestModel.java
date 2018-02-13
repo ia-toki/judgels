@@ -11,4 +11,10 @@ import judgels.persistence.JudgelsModel;
 public class ContestModel extends JudgelsModel {
     @Column(nullable = false)
     public String name;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    public String description;
+
+    @Column(nullable = false)
+    public String style;
 }

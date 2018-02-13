@@ -14,7 +14,7 @@ public interface ContestScoreboardService {
     @GET
     @Path("/{contestJid}/scoreboard/official")
     @Produces(APPLICATION_JSON)
-    ContestScoreboard getContestOfficialScoreboard(@PathParam("contestJid") String contestJid);
+    ContestScoreboard getOfficialContestScoreboard(@PathParam("contestJid") String contestJid);
 
     @GET
     @Path("/{contestJid}/scoreboard")

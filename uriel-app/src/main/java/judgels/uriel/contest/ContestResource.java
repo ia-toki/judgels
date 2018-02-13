@@ -14,7 +14,6 @@ public class ContestResource implements ContestService {
 
     @Inject
     public ContestResource(ContestStore contestStore) {
-
         this.contestStore = contestStore;
     }
 
