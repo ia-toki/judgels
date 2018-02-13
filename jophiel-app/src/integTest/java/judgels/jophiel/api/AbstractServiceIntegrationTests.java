@@ -5,17 +5,10 @@ import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
 
 import com.google.common.collect.ImmutableMap;
-import com.palantir.remoting.api.config.service.ServiceConfiguration;
-import com.palantir.remoting.api.config.ssl.SslConfiguration;
-import com.palantir.remoting3.clients.ClientConfiguration;
-import com.palantir.remoting3.clients.ClientConfigurations;
 import com.palantir.remoting3.clients.UserAgent;
-import com.palantir.remoting3.jaxrs.JaxRsClient;
 import com.palantir.websecurity.WebSecurityConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.testing.DropwizardTestSupport;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 import judgels.jophiel.JophielApplication;
 import judgels.jophiel.JophielApplicationConfiguration;
@@ -27,6 +20,7 @@ import judgels.jophiel.user.avatar.UserAvatarConfiguration;
 import judgels.jophiel.user.password.UserResetPasswordConfiguration;
 import judgels.jophiel.user.registration.UserRegistrationConfiguration;
 import judgels.service.api.actor.AuthHeader;
+import judgels.service.jaxrs.JaxRsClients;
 import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
@@ -79,15 +73,9 @@ public abstract class AbstractServiceIntegrationTests {
     }
 
     protected static <T> T createService(Class<T> serviceClass) {
-        Path testTrustStore = Paths.get(
-                AbstractServiceIntegrationTests.class.getClassLoader().getResource("test.jks").getPath());
-        ServiceConfiguration serviceConfig = ServiceConfiguration.builder()
-                .addUris("http://localhost:" + support.getLocalPort())
-                .security(SslConfiguration.of(testTrustStore))
-                .build();
-
-        UserAgent userAgent = UserAgent.of(UserAgent.Agent.of("test", UserAgent.Agent.DEFAULT_VERSION));
-        ClientConfiguration clientConfig = ClientConfigurations.of(serviceConfig);
-        return JaxRsClient.create(serviceClass, userAgent, clientConfig);
+        return JaxRsClients.create(
+                serviceClass,
+                "http://localhost:" + support.getLocalPort(),
+                UserAgent.of(UserAgent.Agent.of("test", UserAgent.Agent.DEFAULT_VERSION)));
     }
 }

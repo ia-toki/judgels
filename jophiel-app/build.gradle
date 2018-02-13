@@ -58,7 +58,6 @@ dependencies {
 
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
-    compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-forms:$dropwizardVersion"
@@ -77,10 +76,8 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
-
     integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
     integTestCompile "com.palantir.remoting-api:test-utils:$httpRemotingApiVersion"
-    integTestCompile "com.palantir.remoting3:jaxrs-clients:$httpRemotingVersion"
     integTestCompile "org.subethamail:subethasmtp-wiser:$wiserVersion"
 
     integTestRuntime "javax.servlet:javax.servlet-api:$servletApiVersion"
