@@ -51,7 +51,7 @@ class MenubarContainer extends React.Component<RouteComponentProps<{}> & Menubar
 
   private getActiveItemId = () => {
     const { items, location, homeRoute, match } = this.props;
-    const relativePath = location.pathname.replace(match.path, '');
+    const relativePath = match.path === '/' ? location.pathname : location.pathname.slice(match.path.length);
     const matchingItem = items.find(item => matchPath(relativePath, item.route) !== null);
     if (matchingItem) {
       return matchingItem.id;

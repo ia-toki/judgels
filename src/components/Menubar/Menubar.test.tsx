@@ -17,7 +17,7 @@ describe('Menubar', () => {
   const ThirdComponent = () => <div />;
   const HomeComponent = () => <div />;
 
-  const render = (childPath: string, withHome: boolean) => {
+  const render = (childPath: string, withHome: boolean, parentRoute: string) => {
     const props: MenubarProps = {
       items: [
         {
@@ -58,10 +58,12 @@ describe('Menubar', () => {
     };
     const component = () => <Menubar {...props} />;
 
+    const initialPath = parentRoute === '/' ? childPath : parentRoute + childPath;
+
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/parent' + childPath]}>
-          <Route path="/parent" component={component} />
+        <MemoryRouter initialEntries={[initialPath]}>
+          <Route path={parentRoute} component={component} />
         </MemoryRouter>
       </Provider>
     );
@@ -73,7 +75,7 @@ describe('Menubar', () => {
 
   describe('when the child path is present', () => {
     beforeEach(() => {
-      render('/second', false);
+      render('/second', false, '/parent');
     });
 
     it('shows menubar items with the correct texts', () => {
@@ -109,7 +111,7 @@ describe('Menubar', () => {
 
   describe('when the home path is present', () => {
     beforeEach(() => {
-      render('/', true);
+      render('/', true, '/parent');
     });
 
     it('shows menubar items with the correct texts', () => {
@@ -120,6 +122,33 @@ describe('Menubar', () => {
       expect(items.at(1).text()).toEqual('First');
       expect(items.at(2).text()).toEqual('Second');
       expect(items.at(3).text()).toEqual('Third');
+    });
+  });
+
+  describe('when the parent path is empty', () => {
+    beforeEach(() => {
+      render('/second', false, '/');
+    });
+
+    it('has the correct active item', () => {
+      const items = wrapper.find('[role="tab"]');
+
+      expect(items.at(0).prop('aria-selected')).toEqual(false);
+      expect(items.at(1).prop('aria-selected')).toEqual(true);
+      expect(items.at(2).prop('aria-selected')).toEqual(false);
+    });
+
+    describe('when another item is clicked', () => {
+      beforeEach(() => {
+        wrapper
+          .find('[role="tab"]')
+          .at(2)
+          .simulate('click');
+        wrapper.update();
+      });
+      it('pushes the url to that item', () => {
+        expect(store.getActions()).toContainEqual(push('/third'));
+      });
     });
   });
 });
