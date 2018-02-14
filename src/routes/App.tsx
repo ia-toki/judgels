@@ -9,7 +9,7 @@ import LabsContainer from './labs/Labs';
 import LegacyJophielContainer from './legacyJophiel/LegacyJophiel';
 import JophielContainer from './jophiel/Jophiel';
 import { AppContent } from '../components/AppContent/AppContent';
-import Menubar from '../components/Menubar/Menubar';
+import MenubarContainer from '../components/Menubar/Menubar';
 import BreadcrumbsContainer from '../components/Breadcrumbs/Breadcrumbs';
 import { Footer } from '../components/Footer/Footer';
 import { webConfigActions as injectedWebConfigActions } from './jophiel/modules/webConfigActions';
@@ -50,7 +50,7 @@ class AppContainer extends React.Component<AppContainerConnectedProps> {
       <DocumentTitle title={this.props.title}>
         <div>
           <HeaderContainer />
-          <Menubar items={routeDefs} homeRoute={homeRoute} />
+          <MenubarContainer items={routeDefs} homeRoute={homeRoute} />
           <AppContent>
             <BreadcrumbsContainer />
             <Switch>

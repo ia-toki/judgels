@@ -5,7 +5,7 @@ import { MemoryRouter, Route } from 'react-router';
 import { push } from 'react-router-redux';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
-import Menubar, { MenubarProps } from './Menubar';
+import MenubarContainer, { MenubarProps } from './Menubar';
 import { AppState } from '../../modules/store';
 
 describe('Menubar', () => {
@@ -56,7 +56,7 @@ describe('Menubar', () => {
           }
         : undefined,
     };
-    const component = () => <Menubar {...props} />;
+    const component = () => <MenubarContainer {...props} />;
 
     const initialPath = parentRoute === '/' ? childPath : parentRoute + childPath;
 
@@ -146,6 +146,7 @@ describe('Menubar', () => {
           .simulate('click');
         wrapper.update();
       });
+
       it('pushes the url to that item', () => {
         expect(store.getActions()).toContainEqual(push('/third'));
       });
