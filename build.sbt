@@ -14,6 +14,13 @@ lazy val gabriel = (project in file("."))
         mainClass in (Compile, run) := Some("org.iatoki.judgels.gabriel.Main"),
         libraryDependencies ++= Seq(
             "com.typesafe" % "config" % "1.2.1"
+        ),
+        dependencyOverrides ++= Set(
+          "com.google.guava" % "guava" % "20.0",
+          "com.fasterxml.jackson.core" % "jackson-core" % "2.9.1",
+          "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.1",
+          "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.9.1",
+          "com.fasterxml.jackson.module" % "jackson-module-afterburner" % "2.9.1"
         )
     )
     .settings(TestNGPlugin.testNGSettings: _*)
