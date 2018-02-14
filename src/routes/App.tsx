@@ -21,42 +21,42 @@ interface AppContainerConnectedProps {
   onGetWebConfig: () => Promise<void>;
 }
 
-const routeDefs = [
-  {
-    id: 'competition',
-    title: 'Competition',
-    route: {
-      path: '/competition',
-      component: Competition,
-    },
-  },
-];
-
-const homeRoute = {
-  id: 'home',
-  title: 'Home',
-  route: {
-    component: JophielContainer,
-  },
-};
-
 class AppContainer extends React.Component<AppContainerConnectedProps> {
   async componentDidMount() {
     await this.props.onGetWebConfig();
   }
 
   render() {
+    const appRoutes = [
+      {
+        id: 'competition',
+        title: 'Competition',
+        route: {
+          path: '/competition',
+          component: Competition,
+        },
+      },
+    ];
+
+    const homeRoute = {
+      id: 'home',
+      title: 'Home',
+      route: {
+        component: JophielContainer,
+      },
+    };
+
     return (
       <DocumentTitle title={this.props.title}>
         <div>
           <HeaderContainer />
-          <MenubarContainer items={routeDefs} homeRoute={homeRoute} />
+          <MenubarContainer items={appRoutes} homeRoute={homeRoute} />
           <AppContent>
             <BreadcrumbsContainer />
             <Switch>
-              {routeDefs.map(item => <Route key={item.id} {...item.route} />)}{' '}
-              <Route key="labs" path="/labs" component={LabsContainer} />
-              <Route key={homeRoute.id} {...homeRoute.route} />
+              {appRoutes.map(item => <Route key={item.id} {...item.route} />)}{' '}
+              <Route path="/labs" component={LabsContainer} />
+              <Route {...homeRoute.route} />
             </Switch>
             <Route component={LegacyJophielContainer} />
             <Footer />
