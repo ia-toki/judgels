@@ -9,11 +9,11 @@ import { Card } from '../../../../components/Card/Card';
 import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 import { activateActions as injectedActivateActions } from '../modules/activateActions';
 
-interface ActivateProps {
+interface ActivatePageProps {
   isLoading: boolean;
 }
 
-export const Activate = (props: ActivateProps) => {
+const ActivatePage = (props: ActivatePageProps) => {
   const content = !props.isLoading && (
     <Card title="Activation successful" className="card-activate">
       <p>Your account has been activated.</p>
@@ -29,7 +29,7 @@ export const Activate = (props: ActivateProps) => {
   return <SingleColumnLayout>{content}</SingleColumnLayout>;
 };
 
-interface ActivateContainerProps {
+interface ActivatePageContainerProps {
   match: {
     params: {
       emailCode: string;
@@ -39,12 +39,12 @@ interface ActivateContainerProps {
   onActivate: (emailCode: string) => Promise<void>;
 }
 
-interface ActivateContainerState {
+interface ActivatePageContainerState {
   isFetching: boolean;
 }
 
-class ActivateContainer extends React.Component<ActivateContainerProps, ActivateContainerState> {
-  state: ActivateContainerState = {
+class ActivatePageContainer extends React.Component<ActivatePageContainerProps, ActivatePageContainerState> {
+  state: ActivatePageContainerState = {
     isFetching: true,
   };
 
@@ -56,16 +56,16 @@ class ActivateContainer extends React.Component<ActivateContainerProps, Activate
   }
 
   render() {
-    return <Activate isLoading={this.state.isFetching} />;
+    return <ActivatePage isLoading={this.state.isFetching} />;
   }
 }
 
-export function createActivateContainer(activateActions) {
+export function createActivatePage(activateActions) {
   const mapDispatchToProps = dispatch => ({
     onActivate: (emailCode: string) => dispatch(activateActions.activate(emailCode)),
   });
 
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(ActivateContainer));
+  return withRouter<any>(connect(undefined, mapDispatchToProps)(ActivatePageContainer));
 }
 
-export default createActivateContainer(injectedActivateActions);
+export default createActivatePage(injectedActivateActions);

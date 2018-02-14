@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import { serviceLogoutActions as injectedServiceLogoutActions } from '../modules/serviceLogoutActions';
 
-interface LogoutProps {
+interface ServiceLogoutPageProps {
   onLogOut: (redirectUri: string) => Promise<void>;
 
   match: {
@@ -14,7 +14,7 @@ interface LogoutProps {
   };
 }
 
-class ServiceLogout extends React.Component<LogoutProps> {
+class ServiceLogoutPage extends React.Component<ServiceLogoutPageProps> {
   async componentDidMount() {
     await this.props.onLogOut(this.props.match.params.returnUri);
   }
@@ -24,12 +24,11 @@ class ServiceLogout extends React.Component<LogoutProps> {
   }
 }
 
-export function createServiceLogoutContainer(serviceLogoutActions) {
+export function createServiceLogoutPage(serviceLogoutActions) {
   const mapDispatchToProps = dispatch => ({
     onLogOut: (redirectUri: string) => dispatch(serviceLogoutActions.logOut(redirectUri)),
   });
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(ServiceLogout));
+  return withRouter<any>(connect(undefined, mapDispatchToProps)(ServiceLogoutPage));
 }
 
-const ServiceLogoutContainer = createServiceLogoutContainer(injectedServiceLogoutActions);
-export default ServiceLogoutContainer;
+export default createServiceLogoutPage(injectedServiceLogoutActions);

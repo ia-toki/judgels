@@ -5,20 +5,20 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { createForgotPasswordContainer, ForgotPassword, ForgotPasswordProps } from './ForgotPassword';
+import { createForgotPasswordPage, ForgotPasswordPage, ForgotPasswordPageProps } from './ForgotPasswordPage';
 import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
 
-describe('ForgotPassword', () => {
+describe('ForgotPasswordPageShallow', () => {
   let wrapper: ShallowWrapper;
 
   let onForgetPassword: jest.Mock<any>;
 
   const render = () => {
-    const props: ForgotPasswordProps = {
+    const props: ForgotPasswordPageProps = {
       onForgetPassword,
     };
 
-    wrapper = shallow(<ForgotPassword {...props} />);
+    wrapper = shallow(<ForgotPasswordPage {...props} />);
   };
 
   beforeEach(() => {
@@ -40,7 +40,7 @@ describe('ForgotPassword', () => {
   });
 });
 
-describe('ForgotPasswordContainer', () => {
+describe('ForgotPasswordPage', () => {
   let forgotPasswordActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
@@ -50,18 +50,18 @@ describe('ForgotPasswordContainer', () => {
     };
 
     const store = createStore(combineReducers({ form: formReducer }));
-    const ForgotPasswordContainer = createForgotPasswordContainer(forgotPasswordActions);
+    const ForgotPasswordPageLocal = createForgotPasswordPage(forgotPasswordActions);
 
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <ForgotPasswordContainer />
+          <ForgotPasswordPageLocal />
         </MemoryRouter>
       </Provider>
     );
   });
 
-  it('has working forgot password form', () => {
+  test('forgot password form', () => {
     const email = wrapper.find('input[name="email"]');
     email.simulate('change', { target: { value: 'email@domain.com' } });
 

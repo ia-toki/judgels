@@ -8,7 +8,7 @@ import { Card } from '../../../../components/Card/Card';
 import { AppState } from '../../../../modules/store';
 import { serviceLoginActions as injectedServiceLoginActions } from '../modules/serviceLoginActions';
 
-interface ServiceLoginProps {
+interface ServiceLoginPageProps {
   isLoggedIn: boolean;
   onLogIn: (data: LoginFormData, redirectUri: string, returnUri: string) => Promise<void>;
   onPropagateLogin: (redirectUri: string, returnUri: string) => Promise<void>;
@@ -21,7 +21,7 @@ interface ServiceLoginProps {
   };
 }
 
-class ServiceLogin extends React.Component<ServiceLoginProps> {
+class ServiceLoginPage extends React.Component<ServiceLoginPageProps> {
   async componentDidMount() {
     if (this.props.isLoggedIn) {
       await this.props.onPropagateLogin(this.props.match.params.redirectUri, this.props.match.params.returnUri);
@@ -42,7 +42,7 @@ class ServiceLogin extends React.Component<ServiceLoginProps> {
   }
 }
 
-export function createServiceLoginContainer(serviceLoginActions) {
+export function createServiceLoginPage(serviceLoginActions) {
   const mapStateToProps = (state: AppState) => ({
     isLoggedIn: state.session.isLoggedIn || false,
   });
@@ -54,8 +54,7 @@ export function createServiceLoginContainer(serviceLoginActions) {
       dispatch(serviceLoginActions.propagateLogin(redirectUri, returnUri)),
   });
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ServiceLogin));
+  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ServiceLoginPage));
 }
 
-const ServiceLoginContainer = createServiceLoginContainer(injectedServiceLoginActions);
-export default ServiceLoginContainer;
+export default createServiceLoginPage(injectedServiceLoginActions);

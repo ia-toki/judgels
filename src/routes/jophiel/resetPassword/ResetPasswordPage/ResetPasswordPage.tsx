@@ -7,11 +7,11 @@ import ResetPasswordForm, { ResetPasswordFormData } from '../ResetPasswordForm/R
 import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
 import { resetPasswordActions as injectedResetPasswordActions } from '../modules/resetPasswordActions';
 
-export interface ResetPasswordProps {
+export interface ResetPasswordPageProps {
   onResetPassword: (data: ResetPasswordFormData) => Promise<void>;
 }
 
-export const ResetPassword = (props: ResetPasswordProps) => (
+export const ResetPasswordPage = (props: ResetPasswordPageProps) => (
   <SingleColumnLayout>
     <Card title="Reset password">
       <ResetPasswordForm onSubmit={props.onResetPassword} />
@@ -29,19 +29,19 @@ interface ResetPasswordContainerProps {
   onResetPassword: (emailCode: string, data: ResetPasswordFormData) => Promise<void>;
 }
 
-const ResetPasswordContainer = (props: ResetPasswordContainerProps) => {
+const ResetPasswordPageContainer = (props: ResetPasswordContainerProps) => {
   const onResetPassword = (data: ResetPasswordFormData) => props.onResetPassword(props.match.params.emailCode, data);
-  return <ResetPassword onResetPassword={onResetPassword} />;
+  return <ResetPasswordPage onResetPassword={onResetPassword} />;
 };
 
-export function createResetPasswordContainer(resetPasswordActions) {
+export function createResetPasswordPage(resetPasswordActions) {
   const mapDispatchToProps = dispatch => ({
     onResetPassword: (emailCode: string, data: ResetPasswordFormData) => {
       return dispatch(resetPasswordActions.reset(emailCode, data.password));
     },
   });
 
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(ResetPasswordContainer));
+  return withRouter<any>(connect(undefined, mapDispatchToProps)(ResetPasswordPageContainer));
 }
 
-export default createResetPasswordContainer(injectedResetPasswordActions);
+export default createResetPasswordPage(injectedResetPasswordActions);

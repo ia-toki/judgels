@@ -5,9 +5,9 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { createLoginContainer } from './Login';
+import { createLoginPage } from './LoginPage';
 
-describe('LoginContainer', () => {
+describe('LoginPage', () => {
   let loginActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
@@ -17,18 +17,18 @@ describe('LoginContainer', () => {
     };
 
     const store = createStore(combineReducers({ form: formReducer }));
-    const LoginContainer = createLoginContainer(loginActions);
+    const LoginPage = createLoginPage(loginActions);
 
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <LoginContainer />
+          <LoginPage />
         </MemoryRouter>
       </Provider>
     );
   });
 
-  it('has working login form', () => {
+  test('login form', () => {
     const username = wrapper.find('input[name="username"]');
     username.simulate('change', { target: { value: 'user' } });
 

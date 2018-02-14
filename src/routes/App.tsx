@@ -6,8 +6,8 @@ import DocumentTitle from 'react-document-title';
 import Competition from './competition/Competition';
 import HeaderContainer from '../components/Header/Header';
 import LabsContainer from './labs/Labs';
-import LegacyJophielContainer from './legacyJophiel/LegacyJophiel';
-import JophielContainer from './jophiel/Jophiel';
+import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
+import JophielRoutes from './jophiel/JophielRoutes';
 import { AppContent } from '../components/AppContent/AppContent';
 import MenubarContainer from '../components/Menubar/Menubar';
 import BreadcrumbsContainer from '../components/Breadcrumbs/Breadcrumbs';
@@ -16,12 +16,12 @@ import { webConfigActions as injectedWebConfigActions } from './jophiel/modules/
 import { AppState } from '../modules/store';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
 
-interface AppContainerConnectedProps {
+interface AppProps {
   title: string;
   onGetWebConfig: () => Promise<void>;
 }
 
-class AppContainer extends React.Component<AppContainerConnectedProps> {
+class App extends React.Component<AppProps> {
   async componentDidMount() {
     await this.props.onGetWebConfig();
   }
@@ -42,7 +42,7 @@ class AppContainer extends React.Component<AppContainerConnectedProps> {
       id: 'home',
       title: 'Home',
       route: {
-        component: JophielContainer,
+        component: JophielRoutes,
       },
     };
 
@@ -58,7 +58,7 @@ class AppContainer extends React.Component<AppContainerConnectedProps> {
               <Route path="/labs" component={LabsContainer} />
               <Route {...homeRoute.route} />
             </Switch>
-            <Route component={LegacyJophielContainer} />
+            <Route component={LegacyJophielRoutes} />
             <Footer />
           </AppContent>
         </div>
@@ -67,14 +67,14 @@ class AppContainer extends React.Component<AppContainerConnectedProps> {
   }
 }
 
-export function createAppContainer(webConfigActions) {
+export function createApp(webConfigActions) {
   const mapStateToProps = (state: AppState) => ({
     title: selectDocumentTitle(state),
   });
   const mapDispatchToProps = dispatch => ({
     onGetWebConfig: () => dispatch(webConfigActions.get()),
   });
-  return withRouter(connect(mapStateToProps, mapDispatchToProps)(AppContainer));
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
 }
 
-export default createAppContainer(injectedWebConfigActions);
+export default createApp(injectedWebConfigActions);

@@ -5,9 +5,9 @@ import { MemoryRouter, Route } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { createResetPasswordContainer } from './ResetPassword';
+import { createResetPasswordPage } from './ResetPasswordPage';
 
-describe('ResetPasswordContainer', () => {
+describe('ResetPasswordPage', () => {
   let resetPasswordActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
@@ -17,18 +17,18 @@ describe('ResetPasswordContainer', () => {
     };
 
     const store = createStore(combineReducers({ form: formReducer }));
-    const ResetPasswordContainer = createResetPasswordContainer(resetPasswordActions);
+    const ResetPasswordPage = createResetPasswordPage(resetPasswordActions);
 
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/reset-password/code123']}>
-          <Route exact path="/reset-password/:emailCode" component={ResetPasswordContainer} />
+          <Route exact path="/reset-password/:emailCode" component={ResetPasswordPage} />
         </MemoryRouter>
       </Provider>
     );
   });
 
-  it('has working reset password form', () => {
+  test('reset password form', () => {
     const password = wrapper.find('input[name="password"]');
     password.simulate('change', { target: { value: 'pass' } });
 

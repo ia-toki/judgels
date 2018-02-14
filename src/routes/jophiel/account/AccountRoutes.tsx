@@ -46,5 +46,5 @@ export const Account = () => {
   );
 };
 
-const AccountContainer = withBreadcrumb('My account')(Account);
-export default AccountContainer;
+const AccountRoutes = withBreadcrumb('My account')(Account);
+export default AccountRoutes;

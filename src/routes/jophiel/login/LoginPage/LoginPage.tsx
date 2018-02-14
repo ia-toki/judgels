@@ -6,11 +6,11 @@ import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnL
 import { Card } from '../../../../components/Card/Card';
 import { loginActions as injectedLoginActions } from '../modules/loginActions';
 
-export interface LoginProps {
+export interface LoginPageProps {
   onLogIn: (data: LoginFormData) => Promise<void>;
 }
 
-export const Login = (props: LoginProps) => (
+const LoginPage = (props: LoginPageProps) => (
   <SingleColumnLayout>
     <Card title="Log in" className="card-login">
       <LoginForm onSubmit={props.onLogIn} />
@@ -18,13 +18,12 @@ export const Login = (props: LoginProps) => (
   </SingleColumnLayout>
 );
 
-export function createLoginContainer(loginActions) {
+export function createLoginPage(loginActions) {
   const mapDispatchToProps = dispatch => ({
     onLogIn: (data: LoginFormData) => dispatch(loginActions.logIn(window.location.href, data.username, data.password)),
   });
 
-  return connect(undefined, mapDispatchToProps)(Login);
+  return connect(undefined, mapDispatchToProps)(LoginPage);
 }
 
-const LoginContainer = createLoginContainer(injectedLoginActions);
-export default LoginContainer;
+export default createLoginPage(injectedLoginActions);

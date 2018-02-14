@@ -6,14 +6,14 @@ import { ConnectedRouter } from 'react-router-redux';
 
 import './styles/index.css';
 
-import AppContainer from './routes/App';
+import App from './routes/App';
 import { history, persistor, store } from './modules/store';
 
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
       <ConnectedRouter history={history}>
-        <AppContainer />
+        <App />
       </ConnectedRouter>
     </PersistGate>
   </Provider>,

@@ -4,24 +4,24 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { reducer as formReducer } from 'redux-form';
 
-import { createRegisterContainer, Register, RegisterProps } from './Register';
+import { createRegisterPage, RegisterPage, RegisterPageProps } from './RegisterPage';
 import RegisterForm from '../RegisterForm/RegisterForm';
 import { combineReducers, createStore } from 'redux';
 import { AppState } from '../../../../modules/store';
 import { jophielReducer } from '../../modules/jophielReducer';
 
-describe('Register', () => {
+describe('RegisterPageShallow', () => {
   let wrapper: ShallowWrapper;
 
   let onRegister: jest.Mock<any>;
 
   const render = () => {
-    const props: RegisterProps = {
+    const props: RegisterPageProps = {
       useRecaptcha: false,
       onRegister,
     };
 
-    wrapper = shallow(<Register {...props} />);
+    wrapper = shallow(<RegisterPage {...props} />);
   };
 
   beforeEach(() => {
@@ -46,7 +46,7 @@ describe('Register', () => {
   });
 });
 
-describe('RegisterContainer', () => {
+describe('RegisterPage', () => {
   let registerActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
@@ -62,18 +62,18 @@ describe('RegisterContainer', () => {
       })
     );
 
-    const RegisterContainer = createRegisterContainer(registerActions);
+    const RegisterPageLocal = createRegisterPage(registerActions);
 
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <RegisterContainer />
+          <RegisterPageLocal />
         </MemoryRouter>
       </Provider>
     );
   });
 
-  it('has working register form', () => {
+  test('register form', () => {
     const username = wrapper.find('input[name="username"]');
     username.simulate('change', { target: { value: 'user' } });
 

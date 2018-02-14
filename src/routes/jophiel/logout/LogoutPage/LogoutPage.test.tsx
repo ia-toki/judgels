@@ -4,9 +4,9 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import createMockStore from 'redux-mock-store';
 
-import { createLogoutContainer } from './Logout';
+import { createLogoutPage } from './LogoutPage';
 
-describe('LogoutContainer', () => {
+describe('LogoutPage', () => {
   let logoutActions: jest.Mocked<any>;
 
   beforeEach(() => {
@@ -15,12 +15,12 @@ describe('LogoutContainer', () => {
     };
 
     const store = createMockStore()({});
-    const LogoutContainer = createLogoutContainer(logoutActions);
+    const LogoutPage = createLogoutPage(logoutActions);
 
     mount(
       <Provider store={store}>
         <MemoryRouter>
-          <LogoutContainer />
+          <LogoutPage />
         </MemoryRouter>
       </Provider>
     );

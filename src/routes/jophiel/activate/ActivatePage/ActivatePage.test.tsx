@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
-import { createActivateContainer } from './Activate';
+import { createActivatePage } from './ActivatePage';
 import { AppState } from '../../../../modules/store';
 
-describe('ActivateContainer', () => {
+describe('ActivatePage', () => {
   let activateActions: jest.Mocked<any>;
   let store: MockStore<Partial<AppState>>;
 
@@ -17,12 +17,12 @@ describe('ActivateContainer', () => {
     };
 
     store = createMockStore<Partial<AppState>>()({});
-    const ActivateContainer = createActivateContainer(activateActions);
+    const ActivatePage = createActivatePage(activateActions);
 
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/activate/code123']}>
-          <Route exact path="/activate/:emailCode" component={ActivateContainer} />
+          <Route exact path="/activate/:emailCode" component={ActivatePage} />
         </MemoryRouter>
       </Provider>
     );

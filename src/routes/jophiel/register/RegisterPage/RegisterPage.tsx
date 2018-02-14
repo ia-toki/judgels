@@ -9,27 +9,27 @@ import { selectRecaptchaSiteKey, selectUserRegistrationUseRecaptcha } from '../.
 import { UserRegistrationData } from '../../../../modules/api/jophiel/user';
 import { registerActions as injectedRegisterActions } from '../modules/registerActions';
 
-export interface RegisterProps {
+export interface RegisterPageProps {
   onRegister: (data: RegisterFormData) => Promise<void>;
   useRecaptcha: boolean;
   recaptchaSiteKey?: string;
 }
 
-interface RegisterState {
+interface RegisterPageState {
   registeredUser?: {
     username: string;
     email: string;
   };
 }
 
-export class Register extends React.Component<RegisterProps, RegisterState> {
-  state: RegisterState = {};
+export class RegisterPage extends React.Component<RegisterPageProps, RegisterPageState> {
+  state: RegisterPageState = {};
 
   render() {
     let content: JSX.Element;
     if (this.state.registeredUser) {
       content = (
-        <Card title="Activation Required" className="card-register">
+        <Card title="Activation required" className="card-register">
           <p>
             Thank you for registering, <strong>{this.state.registeredUser.username}</strong>.
           </p>
@@ -66,7 +66,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
   };
 }
 
-export function createRegisterContainer(registerActions) {
+export function createRegisterPage(registerActions) {
   const mapStateToProps = (state: AppState) => ({
     useRecaptcha: selectUserRegistrationUseRecaptcha(state),
     recaptchaSiteKey: selectRecaptchaSiteKey(state),
@@ -86,10 +86,9 @@ export function createRegisterContainer(registerActions) {
   });
 
   // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/19989
-  const RegisterWrapper = (props: RegisterProps) => <Register {...props} />;
+  const RegisterWrapper = (props: RegisterPageProps) => <RegisterPage {...props} />;
 
   return connect(mapStateToProps, mapDispatchToProps)(RegisterWrapper);
 }
 
-const RegisterContainer = createRegisterContainer(injectedRegisterActions);
-export default RegisterContainer;
+export default createRegisterPage(injectedRegisterActions);

@@ -4,12 +4,12 @@ import * as React from 'react';
 import { APP_CONFIG } from '../../../../conf';
 import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
 
-import './Home.css';
+import './HomePage.css';
 
 const redirectToUriel = () => (location.href = APP_CONFIG.tempHome.urielUrl);
 const redirectToJerahmeel = () => (location.href = APP_CONFIG.tempHome.jerahmeelUrl);
 
-export const Home = () => (
+export const HomePage = () => (
   <SingleColumnLayout>
     <h5 className="home__text">
       <Icon iconName="oil-field" className="home__icon" />

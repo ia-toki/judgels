@@ -6,16 +6,16 @@ import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
 import { forgotPasswordActions as injectedForgotPasswordActions } from '../modules/forgotPasswordActions';
 
-export interface ForgotPasswordProps {
+export interface ForgotPasswordPageProps {
   onForgetPassword: (data: ForgotPasswordFormData) => Promise<void>;
 }
 
-interface ForgotPasswordState {
+interface ForgotPasswordPageState {
   submitted: boolean;
 }
 
-export class ForgotPassword extends React.Component<ForgotPasswordProps, ForgotPasswordState> {
-  state: ForgotPasswordState = { submitted: false };
+export class ForgotPasswordPage extends React.Component<ForgotPasswordPageProps, ForgotPasswordPageState> {
+  state: ForgotPasswordPageState = { submitted: false };
 
   render() {
     let content: JSX.Element;
@@ -43,13 +43,12 @@ export class ForgotPassword extends React.Component<ForgotPasswordProps, ForgotP
   };
 }
 
-export function createForgotPasswordContainer(forgotPasswordActions) {
+export function createForgotPasswordPage(forgotPasswordActions) {
   const mapDispatchToProps = dispatch => ({
     onForgetPassword: (data: ForgotPasswordFormData) => dispatch(forgotPasswordActions.requestToReset(data.email)),
   });
 
-  return connect(undefined, mapDispatchToProps)(ForgotPassword);
+  return connect(undefined, mapDispatchToProps)(ForgotPasswordPage);
 }
 
-const ForgotPasswordContainer = createForgotPasswordContainer(injectedForgotPasswordActions);
-export default ForgotPasswordContainer;
+export default createForgotPasswordPage(injectedForgotPasswordActions);
