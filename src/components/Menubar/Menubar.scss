@@ -21,13 +21,15 @@
   .pt-tab {
     padding-left: 20px;
     padding-right: 20px;
+    margin-right: 0;
     line-height: 45px;
     height: 45px;
-    background-color: #fbfbfb;
+    color: $primary-color;
   }
 
   .pt-tab[aria-selected="true"] {
     font-weight: 600;
+    background-color: #fbfbfb;
     color: $text-color;
   }
 
