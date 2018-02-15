@@ -1,7 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
@@ -29,13 +29,7 @@ const ActivatePage = (props: ActivatePageProps) => {
   return <SingleColumnLayout>{content}</SingleColumnLayout>;
 };
 
-interface ActivatePageContainerProps {
-  match: {
-    params: {
-      emailCode: string;
-    };
-  };
-
+interface ActivatePageContainerProps extends RouteComponentProps<{ emailCode: string }> {
   onActivate: (emailCode: string) => Promise<void>;
 }
 

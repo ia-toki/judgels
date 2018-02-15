@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import ResetPasswordForm, { ResetPasswordFormData } from '../ResetPasswordForm/ResetPasswordForm';
@@ -19,13 +19,7 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => (
   </SingleColumnLayout>
 );
 
-interface ResetPasswordContainerProps {
-  match: {
-    params: {
-      emailCode: string;
-    };
-  };
-
+interface ResetPasswordContainerProps extends RouteComponentProps<{ emailCode: string }> {
   onResetPassword: (emailCode: string, data: ResetPasswordFormData) => Promise<void>;
 }
 

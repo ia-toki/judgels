@@ -1,6 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Redirect, Switch, withRouter } from 'react-router';
+import { Redirect, RouteComponentProps, Switch, withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 
@@ -40,14 +40,7 @@ export interface ContentWithSidebarProps {
   items: ContentWithSidebarItem[];
 }
 
-interface ContentWithSidebarConnectedProps {
-  location: {
-    pathname: string;
-  };
-  match: {
-    url: string;
-  };
-
+interface ContentWithSidebarConnectedProps extends RouteComponentProps<{ pathname: string }> {
   onItemClick: (parentPath: string, itemId: string) => void;
 }
 
@@ -87,7 +80,7 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
       const RouteC = item.routeComponent;
       const props = {
         exact: true,
-        path: this.props.match.url + '/' + item.id,
+        path: resolveUrl(this.props.match.url, item.id),
         component: item.component,
       };
       return <RouteC key={item.id} {...props} />;
@@ -108,9 +101,7 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
   };
 
   private getActiveItemId = () => {
-    const currentPath = this.props.location.pathname + '/';
-    const nextSlashPos = currentPath.indexOf('/', this.props.match.url.length + 1);
-    return currentPath.substring(this.props.match.url.length + 1, nextSlashPos);
+    return this.props.location.pathname.slice(this.props.match.path.length + 1);
   };
 }
 
