@@ -2,38 +2,38 @@ import * as React from 'react';
 
 import { FullPageLayout } from '../../../components/layouts/FullPageLayout/FullPageLayout';
 import UserRoute from '../../../components/UserRoute/UserRoute';
-import ProfileContainer from './routes/profile/Profile/Profile';
-import ChangePasswordContainer from './routes/changePassword/ChangePassword/ChangePassword';
-import ChangeAvatarContainer from './routes/changeAvatar/ChangeAvatar/ChangeAvatar';
-import ContentWithSidebarContainer, {
-  ContentWithSidebarContainerItem,
-  ContentWithSidebarContainerProps,
+import ProfilePage from './routes/profile/ProfilePage/ProfilePage';
+import ChangePasswordPage from './routes/changePassword/ChangePasswordPage/ChangePasswordPage';
+import ChangeAvatarPage from './routes/changeAvatar/ChangeAvatarPage/ChangeAvatarPage';
+import ContentWithSidebar, {
+  ContentWithSidebarItem,
+  ContentWithSidebarProps,
 } from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
-export const Account = () => {
-  const sidebarItems: ContentWithSidebarContainerItem[] = [
+const AccountRoutes = () => {
+  const sidebarItems: ContentWithSidebarItem[] = [
     {
       id: 'profile',
       title: 'Profile',
       routeComponent: UserRoute,
-      component: ProfileContainer,
+      component: ProfilePage,
     },
     {
       id: 'avatar',
       title: 'Change avatar',
       routeComponent: UserRoute,
-      component: ChangeAvatarContainer,
+      component: ChangeAvatarPage,
     },
     {
       id: 'password',
       title: 'Change password',
       routeComponent: UserRoute,
-      component: ChangePasswordContainer,
+      component: ChangePasswordPage,
     },
   ];
 
-  const contentWithSidebarContainerProps: ContentWithSidebarContainerProps = {
+  const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'My account',
     items: sidebarItems,
     smallContent: true,
@@ -41,10 +41,9 @@ export const Account = () => {
 
   return (
     <FullPageLayout>
-      <ContentWithSidebarContainer {...contentWithSidebarContainerProps} />
+      <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
 };
 
-const AccountRoutes = withBreadcrumb('My account')(Account);
-export default AccountRoutes;
+export default withBreadcrumb('My account')(AccountRoutes);

@@ -5,7 +5,7 @@ import { AppState } from '../../../../../../modules/store';
 import { ChangeAvatarPanel } from '../../../../panels/avatar/ChangeAvatar/ChangeAvatar';
 import { avatarActions as injectedAvatarActions } from '../modules/avatarActions';
 
-export function createChangeAvatarContainer(avatarActions) {
+export function createChangeAvatarPage(avatarActions) {
   const mapStateToProps = (state: AppState) => ({
     avatarUrl: state.session.user && state.session.user.avatarUrl,
   });
@@ -19,5 +19,4 @@ export function createChangeAvatarContainer(avatarActions) {
   return connect(mapStateToProps, mapDispatchToProps)(ChangeAvatarPanel);
 }
 
-const AvatarContainer = withBreadcrumb('Change avatar')(createChangeAvatarContainer(injectedAvatarActions));
-export default AvatarContainer;
+export default withBreadcrumb('Change avatar')(createChangeAvatarPage(injectedAvatarActions));

@@ -78,12 +78,11 @@ class Menubar extends React.Component<RouteComponentProps<{}> & MenubarProps & M
   };
 }
 
-function createMenubarContainer() {
+function createMenubar() {
   const mapDispatchToProps = dispatch => ({
     onNavigate: (url: string) => dispatch(push(url)),
   });
   return withRouter<any>(connect(undefined, mapDispatchToProps)(Menubar));
 }
 
-const MenubarContainer = createMenubarContainer();
-export default MenubarContainer;
+export default createMenubar();

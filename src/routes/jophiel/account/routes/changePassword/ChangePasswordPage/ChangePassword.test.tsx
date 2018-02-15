@@ -5,9 +5,9 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { createChangePasswordContainer } from './ChangePassword';
+import { createChangePasswordPage } from './ChangePasswordPage';
 
-describe('ChangePasswordContainer', () => {
+describe('ChangePasswordPage', () => {
   let changePasswordActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
 
@@ -17,18 +17,18 @@ describe('ChangePasswordContainer', () => {
     };
 
     const store = createStore(combineReducers({ form: formReducer }));
-    const ChangePasswordContainer = createChangePasswordContainer(changePasswordActions);
+    const ChangePasswordPage = createChangePasswordPage(changePasswordActions);
 
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <ChangePasswordContainer />
+          <ChangePasswordPage />
         </MemoryRouter>
       </Provider>
     );
   });
 
-  it('has working change password form', () => {
+  test('change password form', () => {
     const oldPassword = wrapper.find('input[name="oldPassword"]');
     oldPassword.simulate('change', { target: { value: 'oldPass' } });
 

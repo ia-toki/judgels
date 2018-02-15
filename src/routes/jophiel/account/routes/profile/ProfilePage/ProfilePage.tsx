@@ -8,13 +8,13 @@ import { AppState } from '../../../../../../modules/store';
 import { selectProfile } from '../../../../../../modules/session/sessionSelectors';
 import { profileActions as injectedProfileActions } from '../modules/profileActions';
 
-interface ProfileContainerProps {
+interface ProfilePageProps {
   profile: UserProfile | undefined;
   onGetProfile: () => Promise<void>;
   onUpdateProfile: (profile: UserProfile) => Promise<void>;
 }
 
-class ProfileContainer extends React.Component<ProfileContainerProps> {
+class ProfilePage extends React.Component<ProfilePageProps> {
   async componentDidMount() {
     await this.props.onGetProfile();
   }
@@ -27,7 +27,7 @@ class ProfileContainer extends React.Component<ProfileContainerProps> {
   }
 }
 
-export function createProfileContainer(profileActions) {
+export function createProfilePage(profileActions) {
   const mapStateToProps = (state: AppState) => ({
     profile: selectProfile(state),
   });
@@ -35,7 +35,7 @@ export function createProfileContainer(profileActions) {
     onGetProfile: () => dispatch(profileActions.get()),
     onUpdateProfile: (profile: UserProfile) => dispatch(profileActions.update(profile)),
   });
-  return connect(mapStateToProps, mapDispatchToProps)(ProfileContainer);
+  return connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
 }
 
-export default withBreadcrumb('Profile')(createProfileContainer(injectedProfileActions));
+export default withBreadcrumb('Profile')(createProfilePage(injectedProfileActions));

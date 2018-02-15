@@ -6,10 +6,10 @@ import { MemoryRouter, Route } from 'react-router';
 import { push } from 'react-router-redux';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
-import ContentWithSidebarContainer, { ContentWithSidebarContainerProps } from './ContentWithSidebar';
+import ContentWithSidebar, { ContentWithSidebarProps } from './ContentWithSidebar';
 import { AppState } from '../../modules/store';
 
-describe('ContentWithSidebarContainer', () => {
+describe('ContentWithSidebar', () => {
   let store: MockStore<Partial<AppState>>;
   let wrapper: ReactWrapper<any, any>;
 
@@ -18,7 +18,7 @@ describe('ContentWithSidebarContainer', () => {
   const ThirdComponent = () => <div />;
 
   const render = (childPath: string) => {
-    const props: ContentWithSidebarContainerProps = {
+    const props: ContentWithSidebarProps = {
       title: 'Content with Sidebar',
       items: [
         {
@@ -41,7 +41,7 @@ describe('ContentWithSidebarContainer', () => {
         },
       ],
     };
-    const component = () => <ContentWithSidebarContainer {...props} />;
+    const component = () => <ContentWithSidebar {...props} />;
 
     wrapper = mount(
       <Provider store={store}>

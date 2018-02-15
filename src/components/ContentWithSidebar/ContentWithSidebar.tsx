@@ -8,13 +8,13 @@ import { Sidebar } from '../Sidebar/Sidebar';
 
 import './ContentWithSidebar.css';
 
-export interface ContentWithSidebarProps {
+export interface ContentAndSidebarProps {
   sidebarElement: JSX.Element;
   contentElement: JSX.Element;
   smallContent?: boolean;
 }
 
-export const ContentWithSidebar = (props: ContentWithSidebarProps) => (
+const ContentAndSidebar = (props: ContentAndSidebarProps) => (
   <div className="content-with-sidebar">
     <div className="content-with-sidebar__sidebar">{props.sidebarElement}</div>
     <div
@@ -27,20 +27,20 @@ export const ContentWithSidebar = (props: ContentWithSidebarProps) => (
   </div>
 );
 
-export interface ContentWithSidebarContainerItem {
+export interface ContentWithSidebarItem {
   id: string;
   title: string;
   routeComponent: any;
   component: any;
 }
 
-export interface ContentWithSidebarContainerProps {
+export interface ContentWithSidebarProps {
   title: string;
   smallContent?: boolean;
-  items: ContentWithSidebarContainerItem[];
+  items: ContentWithSidebarItem[];
 }
 
-interface ContentWithSidebarContainerConnectedProps {
+interface ContentWithSidebarConnectedProps {
   location: {
     pathname: string;
   };
@@ -55,12 +55,10 @@ function resolveUrl(parentPath: string, childPath: string) {
   return (parentPath + '/' + childPath).replace(/\/\/+/g, '/');
 }
 
-class ContentWithSidebarContainer extends React.Component<
-  ContentWithSidebarContainerProps & ContentWithSidebarContainerConnectedProps
-> {
+class ContentWithSidebar extends React.Component<ContentWithSidebarProps & ContentWithSidebarConnectedProps> {
   render() {
     return (
-      <ContentWithSidebar
+      <ContentAndSidebar
         sidebarElement={this.renderSidebar()}
         contentElement={this.renderContent()}
         smallContent={this.props.smallContent}
@@ -116,11 +114,11 @@ class ContentWithSidebarContainer extends React.Component<
   };
 }
 
-function createContentWithSidebarContainer() {
+function createContentWithSidebar() {
   const mapDispatchToProps = dispatch => ({
     onItemClick: (parentPath: string, itemId: string) => dispatch(push(resolveUrl(parentPath, itemId))),
   });
-  return connect(undefined, mapDispatchToProps)(ContentWithSidebarContainer);
+  return connect(undefined, mapDispatchToProps)(ContentWithSidebar);
 }
 
-export default withRouter<any>(createContentWithSidebarContainer());
+export default withRouter<any>(createContentWithSidebar());

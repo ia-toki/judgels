@@ -4,13 +4,13 @@ import { Route, Switch, withRouter } from 'react-router';
 import DocumentTitle from 'react-document-title';
 
 import Competition from './competition/Competition';
-import HeaderContainer from '../components/Header/Header';
-import LabsContainer from './labs/Labs';
+import Header from '../components/Header/Header';
+import LabsRoutes from './labs/LabsRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import JophielRoutes from './jophiel/JophielRoutes';
 import { AppContent } from '../components/AppContent/AppContent';
-import MenubarContainer from '../components/Menubar/Menubar';
-import BreadcrumbsContainer from '../components/Breadcrumbs/Breadcrumbs';
+import Menubar from '../components/Menubar/Menubar';
+import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
 import { Footer } from '../components/Footer/Footer';
 import { webConfigActions as injectedWebConfigActions } from './jophiel/modules/webConfigActions';
 import { AppState } from '../modules/store';
@@ -49,13 +49,13 @@ class App extends React.Component<AppProps> {
     return (
       <DocumentTitle title={this.props.title}>
         <div>
-          <HeaderContainer />
-          <MenubarContainer items={appRoutes} homeRoute={homeRoute} />
+          <Header />
+          <Menubar items={appRoutes} homeRoute={homeRoute} />
           <AppContent>
-            <BreadcrumbsContainer />
+            <Breadcrumbs />
             <Switch>
               {appRoutes.map(item => <Route key={item.id} {...item.route} />)}{' '}
-              <Route path="/labs" component={LabsContainer} />
+              <Route path="/labs" component={LabsRoutes} />
               <Route {...homeRoute.route} />
             </Switch>
             <Route component={LegacyJophielRoutes} />

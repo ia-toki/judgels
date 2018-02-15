@@ -5,7 +5,7 @@ import { MemoryRouter, Route } from 'react-router';
 import { push } from 'react-router-redux';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
-import MenubarContainer, { MenubarProps } from './Menubar';
+import Menubar, { MenubarProps } from './Menubar';
 import { AppState } from '../../modules/store';
 
 describe('Menubar', () => {
@@ -56,7 +56,7 @@ describe('Menubar', () => {
           }
         : undefined,
     };
-    const component = () => <MenubarContainer {...props} />;
+    const component = () => <Menubar {...props} />;
 
     const initialPath = parentRoute === '/' ? childPath : parentRoute + childPath;
 

@@ -6,27 +6,24 @@ import { Card } from '../../../../../../components/Card/Card';
 import { changePasswordActions as injectedChangePasswordActions } from '../modules/changePasswordActions';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
-export interface ChangePasswordProps {
+export interface ChangePasswordPageProps {
   onChangePassword: (data: ChangePasswordFormData) => Promise<void>;
 }
 
-export const ChangePassword = (props: ChangePasswordProps) => (
+const ChangePasswordPage = (props: ChangePasswordPageProps) => (
   <Card title="Change password" className="card-change-password">
     <ChangePasswordForm onSubmit={props.onChangePassword} />
   </Card>
 );
 
-export function createChangePasswordContainer(changePasswordActions) {
+export function createChangePasswordPage(changePasswordActions) {
   const mapDispatchToProps = dispatch => ({
     onChangePassword: (data: ChangePasswordFormData) => {
       return dispatch(changePasswordActions.changePassword(data.oldPassword, data.password));
     },
   });
 
-  return connect(undefined, mapDispatchToProps)(ChangePassword);
+  return connect(undefined, mapDispatchToProps)(ChangePasswordPage);
 }
 
-const ChangePasswordContainer = withBreadcrumb('Change password')(
-  createChangePasswordContainer(injectedChangePasswordActions)
-);
-export default ChangePasswordContainer;
+export default withBreadcrumb('Change password')(createChangePasswordPage(injectedChangePasswordActions));

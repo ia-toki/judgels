@@ -4,7 +4,7 @@ import { Route, Switch, withRouter } from 'react-router';
 import { Example } from './routes/example/Example/Example';
 import ScoreboardContainer from './routes/scoreboard/ScoreboardContainer/ScoreboardContainer';
 
-const LabsContainer = () => (
+const LabsRoutes = () => (
   <div>
     <Switch>
       <Route exact path="/labs/example" component={Example} />
@@ -13,4 +13,4 @@ const LabsContainer = () => (
   </div>
 );
 
-export default withRouter<any>(LabsContainer);
+export default withRouter<any>(LabsRoutes);

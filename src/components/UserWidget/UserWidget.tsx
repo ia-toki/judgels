@@ -104,7 +104,7 @@ export class UserWidget extends React.Component<UserWidgetProps> {
   };
 }
 
-export function createUserWidgetContainer() {
+export function createUserWidget() {
   const mapStateToProps = (state: AppState) => ({
     user: state.session.user,
   });
@@ -115,5 +115,4 @@ export function createUserWidgetContainer() {
   return connect(mapStateToProps)(UserWidgetWrapper);
 }
 
-const UserWidgetContainer = createUserWidgetContainer();
-export default UserWidgetContainer;
+export default createUserWidget();
