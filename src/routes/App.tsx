@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router';
 import DocumentTitle from 'react-document-title';
 
-import Competition from './competition/Competition';
 import Header from '../components/Header/Header';
 import LabsRoutes from './labs/LabsRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import JophielRoutes from './jophiel/JophielRoutes';
+import UrielRoutes from './uriel/UrielRoutes';
 import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
@@ -33,7 +33,7 @@ class App extends React.Component<AppProps> {
         title: 'Competition',
         route: {
           path: '/competition',
-          component: Competition,
+          component: UrielRoutes,
         },
       },
     ];

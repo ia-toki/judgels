@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { Card, Button, Intent } from '@blueprintjs/core';
+import * as React from 'react';
 
-import { ContestList } from '../../modules/api/uriel/contest';
+import { ContestList } from '../../../../../../modules/api/uriel/contest';
 
 import './ContestListTable.css';
 
