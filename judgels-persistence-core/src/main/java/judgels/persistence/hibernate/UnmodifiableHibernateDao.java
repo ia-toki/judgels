@@ -13,9 +13,7 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.UnmodifiableModel;
 import judgels.persistence.api.Page;
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
 import org.hibernate.query.Query;
 
 public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M>
@@ -46,10 +44,11 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
 
     @Override
     public long selectCount() {
-        Criteria cr = criteria();
-        cr.setProjection(Projections.rowCount());
-
-        return (long) cr.uniqueResult();
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<M> root = cq.from(getEntityClass());
+        cq.select(cb.count(root));
+        return currentSession().createQuery(cq).getSingleResult();
     }
 
     @Override
