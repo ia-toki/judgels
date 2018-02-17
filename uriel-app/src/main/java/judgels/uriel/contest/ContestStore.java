@@ -22,13 +22,14 @@ public class ContestStore {
     }
 
     public Page<Contest> getContests(int page, int pageSize) {
-        Page<ContestModel> contestModelsPage = contestDao.selectAll(page, pageSize);
-
-        List<Contest> contests = Lists.transform(contestModelsPage.getData(), ContestStore::fromModel);
+        Page<ContestModel> models = contestDao.selectAll(page, pageSize);
+        List<Contest> contests = Lists.transform(models.getData(), ContestStore::fromModel);
 
         return new Page.Builder<Contest>()
-                .totalItems(contestModelsPage.getTotalItems())
-                .totalPages(contestModelsPage.getTotalPages())
+                .currentPage(page)
+                .pageSize(pageSize)
+                .totalPages(models.getTotalPages())
+                .totalData(models.getTotalData())
                 .data(contests)
                 .build();
     }

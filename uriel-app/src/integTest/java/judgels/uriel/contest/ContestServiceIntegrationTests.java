@@ -15,28 +15,27 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
     @Test void basic_flow() {
         Contest contestA = contestService.createContest(new ContestData.Builder()
-                .name("cf212")
-                .description("codeforces 212")
+                .name("Contest A")
+                .description("This is contest A")
                 .style(ContestStyle.ICPC)
                 .build());
 
-        assertThat(contestA.getName()).isEqualTo("cf212");
-        assertThat(contestA.getDescription()).isEqualTo("codeforces 212");
+        assertThat(contestA.getName()).isEqualTo("Contest A");
+        assertThat(contestA.getDescription()).isEqualTo("This is contest A");
         assertThat(contestA.getStyle()).isEqualTo(ContestStyle.ICPC);
 
         assertThat(contestService.getContest(contestA.getJid())).isEqualTo(contestA);
 
         Contest contestB = contestService.createContest(new ContestData.Builder()
-                .name("acf212")
-                .description("alumni cf 212")
+                .name("Contest B")
+                .description("This is contest B")
                 .style(ContestStyle.IOI)
                 .build());
 
         assertThat(contestService.getContest(contestB.getJid())).isEqualTo(contestB);
 
         Page<Contest> contests = contestService.getContests(1, 10);
-        assertThat(contests.getTotalItems()).isEqualTo(2);
-        assertThat(contests.getData()).contains(contestA, contestB);
+        assertThat(contests.getData()).containsExactly(contestA, contestB);
     }
 
 }
