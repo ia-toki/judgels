@@ -55,7 +55,7 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     @Override
     public Page<M> selectAll(int page, int pageSize) {
         CriteriaQuery<M> cq = criteriaQuery();
-        Root<M> root = cq.from(getEntityClass());
+        cq.from(getEntityClass());
 
         Query<M> query = currentSession().createQuery(cq);
 
@@ -63,12 +63,14 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
         query.setMaxResults(pageSize);
 
         List<M> data = query.list();
-        long totalItems = selectCount();
-        long totalPages = (totalItems + pageSize - 1) / pageSize;
+        long totalData = selectCount();
+        long totalPages = (totalData + pageSize - 1) / pageSize;
 
         return new Page.Builder<M>()
-                .totalItems(totalItems)
+                .currentPage(page)
+                .pageSize(pageSize)
                 .totalPages(totalPages)
+                .totalData(totalData)
                 .data(data)
                 .build();
     }

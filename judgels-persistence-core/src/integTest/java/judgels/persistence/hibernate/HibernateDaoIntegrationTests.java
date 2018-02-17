@@ -92,8 +92,10 @@ class HibernateDaoIntegrationTests {
                     new FixedActorProvider());
 
             Page<ExampleModel> page1 = dao.selectAll(1, 10);
-            assertThat(page1.getTotalItems()).isZero();
+            assertThat(page1.getCurrentPage()).isEqualTo(1);
+            assertThat(page1.getPageSize()).isEqualTo(10);
             assertThat(page1.getTotalPages()).isZero();
+            assertThat(page1.getTotalData()).isZero();
             assertThat(page1.getData()).isEmpty();
 
             ExampleModel model1 = new ExampleModel();
@@ -107,28 +109,32 @@ class HibernateDaoIntegrationTests {
             dao.insert(model2);
 
             Page<ExampleModel> page2 = dao.selectAll(1, 1);
-            assertThat(page2.getTotalItems()).isEqualTo(2);
+            assertThat(page2.getCurrentPage()).isEqualTo(1);
+            assertThat(page2.getPageSize()).isEqualTo(1);
             assertThat(page2.getTotalPages()).isEqualTo(2);
-            assertThat(page2.getData()).contains(model1);
-            assertThat(page2.getData()).doesNotContain(model2);
+            assertThat(page2.getTotalData()).isEqualTo(2);
+            assertThat(page2.getData()).containsExactly(model1);
 
             Page<ExampleModel> page3 = dao.selectAll(2, 1);
-            assertThat(page3.getTotalItems()).isEqualTo(2);
+            assertThat(page3.getCurrentPage()).isEqualTo(2);
+            assertThat(page3.getPageSize()).isEqualTo(1);
             assertThat(page3.getTotalPages()).isEqualTo(2);
-            assertThat(page3.getData()).contains(model2);
-            assertThat(page3.getData()).doesNotContain(model1);
+            assertThat(page3.getTotalData()).isEqualTo(2);
+            assertThat(page3.getData()).containsExactly(model2);
 
             Page<ExampleModel> page4 = dao.selectAll(1, 2);
-            assertThat(page4.getTotalItems()).isEqualTo(2);
+            assertThat(page4.getCurrentPage()).isEqualTo(1);
+            assertThat(page4.getPageSize()).isEqualTo(2);
             assertThat(page4.getTotalPages()).isEqualTo(1);
-            assertThat(page4.getData()).contains(model1);
-            assertThat(page4.getData()).contains(model2);
+            assertThat(page4.getTotalData()).isEqualTo(2);
+            assertThat(page4.getData()).containsExactly(model1, model2);
 
             Page<ExampleModel> page5 = dao.selectAll(1, 10);
-            assertThat(page5.getTotalItems()).isEqualTo(2);
+            assertThat(page5.getCurrentPage()).isEqualTo(1);
+            assertThat(page5.getPageSize()).isEqualTo(10);
             assertThat(page5.getTotalPages()).isEqualTo(1);
-            assertThat(page5.getData()).contains(model1);
-            assertThat(page5.getData()).contains(model2);
+            assertThat(page5.getTotalData()).isEqualTo(2);
+            assertThat(page5.getData()).containsExactly(model1, model2);
         }
     }
 
