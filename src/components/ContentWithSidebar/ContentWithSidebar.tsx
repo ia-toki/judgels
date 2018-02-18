@@ -1,8 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps, Switch, withRouter } from 'react-router';
 import { push } from 'react-router-redux';
-import { connect } from 'react-redux';
 
 import { Sidebar } from '../Sidebar/Sidebar';
 
@@ -79,7 +79,6 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
     const components = this.props.items.map(item => {
       const RouteC = item.routeComponent;
       const props = {
-        exact: true,
         path: resolveUrl(this.props.match.url, item.id),
         component: item.component,
       };
@@ -101,7 +100,9 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
   };
 
   private getActiveItemId = () => {
-    return this.props.location.pathname.slice(this.props.match.path.length + 1);
+    const currentPath = this.props.location.pathname + '/';
+    const nextSlashPos = currentPath.indexOf('/', this.props.match.url.length + 1);
+    return currentPath.substring(this.props.match.url.length + 1, nextSlashPos);
   };
 }
 

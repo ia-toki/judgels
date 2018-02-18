@@ -1,7 +1,7 @@
 import { Card, Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContestList } from '../../../../../../modules/api/uriel/contest';
+import { ContestList } from '../../../../../../../../modules/api/uriel/contest';
 
 import './ContestListTable.css';
 
@@ -18,11 +18,10 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
           <h3>{item.name}</h3>
         </div>
         <div className="flex-column contest-list-item-info">
-          <p>Mar 4, 2017 | 2 Division Contest</p>
           <div className="flex-row justify-content-flex-end">
             {/* TODO add on click */}
             <Button intent={Intent.PRIMARY} className="contest-list-view-result">
-              View Result
+              View scoreboard
             </Button>
           </div>
         </div>

@@ -4,7 +4,7 @@ import * as Loadable from 'react-loadable';
 import { LoadingPage } from '../../components/LoadingPage/LoadingPage';
 
 const LoadableCompetitionRoutes = Loadable({
-  loader: () => import('./competition/CompetitionRoutes'),
+  loader: () => import('./competition/routes/CompetitionRoutes'),
   loading: LoadingPage,
 });
 

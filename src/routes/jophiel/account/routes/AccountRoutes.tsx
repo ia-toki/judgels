@@ -1,15 +1,15 @@
 import * as React from 'react';
 
-import { FullPageLayout } from '../../../components/layouts/FullPageLayout/FullPageLayout';
-import UserRoute from '../../../components/UserRoute/UserRoute';
-import ProfilePage from './routes/profile/ProfilePage/ProfilePage';
-import ChangePasswordPage from './routes/changePassword/ChangePasswordPage/ChangePasswordPage';
-import ChangeAvatarPage from './routes/changeAvatar/ChangeAvatarPage/ChangeAvatarPage';
+import { FullPageLayout } from '../../../../components/layouts/FullPageLayout/FullPageLayout';
+import UserRoute from '../../../../components/UserRoute/UserRoute';
+import ProfilePage from './profile/ProfilePage/ProfilePage';
+import ChangePasswordPage from './changePassword/ChangePasswordPage/ChangePasswordPage';
+import ChangeAvatarPage from './changeAvatar/ChangeAvatarPage/ChangeAvatarPage';
 import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
-} from '../../../components/ContentWithSidebar/ContentWithSidebar';
-import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+} from '../../../../components/ContentWithSidebar/ContentWithSidebar';
+import { withBreadcrumb } from '../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 const AccountRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [

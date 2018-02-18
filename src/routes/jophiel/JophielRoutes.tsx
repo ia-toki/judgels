@@ -10,7 +10,7 @@ import RegisterPage from './register/RegisterPage/RegisterPage';
 import ActivatePage from './activate/ActivatePage/ActivatePage';
 import ForgotPasswordPage from './forgotPassword/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPage';
-import AccountRoutes from './account/AccountRoutes';
+import AccountRoutes from './account/routes/AccountRoutes';
 
 const JophielRoutes = () => (
   <div>

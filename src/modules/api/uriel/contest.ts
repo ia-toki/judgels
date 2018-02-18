@@ -7,6 +7,8 @@ export interface Contest {
   name: string;
 }
 
+export interface ContestScoreboard {}
+
 export interface ContestList extends Page<Contest> {}
 
 export function createContestAPI() {
@@ -15,6 +17,10 @@ export function createContestAPI() {
   return {
     getContests: (page: number, pageSize: number): Promise<ContestList> => {
       return get(`${baseURL}?page=${page}&pageSize=${pageSize}`);
+    },
+
+    getContest: (contestJid: string): Promise<Contest> => {
+      return get(`${baseURL}/${contestJid}`);
     },
   };
 }
