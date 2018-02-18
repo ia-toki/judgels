@@ -6,6 +6,7 @@
 @import './fonts';
 
 body {
+  color: $text-color !important;
   font-family: $primary-font;
   background-color: #f4f5f6;
 }
@@ -13,13 +14,14 @@ body {
 h3 {
   font-size: $font-size-large;
   font-weight: bold;
-  color: $text-color !important;
+  color: $header-color !important;
   line-height: 0.5 * $font-size-large !important;
 }
 
 h4 {
   font-size: $font-size;
   font-weight: bold;
+  color: $header-color !important;
   line-height: $font-size-large !important;
 }
 
@@ -75,4 +77,8 @@ table {
 
 .dispay-block {
   display: block;
+}
+
+.pt-button.pt-intent-primary {
+  background-color: $primary-color;
 }
