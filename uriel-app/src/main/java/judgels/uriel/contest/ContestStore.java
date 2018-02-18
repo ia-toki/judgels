@@ -22,7 +22,7 @@ public class ContestStore {
     }
 
     public Page<Contest> getContests(int page, int pageSize) {
-        Page<ContestModel> models = contestDao.selectAll(page, pageSize);
+        Page<ContestModel> models = contestDao.selectAllPublic(page, pageSize);
         List<Contest> contests = Lists.transform(models.getData(), ContestStore::fromModel);
 
         return new Page.Builder<Contest>()
