@@ -7,7 +7,7 @@ import Header from '../components/Header/Header';
 import LabsRoutes from './labs/LabsRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import JophielRoutes from './jophiel/JophielRoutes';
-import UrielRoutes from './uriel/UrielRoutes';
+import CompetitionRoutes from './uriel/competition/routes/CompetitionRoutes';
 import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
@@ -27,16 +27,7 @@ class App extends React.Component<AppProps> {
   }
 
   render() {
-    const appRoutes = [
-      {
-        id: 'competition',
-        title: 'Competition (BETA)',
-        route: {
-          path: '/competition',
-          component: UrielRoutes,
-        },
-      },
-    ];
+    const appRoutes = [];
 
     const homeRoute = {
       id: 'home',
@@ -54,8 +45,8 @@ class App extends React.Component<AppProps> {
           <AppContent>
             <Breadcrumbs />
             <Switch>
-              {appRoutes.map(item => <Route key={item.id} {...item.route} />)}{' '}
               <Route path="/labs" component={LabsRoutes} />
+              <Route path="/competition" component={CompetitionRoutes} />
               <Route {...homeRoute.route} />
             </Switch>
             <Route component={LegacyJophielRoutes} />
