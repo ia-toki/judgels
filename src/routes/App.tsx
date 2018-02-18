@@ -30,7 +30,7 @@ class App extends React.Component<AppProps> {
     const appRoutes = [
       {
         id: 'competition',
-        title: 'Competition',
+        title: 'Competition (BETA)',
         route: {
           path: '/competition',
           component: UrielRoutes,

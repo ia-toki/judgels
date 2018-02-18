@@ -10,6 +10,7 @@ import { createSessionAPI } from './api/jophiel/session';
 import { createLegacySessionAPI } from './api/jophiel/legacySession';
 import { createUserAPI } from './api/jophiel/user';
 import { createWebAPI } from './api/jophiel/web';
+import { createContestAPI } from './api/uriel/contest';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { toastActions } from './toast/toastActions';
 import { toastMiddleware } from './toast/toastMiddleware';
@@ -46,6 +47,7 @@ export const store = createStore<AppState>(
         legacySessionAPI: createLegacySessionAPI(),
         webAPI: createWebAPI(),
         userAPI: createUserAPI(),
+        contestAPI: createContestAPI(),
         toastActions,
       }),
       routerMiddleware(history)

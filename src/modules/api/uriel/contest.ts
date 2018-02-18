@@ -1,15 +1,20 @@
-export interface ContestList {
-  totalItems: number;
-  totalPages: number;
-  data: Contest[];
-}
+import { APP_CONFIG } from '../../../conf';
+import { Page } from '../pagination';
+import { get } from '../http';
 
 export interface Contest {
+  id: number;
   name: string;
 }
 
-export const contestListMock = {
-  totalItems: 100,
-  totalPages: 5,
-  data: [{ name: 'TOKI Open Contest - April 2017' }, { name: 'TOKI Open Contest - Mei 2017' }],
-};
+export interface ContestList extends Page<Contest> {}
+
+export function createContestAPI() {
+  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+
+  return {
+    getContests: (page: number, pageSize: number): Promise<ContestList> => {
+      return get(`${baseURL}?page=${page}&pageSize=${pageSize}`);
+    },
+  };
+}

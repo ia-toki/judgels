@@ -1,6 +1,7 @@
 export interface ApiUrlsConfig {
   jophiel: string;
   legacyJophiel: string;
+  uriel: string;
 }
 
 export interface TempHomeConfig {

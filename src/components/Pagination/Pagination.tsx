@@ -1,25 +1,28 @@
+import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import * as ReactPaginate from 'react-paginate';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 import './Pagination.css';
 
-export interface PaginationProps {
-  totalItems: number;
-  pageSize: number;
+interface PaginationProps {
   currentPage: number;
-
-  onPageChanged?: (nextPage: number) => void;
+  pageSize: number;
+  totalData: number;
+  onChangePage: (nextPage: number) => Promise<void>;
 }
 
-export class Pagination extends React.Component<PaginationProps, {}> {
+class Pagination extends React.Component<PaginationProps, {}> {
   render() {
-    const { totalItems } = this.props;
+    const { totalData } = this.props;
     const { start, end } = this.getRange();
 
     return (
-      <div className="pagination-container">
-        <p>
-          Showing {start}..{end} of {totalItems} results
+      <div className="pagination">
+        <p className="pagination__helper-text" data-key="pagination-helper-text">
+          Showing {start}..{Math.min(end, totalData)} of {totalData} results
         </p>
         {this.renderNavigation()}
       </div>
@@ -27,8 +30,8 @@ export class Pagination extends React.Component<PaginationProps, {}> {
   }
 
   private getTotalPages = () => {
-    const { totalItems, pageSize } = this.props;
-    return Math.ceil(totalItems / pageSize);
+    const { totalData, pageSize } = this.props;
+    return Math.ceil(totalData / pageSize);
   };
 
   private getRange = () => {
@@ -39,11 +42,8 @@ export class Pagination extends React.Component<PaginationProps, {}> {
     };
   };
 
-  private actionPageChanged = (nextPage: { selected: number }) => {
-    const { onPageChanged } = this.props;
-    if (onPageChanged) {
-      onPageChanged(nextPage.selected);
-    }
+  private onChangePage = async (nextPage: { selected: number }) => {
+    await this.props.onChangePage(nextPage.selected + 1);
   };
 
   private renderNavigation = () => {
@@ -58,16 +58,67 @@ export class Pagination extends React.Component<PaginationProps, {}> {
         pageClassName="pt-button"
         previousLabel="<"
         nextLabel=">"
-        pageLinkClassName="pagination-link"
-        nextLinkClassName="pagination-link"
-        previousLinkClassName="pagination-link"
+        pageLinkClassName="pagination__link"
+        nextLinkClassName="pagination__link"
+        previousLinkClassName="pagination__link"
         breakClassName="pt-button pt-disabled"
         containerClassName="pt-button-group"
         activeClassName="pt-button pt-active"
         previousClassName="pt-button"
         nextClassName="pt-button"
-        onPageChange={this.actionPageChanged}
+        onPageChange={this.onChangePage}
       />
     );
   };
 }
+
+interface PaginationContainerProps {
+  pageSize: number;
+  totalData: number;
+  onChangePage: (nextPage: number) => Promise<void>;
+}
+
+interface PaginationContainerConnectedProps extends RouteComponentProps<{ page: string }> {
+  onAppendRoute: (nextPage: number) => Promise<void>;
+}
+
+class PaginationContainer extends React.Component<PaginationContainerProps & PaginationContainerConnectedProps> {
+  render() {
+    const queries = parse(this.props.location.search);
+
+    let currentPage = 1;
+    const parsedCurrentPage = +queries.page;
+    if (queries.page && !isNaN(parsedCurrentPage)) {
+      currentPage = parsedCurrentPage;
+    }
+
+    const props: PaginationProps = {
+      currentPage,
+      pageSize: this.props.pageSize,
+      totalData: this.props.totalData,
+      onChangePage: this.onChangePage,
+    };
+    return <Pagination {...props} />;
+  }
+
+  private onChangePage = async (nextPage: number) => {
+    await this.props.onAppendRoute(nextPage);
+    await this.props.onChangePage(nextPage);
+  };
+}
+
+function createPagination() {
+  const mapDispatchToProps = dispatch => ({
+    onAppendRoute: (nextPage: number) => {
+      let query = '';
+      if (nextPage > 1) {
+        query = stringify({ page: nextPage });
+      }
+      return dispatch(push({ search: query }));
+    },
+  });
+  return withRouter<any>(connect(undefined, mapDispatchToProps)(PaginationContainer));
+}
+
+export default createPagination();
+export { PaginationContainerProps as PaginationProps };
