@@ -6,17 +6,12 @@ git:
 addons:
   ssh_known_hosts: test3.ia-toki.org
 
-env:
-  global:
-    - secure: nmKATxrUqDUK5dqc4nbjq4IYXOzy1uvDo771lNza47fHxYo/E7ikfyThnuvL7tBgp/Yrzn+jToNs0avwntZ3dRzByDg+wMt5T36AVkxlJDTTKVbMDIqJghDddWQvYBKM+GpLoXnB7ohR+oZgKhTCdbBrPhEm6ProUP9Z62+sIf0J3DDyH+U6blvu16/OCukGwILYpeVYSADBaLFZbA5GUCHFlRNsk6BZUCRyaLQ6YXSXhxE4EtevzjR58KWt9OXoH/sNctq3DBLY7WV/CZmZqiIADhfevY1Jp+r1/oxbO+WPMhgAe3S6DlUQj05oDs3EjJwoyJD8FMSa5aZXalPFHDZhFTCyPKRgTgRIVx5X9MpLjI8mPaE+mWhQgG33MvF8WdEhE/T/4HHtN2i2HFL+NOHv7454nj3TKzuVQO/mNECQs3HJGKOfd0XCV9nSMka/9eMy9mPnTDZ/cESM9wqBQfoLZfJ0VQj4jJktCKrhcrE2mnc+TSr+lCzpE0+FbDPi6izlqS4XAWrxDhlza4Mn7nxCKUgd7r/bcCeid6lWkPjC22gIwxoduxcmBPrGK6CMnpZ1lL/hR/MCam2FfOynlOH48J4iXlbqrLIS0hppUxOe9rAjEjuUpubvGfJr9B+UDgfXpwm9JylbbpXYcrcRrKQ/CLSKHAdKwNKRLiGsdd8=
-    - secure: XkfUCosyHEYk5V1iccNgelVQbbSOFM0AnC4tQNRmz/wpJ3ERdWakw/8fCrLXA66t3e/cRXMNhKFFJJgU9RQsKreakSlFNK07e0HZDF6z8poZEkGA3MPUHESKZW/3KA+nNzQ9WjWE3Wv6+KqFUgORYrW2Ah8DPKqWCjn6SOO+nvZWfhCsTpvmL5Y2r0VflnIMmqMfS/v+ySXLGdD34kCiut5+gt9pWHP5sXTZN7vuq6V1ILdZFfrhr3p4fl2uUaAEQ0HbufIadtTeWgGgAiz6iJqSzj3TZofybWl7GaJXrw3Zsl1xw2hRmpXOAa6zmdNSn/sNVghhXfpwVk3mkfHpQcvQWAV64QOaAAJRq9K7MBzUHabvoMBOV51o1ywayP9fhQFp0mcc+mlKZMyNjh+4p7E0EKe2+ufCYTupMOfcnqAnpxIVEgf48xx+hx1b7hx/OmuRqonQkaavCyZKUYL6sRBsDhTBNtscwtfrh5vxkEnOFUPvQjXQJ3s8xdV5LFH0XZE0SO4Ufye7rZ6AmAdKyQ7Bt7pLImFsm76x30MjESl0DPAugpMlwMh3kir1vaT/BokhjGEYoC6EY2k/waW4BvQR2qiEOLVH9gJWu+JcgT6uzfUMEj6NJaY3WQISK10AWxytItV3C2kUC1C3dvvlxBorXv50zWbS6Av8NvEktnM=
-    - secure: usKkETxFPrFbpJC6n22PMEBGmfJQh3pZw9Aj1ypYJ+LNE+PLUBEoaGa+A8l6/sKCyNtReXeEjgJQyMmcpT+YICFOCQTGBxDL8Olz8d860GAonKv4Mw6h/ybmfl/RLEOfWtSUzUuc0/ob3Y3siTL5355ueHNsXe812g/1UUyMiDoZbEcUCfgioHucb9xD/pFebJNn0f6IWfvjt8O9RY5pE5+p/nWDzHW168jCbWdTHs9wmLtIVxI3u0hGuJMJfx2HFPF4hFjuisehuFwxt2vMZ3iVdkMgbgsDFF4xgEuZtybFo70jL+gh+PWuzJ8yrc49sIlNrROS4rM3uHxsjxSukQ7TeejVBcqf+IBtj0aALFjt+uSeUSIZxjsmGnDXY3m0lZ4xerACPWqESNIpE+cC8+KaSwkDntvj1pT4dYpOYInNJdnUsdDAsAbhTGxPAprYfJGs5tbNUJvzmTUwHVK1oNraAYuYYTYa2FvgIC/FaCuEpP59/IMfjVtPL52HDn82dXcUB8ncy3z0wfwGmBzU0MtasUPrgAW3t90V0p6uAdHR0r+pMJg7kX0oh9W4r/8qtHjwnmyhAb2YRFw5o2yhq/Yev6xzvPblTuunSpe/AJvhJtBbyCbYi4dST+4/P/bmdVd/qovqU8aPquNzCj3y6Dkb1LQrOxcak6rU+hnk2nE=
-
 before_install:
   - openssl aes-256-cbc -K $encrypted_bd46b89c8fce_key -iv $encrypted_bd46b89c8fce_iv -in jophiel-dist/deploy_rsa.enc -out /tmp/deploy_rsa -d
   - eval "$(ssh-agent -s)"
   - chmod 600 /tmp/deploy_rsa
   - ssh-add /tmp/deploy_rsa
+  - git clone git@gitlab.com:ia-toki/tlx-staging.git
   - sudo apt-add-repository ppa:ansible/ansible -y
   - sudo apt-get -qq update
   - sudo apt-get install -y ansible docker.io python-pip
