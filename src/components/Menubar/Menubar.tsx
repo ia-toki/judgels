@@ -18,11 +18,11 @@ export interface MenubarProps {
   homeRoute?: MenubarItem;
 }
 
-export interface MenubarConnectedProps {
-  onNavigate: (url: string) => void;
+export interface MenubarConnectedProps extends RouteComponentProps<{}> {
+  onNavigate: (url: string) => any;
 }
 
-class Menubar extends React.Component<RouteComponentProps<{}> & MenubarProps & MenubarConnectedProps> {
+class Menubar extends React.Component<MenubarProps & MenubarConnectedProps> {
   render() {
     const selectedTabId = this.getActiveItemId();
     const homeRoute = this.props.homeRoute;
@@ -79,9 +79,9 @@ class Menubar extends React.Component<RouteComponentProps<{}> & MenubarProps & M
 }
 
 function createMenubar() {
-  const mapDispatchToProps = dispatch => ({
-    onNavigate: (url: string) => dispatch(push(url)),
-  });
+  const mapDispatchToProps = {
+    onNavigate: push,
+  };
   return withRouter<any>(connect(undefined, mapDispatchToProps)(Menubar));
 }
 

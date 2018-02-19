@@ -10,11 +10,11 @@ export function createChangeAvatarPage(avatarActions) {
     avatarUrl: state.session.user && state.session.user.avatarUrl,
   });
 
-  const mapDispatchToProps = dispatch => ({
-    onDropAccepted: (files: File[]) => dispatch(avatarActions.change(files[0])),
-    onDropRejected: (files: File[]) => dispatch(avatarActions.reject(files[0])),
-    onRemoveAvatar: () => dispatch(avatarActions.remove()),
-  });
+  const mapDispatchToProps = {
+    onDropAccepted: (files: File[]) => avatarActions.change(files[0]),
+    onDropRejected: (files: File[]) => avatarActions.reject(files[0]),
+    onRemoveAvatar: avatarActions.remove,
+  };
 
   return connect(mapStateToProps, mapDispatchToProps)(ChangeAvatarPanel);
 }

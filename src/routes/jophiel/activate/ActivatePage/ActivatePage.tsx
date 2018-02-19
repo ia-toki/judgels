@@ -55,9 +55,9 @@ class ActivatePageContainer extends React.Component<ActivatePageContainerProps, 
 }
 
 export function createActivatePage(activateActions) {
-  const mapDispatchToProps = dispatch => ({
-    onActivate: (emailCode: string) => dispatch(activateActions.activate(emailCode)),
-  });
+  const mapDispatchToProps = {
+    onActivate: activateActions.activate,
+  };
 
   return withRouter<any>(connect(undefined, mapDispatchToProps)(ActivatePageContainer));
 }

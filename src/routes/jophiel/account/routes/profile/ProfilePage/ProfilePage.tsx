@@ -31,10 +31,10 @@ export function createProfilePage(profileActions) {
   const mapStateToProps = (state: AppState) => ({
     profile: selectProfile(state),
   });
-  const mapDispatchToProps = dispatch => ({
-    onGetProfile: () => dispatch(profileActions.get()),
-    onUpdateProfile: (profile: UserProfile) => dispatch(profileActions.update(profile)),
-  });
+  const mapDispatchToProps = {
+    onGetProfile: profileActions.get,
+    onUpdateProfile: profileActions.update,
+  };
   return connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
 }
 

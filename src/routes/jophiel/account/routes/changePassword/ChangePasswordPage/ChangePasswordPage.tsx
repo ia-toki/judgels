@@ -17,11 +17,10 @@ const ChangePasswordPage = (props: ChangePasswordPageProps) => (
 );
 
 export function createChangePasswordPage(changePasswordActions) {
-  const mapDispatchToProps = dispatch => ({
-    onChangePassword: (data: ChangePasswordFormData) => {
-      return dispatch(changePasswordActions.changePassword(data.oldPassword, data.password));
-    },
-  });
+  const mapDispatchToProps = {
+    onChangePassword: (data: ChangePasswordFormData) =>
+      changePasswordActions.changePassword(data.oldPassword, data.password),
+  };
 
   return connect(undefined, mapDispatchToProps)(ChangePasswordPage);
 }

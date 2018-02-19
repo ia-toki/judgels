@@ -79,7 +79,7 @@ interface PaginationContainerProps {
 }
 
 interface PaginationContainerConnectedProps extends RouteComponentProps<{ page: string }> {
-  onAppendRoute: (nextPage: number) => Promise<void>;
+  onAppendRoute: (nextPage: number) => any;
 }
 
 class PaginationContainer extends React.Component<PaginationContainerProps & PaginationContainerConnectedProps> {
@@ -102,21 +102,21 @@ class PaginationContainer extends React.Component<PaginationContainerProps & Pag
   }
 
   private onChangePage = async (nextPage: number) => {
-    await this.props.onAppendRoute(nextPage);
+    this.props.onAppendRoute(nextPage);
     await this.props.onChangePage(nextPage);
   };
 }
 
 function createPagination() {
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = {
     onAppendRoute: (nextPage: number) => {
       let query = '';
       if (nextPage > 1) {
         query = stringify({ page: nextPage });
       }
-      return dispatch(push({ search: query }));
+      return push({ search: query });
     },
-  });
+  };
   return withRouter<any>(connect(undefined, mapDispatchToProps)(PaginationContainer));
 }
 

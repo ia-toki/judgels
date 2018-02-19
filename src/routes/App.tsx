@@ -71,9 +71,9 @@ export function createApp(webConfigActions) {
   const mapStateToProps = (state: AppState) => ({
     title: selectDocumentTitle(state),
   });
-  const mapDispatchToProps = dispatch => ({
-    onGetWebConfig: () => dispatch(webConfigActions.get()),
-  });
+  const mapDispatchToProps = {
+    onGetWebConfig: webConfigActions.get,
+  };
   return withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
 }
 

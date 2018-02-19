@@ -41,7 +41,7 @@ export interface ContentWithSidebarProps {
 }
 
 interface ContentWithSidebarConnectedProps extends RouteComponentProps<{ pathname: string }> {
-  onItemClick: (parentPath: string, itemId: string) => void;
+  onItemClick: (parentPath: string, itemId: string) => any;
 }
 
 function resolveUrl(parentPath: string, childPath: string) {
@@ -107,9 +107,9 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
 }
 
 function createContentWithSidebar() {
-  const mapDispatchToProps = dispatch => ({
-    onItemClick: (parentPath: string, itemId: string) => dispatch(push(resolveUrl(parentPath, itemId))),
-  });
+  const mapDispatchToProps = {
+    onItemClick: (parentPath: string, itemId: string) => push(resolveUrl(parentPath, itemId)),
+  };
   return connect(undefined, mapDispatchToProps)(ContentWithSidebar);
 }
 

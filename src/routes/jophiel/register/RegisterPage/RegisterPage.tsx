@@ -72,7 +72,7 @@ export function createRegisterPage(registerActions) {
     recaptchaSiteKey: selectRecaptchaSiteKey(state),
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = {
     onRegister: (data: RegisterFormData) => {
       const userRegistrationData: UserRegistrationData = {
         username: data.username,
@@ -81,9 +81,9 @@ export function createRegisterPage(registerActions) {
         name: data.name,
         recaptchaResponse: data.recaptchaResponse,
       };
-      return dispatch(registerActions.register(userRegistrationData));
+      return registerActions.register(userRegistrationData);
     },
-  });
+  };
 
   // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/19989
   const RegisterWrapper = (props: RegisterPageProps) => <RegisterPage {...props} />;

@@ -19,9 +19,9 @@ const LoginPage = (props: LoginPageProps) => (
 );
 
 export function createLoginPage(loginActions) {
-  const mapDispatchToProps = dispatch => ({
-    onLogIn: (data: LoginFormData) => dispatch(loginActions.logIn(window.location.href, data.username, data.password)),
-  });
+  const mapDispatchToProps = {
+    onLogIn: (data: LoginFormData) => loginActions.logIn(window.location.href, data.username, data.password),
+  };
 
   return connect(undefined, mapDispatchToProps)(LoginPage);
 }

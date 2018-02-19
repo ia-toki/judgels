@@ -47,12 +47,11 @@ export function createServiceLoginPage(serviceLoginActions) {
     isLoggedIn: state.session.isLoggedIn || false,
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = {
     onLogIn: (data: LoginFormData, redirectUri: string, returnUri: string) =>
-      dispatch(serviceLoginActions.logIn(data.username, data.password, redirectUri, returnUri)),
-    onPropagateLogin: (redirectUri: string, returnUri: string) =>
-      dispatch(serviceLoginActions.propagateLogin(redirectUri, returnUri)),
-  });
+      serviceLoginActions.logIn(data.username, data.password, redirectUri, returnUri),
+    onPropagateLogin: serviceLoginActions.propagateLogin,
+  };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ServiceLoginPage));
 }

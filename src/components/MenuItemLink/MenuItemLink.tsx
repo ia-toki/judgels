@@ -10,14 +10,14 @@ export interface MenuItemLinkProps {
 
 interface MenuItemLinkConnectedProps {
   text: string;
-  onClick: () => void;
+  onClick: () => any;
 }
 
 const MenuItemLink = (props: MenuItemLinkConnectedProps) => <MenuItem text={props.text} onClick={props.onClick} />;
 
-const mapDispatchToProps = dispatch => ({
-  onClick: (to: string) => dispatch(push(to)),
-});
+const mapDispatchToProps = {
+  onClick: push,
+};
 
 const mergeProps = (stateProps, dispatchProps, ownProps: MenuItemLinkProps) => ({
   text: ownProps.text,
