@@ -10,13 +10,13 @@ import { HorizontalDivider } from '../../../../components/HorizontalDivider/Hori
 import './LoginForm.css';
 
 export interface LoginFormData {
-  username: string;
+  usernameOrEmail: string;
   password: string;
 }
 
-const usernameField: any = {
-  name: 'username',
-  label: 'Username',
+const usernameOrEmailField: any = {
+  name: 'usernameOrEmail',
+  label: 'Username or Email',
   validate: [Required],
 } as any;
 
@@ -29,7 +29,7 @@ const passwordField: any = {
 
 const LoginForm = (props: InjectedFormProps<LoginFormData>) => (
   <form onSubmit={props.handleSubmit}>
-    <Field component={FormTextInput} {...usernameField} />
+    <Field component={FormTextInput} {...usernameOrEmailField} />
     <Field component={FormTextInput} {...passwordField} />
     <p className="form-login__actions-forgot-password">
       <Link to="/forgot-password">Forgot your password?</Link>

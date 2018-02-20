@@ -29,8 +29,8 @@ describe('LoginPage', () => {
   });
 
   test('login form', () => {
-    const username = wrapper.find('input[name="username"]');
-    username.simulate('change', { target: { value: 'user' } });
+    const usernameOrEmail = wrapper.find('input[name="usernameOrEmail"]');
+    usernameOrEmail.simulate('change', { target: { value: 'user' } });
 
     const password = wrapper.find('input[name="password"]');
     password.simulate('change', { target: { value: 'pass' } });

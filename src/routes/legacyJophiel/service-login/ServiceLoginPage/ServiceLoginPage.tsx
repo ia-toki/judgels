@@ -49,7 +49,7 @@ export function createServiceLoginPage(serviceLoginActions) {
 
   const mapDispatchToProps = {
     onLogIn: (data: LoginFormData, redirectUri: string, returnUri: string) =>
-      serviceLoginActions.logIn(data.username, data.password, redirectUri, returnUri),
+      serviceLoginActions.logIn(data.usernameOrEmail, data.password, redirectUri, returnUri),
     onPropagateLogin: serviceLoginActions.propagateLogin,
   };
 

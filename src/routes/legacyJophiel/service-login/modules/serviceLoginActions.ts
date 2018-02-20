@@ -3,11 +3,11 @@ import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 
 export const serviceLoginActions = {
-  logIn: (username: string, password: string, redirectUri: string, returnUri: string) => {
+  logIn: (usernameOrEmail: string, password: string, redirectUri: string, returnUri: string) => {
     return async (dispatch, getState, { legacySessionAPI, userAPI }) => {
       let session;
       try {
-        session = await legacySessionAPI.logIn(username, password);
+        session = await legacySessionAPI.logIn(usernameOrEmail, password);
       } catch (error) {
         if (error instanceof ForbiddenError) {
           throw new Error('Invalid username/password.');

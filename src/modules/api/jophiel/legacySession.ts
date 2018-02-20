@@ -11,8 +11,8 @@ export function createLegacySessionAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.legacyJophiel}/session`;
 
   return {
-    logIn: (username: string, password: string): Promise<LegacySession> => {
-      return post(`${baseURL}/login`, undefined, { username, password });
+    logIn: (usernameOrEmail: string, password: string): Promise<LegacySession> => {
+      return post(`${baseURL}/login`, undefined, { usernameOrEmail, password });
     },
 
     preparePostLogin: (authCode: string, redirectUri: string) => {

@@ -2,11 +2,11 @@ import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 
 export const loginActions = {
-  logIn: (currentPath: string, username: string, password: string) => {
+  logIn: (currentPath: string, usernameOrEmail: string, password: string) => {
     return async (dispatch, getState, { legacySessionAPI, userAPI, toastActions }) => {
       let session;
       try {
-        session = await legacySessionAPI.logIn(username, password);
+        session = await legacySessionAPI.logIn(usernameOrEmail, password);
       } catch (error) {
         if (error instanceof ForbiddenError) {
           throw new Error('Invalid username/password.');
@@ -18,7 +18,7 @@ export const loginActions = {
       }
 
       const user = await userAPI.getMyself(session.token);
-      toastActions.showToast(`Welcome, ${username}.`);
+      toastActions.showToast(`Welcome, ${user.username}.`);
       dispatch(PutToken.create(session.token));
       dispatch(PutUser.create(user));
 
