@@ -6,12 +6,12 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableCredentials.class)
 public interface Credentials {
-    String getUsername();
+    String getUsernameOrEmail();
     String getPassword();
 
-    static Credentials of(String username, String password) {
+    static Credentials of(String usernameOrEmail, String password) {
         return ImmutableCredentials.builder()
-                .username(username)
+                .usernameOrEmail(usernameOrEmail)
                 .password(password)
                 .build();
     }

@@ -36,8 +36,10 @@ public class SessionResource implements SessionService {
     @Override
     @UnitOfWork
     public Session logIn(Credentials credentials) {
-        User user = userStore.findUserByUsernameAndPassword(credentials.getUsername(), credentials.getPassword())
-                .orElseThrow(ForbiddenException::new);
+        User user = userStore.findUserByUsernameAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
+                .orElseGet(() ->
+                    userStore.findUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
+                    .orElseThrow(ForbiddenException::new));
 
         checkAllowed(userRegistrationEmailStore.isUserActivated(user.getJid()));
 

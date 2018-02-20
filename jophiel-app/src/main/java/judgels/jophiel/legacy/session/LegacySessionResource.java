@@ -57,8 +57,10 @@ public class LegacySessionResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork
     public LegacySession logIn(Credentials credentials) {
-        User user = userStore.findUserByUsernameAndPassword(credentials.getUsername(), credentials.getPassword())
-                .orElseThrow(ForbiddenException::new);
+        User user = userStore.findUserByUsernameAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
+                .orElseGet(() ->
+                    userStore.findUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
+                    .orElseThrow(ForbiddenException::new));
 
         checkAllowed(userRegistrationEmailStore.isUserActivated(user.getJid()));
 

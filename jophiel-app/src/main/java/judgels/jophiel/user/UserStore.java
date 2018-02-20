@@ -50,6 +50,12 @@ public class UserStore {
                 .map(this::fromModel);
     }
 
+    public Optional<User> findUserByEmailAndPassword(String email, String password) {
+        return userDao.selectByEmail(email)
+                .filter(model -> validatePassword(password, model.password))
+                .map(this::fromModel);
+    }
+
     public Optional<User> findUserByEmail(String email) {
         return userDao.selectByEmail(email).map(this::fromModel);
     }

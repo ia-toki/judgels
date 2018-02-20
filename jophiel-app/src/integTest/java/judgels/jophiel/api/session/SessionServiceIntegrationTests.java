@@ -2,6 +2,7 @@ package judgels.jophiel.api.session;
 
 import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.palantir.remoting.api.errors.ErrorType;
@@ -42,5 +43,9 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> userService.getMyself(AuthHeader.of(sessionToken)))
                 .withMessageContaining("401");
+
+        // test login with email
+        assertThatCode(() -> sessionService.logIn(Credentials.of("user@domain.com", "password")))
+                .doesNotThrowAnyException();
     }
 }
