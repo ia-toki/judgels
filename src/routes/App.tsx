@@ -18,12 +18,12 @@ import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors
 
 interface AppProps {
   title: string;
-  onGetWebConfig: () => Promise<void>;
+  onGetWebConfig: () => void;
 }
 
 class App extends React.Component<AppProps> {
-  async componentDidMount() {
-    await this.props.onGetWebConfig();
+  componentDidMount() {
+    this.props.onGetWebConfig();
   }
 
   render() {

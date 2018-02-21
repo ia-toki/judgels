@@ -5,12 +5,12 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { serviceLogoutActions as injectedServiceLogoutActions } from '../modules/serviceLogoutActions';
 
 interface ServiceLogoutPageProps extends RouteComponentProps<{ returnUri: string }> {
-  onLogOut: (redirectUri: string) => Promise<void>;
+  onLogOut: (redirectUri: string) => void;
 }
 
 class ServiceLogoutPage extends React.Component<ServiceLogoutPageProps> {
-  async componentDidMount() {
-    await this.props.onLogOut(this.props.match.params.returnUri);
+  componentDidMount() {
+    this.props.onLogOut(this.props.match.params.returnUri);
   }
 
   render() {

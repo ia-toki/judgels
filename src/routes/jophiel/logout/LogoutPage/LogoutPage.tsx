@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { logoutActions as injectedLogoutActions } from '../modules/logoutActions';
 
 interface LogoutPageProps {
-  onLogOut: () => Promise<void>;
+  onLogOut: () => void;
 }
 
 class LogoutPage extends React.Component<LogoutPageProps> {
-  async componentDidMount() {
-    await this.props.onLogOut();
+  componentDidMount() {
+    this.props.onLogOut();
   }
 
   render() {

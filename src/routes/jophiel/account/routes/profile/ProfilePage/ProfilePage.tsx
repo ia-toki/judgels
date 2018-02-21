@@ -9,14 +9,14 @@ import { selectProfile } from '../../../../../../modules/session/sessionSelector
 import { profileActions as injectedProfileActions } from '../modules/profileActions';
 
 interface ProfilePageProps {
-  profile: UserProfile | undefined;
-  onGetProfile: () => Promise<void>;
+  profile?: UserProfile;
+  onGetProfile: () => void;
   onUpdateProfile: (profile: UserProfile) => Promise<void>;
 }
 
 class ProfilePage extends React.Component<ProfilePageProps> {
-  async componentDidMount() {
-    await this.props.onGetProfile();
+  componentDidMount() {
+    this.props.onGetProfile();
   }
 
   render() {
@@ -28,9 +28,10 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 }
 
 export function createProfilePage(profileActions) {
-  const mapStateToProps = (state: AppState) => ({
-    profile: selectProfile(state),
-  });
+  const mapStateToProps = (state: AppState) =>
+    ({
+      profile: selectProfile(state),
+    } as Partial<ProfilePageProps>);
   const mapDispatchToProps = {
     onGetProfile: profileActions.get,
     onUpdateProfile: profileActions.update,

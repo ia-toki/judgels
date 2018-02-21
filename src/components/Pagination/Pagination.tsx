@@ -11,7 +11,7 @@ interface PaginationProps {
   currentPage: number;
   pageSize: number;
   totalData: number;
-  onChangePage: (nextPage: number) => Promise<void>;
+  onChangePage: (nextPage: number) => void;
 }
 
 class Pagination extends React.Component<PaginationProps, {}> {
@@ -42,8 +42,8 @@ class Pagination extends React.Component<PaginationProps, {}> {
     };
   };
 
-  private onChangePage = async (nextPage: { selected: number }) => {
-    await this.props.onChangePage(nextPage.selected + 1);
+  private onChangePage = (nextPage: { selected: number }) => {
+    this.props.onChangePage(nextPage.selected + 1);
   };
 
   private renderNavigation = () => {
@@ -75,7 +75,7 @@ class Pagination extends React.Component<PaginationProps, {}> {
 interface PaginationContainerProps {
   pageSize: number;
   totalData: number;
-  onChangePage: (nextPage: number) => Promise<void>;
+  onChangePage: (nextPage: number) => void;
 }
 
 interface PaginationContainerConnectedProps extends RouteComponentProps<{ page: string }> {
@@ -101,9 +101,9 @@ class PaginationContainer extends React.Component<PaginationContainerProps & Pag
     return <Pagination {...props} />;
   }
 
-  private onChangePage = async (nextPage: number) => {
+  private onChangePage = (nextPage: number) => {
     this.props.onAppendRoute(nextPage);
-    await this.props.onChangePage(nextPage);
+    this.props.onChangePage(nextPage);
   };
 }
 

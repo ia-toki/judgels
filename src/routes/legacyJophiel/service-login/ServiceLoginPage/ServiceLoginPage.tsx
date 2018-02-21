@@ -10,8 +10,8 @@ import { serviceLoginActions as injectedServiceLoginActions } from '../modules/s
 
 interface ServiceLoginPageProps {
   isLoggedIn: boolean;
-  onLogIn: (data: LoginFormData, redirectUri: string, returnUri: string) => Promise<void>;
-  onPropagateLogin: (redirectUri: string, returnUri: string) => Promise<void>;
+  onLogIn: (data: LoginFormData, redirectUri: string, returnUri: string) => void;
+  onPropagateLogin: (redirectUri: string, returnUri: string) => void;
 
   match: {
     params: {
@@ -22,9 +22,9 @@ interface ServiceLoginPageProps {
 }
 
 class ServiceLoginPage extends React.Component<ServiceLoginPageProps> {
-  async componentDidMount() {
+  componentDidMount() {
     if (this.props.isLoggedIn) {
-      await this.props.onPropagateLogin(this.props.match.params.redirectUri, this.props.match.params.returnUri);
+      this.props.onPropagateLogin(this.props.match.params.redirectUri, this.props.match.params.returnUri);
     }
   }
 
