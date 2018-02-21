@@ -24,16 +24,16 @@ describe('profileActions', () => {
     };
   });
 
-  describe('get()', () => {
-    const { get } = profileActions;
-    const doGet = async () => get()(dispatch, getState, { userAPI });
+  describe('fetch()', () => {
+    const { fetch } = profileActions;
+    const doFetch = async () => fetch()(dispatch, getState, { userAPI });
 
     const profile: UserProfile = { name: 'First Last' };
 
     beforeEach(async () => {
       userAPI.getUserProfile.mockImplementation(() => profile);
 
-      await doGet();
+      await doFetch();
     });
 
     it('calls API to get user profile', () => {

@@ -3,7 +3,7 @@ import { PutProfile } from '../../../../../../modules/session/sessionReducer';
 import { UserProfile } from 'modules/api/jophiel/user';
 
 export const profileActions = {
-  get: () => {
+  fetch: () => {
     return async (dispatch, getState, { userAPI }) => {
       const token = selectToken(getState());
       const userJid = selectUserJid(getState());

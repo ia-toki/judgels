@@ -10,13 +10,13 @@ import { profileActions as injectedProfileActions } from '../modules/profileActi
 
 interface ProfilePageProps {
   profile?: UserProfile;
-  onGetProfile: () => void;
+  onFetchProfile: () => void;
   onUpdateProfile: (profile: UserProfile) => Promise<void>;
 }
 
 class ProfilePage extends React.Component<ProfilePageProps> {
   componentDidMount() {
-    this.props.onGetProfile();
+    this.props.onFetchProfile();
   }
 
   render() {
@@ -33,7 +33,7 @@ export function createProfilePage(profileActions) {
       profile: selectProfile(state),
     } as Partial<ProfilePageProps>);
   const mapDispatchToProps = {
-    onGetProfile: profileActions.get,
+    onFetchProfile: profileActions.fetch,
     onUpdateProfile: profileActions.update,
   };
   return connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
