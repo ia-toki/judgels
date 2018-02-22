@@ -15,11 +15,13 @@ import { sessionReducer, SessionState } from './session/sessionReducer';
 import { toastActions } from './toast/toastActions';
 import { toastMiddleware } from './toast/toastMiddleware';
 import { jophielReducer, JophielState } from '../routes/jophiel/modules/jophielReducer';
+import { urielReducer, UrielState } from '../routes/uriel/competition/modules/urielReducer';
 import { breadcrumbsReducer, BreadcrumbsState } from './breadcrumbs/breadcrumbsReducer';
 
 export interface AppState {
   session: SessionState;
   jophiel: JophielState;
+  uriel: UrielState;
   router: RouterState;
   form: FormState;
   breadcrumbs: BreadcrumbsState;
@@ -28,6 +30,7 @@ export interface AppState {
 const rootReducer = combineReducers<AppState>({
   session: persistReducer({ key: 'session', storage }, sessionReducer),
   jophiel: jophielReducer,
+  uriel: urielReducer,
   router: routerReducer,
   form: formReducer,
   breadcrumbs: breadcrumbsReducer,

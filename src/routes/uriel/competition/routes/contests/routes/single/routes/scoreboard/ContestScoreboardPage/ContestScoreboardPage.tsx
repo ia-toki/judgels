@@ -4,40 +4,30 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { Card } from '../../../../../../../../../../components/Card/Card';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
-import { singleContestActions as injectedSingleContestActions } from '../../../modules/singleContestActions';
+import { AppState } from '../../../../../../../../../../modules/store';
 
 interface ContestScoreboardPageProps extends RouteComponentProps<{ contestJid: string }> {
-  onGetContest: (contestJid: string) => Promise<Contest>;
-}
-
-interface ContestScoreboardPageState {
   contest?: Contest;
 }
 
-class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, ContestScoreboardPageState> {
-  state: ContestScoreboardPageState = {};
-
-  async componentDidMount() {
-    const contest = await this.props.onGetContest(this.props.match.params.contestJid);
-    this.setState({ contest });
-  }
-
+class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps> {
   render() {
-    if (!this.state.contest) {
+    if (!this.props.contest) {
       return null;
     }
 
-    const { contest } = this.state;
+    const { contest } = this.props;
 
     return <Card title={contest.name} />;
   }
 }
 
-function createContestScoreboardPage(singleContestActions) {
-  const mapDispatchToProps = {
-    onGetContest: singleContestActions.get,
-  };
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(ContestScoreboardPage));
+function createContestScoreboardPage() {
+  const mapStateToProps = (state: AppState) =>
+    ({
+      contest: state.uriel.contest.value,
+    } as Partial<ContestScoreboardPageProps>);
+  return withRouter<any>(connect(mapStateToProps)(ContestScoreboardPage));
 }
 
-export default createContestScoreboardPage(injectedSingleContestActions);
+export default createContestScoreboardPage();

@@ -74,7 +74,7 @@ export function createApp(webConfigActions) {
   const mapDispatchToProps = {
     onGetWebConfig: webConfigActions.get,
   };
-  return withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(App));
 }
 
 export default createApp(injectedWebConfigActions);
