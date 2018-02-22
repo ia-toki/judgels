@@ -11,6 +11,7 @@ export const contestActions = {
     return async (dispatch, getState, { contestAPI }) => {
       const contest = await contestAPI.getContest(contestJid);
       dispatch(PutContest.create(contest));
+      return contest;
     };
   },
 

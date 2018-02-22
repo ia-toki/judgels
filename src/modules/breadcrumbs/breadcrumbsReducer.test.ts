@@ -1,28 +1,28 @@
 import {
   INITIAL_STATE,
   BreadcrumbsState,
-  AddBreadcrumb,
+  PushBreadcrumb,
   breadcrumbsReducer,
-  DelBreadcrumb,
+  PopBreadcrumb,
 } from './breadcrumbsReducer';
 
 describe('breadcrumbsReducer', () => {
-  test('ADD', () => {
+  test('PUSH', () => {
     const state: BreadcrumbsState = {
       values: [{ link: '/a', title: 'A' }],
     };
-    const action = AddBreadcrumb.create({ link: '/a/b', title: 'AB' });
+    const action = PushBreadcrumb.create({ link: '/a/b', title: 'AB' });
     const nextState: BreadcrumbsState = {
       values: [{ link: '/a', title: 'A' }, { link: '/a/b', title: 'AB' }],
     };
     expect(breadcrumbsReducer(state, action)).toEqual(nextState);
   });
 
-  test('DEL', () => {
+  test('POP', () => {
     const state: BreadcrumbsState = {
       values: [{ link: '/a', title: 'A' }, { link: '/a/b/c', title: 'ABC' }, { link: '/a/b', title: 'AB' }],
     };
-    const action = DelBreadcrumb.create({ link: '/a/b/c' });
+    const action = PopBreadcrumb.create({ link: '/a/b/c' });
     const nextState: BreadcrumbsState = {
       values: [{ link: '/a', title: 'A' }, { link: '/a/b', title: 'AB' }],
     };

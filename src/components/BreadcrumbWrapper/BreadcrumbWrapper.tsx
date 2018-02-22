@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { AddBreadcrumb, DelBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
+import { PushBreadcrumb, PopBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 
 export function withBreadcrumb(breadcrumbTitle: string) {
   return InnerComponent => {
@@ -27,8 +27,8 @@ export function withBreadcrumb(breadcrumbTitle: string) {
     }
 
     const mapDispatchToProps = {
-      onPushBreadcrumb: (link: string, title: string) => AddBreadcrumb.create({ link, title }),
-      onPopBreadcrumb: (link: string) => DelBreadcrumb.create({ link }),
+      onPushBreadcrumb: (link: string, title: string) => PushBreadcrumb.create({ link, title }),
+      onPopBreadcrumb: (link: string) => PopBreadcrumb.create({ link }),
     };
 
     return withRouter<any>(connect(undefined, mapDispatchToProps)(WrappedComponent));

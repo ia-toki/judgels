@@ -6,7 +6,7 @@ import createMockStore, { MockStore } from 'redux-mock-store';
 
 import { AppState } from '../../modules/store';
 import { withBreadcrumb } from './BreadcrumbWrapper';
-import { AddBreadcrumb, DelBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
+import { PushBreadcrumb, PopBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 
 describe('BreadcrumbWrapper', () => {
   let store: MockStore<Partial<AppState>>;
@@ -43,7 +43,7 @@ describe('BreadcrumbWrapper', () => {
   });
 
   it('pushes a new breadcrumb when mounted', () => {
-    expect(store.getActions()).toContainEqual(AddBreadcrumb.create({ link: '/component', title: 'My Component' }));
+    expect(store.getActions()).toContainEqual(PushBreadcrumb.create({ link: '/component', title: 'My Component' }));
   });
 
   it('renders the inner component', () => {
@@ -52,6 +52,6 @@ describe('BreadcrumbWrapper', () => {
 
   it('pops a breadcrumb when unmounted', () => {
     wrapper.unmount();
-    expect(store.getActions()).toContainEqual(DelBreadcrumb.create({ link: '/component' }));
+    expect(store.getActions()).toContainEqual(PopBreadcrumb.create({ link: '/component' }));
   });
 });

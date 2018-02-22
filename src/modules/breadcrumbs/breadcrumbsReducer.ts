@@ -11,19 +11,19 @@ export interface BreadcrumbsState {
 
 export const INITIAL_STATE: BreadcrumbsState = { values: [] };
 
-export const AddBreadcrumb = TypedAction.define('breadcrumbs/ADD')<Breadcrumb>();
+export const PushBreadcrumb = TypedAction.define('breadcrumbs/PUSH')<Breadcrumb>();
 
-export const DelBreadcrumb = TypedAction.define('breadcrumbs/DEL')<{
+export const PopBreadcrumb = TypedAction.define('breadcrumbs/POP')<{
   link: string;
 }>();
 
 const createBreadcrumbsReducer = () => {
   const builder = TypedReducer.builder<BreadcrumbsState>();
 
-  builder.withHandler(AddBreadcrumb.TYPE, (state, payload) => ({
+  builder.withHandler(PushBreadcrumb.TYPE, (state, payload) => ({
     values: [...state.values, payload],
   }));
-  builder.withHandler(DelBreadcrumb.TYPE, (state, payload) => ({
+  builder.withHandler(PopBreadcrumb.TYPE, (state, payload) => ({
     values: state.values.filter(b => b.link !== payload.link),
   }));
   builder.withDefaultHandler(state => (state !== undefined ? state : INITIAL_STATE));
