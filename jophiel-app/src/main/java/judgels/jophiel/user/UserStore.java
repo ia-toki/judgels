@@ -1,8 +1,10 @@
 package judgels.jophiel.user;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -58,6 +60,10 @@ public class UserStore {
 
     public Optional<User> findUserByEmail(String email) {
         return userDao.selectByEmail(email).map(this::fromModel);
+    }
+
+    public List<User> getUsersByTerm(String term) {
+        return Lists.transform(userDao.selectByTerm(term), this::fromModel);
     }
 
     public Optional<User> updateUser(String userJid, UserData userData) {

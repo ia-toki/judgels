@@ -103,6 +103,33 @@ class UserStoreIntegrationTests {
                 .isThrownBy(() -> store.createUser(newUserData));
     }
 
+    @Test void can_get_by_term() {
+        UserData userData = new UserData.Builder()
+                .username("andi")
+                .password("password")
+                .email("andi@domain.com")
+                .build();
+        store.createUser(userData);
+
+        userData = new UserData.Builder()
+                .username("dimas")
+                .password("password")
+                .email("dimas@domain.com")
+                .build();
+        store.createUser(userData);
+
+        userData = new UserData.Builder()
+                .username("ani")
+                .password("password")
+                .email("ani@domain.com")
+                .build();
+        store.createUser(userData);
+
+        assertThat(store.getUsersByTerm("di"))
+                .extracting("username")
+                .containsExactly("andi", "dimas");
+    }
+
     static class FakeFs implements FileSystem {
         @Override
         public void uploadPublicFile(InputStream file, List<String> destDirPath, String destFilename) {}

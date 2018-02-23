@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.legacy.session.LegacySessionResource;
+import judgels.jophiel.legacy.user.LegacyUserResource;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.session.SessionResource;
 import judgels.jophiel.user.UserResource;
@@ -33,6 +34,7 @@ import judgels.recaptcha.RecaptchaModule;
 public interface JophielComponent {
     SuperadminCreator superadminCreator();
 
+    LegacyUserResource legacyUserResource();
     LegacySessionResource legacySessionResource();
     SessionResource accountResource();
     UserResource userResource();

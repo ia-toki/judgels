@@ -1,5 +1,6 @@
 package judgels.jophiel.user;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -9,4 +10,5 @@ public interface UserDao extends JudgelsDao<UserModel> {
     Optional<UserModel> selectByUsername(String username);
     Optional<UserModel> selectByEmail(String email);
     Map<String, UserModel> selectByJids(Set<String> jids);
+    List<UserModel> selectByTerm(String term);
 }
