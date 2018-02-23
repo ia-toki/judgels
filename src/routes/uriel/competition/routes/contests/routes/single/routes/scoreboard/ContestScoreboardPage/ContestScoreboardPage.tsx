@@ -5,6 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { Card } from '../../../../../../../../../../components/Card/Card';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../../../modules/store';
+import { selectContest } from '../../../../../../../modules/contestSelectors';
 
 interface ContestScoreboardPageProps extends RouteComponentProps<{ contestJid: string }> {
   contest?: Contest;
@@ -25,7 +26,7 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps> 
 function createContestScoreboardPage() {
   const mapStateToProps = (state: AppState) =>
     ({
-      contest: state.uriel.contest.value,
+      contest: selectContest(state),
     } as Partial<ContestScoreboardPageProps>);
   return withRouter<any>(connect(mapStateToProps)(ContestScoreboardPage));
 }

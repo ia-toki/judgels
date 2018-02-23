@@ -40,7 +40,7 @@ export interface ContentWithSidebarProps {
   items: ContentWithSidebarItem[];
 }
 
-interface ContentWithSidebarConnectedProps extends RouteComponentProps<{ pathname: string }> {
+interface ContentWithSidebarConnectedProps extends RouteComponentProps<{}> {
   onItemClick: (parentPath: string, itemId: string) => any;
 }
 

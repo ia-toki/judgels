@@ -1,16 +1,53 @@
 import * as React from 'react';
-import { Route, Switch, withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import { Route, withRouter } from 'react-router';
 
-import SingleContestDataRoute from './SingleContestDataRoute';
+import { FullPageLayout } from '../../../../../../../../components/layouts/FullPageLayout/FullPageLayout';
+
+import ContentWithSidebar, {
+  ContentWithSidebarItem,
+  ContentWithSidebarProps,
+} from '../../../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
+import { Contest } from '../../../../../../../../modules/api/uriel/contest';
+import { AppState } from '../../../../../../../../modules/store';
+import { selectContest } from '../../../../../modules/contestSelectors';
 
-const SingleContestRoutes = () => (
-  <div>
-    <Route path="/competition/contests/:contestJid" component={SingleContestDataRoute} />
-    <Switch>
-      <Route exact path="/competition/contests/:contestJid/scoreboard" component={ContestScoreboardPage} />
-    </Switch>
-  </div>
-);
+interface SingleContestRoutesProps {
+  contest?: Contest;
+}
 
-export default withRouter<any>(SingleContestRoutes);
+const SingleContestRoutes = (props: SingleContestRoutesProps) => {
+  if (!props.contest) {
+    return null;
+  }
+
+  const sidebarItems: ContentWithSidebarItem[] = [
+    {
+      id: 'scoreboard',
+      title: 'Scoreboard',
+      routeComponent: Route,
+      component: ContestScoreboardPage,
+    },
+  ];
+
+  const contentWithSidebarProps: ContentWithSidebarProps = {
+    title: 'Menu',
+    items: sidebarItems,
+  };
+
+  return (
+    <FullPageLayout>
+      <ContentWithSidebar {...contentWithSidebarProps} />
+    </FullPageLayout>
+  );
+};
+
+function createSingleContestRoutes() {
+  const mapStateToProps = (state: AppState) => ({
+    contest: selectContest(state),
+  });
+  return withRouter<any>(connect(mapStateToProps)(SingleContestRoutes));
+}
+
+export default createSingleContestRoutes();
