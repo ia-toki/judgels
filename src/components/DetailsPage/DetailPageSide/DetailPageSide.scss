@@ -1,0 +1,21 @@
+@import '../../../styles/_base';
+
+.detail-page {
+  display: flex;
+}
+
+.detail-page__side {
+  width: 270px;
+  margin-right: 25px;
+  margin-bottom: 15px;
+}
+
+.detail-page__main {
+  flex-grow: 1;
+}
+
+@media only screen and (max-width: 750px) {
+  .detail-page {
+    display: block;
+  }
+}
