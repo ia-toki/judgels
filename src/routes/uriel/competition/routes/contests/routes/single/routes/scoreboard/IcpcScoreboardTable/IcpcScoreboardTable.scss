@@ -1,0 +1,45 @@
+table.pt-table.scoreboard__content {
+  td, th {
+    border: 1px #dee0e1 solid;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  th {
+    color: #3b73ba;
+    font-weight: bold;
+  }
+
+  .rank-cell {
+    width: 20px;
+  }
+
+  .contestant-cell {
+    text-align: left;
+  }
+
+  .problem-cell {
+    max-width: 40px;
+  }
+
+  td.first-accepted {
+    strong, small {
+      color: #fff;
+    }
+    background: #1f8763 !important;
+  }
+
+  td.accepted {
+    strong, small {
+      color: #000;
+    }
+    background: #e1fdd7 !important;
+  }
+
+  td.not-accepted {
+    strong, small {
+      color: #fff;
+    }
+    background: #c24242 !important;
+  }
+}
