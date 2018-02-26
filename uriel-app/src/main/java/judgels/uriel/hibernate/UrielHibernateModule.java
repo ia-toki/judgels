@@ -7,6 +7,7 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import java.time.Clock;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
+import judgels.uriel.contest.ContestContestantDao;
 import judgels.uriel.contest.ContestDao;
 import judgels.uriel.contest.ContestScoreboardDao;
 import org.hibernate.SessionFactory;
@@ -44,4 +45,11 @@ public class UrielHibernateModule {
     ContestScoreboardDao contestScoreboardDao(Clock clock, ActorProvider actorProvider) {
         return new ContestScoreboardHibernateDao(sessionFactory, clock, actorProvider);
     }
+
+    @Provides
+    @Singleton
+    ContestContestantDao contestContestantDao(Clock clock, ActorProvider actorProvider) {
+        return new ContestContestantHibernateDao(sessionFactory, clock, actorProvider);
+    }
+
 }

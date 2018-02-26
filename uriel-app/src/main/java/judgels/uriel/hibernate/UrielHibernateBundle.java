@@ -3,6 +3,7 @@ package judgels.uriel.hibernate;
 import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import judgels.uriel.UrielApplicationConfiguration;
+import judgels.uriel.contest.ContestContestantModel;
 import judgels.uriel.contest.ContestModel;
 import judgels.uriel.contest.ContestScoreboardModel;
 
@@ -10,7 +11,9 @@ public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfig
     public UrielHibernateBundle() {
         super(
                 ContestModel.class,
-                ContestScoreboardModel.class);
+                ContestScoreboardModel.class,
+                ContestContestantModel.class
+        );
     }
 
     @Override
