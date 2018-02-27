@@ -8,6 +8,7 @@ import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
 } from '../../../../../../../../components/ContentWithSidebar/ContentWithSidebar';
+import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../modules/store';
@@ -32,7 +33,12 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
   ];
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
-    title: 'Menu',
+    title: 'Contest Menu',
+    action: (
+      <ButtonLink to="/competition/contests" className="pt-small pt-icon-chevron-left">
+        Back
+      </ButtonLink>
+    ),
     items: sidebarItems,
   };
 

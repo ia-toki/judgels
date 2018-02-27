@@ -12,6 +12,7 @@ export interface SidebarItem {
 
 export interface SidebarProps {
   title: string;
+  action?: JSX.Element;
   activeItemId: string;
   items: SidebarItem[];
   onItemClick: (parentPath: string, itemId: string) => void;
@@ -19,7 +20,7 @@ export interface SidebarProps {
 
 export class Sidebar extends React.Component<SidebarProps> {
   render() {
-    const { title, activeItemId, items, onItemClick } = this.props;
+    const { title, action, activeItemId, items, onItemClick } = this.props;
 
     const tabs = items.map(item => {
       const icon = item.id === activeItemId && (
@@ -35,7 +36,7 @@ export class Sidebar extends React.Component<SidebarProps> {
     });
 
     return (
-      <Card className="card-sidebar" title={title}>
+      <Card className="card-sidebar" title={title} action={action} actionRightJustified>
         <Tabs2 id="sidebar" selectedTabId={activeItemId} onChange={onItemClick} vertical renderActiveTabPanelOnly>
           {tabs}
         </Tabs2>

@@ -36,6 +36,7 @@ export interface ContentWithSidebarItem {
 
 export interface ContentWithSidebarProps {
   title: string;
+  action?: JSX.Element;
   smallContent?: boolean;
   items: ContentWithSidebarItem[];
 }
@@ -68,6 +69,7 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
     return (
       <Sidebar
         title={this.props.title}
+        action={this.props.action}
         activeItemId={this.getActiveItemId()}
         items={sidebarItems}
         onItemClick={this.onItemClick}
