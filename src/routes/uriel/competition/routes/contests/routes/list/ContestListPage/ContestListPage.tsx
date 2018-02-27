@@ -9,51 +9,38 @@ import { Card } from '../../../../../../../../components/Card/Card';
 import { ContestList } from '../../../../../../../../modules/api/uriel/contest';
 import { contestActions as injectedContestActions } from '../../../../../modules/contestActions';
 
-export interface ContestListPageProps {
-  contestList: ContestList;
-  onChangePage: (nextPage: number) => Promise<void>;
-}
-
-class ContestListPage extends React.Component<ContestListPageProps, {}> {
-  render() {
-    const { contestList } = this.props;
-    return (
-      <div>
-        <Card title="Past contests">
-          <Pagination
-            currentPage={1}
-            pageSize={contestList.pageSize}
-            totalData={contestList.totalData}
-            onChangePage={this.props.onChangePage}
-          />
-          <ContestListTable contestList={contestList} />
-        </Card>
-      </div>
-    );
-  }
-}
-
-interface ContestListPageContainerProps extends RouteComponentProps<{}> {
+export interface ContestListPageProps extends RouteComponentProps<{}> {
   onFetchContestList: (page: number) => Promise<ContestList>;
 }
 
-interface ContestListPageContainerState {
+export interface ContestListPageState {
   contestList?: ContestList;
 }
 
-class ContestListPageContainer extends React.Component<ContestListPageContainerProps, ContestListPageContainerState> {
-  state: ContestListPageContainerState = {};
+class ContestListPage extends React.Component<ContestListPageProps, ContestListPageState> {
+  state: ContestListPageState = {};
 
   async componentDidMount() {
-    const contestList = await this.props.onFetchContestList(1);
-    this.setState({ contestList });
+    await this.onChangePage(1);
   }
 
   render() {
-    if (!this.state.contestList) {
+    const { contestList } = this.state;
+    if (!contestList) {
       return null;
     }
-    return <ContestListPage contestList={this.state.contestList} onChangePage={this.onChangePage} />;
+
+    return (
+      <Card title="Past contests">
+        <Pagination
+          currentPage={1}
+          pageSize={contestList.pageSize}
+          totalData={contestList.totalData}
+          onChangePage={this.onChangePage}
+        />
+        <ContestListTable contestList={contestList} />
+      </Card>
+    );
   }
 
   private onChangePage = async (nextPage: number) => {
@@ -66,7 +53,7 @@ export function createContestListPage(contestActions) {
   const mapDispatchToProps = {
     onFetchContestList: contestActions.fetchList,
   };
-  return connect(undefined, mapDispatchToProps)(ContestListPageContainer);
+  return connect(undefined, mapDispatchToProps)(ContestListPage);
 }
 
 export default withBreadcrumb('Contests')(createContestListPage(injectedContestActions));
