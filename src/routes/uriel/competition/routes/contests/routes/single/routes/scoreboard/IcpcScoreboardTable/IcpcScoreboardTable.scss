@@ -22,6 +22,12 @@ table.pt-table.scoreboard__content {
     max-width: 40px;
   }
 
+  td {
+    strong {
+      font-size: 16px;
+    }
+  }
+
   td.first-accepted {
     strong, small {
       color: #fff;
