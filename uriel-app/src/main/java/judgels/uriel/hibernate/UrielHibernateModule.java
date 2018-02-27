@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
 import judgels.uriel.contest.ContestContestantDao;
 import judgels.uriel.contest.ContestDao;
-import judgels.uriel.contest.ContestScoreboardDao;
+import judgels.uriel.contest.scoreboard.ContestScoreboardDao;
 import org.hibernate.SessionFactory;
 
 @Module

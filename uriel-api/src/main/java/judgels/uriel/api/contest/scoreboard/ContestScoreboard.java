@@ -1,4 +1,4 @@
-package judgels.uriel.api.contest;
+package judgels.uriel.api.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
@@ -6,9 +6,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestScoreboard.class)
 public interface ContestScoreboard {
-    String getContestJid();
+    ContestScoreboardType getType();
     String getScoreboard();
-    boolean isOfficial();
 
     class Builder extends ImmutableContestScoreboard.Builder {}
 }

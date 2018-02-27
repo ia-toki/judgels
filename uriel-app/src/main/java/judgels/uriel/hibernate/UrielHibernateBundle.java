@@ -5,7 +5,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import judgels.uriel.UrielApplicationConfiguration;
 import judgels.uriel.contest.ContestContestantModel;
 import judgels.uriel.contest.ContestModel;
-import judgels.uriel.contest.ContestScoreboardModel;
+import judgels.uriel.contest.scoreboard.ContestScoreboardModel;
 
 public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfiguration> {
     public UrielHibernateBundle() {
