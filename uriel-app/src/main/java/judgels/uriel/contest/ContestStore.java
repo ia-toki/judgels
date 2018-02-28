@@ -1,7 +1,6 @@
 package judgels.uriel.contest;
 
 import com.google.common.collect.Lists;
-import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
@@ -23,15 +22,7 @@ public class ContestStore {
 
     public Page<Contest> getContests(int page, int pageSize) {
         Page<ContestModel> models = contestDao.selectAllPublic(page, pageSize);
-        List<Contest> contests = Lists.transform(models.getData(), ContestStore::fromModel);
-
-        return new Page.Builder<Contest>()
-                .currentPage(page)
-                .pageSize(pageSize)
-                .totalPages(models.getTotalPages())
-                .totalData(models.getTotalData())
-                .data(contests)
-                .build();
+        return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 
     public Contest createContest(ContestData contestData) {

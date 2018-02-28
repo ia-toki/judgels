@@ -30,17 +30,8 @@ public class ContestContestantStore {
             Page<ContestContestantModel> contestModelsPage =
                     contestContestantDao.selectAllByContestJid(contestJid, page, pageSize);
 
-            List<String> contestantJids = Lists.transform(
-                    contestModelsPage.getData(),
-                    ContestContestantStore::fromModel);
-
-            return Optional.of(new Page.Builder<String>()
-                    .currentPage(page)
-                    .pageSize(pageSize)
-                    .totalPages(contestModelsPage.getTotalPages())
-                    .totalData(contestModelsPage.getTotalData())
-                    .data(contestantJids)
-                    .build());
+            return Optional.of(contestModelsPage.mapData(
+                    data -> Lists.transform(data, ContestContestantStore::fromModel)));
         }
     }
 

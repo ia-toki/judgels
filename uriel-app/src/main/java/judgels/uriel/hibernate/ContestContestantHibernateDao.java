@@ -60,12 +60,8 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
 
         List<ContestContestantModel> data = query.list();
         long totalData = selectCount();
-        long totalPages = (totalData + pageSize - 1) / pageSize;
 
         return new Page.Builder<ContestContestantModel>()
-                .currentPage(page)
-                .pageSize(pageSize)
-                .totalPages(totalPages)
                 .totalData(totalData)
                 .data(data)
                 .build();

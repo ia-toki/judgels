@@ -53,12 +53,8 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
         List<ContestModel> data = query.list();
         long totalData = selectCountPublic();
-        long totalPages = (totalData + pageSize - 1) / pageSize;
 
         return new Page.Builder<ContestModel>()
-                .currentPage(page)
-                .pageSize(pageSize)
-                .totalPages(totalPages)
                 .totalData(totalData)
                 .data(data)
                 .build();
