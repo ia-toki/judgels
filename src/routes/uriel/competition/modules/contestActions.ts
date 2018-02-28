@@ -15,11 +15,5 @@ export const contestActions = {
     };
   },
 
-  getScoreboard: (contestJid: string) => {
-    return async (dispatch, getState, { contestAPI }) => {
-      return await contestAPI.getContestScoreboard(contestJid);
-    };
-  },
-
   clear: DelContest.create,
 };
