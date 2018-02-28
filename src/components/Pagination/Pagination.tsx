@@ -74,15 +74,23 @@ class Pagination extends React.Component<PaginationProps, {}> {
 
 interface PaginationContainerProps {
   pageSize: number;
-  totalData: number;
-  onChangePage: (nextPage: number) => void;
+  onChangePage: (nextPage: number) => Promise<number>;
 }
 
 interface PaginationContainerConnectedProps extends RouteComponentProps<{ page: string }> {
   onAppendRoute: (nextPage: number) => any;
 }
 
-class PaginationContainer extends React.Component<PaginationContainerProps & PaginationContainerConnectedProps> {
+interface PaginationContainerState {
+  totalData: number;
+}
+
+class PaginationContainer extends React.Component<
+  PaginationContainerProps & PaginationContainerConnectedProps,
+  PaginationContainerState
+> {
+  state: PaginationContainerState = { totalData: 0 };
+
   render() {
     const queries = parse(this.props.location.search);
 
@@ -95,15 +103,16 @@ class PaginationContainer extends React.Component<PaginationContainerProps & Pag
     const props: PaginationProps = {
       currentPage,
       pageSize: this.props.pageSize,
-      totalData: this.props.totalData,
+      totalData: this.state.totalData,
       onChangePage: this.onChangePage,
     };
     return <Pagination {...props} />;
   }
 
-  private onChangePage = (nextPage: number) => {
+  private onChangePage = async (nextPage: number) => {
     this.props.onAppendRoute(nextPage);
-    this.props.onChangePage(nextPage);
+    const totalData = await this.props.onChangePage(nextPage);
+    this.setState({ totalData });
   };
 }
 

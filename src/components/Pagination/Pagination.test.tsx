@@ -18,7 +18,6 @@ describe('Pagination', () => {
   const render = (pageQuery: string) => {
     const props: PaginationProps = {
       pageSize: 6,
-      totalData: 14,
       onChangePage,
     };
     const component = () => <Pagination {...props} />;
@@ -34,7 +33,7 @@ describe('Pagination', () => {
 
   beforeEach(() => {
     store = createMockStore<Partial<AppState>>()({});
-    onChangePage = jest.fn();
+    onChangePage = jest.fn().mockReturnValue(14);
   });
 
   describe('when there is no page query string', () => {

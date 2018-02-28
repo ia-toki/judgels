@@ -21,19 +21,16 @@ describe('contestActions', () => {
 
   describe('fetchList()', () => {
     const { fetchList } = contestActions;
-    const doFetchList = async (page: number) => fetchList(page)(dispatch, getState, { contestAPI });
+    const doFetchList = async () => fetchList(2, 20)(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
       const contestList: ContestList = {
-        currentPage: 2,
-        pageSize: 20,
-        totalPages: 5,
         totalData: 3,
         data: [],
       };
       contestAPI.getContests.mockImplementation(() => contestList);
 
-      await doFetchList(2);
+      await doFetchList();
     });
 
     it('calls API to get contest list', () => {

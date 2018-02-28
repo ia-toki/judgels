@@ -10,7 +10,7 @@ import { ContestList } from '../../../../../../../../modules/api/uriel/contest';
 import { contestActions as injectedContestActions } from '../../../../../modules/contestActions';
 
 export interface ContestListPageProps extends RouteComponentProps<{}> {
-  onFetchContestList: (page: number) => Promise<ContestList>;
+  onFetchContestList: (page: number, pageSize: number) => Promise<ContestList>;
 }
 
 export interface ContestListPageState {
@@ -18,34 +18,25 @@ export interface ContestListPageState {
 }
 
 class ContestListPage extends React.Component<ContestListPageProps, ContestListPageState> {
-  state: ContestListPageState = {};
+  private static PAGE_SIZE = 20;
 
-  async componentDidMount() {
-    await this.onChangePage(1);
-  }
+  state: ContestListPageState = {};
 
   render() {
     const { contestList } = this.state;
-    if (!contestList) {
-      return null;
-    }
 
     return (
       <Card title="Past contests">
-        <Pagination
-          currentPage={1}
-          pageSize={contestList.pageSize}
-          totalData={contestList.totalData}
-          onChangePage={this.onChangePage}
-        />
-        <ContestListTable contestList={contestList} />
+        <Pagination currentPage={1} pageSize={ContestListPage.PAGE_SIZE} onChangePage={this.onChangePage} />
+        {contestList && <ContestListTable contestList={contestList} />}
       </Card>
     );
   }
 
   private onChangePage = async (nextPage: number) => {
-    const contestList = await this.props.onFetchContestList(nextPage);
+    const contestList = await this.props.onFetchContestList(nextPage, ContestListPage.PAGE_SIZE);
     this.setState({ contestList });
+    return contestList.totalData;
   };
 }
 

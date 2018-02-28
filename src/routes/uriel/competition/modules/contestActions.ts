@@ -1,9 +1,9 @@
 import { DelContest, PutContest } from './contestReducer';
 
 export const contestActions = {
-  fetchList: (page: number) => {
+  fetchList: (page: number, pageSize: number) => {
     return async (dispatch, getState, { contestAPI }) => {
-      return await contestAPI.getContests(page, 20);
+      return await contestAPI.getContests(page, pageSize);
     };
   },
 
