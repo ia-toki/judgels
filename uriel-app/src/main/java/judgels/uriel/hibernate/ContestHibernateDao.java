@@ -1,5 +1,8 @@
 package judgels.uriel.hibernate;
 
+import static judgels.uriel.contest.ContestHacks.ALLOWED_CONTEST_NAME;
+import static judgels.uriel.contest.ContestHacks.ALLOWED_CONTEST_NAME_EXCEPTION;
+
 import java.time.Clock;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,9 +18,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> implements ContestDao {
-    public static final String ALLOWED_CONTEST_NAME = "%TOKI Open Contest%";
-    public static final String ALLOWED_CONTEST_NAME_EXCEPTION = "%Testing%";
-
     public ContestHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
     }
@@ -29,8 +29,8 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         Root<ContestModel> root = cq.from(getEntityClass());
         cq.where(
                 cb.and(
-                        cb.like(root.get(ContestModel_.name), ALLOWED_CONTEST_NAME),
-                        cb.notLike(root.get(ContestModel_.name), ALLOWED_CONTEST_NAME_EXCEPTION)));
+                        cb.like(root.get(ContestModel_.name), "%" + ALLOWED_CONTEST_NAME + "%"),
+                        cb.notLike(root.get(ContestModel_.name), "%" + ALLOWED_CONTEST_NAME_EXCEPTION + "%")));
         cq.select(cb.count(root));
         return currentSession().createQuery(cq).getSingleResult();
     }
@@ -43,8 +43,8 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
         cq.where(
                 cb.and(
-                        cb.like(root.get(ContestModel_.name), ALLOWED_CONTEST_NAME),
-                        cb.notLike(root.get(ContestModel_.name), ALLOWED_CONTEST_NAME_EXCEPTION)));
+                        cb.like(root.get(ContestModel_.name), "%" + ALLOWED_CONTEST_NAME + "%"),
+                        cb.notLike(root.get(ContestModel_.name), "%" + ALLOWED_CONTEST_NAME_EXCEPTION + "%")));
 
         Query<ContestModel> query = currentSession().createQuery(cq);
 

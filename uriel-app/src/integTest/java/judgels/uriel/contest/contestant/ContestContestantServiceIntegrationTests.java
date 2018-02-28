@@ -25,7 +25,7 @@ class ContestContestantServiceIntegrationTests extends AbstractServiceIntegratio
                 .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
 
         Contest contest = contestService.createContest(new ContestData.Builder()
-                .name("contestA")
+                .name("TOKI Open Contest A")
                 .description("contest A")
                 .style(ContestStyle.IOI).build());
 

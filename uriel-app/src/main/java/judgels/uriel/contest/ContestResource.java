@@ -1,6 +1,7 @@
 package judgels.uriel.contest;
 
 import static judgels.service.ServiceUtils.checkFound;
+import static judgels.uriel.contest.ContestHacks.checkAllowed;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ public class ContestResource implements ContestService {
     @Override
     @UnitOfWork(readOnly = true)
     public Contest getContest(String contestJid) {
-        return checkFound(contestStore.findContestByJid(contestJid));
+        return checkAllowed(checkFound(contestStore.findContestByJid(contestJid)));
     }
 
     @Override
