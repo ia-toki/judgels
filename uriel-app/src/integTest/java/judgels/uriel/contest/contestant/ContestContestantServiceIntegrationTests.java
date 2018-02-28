@@ -1,4 +1,4 @@
-package judgels.uriel.contest;
+package judgels.uriel.contest.contestant;
 
 import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,10 +8,10 @@ import com.palantir.remoting.api.errors.ErrorType;
 import judgels.persistence.api.Page;
 import judgels.uriel.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestContestantService;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.contestant.ContestContestantService;
 import org.junit.jupiter.api.Test;
 
 class ContestContestantServiceIntegrationTests extends AbstractServiceIntegrationTests {

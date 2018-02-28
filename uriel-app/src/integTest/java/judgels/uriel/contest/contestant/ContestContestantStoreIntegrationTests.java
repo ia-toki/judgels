@@ -1,4 +1,4 @@
-package judgels.uriel.contest;
+package judgels.uriel.contest.contestant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,6 +11,9 @@ import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.contest.ContestDao;
+import judgels.uriel.contest.ContestModel;
+import judgels.uriel.contest.ContestStore;
 import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.ContestHibernateDao;
 import org.hibernate.SessionFactory;
@@ -18,12 +21,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestContestantModel.class})
-class ContestContestantStoreIntegrationTest {
+class ContestContestantStoreIntegrationTests {
     private ContestContestantStore store;
     private ContestStore contestStore;
 
-    @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    @BeforeEach void before(SessionFactory sessionFactory) {
         ContestDao contestDao = new ContestHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
         ContestContestantDao contestantDao = new ContestContestantHibernateDao(
                 sessionFactory,
@@ -65,8 +67,7 @@ class ContestContestantStoreIntegrationTest {
         assertThat(contestantJids.get().getData()).containsOnly("A", "B", "C", "D");
     }
 
-    @Test
-    void can_accept_empty_set() {
+    @Test void can_accept_empty_set() {
         Contest contest = contestStore.createContest(new ContestData.Builder()
                 .name("contestA")
                 .description("contest A")
@@ -79,5 +80,4 @@ class ContestContestantStoreIntegrationTest {
         assertThat(contestantJids).isPresent();
         assertThat(contestantJids.get().getTotalData()).isEqualTo(0);
     }
-
 }

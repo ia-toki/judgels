@@ -2,8 +2,8 @@ package judgels.uriel;
 
 import dagger.Component;
 import javax.inject.Singleton;
-import judgels.uriel.contest.ContestContestantResource;
 import judgels.uriel.contest.ContestResource;
+import judgels.uriel.contest.contestant.ContestContestantResource;
 import judgels.uriel.contest.scoreboard.ContestScoreboardResource;
 import judgels.uriel.hibernate.UrielHibernateModule;
 

@@ -1,4 +1,4 @@
-package judgels.uriel.contest;
+package judgels.uriel.contest.contestant;
 
 import java.util.Set;
 import judgels.persistence.Dao;

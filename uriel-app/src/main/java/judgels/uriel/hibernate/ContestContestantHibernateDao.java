@@ -10,9 +10,9 @@ import javax.persistence.criteria.Root;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.HibernateDao;
-import judgels.uriel.contest.ContestContestantDao;
-import judgels.uriel.contest.ContestContestantModel;
-import judgels.uriel.contest.ContestContestantModel_;
+import judgels.uriel.contest.contestant.ContestContestantDao;
+import judgels.uriel.contest.contestant.ContestContestantModel;
+import judgels.uriel.contest.contestant.ContestContestantModel_;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 

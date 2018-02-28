@@ -1,4 +1,4 @@
-package judgels.uriel.contest;
+package judgels.uriel.contest.contestant;
 
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -6,7 +6,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Set;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
-import judgels.uriel.api.contest.ContestContestantService;
+import judgels.uriel.api.contest.contestant.ContestContestantService;
 
 public class ContestContestantResource implements ContestContestantService {
     private final ContestContestantStore contestantStore;

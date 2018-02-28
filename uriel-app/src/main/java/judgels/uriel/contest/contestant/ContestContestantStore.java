@@ -1,4 +1,4 @@
-package judgels.uriel.contest;
+package judgels.uriel.contest.contestant;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
+import judgels.uriel.contest.ContestDao;
+import judgels.uriel.contest.ContestModel;
 
 public class ContestContestantStore {
     private final ContestDao contestDao;

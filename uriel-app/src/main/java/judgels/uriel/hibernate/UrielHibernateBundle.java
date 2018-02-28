@@ -3,8 +3,8 @@ package judgels.uriel.hibernate;
 import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import judgels.uriel.UrielApplicationConfiguration;
-import judgels.uriel.contest.ContestContestantModel;
 import judgels.uriel.contest.ContestModel;
+import judgels.uriel.contest.contestant.ContestContestantModel;
 import judgels.uriel.contest.scoreboard.ContestScoreboardModel;
 
 public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfiguration> {

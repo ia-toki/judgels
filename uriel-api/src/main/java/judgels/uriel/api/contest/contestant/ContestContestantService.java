@@ -1,4 +1,4 @@
-package judgels.uriel.api.contest;
+package judgels.uriel.api.contest.contestant;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -28,5 +28,4 @@ public interface ContestContestantService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     Set<String> addContestants(@PathParam("contestJid") String contestJid, Set<String> contestantJids);
-
 }
