@@ -7,7 +7,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestScoreboard.class)
 public interface ContestScoreboard {
     ContestScoreboardType getType();
-    String getScoreboard();
+    Scoreboard getScoreboard();
 
     class Builder extends ImmutableContestScoreboard.Builder {}
 }

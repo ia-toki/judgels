@@ -2,34 +2,24 @@ package judgels.uriel.contest.scoreboard;
 
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
-import judgels.uriel.contest.ContestDao;
-import judgels.uriel.contest.ContestModel;
 
 public class ContestScoreboardStore {
-    private final ContestDao contestDao;
     private final ContestScoreboardDao contestScoreboardDao;
 
     @Inject
-    public ContestScoreboardStore(ContestDao contestDao, ContestScoreboardDao contestScoreboardDao) {
-        this.contestDao = contestDao;
+    public ContestScoreboardStore(ContestScoreboardDao contestScoreboardDao) {
         this.contestScoreboardDao = contestScoreboardDao;
     }
 
-    public Optional<ContestScoreboard> findScoreboard(String contestJid, ContestScoreboardType type) {
+    public Optional<ContestScoreboardData> findScoreboard(String contestJid, ContestScoreboardType type) {
         return contestScoreboardDao.selectByContestJidAndType(contestJid, type).map(this::fromModel);
     }
 
-    public Optional<ContestScoreboard> upsertScoreboard(
+    public Optional<ContestScoreboardData> upsertScoreboard(
             String contestJid,
             ContestScoreboardType type,
             String scoreboard) {
-
-        Optional<ContestModel> maybeContestModel = contestDao.selectByJid(contestJid);
-        if (!maybeContestModel.isPresent()) {
-            return Optional.empty();
-        }
 
         Optional<ContestScoreboardModel> maybeModel = contestScoreboardDao.selectByContestJidAndType(contestJid, type);
         if (!maybeModel.isPresent()) {
@@ -43,8 +33,8 @@ public class ContestScoreboardStore {
         }
     }
 
-    private ContestScoreboard fromModel(ContestScoreboardModel model) {
-        return new ContestScoreboard.Builder()
+    private ContestScoreboardData fromModel(ContestScoreboardModel model) {
+        return new ContestScoreboardData.Builder()
                 .type(ContestScoreboardType.valueOf(model.type))
                 .scoreboard(model.scoreboard)
                 .build();

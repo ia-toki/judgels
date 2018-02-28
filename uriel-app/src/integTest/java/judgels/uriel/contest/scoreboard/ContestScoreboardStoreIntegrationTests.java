@@ -8,7 +8,6 @@ import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestDao;
 import judgels.uriel.contest.ContestModel;
@@ -20,20 +19,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestScoreboardModel.class})
-class ContestScoreboardStoreIntegrationTest {
+class ContestScoreboardStoreIntegrationTests {
     private ContestScoreboardStore store;
     private ContestStore contestStore;
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
         ContestDao contestDao = new ContestHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        ContestScoreboardDao contestantDao = new ContestScoreboardHibernateDao(
+        ContestScoreboardDao contestScoreboardDao = new ContestScoreboardHibernateDao(
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
 
         contestStore = new ContestStore(contestDao);
-        store = new ContestScoreboardStore(contestDao, contestantDao);
+        store = new ContestScoreboardStore(contestScoreboardDao);
     }
 
     @Test void can_do_basic_crud() {
@@ -56,12 +55,12 @@ class ContestScoreboardStoreIntegrationTest {
         store.upsertScoreboard(contest.getJid(), ContestScoreboardType.FROZEN, "frozen1");
 
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(
-                new ContestScoreboard.Builder()
+                new ContestScoreboardData.Builder()
                         .type(ContestScoreboardType.OFFICIAL)
                         .scoreboard("official1")
                         .build());
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(
-                new ContestScoreboard.Builder()
+                new ContestScoreboardData.Builder()
                         .type(ContestScoreboardType.FROZEN)
                         .scoreboard("frozen1")
                         .build());
@@ -70,12 +69,12 @@ class ContestScoreboardStoreIntegrationTest {
         store.upsertScoreboard(contest.getJid(), ContestScoreboardType.FROZEN, "frozen2");
 
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(
-                new ContestScoreboard.Builder()
+                new ContestScoreboardData.Builder()
                         .type(ContestScoreboardType.OFFICIAL)
                         .scoreboard("official2")
                         .build());
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(
-                new ContestScoreboard.Builder()
+                new ContestScoreboardData.Builder()
                         .type(ContestScoreboardType.FROZEN)
                         .scoreboard("frozen2")
                         .build());
