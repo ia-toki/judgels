@@ -28,7 +28,7 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
 
   private renderHeader = (state: IcpcScoreboardState) => {
     const problems = state.problemAliases.map(alias => (
-      <th className="problem-cell" key={alias}>
+      <th key={alias} className="problem-cell">
         {alias}
       </th>
     ));
@@ -63,13 +63,13 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
       </td>,
     ];
     const problemCells = entry.attemptsList.map((item, i) =>
-      this.renderProblemCell(entry.attemptsList[i], entry.penaltyList[i], entry.problemStateList[i])
+      this.renderProblemCell(i, entry.attemptsList[i], entry.penaltyList[i], entry.problemStateList[i])
     );
     cells = [...cells, ...problemCells];
     return <tr key={entry.contestantJid}>{cells}</tr>;
   };
 
-  private renderProblemCell = (attempts: number, penalty: number, state: IcpcProblemState) => {
+  private renderProblemCell = (idx: number, attempts: number, penalty: number, state: IcpcProblemState) => {
     let className = {};
     if (state === IcpcProblemState.Accepted) {
       className = 'accepted';
@@ -83,7 +83,7 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
     const shownPenalty = state === IcpcProblemState.NotAccepted ? '-' : '' + penalty;
 
     return (
-      <td className={classNames(className)}>
+      <td key={idx} className={classNames(className)}>
         <strong>{shownAttempts}</strong>
         <br />
         <small>{shownPenalty}</small>
