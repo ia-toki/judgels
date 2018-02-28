@@ -1,8 +1,8 @@
+import { Card } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { Card } from '../../../../../../../../../../components/Card/Card';
 import { Contest, ContestStyle } from '../../../../../../../../../../modules/api/uriel/contest';
 import { IcpcScoreboard, Scoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
 import { AppState } from '../../../../../../../../../../modules/store';
@@ -37,7 +37,7 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
     const { contest } = this.props;
     const { scoreboard } = this.state;
 
-    return <Card title={contest.name}>{this.renderScoreboard(contest.style, scoreboard)}</Card>;
+    return <Card>{this.renderScoreboard(contest.style, scoreboard)}</Card>;
   }
 
   private renderScoreboard = (style: ContestStyle, scoreboard: Scoreboard) => {

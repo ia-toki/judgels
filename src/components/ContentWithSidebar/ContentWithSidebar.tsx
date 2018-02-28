@@ -41,6 +41,7 @@ export interface ContentWithSidebarProps {
   action?: JSX.Element;
   smallContent?: boolean;
   items: ContentWithSidebarItem[];
+  contentHeader?: JSX.Element;
 }
 
 interface ContentWithSidebarConnectedProps extends RouteComponentProps<{}> {
@@ -95,6 +96,7 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
 
     return (
       <div>
+        {this.props.contentHeader}
         <Switch>
           <Redirect exact from={this.props.match.url} to={resolveUrl(this.props.match.url, this.props.items[0].id)} />
           {components}

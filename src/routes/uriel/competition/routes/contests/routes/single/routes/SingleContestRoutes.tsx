@@ -14,12 +14,15 @@ import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
 
+import './SingleContestRoutes.css';
+
 interface SingleContestRoutesProps {
   contest?: Contest;
 }
 
 const SingleContestRoutes = (props: SingleContestRoutesProps) => {
-  if (!props.contest) {
+  const { contest } = props;
+  if (!contest) {
     return null;
   }
 
@@ -41,6 +44,12 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       </ButtonLink>
     ),
     items: sidebarItems,
+    contentHeader: (
+      <div className="single-contest-routes__header">
+        <h2>{contest.name}</h2>
+        <hr />
+      </div>
+    ),
   };
 
   return (
