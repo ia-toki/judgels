@@ -12,6 +12,7 @@ const MainCompetitionRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
     {
       id: 'contests',
+      titleIcon: 'timeline-events',
       title: 'Contests',
       routeComponent: Route,
       component: ContestListPage,

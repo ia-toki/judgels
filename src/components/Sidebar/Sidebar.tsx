@@ -1,4 +1,4 @@
-import { Icon, Tab2, Tabs2 } from '@blueprintjs/core';
+import { Icon, IconName, Tab2, Tabs2 } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Card } from '../Card/Card';
@@ -7,6 +7,7 @@ import './Sidebar.css';
 
 export interface SidebarItem {
   id: string;
+  titleIcon?: IconName;
   title: string;
 }
 
@@ -23,13 +24,19 @@ export class Sidebar extends React.Component<SidebarProps> {
     const { title, action, activeItemId, items, onItemClick } = this.props;
 
     const tabs = items.map(item => {
+      const titleIcon = item.titleIcon && <Icon iconName={item.titleIcon} />;
+
       const icon = item.id === activeItemId && (
         <Icon iconName="chevron-right" iconSize={Icon.SIZE_LARGE} className="card-sidebar__arrow" />
       );
 
       return (
         <Tab2 key={item.id} id={item.id}>
-          <span>{item.title}</span>
+          <span>
+            {titleIcon}
+            {titleIcon && <span>&nbsp;&nbsp;</span>}
+            {item.title}
+          </span>
           {icon}
         </Tab2>
       );

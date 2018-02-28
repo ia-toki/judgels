@@ -26,6 +26,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
   const sidebarItems: ContentWithSidebarItem[] = [
     {
       id: 'scoreboard',
+      titleIcon: 'th',
       title: 'Scoreboard',
       routeComponent: Route,
       component: ContestScoreboardPage,

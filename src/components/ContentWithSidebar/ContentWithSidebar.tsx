@@ -1,10 +1,11 @@
+import { IconName } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps, Switch, withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { Sidebar } from '../Sidebar/Sidebar';
+import { Sidebar, SidebarItem } from '../Sidebar/Sidebar';
 
 import './ContentWithSidebar.css';
 
@@ -29,6 +30,7 @@ const ContentAndSidebar = (props: ContentAndSidebarProps) => (
 
 export interface ContentWithSidebarItem {
   id: string;
+  titleIcon?: IconName;
   title: string;
   routeComponent: any;
   component: any;
@@ -61,10 +63,14 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
   }
 
   private renderSidebar = () => {
-    const sidebarItems = this.props.items.map(item => ({
-      id: item.id,
-      title: item.title,
-    }));
+    const sidebarItems = this.props.items.map(
+      item =>
+        ({
+          id: item.id,
+          titleIcon: item.titleIcon,
+          title: item.title,
+        } as SidebarItem)
+    );
 
     return (
       <Sidebar
