@@ -3,7 +3,6 @@ package judgels.uriel.contest.contestant;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.Optional;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
@@ -33,7 +32,7 @@ class ContestContestantStoreIntegrationTests {
                 new FixedActorProvider());
 
         contestStore = new ContestStore(contestDao);
-        store = new ContestContestantStore(contestDao, contestantDao);
+        store = new ContestContestantStore(contestantDao);
     }
 
     @Test void can_do_basic_crud() {
@@ -45,10 +44,9 @@ class ContestContestantStoreIntegrationTests {
 
         store.addContestants(contest.getJid(), ImmutableSet.of("A", "B"));
 
-        Optional<Page<String>> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
-        assertThat(contestantJids).isPresent();
-        assertThat(contestantJids.get().getTotalData()).isEqualTo(2);
-        assertThat(contestantJids.get().getData()).containsOnly("A", "B");
+        Page<String> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
+        assertThat(contestantJids.getTotalData()).isEqualTo(2);
+        assertThat(contestantJids.getData()).containsOnly("A", "B");
     }
 
     @Test void can_add_without_duplication() {
@@ -61,10 +59,9 @@ class ContestContestantStoreIntegrationTests {
         store.addContestants(contest.getJid(), ImmutableSet.of("A", "B"));
         store.addContestants(contest.getJid(), ImmutableSet.of("A", "B", "B", "C", "D"));
 
-        Optional<Page<String>> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
-        assertThat(contestantJids).isPresent();
-        assertThat(contestantJids.get().getTotalData()).isEqualTo(4);
-        assertThat(contestantJids.get().getData()).containsOnly("A", "B", "C", "D");
+        Page<String> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
+        assertThat(contestantJids.getTotalData()).isEqualTo(4);
+        assertThat(contestantJids.getData()).containsOnly("A", "B", "C", "D");
     }
 
     @Test void can_accept_empty_set() {
@@ -76,8 +73,7 @@ class ContestContestantStoreIntegrationTests {
 
         store.addContestants(contest.getJid(), ImmutableSet.of());
 
-        Optional<Page<String>> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
-        assertThat(contestantJids).isPresent();
-        assertThat(contestantJids.get().getTotalData()).isEqualTo(0);
+        Page<String> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
+        assertThat(contestantJids.getTotalData()).isEqualTo(0);
     }
 }

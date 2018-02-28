@@ -25,7 +25,7 @@ public class ContestContestantResource implements ContestContestantService {
     public Page<String> getContestants(String contestJid, int page, int pageSize) {
         checkAllowed(checkFound(contestStore.findContestByJid(contestJid)));
 
-        return checkFound(contestantStore.getContestantJids(contestJid, page, pageSize));
+        return contestantStore.getContestantJids(contestJid, page, pageSize);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ContestContestantResource implements ContestContestantService {
     public Set<String> addContestants(String contestJid, Set<String> contestantJids) {
         checkAllowed(checkFound(contestStore.findContestByJid(contestJid)));
 
-        return checkFound(contestantStore.addContestants(contestJid, contestantJids));
+        return contestantStore.addContestants(contestJid, contestantJids);
     }
 
 }
