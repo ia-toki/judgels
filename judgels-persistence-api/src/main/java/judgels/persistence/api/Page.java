@@ -7,9 +7,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutablePage.class)
 public interface Page<M> {
-    long getCurrentPage();
-    long getPageSize();
-    long getTotalPages();
     long getTotalData();
     List<M> getData();
 

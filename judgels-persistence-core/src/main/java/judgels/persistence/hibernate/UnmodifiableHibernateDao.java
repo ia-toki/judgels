@@ -63,12 +63,8 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
 
         List<M> data = query.list();
         long totalData = selectCount();
-        long totalPages = (totalData + pageSize - 1) / pageSize;
 
         return new Page.Builder<M>()
-                .currentPage(page)
-                .pageSize(pageSize)
-                .totalPages(totalPages)
                 .totalData(totalData)
                 .data(data)
                 .build();
