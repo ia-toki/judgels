@@ -11,6 +11,11 @@ body {
   background-color: #f4f5f6;
 }
 
+h2 {
+  font-weight: bold;
+  color: $header-color !important;
+}
+
 h3 {
   font-size: $font-size-large;
   font-weight: bold;

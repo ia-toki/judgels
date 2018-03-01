@@ -10,16 +10,25 @@ table.pt-table.scoreboard__content {
     font-weight: bold;
   }
 
+  thead tr {
+    height: 50px;
+  }
+
+  tbody tr {
+    height: 60px;
+  }
+
   .rank-cell {
     width: 20px;
   }
 
   .contestant-cell {
+    font-weight: bold;
     text-align: left;
   }
 
   .problem-cell {
-    max-width: 40px;
+    width: 60px;
   }
 
   td {

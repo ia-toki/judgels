@@ -13,6 +13,7 @@ import './IcpcScoreboardTable.css';
 
 export class IcpcScoreboardTableProps {
   scoreboard: IcpcScoreboard;
+  contestantDisplayNames: { [contestantJid: string]: string };
 }
 
 export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProps> {
@@ -54,7 +55,7 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
     let cells = [
       <td key="rank">{entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
-        {entry.contestantJid}
+        {this.props.contestantDisplayNames[entry.contestantJid]}
       </td>,
       <td key="totalAccepted">
         <strong>{entry.totalAccepted}</strong>
