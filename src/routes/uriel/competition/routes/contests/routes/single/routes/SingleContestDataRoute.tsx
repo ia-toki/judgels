@@ -3,7 +3,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
-import { contestActions as injectedContestActions } from '../../../../../modules/contestActions';
+import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
 export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestJid: string }> {

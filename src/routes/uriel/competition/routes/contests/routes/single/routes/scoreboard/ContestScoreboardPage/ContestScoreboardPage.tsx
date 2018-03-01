@@ -7,9 +7,9 @@ import { Contest, ContestStyle } from '../../../../../../../../../../modules/api
 import { ContestScoreboard } from '../../../../../../../../../../modules/api/uriel/contestScoreboard';
 import { IcpcScoreboard, Scoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
 import { AppState } from '../../../../../../../../../../modules/store';
-import { selectContest } from '../../../../../../../modules/contestSelectors';
+import { selectContest } from '../../../../../modules/contestSelectors';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
-import { contestScoreboardActions as injectedContestScoreboardActions } from '../../modules/contestScoreboardActions';
+import { contestScoreboardActions as injectedContestScoreboardActions } from '../modules/contestScoreboardActions';
 
 interface ContestScoreboardPageProps extends RouteComponentProps<{ contestJid: string }> {
   contest?: Contest;

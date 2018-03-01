@@ -12,7 +12,7 @@ import { ButtonLink } from '../../../../../../../../components/ButtonLink/Button
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../modules/store';
-import { selectContest } from '../../../../../modules/contestSelectors';
+import { selectContest } from '../../../modules/contestSelectors';
 
 import './SingleContestRoutes.css';
 

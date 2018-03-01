@@ -1,6 +1,6 @@
 import { contestScoreboardActions } from './contestScoreboardActions';
-import { contestJid } from '../../../../../../../../../fixtures/state';
-import { Scoreboard } from '../../../../../../../../../modules/api/uriel/scoreboard';
+import { contestJid } from '../../../../../../../../../../fixtures/state';
+import { Scoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
 
 describe('contestScoreboardActions', () => {
   let dispatch: jest.Mock<any>;

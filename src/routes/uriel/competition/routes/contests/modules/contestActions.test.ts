@@ -1,7 +1,7 @@
 import { contestActions } from './contestActions';
 import { PutContest } from './contestReducer';
-import { ContestList } from '../../../../modules/api/uriel/contest';
-import { contest, contestJid } from '../../../../fixtures/state';
+import { ContestList } from '../../../../../../modules/api/uriel/contest';
+import { contest, contestJid } from '../../../../../../fixtures/state';
 
 describe('contestActions', () => {
   let dispatch: jest.Mock<any>;

@@ -7,7 +7,7 @@ import { ContestListTable } from '../ContestListTable/ContestListTable';
 import { withBreadcrumb } from '../../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { Card } from '../../../../../../../../components/Card/Card';
 import { ContestList } from '../../../../../../../../modules/api/uriel/contest';
-import { contestActions as injectedContestActions } from '../../../../../modules/contestActions';
+import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 
 export interface ContestListPageProps extends RouteComponentProps<{}> {
   onFetchContestList: (page: number, pageSize: number) => Promise<ContestList>;
