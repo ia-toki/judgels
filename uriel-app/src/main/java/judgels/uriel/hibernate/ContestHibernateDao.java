@@ -5,6 +5,8 @@ import static judgels.uriel.contest.ContestHacks.ALLOWED_CONTEST_NAME_EXCEPTION;
 
 import java.time.Clock;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -17,7 +19,9 @@ import judgels.uriel.contest.ContestModel_;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+@Singleton
 public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> implements ContestDao {
+    @Inject
     public ContestHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
     }

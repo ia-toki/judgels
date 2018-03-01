@@ -4,9 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import java.time.Clock;
 import javax.inject.Singleton;
-import judgels.persistence.ActorProvider;
 import judgels.uriel.contest.ContestDao;
 import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.contest.scoreboard.ContestScoreboardDao;
@@ -23,7 +21,6 @@ public class UrielHibernateModule {
     }
 
     @Provides
-    @Singleton
     SessionFactory sessionFactory() {
         return sessionFactory;
     }
@@ -35,21 +32,17 @@ public class UrielHibernateModule {
     }
 
     @Provides
-    @Singleton
-    ContestDao contestDao(Clock clock, ActorProvider actorProvider) {
-        return new ContestHibernateDao(sessionFactory, clock, actorProvider);
+    ContestDao contestDao(ContestHibernateDao dao) {
+        return dao;
     }
 
     @Provides
-    @Singleton
-    ContestScoreboardDao contestScoreboardDao(Clock clock, ActorProvider actorProvider) {
-        return new ContestScoreboardHibernateDao(sessionFactory, clock, actorProvider);
+    ContestScoreboardDao contestScoreboardDao(ContestScoreboardHibernateDao dao) {
+        return dao;
     }
 
     @Provides
-    @Singleton
-    ContestContestantDao contestContestantDao(Clock clock, ActorProvider actorProvider) {
-        return new ContestContestantHibernateDao(sessionFactory, clock, actorProvider);
+    ContestContestantDao contestContestantDao(ContestContestantHibernateDao dao) {
+        return dao;
     }
-
 }

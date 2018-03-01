@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -16,8 +18,11 @@ import judgels.uriel.contest.contestant.ContestContestantModel_;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+@Singleton
 public class ContestContestantHibernateDao extends HibernateDao<ContestContestantModel> implements
         ContestContestantDao {
+
+    @Inject
     public ContestContestantHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
     }

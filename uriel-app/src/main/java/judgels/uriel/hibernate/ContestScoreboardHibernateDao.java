@@ -2,6 +2,8 @@ package judgels.uriel.hibernate;
 
 import java.time.Clock;
 import java.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -13,9 +15,11 @@ import judgels.uriel.contest.scoreboard.ContestScoreboardModel;
 import judgels.uriel.contest.scoreboard.ContestScoreboardModel_;
 import org.hibernate.SessionFactory;
 
+@Singleton
 public class ContestScoreboardHibernateDao extends HibernateDao<ContestScoreboardModel> implements
         ContestScoreboardDao {
 
+    @Inject
     public ContestScoreboardHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
     }
