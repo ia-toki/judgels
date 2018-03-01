@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { Contest, ContestStyle } from '../../../../../../../../../../modules/api/uriel/contest';
 import { ContestScoreboard } from '../../../../../../../../../../modules/api/uriel/contestScoreboard';
-import { IcpcScoreboard, Scoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
+import { IcpcScoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
 import { AppState } from '../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
@@ -38,12 +38,17 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
     const { contest } = this.props;
     const { contestScoreboard } = this.state;
 
-    return <Card>{this.renderScoreboard(contest.style, contestScoreboard.scoreboard)}</Card>;
+    return <Card>{this.renderScoreboard(contest.style, contestScoreboard)}</Card>;
   }
 
-  private renderScoreboard = (style: ContestStyle, scoreboard: Scoreboard) => {
+  private renderScoreboard = (style: ContestStyle, contestScoreboard: ContestScoreboard) => {
     if (style === ContestStyle.ICPC) {
-      return <IcpcScoreboardTable scoreboard={scoreboard as IcpcScoreboard} />;
+      return (
+        <IcpcScoreboardTable
+          scoreboard={contestScoreboard.scoreboard as IcpcScoreboard}
+          contestantDisplayNames={contestScoreboard.contestantDisplayNames}
+        />
+      );
     }
     return null;
   };

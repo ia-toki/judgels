@@ -5,6 +5,7 @@ import { Scoreboard } from './scoreboard';
 export interface ContestScoreboard {
   type: ContestScoreboardType;
   scoreboard: Scoreboard;
+  contestantDisplayNames: { [contestantJid: string]: string };
 }
 
 enum ContestScoreboardType {
