@@ -15,6 +15,7 @@ import { createContestScoreboardAPI } from './api/uriel/contestScoreboard';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { toastActions } from './toast/toastActions';
 import { toastMiddleware } from './toast/toastMiddleware';
+import { tokenGateMiddleware } from './tokenGate/tokenGateMiddleware';
 import { jophielReducer, JophielState } from '../routes/jophiel/modules/jophielReducer';
 import { urielReducer, UrielState } from '../routes/uriel/competition/modules/urielReducer';
 import { breadcrumbsReducer, BreadcrumbsState } from './breadcrumbs/breadcrumbsReducer';
@@ -46,6 +47,7 @@ export const store = createStore<AppState>(
   composeEnhancers(
     applyMiddleware(
       toastMiddleware,
+      tokenGateMiddleware,
       thunk.withExtraArgument({
         sessionAPI: createSessionAPI(),
         legacySessionAPI: createLegacySessionAPI(),
