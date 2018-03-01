@@ -8,6 +8,7 @@ import io.dropwizard.setup.Environment;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.uriel.hibernate.UrielHibernateBundle;
 import judgels.uriel.hibernate.UrielHibernateModule;
+import judgels.uriel.jophiel.JophielModule;
 
 public class UrielApplication extends Application<UrielApplicationConfiguration> {
     private final HibernateBundle<UrielApplicationConfiguration> hibernateBundle = new UrielHibernateBundle();
@@ -24,7 +25,9 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
 
     @Override
     public void run(UrielApplicationConfiguration config, Environment env) throws Exception {
+        UrielConfiguration urielConfig = config.getUrielConfig();
         UrielComponent component = DaggerUrielComponent.builder()
+                .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
                 .urielHibernateModule(new UrielHibernateModule(hibernateBundle))
                 .build();
 

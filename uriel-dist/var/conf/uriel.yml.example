@@ -39,3 +39,7 @@ logging:
 webSecurity:
   cors:
     allowedOrigins: "*"
+
+uriel:
+  jophiel:
+    baseUrl: http://localhost:9001

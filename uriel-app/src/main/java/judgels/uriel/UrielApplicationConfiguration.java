@@ -9,13 +9,16 @@ import io.dropwizard.db.DataSourceFactory;
 public class UrielApplicationConfiguration extends Configuration implements WebSecurityConfigurable {
     private final DataSourceFactory databaseConfig;
     private final WebSecurityConfiguration webSecurityConfig;
+    private final UrielConfiguration urielConfig;
 
     public UrielApplicationConfiguration(
             @JsonProperty("database") DataSourceFactory databaseConfig,
-            @JsonProperty("webSecurity") WebSecurityConfiguration webSecurityConfig) {
+            @JsonProperty("webSecurity") WebSecurityConfiguration webSecurityConfig,
+            @JsonProperty("uriel") UrielConfiguration urielConfig) {
 
         this.databaseConfig = databaseConfig;
         this.webSecurityConfig = webSecurityConfig;
+        this.urielConfig = urielConfig;
     }
 
     public DataSourceFactory getDatabaseConfig() {
@@ -25,5 +28,9 @@ public class UrielApplicationConfiguration extends Configuration implements WebS
     @Override
     public WebSecurityConfiguration getWebSecurityConfiguration() {
         return webSecurityConfig;
+    }
+
+    public UrielConfiguration getUrielConfig() {
+        return urielConfig;
     }
 }

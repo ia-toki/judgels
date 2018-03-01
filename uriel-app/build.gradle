@@ -62,6 +62,7 @@ dependencies {
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-forms:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
+    compile "org.iatoki.judgels:jophiel-api:$jophielVersion"
     compile "org.iatoki.judgels:judgels-fs:$judgelsFsVersion"
     compile "org.iatoki.judgels:judgels-persistence-core:$judgelsPersistenceVersion"
     compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
