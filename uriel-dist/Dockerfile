@@ -1,0 +1,16 @@
+FROM openjdk:8u151-jre-alpine3.7
+
+RUN apk add --no-cache bash
+
+WORKDIR /judgels/uriel
+
+EXPOSE 9004 9104
+
+COPY build/distributions .
+
+RUN addgroup -S judgels && adduser -S -g judgels judgels && chown -R judgels var
+USER judgels
+
+VOLUME var/conf
+
+CMD ["service/bin/init.sh", "console"]
