@@ -24,7 +24,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
     }
 
     @Override
-    public void run(UrielApplicationConfiguration config, Environment env) throws Exception {
+    public void run(UrielApplicationConfiguration config, Environment env) {
         UrielConfiguration urielConfig = config.getUrielConfig();
         UrielComponent component = DaggerUrielComponent.builder()
                 .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
@@ -36,5 +36,6 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         env.jersey().register(component.contestResource());
         env.jersey().register(component.contestScoreboardResource());
         env.jersey().register(component.contestContestantResource());
+        env.jersey().register(component.versionResource());
     }
 }

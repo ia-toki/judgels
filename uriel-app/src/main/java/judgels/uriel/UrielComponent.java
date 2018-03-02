@@ -17,4 +17,5 @@ public interface UrielComponent {
     ContestResource contestResource();
     ContestScoreboardResource contestScoreboardResource();
     ContestContestantResource contestContestantResource();
+    VersionResource versionResource();
 }
