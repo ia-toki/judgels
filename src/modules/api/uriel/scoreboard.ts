@@ -20,7 +20,6 @@ export interface IcpcScoreboardEntry {
   contestantJid: string;
   totalAccepted: number;
   totalPenalties: number;
-  lastAcceptedPenalty: number;
   attemptsList: number[];
   penaltyList: number[];
   problemStateList: IcpcProblemState[];
