@@ -1,6 +1,7 @@
 package judgels.jophiel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palantir.remoting3.clients.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.jackson.Jackson;
@@ -16,6 +17,17 @@ import judgels.service.actor.PerRequestActorProvider;
 @Module
 public class JophielModule {
     private JophielModule() {}
+
+    @Provides
+    @Singleton
+    static UserAgent userAgent() {
+        String version = JophielModule.class.getPackage().getImplementationVersion();
+        if (version == null) {
+            version = UserAgent.Agent.DEFAULT_VERSION;
+        }
+
+        return UserAgent.of(UserAgent.Agent.of("jophiel", version));
+    }
 
     @Provides
     @Singleton
