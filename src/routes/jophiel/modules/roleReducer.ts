@@ -1,16 +1,16 @@
 import { TypedAction, TypedReducer } from 'redoodle';
 
-import { Role } from '../../../modules/api/jophiel/user';
+import { JophielRole } from '../../../modules/api/jophiel/user';
 
 export interface RoleState {
-  value: Role;
+  value: JophielRole;
 }
 
 export const INITIAL_STATE: RoleState = {
-  value: Role.User,
+  value: JophielRole.User,
 };
 
-export const PutRole = TypedAction.define('jophiel/role/PUT')<Role>();
+export const PutRole = TypedAction.define('jophiel/role/PUT')<JophielRole>();
 
 function createRoleReducer() {
   const builder = TypedReducer.builder<RoleState>();

@@ -1,6 +1,6 @@
 import { roleActions } from './roleActions';
 import { PutRole } from './roleReducer';
-import { Role } from '../../../modules/api/jophiel/user';
+import { JophielRole } from '../../../modules/api/jophiel/user';
 import { AppState } from '../../../modules/store';
 import { sessionState, token, userJid } from '../../../fixtures/state';
 
@@ -23,7 +23,7 @@ describe('roleActions', () => {
     const { get } = roleActions;
     const doGet = async () => get()(dispatch, getState, { userAPI });
 
-    const role = Role.Superadmin;
+    const role = JophielRole.Superadmin;
 
     beforeEach(async () => {
       userAPI.getRole.mockImplementation(() => role);

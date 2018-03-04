@@ -1,7 +1,7 @@
 import { APP_CONFIG } from '../../../conf';
 import { delete_, get, post, postMultipart, put } from '../http';
 
-export enum Role {
+export enum JophielRole {
   User = 'user',
   Admin = 'admin',
   Superadmin = 'superadmin',
@@ -100,7 +100,7 @@ export function createUserAPI() {
       return delete_(`${baseURL}/${userJid}/avatar`, token);
     },
 
-    getRole: (token: string, userJid: string): Promise<Role> => {
+    getRole: (token: string, userJid: string): Promise<JophielRole> => {
       return get(`${baseURL}/${userJid}/role`);
     },
   };
