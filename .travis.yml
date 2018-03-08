@@ -18,10 +18,8 @@ before_install:
   - sudo apt-get install -y ansible docker.io python-pip
   - sudo pip install docker-py
 
-script:
-  - "./gradlew clean distTar"
-  - mkdir -p jophiel-dist/dockerfiles/jophiel/build/distributions
-  - tar -xf jophiel-dist/build/distributions/jophiel-* -C jophiel-dist/dockerfiles/jophiel/build/distributions
+after_success:
+  - jophiel-dist/scripts/build_docker_artifact.sh
 
 deploy:
   skip_cleanup: true
