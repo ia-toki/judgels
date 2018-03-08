@@ -26,4 +26,4 @@ deploy:
   provider: script
   script: scripts/deploy.sh
   on:
-    branch: test
+    branch: tlx-staging
