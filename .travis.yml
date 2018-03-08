@@ -6,9 +6,6 @@ git:
 addons:
   ssh_known_hosts: test3.ia-toki.org
 
-after_success:
-  - jophiel-dist/scripts/build_docker_artifact.sh
-
 before_deploy:
   - openssl aes-256-cbc -K $encrypted_bd46b89c8fce_key -iv $encrypted_bd46b89c8fce_iv -in jophiel-dist/deploy_rsa.enc -out /tmp/deploy_rsa -d
   - eval "$(ssh-agent -s)"
