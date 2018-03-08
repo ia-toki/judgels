@@ -1,2 +1,2 @@
-[sso]
-test.ia-toki.org ansible_user=root
+[jophiel]
+jophiel-staging.ia-toki.org ansible_user=root

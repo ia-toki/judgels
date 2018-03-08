@@ -1,6 +1,6 @@
 ---
 jophiel_version: "0.1.0"
-jophiel_url: "test3.ia-toki.org"
+jophiel_url: "jophiel-staging.ia-toki.org"
 jophiel_listen_port: "9001"
 
 dockerhub_username: "dragoon20"

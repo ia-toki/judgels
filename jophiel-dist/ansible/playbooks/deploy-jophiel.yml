@@ -1,5 +1,5 @@
 ---
-- hosts: "sso"
+- hosts: "jophiel"
   gather_facts: false
   pre_tasks:
     - name: "Install python for Ansible"
