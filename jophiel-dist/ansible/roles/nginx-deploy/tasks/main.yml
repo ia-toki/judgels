@@ -2,7 +2,7 @@
 - block:
   - name: "Create letsencrypt dir on hosts to mount"
     file:
-      path: "/var/judgels/jophiel/letsencrypt"
+      path: "/judgels/jophiel/letsencrypt"
       recurse: "yes"
       state: "directory"
       mode: "0755"
@@ -22,7 +22,7 @@
         - "80:80"
         - "443:43"
       volumes:
-        - "/var/judgels/jophiel/letsencrypt:/etc/letsencrypt"
+        - "/judgels/jophiel/letsencrypt:/etc/letsencrypt"
 
   tags:
     - "nginx-deploy"
