@@ -13,9 +13,12 @@ cp dockerfiles/jophiel/Dockerfile build/
 cp dockerfiles/jophiel/.dockerignore build/
 
 cd ansible
-
 ansible --version
 
-ansible-playbook -c local -e @../../tlx-staging/jophiel_conf.yml playbooks/build-jophiel.yml
-ansible-playbook -c local -e @../../tlx-staging/jophiel_conf.yml playbooks/build-jophiel-nginx.yml
-ansible-playbook -e @../../tlx-staging/jophiel_conf.yml playbooks/deploy-jophiel.yml
+mkdir -p roles/jophiel-deploy/templates
+cp ../../tlx-staging/jophiel.yml roles/jophiel-deploy/templates/jophiel.yml.j2
+ansible-playbook -c local -e @../../tlx-staging/global.yml playbooks/build-jophiel.yml
+
+ansible-playbook -c local -e @../../tlx-staging/global.yml playbooks/build-jophiel-nginx.yml
+
+ansible-playbook -e @../../tlx-staging/global.yml playbooks/deploy-jophiel.yml

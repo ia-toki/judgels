@@ -24,7 +24,7 @@
       restart: "yes"
       network_mode: "host"
       ports:
-        - "{{ jophiel_listen_port }}:{{ jophiel_listen_port }}"
+        - "{{ jophiel_port }}:{{ jophiel_port }}"
       volumes:
         - "/var/judgels/jophiel/conf:/judgels/jophiel/var/conf"
 

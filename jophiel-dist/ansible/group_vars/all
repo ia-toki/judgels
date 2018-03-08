@@ -1,9 +1,2 @@
 ---
 jophiel_version: "0.1.0"
-jophiel_url: "jophiel-staging.ia-toki.org"
-jophiel_listen_port: "9001"
-
-dockerhub_username: "dragoon20"
-dockerhub_email: "fernandojordan.92@gmail.com"
-
-db_host: "localhost"
