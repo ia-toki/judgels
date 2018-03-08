@@ -6,6 +6,9 @@ git:
 addons:
   ssh_known_hosts: jophiel-staging.ia-toki.org
 
+script:
+  - ls
+
 before_deploy:
   - openssl aes-256-cbc -K $encrypted_bd46b89c8fce_key -iv $encrypted_bd46b89c8fce_iv -in jophiel-dist/deploy_rsa.enc -out /tmp/deploy_rsa -d
   - eval "$(ssh-agent -s)"
