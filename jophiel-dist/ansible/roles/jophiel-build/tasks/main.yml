@@ -4,7 +4,6 @@
     docker_image:
       path: "{{ playbook_dir }}/../../build"
       name: "judgels/jophiel"
-      tag: "{{ jophiel_version }}"
       push: yes
 
   tags:

@@ -15,12 +15,12 @@
   - name: "Pull jophiel image"
     docker_image:
       name: "judgels/jophiel"
-      tag: "{{ jophiel_version }}"
+      force: "yes"
 
   - name: "Create a jophiel container"
     docker_container:
       name: "jophiel"
-      image: "judgels/jophiel:{{ jophiel_version }}"
+      image: "judgels/jophiel"
       restart: "yes"
       network_mode: "host"
       ports:

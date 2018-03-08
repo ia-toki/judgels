@@ -10,6 +10,7 @@
   - name: "Pull jophiel-nginx image"
     docker_image:
       name: "judgels/jophiel-nginx"
+      force: "yes"
 
   - name: "Create a nginx container"
     docker_container:
