@@ -3,6 +3,7 @@
     docker_image:
       path: "{{ playbook_dir }}/../../build"
       name: judgels/jophiel
+      force: yes
       push: yes
 
   tags:
