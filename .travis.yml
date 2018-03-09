@@ -4,10 +4,10 @@ git:
   depth: false
 
 before_deploy:
-  - openssl aes-256-cbc -K $encrypted_bd46b89c8fce_key -iv $encrypted_bd46b89c8fce_iv -in jophiel-dist/deploy_rsa.enc -out /tmp/deploy_rsa -d
+  - openssl aes-256-cbc -K $encrypted_5612c464cda0_key -iv $encrypted_5612c464cda0_iv -in jophiel-dist/deployment_rsa.enc -out /tmp/deployment_rsa -d
   - eval "$(ssh-agent -s)"
-  - chmod 600 /tmp/deploy_rsa
-  - ssh-add /tmp/deploy_rsa
+  - chmod 600 /tmp/deployment_rsa
+  - ssh-add /tmp/deployment_rsa
   - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
   - git clone -q "git@gitlab.com:${deployment_repo}.git" deployment
   - sudo apt-add-repository ppa:ansible/ansible -y
