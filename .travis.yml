@@ -1,4 +1,3 @@
-sudo: false
 language: node_js
 node_js:
   - 8
@@ -10,3 +9,22 @@ cache:
 
 before_script:
   - yarn lint
+
+before_deploy:
+  - openssl aes-256-cbc -K $encrypted_fe1419982d29_key -iv $encrypted_fe1419982d29_iv -in dist/deployment_rsa.enc -out /tmp/deployment_rsa -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/deployment_rsa
+  - ssh-add /tmp/deployment_rsa
+  - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+  - git clone --depth=1 -q "git@gitlab.com:${deployment_repo}.git" deployment
+  - sudo apt-add-repository ppa:ansible/ansible -y
+  - sudo apt-get -q update
+  - sudo apt-get install -y ansible docker.io python-pip
+  - sudo pip install docker-py
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: scripts/deploy.sh
+  on:
+    branch: master

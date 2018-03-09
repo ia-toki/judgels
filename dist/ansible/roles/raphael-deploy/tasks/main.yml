@@ -1,0 +1,34 @@
+- block:
+  - name: Prune docker artifacts
+    raw: docker system prune -f && docker rmi -f $(docker images -q --filter "dangling=true") || true
+
+  - name: Create raphael container mount volume
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/raphael/var
+      - /judgels/raphael/var/conf
+
+  - name: Generate raphael config
+    template:
+      src: raphael.js.j2
+      dest: /judgels/raphael/var/conf/raphael.js
+
+  - name: Pull raphael image
+    docker_image:
+      name: judgels/raphael
+      force: yes
+
+  - name: Run a raphael container
+    docker_container:
+      name: raphael
+      image: judgels/raphael
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/raphael/var:/judgels/raphael/var"
+  tags:
+    - raphael-deploy
