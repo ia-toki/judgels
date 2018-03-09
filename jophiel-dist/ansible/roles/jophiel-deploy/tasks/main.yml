@@ -1,4 +1,7 @@
 - block:
+  - name: Prune docker artifacts
+    raw: docker system prune -f && docker rmi -f $(docker images -q --filter "dangling=true")
+
   - name: Create jophiel container mount volume
     file:
       path: "{{ item }}"
@@ -29,6 +32,5 @@
         - "{{ jophiel_port }}:{{ jophiel_port }}"
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
-
   tags:
     - jophiel-deploy
