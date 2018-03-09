@@ -5,7 +5,6 @@
     - name: "Install python for Ansible"
       raw: "test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-pip)"
       changed_when: "False"
-    - setup: # aka gather_facts
   roles:
     - name: "jophiel-deploy"
     - name: "nginx-deploy"
