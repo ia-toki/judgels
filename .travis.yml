@@ -9,7 +9,7 @@ before_deploy:
   - chmod 600 /tmp/deployment_rsa
   - ssh-add /tmp/deployment_rsa
   - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-  - git clone -q "git@gitlab.com:${deployment_repo}.git" deployment
+  - git clone --depth=1 -q "git@gitlab.com:${deployment_repo}.git" deployment
   - sudo apt-add-repository ppa:ansible/ansible -y
   - sudo apt-get -q update
   - sudo apt-get install -y ansible docker.io python-pip
