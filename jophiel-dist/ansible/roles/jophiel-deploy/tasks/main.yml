@@ -1,6 +1,6 @@
 - block:
   - name: Prune docker artifacts
-    raw: docker system prune -f && docker rmi -f $(docker images -q --filter "dangling=true")
+    raw: docker system prune -f && docker rmi -f $(docker images -q --filter "dangling=true") || true
 
   - name: Create jophiel container mount volume
     file:
