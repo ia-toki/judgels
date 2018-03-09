@@ -1,0 +1,19 @@
+- block:
+  - name: Generate docker-entrypoint.sh
+    template:
+      src: docker-entrypoint.sh.j2
+      dest: "{{ playbook_dir }}/../../dockerfiles/nginx/docker-entrypoint.sh"
+
+  - name: Generate jophiel site
+    template:
+      src: jophiel.j2
+      dest: "{{ playbook_dir }}/../../dockerfiles/nginx/jophiel"
+
+  - name: Build jophiel-nginx image and push it to DockerHub
+    docker_image:
+      path: "{{ playbook_dir }}/../../dockerfiles/nginx"
+      name: judgels/jophiel-nginx
+      push: yes
+
+  tags:
+    - jophiel-nginx-build

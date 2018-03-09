@@ -1,35 +1,34 @@
----
 - block:
-  - name: "Create var dir on hosts to mount"
+  - name: Create jophiel container mount volume
     file:
       path: "{{ item }}"
-      recurse: "yes"
-      state: "directory"
+      recurse: yes
+      state: directory
       mode: "0777"
     with_items:
       - /judgels/jophiel/var
       - /judgels/jophiel/var/conf
 
-  - name: "Generate jophiel configurations"
+  - name: Generate jophiel config
     template:
-      src: "jophiel.yml.j2"
-      dest: "/judgels/jophiel/var/conf/jophiel.yml"
+      src: jophiel.yml.j2
+      dest: /judgels/jophiel/var/conf/jophiel.yml
 
-  - name: "Pull jophiel image"
+  - name: Pull jophiel image
     docker_image:
-      name: "judgels/jophiel"
-      force: "yes"
+      name: judgels/jophiel
+      force: yes
 
-  - name: "Create a jophiel container"
+  - name: Run a jophiel container
     docker_container:
-      name: "jophiel"
-      image: "judgels/jophiel"
-      restart: "yes"
-      network_mode: "host"
+      name: jophiel
+      image: judgels/jophiel
+      restart: yes
+      network_mode: host
       ports:
         - "{{ jophiel_port }}:{{ jophiel_port }}"
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
 
   tags:
-    - "jophiel-deploy"
+    - jophiel-deploy

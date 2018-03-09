@@ -1,4 +1,0 @@
----
-dependencies:
-  - name: "docker-install"
-  - name: "dockerhub-login"

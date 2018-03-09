@@ -1,10 +1,9 @@
----
-- hosts: "jophiel"
+- hosts: jophiel
   gather_facts: false
   pre_tasks:
-    - name: "Install python for Ansible"
+    - name: Install Python for Ansible
       raw: "test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-pip)"
-      changed_when: "False"
+      changed_when: False
   roles:
-    - name: "jophiel-deploy"
-    - name: "nginx-deploy"
+    - name: jophiel-deploy
+    - name: jophiel-nginx-deploy

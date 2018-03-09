@@ -1,5 +1,5 @@
 ---
-- hosts: "localhost"
+- hosts: localhost
   gather_facts: false
   roles:
-    - name: "nginx-build"
+    - name: jophiel-nginx-build

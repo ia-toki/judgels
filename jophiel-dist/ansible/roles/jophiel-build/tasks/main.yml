@@ -1,10 +1,9 @@
----
 - block:
-  - name: "Build jophiel image and push it to dockerhub"
+  - name: Build jophiel image and push it to DockerHub
     docker_image:
       path: "{{ playbook_dir }}/../../build"
-      name: "judgels/jophiel"
+      name: judgels/jophiel
       push: yes
 
   tags:
-    - "jophiel-build"
+    - jophiel-build
