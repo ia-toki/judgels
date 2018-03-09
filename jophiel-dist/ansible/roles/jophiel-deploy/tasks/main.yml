@@ -28,8 +28,6 @@
       image: judgels/jophiel
       restart: yes
       network_mode: host
-      ports:
-        - "{{ jophiel_port }}:{{ jophiel_port }}"
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
   tags:
