@@ -16,6 +16,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.context.internal.ManagedSessionContext;
 import org.hibernate.dialect.H2Dialect;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-public class HibernateSessionExtension implements ParameterResolver, AfterEachCallback {
+public class HibernateSessionExtension implements ParameterResolver, AfterEachCallback, AfterAllCallback {
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
             throws ParameterResolutionException {
@@ -65,9 +66,16 @@ public class HibernateSessionExtension implements ParameterResolver, AfterEachCa
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
         SessionContext sessionContext = getStore(context).get(context.getUniqueId(), SessionContext.class);
-        sessionContext.getSession().close();
-        ManagedSessionContext.unbind(sessionContext.getSessionFactory());
-        sessionContext.getSessionFactory().close();
+        if (sessionContext != null) {
+            sessionContext.getSession().close();
+            ManagedSessionContext.unbind(sessionContext.getSessionFactory());
+            sessionContext.getSessionFactory().close();
+        }
+    }
+
+    @Override
+    public void afterAll(ExtensionContext context) throws Exception {
+        afterEach(context);
     }
 
     private Store getStore(ExtensionContext context) {
