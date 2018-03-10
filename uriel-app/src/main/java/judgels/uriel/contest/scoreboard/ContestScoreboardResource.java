@@ -8,7 +8,9 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jophiel.api.user.PublicUser;
 import judgels.jophiel.api.user.UserService;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
@@ -65,7 +67,9 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             throw new RuntimeException(e);
         }
 
-        Map<String, String> contestantDisplayNames = userService.findUsernamesByJids(contestantJids);
+        Map<String, PublicUser> publicUsersByJids = userService.findPublicUsersByJids(contestantJids);
+        Map<String, String> contestantDisplayNames = publicUsersByJids.values().stream()
+                .collect(Collectors.toMap(PublicUser::getJid, PublicUser::getUsername));
 
         return new ContestScoreboard.Builder()
                 .type(type)

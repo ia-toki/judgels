@@ -12,13 +12,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import judgels.persistence.api.Page;
+import judgels.uriel.api.contest.ContestContestant;
 
 @Path("/api/v2/contests")
 public interface ContestContestantService {
     @GET
     @Path("/{contestJid}/contestants")
     @Produces(APPLICATION_JSON)
-    Page<String> getContestants(
+    Page<ContestContestant> getContestants(
             @PathParam("contestJid") String contestJid,
             @DefaultValue("1") @QueryParam("page") int page,
             @DefaultValue("10") @QueryParam("pageSize") int pageSize);
