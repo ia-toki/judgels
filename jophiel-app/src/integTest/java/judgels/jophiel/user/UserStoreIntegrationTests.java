@@ -11,6 +11,7 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.hibernate.UserHibernateDao;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
+import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
@@ -53,6 +54,27 @@ class UserStoreIntegrationTests {
         user = store.updateUser(user.getJid(), userData).get();
         assertThat(user.getUsername()).isEqualTo("new.username");
         assertThat(user.getEmail()).isEqualTo("new.email@domain.com");
+
+        UserData nanoData = new UserData.Builder()
+                .username("nano")
+                .password("pass")
+                .email("nano@domain.com")
+                .build();
+        store.createUser(nanoData);
+
+        User nano = store.findUserByUsername("nano").get();
+
+        UserData budiData = new UserData.Builder()
+                .username("budi")
+                .password("pass")
+                .email("budi@domain.com")
+                .build();
+        store.createUser(budiData);
+
+        User budi = store.findUserByUsername("budi").get();
+
+        Page<User> users = store.getUsers(1, 10);
+        assertThat(users.getData()).containsExactly(user, nano, budi);
     }
 
     @Test void can_update_avatar() {

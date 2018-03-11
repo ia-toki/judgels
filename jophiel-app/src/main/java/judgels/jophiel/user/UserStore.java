@@ -16,6 +16,7 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.user.avatar.UserAvatarFs;
 import judgels.jophiel.user.password.PasswordHash;
+import judgels.persistence.api.Page;
 
 public class UserStore {
     private final UserDao userDao;
@@ -64,6 +65,11 @@ public class UserStore {
 
     public List<User> getUsersByTerm(String term) {
         return Lists.transform(userDao.selectByTerm(term), this::fromModel);
+    }
+
+    public Page<User> getUsers(int page, int pageSize) {
+        Page<UserModel> models = userDao.selectAll(page, pageSize);
+        return models.mapData(data -> Lists.transform(data, this::fromModel));
     }
 
     public Optional<User> updateUser(String userJid, UserData userData) {

@@ -30,6 +30,12 @@ class RoleCheckerTests {
         assertThat(checker.canReadUser("userJid", "anotherUserJid")).isFalse();
     }
 
+    @Test void read_users() {
+        assertThat(checker.canReadUsers("adminJid")).isTrue();
+        assertThat(checker.canReadUsers("userJid")).isFalse();
+        assertThat(checker.canReadUsers("anotherUserJid")).isFalse();
+    }
+
     @Test void mutate_user() {
         assertThat(checker.canMutateUser("adminJid", "userJid")).isTrue();
         assertThat(checker.canMutateUser("userJid", "userJid")).isTrue();

@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
+import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
@@ -51,6 +52,20 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .build();
         userService.updateUserProfile(adminHeader, user.getJid(), userProfile);
         assertThat(userService.getUserProfile(adminHeader, user.getJid())).isEqualTo(userProfile);
+
+        User nano = userService.createUser(adminHeader, new UserData.Builder()
+                .username("nano")
+                .password("pass")
+                .email("nano@domain.com")
+                .build());
+        User budi = userService.createUser(adminHeader, new UserData.Builder()
+                .username("budi")
+                .password("pass")
+                .email("budi@domain.com")
+                .build());
+
+        Page<User> users = userService.getUsers(adminHeader, 1, 10);
+        assertThat(users.getData()).contains(user, nano, budi);
     }
 
     @Test void register_flow() {

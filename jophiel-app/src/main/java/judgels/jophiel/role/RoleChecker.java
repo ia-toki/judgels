@@ -18,6 +18,10 @@ public class RoleChecker {
         return actorJid.equals(userJid) || roleStore.isAdmin(actorJid);
     }
 
+    public boolean canReadUsers(String actorJid) {
+        return roleStore.isAdmin(actorJid);
+    }
+
     public boolean canMutateUser(String actorJid, String userJid) {
         return actorJid.equals(userJid) || roleStore.isAdmin(actorJid);
     }

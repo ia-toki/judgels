@@ -22,6 +22,7 @@ import judgels.jophiel.role.RoleChecker;
 import judgels.jophiel.user.password.UserPasswordResetter;
 import judgels.jophiel.user.profile.UserProfileStore;
 import judgels.jophiel.user.registration.UserRegisterer;
+import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -57,6 +58,15 @@ public class UserResource implements UserService {
         checkAllowed(roleChecker.canReadUser(actorJid, userJid));
 
         return checkFound(userStore.findUserByJid(userJid));
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Page<User> getUsers(AuthHeader authHeader, int page, int pageSize) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canReadUsers(actorJid));
+
+        return userStore.getUsers(page, pageSize);
     }
 
     @Override
