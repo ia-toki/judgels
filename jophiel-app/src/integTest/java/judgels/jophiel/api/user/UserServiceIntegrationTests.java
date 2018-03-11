@@ -176,20 +176,15 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .build());
 
         Set<String> jids = ImmutableSet.of(user1.getJid(), user2.getJid());
-        Map<String, PublicUser> publicUsers = userService.findPublicUsersByJids(jids);
-        assertThat(publicUsers).containsOnly(
-                new SimpleEntry<String, PublicUser>(
-                        user1.getJid(),
-                        new PublicUser.Builder().jid(user1.getJid()).username(user1.getUsername()).build()),
-                new SimpleEntry<String, PublicUser>(
-                        user2.getJid(),
-                        new PublicUser.Builder().jid(user2.getJid()).username(user2.getUsername()).build()));
+        Map<String, User> usersByJids = userService.findUsersByJids(jids);
+        assertThat(usersByJids).containsOnly(
+                new SimpleEntry<>(user1.getJid(), user1),
+                new SimpleEntry<>(user2.getJid(), user2));
+
         // must ignore not found jids
         jids = ImmutableSet.of(user1.getJid(), "88888");
-        publicUsers = userService.findPublicUsersByJids(jids);
-        assertThat(publicUsers).containsExactly(new SimpleEntry<String, PublicUser>(
-                user1.getJid(),
-                new PublicUser.Builder().jid(user1.getJid()).username(user1.getUsername()).build()));
+        usersByJids = userService.findUsersByJids(jids);
+        assertThat(usersByJids).containsExactly(new SimpleEntry<>(user1.getJid(), user1));
     }
 
     private static String readEmail(Wiser wiser, int index) {

@@ -110,5 +110,5 @@ public interface UserService {
     @Path("/usernames")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, PublicUser> findPublicUsersByJids(Set<String> jids);
+    Map<String, User> findUsersByJids(Set<String> jids);
 }

@@ -7,12 +7,9 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.PasswordResetData;
 import judgels.jophiel.api.user.PasswordUpdateData;
-import judgels.jophiel.api.user.PublicUser;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserProfile;
@@ -172,13 +169,8 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public Map<String, PublicUser> findPublicUsersByJids(Set<String> jids) {
+    public Map<String, User> findUsersByJids(Set<String> jids) {
         Map<String, User> users = userStore.findUsersByJids(jids);
-        return users.values().stream()
-                .map(user -> new PublicUser.Builder()
-                        .jid(user.getJid())
-                        .username(user.getUsername())
-                        .build())
-                .collect(Collectors.toMap(PublicUser::getJid, Function.identity()));
+        return users;
     }
 }
