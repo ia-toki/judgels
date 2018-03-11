@@ -173,4 +173,12 @@ public class UserResource implements UserService {
         Map<String, User> users = userStore.findUsersByJids(jids);
         return users;
     }
+
+    @Override
+    @UnitOfWork
+    public Map<String, User> findUsersByUsernames(Set<String> usernames) {
+        Map<String, User> users = userStore.findUsersByUsernames(usernames);
+        return users;
+    }
+
 }

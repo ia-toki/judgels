@@ -107,8 +107,14 @@ public interface UserService {
     void resetUserPassword(PasswordResetData passwordResetData);
 
     @POST
-    @Path("/usernames")
+    @Path("/jids")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     Map<String, User> findUsersByJids(Set<String> jids);
+
+    @POST
+    @Path("/usernames")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Map<String, User> findUsersByUsernames(Set<String> usernames);
 }

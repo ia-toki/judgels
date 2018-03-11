@@ -2,7 +2,10 @@ package judgels.jophiel.hibernate;
 
 import java.time.Clock;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -40,4 +43,17 @@ public class UserHibernateDao extends JudgelsHibernateDao<UserModel> implements 
         cq.where(cb.like(root.get(UserModel_.username), "%" + term + "%"));
         return currentSession().createQuery(cq).getResultList();
     }
+
+    @Override
+    public Map<String, UserModel> selectByUsernames(Set<String> usernames) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<UserModel> cq = cb.createQuery(getEntityClass());
+        Root<UserModel> root = cq.from(getEntityClass());
+
+        cq.where(root.get(UserModel_.username).in(usernames));
+
+        List<UserModel> result = currentSession().createQuery(cq).getResultList();
+        return result.stream().collect(Collectors.toMap(p -> p.username, p -> p));
+    }
+
 }

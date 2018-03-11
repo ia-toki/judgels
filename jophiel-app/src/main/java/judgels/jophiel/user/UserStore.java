@@ -138,4 +138,12 @@ public class UserStore {
             throw new IllegalStateException(e);
         }
     }
+
+    public Map<String, User> findUsersByUsernames(Set<String> usernames) {
+        Map<String, UserModel> userModelByUsernames = userDao.selectByUsernames(usernames);
+        return userModelByUsernames.values().stream()
+                .map(this::fromModel)
+                .collect(Collectors.toMap(User::getUsername, p -> p));
+    }
+
 }

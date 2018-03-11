@@ -11,4 +11,5 @@ public interface UserDao extends JudgelsDao<UserModel> {
     Optional<UserModel> selectByEmail(String email);
     Map<String, UserModel> selectByJids(Set<String> jids);
     List<UserModel> selectByTerm(String term);
+    Map<String, UserModel> selectByUsernames(Set<String> usernames);
 }
