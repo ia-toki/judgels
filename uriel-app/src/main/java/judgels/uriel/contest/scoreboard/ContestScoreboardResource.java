@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.jophiel.api.user.PublicUser;
+import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -77,9 +77,9 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             throw new RuntimeException(e);
         }
 
-        Map<String, PublicUser> publicUsersByJids = userService.findPublicUsersByJids(contestantJids);
-        Map<String, String> contestantDisplayNames = publicUsersByJids.values().stream()
-                .collect(Collectors.toMap(PublicUser::getJid, PublicUser::getUsername));
+        Map<String, User> usersByJids = userService.findUsersByJids(contestantJids);
+        Map<String, String> contestantDisplayNames = usersByJids.values().stream()
+                .collect(Collectors.toMap(User::getJid, User::getUsername));
 
         return new ContestScoreboard.Builder()
                 .type(type)

@@ -46,8 +46,8 @@ public class ContestContestantResource implements ContestContestantService {
 
         Page<String> contestantJids = contestantStore.getContestantJids(contestJid, page, pageSize);
         return contestantJids.mapData(jids ->
-                userService.findPublicUsersByJids(ImmutableSet.copyOf(jids)).values().stream()
-                        .map(publicUser -> new ContestContestant.Builder().contestant(publicUser).build())
+                userService.findUsersByJids(ImmutableSet.copyOf(jids)).values().stream()
+                        .map(user -> new ContestContestant.Builder().contestant(user).build())
                         .collect(Collectors.toList()));
     }
 
