@@ -1,27 +1,40 @@
 package judgels.uriel.contest;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
-import static judgels.uriel.contest.ContestHacks.checkAllowed;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
+import judgels.service.actor.ActorChecker;
+import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestService;
+import judgels.uriel.role.RoleChecker;
 
 public class ContestResource implements ContestService {
+    private final ActorChecker actorChecker;
+    private final RoleChecker roleChecker;
     private final ContestStore contestStore;
 
     @Inject
-    public ContestResource(ContestStore contestStore) {
+    public ContestResource(
+            ActorChecker actorChecker,
+            RoleChecker roleChecker,
+            ContestStore contestStore) {
+        this.actorChecker = actorChecker;
+        this.roleChecker = roleChecker;
         this.contestStore = contestStore;
     }
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Contest getContest(String contestJid) {
-        return checkAllowed(checkFound(contestStore.findContestByJid(contestJid)));
+    public Contest getContest(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canReadContest(actorJid, contestJid));
+
+        return checkFound(contestStore.findContestByJid(contestJid));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package judgels.uriel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palantir.remoting.api.errors.RemoteException;
 import com.palantir.remoting3.clients.UserAgent;
 import dagger.Module;
 import dagger.Provides;
@@ -8,7 +9,9 @@ import io.dropwizard.jackson.Jackson;
 import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Singleton;
+import judgels.jophiel.api.user.UserService;
 import judgels.persistence.ActorProvider;
+import judgels.service.actor.ActorChecker;
 import judgels.service.actor.PerRequestActorProvider;
 
 @Module
@@ -52,5 +55,17 @@ public class UrielModule {
                 return PerRequestActorProvider.getIpAddress();
             }
         };
+    }
+
+    @Provides
+    @Singleton
+    static ActorChecker actorChecker(UserService userService) {
+        return new ActorChecker(authHeader -> {
+            try {
+                return Optional.of(userService.getMyself(authHeader).getJid());
+            } catch (RemoteException e) {
+                return Optional.empty();
+            }
+        });
     }
 }

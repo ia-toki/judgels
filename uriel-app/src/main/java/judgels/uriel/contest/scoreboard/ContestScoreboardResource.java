@@ -1,7 +1,7 @@
 package judgels.uriel.contest.scoreboard;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
-import static judgels.uriel.contest.ContestHacks.checkAllowed;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -12,27 +12,31 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.PublicUser;
 import judgels.jophiel.api.user.UserService;
+import judgels.service.actor.ActorChecker;
+import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
-import judgels.uriel.contest.ContestStore;
+import judgels.uriel.role.RoleChecker;
 
 public class ContestScoreboardResource implements ContestScoreboardService {
-    private final ContestStore contestStore;
+    private final ActorChecker actorChecker;
+    private final RoleChecker roleChecker;
     private final ContestScoreboardStore contestScoreboardStore;
     private final UserService userService;
     private final ObjectMapper mapper;
 
     @Inject
     public ContestScoreboardResource(
-            ContestStore contestStore,
+            ActorChecker actorChecker,
+            RoleChecker roleChecker,
             ContestScoreboardStore contestScoreboardStore,
             UserService userService,
             ObjectMapper mapper) {
-
-        this.contestStore = contestStore;
+        this.actorChecker = actorChecker;
+        this.roleChecker = roleChecker;
         this.contestScoreboardStore = contestScoreboardStore;
         this.userService = userService;
         this.mapper = mapper;
@@ -40,20 +44,26 @@ public class ContestScoreboardResource implements ContestScoreboardService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestScoreboard getScoreboard(String contestJid) {
+    public ContestScoreboard getScoreboard(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canReadContest(actorJid, contestJid));
+
         // TODO(fushar): this should return frozen scoreboard when necessary
 
-        return getScoreboardOfType(contestJid, ContestScoreboardType.OFFICIAL);
+        return getScoreboardOfType(authHeader, contestJid, ContestScoreboardType.OFFICIAL);
     }
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestScoreboard getFrozenScoreboard(String contestJid) {
-        return getScoreboardOfType(contestJid, ContestScoreboardType.FROZEN);
+    public ContestScoreboard getFrozenScoreboard(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canReadContest(actorJid, contestJid));
+
+        return getScoreboardOfType(authHeader, contestJid, ContestScoreboardType.FROZEN);
     }
 
-    private ContestScoreboard getScoreboardOfType(String contestJid, ContestScoreboardType type) {
-        checkAllowed(checkFound(contestStore.findContestByJid(contestJid)));
+    private ContestScoreboard getScoreboardOfType(AuthHeader authHeader, String contestJid,
+            ContestScoreboardType type) {
         ContestScoreboardData data =
                 checkFound(contestScoreboardStore.findScoreboard(contestJid, type));
 

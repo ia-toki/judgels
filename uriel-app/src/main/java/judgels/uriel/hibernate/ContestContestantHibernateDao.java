@@ -3,6 +3,7 @@ package judgels.uriel.hibernate;
 import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -70,6 +71,19 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
                 .totalData(totalData)
                 .data(data)
                 .build();
+    }
+
+    @Override
+    public boolean existsByContestJidAndUserJid(String contestJid, String userJid) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<ContestContestantModel> cq = cb.createQuery(getEntityClass());
+        Root<ContestContestantModel> root = cq.from(getEntityClass());
+        cq.where(cb.and(
+                cb.equal(root.get(ContestContestantModel_.contestJid), contestJid),
+                cb.equal(root.get(ContestContestantModel_.userJid), userJid)));
+
+        Optional<ContestContestantModel> model = currentSession().createQuery(cq).uniqueResultOptional();
+        return model.isPresent();
     }
 
 }

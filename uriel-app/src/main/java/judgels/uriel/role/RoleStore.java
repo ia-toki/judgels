@@ -1,13 +1,16 @@
 package judgels.uriel.role;
 
 import javax.inject.Inject;
+import judgels.uriel.contest.contestant.ContestContestantDao;
 
 public class RoleStore {
     private final AdminRoleDao adminRoleDao;
+    private final ContestContestantDao contestantDao;
 
     @Inject
-    public RoleStore(AdminRoleDao adminRoleDao) {
+    public RoleStore(AdminRoleDao adminRoleDao, ContestContestantDao contestantDao) {
         this.adminRoleDao = adminRoleDao;
+        this.contestantDao = contestantDao;
     }
 
     public void addAdmin(String userJid) {
@@ -18,5 +21,9 @@ public class RoleStore {
 
     public boolean isAdmin(String userJid) {
         return adminRoleDao.existsByUserJid(userJid);
+    }
+
+    public boolean isContestant(String contestJid, String userJid) {
+        return contestantDao.existsByContestJidAndUserJid(contestJid, userJid);
     }
 }

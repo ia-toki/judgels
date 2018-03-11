@@ -6,6 +6,7 @@ import judgels.persistence.api.Page;
 
 public interface ContestContestantDao extends Dao<ContestContestantModel> {
     Set<ContestContestantModel> selectAllByUserJids(String contestJid, Set<String> userJids);
-    Set<ContestContestantModel> insertAll(String contestJid, Set<ContestContestantModel> userJids);
-    Page<ContestContestantModel> selectAllByContestJid(String contestId, int page, int pageSize);
+    Set<ContestContestantModel> insertAll(String contestJid, Set<ContestContestantModel> contestantModels);
+    Page<ContestContestantModel> selectAllByContestJid(String contestJid, int page, int pageSize);
+    boolean existsByContestJidAndUserJid(String contestJid, String userJid);
 }

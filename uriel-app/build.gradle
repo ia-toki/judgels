@@ -74,6 +74,7 @@ dependencies {
     testCompile "org.iatoki.judgels:judgels-persistence-testing:$judgelsPersistenceVersion"
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "com.github.tomakehurst:wiremock:$wiremockVersion"
 
     integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
     integTestCompile "com.palantir.remoting-api:test-utils:$httpRemotingApiVersion"

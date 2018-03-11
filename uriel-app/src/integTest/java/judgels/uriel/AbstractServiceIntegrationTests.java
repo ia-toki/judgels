@@ -9,7 +9,6 @@ import com.palantir.remoting3.clients.UserAgent;
 import com.palantir.websecurity.WebSecurityConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.testing.DropwizardTestSupport;
-import java.util.UUID;
 import judgels.service.jaxrs.JaxRsClients;
 import judgels.uriel.jophiel.JophielConfiguration;
 import org.h2.Driver;
@@ -18,12 +17,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
 public abstract class AbstractServiceIntegrationTests {
+    public static final String URIEL_JDBC_SUFFIX = "uriel";
     private static DropwizardTestSupport<UrielApplicationConfiguration> support;
 
     @BeforeAll public static void beforeAll() {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
-        dbConfig.setUrl("jdbc:h2:mem:./" + UUID.randomUUID().toString());
+        dbConfig.setUrl("jdbc:h2:mem:./" + URIEL_JDBC_SUFFIX);
         dbConfig.setProperties(ImmutableMap.<String, String>builder()
                 .put(DIALECT, H2Dialect.class.getName())
                 .put(HBM2DDL_AUTO, "create")
