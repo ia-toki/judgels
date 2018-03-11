@@ -12,9 +12,9 @@ import javax.persistence.criteria.Root;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.HibernateDao;
-import judgels.uriel.manager.ContestManagerDao;
-import judgels.uriel.manager.ContestManagerModel;
-import judgels.uriel.manager.ContestManagerModel_;
+import judgels.uriel.contest.manager.ContestManagerDao;
+import judgels.uriel.contest.manager.ContestManagerModel;
+import judgels.uriel.contest.manager.ContestManagerModel_;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 

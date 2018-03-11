@@ -7,9 +7,9 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
 import judgels.uriel.contest.ContestDao;
 import judgels.uriel.contest.contestant.ContestContestantDao;
+import judgels.uriel.contest.manager.ContestManagerDao;
 import judgels.uriel.contest.scoreboard.ContestScoreboardDao;
 import judgels.uriel.contest.supervisor.ContestSupervisorDao;
-import judgels.uriel.manager.ContestManagerDao;
 import judgels.uriel.role.AdminRoleDao;
 import org.hibernate.SessionFactory;
 
