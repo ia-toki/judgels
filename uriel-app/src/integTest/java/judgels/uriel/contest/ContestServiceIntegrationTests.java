@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.palantir.remoting.api.errors.ErrorType;
 import javax.ws.rs.core.HttpHeaders;
 import judgels.persistence.FixedActorProvider;
@@ -23,6 +24,7 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.contest.contestant.ContestContestantModel;
 import judgels.uriel.hibernate.AdminRoleHibernateDao;
@@ -40,10 +42,18 @@ import org.junit.jupiter.api.Test;
         models = {AdminRoleModel.class, ContestContestantModel.class})
 class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static final String ADMIN_BEARER_TOKEN = "adminToken";
+    private static final String USER_A_BEARER_TOKEN = "userAToken";
+    private static final String USER_B_BEARER_TOKEN = "userBToken";
     private static final AuthHeader ADMIN_HEADER = AuthHeader.of(ADMIN_BEARER_TOKEN);
+    private static final AuthHeader USER_A_HEADER = AuthHeader.of(USER_A_BEARER_TOKEN);
+    private static final AuthHeader USER_B_HEADER = AuthHeader.of(USER_B_BEARER_TOKEN);
+    private static final String USER_A_JID = "userAJid";
+    private static final String USER_B_JID = "userBJid";
     private static final int JOPHIEL_PORT = 9001;
     private static WireMockServer wireMockServer;
     private ContestService contestService = createService(ContestService.class);
+    private ContestContestantService contestContestantService = createService(ContestContestantService.class);
+
 
     @BeforeAll static void start(SessionFactory sessionFactory) {
         wireMockServer = new WireMockServer(JOPHIEL_PORT);
@@ -87,6 +97,24 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                                 "email", "foo@bar.com")
                 )));
 
+        stubFor(get("/api/v2/users/me")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_A_BEARER_TOKEN))
+                .willReturn(okForJson(
+                        ImmutableMap.of(
+                                "jid", USER_A_JID,
+                                "username", "userA",
+                                "email", "usera@mailinator.com")
+                )));
+
+        stubFor(get("/api/v2/users/me")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_B_BEARER_TOKEN))
+                .willReturn(okForJson(
+                        ImmutableMap.of(
+                                "jid", USER_B_JID,
+                                "username", "userB",
+                                "email", "userb@mailinator.com")
+                )));
+
         Contest contestA = contestService.createContest(new ContestData.Builder()
                 .name("TOKI Open Contest A")
                 .description("This is contest A")
@@ -121,8 +149,23 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .style(ContestStyle.IOI)
                 .build());
 
-        Page<Contest> contests = contestService.getContests(1, 10);
-        assertThat(contests.getData()).containsExactly(contestA, contestB);
+        contestContestantService.addContestants(
+                ADMIN_HEADER,
+                contestA.getJid(),
+                ImmutableSet.of(USER_A_JID));
+        contestContestantService.addContestants(
+                ADMIN_HEADER,
+                contestB.getJid(),
+                ImmutableSet.of(USER_A_JID, USER_B_JID));
+
+        Page<Contest> userAContests = contestService.getContests(USER_A_HEADER, 1, 10);
+        Page<Contest> userBContests = contestService.getContests(USER_B_HEADER, 1, 10);
+
+        assertThat(userAContests.getTotalData()).isEqualTo(2);
+        assertThat(userAContests.getData()).containsExactly(contestA, contestB);
+
+        assertThat(userBContests.getTotalData()).isEqualTo(1);
+        assertThat(userBContests.getData()).containsExactly(contestB);
     }
 
 }

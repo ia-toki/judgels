@@ -34,8 +34,12 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
         CriteriaQuery<ContestContestantModel> cq = cb.createQuery(ContestContestantModel.class);
         Root<ContestContestantModel> root = cq.from(ContestContestantModel.class);
 
-        cb.and(cb.equal(root.get(ContestContestantModel_.contestJid), contestJid),
-                root.get(ContestContestantModel_.userJid).in(userJids));
+        cq.where(
+                cb.and(
+                        cb.equal(root.get(ContestContestantModel_.contestJid), contestJid),
+                        root.get(ContestContestantModel_.userJid).in(userJids)
+                )
+        );
 
         return ImmutableSet.copyOf(currentSession().createQuery(cq).getResultList());
     }
@@ -65,12 +69,24 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
         query.setMaxResults(pageSize);
 
         List<ContestContestantModel> data = query.list();
-        long totalData = selectCount();
+        long totalData = selectCountByContestJid(contestJid);
 
         return new Page.Builder<ContestContestantModel>()
                 .totalData(totalData)
                 .data(data)
                 .build();
+    }
+
+    private long selectCountByContestJid(String contestJid) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<ContestContestantModel> root = cq.from(getEntityClass());
+
+        cq.where(cb.equal(root.get(ContestContestantModel_.contestJid), contestJid));
+        cq.select(cb.count(root));
+
+        Query<Long> query = currentSession().createQuery(cq);
+        return query.getSingleResult();
     }
 
     @Override

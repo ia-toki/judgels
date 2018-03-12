@@ -12,9 +12,11 @@ import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.contest.ContestDao;
 import judgels.uriel.contest.ContestModel;
+import judgels.uriel.contest.ContestRawDao;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.ContestHibernateDao;
+import judgels.uriel.hibernate.ContestRawHibernateDao;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,12 +28,14 @@ class ContestContestantStoreIntegrationTests {
 
     @BeforeEach void before(SessionFactory sessionFactory) {
         ContestDao contestDao = new ContestHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
+        ContestRawDao contestRawDao = new ContestRawHibernateDao(sessionFactory);
+
         ContestContestantDao contestantDao = new ContestContestantHibernateDao(
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
 
-        contestStore = new ContestStore(contestDao);
+        contestStore = new ContestStore(contestDao, contestRawDao);
         store = new ContestContestantStore(contestantDao);
     }
 

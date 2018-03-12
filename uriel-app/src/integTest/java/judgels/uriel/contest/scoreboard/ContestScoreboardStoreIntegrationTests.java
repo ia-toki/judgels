@@ -11,8 +11,10 @@ import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestDao;
 import judgels.uriel.contest.ContestModel;
+import judgels.uriel.contest.ContestRawDao;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.hibernate.ContestHibernateDao;
+import judgels.uriel.hibernate.ContestRawHibernateDao;
 import judgels.uriel.hibernate.ContestScoreboardHibernateDao;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +32,9 @@ class ContestScoreboardStoreIntegrationTests {
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
+        ContestRawDao contestRawDao = new ContestRawHibernateDao(sessionFactory);
 
-        contestStore = new ContestStore(contestDao);
+        contestStore = new ContestStore(contestDao, contestRawDao);
         store = new ContestScoreboardStore(contestScoreboardDao);
     }
 

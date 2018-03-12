@@ -28,6 +28,7 @@ public interface ContestService {
     @Path("/")
     @Produces(APPLICATION_JSON)
     Page<Contest> getContests(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @DefaultValue("1") @QueryParam("page") int page,
             @DefaultValue("10") @QueryParam("pageSize") int pageSize);
 

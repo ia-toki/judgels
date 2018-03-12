@@ -6,6 +6,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
 import judgels.uriel.contest.ContestDao;
+import judgels.uriel.contest.ContestRawDao;
 import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.contest.manager.ContestManagerDao;
 import judgels.uriel.contest.scoreboard.ContestScoreboardDao;
@@ -49,13 +50,17 @@ public class UrielHibernateModule {
         return dao;
     }
 
-    @Provides
     ContestSupervisorDao contestSupervisorDao(ContestSupervisorHibernateDao dao) {
         return dao;
     }
 
     @Provides
     ContestManagerDao contestManagerDao(ContestManagerHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    ContestRawDao contestRawDao(ContestRawHibernateDao dao) {
         return dao;
     }
 

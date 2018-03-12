@@ -10,18 +10,20 @@ import judgels.uriel.api.contest.ContestStyle;
 
 public class ContestStore {
     private final ContestDao contestDao;
+    private final ContestRawDao contestRawDao;
 
     @Inject
-    public ContestStore(ContestDao contestDao) {
+    public ContestStore(ContestDao contestDao, ContestRawDao contestRawDao) {
         this.contestDao = contestDao;
+        this.contestRawDao = contestRawDao;
     }
 
     public Optional<Contest> findContestByJid(String contestJid) {
         return contestDao.selectByJid(contestJid).map(ContestStore::fromModel);
     }
 
-    public Page<Contest> getContests(int page, int pageSize) {
-        Page<ContestModel> models = contestDao.selectAllPublic(page, pageSize);
+    public Page<Contest> getContests(String userJid, int page, int pageSize) {
+        Page<ContestModel> models = contestRawDao.selectAllByUserJid(userJid, page, pageSize);
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 

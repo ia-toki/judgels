@@ -39,8 +39,9 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Page<Contest> getContests(int page, int pageSize) {
-        return contestStore.getContests(page, pageSize);
+    public Page<Contest> getContests(AuthHeader authHeader, int page, int pageSize) {
+        String actorJid = actorChecker.check(authHeader);
+        return contestStore.getContests(actorJid, page, pageSize);
     }
 
     @Override
