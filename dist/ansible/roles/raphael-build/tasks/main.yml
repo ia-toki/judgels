@@ -1,7 +1,7 @@
 - block:
   - name: Build raphael image and push it to DockerHub
     docker_image:
-      path: "{{ playbook_dir }}/../../build"
+      path: "{{ playbook_dir }}/../.."
       name: judgels/raphael
       force: yes
       push: yes

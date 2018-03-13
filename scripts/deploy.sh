@@ -5,11 +5,7 @@ set -ex
 cd "$(dirname "$0")"/..
 
 GENERATE_SOURCEMAP=false yarn build
-mkdir -p dist/build
-rm -rf dist/build/build && mv build dist/build/
-
-cp dist/dockerfiles/raphael/* dist/build/
-cp dist/dockerfiles/raphael/.dockerignore dist/build/
+rm -rf dist/build && mv build dist/
 
 cd dist/ansible
 ansible --version
