@@ -7,12 +7,11 @@ cd "$(dirname "$0")"/..
 GENERATE_SOURCEMAP=false yarn build
 rm -rf dist/build && mv build dist/
 
-cd dist/ansible
 ansible --version
-cp ../../deployment/global/hosts .
 
-mkdir -p roles/raphael-deploy/templates
-cp ../../deployment/raphael/conf/raphael.js roles/raphael-deploy/templates/raphael.js.j2
+cd dist/ansible
+ansible-playbook -e @../../deployment/conf/global.yml playbooks/build-raphael.yml
 
-ansible-playbook -c local -e @../../deployment/global/env.yml playbooks/build-raphael.yml
-ansible-playbook -e @../../deployment/global/env.yml playbooks/deploy-raphael.yml
+cd ../../judgels/ansible
+cp ../../deployment/conf/raphael.js roles/raphael-deploy/templates/raphael.js.j2
+ansible-playbook -e @../../deployment/conf/global.yml playbooks/deploy-raphael.yml

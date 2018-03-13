@@ -8,3 +8,5 @@ raphael.js
 *.css
 
 .idea/
+
+*.retry

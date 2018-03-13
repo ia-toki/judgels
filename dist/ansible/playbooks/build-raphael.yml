@@ -1,4 +1,5 @@
-- hosts: localhost
+- hosts: local
+  connection: local
   gather_facts: false
   roles:
     - name: raphael-build
