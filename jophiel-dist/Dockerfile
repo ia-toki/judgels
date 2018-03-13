@@ -1,7 +1,7 @@
 FROM openjdk:8u151-jre-alpine3.7
 
 RUN addgroup -S judgels && adduser -S -g judgels judgels
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash procps
 
 USER judgels
 
@@ -11,4 +11,5 @@ EXPOSE 9001 9101
 
 COPY build/distributions .
 
-CMD ["service/bin/init.sh", "console"]
+ENTRYPOINT ["./service/bin/init.sh"]
+CMD ["console"]
