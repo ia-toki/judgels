@@ -8,9 +8,6 @@ cd "$(dirname "$0")"/../jophiel-dist
 tar -xf build/distributions/jophiel-* --strip-components=1 -C build/distributions
 rm build/distributions/*.tgz
 
-cp dockerfiles/jophiel/Dockerfile build/
-cp dockerfiles/jophiel/.dockerignore build/
-
 cd ansible
 ansible --version
 cp ../../deployment/global/hosts .

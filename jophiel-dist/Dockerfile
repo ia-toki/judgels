@@ -9,6 +9,6 @@ WORKDIR /judgels/jophiel
 
 EXPOSE 9001 9101
 
-COPY distributions .
+COPY build/distributions .
 
 CMD ["service/bin/init.sh", "console"]

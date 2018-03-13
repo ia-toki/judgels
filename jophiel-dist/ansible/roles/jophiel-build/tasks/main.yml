@@ -1,7 +1,7 @@
 - block:
   - name: Build jophiel image and push it to DockerHub
     docker_image:
-      path: "{{ playbook_dir }}/../../build"
+      path: "{{ playbook_dir }}/../.."
       name: judgels/jophiel
       force: yes
       push: yes
