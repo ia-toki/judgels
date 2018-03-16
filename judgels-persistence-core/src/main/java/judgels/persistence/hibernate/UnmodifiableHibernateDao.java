@@ -4,9 +4,11 @@ import io.dropwizard.hibernate.AbstractDAO;
 import java.sql.Date;
 import java.time.Clock;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.ActorProvider;
@@ -43,6 +45,27 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
+    public Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<M> cq = criteriaQuery();
+        Root<M> root = cq.from(getEntityClass());
+        cq.where(cb.equal(root.get(column), value));
+        return currentSession().createQuery(cq).uniqueResultOptional();
+    }
+
+    @Override
+    public Optional<M> selectByUniqueColumns(Map<SingularAttribute<M, ?>, ?> key) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<M> cq = criteriaQuery();
+        Root<M> root = cq.from(getEntityClass());
+        cq.where(cb.and(key.entrySet()
+                .stream()
+                .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
+                .toArray(Predicate[]::new)));
+        return currentSession().createQuery(cq).uniqueResultOptional();
+    }
+
+    @Override
     public long selectCount() {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
@@ -52,12 +75,32 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
+    public long selectCountByColumn(SingularAttribute<M, String> column, String value) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<M> root = cq.from(getEntityClass());
+        cq.select(cb.count(root)).where(cb.equal(root.get(column), value));
+        return currentSession().createQuery(cq).getSingleResult();
+    }
+
+    @Override
+    public long selectCountByColumns(Map<SingularAttribute<M, ?>, ?> key) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<M> root = cq.from(getEntityClass());
+        cq.select(cb.count(root)).where(cb.and(key.entrySet()
+                .stream()
+                .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
+                .toArray(Predicate[]::new)));
+        return currentSession().createQuery(cq).getSingleResult();
+    }
+
+    @Override
     public Page<M> selectAll(int page, int pageSize) {
         CriteriaQuery<M> cq = criteriaQuery();
         cq.from(getEntityClass());
 
         Query<M> query = currentSession().createQuery(cq);
-
         query.setFirstResult((page - 1) * pageSize);
         query.setMaxResults(pageSize);
 
@@ -71,15 +114,50 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
-    public void delete(M model) {
-        currentSession().delete(model);
-    }
-
-    protected final Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value) {
+    public Page<M> selectAllByColumn(SingularAttribute<M, String> column, String value, int page, int pageSize) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<M> cq = cb.createQuery(getEntityClass());
+        CriteriaQuery<M> cq = criteriaQuery();
         Root<M> root = cq.from(getEntityClass());
         cq.where(cb.equal(root.get(column), value));
-        return currentSession().createQuery(cq).uniqueResultOptional();
+
+        Query<M> query = currentSession().createQuery(cq);
+        query.setFirstResult((page - 1) * pageSize);
+        query.setMaxResults(pageSize);
+
+        List<M> data = query.list();
+        long totalData = selectCountByColumn(column, value);
+
+        return new Page.Builder<M>()
+                .totalData(totalData)
+                .data(data)
+                .build();
+    }
+
+    @Override
+    public Page<M> selectAllByColumns(Map<SingularAttribute<M, ?>, ?> key, int page, int pageSize) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<M> cq = criteriaQuery();
+        Root<M> root = cq.from(getEntityClass());
+        cq.where(cb.and(key.entrySet()
+                .stream()
+                .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
+                .toArray(Predicate[]::new)));
+
+        Query<M> query = currentSession().createQuery(cq);
+        query.setFirstResult((page - 1) * pageSize);
+        query.setMaxResults(pageSize);
+
+        List<M> data = query.list();
+        long totalData = selectCountByColumns(key);
+
+        return new Page.Builder<M>()
+                .totalData(totalData)
+                .data(data)
+                .build();
+    }
+
+    @Override
+    public void delete(M model) {
+        currentSession().delete(model);
     }
 }
