@@ -16,6 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.jophiel.api.role.Role;
 import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
 
@@ -45,6 +46,11 @@ public interface UserService {
     @Path("/me/password")
     @Consumes(APPLICATION_JSON)
     void updateMyPassword(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, PasswordUpdateData passwordUpdateData);
+
+    @GET
+    @Path("/me/role")
+    @Produces(APPLICATION_JSON)
+    Role getMyRole(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
 
     @POST
     @Path("/")

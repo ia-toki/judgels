@@ -1,6 +1,7 @@
 package judgels.jophiel.role;
 
 import javax.inject.Inject;
+import judgels.jophiel.api.role.Role;
 
 public class RoleStore {
     private final AdminRoleDao adminRoleDao;
@@ -19,6 +20,16 @@ public class RoleStore {
         AdminRoleModel model = new AdminRoleModel();
         model.userJid = userJid;
         adminRoleDao.insert(model);
+    }
+
+    public Role getUserRole(String userJid) {
+        if (userJid.equals(superadminUserJid)) {
+            return Role.SUPERADMIN;
+        } else if (adminRoleDao.existsByUserJid(userJid)) {
+            return Role.ADMIN;
+        } else {
+            return Role.USER;
+        }
     }
 
     public boolean isAdmin(String userJid) {

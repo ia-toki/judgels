@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
+import judgels.jophiel.api.role.Role;
 import judgels.jophiel.api.user.PasswordResetData;
 import judgels.jophiel.api.user.PasswordUpdateData;
 import judgels.jophiel.api.user.User;
@@ -16,6 +17,7 @@ import judgels.jophiel.api.user.UserProfile;
 import judgels.jophiel.api.user.UserRegistrationData;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.role.RoleChecker;
+import judgels.jophiel.role.RoleStore;
 import judgels.jophiel.user.password.UserPasswordResetter;
 import judgels.jophiel.user.profile.UserProfileStore;
 import judgels.jophiel.user.registration.UserRegisterer;
@@ -26,6 +28,7 @@ import judgels.service.api.actor.AuthHeader;
 public class UserResource implements UserService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
+    private final RoleStore roleStore;
     private final UserStore userStore;
     private final UserProfileStore userProfileStore;
     private final Optional<UserRegisterer> userRegisterer;
@@ -35,6 +38,7 @@ public class UserResource implements UserService {
     public UserResource(
             ActorChecker actorChecker,
             RoleChecker roleChecker,
+            RoleStore roleStore,
             UserStore userStore,
             UserProfileStore userProfileStore,
             Optional<UserRegisterer> userRegisterer,
@@ -42,6 +46,7 @@ public class UserResource implements UserService {
 
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
+        this.roleStore = roleStore;
         this.userStore = userStore;
         this.userProfileStore = userProfileStore;
         this.userRegisterer = userRegisterer;
@@ -93,6 +98,13 @@ public class UserResource implements UserService {
 
         userStore.validateUserPassword(actorJid, passwordUpdateData.getOldPassword());
         userStore.updateUserPassword(actorJid, passwordUpdateData.getNewPassword());
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Role getMyRole(AuthHeader authHeader) {
+        String actorJid = actorChecker.check(authHeader);
+        return roleStore.getUserRole(actorJid);
     }
 
     @Override
