@@ -14,5 +14,4 @@ cd ansible
 ansible-playbook -e @../../deployment/conf/global.yml playbooks/build-jophiel.yml
 
 cd ../../judgels/ansible
-cp ../../deployment/conf/jophiel.yml roles/jophiel-deploy/templates/jophiel.yml.j2
 ansible-playbook -e @../../deployment/conf/global.yml playbooks/deploy-jophiel.yml
