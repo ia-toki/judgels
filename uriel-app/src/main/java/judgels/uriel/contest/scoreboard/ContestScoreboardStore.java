@@ -3,6 +3,7 @@ package judgels.uriel.contest.scoreboard;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
+import judgels.uriel.persistence.ContestScoreboardModel;
 
 public class ContestScoreboardStore {
     private final ContestScoreboardDao contestScoreboardDao;

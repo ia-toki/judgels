@@ -1,4 +1,4 @@
-package judgels.uriel.contest.supervisor;
+package judgels.uriel.persistence;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,10 +7,10 @@ import javax.persistence.Table;
 import judgels.persistence.Model;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
-@Entity(name = "uriel_contest_supervisor")
+@Entity(name = "uriel_contest_contestant")
 @Table(indexes = {@Index(columnList = "contestJid"),
                   @Index(columnList = "contestJid,userJid", unique = true)})
-public class ContestSupervisorModel extends Model {
+public class ContestContestantModel extends Model {
     @Column(nullable = false)
     public String contestJid;
 

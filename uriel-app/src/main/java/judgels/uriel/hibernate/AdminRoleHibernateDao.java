@@ -5,9 +5,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
+import judgels.uriel.persistence.AdminRoleModel;
+import judgels.uriel.persistence.AdminRoleModel_;
 import judgels.uriel.role.AdminRoleDao;
-import judgels.uriel.role.AdminRoleModel;
-import judgels.uriel.role.AdminRoleModel_;
 import org.hibernate.SessionFactory;
 
 @Singleton

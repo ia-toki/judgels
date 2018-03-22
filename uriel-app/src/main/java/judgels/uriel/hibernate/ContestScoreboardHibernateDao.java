@@ -11,8 +11,8 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.scoreboard.ContestScoreboardDao;
-import judgels.uriel.contest.scoreboard.ContestScoreboardModel;
-import judgels.uriel.contest.scoreboard.ContestScoreboardModel_;
+import judgels.uriel.persistence.ContestScoreboardModel;
+import judgels.uriel.persistence.ContestScoreboardModel_;
 import org.hibernate.SessionFactory;
 
 @Singleton

@@ -14,8 +14,8 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.contest.contestant.ContestContestantDao;
-import judgels.uriel.contest.contestant.ContestContestantModel;
-import judgels.uriel.contest.contestant.ContestContestantModel_;
+import judgels.uriel.persistence.ContestContestantModel;
+import judgels.uriel.persistence.ContestContestantModel_;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 

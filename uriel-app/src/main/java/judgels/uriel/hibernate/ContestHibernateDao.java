@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.contest.ContestDao;
-import judgels.uriel.contest.ContestModel;
+import judgels.uriel.persistence.ContestModel;
 import org.hibernate.SessionFactory;
 
 @Singleton

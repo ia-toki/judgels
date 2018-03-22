@@ -13,8 +13,8 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.contest.manager.ContestManagerDao;
-import judgels.uriel.contest.manager.ContestManagerModel;
-import judgels.uriel.contest.manager.ContestManagerModel_;
+import judgels.uriel.persistence.ContestManagerModel;
+import judgels.uriel.persistence.ContestManagerModel_;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 

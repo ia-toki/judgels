@@ -3,6 +3,7 @@ package judgels.uriel.contest.contestant;
 import java.util.Set;
 import judgels.persistence.Dao;
 import judgels.persistence.api.Page;
+import judgels.uriel.persistence.ContestContestantModel;
 
 public interface ContestContestantDao extends Dao<ContestContestantModel> {
     Set<ContestContestantModel> selectAllByUserJids(String contestJid, Set<String> userJids);

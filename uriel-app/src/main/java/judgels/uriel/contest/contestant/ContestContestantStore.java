@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
+import judgels.uriel.persistence.ContestContestantModel;
 
 public class ContestContestantStore {
     private final ContestContestantDao contestContestantDao;

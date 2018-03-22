@@ -2,6 +2,7 @@ package judgels.uriel.role;
 
 import javax.inject.Inject;
 import judgels.uriel.contest.contestant.ContestContestantDao;
+import judgels.uriel.persistence.AdminRoleModel;
 
 public class RoleStore {
     private final AdminRoleDao adminRoleDao;

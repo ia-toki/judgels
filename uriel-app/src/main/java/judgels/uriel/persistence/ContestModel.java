@@ -1,4 +1,4 @@
-package judgels.uriel.contest;
+package judgels.uriel.persistence;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
