@@ -1,15 +1,17 @@
 package judgels.uriel.role;
 
 import javax.inject.Inject;
+import judgels.persistence.UnmodifiableDao;
 import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.persistence.AdminRoleModel;
+import judgels.uriel.persistence.AdminRoleModel_;
 
 public class RoleStore {
-    private final AdminRoleDao adminRoleDao;
+    private final UnmodifiableDao<AdminRoleModel> adminRoleDao;
     private final ContestContestantDao contestantDao;
 
     @Inject
-    public RoleStore(AdminRoleDao adminRoleDao, ContestContestantDao contestantDao) {
+    public RoleStore(UnmodifiableDao<AdminRoleModel> adminRoleDao, ContestContestantDao contestantDao) {
         this.adminRoleDao = adminRoleDao;
         this.contestantDao = contestantDao;
     }
@@ -21,7 +23,7 @@ public class RoleStore {
     }
 
     public boolean isAdmin(String userJid) {
-        return adminRoleDao.existsByUserJid(userJid);
+        return adminRoleDao.selectByUniqueColumn(AdminRoleModel_.userJid, userJid).isPresent();
     }
 
     public boolean isContestant(String contestJid, String userJid) {

@@ -11,10 +11,10 @@ import judgels.uriel.persistence.ContestScoreboardModel;
 public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfiguration> {
     public UrielHibernateBundle() {
         super(
+                AdminRoleModel.class,
                 ContestModel.class,
                 ContestScoreboardModel.class,
-                ContestContestantModel.class,
-                AdminRoleModel.class
+                ContestContestantModel.class
         );
     }
 
