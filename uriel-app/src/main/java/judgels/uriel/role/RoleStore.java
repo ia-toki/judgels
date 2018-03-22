@@ -1,17 +1,17 @@
 package judgels.uriel.role;
 
 import javax.inject.Inject;
-import judgels.persistence.UnmodifiableDao;
 import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.AdminRoleModel_;
+import judgels.uriel.persistence.Daos.AdminRoleDao;
 
 public class RoleStore {
-    private final UnmodifiableDao<AdminRoleModel> adminRoleDao;
+    private final AdminRoleDao adminRoleDao;
     private final ContestContestantDao contestantDao;
 
     @Inject
-    public RoleStore(UnmodifiableDao<AdminRoleModel> adminRoleDao, ContestContestantDao contestantDao) {
+    public RoleStore(AdminRoleDao adminRoleDao, ContestContestantDao contestantDao) {
         this.adminRoleDao = adminRoleDao;
         this.contestantDao = contestantDao;
     }

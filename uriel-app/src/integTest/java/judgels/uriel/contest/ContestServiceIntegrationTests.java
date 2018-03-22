@@ -16,9 +16,7 @@ import com.palantir.remoting.api.errors.ErrorType;
 import javax.ws.rs.core.HttpHeaders;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
-import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.api.Page;
-import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.AbstractServiceIntegrationTests;
@@ -29,8 +27,10 @@ import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.hibernate.ContestContestantHibernateDao;
+import judgels.uriel.hibernate.HibernateDaos.AdminRoleHibernateDao;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
+import judgels.uriel.persistence.Daos.AdminRoleDao;
 import judgels.uriel.role.RoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -60,7 +60,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
         wireMockServer.start();
         configureFor(JOPHIEL_PORT);
 
-        UnmodifiableDao<AdminRoleModel> adminRoleDao = new UnmodifiableHibernateDao<AdminRoleModel>(
+        AdminRoleDao adminRoleDao = new AdminRoleHibernateDao(
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider()) {};

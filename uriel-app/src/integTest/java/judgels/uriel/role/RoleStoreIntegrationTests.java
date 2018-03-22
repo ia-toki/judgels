@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
-import judgels.persistence.UnmodifiableDao;
-import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.hibernate.ContestContestantHibernateDao;
+import judgels.uriel.hibernate.HibernateDaos.AdminRoleHibernateDao;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
+import judgels.uriel.persistence.Daos.AdminRoleDao;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,10 +21,10 @@ class RoleStoreIntegrationTests {
     private ContestContestantDao contestantDao;
 
     @BeforeEach void before(SessionFactory sessionFactory) {
-        UnmodifiableDao<AdminRoleModel> adminRoleDao = new UnmodifiableHibernateDao<AdminRoleModel>(
+        AdminRoleDao adminRoleDao = new AdminRoleHibernateDao(
                 sessionFactory,
                 new FixedClock(),
-                new FixedActorProvider()) {};
+                new FixedActorProvider());
 
         contestantDao = new ContestContestantHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
         store = new RoleStore(adminRoleDao, contestantDao);

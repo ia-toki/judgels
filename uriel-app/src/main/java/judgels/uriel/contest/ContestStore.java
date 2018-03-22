@@ -3,19 +3,19 @@ package judgels.uriel.contest;
 import com.google.common.collect.Lists;
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.persistence.JudgelsDao;
 import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.Daos.ContestDao;
 
 public class ContestStore {
-    private final JudgelsDao<ContestModel> contestDao;
+    private final ContestDao contestDao;
     private final ContestRawDao contestRawDao;
 
     @Inject
-    public ContestStore(JudgelsDao<ContestModel> contestDao, ContestRawDao contestRawDao) {
+    public ContestStore(ContestDao contestDao, ContestRawDao contestRawDao) {
         this.contestDao = contestDao;
         this.contestRawDao = contestRawDao;
     }

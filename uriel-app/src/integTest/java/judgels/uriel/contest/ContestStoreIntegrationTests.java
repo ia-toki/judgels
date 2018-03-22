@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableSet;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
-import judgels.persistence.JudgelsDao;
 import judgels.persistence.api.Page;
-import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
@@ -16,8 +14,10 @@ import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.ContestRawHibernateDao;
+import judgels.uriel.hibernate.HibernateDaos.ContestHibernateDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.Daos.ContestDao;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,10 +29,10 @@ public class ContestStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        JudgelsDao<ContestModel> contestDao = new JudgelsHibernateDao<ContestModel>(
+        ContestDao contestDao = new ContestHibernateDao(
                 sessionFactory,
                 new FixedClock(),
-                new FixedActorProvider()) {};
+                new FixedActorProvider());
         ContestRawDao contestRawDao = new ContestRawHibernateDao(sessionFactory);
 
         ContestContestantDao contestantDao = new ContestContestantHibernateDao(
