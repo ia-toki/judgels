@@ -4,15 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
+import judgels.persistence.JudgelsDao;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
-import judgels.uriel.contest.ContestDao;
 import judgels.uriel.contest.ContestRawDao;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.hibernate.ContestHibernateDao;
 import judgels.uriel.hibernate.ContestRawHibernateDao;
 import judgels.uriel.hibernate.ContestScoreboardHibernateDao;
 import judgels.uriel.persistence.ContestModel;
@@ -28,7 +28,10 @@ class ContestScoreboardStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        ContestDao contestDao = new ContestHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
+        JudgelsDao<ContestModel> contestDao = new JudgelsHibernateDao<ContestModel>(
+                sessionFactory,
+                new FixedClock(),
+                new FixedActorProvider()) {};
         ContestScoreboardDao contestScoreboardDao = new ContestScoreboardHibernateDao(
                 sessionFactory,
                 new FixedClock(),

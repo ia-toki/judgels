@@ -7,15 +7,17 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import java.time.Clock;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.UnmodifiableDao;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
-import judgels.uriel.contest.ContestDao;
 import judgels.uriel.contest.ContestRawDao;
 import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.contest.manager.ContestManagerDao;
 import judgels.uriel.contest.scoreboard.ContestScoreboardDao;
 import judgels.uriel.contest.supervisor.ContestSupervisorDao;
 import judgels.uriel.persistence.AdminRoleModel;
+import judgels.uriel.persistence.ContestModel;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -46,8 +48,9 @@ public class UrielHibernateModule {
     }
 
     @Provides
-    ContestDao contestDao(ContestHibernateDao dao) {
-        return dao;
+    @Singleton
+    JudgelsDao<ContestModel> contestDao(Clock clock, ActorProvider actorProvider) {
+        return new JudgelsHibernateDao<ContestModel>(sessionFactory, clock, actorProvider) {};
     }
 
     @Provides
