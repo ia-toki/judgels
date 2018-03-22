@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.sql.Date;
 import java.time.Clock;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -121,6 +122,14 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
                 .totalData(totalData)
                 .data(data)
                 .build();
+    }
+
+    @Override
+    public List<M> selectAllByColumnIn(SingularAttribute<M, String> column, Collection<String> values) {
+        CriteriaQuery<M> cq = criteriaQuery();
+        Root<M> root = cq.from(getEntityClass());
+        cq.where(root.get(column).in(values));
+        return currentSession().createQuery(cq).getResultList();
     }
 
     @Override
