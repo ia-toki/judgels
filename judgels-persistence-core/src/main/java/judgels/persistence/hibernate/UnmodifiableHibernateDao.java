@@ -1,5 +1,7 @@
 package judgels.persistence.hibernate;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.sql.Date;
 import java.time.Clock;
@@ -40,17 +42,18 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
+    public List<M> insertAll(List<M> models) {
+        return Lists.transform(models, this::insert);
+    }
+
+    @Override
     public Optional<M> select(long id) {
         return Optional.ofNullable(get(id));
     }
 
     @Override
     public Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<M> cq = criteriaQuery();
-        Root<M> root = cq.from(getEntityClass());
-        cq.where(cb.equal(root.get(column), value));
-        return currentSession().createQuery(cq).uniqueResultOptional();
+        return selectByUniqueColumns(ImmutableMap.of(column, value));
     }
 
     @Override
@@ -67,20 +70,12 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
 
     @Override
     public long selectCount() {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<M> root = cq.from(getEntityClass());
-        cq.select(cb.count(root));
-        return currentSession().createQuery(cq).getSingleResult();
+        return selectCountByColumns(ImmutableMap.of());
     }
 
     @Override
     public long selectCountByColumn(SingularAttribute<M, String> column, String value) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        Root<M> root = cq.from(getEntityClass());
-        cq.select(cb.count(root)).where(cb.equal(root.get(column), value));
-        return currentSession().createQuery(cq).getSingleResult();
+        return selectCountByColumns(ImmutableMap.of(column, value));
     }
 
     @Override
@@ -97,40 +92,12 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
 
     @Override
     public Page<M> selectAll(int page, int pageSize) {
-        CriteriaQuery<M> cq = criteriaQuery();
-        cq.from(getEntityClass());
-
-        Query<M> query = currentSession().createQuery(cq);
-        query.setFirstResult((page - 1) * pageSize);
-        query.setMaxResults(pageSize);
-
-        List<M> data = query.list();
-        long totalData = selectCount();
-
-        return new Page.Builder<M>()
-                .totalData(totalData)
-                .data(data)
-                .build();
+        return selectAllByColumns(ImmutableMap.of(), page, pageSize);
     }
 
     @Override
     public Page<M> selectAllByColumn(SingularAttribute<M, String> column, String value, int page, int pageSize) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<M> cq = criteriaQuery();
-        Root<M> root = cq.from(getEntityClass());
-        cq.where(cb.equal(root.get(column), value));
-
-        Query<M> query = currentSession().createQuery(cq);
-        query.setFirstResult((page - 1) * pageSize);
-        query.setMaxResults(pageSize);
-
-        List<M> data = query.list();
-        long totalData = selectCountByColumn(column, value);
-
-        return new Page.Builder<M>()
-                .totalData(totalData)
-                .data(data)
-                .build();
+        return selectAllByColumns(ImmutableMap.of(column, value), page, pageSize);
     }
 
     @Override
