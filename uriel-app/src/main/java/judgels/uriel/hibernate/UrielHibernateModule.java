@@ -8,12 +8,13 @@ import javax.inject.Singleton;
 import judgels.uriel.contest.ContestRawDao;
 import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.contest.manager.ContestManagerDao;
-import judgels.uriel.contest.scoreboard.ContestScoreboardDao;
 import judgels.uriel.contest.supervisor.ContestSupervisorDao;
 import judgels.uriel.hibernate.HibernateDaos.AdminRoleHibernateDao;
 import judgels.uriel.hibernate.HibernateDaos.ContestHibernateDao;
+import judgels.uriel.hibernate.HibernateDaos.ContestScoreboardHibernateDao;
 import judgels.uriel.persistence.Daos.AdminRoleDao;
 import judgels.uriel.persistence.Daos.ContestDao;
+import judgels.uriel.persistence.Daos.ContestScoreboardDao;
 import org.hibernate.SessionFactory;
 
 @Module
