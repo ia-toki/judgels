@@ -21,7 +21,7 @@ import judgels.persistence.api.Page;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
-public class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M>
+public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M>
         implements UnmodifiableDao<M> {
 
     private final Clock clock;

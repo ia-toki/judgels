@@ -7,7 +7,7 @@ import judgels.persistence.Dao;
 import judgels.persistence.Model;
 import org.hibernate.SessionFactory;
 
-public class HibernateDao<M extends Model> extends UnmodifiableHibernateDao<M> implements Dao<M> {
+public abstract class HibernateDao<M extends Model> extends UnmodifiableHibernateDao<M> implements Dao<M> {
     private final Clock clock;
     private final ActorProvider actorProvider;
 
