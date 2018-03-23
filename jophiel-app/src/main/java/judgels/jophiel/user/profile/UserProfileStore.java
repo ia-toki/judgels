@@ -3,7 +3,9 @@ package judgels.jophiel.user.profile;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.UserProfile;
+import judgels.jophiel.persistence.Daos.UserProfileDao;
 import judgels.jophiel.persistence.UserProfileModel;
+import judgels.jophiel.persistence.UserProfileModel_;
 
 public class UserProfileStore {
     private final UserProfileDao userProfileDao;
@@ -14,13 +16,13 @@ public class UserProfileStore {
     }
 
     public UserProfile getUserProfile(String userJid) {
-        return userProfileDao.selectByUserJid(userJid)
+        return userProfileDao.selectByUniqueColumn(UserProfileModel_.userJid, userJid)
                 .map(UserProfileStore::fromModel)
                 .orElse(new UserProfile.Builder().build());
     }
 
     public UserProfile upsertUserProfile(String userJid, UserProfile userProfile) {
-        Optional<UserProfileModel> maybeModel = userProfileDao.selectByUserJid(userJid);
+        Optional<UserProfileModel> maybeModel = userProfileDao.selectByUniqueColumn(UserProfileModel_.userJid, userJid);
         if (maybeModel.isPresent()) {
             UserProfileModel model = maybeModel.get();
             toModel(userJid, userProfile, model);

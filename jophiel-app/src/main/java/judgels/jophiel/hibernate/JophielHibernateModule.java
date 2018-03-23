@@ -5,13 +5,14 @@ import dagger.Provides;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
+import judgels.jophiel.hibernate.HibernateDaos.UserProfileHibernateDao;
 import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
+import judgels.jophiel.persistence.Daos.UserProfileDao;
 import judgels.jophiel.role.AdminRoleDao;
 import judgels.jophiel.session.SessionDao;
 import judgels.jophiel.user.UserDao;
 import judgels.jophiel.user.password.UserResetPasswordDao;
-import judgels.jophiel.user.profile.UserProfileDao;
 import judgels.jophiel.user.registration.UserRegistrationEmailDao;
 import org.hibernate.SessionFactory;
 
