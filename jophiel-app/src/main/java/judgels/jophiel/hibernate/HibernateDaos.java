@@ -3,6 +3,8 @@ package judgels.jophiel.hibernate;
 import java.time.Clock;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.jophiel.persistence.AdminRoleModel;
+import judgels.jophiel.persistence.Daos.AdminRoleDao;
 import judgels.jophiel.persistence.Daos.SessionDao;
 import judgels.jophiel.persistence.Daos.UserProfileDao;
 import judgels.jophiel.persistence.Daos.UserRegistrationEmailDao;
@@ -16,6 +18,17 @@ import org.hibernate.SessionFactory;
 
 public class HibernateDaos {
     private HibernateDaos() {}
+
+    @Singleton
+    public static class AdminRoleHibernateDao
+            extends UnmodifiableHibernateDao<AdminRoleModel>
+            implements AdminRoleDao {
+
+        @Inject
+        public AdminRoleHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+            super(sessionFactory, clock, actorProvider);
+        }
+    }
 
     @Singleton
     public static class SessionHibernateDao

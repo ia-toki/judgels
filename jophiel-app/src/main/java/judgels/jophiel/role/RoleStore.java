@@ -3,6 +3,8 @@ package judgels.jophiel.role;
 import javax.inject.Inject;
 import judgels.jophiel.api.role.Role;
 import judgels.jophiel.persistence.AdminRoleModel;
+import judgels.jophiel.persistence.AdminRoleModel_;
+import judgels.jophiel.persistence.Daos.AdminRoleDao;
 
 public class RoleStore {
     private final AdminRoleDao adminRoleDao;
@@ -26,7 +28,7 @@ public class RoleStore {
     public Role getUserRole(String userJid) {
         if (userJid.equals(superadminUserJid)) {
             return Role.SUPERADMIN;
-        } else if (adminRoleDao.existsByUserJid(userJid)) {
+        } else if (adminRoleDao.selectByUniqueColumn(AdminRoleModel_.userJid, userJid).isPresent()) {
             return Role.ADMIN;
         } else {
             return Role.USER;
@@ -34,6 +36,7 @@ public class RoleStore {
     }
 
     public boolean isAdmin(String userJid) {
-        return userJid.equals(superadminUserJid) || adminRoleDao.existsByUserJid(userJid);
+        return userJid.equals(superadminUserJid)
+                || adminRoleDao.selectByUniqueColumn(AdminRoleModel_.userJid, userJid).isPresent();
     }
 }
