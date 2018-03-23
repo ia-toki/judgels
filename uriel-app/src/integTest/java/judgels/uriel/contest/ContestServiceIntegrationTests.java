@@ -10,8 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.palantir.remoting.api.errors.ErrorType;
 import javax.ws.rs.core.HttpHeaders;
 import judgels.persistence.FixedActorProvider;
@@ -25,12 +25,12 @@ import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
-import judgels.uriel.contest.contestant.ContestContestantDao;
-import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.HibernateDaos.AdminRoleHibernateDao;
+import judgels.uriel.hibernate.HibernateDaos.ContestContestantHibernateDao;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.Daos.AdminRoleDao;
+import judgels.uriel.persistence.Daos.ContestContestantDao;
 import judgels.uriel.role.RoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -151,11 +151,11 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
         contestContestantService.addContestants(
                 ADMIN_HEADER,
                 contestA.getJid(),
-                ImmutableSet.of(USER_A_JID));
+                ImmutableList.of(USER_A_JID));
         contestContestantService.addContestants(
                 ADMIN_HEADER,
                 contestB.getJid(),
-                ImmutableSet.of(USER_A_JID, USER_B_JID));
+                ImmutableList.of(USER_A_JID, USER_B_JID));
 
         Page<Contest> userAContests = contestService.getContests(USER_A_HEADER, 1, 10);
         Page<Contest> userBContests = contestService.getContests(USER_B_HEADER, 1, 10);

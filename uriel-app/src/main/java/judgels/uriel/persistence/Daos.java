@@ -11,5 +11,7 @@ public class Daos {
 
     public interface ContestDao extends JudgelsDao<ContestModel> {}
 
+    public interface ContestContestantDao extends Dao<ContestContestantModel> {}
+
     public interface ContestScoreboardDao extends Dao<ContestScoreboardModel> {}
 }

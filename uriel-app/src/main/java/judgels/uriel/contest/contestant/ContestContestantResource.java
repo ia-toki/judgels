@@ -5,7 +5,7 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.UserService;
@@ -53,7 +53,7 @@ public class ContestContestantResource implements ContestContestantService {
 
     @Override
     @UnitOfWork
-    public Set<String> addContestants(AuthHeader authHeader, String contestJid, Set<String> contestantJids) {
+    public List<String> addContestants(AuthHeader authHeader, String contestJid, List<String> contestantJids) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAddContestants(actorJid));
         checkFound(contestStore.findContestByJid(contestJid));

@@ -2,7 +2,7 @@ package judgels.uriel.contest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
@@ -10,13 +10,13 @@ import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
-import judgels.uriel.contest.contestant.ContestContestantDao;
 import judgels.uriel.contest.contestant.ContestContestantStore;
-import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.ContestRawHibernateDao;
+import judgels.uriel.hibernate.HibernateDaos.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.HibernateDaos.ContestHibernateDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.Daos.ContestContestantDao;
 import judgels.uriel.persistence.Daos.ContestDao;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,8 +63,8 @@ public class ContestStoreIntegrationTests {
         String userJidB  = "userJidB";
         String userJidC = "userJidC";
 
-        contestContestantStore.addContestants(contestA.getJid(), ImmutableSet.of(userJidA, userJidB));
-        contestContestantStore.addContestants(contestB.getJid(), ImmutableSet.of(userJidB));
+        contestContestantStore.addContestants(contestA.getJid(), ImmutableList.of(userJidA, userJidB));
+        contestContestantStore.addContestants(contestB.getJid(), ImmutableList.of(userJidB));
 
         Page<Contest> contestPageA = store.getContests(userJidA, 1, 10);
         Page<Contest> contestPageB = store.getContests(userJidB, 1, 10);

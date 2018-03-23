@@ -2,7 +2,7 @@ package judgels.uriel.contest.contestant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
@@ -12,11 +12,12 @@ import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.contest.ContestRawDao;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.ContestRawHibernateDao;
+import judgels.uriel.hibernate.HibernateDaos.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.HibernateDaos.ContestHibernateDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.Daos.ContestContestantDao;
 import judgels.uriel.persistence.Daos.ContestDao;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +51,7 @@ class ContestContestantStoreIntegrationTests {
                 .style(ContestStyle.IOI)
                 .build());
 
-        store.addContestants(contest.getJid(), ImmutableSet.of("A", "B"));
+        store.addContestants(contest.getJid(), ImmutableList.of("A", "B"));
 
         Page<String> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
         assertThat(contestantJids.getTotalData()).isEqualTo(2);
@@ -64,8 +65,8 @@ class ContestContestantStoreIntegrationTests {
                 .style(ContestStyle.IOI)
                 .build());
 
-        store.addContestants(contest.getJid(), ImmutableSet.of("A", "B"));
-        store.addContestants(contest.getJid(), ImmutableSet.of("A", "B", "B", "C", "D"));
+        store.addContestants(contest.getJid(), ImmutableList.of("A", "B"));
+        store.addContestants(contest.getJid(), ImmutableList.of("A", "B", "B", "C", "D"));
 
         Page<String> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
         assertThat(contestantJids.getTotalData()).isEqualTo(4);
@@ -79,7 +80,7 @@ class ContestContestantStoreIntegrationTests {
                 .style(ContestStyle.IOI)
                 .build());
 
-        store.addContestants(contest.getJid(), ImmutableSet.of());
+        store.addContestants(contest.getJid(), ImmutableList.of());
 
         Page<String> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
         assertThat(contestantJids.getTotalData()).isEqualTo(0);
