@@ -26,13 +26,15 @@ import org.junit.jupiter.api.Test;
 class UserStoreIntegrationTests {
     private UserStore store;
 
-    @BeforeEach void before(SessionFactory sessionFactory) {
+    @BeforeEach
+    void before(SessionFactory sessionFactory) {
         UserDao userDao = new UserHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
         UserRawDao userRawDao = new UserRawHibernateDao(sessionFactory);
         store = new UserStore(userDao, userRawDao, new FakeFs());
     }
 
-    @Test void can_do_basic_crud() {
+    @Test
+    void can_do_basic_crud() {
         assertThat(store.findUserByUsername("username")).isEmpty();
 
         UserData userData = new UserData.Builder()
@@ -82,7 +84,8 @@ class UserStoreIntegrationTests {
         assertThat(users.getData()).containsExactly(user, nano, budi);
     }
 
-    @Test void can_update_avatar() {
+    @Test
+    void can_update_avatar() {
         UserData userData = new UserData.Builder()
                 .username("username")
                 .password("password")
@@ -96,7 +99,8 @@ class UserStoreIntegrationTests {
         assertThat(user.getAvatarUrl()).contains("/fake/avatar.jpg");
     }
 
-    @Test void username_has_unique_constraint() {
+    @Test
+    void username_has_unique_constraint() {
         UserData userData = new UserData.Builder()
                 .username("username")
                 .password("password")
@@ -113,7 +117,8 @@ class UserStoreIntegrationTests {
                 .isThrownBy(() -> store.createUser(newUserData));
     }
 
-    @Test void email_has_unique_constraint() {
+    @Test
+    void email_has_unique_constraint() {
         UserData userData = new UserData.Builder()
                 .username("username")
                 .password("password")
@@ -130,7 +135,8 @@ class UserStoreIntegrationTests {
                 .isThrownBy(() -> store.createUser(newUserData));
     }
 
-    @Test void can_get_by_term() {
+    @Test
+    void can_get_by_term() {
         UserData userData = new UserData.Builder()
                 .username("andi")
                 .password("password")

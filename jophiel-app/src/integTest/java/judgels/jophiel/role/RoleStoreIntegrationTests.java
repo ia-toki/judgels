@@ -17,13 +17,15 @@ import org.junit.jupiter.api.Test;
 class RoleStoreIntegrationTests {
     private RoleStore store;
 
-    @BeforeEach void before(SessionFactory sessionFactory) {
+    @BeforeEach
+    void before(SessionFactory sessionFactory) {
         AdminRoleDao adminRoleDao =
                 new AdminRoleHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
         store = new RoleStore(adminRoleDao);
     }
 
-    @Test void test_roles() {
+    @Test
+    void test_roles() {
         store.setSuperadmin("jidX");
         store.addAdmin("jid1");
         store.addAdmin("jid2");

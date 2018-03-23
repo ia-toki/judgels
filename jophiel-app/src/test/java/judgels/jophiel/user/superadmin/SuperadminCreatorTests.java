@@ -22,13 +22,15 @@ class SuperadminCreatorTests {
 
     private SuperadminCreator creator;
 
-    @BeforeEach void before() {
+    @BeforeEach
+    void before() {
         initMocks(this);
 
         creator = new SuperadminCreator(userStore, roleStore);
     }
 
-    @Test void skips_existing_superadmin() {
+    @Test
+    void skips_existing_superadmin() {
         when(userStore.findUserByUsername("superadmin"))
                 .thenReturn(Optional.of(mock(User.class)));
 
@@ -37,7 +39,8 @@ class SuperadminCreatorTests {
         verify(userStore, times(0)).createUser(any());
     }
 
-    @Test void creates_missing_superadmin() {
+    @Test
+    void creates_missing_superadmin() {
         when(userStore.createUser(any())).thenReturn(new User.Builder()
                 .jid("superadminUserJid")
                 .username("superadmin")

@@ -18,7 +18,8 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private SessionService sessionService = createService(SessionService.class);
     private UserService userService = createService(UserService.class);
 
-    @Test void login_logout_flow() {
+    @Test
+    void login_logout_flow() {
         Credentials userCredentials = Credentials.of("user", "password");
 
         assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(userCredentials))
@@ -50,7 +51,8 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .doesNotThrowAnyException();
     }
 
-    @Test void get_role() {
+    @Test
+    void get_role() {
         Credentials userCredentials = Credentials.of("user2", "password");
         User user = userService.createUser(adminHeader, new UserData.Builder()
                 .username("user2")

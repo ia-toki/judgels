@@ -21,14 +21,16 @@ import org.junit.jupiter.api.Test;
 class SessionStoreIntegrationTests {
     private SessionStore store;
 
-    @BeforeEach void before(SessionFactory sessionFactory) {
+    @BeforeEach
+    void before(SessionFactory sessionFactory) {
         SessionDao sessionDao = new SessionHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
         LegacySessionDao legacySssionDao =
                 new LegacySessionHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
         store = new SessionStore(sessionDao, legacySssionDao);
     }
 
-    @Test void can_do_basic_crud() {
+    @Test
+    void can_do_basic_crud() {
         assertThat(store.findSessionByToken("token123")).isEmpty();
 
         store.createSession("token123", "userJid");
@@ -38,7 +40,8 @@ class SessionStoreIntegrationTests {
         assertThat(session.getUserJid()).isEqualTo("userJid");
     }
 
-    @Test void token_has_unique_constraint() {
+    @Test
+    void token_has_unique_constraint() {
         store.createSession("token123", "userJid1");
 
         assertThatExceptionOfType(ConstraintViolationException.class)

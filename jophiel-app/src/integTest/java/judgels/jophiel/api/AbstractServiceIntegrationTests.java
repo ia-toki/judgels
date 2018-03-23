@@ -31,7 +31,8 @@ public abstract class AbstractServiceIntegrationTests {
 
     protected static AuthHeader adminHeader;
 
-    @BeforeAll public static void beforeAll() {
+    @BeforeAll
+    public static void beforeAll() {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
         dbConfig.setUrl("jdbc:h2:mem:./" + UUID.randomUUID().toString());
@@ -68,7 +69,8 @@ public abstract class AbstractServiceIntegrationTests {
                 .getToken());
     }
 
-    @AfterAll public static void afterAll() {
+    @AfterAll
+    public static void afterAll() {
         support.after();
     }
 

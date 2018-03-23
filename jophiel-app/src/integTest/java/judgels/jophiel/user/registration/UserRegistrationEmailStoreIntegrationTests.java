@@ -18,21 +18,25 @@ class UserRegistrationEmailStoreIntegrationTests {
 
     private UserRegistrationEmailStore store;
 
-    @BeforeEach void before(SessionFactory sessionFactory) {
+    @BeforeEach
+    void before(SessionFactory sessionFactory) {
         UserRegistrationEmailDao dao =
                 new UserRegistrationEmailHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
         store = new UserRegistrationEmailStore(dao);
     }
 
-    @Test void user_with_missing_entry_is_considered_verified() {
+    @Test
+    void user_with_missing_entry_is_considered_verified() {
         assertThat(store.isUserActivated(USER_JID)).isTrue();
     }
 
-    @Test void cannot_verify_nonexistent_email_code() {
+    @Test
+    void cannot_verify_nonexistent_email_code() {
         assertThat(store.verifyEmailCode("nonexistent")).isFalse();
     }
 
-    @Test void can_generate_email_code_and_verify() {
+    @Test
+    void can_generate_email_code_and_verify() {
         String emailCode = store.generateEmailCode(USER_JID);
         assertThat(store.isUserActivated(USER_JID)).isFalse();
 

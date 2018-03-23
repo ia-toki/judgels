@@ -25,7 +25,8 @@ class UserResetPasswordStoreIntegrationTests {
     private Session currentSession;
     private UserResetPasswordStore store;
 
-    @BeforeEach void before(SessionFactory sessionFactory) {
+    @BeforeEach
+    void before(SessionFactory sessionFactory) {
         currentSession = sessionFactory.getCurrentSession();
 
         UserResetPasswordDao userResetPasswordDao =
@@ -35,7 +36,8 @@ class UserResetPasswordStoreIntegrationTests {
         store = new UserResetPasswordStore(userResetPasswordDao, userResetPasswordRawDao);
     }
 
-    @Test void can_generate_find_consume_code() {
+    @Test
+    void can_generate_find_consume_code() {
         assertThat(store.consumeEmailCode("code", Duration.ofHours(1))).isEmpty();
 
         store.generateEmailCode("userJid2", Duration.ofHours(1));
@@ -50,13 +52,15 @@ class UserResetPasswordStoreIntegrationTests {
         assertThat(newCode).isNotEqualTo(code);
     }
 
-    @Test void same_code_is_returned_if_not_expired() {
+    @Test
+    void same_code_is_returned_if_not_expired() {
         String code1 = store.generateEmailCode(USER_JID, Duration.ofHours(1));
         String code2 = store.generateEmailCode(USER_JID, Duration.ofHours(1));
         assertThat(code1).isEqualTo(code2);
     }
 
-    @Test void different_code_is_returned_if_expired() {
+    @Test
+    void different_code_is_returned_if_expired() {
         String code1 = store.generateEmailCode(USER_JID, Duration.ofHours(1));
         Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
         String code2 = store.generateEmailCode(USER_JID, Duration.ofMillis(700));

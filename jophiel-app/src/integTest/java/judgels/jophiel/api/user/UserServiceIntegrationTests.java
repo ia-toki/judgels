@@ -25,7 +25,8 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private UserService userService = createService(UserService.class);
     private SessionService sessionService = createService(SessionService.class);
 
-    @Test void basic_flow() {
+    @Test
+    void basic_flow() {
         assertThatRemoteExceptionThrownBy(() -> userService.getUser(adminHeader, "userJid"))
                 .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
 
@@ -68,7 +69,8 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(users.getData()).contains(user, nano, budi);
     }
 
-    @Test void register_flow() {
+    @Test
+    void register_flow() {
         Wiser wiser = new Wiser();
         wiser.setPort(2500);
         wiser.start();
@@ -103,7 +105,8 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         wiser.stop();
     }
 
-    @Test void update_password_flow() {
+    @Test
+    void update_password_flow() {
         userService.createUser(adminHeader, new UserData.Builder()
                 .username("charlie")
                 .password("pass")
@@ -131,7 +134,8 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .doesNotThrowAnyException();
     }
 
-    @Test void reset_password_flow() {
+    @Test
+    void reset_password_flow() {
         Wiser wiser = new Wiser();
         wiser.setPort(2500);
         wiser.start();
@@ -162,7 +166,8 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         wiser.stop();
     }
 
-    @Test void get_user_by_jids_or_usernames() {
+    @Test
+    void get_user_by_jids_or_usernames() {
         User user1 = userService.createUser(adminHeader, new UserData.Builder()
                 .username("gama")
                 .password("pass")

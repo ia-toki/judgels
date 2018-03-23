@@ -19,12 +19,14 @@ class UserProfileStoreIntegrationTests {
 
     private UserProfileStore store;
 
-    @BeforeEach void before(SessionFactory sessionFactory) {
+    @BeforeEach
+    void before(SessionFactory sessionFactory) {
         UserProfileDao dao = new UserProfileHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
         store = new UserProfileStore(dao);
     }
 
-    @Test void can_do_basic_crud() {
+    @Test
+    void can_do_basic_crud() {
         assertThat(store.getUserProfile(USER_JID))
                 .isEqualTo(new UserProfile.Builder().build());
 
