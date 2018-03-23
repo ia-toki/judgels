@@ -1,6 +1,7 @@
 package judgels.jophiel.user;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -14,18 +15,23 @@ import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
+import judgels.jophiel.persistence.Daos.UserDao;
 import judgels.jophiel.persistence.UserModel;
+import judgels.jophiel.persistence.UserModel_;
+import judgels.jophiel.persistence.UserRawDao;
 import judgels.jophiel.user.avatar.UserAvatarFs;
 import judgels.jophiel.user.password.PasswordHash;
 import judgels.persistence.api.Page;
 
 public class UserStore {
     private final UserDao userDao;
+    private final UserRawDao userRawDao;
     private final FileSystem userAvatarFs;
 
     @Inject
-    public UserStore(UserDao userDao, @UserAvatarFs FileSystem userAvatarFs) {
+    public UserStore(UserDao userDao, UserRawDao userRawDao, @UserAvatarFs FileSystem userAvatarFs) {
         this.userDao = userDao;
+        this.userRawDao = userRawDao;
         this.userAvatarFs = userAvatarFs;
     }
 
@@ -45,27 +51,27 @@ public class UserStore {
     }
 
     public Optional<User> findUserByUsername(String username) {
-        return userDao.selectByUsername(username).map(this::fromModel);
+        return userDao.selectByUniqueColumn(UserModel_.username, username).map(this::fromModel);
     }
 
     public Optional<User> findUserByUsernameAndPassword(String username, String password) {
-        return userDao.selectByUsername(username)
+        return userDao.selectByUniqueColumn(UserModel_.username, username)
                 .filter(model -> validatePassword(password, model.password))
                 .map(this::fromModel);
     }
 
     public Optional<User> findUserByEmailAndPassword(String email, String password) {
-        return userDao.selectByEmail(email)
+        return userDao.selectByUniqueColumn(UserModel_.email, email)
                 .filter(model -> validatePassword(password, model.password))
                 .map(this::fromModel);
     }
 
     public Optional<User> findUserByEmail(String email) {
-        return userDao.selectByEmail(email).map(this::fromModel);
+        return userDao.selectByUniqueColumn(UserModel_.email, email).map(this::fromModel);
     }
 
     public List<User> getUsersByTerm(String term) {
-        return Lists.transform(userDao.selectByTerm(term), this::fromModel);
+        return Lists.transform(userRawDao.selectByTerm(term), this::fromModel);
     }
 
     public Page<User> getUsers(int page, int pageSize) {
@@ -141,8 +147,9 @@ public class UserStore {
     }
 
     public Map<String, User> findUsersByUsernames(Set<String> usernames) {
-        Map<String, UserModel> userModelByUsernames = userDao.selectByUsernames(usernames);
-        return userModelByUsernames.values().stream()
+        return userDao
+                .selectAllByColumnIn(ImmutableMap.of(), UserModel_.username, usernames)
+                .stream()
                 .map(this::fromModel)
                 .collect(Collectors.toMap(User::getUsername, p -> p));
     }

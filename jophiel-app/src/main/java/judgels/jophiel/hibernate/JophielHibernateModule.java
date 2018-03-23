@@ -6,6 +6,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
 import judgels.jophiel.hibernate.HibernateDaos.SessionHibernateDao;
+import judgels.jophiel.hibernate.HibernateDaos.UserHibernateDao;
 import judgels.jophiel.hibernate.HibernateDaos.UserProfileHibernateDao;
 import judgels.jophiel.hibernate.HibernateDaos.UserRegistrationEmailHibernateDao;
 import judgels.jophiel.hibernate.HibernateDaos.UserResetPasswordHibernateDao;
@@ -13,11 +14,12 @@ import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
 import judgels.jophiel.persistence.Daos.AdminRoleDao;
 import judgels.jophiel.persistence.Daos.SessionDao;
+import judgels.jophiel.persistence.Daos.UserDao;
 import judgels.jophiel.persistence.Daos.UserProfileDao;
 import judgels.jophiel.persistence.Daos.UserRegistrationEmailDao;
 import judgels.jophiel.persistence.Daos.UserResetPasswordDao;
+import judgels.jophiel.persistence.UserRawDao;
 import judgels.jophiel.persistence.UserResetPasswordRawDao;
-import judgels.jophiel.user.UserDao;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -58,6 +60,11 @@ public class JophielHibernateModule {
 
     @Provides
     UserDao userDao(UserHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    UserRawDao userRawDao(UserRawHibernateDao dao) {
         return dao;
     }
 

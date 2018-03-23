@@ -1,6 +1,7 @@
 package judgels.jophiel.persistence;
 
 import judgels.persistence.Dao;
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.UnmodifiableDao;
 
 public class Daos {
@@ -9,6 +10,8 @@ public class Daos {
     public interface AdminRoleDao extends UnmodifiableDao<AdminRoleModel> {}
 
     public interface SessionDao extends UnmodifiableDao<SessionModel> {}
+
+    public interface UserDao extends JudgelsDao<UserModel> {}
 
     public interface UserProfileDao extends Dao<UserProfileModel> {}
 

@@ -8,8 +8,11 @@ import java.util.List;
 import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
-import judgels.jophiel.hibernate.UserHibernateDao;
+import judgels.jophiel.hibernate.HibernateDaos.UserHibernateDao;
+import judgels.jophiel.hibernate.UserRawHibernateDao;
+import judgels.jophiel.persistence.Daos.UserDao;
 import judgels.jophiel.persistence.UserModel;
+import judgels.jophiel.persistence.UserRawDao;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
@@ -24,8 +27,9 @@ class UserStoreIntegrationTests {
     private UserStore store;
 
     @BeforeEach void before(SessionFactory sessionFactory) {
-        UserDao dao = new UserHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        store = new UserStore(dao, new FakeFs());
+        UserDao userDao = new UserHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
+        UserRawDao userRawDao = new UserRawHibernateDao(sessionFactory);
+        store = new UserStore(userDao, userRawDao, new FakeFs());
     }
 
     @Test void can_do_basic_crud() {
