@@ -5,22 +5,12 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import judgels.jophiel.api.role.Role;
-import judgels.jophiel.api.user.PasswordResetData;
-import judgels.jophiel.api.user.PasswordUpdateData;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
-import judgels.jophiel.api.user.UserProfile;
-import judgels.jophiel.api.user.UserRegistrationData;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.role.RoleChecker;
-import judgels.jophiel.role.RoleStore;
-import judgels.jophiel.user.password.UserPasswordResetter;
-import judgels.jophiel.user.profile.UserProfileStore;
-import judgels.jophiel.user.registration.UserRegisterer;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -28,29 +18,17 @@ import judgels.service.api.actor.AuthHeader;
 public class UserResource implements UserService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
-    private final RoleStore roleStore;
     private final UserStore userStore;
-    private final UserProfileStore userProfileStore;
-    private final Optional<UserRegisterer> userRegisterer;
-    private final Optional<UserPasswordResetter> userPasswordResetter;
 
     @Inject
     public UserResource(
             ActorChecker actorChecker,
             RoleChecker roleChecker,
-            RoleStore roleStore,
-            UserStore userStore,
-            UserProfileStore userProfileStore,
-            Optional<UserRegisterer> userRegisterer,
-            Optional<UserPasswordResetter> userPasswordResetter) {
+            UserStore userStore) {
 
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
-        this.roleStore = roleStore;
         this.userStore = userStore;
-        this.userProfileStore = userProfileStore;
-        this.userRegisterer = userRegisterer;
-        this.userPasswordResetter = userPasswordResetter;
     }
 
     @Override
@@ -84,30 +62,6 @@ public class UserResource implements UserService {
     }
 
     @Override
-    @UnitOfWork(readOnly = true)
-    public User getMyself(AuthHeader authHeader) {
-        String actorJid = actorChecker.check(authHeader);
-
-        return checkFound(userStore.findUserByJid(actorJid));
-    }
-
-    @Override
-    @UnitOfWork
-    public void updateMyPassword(AuthHeader authHeader, PasswordUpdateData passwordUpdateData) {
-        String actorJid = actorChecker.check(authHeader);
-
-        userStore.validateUserPassword(actorJid, passwordUpdateData.getOldPassword());
-        userStore.updateUserPassword(actorJid, passwordUpdateData.getNewPassword());
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public Role getMyRole(AuthHeader authHeader) {
-        String actorJid = actorChecker.check(authHeader);
-        return roleStore.getUserRole(actorJid);
-    }
-
-    @Override
     @UnitOfWork
     public User createUser(AuthHeader authHeader, UserData userData) {
         String actorJid = actorChecker.check(authHeader);
@@ -118,43 +72,11 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public User registerUser(UserRegistrationData userRegistrationData) {
-        return checkFound(userRegisterer).register(userRegistrationData);
-    }
-
-    @Override
-    @UnitOfWork
-    public void activateUser(String emailCode) {
-        checkFound(userRegisterer).activate(emailCode);
-    }
-
-    @Override
-    @UnitOfWork
     public User updateUser(AuthHeader authHeader, String userJid, UserData userData) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
 
         return checkFound(userStore.updateUser(userJid, userData));
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public UserProfile getUserProfile(AuthHeader authHeader, String userJid) {
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canReadUser(actorJid, userJid));
-
-        User user = checkFound(userStore.findUserByJid(userJid));
-        return userProfileStore.getUserProfile(user.getJid());
-    }
-
-    @Override
-    @UnitOfWork
-    public UserProfile updateUserProfile(AuthHeader authHeader, String userJid, UserProfile userProfile) {
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
-
-        User user = checkFound(userStore.findUserByJid(userJid));
-        return userProfileStore.upsertUserProfile(user.getJid(), userProfile);
     }
 
     @Override
@@ -168,29 +90,13 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public void requestToResetUserPassword(String email) {
-        User user = checkFound(userStore.findUserByEmail(email));
-        checkFound(userPasswordResetter).request(user);
-    }
-
-    @Override
-    @UnitOfWork
-    public void resetUserPassword(PasswordResetData passwordResetData) {
-        checkFound(userPasswordResetter).reset(passwordResetData);
-    }
-
-    @Override
-    @UnitOfWork
     public Map<String, User> findUsersByJids(Set<String> jids) {
-        Map<String, User> users = userStore.findUsersByJids(jids);
-        return users;
+        return userStore.findUsersByJids(jids);
     }
 
     @Override
     @UnitOfWork
     public Map<String, User> findUsersByUsernames(Set<String> usernames) {
-        Map<String, User> users = userStore.findUsersByUsernames(usernames);
-        return users;
+        return userStore.findUsersByUsernames(usernames);
     }
-
 }

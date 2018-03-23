@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.palantir.remoting.api.errors.ErrorType;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
-import judgels.jophiel.api.role.Role;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
@@ -38,30 +37,16 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(session.getUserJid()).isEqualTo(user.getJid());
 
         String sessionToken = session.getToken();
-        assertThat(userService.getMyself(AuthHeader.of(sessionToken))).isEqualTo(user);
+        assertThat(userService.getUser(AuthHeader.of(sessionToken), user.getJid())).isEqualTo(user);
 
         sessionService.logOut(AuthHeader.of(session.getToken()));
 
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> userService.getMyself(AuthHeader.of(sessionToken)))
+                .isThrownBy(() -> userService.getUser(AuthHeader.of(sessionToken), user.getJid()))
                 .withMessageContaining("401");
 
         // test login with email
         assertThatCode(() -> sessionService.logIn(Credentials.of("user@domain.com", "password")))
                 .doesNotThrowAnyException();
-    }
-
-    @Test
-    void get_role() {
-        Credentials userCredentials = Credentials.of("user2", "password");
-        User user = userService.createUser(adminHeader, new UserData.Builder()
-                .username("user2")
-                .password("password")
-                .email("user2@domain.com")
-                .build());
-
-        Session session = sessionService.logIn(userCredentials);
-        String sessionToken = session.getToken();
-        assertThat(userService.getMyRole(AuthHeader.of(sessionToken))).isEqualTo(Role.USER);
     }
 }

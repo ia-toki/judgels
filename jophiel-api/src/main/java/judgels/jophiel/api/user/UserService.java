@@ -16,7 +16,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.jophiel.api.role.Role;
 import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
 
@@ -37,21 +36,6 @@ public interface UserService {
     @Produces(APPLICATION_JSON)
     boolean emailExists(@PathParam("email") String email);
 
-    @GET
-    @Path("/me")
-    @Produces(APPLICATION_JSON)
-    User getMyself(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
-
-    @POST
-    @Path("/me/password")
-    @Consumes(APPLICATION_JSON)
-    void updateMyPassword(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, PasswordUpdateData passwordUpdateData);
-
-    @GET
-    @Path("/me/role")
-    @Produces(APPLICATION_JSON)
-    Role getMyRole(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
-
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
@@ -66,16 +50,6 @@ public interface UserService {
             @DefaultValue("1") @QueryParam("page") int page,
             @DefaultValue("10") @QueryParam("pageSize") int pageSize);
 
-    @POST
-    @Path("/register")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    User registerUser(UserRegistrationData userRegistrationData);
-
-    @POST
-    @Path("/activate/{emailCode}")
-    void activateUser(@PathParam("emailCode") String emailCode);
-
     @PUT
     @Path("/{userJid}")
     @Consumes(APPLICATION_JSON)
@@ -85,32 +59,9 @@ public interface UserService {
             @PathParam("userJid") String userJid,
             UserData userData);
 
-    @GET
-    @Path("/{userJid}/profile")
-    @Produces(APPLICATION_JSON)
-    UserProfile getUserProfile(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
-
-    @PUT
-    @Path("/{userJid}/profile")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    UserProfile updateUserProfile(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @PathParam("userJid") String userJid,
-            UserProfile userProfile);
-
     @DELETE
     @Path("/{userJid}/avatar")
     void deleteUserAvatar(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
-
-    @POST
-    @Path("/request-reset-password/{email}")
-    void requestToResetUserPassword(@PathParam("email") String email);
-
-    @POST
-    @Path("/reset-password")
-    @Consumes(APPLICATION_JSON)
-    void resetUserPassword(PasswordResetData passwordResetData);
 
     @POST
     @Path("/jids")

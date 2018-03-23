@@ -34,7 +34,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
     }
 
     @Override
-    public void run(JophielApplicationConfiguration config, Environment env) throws Exception {
+    public void run(JophielApplicationConfiguration config, Environment env) {
         JophielConfiguration jophielConfig = config.getJophielConfig();
         JophielComponent component = DaggerJophielComponent.builder()
                 .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
@@ -51,11 +51,14 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
 
-        env.jersey().register(component.accountResource());
+        env.jersey().register(component.sessionResource());
         env.jersey().register(component.legacySessionResource());
         env.jersey().register(component.legacyUserResource());
+        env.jersey().register(component.myResource());
         env.jersey().register(component.userResource());
+        env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userAvatarResource());
+        env.jersey().register(component.userProfileResource());
         env.jersey().register(component.webResource());
         env.jersey().register(component.versionResource());
     }

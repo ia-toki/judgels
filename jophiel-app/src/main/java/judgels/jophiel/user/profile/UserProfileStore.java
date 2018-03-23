@@ -2,7 +2,7 @@ package judgels.jophiel.user.profile;
 
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.jophiel.api.user.UserProfile;
+import judgels.jophiel.api.user.profile.UserProfile;
 import judgels.jophiel.persistence.Daos.UserProfileDao;
 import judgels.jophiel.persistence.UserProfileModel;
 import judgels.jophiel.persistence.UserProfileModel_;
