@@ -23,7 +23,10 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     Page<M> selectAllByColumn(SingularAttribute<M, String> column, String value, int page, int pageSize);
     Page<M> selectAllByColumns(Map<SingularAttribute<M, ?>, ?> key, int page, int pageSize);
 
-    List<M> selectAllByColumnIn(SingularAttribute<M, String> column, Collection<String> values);
+    List<M> selectAllByColumnIn(
+            Map<SingularAttribute<M, ?>, ?> key,
+            SingularAttribute<M, String> columnIn,
+            Collection<String> valuesIn);
 
     void delete(M model);
 }

@@ -125,10 +125,18 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
-    public List<M> selectAllByColumnIn(SingularAttribute<M, String> column, Collection<String> values) {
+    public List<M> selectAllByColumnIn(
+            Map<SingularAttribute<M, ?>, ?> key,
+            SingularAttribute<M, String> columnIn,
+            Collection<String> valuesIn) {
+
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<M> cq = criteriaQuery();
         Root<M> root = cq.from(getEntityClass());
-        cq.where(root.get(column).in(values));
+        cq.where(cb.and(root.get(columnIn).in(valuesIn), cb.and(key.entrySet()
+                .stream()
+                .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
+                .toArray(Predicate[]::new))));
         return currentSession().createQuery(cq).getResultList();
     }
 

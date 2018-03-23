@@ -221,24 +221,37 @@ class HibernateDaoIntegrationTests {
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "a";
         model1.column2 = "b";
+        model1.uniqueColumn1 = "x";
         dao.insert(model1);
 
         ExampleModel model2 = new ExampleModel();
         model2.column1 = "b";
         model2.column2 = "a";
+        model2.uniqueColumn1 = "x";
         dao.insert(model2);
 
         ExampleModel model3 = new ExampleModel();
         model3.column1 = "c";
         model3.column2 = "c";
+        model3.uniqueColumn1 = "x";
         dao.insert(model3);
 
         ExampleModel model4 = new ExampleModel();
         model4.column1 = "a";
         model4.column2 = "c";
+        model4.uniqueColumn1 = "x";
         dao.insert(model4);
 
-        List<ExampleModel> models = dao.selectAllByColumnIn(ExampleModel_.column1, ImmutableSet.of("a", "d"));
+        ExampleModel model5 = new ExampleModel();
+        model5.column1 = "a";
+        model5.column2 = "e";
+        model5.uniqueColumn1 = "y";
+        dao.insert(model5);
+
+        List<ExampleModel> models = dao.selectAllByColumnIn(
+                ImmutableMap.of(ExampleModel_.uniqueColumn1, "x"),
+                ExampleModel_.column1,
+                ImmutableSet.of("a", "d"));
         assertThat(models).containsExactly(model1, model4);
     }
 
