@@ -9,4 +9,6 @@ public class Daos {
     public interface SessionDao extends UnmodifiableDao<SessionModel> {}
 
     public interface UserProfileDao extends Dao<UserProfileModel> {}
+
+    public interface UserRegistrationEmailDao extends Dao<UserRegistrationEmailModel> {}
 }

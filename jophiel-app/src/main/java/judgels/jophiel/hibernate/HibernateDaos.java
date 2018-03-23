@@ -5,8 +5,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.persistence.Daos.SessionDao;
 import judgels.jophiel.persistence.Daos.UserProfileDao;
+import judgels.jophiel.persistence.Daos.UserRegistrationEmailDao;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.jophiel.persistence.UserProfileModel;
+import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
@@ -33,6 +35,20 @@ public class HibernateDaos {
 
         @Inject
         public UserProfileHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+            super(sessionFactory, clock, actorProvider);
+        }
+    }
+
+    @Singleton
+    public static class UserRegistrationEmailHibernateDao
+            extends HibernateDao<UserRegistrationEmailModel>
+            implements UserRegistrationEmailDao {
+
+        @Inject
+        public UserRegistrationEmailHibernateDao(
+                SessionFactory sessionFactory,
+                Clock clock,
+                ActorProvider actorProvider) {
             super(sessionFactory, clock, actorProvider);
         }
     }

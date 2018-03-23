@@ -7,14 +7,15 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
 import judgels.jophiel.hibernate.HibernateDaos.SessionHibernateDao;
 import judgels.jophiel.hibernate.HibernateDaos.UserProfileHibernateDao;
+import judgels.jophiel.hibernate.HibernateDaos.UserRegistrationEmailHibernateDao;
 import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
 import judgels.jophiel.persistence.Daos.SessionDao;
 import judgels.jophiel.persistence.Daos.UserProfileDao;
+import judgels.jophiel.persistence.Daos.UserRegistrationEmailDao;
 import judgels.jophiel.role.AdminRoleDao;
 import judgels.jophiel.user.UserDao;
 import judgels.jophiel.user.password.UserResetPasswordDao;
-import judgels.jophiel.user.registration.UserRegistrationEmailDao;
 import org.hibernate.SessionFactory;
 
 @Module

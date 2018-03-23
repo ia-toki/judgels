@@ -2,7 +2,9 @@ package judgels.jophiel.user.registration;
 
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.jophiel.persistence.Daos.UserRegistrationEmailDao;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
+import judgels.jophiel.persistence.UserRegistrationEmailModel_;
 import judgels.service.RandomCodeGenerator;
 
 public class UserRegistrationEmailStore {
@@ -14,7 +16,7 @@ public class UserRegistrationEmailStore {
     }
 
     public boolean isUserActivated(String userJid) {
-        return !userRegistrationEmailDao.findByUserJid(userJid)
+        return !userRegistrationEmailDao.selectByUniqueColumn(UserRegistrationEmailModel_.userJid, userJid)
                 .flatMap(model -> model.verified ? Optional.empty() : Optional.of(false))
                 .isPresent();
     }
@@ -28,13 +30,15 @@ public class UserRegistrationEmailStore {
     }
 
     public boolean verifyEmailCode(String emailCode) {
-        return userRegistrationEmailDao.findByEmailCode(emailCode).flatMap(model -> {
-            if (model.verified) {
-                return Optional.empty();
-            }
-            model.verified = true;
-            userRegistrationEmailDao.update(model);
-            return Optional.of(true);
-        }).isPresent();
+        return userRegistrationEmailDao
+                .selectByUniqueColumn(UserRegistrationEmailModel_.emailCode, emailCode)
+                .flatMap(model -> {
+                    if (model.verified) {
+                        return Optional.empty();
+                    }
+                    model.verified = true;
+                    userRegistrationEmailDao.update(model);
+                    return Optional.of(true);
+                }).isPresent();
     }
 }

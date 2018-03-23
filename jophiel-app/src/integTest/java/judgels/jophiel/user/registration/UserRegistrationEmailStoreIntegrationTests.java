@@ -2,7 +2,8 @@ package judgels.jophiel.user.registration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import judgels.jophiel.hibernate.UserRegistrationEmailHibernateDao;
+import judgels.jophiel.hibernate.HibernateDaos.UserRegistrationEmailHibernateDao;
+import judgels.jophiel.persistence.Daos.UserRegistrationEmailDao;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
