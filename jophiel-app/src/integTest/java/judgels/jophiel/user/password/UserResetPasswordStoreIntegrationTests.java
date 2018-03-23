@@ -7,6 +7,7 @@ import java.time.Clock;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import judgels.jophiel.hibernate.UserResetPasswordHibernateDao;
+import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.Session;

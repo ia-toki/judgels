@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.jophiel.persistence.UserModel;
 import judgels.persistence.JudgelsDao;
 
 public interface UserDao extends JudgelsDao<UserModel> {

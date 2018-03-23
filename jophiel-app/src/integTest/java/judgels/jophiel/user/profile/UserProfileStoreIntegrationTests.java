@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.jophiel.api.user.UserProfile;
 import judgels.jophiel.hibernate.UserProfileHibernateDao;
+import judgels.jophiel.persistence.UserProfileModel;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;

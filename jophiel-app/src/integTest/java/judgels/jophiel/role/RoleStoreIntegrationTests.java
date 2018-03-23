@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.jophiel.api.role.Role;
 import judgels.jophiel.hibernate.AdminRoleHibernateDao;
+import judgels.jophiel.persistence.AdminRoleModel;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;

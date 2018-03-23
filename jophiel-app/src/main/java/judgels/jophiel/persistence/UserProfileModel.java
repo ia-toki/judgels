@@ -1,4 +1,4 @@
-package judgels.jophiel.user.profile;
+package judgels.jophiel.persistence;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

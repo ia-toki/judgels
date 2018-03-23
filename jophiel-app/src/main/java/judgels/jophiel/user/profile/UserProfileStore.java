@@ -3,6 +3,7 @@ package judgels.jophiel.user.profile;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.UserProfile;
+import judgels.jophiel.persistence.UserProfileModel;
 
 public class UserProfileStore {
     private final UserProfileDao userProfileDao;

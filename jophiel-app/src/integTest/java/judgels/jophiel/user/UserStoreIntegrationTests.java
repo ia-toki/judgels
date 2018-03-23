@@ -9,6 +9,7 @@ import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.hibernate.UserHibernateDao;
+import judgels.jophiel.persistence.UserModel;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;

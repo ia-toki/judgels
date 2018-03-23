@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionModel;
+import judgels.jophiel.persistence.SessionModel;
 
 public class SessionStore {
     private final SessionDao sessionDao;

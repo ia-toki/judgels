@@ -4,12 +4,12 @@ import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import judgels.jophiel.JophielApplicationConfiguration;
 import judgels.jophiel.legacy.session.LegacySessionModel;
-import judgels.jophiel.role.AdminRoleModel;
-import judgels.jophiel.session.SessionModel;
-import judgels.jophiel.user.UserModel;
-import judgels.jophiel.user.password.UserResetPasswordModel;
-import judgels.jophiel.user.profile.UserProfileModel;
-import judgels.jophiel.user.registration.UserRegistrationEmailModel;
+import judgels.jophiel.persistence.AdminRoleModel;
+import judgels.jophiel.persistence.SessionModel;
+import judgels.jophiel.persistence.UserModel;
+import judgels.jophiel.persistence.UserProfileModel;
+import judgels.jophiel.persistence.UserRegistrationEmailModel;
+import judgels.jophiel.persistence.UserResetPasswordModel;
 
 public class JophielHibernateBundle extends HibernateBundle<JophielApplicationConfiguration> {
     public JophielHibernateBundle() {

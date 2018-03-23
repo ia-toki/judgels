@@ -3,6 +3,7 @@ package judgels.jophiel.user.password;
 import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.service.RandomCodeGenerator;
 
 public class UserResetPasswordStore {

@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
+import judgels.jophiel.persistence.UserModel;
 import judgels.jophiel.user.avatar.UserAvatarFs;
 import judgels.jophiel.user.password.PasswordHash;
 import judgels.persistence.api.Page;

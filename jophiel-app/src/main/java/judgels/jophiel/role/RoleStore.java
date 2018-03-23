@@ -2,6 +2,7 @@ package judgels.jophiel.role;
 
 import javax.inject.Inject;
 import judgels.jophiel.api.role.Role;
+import judgels.jophiel.persistence.AdminRoleModel;
 
 public class RoleStore {
     private final AdminRoleDao adminRoleDao;

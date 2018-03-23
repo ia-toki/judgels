@@ -7,6 +7,7 @@ import judgels.jophiel.api.session.Session;
 import judgels.jophiel.hibernate.SessionHibernateDao;
 import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
+import judgels.jophiel.persistence.SessionModel;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;
