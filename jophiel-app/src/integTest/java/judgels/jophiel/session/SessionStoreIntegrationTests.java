@@ -4,9 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import judgels.jophiel.api.session.Session;
-import judgels.jophiel.hibernate.SessionHibernateDao;
+import judgels.jophiel.hibernate.HibernateDaos.SessionHibernateDao;
 import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
+import judgels.jophiel.persistence.Daos.SessionDao;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
