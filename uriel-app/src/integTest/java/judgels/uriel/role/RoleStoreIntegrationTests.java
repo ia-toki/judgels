@@ -20,7 +20,8 @@ class RoleStoreIntegrationTests {
     private RoleStore store;
     private ContestContestantDao contestantDao;
 
-    @BeforeEach void before(SessionFactory sessionFactory) {
+    @BeforeEach
+    void before(SessionFactory sessionFactory) {
         AdminRoleDao adminRoleDao = new AdminRoleHibernateDao(
                 sessionFactory,
                 new FixedClock(),
@@ -30,7 +31,8 @@ class RoleStoreIntegrationTests {
         store = new RoleStore(adminRoleDao, contestantDao);
     }
 
-    @Test void test_roles() {
+    @Test
+    void test_roles() {
         store.addAdmin("jid1");
 
         assertThat(store.isAdmin("jid1")).isTrue();

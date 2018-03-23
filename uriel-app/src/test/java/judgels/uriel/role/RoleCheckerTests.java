@@ -12,14 +12,16 @@ class RoleCheckerTests {
     @Mock private RoleStore roleStore;
     private RoleChecker checker;
 
-    @BeforeEach void before() {
+    @BeforeEach
+    void before() {
         initMocks(this);
         checker = new RoleChecker(roleStore);
 
         when(roleStore.isAdmin("adminJid")).thenReturn(true);
     }
 
-    @Test void read_contest() {
+    @Test
+    void read_contest() {
         when(roleStore.isContestant("contestA", "contestantJid")).thenReturn(true);
 
         assertThat(checker.canReadContest("adminJid", "contestA")).isTrue();

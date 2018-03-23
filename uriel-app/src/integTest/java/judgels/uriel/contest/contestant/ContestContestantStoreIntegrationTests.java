@@ -28,7 +28,8 @@ class ContestContestantStoreIntegrationTests {
     private ContestContestantStore store;
     private ContestStore contestStore;
 
-    @BeforeEach void before(SessionFactory sessionFactory) {
+    @BeforeEach
+    void before(SessionFactory sessionFactory) {
         ContestDao contestDao = new ContestHibernateDao(
                 sessionFactory,
                 new FixedClock(),
@@ -44,7 +45,8 @@ class ContestContestantStoreIntegrationTests {
         store = new ContestContestantStore(contestantDao);
     }
 
-    @Test void can_do_basic_crud() {
+    @Test
+    void can_do_basic_crud() {
         Contest contest = contestStore.createContest(new ContestData.Builder()
                 .name("contestA")
                 .description("contest A")
@@ -58,7 +60,8 @@ class ContestContestantStoreIntegrationTests {
         assertThat(contestantJids.getData()).containsOnly("A", "B");
     }
 
-    @Test void can_add_without_duplication() {
+    @Test
+    void can_add_without_duplication() {
         Contest contest = contestStore.createContest(new ContestData.Builder()
                 .name("contestA")
                 .description("contest A")
@@ -73,7 +76,8 @@ class ContestContestantStoreIntegrationTests {
         assertThat(contestantJids.getData()).containsOnly("A", "B", "C", "D");
     }
 
-    @Test void can_accept_empty_set() {
+    @Test
+    void can_accept_empty_set() {
         Contest contest = contestStore.createContest(new ContestData.Builder()
                 .name("contestA")
                 .description("contest A")

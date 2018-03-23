@@ -20,7 +20,8 @@ public abstract class AbstractServiceIntegrationTests {
     public static final String URIEL_JDBC_SUFFIX = "uriel";
     private static DropwizardTestSupport<UrielApplicationConfiguration> support;
 
-    @BeforeAll public static void beforeAll() {
+    @BeforeAll
+    public static void beforeAll() {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
         dbConfig.setUrl("jdbc:h2:mem:./" + URIEL_JDBC_SUFFIX);
@@ -41,7 +42,8 @@ public abstract class AbstractServiceIntegrationTests {
         support.before();
     }
 
-    @AfterAll public static void afterAll() {
+    @AfterAll
+    public static void afterAll() {
         support.after();
     }
 

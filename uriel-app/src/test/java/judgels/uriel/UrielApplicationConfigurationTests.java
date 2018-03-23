@@ -17,7 +17,8 @@ class UrielApplicationConfigurationTests {
     private final YamlConfigurationFactory<UrielApplicationConfiguration> factory =
             new YamlConfigurationFactory<>(UrielApplicationConfiguration.class, validator, objectMapper, "dw");
 
-    @Test void can_deserialize_uriel_yml() {
+    @Test
+    void can_deserialize_uriel_yml() {
         File urielYml = Paths.get("..", "uriel-dist", "var", "conf", "uriel.yml.example").toFile();
         assertThatCode(() -> factory.build(urielYml))
                 .doesNotThrowAnyException();

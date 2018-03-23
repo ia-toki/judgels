@@ -45,7 +45,8 @@ public class ContestStoreIntegrationTests {
         contestContestantStore = new ContestContestantStore(contestantDao);
     }
 
-    @Test void test_contest() {
+    @Test
+    void test_contest() {
         Contest contestA = store.createContest(new ContestData.Builder()
                 .name("Turfa")
                 .description("Ganteng")

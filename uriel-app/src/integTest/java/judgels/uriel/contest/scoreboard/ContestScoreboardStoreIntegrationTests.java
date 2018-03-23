@@ -43,7 +43,8 @@ class ContestScoreboardStoreIntegrationTests {
         store = new ContestScoreboardStore(contestScoreboardDao);
     }
 
-    @Test void can_do_basic_crud() {
+    @Test
+    void can_do_basic_crud() {
         Contest contest = contestStore.createContest(new ContestData.Builder()
                 .name("contestA")
                 .description("contest A")

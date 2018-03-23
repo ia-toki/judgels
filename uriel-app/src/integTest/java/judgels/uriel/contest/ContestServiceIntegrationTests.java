@@ -55,7 +55,8 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private ContestContestantService contestContestantService = createService(ContestContestantService.class);
 
 
-    @BeforeAll static void start(SessionFactory sessionFactory) {
+    @BeforeAll
+    static void start(SessionFactory sessionFactory) {
         wireMockServer = new WireMockServer(JOPHIEL_PORT);
         wireMockServer.start();
         configureFor(JOPHIEL_PORT);
@@ -73,11 +74,13 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
         roleStore.addAdmin("adminJid");
     }
 
-    @AfterAll static void shutdown() {
+    @AfterAll
+    static void shutdown() {
         wireMockServer.shutdown();
     }
 
-    @Test void basic_flow() throws JsonProcessingException {
+    @Test
+    void basic_flow() throws JsonProcessingException {
         // default user
         stubFor(get("/api/v2/users/me")
                 .willReturn(okForJson(
