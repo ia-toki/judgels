@@ -16,24 +16,28 @@ class ClientCheckerTests {
 
     private ClientChecker clientChecker = new ClientChecker(ImmutableSet.of(CLIENT_1, CLIENT_2));
 
-    @Test void passes_if_client_exists() {
+    @Test
+    void passes_if_client_exists() {
         assertThat(clientChecker.check(BasicAuthHeader.of(CLIENT_1))).isEqualTo(CLIENT_1);
         assertThat(clientChecker.check(BasicAuthHeader.of(CLIENT_2))).isEqualTo(CLIENT_2);
     }
 
-    @Test void fails_for_wrong_jid() {
+    @Test
+    void fails_for_wrong_jid() {
         BasicAuthHeader authHeader = BasicAuthHeader.of(Client.of("wrong-jid", CLIENT_1.getSecret()));
         assertThatExceptionOfType(ForbiddenException.class)
                 .isThrownBy(() -> clientChecker.check(authHeader));
     }
 
-    @Test void fails_for_wrong_secret() {
+    @Test
+    void fails_for_wrong_secret() {
         BasicAuthHeader authHeader = BasicAuthHeader.of(Client.of(CLIENT_1.getJid(), "wrong-secret"));
         assertThatExceptionOfType(ForbiddenException.class)
                 .isThrownBy(() -> clientChecker.check(authHeader));
     }
 
-    @Test void fails_for_wrong_client() {
+    @Test
+    void fails_for_wrong_client() {
         assertThatExceptionOfType(ForbiddenException.class)
                 .isThrownBy(() -> clientChecker.check(BasicAuthHeader.of(CLIENT_3)));
     }

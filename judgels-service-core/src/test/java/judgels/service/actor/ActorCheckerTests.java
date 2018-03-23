@@ -21,42 +21,53 @@ class ActorCheckerTests {
     @Mock private ActorExtractor actorExtractor;
     private ActorChecker actorChecker;
 
-    @BeforeEach void before() {
+    @BeforeEach
+    void before() {
         initMocks(this);
         actorChecker = new ActorChecker(actorExtractor);
     }
 
-    @Nested class check {
-        @Nested class when_auth_header_is_valid {
+    @Nested
+    class check {
+        @Nested
+        class when_auth_header_is_valid {
             private String actorJid;
 
-            @BeforeEach void before() {
+            @BeforeEach
+            void before() {
                 when(actorExtractor.extractJid(AUTH_HEADER)).thenReturn(Optional.of(ACTOR_JID));
                 actorJid = actorChecker.check(AUTH_HEADER);
             }
 
-            @Test void returns_actor_jid() {
+            @Test
+            void returns_actor_jid() {
                 assertThat(actorJid).isEqualTo(ACTOR_JID);
             }
 
-            @Test void sets_actor_jid() {
+            @Test
+            void sets_actor_jid() {
                 assertThat(PerRequestActorProvider.getJid()).contains(ACTOR_JID);
             }
         }
 
-        @Nested class when_auth_header_is_missing {
-            @Test void throws_unauthorized() {
+        @Nested
+        class when_auth_header_is_missing {
+            @Test
+            void throws_unauthorized() {
                 assertThatExceptionOfType(NotAuthorizedException.class)
                         .isThrownBy(() -> actorChecker.check(null));
             }
         }
 
-        @Nested class when_auth_header_is_invalid {
-            @BeforeEach void before() {
+        @Nested
+        class when_auth_header_is_invalid {
+            @BeforeEach
+            void before() {
                 when(actorExtractor.extractJid(AUTH_HEADER)).thenReturn(Optional.empty());
             }
 
-            @Test void throws_unauthorized() {
+            @Test
+            void throws_unauthorized() {
                 assertThatExceptionOfType(NotAuthorizedException.class)
                         .isThrownBy(() -> actorChecker.check(AUTH_HEADER));
             }

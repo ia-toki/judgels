@@ -5,7 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 class JidGeneratorTests {
-    @Test void generates_new_jid() {
+    @Test
+    void generates_new_jid() {
         String jid = JidGenerator.newJid(ExampleModel.class);
         assertThat(jid).containsPattern("^JIDEXAM[a-zA-Z0-9]{20}$");
 

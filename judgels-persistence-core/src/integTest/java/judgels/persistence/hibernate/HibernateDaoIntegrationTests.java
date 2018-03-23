@@ -18,7 +18,8 @@ import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ExampleModel.class})
 class HibernateDaoIntegrationTests {
-    @Test void can_do_basic_crud(SessionFactory sessionFactory) {
+    @Test
+    void can_do_basic_crud(SessionFactory sessionFactory) {
         Date now1 = new Date(42);
         ExampleHibernateDao dao1 = new ExampleHibernateDao(
                 sessionFactory,
@@ -87,7 +88,8 @@ class HibernateDaoIntegrationTests {
         assertThat(dao1.select(2)).isEmpty();
     }
 
-    @Test void can_select_by_unique_columns(SessionFactory sessionFactory) {
+    @Test
+    void can_select_by_unique_columns(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
@@ -121,7 +123,8 @@ class HibernateDaoIntegrationTests {
         assertThat(dao.selectByUniqueColumns("a2", "b1")).isEmpty();
     }
 
-    @Test void can_select_and_count_all(SessionFactory sessionFactory) {
+    @Test
+    void can_select_and_count_all(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
@@ -155,7 +158,8 @@ class HibernateDaoIntegrationTests {
         assertThat(page.getData()).containsExactly(model1, model2);
     }
 
-    @Test void can_select_and_count_all_by_columns(SessionFactory sessionFactory) {
+    @Test
+    void can_select_and_count_all_by_columns(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
@@ -213,7 +217,8 @@ class HibernateDaoIntegrationTests {
         assertThat(page.getData()).isEmpty();
     }
 
-    @Test void can_select_and_count_all_by_column_in(SessionFactory sessionFactory) {
+    @Test
+    void can_select_and_count_all_by_column_in(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());

@@ -5,7 +5,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
 
 class PerRequestActorProviderTests {
-    @Test void sets_and_gets_jid() {
+    @Test
+    void sets_and_gets_jid() {
         new Thread(() -> {
             assertThat(PerRequestActorProvider.getJid()).isEmpty();
             PerRequestActorProvider.setJid("jid");
@@ -13,7 +14,8 @@ class PerRequestActorProviderTests {
         }).start();
     }
 
-    @Test void sets_and_gets_ip_address() {
+    @Test
+    void sets_and_gets_ip_address() {
         new Thread(() -> {
             assertThat(PerRequestActorProvider.getIpAddress()).isEmpty();
             PerRequestActorProvider.setIpAddress("ip");

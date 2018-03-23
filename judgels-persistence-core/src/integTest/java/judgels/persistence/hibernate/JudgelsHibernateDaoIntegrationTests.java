@@ -18,7 +18,8 @@ import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {JudgelsHibernateDaoIntegrationTests.ExampleModel.class})
 class JudgelsHibernateDaoIntegrationTests {
-    @Test void can_do_basic_crud(SessionFactory sessionFactory) {
+    @Test
+    void can_do_basic_crud(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
 
         assertThat(dao.select(1)).isEmpty();
@@ -62,7 +63,8 @@ class JudgelsHibernateDaoIntegrationTests {
         assertThat(dao.selectByJid("JIDEXAMnotfound")).isEmpty();
     }
 
-    @Test void can_select_multiple_jids(SessionFactory sessionFactory) {
+    @Test
+    void can_select_multiple_jids(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
 
         ExampleModel model1 = new ExampleModel();
