@@ -6,8 +6,11 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import judgels.jophiel.hibernate.UserResetPasswordHibernateDao;
+import judgels.jophiel.hibernate.HibernateDaos.UserResetPasswordHibernateDao;
+import judgels.jophiel.hibernate.UserResetPasswordRawHibernateDao;
+import judgels.jophiel.persistence.Daos.UserResetPasswordDao;
 import judgels.jophiel.persistence.UserResetPasswordModel;
+import judgels.jophiel.persistence.UserResetPasswordRawDao;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.Session;
@@ -25,9 +28,11 @@ class UserResetPasswordStoreIntegrationTests {
     @BeforeEach void before(SessionFactory sessionFactory) {
         currentSession = sessionFactory.getCurrentSession();
 
-        UserResetPasswordDao dao =
+        UserResetPasswordDao userResetPasswordDao =
                 new UserResetPasswordHibernateDao(sessionFactory, Clock.systemUTC(), new FixedActorProvider());
-        store = new UserResetPasswordStore(dao);
+        UserResetPasswordRawDao userResetPasswordRawDao =
+                new UserResetPasswordRawHibernateDao(sessionFactory, Clock.systemUTC());
+        store = new UserResetPasswordStore(userResetPasswordDao, userResetPasswordRawDao);
     }
 
     @Test void can_generate_find_consume_code() {

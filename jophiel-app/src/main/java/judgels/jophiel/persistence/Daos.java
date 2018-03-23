@@ -13,4 +13,6 @@ public class Daos {
     public interface UserProfileDao extends Dao<UserProfileModel> {}
 
     public interface UserRegistrationEmailDao extends Dao<UserRegistrationEmailModel> {}
+
+    public interface UserResetPasswordDao extends Dao<UserResetPasswordModel> {}
 }

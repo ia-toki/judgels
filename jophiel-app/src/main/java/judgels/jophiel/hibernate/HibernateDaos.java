@@ -8,9 +8,11 @@ import judgels.jophiel.persistence.Daos.AdminRoleDao;
 import judgels.jophiel.persistence.Daos.SessionDao;
 import judgels.jophiel.persistence.Daos.UserProfileDao;
 import judgels.jophiel.persistence.Daos.UserRegistrationEmailDao;
+import judgels.jophiel.persistence.Daos.UserResetPasswordDao;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.jophiel.persistence.UserProfileModel;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
+import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
@@ -62,6 +64,17 @@ public class HibernateDaos {
                 SessionFactory sessionFactory,
                 Clock clock,
                 ActorProvider actorProvider) {
+            super(sessionFactory, clock, actorProvider);
+        }
+    }
+
+    @Singleton
+    public static class UserResetPasswordHibernateDao
+            extends HibernateDao<UserResetPasswordModel>
+            implements UserResetPasswordDao {
+
+        @Inject
+        public UserResetPasswordHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
             super(sessionFactory, clock, actorProvider);
         }
     }

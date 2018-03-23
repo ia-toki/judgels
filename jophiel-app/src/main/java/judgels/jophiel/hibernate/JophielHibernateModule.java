@@ -8,14 +8,16 @@ import javax.inject.Singleton;
 import judgels.jophiel.hibernate.HibernateDaos.SessionHibernateDao;
 import judgels.jophiel.hibernate.HibernateDaos.UserProfileHibernateDao;
 import judgels.jophiel.hibernate.HibernateDaos.UserRegistrationEmailHibernateDao;
+import judgels.jophiel.hibernate.HibernateDaos.UserResetPasswordHibernateDao;
 import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
 import judgels.jophiel.persistence.Daos.AdminRoleDao;
 import judgels.jophiel.persistence.Daos.SessionDao;
 import judgels.jophiel.persistence.Daos.UserProfileDao;
 import judgels.jophiel.persistence.Daos.UserRegistrationEmailDao;
+import judgels.jophiel.persistence.Daos.UserResetPasswordDao;
+import judgels.jophiel.persistence.UserResetPasswordRawDao;
 import judgels.jophiel.user.UserDao;
-import judgels.jophiel.user.password.UserResetPasswordDao;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -71,6 +73,11 @@ public class JophielHibernateModule {
 
     @Provides
     UserResetPasswordDao userResetPasswordDao(UserResetPasswordHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    UserResetPasswordRawDao userResetPasswordRawDao(UserResetPasswordRawHibernateDao dao) {
         return dao;
     }
 }

@@ -13,42 +13,40 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.jophiel.persistence.UserResetPasswordModel_;
-import judgels.jophiel.user.password.UserResetPasswordDao;
-import judgels.persistence.ActorProvider;
+import judgels.jophiel.persistence.UserResetPasswordRawDao;
 import judgels.persistence.Model_;
-import judgels.persistence.hibernate.HibernateDao;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 @Singleton
-public class UserResetPasswordHibernateDao extends HibernateDao<UserResetPasswordModel>
-        implements UserResetPasswordDao {
-
+public class UserResetPasswordRawHibernateDao implements UserResetPasswordRawDao {
+    private final SessionFactory sessionFactory;
     private final Clock clock;
 
     @Inject
-    public UserResetPasswordHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public UserResetPasswordRawHibernateDao(SessionFactory sessionFactory, Clock clock) {
+        this.sessionFactory = sessionFactory;
         this.clock = clock;
     }
 
     @Override
-    public Optional<UserResetPasswordModel> findByUserJid(String userJid, Duration expiration) {
-        return find(expiration, UserResetPasswordModel_.userJid, userJid);
+    public Optional<UserResetPasswordModel> selectByUserJid(String userJid, Duration expiration) {
+        return select(expiration, UserResetPasswordModel_.userJid, userJid);
     }
 
     @Override
-    public Optional<UserResetPasswordModel> findByEmailCode(String emailCode, Duration expiration) {
-        return find(expiration, UserResetPasswordModel_.emailCode, emailCode);
+    public Optional<UserResetPasswordModel> selectByEmailCode(String emailCode, Duration expiration) {
+        return select(expiration, UserResetPasswordModel_.emailCode, emailCode);
     }
 
-    private Optional<UserResetPasswordModel> find(
+    private Optional<UserResetPasswordModel> select(
             Duration expiration,
             SingularAttribute<UserResetPasswordModel, ?> attr,
             Object val) {
 
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<UserResetPasswordModel> cq = cb.createQuery(getEntityClass());
-        Root<UserResetPasswordModel> root = cq.from(getEntityClass());
+        CriteriaQuery<UserResetPasswordModel> cq = cb.createQuery(UserResetPasswordModel.class);
+        Root<UserResetPasswordModel> root = cq.from(UserResetPasswordModel.class);
 
         Instant currentInstant = clock.instant();
         Date currentDate = new Date(currentInstant.toEpochMilli());
@@ -62,5 +60,9 @@ public class UserResetPasswordHibernateDao extends HibernateDao<UserResetPasswor
         return currentSession().createQuery(cq).list()
                 .stream()
                 .findFirst();
+    }
+
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
 }
