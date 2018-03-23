@@ -16,6 +16,7 @@ import judgels.uriel.hibernate.HibernateDaos.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.HibernateDaos.ContestHibernateDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.ContestRawDao;
 import judgels.uriel.persistence.Daos.ContestContestantDao;
 import judgels.uriel.persistence.Daos.ContestDao;
 import org.hibernate.SessionFactory;

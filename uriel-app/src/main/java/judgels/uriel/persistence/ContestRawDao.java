@@ -1,7 +1,6 @@
-package judgels.uriel.contest;
+package judgels.uriel.persistence;
 
 import judgels.persistence.api.Page;
-import judgels.uriel.persistence.ContestModel;
 
 public interface ContestRawDao {
     Page<ContestModel> selectAllByUserJid(String userJid, int page, int pageSize);

@@ -8,6 +8,7 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.ContestRawDao;
 import judgels.uriel.persistence.Daos.ContestDao;
 
 public class ContestStore {
