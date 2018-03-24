@@ -2,7 +2,7 @@ import { roleActions } from './roleActions';
 import { PutRole } from './roleReducer';
 import { JophielRole } from '../../../modules/api/jophiel/my';
 import { AppState } from '../../../modules/store';
-import { sessionState, token, userJid } from '../../../fixtures/state';
+import { sessionState, token } from '../../../fixtures/state';
 
 describe('roleActions', () => {
   let dispatch: jest.Mock<any>;
@@ -32,7 +32,7 @@ describe('roleActions', () => {
     });
 
     it('calls API to get role', () => {
-      expect(myAPI.getMyRole).toHaveBeenCalledWith(token, userJid);
+      expect(myAPI.getMyRole).toHaveBeenCalledWith(token);
     });
 
     it('puts the role', () => {

@@ -5,7 +5,7 @@ export const roleActions = {
   get: () => {
     return async (dispatch, getState, { myAPI }) => {
       const token = selectToken(getState());
-      const role = await myAPI.getRole(token);
+      const role = await myAPI.getMyRole(token);
 
       dispatch(PutRole.create(role));
     };
