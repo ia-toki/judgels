@@ -1,5 +1,5 @@
 import { profileActions } from './profileActions';
-import { UserProfile } from '../../../../../../modules/api/jophiel/user';
+import { UserProfile } from '../../../../../../modules/api/jophiel/userProfile';
 import { AppState } from '../../../../../../modules/store';
 import { sessionState, token, userJid } from '../../../../../../fixtures/state';
 import { PutProfile } from '../../../../../../modules/session/sessionReducer';
@@ -9,13 +9,13 @@ describe('profileActions', () => {
 
   const getState = (): Partial<AppState> => ({ session: sessionState });
 
-  let userAPI: jest.Mocked<any>;
+  let userProfileAPI: jest.Mocked<any>;
   let toastActions: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
 
-    userAPI = {
+    userProfileAPI = {
       getUserProfile: jest.fn(),
       updateUserProfile: jest.fn(),
     };
@@ -26,18 +26,18 @@ describe('profileActions', () => {
 
   describe('fetch()', () => {
     const { fetch } = profileActions;
-    const doFetch = async () => fetch()(dispatch, getState, { userAPI });
+    const doFetch = async () => fetch()(dispatch, getState, { userProfileAPI });
 
     const profile: UserProfile = { name: 'First Last' };
 
     beforeEach(async () => {
-      userAPI.getUserProfile.mockImplementation(() => profile);
+      userProfileAPI.getUserProfile.mockImplementation(() => profile);
 
       await doFetch();
     });
 
     it('calls API to get user profile', () => {
-      expect(userAPI.getUserProfile).toHaveBeenCalledWith(token, userJid);
+      expect(userProfileAPI.getUserProfile).toHaveBeenCalledWith(token, userJid);
     });
 
     it('puts the profile', () => {
@@ -47,19 +47,19 @@ describe('profileActions', () => {
 
   describe('update()', () => {
     const { update } = profileActions;
-    const doUpdate = async () => update(profile)(dispatch, getState, { userAPI, toastActions });
+    const doUpdate = async () => update(profile)(dispatch, getState, { userProfileAPI, toastActions });
 
     const profile: UserProfile = { name: 'First Last' };
     const newProfile: UserProfile = { name: 'Last First' };
 
     beforeEach(async () => {
-      userAPI.updateUserProfile.mockImplementation(() => newProfile);
+      userProfileAPI.updateUserProfile.mockImplementation(() => newProfile);
 
       await doUpdate();
     });
 
     it('calls API to update user profile', () => {
-      expect(userAPI.updateUserProfile).toHaveBeenCalledWith(token, userJid, profile);
+      expect(userProfileAPI.updateUserProfile).toHaveBeenCalledWith(token, userJid, profile);
     });
 
     it('puts the new profile', () => {

@@ -7,14 +7,14 @@ describe('resetPasswordActions', () => {
   let dispatch: jest.Mock<any>;
   let getState: jest.Mock<any>;
 
-  let userAPI: jest.Mocked<any>;
+  let userAccountAPI: jest.Mocked<any>;
   let toastActions: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
     getState = jest.fn();
 
-    userAPI = {
+    userAccountAPI = {
       resetUserPassword: jest.fn(),
     };
     toastActions = {
@@ -24,12 +24,12 @@ describe('resetPasswordActions', () => {
 
   describe('reset()', () => {
     const { reset } = resetPasswordActions;
-    const doReset = async () => reset('code123', 'pass')(dispatch, getState, { userAPI, toastActions });
+    const doReset = async () => reset('code123', 'pass')(dispatch, getState, { userAccountAPI, toastActions });
 
     it('calls API to reset password', async () => {
       await doReset();
 
-      expect(userAPI.resetUserPassword).toHaveBeenCalledWith({
+      expect(userAccountAPI.resetUserPassword).toHaveBeenCalledWith({
         emailCode: 'code123',
         newPassword: 'pass',
       });
@@ -37,7 +37,7 @@ describe('resetPasswordActions', () => {
 
     describe('when the email code is valid', () => {
       beforeEach(async () => {
-        userAPI.resetUserPassword.mockImplementation(() => Promise.resolve());
+        userAccountAPI.resetUserPassword.mockImplementation(() => Promise.resolve());
 
         await doReset();
       });
@@ -56,7 +56,7 @@ describe('resetPasswordActions', () => {
 
       beforeEach(async () => {
         error = new BadRequestError();
-        userAPI.resetUserPassword.mockImplementation(() => {
+        userAccountAPI.resetUserPassword.mockImplementation(() => {
           throw error;
         });
       });

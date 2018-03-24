@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Card } from '../../../../../components/Card/Card';
-import { UserProfile } from '../../../../../modules/api/jophiel/user';
+import { UserProfile } from '../../../../../modules/api/jophiel/userProfile';
 import ProfileForm from '../ProfileForm/ProfileForm';
 import { ProfileTable } from '../ProfileTable/ProfileTable';
 

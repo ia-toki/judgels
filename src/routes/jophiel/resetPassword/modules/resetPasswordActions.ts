@@ -4,9 +4,9 @@ import { BadRequestError } from '../../../../modules/api/error';
 
 export const resetPasswordActions = {
   reset: (emailCode: string, newPassword: string) => {
-    return async (dispatch, getState, { userAPI, toastActions }) => {
+    return async (dispatch, getState, { userAccountAPI, toastActions }) => {
       try {
-        await userAPI.resetUserPassword({ emailCode, newPassword });
+        await userAccountAPI.resetUserPassword({ emailCode, newPassword });
       } catch (error) {
         if (error instanceof BadRequestError) {
           throw new Error('Invalid code.');

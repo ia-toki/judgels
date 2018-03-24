@@ -3,7 +3,7 @@ import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 
 export const loginActions = {
   logIn: (currentPath: string, usernameOrEmail: string, password: string) => {
-    return async (dispatch, getState, { legacySessionAPI, userAPI, toastActions }) => {
+    return async (dispatch, getState, { legacySessionAPI, myAPI, toastActions }) => {
       let session;
       try {
         session = await legacySessionAPI.logIn(usernameOrEmail, password);
@@ -17,7 +17,7 @@ export const loginActions = {
         }
       }
 
-      const user = await userAPI.getMyself(session.token);
+      const user = await myAPI.getMyself(session.token);
       toastActions.showToast(`Welcome, ${user.username}.`);
       dispatch(PutToken.create(session.token));
       dispatch(PutUser.create(user));

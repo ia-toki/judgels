@@ -2,9 +2,9 @@ import { NotFoundError } from '../../../../modules/api/error';
 
 export const forgotPasswordActions = {
   requestToReset: (email: string) => {
-    return async (dispatch, getState, { userAPI }) => {
+    return async (dispatch, getState, { userAccountAPI }) => {
       try {
-        await userAPI.requestToResetUserPassword(email);
+        await userAccountAPI.requestToResetUserPassword(email);
       } catch (error) {
         if (error instanceof NotFoundError) {
           throw new Error('Email not found.');

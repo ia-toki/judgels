@@ -10,6 +10,7 @@ describe('avatarActions', () => {
   const getState = (): Partial<AppState> => ({ session: sessionState });
 
   let userAPI: jest.Mocked<any>;
+  let myAPI: jest.Mocked<any>;
   let toastActions: jest.Mocked<any>;
 
   beforeEach(() => {
@@ -20,6 +21,9 @@ describe('avatarActions', () => {
       updateUserAvatar: jest.fn(),
       deleteUserAvatar: jest.fn(),
     };
+    myAPI = {
+      getMyself: jest.fn(),
+    };
     toastActions = {
       showSuccessToast: jest.fn(),
       showErrorToast: jest.fn(),
@@ -29,10 +33,10 @@ describe('avatarActions', () => {
   describe('change()', () => {
     const file = {} as File;
     const { change } = avatarActions;
-    const doChange = async () => change(file)(dispatch, getState, { userAPI, toastActions });
+    const doChange = async () => change(file)(dispatch, getState, { userAPI, myAPI, toastActions });
 
     beforeEach(async () => {
-      userAPI.getMyself.mockImplementation(() => Promise.resolve<User>(user));
+      myAPI.getMyself.mockImplementation(() => Promise.resolve<User>(user));
       await doChange();
     });
 
@@ -41,7 +45,7 @@ describe('avatarActions', () => {
     });
 
     it('updates the current user', () => {
-      expect(userAPI.getMyself).toHaveBeenCalled();
+      expect(myAPI.getMyself).toHaveBeenCalled();
       expect(dispatch).toHaveBeenCalledWith(PutUser.create(user));
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Avatar updated.');
     });
@@ -49,10 +53,10 @@ describe('avatarActions', () => {
 
   describe('remove()', () => {
     const { remove } = avatarActions;
-    const doRemove = async () => remove()(dispatch, getState, { userAPI, toastActions });
+    const doRemove = async () => remove()(dispatch, getState, { userAPI, myAPI, toastActions });
 
     beforeEach(async () => {
-      userAPI.getMyself.mockImplementation(() => Promise.resolve<User>(user));
+      myAPI.getMyself.mockImplementation(() => Promise.resolve<User>(user));
       await doRemove();
     });
 
@@ -61,7 +65,7 @@ describe('avatarActions', () => {
     });
 
     it('updates the current user', () => {
-      expect(userAPI.getMyself).toHaveBeenCalled();
+      expect(myAPI.getMyself).toHaveBeenCalled();
       expect(dispatch).toHaveBeenCalledWith(PutUser.create(user));
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Avatar removed.');
     });

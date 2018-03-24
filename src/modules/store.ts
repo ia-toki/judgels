@@ -8,7 +8,10 @@ import thunk from 'redux-thunk';
 
 import { createSessionAPI } from './api/jophiel/session';
 import { createLegacySessionAPI } from './api/jophiel/legacySession';
+import { createMyAPI } from './api/jophiel/my';
 import { createUserAPI } from './api/jophiel/user';
+import { createUserAccountAPI } from './api/jophiel/userAccount';
+import { createUserProfileAPI } from './api/jophiel/userProfile';
 import { createWebAPI } from './api/jophiel/web';
 import { createContestAPI } from './api/uriel/contest';
 import { createContestScoreboardAPI } from './api/uriel/contestScoreboard';
@@ -51,8 +54,11 @@ export const store = createStore<AppState>(
       thunk.withExtraArgument({
         sessionAPI: createSessionAPI(),
         legacySessionAPI: createLegacySessionAPI(),
+        myAPI: createMyAPI(),
         webAPI: createWebAPI(),
         userAPI: createUserAPI(),
+        userAccountAPI: createUserAccountAPI(),
+        userProfileAPI: createUserProfileAPI(),
         contestAPI: createContestAPI(),
         contestScoreboardAPI: createContestScoreboardAPI(),
         toastActions,

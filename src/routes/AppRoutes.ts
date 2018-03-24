@@ -1,7 +1,7 @@
 import { AccountRoutes } from './jophiel/accounts/AccountRoutes';
 import JophielRoutes from './jophiel/JophielRoutes';
 import UrielRoutes from './uriel/UrielRoutes';
-import { JophielRole } from '../modules/api/jophiel/user';
+import { JophielRole } from '../modules/api/jophiel/my';
 
 function shouldShowRoute(id: string, role: JophielRole) {
   if (role !== JophielRole.Superadmin && role !== JophielRole.Admin && id === 'account') {

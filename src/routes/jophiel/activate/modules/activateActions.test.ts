@@ -4,13 +4,13 @@ describe('activateActions', () => {
   let dispatch: jest.Mock<any>;
   let getState: jest.Mock<any>;
 
-  let userAPI: jest.Mocked<any>;
+  let userAccountAPI: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
     getState = jest.fn();
 
-    userAPI = {
+    userAccountAPI = {
       activateUser: jest.fn(),
     };
   });
@@ -18,14 +18,14 @@ describe('activateActions', () => {
   describe('activate()', () => {
     const { activate } = activateActions;
     const emailCode = 'code';
-    const doActivate = async () => activate(emailCode)(dispatch, getState, { userAPI });
+    const doActivate = async () => activate(emailCode)(dispatch, getState, { userAccountAPI });
 
     beforeEach(async () => {
       await doActivate();
     });
 
     it('calls API to activate user', async () => {
-      expect(userAPI.activateUser).toHaveBeenCalledWith(emailCode);
+      expect(userAccountAPI.activateUser).toHaveBeenCalledWith(emailCode);
     });
   });
 });

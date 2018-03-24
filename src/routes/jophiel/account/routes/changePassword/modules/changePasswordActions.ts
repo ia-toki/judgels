@@ -4,11 +4,11 @@ import { push } from 'react-router-redux';
 
 export const changePasswordActions = {
   changePassword: (oldPassword: string, newPassword: string) => {
-    return async (dispatch, getState, { userAPI, toastActions }) => {
+    return async (dispatch, getState, { myAPI, toastActions }) => {
       const token = selectToken(getState());
 
       try {
-        await userAPI.updateMyPassword(token, { oldPassword, newPassword });
+        await myAPI.updateMyPassword(token, { oldPassword, newPassword });
       } catch (error) {
         if (error instanceof BadRequestError) {
           throw new Error('Incorrect old password.');

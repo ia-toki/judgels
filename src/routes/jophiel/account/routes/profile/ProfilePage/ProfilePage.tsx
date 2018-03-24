@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { UserProfile } from '../../../../../../modules/api/jophiel/user';
+import { UserProfile } from '../../../../../../modules/api/jophiel/userProfile';
 import { ProfilePanel } from '../../../../panels/profile/Profile/Profile';
 import { AppState } from '../../../../../../modules/store';
 import { selectProfile } from '../../../../../../modules/session/sessionSelectors';

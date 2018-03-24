@@ -12,7 +12,7 @@ import Menubar from '../components/Menubar/Menubar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
 import { Footer } from '../components/Footer/Footer';
 import { webConfigActions as injectedWebConfigActions } from './jophiel/modules/webConfigActions';
-import { JophielRole } from '../modules/api/jophiel/user';
+import { JophielRole } from '../modules/api/jophiel/my';
 import { AppState } from '../modules/store';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
 import { selectRole } from './jophiel/modules/roleSelectors';

@@ -10,7 +10,7 @@ import { HorizontalInnerDivider } from '../../../../../components/HorizontalInne
 import { ActionButtons } from '../../../../../components/ActionButtons/ActionButtons';
 import { FormTableTextArea } from '../../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableSelect } from '../../../../../components/forms/FormTableSelect/FormTableSelect';
-import { UserProfile } from '../../../../../modules/api/jophiel/user';
+import { UserProfile } from '../../../../../modules/api/jophiel/userProfile';
 
 const nameField: any = {
   name: 'name',

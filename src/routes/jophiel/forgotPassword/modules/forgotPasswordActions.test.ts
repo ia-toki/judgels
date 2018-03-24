@@ -5,30 +5,30 @@ describe('forgotPasswordActions', () => {
   let dispatch: jest.Mock<any>;
   let getState: jest.Mock<any>;
 
-  let userAPI: jest.Mocked<any>;
+  let userAccountAPI: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
     getState = jest.fn();
 
-    userAPI = {
+    userAccountAPI = {
       requestToResetUserPassword: jest.fn(),
     };
   });
 
   describe('requestToReset()', () => {
     const { requestToReset } = forgotPasswordActions;
-    const doRequestToReset = async () => requestToReset('email@domain.com')(dispatch, getState, { userAPI });
+    const doRequestToReset = async () => requestToReset('email@domain.com')(dispatch, getState, { userAccountAPI });
 
     it('calls API to request to reset password', async () => {
       await doRequestToReset();
 
-      expect(userAPI.requestToResetUserPassword).toHaveBeenCalledWith('email@domain.com');
+      expect(userAccountAPI.requestToResetUserPassword).toHaveBeenCalledWith('email@domain.com');
     });
 
     describe('when the email is not found', () => {
       beforeEach(async () => {
-        userAPI.requestToResetUserPassword.mockImplementation(() => {
+        userAccountAPI.requestToResetUserPassword.mockImplementation(() => {
           throw new NotFoundError();
         });
       });

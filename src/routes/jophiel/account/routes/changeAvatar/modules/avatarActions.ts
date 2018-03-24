@@ -4,12 +4,12 @@ import { MAX_AVATAR_FILE_SIZE } from '../../../../panels/avatar/ChangeAvatar/Cha
 
 export const avatarActions = {
   change: (file: File) => {
-    return async (dispatch, getState, { userAPI, toastActions }) => {
+    return async (dispatch, getState, { userAPI, myAPI, toastActions }) => {
       const token = selectToken(getState());
       const userJid = selectUserJid(getState());
       await userAPI.updateUserAvatar(token, userJid, file);
 
-      const user = await userAPI.getMyself(token);
+      const user = await myAPI.getMyself(token);
       dispatch(PutUser.create(user));
 
       toastActions.showSuccessToast('Avatar updated.');
@@ -17,12 +17,12 @@ export const avatarActions = {
   },
 
   remove: () => {
-    return async (dispatch, getState, { userAPI, toastActions }) => {
+    return async (dispatch, getState, { userAPI, myAPI, toastActions }) => {
       const token = selectToken(getState());
       const userJid = selectUserJid(getState());
       await userAPI.deleteUserAvatar(token, userJid);
 
-      const user = await userAPI.getMyself(token);
+      const user = await myAPI.getMyself(token);
       dispatch(PutUser.create(user));
 
       toastActions.showSuccessToast('Avatar removed.');

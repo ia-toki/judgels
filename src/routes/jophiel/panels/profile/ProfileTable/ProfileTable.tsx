@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { UserProfile, userProfileGender } from '../../../../../modules/api/jophiel/user';
+import { UserProfile, userProfileGender } from '../../../../../modules/api/jophiel/userProfile';
 import { FormTable, FormTableRow } from '../../../../../components/forms/FormTable/FormTable';
 import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
 

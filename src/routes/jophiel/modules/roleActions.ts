@@ -1,12 +1,11 @@
-import { selectToken, selectUserJid } from '../../../modules/session/sessionSelectors';
+import { selectToken } from '../../../modules/session/sessionSelectors';
 import { PutRole } from './roleReducer';
 
 export const roleActions = {
   get: () => {
-    return async (dispatch, getState, { userAPI }) => {
+    return async (dispatch, getState, { myAPI }) => {
       const token = selectToken(getState());
-      const userJid = selectUserJid(getState());
-      const role = await userAPI.getRole(token, userJid);
+      const role = await myAPI.getRole(token);
 
       dispatch(PutRole.create(role));
     };
