@@ -3,8 +3,8 @@ package judgels.jophiel.user.profile;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.jophiel.api.user.profile.UserProfile;
-import judgels.jophiel.hibernate.HibernateDaos.UserProfileHibernateDao;
-import judgels.jophiel.persistence.Daos.UserProfileDao;
+import judgels.jophiel.hibernate.UserProfileHibernateDao;
+import judgels.jophiel.persistence.UserProfileDao;
 import judgels.jophiel.persistence.UserProfileModel;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;

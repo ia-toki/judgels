@@ -5,9 +5,8 @@ import javax.inject.Inject;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionModel;
-import judgels.jophiel.persistence.Daos.SessionDao;
+import judgels.jophiel.persistence.SessionDao;
 import judgels.jophiel.persistence.SessionModel;
-import judgels.jophiel.persistence.SessionModel_;
 
 public class SessionStore {
     private final SessionDao sessionDao;
@@ -33,12 +32,12 @@ public class SessionStore {
     }
 
     public Optional<Session> findSessionByToken(String token) {
-        return sessionDao.selectByUniqueColumn(SessionModel_.token, token).map(SessionStore::fromModel);
+        return sessionDao.selectByToken(token).map(SessionStore::fromModel);
     }
 
     public Optional<Session> findSessionByAuthCode(String authCode) {
         return legacySessionDao.findByAuthCode(authCode).flatMap(legacyModel ->
-                sessionDao.selectByUniqueColumn(SessionModel_.token, legacyModel.token).map(SessionStore::fromModel));
+                sessionDao.selectByToken(legacyModel.token).map(SessionStore::fromModel));
     }
 
     public void deleteAuthCode(String authCode) {
@@ -46,7 +45,7 @@ public class SessionStore {
     }
 
     public void deleteSessionByToken(String token) {
-        sessionDao.selectByUniqueColumn(SessionModel_.token, token).ifPresent(sessionDao::delete);
+        sessionDao.selectByToken(token).ifPresent(sessionDao::delete);
     }
 
     private static Session fromModel(SessionModel model) {

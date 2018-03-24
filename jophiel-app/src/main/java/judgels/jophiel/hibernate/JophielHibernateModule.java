@@ -5,21 +5,14 @@ import dagger.Provides;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
-import judgels.jophiel.hibernate.HibernateDaos.SessionHibernateDao;
-import judgels.jophiel.hibernate.HibernateDaos.UserHibernateDao;
-import judgels.jophiel.hibernate.HibernateDaos.UserProfileHibernateDao;
-import judgels.jophiel.hibernate.HibernateDaos.UserRegistrationEmailHibernateDao;
-import judgels.jophiel.hibernate.HibernateDaos.UserResetPasswordHibernateDao;
 import judgels.jophiel.legacy.session.LegacySessionDao;
 import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
-import judgels.jophiel.persistence.Daos.AdminRoleDao;
-import judgels.jophiel.persistence.Daos.SessionDao;
-import judgels.jophiel.persistence.Daos.UserDao;
-import judgels.jophiel.persistence.Daos.UserProfileDao;
-import judgels.jophiel.persistence.Daos.UserRegistrationEmailDao;
-import judgels.jophiel.persistence.Daos.UserResetPasswordDao;
-import judgels.jophiel.persistence.UserRawDao;
-import judgels.jophiel.persistence.UserResetPasswordRawDao;
+import judgels.jophiel.persistence.AdminRoleDao;
+import judgels.jophiel.persistence.SessionDao;
+import judgels.jophiel.persistence.UserDao;
+import judgels.jophiel.persistence.UserProfileDao;
+import judgels.jophiel.persistence.UserRegistrationEmailDao;
+import judgels.jophiel.persistence.UserResetPasswordDao;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -44,7 +37,7 @@ public class JophielHibernateModule {
     }
 
     @Provides
-    AdminRoleDao adminRoleDao(HibernateDaos.AdminRoleHibernateDao dao) {
+    AdminRoleDao adminRoleDao(AdminRoleHibernateDao dao) {
         return dao;
     }
 
@@ -64,11 +57,6 @@ public class JophielHibernateModule {
     }
 
     @Provides
-    UserRawDao userRawDao(UserRawHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
     UserProfileDao userProfileDao(UserProfileHibernateDao dao) {
         return dao;
     }
@@ -80,11 +68,6 @@ public class JophielHibernateModule {
 
     @Provides
     UserResetPasswordDao userResetPasswordDao(UserResetPasswordHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    UserResetPasswordRawDao userResetPasswordRawDao(UserResetPasswordRawHibernateDao dao) {
         return dao;
     }
 }

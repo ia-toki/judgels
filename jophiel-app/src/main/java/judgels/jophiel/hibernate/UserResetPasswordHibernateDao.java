@@ -11,21 +11,23 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
+import judgels.jophiel.persistence.UserResetPasswordDao;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.jophiel.persistence.UserResetPasswordModel_;
-import judgels.jophiel.persistence.UserResetPasswordRawDao;
+import judgels.persistence.ActorProvider;
 import judgels.persistence.Model_;
-import org.hibernate.Session;
+import judgels.persistence.hibernate.HibernateDao;
 import org.hibernate.SessionFactory;
 
 @Singleton
-public class UserResetPasswordRawHibernateDao implements UserResetPasswordRawDao {
-    private final SessionFactory sessionFactory;
+public class UserResetPasswordHibernateDao extends HibernateDao<UserResetPasswordModel>
+        implements UserResetPasswordDao {
+
     private final Clock clock;
 
     @Inject
-    public UserResetPasswordRawHibernateDao(SessionFactory sessionFactory, Clock clock) {
-        this.sessionFactory = sessionFactory;
+    public UserResetPasswordHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
         this.clock = clock;
     }
 
@@ -60,9 +62,5 @@ public class UserResetPasswordRawHibernateDao implements UserResetPasswordRawDao
         return currentSession().createQuery(cq).list()
                 .stream()
                 .findFirst();
-    }
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
     }
 }
