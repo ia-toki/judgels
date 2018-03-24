@@ -7,18 +7,15 @@ import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestRawDao;
-import judgels.uriel.persistence.Daos.ContestDao;
 
 public class ContestStore {
     private final ContestDao contestDao;
-    private final ContestRawDao contestRawDao;
 
     @Inject
-    public ContestStore(ContestDao contestDao, ContestRawDao contestRawDao) {
+    public ContestStore(ContestDao contestDao) {
         this.contestDao = contestDao;
-        this.contestRawDao = contestRawDao;
     }
 
     public Optional<Contest> findContestByJid(String contestJid) {
@@ -26,7 +23,7 @@ public class ContestStore {
     }
 
     public Page<Contest> getContests(String userJid, int page, int pageSize) {
-        Page<ContestModel> models = contestRawDao.selectAllByUserJid(userJid, page, pageSize);
+        Page<ContestModel> models = contestDao.selectAllByUserJid(userJid, page, pageSize);
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 

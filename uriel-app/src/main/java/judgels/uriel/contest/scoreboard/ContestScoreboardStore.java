@@ -1,12 +1,10 @@
 package judgels.uriel.contest.scoreboard;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
+import judgels.uriel.persistence.ContestScoreboardDao;
 import judgels.uriel.persistence.ContestScoreboardModel;
-import judgels.uriel.persistence.ContestScoreboardModel_;
-import judgels.uriel.persistence.Daos.ContestScoreboardDao;
 
 public class ContestScoreboardStore {
     private final ContestScoreboardDao contestScoreboardDao;
@@ -17,9 +15,7 @@ public class ContestScoreboardStore {
     }
 
     public Optional<ContestScoreboardData> findScoreboard(String contestJid, ContestScoreboardType type) {
-        return contestScoreboardDao.selectByUniqueColumns(ImmutableMap.of(
-                ContestScoreboardModel_.contestJid, contestJid,
-                ContestScoreboardModel_.type, type.name())).map(this::fromModel);
+        return contestScoreboardDao.selectByContestJidAndType(contestJid, type).map(this::fromModel);
     }
 
     public Optional<ContestScoreboardData> upsertScoreboard(
@@ -27,9 +23,7 @@ public class ContestScoreboardStore {
             ContestScoreboardType type,
             String scoreboard) {
 
-        Optional<ContestScoreboardModel> maybeModel = contestScoreboardDao.selectByUniqueColumns(ImmutableMap.of(
-                ContestScoreboardModel_.contestJid, contestJid,
-                ContestScoreboardModel_.type, type.name()));
+        Optional<ContestScoreboardModel> maybeModel = contestScoreboardDao.selectByContestJidAndType(contestJid, type);
         if (!maybeModel.isPresent()) {
             ContestScoreboardModel model = new ContestScoreboardModel();
             toModel(contestJid, type, scoreboard, model);

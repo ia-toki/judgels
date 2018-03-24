@@ -5,15 +5,10 @@ import dagger.Provides;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
-import judgels.uriel.hibernate.HibernateDaos.AdminRoleHibernateDao;
-import judgels.uriel.hibernate.HibernateDaos.ContestContestantHibernateDao;
-import judgels.uriel.hibernate.HibernateDaos.ContestHibernateDao;
-import judgels.uriel.hibernate.HibernateDaos.ContestScoreboardHibernateDao;
-import judgels.uriel.persistence.ContestRawDao;
-import judgels.uriel.persistence.Daos.AdminRoleDao;
-import judgels.uriel.persistence.Daos.ContestContestantDao;
-import judgels.uriel.persistence.Daos.ContestDao;
-import judgels.uriel.persistence.Daos.ContestScoreboardDao;
+import judgels.uriel.persistence.AdminRoleDao;
+import judgels.uriel.persistence.ContestContestantDao;
+import judgels.uriel.persistence.ContestDao;
+import judgels.uriel.persistence.ContestScoreboardDao;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -54,11 +49,6 @@ public class UrielHibernateModule {
 
     @Provides
     ContestContestantDao contestContestantDao(ContestContestantHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    ContestRawDao contestRawDao(ContestRawHibernateDao dao) {
         return dao;
     }
 }

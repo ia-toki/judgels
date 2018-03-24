@@ -1,12 +1,9 @@
 package judgels.uriel.role;
 
-import com.google.common.collect.ImmutableMap;
 import javax.inject.Inject;
+import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.AdminRoleModel;
-import judgels.uriel.persistence.AdminRoleModel_;
-import judgels.uriel.persistence.ContestContestantModel_;
-import judgels.uriel.persistence.Daos.AdminRoleDao;
-import judgels.uriel.persistence.Daos.ContestContestantDao;
+import judgels.uriel.persistence.ContestContestantDao;
 
 public class RoleStore {
     private final AdminRoleDao adminRoleDao;
@@ -25,12 +22,10 @@ public class RoleStore {
     }
 
     public boolean isAdmin(String userJid) {
-        return adminRoleDao.selectByUniqueColumn(AdminRoleModel_.userJid, userJid).isPresent();
+        return adminRoleDao.existsByUserJid(userJid);
     }
 
     public boolean isContestant(String contestJid, String userJid) {
-        return contestantDao.selectByUniqueColumns(ImmutableMap.of(
-                ContestContestantModel_.contestJid, contestJid,
-                ContestContestantModel_.userJid, userJid)).isPresent();
+        return contestantDao.existsByContestJidAndUserJid(contestJid, userJid);
     }
 }

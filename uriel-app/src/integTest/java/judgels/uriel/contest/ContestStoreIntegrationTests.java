@@ -11,14 +11,12 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.contest.contestant.ContestContestantStore;
-import judgels.uriel.hibernate.ContestRawHibernateDao;
-import judgels.uriel.hibernate.HibernateDaos.ContestContestantHibernateDao;
-import judgels.uriel.hibernate.HibernateDaos.ContestHibernateDao;
+import judgels.uriel.hibernate.ContestContestantHibernateDao;
+import judgels.uriel.hibernate.ContestHibernateDao;
+import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
+import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestRawDao;
-import judgels.uriel.persistence.Daos.ContestContestantDao;
-import judgels.uriel.persistence.Daos.ContestDao;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,14 +32,13 @@ public class ContestStoreIntegrationTests {
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
-        ContestRawDao contestRawDao = new ContestRawHibernateDao(sessionFactory);
 
         ContestContestantDao contestantDao = new ContestContestantHibernateDao(
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
 
-        store = new ContestStore(contestDao, contestRawDao);
+        store = new ContestStore(contestDao);
         contestContestantStore = new ContestContestantStore(contestantDao);
     }
 

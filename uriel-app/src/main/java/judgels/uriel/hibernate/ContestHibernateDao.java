@@ -1,5 +1,6 @@
 package judgels.uriel.hibernate;
 
+import java.time.Clock;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -8,27 +9,22 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import judgels.persistence.ActorProvider;
 import judgels.persistence.api.Page;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestContestantModel_;
+import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModel_;
-import judgels.uriel.persistence.ContestRawDao;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 @Singleton
-public class ContestRawHibernateDao implements ContestRawDao {
-    private final SessionFactory sessionFactory;
-
-    protected Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
+public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> implements ContestDao {
     @Inject
-    public ContestRawHibernateDao(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public ContestHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 
     @Override
