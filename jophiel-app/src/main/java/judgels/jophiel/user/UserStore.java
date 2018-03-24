@@ -40,6 +40,10 @@ public class UserStore {
         return userDao.selectByJid(userJid).map(this::fromModel);
     }
 
+    public Optional<String> findUserEmailByJid(String userJid) {
+        return userDao.selectByJid(userJid).map(model -> model.email);
+    }
+
     public Map<String, User> findUsersByJids(Set<String> userJids) {
         Map<String, UserModel> userModels = userDao.selectByJids(userJids);
         return userModels.values().stream().map(this::fromModel).collect(Collectors.toMap(User::getJid, p -> p));
@@ -114,7 +118,6 @@ public class UserStore {
         return new User.Builder()
                 .jid(model.jid)
                 .username(model.username)
-                .email(model.email)
                 .avatarUrl(avatarUrl)
                 .build();
     }

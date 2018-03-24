@@ -44,8 +44,8 @@ class UserStoreIntegrationTests {
         User user = store.findUserByUsername("username").get();
         assertThat(user.getJid()).isNotEmpty();
         assertThat(user.getUsername()).isEqualTo("username");
-        assertThat(user.getEmail()).isEqualTo("email@domain.com");
         assertThat(user.getAvatarUrl()).isEmpty();
+        assertThat(store.findUserEmailByJid(user.getJid())).contains("email@domain.com");
 
         assertThat(store.findUserByJid(user.getJid())).contains(user);
 
@@ -57,7 +57,7 @@ class UserStoreIntegrationTests {
 
         user = store.updateUser(user.getJid(), userData).get();
         assertThat(user.getUsername()).isEqualTo("new.username");
-        assertThat(user.getEmail()).isEqualTo("new.email@domain.com");
+        assertThat(store.findUserEmailByJid(user.getJid())).contains("new.email@domain.com");
 
         UserData nanoData = new UserData.Builder()
                 .username("nano")

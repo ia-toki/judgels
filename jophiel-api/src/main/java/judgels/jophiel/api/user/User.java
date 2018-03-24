@@ -9,7 +9,6 @@ import org.immutables.value.Value;
 public interface User {
     String getJid();
     String getUsername();
-    String getEmail();
     Optional<String> getAvatarUrl();
 
     class Builder extends ImmutableUser.Builder {}

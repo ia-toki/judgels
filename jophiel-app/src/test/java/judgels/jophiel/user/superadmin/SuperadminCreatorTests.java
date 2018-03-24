@@ -44,7 +44,6 @@ class SuperadminCreatorTests {
         when(userStore.createUser(any())).thenReturn(new User.Builder()
                 .jid("superadminUserJid")
                 .username("superadmin")
-                .email("superadminEmail")
                 .build());
 
         creator.create();

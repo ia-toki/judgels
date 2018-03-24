@@ -53,7 +53,7 @@ public class UserRegisterer {
         userProfileStore.upsertUserProfile(user.getJid(), userProfile);
 
         String emailCode = userRegistrationEmailStore.generateEmailCode(user.getJid());
-        userRegistrationEmailMailer.sendActivationEmail(user, emailCode);
+        userRegistrationEmailMailer.sendActivationEmail(user, data.getEmail(), emailCode);
 
         return user;
     }

@@ -44,7 +44,7 @@ public class UserAccountResource implements UserAccountService {
     @UnitOfWork
     public void requestToResetUserPassword(String email) {
         User user = checkFound(userStore.findUserByEmail(email));
-        checkFound(userPasswordResetter).request(user);
+        checkFound(userPasswordResetter).request(user, email);
     }
 
     @Override

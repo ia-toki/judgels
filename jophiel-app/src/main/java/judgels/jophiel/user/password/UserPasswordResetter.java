@@ -22,9 +22,9 @@ public class UserPasswordResetter {
         this.userResetPasswordMailer = userResetPasswordMailer;
     }
 
-    public void request(User user) {
+    public void request(User user, String email) {
         String emailCode = userResetPasswordStore.generateEmailCode(user.getJid(), FORGOT_PASSWORD_EXPIRATION);
-        userResetPasswordMailer.sendRequestEmail(user, emailCode);
+        userResetPasswordMailer.sendRequestEmail(user, email, emailCode);
     }
 
     public void reset(PasswordResetData data) {
@@ -34,9 +34,11 @@ public class UserPasswordResetter {
                 .orElseThrow(IllegalArgumentException::new);
         User user = userStore.findUserByJid(userJid)
                 .orElseThrow(IllegalStateException::new);
+        String email = userStore.findUserEmailByJid(userJid)
+                .orElseThrow(IllegalStateException::new);
 
         userStore.updateUserPassword(user.getJid(), data.getNewPassword());
 
-        userResetPasswordMailer.sendResetEmail(user);
+        userResetPasswordMailer.sendResetEmail(user, email);
     }
 }

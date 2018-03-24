@@ -19,18 +19,18 @@ public class UserResetPasswordMailer {
         this.resetEmailTemplate = resetEmailTemplate;
     }
 
-    public void sendRequestEmail(User user, String emailCode) {
+    public void sendRequestEmail(User user, String email, String emailCode) {
         String subject = requestEmailTemplate.getSubject();
         String body = requestEmailTemplate.getBody()
                 .replace("{{username}}", user.getUsername())
                 .replace("{{emailCode}}", emailCode);
-        mailer.send(user.getEmail(), subject, body);
+        mailer.send(email, subject, body);
     }
 
-    public void sendResetEmail(User user) {
+    public void sendResetEmail(User user, String email) {
         String subject = resetEmailTemplate.getSubject();
         String body = resetEmailTemplate.getBody()
                 .replace("{{username}}", user.getUsername());
-        mailer.send(user.getEmail(), subject, body);
+        mailer.send(email, subject, body);
     }
 }

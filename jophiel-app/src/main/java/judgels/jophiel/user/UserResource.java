@@ -72,15 +72,6 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public User updateUser(AuthHeader authHeader, String userJid, UserData userData) {
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
-
-        return checkFound(userStore.updateUser(userJid, userData));
-    }
-
-    @Override
-    @UnitOfWork
     public void deleteUserAvatar(AuthHeader authHeader, String userJid) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canMutateUser(actorJid, userJid));

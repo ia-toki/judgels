@@ -13,11 +13,11 @@ public class UserRegistrationEmailMailer {
         this.activationEmailTemplate = activationEmailTemplate;
     }
 
-    public void sendActivationEmail(User user, String emailCode) {
+    public void sendActivationEmail(User user, String email, String emailCode) {
         String subject = activationEmailTemplate.getSubject();
         String body = activationEmailTemplate.getBody()
                 .replace("{{username}}", user.getUsername())
                 .replace("{{emailCode}}", emailCode);
-        mailer.send(user.getEmail(), subject, body);
+        mailer.send(email, subject, body);
     }
 }
