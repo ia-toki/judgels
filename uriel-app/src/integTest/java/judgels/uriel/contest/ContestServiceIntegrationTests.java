@@ -82,7 +82,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
     @Test
     void basic_flow() throws JsonProcessingException {
         // default user
-        stubFor(get("/api/v2/users/me")
+        stubFor(get("/api/v2/users/me/")
                 .willReturn(okForJson(
                         ImmutableMap.of(
                                 "jid", "nonadminJid",
@@ -90,7 +90,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                                 "email", "foo@bar.com")
                 )));
         // admin user
-        stubFor(get("/api/v2/users/me")
+        stubFor(get("/api/v2/users/me/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(ADMIN_BEARER_TOKEN))
                 .willReturn(okForJson(
                         ImmutableMap.of(
@@ -99,7 +99,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                                 "email", "foo@bar.com")
                 )));
 
-        stubFor(get("/api/v2/users/me")
+        stubFor(get("/api/v2/users/me/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_A_BEARER_TOKEN))
                 .willReturn(okForJson(
                         ImmutableMap.of(
@@ -108,7 +108,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                                 "email", "usera@mailinator.com")
                 )));
 
-        stubFor(get("/api/v2/users/me")
+        stubFor(get("/api/v2/users/me/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_B_BEARER_TOKEN))
                 .willReturn(okForJson(
                         ImmutableMap.of(

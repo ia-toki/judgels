@@ -9,7 +9,7 @@ import io.dropwizard.jackson.Jackson;
 import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Singleton;
-import judgels.jophiel.api.user.UserService;
+import judgels.jophiel.api.user.MyService;
 import judgels.persistence.ActorProvider;
 import judgels.service.actor.ActorChecker;
 import judgels.service.actor.PerRequestActorProvider;
@@ -59,10 +59,10 @@ public class UrielModule {
 
     @Provides
     @Singleton
-    static ActorChecker actorChecker(UserService userService) {
+    static ActorChecker actorChecker(MyService myService) {
         return new ActorChecker(authHeader -> {
             try {
-                return Optional.of(userService.getMyself(authHeader).getJid());
+                return Optional.of(myService.getMyself(authHeader).getJid());
             } catch (RemoteException e) {
                 return Optional.empty();
             }
