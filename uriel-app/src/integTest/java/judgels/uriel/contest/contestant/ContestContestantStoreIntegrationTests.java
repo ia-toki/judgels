@@ -72,18 +72,4 @@ class ContestContestantStoreIntegrationTests {
         assertThat(contestantJids.getTotalData()).isEqualTo(4);
         assertThat(contestantJids.getData()).containsOnly("A", "B", "C", "D");
     }
-
-    @Test
-    void can_accept_empty_set() {
-        Contest contest = contestStore.createContest(new ContestData.Builder()
-                .name("contestA")
-                .description("contest A")
-                .style(ContestStyle.IOI)
-                .build());
-
-        store.addContestants(contest.getJid(), ImmutableList.of());
-
-        Page<String> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
-        assertThat(contestantJids.getTotalData()).isEqualTo(0);
-    }
 }

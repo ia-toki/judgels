@@ -22,9 +22,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestContestantModel.class})
-public class ContestStoreIntegrationTests {
+class ContestStoreIntegrationTests {
     private ContestStore store;
-    private ContestContestantStore contestContestantStore;
+    private ContestContestantStore contestantStore;
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
@@ -39,43 +39,40 @@ public class ContestStoreIntegrationTests {
                 new FixedActorProvider());
 
         store = new ContestStore(contestDao);
-        contestContestantStore = new ContestContestantStore(contestantDao);
+        contestantStore = new ContestContestantStore(contestantDao);
     }
 
     @Test
-    void test_contest() {
+    void get_contests() {
         Contest contestA = store.createContest(new ContestData.Builder()
                 .name("Turfa")
                 .description("Ganteng")
                 .style(ContestStyle.IOI)
-                .build()
-        );
+                .build());
 
         Contest contestB = store.createContest(new ContestData.Builder()
                 .name("Ganteng")
                 .description("Turfa")
                 .style(ContestStyle.ICPC)
-                .build()
-        );
+                .build());
 
         String userJidA = "userJidA";
         String userJidB  = "userJidB";
         String userJidC = "userJidC";
 
-        contestContestantStore.addContestants(contestA.getJid(), ImmutableList.of(userJidA, userJidB));
-        contestContestantStore.addContestants(contestB.getJid(), ImmutableList.of(userJidB));
+        contestantStore.addContestants(contestA.getJid(), ImmutableList.of(userJidA, userJidB));
+        contestantStore.addContestants(contestB.getJid(), ImmutableList.of(userJidB));
 
         Page<Contest> contestPageA = store.getContests(userJidA, 1, 10);
-        Page<Contest> contestPageB = store.getContests(userJidB, 1, 10);
-        Page<Contest> contestPageC = store.getContests(userJidC, 1, 10);
-
         assertThat(contestPageA.getTotalData()).isEqualTo(1);
         assertThat(contestPageA.getData()).containsExactly(contestA);
 
+        Page<Contest> contestPageB = store.getContests(userJidB, 1, 10);
         assertThat(contestPageB.getTotalData()).isEqualTo(2);
         assertThat(contestPageB.getData()).containsExactly(contestA, contestB);
 
-        assertThat(contestPageC.getTotalData()).isEqualTo(0);
+        Page<Contest> contestPageC = store.getContests(userJidC, 1, 10);
+        assertThat(contestPageC.getTotalData()).isZero();
         assertThat(contestPageC.getData()).isEmpty();
     }
 }

@@ -31,13 +31,13 @@ class ContestScoreboardStoreIntegrationTests {
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
-        ContestScoreboardDao contestScoreboardDao = new ContestScoreboardHibernateDao(
+        ContestScoreboardDao scoreboardDao = new ContestScoreboardHibernateDao(
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
 
         contestStore = new ContestStore(contestDao);
-        store = new ContestScoreboardStore(contestScoreboardDao);
+        store = new ContestScoreboardStore(scoreboardDao);
     }
 
     @Test
