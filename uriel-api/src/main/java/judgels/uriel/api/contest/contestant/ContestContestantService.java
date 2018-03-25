@@ -17,10 +17,10 @@ import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.ContestContestant;
 
-@Path("/api/v2/contests")
+@Path("/api/v2/contests/{contestJid}/contestants")
 public interface ContestContestantService {
     @GET
-    @Path("/{contestJid}/contestants")
+    @Path("/")
     @Produces(APPLICATION_JSON)
     Page<ContestContestant> getContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
@@ -29,7 +29,7 @@ public interface ContestContestantService {
             @DefaultValue("10") @QueryParam("pageSize") int pageSize);
 
     @POST
-    @Path("/{contestJid}/contestants")
+    @Path("/")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     List<String> addContestants(

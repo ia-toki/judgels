@@ -10,17 +10,17 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/contests")
+@Path("/api/v2/contests/{contestJid}/scoreboard")
 public interface ContestScoreboardService {
     @GET
-    @Path("/{contestJid}/scoreboard")
+    @Path("/")
     @Produces(APPLICATION_JSON)
     ContestScoreboard getScoreboard(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
 
     @GET
-    @Path("/{contestJid}/scoreboard/frozen")
+    @Path("/frozen")
     @Produces(APPLICATION_JSON)
     ContestScoreboard getFrozenScoreboard(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
