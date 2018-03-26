@@ -1,5 +1,7 @@
 package judgels.uriel;
 
+import static judgels.uriel.VersionResource.VERSION;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.palantir.remoting.api.errors.RemoteException;
 import com.palantir.remoting3.clients.UserAgent;
@@ -21,11 +23,7 @@ public class UrielModule {
     @Provides
     @Singleton
     static UserAgent userAgent() {
-        String version = UrielModule.class.getPackage().getImplementationVersion();
-        if (version == null) {
-            version = UserAgent.Agent.DEFAULT_VERSION;
-        }
-
+        String version = VERSION == null ? UserAgent.Agent.DEFAULT_VERSION : VERSION;
         return UserAgent.of(UserAgent.Agent.of("uriel", version));
     }
 
