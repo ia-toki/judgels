@@ -11,19 +11,24 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.hibernate.AdminRoleHibernateDao;
 import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.ContestHibernateDao;
+import judgels.uriel.persistence.AdminRoleDao;
+import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.role.RoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(models = {ContestModel.class, ContestContestantModel.class})
+@WithHibernateSession(models = {AdminRoleModel.class, ContestModel.class, ContestContestantModel.class})
 class ContestStoreIntegrationTests {
     private ContestStore store;
+    private RoleStore roleStore;
     private ContestContestantStore contestantStore;
 
     @BeforeEach
@@ -38,8 +43,14 @@ class ContestStoreIntegrationTests {
                 new FixedClock(),
                 new FixedActorProvider());
 
-        store = new ContestStore(contestDao);
+        AdminRoleDao adminRoleDao = new AdminRoleHibernateDao(
+                sessionFactory,
+                new FixedClock(),
+                new FixedActorProvider());
+
+        roleStore = new RoleStore(adminRoleDao, contestantDao);
         contestantStore = new ContestContestantStore(contestantDao);
+        store = new ContestStore(roleStore, contestDao);
     }
 
     @Test
@@ -56,6 +67,7 @@ class ContestStoreIntegrationTests {
                 .style(ContestStyle.ICPC)
                 .build());
 
+        String adminJid = "adminJid";
         String userJidA = "userJidA";
         String userJidB  = "userJidB";
         String userJidC = "userJidC";
@@ -63,16 +75,21 @@ class ContestStoreIntegrationTests {
         contestantStore.addContestants(contestA.getJid(), ImmutableList.of(userJidA, userJidB));
         contestantStore.addContestants(contestB.getJid(), ImmutableList.of(userJidB));
 
-        Page<Contest> contestPageA = store.getContests(userJidA, 1, 10);
-        assertThat(contestPageA.getTotalData()).isEqualTo(1);
-        assertThat(contestPageA.getData()).containsExactly(contestA);
+        Page<Contest> contests = store.getContests(userJidA, 1, 10);
+        assertThat(contests.getTotalData()).isEqualTo(1);
+        assertThat(contests.getData()).containsExactly(contestA);
 
-        Page<Contest> contestPageB = store.getContests(userJidB, 1, 10);
-        assertThat(contestPageB.getTotalData()).isEqualTo(2);
-        assertThat(contestPageB.getData()).containsExactly(contestA, contestB);
+        contests = store.getContests(userJidB, 1, 10);
+        assertThat(contests.getTotalData()).isEqualTo(2);
+        assertThat(contests.getData()).containsExactly(contestA, contestB);
 
-        Page<Contest> contestPageC = store.getContests(userJidC, 1, 10);
-        assertThat(contestPageC.getTotalData()).isZero();
-        assertThat(contestPageC.getData()).isEmpty();
+        contests = store.getContests(userJidC, 1, 10);
+        assertThat(contests.getTotalData()).isZero();
+        assertThat(contests.getData()).isEmpty();
+
+        roleStore.addAdmin(adminJid);
+        contests = store.getContests(adminJid, 1, 10);
+        assertThat(contests.getTotalData()).isEqualTo(2);
+        assertThat(contests.getData()).containsExactly(contestA, contestB);
     }
 }

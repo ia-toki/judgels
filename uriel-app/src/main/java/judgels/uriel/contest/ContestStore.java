@@ -9,12 +9,15 @@ import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.role.RoleStore;
 
 public class ContestStore {
+    private final RoleStore roleStore;
     private final ContestDao contestDao;
 
     @Inject
-    public ContestStore(ContestDao contestDao) {
+    public ContestStore(RoleStore roleStore, ContestDao contestDao) {
+        this.roleStore = roleStore;
         this.contestDao = contestDao;
     }
 
@@ -23,7 +26,12 @@ public class ContestStore {
     }
 
     public Page<Contest> getContests(String userJid, int page, int pageSize) {
-        Page<ContestModel> models = contestDao.selectAllByUserJid(userJid, page, pageSize);
+        Page<ContestModel> models;
+        if (roleStore.isAdmin(userJid)) {
+            models = contestDao.selectAll(page, pageSize);
+        } else {
+            models = contestDao.selectAllByUserJid(userJid, page, pageSize);
+        }
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 

@@ -25,7 +25,7 @@ public class RoleStore {
         return adminRoleDao.existsByUserJid(userJid);
     }
 
-    public boolean isContestant(String contestJid, String userJid) {
+    public boolean isContestant(String userJid, String contestJid) {
         return contestantDao.existsByContestJidAndUserJid(contestJid, userJid);
     }
 }

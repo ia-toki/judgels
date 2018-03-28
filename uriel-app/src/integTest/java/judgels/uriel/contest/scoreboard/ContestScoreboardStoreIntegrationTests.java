@@ -10,12 +10,17 @@ import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.hibernate.AdminRoleHibernateDao;
+import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.ContestHibernateDao;
 import judgels.uriel.hibernate.ContestScoreboardHibernateDao;
+import judgels.uriel.persistence.AdminRoleDao;
+import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestScoreboardDao;
 import judgels.uriel.persistence.ContestScoreboardModel;
+import judgels.uriel.role.RoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,8 +40,18 @@ class ContestScoreboardStoreIntegrationTests {
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
+        ContestContestantDao contestantDao = new ContestContestantHibernateDao(
+                sessionFactory,
+                new FixedClock(),
+                new FixedActorProvider());
+        AdminRoleDao adminRoleDao = new AdminRoleHibernateDao(
+                sessionFactory,
+                new FixedClock(),
+                new FixedActorProvider());
 
-        contestStore = new ContestStore(contestDao);
+        RoleStore roleStore = new RoleStore(adminRoleDao, contestantDao);
+
+        contestStore = new ContestStore(roleStore, contestDao);
         store = new ContestScoreboardStore(scoreboardDao);
     }
 

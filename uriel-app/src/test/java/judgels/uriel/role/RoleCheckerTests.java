@@ -22,7 +22,7 @@ class RoleCheckerTests {
 
     @Test
     void read_contest() {
-        when(roleStore.isContestant("contestA", "contestantJid")).thenReturn(true);
+        when(roleStore.isContestant("contestantJid", "contestA")).thenReturn(true);
 
         assertThat(checker.canReadContest("adminJid", "contestA")).isTrue();
         assertThat(checker.canReadContest("contestantJid", "contestA")).isTrue();

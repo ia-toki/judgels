@@ -44,6 +44,6 @@ class RoleStoreIntegrationTests {
 
         contestantDao.insert(contestantModel);
 
-        assertThat(store.isContestant("contestA", "contestantJid")).isTrue();
+        assertThat(store.isContestant("contestantJid", "contestA")).isTrue();
     }
 }

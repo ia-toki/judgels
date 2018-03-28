@@ -50,7 +50,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
 
         // TODO(fushar): this should return frozen scoreboard when necessary
 
-        return getScoreboardOfType(authHeader, contestJid, ContestScoreboardType.OFFICIAL);
+        return getScoreboardOfType(contestJid, ContestScoreboardType.OFFICIAL);
     }
 
     @Override
@@ -59,11 +59,10 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canReadContest(actorJid, contestJid));
 
-        return getScoreboardOfType(authHeader, contestJid, ContestScoreboardType.FROZEN);
+        return getScoreboardOfType(contestJid, ContestScoreboardType.FROZEN);
     }
 
-    private ContestScoreboard getScoreboardOfType(AuthHeader authHeader, String contestJid,
-            ContestScoreboardType type) {
+    private ContestScoreboard getScoreboardOfType(String contestJid, ContestScoreboardType type) {
         ContestScoreboardData data =
                 checkFound(contestScoreboardStore.findScoreboard(contestJid, type));
 

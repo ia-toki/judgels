@@ -11,12 +11,15 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.hibernate.AdminRoleHibernateDao;
 import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.ContestHibernateDao;
+import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.role.RoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +41,14 @@ class ContestContestantStoreIntegrationTests {
                 new FixedClock(),
                 new FixedActorProvider());
 
-        contestStore = new ContestStore(contestDao);
+        AdminRoleDao adminRoleDao = new AdminRoleHibernateDao(
+                sessionFactory,
+                new FixedClock(),
+                new FixedActorProvider());
+
+        RoleStore roleStore = new RoleStore(adminRoleDao, contestantDao);
+
+        contestStore = new ContestStore(roleStore, contestDao);
         store = new ContestContestantStore(contestantDao);
     }
 
