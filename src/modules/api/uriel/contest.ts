@@ -20,12 +20,12 @@ export function createContestAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    getContests: (page: number, pageSize: number): Promise<ContestList> => {
-      return get(`${baseURL}?page=${page}&pageSize=${pageSize}`);
+    getContests: (token: string, page: number, pageSize: number): Promise<ContestList> => {
+      return get(`${baseURL}?page=${page}&pageSize=${pageSize}`, token);
     },
 
-    getContest: (contestJid: string): Promise<Contest> => {
-      return get(`${baseURL}/${contestJid}`);
+    getContest: (token: string, contestJid: string): Promise<Contest> => {
+      return get(`${baseURL}/${contestJid}`, token);
     },
   };
 }

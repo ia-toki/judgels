@@ -17,8 +17,8 @@ export function createContestScoreboardAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    getScoreboard: (contestJid: string): Promise<ContestScoreboard> => {
-      return get(`${baseURL}/${contestJid}/scoreboard`);
+    getScoreboard: (token: string, contestJid: string): Promise<ContestScoreboard> => {
+      return get(`${baseURL}/${contestJid}/scoreboard`, token);
     },
   };
 }

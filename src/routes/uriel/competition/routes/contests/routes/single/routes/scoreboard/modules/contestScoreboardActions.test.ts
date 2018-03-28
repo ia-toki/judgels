@@ -1,16 +1,16 @@
 import { contestScoreboardActions } from './contestScoreboardActions';
-import { contestJid } from '../../../../../../../../../../fixtures/state';
+import { contestJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
 import { Scoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
+import { AppState } from '../../../../../../../../../../modules/store';
 
 describe('contestScoreboardActions', () => {
   let dispatch: jest.Mock<any>;
-  let getState: jest.Mock<any>;
+  const getState = (): Partial<AppState> => ({ session: sessionState });
 
   let contestScoreboardAPI: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
-    getState = jest.fn();
 
     contestScoreboardAPI = {
       getScoreboard: jest.fn(),
@@ -29,7 +29,7 @@ describe('contestScoreboardActions', () => {
     });
 
     it('calls API to get contest scoreboard', () => {
-      expect(contestScoreboardAPI.getScoreboard).toHaveBeenCalledWith(contestJid);
+      expect(contestScoreboardAPI.getScoreboard).toHaveBeenCalledWith(token, contestJid);
     });
   });
 });

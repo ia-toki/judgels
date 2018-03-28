@@ -1,17 +1,17 @@
 import { contestActions } from './contestActions';
 import { PutContest } from './contestReducer';
 import { ContestList } from '../../../../../../modules/api/uriel/contest';
-import { contest, contestJid } from '../../../../../../fixtures/state';
+import { contest, contestJid, sessionState, token } from '../../../../../../fixtures/state';
+import { AppState } from '../../../../../../modules/store';
 
 describe('contestActions', () => {
   let dispatch: jest.Mock<any>;
-  let getState: jest.Mock<any>;
+  const getState = (): Partial<AppState> => ({ session: sessionState });
 
   let contestAPI: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
-    getState = jest.fn();
 
     contestAPI = {
       getContests: jest.fn(),
@@ -34,7 +34,7 @@ describe('contestActions', () => {
     });
 
     it('calls API to get contest list', () => {
-      expect(contestAPI.getContests).toHaveBeenCalledWith(2, 20);
+      expect(contestAPI.getContests).toHaveBeenCalledWith(token, 2, 20);
     });
   });
 
@@ -49,7 +49,7 @@ describe('contestActions', () => {
     });
 
     it('calls API to get contest', () => {
-      expect(contestAPI.getContest).toHaveBeenCalledWith(contestJid);
+      expect(contestAPI.getContest).toHaveBeenCalledWith(token, contestJid);
     });
 
     it('puts the contest', () => {
