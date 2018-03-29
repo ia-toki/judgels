@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.sql.Date;
 import java.time.Clock;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +14,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.OrderDir;
+import judgels.persistence.SelectAllOptions;
+import judgels.persistence.SelectCountOptions;
 import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.UnmodifiableModel;
 import judgels.persistence.api.Page;
@@ -70,74 +72,64 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
-    public long selectCount() {
-        return selectCountByColumns(ImmutableMap.of());
-    }
-
-    @Override
-    public long selectCountByColumn(SingularAttribute<M, String> column, String value) {
-        return selectCountByColumns(ImmutableMap.of(column, value));
-    }
-
-    @Override
-    public long selectCountByColumns(Map<SingularAttribute<M, ?>, ?> key) {
+    public long selectCount(SelectCountOptions<M> options) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<M> root = cq.from(getEntityClass());
-        cq.select(cb.count(root)).where(cb.and(key.entrySet()
+
+        Predicate filterEq = cb.and(options.getFilterColumnsEq().entrySet()
                 .stream()
                 .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
-                .toArray(Predicate[]::new)));
+                .toArray(Predicate[]::new));
+        Predicate filterIn = cb.and(options.getFilterColumnsIn().entrySet()
+                .stream()
+                .map(e -> root.get(e.getKey()).in(e.getValue()))
+                .toArray(Predicate[]::new));
+
+        cq.select(cb.count(root)).where(cb.and(filterEq, filterIn));
         return currentSession().createQuery(cq).getSingleResult();
     }
 
     @Override
-    public Page<M> selectAll(int page, int pageSize) {
-        return selectAllByColumns(ImmutableMap.of(), page, pageSize);
-    }
-
-    @Override
-    public Page<M> selectAllByColumn(SingularAttribute<M, String> column, String value, int page, int pageSize) {
-        return selectAllByColumns(ImmutableMap.of(column, value), page, pageSize);
-    }
-
-    @Override
-    public Page<M> selectAllByColumns(Map<SingularAttribute<M, ?>, ?> key, int page, int pageSize) {
+    public Page<M> selectAll(SelectAllOptions<M> options) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<M> cq = criteriaQuery();
         Root<M> root = cq.from(getEntityClass());
-        cq.where(cb.and(key.entrySet()
+
+        Predicate filterEq = cb.and(options.getFilterColumnsEq().entrySet()
                 .stream()
                 .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
-                .toArray(Predicate[]::new)));
+                .toArray(Predicate[]::new));
+        Predicate filterIn = cb.and(options.getFilterColumnsIn().entrySet()
+                .stream()
+                .map(e -> root.get(e.getKey()).in(e.getValue()))
+                .toArray(Predicate[]::new));
+
+        cq.where(cb.and(filterEq, filterIn));
+
+        if (options.getOrderDir() == OrderDir.ASC) {
+            cq.orderBy(cb.asc(root.get(options.getOrderBy())));
+        } else {
+            cq.orderBy(cb.desc(root.get(options.getOrderBy())));
+        }
 
         Query<M> query = currentSession().createQuery(cq);
-        query.setFirstResult((page - 1) * pageSize);
-        query.setMaxResults(pageSize);
+
+        if (options.getPageSize() > 0) {
+            query.setFirstResult((options.getPage() - 1) * options.getPageSize());
+            query.setMaxResults(options.getPageSize());
+        }
 
         List<M> data = query.list();
-        long totalData = selectCountByColumns(key);
+        long totalData = selectCount(new SelectCountOptions.Builder<M>()
+                .filterColumnsEq(options.getFilterColumnsEq())
+                .filterColumnsIn(options.getFilterColumnsIn())
+                .build());
 
         return new Page.Builder<M>()
                 .totalData(totalData)
                 .data(data)
                 .build();
-    }
-
-    @Override
-    public List<M> selectAllByColumnIn(
-            Map<SingularAttribute<M, ?>, ?> key,
-            SingularAttribute<M, String> columnIn,
-            Collection<String> valuesIn) {
-
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<M> cq = criteriaQuery();
-        Root<M> root = cq.from(getEntityClass());
-        cq.where(cb.and(root.get(columnIn).in(valuesIn), cb.and(key.entrySet()
-                .stream()
-                .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
-                .toArray(Predicate[]::new))));
-        return currentSession().createQuery(cq).getResultList();
     }
 
     @Override

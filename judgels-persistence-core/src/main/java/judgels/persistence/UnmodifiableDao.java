@@ -1,6 +1,5 @@
 package judgels.persistence;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,18 +14,8 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value);
     Optional<M> selectByUniqueColumns(Map<SingularAttribute<M, ?>, ?> key);
 
-    long selectCount();
-    long selectCountByColumn(SingularAttribute<M, String> column, String value);
-    long selectCountByColumns(Map<SingularAttribute<M, ?>, ?> key);
-
-    Page<M> selectAll(int page, int pageSize);
-    Page<M> selectAllByColumn(SingularAttribute<M, String> column, String value, int page, int pageSize);
-    Page<M> selectAllByColumns(Map<SingularAttribute<M, ?>, ?> key, int page, int pageSize);
-
-    List<M> selectAllByColumnIn(
-            Map<SingularAttribute<M, ?>, ?> key,
-            SingularAttribute<M, String> columnIn,
-            Collection<String> valuesIn);
+    long selectCount(SelectCountOptions<M> options);
+    Page<M> selectAll(SelectAllOptions<M> options);
 
     void delete(M model);
 }
