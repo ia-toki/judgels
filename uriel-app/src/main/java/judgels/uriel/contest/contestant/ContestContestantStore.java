@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
 
@@ -19,10 +20,8 @@ public class ContestContestantStore {
         this.contestContestantDao = contestContestantDao;
     }
 
-    public Page<String> getContestantJids(String contestJid, int page, int pageSize) {
-        Page<ContestContestantModel> modelsPage =
-                contestContestantDao.selectAllByContestJid(contestJid, page, pageSize);
-
+    public Page<String> getContestantJids(String contestJid, SelectionOptions options) {
+        Page<ContestContestantModel> modelsPage = contestContestantDao.selectAllByContestJid(contestJid, options);
         return modelsPage.mapData(data -> Lists.transform(data, ContestContestantStore::fromModel));
     }
 
@@ -46,7 +45,7 @@ public class ContestContestantStore {
     }
 
     private List<String> filterOutExistingUserJids(String contestJid, List<String> userJids) {
-        List<String> existingJids = contestContestantDao.selectAllByUserJids(contestJid, userJids).stream()
+        List<String> existingJids = contestContestantDao.selectAllByContestJidAndUserJids(contestJid, userJids).stream()
                 .map(contestant -> contestant.userJid)
                 .collect(Collectors.toList());
 

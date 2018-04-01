@@ -4,8 +4,8 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
+import java.util.Optional;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -25,8 +25,7 @@ public interface ContestContestantService {
     Page<ContestContestant> getContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            @DefaultValue("1") @QueryParam("page") int page,
-            @DefaultValue("10") @QueryParam("pageSize") int pageSize);
+            @QueryParam("page") Optional<Integer> page);
 
     @POST
     @Path("/")

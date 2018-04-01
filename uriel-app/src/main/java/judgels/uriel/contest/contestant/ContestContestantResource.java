@@ -6,10 +6,12 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.UserService;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.ContestContestant;
@@ -40,11 +42,13 @@ public class ContestContestantResource implements ContestContestantService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Page<ContestContestant> getContestants(AuthHeader authHeader, String contestJid, int page, int pageSize) {
+    public Page<ContestContestant> getContestants(AuthHeader authHeader, String contestJid, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canReadContest(actorJid, contestJid));
 
-        Page<String> contestantJids = contestantStore.getContestantJids(contestJid, page, pageSize);
+        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        page.ifPresent(options::page);
+        Page<String> contestantJids = contestantStore.getContestantJids(contestJid, options.build());
         return contestantJids.mapData(jids ->
                 userService.findUsersByJids(ImmutableSet.copyOf(jids)).values().stream()
                         .map(user -> new ContestContestant.Builder().contestant(user).build())
@@ -60,5 +64,4 @@ public class ContestContestantResource implements ContestContestantService {
 
         return contestantStore.addContestants(contestJid, contestantJids);
     }
-
 }

@@ -4,8 +4,11 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Optional;
 import javax.inject.Inject;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -39,9 +42,13 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Page<Contest> getContests(AuthHeader authHeader, int page, int pageSize) {
+    public Page<Contest> getContests(AuthHeader authHeader, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
-        return contestStore.getContests(actorJid, page, pageSize);
+
+        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        options.orderDir(OrderDir.DESC);
+        page.ifPresent(options::page);
+        return contestStore.getContests(actorJid, options.build());
     }
 
     @Override

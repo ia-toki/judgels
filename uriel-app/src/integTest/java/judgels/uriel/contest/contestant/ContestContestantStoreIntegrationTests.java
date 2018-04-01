@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
@@ -62,8 +63,7 @@ class ContestContestantStoreIntegrationTests {
 
         store.addContestants(contest.getJid(), ImmutableList.of("A", "B"));
 
-        Page<String> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
-        assertThat(contestantJids.getTotalData()).isEqualTo(2);
+        Page<String> contestantJids = store.getContestantJids(contest.getJid(), SelectionOptions.DEFAULT);
         assertThat(contestantJids.getData()).containsOnly("A", "B");
     }
 
@@ -78,8 +78,7 @@ class ContestContestantStoreIntegrationTests {
         store.addContestants(contest.getJid(), ImmutableList.of("A", "B"));
         store.addContestants(contest.getJid(), ImmutableList.of("A", "B", "B", "C", "D"));
 
-        Page<String> contestantJids = store.getContestantJids(contest.getJid(), 1, 10);
-        assertThat(contestantJids.getTotalData()).isEqualTo(4);
+        Page<String> contestantJids = store.getContestantJids(contest.getJid(), SelectionOptions.DEFAULT);
         assertThat(contestantJids.getData()).containsOnly("A", "B", "C", "D");
     }
 }

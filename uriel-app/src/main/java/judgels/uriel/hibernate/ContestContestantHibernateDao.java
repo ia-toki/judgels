@@ -8,7 +8,9 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
@@ -25,16 +27,18 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
     }
 
     @Override
-    public Set<ContestContestantModel> selectAllByUserJids(String contestJid, List<String> userJids) {
-        return ImmutableSet.copyOf(selectAllByColumnIn(
-                ImmutableMap.of(ContestContestantModel_.contestJid, contestJid),
-                ContestContestantModel_.userJid,
-                userJids));
+    public Set<ContestContestantModel> selectAllByContestJidAndUserJids(String contestJid, List<String> userJids) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
+                .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
+                .putColumnsIn(ContestContestantModel_.userJid, userJids)
+                .build()).getData());
     }
 
     @Override
-    public Page<ContestContestantModel> selectAllByContestJid(String contestJid, int page, int pageSize) {
-        return selectAllByColumn(ContestContestantModel_.contestJid, contestJid, page, pageSize);
+    public Page<ContestContestantModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
+        return selectAll(new FilterOptions.Builder<ContestContestantModel>()
+                .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
+                .build(), options);
     }
 
     @Override

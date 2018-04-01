@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
@@ -75,21 +76,17 @@ class ContestStoreIntegrationTests {
         contestantStore.addContestants(contestA.getJid(), ImmutableList.of(userJidA, userJidB));
         contestantStore.addContestants(contestB.getJid(), ImmutableList.of(userJidB));
 
-        Page<Contest> contests = store.getContests(userJidA, 1, 10);
-        assertThat(contests.getTotalData()).isEqualTo(1);
+        Page<Contest> contests = store.getContests(userJidA, SelectionOptions.DEFAULT);
         assertThat(contests.getData()).containsExactly(contestA);
 
-        contests = store.getContests(userJidB, 1, 10);
-        assertThat(contests.getTotalData()).isEqualTo(2);
+        contests = store.getContests(userJidB, SelectionOptions.DEFAULT);
         assertThat(contests.getData()).containsExactly(contestA, contestB);
 
-        contests = store.getContests(userJidC, 1, 10);
-        assertThat(contests.getTotalData()).isZero();
+        contests = store.getContests(userJidC, SelectionOptions.DEFAULT);
         assertThat(contests.getData()).isEmpty();
 
         roleStore.addAdmin(adminJid);
-        contests = store.getContests(adminJid, 1, 10);
-        assertThat(contests.getTotalData()).isEqualTo(2);
+        contests = store.getContests(adminJid, SelectionOptions.DEFAULT);
         assertThat(contests.getData()).containsExactly(contestA, contestB);
     }
 }

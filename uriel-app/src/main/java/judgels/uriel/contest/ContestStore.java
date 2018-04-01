@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
@@ -25,12 +26,12 @@ public class ContestStore {
         return contestDao.selectByJid(contestJid).map(ContestStore::fromModel);
     }
 
-    public Page<Contest> getContests(String userJid, int page, int pageSize) {
+    public Page<Contest> getContests(String userJid, SelectionOptions options) {
         Page<ContestModel> models;
         if (roleStore.isAdmin(userJid)) {
-            models = contestDao.selectAll(page, pageSize);
+            models = contestDao.selectAll(options);
         } else {
-            models = contestDao.selectAllByUserJid(userJid, page, pageSize);
+            models = contestDao.selectAllByUserJid(userJid, options);
         }
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }

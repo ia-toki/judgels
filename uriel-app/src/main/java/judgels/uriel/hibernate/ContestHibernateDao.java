@@ -11,6 +11,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestContestantModel_;
@@ -28,7 +29,7 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     }
 
     @Override
-    public Page<ContestModel> selectAllByUserJid(String userJid, int page, int pageSize) {
+    public Page<ContestModel> selectAllByUserJid(String userJid, SelectionOptions options) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<ContestModel> cq = cb.createQuery(ContestModel.class);
         Root<ContestModel> root = cq.from(ContestModel.class);
@@ -37,8 +38,8 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
         Query<ContestModel> query = currentSession().createQuery(cq);
 
-        query.setFirstResult((page - 1) * pageSize);
-        query.setMaxResults(pageSize);
+        query.setFirstResult((options.getPage() - 1) * options.getPageSize());
+        query.setMaxResults(options.getPageSize());
 
         List<ContestModel> data = query.list();
         long totalData = selectCountByUserJid(userJid);

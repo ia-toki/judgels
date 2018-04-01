@@ -1,6 +1,7 @@
 package judgels.uriel.api.contest;
 
 import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
+import static java.util.Optional.empty;
 import static judgels.uriel.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
@@ -112,12 +113,10 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 contestB.getJid(),
                 ImmutableList.of(USER_A_JID, USER_B_JID));
 
-        Page<Contest> userAContests = contestService.getContests(USER_A_HEADER, 1, 10);
-        assertThat(userAContests.getTotalData()).isEqualTo(2);
+        Page<Contest> userAContests = contestService.getContests(USER_A_HEADER, empty());
         assertThat(userAContests.getData()).containsExactly(contestA, contestB);
 
-        Page<Contest> userBContests = contestService.getContests(USER_B_HEADER, 1, 10);
-        assertThat(userBContests.getTotalData()).isEqualTo(1);
+        Page<Contest> userBContests = contestService.getContests(USER_B_HEADER, empty());
         assertThat(userBContests.getData()).containsExactly(contestB);
     }
 }
