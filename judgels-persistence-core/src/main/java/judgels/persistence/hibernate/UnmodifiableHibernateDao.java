@@ -14,12 +14,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.ActorProvider;
-import judgels.persistence.OrderDir;
-import judgels.persistence.SelectAllOptions;
-import judgels.persistence.SelectCountOptions;
+import judgels.persistence.FilterOptions;
 import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.UnmodifiableModel;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
@@ -72,16 +72,16 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
-    public long selectCount(SelectCountOptions<M> options) {
+    public long selectCount(FilterOptions<M> filterOptions) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<M> root = cq.from(getEntityClass());
 
-        Predicate filterEq = cb.and(options.getFilterColumnsEq().entrySet()
+        Predicate filterEq = cb.and(filterOptions.getColumnsEq().entrySet()
                 .stream()
                 .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
                 .toArray(Predicate[]::new));
-        Predicate filterIn = cb.and(options.getFilterColumnsIn().entrySet()
+        Predicate filterIn = cb.and(filterOptions.getColumnsIn().entrySet()
                 .stream()
                 .map(e -> root.get(e.getKey()).in(e.getValue()))
                 .toArray(Predicate[]::new));
@@ -91,40 +91,37 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
-    public Page<M> selectAll(SelectAllOptions<M> options) {
+    public Page<M> selectAll(FilterOptions<M> filterOptions, SelectionOptions selectionOptions) {
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<M> cq = criteriaQuery();
         Root<M> root = cq.from(getEntityClass());
 
-        Predicate filterEq = cb.and(options.getFilterColumnsEq().entrySet()
+        Predicate filterEq = cb.and(filterOptions.getColumnsEq().entrySet()
                 .stream()
                 .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
                 .toArray(Predicate[]::new));
-        Predicate filterIn = cb.and(options.getFilterColumnsIn().entrySet()
+        Predicate filterIn = cb.and(filterOptions.getColumnsIn().entrySet()
                 .stream()
                 .map(e -> root.get(e.getKey()).in(e.getValue()))
                 .toArray(Predicate[]::new));
 
         cq.where(cb.and(filterEq, filterIn));
 
-        if (options.getOrderDir() == OrderDir.ASC) {
-            cq.orderBy(cb.asc(root.get(options.getOrderBy())));
+        if (selectionOptions.getOrderDir() == OrderDir.ASC) {
+            cq.orderBy(cb.asc(root.get(selectionOptions.getOrderBy())));
         } else {
-            cq.orderBy(cb.desc(root.get(options.getOrderBy())));
+            cq.orderBy(cb.desc(root.get(selectionOptions.getOrderBy())));
         }
 
         Query<M> query = currentSession().createQuery(cq);
 
-        if (options.getPageSize() > 0) {
-            query.setFirstResult((options.getPage() - 1) * options.getPageSize());
-            query.setMaxResults(options.getPageSize());
+        if (selectionOptions.getPageSize() > 0) {
+            query.setFirstResult((selectionOptions.getPage() - 1) * selectionOptions.getPageSize());
+            query.setMaxResults(selectionOptions.getPageSize());
         }
 
         List<M> data = query.list();
-        long totalData = selectCount(new SelectCountOptions.Builder<M>()
-                .filterColumnsEq(options.getFilterColumnsEq())
-                .filterColumnsIn(options.getFilterColumnsIn())
-                .build());
+        long totalData = selectCount(filterOptions);
 
         return new Page.Builder<M>()
                 .totalData(totalData)

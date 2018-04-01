@@ -9,11 +9,12 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.FilterOptions;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
-import judgels.persistence.OrderDir;
-import judgels.persistence.SelectAllOptions;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 
@@ -132,7 +133,7 @@ class HibernateDaoIntegrationTests {
                 new FixedClock(),
                 new FixedActorProvider());
 
-        Page<ExampleModel> page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
+        Page<ExampleModel> page = dao.selectAll(new SelectionOptions.Builder()
                 .page(1)
                 .pageSize(10)
                 .build());
@@ -147,28 +148,28 @@ class HibernateDaoIntegrationTests {
         model2.column1 = "value2";
         dao.insert(model2);
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
+        page = dao.selectAll(new SelectionOptions.Builder()
                 .page(1)
                 .pageSize(1)
                 .build());
         assertThat(page.getTotalData()).isEqualTo(2);
         assertThat(page.getData()).containsExactly(model1);
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
+        page = dao.selectAll(new SelectionOptions.Builder()
                 .page(2)
                 .pageSize(1)
                 .build());
         assertThat(page.getTotalData()).isEqualTo(2);
         assertThat(page.getData()).containsExactly(model2);
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
+        page = dao.selectAll(new SelectionOptions.Builder()
                 .page(1)
                 .pageSize(2)
                 .build());
         assertThat(page.getTotalData()).isEqualTo(2);
         assertThat(page.getData()).containsExactly(model1, model2);
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
+        page = dao.selectAll(new SelectionOptions.Builder()
                 .page(1)
                 .pageSize(10)
                 .build());
@@ -204,48 +205,48 @@ class HibernateDaoIntegrationTests {
         model4.uniqueColumn = "unique";
         dao.insert(model4);
 
-        Page<ExampleModel> page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .putFilterColumnsEq(ExampleModel_.column1, "a1")
-                .build());
+        Page<ExampleModel> page = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.column1, "a1")
+                .build(), new SelectionOptions.Builder().build());
         assertThat(page.getTotalData()).isEqualTo(2);
         assertThat(page.getData()).containsExactly(model1, model2);
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .putFilterColumnsEq(ExampleModel_.column2, "b1")
-                .build());
+        page = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.column2, "b1")
+                .build(), new SelectionOptions.Builder().build());
         assertThat(page.getTotalData()).isEqualTo(3);
         assertThat(page.getData()).containsExactly(model1, model3, model4);
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .putFilterColumnsEq(ExampleModel_.column2, "b2")
-                .build());
+        page = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.column2, "b2")
+                .build(), new SelectionOptions.Builder().build());
         assertThat(page.getTotalData()).isEqualTo(1);
         assertThat(page.getData()).containsExactly(model2);
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .putFilterColumnsEq(ExampleModel_.column2, "b3")
-                .build());
+        page = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.column2, "b3")
+                .build(), new SelectionOptions.Builder().build());
         assertThat(page.getTotalData()).isZero();
         assertThat(page.getData()).isEmpty();
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .putFilterColumnsEq(ExampleModel_.column1, "a1")
-                .putFilterColumnsEq(ExampleModel_.column2, "b1")
-                .build());
+        page = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.column1, "a1")
+                .putColumnsEq(ExampleModel_.column2, "b1")
+                .build(), new SelectionOptions.Builder().build());
         assertThat(page.getTotalData()).isEqualTo(1);
         assertThat(page.getData()).containsExactly(model1);
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .putFilterColumnsEq(ExampleModel_.column1, "a2")
-                .putFilterColumnsEq(ExampleModel_.column2, "b1")
-                .build());
+        page = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.column1, "a2")
+                .putColumnsEq(ExampleModel_.column2, "b1")
+                .build(), new SelectionOptions.Builder().build());
         assertThat(page.getTotalData()).isEqualTo(2);
         assertThat(page.getData()).containsExactly(model3, model4);
 
-        page = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .putFilterColumnsEq(ExampleModel_.column1, "a2")
-                .putFilterColumnsEq(ExampleModel_.column2, "b2")
-                .build());
+        page = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.column1, "a2")
+                .putColumnsEq(ExampleModel_.column2, "b2")
+                .build(), new SelectionOptions.Builder().build());
         assertThat(page.getTotalData()).isZero();
         assertThat(page.getData()).isEmpty();
     }
@@ -287,9 +288,10 @@ class HibernateDaoIntegrationTests {
         model5.uniqueColumn1 = "y";
         dao.insert(model5);
 
-        Page<ExampleModel> models = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .putFilterColumnsEq(ExampleModel_.uniqueColumn1, "x")
-                .putFilterColumnsIn(ExampleModel_.column1, ImmutableSet.of("a", "d"))
+        Page<ExampleModel> models = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.uniqueColumn1, "x")
+                .putColumnsIn(ExampleModel_.column1, ImmutableSet.of("a", "d"))
+                .build(), new SelectionOptions.Builder()
                 .pageSize(0)
                 .build());
         assertThat(models.getData()).containsExactly(model1, model4);
@@ -314,16 +316,18 @@ class HibernateDaoIntegrationTests {
         model3.column1 = "c";
         dao.insert(model3);
 
-        Page<ExampleModel> models = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>().build());
+        Page<ExampleModel> models = dao.selectAll(
+                new FilterOptions.Builder<ExampleModel>().build(),
+                new SelectionOptions.Builder().build());
         assertThat(models.getData()).containsExactly(model1, model2, model3);
 
-        models = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .orderBy(ExampleModel_.column1)
+        models = dao.selectAll(new SelectionOptions.Builder()
+                .orderBy("column1")
                 .build());
         assertThat(models.getData()).containsExactly(model2, model1, model3);
 
-        models = dao.selectAll(new SelectAllOptions.Builder<ExampleModel>()
-                .orderBy(ExampleModel_.column1)
+        models = dao.selectAll(new SelectionOptions.Builder()
+                .orderBy("column1")
                 .orderDir(OrderDir.DESC)
                 .build());
         assertThat(models.getData()).containsExactly(model3, model1, model2);

@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.persistence.metamodel.SingularAttribute;
+import judgels.persistence.api.ImmutableSelectionOptions;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 
 public interface UnmodifiableDao<M extends UnmodifiableModel> {
     M insert(M model);
@@ -14,8 +16,16 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value);
     Optional<M> selectByUniqueColumns(Map<SingularAttribute<M, ?>, ?> key);
 
-    long selectCount(SelectCountOptions<M> options);
-    Page<M> selectAll(SelectAllOptions<M> options);
+    long selectCount(FilterOptions<M> filterOptions);
+    Page<M> selectAll(FilterOptions<M> filterOptions, SelectionOptions selectionOptions);
+
+    default Page<M> selectAll(FilterOptions<M> filterOptions) {
+        return selectAll(filterOptions, new ImmutableSelectionOptions.Builder().build());
+    }
+
+    default Page<M> selectAll(SelectionOptions selectionOptions) {
+        return selectAll(new FilterOptions.Builder<M>().build(), selectionOptions);
+    }
 
     void delete(M model);
 }
