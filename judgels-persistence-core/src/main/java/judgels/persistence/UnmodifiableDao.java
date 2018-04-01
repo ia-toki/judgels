@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.persistence.metamodel.SingularAttribute;
-import judgels.persistence.api.ImmutableSelectionOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
@@ -20,7 +19,7 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     Page<M> selectAll(FilterOptions<M> filterOptions, SelectionOptions selectionOptions);
 
     default Page<M> selectAll(FilterOptions<M> filterOptions) {
-        return selectAll(filterOptions, new ImmutableSelectionOptions.Builder().build());
+        return selectAll(filterOptions, SelectionOptions.DEFAULT);
     }
 
     default Page<M> selectAll(SelectionOptions selectionOptions) {

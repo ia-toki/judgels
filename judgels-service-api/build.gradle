@@ -1,7 +1,10 @@
 apply from: '../gradle/publishing.gradle'
 
 dependencies {
+    compile project(':judgels-persistence-api')
+
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
 
     testCompile "org.assertj:assertj-core:$assertJVersion"
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"

@@ -6,6 +6,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableSelectionOptions.class)
 public interface SelectionOptions {
+    SelectionOptions DEFAULT = new Builder().build();
+
     int getPage();
     int getPageSize();
     String getOrderBy();
