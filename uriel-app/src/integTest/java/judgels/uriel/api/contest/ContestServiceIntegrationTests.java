@@ -114,7 +114,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 ImmutableList.of(USER_A_JID, USER_B_JID));
 
         Page<Contest> userAContests = contestService.getContests(USER_A_HEADER, empty());
-        assertThat(userAContests.getData()).containsExactly(contestA, contestB);
+        assertThat(userAContests.getData()).containsExactly(contestB, contestA);
 
         Page<Contest> userBContests = contestService.getContests(USER_B_HEADER, empty());
         assertThat(userBContests.getData()).containsExactly(contestB);
