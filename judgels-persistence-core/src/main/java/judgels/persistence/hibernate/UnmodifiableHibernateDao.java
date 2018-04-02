@@ -77,16 +77,9 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<M> root = cq.from(getEntityClass());
 
-        Predicate filterEq = cb.and(filterOptions.getColumnsEq().entrySet()
-                .stream()
-                .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
-                .toArray(Predicate[]::new));
-        Predicate filterIn = cb.and(filterOptions.getColumnsIn().entrySet()
-                .stream()
-                .map(e -> root.get(e.getKey()).in(e.getValue()))
-                .toArray(Predicate[]::new));
+        applyFilters(cb, cq, root, filterOptions);
+        cq.select(cb.count(root));
 
-        cq.select(cb.count(root)).where(cb.and(filterEq, filterIn));
         return currentSession().createQuery(cq).getSingleResult();
     }
 
@@ -96,16 +89,7 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
         CriteriaQuery<M> cq = criteriaQuery();
         Root<M> root = cq.from(getEntityClass());
 
-        Predicate filterEq = cb.and(filterOptions.getColumnsEq().entrySet()
-                .stream()
-                .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
-                .toArray(Predicate[]::new));
-        Predicate filterIn = cb.and(filterOptions.getColumnsIn().entrySet()
-                .stream()
-                .map(e -> root.get(e.getKey()).in(e.getValue()))
-                .toArray(Predicate[]::new));
-
-        cq.where(cb.and(filterEq, filterIn));
+        applyFilters(cb, cq, root, filterOptions);
 
         if (selectionOptions.getOrderDir() == OrderDir.ASC) {
             cq.orderBy(cb.asc(root.get(selectionOptions.getOrderBy())));
@@ -132,5 +116,22 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     @Override
     public void delete(M model) {
         currentSession().delete(model);
+    }
+
+    private void applyFilters(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<M> root, FilterOptions<M> options) {
+        Predicate filterEq = cb.and(options.getColumnsEq().entrySet()
+                .stream()
+                .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
+                .toArray(Predicate[]::new));
+        Predicate filterIn = cb.and(options.getColumnsIn().entrySet()
+                .stream()
+                .map(e -> root.get(e.getKey()).in(e.getValue()))
+                .toArray(Predicate[]::new));
+        Predicate filterCustom = cb.and(options.getCustomPredicates()
+                .stream()
+                .map(f -> f.apply(cb, cq, root))
+                .toArray(Predicate[]::new));
+
+        cq.where(cb.and(filterEq, filterIn, filterCustom));
     }
 }

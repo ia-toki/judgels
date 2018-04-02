@@ -298,6 +298,39 @@ class HibernateDaoIntegrationTests {
     }
 
     @Test
+    void can_select_with_custom_predicates(SessionFactory sessionFactory) {
+        ExampleHibernateDao dao = new ExampleHibernateDao(
+                sessionFactory,
+                new FixedClock(),
+                new FixedActorProvider());
+
+        ExampleModel model1 = new ExampleModel();
+        model1.column1 = "a";
+        model1.column2 = "b";
+        model1.uniqueColumn1 = "x";
+        dao.insert(model1);
+
+        ExampleModel model2 = new ExampleModel();
+        model2.column1 = "b";
+        model2.column2 = "a";
+        model2.uniqueColumn1 = "x";
+        dao.insert(model2);
+
+        ExampleModel model3 = new ExampleModel();
+        model3.column1 = "a";
+        model3.column2 = "b";
+        model3.uniqueColumn1 = "y";
+        dao.insert(model3);
+
+        Page<ExampleModel> models = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.uniqueColumn1, "x")
+                .addCustomPredicates((cb, cq, root) -> cb.equal(root.get(ExampleModel_.column1), "a"))
+                .build());
+        assertThat(models.getTotalData()).isEqualTo(1);
+        assertThat(models.getData()).containsExactly(model1);
+    }
+
+    @Test
     void can_select_all_with_order(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(
                 sessionFactory,

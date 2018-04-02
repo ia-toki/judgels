@@ -1,5 +1,6 @@
 package judgels.persistence;
 
+import java.util.List;
 import java.util.Map;
 import javax.persistence.metamodel.SingularAttribute;
 import org.immutables.value.Value;
@@ -8,6 +9,7 @@ import org.immutables.value.Value;
 public interface FilterOptions<M extends UnmodifiableModel> {
     Map<SingularAttribute<? super M, ?>, Object> getColumnsEq();
     Map<SingularAttribute<? super M, ?>, Object> getColumnsIn();
+    List<CustomPredicateFilter<M>> getCustomPredicates();
 
     class Builder<M extends UnmodifiableModel> extends ImmutableFilterOptions.Builder<M> {}
 }
