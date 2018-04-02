@@ -57,36 +57,31 @@ class ContestStoreIntegrationTests {
     @Test
     void get_contests() {
         Contest contestA = store.createContest(new ContestData.Builder()
-                .name("Turfa")
-                .description("Ganteng")
+                .name("contestA")
+                .description("Contest A")
                 .style(ContestStyle.IOI)
                 .build());
 
         Contest contestB = store.createContest(new ContestData.Builder()
-                .name("Ganteng")
-                .description("Turfa")
+                .name("contestB")
+                .description("Contest B")
                 .style(ContestStyle.ICPC)
                 .build());
 
-        String adminJid = "adminJid";
-        String userJidA = "userJidA";
-        String userJidB  = "userJidB";
-        String userJidC = "userJidC";
+        contestantStore.addContestants(contestA.getJid(), ImmutableList.of("A", "B"));
+        contestantStore.addContestants(contestB.getJid(), ImmutableList.of("B"));
 
-        contestantStore.addContestants(contestA.getJid(), ImmutableList.of(userJidA, userJidB));
-        contestantStore.addContestants(contestB.getJid(), ImmutableList.of(userJidB));
-
-        Page<Contest> contests = store.getContests(userJidA, SelectionOptions.DEFAULT);
+        Page<Contest> contests = store.getContests("A", SelectionOptions.DEFAULT);
         assertThat(contests.getData()).containsExactly(contestA);
 
-        contests = store.getContests(userJidB, SelectionOptions.DEFAULT);
+        contests = store.getContests("B", SelectionOptions.DEFAULT);
         assertThat(contests.getData()).containsExactly(contestA, contestB);
 
-        contests = store.getContests(userJidC, SelectionOptions.DEFAULT);
+        contests = store.getContests("C", SelectionOptions.DEFAULT);
         assertThat(contests.getData()).isEmpty();
 
-        roleStore.addAdmin(adminJid);
-        contests = store.getContests(adminJid, SelectionOptions.DEFAULT);
+        roleStore.addAdmin("admin");
+        contests = store.getContests("admin", SelectionOptions.DEFAULT);
         assertThat(contests.getData()).containsExactly(contestA, contestB);
     }
 }

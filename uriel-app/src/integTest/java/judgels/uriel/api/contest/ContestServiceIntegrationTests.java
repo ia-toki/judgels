@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static WireMockServer mockJophiel;
     private ContestService contestService = createService(ContestService.class);
-    private ContestContestantService contestContestantService = createService(ContestContestantService.class);
+    private ContestContestantService contestantService = createService(ContestContestantService.class);
 
     @BeforeAll
     static void startMocks() {
@@ -104,19 +104,19 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .style(ContestStyle.IOI)
                 .build());
 
-        contestContestantService.addContestants(
+        contestantService.addContestants(
                 ADMIN_HEADER,
                 contestA.getJid(),
                 ImmutableList.of(USER_A_JID));
-        contestContestantService.addContestants(
+        contestantService.addContestants(
                 ADMIN_HEADER,
                 contestB.getJid(),
                 ImmutableList.of(USER_A_JID, USER_B_JID));
 
-        Page<Contest> userAContests = contestService.getContests(USER_A_HEADER, empty());
-        assertThat(userAContests.getData()).containsExactly(contestB, contestA);
+        Page<Contest> contests = contestService.getContests(USER_A_HEADER, empty());
+        assertThat(contests.getData()).containsExactly(contestB, contestA);
 
-        Page<Contest> userBContests = contestService.getContests(USER_B_HEADER, empty());
-        assertThat(userBContests.getData()).containsExactly(contestB);
+        contests = contestService.getContests(USER_B_HEADER, empty());
+        assertThat(contests.getData()).containsExactly(contestB);
     }
 }
