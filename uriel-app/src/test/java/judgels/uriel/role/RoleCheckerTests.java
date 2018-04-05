@@ -29,4 +29,9 @@ class RoleCheckerTests {
         assertThat(checker.canReadContest("randomJid", "contestA")).isFalse();
     }
 
+    @Test
+    void create_contest() {
+        assertThat(checker.canCreateContest("adminJid")).isTrue();
+        assertThat(checker.canCreateContest("contestantJid")).isFalse();
+    }
 }

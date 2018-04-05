@@ -70,7 +70,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
     @Test
     void basic_flow() {
-        Contest contestA = contestService.createContest(new ContestData.Builder()
+        Contest contestA = contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("TOKI Open Contest A")
                 .description("This is contest A")
                 .style(ContestStyle.ICPC)
@@ -85,7 +85,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 () -> contestService.getContest(AuthHeader.of("randomToken"), contestA.getJid()))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
-        Contest contestB = contestService.createContest(new ContestData.Builder()
+        Contest contestB = contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("TOKI Open Contest B")
                 .description("This is contest B")
                 .style(ContestStyle.IOI)
@@ -93,12 +93,12 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         assertThat(contestService.getContest(ADMIN_HEADER, contestB.getJid())).isEqualTo(contestB);
 
-        contestService.createContest(new ContestData.Builder()
+        contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("TOKI Open Contest - Testing")
                 .description("This is testing contest")
                 .style(ContestStyle.IOI)
                 .build());
-        contestService.createContest(new ContestData.Builder()
+        contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("Random Contest")
                 .description("This is random contest")
                 .style(ContestStyle.IOI)

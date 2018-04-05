@@ -10,6 +10,10 @@ public class RoleChecker {
         this.roleStore = roleStore;
     }
 
+    public boolean canCreateContest(String actorJid) {
+        return roleStore.isAdmin(actorJid);
+    }
+
     public boolean canReadContest(String actorJid, String contestJid) {
         return roleStore.isAdmin(actorJid) || roleStore.isContestant(actorJid, contestJid);
     }

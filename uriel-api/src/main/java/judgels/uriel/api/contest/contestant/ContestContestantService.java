@@ -34,5 +34,5 @@ public interface ContestContestantService {
     List<String> addContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            List<String> contestantJids);
+            List<String> usernames);
 }

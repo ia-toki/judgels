@@ -53,7 +53,10 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork
-    public Contest createContest(ContestData contestData) {
+    public Contest createContest(AuthHeader authHeader, ContestData contestData) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canCreateContest(actorJid));
+
         return contestStore.createContest(contestData);
     }
 }

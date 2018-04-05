@@ -35,5 +35,5 @@ public interface ContestService {
     @Path("/")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Contest createContest(ContestData contestData);
+    Contest createContest(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestData contestData);
 }
