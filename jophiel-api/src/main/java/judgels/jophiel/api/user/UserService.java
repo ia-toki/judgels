@@ -4,10 +4,10 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -44,10 +44,7 @@ public interface UserService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    Page<User> getUsers(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @DefaultValue("1") @QueryParam("page") int page,
-            @DefaultValue("10") @QueryParam("pageSize") int pageSize);
+    Page<User> getUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @QueryParam("page") Optional<Integer> page);
 
     @DELETE
     @Path("/{userJid}/avatar")

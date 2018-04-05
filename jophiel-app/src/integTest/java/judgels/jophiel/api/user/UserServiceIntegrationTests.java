@@ -1,5 +1,6 @@
 package judgels.jophiel.api.user;
 
+import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
@@ -26,7 +27,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .email("budi@domain.com")
                 .build());
 
-        Page<User> users = userService.getUsers(adminHeader, 1, 10);
+        Page<User> users = userService.getUsers(adminHeader, empty());
         assertThat(users.getData()).contains(nano, budi);
     }
 

@@ -1,6 +1,5 @@
 package judgels.jophiel.hibernate;
 
-import com.google.common.collect.ImmutableMap;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +8,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserModel;
 import judgels.jophiel.persistence.UserModel_;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.FilterOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import org.hibernate.SessionFactory;
 
@@ -38,16 +35,16 @@ public class UserHibernateDao extends JudgelsHibernateDao<UserModel> implements 
 
     @Override
     public List<UserModel> selectAllByTerm(String term) {
-        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
-        CriteriaQuery<UserModel> cq = cb.createQuery(getEntityClass());
-        Root<UserModel> root = cq.from(getEntityClass());
-        cq.where(cb.like(root.get(UserModel_.username), "%" + term + "%"));
-        return currentSession().createQuery(cq).getResultList();
+        return selectAll(new FilterOptions.Builder<UserModel>()
+                .addCustomPredicates((cb, cq, root) -> cb.like(root.get(UserModel_.username), "%" + term + "%"))
+                .build()).getData();
     }
 
     @Override
     public Map<String, UserModel> selectAllByUsernames(Set<String> usernames) {
-        return selectAllByColumnIn(ImmutableMap.of(), UserModel_.username, usernames)
+        return selectAll(new FilterOptions.Builder<UserModel>()
+                .putColumnsIn(UserModel_.username, usernames)
+                .build()).getData()
                 .stream()
                 .collect(Collectors.toMap(m -> m.jid, m -> m));
     }

@@ -5,13 +5,16 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.role.RoleChecker;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -42,11 +45,14 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Page<User> getUsers(AuthHeader authHeader, int page, int pageSize) {
+    public Page<User> getUsers(AuthHeader authHeader, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canReadUsers(actorJid));
 
-        return userStore.getUsers(page, pageSize);
+        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        options.orderDir(OrderDir.DESC);
+        page.ifPresent(options::page);
+        return userStore.getUsers(options.build());
     }
 
     @Override

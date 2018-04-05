@@ -14,6 +14,7 @@ import judgels.jophiel.persistence.UserModel;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
@@ -77,7 +78,7 @@ class UserStoreIntegrationTests {
 
         User budi = store.findUserByUsername("budi").get();
 
-        Page<User> users = store.getUsers(1, 10);
+        Page<User> users = store.getUsers(SelectionOptions.DEFAULT);
         assertThat(users.getData()).containsExactly(user, nano, budi);
     }
 

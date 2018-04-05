@@ -19,6 +19,7 @@ import judgels.jophiel.persistence.UserModel;
 import judgels.jophiel.user.avatar.UserAvatarFs;
 import judgels.jophiel.user.password.PasswordHash;
 import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 
 public class UserStore {
     private final UserDao userDao;
@@ -73,8 +74,8 @@ public class UserStore {
         return Lists.transform(userDao.selectAllByTerm(term), this::fromModel);
     }
 
-    public Page<User> getUsers(int page, int pageSize) {
-        Page<UserModel> models = userDao.selectAll(page, pageSize);
+    public Page<User> getUsers(SelectionOptions options) {
+        Page<UserModel> models = userDao.selectAll(options);
         return models.mapData(data -> Lists.transform(data, this::fromModel));
     }
 
