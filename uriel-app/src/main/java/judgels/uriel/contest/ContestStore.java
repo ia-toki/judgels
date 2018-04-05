@@ -44,6 +44,7 @@ public class ContestStore {
 
     private static Contest fromModel(ContestModel model) {
         return new Contest.Builder()
+                .id(model.id)
                 .jid(model.jid)
                 .name(model.name)
                 .description(model.description)
