@@ -24,21 +24,18 @@ public class SealtielApplicationExtension implements BeforeAllCallback, AfterAll
 
     private static DropwizardTestSupport<SealtielApplicationConfiguration> sealtiel;
     private static GenericContainer rabbitmq;
-    private static GenericContainer rabbitmqMgmt;
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        rabbitmq = new GenericContainer("rabbitmq:3.7.4-alpine").withExposedPorts(5672);
+        rabbitmq = new GenericContainer("rabbitmq:3.7.4-management-alpine").withExposedPorts(5672, 15672);
         rabbitmq.start();
-        rabbitmqMgmt = new GenericContainer("rabbitmq:3.7.4-management-alpine").withExposedPorts(15672);
-        rabbitmqMgmt.start();
 
         SealtielConfiguration sealtielConfig = new SealtielConfiguration.Builder()
                 .addClients(CLIENT_1, CLIENT_2)
                 .rabbitMQConfig(new RabbitMQConfiguration.Builder()
                         .host(rabbitmq.getContainerIpAddress())
                         .port(rabbitmq.getMappedPort(5672))
-                        .managementPort(rabbitmqMgmt.getMappedPort(15672))
+                        .managementPort(rabbitmq.getMappedPort(15672))
                         .username("guest")
                         .password("guest")
                         .virtualHost("/")
@@ -52,7 +49,6 @@ public class SealtielApplicationExtension implements BeforeAllCallback, AfterAll
     @Override
     public void afterAll(ExtensionContext context) {
         rabbitmq.stop();
-        rabbitmqMgmt.stop();
         sealtiel.after();
     }
 
