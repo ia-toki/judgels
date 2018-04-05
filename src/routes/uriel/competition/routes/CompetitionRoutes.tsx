@@ -8,8 +8,8 @@ import { withBreadcrumb } from '../../../../components/BreadcrumbWrapper/Breadcr
 const CompetitionRoutes = () => (
   <div>
     <Switch>
-      <Route path="/competition/contests/:contestJid" component={ContestRoutes} />
-      <Route path="/competition" component={MainCompetitionRoutes} />
+      <Route path="/beta/competition/contests/:contestJid" component={ContestRoutes} />
+      <Route path="/beta/competition" component={MainCompetitionRoutes} />
     </Switch>
   </div>
 );
