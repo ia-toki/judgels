@@ -24,7 +24,7 @@ const appRoutes = [
     id: 'competition',
     title: 'Competition (BETA)',
     route: {
-      path: '/beta/competition',
+      path: '/competition',
       component: UrielRoutes,
     },
   },

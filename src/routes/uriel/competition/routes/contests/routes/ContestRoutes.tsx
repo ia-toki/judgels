@@ -7,9 +7,9 @@ import SingleContestRoutes from './single/routes/SingleContestRoutes';
 
 const ContestRoutes = () => (
   <div>
-    <Route path="/beta/competition/contests" component={ContestDataRoute} />
-    <Route path="/beta/competition/contests/:contestJid" component={SingleContestDataRoute} />
-    <Route path="/beta/competition/contests/:contestJid" component={SingleContestRoutes} />
+    <Route path="/competition/contests" component={ContestDataRoute} />
+    <Route path="/competition/contests/:contestJid" component={SingleContestDataRoute} />
+    <Route path="/competition/contests/:contestJid" component={SingleContestRoutes} />
   </div>
 );
 

@@ -24,7 +24,7 @@ describe('SingleContestDataRoute', () => {
     mount(
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <Route path="/beta/competition/contests/:contestJid" component={SingleContestDataRoute} />
+          <Route path="/competition/contests/:contestJid" component={SingleContestDataRoute} />
         </ConnectedRouter>
       </Provider>
     );
@@ -45,20 +45,20 @@ describe('SingleContestDataRoute', () => {
   });
 
   test('navigation', async () => {
-    render('/beta/competition/contests/JIDCONT123');
+    render('/competition/contests/JIDCONT123');
     await new Promise(resolve => setImmediate(resolve));
     expect(contestActions.fetch).toHaveBeenCalledWith('JIDCONT123');
-    expect(breadcrumbsActions.push).toHaveBeenCalledWith('/beta/competition/contests/JIDCONT123', 'Contest 123');
+    expect(breadcrumbsActions.push).toHaveBeenCalledWith('/competition/contests/JIDCONT123', 'Contest 123');
 
-    history.push('/beta/competition/contests/JIDCONT456');
+    history.push('/competition/contests/JIDCONT456');
     await new Promise(resolve => setImmediate(resolve));
     expect(contestActions.fetch).toHaveBeenCalledWith('JIDCONT456');
-    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/beta/competition/contests/JIDCONT123');
-    expect(breadcrumbsActions.push).toHaveBeenCalledWith('/beta/competition/contests/JIDCONT456', 'Contest 456');
+    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/competition/contests/JIDCONT123');
+    expect(breadcrumbsActions.push).toHaveBeenCalledWith('/competition/contests/JIDCONT456', 'Contest 456');
 
     history.push('/other');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/beta/competition/contests/JIDCONT456');
+    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/competition/contests/JIDCONT456');
     expect(contestActions.clear).toHaveBeenCalled();
   });
 });

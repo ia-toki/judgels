@@ -39,7 +39,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Contest Menu',
     action: (
-      <ButtonLink to="/beta/competition/contests" className="pt-small pt-icon-chevron-left">
+      <ButtonLink to="/competition/contests" className="pt-small pt-icon-chevron-left">
         Back
       </ButtonLink>
     ),
