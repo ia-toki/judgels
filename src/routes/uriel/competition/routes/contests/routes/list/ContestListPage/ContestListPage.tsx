@@ -1,3 +1,4 @@
+import { Spinner } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
@@ -23,14 +24,19 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
   state: ContestListPageState = {};
 
   render() {
-    const { contestList } = this.state;
-
     return (
       <Card title="Past contests">
         <Pagination currentPage={1} pageSize={ContestListPage.PAGE_SIZE} onChangePage={this.onChangePage} />
-        {contestList && <ContestListTable contestList={contestList} />}
+        {this.renderContestList(this.state.contestList)}
       </Card>
     );
+  }
+
+  private renderContestList(contestList?: ContestList) {
+    if (!contestList) {
+      return <Spinner className="loading-spinner" />;
+    }
+    return <ContestListTable contestList={contestList} />;
   }
 
   private onChangePage = async (nextPage: number) => {
