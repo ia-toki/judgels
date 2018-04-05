@@ -1,10 +1,10 @@
 import { Card, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
+import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 import { ContestList } from '../../../../../../../../modules/api/uriel/contest';
 
 import './ContestListTable.css';
-import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 
 export interface ContestListTableProps {
   contestList: ContestList;
@@ -25,7 +25,7 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
               intent={Intent.PRIMARY}
               className="contest-list-view-result"
             >
-              View scoreboard
+              View contest
             </ButtonLink>
           </div>
         </div>

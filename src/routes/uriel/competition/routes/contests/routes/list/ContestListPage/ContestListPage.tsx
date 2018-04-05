@@ -25,9 +25,9 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
 
   render() {
     return (
-      <Card title="Past contests">
-        <Pagination currentPage={1} pageSize={ContestListPage.PAGE_SIZE} onChangePage={this.onChangePage} />
+      <Card title="All contests">
         {this.renderContestList(this.state.contestList)}
+        <Pagination currentPage={1} pageSize={ContestListPage.PAGE_SIZE} onChangePage={this.onChangePage} />
       </Card>
     );
   }
