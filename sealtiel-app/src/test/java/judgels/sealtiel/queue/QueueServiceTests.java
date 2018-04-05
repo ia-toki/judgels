@@ -24,7 +24,8 @@ class QueueServiceTests {
     private @Mock QueueChannel queueChannel;
     private QueueService queueService;
 
-    @BeforeEach void before() throws Exception {
+    @BeforeEach
+    void before() throws Exception {
         initMocks(this);
 
         when(queue.createChannel())
@@ -32,8 +33,10 @@ class QueueServiceTests {
         queueService = new QueueService(queue, objectMapper);
     }
 
-    @Nested class receiveMessage {
-        @Test void declares_queue_before_popping() throws Exception {
+    @Nested
+    class receiveMessage {
+        @Test
+        void declares_queue_before_popping() throws Exception {
             queueService.receiveMessage(CLIENT_JID_1);
 
             InOrder inOrder = inOrder(queueChannel);
@@ -41,13 +44,15 @@ class QueueServiceTests {
             inOrder.verify(queueChannel).popMessage(CLIENT_JID_1);
         }
 
-        @Test void receives_no_message() throws Exception {
+        @Test
+        void receives_no_message() throws Exception {
             when(queueChannel.popMessage(CLIENT_JID_1))
                     .thenReturn(Optional.empty());
             assertThat(queueService.receiveMessage(CLIENT_JID_1)).isEmpty();
         }
 
-        @Test void receives_one_message() throws Exception {
+        @Test
+        void receives_one_message() throws Exception {
             when(queueChannel.popMessage(CLIENT_JID_1))
                     .thenReturn(Optional.of(QueueMessage.of(123, "the-message")));
             when(objectMapper.readValue("the-message", QueueService.ClientMessage.class))
@@ -64,7 +69,8 @@ class QueueServiceTests {
                     .build());
         }
 
-        @Test void receives_no_message_for_bogus_format() throws Exception {
+        @Test
+        void receives_no_message_for_bogus_format() throws Exception {
             when(queueChannel.popMessage(CLIENT_JID_1))
                     .thenReturn(Optional.of(QueueMessage.of(123, "the-message")));
             when(objectMapper.readValue("the-message", QueueService.ClientMessage.class))

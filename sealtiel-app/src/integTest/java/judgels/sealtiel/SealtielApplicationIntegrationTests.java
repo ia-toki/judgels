@@ -4,6 +4,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.sealtiel.SealtielApplicationExtension.CLIENT_1;
 import static judgels.sealtiel.SealtielApplicationExtension.CLIENT_2;
 import static judgels.sealtiel.SealtielApplicationExtension.createAdminWebTarget;
+import static judgels.sealtiel.SealtielApplicationExtension.createService;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
@@ -21,8 +22,9 @@ class SealtielApplicationIntegrationTests {
     private static final BasicAuthHeader AUTH_HEADER_1 = BasicAuthHeader.of(CLIENT_1);
     private static final BasicAuthHeader AUTH_HEADER_2 = BasicAuthHeader.of(CLIENT_2);
 
-    @Test void messaging_flow() {
-        MessageService messageService = SealtielApplicationExtension.createService(MessageService.class);
+    @Test
+    void messaging_flow() {
+        MessageService messageService = createService(MessageService.class);
         assertThat(messageService.receiveMessage(AUTH_HEADER_1)).isEmpty();
 
         messageService.sendMessage(AUTH_HEADER_2, new MessageData.Builder()
@@ -41,7 +43,8 @@ class SealtielApplicationIntegrationTests {
         assertThat(messageService.receiveMessage(AUTH_HEADER_1)).isEmpty();
     }
 
-    @Test void rabbitmq_healthcheck() {
+    @Test
+    void rabbitmq_healthcheck() {
         Map<String, Map<String, Boolean>> result = createAdminWebTarget()
                 .path("/healthcheck")
                 .request(APPLICATION_JSON)

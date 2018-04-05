@@ -27,7 +27,7 @@ public class SealtielApplicationExtension implements BeforeAllCallback, AfterAll
     private static GenericContainer rabbitmqMgmt;
 
     @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
+    public void beforeAll(ExtensionContext context) {
         rabbitmq = new GenericContainer("rabbitmq:3.7.2").withExposedPorts(5672);
         rabbitmq.start();
         rabbitmqMgmt = new GenericContainer("rabbitmq:3.7.2-management").withExposedPorts(15672);
@@ -50,7 +50,7 @@ public class SealtielApplicationExtension implements BeforeAllCallback, AfterAll
     }
 
     @Override
-    public void afterAll(ExtensionContext context) throws Exception {
+    public void afterAll(ExtensionContext context) {
         rabbitmq.stop();
         rabbitmqMgmt.stop();
         sealtiel.after();

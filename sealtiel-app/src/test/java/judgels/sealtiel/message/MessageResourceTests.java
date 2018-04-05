@@ -27,7 +27,8 @@ class MessageResourceTests {
     @Mock private QueueService queueService;
     private MessageResource resource;
 
-    @BeforeEach void before() {
+    @BeforeEach
+    void before() {
         initMocks(this);
 
         resource = new MessageResource(clientChecker, queueService);
@@ -36,14 +37,17 @@ class MessageResourceTests {
                 .thenReturn(CLIENT_1);
     }
 
-    @Nested class receiveMessage {
-        @Test void receives_no_message() throws Exception {
+    @Nested
+    class receiveMessage {
+        @Test
+        void receives_no_message() throws Exception {
             when(queueService.receiveMessage(CLIENT_1.getJid()))
                     .thenReturn(Optional.empty());
             assertThat(resource.receiveMessage(AUTH_HEADER_1)).isEmpty();
         }
 
-        @Test void receives_one_message() throws Exception {
+        @Test
+        void receives_one_message() throws Exception {
             Message message = mock(Message.class);
             when(queueService.receiveMessage(CLIENT_1.getJid()))
                     .thenReturn(Optional.of(message));
@@ -51,15 +55,19 @@ class MessageResourceTests {
         }
     }
 
-    @Nested class confirmMessage {
-        @Test void confirms() throws Exception {
+    @Nested
+    class confirmMessage {
+        @Test
+        void confirms() throws Exception {
             resource.confirmMessage(AUTH_HEADER_1, 123);
             verify(queueService).confirmMessage(123);
         }
     }
 
-    @Nested class sendMessage {
-        @Test void sends() throws Exception {
+    @Nested
+    class sendMessage {
+        @Test
+        void sends() throws Exception {
             MessageData messageData = new MessageData.Builder()
                     .targetJid(CLIENT_2.getJid())
                     .type("the-type")
