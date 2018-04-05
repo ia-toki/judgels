@@ -16,5 +16,6 @@ export const contest: Contest = {
   id: 1,
   jid: contestJid,
   name: 'Contest',
+  description: 'A contest',
   style: ContestStyle.ICPC,
 };

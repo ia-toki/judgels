@@ -21,7 +21,7 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
         <div className="flex-column contest-list-item-info">
           <div className="flex-row justify-content-flex-end">
             <ButtonLink
-              to={`/competition/contests/${contest.jid}/scoreboard`}
+              to={`/competition/contests/${contest.jid}`}
               intent={Intent.PRIMARY}
               className="contest-list-view-result"
             >

@@ -6,6 +6,7 @@
     "classnames": "^2.2.5",
     "country-list": "^1.1.0",
     "history": "^4.7.2",
+    "html-react-parser": "^0.4.3",
     "node-sass-chokidar": "^0.0.3",
     "normalize.css": "^5.0.0",
     "query-string": "^5.1.0",

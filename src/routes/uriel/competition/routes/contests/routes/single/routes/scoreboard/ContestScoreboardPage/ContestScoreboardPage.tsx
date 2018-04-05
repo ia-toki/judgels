@@ -12,7 +12,7 @@ import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable'
 import { contestScoreboardActions as injectedContestScoreboardActions } from '../modules/contestScoreboardActions';
 
 interface ContestScoreboardPageProps extends RouteComponentProps<{ contestJid: string }> {
-  contest?: Contest;
+  contest: Contest;
   onGetScoreboard: (contestJid: string) => Promise<ContestScoreboard>;
 }
 
@@ -23,11 +23,9 @@ interface ContestScoreboardPageState {
 class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, ContestScoreboardPageState> {
   state: ContestScoreboardPageState = {};
 
-  async componentWillReceiveProps(nextProps: ContestScoreboardPageProps) {
-    if (nextProps.contest) {
-      const contestScoreboard = await this.props.onGetScoreboard(nextProps.contest.jid);
-      this.setState({ contestScoreboard });
-    }
+  async componentDidMount() {
+    const contestScoreboard = await this.props.onGetScoreboard(this.props.contest.jid);
+    this.setState({ contestScoreboard });
   }
 
   render() {
@@ -57,7 +55,7 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
 function createContestScoreboardPage(contestScoreboardActions) {
   const mapStateToProps = (state: AppState) =>
     ({
-      contest: selectContest(state),
+      contest: selectContest(state)!,
     } as Partial<ContestScoreboardPageProps>);
 
   const mapDispatchToProps = {

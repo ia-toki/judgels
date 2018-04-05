@@ -11,22 +11,23 @@ body {
   background-color: #f4f5f6;
 }
 
+p {
+  line-height: 20px;
+}
+
 h2 {
   font-weight: bold;
-  color: $header-color !important;
 }
 
 h3 {
   font-size: $font-size-large;
   font-weight: bold;
-  color: $header-color !important;
   line-height: 0.5 * $font-size-large !important;
 }
 
 h4 {
   font-size: $font-size;
   font-weight: bold;
-  color: $header-color !important;
   line-height: $font-size-large !important;
 }
 
@@ -36,6 +37,23 @@ a {
 
 td {
   color: $text-color !important;
+}
+
+ol {
+  list-style: decimal;
+}
+
+ul {
+  list-style: disc;
+}
+
+ol, ul {
+  padding-left: 25px;
+}
+
+ol li, ul li {
+  line-height: 20px;
+  margin-bottom: 2px;
 }
 
 .toast {

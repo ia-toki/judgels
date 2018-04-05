@@ -6,6 +6,7 @@ export interface Contest {
   id: number;
   jid: string;
   name: string;
+  description: string;
   style: ContestStyle;
 }
 
