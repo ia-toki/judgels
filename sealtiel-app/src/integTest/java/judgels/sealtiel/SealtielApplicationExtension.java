@@ -28,9 +28,9 @@ public class SealtielApplicationExtension implements BeforeAllCallback, AfterAll
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        rabbitmq = new GenericContainer("rabbitmq:3.7.2").withExposedPorts(5672);
+        rabbitmq = new GenericContainer("rabbitmq:3.7.4-alpine").withExposedPorts(5672);
         rabbitmq.start();
-        rabbitmqMgmt = new GenericContainer("rabbitmq:3.7.2-management").withExposedPorts(15672);
+        rabbitmqMgmt = new GenericContainer("rabbitmq:3.7.4-management-alpine").withExposedPorts(15672);
         rabbitmqMgmt.start();
 
         SealtielConfiguration sealtielConfig = new SealtielConfiguration.Builder()
