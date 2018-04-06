@@ -59,7 +59,7 @@ public class ContestContestantResource implements ContestContestantService {
     @UnitOfWork
     public List<String> addContestants(AuthHeader authHeader, String contestJid, List<String> contestantJids) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canAddContestants(actorJid));
+        checkAllowed(roleChecker.canAddContestants(actorJid, contestJid));
         checkFound(contestStore.findContestByJid(contestJid));
 
         return contestantStore.addContestants(contestJid, contestantJids);

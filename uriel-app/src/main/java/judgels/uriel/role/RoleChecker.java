@@ -15,11 +15,10 @@ public class RoleChecker {
     }
 
     public boolean canReadContest(String actorJid, String contestJid) {
-        return roleStore.isAdmin(actorJid) || roleStore.isContestant(actorJid, contestJid);
+        return roleStore.isAdmin(actorJid) || roleStore.isContestContestantOrAbove(actorJid, contestJid);
     }
 
-    public boolean canAddContestants(String actorJid) {
-        return roleStore.isAdmin(actorJid);
+    public boolean canAddContestants(String actorJid, String contestJid) {
+        return roleStore.isAdmin(actorJid) || roleStore.isContestManager(actorJid, contestJid);
     }
-
 }

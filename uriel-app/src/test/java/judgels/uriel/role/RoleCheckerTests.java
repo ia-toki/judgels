@@ -9,6 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 class RoleCheckerTests {
+    private static final String ADMIN = "adminJid";
+    private static final String USER = "userJid";
+    private static final String CONTESTANT = "contestantJid";
+    private static final String SUPERVISOR = "supervisorJid";
+    private static final String MANAGER = "managerJid";
+    private static final String CONTEST = "contestJid";
+
     @Mock private RoleStore roleStore;
     private RoleChecker checker;
 
@@ -17,21 +24,27 @@ class RoleCheckerTests {
         initMocks(this);
         checker = new RoleChecker(roleStore);
 
-        when(roleStore.isAdmin("adminJid")).thenReturn(true);
+        when(roleStore.isAdmin(ADMIN)).thenReturn(true);
+        when(roleStore.isContestContestantOrAbove(CONTESTANT, CONTEST)).thenReturn(true);
+        when(roleStore.isContestContestantOrAbove(SUPERVISOR, CONTEST)).thenReturn(true);
+        when(roleStore.isContestSupervisorOrAbove(SUPERVISOR, CONTEST)).thenReturn(true);
+        when(roleStore.isContestContestantOrAbove(MANAGER, CONTEST)).thenReturn(true);
+        when(roleStore.isContestSupervisorOrAbove(MANAGER, CONTEST)).thenReturn(true);
+        when(roleStore.isContestManager(MANAGER, CONTEST)).thenReturn(true);
     }
 
     @Test
     void read_contest() {
-        when(roleStore.isContestant("contestantJid", "contestA")).thenReturn(true);
-
-        assertThat(checker.canReadContest("adminJid", "contestA")).isTrue();
-        assertThat(checker.canReadContest("contestantJid", "contestA")).isTrue();
-        assertThat(checker.canReadContest("randomJid", "contestA")).isFalse();
+        assertThat(checker.canReadContest(ADMIN, CONTEST)).isTrue();
+        assertThat(checker.canReadContest(USER, CONTEST)).isFalse();
+        assertThat(checker.canReadContest(CONTESTANT, CONTEST)).isTrue();
+        assertThat(checker.canReadContest(SUPERVISOR, CONTEST)).isTrue();
+        assertThat(checker.canReadContest(MANAGER, CONTEST)).isTrue();
     }
 
     @Test
     void create_contest() {
-        assertThat(checker.canCreateContest("adminJid")).isTrue();
-        assertThat(checker.canCreateContest("contestantJid")).isFalse();
+        assertThat(checker.canCreateContest(ADMIN)).isTrue();
+        assertThat(checker.canCreateContest(USER)).isFalse();
     }
 }

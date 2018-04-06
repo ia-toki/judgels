@@ -3,16 +3,16 @@ package judgels.uriel.role;
 import javax.inject.Inject;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.AdminRoleModel;
-import judgels.uriel.persistence.ContestContestantDao;
+import judgels.uriel.persistence.ContestRoleDao;
 
 public class RoleStore {
     private final AdminRoleDao adminRoleDao;
-    private final ContestContestantDao contestantDao;
+    private final ContestRoleDao contestRoleDao;
 
     @Inject
-    public RoleStore(AdminRoleDao adminRoleDao, ContestContestantDao contestantDao) {
+    public RoleStore(AdminRoleDao adminRoleDao, ContestRoleDao contestRoleDao) {
         this.adminRoleDao = adminRoleDao;
-        this.contestantDao = contestantDao;
+        this.contestRoleDao = contestRoleDao;
     }
 
     public void addAdmin(String userJid) {
@@ -25,7 +25,15 @@ public class RoleStore {
         return adminRoleDao.existsByUserJid(userJid);
     }
 
-    public boolean isContestant(String userJid, String contestJid) {
-        return contestantDao.existsByContestJidAndUserJid(contestJid, userJid);
+    public boolean isContestContestantOrAbove(String userJid, String contestJid) {
+        return contestRoleDao.isContestantOrAbove(userJid, contestJid);
+    }
+
+    public boolean isContestSupervisorOrAbove(String userJid, String contestJid) {
+        return contestRoleDao.isSupervisorOrAbove(userJid, contestJid);
+    }
+
+    public boolean isContestManager(String userJid, String contestJid) {
+        return contestRoleDao.isManager(userJid, contestJid);
     }
 }

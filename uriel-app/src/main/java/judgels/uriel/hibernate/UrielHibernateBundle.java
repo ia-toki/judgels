@@ -5,8 +5,10 @@ import io.dropwizard.hibernate.HibernateBundle;
 import judgels.uriel.UrielApplicationConfiguration;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
+import judgels.uriel.persistence.ContestManagerModel;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestScoreboardModel;
+import judgels.uriel.persistence.ContestSupervisorModel;
 
 public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfiguration> {
     public UrielHibernateBundle() {
@@ -14,7 +16,9 @@ public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfig
                 AdminRoleModel.class,
                 ContestModel.class,
                 ContestScoreboardModel.class,
-                ContestContestantModel.class
+                ContestContestantModel.class,
+                ContestSupervisorModel.class,
+                ContestManagerModel.class
         );
     }
 

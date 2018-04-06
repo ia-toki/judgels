@@ -23,11 +23,11 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.hibernate.AdminRoleHibernateDao;
-import judgels.uriel.hibernate.ContestContestantHibernateDao;
+import judgels.uriel.hibernate.ContestRoleHibernateDao;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.AdminRoleModel;
-import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
+import judgels.uriel.persistence.ContestRoleDao;
 import judgels.uriel.role.RoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -54,12 +54,12 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider()) {};
-        ContestContestantDao contestantDao = new ContestContestantHibernateDao(
+        ContestRoleDao contestRoleDao = new ContestRoleHibernateDao(
                 sessionFactory,
                 new FixedClock(),
                 new FixedActorProvider());
 
-        RoleStore roleStore = new RoleStore(adminRoleDao, contestantDao);
+        RoleStore roleStore = new RoleStore(adminRoleDao, contestRoleDao);
         roleStore.addAdmin(ADMIN_JID);
     }
 

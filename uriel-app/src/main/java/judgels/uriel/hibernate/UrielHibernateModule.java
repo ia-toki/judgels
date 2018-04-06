@@ -8,7 +8,10 @@ import javax.inject.Singleton;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestDao;
+import judgels.uriel.persistence.ContestManagerDao;
+import judgels.uriel.persistence.ContestRoleDao;
 import judgels.uriel.persistence.ContestScoreboardDao;
+import judgels.uriel.persistence.ContestSupervisorDao;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -49,6 +52,21 @@ public class UrielHibernateModule {
 
     @Provides
     ContestContestantDao contestContestantDao(ContestContestantHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    ContestSupervisorDao contestSupervisorDao(ContestSupervisorHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    ContestManagerDao contestManagerDao(ContestManagerHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    ContestRoleDao contestRoleDao(ContestRoleHibernateDao dao) {
         return dao;
     }
 }
