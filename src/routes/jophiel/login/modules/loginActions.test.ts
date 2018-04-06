@@ -1,7 +1,8 @@
 import { loginActions } from './loginActions';
 import { ForbiddenError } from '../../../../modules/api/error';
-import { User } from '../../../../modules/api/jophiel/user';
+import { JophielRole } from '../../../../modules/api/jophiel/my';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
+import { PutRole } from '../../modules/roleReducer';
 import { token, user, userJid } from '../../../../fixtures/state';
 
 describe('loginActions', () => {
@@ -24,6 +25,7 @@ describe('loginActions', () => {
     };
     myAPI = {
       getMyself: jest.fn(),
+      getMyRole: jest.fn(),
     };
     toastActions = {
       showToast: jest.fn(),
@@ -52,7 +54,8 @@ describe('loginActions', () => {
     describe('when the credentials is valid', () => {
       beforeEach(async () => {
         legacySessionAPI.logIn.mockImplementation(() => Promise.resolve({ authCode, token }));
-        myAPI.getMyself.mockImplementation(() => Promise.resolve<User>(user));
+        myAPI.getMyself.mockImplementation(() => Promise.resolve(user));
+        myAPI.getMyRole.mockImplementation(() => Promise.resolve(JophielRole.User));
 
         await doLogIn();
       });
@@ -66,8 +69,9 @@ describe('loginActions', () => {
       });
 
       it('puts the session', () => {
-        expect(dispatch).toHaveBeenCalledWith(PutUser.create(user));
         expect(dispatch).toHaveBeenCalledWith(PutToken.create(token));
+        expect(dispatch).toHaveBeenCalledWith(PutUser.create(user));
+        expect(dispatch).toHaveBeenCalledWith(PutRole.create(JophielRole.User));
       });
     });
 

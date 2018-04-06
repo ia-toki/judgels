@@ -1,5 +1,6 @@
 import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
+import { PutRole } from '../../modules/roleReducer';
 
 export const loginActions = {
   logIn: (currentPath: string, usernameOrEmail: string, password: string) => {
@@ -18,9 +19,11 @@ export const loginActions = {
       }
 
       const user = await myAPI.getMyself(session.token);
+      const role = await myAPI.getMyRole(session.token);
       toastActions.showToast(`Welcome, ${user.username}.`);
       dispatch(PutToken.create(session.token));
       dispatch(PutUser.create(user));
+      dispatch(PutRole.create(role));
 
       legacySessionAPI.preparePostLogin(session.authCode, encodeURIComponent(currentPath));
     };

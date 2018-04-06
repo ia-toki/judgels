@@ -7,7 +7,7 @@ export interface RoleState {
 }
 
 export const INITIAL_STATE: RoleState = {
-  value: JophielRole.User,
+  value: JophielRole.Guest,
 };
 
 export const PutRole = TypedAction.define('jophiel/role/PUT')<JophielRole>();

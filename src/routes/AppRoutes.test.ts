@@ -7,6 +7,7 @@ describe('AppRoutes', () => {
     const ids = appRoutes.map(route => route.id);
     expect(ids).toEqual(expectedIds);
   };
+
   test('admin', () => {
     testAppRoutes(JophielRole.Admin, ['account', 'competition']);
   });
@@ -17,5 +18,9 @@ describe('AppRoutes', () => {
 
   test('user', () => {
     testAppRoutes(JophielRole.User, ['competition']);
+  });
+
+  test('guest', () => {
+    testAppRoutes(JophielRole.Guest, []);
   });
 });

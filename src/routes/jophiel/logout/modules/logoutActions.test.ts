@@ -2,6 +2,8 @@ import { logoutActions } from './logoutActions';
 import { UnauthorizedError } from '../../../../modules/api/error';
 import { DelSession } from '../../../../modules/session/sessionReducer';
 import { AppState } from '../../../../modules/store';
+import { PutRole } from '../../modules/roleReducer';
+import { JophielRole } from '../../../../modules/api/jophiel/my';
 import { sessionState, token } from '../../../../fixtures/state';
 
 describe('logoutActions', () => {
@@ -39,6 +41,7 @@ describe('logoutActions', () => {
 
       it('deletes the session', () => {
         expect(dispatch).toHaveBeenCalledWith(DelSession.create());
+        expect(dispatch).toHaveBeenCalledWith(PutRole.create(JophielRole.Guest));
       });
 
       it('redirects to post logout url', () => {

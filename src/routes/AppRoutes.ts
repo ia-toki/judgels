@@ -4,11 +4,13 @@ import UrielRoutes from './uriel/UrielRoutes';
 import { JophielRole } from '../modules/api/jophiel/my';
 
 function shouldShowRoute(id: string, role: JophielRole) {
-  if (role !== JophielRole.Superadmin && role !== JophielRole.Admin && id === 'account') {
+  if (id === 'account' && role !== JophielRole.Superadmin && role !== JophielRole.Admin) {
     return false;
-  } else {
-    return true;
   }
+  if (id === 'competition' && role === JophielRole.Guest) {
+    return false;
+  }
+  return true;
 }
 
 const appRoutes = [

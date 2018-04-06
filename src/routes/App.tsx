@@ -11,20 +11,23 @@ import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
 import { Footer } from '../components/Footer/Footer';
-import { webConfigActions as injectedWebConfigActions } from './jophiel/modules/webConfigActions';
 import { JophielRole } from '../modules/api/jophiel/my';
 import { AppState } from '../modules/store';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
 import { selectRole } from './jophiel/modules/roleSelectors';
+import { roleActions as injectedRoleActions } from './jophiel/modules/roleActions';
+import { webConfigActions as injectedWebConfigActions } from './jophiel/modules/webConfigActions';
 
 interface AppProps {
   title: string;
   role: JophielRole;
+  onGetRole: () => void;
   onGetWebConfig: () => void;
 }
 
 class App extends React.Component<AppProps> {
   componentDidMount() {
+    this.props.onGetRole();
     this.props.onGetWebConfig();
   }
 
@@ -53,15 +56,16 @@ class App extends React.Component<AppProps> {
   }
 }
 
-export function createApp(webConfigActions) {
+export function createApp(roleActions, webConfigActions) {
   const mapStateToProps = (state: AppState) => ({
     title: selectDocumentTitle(state),
     role: selectRole(state),
   });
   const mapDispatchToProps = {
+    onGetRole: roleActions.get,
     onGetWebConfig: webConfigActions.get,
   };
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(App));
 }
 
-export default createApp(injectedWebConfigActions);
+export default createApp(injectedRoleActions, injectedWebConfigActions);

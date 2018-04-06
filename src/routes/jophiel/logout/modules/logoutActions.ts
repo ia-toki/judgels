@@ -1,6 +1,8 @@
 import { UnauthorizedError } from '../../../../modules/api/error';
 import { DelSession } from '../../../../modules/session/sessionReducer';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { PutRole } from '../../modules/roleReducer';
+import { JophielRole } from '../../../../modules/api/jophiel/my';
 
 export const logoutActions = {
   logOut: (currentPath: string) => {
@@ -13,6 +15,7 @@ export const logoutActions = {
         }
       }
       dispatch(DelSession.create());
+      dispatch(PutRole.create(JophielRole.Guest));
 
       legacySessionAPI.postLogout(encodeURIComponent(currentPath));
     };

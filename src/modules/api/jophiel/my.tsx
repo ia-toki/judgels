@@ -3,6 +3,7 @@ import { get, post } from '../http';
 import { User } from './user';
 
 export enum JophielRole {
+  Guest = 'guest',
   User = 'user',
   Admin = 'admin',
   Superadmin = 'superadmin',
@@ -26,7 +27,7 @@ export function createMyAPI() {
     },
 
     getMyRole: (token: string): Promise<JophielRole> => {
-      return get(`${baseURL}/role`);
+      return get(`${baseURL}/role`, token);
     },
   };
 }
