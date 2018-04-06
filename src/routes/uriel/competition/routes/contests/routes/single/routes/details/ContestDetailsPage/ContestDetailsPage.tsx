@@ -20,16 +20,22 @@ class ContestDetailsPage extends React.Component<ContestDetailsPageProps> {
     return (
       <div>
         <Callout intent={Intent.WARNING} iconName="info-sign">
-          Under construction. See the old page here:{' '}
+          <strong>New page under construction.</strong> See the old contest page here:{' '}
           <a href={`${APP_CONFIG.tempHome.urielUrl}/contests/${contest.id}`}>
-            {APP_CONFIG.tempHome.urielUrl}/contests/{contest.id}
+            <strong>
+              {APP_CONFIG.tempHome.urielUrl}/contests/{contest.id}
+            </strong>
           </a>
         </Callout>
         <hr />
-        <Card>{HTMLReactParser(contest.description)}</Card>
+        {this.renderDescription(contest.description)}
       </div>
     );
   }
+
+  private renderDescription = (description: string) => {
+    return description && <Card>{HTMLReactParser(description)}</Card>;
+  };
 }
 
 function createContestDetailsPage() {
