@@ -93,6 +93,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         Contest contestB = contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("TOKI Open Contest B")
+                .beginTime(Instant.ofEpochSecond(43))
                 .build());
 
         assertThat(contestService.getContest(ADMIN_HEADER, contestB.getJid())).isEqualTo(contestB);

@@ -46,8 +46,10 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
 
         SelectionOptions.Builder options = new SelectionOptions.Builder();
+        options.orderBy("beginTime");
         options.orderDir(OrderDir.DESC);
         page.ifPresent(options::page);
+
         return contestStore.getContests(actorJid, options.build());
     }
 
