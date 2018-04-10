@@ -3,17 +3,16 @@ package judgels.persistence;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Date;
 
 public class FixedClock extends Clock {
     private final Instant now;
 
     public FixedClock() {
-        this(42);
+        this(Instant.ofEpochMilli(42));
     }
 
-    public FixedClock(long now) {
-        this.now = new Date(now).toInstant();
+    public FixedClock(Instant now) {
+        this.now = now;
     }
 
     @Override

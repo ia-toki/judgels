@@ -1,13 +1,11 @@
 package judgels.persistence;
 
-import java.util.Date;
+import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @MappedSuperclass
@@ -21,6 +19,5 @@ public abstract class UnmodifiableModel {
     public String createdIp;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date createdAt;
+    public Instant createdAt;
 }

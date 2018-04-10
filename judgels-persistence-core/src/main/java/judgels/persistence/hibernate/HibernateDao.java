@@ -1,6 +1,5 @@
 package judgels.persistence.hibernate;
 
-import java.sql.Date;
 import java.time.Clock;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.Dao;
@@ -20,7 +19,7 @@ public abstract class HibernateDao<M extends Model> extends UnmodifiableHibernat
     @Override
     public M insert(M model) {
         model.createdBy = actorProvider.getJid().orElse(null);
-        model.createdAt = Date.from(clock.instant());
+        model.createdAt = clock.instant();
         model.createdIp = actorProvider.getIpAddress().orElse(null);
 
         model.updatedBy = model.createdBy;
@@ -33,7 +32,7 @@ public abstract class HibernateDao<M extends Model> extends UnmodifiableHibernat
     @Override
     public M update(M model) {
         model.updatedBy = actorProvider.getJid().orElse(null);
-        model.updatedAt = Date.from(clock.instant());
+        model.updatedAt = clock.instant();
         model.updatedIp = actorProvider.getIpAddress().orElse(null);
 
         return persist(model);

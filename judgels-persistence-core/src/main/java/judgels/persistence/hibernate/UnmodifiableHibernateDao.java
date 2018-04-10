@@ -3,7 +3,6 @@ package judgels.persistence.hibernate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.AbstractDAO;
-import java.sql.Date;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,7 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     @Override
     public M insert(M model) {
         model.createdBy = actorProvider.getJid().orElse(null);
-        model.createdAt = Date.from(clock.instant());
+        model.createdAt = clock.instant();
         model.createdIp = actorProvider.getIpAddress().orElse(null);
 
         return persist(model);

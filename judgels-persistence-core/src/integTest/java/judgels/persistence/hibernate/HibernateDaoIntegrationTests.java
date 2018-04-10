@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
+import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.Optional;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 class HibernateDaoIntegrationTests {
     @Test
     void can_do_basic_crud(SessionFactory sessionFactory) {
-        Date now1 = new Date(42);
+        Instant now1 = Instant.ofEpochMilli(42);
         ExampleHibernateDao dao1 = new ExampleHibernateDao(
                 sessionFactory,
-                new FixedClock(42),
+                new FixedClock(now1),
                 new FixedActorProvider("actor1", "ip1"));
 
         assertThat(dao1.select(1)).isEmpty();
@@ -47,10 +47,10 @@ class HibernateDaoIntegrationTests {
         assertThat(model1.updatedIp).isEqualTo("ip1");
         assertThat(model1.column1).isEqualTo("value1");
 
-        Date now2 = new Date(43);
+        Instant now2 = Instant.ofEpochMilli(43);
         ExampleHibernateDao dao2 = new ExampleHibernateDao(
                 sessionFactory,
-                Clock.fixed(now2.toInstant(), ZoneId.systemDefault()),
+                Clock.fixed(now2, ZoneId.systemDefault()),
                 new FixedActorProvider("actor2", "ip2"));
 
         model1.column1 = "value2";
