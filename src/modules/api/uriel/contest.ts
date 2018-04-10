@@ -8,6 +8,8 @@ export interface Contest {
   name: string;
   description: string;
   style: ContestStyle;
+  beginTime: number;
+  duration: number;
 }
 
 export enum ContestStyle {

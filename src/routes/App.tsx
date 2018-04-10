@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router';
 import DocumentTitle from 'react-document-title';
@@ -37,20 +38,22 @@ class App extends React.Component<AppProps> {
 
     return (
       <DocumentTitle title={this.props.title}>
-        <div>
-          <Header />
-          <Menubar items={appRoutes} homeRoute={homeRoute} />
-          <AppContent>
-            <Breadcrumbs />
-            <Switch>
-              {appRoutes.map(item => <Route key={item.id} {...item.route} />)}
-              <Route path="/labs" component={LabsRoutes} />
-              <Route {...homeRoute.route} />
-            </Switch>
-            <Route component={LegacyJophielRoutes} />
-            <Footer />
-          </AppContent>
-        </div>
+        <IntlProvider locale={navigator.language}>
+          <div>
+            <Header />
+            <Menubar items={appRoutes} homeRoute={homeRoute} />
+            <AppContent>
+              <Breadcrumbs />
+              <Switch>
+                {appRoutes.map(item => <Route key={item.id} {...item.route} />)}
+                <Route path="/labs" component={LabsRoutes} />
+                <Route {...homeRoute.route} />
+              </Switch>
+              <Route component={LegacyJophielRoutes} />
+              <Footer />
+            </AppContent>
+          </div>
+        </IntlProvider>
       </DocumentTitle>
     );
   }

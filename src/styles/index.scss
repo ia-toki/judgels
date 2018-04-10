@@ -13,6 +13,10 @@ body {
 
 p {
   line-height: 20px;
+
+  small {
+    color: $small-color !important;
+  }
 }
 
 h2 {

@@ -18,4 +18,6 @@ export const contest: Contest = {
   name: 'Contest',
   description: 'A contest',
   style: ContestStyle.ICPC,
+  beginTime: 123,
+  duration: 456,
 };
