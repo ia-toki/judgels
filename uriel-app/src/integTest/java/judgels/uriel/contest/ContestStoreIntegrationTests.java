@@ -9,7 +9,6 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
-import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.hibernate.AdminRoleHibernateDao;
 import judgels.uriel.hibernate.ContestContestantHibernateDao;
 import judgels.uriel.hibernate.ContestHibernateDao;
@@ -78,23 +77,9 @@ class ContestStoreIntegrationTests {
 
     @Test
     void get_contests() {
-        Contest contestA = store.createContest(new ContestData.Builder()
-                .name("contestA")
-                .description("Contest A")
-                .style(ContestStyle.IOI)
-                .build());
-
-        Contest contestB = store.createContest(new ContestData.Builder()
-                .name("contestB")
-                .description("Contest B")
-                .style(ContestStyle.ICPC)
-                .build());
-
-        Contest contestC = store.createContest(new ContestData.Builder()
-                .name("contestC")
-                .description("Contest C")
-                .style(ContestStyle.ICPC)
-                .build());
+        Contest contestA = store.createContest(new ContestData.Builder().name("contestA").build());
+        Contest contestB = store.createContest(new ContestData.Builder().name("contestB").build());
+        Contest contestC = store.createContest(new ContestData.Builder().name("contestC").build());
 
         roleStore.addAdmin(ADMIN);
         addContestant(contestA.getJid(), USER_1);

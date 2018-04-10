@@ -1,6 +1,9 @@
 package judgels.uriel.contest;
 
+import static java.time.temporal.ChronoUnit.MILLIS;
+
 import com.google.common.collect.Lists;
+import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
@@ -49,6 +52,8 @@ public class ContestStore {
                 .name(model.name)
                 .description(model.description)
                 .style(ContestStyle.valueOf(model.style))
+                .beginTime(model.beginTime)
+                .duration(Duration.of(model.duration, MILLIS))
                 .build();
     }
 
@@ -56,5 +61,7 @@ public class ContestStore {
         model.name = data.getName();
         model.description = data.getDescription();
         model.style = data.getStyle().name();
+        model.beginTime = data.getBeginTime();
+        model.duration = data.getDuration().toMillis();
     }
 }

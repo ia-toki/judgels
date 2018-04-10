@@ -7,7 +7,6 @@ import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
-import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.hibernate.AdminRoleHibernateDao;
@@ -59,17 +58,8 @@ class ContestScoreboardStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contest = contestStore.createContest(new ContestData.Builder()
-                .name("contestA")
-                .description("contest A")
-                .style(ContestStyle.IOI)
-                .build());
-
-        contestStore.createContest(new ContestData.Builder()
-                .name("contestB")
-                .description("contest B")
-                .style(ContestStyle.IOI)
-                .build());
+        Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
+        contestStore.createContest(new ContestData.Builder().name("contestB").build());
 
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).isEmpty();
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).isEmpty();

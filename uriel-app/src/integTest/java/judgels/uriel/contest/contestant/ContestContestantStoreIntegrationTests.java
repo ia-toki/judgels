@@ -10,7 +10,6 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
-import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.hibernate.AdminRoleHibernateDao;
 import judgels.uriel.hibernate.ContestContestantHibernateDao;
@@ -62,11 +61,7 @@ class ContestContestantStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contest = contestStore.createContest(new ContestData.Builder()
-                .name("contestA")
-                .description("contest A")
-                .style(ContestStyle.IOI)
-                .build());
+        Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
 
         store.addContestants(contest.getJid(), ImmutableList.of("A", "B"));
 
@@ -76,11 +71,7 @@ class ContestContestantStoreIntegrationTests {
 
     @Test
     void can_add_without_duplication() {
-        Contest contest = contestStore.createContest(new ContestData.Builder()
-                .name("contestA")
-                .description("contest A")
-                .style(ContestStyle.IOI)
-                .build());
+        Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
 
         store.addContestants(contest.getJid(), ImmutableList.of("A", "B"));
         store.addContestants(contest.getJid(), ImmutableList.of("A", "B", "B", "C", "D"));

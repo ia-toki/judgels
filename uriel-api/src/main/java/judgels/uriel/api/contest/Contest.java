@@ -1,6 +1,8 @@
 package judgels.uriel.api.contest;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.Duration;
+import java.time.Instant;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -11,6 +13,8 @@ public interface Contest {
     String getName();
     String getDescription();
     ContestStyle getStyle();
+    Instant getBeginTime();
+    Duration getDuration();
 
     class Builder extends ImmutableContest.Builder {}
 }

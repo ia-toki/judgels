@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
 import com.palantir.remoting.api.errors.ErrorType;
+import java.time.Duration;
+import java.time.Instant;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
@@ -74,11 +76,15 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .name("TOKI Open Contest A")
                 .description("This is contest A")
                 .style(ContestStyle.ICPC)
+                .beginTime(Instant.ofEpochSecond(42))
+                .duration(Duration.ofHours(5))
                 .build());
 
         assertThat(contestA.getName()).isEqualTo("TOKI Open Contest A");
         assertThat(contestA.getDescription()).isEqualTo("This is contest A");
         assertThat(contestA.getStyle()).isEqualTo(ContestStyle.ICPC);
+        assertThat(contestA.getBeginTime()).isEqualTo(Instant.ofEpochSecond(42));
+        assertThat(contestA.getDuration()).isEqualTo(Duration.ofHours(5));
 
         assertThat(contestService.getContest(ADMIN_HEADER, contestA.getJid())).isEqualTo(contestA);
         assertThatRemoteExceptionThrownBy(
@@ -87,21 +93,15 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         Contest contestB = contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("TOKI Open Contest B")
-                .description("This is contest B")
-                .style(ContestStyle.IOI)
                 .build());
 
         assertThat(contestService.getContest(ADMIN_HEADER, contestB.getJid())).isEqualTo(contestB);
 
         contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("TOKI Open Contest - Testing")
-                .description("This is testing contest")
-                .style(ContestStyle.IOI)
                 .build());
         contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("Random Contest")
-                .description("This is random contest")
-                .style(ContestStyle.IOI)
                 .build());
 
         contestantService.addContestants(

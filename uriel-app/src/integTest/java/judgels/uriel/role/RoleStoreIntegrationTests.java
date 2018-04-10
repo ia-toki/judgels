@@ -2,6 +2,7 @@ package judgels.uriel.role;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Instant;
 import judgels.persistence.FixedActorProvider;
 import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;
@@ -79,6 +80,8 @@ class RoleStoreIntegrationTests {
         contestModel1.name = "Contest A";
         contestModel1.description = "";
         contestModel1.style = "";
+        contestModel1.beginTime = Instant.ofEpochSecond(42);
+        contestModel1.duration = 42;
         contestModel1 = contestDao.insert(contestModel1);
         String contestJid1 = contestModel1.jid;
 
@@ -86,6 +89,8 @@ class RoleStoreIntegrationTests {
         contestModel2.name = "Contest B";
         contestModel2.description = "";
         contestModel2.style = "";
+        contestModel2.beginTime = Instant.ofEpochSecond(42);
+        contestModel2.duration = 42;
         contestModel2 = contestDao.insert(contestModel2);
         String contestJid2 = contestModel2.jid;
 
