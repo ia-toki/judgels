@@ -1,4 +1,4 @@
-import { Tab2, Tabs2 } from '@blueprintjs/core';
+import { Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, RouteProps } from 'react-router';
@@ -30,20 +30,20 @@ class Menubar extends React.Component<MenubarProps & MenubarConnectedProps> {
     return (
       <div className="menubar">
         <div className="menubar__content">
-          <Tabs2 id="menubar" renderActiveTabPanelOnly selectedTabId={selectedTabId} onChange={this.onTabChange}>
+          <Tabs id="menubar" renderActiveTabPanelOnly selectedTabId={selectedTabId} onChange={this.onTabChange}>
             {homeRoute ? (
-              <Tab2 key={homeRoute.id} id={homeRoute.id}>
+              <Tab key={homeRoute.id} id={homeRoute.id}>
                 {homeRoute.title}
-              </Tab2>
+              </Tab>
             ) : null}
             {this.props.items.map(item => {
               return (
-                <Tab2 key={item.id} id={item.id}>
+                <Tab key={item.id} id={item.id}>
                   {item.title}
-                </Tab2>
+                </Tab>
               );
             })}
-          </Tabs2>
+          </Tabs>
         </div>
       </div>
     );

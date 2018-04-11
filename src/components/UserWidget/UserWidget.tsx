@@ -25,7 +25,7 @@ export class UserWidget extends React.Component<UserWidgetProps> {
   private renderForUser = (user: UserWithAvatar) => {
     const menu = (
       <Menu className="widget-user__menu">
-        <MenuItem className="widget-user__menu-helper" iconName="user" text={user.username} disabled />
+        <MenuItem className="widget-user__menu-helper" icon="user" text={user.username} disabled />
         <MenuDivider className="widget-user__menu-helper" />
         <MenuItemLink text="My account" to="/account" />
         <MenuItemLink text="Log out" to="/logout" />
@@ -33,25 +33,19 @@ export class UserWidget extends React.Component<UserWidgetProps> {
     );
 
     const popover = (
-      <Popover className="widget-user__avatar-menu" content={menu} position={Position.BOTTOM_RIGHT} inline>
+      <Popover className="widget-user__avatar-menu" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
         <div>
           <span data-key="username" className="widget-user__user__username">
             {user.username}
           </span>{' '}
-          <Icon iconName="pt-icon-chevron-down" />
+          <Icon icon="chevron-down" />
         </div>
       </Popover>
     );
 
     const responsivePopover = (
-      <Popover
-        className="widget-user__burger"
-        content={menu}
-        position={Position.BOTTOM_RIGHT}
-        inline
-        useSmartArrowPositioning={false}
-      >
-        <Icon iconName="menu" iconSize={Icon.SIZE_LARGE} />
+      <Popover className="widget-user__burger" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
+        <Icon icon="menu" iconSize={Icon.SIZE_LARGE} />
       </Popover>
     );
 
@@ -91,14 +85,8 @@ export class UserWidget extends React.Component<UserWidgetProps> {
     );
 
     return (
-      <Popover
-        className="widget-user__burger"
-        content={menu}
-        position={Position.BOTTOM_RIGHT}
-        inline
-        useSmartArrowPositioning={false}
-      >
-        <Icon iconName="menu" iconSize={Icon.SIZE_LARGE} />
+      <Popover className="widget-user__burger" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
+        <Icon icon="menu" iconSize={Icon.SIZE_LARGE} />
       </Popover>
     );
   };

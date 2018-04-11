@@ -12,7 +12,7 @@ export function createToastActions(toaster) {
 
     showSuccessToast: (message: string) => {
       toaster.show({
-        iconName: 'tick',
+        icon: 'tick',
         message,
         intent: Intent.SUCCESS,
       });
@@ -27,7 +27,7 @@ export function createToastActions(toaster) {
       }
 
       toaster.show({
-        iconName: 'warning-sign',
+        icon: 'warning-sign',
         message,
         intent: Intent.DANGER,
       });

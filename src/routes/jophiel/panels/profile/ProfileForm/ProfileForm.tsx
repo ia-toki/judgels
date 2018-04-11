@@ -75,7 +75,7 @@ const ProfileForm = (props: ProfileFormProps) => {
   return (
     <form onSubmit={props.handleSubmit}>
       <h4>My info</h4>
-      <table className="pt-table pt-striped">
+      <table className="pt-html-table pt-html-table-striped">
         <tbody>
           <Field component={FormTableTextInput} {...nameField} />
           <Field component={FormTableSelect} {...genderField}>
@@ -105,7 +105,7 @@ const ProfileForm = (props: ProfileFormProps) => {
       <HorizontalInnerDivider />
 
       <h4>My institution (school/organization represented)</h4>
-      <table className="pt-table pt-striped">
+      <table className="pt-html-table pt-html-table-striped">
         <tbody>
           <Field component={FormTableTextInput} {...institutionField} />
           <Field component={FormTableSelect} {...countryField}>

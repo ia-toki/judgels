@@ -18,7 +18,7 @@ export class IoiScoreboardTable extends React.Component<IoiScoreboardTableProps>
   render() {
     const { scoreboard } = this.props;
     return (
-      <table className="pt-table pt-striped scoreboard__content ioi-scoreboard__content">
+      <table className="pt-html-table pt-html-table-striped scoreboard__content ioi-scoreboard__content">
         {this.renderHeader(scoreboard.state)}
         {this.renderData(scoreboard.content)}
       </table>

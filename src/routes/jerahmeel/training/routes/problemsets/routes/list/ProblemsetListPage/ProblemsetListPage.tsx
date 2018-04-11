@@ -5,7 +5,7 @@ import { withBreadcrumb } from '../../../../../../../../components/BreadcrumbWra
 import { APP_CONFIG } from '../../../../../../../../conf';
 
 const ProblemsetListPage = () => (
-  <Callout intent={Intent.WARNING} iconName="info-sign">
+  <Callout intent={Intent.WARNING} icon="info-sign">
     <strong>New page under construction.</strong> See the old training page here:{' '}
     <a href={APP_CONFIG.tempHome.jerahmeelUrl}>
       <strong>{APP_CONFIG.tempHome.jerahmeelUrl}</strong>

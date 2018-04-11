@@ -1,4 +1,4 @@
-import { Icon, IconName, Tab2, Tabs2 } from '@blueprintjs/core';
+import { Icon, IconName, Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Card } from '../Card/Card';
@@ -24,29 +24,29 @@ export class Sidebar extends React.Component<SidebarProps> {
     const { title, action, activeItemId, items, onItemClick } = this.props;
 
     const tabs = items.map(item => {
-      const titleIcon = item.titleIcon && <Icon iconName={item.titleIcon} />;
+      const titleIcon = item.titleIcon && <Icon icon={item.titleIcon} />;
 
       const icon = item.id === activeItemId && (
-        <Icon iconName="chevron-right" iconSize={Icon.SIZE_LARGE} className="card-sidebar__arrow" />
+        <Icon icon="chevron-right" iconSize={Icon.SIZE_LARGE} className="card-sidebar__arrow" />
       );
 
       return (
-        <Tab2 key={item.id} id={item.id}>
+        <Tab key={item.id} id={item.id}>
           <span>
             {titleIcon}
             {titleIcon && <span>&nbsp;&nbsp;</span>}
             {item.title}
           </span>
           {icon}
-        </Tab2>
+        </Tab>
       );
     });
 
     return (
       <Card className="card-sidebar" title={title} action={action} actionRightJustified>
-        <Tabs2 id="sidebar" selectedTabId={activeItemId} onChange={onItemClick} vertical renderActiveTabPanelOnly>
+        <Tabs id="sidebar" selectedTabId={activeItemId} onChange={onItemClick} vertical renderActiveTabPanelOnly>
           {tabs}
-        </Tabs2>
+        </Tabs>
       </Card>
     );
   }

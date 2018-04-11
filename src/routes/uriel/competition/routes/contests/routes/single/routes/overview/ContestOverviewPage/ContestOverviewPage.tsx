@@ -19,7 +19,7 @@ class ContestOverviewPage extends React.Component<ContestOverviewPageProps> {
 
     return (
       <div>
-        <Callout intent={Intent.WARNING} iconName="info-sign">
+        <Callout intent={Intent.WARNING} icon="info-sign">
           <strong>New page under construction.</strong> See the old contest page here:{' '}
           <a href={`${APP_CONFIG.tempHome.urielUrl}/contests/${contest.id}`}>
             <strong>
