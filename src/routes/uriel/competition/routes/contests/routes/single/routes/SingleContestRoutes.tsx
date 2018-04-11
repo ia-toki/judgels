@@ -11,7 +11,7 @@ import ContentWithSidebar, {
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 import ContestDetailsPage from './details/ContestDetailsPage/ContestDetailsPage';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
-import { Contest, ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
+import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../modules/store';
 import { selectContest } from '../../../modules/contestSelectors';
 
@@ -35,20 +35,14 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       routeComponent: Route,
       component: ContestDetailsPage,
     },
+    {
+      id: 'scoreboard',
+      titleIcon: 'th',
+      title: 'Scoreboard',
+      routeComponent: Route,
+      component: ContestScoreboardPage,
+    },
   ];
-
-  if (contest.style === ContestStyle.ICPC) {
-    sidebarItems = [
-      ...sidebarItems,
-      {
-        id: 'scoreboard',
-        titleIcon: 'th',
-        title: 'Scoreboard',
-        routeComponent: Route,
-        component: ContestScoreboardPage,
-      },
-    ];
-  }
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Contest Menu',

@@ -5,10 +5,11 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { Contest, ContestStyle } from '../../../../../../../../../../modules/api/uriel/contest';
 import { ContestScoreboard } from '../../../../../../../../../../modules/api/uriel/contestScoreboard';
-import { IcpcScoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
+import { IcpcScoreboard, IoiScoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
 import { AppState } from '../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
+import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
 import { contestScoreboardActions as injectedContestScoreboardActions } from '../modules/contestScoreboardActions';
 
 interface ContestScoreboardPageProps extends RouteComponentProps<{ contestJid: string }> {
@@ -47,8 +48,14 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
           contestantDisplayNames={contestScoreboard.contestantDisplayNames}
         />
       );
+    } else {
+      return (
+        <IoiScoreboardTable
+          scoreboard={contestScoreboard.scoreboard as IoiScoreboard}
+          contestantDisplayNames={contestScoreboard.contestantDisplayNames}
+        />
+      );
     }
-    return null;
   };
 }
 

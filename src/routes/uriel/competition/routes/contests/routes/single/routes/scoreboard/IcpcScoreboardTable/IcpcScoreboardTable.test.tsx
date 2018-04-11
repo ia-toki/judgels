@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
-import { IcpcProblemState, IcpcScoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
+import { IcpcScoreboardProblemState, IcpcScoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
 import { IcpcScoreboardTable, IcpcScoreboardTableProps } from './IcpcScoreboardTable';
 
 describe('IcpcScoreboardTable', () => {
@@ -22,7 +22,11 @@ describe('IcpcScoreboardTable', () => {
           totalPenalties: 66,
           attemptsList: [1, 3, 1],
           penaltyList: [3, 14, 9],
-          problemStateList: [IcpcProblemState.Accepted, IcpcProblemState.FirstAccepted, IcpcProblemState.FirstAccepted],
+          problemStateList: [
+            IcpcScoreboardProblemState.Accepted,
+            IcpcScoreboardProblemState.FirstAccepted,
+            IcpcScoreboardProblemState.FirstAccepted,
+          ],
         },
         {
           rank: 2,
@@ -31,7 +35,11 @@ describe('IcpcScoreboardTable', () => {
           totalPenalties: 17,
           attemptsList: [1, 1, 0],
           penaltyList: [10, 17, 0],
-          problemStateList: [IcpcProblemState.NotAccepted, IcpcProblemState.Accepted, IcpcProblemState.NotAccepted],
+          problemStateList: [
+            IcpcScoreboardProblemState.NotAccepted,
+            IcpcScoreboardProblemState.Accepted,
+            IcpcScoreboardProblemState.NotAccepted,
+          ],
         },
       ],
     },

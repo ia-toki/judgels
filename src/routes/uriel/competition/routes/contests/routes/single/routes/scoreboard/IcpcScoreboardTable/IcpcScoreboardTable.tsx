@@ -2,13 +2,14 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import {
-  IcpcProblemState,
+  IcpcScoreboardProblemState,
   IcpcScoreboard,
   IcpcScoreboardContent,
   IcpcScoreboardEntry,
-  IcpcScoreboardState,
+  ScoreboardState,
 } from '../../../../../../../../../../modules/api/uriel/scoreboard';
 
+import '../ScoreboardTable.css';
 import './IcpcScoreboardTable.css';
 
 export class IcpcScoreboardTableProps {
@@ -20,14 +21,14 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
   render() {
     const { scoreboard } = this.props;
     return (
-      <table className="pt-table pt-striped scoreboard__content">
+      <table className="pt-table pt-striped scoreboard__content icpc-scoreboard__content">
         {this.renderHeader(scoreboard.state)}
         {this.renderData(scoreboard.content)}
       </table>
     );
   }
 
-  private renderHeader = (state: IcpcScoreboardState) => {
+  private renderHeader = (state: ScoreboardState) => {
     const problems = state.problemAliases.map(alias => (
       <th key={alias} className="problem-cell">
         {alias}
@@ -70,18 +71,18 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
     return <tr key={entry.contestantJid}>{cells}</tr>;
   };
 
-  private renderProblemCell = (idx: number, attempts: number, penalty: number, state: IcpcProblemState) => {
+  private renderProblemCell = (idx: number, attempts: number, penalty: number, state: IcpcScoreboardProblemState) => {
     let className = {};
-    if (state === IcpcProblemState.Accepted) {
+    if (state === IcpcScoreboardProblemState.Accepted) {
       className = 'accepted';
-    } else if (state === IcpcProblemState.FirstAccepted) {
+    } else if (state === IcpcScoreboardProblemState.FirstAccepted) {
       className = 'first-accepted';
-    } else if (state === IcpcProblemState.NotAccepted && attempts > 0) {
+    } else if (state === IcpcScoreboardProblemState.NotAccepted && attempts > 0) {
       className = 'not-accepted';
     }
 
     const shownAttempts = attempts === 0 ? '-' : '' + attempts;
-    const shownPenalty = state === IcpcProblemState.NotAccepted ? '-' : '' + penalty;
+    const shownPenalty = state === IcpcScoreboardProblemState.NotAccepted ? '-' : '' + penalty;
 
     return (
       <td key={idx} className={classNames(className)}>

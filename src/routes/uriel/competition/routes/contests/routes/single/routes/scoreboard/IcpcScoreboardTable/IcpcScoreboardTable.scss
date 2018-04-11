@@ -1,52 +1,6 @@
 @import '../../../../../../../../../../styles/base';
 
-table.pt-table.scoreboard__content {
-  td, th {
-    border: 1px #dee0e1 solid;
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  th {
-    color: #3b73ba;
-    font-weight: bold;
-  }
-
-  thead tr {
-    height: 50px;
-  }
-
-  tbody tr {
-    height: 40px;
-  }
-
-  .rank-cell {
-    width: 20px;
-  }
-
-  .contestant-cell {
-    font-weight: bold;
-    text-align: left;
-  }
-
-  .problem-cell {
-    width: 60px;
-  }
-
-  td {
-    padding-top: 5px;
-    padding-bottom: 5px;
-  }
-
-  td {
-    strong {
-      font-size: 16px;
-    }
-    small {
-      color: $small-color;
-    }
-  }
-
+table.pt-table.icpc-scoreboard__content {
   td.first-accepted {
     strong, small {
       color: #fff;
