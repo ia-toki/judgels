@@ -295,6 +295,14 @@ class HibernateDaoIntegrationTests {
                 .pageSize(0)
                 .build());
         assertThat(models.getData()).containsExactly(model1, model4);
+
+        models = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .putColumnsEq(ExampleModel_.uniqueColumn1, "x")
+                .putColumnsIn(ExampleModel_.column1, ImmutableSet.of())
+                .build(), new SelectionOptions.Builder()
+                .pageSize(0)
+                .build());
+        assertThat(models.getData()).isEmpty();
     }
 
     @Test
