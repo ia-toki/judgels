@@ -15,7 +15,12 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private UserService userService = createService(UserService.class);
 
     @Test
-    void get_users() {
+    void basic_flow() {
+        assertThat(userService.usernameExists("nano")).isFalse();
+        assertThat(userService.emailExists("nano@domain.com")).isFalse();
+        assertThat(userService.usernameExists("budi")).isFalse();
+        assertThat(userService.emailExists("budi@domain.com")).isFalse();
+
         User nano = userService.createUser(adminHeader, new UserData.Builder()
                 .username("nano")
                 .password("pass")
@@ -26,6 +31,13 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .password("pass")
                 .email("budi@domain.com")
                 .build());
+
+        assertThat(userService.usernameExists("nano")).isTrue();
+        assertThat(userService.emailExists("nano@domain.com")).isTrue();
+        assertThat(userService.usernameExists("budi")).isTrue();
+        assertThat(userService.emailExists("budi@domain.com")).isTrue();
+        assertThat(userService.usernameExists("random")).isFalse();
+        assertThat(userService.emailExists("random@random.com")).isFalse();
 
         Page<User> users = userService.getUsers(adminHeader, empty());
         assertThat(users.getData()).contains(nano, budi);

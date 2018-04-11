@@ -17,7 +17,7 @@ public interface MyService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    User getMyself(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
+    UserWithAvatar getMyself(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
 
     @POST
     @Path("/password")
