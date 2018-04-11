@@ -1,3 +1,5 @@
+@import '../../../../../../../../../../styles/base';
+
 table.pt-table.scoreboard__content {
   td, th {
     border: 1px #dee0e1 solid;
@@ -40,6 +42,9 @@ table.pt-table.scoreboard__content {
     strong {
       font-size: 16px;
     }
+    small {
+      color: $small-color;
+    }
   }
 
   td.first-accepted {
@@ -50,9 +55,6 @@ table.pt-table.scoreboard__content {
   }
 
   td.accepted {
-    strong, small {
-      color: #000;
-    }
     background: #e1fdd7 !important;
   }
 
