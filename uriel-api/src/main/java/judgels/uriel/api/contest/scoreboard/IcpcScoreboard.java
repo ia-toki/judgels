@@ -4,52 +4,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
-import java.util.Set;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableIcpcScoreboard.class)
 public interface IcpcScoreboard extends Scoreboard {
-    State getState();
-    Content getContent();
+    IcpcScoreboardContent getContent();
 
     class Builder extends ImmutableIcpcScoreboard.Builder {}
 
     @Value.Immutable
-    @JsonDeserialize(as = ImmutableState.class)
-    interface State {
-        List<String> getProblemJids();
-        List<String> getProblemAliases();
-        Set<String> getContestantJids();
+    @JsonDeserialize(as = ImmutableIcpcScoreboardContent.class)
+    interface IcpcScoreboardContent {
+        List<IcpcScoreboardEntry> getEntries();
 
-        class Builder extends ImmutableState.Builder {}
+        class Builder extends ImmutableIcpcScoreboardContent.Builder {}
     }
 
     @Value.Immutable
-    @JsonDeserialize(as = ImmutableContent.class)
-    interface Content {
-        List<Entry> getEntries();
-
-        class Builder extends ImmutableContent.Builder {}
-    }
-
-    @Value.Immutable
-    @JsonDeserialize(as = ImmutableEntry.class)
-    interface Entry {
+    @JsonDeserialize(as = ImmutableIcpcScoreboardEntry.class)
+    interface IcpcScoreboardEntry {
         int getRank();
         String getContestantJid();
-        String getImageURL();
         int getTotalAccepted();
         int getTotalPenalties();
         int getLastAcceptedPenalty();
         List<Integer> getAttemptsList();
-        List<Integer> getPenaltyList();
-        List<ProblemState> getProblemStateList();
+        List<Long> getPenaltyList();
+        List<IcpcScoreboardProblemState> getProblemStateList();
 
-        class Builder extends ImmutableEntry.Builder {}
+        class Builder extends ImmutableIcpcScoreboardEntry.Builder {}
     }
 
-    enum ProblemState {
+    enum IcpcScoreboardProblemState {
         @JsonProperty NOT_ACCEPTED,
         @JsonProperty ACCEPTED,
         @JsonProperty FIRST_ACCEPTED;

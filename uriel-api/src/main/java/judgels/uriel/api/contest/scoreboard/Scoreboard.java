@@ -1,3 +1,5 @@
 package judgels.uriel.api.contest.scoreboard;
 
-public interface Scoreboard {}
+public interface Scoreboard {
+    ScoreboardState getState();
+}
