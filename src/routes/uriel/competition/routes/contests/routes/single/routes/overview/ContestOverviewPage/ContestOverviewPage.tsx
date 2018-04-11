@@ -1,13 +1,16 @@
-import { Callout, Card, Intent } from '@blueprintjs/core';
+import { Callout, Intent } from '@blueprintjs/core';
 import * as HTMLReactParser from 'html-react-parser';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
+import { Card } from '../../../../../../../../../../components/Card/Card';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
 import { APP_CONFIG } from '../../../../../../../../../../conf';
+
+import './ContestOverviewPage.css';
 
 interface ContestOverviewPageProps extends RouteComponentProps<{ contestJid: string }> {
   contest: Contest;
@@ -19,7 +22,7 @@ class ContestOverviewPage extends React.Component<ContestOverviewPageProps> {
 
     return (
       <div>
-        <Callout intent={Intent.WARNING} icon="info-sign">
+        <Callout intent={Intent.WARNING} icon="info-sign" className="contest-overview__callout">
           <strong>New page under construction.</strong> See the old contest page here:{' '}
           <a href={`${APP_CONFIG.tempHome.urielUrl}/contests/${contest.id}`}>
             <strong>
@@ -27,14 +30,13 @@ class ContestOverviewPage extends React.Component<ContestOverviewPageProps> {
             </strong>
           </a>
         </Callout>
-        <hr />
         {this.renderDescription(contest.description)}
       </div>
     );
   }
 
   private renderDescription = (description: string) => {
-    return description && <Card>{HTMLReactParser(description)}</Card>;
+    return description && <Card title="Description">{HTMLReactParser(description)}</Card>;
   };
 }
 
