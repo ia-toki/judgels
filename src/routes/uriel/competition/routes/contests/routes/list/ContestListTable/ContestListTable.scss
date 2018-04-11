@@ -1,5 +1,8 @@
+.contest-list-container > :first-child {
+  margin-top: -20px;
+}
+
 .contest-list-container > :not(:last-child) {
-  margin-bottom: 20px;
   border-bottom: 1px solid rgba(16, 22, 26, 0.15);
 }
 .contest-list-container > :last-child {
@@ -9,7 +12,11 @@
 .contest-list-item-container {
   margin-left: -20px;
   margin-right: -20px;
-  padding-top: 0;
+  padding-top: 20px;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.contest-list-item-container:hover {
+  background-color: #eef2fb;
 }
