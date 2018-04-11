@@ -1,6 +1,6 @@
 import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
-import { User } from './user';
+import { UserWithAvatar } from './user';
 
 export enum JophielRole {
   Guest = 'guest',
@@ -18,7 +18,7 @@ export function createMyAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users/me`;
 
   return {
-    getMyself: (token: string): Promise<User> => {
+    getMyself: (token: string): Promise<UserWithAvatar> => {
       return get(`${baseURL}`, token);
     },
 

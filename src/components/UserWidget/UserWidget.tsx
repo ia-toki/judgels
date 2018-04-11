@@ -3,14 +3,14 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { User } from '../../modules/api/jophiel/user';
+import { UserWithAvatar } from '../../modules/api/jophiel/user';
 import { AppState } from '../../modules/store';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 
 import './UserWidget.css';
 
 export interface UserWidgetProps {
-  user?: User;
+  user?: UserWithAvatar;
 }
 
 export class UserWidget extends React.Component<UserWidgetProps> {
@@ -22,7 +22,7 @@ export class UserWidget extends React.Component<UserWidgetProps> {
     }
   }
 
-  private renderForUser = (user: User) => {
+  private renderForUser = (user: UserWithAvatar) => {
     const menu = (
       <Menu className="widget-user__menu">
         <MenuItem className="widget-user__menu-helper" iconName="user" text={user.username} disabled />

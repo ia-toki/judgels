@@ -4,6 +4,9 @@ import { delete_, get, postMultipart } from '../http';
 export interface User {
   jid: string;
   username: string;
+}
+
+export interface UserWithAvatar extends User {
   avatarUrl?: string;
 }
 
