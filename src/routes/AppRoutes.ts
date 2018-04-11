@@ -1,6 +1,7 @@
 import { AccountRoutes } from './jophiel/accounts/AccountRoutes';
 import JophielRoutes from './jophiel/JophielRoutes';
 import UrielRoutes from './uriel/UrielRoutes';
+import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
 import { JophielRole } from '../modules/api/jophiel/my';
 
 function shouldShowRoute(id: string, role: JophielRole) {
@@ -8,6 +9,9 @@ function shouldShowRoute(id: string, role: JophielRole) {
     return false;
   }
   if (id === 'competition' && role === JophielRole.Guest) {
+    return false;
+  }
+  if (id === 'training' && role === JophielRole.Guest) {
     return false;
   }
   return true;
@@ -24,10 +28,18 @@ const appRoutes = [
   },
   {
     id: 'competition',
-    title: 'Competition (BETA)',
+    title: 'Competition',
     route: {
       path: '/competition',
       component: UrielRoutes,
+    },
+  },
+  {
+    id: 'training',
+    title: 'Training',
+    route: {
+      path: '/training',
+      component: JerahmeelRoutes,
     },
   },
 ];

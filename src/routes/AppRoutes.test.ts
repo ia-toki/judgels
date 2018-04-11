@@ -9,15 +9,15 @@ describe('AppRoutes', () => {
   };
 
   test('admin', () => {
-    testAppRoutes(JophielRole.Admin, ['account', 'competition']);
+    testAppRoutes(JophielRole.Admin, ['account', 'competition', 'training']);
   });
 
   test('superadmin', () => {
-    testAppRoutes(JophielRole.Superadmin, ['account', 'competition']);
+    testAppRoutes(JophielRole.Superadmin, ['account', 'competition', 'training']);
   });
 
   test('user', () => {
-    testAppRoutes(JophielRole.User, ['competition']);
+    testAppRoutes(JophielRole.User, ['competition', 'training']);
   });
 
   test('guest', () => {
