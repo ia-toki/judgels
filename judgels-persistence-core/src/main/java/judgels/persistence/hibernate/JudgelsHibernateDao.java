@@ -1,5 +1,6 @@
 package judgels.persistence.hibernate;
 
+import com.google.common.collect.ImmutableMap;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,10 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
 
     @Override
     public Map<String, M> selectByJids(Set<String> jids) {
+        if (jids.isEmpty()) {
+            return ImmutableMap.of();
+        }
+
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<M> cq = cb.createQuery(getEntityClass());
         Root<M> root = cq.from(getEntityClass());
