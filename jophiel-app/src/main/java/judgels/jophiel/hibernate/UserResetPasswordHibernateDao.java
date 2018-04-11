@@ -1,6 +1,5 @@
 package judgels.jophiel.hibernate;
 
-import java.sql.Date;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -45,14 +44,13 @@ public class UserResetPasswordHibernateDao extends HibernateDao<UserResetPasswor
             Object val) {
 
         Instant currentInstant = clock.instant();
-        Date currentDate = new Date(currentInstant.toEpochMilli());
-        Date pastDate = new Date(currentInstant.minus(expiration).toEpochMilli());
+        Instant pastInstant = currentInstant.minus(expiration);
 
         return selectAll(new FilterOptions.Builder<UserResetPasswordModel>()
                 .addCustomPredicates((cb, cq, root) -> cb.equal(root.get(attr), val))
                 .addCustomPredicates((cb, cq, root) -> cb.isFalse(root.get(UserResetPasswordModel_.consumed)))
                 .addCustomPredicates((cb, cq, root) ->
-                        cb.between(root.get(Model_.createdAt), cb.literal(pastDate), cb.literal(currentDate)))
+                        cb.between(root.get(Model_.createdAt), cb.literal(pastInstant), cb.literal(currentInstant)))
                 .build()).getData()
                 .stream()
                 .findFirst();
