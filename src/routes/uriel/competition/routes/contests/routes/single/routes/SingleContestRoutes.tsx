@@ -9,7 +9,7 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from '../../../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
-import ContestDetailsPage from './details/ContestDetailsPage/ContestDetailsPage';
+import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../modules/store';
@@ -29,11 +29,11 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
 
   let sidebarItems: ContentWithSidebarItem[] = [
     {
-      id: 'details',
+      id: 'overview',
       titleIcon: 'properties',
-      title: 'Details',
+      title: 'Overview',
       routeComponent: Route,
-      component: ContestDetailsPage,
+      component: ContestOverviewPage,
     },
     {
       id: 'scoreboard',

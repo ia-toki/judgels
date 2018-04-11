@@ -9,11 +9,11 @@ import { AppState } from '../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
 import { APP_CONFIG } from '../../../../../../../../../../conf';
 
-interface ContestDetailsPageProps extends RouteComponentProps<{ contestJid: string }> {
+interface ContestOverviewPageProps extends RouteComponentProps<{ contestJid: string }> {
   contest: Contest;
 }
 
-class ContestDetailsPage extends React.Component<ContestDetailsPageProps> {
+class ContestOverviewPage extends React.Component<ContestOverviewPageProps> {
   render() {
     const { contest } = this.props;
 
@@ -38,13 +38,13 @@ class ContestDetailsPage extends React.Component<ContestDetailsPageProps> {
   };
 }
 
-function createContestDetailsPage() {
+function createContestOverviewPage() {
   const mapStateToProps = (state: AppState) =>
     ({
       contest: selectContest(state)!,
-    } as Partial<ContestDetailsPageProps>);
+    } as Partial<ContestOverviewPageProps>);
 
-  return withRouter<any>(connect(mapStateToProps)(ContestDetailsPage));
+  return withRouter<any>(connect(mapStateToProps)(ContestOverviewPage));
 }
 
-export default createContestDetailsPage();
+export default createContestOverviewPage();
