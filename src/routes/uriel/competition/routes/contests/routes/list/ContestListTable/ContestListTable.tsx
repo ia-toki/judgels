@@ -64,8 +64,10 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
     if (!contest.duration) {
       return null;
     }
+
+    const Span = props => <span {...props} />;
     return (
-      <FormattedDuration seconds={contest.duration} format="{days} {hours} {minutes} {seconds}" textComponent="span" />
+      <FormattedDuration seconds={contest.duration} format="{days} {hours} {minutes} {seconds}" textComponent={Span} />
     );
   };
 }
