@@ -53,8 +53,8 @@ class Pagination extends React.Component<PaginationProps, {}> {
       <ReactPaginate
         initialPage={currentPage - 1}
         pageCount={this.getTotalPages()}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={1}
+        pageRangeDisplayed={5}
+        marginPagesDisplayed={2}
         pageClassName="pt-button"
         previousLabel="<"
         nextLabel=">"
