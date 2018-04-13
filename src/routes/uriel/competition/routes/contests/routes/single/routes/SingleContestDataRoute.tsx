@@ -15,29 +15,18 @@ export interface SingleContestDataRouteProps extends RouteComponentProps<{ conte
 
 class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps> {
   async componentDidMount() {
-    await this.refresh(this.props.match.params.contestJid);
-  }
-
-  async componentWillReceiveProps(nextProps: SingleContestDataRouteProps) {
-    if (nextProps.match.params.contestJid !== this.props.match.params.contestJid) {
-      this.props.onPopBreadcrumb(this.props.match.url);
-      await this.refresh(nextProps.match.params.contestJid);
-    }
+    const contest = await this.props.onFetchContest(this.props.match.params.contestJid);
+    this.props.onPushBreadcrumb(this.props.match.url, contest.name);
   }
 
   componentWillUnmount() {
     this.props.onClearContest();
-    this.props.onPopBreadcrumb(this.props.match.url);
+    this.props.onPopBreadcrumb(this.props.match.url.replace(/\/+$/, ''));
   }
 
   render() {
     return null;
   }
-
-  private refresh = async (contestJid: string) => {
-    const contest = await this.props.onFetchContest(contestJid);
-    this.props.onPushBreadcrumb(this.props.match.url, contest.name);
-  };
 }
 
 export function createSingleContestDataRoute(contestActions, breadcrumbsActions) {

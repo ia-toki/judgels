@@ -49,7 +49,8 @@ interface ContentWithSidebarConnectedProps extends RouteComponentProps<{}> {
 }
 
 function resolveUrl(parentPath: string, childPath: string) {
-  return (parentPath + '/' + childPath).replace(/\/\/+/g, '/');
+  const actualChildPath = childPath === '@' ? '' : childPath;
+  return (parentPath + '/' + actualChildPath).replace(/\/\/+/g, '/');
 }
 
 class ContentWithSidebar extends React.Component<ContentWithSidebarProps & ContentWithSidebarConnectedProps> {
@@ -88,17 +89,22 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
     const components = this.props.items.map(item => {
       const RouteC = item.routeComponent;
       const props = {
+        exact: item.id === '@',
         path: resolveUrl(this.props.match.url, item.id),
         component: item.component,
       };
       return <RouteC key={item.id} {...props} />;
     });
 
+    const redirect = this.props.items[0].id !== '@' && (
+      <Redirect exact from={this.props.match.url} to={resolveUrl(this.props.match.url, this.props.items[0].id)} />
+    );
+
     return (
       <div>
         {this.props.contentHeader}
         <Switch>
-          <Redirect exact from={this.props.match.url} to={resolveUrl(this.props.match.url, this.props.items[0].id)} />
+          {redirect}
           {components}
         </Switch>
       </div>
@@ -110,6 +116,10 @@ class ContentWithSidebar extends React.Component<ContentWithSidebarProps & Conte
   };
 
   private getActiveItemId = () => {
+    if (this.props.location.pathname === this.props.match.url) {
+      return '@';
+    }
+
     const currentPath = this.props.location.pathname + '/';
     const nextSlashPos = currentPath.indexOf('/', this.props.match.url.length + 1);
     return currentPath.substring(this.props.match.url.length + 1, nextSlashPos);

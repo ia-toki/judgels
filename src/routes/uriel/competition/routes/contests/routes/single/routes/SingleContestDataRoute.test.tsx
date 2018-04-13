@@ -50,15 +50,12 @@ describe('SingleContestDataRoute', () => {
     expect(contestActions.fetch).toHaveBeenCalledWith('JIDCONT123');
     expect(breadcrumbsActions.push).toHaveBeenCalledWith('/competition/contests/JIDCONT123', 'Contest 123');
 
-    history.push('/competition/contests/JIDCONT456');
+    history.push('/competition/contests/JIDCONT123/');
     await new Promise(resolve => setImmediate(resolve));
-    expect(contestActions.fetch).toHaveBeenCalledWith('JIDCONT456');
-    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/competition/contests/JIDCONT123');
-    expect(breadcrumbsActions.push).toHaveBeenCalledWith('/competition/contests/JIDCONT456', 'Contest 456');
 
     history.push('/other');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/competition/contests/JIDCONT456');
+    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/competition/contests/JIDCONT123');
     expect(contestActions.clear).toHaveBeenCalled();
   });
 });

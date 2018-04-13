@@ -29,7 +29,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
 
   let sidebarItems: ContentWithSidebarItem[] = [
     {
-      id: 'overview',
+      id: '@',
       titleIcon: 'properties',
       title: 'Overview',
       routeComponent: Route,
