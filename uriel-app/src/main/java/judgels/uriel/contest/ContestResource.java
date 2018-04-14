@@ -42,7 +42,7 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Page<Contest> getContests(AuthHeader authHeader, Optional<Integer> page) {
+    public Page<Contest> getContests(Optional<AuthHeader> authHeader, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
 
         SelectionOptions.Builder options = new SelectionOptions.Builder();
