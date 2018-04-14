@@ -55,7 +55,6 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     contentHeader: (
       <div className="single-contest-routes__header">
         <h2>{contest.name}</h2>
-        <hr />
       </div>
     ),
   };
