@@ -1,5 +1,8 @@
 package judgels.service.actor;
 
+import static judgels.service.actor.Actors.GUEST;
+
+import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.ws.rs.NotAuthorizedException;
 import judgels.service.api.actor.ActorExtractor;
@@ -11,6 +14,13 @@ public class ActorChecker {
 
     public ActorChecker(ActorExtractor actorExtractor) {
         this.actorExtractor = actorExtractor;
+    }
+
+    public String check(Optional<AuthHeader> authHeader) {
+        if (!authHeader.isPresent()) {
+            return GUEST;
+        }
+        return check(authHeader.get());
     }
 
     public String check(@Nullable AuthHeader authHeader) {

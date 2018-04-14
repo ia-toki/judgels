@@ -1,5 +1,6 @@
 package judgels.service.actor;
 
+import static judgels.service.actor.Actors.GUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
@@ -55,7 +56,7 @@ class ActorCheckerTests {
             @Test
             void throws_unauthorized() {
                 assertThatExceptionOfType(NotAuthorizedException.class)
-                        .isThrownBy(() -> actorChecker.check(null));
+                        .isThrownBy(() -> actorChecker.check((AuthHeader) null));
             }
         }
 
@@ -70,6 +71,14 @@ class ActorCheckerTests {
             void throws_unauthorized() {
                 assertThatExceptionOfType(NotAuthorizedException.class)
                         .isThrownBy(() -> actorChecker.check(AUTH_HEADER));
+            }
+        }
+
+        @Nested
+        class when_auth_header_is_optional_and_empty {
+            @Test
+            void returns_guest() {
+                assertThat(actorChecker.check(Optional.empty())).isEqualTo(GUEST);
             }
         }
     }
