@@ -21,6 +21,6 @@ describe('AppRoutes', () => {
   });
 
   test('guest', () => {
-    testAppRoutes(JophielRole.Guest, []);
+    testAppRoutes(JophielRole.Guest, ['competition', 'training']);
   });
 });

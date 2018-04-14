@@ -8,12 +8,6 @@ function shouldShowRoute(id: string, role: JophielRole) {
   if (id === 'account' && role !== JophielRole.Superadmin && role !== JophielRole.Admin) {
     return false;
   }
-  if (id === 'competition' && role === JophielRole.Guest) {
-    return false;
-  }
-  if (id === 'training' && role === JophielRole.Guest) {
-    return false;
-  }
   return true;
 }
 
