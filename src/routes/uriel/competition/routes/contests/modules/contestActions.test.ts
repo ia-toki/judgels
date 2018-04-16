@@ -1,6 +1,6 @@
 import { contestActions } from './contestActions';
 import { PutContest } from './contestReducer';
-import { ContestList } from '../../../../../../modules/api/uriel/contest';
+import { Contest, ContestPage } from '../../../../../../modules/api/uriel/contest';
 import { contest, contestJid, sessionState, token } from '../../../../../../fixtures/state';
 import { AppState } from '../../../../../../modules/store';
 
@@ -14,27 +14,44 @@ describe('contestActions', () => {
     dispatch = jest.fn();
 
     contestAPI = {
-      getContests: jest.fn(),
+      getActiveContests: jest.fn(),
+      getPastContests: jest.fn(),
       getContest: jest.fn(),
     };
   });
 
-  describe('fetchList()', () => {
-    const { fetchList } = contestActions;
-    const doFetchList = async () => fetchList(2, 20)(dispatch, getState, { contestAPI });
+  describe('fetchActiveList()', () => {
+    const { fetchActiveList } = contestActions;
+    const doFetchActiveList = async () => fetchActiveList()(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
-      const contestList: ContestList = {
+      const contestList: Contest[] = [contest];
+      contestAPI.getActiveContests.mockImplementation(() => contestList);
+
+      await doFetchActiveList();
+    });
+
+    it('calls API to get active contest list', () => {
+      expect(contestAPI.getActiveContests).toHaveBeenCalledWith(token);
+    });
+  });
+
+  describe('fetchPastPage()', () => {
+    const { fetchPastPage } = contestActions;
+    const doFetchPastPage = async () => fetchPastPage(2, 20)(dispatch, getState, { contestAPI });
+
+    beforeEach(async () => {
+      const contestPage: ContestPage = {
         totalData: 3,
         data: [],
       };
-      contestAPI.getContests.mockImplementation(() => contestList);
+      contestAPI.getPastContests.mockImplementation(() => contestPage);
 
-      await doFetchList();
+      await doFetchPastPage();
     });
 
-    it('calls API to get contest list', () => {
-      expect(contestAPI.getContests).toHaveBeenCalledWith(token, 2, 20);
+    it('calls API to get past contest list', () => {
+      expect(contestAPI.getPastContests).toHaveBeenCalledWith(token, 2, 20);
     });
   });
 

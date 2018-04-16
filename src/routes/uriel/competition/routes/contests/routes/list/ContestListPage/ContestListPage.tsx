@@ -1,4 +1,4 @@
-import { Spinner } from '@blueprintjs/core';
+import { Intent, Spinner } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
@@ -7,15 +7,17 @@ import Pagination from '../../../../../../../../components/Pagination/Pagination
 import { ContestListTable } from '../ContestListTable/ContestListTable';
 import { withBreadcrumb } from '../../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { Card } from '../../../../../../../../components/Card/Card';
-import { ContestList } from '../../../../../../../../modules/api/uriel/contest';
+import { Contest, ContestPage } from '../../../../../../../../modules/api/uriel/contest';
 import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 
 export interface ContestListPageProps extends RouteComponentProps<{}> {
-  onFetchContestList: (page: number, pageSize: number) => Promise<ContestList>;
+  onFetchActiveContestList: () => Promise<Contest[]>;
+  onFetchPastContestPage: (page: number) => Promise<ContestPage>;
 }
 
 export interface ContestListPageState {
-  contestList?: ContestList;
+  activeContestList?: Contest[];
+  pastContestPage?: ContestPage;
 }
 
 class ContestListPage extends React.Component<ContestListPageProps, ContestListPageState> {
@@ -23,32 +25,51 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
 
   state: ContestListPageState = {};
 
+  async componentDidMount() {
+    const activeContestList = await this.props.onFetchActiveContestList();
+    this.setState({ activeContestList });
+  }
+
   render() {
     return (
-      <Card title="All contests">
-        {this.renderContestList(this.state.contestList)}
-        <Pagination currentPage={1} pageSize={ContestListPage.PAGE_SIZE} onChangePage={this.onChangePage} />
-      </Card>
+      <div>
+        <Card title="Active contests">{this.renderActiveContestList(this.state.activeContestList)}</Card>
+        <Card title="Past contests">
+          {this.renderPastContestPage(this.state.pastContestPage)}
+          <Pagination currentPage={1} pageSize={ContestListPage.PAGE_SIZE} onChangePage={this.onChangePage} />
+        </Card>
+      </div>
     );
   }
 
-  private renderContestList(contestList?: ContestList) {
+  private renderActiveContestList(contestList?: Contest[]) {
     if (!contestList) {
       return <Spinner className="loading-spinner" />;
     }
-    return <ContestListTable contestList={contestList} />;
+    if (contestList.length === 0) {
+      return <p>No active contests.</p>;
+    }
+    return <ContestListTable contestList={contestList} buttonIntent={Intent.PRIMARY} />;
+  }
+
+  private renderPastContestPage(contestPage?: ContestPage) {
+    if (!contestPage) {
+      return <Spinner className="loading-spinner" />;
+    }
+    return <ContestListTable contestList={contestPage.data} buttonIntent={Intent.NONE} />;
   }
 
   private onChangePage = async (nextPage: number) => {
-    const contestList = await this.props.onFetchContestList(nextPage, ContestListPage.PAGE_SIZE);
-    this.setState({ contestList });
-    return contestList.totalData;
+    const pastContestPage = await this.props.onFetchPastContestPage(nextPage);
+    this.setState({ pastContestPage });
+    return pastContestPage.totalData;
   };
 }
 
 export function createContestListPage(contestActions) {
   const mapDispatchToProps = {
-    onFetchContestList: contestActions.fetchList,
+    onFetchActiveContestList: contestActions.fetchActiveList,
+    onFetchPastContestPage: contestActions.fetchPastPage,
   };
   return connect(undefined, mapDispatchToProps)(ContestListPage);
 }

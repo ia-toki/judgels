@@ -2,10 +2,17 @@ import { DelContest, PutContest } from './contestReducer';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 
 export const contestActions = {
-  fetchList: (page: number, pageSize: number) => {
+  fetchActiveList: () => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
-      return await contestAPI.getContests(token, page, pageSize);
+      return await contestAPI.getActiveContests(token);
+    };
+  },
+
+  fetchPastPage: (page: number, pageSize: number) => {
+    return async (dispatch, getState, { contestAPI }) => {
+      const token = selectToken(getState());
+      return await contestAPI.getPastContests(token, page, pageSize);
     };
   },
 

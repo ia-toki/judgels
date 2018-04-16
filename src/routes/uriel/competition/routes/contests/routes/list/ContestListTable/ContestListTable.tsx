@@ -4,18 +4,19 @@ import { FormattedDate } from 'react-intl';
 import FormattedDuration from 'react-intl-formatted-duration';
 
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
-import { Contest, ContestList } from '../../../../../../../../modules/api/uriel/contest';
+import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 
 import './ContestListTable.css';
 
 export interface ContestListTableProps {
-  contestList: ContestList;
+  contestList: Contest[];
+  buttonIntent: Intent;
 }
 
 export class ContestListTable extends React.Component<ContestListTableProps, {}> {
   render() {
     const { contestList } = this.props;
-    const list = contestList.data.map(contest => (
+    const list = contestList.map(contest => (
       <div key={contest.jid} className="flex-row justify-content-space-between contest-list-item-container">
         <div>
           <h3>{contest.name}</h3>
@@ -40,10 +41,10 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
           <div className="flex-row justify-content-flex-end">
             <ButtonLink
               to={`/competition/contests/${contest.jid}`}
-              intent={Intent.PRIMARY}
+              intent={this.props.buttonIntent}
               className="contest-list-view-result"
             >
-              View contest
+              View
             </ButtonLink>
           </div>
         </div>
