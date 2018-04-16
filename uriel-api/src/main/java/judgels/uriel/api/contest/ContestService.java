@@ -3,6 +3,7 @@ package judgels.uriel.api.contest;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -28,6 +29,17 @@ public interface ContestService {
     @Path("/")
     @Produces(APPLICATION_JSON)
     Page<Contest> getContests(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @QueryParam("page") Optional<Integer> page);
+    @GET
+    @Path("/active")
+    @Produces(APPLICATION_JSON)
+    List<Contest> getActiveContests(@HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader);
+
+    @GET
+    @Path("/past")
+    @Produces(APPLICATION_JSON)
+    Page<Contest> getPastContests(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("page") Optional<Integer> page);
 

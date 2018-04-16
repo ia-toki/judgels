@@ -4,6 +4,7 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
@@ -51,6 +52,31 @@ public class ContestResource implements ContestService {
         page.ifPresent(options::page);
 
         return contestStore.getContests(actorJid, options.build());
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public List<Contest> getActiveContests(Optional<AuthHeader> authHeader) {
+        String actorJid = actorChecker.check(authHeader);
+
+        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        options.orderBy("beginTime");
+        options.orderDir(OrderDir.DESC);
+
+        return contestStore.getActiveContests(actorJid, options.build());
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Page<Contest> getPastContests(Optional<AuthHeader> authHeader, Optional<Integer> page) {
+        String actorJid = actorChecker.check(authHeader);
+
+        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        options.orderBy("beginTime");
+        options.orderDir(OrderDir.DESC);
+        page.ifPresent(options::page);
+
+        return contestStore.getPastContests(actorJid, options.build());
     }
 
     @Override

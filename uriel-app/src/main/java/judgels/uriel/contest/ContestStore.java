@@ -4,6 +4,7 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 
 import com.google.common.collect.Lists;
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
@@ -30,12 +31,20 @@ public class ContestStore {
     }
 
     public Page<Contest> getContests(String userJid, SelectionOptions options) {
-        Page<ContestModel> models;
-        if (roleStore.isAdmin(userJid)) {
-            models = contestDao.selectAll(options);
-        } else {
-            models = contestDao.selectAllByUserJid(userJid, options);
-        }
+        Optional<String> userJidFilter = roleStore.isAdmin(userJid) ? Optional.empty() : Optional.of(userJid);
+        Page<ContestModel> models = contestDao.selectAllByUserJid(userJidFilter, options);
+        return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
+    }
+
+    public List<Contest> getActiveContests(String userJid, SelectionOptions options) {
+        Optional<String> userJidFilter = roleStore.isAdmin(userJid) ? Optional.empty() : Optional.of(userJid);
+        List<ContestModel> models = contestDao.selectAllActiveByUserJid(userJidFilter, options);
+        return Lists.transform(models, ContestStore::fromModel);
+    }
+
+    public Page<Contest> getPastContests(String userJid, SelectionOptions options) {
+        Optional<String> userJidFilter = roleStore.isAdmin(userJid) ? Optional.empty() : Optional.of(userJid);
+        Page<ContestModel> models = contestDao.selectAllPastByUserJid(userJidFilter, options);
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 
