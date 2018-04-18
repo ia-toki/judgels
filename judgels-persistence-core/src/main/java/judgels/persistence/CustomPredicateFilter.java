@@ -18,4 +18,12 @@ public interface CustomPredicateFilter<M> {
             return cb.or(predicates);
         };
     }
+
+    static <M> CustomPredicateFilter<M> not(CustomPredicateFilter<M> predicateFilter) {
+        return (cb, cq, root) -> cb.not(predicateFilter.apply(cb, cq, root));
+    }
+
+    static CustomPredicateFilter<?> literalTrue() {
+        return (cb, cq, root) -> cb.isTrue(cb.literal(true));
+    }
 }
