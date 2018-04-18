@@ -33,5 +33,9 @@ export function createContestAPI() {
       const params = stringify({ page, pageSize });
       return get(`${baseURL}/past?${params}`, token);
     },
+
+    getContest: (token: string, contestJid: string): Promise<Contest> => {
+      return get(`${baseURL}/${contestJid}`, token);
+    },
   };
 }
