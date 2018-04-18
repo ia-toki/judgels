@@ -47,7 +47,11 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
       return <Spinner className="loading-spinner" />;
     }
     if (contestList.length === 0) {
-      return <p>No active contests.</p>;
+      return (
+        <p>
+          <small>No active contests.</small>
+        </p>
+      );
     }
     return <ContestListTable contestList={contestList} buttonIntent={Intent.PRIMARY} />;
   }
