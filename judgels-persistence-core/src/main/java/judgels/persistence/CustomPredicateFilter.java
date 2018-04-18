@@ -23,7 +23,7 @@ public interface CustomPredicateFilter<M> {
         return (cb, cq, root) -> cb.not(predicateFilter.apply(cb, cq, root));
     }
 
-    static CustomPredicateFilter<?> literalTrue() {
+    static <M> CustomPredicateFilter<M> literalTrue() {
         return (cb, cq, root) -> cb.isTrue(cb.literal(true));
     }
 }
