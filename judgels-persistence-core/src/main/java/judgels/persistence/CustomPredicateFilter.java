@@ -8,6 +8,7 @@ import javax.persistence.criteria.Root;
 public interface CustomPredicateFilter<M> {
     Predicate apply(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<M> root);
 
+    @SafeVarargs
     static <M> CustomPredicateFilter<M> or(CustomPredicateFilter<M>... predicateFilters) {
         return (cb, cq, root) -> {
             Predicate[] predicates = new Predicate[predicateFilters.length];
