@@ -330,12 +330,17 @@ class HibernateDaoIntegrationTests {
         model3.uniqueColumn1 = "y";
         dao.insert(model3);
 
-        Page<ExampleModel> models = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+        Optional<ExampleModel> model = dao.selectByFilter(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.uniqueColumn1, "x")
                 .addCustomPredicates((cb, cq, root) -> cb.equal(root.get(ExampleModel_.column1), "a"))
                 .build());
-        assertThat(models.getTotalData()).isEqualTo(1);
-        assertThat(models.getData()).containsExactly(model1);
+        assertThat(model).contains(model1);
+
+        Page<ExampleModel> models = dao.selectAll(new FilterOptions.Builder<ExampleModel>()
+                .addCustomPredicates((cb, cq, root) -> cb.equal(root.get(ExampleModel_.column1), "a"))
+                .build());
+        assertThat(models.getTotalData()).isEqualTo(2);
+        assertThat(models.getData()).containsExactly(model1, model3);
     }
 
     @Test

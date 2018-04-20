@@ -55,6 +55,24 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
+    public Optional<M> selectByFilter(FilterOptions<M> filterOptions) {
+        // MySQL doesn't support empty IN() clause
+        for (Collection<?> collection : filterOptions.getColumnsIn().values()) {
+            if (collection.isEmpty()) {
+                return Optional.empty();
+            }
+        }
+
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<M> cq = criteriaQuery();
+        Root<M> root = cq.from(getEntityClass());
+
+        applyFilters(cb, cq, root, filterOptions);
+
+        return currentSession().createQuery(cq).uniqueResultOptional();
+    }
+
+    @Override
     public Optional<M> selectByUniqueColumn(SingularAttribute<M, String> column, String value) {
         return selectByUniqueColumns(ImmutableMap.of(column, value));
     }
