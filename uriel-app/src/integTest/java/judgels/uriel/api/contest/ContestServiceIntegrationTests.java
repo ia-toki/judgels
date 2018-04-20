@@ -18,20 +18,17 @@ import com.google.common.collect.ImmutableList;
 import com.palantir.remoting.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.AbstractServiceIntegrationTests;
+import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.UrielIntegrationTestComponent;
+import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
-import judgels.uriel.hibernate.AdminRoleHibernateDao;
-import judgels.uriel.hibernate.ContestRoleHibernateDao;
-import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
-import judgels.uriel.persistence.ContestRoleDao;
-import judgels.uriel.role.RoleStore;
+import judgels.uriel.role.AdminRoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -53,17 +50,12 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
     @BeforeAll
     static void setUpRoles(SessionFactory sessionFactory) {
-        AdminRoleDao adminRoleDao = new AdminRoleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider()) {};
-        ContestRoleDao contestRoleDao = new ContestRoleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
+                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
+                .build();
 
-        RoleStore roleStore = new RoleStore(adminRoleDao, contestRoleDao);
-        roleStore.addAdmin(ADMIN_JID);
+        AdminRoleStore adminRoleStore = component.adminRoleStore();
+        adminRoleStore.addAdmin(ADMIN_JID);
     }
 
     @AfterAll

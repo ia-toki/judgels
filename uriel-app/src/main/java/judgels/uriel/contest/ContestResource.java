@@ -36,7 +36,7 @@ public class ContestResource implements ContestService {
     @UnitOfWork(readOnly = true)
     public Contest getContest(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canReadContest(actorJid, contestJid));
+        checkAllowed(roleChecker.canViewContest(actorJid, contestJid));
 
         return checkFound(contestStore.findContestByJid(contestJid));
     }

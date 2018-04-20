@@ -1,11 +1,15 @@
 package judgels.uriel.hibernate;
 
-import com.google.common.collect.ImmutableMap;
 import java.time.Clock;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.hibernate.HibernateDao;
+import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.ContestModel_;
 import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
 import judgels.uriel.persistence.ContestSupervisorModel_;
@@ -20,10 +24,17 @@ public class ContestSupervisorHibernateDao extends HibernateDao<ContestSuperviso
         super(sessionFactory, clock, actorProvider);
     }
 
-    @Override
-    public boolean existsByContestJidAndUserJid(String contestJid, String userJid) {
-        return selectByUniqueColumns(ImmutableMap.of(
-                ContestSupervisorModel_.contestJid, contestJid,
-                ContestSupervisorModel_.userJid, userJid)).isPresent();
+    static CustomPredicateFilter<ContestModel> hasSupervisor(String userJid) {
+        return (cb, cq, root) -> {
+            Subquery<ContestSupervisorModel> sq = cq.subquery(ContestSupervisorModel.class);
+            Root<ContestSupervisorModel> subRoot = sq.from(ContestSupervisorModel.class);
+
+            sq.where(
+                    cb.equal(subRoot.get(ContestSupervisorModel_.contestJid), root.get(ContestModel_.jid)),
+                    cb.equal(subRoot.get(ContestSupervisorModel_.userJid), userJid));
+            sq.select(subRoot);
+
+            return cb.exists(sq);
+        };
     }
 }

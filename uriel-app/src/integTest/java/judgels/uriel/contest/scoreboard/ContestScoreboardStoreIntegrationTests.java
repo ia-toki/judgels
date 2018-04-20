@@ -2,24 +2,16 @@ package judgels.uriel.contest.scoreboard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.UrielIntegrationTestComponent;
+import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.hibernate.AdminRoleHibernateDao;
-import judgels.uriel.hibernate.ContestHibernateDao;
-import judgels.uriel.hibernate.ContestRoleHibernateDao;
-import judgels.uriel.hibernate.ContestScoreboardHibernateDao;
-import judgels.uriel.persistence.AdminRoleDao;
-import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestRoleDao;
-import judgels.uriel.persistence.ContestScoreboardDao;
 import judgels.uriel.persistence.ContestScoreboardModel;
-import judgels.uriel.role.RoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,29 +23,12 @@ class ContestScoreboardStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        ContestDao contestDao = new ContestHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
-        ContestScoreboardDao scoreboardDao = new ContestScoreboardHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
+                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
+                .build();
 
-        AdminRoleDao adminRoleDao = new AdminRoleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
-
-        ContestRoleDao contestRoleDao = new ContestRoleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
-
-        RoleStore roleStore = new RoleStore(adminRoleDao, contestRoleDao);
-
-        contestStore = new ContestStore(roleStore, contestDao);
-        store = new ContestScoreboardStore(scoreboardDao);
+        contestStore = component.contestStore();
+        store = component.contestScoreboardStore();
     }
 
     @Test

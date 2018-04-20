@@ -1,13 +1,15 @@
 package judgels.uriel.hibernate;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
@@ -15,6 +17,8 @@ import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestContestantModel_;
+import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.ContestModel_;
 import org.hibernate.SessionFactory;
 
 @Singleton
@@ -41,10 +45,17 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
                 .build(), options);
     }
 
-    @Override
-    public boolean existsByContestJidAndUserJid(String contestJid, String userJid) {
-        return selectByUniqueColumns(ImmutableMap.of(
-                ContestContestantModel_.contestJid, contestJid,
-                ContestContestantModel_.userJid, userJid)).isPresent();
+    static CustomPredicateFilter<ContestModel> hasContestant(String userJid) {
+        return (cb, cq, root) -> {
+            Subquery<ContestContestantModel> sq = cq.subquery(ContestContestantModel.class);
+            Root<ContestContestantModel> subRoot = sq.from(ContestContestantModel.class);
+
+            sq.where(
+                    cb.equal(subRoot.get(ContestContestantModel_.contestJid), root.get(ContestModel_.jid)),
+                    cb.equal(subRoot.get(ContestContestantModel_.userJid), userJid));
+            sq.select(subRoot);
+
+            return cb.exists(sq);
+        };
     }
 }

@@ -68,7 +68,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             ContestScoreboardType type) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canReadContest(actorJid, contestJid));
+        checkAllowed(roleChecker.canViewContest(actorJid, contestJid));
 
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
         ContestScoreboardData data = checkFound(contestScoreboardStore.findScoreboard(contestJid, type));

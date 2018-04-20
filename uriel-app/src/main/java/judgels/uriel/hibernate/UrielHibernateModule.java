@@ -5,74 +5,25 @@ import dagger.Provides;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
-import judgels.uriel.persistence.AdminRoleDao;
-import judgels.uriel.persistence.ContestContestantDao;
-import judgels.uriel.persistence.ContestDao;
-import judgels.uriel.persistence.ContestManagerDao;
-import judgels.uriel.persistence.ContestModuleDao;
-import judgels.uriel.persistence.ContestRoleDao;
-import judgels.uriel.persistence.ContestScoreboardDao;
-import judgels.uriel.persistence.ContestSupervisorDao;
 import org.hibernate.SessionFactory;
 
 @Module
 public class UrielHibernateModule {
     private final HibernateBundle<?> hibernateBundle;
-    private final SessionFactory sessionFactory;
 
     public UrielHibernateModule(HibernateBundle<?> hibernateBundle) {
         this.hibernateBundle = hibernateBundle;
-        this.sessionFactory = hibernateBundle.getSessionFactory();
     }
 
     @Provides
+    @Singleton
     SessionFactory sessionFactory() {
-        return sessionFactory;
+        return hibernateBundle.getSessionFactory();
     }
 
     @Provides
     @Singleton
     UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory() {
         return new UnitOfWorkAwareProxyFactory(hibernateBundle);
-    }
-
-    @Provides
-    AdminRoleDao adminRoleDao(AdminRoleHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    ContestDao contestDao(ContestHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    ContestScoreboardDao contestScoreboardDao(ContestScoreboardHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    ContestContestantDao contestContestantDao(ContestContestantHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    ContestSupervisorDao contestSupervisorDao(ContestSupervisorHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    ContestManagerDao contestManagerDao(ContestManagerHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    ContestRoleDao contestRoleDao(ContestRoleHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    ContestModuleDao contestModuleDao(ContestModuleHibernateDao dao) {
-        return dao;
     }
 }

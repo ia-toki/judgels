@@ -3,34 +3,25 @@ package judgels.uriel.contest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.UrielIntegrationTestComponent;
+import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.module.ContestModule;
-import judgels.uriel.hibernate.AdminRoleHibernateDao;
-import judgels.uriel.hibernate.ContestContestantHibernateDao;
-import judgels.uriel.hibernate.ContestHibernateDao;
-import judgels.uriel.hibernate.ContestManagerHibernateDao;
-import judgels.uriel.hibernate.ContestModuleHibernateDao;
-import judgels.uriel.hibernate.ContestRoleHibernateDao;
-import judgels.uriel.hibernate.ContestSupervisorHibernateDao;
-import judgels.uriel.persistence.AdminRoleDao;
+import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.contest.manager.ContestManagerStore;
+import judgels.uriel.contest.module.ContestModuleStore;
+import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.AdminRoleModel;
-import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
-import judgels.uriel.persistence.ContestDao;
-import judgels.uriel.persistence.ContestManagerDao;
 import judgels.uriel.persistence.ContestManagerModel;
 import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
-import judgels.uriel.persistence.ContestRoleDao;
-import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
-import judgels.uriel.role.RoleStore;
+import judgels.uriel.role.AdminRoleStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,37 +40,26 @@ class ContestStoreIntegrationTests {
     private static final String USER_3 = "user3Jid";
 
     private ContestStore store;
-    private RoleStore roleStore;
 
-    private ContestModuleDao moduleDao;
-    private ContestContestantDao contestantDao;
-    private ContestSupervisorDao supervisorDao;
-    private ContestManagerDao managerDao;
+    private AdminRoleStore adminRoleStore;
+    private ContestModuleStore moduleStore;
+    private ContestContestantStore contestantStore;
+    private ContestSupervisorStore supervisorStore;
+    private ContestManagerStore managerStore;
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        ContestDao contestDao = new ContestHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
+                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
+                .build();
 
-        AdminRoleDao adminRoleDao = new AdminRoleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        adminRoleStore = component.adminRoleStore();
+        moduleStore = component.contestModuleStore();
+        contestantStore = component.contestContestantStore();
+        supervisorStore = component.contestSupervisorStore();
+        managerStore = component.contestManagerStore();
 
-        ContestRoleDao contestRoleDao = new ContestRoleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
-
-        moduleDao = new ContestModuleHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        contestantDao = new ContestContestantHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        supervisorDao = new ContestSupervisorHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        managerDao = new ContestManagerHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-
-        roleStore = new RoleStore(adminRoleDao, contestRoleDao);
-        store = new ContestStore(roleStore, contestDao);
+        store = component.contestStore();
     }
 
     @Test
@@ -89,49 +69,18 @@ class ContestStoreIntegrationTests {
         Contest contestC = store.createContest(new ContestData.Builder().name("contestC").build());
         Contest contestD = store.createContest(new ContestData.Builder().name("contestD").build());
 
-        addRegistrationModule(contestD.getJid());
-
-        roleStore.addAdmin(ADMIN);
-        addContestant(contestA.getJid(), USER_1);
-        addContestant(contestA.getJid(), USER_2);
-        addContestant(contestA.getJid(), USER_3);
-        addSupervisor(contestB.getJid(), USER_2);
-        addManager(contestC.getJid(), USER_3);
+        adminRoleStore.addAdmin(ADMIN);
+        moduleStore.addModule(contestD.getJid(), ContestModule.REGISTRATION);
+        contestantStore.addContestant(contestA.getJid(), USER_1);
+        contestantStore.addContestant(contestA.getJid(), USER_2);
+        contestantStore.addContestant(contestA.getJid(), USER_3);
+        supervisorStore.addSupervisor(contestB.getJid(), USER_2);
+        managerStore.addManager(contestC.getJid(), USER_3);
 
         assertThat(getContests(ADMIN)).containsExactly(contestA, contestB, contestC, contestD);
         assertThat(getContests(USER_1)).containsExactly(contestA, contestD);
         assertThat(getContests(USER_2)).containsExactly(contestA, contestB, contestD);
         assertThat(getContests(USER_3)).containsExactly(contestA, contestC, contestD);
-    }
-
-    private void addRegistrationModule(String contestJid) {
-        ContestModuleModel model = new ContestModuleModel();
-        model.contestJid = contestJid;
-        model.name = ContestModule.REGISTRATION.name();
-        model.enabled = true;
-        model.config = "{}";
-        moduleDao.insert(model);
-    }
-
-    private void addContestant(String contestJid, String userJid) {
-        ContestContestantModel model = new ContestContestantModel();
-        model.contestJid = contestJid;
-        model.userJid = userJid;
-        contestantDao.insert(model);
-    }
-
-    private void addSupervisor(String contestJid, String userJid) {
-        ContestSupervisorModel model = new ContestSupervisorModel();
-        model.contestJid = contestJid;
-        model.userJid = userJid;
-        supervisorDao.insert(model);
-    }
-
-    private void addManager(String contestJid, String userJid) {
-        ContestManagerModel model = new ContestManagerModel();
-        model.contestJid = contestJid;
-        model.userJid = userJid;
-        managerDao.insert(model);
     }
 
     private List<Contest> getContests(String userJid) {

@@ -12,17 +12,17 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.role.RoleStore;
 
 public class ContestStore {
-    private final RoleStore roleStore;
+    private final AdminRoleDao adminRoleDao;
     private final ContestDao contestDao;
 
     @Inject
-    public ContestStore(RoleStore roleStore, ContestDao contestDao) {
-        this.roleStore = roleStore;
+    public ContestStore(AdminRoleDao adminRoleDao, ContestDao contestDao) {
+        this.adminRoleDao = adminRoleDao;
         this.contestDao = contestDao;
     }
 
@@ -31,20 +31,23 @@ public class ContestStore {
     }
 
     public Page<Contest> getContests(String userJid, SelectionOptions options) {
-        Optional<String> userJidFilter = roleStore.isAdmin(userJid) ? Optional.empty() : Optional.of(userJid);
-        Page<ContestModel> models = contestDao.selectAllByUserJid(userJidFilter, options);
+        Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
+                ? contestDao.selectAll(options)
+                : contestDao.selectAllByUserJid(userJid, options);
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 
     public List<Contest> getActiveContests(String userJid, SelectionOptions options) {
-        Optional<String> userJidFilter = roleStore.isAdmin(userJid) ? Optional.empty() : Optional.of(userJid);
-        List<ContestModel> models = contestDao.selectAllActiveByUserJid(userJidFilter, options);
+        List<ContestModel> models = adminRoleDao.isAdmin(userJid)
+                ? contestDao.selectAllActive(options)
+                : contestDao.selectAllActiveByUserJid(userJid, options);
         return Lists.transform(models, ContestStore::fromModel);
     }
 
     public Page<Contest> getPastContests(String userJid, SelectionOptions options) {
-        Optional<String> userJidFilter = roleStore.isAdmin(userJid) ? Optional.empty() : Optional.of(userJid);
-        Page<ContestModel> models = contestDao.selectAllPastByUserJid(userJidFilter, options);
+        Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
+                ? contestDao.selectAllPast(options)
+                : contestDao.selectAllPastByUserJid(userJid, options);
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 

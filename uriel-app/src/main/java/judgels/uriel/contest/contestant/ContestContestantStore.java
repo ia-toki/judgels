@@ -20,6 +20,14 @@ public class ContestContestantStore {
         this.contestContestantDao = contestContestantDao;
     }
 
+    // temporary
+    public void addContestant(String contestJid, String userJid) {
+        ContestContestantModel model = new ContestContestantModel();
+        model.contestJid = contestJid;
+        model.userJid = userJid;
+        contestContestantDao.insert(model);
+    }
+
     public Page<String> getContestantJids(String contestJid, SelectionOptions options) {
         Page<ContestContestantModel> modelsPage = contestContestantDao.selectAllByContestJid(contestJid, options);
         return modelsPage.mapData(data -> Lists.transform(data, ContestContestantStore::fromModel));

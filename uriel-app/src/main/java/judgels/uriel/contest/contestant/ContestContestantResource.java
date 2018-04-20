@@ -44,7 +44,7 @@ public class ContestContestantResource implements ContestContestantService {
     @UnitOfWork(readOnly = true)
     public Page<ContestContestant> getContestants(AuthHeader authHeader, String contestJid, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canReadContest(actorJid, contestJid));
+        checkAllowed(roleChecker.canViewContest(actorJid, contestJid));
 
         SelectionOptions.Builder options = new SelectionOptions.Builder();
         page.ifPresent(options::page);

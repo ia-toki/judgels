@@ -1,16 +1,10 @@
 package judgels.uriel.hibernate;
 
-import static judgels.persistence.CustomPredicateFilter.literalTrue;
 import static judgels.persistence.CustomPredicateFilter.not;
-import static judgels.persistence.CustomPredicateFilter.or;
-import static judgels.uriel.hibernate.ContestModuleHibernateDao.hasModule;
-import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasContestant;
-import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasManager;
-import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasSupervisor;
+import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasViewer;
 
 import java.time.Clock;
 import java.util.List;
-import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.Expression;
@@ -20,7 +14,6 @@ import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
-import judgels.uriel.api.contest.module.ContestModule;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModel_;
@@ -36,26 +29,41 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         this.clock = clock;
     }
 
-    @Override
-    public Page<ContestModel> selectAllByUserJid(Optional<String> userJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(isVisibleTo(userJid))
-                .build(), options);
-    }
 
     @Override
-    public List<ContestModel> selectAllActiveByUserJid(Optional<String> userJid, SelectionOptions options) {
+    public List<ContestModel> selectAllActive(SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(isVisibleTo(userJid))
-                .addCustomPredicates(isActive())
+                .addCustomPredicates(isActive(clock))
                 .build(), options).getData();
     }
 
     @Override
-    public Page<ContestModel> selectAllPastByUserJid(Optional<String> userJid, SelectionOptions options) {
+    public Page<ContestModel> selectAllPast(SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(isVisibleTo(userJid))
-                .addCustomPredicates(isPast())
+                .addCustomPredicates(isPast(clock))
+                .build(), options);
+    }
+
+    @Override
+    public Page<ContestModel> selectAllByUserJid(String userJid, SelectionOptions options) {
+        return selectAll(new FilterOptions.Builder<ContestModel>()
+                .addCustomPredicates(hasViewer(userJid))
+                .build(), options);
+    }
+
+    @Override
+    public List<ContestModel> selectAllActiveByUserJid(String userJid, SelectionOptions options) {
+        return selectAll(new FilterOptions.Builder<ContestModel>()
+                .addCustomPredicates(hasViewer(userJid))
+                .addCustomPredicates(isActive(clock))
+                .build(), options).getData();
+    }
+
+    @Override
+    public Page<ContestModel> selectAllPastByUserJid(String userJid, SelectionOptions options) {
+        return selectAll(new FilterOptions.Builder<ContestModel>()
+                .addCustomPredicates(hasViewer(userJid))
+                .addCustomPredicates(isPast(clock))
                 .build(), options);
     }
 
@@ -63,18 +71,8 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         return (cb, cq, root) -> cb.equal(root.get(ContestModel_.jid), contestJid);
     }
 
-    private static CustomPredicateFilter<ContestModel> isVisibleTo(Optional<String> userJid) {
-        return userJid
-                .map(jid -> or(
-                        hasModule(ContestModule.REGISTRATION),
-                        hasContestant(jid),
-                        hasSupervisor(jid),
-                        hasManager(jid)))
-                .orElse(literalTrue());
-    }
-
     // The following two predicates are currently not testable because H2 does not have 'unix_timestamp' function.
-    private CustomPredicateFilter<ContestModel> isActive() {
+    static CustomPredicateFilter<ContestModel> isActive(Clock clock) {
         return (cb, cq, root) -> {
             long currentInstantEpoch = clock.instant().toEpochMilli();
             Expression<Long> beginTime = cb.prod(
@@ -86,7 +84,7 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         };
     }
 
-    private CustomPredicateFilter<ContestModel> isPast() {
-        return not(isActive());
+    static CustomPredicateFilter<ContestModel> isPast(Clock clock) {
+        return not(isActive(clock));
     }
 }

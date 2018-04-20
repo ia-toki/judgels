@@ -9,5 +9,4 @@ import judgels.persistence.api.SelectionOptions;
 public interface ContestContestantDao extends Dao<ContestContestantModel> {
     Set<ContestContestantModel> selectAllByContestJidAndUserJids(String contestJid, List<String> userJids);
     Page<ContestContestantModel> selectAllByContestJid(String contestJid, SelectionOptions options);
-    boolean existsByContestJidAndUserJid(String contestJid, String userJid);
 }
