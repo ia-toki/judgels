@@ -2,12 +2,11 @@ package judgels.jophiel.role;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.api.role.Role;
-import judgels.jophiel.hibernate.AdminRoleHibernateDao;
-import judgels.jophiel.persistence.AdminRoleDao;
 import judgels.jophiel.persistence.AdminRoleModel;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,9 +18,10 @@ class RoleStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        AdminRoleDao adminRoleDao =
-                new AdminRoleHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        store = new RoleStore(adminRoleDao);
+        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
+                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
+                .build();
+        store = component.roleStore();
     }
 
     @Test

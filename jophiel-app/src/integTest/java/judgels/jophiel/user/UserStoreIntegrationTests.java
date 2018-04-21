@@ -3,16 +3,12 @@ package judgels.jophiel.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import java.io.InputStream;
-import java.util.List;
-import judgels.fs.FileSystem;
+import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
-import judgels.jophiel.hibernate.UserHibernateDao;
-import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserModel;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
@@ -27,8 +23,10 @@ class UserStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        UserDao userDao = new UserHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        store = new UserStore(userDao, new FakeFs());
+        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
+                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
+                .build();
+        store = component.userStore();
     }
 
     @Test
@@ -160,15 +158,5 @@ class UserStoreIntegrationTests {
         assertThat(store.getUsersByTerm("di"))
                 .extracting("username")
                 .containsExactly("andi", "dimas");
-    }
-
-    static class FakeFs implements FileSystem {
-        @Override
-        public void uploadPublicFile(InputStream file, List<String> destDirPath, String destFilename) {}
-
-        @Override
-        public String getPublicFileUrl(List<String> filePath) {
-            return "/fake/" + filePath.get(0);
-        }
     }
 }

@@ -2,12 +2,11 @@ package judgels.jophiel.user.profile;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.api.user.profile.UserProfile;
-import judgels.jophiel.hibernate.UserProfileHibernateDao;
-import judgels.jophiel.persistence.UserProfileDao;
 import judgels.jophiel.persistence.UserProfileModel;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +20,10 @@ class UserProfileStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        UserProfileDao dao = new UserProfileHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        store = new UserProfileStore(dao);
+        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
+                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
+                .build();
+        store = component.userProfileStore();
     }
 
     @Test

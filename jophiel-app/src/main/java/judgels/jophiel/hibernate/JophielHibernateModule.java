@@ -5,14 +5,6 @@ import dagger.Provides;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
-import judgels.jophiel.legacy.session.LegacySessionDao;
-import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
-import judgels.jophiel.persistence.AdminRoleDao;
-import judgels.jophiel.persistence.SessionDao;
-import judgels.jophiel.persistence.UserDao;
-import judgels.jophiel.persistence.UserProfileDao;
-import judgels.jophiel.persistence.UserRegistrationEmailDao;
-import judgels.jophiel.persistence.UserResetPasswordDao;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -34,40 +26,5 @@ public class JophielHibernateModule {
     @Singleton
     UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory() {
         return new UnitOfWorkAwareProxyFactory(hibernateBundle);
-    }
-
-    @Provides
-    AdminRoleDao adminRoleDao(AdminRoleHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    LegacySessionDao legacySessionDao(LegacySessionHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    SessionDao sessionDao(SessionHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    UserDao userDao(UserHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    UserProfileDao userProfileDao(UserProfileHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    UserRegistrationEmailDao userRegistrationEmailDao(UserRegistrationEmailHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    UserResetPasswordDao userResetPasswordDao(UserResetPasswordHibernateDao dao) {
-        return dao;
     }
 }

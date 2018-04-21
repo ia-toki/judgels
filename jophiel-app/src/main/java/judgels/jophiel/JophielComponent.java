@@ -3,6 +3,7 @@ package judgels.jophiel;
 import dagger.Component;
 import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
+import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.legacy.session.LegacySessionResource;
 import judgels.jophiel.legacy.user.LegacyUserResource;
@@ -26,6 +27,8 @@ import judgels.recaptcha.RecaptchaModule;
         AwsModule.class,
         JophielModule.class,
         JophielHibernateModule.class,
+        JophielHibernateDaoModule.class,
+        JophielPersistenceModule.class,
         MailerModule.class,
         RecaptchaModule.class,
         SuperadminModule.class,

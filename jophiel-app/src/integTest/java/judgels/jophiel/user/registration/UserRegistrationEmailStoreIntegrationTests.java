@@ -2,11 +2,10 @@ package judgels.jophiel.user.registration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import judgels.jophiel.hibernate.UserRegistrationEmailHibernateDao;
-import judgels.jophiel.persistence.UserRegistrationEmailDao;
+import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +19,10 @@ class UserRegistrationEmailStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        UserRegistrationEmailDao dao =
-                new UserRegistrationEmailHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        store = new UserRegistrationEmailStore(dao);
+        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
+                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
+                .build();
+        store = component.userRegistrationEmailStore();
     }
 
     @Test

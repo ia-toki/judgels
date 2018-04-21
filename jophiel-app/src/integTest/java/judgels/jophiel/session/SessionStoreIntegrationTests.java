@@ -3,14 +3,11 @@ package judgels.jophiel.session;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.api.session.Session;
-import judgels.jophiel.hibernate.SessionHibernateDao;
-import judgels.jophiel.legacy.session.LegacySessionDao;
-import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
-import judgels.jophiel.persistence.SessionDao;
 import judgels.jophiel.persistence.SessionModel;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
@@ -23,10 +20,10 @@ class SessionStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        SessionDao sessionDao = new SessionHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        LegacySessionDao legacySssionDao =
-                new LegacySessionHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
-        store = new SessionStore(sessionDao, legacySssionDao);
+        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
+                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
+                .build();
+        store = component.sessionStore();
     }
 
     @Test
