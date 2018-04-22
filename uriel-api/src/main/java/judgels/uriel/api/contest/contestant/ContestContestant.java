@@ -1,4 +1,4 @@
-package judgels.uriel.api.contest;
+package judgels.uriel.api.contest.contestant;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import judgels.jophiel.api.user.User;

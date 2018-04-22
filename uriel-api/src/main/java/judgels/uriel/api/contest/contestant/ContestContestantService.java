@@ -15,7 +15,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.contest.ContestContestant;
 
 @Path("/api/v2/contests/{contestJid}/contestants")
 public interface ContestContestantService {
