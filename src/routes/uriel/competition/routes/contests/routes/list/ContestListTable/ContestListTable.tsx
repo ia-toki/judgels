@@ -30,7 +30,7 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
                 hour="numeric"
                 hour12={false}
                 minute="numeric"
-                timeZoneName="short"
+                timeZoneName="long"
               />
               {this.renderDurationSeparator(contest)}
               {this.renderDuration(contest)}

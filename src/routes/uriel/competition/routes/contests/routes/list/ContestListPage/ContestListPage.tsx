@@ -49,7 +49,9 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
     if (contestList.length === 0) {
       return (
         <p>
-          <small>No active contests.</small>
+          <small>
+            <em>No active contests.</em>
+          </small>
         </p>
       );
     }
