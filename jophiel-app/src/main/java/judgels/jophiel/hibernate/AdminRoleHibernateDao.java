@@ -18,7 +18,7 @@ public class AdminRoleHibernateDao extends UnmodifiableHibernateDao<AdminRoleMod
     }
 
     @Override
-    public boolean existsByUserJid(String userJid) {
+    public boolean isAdmin(String userJid) {
         return selectByUniqueColumn(AdminRoleModel_.userJid, userJid).isPresent();
     }
 }

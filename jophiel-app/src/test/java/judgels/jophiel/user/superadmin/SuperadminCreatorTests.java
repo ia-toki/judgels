@@ -10,7 +10,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import java.util.Optional;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
-import judgels.jophiel.role.RoleStore;
+import judgels.jophiel.role.SuperadminRoleStore;
 import judgels.jophiel.user.UserStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import org.mockito.Mock;
 
 class SuperadminCreatorTests {
     @Mock private UserStore userStore;
-    @Mock private RoleStore roleStore;
+    @Mock private SuperadminRoleStore superadminRoleStore;
 
     private SuperadminCreator creator;
 
@@ -26,7 +26,7 @@ class SuperadminCreatorTests {
     void before() {
         initMocks(this);
 
-        creator = new SuperadminCreator(userStore, roleStore);
+        creator = new SuperadminCreator(userStore, superadminRoleStore);
     }
 
     @Test
@@ -54,6 +54,6 @@ class SuperadminCreatorTests {
                 .email("superadmin@jophiel.judgels")
                 .build());
         verify(userStore, times(1)).createUser(any());
-        verify(roleStore).setSuperadmin("superadminUserJid");
+        verify(superadminRoleStore).setSuperadmin("superadminUserJid");
     }
 }

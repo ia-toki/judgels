@@ -58,7 +58,7 @@ public class UserAvatarResource {
             @FormDataParam("file") FormDataContentDisposition fileDetails) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
+        checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
 
         User user = checkFound(userStore.findUserByJid(userJid));
 

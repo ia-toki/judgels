@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import javax.inject.Singleton;
-import judgels.jophiel.role.RoleStore;
+import judgels.jophiel.role.SuperadminRoleStore;
 import judgels.jophiel.user.UserStore;
 
 @Module
@@ -16,11 +16,11 @@ public class SuperadminModule {
     static SuperadminCreator superadminCreator(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             UserStore userStore,
-            RoleStore roleStore) {
+            SuperadminRoleStore superadminRoleStore) {
 
         return unitOfWorkAwareProxyFactory.create(
                 SuperadminCreator.class,
-                new Class<?>[]{UserStore.class, RoleStore.class},
-                new Object[]{userStore, roleStore});
+                new Class<?>[]{UserStore.class, SuperadminRoleStore.class},
+                new Object[]{userStore, superadminRoleStore});
     }
 }

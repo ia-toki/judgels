@@ -38,7 +38,7 @@ public class UserResource implements UserService {
     @UnitOfWork(readOnly = true)
     public User getUser(AuthHeader authHeader, String userJid) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canReadUser(actorJid, userJid));
+        checkAllowed(roleChecker.canViewUser(actorJid, userJid));
 
         return checkFound(userStore.findUserByJid(userJid));
     }
@@ -47,7 +47,7 @@ public class UserResource implements UserService {
     @UnitOfWork(readOnly = true)
     public Page<User> getUsers(AuthHeader authHeader, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canReadUsers(actorJid));
+        checkAllowed(roleChecker.canViewUserList(actorJid));
 
         SelectionOptions.Builder options = new SelectionOptions.Builder();
         options.orderDir(OrderDir.DESC);
@@ -80,7 +80,7 @@ public class UserResource implements UserService {
     @UnitOfWork
     public void deleteUserAvatar(AuthHeader authHeader, String userJid) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
+        checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
 
         checkFound(userStore.updateUserAvatar(userJid, null));
     }

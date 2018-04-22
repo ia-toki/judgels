@@ -9,41 +9,51 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 class RoleCheckerTests {
-    @Mock private RoleStore roleStore;
+    private static final String SUPERADMIN = "superadminJid";
+    private static final String ADMIN = "adminJid";
+    private static final String USER = "userJid";
+    private static final String ANOTHER_USER = "anotherUserJid";
+
+    @Mock private SuperadminRoleStore superadminRoleStore;
+    @Mock private AdminRoleStore adminRoleStore;
     private RoleChecker checker;
 
     @BeforeEach
     void before() {
         initMocks(this);
-        checker = new RoleChecker(roleStore);
+        checker = new RoleChecker(superadminRoleStore, adminRoleStore);
 
-        when(roleStore.isAdmin("adminJid")).thenReturn(true);
+        when(superadminRoleStore.isSuperadmin(SUPERADMIN)).thenReturn(true);
+        when(adminRoleStore.isAdmin(ADMIN)).thenReturn(true);
     }
 
     @Test
     void create_user() {
-        assertThat(checker.canCreateUser("adminJid")).isTrue();
-        assertThat(checker.canCreateUser("userJid")).isFalse();
+        assertThat(checker.canCreateUser(SUPERADMIN)).isTrue();
+        assertThat(checker.canCreateUser(ADMIN)).isTrue();
+        assertThat(checker.canCreateUser(USER)).isFalse();
     }
 
     @Test
-    void read_user() {
-        assertThat(checker.canReadUser("adminJid", "userJid")).isTrue();
-        assertThat(checker.canReadUser("userJid", "userJid")).isTrue();
-        assertThat(checker.canReadUser("userJid", "anotherUserJid")).isFalse();
+    void view_user() {
+        assertThat(checker.canViewUser(SUPERADMIN, USER)).isTrue();
+        assertThat(checker.canViewUser(ADMIN, USER)).isTrue();
+        assertThat(checker.canViewUser(USER, USER)).isTrue();
+        assertThat(checker.canViewUser(USER, ANOTHER_USER)).isFalse();
     }
 
     @Test
-    void read_users() {
-        assertThat(checker.canReadUsers("adminJid")).isTrue();
-        assertThat(checker.canReadUsers("userJid")).isFalse();
-        assertThat(checker.canReadUsers("anotherUserJid")).isFalse();
+    void view_user_list() {
+        assertThat(checker.canViewUserList(SUPERADMIN)).isTrue();
+        assertThat(checker.canViewUserList(ADMIN)).isTrue();
+        assertThat(checker.canViewUserList(USER)).isFalse();
     }
 
     @Test
-    void mutate_user() {
-        assertThat(checker.canMutateUser("adminJid", "userJid")).isTrue();
-        assertThat(checker.canMutateUser("userJid", "userJid")).isTrue();
-        assertThat(checker.canMutateUser("userJid", "anotherUserJid")).isFalse();
+    void update_user() {
+        assertThat(checker.canUpdateUser(SUPERADMIN, USER)).isTrue();
+        assertThat(checker.canUpdateUser(ADMIN, USER)).isTrue();
+        assertThat(checker.canUpdateUser(USER, USER)).isTrue();
+        assertThat(checker.canUpdateUser(USER, ANOTHER_USER)).isFalse();
     }
 }

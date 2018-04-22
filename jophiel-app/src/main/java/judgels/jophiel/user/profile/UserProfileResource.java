@@ -36,7 +36,7 @@ public class UserProfileResource implements UserProfileService {
     @UnitOfWork(readOnly = true)
     public UserProfile getUserProfile(AuthHeader authHeader, String userJid) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canReadUser(actorJid, userJid));
+        checkAllowed(roleChecker.canViewUser(actorJid, userJid));
 
         User user = checkFound(userStore.findUserByJid(userJid));
         return userProfileStore.getUserProfile(user.getJid());
@@ -46,7 +46,7 @@ public class UserProfileResource implements UserProfileService {
     @UnitOfWork
     public UserProfile updateUserProfile(AuthHeader authHeader, String userJid, UserProfile userProfile) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canMutateUser(actorJid, userJid));
+        checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
 
         User user = checkFound(userStore.findUserByJid(userJid));
         return userProfileStore.upsertUserProfile(user.getJid(), userProfile);

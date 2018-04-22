@@ -3,7 +3,7 @@ package judgels.jophiel.user.superadmin;
 import io.dropwizard.hibernate.UnitOfWork;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
-import judgels.jophiel.role.RoleStore;
+import judgels.jophiel.role.SuperadminRoleStore;
 import judgels.jophiel.user.UserStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +15,11 @@ public class SuperadminCreator {
     public static final String PASSWORD = "superadmin";
 
     private final UserStore userStore;
-    private final RoleStore roleStore;
+    private final SuperadminRoleStore superadminRoleStore;
 
-    public SuperadminCreator(UserStore userStore, RoleStore roleStore) {
+    public SuperadminCreator(UserStore userStore, SuperadminRoleStore superadminRoleStore) {
         this.userStore = userStore;
-        this.roleStore = roleStore;
+        this.superadminRoleStore = superadminRoleStore;
     }
 
     @UnitOfWork
@@ -32,7 +32,7 @@ public class SuperadminCreator {
                     .password(PASSWORD)
                     .email(USERNAME + "@jophiel.judgels")
                     .build());
-            roleStore.setSuperadmin(user.getJid());
+            superadminRoleStore.setSuperadmin(user.getJid());
             LOGGER.info("Created superadmin user");
         }
     }

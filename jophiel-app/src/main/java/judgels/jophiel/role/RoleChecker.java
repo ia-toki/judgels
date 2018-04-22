@@ -3,26 +3,34 @@ package judgels.jophiel.role;
 import javax.inject.Inject;
 
 public class RoleChecker {
-    private final RoleStore roleStore;
+    private final SuperadminRoleStore superadminRoleStore;
+    private final AdminRoleStore adminRoleStore;
 
     @Inject
-    public RoleChecker(RoleStore roleStore) {
-        this.roleStore = roleStore;
+    public RoleChecker(SuperadminRoleStore superadminRoleStore, AdminRoleStore adminRoleStore) {
+        this.superadminRoleStore = superadminRoleStore;
+        this.adminRoleStore = adminRoleStore;
     }
 
     public boolean canCreateUser(String actorJid) {
-        return roleStore.isAdmin(actorJid);
+        return superadminRoleStore.isSuperadmin(actorJid)
+                || adminRoleStore.isAdmin(actorJid);
     }
 
-    public boolean canReadUser(String actorJid, String userJid) {
-        return actorJid.equals(userJid) || roleStore.isAdmin(actorJid);
+    public boolean canViewUser(String actorJid, String userJid) {
+        return superadminRoleStore.isSuperadmin(actorJid)
+                || adminRoleStore.isAdmin(actorJid)
+                || actorJid.equals(userJid);
     }
 
-    public boolean canReadUsers(String actorJid) {
-        return roleStore.isAdmin(actorJid);
+    public boolean canViewUserList(String actorJid) {
+        return superadminRoleStore.isSuperadmin(actorJid)
+                || adminRoleStore.isAdmin(actorJid);
     }
 
-    public boolean canMutateUser(String actorJid, String userJid) {
-        return actorJid.equals(userJid) || roleStore.isAdmin(actorJid);
+    public boolean canUpdateUser(String actorJid, String userJid) {
+        return superadminRoleStore.isSuperadmin(actorJid)
+                || adminRoleStore.isAdmin(actorJid)
+                || actorJid.equals(userJid);
     }
 }

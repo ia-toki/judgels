@@ -14,6 +14,12 @@ import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {AdminRoleModel.class})
 class RoleStoreIntegrationTests {
+    private static final String SUPERADMIN = "superadminJid";
+    private static final String ADMIN = "adminJid";
+    private static final String USER = "userJid";
+
+    private SuperadminRoleStore superadminRoleStore;
+    private AdminRoleStore adminRoleStore;
     private RoleStore store;
 
     @BeforeEach
@@ -21,22 +27,19 @@ class RoleStoreIntegrationTests {
         JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
                 .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
                 .build();
+
+        superadminRoleStore = component.superadminRoleStore();
+        adminRoleStore = component.adminRoleStore();
         store = component.roleStore();
     }
 
     @Test
     void test_roles() {
-        store.setSuperadmin("jidX");
-        store.addAdmin("jid1");
-        store.addAdmin("jid2");
+        superadminRoleStore.setSuperadmin(SUPERADMIN);
+        adminRoleStore.addAdmin(ADMIN);
 
-        assertThat(store.isAdmin("jidX")).isTrue();
-        assertThat(store.getUserRole("jidX")).isEqualTo(Role.SUPERADMIN);
-        assertThat(store.isAdmin("jid1")).isTrue();
-        assertThat(store.getUserRole("jid1")).isEqualTo(Role.ADMIN);
-        assertThat(store.isAdmin("jid2")).isTrue();
-        assertThat(store.getUserRole("jid2")).isEqualTo(Role.ADMIN);
-        assertThat(store.isAdmin("jid3")).isFalse();
-        assertThat(store.getUserRole("jid3")).isEqualTo(Role.USER);
+        assertThat(store.getUserRole(SUPERADMIN)).isEqualTo(Role.SUPERADMIN);
+        assertThat(store.getUserRole(ADMIN)).isEqualTo(Role.ADMIN);
+        assertThat(store.getUserRole(USER)).isEqualTo(Role.USER);
     }
 }

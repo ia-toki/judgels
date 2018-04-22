@@ -3,7 +3,9 @@ package judgels.jophiel;
 import dagger.Component;
 import javax.inject.Singleton;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
+import judgels.jophiel.role.AdminRoleStore;
 import judgels.jophiel.role.RoleStore;
+import judgels.jophiel.role.SuperadminRoleStore;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.avatar.UserAvatarIntegrationTestModule;
@@ -17,6 +19,8 @@ import judgels.jophiel.user.registration.UserRegistrationEmailStore;
         UserAvatarIntegrationTestModule.class})
 @Singleton
 public interface JophielIntegrationTestComponent {
+    SuperadminRoleStore superadminRoleStore();
+    AdminRoleStore adminRoleStore();
     RoleStore roleStore();
     SessionStore sessionStore();
     UserStore userStore();
