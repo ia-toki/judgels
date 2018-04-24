@@ -3,12 +3,12 @@ import { MemoryHistory } from 'history';
 import createMemoryHistory from 'history/createMemoryHistory';
 import * as React from 'react';
 import { Provider } from 'react-redux';
+import { Route } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
 import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { createSingleContestDataRoute } from './SingleContestDataRoute';
-import { Route } from 'react-router';
 
 describe('SingleContestDataRoute', () => {
   let history: MemoryHistory;
@@ -24,7 +24,7 @@ describe('SingleContestDataRoute', () => {
     mount(
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <Route path="/competition/contests/:contestJid" component={SingleContestDataRoute} />
+          <Route path="/competition/contests/:contestId" component={SingleContestDataRoute} />
         </ConnectedRouter>
       </Provider>
     );
@@ -32,7 +32,7 @@ describe('SingleContestDataRoute', () => {
 
   beforeEach(() => {
     contestActions = {
-      fetch: jest
+      fetchById: jest
         .fn()
         .mockReturnValueOnce(() => Promise.resolve({ name: 'Contest 123' }))
         .mockReturnValueOnce(() => Promise.resolve({ name: 'Contest 456' })),
@@ -45,17 +45,17 @@ describe('SingleContestDataRoute', () => {
   });
 
   test('navigation', async () => {
-    render('/competition/contests/JIDCONT123');
+    render('/competition/contests/123');
     await new Promise(resolve => setImmediate(resolve));
-    expect(contestActions.fetch).toHaveBeenCalledWith('JIDCONT123');
-    expect(breadcrumbsActions.push).toHaveBeenCalledWith('/competition/contests/JIDCONT123', 'Contest 123');
+    expect(contestActions.fetchById).toHaveBeenCalledWith(123);
+    expect(breadcrumbsActions.push).toHaveBeenCalledWith('/competition/contests/123', 'Contest 123');
 
-    history.push('/competition/contests/JIDCONT123/');
+    history.push('/competition/contests/123/');
     await new Promise(resolve => setImmediate(resolve));
 
     history.push('/other');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/competition/contests/JIDCONT123');
+    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/competition/contests/123');
     expect(contestActions.clear).toHaveBeenCalled();
   });
 });

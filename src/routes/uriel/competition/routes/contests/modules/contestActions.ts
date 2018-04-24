@@ -16,10 +16,10 @@ export const contestActions = {
     };
   },
 
-  fetch: (contestJid: string) => {
+  fetchById: (contestId: string) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
-      const contest = await contestAPI.getContest(token, contestJid);
+      const contest = await contestAPI.getContestById(token, contestId);
       dispatch(PutContest.create(contest));
       return contest;
     };

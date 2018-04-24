@@ -6,8 +6,8 @@ import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestJid: string }> {
-  onFetchContest: (contestJid: string) => Promise<Contest>;
+export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestId: string }> {
+  onFetchContest: (contestId: number) => Promise<Contest>;
   onClearContest: () => void;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
@@ -15,7 +15,7 @@ export interface SingleContestDataRouteProps extends RouteComponentProps<{ conte
 
 class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps> {
   async componentDidMount() {
-    const contest = await this.props.onFetchContest(this.props.match.params.contestJid);
+    const contest = await this.props.onFetchContest(+this.props.match.params.contestId);
     this.props.onPushBreadcrumb(this.props.match.url, contest.name);
   }
 
@@ -31,7 +31,7 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
 
 export function createSingleContestDataRoute(contestActions, breadcrumbsActions) {
   const mapDispatchToProps = {
-    onFetchContest: contestActions.fetch,
+    onFetchContest: contestActions.fetchById,
     onClearContest: contestActions.clear,
     onPushBreadcrumb: breadcrumbsActions.push,
     onPopBreadcrumb: breadcrumbsActions.pop,

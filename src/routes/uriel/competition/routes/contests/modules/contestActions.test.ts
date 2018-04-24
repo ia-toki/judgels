@@ -1,7 +1,7 @@
 import { contestActions } from './contestActions';
 import { PutContest } from './contestReducer';
 import { Contest, ContestPage } from '../../../../../../modules/api/uriel/contest';
-import { contest, contestJid, sessionState, token } from '../../../../../../fixtures/state';
+import { contest, contestId, sessionState, token } from '../../../../../../fixtures/state';
 import { AppState } from '../../../../../../modules/store';
 
 describe('contestActions', () => {
@@ -16,7 +16,7 @@ describe('contestActions', () => {
     contestAPI = {
       getActiveContests: jest.fn(),
       getPastContests: jest.fn(),
-      getContest: jest.fn(),
+      getContestById: jest.fn(),
     };
   });
 
@@ -55,18 +55,18 @@ describe('contestActions', () => {
     });
   });
 
-  describe('fetch()', () => {
-    const { fetch } = contestActions;
-    const doFetch = async () => fetch(contestJid)(dispatch, getState, { contestAPI });
+  describe('fetchById()', () => {
+    const { fetchById } = contestActions;
+    const doFetch = async () => fetchById(contestId)(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
-      contestAPI.getContest.mockImplementation(() => contest);
+      contestAPI.getContestById.mockImplementation(() => contest);
 
       await doFetch();
     });
 
     it('calls API to get contest', () => {
-      expect(contestAPI.getContest).toHaveBeenCalledWith(token, contestJid);
+      expect(contestAPI.getContestById).toHaveBeenCalledWith(token, contestId);
     });
 
     it('puts the contest', () => {

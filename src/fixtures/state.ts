@@ -12,6 +12,7 @@ export const sessionState: SessionState = {
 };
 
 export const contestJid = 'contestJid123';
+export const contestId = '123';
 export const contest: Contest = {
   id: 1,
   jid: contestJid,

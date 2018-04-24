@@ -40,7 +40,7 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
         <div className="flex-column contest-list-item-info">
           <div className="flex-row justify-content-flex-end">
             <ButtonLink
-              to={`/competition/contests/${contest.jid}`}
+              to={`/competition/contests/${contest.id}`}
               intent={this.props.buttonIntent}
               className="contest-list-view-result"
             >
