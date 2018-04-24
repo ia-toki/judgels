@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { Card } from '../../../../../../../../../../components/Card/Card';
+import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
@@ -30,13 +30,13 @@ class ContestOverviewPage extends React.Component<ContestOverviewPageProps> {
             </strong>
           </a>
         </Callout>
-        {this.renderDescription(contest.description)}
+        <ContentCard>{this.renderDescription(contest.description)}</ContentCard>
       </div>
     );
   }
 
   private renderDescription = (description: string) => {
-    return description && <Card title="Description">{HTMLReactParser(description)}</Card>;
+    return description && HTMLReactParser(description);
   };
 }
 
