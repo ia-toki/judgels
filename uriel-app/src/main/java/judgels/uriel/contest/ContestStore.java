@@ -30,6 +30,10 @@ public class ContestStore {
         return contestDao.selectByJid(contestJid).map(ContestStore::fromModel);
     }
 
+    public Optional<Contest> findContestById(long contestId) {
+        return contestDao.select(contestId).map(ContestStore::fromModel);
+    }
+
     public Page<Contest> getContests(String userJid, SelectionOptions options) {
         Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
                 ? contestDao.selectAll(options)

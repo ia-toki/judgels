@@ -43,6 +43,16 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork(readOnly = true)
+    public Contest getContestById(AuthHeader authHeader, long contestId) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.findContestById(contestId));
+
+        checkAllowed(roleChecker.canViewContest(actorJid, contest.getJid()));
+        return contest;
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
     public Page<Contest> getContests(Optional<AuthHeader> authHeader, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
 

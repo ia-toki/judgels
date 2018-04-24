@@ -80,6 +80,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(contestA.getDuration()).isEqualTo(Duration.ofHours(5));
 
         assertThat(contestService.getContest(ADMIN_HEADER, contestA.getJid())).isEqualTo(contestA);
+        assertThat(contestService.getContestById(ADMIN_HEADER, contestA.getId())).isEqualTo(contestA);
         assertThatRemoteExceptionThrownBy(
                 () -> contestService.getContest(AuthHeader.of("randomToken"), contestA.getJid()))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);

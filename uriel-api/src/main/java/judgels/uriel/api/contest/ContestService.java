@@ -26,6 +26,13 @@ public interface ContestService {
             @PathParam("contestJid") String contestJid);
 
     @GET
+    @Path("/id/{contestId}")
+    @Produces(APPLICATION_JSON)
+    Contest getContestById(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestId") long contestId);
+
+    @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
     Page<Contest> getContests(
