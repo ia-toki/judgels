@@ -54,7 +54,7 @@ public interface UserService {
     @Path("/jids")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, User> findUsersByJids(Set<String> jids);
+    Map<String, UserInfo> findUsersByJids(Set<String> jids);
 
     @POST
     @Path("/usernames")

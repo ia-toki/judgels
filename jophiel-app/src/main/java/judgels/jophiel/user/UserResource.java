@@ -7,9 +7,11 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
+import judgels.jophiel.api.user.UserInfo;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.role.RoleChecker;
 import judgels.persistence.api.OrderDir;
@@ -87,8 +89,12 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public Map<String, User> findUsersByJids(Set<String> jids) {
-        return userStore.findUsersByJids(jids);
+    public Map<String, UserInfo> findUsersByJids(Set<String> jids) {
+        return userStore.findUsersByJids(jids).entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        e -> e.getKey(),
+                        e -> new UserInfo.Builder().username(e.getValue().getUsername()).build()));
     }
 
     @Override
