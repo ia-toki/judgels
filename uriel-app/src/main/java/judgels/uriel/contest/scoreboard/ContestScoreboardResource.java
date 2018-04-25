@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
+import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestStore;
@@ -35,18 +35,18 @@ public class ContestScoreboardResource implements ContestScoreboardService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestScoreboard getScoreboard(AuthHeader authHeader, String contestJid) {
+    public ContestScoreboardResponse getScoreboard(AuthHeader authHeader, String contestJid) {
         // TODO(fushar): this should return frozen scoreboard when necessary
         return getScoreboardOfType(authHeader, contestJid, ContestScoreboardType.OFFICIAL);
     }
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestScoreboard getFrozenScoreboard(AuthHeader authHeader, String contestJid) {
+    public ContestScoreboardResponse getFrozenScoreboard(AuthHeader authHeader, String contestJid) {
         return getScoreboardOfType(authHeader, contestJid, ContestScoreboardType.FROZEN);
     }
 
-    private ContestScoreboard getScoreboardOfType(
+    private ContestScoreboardResponse getScoreboardOfType(
             AuthHeader authHeader,
             String contestJid,
             ContestScoreboardType type) {

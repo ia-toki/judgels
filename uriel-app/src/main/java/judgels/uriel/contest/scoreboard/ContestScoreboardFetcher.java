@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.UserInfo;
 import judgels.jophiel.api.user.UserService;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
+import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
@@ -33,7 +33,11 @@ public class ContestScoreboardFetcher {
         this.mapper = mapper;
     }
 
-    public ContestScoreboard fetchScoreboard(String contestJid, ContestStyle contestStyle, ContestScoreboardType type) {
+    public ContestScoreboardResponse fetchScoreboard(
+            String contestJid,
+            ContestStyle contestStyle,
+            ContestScoreboardType type) {
+
         ContestScoreboardData data = checkFound(scoreboardStore.findScoreboard(contestJid, type));
 
         Scoreboard scoreboard;
@@ -47,17 +51,15 @@ public class ContestScoreboardFetcher {
             throw new RuntimeException(e);
         }
 
-        Set<String> contestantJids = scoreboard.getState().getContestantJids();
+        Set<String> userJids = scoreboard.getState().getContestantJids();
+        Map<String, UserInfo> usersMap = userService.findUsersByJids(userJids);
 
-        Map<String, User> usersByJids = userService.findUsersByJids(contestantJids);
-        Map<String, String> contestantDisplayNames = usersByJids.values()
-                .stream()
-                .collect(Collectors.toMap(User::getJid, User::getUsername));
-
-        return new ContestScoreboard.Builder()
-                .type(type)
-                .scoreboard(scoreboard)
-                .contestantDisplayNames(contestantDisplayNames)
+        return new ContestScoreboardResponse.Builder()
+                .data(new ContestScoreboard.Builder()
+                        .type(type)
+                        .scoreboard(scoreboard)
+                        .build())
+                .usersMap(usersMap)
                 .build();
     }
 }

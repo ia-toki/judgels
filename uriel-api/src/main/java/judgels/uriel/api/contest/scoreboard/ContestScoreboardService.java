@@ -15,14 +15,14 @@ public interface ContestScoreboardService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    ContestScoreboard getScoreboard(
+    ContestScoreboardResponse getScoreboard(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
 
     @GET
     @Path("/frozen")
     @Produces(APPLICATION_JSON)
-    ContestScoreboard getFrozenScoreboard(
+    ContestScoreboardResponse getFrozenScoreboard(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
 }

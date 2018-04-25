@@ -9,11 +9,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
-import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.UserInfo;
 import judgels.jophiel.api.user.UserService;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
+import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
@@ -52,16 +54,20 @@ public class ContestScoreboardFetcherTests {
         when(mapper.readValue("json", IcpcScoreboard.class))
                 .thenReturn(scoreboard);
 
+        Map<String, UserInfo> usersMap = ImmutableMap.of(
+                "userJid1", new UserInfo.Builder().username("username1").build(),
+                "userJid2", new UserInfo.Builder().username("username2").build());
         when(userService.findUsersByJids(ImmutableSet.of("userJid1", "userJid2")))
-                .thenReturn(ImmutableMap.of(
-                        "userJid1", new User.Builder().jid("userJid1").username("username1").build(),
-                        "userJid2", new User.Builder().jid("userJid2").username("username2").build()));
+                .thenReturn(usersMap);
 
         assertThat(scoreboardFetcher.fetchScoreboard("contestJid", ContestStyle.ICPC, ContestScoreboardType.OFFICIAL))
-                .isEqualTo(new ContestScoreboard.Builder()
-                        .type(ContestScoreboardType.OFFICIAL)
-                        .scoreboard(scoreboard)
-                        .contestantDisplayNames(ImmutableMap.of("userJid1", "username1", "userJid2", "username2"))
-                        .build());
+                .isEqualTo(
+                        new ContestScoreboardResponse.Builder()
+                                .data(new ContestScoreboard.Builder()
+                                        .type(ContestScoreboardType.OFFICIAL)
+                                        .scoreboard(scoreboard)
+                                        .build())
+                                .usersMap(usersMap)
+                                .build());
     }
 }
