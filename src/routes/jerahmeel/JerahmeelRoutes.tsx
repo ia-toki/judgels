@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as Loadable from 'react-loadable';
 
-import { LoadingPage } from '../../components/LoadingPage/LoadingPage';
+import { LoadingState } from '../../components/LoadingState/LoadingState';
 
 const LoadableTrainingRoutes = Loadable({
   loader: () => import('./training/routes/TrainingRoutes'),
-  loading: LoadingPage,
+  loading: () => <LoadingState large />,
 });
 
 export default class JerahmeelRoutes extends React.Component {

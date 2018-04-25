@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as Loadable from 'react-loadable';
 
-import { LoadingPage } from '../../components/LoadingPage/LoadingPage';
+import { LoadingState } from '../../components/LoadingState/LoadingState';
 
 const LoadableCompetitionRoutes = Loadable({
   loader: () => import('./competition/routes/CompetitionRoutes'),
-  loading: LoadingPage,
+  loading: () => <LoadingState large />,
 });
 
 export default class UrielRoutes extends React.Component {

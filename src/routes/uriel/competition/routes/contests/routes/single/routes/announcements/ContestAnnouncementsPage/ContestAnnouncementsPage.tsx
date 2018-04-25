@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import { AppState } from '../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
@@ -48,7 +49,7 @@ class ContestAnnouncementsPage extends React.Component<ContestAnnouncementsPageP
   private renderAnnouncements = () => {
     const { announcements, usersMap } = this.state;
     if (!announcements || !usersMap) {
-      return null;
+      return <LoadingState />;
     }
 
     if (announcements.length === 0) {

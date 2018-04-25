@@ -8,6 +8,7 @@ import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
 } from '../../../../../../../../components/ContentWithSidebar/ContentWithSidebar';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
@@ -25,7 +26,7 @@ interface SingleContestRoutesProps {
 const SingleContestRoutes = (props: SingleContestRoutesProps) => {
   const { contest } = props;
   if (!contest) {
-    return null;
+    return <LoadingState large />;
   }
 
   let sidebarItems: ContentWithSidebarItem[] = [

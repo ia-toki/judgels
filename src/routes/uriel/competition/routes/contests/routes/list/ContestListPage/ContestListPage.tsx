@@ -1,9 +1,10 @@
-import { Intent, Spinner } from '@blueprintjs/core';
+import { Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
+import { BlankContestListTable } from '../ContestListTable/BlankContestListTable';
 import { ContestListTable } from '../ContestListTable/ContestListTable';
 import { withBreadcrumb } from '../../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { Card } from '../../../../../../../../components/Card/Card';
@@ -42,9 +43,9 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
     );
   }
 
-  private renderActiveContestList(contestList?: Contest[]) {
+  private renderActiveContestList = (contestList?: Contest[]) => {
     if (!contestList) {
-      return <Spinner className="loading-spinner" />;
+      return <BlankContestListTable />;
     }
     if (contestList.length === 0) {
       return (
@@ -56,14 +57,14 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
       );
     }
     return <ContestListTable contestList={contestList} buttonIntent={Intent.PRIMARY} />;
-  }
+  };
 
-  private renderPastContestPage(contestPage?: ContestPage) {
+  private renderPastContestPage = (contestPage?: ContestPage) => {
     if (!contestPage) {
-      return <Spinner className="loading-spinner" />;
+      return <BlankContestListTable />;
     }
     return <ContestListTable contestList={contestPage.data} buttonIntent={Intent.NONE} />;
-  }
+  };
 
   private onChangePage = async (nextPage: number) => {
     const pastContestPage = await this.props.onFetchPastContestPage(nextPage);

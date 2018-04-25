@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import { UsersMap } from '../../../../../../../../../../modules/api/jophiel/user';
 import { Contest, ContestStyle } from '../../../../../../../../../../modules/api/uriel/contest';
@@ -50,7 +51,7 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
   private renderScoreboard = () => {
     const { scoreboard, usersMap } = this.state;
     if (!scoreboard || !usersMap) {
-      return null;
+      return <LoadingState />;
     }
 
     if (this.props.contest.style === ContestStyle.ICPC) {
