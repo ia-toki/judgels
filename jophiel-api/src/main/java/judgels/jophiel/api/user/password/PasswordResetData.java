@@ -1,4 +1,4 @@
-package judgels.jophiel.api.user;
+package judgels.jophiel.api.user.password;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;

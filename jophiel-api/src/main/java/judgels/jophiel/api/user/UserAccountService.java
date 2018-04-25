@@ -7,6 +7,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import judgels.jophiel.api.user.password.PasswordResetData;
+import judgels.jophiel.api.user.registration.UserRegistrationData;
 
 @Path("/api/v2/users/account")
 public interface UserAccountService {

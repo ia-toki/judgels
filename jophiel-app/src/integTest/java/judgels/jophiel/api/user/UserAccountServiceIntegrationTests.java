@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
+import judgels.jophiel.api.user.password.PasswordResetData;
+import judgels.jophiel.api.user.registration.UserRegistrationData;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
 
