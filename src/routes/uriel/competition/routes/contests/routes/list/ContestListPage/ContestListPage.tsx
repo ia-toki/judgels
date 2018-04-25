@@ -45,7 +45,7 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
 
   private renderActiveContestList = (contestList?: Contest[]) => {
     if (!contestList) {
-      return <BlankContestListTable />;
+      return null;
     }
     if (contestList.length === 0) {
       return (

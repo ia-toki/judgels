@@ -19,8 +19,8 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
     const list = contestList.map(contest => (
       <div key={contest.jid} className="flex-row justify-content-space-between contest-list-item-container">
         <div>
-          <h4>{contest.name}</h4>
-          <p>
+          <h4 className="contest-list-item-name">{contest.name}</h4>
+          <p className="contest-list-item-date">
             <small>
               <FormattedDate
                 value={contest.beginTime * 1000}
