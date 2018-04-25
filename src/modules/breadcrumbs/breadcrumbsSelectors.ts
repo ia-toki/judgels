@@ -3,9 +3,9 @@ import { createSelector } from 'reselect';
 import { APP_CONFIG } from '../../conf';
 import { AppState } from '../store';
 
-export const selectSortedBreadcrumbs = createSelector([(state: AppState) => state.breadcrumbs.values], values =>
-  values.slice().sort((a, b) => a.link.length - b.link.length)
-);
+export function selectSortedBreadcrumbs(state: AppState) {
+  return state.breadcrumbs.values.slice().sort((a, b) => a.link.length - b.link.length);
+}
 
 export const selectDocumentTitle = createSelector([selectSortedBreadcrumbs], breadcrumbs => {
   let title = APP_CONFIG.name;
