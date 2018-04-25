@@ -8,13 +8,14 @@ import {
   IcpcScoreboardEntry,
   ScoreboardState,
 } from '../../../../../../../../../../modules/api/uriel/scoreboard';
+import { UsersMap } from '../../../../../../../../../../modules/api/jophiel/user';
 
 import '../ScoreboardTable.css';
 import './IcpcScoreboardTable.css';
 
 export class IcpcScoreboardTableProps {
   scoreboard: IcpcScoreboard;
-  contestantDisplayNames: { [contestantJid: string]: string };
+  usersMap: UsersMap;
 }
 
 export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProps> {
@@ -56,7 +57,7 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
     let cells = [
       <td key="rank">{entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
-        {this.props.contestantDisplayNames[entry.contestantJid]}
+        {this.props.usersMap[entry.contestantJid] && this.props.usersMap[entry.contestantJid].username}
       </td>,
       <td key="totalAccepted">
         <strong>{entry.totalAccepted}</strong>

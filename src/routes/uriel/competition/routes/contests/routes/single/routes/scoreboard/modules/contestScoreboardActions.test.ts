@@ -1,6 +1,6 @@
 import { contestScoreboardActions } from './contestScoreboardActions';
 import { contestJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
-import { Scoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
+import { ContestScoreboardResponse } from '../../../../../../../../../../modules/api/uriel/contestScoreboard';
 import { AppState } from '../../../../../../../../../../modules/store';
 
 describe('contestScoreboardActions', () => {
@@ -22,7 +22,7 @@ describe('contestScoreboardActions', () => {
     const doGet = async () => get(contestJid)(dispatch, getState, { contestScoreboardAPI });
 
     beforeEach(async () => {
-      const scoreboard = {} as Scoreboard;
+      const scoreboard = {} as ContestScoreboardResponse;
       contestScoreboardAPI.getScoreboard.mockReturnValue(scoreboard);
 
       await doGet();

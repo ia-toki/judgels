@@ -6,12 +6,13 @@ import {
   IoiScoreboardEntry,
   ScoreboardState,
 } from '../../../../../../../../../../modules/api/uriel/scoreboard';
+import { UsersMap } from '../../../../../../../../../../modules/api/jophiel/user';
 
 import './IoiScoreboardTable.css';
 
 export class IoiScoreboardTableProps {
   scoreboard: IoiScoreboard;
-  contestantDisplayNames: { [contestantJid: string]: string };
+  usersMap: UsersMap;
 }
 
 export class IoiScoreboardTable extends React.Component<IoiScoreboardTableProps> {
@@ -53,7 +54,7 @@ export class IoiScoreboardTable extends React.Component<IoiScoreboardTableProps>
     let cells = [
       <td key="rank">{entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
-        {this.props.contestantDisplayNames[entry.contestantJid]}
+        {this.props.usersMap[entry.contestantJid] && this.props.usersMap[entry.contestantJid].username}
       </td>,
       <td key="totalScores">
         <strong>{entry.totalScores}</strong>

@@ -10,6 +10,14 @@ export interface UserWithAvatar extends User {
   avatarUrl?: string;
 }
 
+export interface UserInfo {
+  username: string;
+}
+
+export interface UsersMap {
+  [userJid: string]: UserInfo;
+}
+
 export function createUserAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users`;
 

@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import { Contest, ContestStyle } from '../../../../../../../../../../modules/api/uriel/contest';
-import { ContestScoreboard } from '../../../../../../../../../../modules/api/uriel/contestScoreboard';
+import { ContestScoreboardResponse } from '../../../../../../../../../../modules/api/uriel/contestScoreboard';
 import { IcpcScoreboard, IoiScoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
 import { AppState } from '../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
@@ -14,11 +14,11 @@ import { contestScoreboardActions as injectedContestScoreboardActions } from '..
 
 interface ContestScoreboardPageProps extends RouteComponentProps<{ contestJid: string }> {
   contest: Contest;
-  onGetScoreboard: (contestJid: string) => Promise<ContestScoreboard>;
+  onGetScoreboard: (contestJid: string) => Promise<ContestScoreboardResponse>;
 }
 
 interface ContestScoreboardPageState {
-  contestScoreboard?: ContestScoreboard;
+  contestScoreboard?: ContestScoreboardResponse;
 }
 
 class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, ContestScoreboardPageState> {
@@ -40,19 +40,19 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
     return <ContentCard>{this.renderScoreboard(contest.style, contestScoreboard)}</ContentCard>;
   }
 
-  private renderScoreboard = (style: ContestStyle, contestScoreboard: ContestScoreboard) => {
+  private renderScoreboard = (style: ContestStyle, contestScoreboard: ContestScoreboardResponse) => {
     if (style === ContestStyle.ICPC) {
       return (
         <IcpcScoreboardTable
-          scoreboard={contestScoreboard.scoreboard as IcpcScoreboard}
-          contestantDisplayNames={contestScoreboard.contestantDisplayNames}
+          scoreboard={contestScoreboard.data.scoreboard as IcpcScoreboard}
+          usersMap={contestScoreboard.usersMap}
         />
       );
     } else {
       return (
         <IoiScoreboardTable
-          scoreboard={contestScoreboard.scoreboard as IoiScoreboard}
-          contestantDisplayNames={contestScoreboard.contestantDisplayNames}
+          scoreboard={contestScoreboard.data.scoreboard as IoiScoreboard}
+          usersMap={contestScoreboard.usersMap}
         />
       );
     }
