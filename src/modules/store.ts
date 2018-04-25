@@ -14,6 +14,7 @@ import { createUserAccountAPI } from './api/jophiel/userAccount';
 import { createUserProfileAPI } from './api/jophiel/userProfile';
 import { createWebAPI } from './api/jophiel/web';
 import { createContestAPI } from './api/uriel/contest';
+import { createContestAnnouncementAPI } from './api/uriel/contestAnnouncement';
 import { createContestScoreboardAPI } from './api/uriel/contestScoreboard';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { toastActions } from './toast/toastActions';
@@ -60,6 +61,7 @@ export const store = createStore<AppState>(
         userAccountAPI: createUserAccountAPI(),
         userProfileAPI: createUserProfileAPI(),
         contestAPI: createContestAPI(),
+        contestAnnouncementAPI: createContestAnnouncementAPI(),
         contestScoreboardAPI: createContestScoreboardAPI(),
         toastActions,
       }),

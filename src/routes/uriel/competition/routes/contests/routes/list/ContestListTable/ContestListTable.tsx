@@ -19,7 +19,7 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
     const list = contestList.map(contest => (
       <div key={contest.jid} className="flex-row justify-content-space-between contest-list-item-container">
         <div>
-          <h3>{contest.name}</h3>
+          <h4>{contest.name}</h4>
           <p>
             <small>
               <FormattedDate

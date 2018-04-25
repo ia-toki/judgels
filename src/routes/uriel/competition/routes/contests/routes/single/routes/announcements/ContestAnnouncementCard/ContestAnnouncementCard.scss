@@ -1,0 +1,25 @@
+.contest-announcement-card {
+  margin-bottom: 15px;
+
+  h4 {
+    margin-bottom: 10px !important;
+
+    float: left;
+  }
+
+  .clearfix {
+    &::after {
+      display: block;
+      content: '';
+      clear: both;
+    }
+  }
+
+  hr {
+    margin-top: 0 !important;
+  }
+}
+
+.contest-announcement-card__info {
+  float: right;
+}

@@ -17,6 +17,7 @@ p {
 
   small {
     color: $small-color !important;
+    line-height: 14px !important;
   }
 }
 
@@ -25,15 +26,20 @@ h2 {
 }
 
 h3 {
-  font-size: $font-size-large;
+  font-size: 18px;
   font-weight: bold;
-  line-height: 0.5 * $font-size-large !important;
+  line-height: 0.5 * 18px !important;
 }
 
 h4 {
-  font-size: $font-size;
+  font-size: 16px;
   font-weight: bold;
-  line-height: $font-size-large !important;
+  line-height: 16px !important;
+}
+
+hr {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
 }
 
 a {

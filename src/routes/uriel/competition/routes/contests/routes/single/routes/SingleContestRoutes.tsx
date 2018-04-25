@@ -10,6 +10,7 @@ import ContentWithSidebar, {
 } from '../../../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
+import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../modules/store';
@@ -34,6 +35,13 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       title: 'Overview',
       routeComponent: Route,
       component: ContestOverviewPage,
+    },
+    {
+      id: 'announcements',
+      titleIcon: 'notifications',
+      title: 'Announcements',
+      routeComponent: Route,
+      component: ContestAnnouncementsPage,
     },
     {
       id: 'scoreboard',
