@@ -3,6 +3,7 @@ package judgels.uriel;
 import dagger.Component;
 import javax.inject.Singleton;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.announcement.ContestAnnouncementStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -21,6 +22,7 @@ public interface UrielIntegrationTestComponent {
     AdminRoleStore adminRoleStore();
     ContestStore contestStore();
     ContestModuleStore contestModuleStore();
+    ContestAnnouncementStore contestAnnouncementStore();
     ContestContestantStore contestContestantStore();
     ContestSupervisorStore contestSupervisorStore();
     ContestManagerStore contestManagerStore();

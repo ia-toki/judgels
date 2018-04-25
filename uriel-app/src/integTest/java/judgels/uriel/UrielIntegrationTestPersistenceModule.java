@@ -10,6 +10,9 @@ import judgels.persistence.FixedClock;
 
 @Module
 public class UrielIntegrationTestPersistenceModule {
+    public static final String ACTOR = "actorJid";
+    public static final String ACTOR_IP = "actorIp";
+
     private UrielIntegrationTestPersistenceModule() {}
 
     @Provides
@@ -21,6 +24,6 @@ public class UrielIntegrationTestPersistenceModule {
     @Provides
     @Singleton
     static ActorProvider actorProvider() {
-        return new FixedActorProvider();
+        return new FixedActorProvider(ACTOR, ACTOR_IP);
     }
 }
