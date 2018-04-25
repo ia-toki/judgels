@@ -1,0 +1,26 @@
+.contest-scoreboard-page {
+  h3 {
+    float: left;
+  }
+
+  .clearfix {
+    &::after {
+      display: block;
+      content: '';
+      clear: both;
+    }
+  }
+
+  p {
+    line-height: 9px !important;
+    margin-bottom: 0 !important;
+  }
+
+  hr {
+    margin-top: 10px !important;
+  }
+}
+
+.contest-scoreboard-page__info {
+  float: right;
+}

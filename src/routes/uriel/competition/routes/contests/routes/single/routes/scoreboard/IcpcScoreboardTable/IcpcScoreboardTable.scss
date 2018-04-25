@@ -1,6 +1,15 @@
 @import '../../../../../../../../../../styles/base';
 
 table.pt-html-table.icpc-scoreboard__content {
+  td {
+    strong {
+      font-size: 16px;
+    }
+    small {
+      color: $small-color;
+    }
+  }
+
   td.first-accepted {
     strong, small {
       color: #fff;

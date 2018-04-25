@@ -4,8 +4,8 @@ import {
   IoiScoreboard,
   IoiScoreboardContent,
   IoiScoreboardEntry,
-  ScoreboardState,
 } from '../../../../../../../../../../modules/api/uriel/scoreboard';
+import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 import { UsersMap } from '../../../../../../../../../../modules/api/jophiel/user';
 
 import './IoiScoreboardTable.css';
@@ -19,31 +19,11 @@ export class IoiScoreboardTable extends React.Component<IoiScoreboardTableProps>
   render() {
     const { scoreboard } = this.props;
     return (
-      <table className="pt-html-table pt-html-table-striped scoreboard__content ioi-scoreboard__content">
-        {this.renderHeader(scoreboard.state)}
+      <ScoreboardTable className="ioi-scoreboard__content" state={scoreboard.state}>
         {this.renderData(scoreboard.content)}
-      </table>
+      </ScoreboardTable>
     );
   }
-
-  private renderHeader = (state: ScoreboardState) => {
-    const problems = state.problemAliases.map(alias => (
-      <th key={alias} className="problem-cell">
-        {alias}
-      </th>
-    ));
-
-    return (
-      <thead>
-        <tr>
-          <th className="rank-cell">#</th>
-          <th className="contestant-cell">Contestant</th>
-          <th className="problem-cell">Total</th>
-          {problems}
-        </tr>
-      </thead>
-    );
-  };
 
   private renderData = (content: IoiScoreboardContent) => {
     let rows = content.entries.map(this.renderRow);

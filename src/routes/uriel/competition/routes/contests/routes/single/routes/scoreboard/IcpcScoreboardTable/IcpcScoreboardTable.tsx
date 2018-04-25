@@ -6,11 +6,10 @@ import {
   IcpcScoreboard,
   IcpcScoreboardContent,
   IcpcScoreboardEntry,
-  ScoreboardState,
 } from '../../../../../../../../../../modules/api/uriel/scoreboard';
+import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 import { UsersMap } from '../../../../../../../../../../modules/api/jophiel/user';
 
-import '../ScoreboardTable.css';
 import './IcpcScoreboardTable.css';
 
 export class IcpcScoreboardTableProps {
@@ -22,31 +21,11 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
   render() {
     const { scoreboard } = this.props;
     return (
-      <table className="pt-html-table pt-html-table-striped scoreboard__content icpc-scoreboard__content">
-        {this.renderHeader(scoreboard.state)}
+      <ScoreboardTable className="icpc-scoreboard__content" state={scoreboard.state}>
         {this.renderData(scoreboard.content)}
-      </table>
+      </ScoreboardTable>
     );
   }
-
-  private renderHeader = (state: ScoreboardState) => {
-    const problems = state.problemAliases.map(alias => (
-      <th key={alias} className="problem-cell">
-        {alias}
-      </th>
-    ));
-
-    return (
-      <thead>
-        <tr>
-          <th className="rank-cell">#</th>
-          <th className="contestant-cell">Contestant</th>
-          <th className="problem-cell">Total</th>
-          {problems}
-        </tr>
-      </thead>
-    );
-  };
 
   private renderData = (content: IcpcScoreboardContent) => {
     let rows = content.entries.map(this.renderRow);

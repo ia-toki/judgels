@@ -56,16 +56,6 @@ describe('IcpcScoreboardTable', () => {
     wrapper = shallow(<IcpcScoreboardTable {...props} />);
   });
 
-  test('header', () => {
-    const header = wrapper
-      .find('thead')
-      .find('tr')
-      .first()
-      .children()
-      .map(th => th.text());
-    expect(header).toEqual(['#', 'Contestant', 'Total', 'A', 'B', 'C']);
-  });
-
   test('ranks', () => {
     const ranks = wrapper
       .find('tbody')

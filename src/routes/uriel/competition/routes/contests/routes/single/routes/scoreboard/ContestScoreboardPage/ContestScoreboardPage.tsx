@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormattedRelative } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -16,6 +17,8 @@ import { selectContest } from '../../../../../modules/contestSelectors';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
 import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
 import { contestScoreboardActions as injectedContestScoreboardActions } from '../modules/contestScoreboardActions';
+
+import './ContestScoreboardPage.css';
 
 interface ContestScoreboardPageProps {
   contest: Contest;
@@ -40,13 +43,30 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
 
   render() {
     return (
-      <ContentCard>
+      <ContentCard className="contest-scoreboard-page">
         <h3>Scoreboard</h3>
+        {this.renderScoreboardUpdatedTime()}
+        <div className="clearfix" />
         <hr />
         {this.renderScoreboard()}
       </ContentCard>
     );
   }
+
+  private renderScoreboardUpdatedTime = () => {
+    const { scoreboard } = this.state;
+    if (!scoreboard) {
+      return null;
+    }
+
+    return (
+      <p className="contest-scoreboard-page__info">
+        <small>
+          last updated <FormattedRelative value={scoreboard.updatedTime * 1000} />
+        </small>
+      </p>
+    );
+  };
 
   private renderScoreboard = () => {
     const { scoreboard, usersMap } = this.state;
