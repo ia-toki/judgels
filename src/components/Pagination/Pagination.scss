@@ -12,13 +12,10 @@
 .pagination__helper-text {
   margin-bottom: 0;
   color: $small-color;
+  font-size: $font-size-small;
 }
 
 .pagination__link {
   display: block;
-  margin-left: -10px;
-  margin-right: -10px;
-  padding-left: 10px;
-  padding-right: 10px;
   text-decoration: none !important;
 }
