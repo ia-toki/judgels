@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import judgels.jophiel.api.user.UserInfo;
@@ -40,9 +41,10 @@ public class ContestScoreboardFetcherTests {
     @Test
     public void fetch_scoreboard() throws IOException {
         when(scoreboardStore.findScoreboard("contestJid", ContestScoreboardType.OFFICIAL))
-                .thenReturn(Optional.of(new ContestScoreboardData.Builder()
+                .thenReturn(Optional.of(new RawContestScoreboard.Builder()
                         .scoreboard("json")
                         .type(ContestScoreboardType.OFFICIAL)
+                        .updatedTime(Instant.ofEpochMilli(42))
                         .build()));
 
         IcpcScoreboard scoreboard = mock(IcpcScoreboard.class);
@@ -66,6 +68,7 @@ public class ContestScoreboardFetcherTests {
                                 .data(new ContestScoreboard.Builder()
                                         .type(ContestScoreboardType.OFFICIAL)
                                         .scoreboard(scoreboard)
+                                        .updatedTime(Instant.ofEpochMilli(42))
                                         .build())
                                 .usersMap(usersMap)
                                 .build());

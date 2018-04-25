@@ -1,6 +1,7 @@
 package judgels.uriel.api.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.Instant;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -8,6 +9,7 @@ import org.immutables.value.Value;
 public interface ContestScoreboard {
     ContestScoreboardType getType();
     Scoreboard getScoreboard();
+    Instant getUpdatedTime();
 
     class Builder extends ImmutableContestScoreboard.Builder {}
 }

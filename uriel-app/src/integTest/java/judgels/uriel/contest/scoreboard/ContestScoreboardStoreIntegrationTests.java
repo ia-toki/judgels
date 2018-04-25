@@ -1,5 +1,6 @@
 package judgels.uriel.contest.scoreboard;
 
+import static judgels.uriel.UrielIntegrationTestPersistenceModule.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.persistence.hibernate.WithHibernateSession;
@@ -8,6 +9,7 @@ import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.persistence.ContestModel;
@@ -39,32 +41,48 @@ class ContestScoreboardStoreIntegrationTests {
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).isEmpty();
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).isEmpty();
 
-        store.upsertScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL, "official1");
-        store.upsertScoreboard(contest.getJid(), ContestScoreboardType.FROZEN, "frozen1");
+        store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+                .type(ContestScoreboardType.OFFICIAL)
+                .scoreboard("official1")
+                .build());
+        store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+                .type(ContestScoreboardType.FROZEN)
+                .scoreboard("frozen1")
+                .build());
 
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(
-                new ContestScoreboardData.Builder()
+                new RawContestScoreboard.Builder()
                         .type(ContestScoreboardType.OFFICIAL)
                         .scoreboard("official1")
+                        .updatedTime(NOW)
                         .build());
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(
-                new ContestScoreboardData.Builder()
+                new RawContestScoreboard.Builder()
                         .type(ContestScoreboardType.FROZEN)
                         .scoreboard("frozen1")
+                        .updatedTime(NOW)
                         .build());
 
-        store.upsertScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL, "official2");
-        store.upsertScoreboard(contest.getJid(), ContestScoreboardType.FROZEN, "frozen2");
+        store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+                .type(ContestScoreboardType.OFFICIAL)
+                .scoreboard("official2")
+                .build());
+        store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+                .type(ContestScoreboardType.FROZEN)
+                .scoreboard("frozen2")
+                .build());
 
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(
-                new ContestScoreboardData.Builder()
+                new RawContestScoreboard.Builder()
                         .type(ContestScoreboardType.OFFICIAL)
                         .scoreboard("official2")
+                        .updatedTime(NOW)
                         .build());
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(
-                new ContestScoreboardData.Builder()
+                new RawContestScoreboard.Builder()
                         .type(ContestScoreboardType.FROZEN)
                         .scoreboard("frozen2")
+                        .updatedTime(NOW)
                         .build());
     }
 }

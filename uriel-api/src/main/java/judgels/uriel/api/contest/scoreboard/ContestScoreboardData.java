@@ -1,7 +1,6 @@
-package judgels.uriel.contest.scoreboard;
+package judgels.uriel.api.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import org.immutables.value.Value;
 
 @Value.Immutable

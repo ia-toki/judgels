@@ -38,14 +38,14 @@ public class ContestScoreboardFetcher {
             ContestStyle contestStyle,
             ContestScoreboardType type) {
 
-        ContestScoreboardData data = checkFound(scoreboardStore.findScoreboard(contestJid, type));
+        RawContestScoreboard raw = checkFound(scoreboardStore.findScoreboard(contestJid, type));
 
         Scoreboard scoreboard;
         try {
             if (contestStyle == ContestStyle.ICPC) {
-                scoreboard = mapper.readValue(data.getScoreboard(), IcpcScoreboard.class);
+                scoreboard = mapper.readValue(raw.getScoreboard(), IcpcScoreboard.class);
             } else {
-                scoreboard = mapper.readValue(data.getScoreboard(), IoiScoreboard.class);
+                scoreboard = mapper.readValue(raw.getScoreboard(), IoiScoreboard.class);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -58,6 +58,7 @@ public class ContestScoreboardFetcher {
                 .data(new ContestScoreboard.Builder()
                         .type(type)
                         .scoreboard(scoreboard)
+                        .updatedTime(raw.getUpdatedTime())
                         .build())
                 .usersMap(usersMap)
                 .build();

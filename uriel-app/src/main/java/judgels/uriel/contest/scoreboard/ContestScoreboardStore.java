@@ -2,6 +2,7 @@ package judgels.uriel.contest.scoreboard;
 
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.persistence.ContestScoreboardDao;
 import judgels.uriel.persistence.ContestScoreboardModel;
@@ -14,42 +15,36 @@ public class ContestScoreboardStore {
         this.contestScoreboardDao = contestScoreboardDao;
     }
 
-    public Optional<ContestScoreboardData> findScoreboard(String contestJid, ContestScoreboardType type) {
+    public Optional<RawContestScoreboard> findScoreboard(String contestJid, ContestScoreboardType type) {
         return contestScoreboardDao.selectByContestJidAndType(contestJid, type).map(this::fromModel);
     }
 
-    public Optional<ContestScoreboardData> upsertScoreboard(
-            String contestJid,
-            ContestScoreboardType type,
-            String scoreboard) {
+    public Optional<RawContestScoreboard> upsertScoreboard(String contestJid, ContestScoreboardData data) {
+        Optional<ContestScoreboardModel> maybeModel =
+                contestScoreboardDao.selectByContestJidAndType(contestJid, data.getType());
 
-        Optional<ContestScoreboardModel> maybeModel = contestScoreboardDao.selectByContestJidAndType(contestJid, type);
         if (!maybeModel.isPresent()) {
             ContestScoreboardModel model = new ContestScoreboardModel();
-            toModel(contestJid, type, scoreboard, model);
+            toModel(contestJid, data, model);
             return Optional.of(fromModel(contestScoreboardDao.insert(model)));
         } else {
             ContestScoreboardModel model = maybeModel.get();
-            toModel(contestJid, type, scoreboard, model);
+            toModel(contestJid, data, model);
             return Optional.of(fromModel(contestScoreboardDao.update(model)));
         }
     }
 
-    private ContestScoreboardData fromModel(ContestScoreboardModel model) {
-        return new ContestScoreboardData.Builder()
+    private RawContestScoreboard fromModel(ContestScoreboardModel model) {
+        return new RawContestScoreboard.Builder()
                 .type(ContestScoreboardType.valueOf(model.type))
                 .scoreboard(model.scoreboard)
+                .updatedTime(model.updatedAt)
                 .build();
     }
 
-    private static void toModel(
-            String contestJid,
-            ContestScoreboardType type,
-            String scoreboard,
-            ContestScoreboardModel model) {
-
+    private static void toModel(String contestJid, ContestScoreboardData data, ContestScoreboardModel model) {
         model.contestJid = contestJid;
-        model.type = type.name();
-        model.scoreboard = scoreboard;
+        model.type = data.getType().name();
+        model.scoreboard = data.getScoreboard();
     }
 }
