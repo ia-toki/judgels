@@ -31,7 +31,6 @@
     "redux-form": "^7.1.0",
     "redux-persist": "^5.4.0",
     "redux-thunk": "^2.0.0",
-    "reselect": "^3.0.1",
     "reset-css": "^2.2.0"
   },
   "scripts": {

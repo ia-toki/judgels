@@ -1,5 +1,3 @@
-import { createSelector } from 'reselect';
-
 import { APP_CONFIG } from '../../conf';
 import { AppState } from '../store';
 
@@ -7,10 +5,17 @@ export function selectSortedBreadcrumbs(state: AppState) {
   return state.breadcrumbs.values.slice().sort((a, b) => a.link.length - b.link.length);
 }
 
-export const selectDocumentTitle = createSelector([selectSortedBreadcrumbs], breadcrumbs => {
+export function selectDocumentTitle(state: AppState) {
   let title = APP_CONFIG.name;
-  if (breadcrumbs.length) {
-    title = `${breadcrumbs[breadcrumbs.length - 1].title} | ${title}`;
+  let longestBreadcrumb;
+  state.breadcrumbs.values.forEach(breadcrumb => {
+    if (!longestBreadcrumb || breadcrumb.link.length > longestBreadcrumb.link.length) {
+      longestBreadcrumb = breadcrumb;
+    }
+  });
+
+  if (longestBreadcrumb) {
+    title = `${longestBreadcrumb.title} | ${title}`;
   }
   return title;
-});
+}
