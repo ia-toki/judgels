@@ -15,7 +15,17 @@
   font-size: $font-size-small;
 }
 
+.pagination__item {
+  padding: 0 !important;
+  text-align: center;
+}
+
 .pagination__link {
   display: block;
+  line-height: 30px;
+  width: 100%;
   text-decoration: none !important;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
 }

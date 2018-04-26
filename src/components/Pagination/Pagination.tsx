@@ -55,7 +55,7 @@ class Pagination extends React.Component<PaginationProps, {}> {
         pageCount={this.getTotalPages()}
         pageRangeDisplayed={3}
         marginPagesDisplayed={2}
-        pageClassName="pt-button"
+        pageClassName="pt-button pagination__item"
         previousLabel="<"
         nextLabel=">"
         pageLinkClassName="pagination__link"
@@ -63,9 +63,9 @@ class Pagination extends React.Component<PaginationProps, {}> {
         previousLinkClassName="pagination__link"
         breakClassName="pt-button pt-disabled"
         containerClassName="pt-button-group"
-        activeClassName="pt-button pt-active"
-        previousClassName="pt-button"
-        nextClassName="pt-button"
+        activeClassName="pt-button pt-active pagination__item"
+        previousClassName="pt-button pagination__item"
+        nextClassName="pt-button pagination__item"
         onPageChange={this.onChangePage}
       />
     );
