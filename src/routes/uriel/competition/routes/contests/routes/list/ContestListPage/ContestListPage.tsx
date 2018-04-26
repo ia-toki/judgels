@@ -34,7 +34,7 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
   render() {
     return (
       <div>
-        <Card title="Active contests">{this.renderActiveContestList(this.state.activeContestList)}</Card>
+        {this.renderActiveContestList(this.state.activeContestList)}
         <Card title="Past contests">
           {this.renderPastContestPage(this.state.pastContestPage)}
           <Pagination currentPage={1} pageSize={ContestListPage.PAGE_SIZE} onChangePage={this.onChangePage} />
@@ -44,19 +44,14 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
   }
 
   private renderActiveContestList = (contestList?: Contest[]) => {
-    if (!contestList) {
+    if (!contestList || contestList.length === 0) {
       return null;
     }
-    if (contestList.length === 0) {
-      return (
-        <p>
-          <small>
-            <em>No active contests.</em>
-          </small>
-        </p>
-      );
-    }
-    return <ContestListTable contestList={contestList} buttonIntent={Intent.PRIMARY} />;
+    return (
+      <Card title="Active contests">
+        <ContestListTable contestList={contestList} buttonIntent={Intent.PRIMARY} />
+      </Card>
+    );
   };
 
   private renderPastContestPage = (contestPage?: ContestPage) => {
