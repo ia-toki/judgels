@@ -1,4 +1,4 @@
-import { Icon, IconName, Tab, Tabs } from '@blueprintjs/core';
+import { Icon, IconName, Popover, Position, Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Card } from '../Card/Card';
@@ -42,12 +42,38 @@ export class Sidebar extends React.Component<SidebarProps> {
       );
     });
 
-    return (
-      <Card className="card-sidebar" title={title} action={action} actionRightJustified>
-        <Tabs id="sidebar" selectedTabId={activeItemId} onChange={onItemClick} vertical renderActiveTabPanelOnly>
-          {tabs}
-        </Tabs>
+    const tabsContainer = (
+      <Tabs id="sidebar" selectedTabId={activeItemId} onChange={onItemClick} vertical renderActiveTabPanelOnly>
+        {tabs}
+      </Tabs>
+    );
+
+    const card = (
+      <Card className="card-sidebar card-sidebar__full" title={title} action={action} actionRightJustified>
+        {tabsContainer}
       </Card>
+    );
+
+    const responsiveMenu = (
+      <Popover
+        className="card-sidebar card-sidebar__responsive"
+        content={tabsContainer}
+        position={Position.BOTTOM_LEFT}
+        usePortal={false}
+      >
+        <div>
+          <p className="card-sidebar__responsive__menu">
+            <Icon icon="list" iconSize={Icon.SIZE_LARGE} />&nbsp;<small>{title}</small>
+          </p>
+        </div>
+      </Popover>
+    );
+
+    return (
+      <div>
+        {card}
+        {responsiveMenu}
+      </div>
     );
   }
 }

@@ -31,5 +31,9 @@
   .widget-user__burger, .widget-user__menu-helper {
     display: block;
     cursor: pointer;
+
+    svg {
+      float: left;
+    }
   }
 }

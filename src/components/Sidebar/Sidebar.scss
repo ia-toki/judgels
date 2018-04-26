@@ -47,12 +47,35 @@
   float: right;
 }
 
+.card-sidebar__full {
+  display: block;
+}
+
+.card-sidebar__responsive {
+  display: none;
+}
+
 @media only screen and (max-width: 750px) {
-  .card-sidebar {
-    margin-bottom: 25px;
+  .card-sidebar__full {
+    display: none;
+  }
+
+  .card-sidebar__responsive {
+    display: block;
+    width: 200px;
+    top: -15px;
+    height: 30px;
 
     .pt-tab-list {
-      left: -20px;
+      left: 0;
     }
+  }
+
+  .card-sidebar__responsive__menu {
+    line-height: 50px;
+  }
+
+  .pt-overlay-content {
+    top: -10px !important;
   }
 }
