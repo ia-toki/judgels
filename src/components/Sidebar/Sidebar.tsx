@@ -19,9 +19,15 @@ export interface SidebarProps {
   onItemClick: (parentPath: string, itemId: string) => void;
 }
 
-export class Sidebar extends React.Component<SidebarProps> {
+export interface SidebarState {
+  isResponsivePopoverOpen: boolean;
+}
+
+export class Sidebar extends React.Component<SidebarProps, SidebarState> {
+  state: SidebarState = { isResponsivePopoverOpen: false };
+
   render() {
-    const { title, action, activeItemId, items, onItemClick } = this.props;
+    const { title, action, activeItemId, items } = this.props;
 
     const tabs = items.map(item => {
       const titleIcon = item.titleIcon && <Icon icon={item.titleIcon} />;
@@ -43,7 +49,13 @@ export class Sidebar extends React.Component<SidebarProps> {
     });
 
     const tabsContainer = (
-      <Tabs id="sidebar" selectedTabId={activeItemId} onChange={onItemClick} vertical renderActiveTabPanelOnly>
+      <Tabs
+        id="sidebar"
+        selectedTabId={activeItemId}
+        onChange={this.onResponsiveItemClick}
+        vertical
+        renderActiveTabPanelOnly
+      >
         {tabs}
       </Tabs>
     );
@@ -59,6 +71,8 @@ export class Sidebar extends React.Component<SidebarProps> {
         className="card-sidebar card-sidebar__responsive"
         content={tabsContainer}
         position={Position.BOTTOM_LEFT}
+        isOpen={this.state.isResponsivePopoverOpen}
+        onInteraction={this.onResponsivePopoverInteraction}
         usePortal={false}
       >
         <div>
@@ -76,4 +90,16 @@ export class Sidebar extends React.Component<SidebarProps> {
       </div>
     );
   }
+
+  private onResponsivePopoverInteraction = state => {
+    this.setState({ isResponsivePopoverOpen: state });
+  };
+
+  private onResponsiveItemClick = (parentPath: string, itemId: string) => {
+    this.props.onItemClick(parentPath, itemId);
+
+    setTimeout(() => {
+      this.setState({ isResponsivePopoverOpen: false });
+    }, 200);
+  };
 }
