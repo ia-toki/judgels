@@ -1,13 +1,14 @@
 package judgels.jophiel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palantir.remoting3.ext.jackson.ObjectMappers;
 import dagger.Module;
 import dagger.Provides;
-import io.dropwizard.jackson.Jackson;
 import javax.inject.Singleton;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.session.SessionStore;
 import judgels.service.actor.ActorChecker;
+import judgels.service.jersey.JudgelsObjectMappers;
 
 @Module
 public class JophielModule {
@@ -16,7 +17,7 @@ public class JophielModule {
     @Provides
     @Singleton
     static ObjectMapper objectMapper() {
-        return Jackson.newObjectMapper();
+        return JudgelsObjectMappers.configure(ObjectMappers.newClientObjectMapper());
     }
 
     @Provides

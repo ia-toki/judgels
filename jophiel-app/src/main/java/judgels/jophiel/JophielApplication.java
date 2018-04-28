@@ -17,6 +17,7 @@ import judgels.jophiel.web.WebConfiguration;
 import judgels.jophiel.web.WebModule;
 import judgels.recaptcha.RecaptchaModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
+import judgels.service.jersey.JudgelsObjectMappers;
 
 public class JophielApplication extends Application<JophielApplicationConfiguration> {
     private final HibernateBundle<JophielApplicationConfiguration> hibernateBundle = new JophielHibernateBundle();
@@ -27,6 +28,8 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
 
     @Override
     public void initialize(Bootstrap<JophielApplicationConfiguration> bootstrap) {
+        JudgelsObjectMappers.configure(bootstrap.getObjectMapper());
+
         bootstrap.addBundle(hibernateBundle);
         bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new JophielMigrationsBundle());
