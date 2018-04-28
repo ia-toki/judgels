@@ -1,9 +1,9 @@
 import { Card, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { FormattedDate } from 'react-intl';
-import FormattedDuration from 'react-intl-formatted-duration';
 
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
+import { FormattedDate } from '../../../../../../../../components/FormattedDate/FormattedDate';
+import { FormattedDuration } from '../../../../../../../../components/FormattedDuration/FormattedDuration';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 
 import './ContestListTable.css';
@@ -22,16 +22,7 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
           <h4 className="contest-list-item-name">{contest.name}</h4>
           <p className="contest-list-item-date">
             <small>
-              <FormattedDate
-                value={contest.beginTime * 1000}
-                year="numeric"
-                month="short"
-                day="numeric"
-                hour="numeric"
-                hour12={false}
-                minute="numeric"
-                timeZoneName="long"
-              />
+              <FormattedDate value={contest.beginTime} />
               {this.renderDurationSeparator(contest)}
               {this.renderDuration(contest)}
             </small>
@@ -66,9 +57,6 @@ export class ContestListTable extends React.Component<ContestListTableProps, {}>
       return null;
     }
 
-    const Span = props => <span {...props} />;
-    return (
-      <FormattedDuration seconds={contest.duration} format="{days} {hours} {minutes} {seconds}" textComponent={Span} />
-    );
+    return <FormattedDuration value={contest.duration} />;
   };
 }

@@ -62,7 +62,7 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
     return (
       <p className="contest-scoreboard-page__info">
         <small>
-          last updated <FormattedRelative value={scoreboard.updatedTime * 1000} />
+          last updated <FormattedRelative value={scoreboard.updatedTime} />
         </small>
       </p>
     );
