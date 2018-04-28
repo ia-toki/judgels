@@ -6,6 +6,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import judgels.service.jersey.JudgelsJerseyFeature;
+import judgels.service.jersey.JudgelsObjectMappers;
 import judgels.uriel.hibernate.UrielHibernateBundle;
 import judgels.uriel.hibernate.UrielHibernateModule;
 import judgels.uriel.jophiel.JophielModule;
@@ -19,6 +20,8 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
 
     @Override
     public void initialize(Bootstrap<UrielApplicationConfiguration> bootstrap) {
+        JudgelsObjectMappers.configure(bootstrap.getObjectMapper());
+
         bootstrap.addBundle(hibernateBundle);
         bootstrap.addBundle(new WebSecurityBundle());
     }
