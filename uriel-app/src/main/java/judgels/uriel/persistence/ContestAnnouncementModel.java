@@ -18,7 +18,7 @@ public class ContestAnnouncementModel extends JudgelsModel {
     @Column(nullable = false)
     public String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     public String content;
 
     @Column(nullable = false)

@@ -15,6 +15,7 @@ import judgels.uriel.role.RoleChecker;
 
 @Component(modules = {
         UrielHibernateDaoModule.class,
+        UrielIntegrationTestModule.class,
         UrielIntegrationTestHibernateModule.class,
         UrielIntegrationTestPersistenceModule.class})
 @Singleton

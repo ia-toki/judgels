@@ -14,7 +14,7 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
-import judgels.uriel.api.contest.module.ContestModule;
+import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestRoleDao;
 import org.hibernate.SessionFactory;
@@ -44,7 +44,7 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
 
     static CustomPredicateFilter<ContestModel> hasViewer(String userJid) {
         return or(
-                hasModule(ContestModule.REGISTRATION),
+                hasModule(ContestModuleType.REGISTRATION),
                 hasContestant(userJid),
                 hasSupervisor(userJid),
                 hasManager(userJid));

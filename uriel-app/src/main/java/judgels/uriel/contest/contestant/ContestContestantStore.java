@@ -21,7 +21,7 @@ public class ContestContestantStore {
     }
 
     // temporary
-    public void addContestant(String contestJid, String userJid) {
+    public void upsertContestant(String contestJid, String userJid) {
         ContestContestantModel model = new ContestContestantModel();
         model.contestJid = contestJid;
         model.userJid = userJid;

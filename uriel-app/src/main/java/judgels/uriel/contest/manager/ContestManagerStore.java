@@ -13,7 +13,7 @@ public class ContestManagerStore {
     }
 
     // temporary
-    public void addManager(String contestJid, String userJid) {
+    public void upsertManager(String contestJid, String userJid) {
         ContestManagerModel model = new ContestManagerModel();
         model.contestJid = contestJid;
         model.userJid = userJid;

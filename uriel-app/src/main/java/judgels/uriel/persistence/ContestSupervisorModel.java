@@ -16,4 +16,7 @@ public class ContestSupervisorModel extends Model {
 
     @Column(nullable = false)
     public String userJid;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    public String permission;
 }

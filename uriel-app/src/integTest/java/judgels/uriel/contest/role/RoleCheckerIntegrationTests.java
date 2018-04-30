@@ -7,12 +7,14 @@ import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.ContestData;
-import judgels.uriel.api.contest.module.ContestModule;
+import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
+import judgels.uriel.contest.supervisor.ContestSupervisor;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
+import judgels.uriel.contest.supervisor.SupervisorPermission;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestManagerModel;
@@ -66,10 +68,12 @@ class RoleCheckerIntegrationTests {
         contestB = contestStore.createContest(new ContestData.Builder().name("Contest B").build()).getJid();
         contestC = contestStore.createContest(new ContestData.Builder().name("Contest C").build()).getJid();
 
-        moduleStore.addModule(contestA, ContestModule.REGISTRATION);
-        contestantStore.addContestant(contestB, CONTESTANT);
-        supervisorStore.addSupervisor(contestB, SUPERVISOR);
-        managerStore.addManager(contestB, MANAGER);
+        moduleStore.upsertModule(contestA, ContestModuleType.REGISTRATION);
+        contestantStore.upsertContestant(contestB, CONTESTANT);
+        supervisorStore.upsertSupervisor(
+                contestB,
+                new ContestSupervisor.Builder().userJid(SUPERVISOR).permission(SupervisorPermission.all()).build());
+        managerStore.upsertManager(contestB, MANAGER);
     }
 
     @Test

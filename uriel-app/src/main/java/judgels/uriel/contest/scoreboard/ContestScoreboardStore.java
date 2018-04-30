@@ -19,18 +19,18 @@ public class ContestScoreboardStore {
         return contestScoreboardDao.selectByContestJidAndType(contestJid, type).map(this::fromModel);
     }
 
-    public Optional<RawContestScoreboard> upsertScoreboard(String contestJid, ContestScoreboardData data) {
+    public RawContestScoreboard upsertScoreboard(String contestJid, ContestScoreboardData data) {
         Optional<ContestScoreboardModel> maybeModel =
                 contestScoreboardDao.selectByContestJidAndType(contestJid, data.getType());
 
-        if (!maybeModel.isPresent()) {
-            ContestScoreboardModel model = new ContestScoreboardModel();
-            toModel(contestJid, data, model);
-            return Optional.of(fromModel(contestScoreboardDao.insert(model)));
-        } else {
+        if (maybeModel.isPresent()) {
             ContestScoreboardModel model = maybeModel.get();
             toModel(contestJid, data, model);
-            return Optional.of(fromModel(contestScoreboardDao.update(model)));
+            return fromModel(contestScoreboardDao.update(model));
+        } else {
+            ContestScoreboardModel model = new ContestScoreboardModel();
+            toModel(contestJid, data, model);
+            return fromModel(contestScoreboardDao.insert(model));
         }
     }
 

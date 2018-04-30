@@ -1,5 +1,6 @@
 package judgels.uriel.api.contest.module;
 
-public enum ContestModule {
+public enum ContestModuleType {
+    FROZEN_SCOREBOARD,
     REGISTRATION,
 }

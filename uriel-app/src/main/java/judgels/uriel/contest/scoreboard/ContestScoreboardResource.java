@@ -10,7 +10,6 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.role.RoleChecker;
 
@@ -36,26 +35,22 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     @Override
     @UnitOfWork(readOnly = true)
     public ContestScoreboardResponse getScoreboard(AuthHeader authHeader, String contestJid) {
-        // TODO(fushar): this should return frozen scoreboard when necessary
-        return getScoreboardOfType(authHeader, contestJid, ContestScoreboardType.OFFICIAL);
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
+
+        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        return checkFound(scoreboardFetcher.fetchScoreboard(
+                contest,
+                roleChecker.canAlsoSuperviseScoreboard(actorJid, contestJid)));
     }
 
     @Override
     @UnitOfWork(readOnly = true)
     public ContestScoreboardResponse getFrozenScoreboard(AuthHeader authHeader, String contestJid) {
-        return getScoreboardOfType(authHeader, contestJid, ContestScoreboardType.FROZEN);
-    }
-
-    private ContestScoreboardResponse getScoreboardOfType(
-            AuthHeader authHeader,
-            String contestJid,
-            ContestScoreboardType type) {
-
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canViewContest(actorJid, contestJid));
+        checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
 
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-
-        return scoreboardFetcher.fetchScoreboard(contestJid, contest.getStyle(), type);
+        return checkFound(scoreboardFetcher.fetchFrozenScoreboard(contest));
     }
 }

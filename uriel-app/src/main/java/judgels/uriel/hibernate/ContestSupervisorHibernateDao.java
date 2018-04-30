@@ -1,12 +1,14 @@
 package judgels.uriel.hibernate;
 
 import java.time.Clock;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
+import judgels.persistence.FilterOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModel_;
@@ -22,6 +24,14 @@ public class ContestSupervisorHibernateDao extends HibernateDao<ContestSuperviso
     @Inject
     public ContestSupervisorHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
+    }
+
+    @Override
+    public Optional<ContestSupervisorModel> selectByContestJidAndUserJid(String contestJid, String userJid) {
+        return selectByFilter(new FilterOptions.Builder<ContestSupervisorModel>()
+                .putColumnsEq(ContestSupervisorModel_.contestJid, contestJid)
+                .putColumnsEq(ContestSupervisorModel_.userJid, userJid)
+                .build());
     }
 
     static CustomPredicateFilter<ContestModel> hasSupervisor(String userJid) {
