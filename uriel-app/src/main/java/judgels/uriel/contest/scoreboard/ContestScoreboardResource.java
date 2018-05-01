@@ -4,6 +4,7 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Optional;
 import javax.inject.Inject;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -34,23 +35,21 @@ public class ContestScoreboardResource implements ContestScoreboardService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestScoreboardResponse getScoreboard(AuthHeader authHeader, String contestJid) {
+    public Optional<ContestScoreboardResponse> getScoreboard(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
 
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        return checkFound(scoreboardFetcher.fetchScoreboard(
-                contest,
-                roleChecker.canSuperviseScoreboard(actorJid, contestJid)));
+        return scoreboardFetcher.fetchScoreboard(contest, roleChecker.canSuperviseScoreboard(actorJid, contestJid));
     }
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestScoreboardResponse getFrozenScoreboard(AuthHeader authHeader, String contestJid) {
+    public Optional<ContestScoreboardResponse> getFrozenScoreboard(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
 
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        return checkFound(scoreboardFetcher.fetchFrozenScoreboard(contest));
+        return scoreboardFetcher.fetchFrozenScoreboard(contest);
     }
 }
