@@ -13,6 +13,7 @@ import { UsersMap } from '../../../../../../../../../../modules/api/jophiel/user
 import './IcpcScoreboardTable.css';
 
 export class IcpcScoreboardTableProps {
+  userJid?: string;
   scoreboard: IcpcScoreboard;
   usersMap: UsersMap;
 }
@@ -48,7 +49,11 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
       this.renderProblemCell(i, entry.attemptsList[i], entry.penaltyList[i], entry.problemStateList[i])
     );
     cells = [...cells, ...problemCells];
-    return <tr key={entry.contestantJid}>{cells}</tr>;
+    return (
+      <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === this.props.userJid })}>
+        {cells}
+      </tr>
+    );
   };
 
   private renderProblemCell = (idx: number, attempts: number, penalty: number, state: IcpcScoreboardProblemState) => {

@@ -9,8 +9,10 @@ import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 import { UsersMap } from '../../../../../../../../../../modules/api/jophiel/user';
 
 import './IoiScoreboardTable.css';
+import * as classNames from 'classnames';
 
 export class IoiScoreboardTableProps {
+  userJid?: string;
   scoreboard: IoiScoreboard;
   usersMap: UsersMap;
 }
@@ -42,7 +44,11 @@ export class IoiScoreboardTable extends React.Component<IoiScoreboardTableProps>
     ];
     const problemCells = entry.scores.map((item, i) => this.renderProblemCell(i, item));
     cells = [...cells, ...problemCells];
-    return <tr key={entry.contestantJid}>{cells}</tr>;
+    return (
+      <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === this.props.userJid })}>
+        {cells}
+      </tr>
+    );
   };
 
   private renderProblemCell = (idx: number, score: number | null) => {

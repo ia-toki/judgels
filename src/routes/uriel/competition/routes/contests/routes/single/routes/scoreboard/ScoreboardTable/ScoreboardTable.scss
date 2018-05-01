@@ -20,6 +20,10 @@ table.pt-html-table.scoreboard__content {
     height: 40px;
   }
 
+  .my-rank, .my-rank td {
+    background-color: #fcf8e3 !important;
+  }
+
   .rank-cell {
     width: 20px;
   }

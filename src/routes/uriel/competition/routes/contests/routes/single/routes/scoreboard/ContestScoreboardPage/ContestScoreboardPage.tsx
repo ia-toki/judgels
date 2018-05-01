@@ -21,8 +21,10 @@ import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
 import { contestScoreboardActions as injectedContestScoreboardActions } from '../modules/contestScoreboardActions';
 
 import './ContestScoreboardPage.css';
+import { selectMaybeUserJid } from '../../../../../../../../../../modules/session/sessionSelectors';
 
 export interface ContestScoreboardPageProps {
+  userJid?: string;
   contest: Contest;
   onFetchScoreboard: (contestJid: string) => Promise<ContestScoreboardResponse | null>;
 }
@@ -109,9 +111,21 @@ export class ContestScoreboardPage extends React.Component<ContestScoreboardPage
     }
 
     if (this.props.contest.style === ContestStyle.ICPC) {
-      return <IcpcScoreboardTable scoreboard={scoreboard[0].scoreboard as IcpcScoreboard} usersMap={usersMap!} />;
+      return (
+        <IcpcScoreboardTable
+          userJid={this.props.userJid}
+          scoreboard={scoreboard[0].scoreboard as IcpcScoreboard}
+          usersMap={usersMap!}
+        />
+      );
     } else {
-      return <IoiScoreboardTable scoreboard={scoreboard[0].scoreboard as IoiScoreboard} usersMap={usersMap!} />;
+      return (
+        <IoiScoreboardTable
+          userJid={this.props.userJid}
+          scoreboard={scoreboard[0].scoreboard as IoiScoreboard}
+          usersMap={usersMap!}
+        />
+      );
     }
   };
 }
@@ -119,6 +133,7 @@ export class ContestScoreboardPage extends React.Component<ContestScoreboardPage
 function createContestScoreboardPage(contestScoreboardActions) {
   const mapStateToProps = (state: AppState) =>
     ({
+      userJid: selectMaybeUserJid(state),
       contest: selectContest(state)!,
     } as Partial<ContestScoreboardPageProps>);
 
