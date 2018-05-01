@@ -23,6 +23,7 @@ import org.mockito.Mock;
 
 class ContestScoreboardFetcherTests {
     private static final String CONTEST_JID = "contestJid";
+    private static final String USER_JID = "userJid";
     private static final boolean CAN_SUPERVISE_SCOREBOARD = true;
 
     @Mock private ContestScoreboardTypeFetcher typeFetcher;
@@ -74,22 +75,22 @@ class ContestScoreboardFetcherTests {
         when(scoreboardStore.findScoreboard(CONTEST_JID, OFFICIAL))
                 .thenReturn(Optional.of(raw));
 
-        when(responseBuilder.buildResponse(raw, ContestStyle.ICPC, OFFICIAL))
+        when(responseBuilder.buildResponse(contest, USER_JID, raw, OFFICIAL))
                 .thenReturn(response);
 
-        assertThat(scoreboardFetcher.fetchScoreboard(contest, CAN_SUPERVISE_SCOREBOARD))
+        assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, CAN_SUPERVISE_SCOREBOARD))
                 .contains(response);
     }
 
     @Test
     void fetch_frozen_scoreboard() {
-        when(responseBuilder.buildResponse(raw, ContestStyle.ICPC, FROZEN))
+        when(responseBuilder.buildResponse(contest, USER_JID, raw, FROZEN))
                 .thenReturn(response);
 
         when(scoreboardStore.findScoreboard(CONTEST_JID, FROZEN))
                 .thenReturn(Optional.of(raw));
 
-        assertThat(scoreboardFetcher.fetchFrozenScoreboard(contest))
+        assertThat(scoreboardFetcher.fetchFrozenScoreboard(contest, USER_JID))
                 .contains(response);
     }
 }

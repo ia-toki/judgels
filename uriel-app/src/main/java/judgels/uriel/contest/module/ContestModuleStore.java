@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
+import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
 
@@ -25,12 +26,20 @@ public class ContestModuleStore {
         upsertModule(contestJid, ContestModuleType.REGISTRATION, Collections.emptyMap());
     }
 
+    public void upsertScoreboardModule(String contestJid, ScoreboardModuleConfig config) {
+        upsertModule(contestJid, ContestModuleType.SCOREBOARD, config);
+    }
+
     public void upsertFrozenScoreboardModule(String contestJid, FrozenScoreboardModuleConfig config) {
         upsertModule(contestJid, ContestModuleType.FROZEN_SCOREBOARD, config);
     }
 
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, ContestModuleType.FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.class);
+    }
+
+    public Optional<ScoreboardModuleConfig> getScoreboardModuleConfig(String contestJid) {
+        return getModuleConfig(contestJid, ContestModuleType.SCOREBOARD, ScoreboardModuleConfig.class);
     }
 
     public void upsertModule(String contestJid, ContestModuleType type, Object config) {

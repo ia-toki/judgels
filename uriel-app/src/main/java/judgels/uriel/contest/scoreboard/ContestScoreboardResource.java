@@ -40,7 +40,8 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
 
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        return scoreboardFetcher.fetchScoreboard(contest, roleChecker.canSuperviseScoreboard(actorJid, contestJid));
+        return scoreboardFetcher
+                .fetchScoreboard(contest, actorJid, roleChecker.canSuperviseScoreboard(actorJid, contestJid));
     }
 
     @Override
@@ -50,6 +51,6 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
 
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        return scoreboardFetcher.fetchFrozenScoreboard(contest);
+        return scoreboardFetcher.fetchFrozenScoreboard(contest, actorJid);
     }
 }

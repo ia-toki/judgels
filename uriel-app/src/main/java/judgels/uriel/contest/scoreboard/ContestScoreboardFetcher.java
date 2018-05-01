@@ -22,24 +22,35 @@ public class ContestScoreboardFetcher {
         this.responseBuilder = responseBuilder;
     }
 
-    public Optional<ContestScoreboardResponse> fetchScoreboard(Contest contest, boolean canSuperviseScoreboard) {
+    public Optional<ContestScoreboardResponse> fetchScoreboard(
+            Contest contest,
+            String userJid,
+            boolean canSuperviseScoreboard) {
+
         ContestScoreboardType defaultType =
                 typeFetcher.fetchViewableTypes(contest.getJid(), canSuperviseScoreboard).get(0);
-        return fetchScoreboardOfType(contest, defaultType);
+        return fetchScoreboardOfType(contest, userJid, defaultType);
     }
 
-    public Optional<ContestScoreboardResponse> fetchFrozenScoreboard(Contest contest) {
-        return fetchScoreboardOfType(contest, ContestScoreboardType.FROZEN);
+    public Optional<ContestScoreboardResponse> fetchFrozenScoreboard(Contest contest, String userJid) {
+        return fetchScoreboardOfType(contest, userJid, ContestScoreboardType.FROZEN);
     }
 
-    private Optional<ContestScoreboardResponse> fetchScoreboardOfType(Contest contest, ContestScoreboardType type) {
+    private Optional<ContestScoreboardResponse> fetchScoreboardOfType(
+            Contest contest,
+            String userJid,
+            ContestScoreboardType type) {
+
         Optional<RawContestScoreboard> rawScoreboard = scoreboardStore.findScoreboard(contest.getJid(), type);
+        ContestScoreboardType actualType;
 
         // TODO(fushar): keep frozen scoreboard in database
         if (type == ContestScoreboardType.FROZEN && !rawScoreboard.isPresent()) {
-            return scoreboardStore.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)
-                    .map(raw -> responseBuilder.buildResponse(raw, contest.getStyle(), ContestScoreboardType.OFFICIAL));
+            actualType = ContestScoreboardType.OFFICIAL;
+            rawScoreboard = scoreboardStore.findScoreboard(contest.getJid(), actualType);
+        } else {
+            actualType = type;
         }
-        return rawScoreboard.map(raw -> responseBuilder.buildResponse(raw, contest.getStyle(), type));
+        return rawScoreboard.map(raw -> responseBuilder.buildResponse(contest, userJid, raw, actualType));
     }
 }
