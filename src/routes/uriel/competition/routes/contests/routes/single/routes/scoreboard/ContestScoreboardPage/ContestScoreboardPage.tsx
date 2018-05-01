@@ -22,11 +22,11 @@ import './ContestScoreboardPage.css';
 
 interface ContestScoreboardPageProps {
   contest: Contest;
-  onFetchScoreboard: (contestJid: string) => Promise<ContestScoreboardResponse>;
+  onFetchScoreboard: (contestJid: string) => Promise<ContestScoreboardResponse | null>;
 }
 
 interface ContestScoreboardPageState {
-  scoreboard?: ContestScoreboard;
+  scoreboard?: ContestScoreboard[];
   usersMap?: UsersMap;
 }
 
@@ -34,11 +34,16 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
   state: ContestScoreboardPageState = {};
 
   async componentDidMount() {
-    const { data, usersMap } = await this.props.onFetchScoreboard(this.props.contest.jid);
-    this.setState({
-      scoreboard: data,
-      usersMap,
-    });
+    const response = await this.props.onFetchScoreboard(this.props.contest.jid);
+    if (!response) {
+      this.setState({ scoreboard: [] });
+    } else {
+      const { data, usersMap } = response;
+      this.setState({
+        scoreboard: [data],
+        usersMap,
+      });
+    }
   }
 
   render() {
@@ -55,14 +60,14 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
 
   private renderScoreboardUpdatedTime = () => {
     const { scoreboard } = this.state;
-    if (!scoreboard) {
+    if (!scoreboard || scoreboard.length === 0) {
       return null;
     }
 
     return (
       <p className="contest-scoreboard-page__info">
         <small>
-          last updated <FormattedRelative value={scoreboard.updatedTime} />
+          last updated <FormattedRelative value={scoreboard[0].updatedTime} />
         </small>
       </p>
     );
@@ -70,14 +75,24 @@ class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, 
 
   private renderScoreboard = () => {
     const { scoreboard, usersMap } = this.state;
-    if (!scoreboard || !usersMap) {
+    if (!scoreboard) {
       return <LoadingState />;
     }
 
+    if (scoreboard.length === 0) {
+      return (
+        <p>
+          <small>
+            <em>No scoreboard.</em>
+          </small>
+        </p>
+      );
+    }
+
     if (this.props.contest.style === ContestStyle.ICPC) {
-      return <IcpcScoreboardTable scoreboard={scoreboard.scoreboard as IcpcScoreboard} usersMap={usersMap} />;
+      return <IcpcScoreboardTable scoreboard={scoreboard[0].scoreboard as IcpcScoreboard} usersMap={usersMap!} />;
     } else {
-      return <IoiScoreboardTable scoreboard={scoreboard.scoreboard as IoiScoreboard} usersMap={usersMap} />;
+      return <IoiScoreboardTable scoreboard={scoreboard[0].scoreboard as IoiScoreboard} usersMap={usersMap!} />;
     }
   };
 }
