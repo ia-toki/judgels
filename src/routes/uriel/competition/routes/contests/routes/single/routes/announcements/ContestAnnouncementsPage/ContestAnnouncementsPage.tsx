@@ -15,7 +15,7 @@ import {
 import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../modules/contestAnnouncementActions';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 
-interface ContestAnnouncementsPageProps {
+export interface ContestAnnouncementsPageProps {
   contest: Contest;
   onFetchAnnouncements: (contestJid: string) => Promise<ContestAnnouncementsResponse>;
 }
@@ -25,7 +25,10 @@ interface ContestAnnouncementsPageState {
   usersMap?: UsersMap;
 }
 
-class ContestAnnouncementsPage extends React.Component<ContestAnnouncementsPageProps, ContestAnnouncementsPageState> {
+export class ContestAnnouncementsPage extends React.Component<
+  ContestAnnouncementsPageProps,
+  ContestAnnouncementsPageState
+> {
   state: ContestAnnouncementsPageState = {};
 
   async componentDidMount() {

@@ -9,7 +9,7 @@ export interface ContestScoreboard {
   updatedTime: number;
 }
 
-enum ContestScoreboardType {
+export enum ContestScoreboardType {
   Frozen = 'FROZEN',
   Official = 'OFFICIAL',
 }

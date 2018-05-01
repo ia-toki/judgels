@@ -20,7 +20,7 @@ import { contestScoreboardActions as injectedContestScoreboardActions } from '..
 
 import './ContestScoreboardPage.css';
 
-interface ContestScoreboardPageProps {
+export interface ContestScoreboardPageProps {
   contest: Contest;
   onFetchScoreboard: (contestJid: string) => Promise<ContestScoreboardResponse | null>;
 }
@@ -30,7 +30,7 @@ interface ContestScoreboardPageState {
   usersMap?: UsersMap;
 }
 
-class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, ContestScoreboardPageState> {
+export class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, ContestScoreboardPageState> {
   state: ContestScoreboardPageState = {};
 
   async componentDidMount() {
