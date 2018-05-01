@@ -3,6 +3,7 @@ package judgels.uriel.contest.announcement;
 import static judgels.service.ServiceUtils.checkAllowed;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Optional;
 import javax.inject.Inject;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -28,7 +29,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestAnnouncementsResponse getAnnouncements(AuthHeader authHeader, String contestJid) {
+    public ContestAnnouncementsResponse getAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewAnnouncements(actorJid, contestJid));
 

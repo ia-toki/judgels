@@ -17,13 +17,13 @@ public interface ContestScoreboardService {
     @Path("/")
     @Produces(APPLICATION_JSON)
     Optional<ContestScoreboardResponse> getScoreboard(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 
     @GET
     @Path("/frozen")
     @Produces(APPLICATION_JSON)
     Optional<ContestScoreboardResponse> getFrozenScoreboard(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 }

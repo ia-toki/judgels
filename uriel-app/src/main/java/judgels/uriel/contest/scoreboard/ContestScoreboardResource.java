@@ -35,7 +35,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Optional<ContestScoreboardResponse> getScoreboard(AuthHeader authHeader, String contestJid) {
+    public Optional<ContestScoreboardResponse> getScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
 
@@ -46,7 +46,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Optional<ContestScoreboardResponse> getFrozenScoreboard(AuthHeader authHeader, String contestJid) {
+    public Optional<ContestScoreboardResponse> getFrozenScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
 
