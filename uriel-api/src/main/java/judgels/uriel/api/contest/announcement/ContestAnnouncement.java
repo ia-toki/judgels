@@ -9,7 +9,6 @@ import org.immutables.value.Value;
 public interface ContestAnnouncement {
     long getId();
     String getJid();
-    String getContestJid();
     String getUserJid();
     String getTitle();
     String getContent();

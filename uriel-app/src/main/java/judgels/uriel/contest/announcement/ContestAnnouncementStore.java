@@ -17,9 +17,9 @@ public class ContestAnnouncementStore {
         this.announcementDao = announcementDao;
     }
 
-    public ContestAnnouncement createAnnouncement(ContestAnnouncementData data) {
+    public ContestAnnouncement createAnnouncement(String contestJid, ContestAnnouncementData data) {
         ContestAnnouncementModel model = new ContestAnnouncementModel();
-        toModel(data, model);
+        toModel(contestJid, data, model);
         return fromModel(announcementDao.insert(model));
     }
 
@@ -33,7 +33,6 @@ public class ContestAnnouncementStore {
         return new ContestAnnouncement.Builder()
                 .id(model.id)
                 .jid(model.jid)
-                .contestJid(model.contestJid)
                 .userJid(model.createdBy)
                 .title(model.title)
                 .content(model.content)
@@ -42,8 +41,8 @@ public class ContestAnnouncementStore {
                 .build();
     }
 
-    private static void toModel(ContestAnnouncementData data, ContestAnnouncementModel model) {
-        model.contestJid = data.getContestJid();
+    private static void toModel(String contestJid, ContestAnnouncementData data, ContestAnnouncementModel model) {
+        model.contestJid = contestJid;
         model.title = data.getTitle();
         model.content = data.getContent();
         model.status = data.getStatus().name();

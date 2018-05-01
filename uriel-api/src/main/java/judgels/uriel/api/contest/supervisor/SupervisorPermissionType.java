@@ -1,4 +1,4 @@
-package judgels.uriel.contest.supervisor;
+package judgels.uriel.api.contest.supervisor;
 
 public enum SupervisorPermissionType {
     ANNOUNCEMENT,

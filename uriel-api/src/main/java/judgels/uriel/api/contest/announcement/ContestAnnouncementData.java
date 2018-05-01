@@ -6,7 +6,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestAnnouncementData.class)
 public interface ContestAnnouncementData {
-    String getContestJid();
     String getTitle();
     String getContent();
     ContestAnnouncementStatus getStatus();

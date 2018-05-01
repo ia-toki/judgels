@@ -1,7 +1,9 @@
 package judgels.uriel.contest.module;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.module.ContestModuleType;
@@ -19,18 +21,31 @@ public class ContestModuleStore {
         this.mapper = mapper;
     }
 
-    // temporary
-    public void upsertModule(String contestJid, ContestModuleType module) {
-        ContestModuleModel model = new ContestModuleModel();
-        model.contestJid = contestJid;
-        model.name = module.name();
-        model.enabled = true;
-        model.config = "{}";
-        moduleDao.insert(model);
+    public void upsertRegistrationModule(String contestJid) {
+        upsertModule(contestJid, ContestModuleType.REGISTRATION, Collections.emptyMap());
+    }
+
+    public void upsertFrozenScoreboardModule(String contestJid, FrozenScoreboardModuleConfig config) {
+        upsertModule(contestJid, ContestModuleType.FROZEN_SCOREBOARD, config);
     }
 
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, ContestModuleType.FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.class);
+    }
+
+    public void upsertModule(String contestJid, ContestModuleType type, Object config) {
+        ContestModuleModel model = new ContestModuleModel();
+        model.contestJid = contestJid;
+        model.name = type.name();
+        model.enabled = true;
+
+        try {
+            model.config = mapper.writeValueAsString(config);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        moduleDao.insert(model);
     }
 
     private <T> Optional<T> getModuleConfig(String contestJid, ContestModuleType module, Class<T> configClass) {

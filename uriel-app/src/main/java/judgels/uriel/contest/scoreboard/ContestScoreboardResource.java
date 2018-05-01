@@ -41,7 +41,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
         return checkFound(scoreboardFetcher.fetchScoreboard(
                 contest,
-                roleChecker.canAlsoSuperviseScoreboard(actorJid, contestJid)));
+                roleChecker.canSuperviseScoreboard(actorJid, contestJid)));
     }
 
     @Override

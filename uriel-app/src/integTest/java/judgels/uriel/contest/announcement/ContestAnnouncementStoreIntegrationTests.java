@@ -40,27 +40,27 @@ class ContestAnnouncementStoreIntegrationTests {
     @Test
     void can_do_basic_crud() {
         Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
+        contestStore.createContest(new ContestData.Builder().name("contestB").build());
 
-        ContestAnnouncement announcement1 = store.createAnnouncement(new ContestAnnouncementData.Builder()
-                .contestJid(contest.getJid())
-                .title("Contest extension")
-                .content("The contest is extended by 30 mins")
-                .status(ContestAnnouncementStatus.PUBLISHED)
-                .build());
-        store.createAnnouncement(new ContestAnnouncementData.Builder()
-                .contestJid(contest.getJid())
+        ContestAnnouncement announcement1 =
+                store.createAnnouncement(contest.getJid(), new ContestAnnouncementData.Builder()
+                        .title("Contest extension")
+                        .content("The contest is extended by 30 mins")
+                        .status(ContestAnnouncementStatus.PUBLISHED)
+                        .build());
+        store.createAnnouncement(contest.getJid(), new ContestAnnouncementData.Builder()
                 .title("Snack")
                 .content("Snack is available outside hall")
                 .status(ContestAnnouncementStatus.DRAFT)
                 .build());
-        ContestAnnouncement announcement3 = store.createAnnouncement(new ContestAnnouncementData.Builder()
-                .contestJid(contest.getJid())
-                .title("Compiler version")
-                .content("g++ version is 4.9.2")
-                .status(ContestAnnouncementStatus.PUBLISHED)
-                .build());
+        ContestAnnouncement announcement3 =
+                store.createAnnouncement(contest.getJid(), new ContestAnnouncementData.Builder()
+                        .title("Compiler version")
+                        .content("g++ version is 4.9.2")
+                        .status(ContestAnnouncementStatus.PUBLISHED)
+                        .build());
 
-        assertThat(announcement1.getContestJid()).isEqualTo(contest.getJid());
+        // TODO(fushar): move these assertions to service integration tests instead
         assertThat(announcement1.getUserJid()).isEqualTo(ACTOR);
         assertThat(announcement1.getTitle()).isEqualTo("Contest extension");
         assertThat(announcement1.getContent()).isEqualTo("The contest is extended by 30 mins");

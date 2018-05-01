@@ -37,7 +37,8 @@ public class ContestScoreboardFetcher {
 
         // TODO(fushar): keep frozen scoreboard in database
         if (type == ContestScoreboardType.FROZEN && !rawScoreboard.isPresent()) {
-            rawScoreboard = scoreboardStore.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL);
+            return scoreboardStore.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)
+                    .map(raw -> responseBuilder.buildResponse(raw, contest.getStyle(), ContestScoreboardType.OFFICIAL));
         }
         return rawScoreboard.map(raw -> responseBuilder.buildResponse(raw, contest.getStyle(), type));
     }

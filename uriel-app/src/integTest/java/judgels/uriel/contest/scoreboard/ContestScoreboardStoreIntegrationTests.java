@@ -41,48 +41,33 @@ class ContestScoreboardStoreIntegrationTests {
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).isEmpty();
         assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).isEmpty();
 
-        store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+        RawContestScoreboard scoreboard1 = store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
                 .type(ContestScoreboardType.OFFICIAL)
                 .scoreboard("official1")
                 .build());
-        store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+        RawContestScoreboard scoreboard2 = store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
                 .type(ContestScoreboardType.FROZEN)
                 .scoreboard("frozen1")
                 .build());
 
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(
-                new RawContestScoreboard.Builder()
-                        .type(ContestScoreboardType.OFFICIAL)
-                        .scoreboard("official1")
-                        .updatedTime(NOW)
-                        .build());
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(
-                new RawContestScoreboard.Builder()
-                        .type(ContestScoreboardType.FROZEN)
-                        .scoreboard("frozen1")
-                        .updatedTime(NOW)
-                        .build());
+        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(scoreboard1);
+        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(scoreboard2);
 
-        store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+        // TODO(fushar): move these assertions to service integration tests instead
+        assertThat(scoreboard1.getType()).isEqualTo(ContestScoreboardType.OFFICIAL);
+        assertThat(scoreboard1.getScoreboard()).isEqualTo("official1");
+        assertThat(scoreboard1.getUpdatedTime()).isEqualTo(NOW);
+
+        scoreboard1 = store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
                 .type(ContestScoreboardType.OFFICIAL)
                 .scoreboard("official2")
                 .build());
-        store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+        scoreboard2 = store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
                 .type(ContestScoreboardType.FROZEN)
                 .scoreboard("frozen2")
                 .build());
 
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(
-                new RawContestScoreboard.Builder()
-                        .type(ContestScoreboardType.OFFICIAL)
-                        .scoreboard("official2")
-                        .updatedTime(NOW)
-                        .build());
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(
-                new RawContestScoreboard.Builder()
-                        .type(ContestScoreboardType.FROZEN)
-                        .scoreboard("frozen2")
-                        .updatedTime(NOW)
-                        .build());
+        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(scoreboard1);
+        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(scoreboard2);
     }
 }

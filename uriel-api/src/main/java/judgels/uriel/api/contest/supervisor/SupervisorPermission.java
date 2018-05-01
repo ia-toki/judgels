@@ -1,4 +1,4 @@
-package judgels.uriel.contest.supervisor;
+package judgels.uriel.api.contest.supervisor;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Set;

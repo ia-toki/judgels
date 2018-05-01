@@ -9,6 +9,10 @@ import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.supervisor.ContestSupervisor;
+import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
+import judgels.uriel.api.contest.supervisor.SupervisorPermission;
+import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestSupervisorModel;
@@ -18,8 +22,8 @@ import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestSupervisorModel.class})
 class ContestSupervisorStoreIntegrationTests {
-    private static final String USER1 = "user1Jid";
-    private static final String USER2 = "user2Jid";
+    private static final String USER_1 = "user1Jid";
+    private static final String USER_2 = "user2Jid";
 
     private ContestStore contestStore;
     private ContestSupervisorStore store;
@@ -37,20 +41,22 @@ class ContestSupervisorStoreIntegrationTests {
     @Test
     void can_do_basic_crud() {
         Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
+        contestStore.createContest(new ContestData.Builder().name("contestB").build());
 
-        ContestSupervisor supervisor1 = store.upsertSupervisor(contest.getJid(), new ContestSupervisor.Builder()
-                .userJid(USER1)
+        ContestSupervisor supervisor1 = store.upsertSupervisor(contest.getJid(), new ContestSupervisorData.Builder()
+                .userJid(USER_1)
                 .permission(SupervisorPermission.of(ImmutableSet.of(SupervisorPermissionType.SCOREBOARD)))
                 .build());
-        store.upsertSupervisor(contest.getJid(), new ContestSupervisor.Builder()
-                .userJid(USER2)
+        store.upsertSupervisor(contest.getJid(), new ContestSupervisorData.Builder()
+                .userJid(USER_2)
                 .permission(SupervisorPermission.all())
                 .build());
 
-        assertThat(store.findSupervisor(contest.getJid(), USER1)).contains(supervisor1);
+        assertThat(store.findSupervisor(contest.getJid(), USER_1)).contains(supervisor1);
 
+        // TODO(fushar): move these assertions to service integration tests instead
         assertThat(supervisor1.getUserJid())
-                .isEqualTo(USER1);
+                .isEqualTo(USER_1);
         assertThat(supervisor1.getPermission())
                 .isEqualTo(SupervisorPermission.of(ImmutableSet.of(SupervisorPermissionType.SCOREBOARD)));
     }

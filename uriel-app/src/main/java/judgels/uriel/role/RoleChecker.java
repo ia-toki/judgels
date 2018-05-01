@@ -2,9 +2,9 @@ package judgels.uriel.role;
 
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.uriel.contest.supervisor.ContestSupervisor;
+import judgels.uriel.api.contest.supervisor.ContestSupervisor;
+import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
-import judgels.uriel.contest.supervisor.SupervisorPermissionType;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestRoleDao;
 
@@ -40,7 +40,10 @@ public class RoleChecker {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contestJid);
     }
 
-    public boolean canAlsoSuperviseScoreboard(String userJid, String contestJid) {
+    public boolean canSuperviseScoreboard(String userJid, String contestJid) {
+        if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contestJid)) {
+            return true;
+        }
         Optional<ContestSupervisor> supervisor = supervisorStore.findSupervisor(contestJid, userJid);
         return supervisor.isPresent() && supervisor.get().getPermission().allows(SupervisorPermissionType.SCOREBOARD);
     }

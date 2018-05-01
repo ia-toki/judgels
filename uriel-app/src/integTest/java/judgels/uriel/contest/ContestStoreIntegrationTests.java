@@ -10,13 +10,12 @@ import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
-import judgels.uriel.api.contest.module.ContestModuleType;
+import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
+import judgels.uriel.api.contest.supervisor.SupervisorPermission;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
-import judgels.uriel.contest.supervisor.ContestSupervisor;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
-import judgels.uriel.contest.supervisor.SupervisorPermission;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestManagerModel;
@@ -72,13 +71,13 @@ class ContestStoreIntegrationTests {
         Contest contestD = store.createContest(new ContestData.Builder().name("contestD").build());
 
         adminRoleStore.addAdmin(ADMIN);
-        moduleStore.upsertModule(contestD.getJid(), ContestModuleType.REGISTRATION);
+        moduleStore.upsertRegistrationModule(contestD.getJid());
         contestantStore.upsertContestant(contestA.getJid(), USER_1);
         contestantStore.upsertContestant(contestA.getJid(), USER_2);
         contestantStore.upsertContestant(contestA.getJid(), USER_3);
         supervisorStore.upsertSupervisor(
                 contestB.getJid(),
-                new ContestSupervisor.Builder().userJid(USER_2).permission(SupervisorPermission.all()).build());
+                new ContestSupervisorData.Builder().userJid(USER_2).permission(SupervisorPermission.all()).build());
         managerStore.upsertManager(contestC.getJid(), USER_3);
 
         assertThat(getContests(ADMIN)).containsExactly(contestA, contestB, contestC, contestD);

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.uriel.api.contest.supervisor.ContestSupervisor;
+import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
+import judgels.uriel.api.contest.supervisor.SupervisorPermission;
 import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
 
@@ -23,21 +26,19 @@ public class ContestSupervisorStore {
                 .map(this::fromModel);
     }
 
-    public ContestSupervisor upsertSupervisor(String contestJid, ContestSupervisor data) {
+    public ContestSupervisor upsertSupervisor(String contestJid, ContestSupervisorData data) {
         Optional<ContestSupervisorModel> maybeModel =
                 supervisorDao.selectByContestJidAndUserJid(contestJid, data.getUserJid());
 
         if (maybeModel.isPresent()) {
             ContestSupervisorModel model = maybeModel.get();
             toModel(contestJid, data, model);
-            supervisorDao.update(model);
+            return fromModel(supervisorDao.update(model));
         } else {
             ContestSupervisorModel model = new ContestSupervisorModel();
             toModel(contestJid, data, model);
-            supervisorDao.insert(model);
+            return fromModel(supervisorDao.insert(model));
         }
-
-        return data;
     }
 
     private ContestSupervisor fromModel(ContestSupervisorModel model) {
@@ -56,7 +57,7 @@ public class ContestSupervisorStore {
 
     private void toModel(
             String contestJid,
-            ContestSupervisor data,
+            ContestSupervisorData data,
             ContestSupervisorModel model) {
 
         model.contestJid = contestJid;

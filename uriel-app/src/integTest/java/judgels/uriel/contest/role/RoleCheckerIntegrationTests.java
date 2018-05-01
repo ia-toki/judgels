@@ -2,19 +2,20 @@ package judgels.uriel.contest.role;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableSet;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.ContestData;
-import judgels.uriel.api.contest.module.ContestModuleType;
+import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
+import judgels.uriel.api.contest.supervisor.SupervisorPermission;
+import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
-import judgels.uriel.contest.supervisor.ContestSupervisor;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
-import judgels.uriel.contest.supervisor.SupervisorPermission;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestManagerModel;
@@ -45,6 +46,8 @@ class RoleCheckerIntegrationTests {
     private String contestB;
     private String contestC;
 
+    private ContestSupervisorStore supervisorStore;
+
     private RoleChecker roleChecker;
 
     @BeforeEach
@@ -57,7 +60,7 @@ class RoleCheckerIntegrationTests {
         ContestStore contestStore = component.contestStore();
         ContestModuleStore moduleStore = component.contestModuleStore();
         ContestContestantStore contestantStore = component.contestContestantStore();
-        ContestSupervisorStore supervisorStore = component.contestSupervisorStore();
+        supervisorStore = component.contestSupervisorStore();
         ContestManagerStore managerStore = component.contestManagerStore();
 
         roleChecker = component.roleChecker();
@@ -68,11 +71,13 @@ class RoleCheckerIntegrationTests {
         contestB = contestStore.createContest(new ContestData.Builder().name("Contest B").build()).getJid();
         contestC = contestStore.createContest(new ContestData.Builder().name("Contest C").build()).getJid();
 
-        moduleStore.upsertModule(contestA, ContestModuleType.REGISTRATION);
+        moduleStore.upsertRegistrationModule(contestA);
         contestantStore.upsertContestant(contestB, CONTESTANT);
         supervisorStore.upsertSupervisor(
                 contestB,
-                new ContestSupervisor.Builder().userJid(SUPERVISOR).permission(SupervisorPermission.all()).build());
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR)
+                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
         managerStore.upsertManager(contestB, MANAGER);
     }
 
@@ -132,6 +137,34 @@ class RoleCheckerIntegrationTests {
     }
 
     @Test
+    void supervise_scoreboard() {
+        assertThat(roleChecker.canSuperviseScoreboard(ADMIN, contestA)).isTrue();
+        assertThat(roleChecker.canSuperviseScoreboard(ADMIN, contestB)).isTrue();
+        assertThat(roleChecker.canSuperviseScoreboard(ADMIN, contestC)).isTrue();
+
+        assertThat(roleChecker.canSuperviseScoreboard(USER, contestA)).isFalse();
+        assertThat(roleChecker.canSuperviseScoreboard(USER, contestB)).isFalse();
+        assertThat(roleChecker.canSuperviseScoreboard(USER, contestC)).isFalse();
+
+        assertThat(roleChecker.canSuperviseScoreboard(CONTESTANT, contestA)).isFalse();
+        assertThat(roleChecker.canSuperviseScoreboard(CONTESTANT, contestB)).isFalse();
+        assertThat(roleChecker.canSuperviseScoreboard(CONTESTANT, contestC)).isFalse();
+
+
+        assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestA)).isFalse();
+        assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestB)).isFalse();
+        assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestC)).isFalse();
+        addSupervisorToContestBWithPermission(SupervisorPermissionType.SCOREBOARD);
+        assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestA)).isFalse();
+        assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestB)).isTrue();
+        assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestA)).isFalse();
+        assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestB)).isTrue();
+        assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
     void add_contestants() {
         assertThat(roleChecker.canAddContestants(ADMIN, contestA)).isTrue();
         assertThat(roleChecker.canAddContestants(ADMIN, contestB)).isTrue();
@@ -152,5 +185,13 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canAddContestants(MANAGER, contestA)).isFalse();
         assertThat(roleChecker.canAddContestants(MANAGER, contestB)).isTrue();
         assertThat(roleChecker.canAddContestants(MANAGER, contestC)).isFalse();
+    }
+
+    private void addSupervisorToContestBWithPermission(SupervisorPermissionType type) {
+        supervisorStore.upsertSupervisor(
+                contestB,
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR)
+                        .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
     }
 }
