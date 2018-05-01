@@ -1,3 +1,4 @@
+import { Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 import { connect } from 'react-redux';
@@ -10,6 +11,7 @@ import { Contest, ContestStyle } from '../../../../../../../../../../modules/api
 import {
   ContestScoreboard,
   ContestScoreboardResponse,
+  ContestScoreboardType,
 } from '../../../../../../../../../../modules/api/uriel/contestScoreboard';
 import { IcpcScoreboard, IoiScoreboard } from '../../../../../../../../../../modules/api/uriel/scoreboard';
 import { AppState } from '../../../../../../../../../../modules/store';
@@ -53,6 +55,7 @@ export class ContestScoreboardPage extends React.Component<ContestScoreboardPage
         {this.renderScoreboardUpdatedTime()}
         <div className="clearfix" />
         <hr />
+        {this.renderFrozenScoreboardNotice()}
         {this.renderScoreboard()}
       </ContentCard>
     );
@@ -70,6 +73,22 @@ export class ContestScoreboardPage extends React.Component<ContestScoreboardPage
           last updated <FormattedRelative value={scoreboard[0].updatedTime} />
         </small>
       </p>
+    );
+  };
+
+  private renderFrozenScoreboardNotice = () => {
+    const { scoreboard } = this.state;
+    if (!scoreboard || scoreboard.length === 0 || scoreboard[0].type !== ContestScoreboardType.Frozen) {
+      return null;
+    }
+
+    return (
+      <Callout
+        className="contest-scoreboard-page__frozen"
+        icon="pause"
+        intent={Intent.WARNING}
+        title="SCOREBOARD HAS BEEN FROZEN"
+      />
     );
   };
 

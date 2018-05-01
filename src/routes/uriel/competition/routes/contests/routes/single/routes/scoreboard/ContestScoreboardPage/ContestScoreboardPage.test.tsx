@@ -44,7 +44,7 @@ describe('ContestScoreboardPage', () => {
     });
   });
 
-  describe('when there is scoreboard', () => {
+  describe('when there is official scoreboard', () => {
     beforeEach(() => {
       const response: ContestScoreboardResponse = {
         data: {
@@ -68,10 +68,44 @@ describe('ContestScoreboardPage', () => {
       render();
     });
 
-    it('shows the scoreboard', async () => {
+    it('shows the scoreboard without frozen notice', async () => {
       await new Promise(resolve => setImmediate(resolve));
       wrapper.update();
 
+      expect(wrapper.text()).not.toContain('FROZEN');
+      expect(wrapper.find(IcpcScoreboardTable)).toHaveLength(1);
+    });
+  });
+
+  describe('when there is frozen scoreboard', () => {
+    beforeEach(() => {
+      const response: ContestScoreboardResponse = {
+        data: {
+          type: ContestScoreboardType.Frozen,
+          scoreboard: {
+            state: {
+              contestantJids: [],
+              problemJids: [],
+              problemAliases: [],
+            },
+            content: {
+              entries: [],
+            },
+          },
+          updatedTime: 0,
+        },
+        usersMap: {},
+      };
+      onFetchScoreboard.mockReturnValue(Promise.resolve(response));
+
+      render();
+    });
+
+    it('shows the scoreboard with frozen notice', async () => {
+      await new Promise(resolve => setImmediate(resolve));
+      wrapper.update();
+
+      expect(wrapper.text()).toContain('FROZEN');
       expect(wrapper.find(IcpcScoreboardTable)).toHaveLength(1);
     });
   });
