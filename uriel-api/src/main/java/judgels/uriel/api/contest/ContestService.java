@@ -22,14 +22,14 @@ public interface ContestService {
     @Path("/{contestJid}")
     @Produces(APPLICATION_JSON)
     Contest getContest(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 
     @GET
     @Path("/id/{contestId}")
     @Produces(APPLICATION_JSON)
     Contest getContestById(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestId") long contestId);
 
     @GET

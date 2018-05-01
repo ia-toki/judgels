@@ -34,7 +34,7 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Contest getContest(AuthHeader authHeader, String contestJid) {
+    public Contest getContest(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewContest(actorJid, contestJid));
 
@@ -43,7 +43,7 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Contest getContestById(AuthHeader authHeader, long contestId) {
+    public Contest getContestById(Optional<AuthHeader> authHeader, long contestId) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestById(contestId));
 
