@@ -34,7 +34,7 @@ export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProp
 
   private renderRow = (entry: IcpcScoreboardEntry) => {
     let cells = [
-      <td key="rank">{entry.rank}</td>,
+      <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
         {this.props.usersMap[entry.contestantJid] && this.props.usersMap[entry.contestantJid].username}
       </td>,

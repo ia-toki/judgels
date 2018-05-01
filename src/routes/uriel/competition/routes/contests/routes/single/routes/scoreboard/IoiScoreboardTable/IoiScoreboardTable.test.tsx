@@ -52,6 +52,23 @@ describe('IoiScoreboardTable', () => {
     expect(ranks).toEqual(['1', '2']);
   });
 
+  test('incognito ranks', () => {
+    beforeEach(() => {
+      const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
+      const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
+      const props = { scoreboard: incognitoScoreboard, usersMap };
+      wrapper = shallow(<IoiScoreboardTable {...props} />);
+    });
+
+    it('only shows question marks', () => {
+      const ranks = wrapper
+        .find('tbody')
+        .children()
+        .map(tr => tr.childAt(0).text());
+      expect(ranks).toEqual(['?', '?']);
+    });
+  });
+
   test('display names', () => {
     const ranks = wrapper
       .find('tbody')
