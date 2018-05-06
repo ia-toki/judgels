@@ -27,6 +27,6 @@ public class ContestAnnouncementHibernateDao extends JudgelsHibernateDao<Contest
         return selectAll(new FilterOptions.Builder<ContestAnnouncementModel>()
                 .putColumnsEq(ContestAnnouncementModel_.contestJid, contestJid)
                 .putColumnsEq(ContestAnnouncementModel_.status, ContestAnnouncementStatus.PUBLISHED.name())
-                .build()).getData();
+                .build());
     }
 }

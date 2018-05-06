@@ -35,12 +35,12 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
         return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
                 .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
                 .putColumnsIn(ContestContestantModel_.userJid, userJids)
-                .build()).getData());
+                .build()));
     }
 
     @Override
     public Page<ContestContestantModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ContestContestantModel>()
+        return selectPaged(new FilterOptions.Builder<ContestContestantModel>()
                 .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
                 .build(), options);
     }

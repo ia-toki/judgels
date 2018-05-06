@@ -34,19 +34,19 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     public List<ContestModel> selectAllActive(SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(isActive(clock))
-                .build(), options).getData();
+                .build(), options);
     }
 
     @Override
-    public Page<ContestModel> selectAllPast(SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ContestModel>()
+    public Page<ContestModel> selectPagedPast(SelectionOptions options) {
+        return selectPaged(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(isPast(clock))
                 .build(), options);
     }
 
     @Override
-    public Page<ContestModel> selectAllByUserJid(String userJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ContestModel>()
+    public Page<ContestModel> selectPagedByUserJid(String userJid, SelectionOptions options) {
+        return selectPaged(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasViewer(userJid))
                 .build(), options);
     }
@@ -56,12 +56,12 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         return selectAll(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasViewer(userJid))
                 .addCustomPredicates(isActive(clock))
-                .build(), options).getData();
+                .build(), options);
     }
 
     @Override
-    public Page<ContestModel> selectAllPastByUserJid(String userJid, SelectionOptions options) {
-        return selectAll(new FilterOptions.Builder<ContestModel>()
+    public Page<ContestModel> selectPagedPastByUserJid(String userJid, SelectionOptions options) {
+        return selectPaged(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasViewer(userJid))
                 .addCustomPredicates(isPast(clock))
                 .build(), options);

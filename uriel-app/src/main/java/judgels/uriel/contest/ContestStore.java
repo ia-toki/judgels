@@ -36,8 +36,8 @@ public class ContestStore {
 
     public Page<Contest> getContests(String userJid, SelectionOptions options) {
         Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
-                ? contestDao.selectAll(options)
-                : contestDao.selectAllByUserJid(userJid, options);
+                ? contestDao.selectPaged(options)
+                : contestDao.selectPagedByUserJid(userJid, options);
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 
@@ -50,8 +50,8 @@ public class ContestStore {
 
     public Page<Contest> getPastContests(String userJid, SelectionOptions options) {
         Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
-                ? contestDao.selectAllPast(options)
-                : contestDao.selectAllPastByUserJid(userJid, options);
+                ? contestDao.selectPagedPast(options)
+                : contestDao.selectPagedPastByUserJid(userJid, options);
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 
