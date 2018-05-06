@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.time.Clock;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -102,11 +103,21 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
-    public Page<M> selectAll(FilterOptions<M> filterOptions, SelectionOptions selectionOptions) {
+    public Page<M> selectPaged(FilterOptions<M> filterOptions, SelectionOptions selectionOptions) {
+        List<M> data = selectAll(filterOptions, selectionOptions);
+        long totalData = selectCount(filterOptions);
+
+        return new Page.Builder<M>()
+                .totalData(totalData)
+                .data(data)
+                .build();
+    }
+    @Override
+    public List<M> selectAll(FilterOptions<M> filterOptions, SelectionOptions selectionOptions) {
         // MySQL doesn't support empty IN() clause
         for (Collection<?> collection : filterOptions.getColumnsIn().values()) {
             if (collection.isEmpty()) {
-                return new Page.Builder<M>().totalData(0).build();
+                return Collections.emptyList();
             }
         }
 
@@ -129,13 +140,7 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
             query.setMaxResults(selectionOptions.getPageSize());
         }
 
-        List<M> data = query.list();
-        long totalData = selectCount(filterOptions);
-
-        return new Page.Builder<M>()
-                .totalData(totalData)
-                .data(data)
-                .build();
+        return query.list();
     }
 
     @Override

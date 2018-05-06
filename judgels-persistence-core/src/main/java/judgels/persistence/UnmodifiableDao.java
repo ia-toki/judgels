@@ -17,13 +17,24 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     Optional<M> selectByUniqueColumns(Map<SingularAttribute<M, ?>, ?> key);
 
     long selectCount(FilterOptions<M> filterOptions);
-    Page<M> selectAll(FilterOptions<M> filterOptions, SelectionOptions selectionOptions);
 
-    default Page<M> selectAll(FilterOptions<M> filterOptions) {
+    Page<M> selectPaged(FilterOptions<M> filterOptions, SelectionOptions selectionOptions);
+
+    default Page<M> selectPaged(FilterOptions<M> filterOptions) {
+        return selectPaged(filterOptions, SelectionOptions.DEFAULT);
+    }
+
+    default Page<M> selectPaged(SelectionOptions selectionOptions) {
+        return selectPaged(new FilterOptions.Builder<M>().build(), selectionOptions);
+    }
+
+    List<M> selectAll(FilterOptions<M> filterOptions, SelectionOptions selectionOptions);
+
+    default List<M> selectAll(FilterOptions<M> filterOptions) {
         return selectAll(filterOptions, SelectionOptions.DEFAULT);
     }
 
-    default Page<M> selectAll(SelectionOptions selectionOptions) {
+    default List<M> selectAll(SelectionOptions selectionOptions) {
         return selectAll(new FilterOptions.Builder<M>().build(), selectionOptions);
     }
 
