@@ -7,6 +7,7 @@ import judgels.uriel.contest.announcement.ContestAnnouncementResource;
 import judgels.uriel.contest.contestant.ContestContestantResource;
 import judgels.uriel.contest.scoreboard.ContestScoreboardResource;
 import judgels.uriel.contest.submission.ContestSubmissionResource;
+import judgels.uriel.contest.web.ContestWebResource;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.hibernate.UrielHibernateModule;
 import judgels.uriel.jophiel.JophielModule;
@@ -20,6 +21,7 @@ import judgels.uriel.jophiel.JophielModule;
 @Singleton
 public interface UrielComponent {
     ContestResource contestResource();
+    ContestWebResource contestWebResource();
     ContestAnnouncementResource contestAnnouncementResource();
     ContestScoreboardResource contestScoreboardResource();
     ContestContestantResource contestContestantResource();
