@@ -17,5 +17,8 @@ public class ContestProblemModel extends Model {
     public String problemJid;
 
     @Column(nullable = false)
+    public String alias;
+
+    @Column(nullable = false)
     public String status;
 }

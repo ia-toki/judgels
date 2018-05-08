@@ -21,6 +21,13 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     }
 
     @Override
+    public List<ContestProblemModel> selectAllByContestJid(String contestJid) {
+        return selectAll(new FilterOptions.Builder<ContestProblemModel>()
+                .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
+                .build());
+    }
+
+    @Override
     public List<ContestProblemModel> selectAllOpenByContestJid(String contestJid) {
         return selectAll(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
