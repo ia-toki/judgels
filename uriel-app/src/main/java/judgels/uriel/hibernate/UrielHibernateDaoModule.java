@@ -8,8 +8,10 @@ import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestManagerDao;
 import judgels.uriel.persistence.ContestModuleDao;
+import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestRoleDao;
 import judgels.uriel.persistence.ContestScoreboardDao;
+import judgels.uriel.persistence.ContestStyleDao;
 import judgels.uriel.persistence.ContestSupervisorDao;
 
 @Module
@@ -23,6 +25,11 @@ public class UrielHibernateDaoModule {
 
     @Provides
     static ContestDao contestDao(ContestHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ContestStyleDao contestStyleDao(ContestStyleHibernateDao dao) {
         return dao;
     }
 
@@ -58,6 +65,11 @@ public class UrielHibernateDaoModule {
 
     @Provides
     static ContestModuleDao contestModuleDao(ContestModuleHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ContestProblemDao contestProblemDao(ContestProblemHibernateDao dao) {
         return dao;
     }
 }

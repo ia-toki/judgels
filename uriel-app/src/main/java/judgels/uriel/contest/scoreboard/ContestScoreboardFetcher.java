@@ -3,43 +3,47 @@ package judgels.uriel.contest.scoreboard;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
+import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 
 public class ContestScoreboardFetcher {
     private final ContestScoreboardTypeFetcher typeFetcher;
     private final ContestScoreboardStore scoreboardStore;
-    private final ContestScoreboardResponseBuilder responseBuilder;
+    private final ContestScoreboardBuilder scoreboardBuilder;
 
     @Inject
     public ContestScoreboardFetcher(
             ContestScoreboardTypeFetcher typeFetcher,
             ContestScoreboardStore scoreboardStore,
-            ContestScoreboardResponseBuilder responseBuilder) {
+            ContestScoreboardBuilder scoreboardBuilder) {
 
         this.typeFetcher = typeFetcher;
         this.scoreboardStore = scoreboardStore;
-        this.responseBuilder = responseBuilder;
+        this.scoreboardBuilder = scoreboardBuilder;
     }
 
-    public Optional<ContestScoreboardResponse> fetchScoreboard(
+    public Optional<ContestScoreboard> fetchScoreboard(
             Contest contest,
             String userJid,
             boolean canSuperviseScoreboard) {
 
         ContestScoreboardType defaultType =
                 typeFetcher.fetchViewableTypes(contest.getJid(), canSuperviseScoreboard).get(0);
-        return fetchScoreboardOfType(contest, userJid, defaultType);
+        return fetchScoreboardOfType(contest, userJid, defaultType, canSuperviseScoreboard);
     }
 
-    public Optional<ContestScoreboardResponse> fetchFrozenScoreboard(Contest contest, String userJid) {
-        return fetchScoreboardOfType(contest, userJid, ContestScoreboardType.FROZEN);
-    }
-
-    private Optional<ContestScoreboardResponse> fetchScoreboardOfType(
+    public Optional<ContestScoreboard> fetchFrozenScoreboard(
             Contest contest,
             String userJid,
-            ContestScoreboardType type) {
+            boolean canSuperviseScoreboard) {
+        return fetchScoreboardOfType(contest, userJid, ContestScoreboardType.FROZEN, canSuperviseScoreboard);
+    }
+
+    private Optional<ContestScoreboard> fetchScoreboardOfType(
+            Contest contest,
+            String userJid,
+            ContestScoreboardType type,
+            boolean canSuperviseScoreboard) {
 
         Optional<RawContestScoreboard> rawScoreboard = scoreboardStore.findScoreboard(contest.getJid(), type);
         ContestScoreboardType actualType;
@@ -51,6 +55,7 @@ public class ContestScoreboardFetcher {
         } else {
             actualType = type;
         }
-        return rawScoreboard.map(raw -> responseBuilder.buildResponse(contest, userJid, raw, actualType));
+        return rawScoreboard.map(raw ->
+                scoreboardBuilder.buildScoreboard(raw, contest, userJid, actualType, canSuperviseScoreboard));
     }
 }

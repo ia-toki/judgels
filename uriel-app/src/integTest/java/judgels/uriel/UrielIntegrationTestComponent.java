@@ -7,7 +7,9 @@ import judgels.uriel.contest.announcement.ContestAnnouncementStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
+import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
+import judgels.uriel.contest.style.ContestStyleStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.role.AdminRoleStore;
@@ -22,12 +24,14 @@ import judgels.uriel.role.RoleChecker;
 public interface UrielIntegrationTestComponent {
     AdminRoleStore adminRoleStore();
     ContestStore contestStore();
+    ContestStyleStore contestStyleStore();
     ContestModuleStore contestModuleStore();
     ContestAnnouncementStore contestAnnouncementStore();
     ContestContestantStore contestContestantStore();
     ContestSupervisorStore contestSupervisorStore();
     ContestManagerStore contestManagerStore();
     ContestScoreboardStore contestScoreboardStore();
+    ContestProblemStore contestProblemStore();
 
     RoleChecker roleChecker();
 }
