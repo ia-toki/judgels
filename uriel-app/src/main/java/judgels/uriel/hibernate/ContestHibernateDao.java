@@ -1,7 +1,7 @@
 package judgels.uriel.hibernate;
 
 import static judgels.persistence.CustomPredicateFilter.not;
-import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasViewer;
+import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasViewerOrAbove;
 
 import java.time.Clock;
 import java.util.List;
@@ -47,14 +47,14 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     @Override
     public Page<ContestModel> selectPagedByUserJid(String userJid, SelectionOptions options) {
         return selectPaged(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(hasViewer(userJid))
+                .addCustomPredicates(hasViewerOrAbove(userJid))
                 .build(), options);
     }
 
     @Override
     public List<ContestModel> selectAllActiveByUserJid(String userJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(hasViewer(userJid))
+                .addCustomPredicates(hasViewerOrAbove(userJid))
                 .addCustomPredicates(isActive(clock))
                 .build(), options);
     }
@@ -62,7 +62,7 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     @Override
     public Page<ContestModel> selectPagedPastByUserJid(String userJid, SelectionOptions options) {
         return selectPaged(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(hasViewer(userJid))
+                .addCustomPredicates(hasViewerOrAbove(userJid))
                 .addCustomPredicates(isPast(clock))
                 .build(), options);
     }
