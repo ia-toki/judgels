@@ -14,18 +14,21 @@ import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewP
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
+import { ContestTab, ContestWebConfig } from '../../../../../../../../modules/api/uriel/contestWeb';
 import { AppState } from '../../../../../../../../modules/store';
 import { selectContest } from '../../../modules/contestSelectors';
+import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 
 import './SingleContestRoutes.css';
 
 interface SingleContestRoutesProps {
   contest?: Contest;
+  contestWebConfig?: ContestWebConfig;
 }
 
 const SingleContestRoutes = (props: SingleContestRoutesProps) => {
-  const { contest } = props;
-  if (!contest) {
+  const { contest, contestWebConfig } = props;
+  if (!contest || !contestWebConfig) {
     return <LoadingState large />;
   }
 
@@ -37,21 +40,33 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       routeComponent: Route,
       component: ContestOverviewPage,
     },
-    {
-      id: 'announcements',
-      titleIcon: 'notifications',
-      title: 'Announcements',
-      routeComponent: Route,
-      component: ContestAnnouncementsPage,
-    },
-    {
-      id: 'scoreboard',
-      titleIcon: 'th',
-      title: 'Scoreboard',
-      routeComponent: Route,
-      component: ContestScoreboardPage,
-    },
   ];
+
+  const visibleTabs = contestWebConfig!.visibleTabs;
+  if (visibleTabs.indexOf(ContestTab.Announcements) !== -1) {
+    sidebarItems = [
+      ...sidebarItems,
+      {
+        id: 'announcements',
+        titleIcon: 'notifications',
+        title: 'Announcements',
+        routeComponent: Route,
+        component: ContestAnnouncementsPage,
+      },
+    ];
+  }
+  if (visibleTabs.indexOf(ContestTab.Scoreboard) !== -1) {
+    sidebarItems = [
+      ...sidebarItems,
+      {
+        id: 'scoreboard',
+        titleIcon: 'th',
+        title: 'Scoreboard',
+        routeComponent: Route,
+        component: ContestScoreboardPage,
+      },
+    ];
+  }
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Contest Menu',
@@ -78,6 +93,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
 function createSingleContestRoutes() {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state),
+    contestWebConfig: selectContestWebConfig(state),
   });
   return withRouter<any>(connect(mapStateToProps)(SingleContestRoutes));
 }
