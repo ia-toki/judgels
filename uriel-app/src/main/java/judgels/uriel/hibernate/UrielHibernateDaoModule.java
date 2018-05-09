@@ -6,6 +6,7 @@ import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestDao;
+import judgels.uriel.persistence.ContestGradingDao;
 import judgels.uriel.persistence.ContestManagerDao;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestProblemDao;
@@ -76,6 +77,11 @@ public class UrielHibernateDaoModule {
 
     @Provides
     static ContestSubmissionDao contestSubmissionDao(ContestSubmissionHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ContestGradingDao contestGradingDao(ContestGradingHibernateDao dao) {
         return dao;
     }
 }

@@ -15,6 +15,7 @@ public interface Submission {
     String getGradingEngine();
     String getGradingLanguage();
     Instant getTime();
+    Grading getLatestGrading();
 
     class Builder extends ImmutableSubmission.Builder {}
 }
