@@ -1,4 +1,4 @@
-import { Tag } from '@blueprintjs/core';
+import { Icon, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
@@ -33,6 +33,7 @@ export class ContestSubmissionsTable extends React.Component<ContestSubmissionsT
           <th className="col-verdict">Verdict</th>
           <th className="col-pts">Pts</th>
           <th>Time</th>
+          <th className="col-actions" />
         </tr>
       </thead>
     );
@@ -46,7 +47,7 @@ export class ContestSubmissionsTable extends React.Component<ContestSubmissionsT
         <td>{submission.id}</td>
         <td>{problemAliasesMap[submission.problemJid]}</td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
-        <td>
+        <td className="cell-centered">
           <Tag round intent={getVerdictIntent(submission.latestGrading.verdict)}>
             {submission.latestGrading.verdict}
           </Tag>
@@ -54,6 +55,9 @@ export class ContestSubmissionsTable extends React.Component<ContestSubmissionsT
         <td>{submission.latestGrading.score}</td>
         <td>
           <FormattedRelative value={submission.time} />{' '}
+        </td>
+        <td className="cell-centered">
+          <Icon icon="search" />
         </td>
       </tr>
     ));

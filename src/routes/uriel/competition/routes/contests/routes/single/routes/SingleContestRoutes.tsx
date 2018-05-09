@@ -13,7 +13,7 @@ import { ButtonLink } from '../../../../../../../../components/ButtonLink/Button
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
-import ContestSubmissionsPage from './submissions/ContestSubmissionsPage/ContestSubmissionsPage';
+import ContestSubmissionRoutes from './submissions/routes/ContestSubmissionRoutes';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { ContestTab, ContestWebConfig } from '../../../../../../../../modules/api/uriel/contestWeb';
 import { AppState } from '../../../../../../../../modules/store';
@@ -76,7 +76,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
         titleIcon: 'layers',
         title: 'Submissions',
         routeComponent: Route,
-        component: ContestSubmissionsPage,
+        component: ContestSubmissionRoutes,
       },
     ];
   }

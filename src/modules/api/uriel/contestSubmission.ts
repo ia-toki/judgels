@@ -11,11 +11,11 @@ export interface ContestSubmissionsResponse {
 }
 
 export function createContestSubmissionAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+  const baseURL = `${APP_CONFIG.apiUrls.uriel}/submissions`;
 
   return {
     getMySubmissions: (token: string, contestJid: string, page: number): Promise<ContestSubmissionsResponse> => {
-      return get(`${baseURL}/${contestJid}/submissions/mine?page=${page}`, token);
+      return get(`${baseURL}/mine?contestJid=${contestJid}&page=${page}`, token);
     },
   };
 }
