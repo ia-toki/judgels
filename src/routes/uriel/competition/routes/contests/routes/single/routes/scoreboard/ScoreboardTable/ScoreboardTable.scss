@@ -1,10 +1,8 @@
 @import '../../../../../../../../../../styles/base';
 
-table.pt-html-table.scoreboard__content {
+table.scoreboard__content {
   td, th {
-    border: 1px #dee0e1 solid;
     text-align: center;
-    vertical-align: middle;
   }
 
   th {

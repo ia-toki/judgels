@@ -13,6 +13,7 @@ import { ButtonLink } from '../../../../../../../../components/ButtonLink/Button
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
+import ContestSubmissionsPage from './submissions/ContestSubmissionsPage/ContestSubmissionsPage';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { ContestTab, ContestWebConfig } from '../../../../../../../../modules/api/uriel/contestWeb';
 import { AppState } from '../../../../../../../../modules/store';
@@ -64,6 +65,18 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
         title: 'Scoreboard',
         routeComponent: Route,
         component: ContestScoreboardPage,
+      },
+    ];
+  }
+  if (visibleTabs.indexOf(ContestTab.Submissions) !== -1) {
+    sidebarItems = [
+      ...sidebarItems,
+      {
+        id: 'submissions',
+        titleIcon: 'layers',
+        title: 'Submissions',
+        routeComponent: Route,
+        component: ContestSubmissionsPage,
       },
     ];
   }
