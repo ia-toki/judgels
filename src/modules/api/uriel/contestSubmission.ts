@@ -1,5 +1,5 @@
 import { Submission } from '../sandalphon/submission';
-import { UsersMap } from '../jophiel/user';
+import { UserInfo, UsersMap } from '../jophiel/user';
 import { APP_CONFIG } from '../../../conf';
 import { get } from '../http';
 import { Page } from '../pagination';
@@ -10,12 +10,24 @@ export interface ContestSubmissionsResponse {
   problemAliasesMap: { [problemJid: string]: string };
 }
 
+export interface ContestSubmissionResponse {
+  data: Submission;
+  user: UserInfo;
+  problemName: string;
+  problemAlias: string;
+  contestName: string;
+}
+
 export function createContestSubmissionAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/submissions`;
 
   return {
     getMySubmissions: (token: string, contestJid: string, page: number): Promise<ContestSubmissionsResponse> => {
       return get(`${baseURL}/mine?contestJid=${contestJid}&page=${page}`, token);
+    },
+
+    getSubmission: (token: string, submissionId: number): Promise<ContestSubmissionResponse> => {
+      return get(`${baseURL}/id/${submissionId}`, token);
     },
   };
 }

@@ -43,8 +43,8 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
   }
 
   private renderSubmissions = () => {
-    const { submissions, usersMap, problemAliasesMap } = this.state;
-    if (!submissions || !usersMap || !problemAliasesMap) {
+    const { submissions, problemAliasesMap } = this.state;
+    if (!submissions) {
       return <LoadingState />;
     }
 
@@ -58,7 +58,13 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
       );
     }
 
-    return <ContestSubmissionsTable submissions={submissions.data} problemAliasesMap={problemAliasesMap} />;
+    return (
+      <ContestSubmissionsTable
+        contest={this.props.contest}
+        submissions={submissions.data}
+        problemAliasesMap={problemAliasesMap!}
+      />
+    );
   };
 
   private renderPagination = () => {

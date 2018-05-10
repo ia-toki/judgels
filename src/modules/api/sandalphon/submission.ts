@@ -9,5 +9,5 @@ export interface Submission {
   gradingEngine: string;
   gradingLanguage: string;
   time: number;
-  latestGrading: Grading;
+  latestGrading?: Grading;
 }

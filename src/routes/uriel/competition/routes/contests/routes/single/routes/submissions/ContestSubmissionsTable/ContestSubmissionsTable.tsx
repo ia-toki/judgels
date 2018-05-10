@@ -1,14 +1,17 @@
-import { Icon, Tag } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
+import { Link } from 'react-router-dom';
 
+import { VerdictTag } from '../../../../../../../../../../components/VerdictTag/VerdictTag';
 import { Submission } from '../../../../../../../../../../modules/api/sandalphon/submission';
 import { getGradingLanguageName } from '../../../../../../../../../../modules/api/gabriel/languages';
-import { getVerdictIntent } from '../../../../../../../../../../modules/api/gabriel/verdicts';
+import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 
 import './ContestSubmissionsTable.css';
 
 export interface ContestSubmissionsTableProps {
+  contest: Contest;
   submissions: Submission[];
   problemAliasesMap: { [problemJid: string]: string };
 }
@@ -40,7 +43,7 @@ export class ContestSubmissionsTable extends React.Component<ContestSubmissionsT
   };
 
   private renderRows = () => {
-    const { submissions, problemAliasesMap } = this.props;
+    const { contest, submissions, problemAliasesMap } = this.props;
 
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
@@ -48,16 +51,16 @@ export class ContestSubmissionsTable extends React.Component<ContestSubmissionsT
         <td>{problemAliasesMap[submission.problemJid]}</td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
         <td className="cell-centered">
-          <Tag round intent={getVerdictIntent(submission.latestGrading.verdict)}>
-            {submission.latestGrading.verdict}
-          </Tag>
+          {submission.latestGrading && <VerdictTag verdictCode={submission.latestGrading.verdict} />}
         </td>
-        <td>{submission.latestGrading.score}</td>
+        <td>{submission.latestGrading && submission.latestGrading.score}</td>
         <td>
           <FormattedRelative value={submission.time} />{' '}
         </td>
         <td className="cell-centered">
-          <Icon icon="search" />
+          <Link to={`/competition/contests/${contest.id}/submissions/${submission.id}`}>
+            <Icon icon="search" />
+          </Link>
         </td>
       </tr>
     ));

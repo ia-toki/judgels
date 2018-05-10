@@ -7,4 +7,11 @@ export const contestSubmissionActions = {
       return await contestSubmissionAPI.getMySubmissions(token, contestJid, page);
     };
   },
+
+  fetch: (submissionId: number) => {
+    return async (dispatch, getState, { contestSubmissionAPI }) => {
+      const token = selectToken(getState());
+      return await contestSubmissionAPI.getSubmission(token, submissionId);
+    };
+  },
 };

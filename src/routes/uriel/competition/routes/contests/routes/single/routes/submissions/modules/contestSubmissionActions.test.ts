@@ -1,6 +1,9 @@
 import { contestSubmissionActions } from './contestSubmissionActions';
 import { contestJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
-import { ContestSubmissionsResponse } from '../../../../../../../../../../modules/api/uriel/contestSubmission';
+import {
+  ContestSubmissionResponse,
+  ContestSubmissionsResponse,
+} from '../../../../../../../../../../modules/api/uriel/contestSubmission';
 import { AppState } from '../../../../../../../../../../modules/store';
 
 describe('contestSubmissionActions', () => {
@@ -14,6 +17,7 @@ describe('contestSubmissionActions', () => {
 
     contestSubmissionAPI = {
       getMySubmissions: jest.fn(),
+      getSubmission: jest.fn(),
     };
   });
 
@@ -30,6 +34,22 @@ describe('contestSubmissionActions', () => {
 
     it('calls API to get contest submissions', () => {
       expect(contestSubmissionAPI.getMySubmissions).toHaveBeenCalledWith(token, contestJid, 3);
+    });
+  });
+
+  describe('fetch()', () => {
+    const { fetch } = contestSubmissionActions;
+    const doFetch = async () => fetch(3)(dispatch, getState, { contestSubmissionAPI });
+
+    beforeEach(async () => {
+      const submission = {} as ContestSubmissionResponse;
+      contestSubmissionAPI.getSubmission.mockReturnValue(submission);
+
+      await doFetch();
+    });
+
+    it('calls API to get contest submission', () => {
+      expect(contestSubmissionAPI.getSubmission).toHaveBeenCalledWith(token, 3);
     });
   });
 });
