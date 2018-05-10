@@ -1,9 +1,14 @@
 package judgels.sandalphon.submission;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import judgels.gabriel.api.GradingResultDetails;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.Grading;
@@ -16,10 +21,23 @@ import judgels.sandalphon.persistence.BaseSubmissionDao;
 public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel, GM extends AbstractGradingModel> {
     private final BaseSubmissionDao<SM> submissionDao;
     private final BaseGradingDao<GM> gradingDao;
+    private final ObjectMapper mapper;
 
-    public AbstractSubmissionStore(BaseSubmissionDao<SM> submissionDao, BaseGradingDao<GM> gradingDao) {
+    public AbstractSubmissionStore(
+            BaseSubmissionDao<SM> submissionDao,
+            BaseGradingDao<GM> gradingDao,
+            ObjectMapper mapper) {
+
         this.submissionDao = submissionDao;
         this.gradingDao = gradingDao;
+        this.mapper = mapper;
+    }
+
+    public Optional<Submission> findSubmissionById(long submissionId) {
+        return submissionDao.select(submissionId).map(model -> {
+            Optional<GM> gradingModel = gradingDao.selectLatestBySubmissionJid(model.jid);
+            return submissionFromModels(model, gradingModel.orElse(null));
+        });
     }
 
     public Page<Submission> getSubmissions(String containerJid, String userJid, SelectionOptions options) {
@@ -45,13 +63,25 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
                 .build();
     }
 
-    public Grading gradingFromModel(GM model) {
+    public Optional<Grading> gradingFromModel(@Nullable GM model) {
+        if (model == null) {
+            return Optional.empty();
+        }
+
         Grading.Builder grading = new Grading.Builder()
                 .id(model.id)
                 .jid(model.jid)
                 .verdict(model.verdictCode)
                 .score(model.score);
 
-        return grading.build();
+        if (model.details != null) {
+            try {
+                grading.details(mapper.readValue(model.details, GradingResultDetails.class));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return Optional.of(grading.build());
     }
 }

@@ -8,7 +8,9 @@ import judgels.persistence.Model;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "uriel_contest_problem")
-@Table(indexes = {@Index(columnList = "contestJid,problemJid", unique = true)})
+@Table(indexes = {
+        @Index(columnList = "contestJid"),
+        @Index(columnList = "contestJid,problemJid", unique = true)})
 public class ContestProblemModel extends Model {
     @Column(nullable = false)
     public String contestJid;

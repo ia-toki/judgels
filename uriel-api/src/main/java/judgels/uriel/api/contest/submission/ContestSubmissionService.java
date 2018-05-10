@@ -12,13 +12,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/contests/{contestJid}/submissions")
+@Path("/api/v2/submissions")
 public interface ContestSubmissionService {
     @GET
     @Path("/mine")
     @Produces(APPLICATION_JSON)
     ContestSubmissionsResponse getMySubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @PathParam("contestJid") String contestJid,
+            @QueryParam("contestJid") String contestJid,
             @QueryParam("page") Optional<Integer> page);
+
+    @GET
+    @Path("/id/{submissionId}")
+    @Produces(APPLICATION_JSON)
+    ContestSubmissionResponse getSubmissionById(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("submissionId") long submissionId);
 }

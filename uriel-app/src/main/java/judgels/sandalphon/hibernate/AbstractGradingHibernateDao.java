@@ -4,13 +4,17 @@ import com.google.common.collect.ImmutableMap;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.FilterOptions;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.Model_;
+import judgels.persistence.api.OrderDir;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.sandalphon.persistence.AbstractGradingModel;
 import judgels.sandalphon.persistence.AbstractGradingModel_;
@@ -22,6 +26,19 @@ public abstract class AbstractGradingHibernateDao<M extends AbstractGradingModel
 
     public AbstractGradingHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
+    }
+
+    @Override
+    public Optional<M> selectLatestBySubmissionJid(String submissionJid) {
+        FilterOptions<M> filterOptions = new FilterOptions.Builder<M>()
+                .putColumnsEq(AbstractGradingModel_.submissionJid, submissionJid)
+                .build();
+        SelectionOptions selectionOptions = new SelectionOptions.Builder()
+                .orderBy("id")
+                .orderDir(OrderDir.DESC)
+                .build();
+
+        return selectAll(filterOptions, selectionOptions).stream().findFirst();
     }
 
     @Override

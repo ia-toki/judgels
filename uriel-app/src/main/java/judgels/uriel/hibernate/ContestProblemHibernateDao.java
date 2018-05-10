@@ -2,6 +2,7 @@ package judgels.uriel.hibernate;
 
 import java.time.Clock;
 import java.util.List;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
@@ -18,6 +19,14 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     @Inject
     public ContestProblemHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
+    }
+
+    @Override
+    public Optional<ContestProblemModel> selectByContestJidAndProblemJid(String contestJid, String problemJid) {
+        return selectByFilter(new FilterOptions.Builder<ContestProblemModel>()
+                .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
+                .putColumnsEq(ContestProblemModel_.problemJid, problemJid)
+                .build());
     }
 
     @Override

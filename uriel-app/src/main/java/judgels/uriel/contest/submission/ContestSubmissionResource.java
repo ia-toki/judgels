@@ -1,12 +1,15 @@
 package judgels.uriel.contest.submission;
 
 import static judgels.service.ServiceUtils.checkAllowed;
+import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jophiel.api.user.UserInfo;
 import judgels.jophiel.api.user.UserService;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
@@ -14,14 +17,19 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.problem.ContestProblem;
+import judgels.uriel.api.contest.submission.ContestSubmissionResponse;
 import judgels.uriel.api.contest.submission.ContestSubmissionService;
 import judgels.uriel.api.contest.submission.ContestSubmissionsResponse;
+import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.role.RoleChecker;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
+    private final ContestStore contestStore;
     private final ContestSubmissionStore submissionStore;
     private final ContestProblemStore problemStore;
     private final UserService userService;
@@ -30,12 +38,14 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     public ContestSubmissionResource(
             ActorChecker actorChecker,
             RoleChecker roleChecker,
+            ContestStore contestStore,
             ContestSubmissionStore submissionStore,
             ContestProblemStore problemStore,
             UserService userService) {
 
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
+        this.contestStore = contestStore;
         this.submissionStore = submissionStore;
         this.problemStore = problemStore;
         this.userService = userService;
@@ -63,6 +73,29 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .data(data)
                 .usersMap(userService.findUsersByJids(userJids))
                 .problemAliasesMap(problemStore.findProblemAliasesByJids(contestJid, problemJids))
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ContestSubmissionResponse getSubmissionById(AuthHeader authHeader, long submissionId) {
+        String actorJid = actorChecker.check(authHeader);
+        Submission submission = checkFound(submissionStore.findSubmissionById(submissionId));
+        checkAllowed(roleChecker.canViewSubmission(actorJid, submission.getContainerJid(), submission.getUserJid()));
+
+        Contest contest = checkFound(contestStore.findContestByJid(submission.getContainerJid()));
+        ContestProblem problem = checkFound(problemStore.findProblem(contest.getJid(), submission.getProblemJid()));
+
+        String userJid = submission.getUserJid();
+        UserInfo user = checkFound(Optional.ofNullable(
+                userService.findUsersByJids(ImmutableSet.of(userJid)).get(userJid)));
+
+        return new ContestSubmissionResponse.Builder()
+                .data(submission)
+                .user(user)
+                .problemAlias(problem.getAlias())
+                .problemName("")
+                .contestName(contest.getName())
                 .build();
     }
 }

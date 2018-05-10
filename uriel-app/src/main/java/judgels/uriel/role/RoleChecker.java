@@ -48,6 +48,16 @@ public class RoleChecker {
         return supervisor.isPresent() && supervisor.get().getPermission().allows(SupervisorPermissionType.SCOREBOARD);
     }
 
+    public boolean canViewSubmission(String userJid, String contestJid, String submissionUserJid) {
+        if (userJid.equals(submissionUserJid)
+                || adminRoleDao.isAdmin(userJid)
+                || contestRoleDao.isManager(userJid, contestJid)) {
+            return true;
+        }
+        Optional<ContestSupervisor> supervisor = supervisorStore.findSupervisor(contestJid, userJid);
+        return supervisor.isPresent() && supervisor.get().getPermission().allows(SupervisorPermissionType.SUBMISSION);
+    }
+
     public boolean canViewOwnSubmissions(String userJid, String contestJid) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isContestantOrAbove(userJid, contestJid);
     }

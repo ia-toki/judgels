@@ -39,6 +39,7 @@ class RoleCheckerIntegrationTests {
     private static final String USER = "userJid";
     private static final String ADMIN = "adminJid";
     private static final String CONTESTANT = "contestantJid";
+    private static final String ANOTHER_CONTESTANT = "anotherContestantJid";
     private static final String SUPERVISOR = "supervisorJid";
     private static final String MANAGER = "managerJid";
 
@@ -162,6 +163,20 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestA)).isFalse();
         assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestB)).isTrue();
         assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
+    void view_submission() {
+        assertThat(roleChecker.canViewSubmission(ADMIN, contestB, CONTESTANT)).isTrue();
+
+        assertThat(roleChecker.canViewSubmission(CONTESTANT, contestB, CONTESTANT)).isTrue();
+        assertThat(roleChecker.canViewSubmission(CONTESTANT, contestB, ANOTHER_CONTESTANT)).isFalse();
+
+        assertThat(roleChecker.canViewSubmission(SUPERVISOR, contestB, CONTESTANT)).isFalse();
+        addSupervisorToContestBWithPermission(SupervisorPermissionType.SUBMISSION);
+        assertThat(roleChecker.canViewSubmission(SUPERVISOR, contestB, CONTESTANT)).isTrue();
+
+        assertThat(roleChecker.canViewSubmission(MANAGER, contestB, CONTESTANT)).isTrue();
     }
 
     @Test

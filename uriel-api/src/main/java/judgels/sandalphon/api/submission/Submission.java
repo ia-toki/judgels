@@ -2,6 +2,7 @@ package judgels.sandalphon.api.submission;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Instant;
+import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -15,7 +16,7 @@ public interface Submission {
     String getGradingEngine();
     String getGradingLanguage();
     Instant getTime();
-    Grading getLatestGrading();
+    Optional<Grading> getLatestGrading();
 
     class Builder extends ImmutableSubmission.Builder {}
 }
