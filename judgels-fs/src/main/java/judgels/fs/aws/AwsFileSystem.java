@@ -12,7 +12,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.services.s3.model.SetObjectAclRequest;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -64,6 +63,6 @@ public final class AwsFileSystem implements FileSystem {
         String baseUrl = cloudFrontBaseUrl.orElseThrow(
                 () -> new IllegalStateException("cloudFrontBaseUrl was required"));
 
-        return Paths.get(URI.create(baseUrl)).resolve(filePath).toString();
+        return baseUrl + Paths.get("/").resolve(filePath).toString();
     }
 }
