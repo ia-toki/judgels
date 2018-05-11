@@ -7,16 +7,28 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.Region;
-import com.amazonaws.services.s3.model.SetObjectAclRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.google.common.io.ByteStreams;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
+import judgels.fs.NaturalFilenameComparator;
 
 public final class AwsFileSystem implements FileSystem {
     private final AmazonS3 s3;
@@ -54,8 +66,8 @@ public final class AwsFileSystem implements FileSystem {
             }
         }
 
-        s3.putObject(new PutObjectRequest(bucketName, destFilePathString, file, objectMetadata));
-        s3.setObjectAcl(new SetObjectAclRequest(bucketName, destFilePathString, CannedAccessControlList.PublicRead));
+        s3.putObject(bucketName, destFilePathString, file, objectMetadata);
+        s3.setObjectAcl(bucketName, destFilePathString, CannedAccessControlList.PublicRead);
     }
 
     @Override
@@ -64,5 +76,74 @@ public final class AwsFileSystem implements FileSystem {
                 () -> new IllegalStateException("cloudFrontBaseUrl was required"));
 
         return baseUrl + Paths.get("/").resolve(filePath).toString();
+    }
+
+    @Override
+    public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
+        String prefix = dirPath.toString();
+        if (!prefix.isEmpty()) {
+            prefix += File.separator;
+        }
+
+        ListObjectsV2Result result = s3.listObjectsV2(bucketName, prefix);
+
+        Set<String> seenDirectoryNames = Sets.newHashSet();
+        ImmutableList.Builder<FileInfo> fileInfos = ImmutableList.builder();
+        for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+            String key = objectSummary.getKey().substring(prefix.length());
+            if (key.endsWith(File.separator) || !key.contains(File.separator)) {
+                continue;
+            }
+            key = key.substring(0, key.lastIndexOf(File.separator));
+            if (key.contains(File.separator) || seenDirectoryNames.contains(key)) {
+                continue;
+            }
+
+            seenDirectoryNames.add(key);
+            fileInfos.add(new FileInfo.Builder()
+                    .name(key)
+                    .size(objectSummary.getSize())
+                    .lastModifiedTime(objectSummary.getLastModified().toInstant())
+                    .build());
+        }
+        return fileInfos.build();
+    }
+
+    @Override
+    public List<FileInfo> listFilesInDirectory(Path dirPath) {
+        String prefix = dirPath.toString();
+        if (!prefix.isEmpty()) {
+            prefix += File.separator;
+        }
+
+        ListObjectsV2Result result = s3.listObjectsV2(bucketName, prefix);
+
+        List<FileInfo> fileInfos = Lists.newArrayList();
+        for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+            String key = objectSummary.getKey().substring(prefix.length());
+            if (key.contains(File.separator)) {
+                continue;
+            }
+
+            fileInfos.add(new FileInfo.Builder()
+                    .name(key)
+                    .size(objectSummary.getSize())
+                    .lastModifiedTime(objectSummary.getLastModified().toInstant())
+                    .build());
+        }
+
+        Comparator<String> comparator = new NaturalFilenameComparator();
+        Collections.sort(fileInfos, (FileInfo f1, FileInfo f2) -> comparator.compare(f1.getName(), f2.getName()));
+
+        return ImmutableList.copyOf(fileInfos);
+    }
+
+    @Override
+    public byte[] readByteArrayFromFile(Path filePath) {
+        try {
+            return ByteStreams.toByteArray(s3.getObject(bucketName, filePath.toString()).getObjectContent());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
