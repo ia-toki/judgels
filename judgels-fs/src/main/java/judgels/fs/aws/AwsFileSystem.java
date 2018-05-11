@@ -1,7 +1,5 @@
 package judgels.fs.aws;
 
-import static java.util.stream.Collectors.joining;
-
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -13,16 +11,17 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.services.s3.model.SetObjectAclRequest;
-import com.google.common.collect.ImmutableList;
-import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URLConnection;
-import java.util.List;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 import judgels.fs.FileSystem;
 
-public class AwsFileSystem implements FileSystem {
+public final class AwsFileSystem implements FileSystem {
     private final AmazonS3 s3;
-    private final String cloudFrontBaseUrl;
+    private final Optional<String> cloudFrontBaseUrl;
     private final String bucketName;
 
     public AwsFileSystem(AwsConfiguration config, AwsFsConfiguration fsConfig) {
@@ -42,12 +41,9 @@ public class AwsFileSystem implements FileSystem {
     }
 
     @Override
-    public void uploadPublicFile(InputStream file, List<String> destDirPath, String destFilename) {
-        List<String> destFilePath = ImmutableList.<String>builder()
-                .addAll(destDirPath)
-                .add(destFilename)
-                .build();
-        String destFilePathString = destFilePath.stream().collect(joining(File.separator));
+    public void uploadPublicFile(InputStream file, Path destDirPath, String destFilename) {
+        Path destFilePath = destDirPath.resolve(destFilename);
+        String destFilePathString = destFilePath.toString();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
@@ -64,11 +60,10 @@ public class AwsFileSystem implements FileSystem {
     }
 
     @Override
-    public String getPublicFileUrl(List<String> filePath) {
-        List<String> cloudFrontFilePath = ImmutableList.<String>builder()
-                .add(cloudFrontBaseUrl)
-                .addAll(filePath)
-                .build();
-        return cloudFrontFilePath.stream().collect(joining(File.separator));
+    public String getPublicFileUrl(Path filePath) {
+        String baseUrl = cloudFrontBaseUrl.orElseThrow(
+                () -> new IllegalStateException("cloudFrontBaseUrl was required"));
+
+        return Paths.get(URI.create(baseUrl)).resolve(filePath).toString();
     }
 }

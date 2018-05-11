@@ -1,17 +1,17 @@
 package judgels.fs.local;
 
 import java.io.InputStream;
-import java.util.List;
+import java.nio.file.Path;
 import judgels.fs.FileSystem;
 
-public class LocalFileSystem implements FileSystem {
+public final class LocalFileSystem implements FileSystem {
     @Override
-    public void uploadPublicFile(InputStream file, List<String> destDirPath, String destFilename) {
+    public void uploadPublicFile(InputStream file, Path destDirPath, String destFilename) {
         throw new IllegalStateException();
     }
 
     @Override
-    public String getPublicFileUrl(List<String> filePath) {
+    public String getPublicFileUrl(Path filePath) {
         throw new IllegalStateException();
     }
 }
