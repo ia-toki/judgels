@@ -17,13 +17,10 @@ interface PaginationProps {
 class Pagination extends React.Component<PaginationProps, {}> {
   render() {
     const { totalData } = this.props;
-    const { start, end } = this.getRange();
 
     return (
-      <div className="pagination">
-        <p className="pagination__helper-text" data-key="pagination-helper-text">
-          Showing {start}..{Math.min(end, totalData)} of {totalData} results
-        </p>
+      <div className={totalData > 0 ? 'pagination' : 'pagination--hide'}>
+        {this.renderText()}
         {this.renderNavigation()}
       </div>
     );
@@ -44,6 +41,21 @@ class Pagination extends React.Component<PaginationProps, {}> {
 
   private onChangePage = (nextPage: { selected: number }) => {
     this.props.onChangePage(nextPage.selected + 1);
+  };
+
+  private renderText = () => {
+    const { totalData } = this.props;
+    const { start, end } = this.getRange();
+
+    if (totalData === 0) {
+      return null;
+    }
+
+    return (
+      <p className="pagination__helper-text" data-key="pagination-helper-text">
+        Showing {start}..{Math.min(end, totalData)} of {totalData} results
+      </p>
+    );
   };
 
   private renderNavigation = () => {

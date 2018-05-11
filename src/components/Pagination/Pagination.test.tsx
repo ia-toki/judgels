@@ -33,7 +33,21 @@ describe('Pagination', () => {
 
   beforeEach(() => {
     store = createMockStore<Partial<AppState>>()({});
-    onChangePage = jest.fn().mockReturnValue(14);
+    onChangePage = jest.fn().mockReturnValue(Promise.resolve(14));
+  });
+
+  describe('when there is no data', () => {
+    beforeEach(() => {
+      onChangePage = jest.fn().mockReturnValue(Promise.resolve(0));
+      render('');
+    });
+
+    it('does not show the helper text', async () => {
+      await new Promise(resolve => setImmediate(resolve));
+      wrapper.update();
+
+      expect(wrapper.find('[data-key="pagination-helper-text"]')).toHaveLength(0);
+    });
   });
 
   describe('when there is no page query string', () => {
@@ -43,7 +57,10 @@ describe('Pagination', () => {
       expect(onChangePage).toBeCalledWith(1);
     });
 
-    it('shows the helper text', () => {
+    it('shows the helper text', async () => {
+      await new Promise(resolve => setImmediate(resolve));
+      wrapper.update();
+
       expect(wrapper.find('[data-key="pagination-helper-text"]').text()).toEqual('Showing 1..6 of 14 results');
     });
   });
@@ -55,7 +72,10 @@ describe('Pagination', () => {
       expect(onChangePage).toBeCalledWith(3);
     });
 
-    it('shows the helper text', () => {
+    it('shows the helper text', async () => {
+      await new Promise(resolve => setImmediate(resolve));
+      wrapper.update();
+
       expect(wrapper.find('[data-key="pagination-helper-text"]').text()).toEqual('Showing 13..14 of 14 results');
     });
   });
