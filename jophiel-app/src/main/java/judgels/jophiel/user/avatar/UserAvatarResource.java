@@ -6,10 +6,10 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
@@ -65,7 +65,7 @@ public class UserAvatarResource {
         String extension = Files.getFileExtension(fileDetails.getFileName());
         String destFilename = user.getJid() + "-" + RandomCodeGenerator.newCode() + "." + extension;
 
-        avatarFs.uploadPublicFile(fileStream, ImmutableList.of(), destFilename);
+        avatarFs.uploadPublicFile(fileStream, Paths.get(""), destFilename);
         userStore.updateUserAvatar(user.getJid(), destFilename);
     }
 }

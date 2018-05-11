@@ -1,7 +1,7 @@
 package judgels.jophiel.user;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
@@ -106,7 +106,7 @@ public class UserStore {
 
     public Optional<String> getUserAvatar(String userJid) {
         return userDao.selectByJid(userJid).flatMap(model ->
-                Optional.ofNullable(model.avatarFilename).map(ImmutableList::of).map(userAvatarFs::getPublicFileUrl));
+                Optional.ofNullable(model.avatarFilename).map(Paths::get).map(userAvatarFs::getPublicFileUrl));
     }
 
     public Optional<User> updateUserAvatar(String userJid, @Nullable String newAvatarFilename) {
