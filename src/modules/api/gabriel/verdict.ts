@@ -5,6 +5,8 @@ export enum VerdictCode {
   WA = 'WA',
   TLE = 'TLE',
   RTE = 'RTE',
+  PND = '?',
+  ERR = '!!!',
   SKP = 'SKP',
 }
 
@@ -12,9 +14,13 @@ const verdictIntentsMap = {
   AC: Intent.SUCCESS,
   WA: Intent.DANGER,
   SKP: Intent.NONE,
+  PND: Intent.NONE,
+  ERR: Intent.NONE,
 };
 
 const verdictDisplayCodeMap = {
+  PND: '...',
+  ERR: 'ERROR!',
   SKP: 'SKIPPED',
 };
 
