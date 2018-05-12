@@ -5,11 +5,13 @@ import io.dropwizard.Application;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import judgels.fs.aws.AwsModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.service.jersey.JudgelsObjectMappers;
 import judgels.uriel.hibernate.UrielHibernateBundle;
 import judgels.uriel.hibernate.UrielHibernateModule;
 import judgels.uriel.jophiel.JophielModule;
+import judgels.uriel.submission.SubmissionModule;
 
 public class UrielApplication extends Application<UrielApplicationConfiguration> {
     private final HibernateBundle<UrielApplicationConfiguration> hibernateBundle = new UrielHibernateBundle();
@@ -32,6 +34,8 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         UrielComponent component = DaggerUrielComponent.builder()
                 .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
                 .urielHibernateModule(new UrielHibernateModule(hibernateBundle))
+                .awsModule(new AwsModule(urielConfig.getAwsConfig()))
+                .submissionModule(new SubmissionModule(urielConfig.getSubmissionConfig()))
                 .build();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);

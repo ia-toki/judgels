@@ -9,16 +9,19 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.gabriel.api.SubmissionSource;
 import judgels.jophiel.api.user.UserInfo;
 import judgels.jophiel.api.user.UserService;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.submission.SubmissionSourceFetcher;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
+import judgels.uriel.api.contest.submission.ContestSubmission;
 import judgels.uriel.api.contest.submission.ContestSubmissionResponse;
 import judgels.uriel.api.contest.submission.ContestSubmissionService;
 import judgels.uriel.api.contest.submission.ContestSubmissionsResponse;
@@ -30,6 +33,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
     private final ContestStore contestStore;
+    private final SubmissionSourceFetcher submissionSourceFetcher;
     private final ContestSubmissionStore submissionStore;
     private final ContestProblemStore problemStore;
     private final UserService userService;
@@ -39,6 +43,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ActorChecker actorChecker,
             RoleChecker roleChecker,
             ContestStore contestStore,
+            SubmissionSourceFetcher submissionSourceFetcher,
             ContestSubmissionStore submissionStore,
             ContestProblemStore problemStore,
             UserService userService) {
@@ -46,6 +51,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
         this.contestStore = contestStore;
+        this.submissionSourceFetcher = submissionSourceFetcher;
         this.submissionStore = submissionStore;
         this.problemStore = problemStore;
         this.userService = userService;
@@ -90,8 +96,14 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         UserInfo user = checkFound(Optional.ofNullable(
                 userService.findUsersByJids(ImmutableSet.of(userJid)).get(userJid)));
 
+        SubmissionSource source = submissionSourceFetcher.fetchSubmissionSource(submission);
+        ContestSubmission contestSubmission = new ContestSubmission.Builder()
+                .submission(submission)
+                .source(source)
+                .build();
+
         return new ContestSubmissionResponse.Builder()
-                .data(submission)
+                .data(contestSubmission)
                 .user(user)
                 .problemAlias(problem.getAlias())
                 .problemName("")

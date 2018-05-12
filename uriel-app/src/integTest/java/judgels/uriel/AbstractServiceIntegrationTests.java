@@ -11,6 +11,7 @@ import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.testing.DropwizardTestSupport;
 import judgels.service.jaxrs.JaxRsClients;
 import judgels.uriel.jophiel.JophielConfiguration;
+import judgels.uriel.submission.SubmissionConfiguration;
 import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
@@ -36,6 +37,7 @@ public abstract class AbstractServiceIntegrationTests {
                 WebSecurityConfiguration.DEFAULT,
                 new UrielConfiguration.Builder()
                         .jophielConfig(JophielConfiguration.DEFAULT)
+                        .submissionConfig(SubmissionConfiguration.DEFAULT)
                         .build());
 
         support = new DropwizardTestSupport<>(UrielApplication.class, config);
