@@ -1,8 +1,9 @@
-import { Submission } from '../sandalphon/submission';
-import { UserInfo, UsersMap } from '../jophiel/user';
 import { APP_CONFIG } from '../../../conf';
 import { get } from '../http';
 import { Page } from '../pagination';
+import { UserInfo, UsersMap } from '../jophiel/user';
+import { Submission } from '../sandalphon/submission';
+import { SubmissionSource } from '../gabriel/submission';
 
 export interface ContestSubmissionsResponse {
   data: Page<Submission>;
@@ -10,8 +11,13 @@ export interface ContestSubmissionsResponse {
   problemAliasesMap: { [problemJid: string]: string };
 }
 
+export interface ContestSubmission {
+  submission: Submission;
+  source: SubmissionSource;
+}
+
 export interface ContestSubmissionResponse {
-  data: Submission;
+  data: ContestSubmission;
   user: UserInfo;
   problemName: string;
   problemAlias: string;

@@ -22,6 +22,10 @@
     classnames "^2.2"
     tslib "^1.9.0"
 
+"@types/base-64@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@types/base-64/-/base-64-0.1.2.tgz#63ac318302cdabb5f04e8ae2a56e54d4832107e2"
+
 "@types/cheerio@*":
   version "0.22.5"
   resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.5.tgz#db749e8470d98f103d51407db9bee5a8b9d20d45"
@@ -881,6 +885,10 @@ balanced-match@^0.4.1, balanced-match@^0.4.2:
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
+
+base-64@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
 
 base64-js@^1.0.2:
   version "1.2.0"

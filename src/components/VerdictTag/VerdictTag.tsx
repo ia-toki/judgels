@@ -1,7 +1,7 @@
 import { Tag } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { getVerdictDisplayCode, getVerdictIntent } from '../../modules/api/gabriel/verdicts';
+import { getVerdictDisplayCode, getVerdictIntent } from '../../modules/api/gabriel/verdict';
 
 export interface VerdictTagProps {
   verdictCode: string;

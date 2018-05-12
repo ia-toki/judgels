@@ -8,8 +8,10 @@ import { SubmissionDetails } from '../../../../../../../../../../../../component
 import { AppState } from '../../../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../../../modules/contestSelectors';
 import { Contest } from '../../../../../../../../../../../../modules/api/uriel/contest';
-import { ContestSubmissionResponse } from '../../../../../../../../../../../../modules/api/uriel/contestSubmission';
-import { Submission } from '../../../../../../../../../../../../modules/api/sandalphon/submission';
+import {
+  ContestSubmission,
+  ContestSubmissionResponse,
+} from '../../../../../../../../../../../../modules/api/uriel/contestSubmission';
 import { UserInfo } from '../../../../../../../../../../../../modules/api/jophiel/user';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../modules/contestSubmissionActions';
 
@@ -19,7 +21,7 @@ export interface ContestSubmissionPageProps extends RouteComponentProps<{ submis
 }
 
 interface ContestSubmissionPageState {
-  submission?: Submission;
+  submission?: ContestSubmission;
   user?: UserInfo;
   problemName?: string;
   problemAlias?: string;
@@ -60,7 +62,8 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
 
     return (
       <SubmissionDetails
-        submission={submission}
+        submission={submission.submission}
+        source={submission.source}
         user={user!}
         problemName={problemName!}
         problemAlias={problemAlias!}

@@ -1,3 +1,5 @@
+import { Tag } from '@blueprintjs/core';
+import * as base64 from 'base-64';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
@@ -5,14 +7,16 @@ import { ContentCard } from '../ContentCard/ContentCard';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { UserInfo } from '../../modules/api/jophiel/user';
 import { Submission } from '../../modules/api/sandalphon/submission';
-import { getGradingLanguageName } from '../../modules/api/gabriel/languages';
+import { getGradingLanguageName } from '../../modules/api/gabriel/language';
+import { TestCaseResult } from '../../modules/api/gabriel/grading';
+import { SubmissionSource } from '../../modules/api/gabriel/submission';
 
 import './SubmissionDetails.css';
-import { Tag } from '@blueprintjs/core';
-import { TestCaseResult } from '../../modules/api/gabriel/grading';
+import { GradingLanguageCode } from '../../modules/api/gabriel/language';
 
 export interface SubmissionDetailsProps {
   submission: Submission;
+  source: SubmissionSource;
   user: UserInfo;
   problemName: string;
   problemAlias: string;
@@ -234,7 +238,26 @@ export class SubmissionDetails extends React.Component<SubmissionDetailsProps> {
   };
 
   private renderSourceFiles = () => {
-    return null;
+    const { submission, source } = this.props;
+    if (submission.gradingLanguage === GradingLanguageCode.OutputOnly) {
+      return null;
+    }
+
+    const sourceFiles = Object.keys(source.files).map(key => (
+      <ContentCard key={key}>
+        <h5>
+          {key === 'source' ? '' : key + ': '} {source.files[key].name}
+        </h5>
+        <pre>{base64.decode(source.files[key].content)}</pre>
+      </ContentCard>
+    ));
+
+    return (
+      <div>
+        <h4>Source Files</h4>
+        {sourceFiles}
+      </div>
+    );
   };
 
   private renderTestGroupHeading = (id: number, results: TestCaseResult[]) => {

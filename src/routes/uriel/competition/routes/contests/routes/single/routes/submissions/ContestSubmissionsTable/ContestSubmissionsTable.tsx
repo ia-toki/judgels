@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { VerdictTag } from '../../../../../../../../../../components/VerdictTag/VerdictTag';
 import { Submission } from '../../../../../../../../../../modules/api/sandalphon/submission';
-import { getGradingLanguageName } from '../../../../../../../../../../modules/api/gabriel/languages';
+import { getGradingLanguageName } from '../../../../../../../../../../modules/api/gabriel/language';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 
 import './ContestSubmissionsTable.css';
