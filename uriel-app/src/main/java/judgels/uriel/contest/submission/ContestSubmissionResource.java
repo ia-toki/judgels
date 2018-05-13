@@ -16,13 +16,13 @@ import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.SubmissionWithSource;
+import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
 import judgels.sandalphon.submission.SubmissionSourceFetcher;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
-import judgels.uriel.api.contest.submission.ContestSubmission;
-import judgels.uriel.api.contest.submission.ContestSubmissionResponse;
 import judgels.uriel.api.contest.submission.ContestSubmissionService;
 import judgels.uriel.api.contest.submission.ContestSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
@@ -85,7 +85,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestSubmissionResponse getSubmissionById(AuthHeader authHeader, long submissionId) {
+    public SubmissionWithSourceResponse getSubmissionWithSourceById(AuthHeader authHeader, long submissionId) {
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.findSubmissionById(submissionId));
         Contest contest = checkFound(contestStore.findContestByJid(submission.getContainerJid()));
@@ -98,17 +98,17 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 userService.findUsersByJids(ImmutableSet.of(userJid)).get(userJid)));
 
         SubmissionSource source = submissionSourceFetcher.fetchSubmissionSource(submission);
-        ContestSubmission contestSubmission = new ContestSubmission.Builder()
+        SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
                 .submission(submission)
                 .source(source)
                 .build();
 
-        return new ContestSubmissionResponse.Builder()
-                .data(contestSubmission)
+        return new SubmissionWithSourceResponse.Builder()
+                .data(submissionWithSource)
                 .user(user)
                 .problemAlias(problem.getAlias())
                 .problemName("")
-                .contestName(contest.getName())
+                .containerName(contest.getName())
                 .build();
     }
 }

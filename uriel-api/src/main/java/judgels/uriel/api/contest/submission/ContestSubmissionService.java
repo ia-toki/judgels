@@ -10,9 +10,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/submissions")
+@Path("/api/v2/submissions/contest")
 public interface ContestSubmissionService {
     @GET
     @Path("/mine")
@@ -25,7 +26,7 @@ public interface ContestSubmissionService {
     @GET
     @Path("/id/{submissionId}")
     @Produces(APPLICATION_JSON)
-    ContestSubmissionResponse getSubmissionById(
+    SubmissionWithSourceResponse getSubmissionWithSourceById(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionId") long submissionId);
 }
