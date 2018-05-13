@@ -8,10 +8,10 @@ export const contestSubmissionActions = {
     };
   },
 
-  fetch: (submissionId: number) => {
+  fetchWithSource: (submissionId: number) => {
     return async (dispatch, getState, { contestSubmissionAPI }) => {
       const token = selectToken(getState());
-      return await contestSubmissionAPI.getSubmission(token, submissionId);
+      return await contestSubmissionAPI.getSubmissionWithSource(token, submissionId);
     };
   },
 };

@@ -9,38 +9,38 @@ import { AppState } from '../../../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../../../modules/contestSelectors';
 import { Contest } from '../../../../../../../../../../../../modules/api/uriel/contest';
 import {
-  ContestSubmission,
-  ContestSubmissionResponse,
-} from '../../../../../../../../../../../../modules/api/uriel/contestSubmission';
+  SubmissionWithSource,
+  SubmissionWithSourceResponse,
+} from '../../../../../../../../../../../../modules/api/sandalphon/submission';
 import { UserInfo } from '../../../../../../../../../../../../modules/api/jophiel/user';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../modules/contestSubmissionActions';
 
 export interface ContestSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   contest: Contest;
-  onFetchSubmission: (submissionId: number) => Promise<ContestSubmissionResponse>;
+  onFetchSubmissionWithSource: (submissionId: number) => Promise<SubmissionWithSourceResponse>;
 }
 
 interface ContestSubmissionPageState {
-  submission?: ContestSubmission;
+  submissionWithSource?: SubmissionWithSource;
   user?: UserInfo;
   problemName?: string;
   problemAlias?: string;
-  contestName?: string;
+  containerName?: string;
 }
 
 export class ContestSubmissionPage extends React.Component<ContestSubmissionPageProps, ContestSubmissionPageState> {
   state: ContestSubmissionPageState = {};
 
   async componentDidMount() {
-    const { data, user, problemName, problemAlias, contestName } = await this.props.onFetchSubmission(
+    const { data, user, problemName, problemAlias, containerName } = await this.props.onFetchSubmissionWithSource(
       +this.props.match.params.submissionId
     );
     this.setState({
-      submission: data,
+      submissionWithSource: data,
       user,
       problemName,
       problemAlias,
-      contestName,
+      containerName,
     });
   }
 
@@ -55,20 +55,20 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
   }
 
   private renderSubmission = () => {
-    const { submission, user, problemName, problemAlias, contestName } = this.state;
-    if (!submission) {
+    const { submissionWithSource, user, problemName, problemAlias, containerName } = this.state;
+    if (!submissionWithSource) {
       return <LoadingState />;
     }
 
     return (
       <SubmissionDetails
-        submission={submission.submission}
-        source={submission.source}
+        submission={submissionWithSource.submission}
+        source={submissionWithSource.source}
         user={user!}
         problemName={problemName!}
         problemAlias={problemAlias!}
         containerTitle="Contest"
-        containerName={contestName!}
+        containerName={containerName!}
       />
     );
   };
@@ -80,7 +80,7 @@ function createContestSubmissionPage(contestSubmissionActions) {
   });
 
   const mapDispatchToProps = {
-    onFetchSubmission: contestSubmissionActions.fetch,
+    onFetchSubmissionWithSource: contestSubmissionActions.fetchWithSource,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionPage));

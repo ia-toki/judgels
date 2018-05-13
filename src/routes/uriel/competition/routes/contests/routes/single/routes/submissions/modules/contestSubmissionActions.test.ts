@@ -1,9 +1,7 @@
 import { contestSubmissionActions } from './contestSubmissionActions';
 import { contestJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
-import {
-  ContestSubmissionResponse,
-  ContestSubmissionsResponse,
-} from '../../../../../../../../../../modules/api/uriel/contestSubmission';
+import { SubmissionWithSourceResponse } from '../../../../../../../../../../modules/api/sandalphon/submission';
+import { ContestSubmissionsResponse } from '../../../../../../../../../../modules/api/uriel/contestSubmission';
 import { AppState } from '../../../../../../../../../../modules/store';
 
 describe('contestSubmissionActions', () => {
@@ -17,7 +15,7 @@ describe('contestSubmissionActions', () => {
 
     contestSubmissionAPI = {
       getMySubmissions: jest.fn(),
-      getSubmission: jest.fn(),
+      getSubmissionWithSource: jest.fn(),
     };
   });
 
@@ -37,19 +35,19 @@ describe('contestSubmissionActions', () => {
     });
   });
 
-  describe('fetch()', () => {
-    const { fetch } = contestSubmissionActions;
-    const doFetch = async () => fetch(3)(dispatch, getState, { contestSubmissionAPI });
+  describe('fetchWithSource()', () => {
+    const { fetchWithSource } = contestSubmissionActions;
+    const doFetch = async () => fetchWithSource(3)(dispatch, getState, { contestSubmissionAPI });
 
     beforeEach(async () => {
-      const submission = {} as ContestSubmissionResponse;
-      contestSubmissionAPI.getSubmission.mockReturnValue(submission);
+      const submissionWithSource = {} as SubmissionWithSourceResponse;
+      contestSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
 
       await doFetch();
     });
 
     it('calls API to get contest submission', () => {
-      expect(contestSubmissionAPI.getSubmission).toHaveBeenCalledWith(token, 3);
+      expect(contestSubmissionAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3);
     });
   });
 });
