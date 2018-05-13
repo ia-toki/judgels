@@ -1,6 +1,7 @@
 package judgels.uriel.contest.style;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import judgels.gabriel.api.LanguageRestriction;
 import org.immutables.value.Value;
 
 @Value.Immutable

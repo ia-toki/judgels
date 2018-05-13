@@ -4,12 +4,12 @@ import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
+import judgels.gabriel.api.LanguageRestriction;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.style.IoiContestStyleConfig;
-import judgels.uriel.contest.style.LanguageRestriction;
 import org.junit.jupiter.api.Test;
 
 class IoiScoreboardProcessorTests {

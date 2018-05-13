@@ -65,7 +65,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canViewOwnSubmissions(actorJid, contestJid));
+        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        checkAllowed(roleChecker.canViewOwnSubmissions(actorJid, contest));
 
         SelectionOptions.Builder options = new SelectionOptions.Builder();
         options.orderDir(OrderDir.DESC);
@@ -87,9 +88,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     public ContestSubmissionResponse getSubmissionById(AuthHeader authHeader, long submissionId) {
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.findSubmissionById(submissionId));
-        checkAllowed(roleChecker.canViewSubmission(actorJid, submission.getContainerJid(), submission.getUserJid()));
-
         Contest contest = checkFound(contestStore.findContestByJid(submission.getContainerJid()));
+        checkAllowed(roleChecker.canViewSubmission(actorJid, contest, submission.getUserJid()));
+
         ContestProblem problem = checkFound(problemStore.findProblem(contest.getJid(), submission.getProblemJid()));
 
         String userJid = submission.getUserJid();

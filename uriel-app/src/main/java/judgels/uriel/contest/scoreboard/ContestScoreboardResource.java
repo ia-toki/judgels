@@ -42,11 +42,11 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     @UnitOfWork(readOnly = true)
     public Optional<ContestScoreboardResponse> getScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
-
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        checkAllowed(roleChecker.canViewDefaultScoreboard(actorJid, contest));
+
         return scoreboardFetcher
-                .fetchScoreboard(contest, actorJid, roleChecker.canSuperviseScoreboard(actorJid, contestJid))
+                .fetchScoreboard(contest, actorJid, roleChecker.canSuperviseScoreboard(actorJid, contest))
                 .map(this::buildResponse);
     }
 
@@ -54,11 +54,11 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     @UnitOfWork(readOnly = true)
     public Optional<ContestScoreboardResponse> getFrozenScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canViewScoreboard(actorJid, contestJid));
-
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        checkAllowed(roleChecker.canViewDefaultScoreboard(actorJid, contest));
+
         return scoreboardFetcher
-                .fetchFrozenScoreboard(contest, actorJid, roleChecker.canSuperviseScoreboard(actorJid, contestJid))
+                .fetchFrozenScoreboard(contest, actorJid, roleChecker.canSuperviseScoreboard(actorJid, contest))
                 .map(this::buildResponse);
     }
 

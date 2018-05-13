@@ -1,4 +1,4 @@
-package judgels.uriel.contest.style;
+package judgels.gabriel.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Set;
@@ -11,5 +11,9 @@ public abstract class LanguageRestriction {
 
     public static LanguageRestriction noRestriction() {
         return ImmutableLanguageRestriction.builder().build();
+    }
+
+    public static LanguageRestriction of(Set<String> allowedLanguageNames) {
+        return ImmutableLanguageRestriction.builder().allowedLanguageNames(allowedLanguageNames).build();
     }
 }

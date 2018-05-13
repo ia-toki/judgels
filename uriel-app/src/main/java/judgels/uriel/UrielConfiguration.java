@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.uriel.jophiel.JophielConfiguration;
+import judgels.uriel.sandalphon.SandalphonConfiguration;
 import judgels.uriel.submission.SubmissionConfiguration;
 import org.immutables.value.Value;
 
@@ -13,6 +14,9 @@ import org.immutables.value.Value;
 public interface UrielConfiguration {
     @JsonProperty("jophiel")
     JophielConfiguration getJophielConfig();
+
+    @JsonProperty("sandalphon")
+    SandalphonConfiguration getSandalphonConfig();
 
     @JsonProperty("aws")
     Optional<AwsConfiguration> getAwsConfig();

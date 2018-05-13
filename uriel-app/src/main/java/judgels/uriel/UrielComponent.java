@@ -12,10 +12,12 @@ import judgels.uriel.contest.web.ContestWebResource;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.hibernate.UrielHibernateModule;
 import judgels.uriel.jophiel.JophielModule;
+import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.submission.SubmissionModule;
 
 @Component(modules = {
         JophielModule.class,
+        SandalphonModule.class,
         UrielModule.class,
         UrielHibernateDaoModule.class,
         UrielHibernateModule.class,

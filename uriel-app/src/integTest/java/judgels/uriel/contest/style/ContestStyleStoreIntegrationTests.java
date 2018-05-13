@@ -2,6 +2,7 @@ package judgels.uriel.contest.style;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import judgels.gabriel.api.LanguageRestriction;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;

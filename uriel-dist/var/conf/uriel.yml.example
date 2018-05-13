@@ -44,6 +44,11 @@ uriel:
   jophiel:
     baseUrl: http://localhost:9001
 
+  sandalphon:
+    baseUrl: http://localhost:9002
+    clientJid: xxx
+    clientSecret: xxx
+
   aws:
     accessKey: xxx
     secretKey: xxx
