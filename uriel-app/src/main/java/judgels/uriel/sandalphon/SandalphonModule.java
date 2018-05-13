@@ -5,6 +5,8 @@ import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.service.api.client.BasicAuthHeader;
+import judgels.service.api.client.Client;
 
 @Module
 public class SandalphonModule {
@@ -12,6 +14,12 @@ public class SandalphonModule {
 
     public SandalphonModule(SandalphonConfiguration config) {
         this.config = config;
+    }
+
+    @Provides
+    @SandalphonClientAuthHeader
+    BasicAuthHeader clientAuthHeader() {
+        return BasicAuthHeader.of(Client.of(config.getClientJid(), config.getClientSecret()));
     }
 
     @Provides

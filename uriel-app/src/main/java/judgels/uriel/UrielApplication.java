@@ -11,6 +11,7 @@ import judgels.service.jersey.JudgelsObjectMappers;
 import judgels.uriel.hibernate.UrielHibernateBundle;
 import judgels.uriel.hibernate.UrielHibernateModule;
 import judgels.uriel.jophiel.JophielModule;
+import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.submission.SubmissionModule;
 
 public class UrielApplication extends Application<UrielApplicationConfiguration> {
@@ -35,6 +36,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
                 .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
                 .urielHibernateModule(new UrielHibernateModule(hibernateBundle))
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
+                .sandalphonModule(new SandalphonModule(urielConfig.getSandalphonConfig()))
                 .submissionModule(new SubmissionModule(urielConfig.getSubmissionConfig()))
                 .build();
 
@@ -43,6 +45,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         env.jersey().register(component.contestResource());
         env.jersey().register(component.contestWebResource());
         env.jersey().register(component.contestAnnouncementResource());
+        env.jersey().register(component.contestProblemResource());
         env.jersey().register(component.contestScoreboardResource());
         env.jersey().register(component.contestContestantResource());
         env.jersey().register(component.contestSubmissionResource());

@@ -9,6 +9,7 @@ public interface ContestProblem {
     String getProblemJid();
     String getAlias();
     ContestProblemStatus getStatus();
+    long getSubmissionsLimit();
 
     class Builder extends ImmutableContestProblem.Builder {}
 }

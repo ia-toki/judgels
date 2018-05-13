@@ -21,4 +21,7 @@ public class ContestProblemModel extends Model {
 
     @Column(nullable = false)
     public String status;
+
+    @Column(nullable = false)
+    public long submissionsLimit;
 }

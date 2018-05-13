@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.persistence.ContestProblemDao;
@@ -33,6 +34,8 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     public List<ContestProblemModel> selectAllByContestJid(String contestJid) {
         return selectAll(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
+                .build(), new SelectionOptions.Builder()
+                .orderBy("alias")
                 .build());
     }
 

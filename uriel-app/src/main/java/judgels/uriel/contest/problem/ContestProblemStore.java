@@ -1,5 +1,6 @@
 package judgels.uriel.contest.problem;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +31,13 @@ public class ContestProblemStore {
                 .collect(Collectors.toSet());
     }
 
+    public List<ContestProblem> getProblems(String contestJid) {
+        return problemDao.selectAllByContestJid(contestJid)
+                .stream()
+                .map(ContestProblemStore::fromModel)
+                .collect(Collectors.toList());
+    }
+
     public Map<String, String> findProblemAliasesByJids(String contestJid, Set<String> problemJids) {
         Map<String, String> problemAliases = problemDao.selectAllByContestJid(contestJid)
                 .stream()
@@ -44,6 +52,7 @@ public class ContestProblemStore {
                 .problemJid(model.problemJid)
                 .alias(model.alias)
                 .status(ContestProblemStatus.valueOf(model.status))
+                .submissionsLimit(model.submissionsLimit)
                 .build();
     }
 }
