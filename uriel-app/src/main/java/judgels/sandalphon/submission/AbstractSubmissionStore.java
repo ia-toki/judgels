@@ -79,11 +79,22 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
                 .score(model.score);
 
         if (model.details != null) {
+            RawGradingResultDetails raw;
             try {
-                grading.details(mapper.readValue(model.details, GradingResultDetails.class));
+                raw = mapper.readValue(model.details, RawGradingResultDetails.class);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+            Map<String, byte[]> compilationOutputs = raw.getCompilationOutputs().entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getBytes()));
+
+            grading.details(new GradingResultDetails.Builder()
+                    .compilationOutputs(compilationOutputs)
+                    .testDataResults(raw.getTestDataResults())
+                    .subtaskResults(raw.getSubtaskResults())
+                    .build());
         }
 
         return Optional.of(grading.build());

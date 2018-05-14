@@ -8,7 +8,9 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableGradingResultDetails.class)
 public interface GradingResultDetails {
-    Map<String, String> getCompilationOutputs();
+    Map<String, byte[]> getCompilationOutputs();
     List<TestGroupResult> getTestDataResults();
     List<SubtaskResult> getSubtaskResults();
+
+    class Builder extends ImmutableGradingResultDetails.Builder {}
 }
