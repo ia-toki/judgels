@@ -243,12 +243,16 @@ export class SubmissionDetails extends React.Component<SubmissionDetailsProps> {
       return null;
     }
 
+    const details = this.props.submission.latestGrading!.details!;
+
     const sourceFiles = Object.keys(source.files).map(key => (
       <ContentCard key={key}>
         <h5>
           {key === 'source' ? '' : key + ': '} {source.files[key].name}
         </h5>
         <pre>{base64.decode(source.files[key].content)}</pre>
+        <h5>Compilation Output</h5>
+        <pre>{base64.decode(details.compilationOutputs[key])}</pre>
       </ContentCard>
     ));
 

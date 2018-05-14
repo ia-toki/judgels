@@ -1,6 +1,6 @@
 export interface SourceFile {
   name: string;
-  content: any;
+  content: string;
 }
 
 export interface SubmissionSource {
