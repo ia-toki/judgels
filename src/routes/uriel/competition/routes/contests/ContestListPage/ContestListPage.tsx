@@ -3,13 +3,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 
-import Pagination from '../../../../../../../../components/Pagination/Pagination';
+import Pagination from '../../../../../../components/Pagination/Pagination';
+import { Card } from '../../../../../../components/Card/Card';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { BlankContestListTable } from '../ContestListTable/BlankContestListTable';
 import { ContestListTable } from '../ContestListTable/ContestListTable';
-import { withBreadcrumb } from '../../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { Card } from '../../../../../../../../components/Card/Card';
-import { Contest, ContestPage } from '../../../../../../../../modules/api/uriel/contest';
-import { contestActions as injectedContestActions } from '../../../modules/contestActions';
+import { Contest, ContestPage } from '../../../../../../modules/api/uriel/contest';
+import { contestActions as injectedContestActions } from '../modules/contestActions';
 
 export interface ContestListPageProps extends RouteComponentProps<{}> {
   onFetchActiveContestList: () => Promise<Contest[]>;

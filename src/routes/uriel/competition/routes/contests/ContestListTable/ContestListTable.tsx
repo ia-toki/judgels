@@ -1,10 +1,10 @@
 import { Card, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
-import { FormattedDate } from '../../../../../../../../components/FormattedDate/FormattedDate';
-import { FormattedDuration } from '../../../../../../../../components/FormattedDuration/FormattedDuration';
-import { Contest } from '../../../../../../../../modules/api/uriel/contest';
+import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
+import { FormattedDate } from '../../../../../../components/FormattedDate/FormattedDate';
+import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 
 import './ContestListTable.css';
 

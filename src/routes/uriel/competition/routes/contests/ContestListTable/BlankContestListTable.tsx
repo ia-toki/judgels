@@ -1,7 +1,7 @@
 import { Card } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
+import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 
 import './ContestListTable.css';
 

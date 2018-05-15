@@ -6,7 +6,7 @@ import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
 } from '../../../../components/ContentWithSidebar/ContentWithSidebar';
-import ContestListPage from './contests/routes/list/ContestListPage/ContestListPage';
+import ContestListPage from './contests/ContestListPage/ContestListPage';
 
 const MainCompetitionRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
