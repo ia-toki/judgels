@@ -7,4 +7,11 @@ export const contestProblemActions = {
       return await contestProblemAPI.getMyProblems(token, contestJid);
     };
   },
+
+  fetchStatement: (contestJid: string, problemAlias: string) => {
+    return async (dispatch, getState, { contestProblemAPI }) => {
+      const token = selectToken(getState());
+      return await contestProblemAPI.getProblemStatement(token, contestJid, problemAlias);
+    };
+  },
 };

@@ -20,6 +20,6 @@ export const ContestAnnouncementCard = (props: ContestAnnouncementCardProps) => 
     </p>
     <div className="clearfix" />
     <hr />
-    {HTMLReactParser(props.announcement.content)}
+    <div className="html-txt">{HTMLReactParser(props.announcement.content)}</div>
   </Callout>
 );

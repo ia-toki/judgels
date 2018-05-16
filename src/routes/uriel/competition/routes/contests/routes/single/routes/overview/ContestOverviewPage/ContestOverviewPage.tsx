@@ -36,7 +36,7 @@ class ContestOverviewPage extends React.Component<ContestOverviewPageProps> {
   }
 
   private renderDescription = (description: string) => {
-    return description && HTMLReactParser(description);
+    return description && <div className="html-text">{HTMLReactParser(description)}</div>;
   };
 }
 

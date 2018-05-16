@@ -1,0 +1,26 @@
+.statement {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.statement__name {
+  text-align: center;
+}
+
+.statement__limits {
+  width: 200px;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+
+  td, th {
+    border: 1px #dee0e1 solid;
+    border-top: 0;
+    vertical-align: middle;
+  }
+}
+
+.statement__text {
+  margin-top: 25px;
+}

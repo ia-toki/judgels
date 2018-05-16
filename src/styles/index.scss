@@ -73,6 +73,11 @@ ol li, ul li {
   margin-bottom: 2px;
 }
 
+pre {
+  background-color: #f5f5f5;
+  padding: 9px;
+}
+
 em {
   font-style: oblique;
 }
@@ -125,4 +130,12 @@ table {
 
 .pt-button.pt-intent-primary {
   background-color: $primary-color;
+}
+
+.html-text {
+  h2, h3, h4 {
+    margin-top: 20px;
+    margin-bottom: 10px !important;
+    line-height: 20px !important;
+  }
 }
