@@ -57,11 +57,6 @@ export class SubmissionDetails extends React.Component<SubmissionDetailsProps> {
     const { submission, user, problemAlias, problemName, containerTitle, containerName } = this.props;
     const grading = submission.latestGrading;
 
-    let problemDisplayName = problemAlias;
-    if (problemName) {
-      problemDisplayName = problemDisplayName + ' - ' + problemName;
-    }
-
     return (
       <div>
         <h4>General Info</h4>
@@ -80,7 +75,7 @@ export class SubmissionDetails extends React.Component<SubmissionDetailsProps> {
               </tr>
               <tr>
                 <td>Problem</td>
-                <td>{problemDisplayName}</td>
+                <td>{(problemAlias ? problemAlias + '. ' : '') + problemName}</td>
               </tr>
               <tr>
                 <td>{containerTitle}</td>
