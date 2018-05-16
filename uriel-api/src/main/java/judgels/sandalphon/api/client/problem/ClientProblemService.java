@@ -23,6 +23,13 @@ public interface ClientProblemService {
     @GET
     @Path("/{problemJid}")
     @Produces(APPLICATION_JSON)
+    ProblemInfo getProblem(
+            @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
+            @PathParam("problemJid") String problemJid);
+
+    @GET
+    @Path("/{problemJid}/statement")
+    @Produces(APPLICATION_JSON)
     ProblemStatement getProblemStatement(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             @PathParam("problemJid") String problemJid,

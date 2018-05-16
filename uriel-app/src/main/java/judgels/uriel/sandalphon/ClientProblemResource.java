@@ -12,6 +12,14 @@ import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.service.api.client.BasicAuthHeader;
 
 public class ClientProblemResource implements ClientProblemService {
+    @Override
+    public ProblemInfo getProblem(BasicAuthHeader authHeader, String problemJid) {
+        return new ProblemInfo.Builder()
+                .slug("prob")
+                .name("The Problem")
+                .build();
+    }
+
     @SuppressWarnings("checkstyle:all")
     @Override
     public ProblemStatement getProblemStatement(

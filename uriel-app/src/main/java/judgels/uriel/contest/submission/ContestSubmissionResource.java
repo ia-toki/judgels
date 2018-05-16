@@ -15,12 +15,15 @@ import judgels.jophiel.api.user.UserService;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.sandalphon.api.submission.SubmissionWithSource;
 import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
 import judgels.sandalphon.submission.SubmissionSourceFetcher;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionService;
@@ -28,6 +31,7 @@ import judgels.uriel.api.contest.submission.ContestSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.role.RoleChecker;
+import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
     private final ActorChecker actorChecker;
@@ -37,6 +41,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ContestSubmissionStore submissionStore;
     private final ContestProblemStore problemStore;
     private final UserService userService;
+    private final BasicAuthHeader sandalphonClientAuthHeader;
+    private final ClientProblemService clientProblemService;
 
     @Inject
     public ContestSubmissionResource(
@@ -46,7 +52,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             SubmissionSourceFetcher submissionSourceFetcher,
             ContestSubmissionStore submissionStore,
             ContestProblemStore problemStore,
-            UserService userService) {
+            UserService userService,
+            @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
+            ClientProblemService clientProblemService) {
 
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
@@ -55,6 +63,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.submissionStore = submissionStore;
         this.problemStore = problemStore;
         this.userService = userService;
+        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
+        this.clientProblemService = clientProblemService;
     }
 
     @Override
@@ -91,7 +101,10 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.findContestByJid(submission.getContainerJid()));
         checkAllowed(roleChecker.canViewSubmission(actorJid, contest, submission.getUserJid()));
 
-        ContestProblem problem = checkFound(problemStore.findProblem(contest.getJid(), submission.getProblemJid()));
+        ContestProblem contestProblem =
+                checkFound(problemStore.findProblem(contest.getJid(), submission.getProblemJid()));
+        ProblemInfo problem =
+                clientProblemService.getProblem(sandalphonClientAuthHeader, contestProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
         UserInfo user = checkFound(Optional.ofNullable(
@@ -106,8 +119,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         return new SubmissionWithSourceResponse.Builder()
                 .data(submissionWithSource)
                 .user(user)
-                .problemAlias(problem.getAlias())
-                .problemName("")
+                .problemAlias(contestProblem.getAlias())
+                .problemName(problem.getName())
                 .containerName(contest.getName())
                 .build();
     }
