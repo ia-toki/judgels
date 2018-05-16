@@ -24,6 +24,11 @@ public class ContestProblemStore {
                 .map(ContestProblemStore::fromModel);
     }
 
+    public Optional<ContestProblem> findProblemByAlias(String contestJid, String problemAlias) {
+        return problemDao.selectByContestJidAndProblemAlias(contestJid, problemAlias)
+                .map(ContestProblemStore::fromModel);
+    }
+
     public Set<String> getOpenProblemJids(String contestJid) {
         return problemDao.selectAllOpenByContestJid(contestJid)
                 .stream()

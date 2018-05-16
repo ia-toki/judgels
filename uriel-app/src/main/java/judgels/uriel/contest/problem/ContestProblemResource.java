@@ -3,6 +3,7 @@ package judgels.uriel.contest.problem;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
@@ -12,11 +13,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
+import judgels.uriel.api.contest.problem.ContestContestantProblemStatement;
 import judgels.uriel.api.contest.problem.ContestContestantProblemsResponse;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemService;
@@ -82,6 +85,34 @@ public class ContestProblemResource implements ContestProblemService {
         return new ContestContestantProblemsResponse.Builder()
                 .data(contestantProblems)
                 .problemNamesMap(problemNamesMap)
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ContestContestantProblemStatement getProblemStatement(
+            Optional<AuthHeader> authHeader,
+            String contestJid,
+            String problemAlias,
+            Optional<String> language) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        checkAllowed(roleChecker.canViewProblems(actorJid, contest));
+
+        ContestProblem problem = checkFound(problemStore.findProblemByAlias(contestJid, problemAlias));
+        String problemJid = problem.getProblemJid();
+
+        long totalSubmissions = submissionStore.countSubmissions(contestJid, actorJid, ImmutableSet.of(problemJid))
+                .getOrDefault(problemJid, 0L);
+
+        ProblemStatement statement =
+                clientProblemService.getProblemStatement(sandalphonClientAuthHeader, problemJid, language);
+
+        return new ContestContestantProblemStatement.Builder()
+                .problem(problem)
+                .totalSubmissions(totalSubmissions)
+                .statement(statement)
                 .build();
     }
 }

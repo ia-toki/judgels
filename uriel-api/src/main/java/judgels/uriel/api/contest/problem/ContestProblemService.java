@@ -21,4 +21,13 @@ public interface ContestProblemService {
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
             @QueryParam("language") Optional<String> language);
+
+    @GET
+    @Path("/{problemAlias}/statement")
+    @Produces(APPLICATION_JSON)
+    ContestContestantProblemStatement getProblemStatement(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("problemAlias") String problemAlias,
+            @QueryParam("language") Optional<String> language);
 }
