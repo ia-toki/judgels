@@ -15,7 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import judgels.sandalphon.api.problem.ProblemInfo;
-import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemWorksheet;
 import judgels.service.api.client.BasicAuthHeader;
 
 @Path("/api/v2/client/problems")
@@ -28,9 +28,9 @@ public interface ClientProblemService {
             @PathParam("problemJid") String problemJid);
 
     @GET
-    @Path("/{problemJid}/statement")
+    @Path("/{problemJid}/worksheet")
     @Produces(APPLICATION_JSON)
-    ProblemStatement getProblemStatement(
+    ProblemWorksheet getProblemWorksheet(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             @PathParam("problemJid") String problemJid,
             @QueryParam("language") Optional<String> language);

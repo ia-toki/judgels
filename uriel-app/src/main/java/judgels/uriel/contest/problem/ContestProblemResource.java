@@ -13,13 +13,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
-import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemWorksheet;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
-import judgels.uriel.api.contest.problem.ContestContestantProblemStatement;
+import judgels.uriel.api.contest.problem.ContestContestantProblemWorksheet;
 import judgels.uriel.api.contest.problem.ContestContestantProblemsResponse;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemService;
@@ -90,7 +90,7 @@ public class ContestProblemResource implements ContestProblemService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestContestantProblemStatement getProblemStatement(
+    public ContestContestantProblemWorksheet getProblemWorksheet(
             Optional<AuthHeader> authHeader,
             String contestJid,
             String problemAlias,
@@ -106,13 +106,13 @@ public class ContestProblemResource implements ContestProblemService {
         long totalSubmissions = submissionStore.countSubmissions(contestJid, actorJid, ImmutableSet.of(problemJid))
                 .getOrDefault(problemJid, 0L);
 
-        ProblemStatement statement =
-                clientProblemService.getProblemStatement(sandalphonClientAuthHeader, problemJid, language);
+        ProblemWorksheet worksheet =
+                clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
 
-        return new ContestContestantProblemStatement.Builder()
+        return new ContestContestantProblemWorksheet.Builder()
                 .problem(problem)
                 .totalSubmissions(totalSubmissions)
-                .statement(statement)
+                .worksheet(worksheet)
                 .build();
     }
 }
