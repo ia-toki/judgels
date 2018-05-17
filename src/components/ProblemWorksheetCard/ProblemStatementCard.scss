@@ -1,14 +1,8 @@
-.statement {
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.statement__name {
+.problem-statement__name {
   text-align: center;
 }
 
-.statement__limits {
+.problem-statement__limits {
   width: 200px;
   margin-top: 15px;
   margin-left: auto;
@@ -21,6 +15,6 @@
   }
 }
 
-.statement__text {
+.problem-statement__text {
   margin-top: 25px;
 }

@@ -2,7 +2,7 @@ import { contestProblemActions } from './contestProblemActions';
 import { contestJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
 import {
   ContestContestantProblemsResponse,
-  ContestContestantProblemStatement,
+  ContestContestantProblemWorksheet,
 } from '../../../../../../../../../../modules/api/uriel/contestProblem';
 import { AppState } from '../../../../../../../../../../modules/store';
 
@@ -17,7 +17,7 @@ describe('contestProblemActions', () => {
 
     contestProblemAPI = {
       getMyProblems: jest.fn(),
-      getProblemStatement: jest.fn(),
+      getProblemWorksheet: jest.fn(),
     };
   });
 
@@ -37,19 +37,19 @@ describe('contestProblemActions', () => {
     });
   });
 
-  describe('fetchStatement()', () => {
-    const { fetchStatement } = contestProblemActions;
-    const doFetch = async () => fetchStatement(contestJid, 'C')(dispatch, getState, { contestProblemAPI });
+  describe('fetchWorksheet()', () => {
+    const { fetchWorksheet } = contestProblemActions;
+    const doFetch = async () => fetchWorksheet(contestJid, 'C')(dispatch, getState, { contestProblemAPI });
 
     beforeEach(async () => {
-      const statement = {} as ContestContestantProblemStatement;
-      contestProblemAPI.getProblemStatement.mockReturnValue(statement);
+      const worksheet = {} as ContestContestantProblemWorksheet;
+      contestProblemAPI.getProblemWorksheet.mockReturnValue(worksheet);
 
       await doFetch();
     });
 
-    it('calls API to get contest problem statement', () => {
-      expect(contestProblemAPI.getProblemStatement).toHaveBeenCalledWith(token, contestJid, 'C');
+    it('calls API to get contest problem worksheet', () => {
+      expect(contestProblemAPI.getProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C');
     });
   });
 });

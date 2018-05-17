@@ -6,35 +6,35 @@ import { LoadingState } from '../../../../../../../../../../../../components/Loa
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
 import { AppState } from '../../../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../../../modules/contestSelectors';
-import { ProblemStatement } from '../../../../../../../../../../../../modules/api/sandalphon/problem';
+import { ProblemWorksheet } from '../../../../../../../../../../../../modules/api/sandalphon/problem';
 import { Contest } from '../../../../../../../../../../../../modules/api/uriel/contest';
 import {
   ContestProblem,
-  ContestContestantProblemStatement,
+  ContestContestantProblemWorksheet,
 } from '../../../../../../../../../../../../modules/api/uriel/contestProblem';
 import { contestProblemActions as injectedContestProblemActions } from '../../../modules/contestProblemActions';
-import { ProblemStatementDetails } from '../../../../../../../../../../../../components/ProblemStatementDetails/ProblemStatementDetails';
+import { ProblemWorksheetCard } from '../../../../../../../../../../../../components/ProblemWorksheetCard/ProblemWorksheetCard';
 
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
-  onFetchProblemStatement: (contestJid: string, problemAlias: string) => Promise<ContestContestantProblemStatement>;
+  onFetchProblemWorksheet: (contestJid: string, problemAlias: string) => Promise<ContestContestantProblemWorksheet>;
 }
 
 interface ContestProblemPageState {
   problem?: ContestProblem;
   totalSubmissions?: number;
-  statement?: ProblemStatement;
+  worksheet?: ProblemWorksheet;
 }
 
 export class ContestProblemPage extends React.Component<ContestProblemPageProps, ContestProblemPageState> {
   state: ContestProblemPageState = {};
 
   async componentDidMount() {
-    const { problem, totalSubmissions, statement } = await this.props.onFetchProblemStatement(
+    const { problem, totalSubmissions, worksheet } = await this.props.onFetchProblemWorksheet(
       this.props.contest.jid,
       this.props.match.params.problemAlias
     );
-    this.setState({ problem, totalSubmissions, statement });
+    this.setState({ problem, totalSubmissions, worksheet });
   }
 
   render() {
@@ -42,12 +42,12 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   }
 
   private renderStatement = () => {
-    const { problem, statement } = this.state;
-    if (!problem || !statement) {
+    const { problem, worksheet } = this.state;
+    if (!problem || !worksheet) {
       return <LoadingState />;
     }
 
-    return <ProblemStatementDetails alias={problem.alias} statement={statement} />;
+    return <ProblemWorksheetCard alias={problem.alias} worksheet={worksheet} />;
   };
 }
 
@@ -57,7 +57,7 @@ export function createContestProblemPage(contestProblemActions) {
   });
 
   const mapDispatchToProps = {
-    onFetchProblemStatement: contestProblemActions.fetchStatement,
+    onFetchProblemWorksheet: contestProblemActions.fetchWorksheet,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));

@@ -8,10 +8,10 @@ export const contestProblemActions = {
     };
   },
 
-  fetchStatement: (contestJid: string, problemAlias: string) => {
+  fetchWorksheet: (contestJid: string, problemAlias: string) => {
     return async (dispatch, getState, { contestProblemAPI }) => {
       const token = selectToken(getState());
-      return await contestProblemAPI.getProblemStatement(token, contestJid, problemAlias);
+      return await contestProblemAPI.getProblemWorksheet(token, contestJid, problemAlias);
     };
   },
 };

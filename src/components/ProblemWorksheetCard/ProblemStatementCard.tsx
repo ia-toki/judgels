@@ -4,31 +4,22 @@ import * as HTMLReactParser from 'html-react-parser';
 import { ContentCard } from '../ContentCard/ContentCard';
 import { ProblemStatement } from '../../modules/api/sandalphon/problem';
 
-import './ProblemStatementDetails.css';
+import './ProblemStatementCard.css';
 
-export interface ProblemStatementDetailsProps {
+export interface ProblemStatementCardProps {
   alias: string;
   statement: ProblemStatement;
 }
 
-export class ProblemStatementDetails extends React.Component<ProblemStatementDetailsProps> {
+export class ProblemStatementCard extends React.Component<ProblemStatementCardProps> {
   render() {
-    return (
-      <div className="statement">
-        {this.renderStatement()}
-        {this.renderSubmission()}
-      </div>
-    );
-  }
-
-  private renderStatement = () => {
     const { alias, statement } = this.props;
     return (
       <ContentCard>
-        <h2 className="statement__name">
+        <h2 className="problem-statement__name">
           {alias}. {statement.name}
         </h2>
-        <table className="pt-html-table pt-small statement__limits">
+        <table className="pt-html-table pt-small problem-statement__limits">
           <tbody>
             <tr>
               <td>Time limit</td>
@@ -40,18 +31,10 @@ export class ProblemStatementDetails extends React.Component<ProblemStatementDet
             </tr>
           </tbody>
         </table>
-        <div className="statement__text html-text">{HTMLReactParser(statement.text)}</div>
+        <div className="problem-statement__text html-text">{HTMLReactParser(statement.text)}</div>
       </ContentCard>
     );
-  };
-
-  private renderSubmission = () => {
-    return (
-      <ContentCard>
-        <h4>Submit solution</h4>
-      </ContentCard>
-    );
-  };
+  }
 
   private renderTimeLimit = (timeLimit: number) => {
     if (!timeLimit) {
