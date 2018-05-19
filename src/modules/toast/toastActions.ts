@@ -1,4 +1,4 @@
-import { ForbiddenError, RemoteError } from '../api/error';
+import { ForbiddenError, NotFoundError, RemoteError } from '../api/error';
 import { Intent, Position, Toaster } from '@blueprintjs/core';
 
 export function createToastActions(toaster) {
@@ -24,6 +24,8 @@ export function createToastActions(toaster) {
         message = 'Internal server error; please try again later.';
       } else if (error instanceof ForbiddenError) {
         message = 'You are not allowed to view this resource.';
+      } else if (error instanceof NotFoundError) {
+        message = 'Resource not found.';
       } else {
         message = error.message;
       }

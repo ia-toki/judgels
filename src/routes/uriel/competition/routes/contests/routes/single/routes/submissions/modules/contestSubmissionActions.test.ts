@@ -37,17 +37,34 @@ describe('contestSubmissionActions', () => {
 
   describe('fetchWithSource()', () => {
     const { fetchWithSource } = contestSubmissionActions;
-    const doFetch = async () => fetchWithSource(3)(dispatch, getState, { contestSubmissionAPI });
+    const doFetch = async () => fetchWithSource(contestJid, 3)(dispatch, getState, { contestSubmissionAPI });
 
-    beforeEach(async () => {
-      const submissionWithSource = {} as SubmissionWithSourceResponse;
-      contestSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
+    describe('when the contestJid matches', () => {
+      beforeEach(async () => {
+        const submissionWithSource = {
+          data: { submission: { containerJid: contestJid } },
+        } as SubmissionWithSourceResponse;
+        contestSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
 
-      await doFetch();
+        await doFetch();
+      });
+
+      it('calls API to get contest submission', () => {
+        expect(contestSubmissionAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3);
+      });
     });
 
-    it('calls API to get contest submission', () => {
-      expect(contestSubmissionAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3);
+    describe('when the contestJid does not match', () => {
+      beforeEach(() => {
+        const submissionWithSource = {
+          data: { submission: { containerJid: 'bogus' } },
+        } as SubmissionWithSourceResponse;
+        contestSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
+      });
+
+      it('calls API to get contest submission', async () => {
+        await expect(doFetch()).rejects.toMatchObject({});
+      });
     });
   });
 });

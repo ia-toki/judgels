@@ -17,7 +17,7 @@ import { contestSubmissionActions as injectedContestSubmissionActions } from '..
 
 export interface ContestSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   contest: Contest;
-  onFetchSubmissionWithSource: (submissionId: number) => Promise<SubmissionWithSourceResponse>;
+  onFetchSubmissionWithSource: (contestJid: string, submissionId: number) => Promise<SubmissionWithSourceResponse>;
 }
 
 interface ContestSubmissionPageState {
@@ -33,6 +33,7 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
 
   async componentDidMount() {
     const { data, user, problemName, problemAlias, containerName } = await this.props.onFetchSubmissionWithSource(
+      this.props.contest.jid,
       +this.props.match.params.submissionId
     );
     this.setState({
