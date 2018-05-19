@@ -2,7 +2,8 @@
   "name": "raphael",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "2.1.1",
+    "@blueprintjs/core": "^2.3.1",
+    "@blueprintjs/select": "^2.0.1",
     "base-64": "^0.1.0",
     "classnames": "^2.2.5",
     "country-list": "^1.1.0",

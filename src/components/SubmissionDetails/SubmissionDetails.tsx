@@ -7,12 +7,12 @@ import { ContentCard } from '../ContentCard/ContentCard';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { UserInfo } from '../../modules/api/jophiel/user';
 import { Submission } from '../../modules/api/sandalphon/submission';
+import { GradingEngineCode } from '../../modules/api/gabriel/engine';
 import { getGradingLanguageName } from '../../modules/api/gabriel/language';
 import { TestCaseResult } from '../../modules/api/gabriel/grading';
 import { SubmissionSource } from '../../modules/api/gabriel/submission';
 
 import './SubmissionDetails.css';
-import { GradingLanguageCode } from '../../modules/api/gabriel/language';
 
 export interface SubmissionDetailsProps {
   submission: Submission;
@@ -234,7 +234,7 @@ export class SubmissionDetails extends React.Component<SubmissionDetailsProps> {
 
   private renderSourceFiles = () => {
     const { submission, source } = this.props;
-    if (submission.gradingLanguage === GradingLanguageCode.OutputOnly) {
+    if (submission.gradingEngine === GradingEngineCode.OutputOnly) {
       return null;
     }
 

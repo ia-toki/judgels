@@ -2,23 +2,31 @@
 # yarn lockfile v1
 
 
-"@blueprintjs/core@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-2.1.1.tgz#8e7178c7bd0faea53a0f9a25392215a1fe62d05e"
+"@blueprintjs/core@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-2.3.1.tgz#c998f8d22b02bfc9990b66b201f1ea095fb15450"
   dependencies:
-    "@blueprintjs/icons" "^2.1.1"
+    "@blueprintjs/icons" "^2.2.1"
     "@types/dom4" "^2.0.0"
     classnames "^2.2"
     dom4 "^2.0.1"
-    normalize.css "^7.0.0"
+    normalize.css "^8.0.0"
     popper.js "^1.14.1"
     react-popper "^0.8.2"
     tslib "^1.9.0"
 
-"@blueprintjs/icons@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-2.1.1.tgz#426b0291baf198e0181ae8f49bb5c2bc0bb55e9f"
+"@blueprintjs/icons@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-2.2.1.tgz#1b4275fc67467218a8ffec6403c87c7af24532a5"
   dependencies:
+    classnames "^2.2"
+    tslib "^1.9.0"
+
+"@blueprintjs/select@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/select/-/select-2.0.1.tgz#4746aff7ed534113b17d0663bf548b2867dc4b2a"
+  dependencies:
+    "@blueprintjs/core" "^2.3.1"
     classnames "^2.2"
     tslib "^1.9.0"
 
@@ -4629,9 +4637,9 @@ normalize.css@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-5.0.0.tgz#7cec875ce8178a5333c4de80b68ea9c18b9d7c37"
 
-normalize.css@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-7.0.0.tgz#abfb1dd82470674e0322b53ceb1aaf412938e4bf"
+normalize.css@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.0.tgz#14ac5e461612538a4ce9be90a7da23f86e718493"
 
 npm-run-all@^4.1.2:
   version "4.1.2"

@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { ContentCard } from '../ContentCard/ContentCard';
 import { ProblemStatementCard } from './ProblemStatementCard';
+import { ProblemSubmissionCard } from './ProblemSubmissionCard';
+import { ProblemSubmissionFormData } from './ProblemSubmissionForm';
 import { ProblemWorksheet } from '../../modules/api/sandalphon/problem';
 
 import './ProblemWorksheetCard.css';
@@ -25,11 +26,11 @@ export class ProblemWorksheetCard extends React.Component<ProblemWorksheetCardPr
     return <ProblemStatementCard alias={this.props.alias} statement={this.props.worksheet.statement} />;
   };
 
+  private onSubmit = (data: ProblemSubmissionFormData) => {
+    // console.log(data);
+  };
+
   private renderSubmission = () => {
-    return (
-      <ContentCard>
-        <h4>Submit solution</h4>
-      </ContentCard>
-    );
+    return <ProblemSubmissionCard config={this.props.worksheet.submissionConfig} onSubmit={this.onSubmit} />;
   };
 }
