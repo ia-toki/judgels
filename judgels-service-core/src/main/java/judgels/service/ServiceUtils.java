@@ -16,4 +16,10 @@ public class ServiceUtils {
             throw new ForbiddenException();
         }
     }
+
+    public static void checkAllowed(Optional<String> reasonNotAllowed) {
+        if (reasonNotAllowed.isPresent()) {
+            throw new ForbiddenException(reasonNotAllowed.get());
+        }
+    }
 }
