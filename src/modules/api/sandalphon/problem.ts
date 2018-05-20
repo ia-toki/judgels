@@ -16,4 +16,5 @@ export interface ProblemSubmissionConfiguration {
 export interface ProblemWorksheet {
   statement: ProblemStatement;
   submissionConfig: ProblemSubmissionConfiguration;
+  reasonNotAllowedToSubmit?: string;
 }

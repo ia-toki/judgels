@@ -1,3 +1,4 @@
+import { Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +10,6 @@ import {
 } from '../../../../../../../../../../modules/api/uriel/contestProblem';
 
 import './ContestContestantProblemCard.css';
-import { Tag } from '@blueprintjs/core';
 
 export interface ContestContestantProblemCardProps {
   contest: Contest;
@@ -42,7 +42,7 @@ export class ContestContestantProblemCard extends React.Component<ContestContest
   private renderStatus = () => {
     const { problem, totalSubmissions } = this.props.contestantProblem;
     if (problem.status === ContestProblemStatus.Closed) {
-      return <Tag>CLOSED</Tag>;
+      return <Tag intent={Intent.DANGER}>CLOSED</Tag>;
     }
     if (problem.submissionsLimit !== 0) {
       return <span>{problem.submissionsLimit - totalSubmissions} submissions left</span>;

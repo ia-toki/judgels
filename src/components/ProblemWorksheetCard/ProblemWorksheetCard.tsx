@@ -28,6 +28,12 @@ export class ProblemWorksheetCard extends React.Component<ProblemWorksheetCardPr
   };
 
   private renderSubmission = () => {
-    return <ProblemSubmissionCard config={this.props.worksheet.submissionConfig} onSubmit={this.props.onSubmit} />;
+    return (
+      <ProblemSubmissionCard
+        config={this.props.worksheet.submissionConfig}
+        onSubmit={this.props.onSubmit}
+        reasonNotAllowedToSubmit={this.props.worksheet.reasonNotAllowedToSubmit}
+      />
+    );
   };
 }
