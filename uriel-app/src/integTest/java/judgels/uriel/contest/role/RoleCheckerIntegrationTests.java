@@ -379,7 +379,7 @@ class RoleCheckerIntegrationTests {
                 .build();
 
         assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestA, contestantProblem))
-                .contains("Problem is forbidden.");
+                .contains("You are not a contestant.");
         assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestB, contestantProblem))
                 .contains("Contest has not started yet.");
         assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestBFinished, contestantProblem))

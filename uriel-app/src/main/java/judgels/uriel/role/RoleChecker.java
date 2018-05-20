@@ -65,7 +65,7 @@ public class RoleChecker {
 
         if (!contestRoleDao.isContestant(userJid, contest.getJid())
                 && !isSupervisorWithPermissionOrAbove(userJid, contest, PROBLEM)) {
-            return Optional.of("Problem is forbidden.");
+            return Optional.of("You are not a contestant.");
         }
         if (!contest.hasStarted(clock)) {
             return Optional.of("Contest has not started yet.");
