@@ -35,6 +35,14 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
     }
 
     @Override
+    public boolean isContestant(String userJid, String contestJid) {
+        return selectByFilter(new FilterOptions.Builder<ContestModel>()
+                .addCustomPredicates(hasContestJid(contestJid))
+                .addCustomPredicates(hasContestant(userJid))
+                .build()).isPresent();
+    }
+
+    @Override
     public boolean isContestantOrAbove(String userJid, String contestJid) {
         return selectByFilter(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasContestJid(contestJid))

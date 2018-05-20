@@ -5,12 +5,7 @@ import judgels.gabriel.api.LanguageRestriction;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableIcpcContestStyleConfig.class)
-public interface IcpcContestStyleConfig {
+@JsonDeserialize(as = ImmutableContestStyleConfig.class)
+public interface ContestStyleConfig {
     LanguageRestriction getLanguageRestriction();
-
-    @Value.Default
-    default long getWrongSubmissionPenalty() {
-        return 0;
-    }
 }

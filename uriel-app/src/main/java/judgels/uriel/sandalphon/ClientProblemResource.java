@@ -22,6 +22,15 @@ public class ClientProblemResource implements ClientProblemService {
                 .build();
     }
 
+    @Override
+    public ProblemSubmissionConfiguration getProblemSubmissionConfig(BasicAuthHeader authHeader, String problemJid) {
+        return new ProblemSubmissionConfiguration.Builder()
+                .sourceKeys(ImmutableMap.of("encoder", "Encoder", "decoder", "Decoder"))
+                .gradingEngine("BatchWithSubtasks")
+                .gradingLanguageRestriction(LanguageRestriction.noRestriction())
+                .build();
+    }
+
     @SuppressWarnings("checkstyle:all")
     @Override
     public ProblemWorksheet getProblemWorksheet(
@@ -37,7 +46,7 @@ public class ClientProblemResource implements ClientProblemService {
                 .build();
 
         ProblemSubmissionConfiguration submissionConfig = new ProblemSubmissionConfiguration.Builder()
-                .sourceKeys(ImmutableMap.of("encoder", "Encoder"))
+                .sourceKeys(ImmutableMap.of("encoder", "Encoder", "decoder", "Decoder"))
                 .gradingEngine("BatchWithSubtasks")
                 .gradingLanguageRestriction(LanguageRestriction.noRestriction())
                 .build();

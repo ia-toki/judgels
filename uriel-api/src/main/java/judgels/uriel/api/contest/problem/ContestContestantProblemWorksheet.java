@@ -7,8 +7,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestContestantProblemWorksheet.class)
 public interface ContestContestantProblemWorksheet {
-    ContestProblem getProblem();
-    long getTotalSubmissions();
+    ContestContestantProblem getContestantProblem();
     ProblemWorksheet getWorksheet();
 
     class Builder extends ImmutableContestContestantProblemWorksheet.Builder{}

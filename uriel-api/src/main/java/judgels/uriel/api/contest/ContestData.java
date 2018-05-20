@@ -19,7 +19,7 @@ public interface ContestData {
             description("");
             style(ContestStyle.IOI);
             beginTime(Instant.ofEpochSecond(1514764800));
-            duration(Duration.ZERO);
+            duration(Duration.ofHours(5));
         }
     }
 }

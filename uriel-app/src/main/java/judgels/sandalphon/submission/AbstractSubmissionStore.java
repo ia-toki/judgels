@@ -49,10 +49,6 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
                 Lists.transform(data, sm -> submissionFromModels(sm, gradingModels.get(sm.jid))));
     }
 
-    public Map<String, Long> countSubmissions(String containerJid, String userJid, Set<String> problemJid) {
-        return submissionDao.selectCounts(containerJid, userJid, problemJid);
-    }
-
     public Submission submissionFromModels(SM model, GM gradingModel) {
         return new Submission.Builder()
                 .id(model.id)

@@ -25,6 +25,10 @@ public class ContestStyleStore {
         upsertConfig(contestJid, config);
     }
 
+    public ContestStyleConfig getStyleConfig(String contestJid) {
+        return getConfig(contestJid, ContestStyleConfig.class);
+    }
+
     public IcpcContestStyleConfig getIcpcStyleConfig(String contestJid) {
         return getConfig(contestJid, IcpcContestStyleConfig.class);
     }

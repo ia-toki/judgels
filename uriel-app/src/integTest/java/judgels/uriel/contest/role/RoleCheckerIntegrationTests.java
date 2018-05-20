@@ -1,5 +1,6 @@
 package judgels.uriel.contest.role;
 
+import static java.time.temporal.ChronoUnit.HOURS;
 import static judgels.uriel.UrielIntegrationTestPersistenceModule.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,6 +11,9 @@ import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.problem.ContestContestantProblem;
+import judgels.uriel.api.contest.problem.ContestProblem;
+import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
 import judgels.uriel.api.contest.supervisor.SupervisorPermission;
 import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
@@ -49,6 +53,7 @@ class RoleCheckerIntegrationTests {
     private Contest contestAStarted;
     private Contest contestB;
     private Contest contestBStarted;
+    private Contest contestBFinished;
     private Contest contestC;
 
     private ContestSupervisorStore supervisorStore;
@@ -88,12 +93,20 @@ class RoleCheckerIntegrationTests {
                 .name("Contest B - Started")
                 .beginTime(NOW)
                 .build());
-        contestC = contestStore.createContest(new ContestData.Builder().name("Contest C").build());
+        contestBFinished = contestStore.createContest(new ContestData.Builder()
+                .name("Contest B - Ended")
+                .beginTime(NOW.minus(10, HOURS))
+                .build());
+        contestC = contestStore.createContest(new ContestData.Builder()
+                .name("Contest C")
+                .beginTime(NOW.plusMillis(1))
+                .build());
 
         moduleStore.upsertRegistrationModule(contestA.getJid());
         moduleStore.upsertRegistrationModule(contestAStarted.getJid());
         contestantStore.upsertContestant(contestB.getJid(), CONTESTANT);
         contestantStore.upsertContestant(contestBStarted.getJid(), CONTESTANT);
+        contestantStore.upsertContestant(contestBFinished.getJid(), CONTESTANT);
         supervisorStore.upsertSupervisor(
                 contestB.getJid(),
                 new ContestSupervisorData.Builder()
@@ -104,8 +117,14 @@ class RoleCheckerIntegrationTests {
                 new ContestSupervisorData.Builder()
                         .userJid(SUPERVISOR)
                         .permission(SupervisorPermission.of(ImmutableSet.of())).build());
+        supervisorStore.upsertSupervisor(
+                contestBFinished.getJid(),
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR)
+                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
         managerStore.upsertManager(contestB.getJid(), MANAGER);
         managerStore.upsertManager(contestBStarted.getJid(), MANAGER);
+        managerStore.upsertManager(contestBFinished.getJid(), MANAGER);
     }
 
     @Test
@@ -123,6 +142,7 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewContest(ADMIN, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewContest(ADMIN, contestB)).isTrue();
         assertThat(roleChecker.canViewContest(ADMIN, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewContest(ADMIN, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewContest(ADMIN, contestC)).isTrue();
 
         assertThat(roleChecker.canViewContest(USER, contestA)).isTrue();
@@ -134,18 +154,21 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewContest(CONTESTANT, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewContest(CONTESTANT, contestB)).isTrue();
         assertThat(roleChecker.canViewContest(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewContest(CONTESTANT, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewContest(CONTESTANT, contestC)).isFalse();
 
         assertThat(roleChecker.canViewContest(SUPERVISOR, contestA)).isTrue();
         assertThat(roleChecker.canViewContest(SUPERVISOR, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewContest(SUPERVISOR, contestB)).isTrue();
         assertThat(roleChecker.canViewContest(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewContest(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewContest(SUPERVISOR, contestC)).isFalse();
 
         assertThat(roleChecker.canViewContest(MANAGER, contestA)).isTrue();
         assertThat(roleChecker.canViewContest(MANAGER, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewContest(MANAGER, contestB)).isTrue();
         assertThat(roleChecker.canViewContest(MANAGER, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewContest(MANAGER, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewContest(MANAGER, contestC)).isFalse();
     }
 
@@ -155,6 +178,7 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewAnnouncements(ADMIN, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(ADMIN, contestB)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(ADMIN, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewAnnouncements(ADMIN, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(ADMIN, contestC)).isTrue();
 
         assertThat(roleChecker.canViewAnnouncements(USER, contestA)).isTrue();
@@ -166,24 +190,28 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestB)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestC)).isFalse();
 
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestA)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestB)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(SupervisorPermissionType.ANNOUNCEMENT);
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestA)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestB)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestC)).isFalse();
 
         assertThat(roleChecker.canViewAnnouncements(MANAGER, contestA)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(MANAGER, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(MANAGER, contestB)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(MANAGER, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewAnnouncements(MANAGER, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewAnnouncements(MANAGER, contestC)).isFalse();
     }
 
@@ -193,6 +221,7 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewProblems(ADMIN, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewProblems(ADMIN, contestB)).isTrue();
         assertThat(roleChecker.canViewProblems(ADMIN, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewProblems(ADMIN, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewProblems(ADMIN, contestC)).isTrue();
 
         assertThat(roleChecker.canViewProblems(USER, contestA)).isFalse();
@@ -204,24 +233,28 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewProblems(CONTESTANT, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewProblems(CONTESTANT, contestB)).isFalse();
         assertThat(roleChecker.canViewProblems(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewProblems(CONTESTANT, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewProblems(CONTESTANT, contestC)).isFalse();
 
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestA)).isFalse();
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestB)).isFalse();
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewProblems(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(SupervisorPermissionType.PROBLEM);
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestA)).isFalse();
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestB)).isTrue();
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewProblems(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewProblems(SUPERVISOR, contestC)).isFalse();
 
         assertThat(roleChecker.canViewProblems(MANAGER, contestA)).isFalse();
         assertThat(roleChecker.canViewProblems(MANAGER, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewProblems(MANAGER, contestB)).isTrue();
         assertThat(roleChecker.canViewProblems(MANAGER, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewProblems(MANAGER, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewProblems(MANAGER, contestC)).isFalse();
     }
 
@@ -231,6 +264,7 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canSuperviseProblems(ADMIN, contestAStarted)).isTrue();
         assertThat(roleChecker.canSuperviseProblems(ADMIN, contestB)).isTrue();
         assertThat(roleChecker.canSuperviseProblems(ADMIN, contestBStarted)).isTrue();
+        assertThat(roleChecker.canSuperviseProblems(ADMIN, contestBFinished)).isTrue();
         assertThat(roleChecker.canSuperviseProblems(ADMIN, contestC)).isTrue();
 
         assertThat(roleChecker.canSuperviseProblems(USER, contestA)).isFalse();
@@ -255,13 +289,107 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canSuperviseProblems(SUPERVISOR, contestAStarted)).isFalse();
         assertThat(roleChecker.canSuperviseProblems(SUPERVISOR, contestB)).isTrue();
         assertThat(roleChecker.canSuperviseProblems(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canSuperviseProblems(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canSuperviseProblems(SUPERVISOR, contestC)).isFalse();
 
         assertThat(roleChecker.canSuperviseProblems(MANAGER, contestA)).isFalse();
         assertThat(roleChecker.canSuperviseProblems(MANAGER, contestAStarted)).isFalse();
         assertThat(roleChecker.canSuperviseProblems(MANAGER, contestB)).isTrue();
         assertThat(roleChecker.canSuperviseProblems(MANAGER, contestBStarted)).isTrue();
+        assertThat(roleChecker.canSuperviseProblems(MANAGER, contestBFinished)).isTrue();
         assertThat(roleChecker.canSuperviseProblems(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
+    void submit_problem() {
+        ContestProblem problem = new ContestProblem.Builder()
+                .problemJid("problemJid")
+                .alias("alias")
+                .status(ContestProblemStatus.OPEN)
+                .submissionsLimit(50)
+                .build();
+        ContestContestantProblem contestantProblem = new ContestContestantProblem.Builder()
+                .problem(problem)
+                .totalSubmissions(10)
+                .build();
+
+        assertThat(roleChecker.canSubmitProblem(ADMIN, contestA, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(ADMIN, contestAStarted, contestantProblem)).isEmpty();
+        assertThat(roleChecker.canSubmitProblem(ADMIN, contestB, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(ADMIN, contestBStarted, contestantProblem)).isEmpty();
+        assertThat(roleChecker.canSubmitProblem(ADMIN, contestBFinished, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(ADMIN, contestC, contestantProblem)).isPresent();
+
+        assertThat(roleChecker.canSubmitProblem(USER, contestA, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(USER, contestAStarted, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(USER, contestB, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(USER, contestBStarted, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(USER, contestBFinished, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(USER, contestC, contestantProblem)).isPresent();
+
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestA, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestAStarted, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestB, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestBStarted, contestantProblem)).isEmpty();
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestBFinished, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestC, contestantProblem)).isPresent();
+
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestA, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestAStarted, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestB, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestBStarted, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestBFinished, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestC, contestantProblem)).isPresent();
+        addSupervisorToContestBWithPermission(SupervisorPermissionType.PROBLEM);
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestA, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestAStarted, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestB, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestBStarted, contestantProblem)).isEmpty();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestBFinished, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(SUPERVISOR, contestC, contestantProblem)).isPresent();
+
+        assertThat(roleChecker.canSubmitProblem(MANAGER, contestA, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(MANAGER, contestAStarted, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(MANAGER, contestB, contestantProblem)).isPresent();
+        assertThat(roleChecker.canSubmitProblem(MANAGER, contestBStarted, contestantProblem)).isEmpty();
+        assertThat(roleChecker.canSubmitProblem(MANAGER, contestC, contestantProblem)).isPresent();
+
+        ContestContestantProblem contestantProblemClosed = new ContestContestantProblem.Builder()
+                .from(contestantProblem)
+                .problem(new ContestProblem.Builder()
+                        .from(contestantProblem.getProblem())
+                        .status(ContestProblemStatus.CLOSED)
+                        .build())
+                .build();
+
+        ContestContestantProblem contestantProblemLimitReached = new ContestContestantProblem.Builder()
+                .from(contestantProblem)
+                .problem(new ContestProblem.Builder()
+                        .from(contestantProblem.getProblem())
+                        .submissionsLimit(10)
+                        .build())
+                .build();
+
+        ContestContestantProblem contestantProblemNoLimit = new ContestContestantProblem.Builder()
+                .from(contestantProblem)
+                .problem(new ContestProblem.Builder()
+                        .from(contestantProblem.getProblem())
+                        .submissionsLimit(0)
+                        .build())
+                .build();
+
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestA, contestantProblem))
+                .contains("Problem is forbidden.");
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestB, contestantProblem))
+                .contains("Contest has not started yet.");
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestBFinished, contestantProblem))
+                .contains("Contest is over.");
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestBStarted, contestantProblemClosed))
+                .contains("Problem is closed.");
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestBStarted, contestantProblemLimitReached))
+                .contains("Submissions limit has been reached.");
+        assertThat(roleChecker.canSubmitProblem(CONTESTANT, contestBStarted, contestantProblemNoLimit))
+                .isEmpty();
     }
 
     @Test
@@ -270,6 +398,7 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewDefaultScoreboard(ADMIN, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(ADMIN, contestB)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(ADMIN, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewDefaultScoreboard(ADMIN, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(ADMIN, contestC)).isTrue();
 
         assertThat(roleChecker.canViewDefaultScoreboard(USER, contestA)).isFalse();
@@ -281,24 +410,28 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewDefaultScoreboard(CONTESTANT, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(CONTESTANT, contestB)).isFalse();
         assertThat(roleChecker.canViewDefaultScoreboard(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewDefaultScoreboard(CONTESTANT, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(CONTESTANT, contestC)).isFalse();
 
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestA)).isFalse();
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestB)).isFalse();
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(SupervisorPermissionType.SCOREBOARD);
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestA)).isFalse();
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestB)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contestC)).isFalse();
 
         assertThat(roleChecker.canViewDefaultScoreboard(MANAGER, contestA)).isFalse();
         assertThat(roleChecker.canViewDefaultScoreboard(MANAGER, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(MANAGER, contestB)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(MANAGER, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewDefaultScoreboard(MANAGER, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewDefaultScoreboard(MANAGER, contestC)).isFalse();
     }
 
@@ -308,12 +441,14 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canSuperviseScoreboard(ADMIN, contestAStarted)).isTrue();
         assertThat(roleChecker.canSuperviseScoreboard(ADMIN, contestB)).isTrue();
         assertThat(roleChecker.canSuperviseScoreboard(ADMIN, contestBStarted)).isTrue();
+        assertThat(roleChecker.canSuperviseScoreboard(ADMIN, contestBFinished)).isTrue();
         assertThat(roleChecker.canSuperviseScoreboard(ADMIN, contestC)).isTrue();
 
         assertThat(roleChecker.canSuperviseScoreboard(USER, contestA)).isFalse();
         assertThat(roleChecker.canSuperviseScoreboard(USER, contestAStarted)).isFalse();
         assertThat(roleChecker.canSuperviseScoreboard(USER, contestB)).isFalse();
         assertThat(roleChecker.canSuperviseScoreboard(USER, contestBStarted)).isFalse();
+        assertThat(roleChecker.canSuperviseScoreboard(USER, contestBFinished)).isFalse();
         assertThat(roleChecker.canSuperviseScoreboard(USER, contestC)).isFalse();
 
         assertThat(roleChecker.canSuperviseScoreboard(CONTESTANT, contestA)).isFalse();
@@ -332,12 +467,14 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestAStarted)).isFalse();
         assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestB)).isTrue();
         assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canSuperviseScoreboard(SUPERVISOR, contestC)).isFalse();
 
         assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestA)).isFalse();
         assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestAStarted)).isFalse();
         assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestB)).isTrue();
         assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestBStarted)).isTrue();
+        assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestBFinished)).isTrue();
         assertThat(roleChecker.canSuperviseScoreboard(MANAGER, contestC)).isFalse();
     }
 
@@ -345,6 +482,7 @@ class RoleCheckerIntegrationTests {
     void view_submission() {
         assertThat(roleChecker.canViewSubmission(ADMIN, contestB, CONTESTANT)).isTrue();
         assertThat(roleChecker.canViewSubmission(ADMIN, contestBStarted, CONTESTANT)).isTrue();
+        assertThat(roleChecker.canViewSubmission(ADMIN, contestBFinished, CONTESTANT)).isTrue();
 
         assertThat(roleChecker.canViewSubmission(CONTESTANT, contestB, CONTESTANT)).isTrue();
         assertThat(roleChecker.canViewSubmission(CONTESTANT, contestBStarted, CONTESTANT)).isTrue();
@@ -356,9 +494,11 @@ class RoleCheckerIntegrationTests {
         addSupervisorToContestBWithPermission(SupervisorPermissionType.SUBMISSION);
         assertThat(roleChecker.canViewSubmission(SUPERVISOR, contestB, CONTESTANT)).isTrue();
         assertThat(roleChecker.canViewSubmission(SUPERVISOR, contestBStarted, CONTESTANT)).isTrue();
+        assertThat(roleChecker.canViewSubmission(SUPERVISOR, contestBFinished, CONTESTANT)).isTrue();
 
         assertThat(roleChecker.canViewSubmission(MANAGER, contestB, CONTESTANT)).isTrue();
         assertThat(roleChecker.canViewSubmission(MANAGER, contestBStarted, CONTESTANT)).isTrue();
+        assertThat(roleChecker.canViewSubmission(MANAGER, contestBFinished, CONTESTANT)).isTrue();
     }
 
     @Test
@@ -367,6 +507,7 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewOwnSubmissions(ADMIN, contestAStarted)).isTrue();
         assertThat(roleChecker.canViewOwnSubmissions(ADMIN, contestB)).isTrue();
         assertThat(roleChecker.canViewOwnSubmissions(ADMIN, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnSubmissions(ADMIN, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewOwnSubmissions(ADMIN, contestC)).isTrue();
 
         assertThat(roleChecker.canViewOwnSubmissions(USER, contestA)).isFalse();
@@ -379,24 +520,28 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewOwnSubmissions(CONTESTANT, contestAStarted)).isFalse();
         assertThat(roleChecker.canViewOwnSubmissions(CONTESTANT, contestB)).isFalse();
         assertThat(roleChecker.canViewOwnSubmissions(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnSubmissions(CONTESTANT, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewOwnSubmissions(CONTESTANT, contestC)).isFalse();
 
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestA)).isFalse();
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestAStarted)).isFalse();
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestB)).isFalse();
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(SupervisorPermissionType.SUBMISSION);
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestA)).isFalse();
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestAStarted)).isFalse();
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestB)).isTrue();
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewOwnSubmissions(SUPERVISOR, contestC)).isFalse();
 
         assertThat(roleChecker.canViewOwnSubmissions(MANAGER, contestA)).isFalse();
         assertThat(roleChecker.canViewOwnSubmissions(MANAGER, contestAStarted)).isFalse();
         assertThat(roleChecker.canViewOwnSubmissions(MANAGER, contestB)).isTrue();
         assertThat(roleChecker.canViewOwnSubmissions(MANAGER, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnSubmissions(MANAGER, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewOwnSubmissions(MANAGER, contestC)).isFalse();
     }
 
@@ -469,6 +614,11 @@ class RoleCheckerIntegrationTests {
                         .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
         supervisorStore.upsertSupervisor(
                 contestBStarted.getJid(),
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR)
+                        .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
+        supervisorStore.upsertSupervisor(
+                contestBFinished.getJid(),
                 new ContestSupervisorData.Builder()
                         .userJid(SUPERVISOR)
                         .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());

@@ -1,6 +1,7 @@
 package judgels.sandalphon.api.problem;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -8,6 +9,7 @@ import org.immutables.value.Value;
 public interface ProblemWorksheet {
     ProblemStatement getStatement();
     ProblemSubmissionConfiguration getSubmissionConfig();
+    Optional<String> getReasonNotAllowedToSubmit();
 
     class Builder extends ImmutableProblemWorksheet.Builder {}
 }

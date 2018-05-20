@@ -21,5 +21,13 @@ public interface Contest {
         return !clock.instant().isBefore(getBeginTime());
     }
 
+    default boolean hasFinished(Clock clock) {
+        return !clock.instant().isBefore(getBeginTime().plus(getDuration()));
+    }
+
+    default boolean isRunning(Clock clock) {
+        return hasStarted(clock) && !hasFinished(clock);
+    }
+
     class Builder extends ImmutableContest.Builder {}
 }

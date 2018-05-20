@@ -8,6 +8,8 @@ import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.problem.ContestContestantProblem;
+import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
@@ -54,6 +56,31 @@ public class RoleChecker {
 
     public boolean canSuperviseProblems(String userJid, Contest contest) {
         return isSupervisorWithPermissionOrAbove(userJid, contest, PROBLEM);
+    }
+
+    public Optional<String> canSubmitProblem(
+            String userJid,
+            Contest contest,
+            ContestContestantProblem contestantProblem) {
+
+        if (!contestRoleDao.isContestant(userJid, contest.getJid())
+                && !isSupervisorWithPermissionOrAbove(userJid, contest, PROBLEM)) {
+            return Optional.of("Problem is forbidden.");
+        }
+        if (!contest.hasStarted(clock)) {
+            return Optional.of("Contest has not started yet.");
+        }
+        if (contest.hasFinished(clock)) {
+            return Optional.of("Contest is over.");
+        }
+        if (contestantProblem.getProblem().getStatus() == ContestProblemStatus.CLOSED) {
+            return Optional.of("Problem is closed.");
+        }
+        long submissionsLimit = contestantProblem.getProblem().getSubmissionsLimit();
+        if (submissionsLimit != 0 && contestantProblem.getTotalSubmissions() >= submissionsLimit) {
+            return Optional.of("Submissions limit has been reached.");
+        }
+        return Optional.empty();
     }
 
     public boolean canViewDefaultScoreboard(String userJid, Contest contest) {

@@ -3,8 +3,6 @@ package judgels.uriel.contest.problem;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +19,8 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestContestantProblemWorksheet;
 import judgels.uriel.api.contest.problem.ContestContestantProblemsResponse;
-import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.contest.submission.ContestSubmissionStore;
 import judgels.uriel.role.RoleChecker;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 
@@ -33,7 +29,6 @@ public class ContestProblemResource implements ContestProblemService {
     private final RoleChecker roleChecker;
     private final ContestStore contestStore;
     private final ContestProblemStore problemStore;
-    private final ContestSubmissionStore submissionStore;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
 
@@ -43,7 +38,6 @@ public class ContestProblemResource implements ContestProblemService {
             RoleChecker roleChecker,
             ContestStore contestStore,
             ContestProblemStore problemStore,
-            ContestSubmissionStore submissionStore,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
 
@@ -51,7 +45,6 @@ public class ContestProblemResource implements ContestProblemService {
         this.roleChecker = roleChecker;
         this.contestStore = contestStore;
         this.problemStore = problemStore;
-        this.submissionStore = submissionStore;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
     }
@@ -67,14 +60,10 @@ public class ContestProblemResource implements ContestProblemService {
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
         checkAllowed(roleChecker.canViewProblems(actorJid, contest));
 
-        List<ContestProblem> problems = problemStore.getProblems(contestJid);
-        Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
-        Map<String, Long> submissionCounts = submissionStore.countSubmissions(contestJid, actorJid, problemJids);
-        List<ContestContestantProblem> contestantProblems = Lists.transform(problems, problem ->
-                new ContestContestantProblem.Builder()
-                        .problem(problem)
-                        .totalSubmissions(submissionCounts.getOrDefault(problem.getProblemJid(), 0L))
-                        .build());
+        List<ContestContestantProblem> contestantProblems = problemStore.getContestantProblems(contestJid, actorJid);
+        Set<String> problemJids =
+                contestantProblems.stream().map(p -> p.getProblem().getProblemJid()).collect(Collectors.toSet());
+
         Map<String, String> problemNamesMap = clientProblemService.findProblemsByJids(
                 sandalphonClientAuthHeader,
                 language,
@@ -100,18 +89,18 @@ public class ContestProblemResource implements ContestProblemService {
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
         checkAllowed(roleChecker.canViewProblems(actorJid, contest));
 
-        ContestProblem problem = checkFound(problemStore.findProblemByAlias(contestJid, problemAlias));
-        String problemJid = problem.getProblemJid();
+        ContestContestantProblem contestantProblem =
+                checkFound(problemStore.findContestantProblemByAlias(contestJid, actorJid, problemAlias));
+        String problemJid = contestantProblem.getProblem().getProblemJid();
 
-        long totalSubmissions = submissionStore.countSubmissions(contestJid, actorJid, ImmutableSet.of(problemJid))
-                .getOrDefault(problemJid, 0L);
-
-        ProblemWorksheet worksheet =
-                clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
+        Optional<String> reasonNotAllowedToSubmit = roleChecker.canSubmitProblem(actorJid, contest, contestantProblem);
+        ProblemWorksheet worksheet = new ProblemWorksheet.Builder()
+                .from(clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language))
+                .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
+                .build();
 
         return new ContestContestantProblemWorksheet.Builder()
-                .problem(problem)
-                .totalSubmissions(totalSubmissions)
+                .contestantProblem(contestantProblem)
                 .worksheet(worksheet)
                 .build();
     }

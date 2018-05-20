@@ -2,6 +2,7 @@ package judgels.uriel;
 
 import com.palantir.websecurity.WebSecurityBundle;
 import io.dropwizard.Application;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -26,6 +27,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         JudgelsObjectMappers.configure(bootstrap.getObjectMapper());
 
         bootstrap.addBundle(hibernateBundle);
+        bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new WebSecurityBundle());
     }
 
