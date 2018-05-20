@@ -155,7 +155,7 @@ export class SubmissionDetails extends React.Component<SubmissionDetailsProps> {
         <td>{result.executionResult ? result.executionResult.time + ' ms' : '?'}</td>
         <td>{result.executionResult ? result.executionResult.memory + ' KB' : '?'}</td>
         <td>{result.score}</td>
-        <td className="col-centered">{hasSubtasks && this.renderSubtaskTags(result.subtaskIds)}</td>
+        {hasSubtasks && <td className="col-centered">{this.renderSubtaskTags(result.subtaskIds)}</td>}
       </tr>
     ));
 
@@ -171,7 +171,7 @@ export class SubmissionDetails extends React.Component<SubmissionDetailsProps> {
                 <th className="col-tc-info">Time</th>
                 <th className="col-tc-info">Memory</th>
                 <th>Score</th>
-                <th className="col-tc-subtasks">{hasSubtasks && 'Subtasks'}</th>
+                {hasSubtasks && <th className="col-tc-subtasks">{hasSubtasks && 'Subtasks'}</th>}
               </tr>
             </thead>
             <tbody>{results}</tbody>
