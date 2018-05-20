@@ -1,4 +1,4 @@
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
@@ -18,12 +18,14 @@ export interface ProblemSubmissionFormData {
 
 export interface ProblemSubmissionFormProps extends InjectedFormProps<ProblemSubmissionFormData> {
   config: ProblemSubmissionConfiguration;
+  submissionWarning?: string;
 }
 
 class ProblemSubmissionForm extends React.Component<ProblemSubmissionFormProps> {
   render() {
     return (
       <form onSubmit={this.props.handleSubmit}>
+        {this.renderWarning()}
         <table className="problem-submission-form__table">
           <tbody>
             {this.renderSourceFields()}
@@ -34,6 +36,16 @@ class ProblemSubmissionForm extends React.Component<ProblemSubmissionFormProps> 
       </form>
     );
   }
+
+  private renderWarning = () => {
+    return (
+      this.props.submissionWarning && (
+        <Callout icon="warning-sign" className="problem-submission-form__warning">
+          {this.props.submissionWarning}
+        </Callout>
+      )
+    );
+  };
 
   private renderSourceFields = () => {
     const { sourceKeys } = this.props.config;

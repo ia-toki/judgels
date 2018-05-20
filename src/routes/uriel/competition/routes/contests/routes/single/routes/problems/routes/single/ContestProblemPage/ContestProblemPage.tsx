@@ -53,8 +53,19 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       return <LoadingState />;
     }
 
+    let submissionWarning;
+    if (contestantProblem.problem.submissionsLimit !== 0) {
+      const submissionsLeft = contestantProblem.problem.submissionsLimit - contestantProblem.totalSubmissions;
+      submissionWarning = '' + submissionsLeft + ' submissions left.';
+    }
+
     return (
-      <ProblemWorksheetCard alias={contestantProblem.problem.alias} worksheet={worksheet} onSubmit={this.onSubmit} />
+      <ProblemWorksheetCard
+        alias={contestantProblem.problem.alias}
+        worksheet={worksheet}
+        onSubmit={this.onSubmit}
+        submissionWarning={submissionWarning}
+      />
     );
   };
 }

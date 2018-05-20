@@ -11,6 +11,7 @@ export interface ProblemWorksheetCardProps {
   alias: string;
   worksheet: ProblemWorksheet;
   onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
+  submissionWarning?: string;
 }
 
 export class ProblemWorksheetCard extends React.Component<ProblemWorksheetCardProps> {
@@ -33,6 +34,7 @@ export class ProblemWorksheetCard extends React.Component<ProblemWorksheetCardPr
         config={this.props.worksheet.submissionConfig}
         onSubmit={this.props.onSubmit}
         reasonNotAllowedToSubmit={this.props.worksheet.reasonNotAllowedToSubmit}
+        submissionWarning={this.props.submissionWarning}
       />
     );
   };

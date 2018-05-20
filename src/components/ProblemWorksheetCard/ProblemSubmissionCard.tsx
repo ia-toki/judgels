@@ -1,14 +1,15 @@
-import { Callout, Intent } from '@blueprintjs/core';
+import { Callout } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { ContentCard } from '../ContentCard/ContentCard';
-import { ProblemSubmissionConfiguration } from '../../modules/api/sandalphon/problem';
 import ProblemSubmissionForm, { ProblemSubmissionFormData } from './ProblemSubmissionForm';
+import { ProblemSubmissionConfiguration } from '../../modules/api/sandalphon/problem';
 
 export interface ProblemSubmissionCardProps {
   config: ProblemSubmissionConfiguration;
   onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
   reasonNotAllowedToSubmit?: string;
+  submissionWarning?: string;
 }
 
 export class ProblemSubmissionCard extends React.Component<ProblemSubmissionCardProps> {
@@ -23,11 +24,7 @@ export class ProblemSubmissionCard extends React.Component<ProblemSubmissionCard
 
   private renderSubmissionForm = () => {
     if (this.props.reasonNotAllowedToSubmit) {
-      return (
-        <Callout intent={Intent.DANGER} icon="ban-circle">
-          {this.props.reasonNotAllowedToSubmit}
-        </Callout>
-      );
+      return <Callout icon="ban-circle">{this.props.reasonNotAllowedToSubmit}</Callout>;
     }
     return <ProblemSubmissionForm {...this.props} />;
   };
