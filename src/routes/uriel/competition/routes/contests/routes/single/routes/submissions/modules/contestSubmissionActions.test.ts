@@ -3,6 +3,7 @@ import { contestJid, sessionState, token } from '../../../../../../../../../../f
 import { SubmissionWithSourceResponse } from '../../../../../../../../../../modules/api/sandalphon/submission';
 import { ContestSubmissionsResponse } from '../../../../../../../../../../modules/api/uriel/contestSubmission';
 import { AppState } from '../../../../../../../../../../modules/store';
+import { ProblemSubmissionFormData } from '../../../../../../../../../../components/ProblemWorksheetCard/ProblemSubmissionForm';
 
 describe('contestSubmissionActions', () => {
   let dispatch: jest.Mock<any>;
@@ -16,6 +17,7 @@ describe('contestSubmissionActions', () => {
     contestSubmissionAPI = {
       getMySubmissions: jest.fn(),
       getSubmissionWithSource: jest.fn(),
+      createSubmission: jest.fn(),
     };
   });
 
@@ -65,6 +67,33 @@ describe('contestSubmissionActions', () => {
       it('calls API to get contest submission', async () => {
         await expect(doFetch()).rejects.toMatchObject({});
       });
+    });
+  });
+
+  describe('submit()', () => {
+    const { submit } = contestSubmissionActions;
+    const sourceFiles = {
+      encoder: {} as File,
+      decoder: {} as File,
+    };
+    const data: ProblemSubmissionFormData = {
+      gradingLanguage: 'Pascal',
+      sourceFiles,
+    };
+    const doSubmit = async () => submit(contestJid, 'problemJid', data)(dispatch, getState, { contestSubmissionAPI });
+
+    beforeEach(async () => {
+      await doSubmit();
+    });
+
+    it('calls API to get create a submission', () => {
+      expect(contestSubmissionAPI.createSubmission).toHaveBeenCalledWith(
+        token,
+        contestJid,
+        'problemJid',
+        'Pascal',
+        sourceFiles
+      );
     });
   });
 });

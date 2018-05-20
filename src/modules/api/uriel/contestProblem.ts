@@ -25,8 +25,7 @@ export interface ContestContestantProblemsResponse {
 }
 
 export interface ContestContestantProblemWorksheet {
-  problem: ContestProblem;
-  totalSubmissions: number;
+  contestantProblem: ContestContestantProblem;
   worksheet: ProblemWorksheet;
 }
 

@@ -31,7 +31,7 @@ export function createUserAPI() {
     },
 
     updateUserAvatar: (token: string, userJid: string, file: File): Promise<void> => {
-      return postMultipart(`${baseURL}/${userJid}/avatar`, token, file);
+      return postMultipart(`${baseURL}/${userJid}/avatar`, token, { file: file });
     },
 
     deleteUserAvatar: (token: string, userJid: string): Promise<void> => {

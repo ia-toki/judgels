@@ -6,7 +6,7 @@ import ProblemSubmissionForm, { ProblemSubmissionFormData } from './ProblemSubmi
 
 export interface ProblemSubmissionCardProps {
   config: ProblemSubmissionConfiguration;
-  onSubmit: (data: ProblemSubmissionFormData) => void;
+  onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
 }
 
 export class ProblemSubmissionCard extends React.Component<ProblemSubmissionCardProps> {

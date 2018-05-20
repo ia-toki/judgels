@@ -1,5 +1,5 @@
 import { APP_CONFIG } from '../../../conf';
-import { get } from '../http';
+import { get, postMultipart } from '../http';
 import { Page } from '../pagination';
 import { UsersMap } from '../jophiel/user';
 import { Submission, SubmissionWithSourceResponse } from '../sandalphon/submission';
@@ -20,6 +20,17 @@ export function createContestSubmissionAPI() {
 
     getSubmissionWithSource: (token: string, submissionId: number): Promise<SubmissionWithSourceResponse> => {
       return get(`${baseURL}/id/${submissionId}`, token);
+    },
+
+    createSubmission: (
+      token: string,
+      contestJid: string,
+      problemJid: string,
+      gradingLanguage: string,
+      sourceFiles: { [key: string]: File }
+    ): Promise<void> => {
+      const parts = { contestJid, problemJid, gradingLanguage, ...sourceFiles };
+      return postMultipart(baseURL, token, parts);
     },
   };
 }

@@ -23,7 +23,7 @@ export function createToastActions(toaster) {
       if (error instanceof RemoteError) {
         message = 'Internal server error; please try again later.';
       } else if (error instanceof ForbiddenError) {
-        message = 'You are not allowed to view this resource.';
+        message = 'Operation not allowed.';
       } else if (error instanceof NotFoundError) {
         message = 'Resource not found.';
       } else {

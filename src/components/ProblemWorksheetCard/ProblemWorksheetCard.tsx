@@ -10,6 +10,7 @@ import './ProblemWorksheetCard.css';
 export interface ProblemWorksheetCardProps {
   alias: string;
   worksheet: ProblemWorksheet;
+  onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
 }
 
 export class ProblemWorksheetCard extends React.Component<ProblemWorksheetCardProps> {
@@ -26,11 +27,7 @@ export class ProblemWorksheetCard extends React.Component<ProblemWorksheetCardPr
     return <ProblemStatementCard alias={this.props.alias} statement={this.props.worksheet.statement} />;
   };
 
-  private onSubmit = (data: ProblemSubmissionFormData) => {
-    // console.log(data);
-  };
-
   private renderSubmission = () => {
-    return <ProblemSubmissionCard config={this.props.worksheet.submissionConfig} onSubmit={this.onSubmit} />;
+    return <ProblemSubmissionCard config={this.props.worksheet.submissionConfig} onSubmit={this.props.onSubmit} />;
   };
 }
