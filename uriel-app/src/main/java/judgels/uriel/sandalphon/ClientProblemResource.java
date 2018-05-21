@@ -9,7 +9,7 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
-import judgels.sandalphon.api.problem.ProblemSubmissionConfiguration;
+import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.ProblemWorksheet;
 import judgels.service.api.client.BasicAuthHeader;
 
@@ -23,8 +23,8 @@ public class ClientProblemResource implements ClientProblemService {
     }
 
     @Override
-    public ProblemSubmissionConfiguration getProblemSubmissionConfig(BasicAuthHeader authHeader, String problemJid) {
-        return new ProblemSubmissionConfiguration.Builder()
+    public ProblemSubmissionConfig getProblemSubmissionConfig(BasicAuthHeader authHeader, String problemJid) {
+        return new ProblemSubmissionConfig.Builder()
                 .sourceKeys(ImmutableMap.of("encoder", "Encoder", "decoder", "Decoder"))
                 .gradingEngine("BatchWithSubtasks")
                 .gradingLanguageRestriction(LanguageRestriction.noRestriction())
@@ -45,10 +45,10 @@ public class ClientProblemResource implements ClientProblemService {
                 .memoryLimit(65536)
                 .build();
 
-        ProblemSubmissionConfiguration submissionConfig = new ProblemSubmissionConfiguration.Builder()
+        ProblemSubmissionConfig submissionConfig = new ProblemSubmissionConfig.Builder()
                 .sourceKeys(ImmutableMap.of("encoder", "Encoder", "decoder", "Decoder"))
                 .gradingEngine("BatchWithSubtasks")
-                .gradingLanguageRestriction(LanguageRestriction.noRestriction())
+                .gradingLanguageRestriction(LanguageRestriction.of(ImmutableSet.of("C", "Pascal")))
                 .build();
 
         return new ProblemWorksheet.Builder()

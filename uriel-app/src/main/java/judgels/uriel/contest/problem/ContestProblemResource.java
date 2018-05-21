@@ -1,5 +1,6 @@
 package judgels.uriel.contest.problem;
 
+import static judgels.sandalphon.SandalphonUtils.combineLanguageRestrictions;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -10,7 +11,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.ProblemWorksheet;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -21,6 +24,7 @@ import judgels.uriel.api.contest.problem.ContestContestantProblemWorksheet;
 import judgels.uriel.api.contest.problem.ContestContestantProblemsResponse;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.style.ContestStyleStore;
 import judgels.uriel.role.RoleChecker;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 
@@ -28,6 +32,7 @@ public class ContestProblemResource implements ContestProblemService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
     private final ContestStore contestStore;
+    private final ContestStyleStore styleStore;
     private final ContestProblemStore problemStore;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
@@ -37,6 +42,7 @@ public class ContestProblemResource implements ContestProblemService {
             ActorChecker actorChecker,
             RoleChecker roleChecker,
             ContestStore contestStore,
+            ContestStyleStore styleStore,
             ContestProblemStore problemStore,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
@@ -44,6 +50,7 @@ public class ContestProblemResource implements ContestProblemService {
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
         this.contestStore = contestStore;
+        this.styleStore = styleStore;
         this.problemStore = problemStore;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
@@ -94,14 +101,29 @@ public class ContestProblemResource implements ContestProblemService {
         String problemJid = contestantProblem.getProblem().getProblemJid();
 
         Optional<String> reasonNotAllowedToSubmit = roleChecker.canSubmitProblem(actorJid, contest, contestantProblem);
-        ProblemWorksheet worksheet = new ProblemWorksheet.Builder()
-                .from(clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language))
+
+        ProblemWorksheet worksheet =
+                clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
+
+        LanguageRestriction contestGradingLanguageRestriction =
+                styleStore.getStyleConfig(contestJid).getGradingLanguageRestriction();
+        LanguageRestriction problemGradingLanguageRestriction =
+                worksheet.getSubmissionConfig().getGradingLanguageRestriction();
+        LanguageRestriction combinedGradingLanguageRestriction =
+                combineLanguageRestrictions(contestGradingLanguageRestriction, problemGradingLanguageRestriction);
+
+        ProblemWorksheet finalWorksheet = new ProblemWorksheet.Builder()
+                .from(worksheet)
+                .submissionConfig(new ProblemSubmissionConfig.Builder()
+                        .from(worksheet.getSubmissionConfig())
+                        .gradingLanguageRestriction(combinedGradingLanguageRestriction)
+                        .build())
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                 .build();
 
         return new ContestContestantProblemWorksheet.Builder()
                 .contestantProblem(contestantProblem)
-                .worksheet(worksheet)
+                .worksheet(finalWorksheet)
                 .build();
     }
 }

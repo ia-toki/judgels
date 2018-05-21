@@ -25,7 +25,7 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
-import judgels.sandalphon.api.problem.ProblemSubmissionConfiguration;
+import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.sandalphon.api.submission.SubmissionWithSource;
 import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
@@ -156,12 +156,12 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 checkFound(problemStore.findContestantProblem(contestJid, actorJid, problemJid));
         checkAllowed(roleChecker.canSubmitProblem(actorJid, contest, contestantProblem));
 
-        ProblemSubmissionConfiguration problemSubmissionConfig =
+        ProblemSubmissionConfig problemSubmissionConfig =
                 clientProblemService.getProblemSubmissionConfig(sandalphonClientAuthHeader, problemJid);
         ContestStyleConfig styleConfig = styleStore.getStyleConfig(contestJid);
         checkGradingLanguageAllowed(
                 gradingLanguage,
                 problemSubmissionConfig.getGradingLanguageRestriction(),
-                styleConfig.getLanguageRestriction());
+                styleConfig.getGradingLanguageRestriction());
     }
 }
