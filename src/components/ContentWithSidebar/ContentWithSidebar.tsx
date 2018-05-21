@@ -53,7 +53,7 @@ function resolveUrl(parentPath: string, childPath: string) {
   return (parentPath + '/' + actualChildPath).replace(/\/\/+/g, '/');
 }
 
-class ContentWithSidebar extends React.Component<ContentWithSidebarProps & ContentWithSidebarConnectedProps> {
+class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & ContentWithSidebarConnectedProps> {
   render() {
     return (
       <ContentAndSidebar

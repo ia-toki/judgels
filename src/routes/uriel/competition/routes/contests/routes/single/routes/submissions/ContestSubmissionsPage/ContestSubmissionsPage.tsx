@@ -26,7 +26,10 @@ interface ContestSubmissionsPageState {
   problemAliasesMap?: { [problemJid: string]: string };
 }
 
-export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPageProps, ContestSubmissionsPageState> {
+export class ContestSubmissionsPage extends React.PureComponent<
+  ContestSubmissionsPageProps,
+  ContestSubmissionsPageState
+> {
   private static PAGE_SIZE = 20;
 
   state: ContestSubmissionsPageState = {};

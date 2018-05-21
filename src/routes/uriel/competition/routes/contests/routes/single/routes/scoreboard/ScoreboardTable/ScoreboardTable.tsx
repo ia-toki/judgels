@@ -11,7 +11,7 @@ export class ScoreboardTableProps {
   children?: any;
 }
 
-export class ScoreboardTable extends React.Component<ScoreboardTableProps> {
+export class ScoreboardTable extends React.PureComponent<ScoreboardTableProps> {
   render() {
     return (
       <table

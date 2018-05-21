@@ -12,7 +12,7 @@ export interface ProblemSubmissionCardProps {
   submissionWarning?: string;
 }
 
-export class ProblemSubmissionCard extends React.Component<ProblemSubmissionCardProps> {
+export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmissionCardProps> {
   render() {
     return (
       <ContentCard>

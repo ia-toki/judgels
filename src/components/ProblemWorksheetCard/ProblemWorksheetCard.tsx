@@ -14,7 +14,7 @@ export interface ProblemWorksheetCardProps {
   submissionWarning?: string;
 }
 
-export class ProblemWorksheetCard extends React.Component<ProblemWorksheetCardProps> {
+export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCardProps> {
   render() {
     return (
       <div className="problem-worksheet">

@@ -25,7 +25,7 @@ interface ContestAnnouncementsPageState {
   usersMap?: UsersMap;
 }
 
-export class ContestAnnouncementsPage extends React.Component<
+export class ContestAnnouncementsPage extends React.PureComponent<
   ContestAnnouncementsPageProps,
   ContestAnnouncementsPageState
 > {

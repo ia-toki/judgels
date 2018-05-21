@@ -8,7 +8,7 @@ const LoadableTrainingRoutes = Loadable({
   loading: () => <LoadingState large />,
 });
 
-export default class JerahmeelRoutes extends React.Component {
+export default class JerahmeelRoutes extends React.PureComponent {
   render() {
     return <LoadableTrainingRoutes />;
   }

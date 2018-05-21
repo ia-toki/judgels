@@ -28,7 +28,7 @@ interface ContestProblemPageState {
   worksheet?: ProblemWorksheet;
 }
 
-export class ContestProblemPage extends React.Component<ContestProblemPageProps, ContestProblemPageState> {
+export class ContestProblemPage extends React.PureComponent<ContestProblemPageProps, ContestProblemPageState> {
   state: ContestProblemPageState = {};
 
   async componentDidMount() {

@@ -21,7 +21,7 @@ export interface ProblemSubmissionFormProps extends InjectedFormProps<ProblemSub
   submissionWarning?: string;
 }
 
-class ProblemSubmissionForm extends React.Component<ProblemSubmissionFormProps> {
+class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormProps> {
   render() {
     return (
       <form onSubmit={this.props.handleSubmit}>

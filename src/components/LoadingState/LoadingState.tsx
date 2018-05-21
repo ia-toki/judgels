@@ -13,7 +13,7 @@ export interface LoadingStateState {
   showProgressBar: boolean;
 }
 
-export class LoadingState extends React.Component<LoadingStateProps, LoadingStateState> {
+export class LoadingState extends React.PureComponent<LoadingStateProps, LoadingStateState> {
   timer: any;
   state: LoadingStateState = { showProgressBar: false };
 

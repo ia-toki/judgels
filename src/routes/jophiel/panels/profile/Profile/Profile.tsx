@@ -17,7 +17,7 @@ interface ProfilePanelState {
   isEditing: boolean;
 }
 
-export class ProfilePanel extends React.Component<ProfilePanelProps, ProfilePanelState> {
+export class ProfilePanel extends React.PureComponent<ProfilePanelProps, ProfilePanelState> {
   state: ProfilePanelState = { isEditing: false };
 
   render() {

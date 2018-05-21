@@ -14,7 +14,7 @@ interface PaginationProps {
   onChangePage: (nextPage: number) => void;
 }
 
-class Pagination extends React.Component<PaginationProps, {}> {
+class Pagination extends React.PureComponent<PaginationProps, {}> {
   render() {
     const { totalData } = this.props;
 
@@ -97,7 +97,7 @@ interface PaginationContainerState {
   totalData: number;
 }
 
-class PaginationContainer extends React.Component<
+class PaginationContainer extends React.PureComponent<
   PaginationContainerProps & PaginationContainerConnectedProps,
   PaginationContainerState
 > {

@@ -25,7 +25,7 @@ interface ContestProblemsPageState {
   problemNamesMap?: { [problemJid: string]: string };
 }
 
-export class ContestProblemsPage extends React.Component<ContestProblemsPageProps, ContestProblemsPageState> {
+export class ContestProblemsPage extends React.PureComponent<ContestProblemsPageProps, ContestProblemsPageState> {
   state: ContestProblemsPageState = {};
 
   async componentDidMount() {

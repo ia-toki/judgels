@@ -26,7 +26,7 @@ interface AppProps {
   onGetWebConfig: () => void;
 }
 
-class App extends React.Component<AppProps> {
+class App extends React.PureComponent<AppProps> {
   componentDidMount() {
     this.props.onGetRole();
     this.props.onGetWebConfig();

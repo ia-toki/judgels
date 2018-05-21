@@ -22,7 +22,7 @@ interface RegisterPageState {
   };
 }
 
-export class RegisterPage extends React.Component<RegisterPageProps, RegisterPageState> {
+export class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageState> {
   state: RegisterPageState = {};
 
   render() {

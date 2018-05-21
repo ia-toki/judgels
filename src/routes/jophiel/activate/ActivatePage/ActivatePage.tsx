@@ -37,7 +37,7 @@ interface ActivatePageContainerState {
   isFetching: boolean;
 }
 
-class ActivatePageContainer extends React.Component<ActivatePageContainerProps, ActivatePageContainerState> {
+class ActivatePageContainer extends React.PureComponent<ActivatePageContainerProps, ActivatePageContainerState> {
   state: ActivatePageContainerState = {
     isFetching: true,
   };

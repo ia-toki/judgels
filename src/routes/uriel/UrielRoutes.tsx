@@ -8,7 +8,7 @@ const LoadableCompetitionRoutes = Loadable({
   loading: () => <LoadingState large />,
 });
 
-export default class UrielRoutes extends React.Component {
+export default class UrielRoutes extends React.PureComponent {
   render() {
     return <LoadableCompetitionRoutes />;
   }

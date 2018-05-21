@@ -14,7 +14,7 @@ interface ForgotPasswordPageState {
   submitted: boolean;
 }
 
-export class ForgotPasswordPage extends React.Component<ForgotPasswordPageProps, ForgotPasswordPageState> {
+export class ForgotPasswordPage extends React.PureComponent<ForgotPasswordPageProps, ForgotPasswordPageState> {
   state: ForgotPasswordPageState = { submitted: false };
 
   render() {

@@ -17,7 +17,7 @@ export class IoiScoreboardTableProps {
   usersMap: UsersMap;
 }
 
-export class IoiScoreboardTable extends React.Component<IoiScoreboardTableProps> {
+export class IoiScoreboardTable extends React.PureComponent<IoiScoreboardTableProps> {
   render() {
     const { scoreboard } = this.props;
     return (

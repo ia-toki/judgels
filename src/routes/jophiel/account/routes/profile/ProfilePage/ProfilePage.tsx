@@ -14,7 +14,7 @@ interface ProfilePageProps {
   onUpdateProfile: (profile: UserProfile) => Promise<void>;
 }
 
-class ProfilePage extends React.Component<ProfilePageProps> {
+class ProfilePage extends React.PureComponent<ProfilePageProps> {
   componentDidMount() {
     this.props.onFetchProfile();
   }

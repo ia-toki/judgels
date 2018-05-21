@@ -13,7 +13,7 @@ export interface UserWidgetProps {
   user?: UserWithAvatar;
 }
 
-export class UserWidget extends React.Component<UserWidgetProps> {
+export class UserWidget extends React.PureComponent<UserWidgetProps> {
   render() {
     if (this.props.user) {
       return this.renderForUser(this.props.user);

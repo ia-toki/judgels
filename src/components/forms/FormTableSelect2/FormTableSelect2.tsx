@@ -12,7 +12,7 @@ export interface FormTableSelect2Props extends FormInputProps {
   optionNamesMap: { [key: string]: string };
 }
 
-export class FormTableSelect2 extends React.Component<FormTableSelect2Props> {
+export class FormTableSelect2 extends React.PureComponent<FormTableSelect2Props> {
   render() {
     const SelectC = Select.ofType<string>();
     const { onChange, ...inputProps } = this.props.input;

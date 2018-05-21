@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export class AccountRoutes extends React.Component {
+export class AccountRoutes extends React.PureComponent {
   render() {
     return <div />;
   }

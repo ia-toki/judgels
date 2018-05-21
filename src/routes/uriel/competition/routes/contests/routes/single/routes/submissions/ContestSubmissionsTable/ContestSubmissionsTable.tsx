@@ -16,7 +16,7 @@ export interface ContestSubmissionsTableProps {
   problemAliasesMap: { [problemJid: string]: string };
 }
 
-export class ContestSubmissionsTable extends React.Component<ContestSubmissionsTableProps> {
+export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {
   render() {
     return (
       <table className="pt-html-table pt-html-table-striped table-list submissions">

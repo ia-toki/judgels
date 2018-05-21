@@ -18,7 +18,7 @@ export class IcpcScoreboardTableProps {
   usersMap: UsersMap;
 }
 
-export class IcpcScoreboardTable extends React.Component<IcpcScoreboardTableProps> {
+export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTableProps> {
   render() {
     const { scoreboard } = this.props;
     return (

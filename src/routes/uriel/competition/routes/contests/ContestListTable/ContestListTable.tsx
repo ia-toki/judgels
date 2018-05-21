@@ -13,7 +13,7 @@ export interface ContestListTableProps {
   buttonIntent: Intent;
 }
 
-export class ContestListTable extends React.Component<ContestListTableProps, {}> {
+export class ContestListTable extends React.PureComponent<ContestListTableProps, {}> {
   render() {
     const { contestList } = this.props;
     const list = contestList.map(contest => (

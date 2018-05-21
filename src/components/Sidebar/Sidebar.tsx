@@ -23,7 +23,7 @@ export interface SidebarState {
   isResponsivePopoverOpen: boolean;
 }
 
-export class Sidebar extends React.Component<SidebarProps, SidebarState> {
+export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
   state: SidebarState = { isResponsivePopoverOpen: false };
 
   render() {

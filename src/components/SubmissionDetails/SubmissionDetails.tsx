@@ -24,7 +24,7 @@ export interface SubmissionDetailsProps {
   containerName: string;
 }
 
-export class SubmissionDetails extends React.Component<SubmissionDetailsProps> {
+export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProps> {
   render() {
     return (
       <div>

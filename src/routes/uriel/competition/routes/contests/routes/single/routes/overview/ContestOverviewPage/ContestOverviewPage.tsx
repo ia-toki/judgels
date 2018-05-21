@@ -16,7 +16,7 @@ interface ContestOverviewPageProps extends RouteComponentProps<{ contestJid: str
   contest: Contest;
 }
 
-class ContestOverviewPage extends React.Component<ContestOverviewPageProps> {
+class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps> {
   render() {
     const { contest } = this.props;
 

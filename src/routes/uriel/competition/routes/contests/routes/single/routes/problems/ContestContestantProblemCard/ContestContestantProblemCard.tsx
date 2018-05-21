@@ -17,7 +17,7 @@ export interface ContestContestantProblemCardProps {
   problemName: string;
 }
 
-export class ContestContestantProblemCard extends React.Component<ContestContestantProblemCardProps> {
+export class ContestContestantProblemCard extends React.PureComponent<ContestContestantProblemCardProps> {
   render() {
     const { problem } = this.props.contestantProblem;
     const { contest, problemName } = this.props;

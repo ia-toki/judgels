@@ -34,7 +34,7 @@ interface ContestScoreboardPageState {
   usersMap?: UsersMap;
 }
 
-export class ContestScoreboardPage extends React.Component<ContestScoreboardPageProps, ContestScoreboardPageState> {
+export class ContestScoreboardPage extends React.PureComponent<ContestScoreboardPageProps, ContestScoreboardPageState> {
   state: ContestScoreboardPageState = {};
 
   async componentDidMount() {
