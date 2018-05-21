@@ -22,6 +22,7 @@ export const contestSubmissionActions = {
   },
 
   submit: (contestJid: string, problemJid: string, data: ProblemSubmissionFormData) => {
+    console.log(data);
     return async (dispatch, getState, { contestSubmissionAPI }) => {
       const token = selectToken(getState());
       return await contestSubmissionAPI.createSubmission(

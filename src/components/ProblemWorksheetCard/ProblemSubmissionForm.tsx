@@ -4,7 +4,7 @@ import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 import { FormTableFileInput } from '../forms/FormTableFileInput/FormTableFileInput';
 import { FormTableSelect2 } from '../forms/FormTableSelect2/FormTableSelect2';
-import { Required } from '../forms/validations';
+import { CompatibleFilenameExtensionForGradingLanguage, MaxFileSize300KB, Required } from '../forms/validations';
 import { ProblemSubmissionConfig } from '../../modules/api/sandalphon/problem';
 import { GradingEngineCode } from '../../modules/api/gabriel/engine';
 import {
@@ -62,7 +62,7 @@ class RawProblemSubmissionForm extends React.PureComponent<RawProblemSubmissionF
         const field: any = {
           name: 'sourceFiles.' + key,
           label: sourceKeys[key],
-          validate: [Required],
+          validate: [Required, MaxFileSize300KB, CompatibleFilenameExtensionForGradingLanguage],
         };
         return <Field key={key} component={FormTableFileInput} {...field} />;
       });

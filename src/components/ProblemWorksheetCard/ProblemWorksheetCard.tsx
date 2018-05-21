@@ -33,7 +33,7 @@ export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCa
       <ProblemSubmissionCard
         config={this.props.worksheet.submissionConfig}
         onSubmit={this.props.onSubmit}
-        // reasonNotAllowedToSubmit={this.props.worksheet.reasonNotAllowedToSubmit}
+        reasonNotAllowedToSubmit={this.props.worksheet.reasonNotAllowedToSubmit}
         submissionWarning={this.props.submissionWarning}
       />
     );
