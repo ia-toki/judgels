@@ -3,10 +3,10 @@ import * as React from 'react';
 
 import { ContentCard } from '../ContentCard/ContentCard';
 import ProblemSubmissionForm, { ProblemSubmissionFormData } from './ProblemSubmissionForm';
-import { ProblemSubmissionConfiguration } from '../../modules/api/sandalphon/problem';
+import { ProblemSubmissionConfig } from '../../modules/api/sandalphon/problem';
 
 export interface ProblemSubmissionCardProps {
-  config: ProblemSubmissionConfiguration;
+  config: ProblemSubmissionConfig;
   onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
   reasonNotAllowedToSubmit?: string;
   submissionWarning?: string;

@@ -10,8 +10,17 @@ export const gradingLanguageNamesMap = {
   Python3: 'Python 3',
 };
 
+export const preferredGradingLanguage = 'Cpp11';
+
 export const gradingLanguages = Object.keys(gradingLanguageNamesMap).sort();
 
 export function getGradingLanguageName(code: string): string {
   return gradingLanguageNamesMap[code] || code;
+}
+
+export function getAllowedGradingLanguages(restriction: LanguageRestriction) {
+  if (restriction.allowedLanguageNames.length === 0) {
+    return gradingLanguages;
+  }
+  return restriction.allowedLanguageNames;
 }

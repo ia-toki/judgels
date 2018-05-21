@@ -7,7 +7,7 @@ export interface ProblemStatement {
   text: string;
 }
 
-export interface ProblemSubmissionConfiguration {
+export interface ProblemSubmissionConfig {
   sourceKeys: { [key: string]: string };
   gradingEngine: string;
   gradingLanguageRestriction: LanguageRestriction;
@@ -15,6 +15,6 @@ export interface ProblemSubmissionConfiguration {
 
 export interface ProblemWorksheet {
   statement: ProblemStatement;
-  submissionConfig: ProblemSubmissionConfiguration;
+  submissionConfig: ProblemSubmissionConfig;
   reasonNotAllowedToSubmit?: string;
 }
