@@ -1,5 +1,5 @@
 import { contestSubmissionActions } from './contestSubmissionActions';
-import { contestJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
+import { contestJid, problemJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
 import { SubmissionWithSourceResponse } from '../../../../../../../../../../modules/api/sandalphon/submission';
 import { ContestSubmissionsResponse } from '../../../../../../../../../../modules/api/uriel/contestSubmission';
 import { AppState } from '../../../../../../../../../../modules/store';
@@ -80,7 +80,7 @@ describe('contestSubmissionActions', () => {
       gradingLanguage: 'Pascal',
       sourceFiles,
     };
-    const doSubmit = async () => submit(contestJid, 'problemJid', data)(dispatch, getState, { contestSubmissionAPI });
+    const doSubmit = async () => submit(contestJid, problemJid, data)(dispatch, getState, { contestSubmissionAPI });
 
     beforeEach(async () => {
       await doSubmit();
@@ -90,7 +90,7 @@ describe('contestSubmissionActions', () => {
       expect(contestSubmissionAPI.createSubmission).toHaveBeenCalledWith(
         token,
         contestJid,
-        'problemJid',
+        problemJid,
         'Pascal',
         sourceFiles
       );

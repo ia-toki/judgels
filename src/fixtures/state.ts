@@ -22,3 +22,5 @@ export const contest: Contest = {
   beginTime: 123,
   duration: 456,
 };
+
+export const problemJid = 'problemJid123';

@@ -11,7 +11,7 @@ import { urielReducer } from '../../../../../../../../../modules/urielReducer';
 import { PutContest } from '../../../../../../../modules/contestReducer';
 import { preferredGradingLanguage } from '../../../../../../../../../../../../modules/api/gabriel/language';
 import { ContestProblemStatus } from '../../../../../../../../../../../../modules/api/uriel/contestProblem';
-import { contest, contestJid } from '../../../../../../../../../../../../fixtures/state';
+import { contest, contestJid, problemJid } from '../../../../../../../../../../../../fixtures/state';
 
 describe('ContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
@@ -24,7 +24,7 @@ describe('ContestProblemPage', () => {
         Promise.resolve({
           contestantProblem: {
             problem: {
-              problemJid: 'problemJid',
+              problemJid,
               alias: 'C',
               status: ContestProblemStatus.Open,
               submissionsLimit: 0,
@@ -78,7 +78,7 @@ describe('ContestProblemPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestSubmissionActions.submit).toHaveBeenCalledWith(contestJid, 'problemJid', {
+    expect(contestSubmissionActions.submit).toHaveBeenCalledWith(contestJid, problemJid, {
       gradingLanguage: preferredGradingLanguage,
       sourceFiles: {
         encoder: { name: 'encoder.cpp', size: 1000 } as File,
