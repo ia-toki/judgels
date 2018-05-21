@@ -3,7 +3,7 @@ import { contestJid, sessionState, token } from '../../../../../../../../../../f
 import { SubmissionWithSourceResponse } from '../../../../../../../../../../modules/api/sandalphon/submission';
 import { ContestSubmissionsResponse } from '../../../../../../../../../../modules/api/uriel/contestSubmission';
 import { AppState } from '../../../../../../../../../../modules/store';
-import { ProblemSubmissionFormData } from '../../../../../../../../../../components/ProblemWorksheetCard/ProblemSubmissionForm';
+import { ProblemSubmissionFormData } from '../../../../../../../../../../components/ProblemWorksheetCard/ProblemSubmissionForm/ProblemSubmissionForm';
 
 describe('contestSubmissionActions', () => {
   let dispatch: jest.Mock<any>;

@@ -1,9 +1,9 @@
 import { Callout } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContentCard } from '../ContentCard/ContentCard';
-import ProblemSubmissionForm, { ProblemSubmissionFormData } from './ProblemSubmissionForm';
-import { ProblemSubmissionConfig } from '../../modules/api/sandalphon/problem';
+import { ContentCard } from '../../ContentCard/ContentCard';
+import ProblemSubmissionForm, { ProblemSubmissionFormData } from '../ProblemSubmissionForm/ProblemSubmissionForm';
+import { ProblemSubmissionConfig } from '../../../modules/api/sandalphon/problem';
 
 export interface ProblemSubmissionCardProps {
   config: ProblemSubmissionConfig;
@@ -24,7 +24,11 @@ export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmission
 
   private renderSubmissionForm = () => {
     if (this.props.reasonNotAllowedToSubmit) {
-      return <Callout icon="ban-circle">{this.props.reasonNotAllowedToSubmit}</Callout>;
+      return (
+        <Callout icon="ban-circle">
+          <span data-key="reason-not-allowed-to-submit">{this.props.reasonNotAllowedToSubmit}</span>
+        </Callout>
+      );
     }
     return <ProblemSubmissionForm {...this.props} />;
   };

@@ -2,16 +2,16 @@ import { Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { FormTableFileInput } from '../forms/FormTableFileInput/FormTableFileInput';
-import { FormTableSelect2 } from '../forms/FormTableSelect2/FormTableSelect2';
-import { CompatibleFilenameExtensionForGradingLanguage, MaxFileSize300KB, Required } from '../forms/validations';
-import { ProblemSubmissionConfig } from '../../modules/api/sandalphon/problem';
-import { GradingEngineCode } from '../../modules/api/gabriel/engine';
+import { FormTableFileInput } from '../../forms/FormTableFileInput/FormTableFileInput';
+import { FormTableSelect2 } from '../../forms/FormTableSelect2/FormTableSelect2';
+import { CompatibleFilenameExtensionForGradingLanguage, MaxFileSize300KB, Required } from '../../forms/validations';
+import { ProblemSubmissionConfig } from '../../../modules/api/sandalphon/problem';
+import { GradingEngineCode } from '../../../modules/api/gabriel/engine';
 import {
   gradingLanguageNamesMap,
   getAllowedGradingLanguages,
   preferredGradingLanguage,
-} from '../../modules/api/gabriel/language';
+} from '../../../modules/api/gabriel/language';
 
 import './ProblemSubmissionForm.css';
 import { connect } from 'react-redux';
@@ -47,7 +47,7 @@ class RawProblemSubmissionForm extends React.PureComponent<RawProblemSubmissionF
   private renderWarning = () => {
     return (
       this.props.submissionWarning && (
-        <Callout icon="warning-sign" className="problem-submission-form__warning">
+        <Callout icon="warning-sign" className="problem-submission-form__warning" data-key="submission-warning">
           {this.props.submissionWarning}
         </Callout>
       )

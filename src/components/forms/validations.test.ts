@@ -1,4 +1,11 @@
-import { ConfirmPassword, EmailAddress, Required, Username } from './validations';
+import {
+  CompatibleFilenameExtensionForGradingLanguage,
+  ConfirmPassword,
+  EmailAddress,
+  MaxFileSize300KB,
+  Required,
+  Username,
+} from './validations';
 
 test('Required', () => {
   expect(Required(undefined)).toBeTruthy();
@@ -24,4 +31,18 @@ test('ConfirmPassword', () => {
   expect(ConfirmPassword('pass', { password: undefined })).toBeTruthy();
   expect(ConfirmPassword('pass', { password: 'Pass' })).toBeTruthy();
   expect(ConfirmPassword('pass', { password: 'pass' })).toBeUndefined();
+});
+
+test('MaxFileSize300KB', () => {
+  expect(MaxFileSize300KB({ size: 500000 } as File)).toBeTruthy();
+  expect(MaxFileSize300KB({ size: 300000 } as File)).toBeUndefined();
+});
+
+test('CompatibleFilenameExtensionForGradingLanguage', () => {
+  expect(
+    CompatibleFilenameExtensionForGradingLanguage({ name: 'sol.pas' } as File, { gradingLanguage: 'Cpp11' })
+  ).toEqual('Allowed extensions: cc, cpp.');
+  expect(
+    CompatibleFilenameExtensionForGradingLanguage({ name: 'sol.cpp' } as File, { gradingLanguage: 'Cpp11' })
+  ).toBeUndefined();
 });

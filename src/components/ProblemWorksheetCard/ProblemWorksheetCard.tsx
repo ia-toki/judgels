@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { ProblemStatementCard } from './ProblemStatementCard';
-import { ProblemSubmissionCard } from './ProblemSubmissionCard';
-import { ProblemSubmissionFormData } from './ProblemSubmissionForm';
+import { ProblemStatementCard } from './ProblemStatementCard/ProblemStatementCard';
+import { ProblemSubmissionCard } from './ProblemSubmissionCard/ProblemSubmissionCard';
+import { ProblemSubmissionFormData } from './ProblemSubmissionForm/ProblemSubmissionForm';
 import { ProblemWorksheet } from '../../modules/api/sandalphon/problem';
 
 import './ProblemWorksheetCard.css';

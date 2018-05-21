@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as HTMLReactParser from 'html-react-parser';
 
-import { ContentCard } from '../ContentCard/ContentCard';
-import { ProblemStatement } from '../../modules/api/sandalphon/problem';
+import { ContentCard } from '../../ContentCard/ContentCard';
+import { ProblemStatement } from '../../../modules/api/sandalphon/problem';
 
 import './ProblemStatementCard.css';
 

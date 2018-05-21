@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
 import { ProblemWorksheetCard } from '../../../../../../../../../../../../components/ProblemWorksheetCard/ProblemWorksheetCard';
-import { ProblemSubmissionFormData } from '../../../../../../../../../../../../components/ProblemWorksheetCard/ProblemSubmissionForm';
+import { ProblemSubmissionFormData } from '../../../../../../../../../../../../components/ProblemWorksheetCard/ProblemSubmissionForm/ProblemSubmissionForm';
 import { AppState } from '../../../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../../../modules/contestSelectors';
 import { ProblemWorksheet } from '../../../../../../../../../../../../modules/api/sandalphon/problem';
