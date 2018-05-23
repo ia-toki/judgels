@@ -136,11 +136,16 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .source(source)
                 .build();
 
+        String finalLanguage = problem.getDefaultLanguage();
+        if (language.isPresent() && problem.getNamesByLanguage().containsKey(language.get())) {
+            finalLanguage = language.get();
+        }
+
         return new SubmissionWithSourceResponse.Builder()
                 .data(submissionWithSource)
                 .user(user)
                 .problemAlias(contestProblem.getAlias())
-                .problemName(problem.getNamesByLanguage().get(language.orElse(problem.getDefaultLanguage())))
+                .problemName(problem.getNamesByLanguage().get(finalLanguage))
                 .containerName(contest.getName())
                 .build();
     }
