@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
+import StatementLanguageWidget from '../../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
 import { ContestContestantProblemCard } from '../ContestContestantProblemCard/ContestContestantProblemCard';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 import {
@@ -12,28 +13,49 @@ import {
   ContestProblemStatus,
 } from '../../../../../../../../../../modules/api/uriel/contestProblem';
 import { selectContest } from '../../../../../modules/contestSelectors';
+import { selectStatementLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { AppState } from '../../../../../../../../../../modules/store';
+import { consolidateDefaultLanguages } from '../../../../../../../../../../modules/api/sandalphon/language';
+import { getProblemName, ProblemInfo } from '../../../../../../../../../../modules/api/sandalphon/problem';
 import { contestProblemActions as injectedContestProblemActions } from '../modules/contestProblemActions';
 
 export interface ContestProblemsPageProps {
   contest: Contest;
+  statementLanguage: string;
   onFetchMyProblems: (contestJid: string) => Promise<ContestContestantProblemsResponse>;
 }
 
 interface ContestProblemsPageState {
   contestantProblems?: ContestContestantProblem[];
-  problemNamesMap?: { [problemJid: string]: string };
+  problemsMap?: { [problemJid: string]: ProblemInfo };
+  defaultLanguage?: string;
+  uniqueDefaultLanguages?: string[];
 }
 
 export class ContestProblemsPage extends React.PureComponent<ContestProblemsPageProps, ContestProblemsPageState> {
   state: ContestProblemsPageState = {};
 
   async componentDidMount() {
-    const { data, problemNamesMap } = await this.props.onFetchMyProblems(this.props.contest.jid);
+    const { data, problemsMap } = await this.props.onFetchMyProblems(this.props.contest.jid);
+    const { defaultLanguage, uniqueDefaultLanguages } = consolidateDefaultLanguages(
+      Object.keys(problemsMap).map(jid => problemsMap[jid].defaultLanguage),
+      this.props.statementLanguage
+    );
+
     this.setState({
       contestantProblems: data,
-      problemNamesMap,
+      problemsMap,
+      defaultLanguage,
+      uniqueDefaultLanguages,
     });
+  }
+
+  async componentDidUpdate(prevProps: ContestProblemsPageProps, prevState: ContestProblemsPageState) {
+    if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.problemsMap) {
+      this.setState({ problemsMap: undefined });
+    } else if (!this.state.problemsMap) {
+      await this.componentDidMount();
+    }
   }
 
   render() {
@@ -41,14 +63,28 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
       <ContentCard>
         <h3>Problems</h3>
         <hr />
+        {this.renderStatementLanguageWidget()}
         {this.renderContestantProblems()}
       </ContentCard>
     );
   }
 
+  private renderStatementLanguageWidget = () => {
+    const { defaultLanguage, uniqueDefaultLanguages } = this.state;
+    if (!defaultLanguage || !uniqueDefaultLanguages) {
+      return null;
+    }
+
+    const props: any = {
+      defaultLanguage,
+      statementLanguages: uniqueDefaultLanguages,
+    };
+    return <StatementLanguageWidget {...props} />;
+  };
+
   private renderContestantProblems = () => {
-    const { contestantProblems, problemNamesMap } = this.state;
-    if (!contestantProblems || !problemNamesMap) {
+    const { contestantProblems, problemsMap } = this.state;
+    if (!contestantProblems || !problemsMap) {
       return <LoadingState />;
     }
 
@@ -93,7 +129,10 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
         key={contestantProblem.problem.problemJid}
         contest={this.props.contest}
         contestantProblem={contestantProblem}
-        problemName={this.state.problemNamesMap![contestantProblem.problem.problemJid]}
+        problemName={getProblemName(
+          this.state.problemsMap![contestantProblem.problem.problemJid],
+          this.state.defaultLanguage!
+        )}
       />
     ));
   };
@@ -102,6 +141,7 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
 export function createContestProblemsPage(contestProblemActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
+    statementLanguage: selectStatementLanguage(state),
   });
 
   const mapDispatchToProps = {

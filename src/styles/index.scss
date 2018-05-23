@@ -140,3 +140,11 @@ table {
     line-height: 20px !important;
   }
 }
+
+.clearfix {
+  &::after {
+    display: block;
+    content: '';
+    clear: both;
+  }
+}

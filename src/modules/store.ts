@@ -20,6 +20,7 @@ import { createContestProblemAPI } from './api/uriel/contestProblem';
 import { createContestScoreboardAPI } from './api/uriel/contestScoreboard';
 import { createContestSubmissionAPI } from './api/uriel/contestSubmission';
 import { sessionReducer, SessionState } from './session/sessionReducer';
+import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
 import { toastActions } from './toast/toastActions';
 import { toastMiddleware } from './toast/toastMiddleware';
 import { tokenGateMiddleware } from './tokenGate/tokenGateMiddleware';
@@ -29,6 +30,7 @@ import { breadcrumbsReducer, BreadcrumbsState } from './breadcrumbs/breadcrumbsR
 
 export interface AppState {
   session: SessionState;
+  webPrefs: WebPrefsState;
   jophiel: JophielState;
   uriel: UrielState;
   router: RouterState;
@@ -38,6 +40,7 @@ export interface AppState {
 
 const rootReducer = combineReducers<AppState>({
   session: persistReducer({ key: 'session', storage }, sessionReducer),
+  webPrefs: persistReducer({ key: 'webPrefs', storage }, webPrefsReducer),
   jophiel: jophielReducer,
   uriel: urielReducer,
   router: routerReducer,

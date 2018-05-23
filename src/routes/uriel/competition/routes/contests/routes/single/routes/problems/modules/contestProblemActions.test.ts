@@ -39,7 +39,7 @@ describe('contestProblemActions', () => {
 
   describe('fetchWorksheet()', () => {
     const { fetchWorksheet } = contestProblemActions;
-    const doFetch = async () => fetchWorksheet(contestJid, 'C')(dispatch, getState, { contestProblemAPI });
+    const doFetch = async () => fetchWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
 
     beforeEach(async () => {
       const worksheet = {} as ContestContestantProblemWorksheet;
@@ -49,7 +49,7 @@ describe('contestProblemActions', () => {
     });
 
     it('calls API to get contest problem worksheet', () => {
-      expect(contestProblemAPI.getProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C');
+      expect(contestProblemAPI.getProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
     });
   });
 });

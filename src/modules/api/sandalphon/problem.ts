@@ -1,5 +1,15 @@
 import { LanguageRestriction } from '../gabriel/language';
 
+export interface ProblemInfo {
+  slug: string;
+  defaultLanguage: string;
+  namesByLanguage: { [language: string]: string };
+}
+
+export function getProblemName(problem: ProblemInfo, language: string) {
+  return problem.namesByLanguage[language] || problem.namesByLanguage[problem.defaultLanguage];
+}
+
 export interface ProblemStatement {
   name: string;
   timeLimit: number;

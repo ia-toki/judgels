@@ -1,6 +1,6 @@
 import { APP_CONFIG } from '../../../conf';
 import { get } from '../http';
-import { ProblemWorksheet } from '../sandalphon/problem';
+import { ProblemInfo, ProblemWorksheet } from '../sandalphon/problem';
 
 export enum ContestProblemStatus {
   Open = 'OPEN',
@@ -21,10 +21,12 @@ export interface ContestContestantProblem {
 
 export interface ContestContestantProblemsResponse {
   data: ContestContestantProblem[];
-  problemNamesMap: { [problemJid: string]: string };
+  problemsMap: { [problemJid: string]: ProblemInfo };
 }
 
 export interface ContestContestantProblemWorksheet {
+  defaultLanguage: string;
+  languages: string[];
   contestantProblem: ContestContestantProblem;
   worksheet: ProblemWorksheet;
 }
@@ -40,9 +42,11 @@ export function createContestProblemAPI() {
     getProblemWorksheet: (
       token: string,
       contestJid: string,
-      problemAlias: string
+      problemAlias: string,
+      language: string
     ): Promise<ContestContestantProblemWorksheet> => {
-      return get(`${baseURL}/${contestJid}/problems/${problemAlias}/worksheet`, token);
+      const languageParam = language ? `?language=${language}` : '';
+      return get(`${baseURL}/${contestJid}/problems/${problemAlias}/worksheet${languageParam}`, token);
     },
   };
 }

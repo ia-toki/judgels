@@ -7,6 +7,7 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { createContestProblemPage } from './ContestProblemPage';
+import { webPrefsReducer } from '../../../../../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { urielReducer } from '../../../../../../../../../modules/urielReducer';
 import { PutContest } from '../../../../../../../modules/contestReducer';
 import { preferredGradingLanguage } from '../../../../../../../../../../../../modules/api/gabriel/language';
@@ -51,7 +52,10 @@ describe('ContestProblemPage', () => {
       submit: jest.fn(),
     };
 
-    const store = createStore(combineReducers({ form: formReducer, uriel: urielReducer }), applyMiddleware(thunk));
+    const store = createStore(
+      combineReducers({ form: formReducer, webPrefs: webPrefsReducer, uriel: urielReducer }),
+      applyMiddleware(thunk)
+    );
     store.dispatch(PutContest.create(contest));
 
     const ContestProblemPage = createContestProblemPage(contestProblemActions, contestSubmissionActions);
