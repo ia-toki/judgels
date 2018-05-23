@@ -1,4 +1,4 @@
-import { Button, Intent } from '@blueprintjs/core';
+import { Alignment, Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
@@ -19,7 +19,7 @@ interface StatementLanguageFormProps extends InjectedFormProps<StatementLanguage
 const StatementLanguageForm = (props: StatementLanguageFormProps) => {
   const field: any = {
     name: 'statementLanguage',
-    label: 'Statement Language: ',
+    label: 'Language: ',
     optionValues: props.statementLanguages,
     optionNamesMap: statementLanguageDisplayNamesMap,
     validate: [Required],
@@ -36,6 +36,7 @@ const StatementLanguageForm = (props: StatementLanguageFormProps) => {
         className="statement-language-form__button"
         type="submit"
         text="Switch"
+        alignText={Alignment.LEFT}
         intent={Intent.PRIMARY}
         loading={props.submitting}
       />
