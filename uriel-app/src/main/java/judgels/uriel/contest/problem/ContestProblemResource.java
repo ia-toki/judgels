@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.ProblemWorksheet;
 import judgels.service.actor.ActorChecker;
@@ -71,16 +72,14 @@ public class ContestProblemResource implements ContestProblemService {
         Set<String> problemJids =
                 contestantProblems.stream().map(p -> p.getProblem().getProblemJid()).collect(Collectors.toSet());
 
-        Map<String, String> problemNamesMap = clientProblemService.findProblemsByJids(
+        Map<String, ProblemInfo> problemsMap = clientProblemService.findProblemsByJids(
                 sandalphonClientAuthHeader,
                 language,
-                problemJids).entrySet()
-                .stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getName()));
+                problemJids);
 
         return new ContestContestantProblemsResponse.Builder()
                 .data(contestantProblems)
-                .problemNamesMap(problemNamesMap)
+                .problemsMap(problemsMap)
                 .build();
     }
 
@@ -99,6 +98,8 @@ public class ContestProblemResource implements ContestProblemService {
         ContestContestantProblem contestantProblem =
                 checkFound(problemStore.findContestantProblemByAlias(contestJid, actorJid, problemAlias));
         String problemJid = contestantProblem.getProblem().getProblemJid();
+
+        ProblemInfo problem = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
 
         Optional<String> reasonNotAllowedToSubmit = roleChecker.canSubmitProblem(actorJid, contest, contestantProblem);
 
@@ -122,6 +123,8 @@ public class ContestProblemResource implements ContestProblemService {
                 .build();
 
         return new ContestContestantProblemWorksheet.Builder()
+                .defaultLanguage(problem.getDefaultLanguage())
+                .languages(problem.getNamesByLanguage().keySet())
                 .contestantProblem(contestantProblem)
                 .worksheet(finalWorksheet)
                 .build();

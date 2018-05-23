@@ -51,12 +51,4 @@ public interface ClientProblemService {
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             @QueryParam("language") Optional<String> language,
             Set<String> jids);
-
-    @POST
-    @Path("/jids/languages")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    Set<String> getProblemLanguagesByJids(
-            @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
-            Set<String> jids);
 }

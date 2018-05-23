@@ -28,5 +28,6 @@ public interface ContestSubmissionService {
     @Produces(APPLICATION_JSON)
     SubmissionWithSourceResponse getSubmissionWithSourceById(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @PathParam("submissionId") long submissionId);
+            @PathParam("submissionId") long submissionId,
+            @QueryParam("language") Optional<String> language);
 }

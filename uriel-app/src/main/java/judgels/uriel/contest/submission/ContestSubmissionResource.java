@@ -111,7 +111,11 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public SubmissionWithSourceResponse getSubmissionWithSourceById(AuthHeader authHeader, long submissionId) {
+    public SubmissionWithSourceResponse getSubmissionWithSourceById(
+            AuthHeader authHeader,
+            long submissionId,
+            Optional<String> language) {
+
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.findSubmissionById(submissionId));
         Contest contest = checkFound(contestStore.findContestByJid(submission.getContainerJid()));
@@ -136,7 +140,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .data(submissionWithSource)
                 .user(user)
                 .problemAlias(contestProblem.getAlias())
-                .problemName(problem.getName())
+                .problemName(problem.getNamesByLanguage().get(language.orElse(problem.getDefaultLanguage())))
                 .containerName(contest.getName())
                 .build();
     }
