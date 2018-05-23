@@ -39,7 +39,7 @@ describe('contestSubmissionActions', () => {
 
   describe('fetchWithSource()', () => {
     const { fetchWithSource } = contestSubmissionActions;
-    const doFetch = async () => fetchWithSource(contestJid, 3)(dispatch, getState, { contestSubmissionAPI });
+    const doFetch = async () => fetchWithSource(contestJid, 3, 'id')(dispatch, getState, { contestSubmissionAPI });
 
     describe('when the contestJid matches', () => {
       beforeEach(async () => {
@@ -52,7 +52,7 @@ describe('contestSubmissionActions', () => {
       });
 
       it('calls API to get contest submission', () => {
-        expect(contestSubmissionAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3);
+        expect(contestSubmissionAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3, 'id');
       });
     });
 

@@ -14,10 +14,16 @@ import {
 } from '../../../../../../../../../../../../modules/api/sandalphon/submission';
 import { UserInfo } from '../../../../../../../../../../../../modules/api/jophiel/user';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../modules/contestSubmissionActions';
+import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 
 export interface ContestSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   contest: Contest;
-  onFetchSubmissionWithSource: (contestJid: string, submissionId: number) => Promise<SubmissionWithSourceResponse>;
+  statementLanguage: string;
+  onFetchSubmissionWithSource: (
+    contestJid: string,
+    submissionId: number,
+    language: string
+  ) => Promise<SubmissionWithSourceResponse>;
 }
 
 interface ContestSubmissionPageState {
@@ -34,7 +40,8 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
   async componentDidMount() {
     const { data, user, problemName, problemAlias, containerName } = await this.props.onFetchSubmissionWithSource(
       this.props.contest.jid,
-      +this.props.match.params.submissionId
+      +this.props.match.params.submissionId,
+      this.props.statementLanguage
     );
     this.setState({
       submissionWithSource: data,
@@ -78,6 +85,7 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
 function createContestSubmissionPage(contestSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
+    statementLanguage: selectStatementLanguage(state),
   });
 
   const mapDispatchToProps = {

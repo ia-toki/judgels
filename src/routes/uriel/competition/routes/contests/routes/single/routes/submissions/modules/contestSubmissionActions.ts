@@ -10,10 +10,10 @@ export const contestSubmissionActions = {
     };
   },
 
-  fetchWithSource: (contestJid: string, submissionId: number) => {
+  fetchWithSource: (contestJid: string, submissionId: number, language: string) => {
     return async (dispatch, getState, { contestSubmissionAPI }) => {
       const token = selectToken(getState());
-      const submissionWithSource = await contestSubmissionAPI.getSubmissionWithSource(token, submissionId);
+      const submissionWithSource = await contestSubmissionAPI.getSubmissionWithSource(token, submissionId, language);
       if (contestJid !== submissionWithSource.data.submission.containerJid) {
         throw new NotFoundError();
       }

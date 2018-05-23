@@ -18,8 +18,13 @@ export function createContestSubmissionAPI() {
       return get(`${baseURL}/mine?contestJid=${contestJid}&page=${page}`, token);
     },
 
-    getSubmissionWithSource: (token: string, submissionId: number): Promise<SubmissionWithSourceResponse> => {
-      return get(`${baseURL}/id/${submissionId}`, token);
+    getSubmissionWithSource: (
+      token: string,
+      submissionId: number,
+      language: string
+    ): Promise<SubmissionWithSourceResponse> => {
+      const languageParam = language ? `?language=${language}` : '';
+      return get(`${baseURL}/id/${submissionId}${languageParam}`, token);
     },
 
     createSubmission: (
