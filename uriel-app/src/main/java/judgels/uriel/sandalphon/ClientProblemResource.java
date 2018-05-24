@@ -93,7 +93,6 @@ public class ClientProblemResource implements ClientProblemService {
     @Override
     public Map<String, ProblemInfo> findProblemsByJids(
             BasicAuthHeader authHeader,
-            Optional<String> language,
             Set<String> jids) {
 
         return problemsByJid;

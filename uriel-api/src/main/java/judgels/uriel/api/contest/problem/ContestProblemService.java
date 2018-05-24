@@ -19,8 +19,7 @@ public interface ContestProblemService {
     @Produces(APPLICATION_JSON)
     ContestContestantProblemsResponse getMyProblems(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
-            @PathParam("contestJid") String contestJid,
-            @QueryParam("language") Optional<String> language);
+            @PathParam("contestJid") String contestJid);
 
     @GET
     @Path("/{problemAlias}/worksheet")

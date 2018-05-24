@@ -49,6 +49,5 @@ public interface ClientProblemService {
     @Produces(APPLICATION_JSON)
     Map<String, ProblemInfo> findProblemsByJids(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
-            @QueryParam("language") Optional<String> language,
             Set<String> jids);
 }

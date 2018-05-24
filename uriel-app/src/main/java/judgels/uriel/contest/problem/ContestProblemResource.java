@@ -59,11 +59,7 @@ public class ContestProblemResource implements ContestProblemService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestContestantProblemsResponse getMyProblems(
-            Optional<AuthHeader> authHeader,
-            String contestJid,
-            Optional<String> language) {
-
+    public ContestContestantProblemsResponse getMyProblems(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
         checkAllowed(roleChecker.canViewProblems(actorJid, contest));
@@ -74,7 +70,6 @@ public class ContestProblemResource implements ContestProblemService {
 
         Map<String, ProblemInfo> problemsMap = clientProblemService.findProblemsByJids(
                 sandalphonClientAuthHeader,
-                language,
                 problemJids);
 
         return new ContestContestantProblemsResponse.Builder()
