@@ -51,10 +51,17 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
   }
 
   async componentDidUpdate(prevProps: ContestProblemsPageProps, prevState: ContestProblemsPageState) {
-    if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.problemsMap) {
-      this.setState({ problemsMap: undefined });
-    } else if (!this.state.problemsMap) {
-      await this.componentDidMount();
+    const { problemsMap } = this.state;
+    if (this.props.statementLanguage !== prevProps.statementLanguage && problemsMap) {
+      const { defaultLanguage, uniqueDefaultLanguages } = consolidateDefaultLanguages(
+        Object.keys(problemsMap).map(jid => problemsMap[jid].defaultLanguage),
+        this.props.statementLanguage
+      );
+
+      this.setState({
+        defaultLanguage,
+        uniqueDefaultLanguages,
+      });
     }
   }
 
