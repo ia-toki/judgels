@@ -1,4 +1,6 @@
 // extracted from https://github.com/anurbol/languages-iso-639-1-2-3-json/blob/master/data.json
+import { ProblemInfo } from './problem';
+
 export const statementLanguageNamesMap = {
   ab: 'Abkhaz',
   aa: 'Afar',
@@ -201,17 +203,23 @@ export function sortLanguagesByName(languages: string[]) {
   });
 }
 
-export function consolidateDefaultLanguages(defaultLanguages: string[], currentStatementLanguage: string) {
-  const uniqueDefaultLanguages = defaultLanguages.filter((lang, idx) => defaultLanguages.indexOf(lang) === idx);
+export function consolidateLanguages(problemsMap: { [jid: string]: ProblemInfo }, currentLanguage: string) {
+  const defaultLanguages = Object.keys(problemsMap).map(jid => problemsMap[jid].defaultLanguage);
+
+  let languages: string[] = [];
+  Object.keys(problemsMap).forEach(jid => {
+    languages = [...languages, ...Object.keys(problemsMap[jid].namesByLanguage)];
+  });
+  const uniqueLanguages = languages.filter((lang, idx) => languages.indexOf(lang) === idx);
 
   let defaultLanguage;
-  if (uniqueDefaultLanguages.indexOf(currentStatementLanguage) !== -1) {
-    defaultLanguage = currentStatementLanguage;
+  if (uniqueLanguages.indexOf(currentLanguage) !== -1) {
+    defaultLanguage = currentLanguage;
   } else {
     defaultLanguage = getMostCommonElement(defaultLanguages);
   }
 
-  return { defaultLanguage, uniqueDefaultLanguages };
+  return { defaultLanguage, uniqueLanguages };
 }
 
 function getMostCommonElement(arr: any[]) {

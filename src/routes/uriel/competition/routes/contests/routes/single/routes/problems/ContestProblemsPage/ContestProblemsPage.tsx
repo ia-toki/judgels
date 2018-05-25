@@ -15,7 +15,7 @@ import {
 import { selectContest } from '../../../../../modules/contestSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { AppState } from '../../../../../../../../../../modules/store';
-import { consolidateDefaultLanguages } from '../../../../../../../../../../modules/api/sandalphon/language';
+import { consolidateLanguages } from '../../../../../../../../../../modules/api/sandalphon/language';
 import { getProblemName, ProblemInfo } from '../../../../../../../../../../modules/api/sandalphon/problem';
 import { contestProblemActions as injectedContestProblemActions } from '../modules/contestProblemActions';
 
@@ -29,7 +29,7 @@ interface ContestProblemsPageState {
   contestantProblems?: ContestContestantProblem[];
   problemsMap?: { [problemJid: string]: ProblemInfo };
   defaultLanguage?: string;
-  uniqueDefaultLanguages?: string[];
+  uniqueLanguages?: string[];
 }
 
 export class ContestProblemsPage extends React.PureComponent<ContestProblemsPageProps, ContestProblemsPageState> {
@@ -37,30 +37,24 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
 
   async componentDidMount() {
     const { data, problemsMap } = await this.props.onFetchMyProblems(this.props.contest.jid);
-    const { defaultLanguage, uniqueDefaultLanguages } = consolidateDefaultLanguages(
-      Object.keys(problemsMap).map(jid => problemsMap[jid].defaultLanguage),
-      this.props.statementLanguage
-    );
+    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(problemsMap, this.props.statementLanguage);
 
     this.setState({
       contestantProblems: data,
       problemsMap,
       defaultLanguage,
-      uniqueDefaultLanguages,
+      uniqueLanguages,
     });
   }
 
   async componentDidUpdate(prevProps: ContestProblemsPageProps, prevState: ContestProblemsPageState) {
     const { problemsMap } = this.state;
     if (this.props.statementLanguage !== prevProps.statementLanguage && problemsMap) {
-      const { defaultLanguage, uniqueDefaultLanguages } = consolidateDefaultLanguages(
-        Object.keys(problemsMap).map(jid => problemsMap[jid].defaultLanguage),
-        this.props.statementLanguage
-      );
+      const { defaultLanguage, uniqueLanguages } = consolidateLanguages(problemsMap, this.props.statementLanguage);
 
       this.setState({
         defaultLanguage,
-        uniqueDefaultLanguages,
+        uniqueLanguages,
       });
     }
   }
@@ -77,14 +71,14 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
   }
 
   private renderStatementLanguageWidget = () => {
-    const { defaultLanguage, uniqueDefaultLanguages } = this.state;
-    if (!defaultLanguage || !uniqueDefaultLanguages) {
+    const { defaultLanguage, uniqueLanguages } = this.state;
+    if (!defaultLanguage || !uniqueLanguages) {
       return null;
     }
 
     const props: any = {
       defaultLanguage,
-      statementLanguages: uniqueDefaultLanguages,
+      statementLanguages: uniqueLanguages,
     };
     return <StatementLanguageWidget {...props} />;
   };
