@@ -34,7 +34,7 @@ describe('ContestContestantProblemCard', () => {
     });
 
     expect(wrapper.find('[data-key="name"]').text()).toEqual('A. The Problem');
-    expect(wrapper.find(Link).props().to).toEqual('/competition/contests/123/problems/A/');
+    expect(wrapper.find(Link).props().to).toEqual('/competition/contests/123/problems/A');
   });
 
   test('open problem with submissions limit', () => {
