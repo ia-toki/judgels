@@ -26,7 +26,6 @@ export class FormTableSelect2 extends React.PureComponent<FormTableSelect2Props>
           onItemSelect={onChange}
           inputProps={inputProps}
           filterable={false}
-          popoverProps={{ usePortal: false }}
         >
           <Button text={this.props.optionNamesMap[this.props.input.value]} rightIcon="caret-down" />
         </SelectC>
