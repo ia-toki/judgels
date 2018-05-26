@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.ProblemWorksheet;
 import judgels.service.actor.ActorChecker;
@@ -28,6 +29,7 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.style.ContestStyleStore;
 import judgels.uriel.role.RoleChecker;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
+import judgels.uriel.sandalphon.SandalphonConfiguration;
 
 public class ContestProblemResource implements ContestProblemService {
     private final ActorChecker actorChecker;
@@ -35,6 +37,7 @@ public class ContestProblemResource implements ContestProblemService {
     private final ContestStore contestStore;
     private final ContestStyleStore styleStore;
     private final ContestProblemStore problemStore;
+    private final SandalphonConfiguration sandalphonConfig;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
 
@@ -45,6 +48,7 @@ public class ContestProblemResource implements ContestProblemService {
             ContestStore contestStore,
             ContestStyleStore styleStore,
             ContestProblemStore problemStore,
+            SandalphonConfiguration sandalphonConfig,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
 
@@ -53,6 +57,7 @@ public class ContestProblemResource implements ContestProblemService {
         this.contestStore = contestStore;
         this.styleStore = styleStore;
         this.problemStore = problemStore;
+        this.sandalphonConfig = sandalphonConfig;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
     }
@@ -110,6 +115,10 @@ public class ContestProblemResource implements ContestProblemService {
 
         ProblemWorksheet finalWorksheet = new ProblemWorksheet.Builder()
                 .from(worksheet)
+                .statement(new ProblemStatement.Builder()
+                        .from(worksheet.getStatement())
+                        .text(replaceRenderUrls(worksheet.getStatement().getText(), problemJid))
+                        .build())
                 .submissionConfig(new ProblemSubmissionConfig.Builder()
                         .from(worksheet.getSubmissionConfig())
                         .gradingLanguageRestriction(combinedGradingLanguageRestriction)
@@ -123,5 +132,11 @@ public class ContestProblemResource implements ContestProblemService {
                 .contestantProblem(contestantProblem)
                 .worksheet(finalWorksheet)
                 .build();
+    }
+
+    private String replaceRenderUrls(String statementText, String problemJid) {
+        return statementText.replaceAll(
+                "src=\"render/",
+                String.format("src=\"%s/api/v2/problems/%s/render/", sandalphonConfig.getBaseUrl(), problemJid));
     }
 }
