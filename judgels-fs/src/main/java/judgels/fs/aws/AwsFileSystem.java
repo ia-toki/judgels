@@ -10,6 +10,7 @@ import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.Region;
+import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -21,7 +22,6 @@ import java.io.InputStream;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -133,15 +133,14 @@ public final class AwsFileSystem implements FileSystem {
         }
 
         Comparator<String> comparator = new NaturalFilenameComparator();
-        Collections.sort(fileInfos, (FileInfo f1, FileInfo f2) -> comparator.compare(f1.getName(), f2.getName()));
-
+        fileInfos.sort((FileInfo f1, FileInfo f2) -> comparator.compare(f1.getName(), f2.getName()));
         return ImmutableList.copyOf(fileInfos);
     }
 
     @Override
     public byte[] readByteArrayFromFile(Path filePath) {
-        try {
-            return ByteStreams.toByteArray(s3.getObject(bucketName, filePath.toString()).getObjectContent());
+        try (S3Object object = s3.getObject(bucketName, filePath.toString())) {
+            return ByteStreams.toByteArray(object.getObjectContent());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
