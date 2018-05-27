@@ -55,7 +55,7 @@ class ContestListPage extends React.Component<ContestListPageProps, ContestListP
   };
 
   private renderPastContestPage = (contestPage?: ContestPage) => {
-    if (!contestPage) {
+    if (!contestPage || !this.state.activeContestList) {
       return <BlankContestListTable />;
     }
     return <ContestListTable contestList={contestPage.data} buttonIntent={Intent.NONE} />;
