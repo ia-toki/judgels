@@ -48,7 +48,10 @@ class StatementLanguageWidget extends React.Component<
 
     return (
       <div className="statement-language-widget">
-        <StatementLanguageForm {...props} />
+        <div className="statement-language-widget__right">
+          <StatementLanguageForm {...props} />
+        </div>
+        <div className="clearfix" />
       </div>
     );
   }
