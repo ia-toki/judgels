@@ -23,7 +23,7 @@
     "react-intl-formatted-duration": "^2.0.0",
     "react-loadable": "^5.3.1",
     "react-paginate": "^5.0.0",
-    "react-redux": "^5.0.6",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.0",
     "react-router-redux": "^5.0.0-alpha.8",
     "react-scripts-ts": "2.13.0",

@@ -10,6 +10,15 @@ export enum ContestTab {
 
 export interface ContestWebConfig {
   visibleTabs: ContestTab[];
+  contestState: ContestState;
+  remainingContestStateDuration?: number;
+}
+
+export enum ContestState {
+  None = 'NONE',
+  NotBegun = 'NOT_BEGUN',
+  Running = 'RUNNING',
+  Ended = 'ENDED',
 }
 
 export function createContestWebAPI() {

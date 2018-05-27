@@ -9,29 +9,41 @@ import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../..
 
 export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestId: string }> {
   onFetchContest: (contestId: number) => Promise<Contest>;
-  onFetchContestWebConfig: (contestJid: string) => Promise<void>;
   onClearContest: () => void;
+  onFetchContestWebConfig: (contestJid: string) => void;
   onClearContestWebConfig: () => void;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
 
 class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps> {
+  private currentTimeout;
+
   async componentDidMount() {
     const contest = await this.props.onFetchContest(+this.props.match.params.contestId);
-    await this.props.onFetchContestWebConfig(contest.jid);
     this.props.onPushBreadcrumb(this.props.match.url, contest.name);
+
+    await this.refreshWebConfig(contest.jid);
   }
 
   componentWillUnmount() {
     this.props.onClearContest();
     this.props.onClearContestWebConfig();
     this.props.onPopBreadcrumb(this.props.match.url.replace(/\/+$/, ''));
+
+    if (this.currentTimeout) {
+      clearTimeout(this.currentTimeout);
+    }
   }
 
   render() {
     return null;
   }
+
+  private refreshWebConfig = async (contestJid: string) => {
+    await this.props.onFetchContestWebConfig(contestJid);
+    this.currentTimeout = setTimeout(() => this.refreshWebConfig(contestJid), 3000);
+  };
 }
 
 export function createSingleContestDataRoute(contestActions, contestWebConfigActions, breadcrumbsActions) {

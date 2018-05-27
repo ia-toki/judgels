@@ -10,6 +10,7 @@ import ContentWithSidebar, {
 } from '../../../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
+import ContestStateWidget from '../components/ContestStateWidget/ContestStateWidget';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestProblemRoutes from './problems/routes/ContestProblemRoutes';
@@ -105,6 +106,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     contentHeader: (
       <div className="single-contest-routes__header">
         <h2>{contest.name}</h2>
+        <ContestStateWidget />
       </div>
     ),
   };
