@@ -1,16 +1,19 @@
 package judgels.uriel.contest.web;
 
+import static java.time.temporal.ChronoUnit.HOURS;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.time.Duration;
+import java.time.Instant;
+import judgels.persistence.FixedClock;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.web.ContestWebConfig;
+import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.role.RoleChecker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +33,16 @@ class ContestWebConfigFetcherTests {
     void before() {
         initMocks(this);
 
-        webConfigFetcher = new ContestWebConfigFetcher(roleChecker);
-        contest = mock(Contest.class);
+        webConfigFetcher = new ContestWebConfigFetcher(roleChecker, new FixedClock());
+        contest = new Contest.Builder()
+                .id(1)
+                .jid("jid")
+                .name("name")
+                .description("description")
+                .style(ContestStyle.IOI)
+                .beginTime(Instant.ofEpochSecond(42))
+                .duration(Duration.of(5, HOURS))
+                .build();
 
         when(roleChecker.canViewAnnouncements(USER, contest)).thenReturn(true);
         when(roleChecker.canViewAnnouncements(CONTESTANT, contest)).thenReturn(true);
@@ -50,17 +61,14 @@ class ContestWebConfigFetcherTests {
     }
 
     @Test
-    void fetch_web_config() {
-        assertThat(webConfigFetcher.fetchConfig(USER, contest)).isEqualTo(new ContestWebConfig.Builder()
-                .addVisibleTabs(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD)
-                .build());
+    void visible_tabs() {
+        assertThat(webConfigFetcher.fetchConfig(USER, contest).getVisibleTabs())
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD);
 
-        assertThat(webConfigFetcher.fetchConfig(CONTESTANT, contest)).isEqualTo(new ContestWebConfig.Builder()
-                .addVisibleTabs(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD, SUBMISSIONS)
-                .build());
+        assertThat(webConfigFetcher.fetchConfig(CONTESTANT, contest).getVisibleTabs())
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD, SUBMISSIONS);
 
-        assertThat(webConfigFetcher.fetchConfig(SUPERVISOR, contest)).isEqualTo(new ContestWebConfig.Builder()
-                .addVisibleTabs(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD, SUBMISSIONS)
-                .build());
+        assertThat(webConfigFetcher.fetchConfig(SUPERVISOR, contest).getVisibleTabs())
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD, SUBMISSIONS);
     }
 }

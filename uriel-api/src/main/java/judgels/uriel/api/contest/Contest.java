@@ -17,12 +17,16 @@ public interface Contest {
     Instant getBeginTime();
     Duration getDuration();
 
+    default Instant getEndTime() {
+        return getBeginTime().plus(getDuration());
+    }
+
     default boolean hasStarted(Clock clock) {
         return !clock.instant().isBefore(getBeginTime());
     }
 
     default boolean hasFinished(Clock clock) {
-        return !clock.instant().isBefore(getBeginTime().plus(getDuration()));
+        return !clock.instant().isBefore(getEndTime());
     }
 
     default boolean isRunning(Clock clock) {
