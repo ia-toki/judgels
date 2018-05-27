@@ -7,7 +7,5 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableLocalFsConfiguration.class)
 public interface LocalFsConfiguration extends FsConfiguration {
-    String getBaseDir();
-
     class Builder extends ImmutableLocalFsConfiguration.Builder {}
 }
