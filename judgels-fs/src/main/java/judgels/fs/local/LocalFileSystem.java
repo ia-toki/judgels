@@ -38,7 +38,7 @@ public final class LocalFileSystem implements FileSystem {
     public void uploadPublicFile(InputStream file, Path destDirPath, String destFilename) {
         Path destFilePath = baseDir.resolve(destDirPath).resolve(destFilename);
         try {
-            Files.copy(file, destFilePath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+            Files.copy(file, destFilePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
