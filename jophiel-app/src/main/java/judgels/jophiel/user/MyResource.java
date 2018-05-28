@@ -8,7 +8,6 @@ import judgels.jophiel.api.role.Role;
 import judgels.jophiel.api.user.MyService;
 import judgels.jophiel.api.user.PasswordUpdateData;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.UserWithAvatar;
 import judgels.jophiel.role.RoleStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -31,15 +30,9 @@ public class MyResource implements MyService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public UserWithAvatar getMyself(AuthHeader authHeader) {
+    public User getMyself(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
-
-        User user = checkFound(userStore.findUserByJid(actorJid));
-        return new UserWithAvatar.Builder()
-                .jid(user.getJid())
-                .username(user.getUsername())
-                .avatarUrl(userStore.getUserAvatar(user.getJid()))
-                .build();
+        return checkFound(userStore.findUserByJid(actorJid));
     }
 
     @Override

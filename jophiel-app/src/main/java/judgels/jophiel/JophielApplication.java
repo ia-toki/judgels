@@ -6,6 +6,8 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateBundle;
 import judgels.jophiel.hibernate.JophielHibernateModule;
@@ -39,12 +41,14 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
     @Override
     public void run(JophielApplicationConfiguration config, Environment env) {
         JophielConfiguration jophielConfig = config.getJophielConfig();
+        Path baseDataDir = Paths.get(jophielConfig.getBaseDataDir());
+
         JophielComponent component = DaggerJophielComponent.builder()
                 .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
                 .jophielHibernateModule(new JophielHibernateModule(hibernateBundle))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
-                .userAvatarModule(new UserAvatarModule(jophielConfig.getUserAvatarConfig()))
+                .userAvatarModule(new UserAvatarModule(baseDataDir, jophielConfig.getUserAvatarConfig()))
                 .userRegistrationModule(new UserRegistrationModule(jophielConfig.getUserRegistrationConfig()))
                 .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
                 .webModule(new WebModule(WebConfiguration.fromServerConfig(jophielConfig)))

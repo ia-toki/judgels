@@ -5,10 +5,15 @@ import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
 import com.palantir.remoting3.clients.UserAgent;
 import com.palantir.websecurity.WebSecurityConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.testing.DropwizardTestSupport;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 import judgels.jophiel.JophielApplication;
 import judgels.jophiel.JophielApplicationConfiguration;
@@ -28,11 +33,12 @@ import org.junit.jupiter.api.BeforeAll;
 
 public abstract class AbstractServiceIntegrationTests {
     private static DropwizardTestSupport<JophielApplicationConfiguration> support;
+    private static Path baseDataDir;
 
     protected static AuthHeader adminHeader;
 
     @BeforeAll
-    public static void beforeAll() {
+    public static void beforeAll() throws IOException {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
         dbConfig.setUrl("jdbc:h2:mem:./" + UUID.randomUUID().toString());
@@ -42,7 +48,10 @@ public abstract class AbstractServiceIntegrationTests {
                 .put(GENERATE_STATISTICS, "false")
                 .build());
 
+        baseDataDir = Files.createTempDirectory("jophiel");
+
         JophielConfiguration jophielConfig = new JophielConfiguration.Builder()
+                .baseDataDir(baseDataDir.toString())
                 .mailerConfig(new MailerConfiguration.Builder()
                         .host("localhost")
                         .port(2500)
@@ -70,8 +79,9 @@ public abstract class AbstractServiceIntegrationTests {
     }
 
     @AfterAll
-    public static void afterAll() {
+    public static void afterAll() throws IOException {
         support.after();
+        MoreFiles.deleteRecursively(baseDataDir, RecursiveDeleteOption.ALLOW_INSECURE);
     }
 
     protected static <T> T createService(Class<T> serviceClass) {

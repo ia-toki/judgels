@@ -45,7 +45,7 @@ class UserStoreIntegrationTests {
         assertThat(user.getUsername()).isEqualTo("username");
         assertThat(store.findUserEmailByJid(user.getJid())).contains("email@domain.com");
 
-        assertThat(store.getUserAvatar(user.getJid())).isEmpty();
+        assertThat(store.getUserAvatarUrl(user.getJid())).isEmpty();
 
         assertThat(store.findUserByJid(user.getJid())).contains(user);
 
@@ -93,7 +93,7 @@ class UserStoreIntegrationTests {
         store.updateUserAvatar(user.getJid(), "avatar.jpg");
 
         user = store.findUserByJid(user.getJid()).get();
-        assertThat(store.getUserAvatar(user.getJid())).contains("/fake/avatar.jpg");
+        assertThat(store.getUserAvatarUrl(user.getJid())).contains("/fake/avatar.jpg");
     }
 
     @Test

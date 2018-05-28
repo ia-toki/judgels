@@ -41,6 +41,7 @@ webSecurity:
     allowedOrigins: "*"
 
 jophiel:
+  baseDataDir: /judgels/data/jophiel
   mailer:
     host: xxx
     port: 25

@@ -15,6 +15,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJophielConfiguration.class)
 public interface JophielConfiguration {
+    String getBaseDataDir();
+
     @JsonProperty("mailer")
     Optional<MailerConfiguration> getMailerConfig();
 

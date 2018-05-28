@@ -80,15 +80,6 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public void deleteUserAvatar(AuthHeader authHeader, String userJid) {
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
-
-        checkFound(userStore.updateUserAvatar(userJid, null));
-    }
-
-    @Override
-    @UnitOfWork
     public Map<String, UserInfo> findUsersByJids(Set<String> jids) {
         return userStore.findUsersByJids(jids).entrySet()
                 .stream()

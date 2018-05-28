@@ -2,7 +2,9 @@ package judgels.jophiel.user.avatar;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
+import static javax.ws.rs.core.HttpHeaders.IF_MODIFIED_SINCE;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static judgels.service.ServiceUtils.buildImageResponse;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -10,14 +12,17 @@ import com.google.common.io.Files;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.avatar.UserAvatarService;
 import judgels.jophiel.role.RoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.service.RandomCodeGenerator;
@@ -26,8 +31,8 @@ import judgels.service.api.actor.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-@Path("/api/v2/users")
-public class UserAvatarResource {
+@Path("/api/v2/users/{userJid}/avatar")
+public class UserAvatarResource implements UserAvatarService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
     private final UserStore userStore;
@@ -46,8 +51,32 @@ public class UserAvatarResource {
         this.userStore = userStore;
     }
 
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Response renderAvatar(
+            @HeaderParam(IF_MODIFIED_SINCE) Optional<String> ifModifiedSince,
+            @PathParam("userJid") String userJid) {
+
+        String avatarUrl = checkFound(userStore.getUserAvatarUrl(userJid));
+        return buildImageResponse(avatarUrl, ifModifiedSince);
+    }
+
+    @Override
+    @UnitOfWork
+    public void deleteAvatar(AuthHeader authHeader, String userJid) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
+
+        checkFound(userStore.updateUserAvatar(userJid, null));
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public boolean avatarExists(String userJid) {
+        return userStore.getUserAvatarUrl(userJid).isPresent();
+    }
+
     @POST
-    @Path("/{userJid}/avatar")
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
     public void updateUserAvatar(

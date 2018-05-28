@@ -104,7 +104,7 @@ public class UserStore {
         });
     }
 
-    public Optional<String> getUserAvatar(String userJid) {
+    public Optional<String> getUserAvatarUrl(String userJid) {
         return userDao.selectByJid(userJid).flatMap(model ->
                 Optional.ofNullable(model.avatarFilename).map(Paths::get).map(userAvatarFs::getPublicFileUrl));
     }

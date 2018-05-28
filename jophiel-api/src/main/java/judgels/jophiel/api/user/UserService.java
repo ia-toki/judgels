@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -45,10 +44,6 @@ public interface UserService {
     @Path("/")
     @Produces(APPLICATION_JSON)
     Page<User> getUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @QueryParam("page") Optional<Integer> page);
-
-    @DELETE
-    @Path("/{userJid}/avatar")
-    void deleteUserAvatar(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
 
     @POST
     @Path("/jids")
