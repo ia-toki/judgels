@@ -18,8 +18,8 @@ export const loginActions = {
         }
       }
 
-      const user = await myAPI.getMyself(session.token);
-      const role = await myAPI.getMyRole(session.token);
+      const [user, role] = await Promise.all([myAPI.getMyself(session.token), myAPI.getMyRole(session.token)]);
+
       toastActions.showToast(`Welcome, ${user.username}.`);
       dispatch(PutToken.create(session.token));
       dispatch(PutUser.create(user));

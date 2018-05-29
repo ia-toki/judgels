@@ -1,13 +1,9 @@
 import { APP_CONFIG } from '../../../conf';
-import { delete_, get, postMultipart } from '../http';
+import { get } from '../http';
 
 export interface User {
   jid: string;
   username: string;
-}
-
-export interface UserWithAvatar extends User {
-  avatarUrl?: string;
 }
 
 export interface UserInfo {
@@ -28,14 +24,6 @@ export function createUserAPI() {
 
     emailExists: (email: string): Promise<boolean> => {
       return get(`${baseURL}/email/${email}/exists`);
-    },
-
-    updateUserAvatar: (token: string, userJid: string, file: File): Promise<void> => {
-      return postMultipart(`${baseURL}/${userJid}/avatar`, token, { file: file });
-    },
-
-    deleteUserAvatar: (token: string, userJid: string): Promise<void> => {
-      return delete_(`${baseURL}/${userJid}/avatar`, token);
     },
   };
 }

@@ -9,46 +9,59 @@ import './ChangeAvatar.css';
 export const MAX_AVATAR_FILE_SIZE = 100 * 1024;
 
 export interface ChangeAvatarPanelProps {
-  avatarUrl?: string;
   onDropAccepted: (files: File[]) => Promise<void>;
   onDropRejected: (files: File[]) => Promise<void>;
+  onRenderAvatar: () => Promise<string>;
   onRemoveAvatar: () => Promise<void>;
 }
 
-export const ChangeAvatarPanel = (props: ChangeAvatarPanelProps) => {
-  const currentAvatar = props.avatarUrl && (
-    <div className="card-change-avatar__panel">
-      <h4>Current avatar</h4>
-      <img src={props.avatarUrl} />
-      <div>
-        <Button intent={Intent.DANGER} onClick={props.onRemoveAvatar}>
-          Remove avatar
-        </Button>
-      </div>
-    </div>
-  );
+interface ChangeAvatarPanelState {
+  avatarUrl?: string;
+}
 
-  const newAvatar = (
-    <div className="card-change-avatar__panel">
-      <h4>Upload new avatar</h4>
-      <Dropzone
-        accept="image/*"
-        multiple={false}
-        maxSize={MAX_AVATAR_FILE_SIZE}
-        onDropAccepted={props.onDropAccepted}
-        onDropRejected={props.onDropRejected}
-      >
-        <div className="card-change-avatar__dropzone">Click here or drop a new image (max 100 KB).</div>
-      </Dropzone>
-    </div>
-  );
+export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProps, ChangeAvatarPanelState> {
+  state: ChangeAvatarPanelState = {};
 
-  return (
-    <Card title="Change avatar" className="card-change-avatar">
-      <div className="card-change-avatar__content">
-        {currentAvatar}
-        {newAvatar}
+  async componentDidMount() {
+    const avatarUrl = await this.props.onRenderAvatar();
+    this.setState({ avatarUrl });
+  }
+
+  render() {
+    const currentAvatar = this.state.avatarUrl && (
+      <div className="card-change-avatar__panel">
+        <h4>Current avatar</h4>
+        <img src={this.state.avatarUrl} />
+        <div>
+          <Button intent={Intent.DANGER} onClick={this.props.onRemoveAvatar}>
+            Remove avatar
+          </Button>
+        </div>
       </div>
-    </Card>
-  );
-};
+    );
+
+    const newAvatar = (
+      <div className="card-change-avatar__panel">
+        <h4>Upload new avatar</h4>
+        <Dropzone
+          accept="image/*"
+          multiple={false}
+          maxSize={MAX_AVATAR_FILE_SIZE}
+          onDropAccepted={this.props.onDropAccepted}
+          onDropRejected={this.props.onDropRejected}
+        >
+          <div className="card-change-avatar__dropzone">Click here or drop a new image (max 100 KB).</div>
+        </Dropzone>
+      </div>
+    );
+
+    return (
+      <Card title="Change avatar" className="card-change-avatar">
+        <div className="card-change-avatar__content">
+          {currentAvatar}
+          {newAvatar}
+        </div>
+      </Card>
+    );
+  }
+}

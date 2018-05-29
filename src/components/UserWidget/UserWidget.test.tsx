@@ -2,16 +2,18 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
 import { UserWidget, UserWidgetProps } from './UserWidget';
-import { UserWithAvatar } from '../../modules/api/jophiel/user';
+import { User } from '../../modules/api/jophiel/user';
 
 describe('UserWidget', () => {
-  let user: UserWithAvatar | undefined;
+  let user: User | undefined;
+  let onRenderAvatar = () => Promise.resolve('url');
 
   let wrapper: ShallowWrapper;
 
   const render = () => {
     const props: UserWidgetProps = {
       user,
+      onRenderAvatar,
     };
 
     wrapper = shallow(<UserWidget {...props} />);

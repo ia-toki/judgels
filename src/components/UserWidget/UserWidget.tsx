@@ -3,17 +3,38 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { UserWithAvatar } from '../../modules/api/jophiel/user';
+import { User } from '../../modules/api/jophiel/user';
 import { AppState } from '../../modules/store';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
+import { avatarActions as injectedAvatarActions } from '../../routes/jophiel/account/routes/changeAvatar/modules/avatarActions';
 
 import './UserWidget.css';
 
 export interface UserWidgetProps {
-  user?: UserWithAvatar;
+  user?: User;
+  onRenderAvatar: () => Promise<string>;
 }
 
-export class UserWidget extends React.PureComponent<UserWidgetProps> {
+interface UserWidgetState {
+  avatarUrl?: string;
+}
+
+export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetState> {
+  state: UserWidgetState = {};
+
+  async componentDidMount() {
+    if (this.props.user) {
+      const avatarUrl = await this.props.onRenderAvatar();
+      this.setState({ avatarUrl });
+    }
+  }
+
+  async componentDidUpdate(prevProps: UserWidgetProps) {
+    if (this.props.user !== prevProps.user) {
+      await this.componentDidMount();
+    }
+  }
+
   render() {
     if (this.props.user) {
       return this.renderForUser(this.props.user);
@@ -22,7 +43,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps> {
     }
   }
 
-  private renderForUser = (user: UserWithAvatar) => {
+  private renderForUser = (user: User) => {
     const menu = (
       <Menu className="widget-user__menu">
         <MenuItem className="widget-user__menu-helper" icon="user" text={user.username} disabled />
@@ -51,7 +72,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps> {
 
     return (
       <div className="pt-navbar-group pt-align-right">
-        <img src={user.avatarUrl} className="widget-user__avatar" />
+        {this.state.avatarUrl && <img src={this.state.avatarUrl} className="widget-user__avatar" />}
         {popover}
         {responsivePopover}
       </div>
@@ -92,15 +113,17 @@ export class UserWidget extends React.PureComponent<UserWidgetProps> {
   };
 }
 
-export function createUserWidget() {
-  const mapStateToProps = (state: AppState) => ({
-    user: state.session.user,
-  });
+export function createUserWidget(avatarActions) {
+  const mapStateToProps = (state: AppState) =>
+    ({
+      user: state.session.user,
+    } as Partial<UserWidgetProps>);
 
-  // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/19989
-  const UserWidgetWrapper = (props: UserWidgetProps) => <UserWidget {...props} />;
+  const mapDispatchToProps = {
+    onRenderAvatar: avatarActions.render,
+  };
 
-  return connect(mapStateToProps)(UserWidgetWrapper);
+  return connect(mapStateToProps, mapDispatchToProps)(UserWidget);
 }
 
-export default createUserWidget();
+export default createUserWidget(injectedAvatarActions);

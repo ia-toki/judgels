@@ -11,6 +11,7 @@ import { createLegacySessionAPI } from './api/jophiel/legacySession';
 import { createMyAPI } from './api/jophiel/my';
 import { createUserAPI } from './api/jophiel/user';
 import { createUserAccountAPI } from './api/jophiel/userAccount';
+import { createUserAvatarAPI } from './api/jophiel/userAvatar';
 import { createUserProfileAPI } from './api/jophiel/userProfile';
 import { createWebAPI } from './api/jophiel/web';
 import { createContestAPI } from './api/uriel/contest';
@@ -65,6 +66,7 @@ export const store = createStore<AppState>(
         webAPI: createWebAPI(),
         userAPI: createUserAPI(),
         userAccountAPI: createUserAccountAPI(),
+        userAvatarAPI: createUserAvatarAPI(),
         userProfileAPI: createUserProfileAPI(),
         contestAPI: createContestAPI(),
         contestWebAPI: createContestWebAPI(),

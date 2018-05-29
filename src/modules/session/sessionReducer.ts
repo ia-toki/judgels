@@ -1,12 +1,12 @@
 import { setWith, TypedAction, TypedReducer } from 'redoodle';
 
-import { User, UserWithAvatar } from '../api/jophiel/user';
+import { User } from '../api/jophiel/user';
 import { UserProfile } from '../api/jophiel/userProfile';
 
 export interface SessionState {
   isLoggedIn: boolean;
   token?: string;
-  user?: UserWithAvatar;
+  user?: User;
   profile?: UserProfile;
 }
 
