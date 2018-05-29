@@ -6,6 +6,8 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import judgels.fs.aws.AwsModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.service.jersey.JudgelsObjectMappers;
@@ -34,12 +36,14 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
     @Override
     public void run(UrielApplicationConfiguration config, Environment env) {
         UrielConfiguration urielConfig = config.getUrielConfig();
+        Path baseDataDir = Paths.get(urielConfig.getBaseDataDir());
+
         UrielComponent component = DaggerUrielComponent.builder()
                 .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
                 .urielHibernateModule(new UrielHibernateModule(hibernateBundle))
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
                 .sandalphonModule(new SandalphonModule(urielConfig.getSandalphonConfig()))
-                .submissionModule(new SubmissionModule(urielConfig.getSubmissionConfig()))
+                .submissionModule(new SubmissionModule(baseDataDir, urielConfig.getSubmissionConfig()))
                 .build();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);

@@ -41,6 +41,8 @@ webSecurity:
     allowedOrigins: "*"
 
 uriel:
+  baseDataDir: /judgels/uriel/var/data
+
   jophiel:
     baseUrl: http://localhost:9001
 
