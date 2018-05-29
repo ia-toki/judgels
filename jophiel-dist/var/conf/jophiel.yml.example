@@ -41,7 +41,8 @@ webSecurity:
     allowedOrigins: "*"
 
 jophiel:
-  baseDataDir: /judgels/data/jophiel
+  baseDataDir: /judgels/jophiel/var/data
+
   mailer:
     host: xxx
     port: 25
@@ -63,7 +64,9 @@ jophiel:
   userAvatar:
     fs:
       type: local
-      # s3BucketName: judgels-jophiel-avatars
+#   fs:
+#     type: aws
+#     s3BucketName: judgels-jophiel-avatars
 
   userRegistration:
     enabled: true
