@@ -17,13 +17,13 @@ public interface UserProfileService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    UserProfile getUserProfile(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
+    UserProfile getProfile(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
 
     @PUT
     @Path("/")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    UserProfile updateUserProfile(
+    UserProfile updateProfile(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("userJid") String userJid,
             UserProfile userProfile);

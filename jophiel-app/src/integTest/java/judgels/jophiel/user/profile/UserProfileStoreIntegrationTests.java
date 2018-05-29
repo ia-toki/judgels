@@ -28,10 +28,10 @@ class UserProfileStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        assertThat(store.getUserProfile(USER_JID))
+        assertThat(store.getProfile(USER_JID))
                 .isEqualTo(new UserProfile.Builder().build());
 
-        UserProfile userProfile = new UserProfile.Builder()
+        UserProfile profile = new UserProfile.Builder()
                 .name("First Last")
                 .gender("MALE")
                 .nationality("id")
@@ -42,14 +42,14 @@ class UserProfileStoreIntegrationTests {
                 .province("province")
                 .city("town")
                 .build();
-        store.upsertUserProfile(USER_JID, userProfile);
-        assertThat(store.getUserProfile(USER_JID)).isEqualTo(userProfile);
+        store.upsertProfile(USER_JID, profile);
+        assertThat(store.getProfile(USER_JID)).isEqualTo(profile);
 
         UserProfile newUserProfile = new UserProfile.Builder()
-                .from(userProfile)
+                .from(profile)
                 .gender("FEMALE")
                 .build();
-        store.upsertUserProfile(USER_JID, newUserProfile);
-        assertThat(store.getUserProfile(USER_JID)).isEqualTo(newUserProfile);
+        store.upsertProfile(USER_JID, newUserProfile);
+        assertThat(store.getProfile(USER_JID)).isEqualTo(newUserProfile);
     }
 }

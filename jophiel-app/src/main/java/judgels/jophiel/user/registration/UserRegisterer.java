@@ -50,7 +50,7 @@ public class UserRegisterer {
         UserProfile userProfile = new UserProfile.Builder()
                 .name(data.getName())
                 .build();
-        userProfileStore.upsertUserProfile(user.getJid(), userProfile);
+        userProfileStore.upsertProfile(user.getJid(), userProfile);
 
         String emailCode = userRegistrationEmailStore.generateEmailCode(user.getJid());
         userRegistrationEmailMailer.sendActivationEmail(user, data.getEmail(), emailCode);

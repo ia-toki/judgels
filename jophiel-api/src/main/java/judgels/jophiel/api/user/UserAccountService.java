@@ -24,10 +24,10 @@ public interface UserAccountService {
 
     @POST
     @Path("/request-reset-password/{email}")
-    void requestToResetUserPassword(@PathParam("email") String email);
+    void requestToResetPassword(@PathParam("email") String email);
 
     @POST
     @Path("/reset-password")
     @Consumes(APPLICATION_JSON)
-    void resetUserPassword(PasswordResetData passwordResetData);
+    void resetPassword(PasswordResetData passwordResetData);
 }

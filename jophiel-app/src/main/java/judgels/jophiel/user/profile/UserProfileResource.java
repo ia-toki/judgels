@@ -34,21 +34,21 @@ public class UserProfileResource implements UserProfileService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public UserProfile getUserProfile(AuthHeader authHeader, String userJid) {
+    public UserProfile getProfile(AuthHeader authHeader, String userJid) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewUser(actorJid, userJid));
 
         User user = checkFound(userStore.findUserByJid(userJid));
-        return userProfileStore.getUserProfile(user.getJid());
+        return userProfileStore.getProfile(user.getJid());
     }
 
     @Override
     @UnitOfWork
-    public UserProfile updateUserProfile(AuthHeader authHeader, String userJid, UserProfile userProfile) {
+    public UserProfile updateProfile(AuthHeader authHeader, String userJid, UserProfile userProfile) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
 
         User user = checkFound(userStore.findUserByJid(userJid));
-        return userProfileStore.upsertUserProfile(user.getJid(), userProfile);
+        return userProfileStore.upsertProfile(user.getJid(), userProfile);
     }
 }

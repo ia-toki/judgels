@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 class UserProfileServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private UserService userService = createService(UserService.class);
-    private UserProfileService userProfileService = createService(UserProfileService.class);
+    private UserProfileService profileService = createService(UserProfileService.class);
 
     @Test
     void basic_flow() {
@@ -20,7 +20,7 @@ class UserProfileServiceIntegrationTests extends AbstractServiceIntegrationTests
                 .email("email@domain.com")
                 .build());
 
-        UserProfile userProfile = new UserProfile.Builder()
+        UserProfile profile = new UserProfile.Builder()
                 .name("Alpha")
                 .gender("MALE")
                 .nationality("id")
@@ -32,8 +32,8 @@ class UserProfileServiceIntegrationTests extends AbstractServiceIntegrationTests
                 .city("town")
                 .build();
 
-        userProfileService.updateUserProfile(adminHeader, user.getJid(), userProfile);
+        profileService.updateProfile(adminHeader, user.getJid(), profile);
 
-        assertThat(userProfileService.getUserProfile(adminHeader, user.getJid())).isEqualTo(userProfile);
+        assertThat(profileService.getProfile(adminHeader, user.getJid())).isEqualTo(profile);
     }
 }

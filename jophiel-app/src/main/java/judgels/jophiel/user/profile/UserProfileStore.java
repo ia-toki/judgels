@@ -7,29 +7,29 @@ import judgels.jophiel.persistence.UserProfileDao;
 import judgels.jophiel.persistence.UserProfileModel;
 
 public class UserProfileStore {
-    private final UserProfileDao userProfileDao;
+    private final UserProfileDao profileDao;
 
     @Inject
-    public UserProfileStore(UserProfileDao userProfileDao) {
-        this.userProfileDao = userProfileDao;
+    public UserProfileStore(UserProfileDao profileDao) {
+        this.profileDao = profileDao;
     }
 
-    public UserProfile getUserProfile(String userJid) {
-        return userProfileDao.selectByUserJid(userJid)
+    public UserProfile getProfile(String userJid) {
+        return profileDao.selectByUserJid(userJid)
                 .map(UserProfileStore::fromModel)
                 .orElse(new UserProfile.Builder().build());
     }
 
-    public UserProfile upsertUserProfile(String userJid, UserProfile userProfile) {
-        Optional<UserProfileModel> maybeModel = userProfileDao.selectByUserJid(userJid);
+    public UserProfile upsertProfile(String userJid, UserProfile profile) {
+        Optional<UserProfileModel> maybeModel = profileDao.selectByUserJid(userJid);
         if (maybeModel.isPresent()) {
             UserProfileModel model = maybeModel.get();
-            toModel(userJid, userProfile, model);
-            return fromModel(userProfileDao.update(model));
+            toModel(userJid, profile, model);
+            return fromModel(profileDao.update(model));
         } else {
             UserProfileModel model = new UserProfileModel();
-            toModel(userJid, userProfile, model);
-            return fromModel(userProfileDao.insert(model));
+            toModel(userJid, profile, model);
+            return fromModel(profileDao.insert(model));
         }
     }
 

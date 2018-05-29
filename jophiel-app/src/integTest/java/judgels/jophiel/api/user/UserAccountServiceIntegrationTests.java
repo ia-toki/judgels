@@ -62,7 +62,7 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
                 .email("delta@domain.com")
                 .build());
 
-        userAccountService.requestToResetUserPassword("delta@domain.com");
+        userAccountService.requestToResetPassword("delta@domain.com");
 
         assertThatCode(() -> sessionService.logIn(Credentials.of("delta", "pass")))
                 .doesNotThrowAnyException();
@@ -70,11 +70,11 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         String email = readEmail(wiser, 0);
         String emailCode = extractEmailCode(email);
 
-        userAccountService.resetUserPassword(PasswordResetData.of(emailCode, "newPass"));
+        userAccountService.resetPassword(PasswordResetData.of(emailCode, "newPass"));
 
         readEmail(wiser, 1);
 
-        userAccountService.requestToResetUserPassword("delta@domain.com");
+        userAccountService.requestToResetPassword("delta@domain.com");
         String email2 = readEmail(wiser, 2);
         String emailCode2 = extractEmailCode(email2);
         assertThat(emailCode2).isNotEqualTo(emailCode);
