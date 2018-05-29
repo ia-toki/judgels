@@ -16,8 +16,8 @@ describe('profileActions', () => {
     dispatch = jest.fn();
 
     userProfileAPI = {
-      getUserProfile: jest.fn(),
-      updateUserProfile: jest.fn(),
+      getProfile: jest.fn(),
+      updateProfile: jest.fn(),
     };
     toastActions = {
       showSuccessToast: jest.fn(),
@@ -31,13 +31,13 @@ describe('profileActions', () => {
     const profile: UserProfile = { name: 'First Last' };
 
     beforeEach(async () => {
-      userProfileAPI.getUserProfile.mockImplementation(() => profile);
+      userProfileAPI.getProfile.mockImplementation(() => profile);
 
       await doFetch();
     });
 
     it('calls API to get user profile', () => {
-      expect(userProfileAPI.getUserProfile).toHaveBeenCalledWith(token, userJid);
+      expect(userProfileAPI.getProfile).toHaveBeenCalledWith(token, userJid);
     });
 
     it('puts the profile', () => {
@@ -53,13 +53,13 @@ describe('profileActions', () => {
     const newProfile: UserProfile = { name: 'Last First' };
 
     beforeEach(async () => {
-      userProfileAPI.updateUserProfile.mockImplementation(() => newProfile);
+      userProfileAPI.updateProfile.mockImplementation(() => newProfile);
 
       await doUpdate();
     });
 
     it('calls API to update user profile', () => {
-      expect(userProfileAPI.updateUserProfile).toHaveBeenCalledWith(token, userJid, profile);
+      expect(userProfileAPI.updateProfile).toHaveBeenCalledWith(token, userJid, profile);
     });
 
     it('puts the new profile', () => {

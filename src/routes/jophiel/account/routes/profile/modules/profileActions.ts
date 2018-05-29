@@ -7,7 +7,7 @@ export const profileActions = {
     return async (dispatch, getState, { userProfileAPI }) => {
       const token = selectToken(getState());
       const userJid = selectUserJid(getState());
-      const profile = await userProfileAPI.getUserProfile(token, userJid);
+      const profile = await userProfileAPI.getProfile(token, userJid);
 
       dispatch(PutProfile.create(profile));
     };
@@ -17,7 +17,7 @@ export const profileActions = {
     return async (dispatch, getState, { userProfileAPI, toastActions }) => {
       const token = selectToken(getState());
       const userJid = selectUserJid(getState());
-      const newProfile = await userProfileAPI.updateUserProfile(token, userJid, profile);
+      const newProfile = await userProfileAPI.updateProfile(token, userJid, profile);
 
       dispatch(PutProfile.create(newProfile));
 

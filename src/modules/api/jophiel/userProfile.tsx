@@ -22,11 +22,11 @@ export function createUserProfileAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users`;
 
   return {
-    getUserProfile: (token: string, userJid: string): Promise<UserProfile> => {
+    getProfile: (token: string, userJid: string): Promise<UserProfile> => {
       return get(`${baseURL}/${userJid}/profile`, token);
     },
 
-    updateUserProfile: (token: string, userJid: string, userProfile: UserProfile): Promise<void> => {
+    updateProfile: (token: string, userJid: string, userProfile: UserProfile): Promise<void> => {
       return put(`${baseURL}/${userJid}/profile`, token, userProfile);
     },
   };

@@ -6,7 +6,7 @@ export const resetPasswordActions = {
   reset: (emailCode: string, newPassword: string) => {
     return async (dispatch, getState, { userAccountAPI, toastActions }) => {
       try {
-        await userAccountAPI.resetUserPassword({ emailCode, newPassword });
+        await userAccountAPI.resetPassword({ emailCode, newPassword });
       } catch (error) {
         if (error instanceof BadRequestError) {
           throw new Error('Invalid code.');

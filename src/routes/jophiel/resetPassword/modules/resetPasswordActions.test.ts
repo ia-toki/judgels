@@ -15,7 +15,7 @@ describe('resetPasswordActions', () => {
     getState = jest.fn();
 
     userAccountAPI = {
-      resetUserPassword: jest.fn(),
+      resetPassword: jest.fn(),
     };
     toastActions = {
       showSuccessToast: jest.fn(),
@@ -29,7 +29,7 @@ describe('resetPasswordActions', () => {
     it('calls API to reset password', async () => {
       await doReset();
 
-      expect(userAccountAPI.resetUserPassword).toHaveBeenCalledWith({
+      expect(userAccountAPI.resetPassword).toHaveBeenCalledWith({
         emailCode: 'code123',
         newPassword: 'pass',
       });
@@ -37,7 +37,7 @@ describe('resetPasswordActions', () => {
 
     describe('when the email code is valid', () => {
       beforeEach(async () => {
-        userAccountAPI.resetUserPassword.mockImplementation(() => Promise.resolve());
+        userAccountAPI.resetPassword.mockImplementation(() => Promise.resolve());
 
         await doReset();
       });
@@ -56,7 +56,7 @@ describe('resetPasswordActions', () => {
 
       beforeEach(async () => {
         error = new BadRequestError();
-        userAccountAPI.resetUserPassword.mockImplementation(() => {
+        userAccountAPI.resetPassword.mockImplementation(() => {
           throw error;
         });
       });

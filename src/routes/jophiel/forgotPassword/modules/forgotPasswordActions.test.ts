@@ -12,7 +12,7 @@ describe('forgotPasswordActions', () => {
     getState = jest.fn();
 
     userAccountAPI = {
-      requestToResetUserPassword: jest.fn(),
+      requestToResetPassword: jest.fn(),
     };
   });
 
@@ -23,12 +23,12 @@ describe('forgotPasswordActions', () => {
     it('calls API to request to reset password', async () => {
       await doRequestToReset();
 
-      expect(userAccountAPI.requestToResetUserPassword).toHaveBeenCalledWith('email@domain.com');
+      expect(userAccountAPI.requestToResetPassword).toHaveBeenCalledWith('email@domain.com');
     });
 
     describe('when the email is not found', () => {
       beforeEach(async () => {
-        userAccountAPI.requestToResetUserPassword.mockImplementation(() => {
+        userAccountAPI.requestToResetPassword.mockImplementation(() => {
           throw new NotFoundError();
         });
       });

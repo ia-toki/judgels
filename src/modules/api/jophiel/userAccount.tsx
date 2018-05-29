@@ -26,11 +26,11 @@ export function createUserAccountAPI() {
       return post(`${baseURL}/activate/${emailCode}`);
     },
 
-    requestToResetUserPassword: (email: string): Promise<void> => {
+    requestToResetPassword: (email: string): Promise<void> => {
       return post(`${baseURL}/request-reset-password/${email}`);
     },
 
-    resetUserPassword: (passwordResetData: PasswordResetData): Promise<void> => {
+    resetPassword: (passwordResetData: PasswordResetData): Promise<void> => {
       return post(`${baseURL}/reset-password`, undefined, passwordResetData);
     },
   };
