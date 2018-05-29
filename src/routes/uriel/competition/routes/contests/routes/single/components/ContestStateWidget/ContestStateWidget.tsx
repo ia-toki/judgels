@@ -3,21 +3,26 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { FormattedDuration } from '../../../../../../../../../components/FormattedDuration/FormattedDuration';
+import { Contest } from '../../../../../../../../../modules/api/uriel/contest';
 import { ContestState } from '../../../../../../../../../modules/api/uriel/contestWeb';
 import { AppState } from '../../../../../../../../../modules/store';
+import { selectContest } from '../../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../../modules/contestWebConfigSelectors';
+import { contestWebConfigActions as injectedContestWebConfigActions } from '../../modules/contestWebConfigActions';
 
 import './ContestStateWidget.css';
 
 export interface ContestStateWidgetProps {
+  contest: Contest;
   contestState: ContestState;
   remainingContestStateDuration?: number;
+  onFetchContestWebConfig: (contestJid: string) => void;
 }
 
 interface ContestStateWidgetState {
   baseRemainingDuration?: number;
   baseTimeForRemainingDuration?: number;
-  currentTime?: number;
+  remainingDuration?: number;
 }
 
 // TODO(fushar): unit tests
@@ -39,7 +44,7 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
   }
 
   componentDidMount() {
-    this.refreshCurrentTime();
+    this.refreshRemainingDuration();
   }
 
   componentWillUnmount() {
@@ -76,33 +81,45 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
     }
     if (contestState === ContestState.Ended) {
       return {
-        leftComponent: <span>Contest ended.</span>,
+        leftComponent: <span>Contest is over.</span>,
       };
     }
     return null;
   };
 
   private getRemainingDuration = () => {
-    const { baseRemainingDuration, baseTimeForRemainingDuration, currentTime } = this.state;
-    const remainingDuration = baseRemainingDuration! + baseTimeForRemainingDuration! - currentTime!;
-
-    return <FormattedDuration value={Math.max(0, remainingDuration)} />;
+    return <FormattedDuration value={this.state.remainingDuration!} />;
   };
 
-  private refreshCurrentTime = () => {
-    this.setState({ currentTime: new Date().getTime() });
-    this.currentTimeout = setTimeout(() => this.refreshCurrentTime(), 900);
+  private refreshRemainingDuration = () => {
+    const { baseRemainingDuration, baseTimeForRemainingDuration } = this.state;
+    const remainingDuration = Math.max(
+      0,
+      baseRemainingDuration! + baseTimeForRemainingDuration! - new Date().getTime()
+    );
+    this.setState({ remainingDuration });
+
+    if (remainingDuration === 0) {
+      this.props.onFetchContestWebConfig(this.props.contest.jid);
+    }
+
+    this.currentTimeout = setTimeout(() => this.refreshRemainingDuration(), 500);
   };
 }
 
-export function createContestStateWidget() {
+export function createContestStateWidget(contestWebConfigActions) {
   const mapStateToProps = (state: AppState) =>
     ({
+      contest: selectContest(state)!,
       contestState: selectContestWebConfig(state)!.contestState,
       remainingContestStateDuration: selectContestWebConfig(state)!.remainingContestStateDuration,
     } as Partial<ContestStateWidgetProps>);
 
-  return connect(mapStateToProps)(ContestStateWidget);
+  const mapDispatchToProps = {
+    onFetchContestWebConfig: contestWebConfigActions.fetch,
+  };
+
+  return connect(mapStateToProps, mapDispatchToProps)(ContestStateWidget);
 }
 
-export default createContestStateWidget();
+export default createContestStateWidget(injectedContestWebConfigActions);

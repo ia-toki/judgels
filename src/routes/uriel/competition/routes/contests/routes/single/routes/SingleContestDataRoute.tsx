@@ -42,7 +42,7 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
 
   private refreshWebConfig = async (contestJid: string) => {
     await this.props.onFetchContestWebConfig(contestJid);
-    this.currentTimeout = setTimeout(() => this.refreshWebConfig(contestJid), 3000);
+    this.currentTimeout = setTimeout(() => this.refreshWebConfig(contestJid), 20000);
   };
 }
 
