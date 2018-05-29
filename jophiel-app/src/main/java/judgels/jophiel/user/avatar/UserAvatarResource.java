@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -52,16 +53,6 @@ public class UserAvatarResource implements UserAvatarService {
     }
 
     @Override
-    @UnitOfWork(readOnly = true)
-    public Response renderAvatar(
-            @HeaderParam(IF_MODIFIED_SINCE) Optional<String> ifModifiedSince,
-            @PathParam("userJid") String userJid) {
-
-        String avatarUrl = checkFound(userStore.getUserAvatarUrl(userJid));
-        return buildImageResponse(avatarUrl, ifModifiedSince);
-    }
-
-    @Override
     @UnitOfWork
     public void deleteAvatar(AuthHeader authHeader, String userJid) {
         String actorJid = actorChecker.check(authHeader);
@@ -74,6 +65,16 @@ public class UserAvatarResource implements UserAvatarService {
     @UnitOfWork(readOnly = true)
     public boolean avatarExists(String userJid) {
         return userStore.getUserAvatarUrl(userJid).isPresent();
+    }
+
+    @GET
+    @UnitOfWork(readOnly = true)
+    public Response renderAvatar(
+            @HeaderParam(IF_MODIFIED_SINCE) Optional<String> ifModifiedSince,
+            @PathParam("userJid") String userJid) {
+
+        String avatarUrl = checkFound(userStore.getUserAvatarUrl(userJid));
+        return buildImageResponse(avatarUrl, ifModifiedSince);
     }
 
     @POST
