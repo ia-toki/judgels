@@ -24,12 +24,17 @@ export const contestSubmissionActions = {
   submit: (contestJid: string, problemJid: string, data: ProblemSubmissionFormData) => {
     return async (dispatch, getState, { contestSubmissionAPI }) => {
       const token = selectToken(getState());
+      let sourceFiles = {};
+      Object.keys(data.sourceFiles).forEach(key => {
+        sourceFiles['sourceFiles.' + key] = data.sourceFiles[key];
+      });
+
       return await contestSubmissionAPI.createSubmission(
         token,
         contestJid,
         problemJid,
         data.gradingLanguage,
-        data.sourceFiles
+        sourceFiles
       );
     };
   },

@@ -87,13 +87,10 @@ describe('contestSubmissionActions', () => {
     });
 
     it('calls API to get create a submission', () => {
-      expect(contestSubmissionAPI.createSubmission).toHaveBeenCalledWith(
-        token,
-        contestJid,
-        problemJid,
-        'Pascal',
-        sourceFiles
-      );
+      expect(contestSubmissionAPI.createSubmission).toHaveBeenCalledWith(token, contestJid, problemJid, 'Pascal', {
+        'sourceFiles.encoder': {} as File,
+        'sourceFiles.decoder': {} as File,
+      });
     });
   });
 });
