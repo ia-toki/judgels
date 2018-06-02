@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.MoreFiles;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -99,6 +100,7 @@ public final class LocalFileSystem implements FileSystem {
         File file = baseDir.resolve(filePath).toFile();
         if (!file.exists()) {
             try {
+                MoreFiles.createParentDirectories(file.toPath());
                 Files.createFile(file.toPath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
