@@ -51,6 +51,14 @@ uriel:
     clientJid: xxx
     clientSecret: xxx
 
+  sealtiel:
+    baseUrl: http://localhost:9003
+    clientJid: xxx
+    clientSecret: xxx
+
+  gabriel:
+    clientJid: xxx
+
   aws:
     accessKey: xxx
     secretKey: xxx

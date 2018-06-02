@@ -66,6 +66,7 @@ dependencies {
     compile "org.iatoki.judgels:judgels-fs:$judgelsFsVersion"
     compile "org.iatoki.judgels:judgels-persistence-core:$judgelsPersistenceVersion"
     compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
+    compile "org.iatoki.judgels:sealtiel-api:$sealtielVersion"
 
     runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
 

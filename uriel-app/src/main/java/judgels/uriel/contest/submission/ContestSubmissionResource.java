@@ -1,11 +1,10 @@
 package judgels.uriel.contest.submission;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.sandalphon.SandalphonUtils.checkGradingLanguageAllowed;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
-import static judgels.uriel.UrielUtils.checkPartExists;
 
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -17,6 +16,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jophiel.api.user.UserInfo;
 import judgels.jophiel.api.user.UserService;
@@ -29,7 +29,8 @@ import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.sandalphon.api.submission.SubmissionWithSource;
 import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
-import judgels.sandalphon.submission.SubmissionSourceFetcher;
+import judgels.sandalphon.submission.SubmissionData;
+import judgels.sandalphon.submission.SubmissionSourceBuilder;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
@@ -51,7 +52,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final RoleChecker roleChecker;
     private final ContestStore contestStore;
     private final ContestStyleStore styleStore;
-    private final SubmissionSourceFetcher submissionSourceFetcher;
+    private final SubmissionSourceBuilder submissionSourceBuilder;
+    private final ContestSubmissionClient submissionClient;
     private final ContestSubmissionStore submissionStore;
     private final ContestProblemStore problemStore;
     private final UserService userService;
@@ -64,9 +66,10 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             RoleChecker roleChecker,
             ContestStore contestStore,
             ContestStyleStore styleStore,
-            SubmissionSourceFetcher submissionSourceFetcher,
-            ContestSubmissionStore submissionStore,
             ContestProblemStore problemStore,
+            SubmissionSourceBuilder submissionSourceBuilder,
+            ContestSubmissionClient submissionClient,
+            ContestSubmissionStore submissionStore,
             UserService userService,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
@@ -75,9 +78,10 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.roleChecker = roleChecker;
         this.contestStore = contestStore;
         this.styleStore = styleStore;
-        this.submissionSourceFetcher = submissionSourceFetcher;
-        this.submissionStore = submissionStore;
         this.problemStore = problemStore;
+        this.submissionSourceBuilder = submissionSourceBuilder;
+        this.submissionClient = submissionClient;
+        this.submissionStore = submissionStore;
         this.userService = userService;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
@@ -130,7 +134,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         UserInfo user = checkFound(Optional.ofNullable(
                 userService.findUsersByJids(ImmutableSet.of(userJid)).get(userJid)));
 
-        SubmissionSource source = submissionSourceFetcher.fetchSubmissionSource(submission);
+        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
                 .submission(submission)
                 .source(source)
@@ -154,23 +158,33 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     @Path("/submissions")
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
-    public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart multipart) {
+    public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
         String actorJid = actorChecker.check(authHeader);
-        String contestJid = checkPartExists(multipart, "contestJid").getValue();
-        String problemJid = checkPartExists(multipart, "problemJid").getValue();
-        String gradingLanguage = checkPartExists(multipart, "gradingLanguage").getValue();
+        String contestJid = checkNotNull(parts.getField("contestJid"), "contestJid").getValue();
+        String problemJid = checkNotNull(parts.getField("problemJid"), "problemJid").getValue();
+        String gradingLanguage = checkNotNull(parts.getField("gradingLanguage"), "gradingLanguage").getValue();
 
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
         ContestContestantProblem contestantProblem =
                 checkFound(problemStore.findContestantProblem(contestJid, actorJid, problemJid));
         checkAllowed(roleChecker.canSubmitProblem(actorJid, contest, contestantProblem));
 
-        ProblemSubmissionConfig problemSubmissionConfig =
-                clientProblemService.getProblemSubmissionConfig(sandalphonClientAuthHeader, problemJid);
         ContestStyleConfig styleConfig = styleStore.getStyleConfig(contestJid);
-        checkGradingLanguageAllowed(
-                gradingLanguage,
-                problemSubmissionConfig.getGradingLanguageRestriction(),
-                styleConfig.getGradingLanguageRestriction());
+        LanguageRestriction contestGradingLanguageRestriction = styleConfig.getGradingLanguageRestriction();
+
+        SubmissionData data = new SubmissionData.Builder()
+                .userJid(actorJid)
+                .problemJid(problemJid)
+                .containerJid(contestJid)
+                .gradingLanguage(gradingLanguage)
+                .additionalGradingLanguageRestriction(contestGradingLanguageRestriction)
+                .build();
+
+        SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
+
+        ProblemSubmissionConfig config =
+                clientProblemService.getProblemSubmissionConfig(sandalphonClientAuthHeader, data.getProblemJid());
+
+        submissionClient.submit(data, source, config);
     }
 }

@@ -21,6 +21,6 @@ public abstract class AbstractGradingModel extends JudgelsModel {
     @Column(nullable = false)
     public int score;
 
-    @Column(columnDefinition = "LONGTEXT", nullable = false)
+    @Column(columnDefinition = "LONGTEXT")
     public String details;
 }

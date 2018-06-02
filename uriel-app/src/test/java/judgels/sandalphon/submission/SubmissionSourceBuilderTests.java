@@ -1,38 +1,31 @@
 package judgels.sandalphon.submission;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
 import java.nio.file.Paths;
 import judgels.fs.InMemoryFileSystem;
 import judgels.gabriel.api.SourceFile;
-import judgels.sandalphon.api.submission.Submission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class SubmissionSourceFetcherTests {
-    private static final String SUBMISSION_JID = "submissionJid";
+class SubmissionSourceBuilderTests {
+    private static final String SUBMISSION = "submissionJid";
 
     private InMemoryFileSystem submissionFs;
 
-    private SubmissionSourceFetcher submissionFetcher;
-    private Submission submission;
+    private SubmissionSourceBuilder sourceBuilder;
 
     @BeforeEach
     void before() {
         submissionFs = new InMemoryFileSystem();
-        submissionFetcher = new SubmissionSourceFetcher(submissionFs);
-
-        submission = mock(Submission.class);
-        when(submission.getJid()).thenReturn(SUBMISSION_JID);
+        sourceBuilder = new SubmissionSourceBuilder(submissionFs);
     }
 
     @Test
-    void fetch_submission() {
-        submissionFs.addFile(Paths.get(SUBMISSION_JID, "encoder"), "my-encoder.cpp", "the encoder".getBytes());
-        submissionFs.addFile(Paths.get(SUBMISSION_JID, "decoder"), "my-decoder.cpp", "the decoder".getBytes());
+    void past_submission() {
+        submissionFs.addFile(Paths.get(SUBMISSION, "encoder"), "my-encoder.cpp", "the encoder".getBytes());
+        submissionFs.addFile(Paths.get(SUBMISSION, "decoder"), "my-decoder.cpp", "the decoder".getBytes());
 
         SourceFile encoder = new SourceFile.Builder()
                 .name("my-encoder.cpp")
@@ -43,7 +36,7 @@ class SubmissionSourceFetcherTests {
                 .content("the decoder".getBytes())
                 .build();
 
-        assertThat(submissionFetcher.fetchSubmissionSource(submission).getFiles()).isEqualTo(ImmutableMap.of(
+        assertThat(sourceBuilder.fromPastSubmission(SUBMISSION).getSubmissionFiles()).isEqualTo(ImmutableMap.of(
                 "encoder", encoder,
                 "decoder", decoder));
     }

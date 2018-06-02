@@ -1,8 +1,10 @@
 package judgels.sandalphon;
 
+import static judgels.sandalphon.SandalphonUtils.checkGradingLanguageAllowed;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import judgels.gabriel.api.LanguageRestriction;
 import org.junit.jupiter.api.Test;
@@ -15,22 +17,22 @@ class SandalphonUtilsTests {
         LanguageRestriction r2 = LanguageRestriction.of(ImmutableSet.of("Cpp11", "Python3"));
         LanguageRestriction r3 = LanguageRestriction.noRestriction();
 
-        assertThatCode(() -> SandalphonUtils.checkGradingLanguageAllowed("Cpp11", r0))
+        assertThatCode(() -> checkGradingLanguageAllowed("Cpp11", ImmutableList.of(r0)))
                 .doesNotThrowAnyException();
-        assertThatCode(() -> SandalphonUtils.checkGradingLanguageAllowed("Pascal", r0))
+        assertThatCode(() -> checkGradingLanguageAllowed("Pascal", ImmutableList.of(r0)))
                 .doesNotThrowAnyException();
-        assertThatCode(() -> SandalphonUtils.checkGradingLanguageAllowed("Pascal", r0, r1))
+        assertThatCode(() -> checkGradingLanguageAllowed("Pascal", ImmutableList.of(r0, r1)))
                 .doesNotThrowAnyException();
-        assertThatCode(() -> SandalphonUtils.checkGradingLanguageAllowed("Cpp11", r0, r1))
+        assertThatCode(() -> checkGradingLanguageAllowed("Cpp11", ImmutableList.of(r0, r1)))
                 .doesNotThrowAnyException();
-        assertThatCode(() -> SandalphonUtils.checkGradingLanguageAllowed("Cpp11", r1, r2))
+        assertThatCode(() -> checkGradingLanguageAllowed("Cpp11", ImmutableList.of(r1, r2)))
                 .doesNotThrowAnyException();
-        assertThatCode(() -> SandalphonUtils.checkGradingLanguageAllowed("Cpp11", r1, r2, r3))
+        assertThatCode(() -> checkGradingLanguageAllowed("Cpp11", ImmutableList.of(r1, r2, r3)))
                 .doesNotThrowAnyException();
 
 
-        assertThatThrownBy(() -> SandalphonUtils.checkGradingLanguageAllowed("Python3", r0, r1));
-        assertThatThrownBy(() -> SandalphonUtils.checkGradingLanguageAllowed("Python3", r1));
-        assertThatThrownBy(() -> SandalphonUtils.checkGradingLanguageAllowed("Python3", r1, r2));
+        assertThatThrownBy(() -> checkGradingLanguageAllowed("Python3", ImmutableList.of(r0, r1)));
+        assertThatThrownBy(() -> checkGradingLanguageAllowed("Python3", ImmutableList.of(r1)));
+        assertThatThrownBy(() -> checkGradingLanguageAllowed("Python3", ImmutableList.of(r1, r2)));
     }
 }

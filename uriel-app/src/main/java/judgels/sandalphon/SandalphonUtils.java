@@ -1,14 +1,43 @@
 package judgels.sandalphon;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.ws.rs.ForbiddenException;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.api.SubmissionSource;
+import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 
 public class SandalphonUtils {
     private SandalphonUtils() {}
 
-    public static void checkGradingLanguageAllowed(String gradingLanguage, LanguageRestriction... restrictions) {
+    public static void checkAllSourceFilesPresent(SubmissionSource source, ProblemSubmissionConfig config) {
+        Set<String> missingSourceFiles =
+                Sets.difference(config.getSourceKeys().keySet(), source.getSubmissionFiles().keySet());
+        checkArgument(missingSourceFiles.isEmpty(), "Missing source files: {}", missingSourceFiles);
+    }
+
+    public static void checkGradingLanguageAllowed(String gradingLanguage, LanguageRestriction restriction) {
+        checkGradingLanguageAllowed(gradingLanguage, ImmutableList.of(restriction));
+    }
+
+    public static void checkGradingLanguageAllowed(
+            String gradingLanguage,
+            LanguageRestriction r1,
+            Optional<LanguageRestriction> r2) {
+
+        ImmutableList.Builder<LanguageRestriction> restrictions = ImmutableList.builder();
+        restrictions.add(r1);
+        r2.ifPresent(restrictions::add);
+
+        checkGradingLanguageAllowed(gradingLanguage, restrictions.build());
+    }
+
+    public static void checkGradingLanguageAllowed(String gradingLanguage, List<LanguageRestriction> restrictions) {
         LanguageRestriction finalRestriction = LanguageRestriction.noRestriction();
         for (LanguageRestriction restriction : restrictions) {
             finalRestriction = combineLanguageRestrictions(finalRestriction, restriction);

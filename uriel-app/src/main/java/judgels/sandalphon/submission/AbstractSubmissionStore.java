@@ -49,7 +49,23 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
                 Lists.transform(data, sm -> submissionFromModels(sm, gradingModels.get(sm.jid))));
     }
 
-    public Submission submissionFromModels(SM model, GM gradingModel) {
+    public Submission createSubmission(SubmissionData data, String gradingEngine) {
+        SM model = submissionDao.createSubmissionModel();
+        toModel(data, gradingEngine, model);
+        return submissionFromModels(submissionDao.insert(model), null);
+    }
+
+    public String createGrading(Submission submission) {
+        GM model = gradingDao.createGradingModel();
+        model.submissionJid = submission.getJid();
+        model.verdictCode = "?";
+        model.verdictName = "Pending";
+        model.score = 0;
+
+        return gradingDao.insert(model).jid;
+    }
+
+    private Submission submissionFromModels(SM model, GM gradingModel) {
         return new Submission.Builder()
                 .id(model.id)
                 .jid(model.jid)
@@ -63,7 +79,15 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
                 .build();
     }
 
-    public Optional<Grading> gradingFromModel(@Nullable GM model) {
+    private void toModel(SubmissionData data, String gradingEngine, SM model) {
+        model.createdBy = data.getUserJid();
+        model.problemJid = data.getProblemJid();
+        model.containerJid = data.getContainerJid();
+        model.gradingEngine = gradingEngine;
+        model.gradingLanguage = data.getGradingLanguage();
+    }
+
+    private Optional<Grading> gradingFromModel(@Nullable GM model) {
         if (model == null) {
             return Optional.empty();
         }

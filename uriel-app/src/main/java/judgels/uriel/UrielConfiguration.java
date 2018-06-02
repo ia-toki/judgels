@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.fs.aws.AwsFsConfiguration;
+import judgels.uriel.gabriel.GabrielConfiguration;
 import judgels.uriel.jophiel.JophielConfiguration;
 import judgels.uriel.sandalphon.SandalphonConfiguration;
+import judgels.uriel.sealtiel.SealtielConfiguration;
 import judgels.uriel.submission.SubmissionConfiguration;
 import org.immutables.value.Value;
 
@@ -20,6 +22,12 @@ public interface UrielConfiguration {
 
     @JsonProperty("sandalphon")
     SandalphonConfiguration getSandalphonConfig();
+
+    @JsonProperty("sealtiel")
+    SealtielConfiguration getSealtielConfig();
+
+    @JsonProperty("gabriel")
+    GabrielConfiguration getGabrielConfig();
 
     @JsonProperty("aws")
     Optional<AwsConfiguration> getAwsConfig();

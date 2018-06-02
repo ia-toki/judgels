@@ -11,10 +11,12 @@ import java.nio.file.Paths;
 import judgels.fs.aws.AwsModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.service.jersey.JudgelsObjectMappers;
+import judgels.uriel.gabriel.GabrielModule;
 import judgels.uriel.hibernate.UrielHibernateBundle;
 import judgels.uriel.hibernate.UrielHibernateModule;
 import judgels.uriel.jophiel.JophielModule;
 import judgels.uriel.sandalphon.SandalphonModule;
+import judgels.uriel.sealtiel.SealtielModule;
 import judgels.uriel.submission.SubmissionModule;
 
 public class UrielApplication extends Application<UrielApplicationConfiguration> {
@@ -40,9 +42,11 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
 
         UrielComponent component = DaggerUrielComponent.builder()
                 .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
+                .sandalphonModule(new SandalphonModule(urielConfig.getSandalphonConfig()))
+                .sealtielModule(new SealtielModule(urielConfig.getSealtielConfig()))
+                .gabrielModule(new GabrielModule(urielConfig.getGabrielConfig()))
                 .urielHibernateModule(new UrielHibernateModule(hibernateBundle))
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
-                .sandalphonModule(new SandalphonModule(urielConfig.getSandalphonConfig()))
                 .submissionModule(new SubmissionModule(baseDataDir, urielConfig.getSubmissionConfig()))
                 .build();
 

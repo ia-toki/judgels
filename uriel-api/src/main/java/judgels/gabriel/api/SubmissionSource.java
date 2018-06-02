@@ -9,7 +9,7 @@ import org.immutables.value.Value;
 public interface SubmissionSource {
     String DEFAULT_KEY = "source";
 
-    Map<String, SourceFile> getFiles();
+    Map<String, SourceFile> getSubmissionFiles();
 
     class Builder extends ImmutableSubmissionSource.Builder {}
 }
