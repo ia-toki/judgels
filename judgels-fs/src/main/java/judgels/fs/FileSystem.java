@@ -9,5 +9,6 @@ public interface FileSystem {
     String getPublicFileUrl(Path filePath);
     List<FileInfo> listDirectoriesInDirectory(Path dirPath);
     List<FileInfo> listFilesInDirectory(Path dirPath);
+    void writeByteArrayToFile(Path filePath, byte[] content);
     byte[] readByteArrayFromFile(Path filePath);
 }

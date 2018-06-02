@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -135,6 +136,16 @@ public final class AwsFileSystem implements FileSystem {
         Comparator<String> comparator = new NaturalFilenameComparator();
         fileInfos.sort((FileInfo f1, FileInfo f2) -> comparator.compare(f1.getName(), f2.getName()));
         return ImmutableList.copyOf(fileInfos);
+    }
+
+    @Override
+    public void writeByteArrayToFile(Path filePath, byte[] content) {
+        String key = filePath.toString();
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(URLConnection.guessContentTypeFromName(key));
+
+        s3.putObject(bucketName, key, new ByteArrayInputStream(content), objectMetadata);
     }
 
     @Override

@@ -6,8 +6,10 @@ import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -90,6 +92,15 @@ public final class LocalFileSystem implements FileSystem {
         Comparator<String> comparator = new NaturalFilenameComparator();
         fileInfos.sort((FileInfo f1, FileInfo f2) -> comparator.compare(f1.getName(), f2.getName()));
         return ImmutableList.copyOf(fileInfos);
+    }
+
+    @Override
+    public void writeByteArrayToFile(Path filePath, byte[] content) {
+        try (OutputStream stream = new FileOutputStream(baseDir.resolve(filePath).toFile())) {
+            stream.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
