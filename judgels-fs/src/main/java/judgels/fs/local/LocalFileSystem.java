@@ -96,6 +96,15 @@ public final class LocalFileSystem implements FileSystem {
 
     @Override
     public void writeByteArrayToFile(Path filePath, byte[] content) {
+        File file = baseDir.resolve(filePath).toFile();
+        if (!file.exists()) {
+            try {
+                Files.createFile(filePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         try (OutputStream stream = new FileOutputStream(baseDir.resolve(filePath).toFile())) {
             stream.write(content);
         } catch (IOException e) {
