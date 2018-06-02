@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux';
+
 import { contestSubmissionActions } from './contestSubmissionActions';
 import { contestJid, problemJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
 import { SubmissionWithSourceResponse } from '../../../../../../../../../../modules/api/sandalphon/submission';
@@ -10,6 +12,7 @@ describe('contestSubmissionActions', () => {
   const getState = (): Partial<AppState> => ({ session: sessionState });
 
   let contestSubmissionAPI: jest.Mocked<any>;
+  let toastActions: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
@@ -18,6 +21,10 @@ describe('contestSubmissionActions', () => {
       getMySubmissions: jest.fn(),
       getSubmissionWithSource: jest.fn(),
       createSubmission: jest.fn(),
+    };
+
+    toastActions = {
+      showSuccessToast: jest.fn(),
     };
   });
 
@@ -80,7 +87,8 @@ describe('contestSubmissionActions', () => {
       gradingLanguage: 'Pascal',
       sourceFiles,
     };
-    const doSubmit = async () => submit(contestJid, problemJid, data)(dispatch, getState, { contestSubmissionAPI });
+    const doSubmit = async () =>
+      submit(contestJid, 1, problemJid, data)(dispatch, getState, { contestSubmissionAPI, toastActions });
 
     beforeEach(async () => {
       await doSubmit();
@@ -91,6 +99,8 @@ describe('contestSubmissionActions', () => {
         'sourceFiles.encoder': {} as File,
         'sourceFiles.decoder': {} as File,
       });
+      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Solution submitted.');
+      expect(dispatch).toHaveBeenCalledWith(push(`/competition/contests/1/submissions`));
     });
   });
 });

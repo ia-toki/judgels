@@ -1,6 +1,7 @@
 import { selectToken } from '../../../../../../../../../../modules/session/sessionSelectors';
 import { NotFoundError } from '../../../../../../../../../../modules/api/error';
 import { ProblemSubmissionFormData } from '../../../../../../../../../../components/ProblemWorksheetCard/ProblemSubmissionForm/ProblemSubmissionForm';
+import { push } from 'react-router-redux';
 
 export const contestSubmissionActions = {
   fetchMyList: (contestJid: string, page: number) => {
@@ -21,21 +22,20 @@ export const contestSubmissionActions = {
     };
   },
 
-  submit: (contestJid: string, problemJid: string, data: ProblemSubmissionFormData) => {
-    return async (dispatch, getState, { contestSubmissionAPI }) => {
+  submit: (contestJid: string, contestId: number, problemJid: string, data: ProblemSubmissionFormData) => {
+    return async (dispatch, getState, { contestSubmissionAPI, toastActions }) => {
       const token = selectToken(getState());
       let sourceFiles = {};
       Object.keys(data.sourceFiles).forEach(key => {
         sourceFiles['sourceFiles.' + key] = data.sourceFiles[key];
       });
 
-      return await contestSubmissionAPI.createSubmission(
-        token,
-        contestJid,
-        problemJid,
-        data.gradingLanguage,
-        sourceFiles
-      );
+      await contestSubmissionAPI.createSubmission(token, contestJid, problemJid, data.gradingLanguage, sourceFiles);
+
+      toastActions.showSuccessToast('Solution submitted.');
+
+      window.scrollTo(0, 0);
+      dispatch(push(`/competition/contests/${contestId}/submissions`));
     };
   },
 };

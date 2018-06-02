@@ -82,7 +82,7 @@ describe('ContestProblemPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestSubmissionActions.submit).toHaveBeenCalledWith(contestJid, problemJid, {
+    expect(contestSubmissionActions.submit).toHaveBeenCalledWith(contestJid, 1, problemJid, {
       gradingLanguage: preferredGradingLanguage,
       sourceFiles: {
         encoder: { name: 'encoder.cpp', size: 1000 } as File,

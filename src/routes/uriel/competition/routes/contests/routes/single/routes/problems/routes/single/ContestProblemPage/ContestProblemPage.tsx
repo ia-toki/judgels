@@ -29,7 +29,12 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     problemAlias: string,
     language: string
   ) => Promise<ContestContestantProblemWorksheet>;
-  onSubmit: (contestJid: string, problemJid: string, data: ProblemSubmissionFormData) => Promise<void>;
+  onSubmit: (
+    contestJid: string,
+    contestId: number,
+    problemJid: string,
+    data: ProblemSubmissionFormData
+  ) => Promise<void>;
 }
 
 interface ContestProblemPageState {
@@ -69,7 +74,8 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   }
 
   private onSubmit = async (data: ProblemSubmissionFormData) => {
-    return await this.props.onSubmit(this.props.contest.jid, this.state.contestantProblem!.problem.problemJid, data);
+    const { problem } = this.state.contestantProblem!;
+    return await this.props.onSubmit(this.props.contest.jid, this.props.contest.id, problem.problemJid, data);
   };
 
   private renderStatementLanguageWidget = () => {
