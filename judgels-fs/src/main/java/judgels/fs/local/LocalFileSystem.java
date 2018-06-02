@@ -60,7 +60,7 @@ public final class LocalFileSystem implements FileSystem {
         }
 
         List<FileInfo> fileInfos = Lists.newArrayList(Arrays.stream(files)
-                .filter(File::isFile)
+                .filter(File::isDirectory)
                 .filter(file -> !IGNORABLE_FILES.contains(file.getName()))
                 .map(file -> new FileInfo.Builder()
                         .name(file.getName())
@@ -82,7 +82,7 @@ public final class LocalFileSystem implements FileSystem {
         }
 
         List<FileInfo> fileInfos = Lists.newArrayList(Arrays.stream(files)
-                .filter(File::isDirectory)
+                .filter(File::isFile)
                 .map(file -> new FileInfo.Builder()
                         .name(file.getName())
                         .size(file.length())
