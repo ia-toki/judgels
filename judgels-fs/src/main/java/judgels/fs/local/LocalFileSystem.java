@@ -99,13 +99,13 @@ public final class LocalFileSystem implements FileSystem {
         File file = baseDir.resolve(filePath).toFile();
         if (!file.exists()) {
             try {
-                Files.createFile(filePath);
+                Files.createFile(file.toPath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        try (OutputStream stream = new FileOutputStream(baseDir.resolve(filePath).toFile())) {
+        try (OutputStream stream = new FileOutputStream(file)) {
             stream.write(content);
         } catch (IOException e) {
             throw new RuntimeException(e);
