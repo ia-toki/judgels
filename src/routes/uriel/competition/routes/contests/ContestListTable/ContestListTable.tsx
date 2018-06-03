@@ -22,7 +22,7 @@ export class ContestListTable extends React.PureComponent<ContestListTableProps,
           <h4 className="contest-list-item-name">{contest.name}</h4>
           <p className="contest-list-item-date">
             <small>
-              <FormattedDate value={contest.beginTime} />
+              {this.renderBeginTime(contest)}
               {this.renderDurationSeparator(contest)}
               {this.renderDuration(contest)}
             </small>
@@ -44,6 +44,10 @@ export class ContestListTable extends React.PureComponent<ContestListTableProps,
 
     return <Card className="contest-list-container">{list}</Card>;
   }
+
+  private renderBeginTime = (contest: Contest) => {
+    return <FormattedDate value={contest.beginTime} />;
+  };
 
   private renderDurationSeparator = (contest: Contest) => {
     if (!contest.duration) {
