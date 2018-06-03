@@ -14,7 +14,6 @@ import judgels.service.api.actor.AuthHeader;
 @Path("/api/v2/users/{userJid}/avatar")
 public interface UserAvatarService {
     @DELETE
-    @Path("/")
     void deleteAvatar(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
 
     @GET

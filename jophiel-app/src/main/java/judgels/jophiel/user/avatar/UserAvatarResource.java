@@ -18,7 +18,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import judgels.fs.FileSystem;
@@ -32,7 +31,6 @@ import judgels.service.api.actor.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-@Path("/api/v2/users/{userJid}/avatar")
 public class UserAvatarResource implements UserAvatarService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
