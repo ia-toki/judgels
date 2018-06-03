@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import com.google.common.io.ByteStreams;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +53,15 @@ public class SubmissionSourceBuilder {
             submissionFiles.put(key.substring(SOURCE_FILES_PART_PREFIX.length()), sourceFile);
         }
         return new SubmissionSource.Builder().putAllSubmissionFiles(submissionFiles).build();
+    }
+
+    // TODO(fushar): unit test
+    public void storeSubmissionSource(String submissionJid, SubmissionSource source) {
+        for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
+            Path filePath = Paths.get(submissionJid, entry.getKey(), entry.getValue().getName());
+            byte[] content = entry.getValue().getContent();
+            submissionFs.writeByteArrayToFile(filePath, content);
+        }
     }
 
     public SubmissionSource fromPastSubmission(String submissionJid) {

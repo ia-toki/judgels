@@ -19,7 +19,7 @@ public class InMemoryFileSystem implements FileSystem {
     }
 
     @Override
-    public void uploadPublicFile(InputStream file, Path destDirPath, String destFilename) {
+    public void uploadPublicFile(Path filePath, InputStream content) {
         throw new IllegalStateException();
     }
 
@@ -87,6 +87,9 @@ public class InMemoryFileSystem implements FileSystem {
         }
         return fileInfos.build();
     }
+
+    @Override
+    public void writeByteArrayToFile(Path filePath, byte[] content) {}
 
     @Override
     public byte[] readByteArrayFromFile(Path filePath) {

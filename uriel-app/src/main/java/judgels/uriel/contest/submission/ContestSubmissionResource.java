@@ -179,12 +179,11 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .gradingLanguage(gradingLanguage)
                 .additionalGradingLanguageRestriction(contestGradingLanguageRestriction)
                 .build();
-
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
-
         ProblemSubmissionConfig config =
                 clientProblemService.getProblemSubmissionConfig(sandalphonClientAuthHeader, data.getProblemJid());
+        Submission submission = submissionClient.submit(data, source, config);
 
-        submissionClient.submit(data, source, config);
+        submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
     }
 }

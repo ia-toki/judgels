@@ -36,7 +36,7 @@ public abstract class AbstractSubmissionClient<SM extends AbstractSubmissionMode
         this.mapper = mapper;
     }
 
-    public void submit(SubmissionData data, SubmissionSource source, ProblemSubmissionConfig config) {
+    public Submission submit(SubmissionData data, SubmissionSource source, ProblemSubmissionConfig config) {
         checkAllSourceFilesPresent(source, config);
         checkGradingLanguageAllowed(
                 data.getGradingLanguage(),
@@ -45,6 +45,8 @@ public abstract class AbstractSubmissionClient<SM extends AbstractSubmissionMode
 
         Submission submission = submissionStore.createSubmission(data, config.getGradingEngine());
         requestGrading(submission, source);
+
+        return submission;
     }
 
     private void requestGrading(Submission submission, SubmissionSource source) {
