@@ -11,17 +11,17 @@ export enum VerdictCode {
 }
 
 const verdictIntentsMap = {
-  AC: Intent.SUCCESS,
-  WA: Intent.DANGER,
-  SKP: Intent.NONE,
-  PND: Intent.NONE,
-  ERR: Intent.NONE,
+  [VerdictCode.AC]: Intent.SUCCESS,
+  [VerdictCode.WA]: Intent.DANGER,
+  [VerdictCode.PND]: Intent.NONE,
+  [VerdictCode.ERR]: Intent.NONE,
+  [VerdictCode.SKP]: Intent.NONE,
 };
 
 const verdictDisplayCodeMap = {
-  PND: '...',
-  ERR: 'ERROR!',
-  SKP: 'SKIPPED',
+  [VerdictCode.PND]: '...',
+  [VerdictCode.ERR]: 'ERR',
+  [VerdictCode.SKP]: 'SKIPPED',
 };
 
 export function getVerdictIntent(code: string): Intent {
