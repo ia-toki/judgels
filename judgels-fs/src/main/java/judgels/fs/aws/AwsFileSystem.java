@@ -53,13 +53,12 @@ public final class AwsFileSystem implements FileSystem {
     }
 
     @Override
-    public void uploadPublicFile(InputStream file, Path destDirPath, String destFilename) {
-        Path destFilePath = destDirPath.resolve(destFilename);
-        String destFilePathString = destFilePath.toString();
+    public void uploadPublicFile(Path filePath, InputStream content) {
+        String destFilePathString = filePath.toString();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
-        String contentType = URLConnection.guessContentTypeFromName(destFilename);
+        String contentType = URLConnection.guessContentTypeFromName(destFilePathString);
         if (contentType != null) {
             objectMetadata.setContentType(contentType);
             if (contentType.startsWith("image/")) {
@@ -67,7 +66,7 @@ public final class AwsFileSystem implements FileSystem {
             }
         }
 
-        s3.putObject(bucketName, destFilePathString, file, objectMetadata);
+        s3.putObject(bucketName, destFilePathString, content, objectMetadata);
         s3.setObjectAcl(bucketName, destFilePathString, CannedAccessControlList.PublicRead);
     }
 

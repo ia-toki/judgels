@@ -4,13 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.MoreFiles;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -38,10 +36,9 @@ public final class LocalFileSystem implements FileSystem {
     }
 
     @Override
-    public void uploadPublicFile(InputStream file, Path destDirPath, String destFilename) {
-        Path destFilePath = baseDir.resolve(destDirPath).resolve(destFilename);
+    public void uploadPublicFile(Path filePath, InputStream content) {
         try {
-            Files.copy(file, destFilePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(content, baseDir.resolve(filePath), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -97,18 +94,9 @@ public final class LocalFileSystem implements FileSystem {
 
     @Override
     public void writeByteArrayToFile(Path filePath, byte[] content) {
-        File file = baseDir.resolve(filePath).toFile();
-        if (!file.exists()) {
-            try {
-                MoreFiles.createParentDirectories(file.toPath());
-                Files.createFile(file.toPath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        try (OutputStream stream = new FileOutputStream(file)) {
-            stream.write(content);
+        InputStream stream = new ByteArrayInputStream(content);
+        try {
+            Files.copy(stream, baseDir.resolve(filePath), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
