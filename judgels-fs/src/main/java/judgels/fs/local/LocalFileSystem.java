@@ -15,7 +15,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -54,7 +53,7 @@ public final class LocalFileSystem implements FileSystem {
     public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
         File[] files  = baseDir.resolve(dirPath).toFile().listFiles();
         if (files == null) {
-            return Collections.emptyList();
+            throw new RuntimeException("Not a directory: " + baseDir.resolve(dirPath));
         }
 
         List<FileInfo> fileInfos = Lists.newArrayList(Arrays.stream(files)
@@ -76,7 +75,7 @@ public final class LocalFileSystem implements FileSystem {
     public List<FileInfo> listFilesInDirectory(Path dirPath) {
         File[] files  = baseDir.resolve(dirPath).toFile().listFiles();
         if (files == null) {
-            return Collections.emptyList();
+            throw new RuntimeException("Not a directory: " + baseDir.resolve(dirPath));
         }
 
         List<FileInfo> fileInfos = Lists.newArrayList(Arrays.stream(files)
