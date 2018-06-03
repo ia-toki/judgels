@@ -95,7 +95,7 @@ public class UserAvatarResource implements UserAvatarService {
         String extension = Files.getFileExtension(fileDetails.getFileName());
         String destFilename = user.getJid() + "-" + RandomCodeGenerator.newCode() + "." + extension;
 
-        avatarFs.uploadPublicFile(fileStream, Paths.get(""), destFilename);
+        avatarFs.uploadPublicFile(Paths.get(destFilename), fileStream);
         userStore.updateUserAvatar(user.getJid(), destFilename);
     }
 }

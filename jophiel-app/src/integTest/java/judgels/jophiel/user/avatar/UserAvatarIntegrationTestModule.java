@@ -23,7 +23,7 @@ public class UserAvatarIntegrationTestModule {
 
     static class FakeFs implements FileSystem {
         @Override
-        public void uploadPublicFile(InputStream file, Path destDirPath, String destFilename) {}
+        public void uploadPublicFile(Path filePath, InputStream content) {}
 
         @Override
         public String getPublicFileUrl(Path filePath) {
@@ -39,6 +39,9 @@ public class UserAvatarIntegrationTestModule {
         public List<FileInfo> listFilesInDirectory(Path dirPath) {
             return Collections.emptyList();
         }
+
+        @Override
+        public void writeByteArrayToFile(Path filePath, byte[] content) {}
 
         @Override
         public byte[] readByteArrayFromFile(Path filePath) {
