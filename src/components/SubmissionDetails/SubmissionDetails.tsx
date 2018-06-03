@@ -30,6 +30,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <div>
         {this.renderGeneralInfo()}
         {this.renderDetails()}
+        {this.renderSourceFiles()}
       </div>
     );
   }
@@ -44,12 +45,11 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     const hasSubtasks = this.hasSubtasks();
 
     return (
-      <div>
+      <>
         {this.renderSubtaskResults(hasSubtasks)}
         {this.renderSampleTestDataResults(hasSubtasks)}
         {this.renderTestDataResults(hasSubtasks)}
-        {this.renderSourceFiles()}
-      </div>
+      </>
     );
   };
 
@@ -58,7 +58,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     const grading = submission.latestGrading;
 
     return (
-      <div>
+      <>
         <h4>General Info</h4>
         <ContentCard>
           <table className="pt-html-table pt-html-table-striped submission-details">
@@ -102,7 +102,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
             </tbody>
           </table>
         </ContentCard>
-      </div>
+      </>
     );
   };
 
@@ -122,7 +122,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     ));
 
     return (
-      <div>
+      <>
         <h4>Subtask Results</h4>
         <ContentCard>
           <table className="pt-html-table pt-html-table-striped submission-details">
@@ -136,7 +136,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
             <tbody>{results}</tbody>
           </table>
         </ContentCard>
-      </div>
+      </>
     );
   };
 
@@ -160,7 +160,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     ));
 
     return (
-      <div>
+      <>
         <h4>Sample Test Data Results</h4>
         <ContentCard>
           <table className="pt-html-table pt-html-table-striped submission-details">
@@ -177,7 +177,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
             <tbody>{results}</tbody>
           </table>
         </ContentCard>
-      </div>
+      </>
     );
   };
 
@@ -225,10 +225,10 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     }
 
     return (
-      <div>
+      <>
         <h4>Test Data Results</h4>
         {groups}
-      </div>
+      </>
     );
   };
 
@@ -238,24 +238,28 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       return null;
     }
 
-    const details = this.props.submission.latestGrading!.details!;
+    const details = this.props.submission.latestGrading!.details;
 
-    const sourceFiles = Object.keys(source.files).map(key => (
+    const sourceFiles = Object.keys(source.submissionFiles).map(key => (
       <ContentCard key={key}>
         <h5>
-          {key === 'source' ? '' : key + ': '} {source.files[key].name}
+          {key === 'source' ? '' : key + ': '} {source.submissionFiles[key].name}
         </h5>
-        <pre>{base64.decode(source.files[key].content)}</pre>
-        <h5>Compilation Output</h5>
-        <pre>{base64.decode(details.compilationOutputs[key])}</pre>
+        <pre>{base64.decode(source.submissionFiles[key].content)}</pre>
+        {details && (
+          <>
+            <h5>Compilation Output</h5>
+            <pre>{base64.decode(details.compilationOutputs[key])}</pre>
+          </>
+        )}
       </ContentCard>
     ));
 
     return (
-      <div>
+      <>
         <h4>Source Files</h4>
         {sourceFiles}
-      </div>
+      </>
     );
   };
 
@@ -263,12 +267,12 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     const subtaskTags = results.length !== 0 && this.renderSubtaskTags(results[0].subtaskIds);
 
     return (
-      <div>
+      <>
         <h5 className="test-group__id">Test Group {id}</h5>
         <div className="test-group__subtasks-tags">
           <span className="test-group__subtasks">Subtasks</span> {subtaskTags}
         </div>
-      </div>
+      </>
     );
   };
 

@@ -4,5 +4,5 @@ export interface SourceFile {
 }
 
 export interface SubmissionSource {
-  files: { [key: string]: SourceFile };
+  submissionFiles: { [key: string]: SourceFile };
 }
