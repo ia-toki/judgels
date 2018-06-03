@@ -5,13 +5,14 @@ import java.nio.file.Path;
 import java.util.List;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
+import judgels.fs.aws.AwsFileSystem;
 import judgels.fs.local.LocalFileSystem;
 
 public final class DuplexFileSystem implements FileSystem {
     private final LocalFileSystem local;
-    private final LocalFileSystem aws;
+    private final AwsFileSystem aws;
 
-    public DuplexFileSystem(LocalFileSystem local, LocalFileSystem aws) {
+    public DuplexFileSystem(LocalFileSystem local, AwsFileSystem aws) {
         this.local = local;
         this.aws = aws;
     }
