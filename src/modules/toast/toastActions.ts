@@ -18,6 +18,15 @@ export function createToastActions(toaster) {
       });
     },
 
+    showAlertToast: (message: string) => {
+      toaster.show({
+        icon: 'info-sign',
+        message,
+        intent: Intent.WARNING,
+        timeout: 0,
+      });
+    },
+
     showErrorToast: (error: any) => {
       let message: string;
       if (error instanceof RemoteError) {

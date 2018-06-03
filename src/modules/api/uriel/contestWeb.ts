@@ -12,6 +12,7 @@ export interface ContestWebConfig {
   visibleTabs: ContestTab[];
   contestState: ContestState;
   remainingContestStateDuration?: number;
+  announcementsCount: number;
 }
 
 export enum ContestState {

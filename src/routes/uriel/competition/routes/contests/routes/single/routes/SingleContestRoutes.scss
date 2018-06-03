@@ -3,6 +3,19 @@
   padding-bottom: 8px;
 }
 
+.tab-item-with-widget {
+  display: inline-block;
+  width: 190px;
+}
+
+.tab-item-with-widget__name {
+  float: left;
+}
+
+.tab-item-with-widget__widget {
+  float: right;
+}
+
 @media only screen and (max-width: 750px) {
   .single-contest-routes__header {
     h2 {

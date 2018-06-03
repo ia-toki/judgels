@@ -11,6 +11,7 @@ import ContentWithSidebar, {
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 import ContestStateWidget from '../components/ContestStateWidget/ContestStateWidget';
+import ContestAnnouncementsWidget from '../components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestProblemRoutes from './problems/routes/ContestProblemRoutes';
@@ -52,7 +53,15 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       {
         id: 'announcements',
         titleIcon: 'notifications',
-        title: 'Announcements',
+        title: (
+          <div className="tab-item-with-widget">
+            <div className="tab-item-with-widget__name">Announcements</div>
+            <div className="tab-item-with-widget__widget">
+              <ContestAnnouncementsWidget />
+            </div>
+            <div className="clearfix" />
+          </div>
+        ),
         routeComponent: Route,
         component: ContestAnnouncementsPage,
       },

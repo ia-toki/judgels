@@ -31,7 +31,7 @@ const ContentAndSidebar = (props: ContentAndSidebarProps) => (
 export interface ContentWithSidebarItem {
   id: string;
   titleIcon?: IconName;
-  title: string;
+  title: string | JSX.Element;
   routeComponent: any;
   component: any;
 }

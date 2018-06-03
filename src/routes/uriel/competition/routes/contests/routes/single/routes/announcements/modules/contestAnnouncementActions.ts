@@ -7,4 +7,10 @@ export const contestAnnouncementActions = {
       return await contestAnnouncementAPI.getAnnouncements(token, contestJid);
     };
   },
+
+  alertNew: () => {
+    return async (dispatch, getState, { toastActions }) => {
+      toastActions.showAlertToast('You have new notification(s).');
+    };
+  },
 };
