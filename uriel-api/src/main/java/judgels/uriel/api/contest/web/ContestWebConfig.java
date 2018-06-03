@@ -12,6 +12,7 @@ public interface ContestWebConfig {
     Set<ContestTab> getVisibleTabs();
     ContestState getContestState();
     Optional<Duration> getRemainingContestStateDuration();
+    long getAnnouncementsCount();
 
     class Builder extends ImmutableContestWebConfig.Builder {}
 }
