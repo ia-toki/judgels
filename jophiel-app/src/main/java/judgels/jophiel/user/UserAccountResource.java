@@ -11,21 +11,25 @@ import judgels.jophiel.api.user.password.PasswordResetData;
 import judgels.jophiel.api.user.registration.UserRegistrationData;
 import judgels.jophiel.user.password.UserPasswordResetter;
 import judgels.jophiel.user.registration.UserRegisterer;
+import judgels.jophiel.user.registration.UserRegistrationEmailStore;
 
 public class UserAccountResource implements UserAccountService {
     private final UserStore userStore;
     private final Optional<UserRegisterer> userRegisterer;
     private final Optional<UserPasswordResetter> userPasswordResetter;
+    private final UserRegistrationEmailStore userRegistrationEmailStore;
 
     @Inject
     public UserAccountResource(
             UserStore userStore,
             Optional<UserRegisterer> userRegisterer,
-            Optional<UserPasswordResetter> userPasswordResetter) {
+            Optional<UserPasswordResetter> userPasswordResetter,
+            UserRegistrationEmailStore userRegistrationEmailStore) {
 
         this.userStore = userStore;
         this.userRegisterer = userRegisterer;
         this.userPasswordResetter = userPasswordResetter;
+        this.userRegistrationEmailStore = userRegistrationEmailStore;
     }
 
     @Override
@@ -43,7 +47,8 @@ public class UserAccountResource implements UserAccountService {
     @Override
     @UnitOfWork
     public void requestToResetPassword(String email) {
-        User user = checkFound(userStore.findUserByEmail(email));
+        User user = checkFound(userStore.findUserByEmail(email)
+                .filter(u -> userRegistrationEmailStore.isUserActivated(u.getJid())));
         checkFound(userPasswordResetter).request(user, email);
     }
 
