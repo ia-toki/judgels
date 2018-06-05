@@ -216,6 +216,45 @@ class RoleCheckerIntegrationTests {
     }
 
     @Test
+    void view_own_clarifications() {
+        assertThat(roleChecker.canViewOwnClarifications(ADMIN, contestA)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(ADMIN, contestAStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(ADMIN, contestB)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(ADMIN, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(ADMIN, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(ADMIN, contestC)).isTrue();
+
+        assertThat(roleChecker.canViewOwnClarifications(USER, contestA)).isFalse();
+        assertThat(roleChecker.canViewOwnClarifications(USER, contestAStarted)).isFalse();
+        assertThat(roleChecker.canViewOwnClarifications(USER, contestB)).isFalse();
+        assertThat(roleChecker.canViewOwnClarifications(USER, contestC)).isFalse();
+
+        assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestA)).isFalse();
+        assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestB)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestC)).isFalse();
+
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestA)).isFalse();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestB)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestC)).isFalse();
+        addSupervisorToContestBWithPermission(SupervisorPermissionType.CLARIFICATION);
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestA)).isFalse();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestB)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(roleChecker.canViewOwnClarifications(MANAGER, contestA)).isFalse();
+        assertThat(roleChecker.canViewOwnClarifications(MANAGER, contestB)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(MANAGER, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(MANAGER, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
     void view_problems() {
         assertThat(roleChecker.canViewProblems(ADMIN, contestA)).isTrue();
         assertThat(roleChecker.canViewProblems(ADMIN, contestAStarted)).isTrue();
