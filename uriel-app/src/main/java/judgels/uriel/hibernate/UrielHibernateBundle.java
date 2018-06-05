@@ -5,6 +5,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import judgels.uriel.UrielApplicationConfiguration;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestAnnouncementModel;
+import judgels.uriel.persistence.ContestClarificationModel;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestGradingModel;
 import judgels.uriel.persistence.ContestManagerModel;
@@ -21,16 +22,17 @@ public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfig
         super(
                 AdminRoleModel.class,
                 ContestModel.class,
-                ContestStyleModel.class,
                 ContestAnnouncementModel.class,
-                ContestScoreboardModel.class,
+                ContestClarificationModel.class,
                 ContestContestantModel.class,
-                ContestSupervisorModel.class,
+                ContestGradingModel.class,
                 ContestManagerModel.class,
                 ContestModuleModel.class,
                 ContestProblemModel.class,
-                ContestGradingModel.class,
-                ContestSubmissionModel.class
+                ContestScoreboardModel.class,
+                ContestStyleModel.class,
+                ContestSubmissionModel.class,
+                ContestSupervisorModel.class
         );
     }
 

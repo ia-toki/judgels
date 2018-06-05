@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
 import judgels.uriel.contest.ContestResource;
 import judgels.uriel.contest.announcement.ContestAnnouncementResource;
+import judgels.uriel.contest.clarification.ContestClarificationResource;
 import judgels.uriel.contest.contestant.ContestContestantResource;
 import judgels.uriel.contest.problem.ContestProblemResource;
 import judgels.uriel.contest.scoreboard.ContestScoreboardResource;
@@ -34,9 +35,10 @@ public interface UrielComponent {
     ContestResource contestResource();
     ContestWebResource contestWebResource();
     ContestAnnouncementResource contestAnnouncementResource();
+    ContestClarificationResource contestClarificationResource();
+    ContestContestantResource contestContestantResource();
     ContestProblemResource contestProblemResource();
     ContestScoreboardResource contestScoreboardResource();
-    ContestContestantResource contestContestantResource();
     ContestSubmissionResource contestSubmissionResource();
     VersionResource versionResource();
 }

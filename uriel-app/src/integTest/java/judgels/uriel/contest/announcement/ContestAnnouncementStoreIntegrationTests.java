@@ -67,6 +67,6 @@ class ContestAnnouncementStoreIntegrationTests {
         assertThat(announcement1.getStatus()).isEqualTo(ContestAnnouncementStatus.PUBLISHED);
 
         List<ContestAnnouncement> announcements = store.getAnnouncements(contest.getJid(), USER);
-        assertThat(announcements).containsExactly(announcement1, announcement3);
+        assertThat(announcements).containsExactly(announcement3, announcement1);
     }
 }

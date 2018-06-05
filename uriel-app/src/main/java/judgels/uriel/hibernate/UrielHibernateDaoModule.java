@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestAnnouncementDao;
+import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestGradingDao;
@@ -41,7 +42,7 @@ public class UrielHibernateDaoModule {
     }
 
     @Provides
-    static ContestScoreboardDao contestScoreboardDao(ContestScoreboardHibernateDao dao) {
+    static ContestClarificationDao contestClarificationDao(ContestClarificationHibernateDao dao) {
         return dao;
     }
 
@@ -51,17 +52,12 @@ public class UrielHibernateDaoModule {
     }
 
     @Provides
-    static ContestSupervisorDao contestSupervisorDao(ContestSupervisorHibernateDao dao) {
+    static ContestGradingDao contestGradingDao(ContestGradingHibernateDao dao) {
         return dao;
     }
 
     @Provides
     static ContestManagerDao contestManagerDao(ContestManagerHibernateDao dao) {
-        return dao;
-    }
-
-    @Provides
-    static ContestRoleDao contestRoleDao(ContestRoleHibernateDao dao) {
         return dao;
     }
 
@@ -76,12 +72,22 @@ public class UrielHibernateDaoModule {
     }
 
     @Provides
+    static ContestRoleDao contestRoleDao(ContestRoleHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ContestScoreboardDao contestScoreboardDao(ContestScoreboardHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
     static ContestSubmissionDao contestSubmissionDao(ContestSubmissionHibernateDao dao) {
         return dao;
     }
 
     @Provides
-    static ContestGradingDao contestGradingDao(ContestGradingHibernateDao dao) {
+    static ContestSupervisorDao contestSupervisorDao(ContestSupervisorHibernateDao dao) {
         return dao;
     }
 }

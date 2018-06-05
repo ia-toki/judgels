@@ -11,14 +11,14 @@ public interface ContestClarification {
     long getId();
     String getJid();
     String getUserJid();
-    String getTopic();
+    String getTopicJid();
     String getTitle();
     String getQuestion();
     ContestClarificationStatus getStatus();
     Instant getTime();
 
-    Optional<String> getAnswererJid();
     Optional<String> getAnswer();
+    Optional<String> getAnswererJid();
     Optional<Instant> getAnsweredTime();
 
     class Builder extends ImmutableContestClarification.Builder {}
