@@ -1,10 +1,10 @@
 import { selectToken } from '../../../../../../../../../../modules/session/sessionSelectors';
 
 export const contestAnnouncementActions = {
-  fetchList: (contestJid: string) => {
+  fetchPublishedList: (contestJid: string) => {
     return async (dispatch, getState, { contestAnnouncementAPI }) => {
       const token = selectToken(getState());
-      return await contestAnnouncementAPI.getAnnouncements(token, contestJid);
+      return await contestAnnouncementAPI.getPublishedAnnouncements(token, contestJid);
     };
   },
 

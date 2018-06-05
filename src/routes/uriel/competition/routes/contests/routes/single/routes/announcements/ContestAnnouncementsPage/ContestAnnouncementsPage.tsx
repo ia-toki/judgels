@@ -6,23 +6,18 @@ import { LoadingState } from '../../../../../../../../../../components/LoadingSt
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import { AppState } from '../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
-import { UsersMap } from '../../../../../../../../../../modules/api/jophiel/user';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
-import {
-  ContestAnnouncement,
-  ContestAnnouncementsResponse,
-} from '../../../../../../../../../../modules/api/uriel/contestAnnouncement';
+import { ContestAnnouncement } from '../../../../../../../../../../modules/api/uriel/contestAnnouncement';
 import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../modules/contestAnnouncementActions';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 
 export interface ContestAnnouncementsPageProps {
   contest: Contest;
-  onFetchAnnouncements: (contestJid: string) => Promise<ContestAnnouncementsResponse>;
+  onFetchPublishedAnnouncements: (contestJid: string) => Promise<ContestAnnouncement[]>;
 }
 
 interface ContestAnnouncementsPageState {
   announcements?: ContestAnnouncement[];
-  usersMap?: UsersMap;
 }
 
 export class ContestAnnouncementsPage extends React.PureComponent<
@@ -32,10 +27,9 @@ export class ContestAnnouncementsPage extends React.PureComponent<
   state: ContestAnnouncementsPageState = {};
 
   async componentDidMount() {
-    const { data, usersMap } = await this.props.onFetchAnnouncements(this.props.contest.jid);
+    const announcements = await this.props.onFetchPublishedAnnouncements(this.props.contest.jid);
     this.setState({
-      announcements: data,
-      usersMap,
+      announcements,
     });
   }
 
@@ -50,8 +44,8 @@ export class ContestAnnouncementsPage extends React.PureComponent<
   }
 
   private renderAnnouncements = () => {
-    const { announcements, usersMap } = this.state;
-    if (!announcements || !usersMap) {
+    const { announcements } = this.state;
+    if (!announcements) {
       return <LoadingState />;
     }
 
@@ -81,7 +75,7 @@ function createContestAnnouncementsPage(contestAnnouncementActions) {
   });
 
   const mapDispatchToProps = {
-    onFetchAnnouncements: contestAnnouncementActions.fetchList,
+    onFetchPublishedAnnouncements: contestAnnouncementActions.fetchPublishedList,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));

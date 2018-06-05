@@ -1,6 +1,6 @@
 import { contestAnnouncementActions } from './contestAnnouncementActions';
 import { contestJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
-import { ContestAnnouncementsResponse } from '../../../../../../../../../../modules/api/uriel/contestAnnouncement';
+import { ContestAnnouncement } from '../../../../../../../../../../modules/api/uriel/contestAnnouncement';
 import { AppState } from '../../../../../../../../../../modules/store';
 
 describe('contestAnnouncementActions', () => {
@@ -13,23 +13,24 @@ describe('contestAnnouncementActions', () => {
     dispatch = jest.fn();
 
     contestAnnouncementAPI = {
-      getAnnouncements: jest.fn(),
+      getPublishedAnnouncements: jest.fn(),
     };
   });
 
-  describe('fetchList()', () => {
-    const { fetchList } = contestAnnouncementActions;
-    const doFetchList = async () => fetchList(contestJid)(dispatch, getState, { contestAnnouncementAPI });
+  describe('fetchPublishedList()', () => {
+    const { fetchPublishedList } = contestAnnouncementActions;
+    const doFetchPublishedList = async () =>
+      fetchPublishedList(contestJid)(dispatch, getState, { contestAnnouncementAPI });
 
     beforeEach(async () => {
-      const announcements = {} as ContestAnnouncementsResponse;
-      contestAnnouncementAPI.getAnnouncements.mockReturnValue(announcements);
+      const announcements = [] as ContestAnnouncement[];
+      contestAnnouncementAPI.getPublishedAnnouncements.mockReturnValue(announcements);
 
-      await doFetchList();
+      await doFetchPublishedList();
     });
 
     it('calls API to get contest announcements', () => {
-      expect(contestAnnouncementAPI.getAnnouncements).toHaveBeenCalledWith(token, contestJid);
+      expect(contestAnnouncementAPI.getPublishedAnnouncements).toHaveBeenCalledWith(token, contestJid);
     });
   });
 });
