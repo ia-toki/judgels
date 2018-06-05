@@ -46,9 +46,9 @@ class ContestWebConfigFetcherTests {
                 .duration(Duration.of(5, HOURS))
                 .build();
 
-        when(roleChecker.canViewAnnouncements(USER, contest)).thenReturn(true);
-        when(roleChecker.canViewAnnouncements(CONTESTANT, contest)).thenReturn(true);
-        when(roleChecker.canViewAnnouncements(SUPERVISOR, contest)).thenReturn(true);
+        when(roleChecker.canViewPublishedAnnouncements(USER, contest)).thenReturn(true);
+        when(roleChecker.canViewPublishedAnnouncements(CONTESTANT, contest)).thenReturn(true);
+        when(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contest)).thenReturn(true);
 
         when(roleChecker.canViewProblems(USER, contest)).thenReturn(true);
         when(roleChecker.canViewProblems(CONTESTANT, contest)).thenReturn(true);

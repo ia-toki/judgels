@@ -43,7 +43,7 @@ public class RoleChecker {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 
-    public boolean canViewAnnouncements(String userJid, Contest contest) {
+    public boolean canViewPublishedAnnouncements(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 

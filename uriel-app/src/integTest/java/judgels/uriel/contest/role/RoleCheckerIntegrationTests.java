@@ -173,46 +173,46 @@ class RoleCheckerIntegrationTests {
     }
 
     @Test
-    void view_announcements() {
-        assertThat(roleChecker.canViewAnnouncements(ADMIN, contestA)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(ADMIN, contestAStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(ADMIN, contestB)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(ADMIN, contestBStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(ADMIN, contestBFinished)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(ADMIN, contestC)).isTrue();
+    void view_published_announcements() {
+        assertThat(roleChecker.canViewPublishedAnnouncements(ADMIN, contestA)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(ADMIN, contestAStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(ADMIN, contestB)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(ADMIN, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(ADMIN, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(ADMIN, contestC)).isTrue();
 
-        assertThat(roleChecker.canViewAnnouncements(USER, contestA)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(USER, contestAStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(USER, contestB)).isFalse();
-        assertThat(roleChecker.canViewAnnouncements(USER, contestC)).isFalse();
+        assertThat(roleChecker.canViewPublishedAnnouncements(USER, contestA)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(USER, contestAStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(USER, contestB)).isFalse();
+        assertThat(roleChecker.canViewPublishedAnnouncements(USER, contestC)).isFalse();
 
-        assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestA)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestAStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestB)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestBStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestBFinished)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(CONTESTANT, contestC)).isFalse();
+        assertThat(roleChecker.canViewPublishedAnnouncements(CONTESTANT, contestA)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(CONTESTANT, contestAStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(CONTESTANT, contestB)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(CONTESTANT, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(CONTESTANT, contestC)).isFalse();
 
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestA)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestAStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestB)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestBFinished)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestC)).isFalse();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestA)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestAStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestB)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(SupervisorPermissionType.ANNOUNCEMENT);
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestA)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestAStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestB)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestBFinished)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(SUPERVISOR, contestC)).isFalse();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestA)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestAStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestB)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contestC)).isFalse();
 
-        assertThat(roleChecker.canViewAnnouncements(MANAGER, contestA)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(MANAGER, contestAStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(MANAGER, contestB)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(MANAGER, contestBStarted)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(MANAGER, contestBFinished)).isTrue();
-        assertThat(roleChecker.canViewAnnouncements(MANAGER, contestC)).isFalse();
+        assertThat(roleChecker.canViewPublishedAnnouncements(MANAGER, contestA)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(MANAGER, contestAStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(MANAGER, contestB)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(MANAGER, contestBStarted)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(MANAGER, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewPublishedAnnouncements(MANAGER, contestC)).isFalse();
     }
 
     @Test
