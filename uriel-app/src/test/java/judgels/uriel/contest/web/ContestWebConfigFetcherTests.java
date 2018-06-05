@@ -2,6 +2,7 @@ package judgels.uriel.contest.web;
 
 import static java.time.temporal.ChronoUnit.HOURS;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
+import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
@@ -60,6 +61,9 @@ class ContestWebConfigFetcherTests {
 
         when(roleChecker.canViewOwnSubmissions(CONTESTANT, contest)).thenReturn(true);
         when(roleChecker.canViewOwnSubmissions(SUPERVISOR, contest)).thenReturn(true);
+
+        when(roleChecker.canViewOwnClarifications(CONTESTANT, contest)).thenReturn(true);
+        when(roleChecker.canViewOwnClarifications(SUPERVISOR, contest)).thenReturn(true);
     }
 
     @Test
@@ -68,9 +72,9 @@ class ContestWebConfigFetcherTests {
                 .containsExactly(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD);
 
         assertThat(webConfigFetcher.fetchConfig(CONTESTANT, contest).getVisibleTabs())
-                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD, SUBMISSIONS);
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
 
         assertThat(webConfigFetcher.fetchConfig(SUPERVISOR, contest).getVisibleTabs())
-                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SCOREBOARD, SUBMISSIONS);
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
     }
 }

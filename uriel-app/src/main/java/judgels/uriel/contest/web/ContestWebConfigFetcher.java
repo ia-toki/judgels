@@ -1,6 +1,7 @@
 package judgels.uriel.contest.web;
 
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
+import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
@@ -37,12 +38,16 @@ public class ContestWebConfigFetcher {
             visibleTabs.add(PROBLEMS);
         }
 
-        if (roleChecker.canViewDefaultScoreboard(userJid, contest)) {
-            visibleTabs.add(SCOREBOARD);
-        }
-
         if (roleChecker.canViewOwnSubmissions(userJid, contest)) {
             visibleTabs.add(SUBMISSIONS);
+        }
+
+        if (roleChecker.canViewOwnClarifications(userJid, contest)) {
+            visibleTabs.add(CLARIFICATIONS);
+        }
+
+        if (roleChecker.canViewDefaultScoreboard(userJid, contest)) {
+            visibleTabs.add(SCOREBOARD);
         }
 
         // TODO(fushar): unit tests
