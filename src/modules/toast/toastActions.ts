@@ -20,7 +20,7 @@ export function createToastActions(toaster) {
 
     showAlertToast: (message: string) => {
       toaster.show({
-        icon: 'info-sign',
+        icon: 'envelope',
         message,
         intent: Intent.WARNING,
         timeout: 0,
