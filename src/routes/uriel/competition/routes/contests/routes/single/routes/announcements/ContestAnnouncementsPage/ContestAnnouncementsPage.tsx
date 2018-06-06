@@ -60,11 +60,11 @@ export class ContestAnnouncementsPage extends React.PureComponent<
     }
 
     return (
-      <div>
+      <>
         {announcements.map(announcement => (
           <ContestAnnouncementCard key={announcement.jid} announcement={announcement} />
         ))}
-      </div>
+      </>
     );
   };
 }

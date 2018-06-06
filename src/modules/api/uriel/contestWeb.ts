@@ -4,8 +4,9 @@ import { get } from '../http';
 export enum ContestTab {
   Announcements = 'ANNOUNCEMENTS',
   Problems = 'PROBLEMS',
-  Scoreboard = 'SCOREBOARD',
   Submissions = 'SUBMISSIONS',
+  Clarifications = 'CLARIFICATIONS',
+  Scoreboard = 'SCOREBOARD',
 }
 
 export interface ContestWebConfig {

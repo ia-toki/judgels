@@ -14,6 +14,7 @@ import ContestStateWidget from '../components/ContestStateWidget/ContestStateWid
 import ContestAnnouncementsWidget from '../components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
+import ContestClarificationsPage from './clarifications/ContestClarificationsPage/ContestClarificationsPage';
 import ContestProblemRoutes from './problems/routes/ContestProblemRoutes';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import ContestSubmissionRoutes from './submissions/routes/ContestSubmissionRoutes';
@@ -79,18 +80,6 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       },
     ];
   }
-  if (visibleTabs.indexOf(ContestTab.Scoreboard) !== -1) {
-    sidebarItems = [
-      ...sidebarItems,
-      {
-        id: 'scoreboard',
-        titleIcon: 'th',
-        title: 'Scoreboard',
-        routeComponent: Route,
-        component: ContestScoreboardPage,
-      },
-    ];
-  }
   if (visibleTabs.indexOf(ContestTab.Submissions) !== -1) {
     sidebarItems = [
       ...sidebarItems,
@@ -100,6 +89,30 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
         title: 'Submissions',
         routeComponent: Route,
         component: ContestSubmissionRoutes,
+      },
+    ];
+  }
+  if (visibleTabs.indexOf(ContestTab.Clarifications) !== -1) {
+    sidebarItems = [
+      ...sidebarItems,
+      {
+        id: 'clarifications',
+        titleIcon: 'chat',
+        title: 'Clarifications',
+        routeComponent: Route,
+        component: ContestClarificationsPage,
+      },
+    ];
+  }
+  if (visibleTabs.indexOf(ContestTab.Scoreboard) !== -1) {
+    sidebarItems = [
+      ...sidebarItems,
+      {
+        id: 'scoreboard',
+        titleIcon: 'th',
+        title: 'Scoreboard',
+        routeComponent: Route,
+        component: ContestScoreboardPage,
       },
     ];
   }
