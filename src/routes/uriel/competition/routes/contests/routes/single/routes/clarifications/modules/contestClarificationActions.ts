@@ -8,7 +8,7 @@ export const contestClarificationActions = {
     };
   },
 
-  alertNew: () => {
+  alertNewAnswered: () => {
     return async (dispatch, getState, { toastActions }) => {
       toastActions.showAlertToast('You have new answered clarification(s).');
     };

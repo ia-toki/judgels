@@ -14,6 +14,7 @@ export interface ContestWebConfig {
   contestState: ContestState;
   remainingContestStateDuration?: number;
   announcementsCount: number;
+  answeredClarificationsCount: number;
 }
 
 export enum ContestState {

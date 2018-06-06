@@ -12,6 +12,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 import ContestStateWidget from '../components/ContestStateWidget/ContestStateWidget';
 import ContestAnnouncementsWidget from '../components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
+import ContestClarificationsWidget from '../components/ContestClarificationsWidget/ContestClarificationsWidget';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestClarificationsPage from './clarifications/ContestClarificationsPage/ContestClarificationsPage';
@@ -98,7 +99,15 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       {
         id: 'clarifications',
         titleIcon: 'chat',
-        title: 'Clarifications',
+        title: (
+          <div className="tab-item-with-widget">
+            <div className="tab-item-with-widget__name">Clarifications</div>
+            <div className="tab-item-with-widget__widget">
+              <ContestClarificationsWidget />
+            </div>
+            <div className="clearfix" />
+          </div>
+        ),
         routeComponent: Route,
         component: ContestClarificationsPage,
       },
