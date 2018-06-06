@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.ws.rs.ForbiddenException;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
+import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 
 public class SandalphonUtils {
@@ -56,5 +57,13 @@ public class SandalphonUtils {
             return r1;
         }
         return LanguageRestriction.of(Sets.intersection(r1.getAllowedLanguages(), r2.getAllowedLanguages()));
+    }
+
+    public static String getProblemName(ProblemInfo problem, Optional<String> language) {
+        String finalLanguage = problem.getDefaultLanguage();
+        if (language.isPresent() && problem.getNamesByLanguage().containsKey(language.get())) {
+            finalLanguage = language.get();
+        }
+        return problem.getNamesByLanguage().get(finalLanguage);
     }
 }

@@ -23,6 +23,7 @@ import judgels.jophiel.api.user.UserService;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
@@ -140,16 +141,11 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .source(source)
                 .build();
 
-        String finalLanguage = problem.getDefaultLanguage();
-        if (language.isPresent() && problem.getNamesByLanguage().containsKey(language.get())) {
-            finalLanguage = language.get();
-        }
-
         return new SubmissionWithSourceResponse.Builder()
                 .data(submissionWithSource)
                 .user(user)
                 .problemAlias(contestProblem.getAlias())
-                .problemName(problem.getNamesByLanguage().get(finalLanguage))
+                .problemName(SandalphonUtils.getProblemName(problem, language))
                 .containerName(contest.getName())
                 .build();
     }
