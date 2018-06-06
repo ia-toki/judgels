@@ -16,6 +16,7 @@ import judgels.persistence.FixedClock;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.persistence.ContestAnnouncementDao;
+import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.role.RoleChecker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ class ContestWebConfigFetcherTests {
 
     @Mock private RoleChecker roleChecker;
     @Mock private ContestAnnouncementDao announcementDao;
+    @Mock private ContestClarificationDao clarificationDao;
 
     private ContestWebConfigFetcher webConfigFetcher;
     private Contest contest;
@@ -36,7 +38,12 @@ class ContestWebConfigFetcherTests {
     void before() {
         initMocks(this);
 
-        webConfigFetcher = new ContestWebConfigFetcher(roleChecker, announcementDao, new FixedClock());
+        webConfigFetcher = new ContestWebConfigFetcher(
+                roleChecker,
+                announcementDao,
+                clarificationDao,
+                new FixedClock());
+
         contest = new Contest.Builder()
                 .id(1)
                 .jid("jid")

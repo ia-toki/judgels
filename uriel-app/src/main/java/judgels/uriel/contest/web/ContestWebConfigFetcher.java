@@ -16,17 +16,25 @@ import judgels.uriel.api.contest.web.ContestState;
 import judgels.uriel.api.contest.web.ContestTab;
 import judgels.uriel.api.contest.web.ContestWebConfig;
 import judgels.uriel.persistence.ContestAnnouncementDao;
+import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.role.RoleChecker;
 
 public class ContestWebConfigFetcher {
     private final RoleChecker roleChecker;
     private final ContestAnnouncementDao announcementDao;
+    private final ContestClarificationDao clarificationDao;
     private final Clock clock;
 
     @Inject
-    public ContestWebConfigFetcher(RoleChecker roleChecker, ContestAnnouncementDao announcementDao, Clock clock) {
+    public ContestWebConfigFetcher(
+            RoleChecker roleChecker,
+            ContestAnnouncementDao announcementDao,
+            ContestClarificationDao clarificationDao,
+            Clock clock) {
+
         this.roleChecker = roleChecker;
         this.announcementDao = announcementDao;
+        this.clarificationDao = clarificationDao;
         this.clock = clock;
     }
 
@@ -66,12 +74,15 @@ public class ContestWebConfigFetcher {
         }
 
         long announcementsCount = announcementDao.selectCountPublishedByContestJid(contest.getJid());
+        long answeredClarificationsCount =
+                clarificationDao.selectCountAnsweredByContestJidAndUserJid(contest.getJid(), userJid);
 
         return new ContestWebConfig.Builder()
                 .visibleTabs(visibleTabs.build())
                 .contestState(contestState)
                 .remainingContestStateDuration(remainingContestStateDuration)
                 .announcementsCount(announcementsCount)
+                .answeredClarificationsCount(answeredClarificationsCount)
                 .build();
     }
 }

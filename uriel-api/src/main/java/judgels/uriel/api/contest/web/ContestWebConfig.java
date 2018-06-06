@@ -13,6 +13,7 @@ public interface ContestWebConfig {
     ContestState getContestState();
     Optional<Duration> getRemainingContestStateDuration();
     long getAnnouncementsCount();
+    long getAnsweredClarificationsCount();
 
     class Builder extends ImmutableContestWebConfig.Builder {}
 }
