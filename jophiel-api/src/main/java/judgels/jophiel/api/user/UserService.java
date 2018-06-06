@@ -56,4 +56,9 @@ public interface UserService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     Map<String, User> findUsersByUsernames(Set<String> usernames);
+
+    @POST
+    @Path("/passwords")
+    @Consumes(APPLICATION_JSON)
+    void updateUserPasswords(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, Map<String, String> jidToPasswordMap);
 }

@@ -33,4 +33,9 @@ public class RoleChecker {
                 || adminRoleStore.isAdmin(actorJid)
                 || actorJid.equals(userJid);
     }
+
+    public boolean canUpdateUserList(String actorJid) {
+        return superadminRoleStore.isSuperadmin(actorJid)
+                || adminRoleStore.isAdmin(actorJid);
+    }
 }

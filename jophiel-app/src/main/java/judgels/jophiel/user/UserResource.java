@@ -93,4 +93,12 @@ public class UserResource implements UserService {
     public Map<String, User> findUsersByUsernames(Set<String> usernames) {
         return userStore.findUsersByUsernames(usernames);
     }
+
+    @Override
+    @UnitOfWork
+    public void updateUserPasswords(AuthHeader authHeader, Map<String, String> jidToPasswordMap) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canUpdateUserList(actorJid));
+        jidToPasswordMap.forEach(userStore::updateUserPassword);
+    }
 }

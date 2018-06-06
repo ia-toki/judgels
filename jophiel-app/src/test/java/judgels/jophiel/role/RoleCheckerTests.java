@@ -56,4 +56,11 @@ class RoleCheckerTests {
         assertThat(checker.canUpdateUser(USER, USER)).isTrue();
         assertThat(checker.canUpdateUser(USER, ANOTHER_USER)).isFalse();
     }
+
+    @Test
+    void update_user_list() {
+        assertThat(checker.canUpdateUserList(SUPERADMIN)).isTrue();
+        assertThat(checker.canUpdateUserList(ADMIN)).isTrue();
+        assertThat(checker.canUpdateUserList(USER)).isFalse();
+    }
 }
