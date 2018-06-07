@@ -14,6 +14,7 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserInfo;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.role.RoleChecker;
+import judgels.jophiel.session.SessionStore;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
@@ -24,16 +25,19 @@ public class UserResource implements UserService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
     private final UserStore userStore;
+    private final SessionStore sessionStore;
 
     @Inject
     public UserResource(
             ActorChecker actorChecker,
             RoleChecker roleChecker,
-            UserStore userStore) {
+            UserStore userStore,
+            SessionStore sessionStore) {
 
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
         this.userStore = userStore;
+        this.sessionStore = sessionStore;
     }
 
     @Override
@@ -100,5 +104,6 @@ public class UserResource implements UserService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canUpdateUserList(actorJid));
         jidToPasswordMap.forEach(userStore::updateUserPassword);
+        jidToPasswordMap.keySet().forEach(sessionStore::deleteSessionsByUserJid);
     }
 }

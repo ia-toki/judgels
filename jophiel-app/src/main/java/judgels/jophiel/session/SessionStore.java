@@ -48,6 +48,10 @@ public class SessionStore {
         sessionDao.selectByToken(token).ifPresent(sessionDao::delete);
     }
 
+    public void deleteSessionsByUserJid(String userJid) {
+        sessionDao.selectAllByUserJid(userJid).forEach(sessionDao::delete);
+    }
+
     private static Session fromModel(SessionModel model) {
         return Session.of(model.token, model.userJid);
     }
