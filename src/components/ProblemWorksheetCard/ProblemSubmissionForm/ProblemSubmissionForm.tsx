@@ -105,7 +105,10 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
   state: ProblemSubmissionFormState = {};
 
   componentDidMount() {
-    const gradingLanguages = getAllowedGradingLanguages(this.props.config.gradingLanguageRestriction);
+    const gradingLanguages = getAllowedGradingLanguages(
+      this.props.config.gradingEngine,
+      this.props.config.gradingLanguageRestriction
+    );
     this.setState({ gradingLanguages });
 
     let defaultGradingLanguage: string | null = preferredGradingLanguage;

@@ -1,3 +1,5 @@
+import { GradingEngineCode } from './engine';
+
 export interface LanguageRestriction {
   allowedLanguageNames: string[];
 }
@@ -8,6 +10,7 @@ export const gradingLanguageNamesMap = {
   Java: 'Java 8',
   Pascal: 'Pascal',
   Python3: 'Python 3',
+  OutputOnly: '-',
 };
 
 export const gradingLanguageFilenameExtensionsMap = {
@@ -16,6 +19,7 @@ export const gradingLanguageFilenameExtensionsMap = {
   Java: ['java'],
   Pascal: ['pas'],
   Python3: ['py'],
+  OutputOnly: ['zip'],
 };
 
 export const preferredGradingLanguage = 'Cpp11';
@@ -30,7 +34,10 @@ export function getGradingLanguageFilenameExtensions(code: string): string[] {
   return gradingLanguageFilenameExtensionsMap[code] || [];
 }
 
-export function getAllowedGradingLanguages(restriction: LanguageRestriction) {
+export function getAllowedGradingLanguages(gradingEngine: string, restriction: LanguageRestriction) {
+  if (gradingEngine === GradingEngineCode.OutputOnly) {
+    return ['OutputOnly'];
+  }
   if (restriction.allowedLanguageNames.length === 0) {
     return gradingLanguages;
   }
