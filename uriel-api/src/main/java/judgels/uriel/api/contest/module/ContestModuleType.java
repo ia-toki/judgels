@@ -4,4 +4,5 @@ public enum ContestModuleType {
     FROZEN_SCOREBOARD,
     REGISTRATION,
     SCOREBOARD,
+    VIRTUAL,
 }

@@ -4,7 +4,6 @@ import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.PROB
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.SCOREBOARD;
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.SUBMISSION;
 
-import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
@@ -12,25 +11,26 @@ import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
+import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestRoleDao;
 
 public class RoleChecker {
-    private final Clock clock;
     private final AdminRoleDao adminRoleDao;
     private final ContestRoleDao contestRoleDao;
+    private final ContestTimer contestTimer;
     private final ContestSupervisorStore supervisorStore;
 
     @Inject
     public RoleChecker(
-            Clock clock,
             AdminRoleDao adminRoleDao,
             ContestRoleDao contestRoleDao,
+            ContestTimer contestTimer,
             ContestSupervisorStore supervisorStore) {
 
-        this.clock = clock;
         this.adminRoleDao = adminRoleDao;
+        this.contestTimer = contestTimer;
         this.contestRoleDao = contestRoleDao;
         this.supervisorStore = supervisorStore;
     }
@@ -55,7 +55,7 @@ public class RoleChecker {
         if (canSuperviseProblems(userJid, contest)) {
             return true;
         }
-        return contestRoleDao.isViewerOrAbove(userJid, contest.getJid()) && contest.hasStarted(clock);
+        return contestRoleDao.isViewerOrAbove(userJid, contest.getJid()) && contestTimer.hasStarted(contest, userJid);
     }
 
     public boolean canSuperviseProblems(String userJid, Contest contest) {
@@ -71,10 +71,10 @@ public class RoleChecker {
                 && !isSupervisorWithPermissionOrAbove(userJid, contest, PROBLEM)) {
             return Optional.of("You are not a contestant.");
         }
-        if (!contest.hasStarted(clock)) {
+        if (!contestTimer.hasStarted(contest, userJid)) {
             return Optional.of("Contest has not started yet.");
         }
-        if (contest.hasFinished(clock)) {
+        if (contestTimer.hasFinished(contest, userJid)) {
             return Optional.of("Contest is over.");
         }
         if (contestantProblem.getProblem().getStatus() == ContestProblemStatus.CLOSED) {
@@ -91,7 +91,7 @@ public class RoleChecker {
         if (canSuperviseScoreboard(userJid, contest)) {
             return true;
         }
-        return contestRoleDao.isViewerOrAbove(userJid, contest.getJid()) && contest.hasStarted(clock);
+        return contestRoleDao.isViewerOrAbove(userJid, contest.getJid()) && contestTimer.hasStarted(contest, userJid);
     }
 
     public boolean canSuperviseScoreboard(String userJid, Contest contest) {
@@ -106,7 +106,8 @@ public class RoleChecker {
         if (canSuperviseSubmissions(userJid, contest)) {
             return true;
         }
-        return contestRoleDao.isContestantOrAbove(userJid, contest.getJid()) && contest.hasStarted(clock);
+        return contestRoleDao.isContestantOrAbove(userJid, contest.getJid())
+                && contestTimer.hasStarted(contest, userJid);
     }
 
     public boolean canSuperviseSubmissions(String userJid, Contest contest) {

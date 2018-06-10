@@ -1,5 +1,6 @@
 package judgels.uriel.persistence;
 
+import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
@@ -15,4 +16,8 @@ public class ContestContestantModel extends Model {
 
     @Column(nullable = false)
     public String userJid;
+
+    // TODO(fushar): make nullable
+    @Column(nullable = false)
+    public Instant contestStartTime;
 }

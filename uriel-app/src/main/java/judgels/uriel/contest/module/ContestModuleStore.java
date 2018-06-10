@@ -1,5 +1,10 @@
 package judgels.uriel.contest.module;
 
+import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
+import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
+import static judgels.uriel.api.contest.module.ContestModuleType.SCOREBOARD;
+import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -9,6 +14,7 @@ import javax.inject.Inject;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
+import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
 
@@ -23,23 +29,23 @@ public class ContestModuleStore {
     }
 
     public void upsertRegistrationModule(String contestJid) {
-        upsertModule(contestJid, ContestModuleType.REGISTRATION, Collections.emptyMap());
-    }
-
-    public void upsertScoreboardModule(String contestJid, ScoreboardModuleConfig config) {
-        upsertModule(contestJid, ContestModuleType.SCOREBOARD, config);
+        upsertModule(contestJid, REGISTRATION, Collections.emptyMap());
     }
 
     public void upsertFrozenScoreboardModule(String contestJid, FrozenScoreboardModuleConfig config) {
-        upsertModule(contestJid, ContestModuleType.FROZEN_SCOREBOARD, config);
+        upsertModule(contestJid, FROZEN_SCOREBOARD, config);
     }
 
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {
-        return getModuleConfig(contestJid, ContestModuleType.FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.class);
+        return getModuleConfig(contestJid, FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.class);
     }
 
     public Optional<ScoreboardModuleConfig> getScoreboardModuleConfig(String contestJid) {
-        return getModuleConfig(contestJid, ContestModuleType.SCOREBOARD, ScoreboardModuleConfig.class);
+        return getModuleConfig(contestJid, SCOREBOARD, ScoreboardModuleConfig.class);
+    }
+
+    public Optional<VirtualModuleConfig> getVirtualModuleConfig(String contestJid) {
+        return getModuleConfig(contestJid, VIRTUAL, VirtualModuleConfig.class);
     }
 
     public void upsertModule(String contestJid, ContestModuleType type, Object config) {

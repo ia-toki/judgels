@@ -3,6 +3,7 @@ package judgels.uriel.hibernate;
 import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,6 +29,14 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
     @Inject
     public ContestContestantHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
+    }
+
+    @Override
+    public Optional<ContestContestantModel> selectByContestJidAndUserJid(String contestJid, String userJid) {
+        return selectByFilter(new FilterOptions.Builder<ContestContestantModel>()
+                .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
+                .putColumnsEq(ContestContestantModel_.userJid, userJid)
+                .build());
     }
 
     @Override
