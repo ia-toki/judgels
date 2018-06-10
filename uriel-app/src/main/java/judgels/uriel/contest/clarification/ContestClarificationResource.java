@@ -17,6 +17,7 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.clarification.ContestClarification;
+import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationService;
 import judgels.uriel.api.contest.clarification.ContestClarificationsResponse;
 import judgels.uriel.contest.ContestStore;
@@ -50,6 +51,20 @@ public class ContestClarificationResource implements ContestClarificationService
         this.problemStore = problemStore;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
+    }
+
+    @Override
+    @UnitOfWork
+    public ContestClarification createClarification(
+            AuthHeader authHeader,
+            String contestJid,
+            ContestClarificationData clarificationData) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        checkAllowed(roleChecker.canCreateClarification(actorJid, contest));
+
+        return clarificationStore.createClarification(contestJid, clarificationData);
     }
 
     @Override

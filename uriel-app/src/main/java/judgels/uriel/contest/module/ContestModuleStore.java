@@ -1,5 +1,6 @@
 package judgels.uriel.contest.module;
 
+import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.SCOREBOARD;
@@ -28,6 +29,10 @@ public class ContestModuleStore {
         this.mapper = mapper;
     }
 
+    public void upsertClarificationModule(String contestJid) {
+        upsertModule(contestJid, CLARIFICATION, Collections.emptyMap());
+    }
+
     public void upsertRegistrationModule(String contestJid) {
         upsertModule(contestJid, REGISTRATION, Collections.emptyMap());
     }
@@ -38,6 +43,10 @@ public class ContestModuleStore {
 
     public void upsertVirtualModule(String contestJid, VirtualModuleConfig config) {
         upsertModule(contestJid, VIRTUAL, config);
+    }
+
+    public boolean hasClarificationModule(String contestJid) {
+        return moduleDao.selectByContestJidAndType(contestJid, CLARIFICATION).isPresent();
     }
 
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {

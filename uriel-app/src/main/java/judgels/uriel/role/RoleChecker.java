@@ -1,5 +1,6 @@
 package judgels.uriel.role;
 
+import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.CLARIFICATION;
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.PROBLEM;
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.SCOREBOARD;
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.SUBMISSION;
@@ -12,6 +13,7 @@ import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
 import judgels.uriel.contest.ContestTimer;
+import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestRoleDao;
@@ -20,6 +22,7 @@ public class RoleChecker {
     private final AdminRoleDao adminRoleDao;
     private final ContestRoleDao contestRoleDao;
     private final ContestTimer contestTimer;
+    private final ContestModuleStore moduleStore;
     private final ContestSupervisorStore supervisorStore;
 
     @Inject
@@ -27,11 +30,13 @@ public class RoleChecker {
             AdminRoleDao adminRoleDao,
             ContestRoleDao contestRoleDao,
             ContestTimer contestTimer,
+            ContestModuleStore moduleStore,
             ContestSupervisorStore supervisorStore) {
 
         this.adminRoleDao = adminRoleDao;
         this.contestTimer = contestTimer;
         this.contestRoleDao = contestRoleDao;
+        this.moduleStore = moduleStore;
         this.supervisorStore = supervisorStore;
     }
 
@@ -54,8 +59,20 @@ public class RoleChecker {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 
+    public boolean canCreateClarification(String userJid, Contest contest) {
+        return contestRoleDao.isContestant(userJid, contest.getJid())
+                && moduleStore.hasClarificationModule(contest.getJid())
+                && contestTimer.hasStarted(contest, userJid)
+                && !contestTimer.hasFinished(contest, userJid);
+    }
+
     public boolean canViewOwnClarifications(String userJid, Contest contest) {
-        return adminRoleDao.isAdmin(userJid) || contestRoleDao.isContestantOrAbove(userJid, contest.getJid());
+        if (adminRoleDao.isAdmin(userJid) || isSupervisorWithPermissionOrAbove(userJid, contest, CLARIFICATION)) {
+            return true;
+        }
+        return contestRoleDao.isContestant(userJid, contest.getJid())
+                && moduleStore.hasClarificationModule(contest.getJid())
+                && contestTimer.hasStarted(contest, userJid);
     }
 
     public boolean canViewProblems(String userJid, Contest contest) {

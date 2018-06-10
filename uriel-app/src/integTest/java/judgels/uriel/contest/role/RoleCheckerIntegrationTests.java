@@ -207,15 +207,15 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewOwnClarifications(USER, contestC)).isFalse();
 
         assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestA)).isFalse();
-        assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestB)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestB)).isFalse();
         assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestBStarted)).isTrue();
         assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewOwnClarifications(CONTESTANT, contestC)).isFalse();
 
         assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestA)).isFalse();
-        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestB)).isTrue();
-        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestBFinished)).isTrue();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestB)).isFalse();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestBFinished)).isFalse();
         assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(SupervisorPermissionType.CLARIFICATION);
         assertThat(roleChecker.canViewOwnClarifications(SUPERVISOR, contestA)).isFalse();
@@ -632,7 +632,9 @@ class RoleCheckerIntegrationTests {
                 .beginTime(NOW)
                 .build());
 
+        moduleStore.upsertClarificationModule(contestA.getJid());
         moduleStore.upsertRegistrationModule(contestA.getJid());
+        moduleStore.upsertClarificationModule(contestAStarted.getJid());
         moduleStore.upsertRegistrationModule(contestAStarted.getJid());
     }
 
@@ -650,6 +652,10 @@ class RoleCheckerIntegrationTests {
                 .name("Contest B - Ended")
                 .beginTime(NOW.minus(10, HOURS))
                 .build());
+
+        moduleStore.upsertClarificationModule(contestB.getJid());
+        moduleStore.upsertClarificationModule(contestBStarted.getJid());
+        moduleStore.upsertClarificationModule(contestBFinished.getJid());
 
         contestantStore.upsertContestant(contestB.getJid(), CONTESTANT);
         contestantStore.upsertContestant(contestBStarted.getJid(), CONTESTANT);
