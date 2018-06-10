@@ -17,7 +17,5 @@ public class ContestContestantModel extends Model {
     @Column(nullable = false)
     public String userJid;
 
-    // TODO(fushar): make nullable
-    @Column(nullable = false)
     public Instant contestStartTime;
 }

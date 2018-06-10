@@ -2,7 +2,6 @@ package judgels.uriel.contest.contestant;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +27,6 @@ public class ContestContestantStore {
         ContestContestantModel model = new ContestContestantModel();
         model.contestJid = contestJid;
         model.userJid = userJid;
-        model.contestStartTime = Instant.ofEpochMilli(0);
         contestantDao.insert(model);
     }
 
@@ -49,7 +47,6 @@ public class ContestContestantStore {
                     ContestContestantModel contestantModel = new ContestContestantModel();
                     contestantModel.contestJid = contestJid;
                     contestantModel.userJid = userJid;
-                    contestantModel.contestStartTime = Instant.ofEpochMilli(0);
                     return contestantModel;
                 })
                 .collect(Collectors.toList());
@@ -76,8 +73,7 @@ public class ContestContestantStore {
     private static ContestContestant fromModel(ContestContestantModel model) {
         return new ContestContestant.Builder()
                 .userJid(model.userJid)
-                .contestStartTime(Optional.ofNullable(
-                        model.contestStartTime.toEpochMilli() == 0 ? null : model.contestStartTime))
+                .contestStartTime(Optional.ofNullable(model.contestStartTime))
                 .build();
     }
 }
