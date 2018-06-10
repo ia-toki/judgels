@@ -18,10 +18,10 @@ export interface ContestWebConfig {
 }
 
 export enum ContestState {
-  None = 'NONE',
   NotBegun = 'NOT_BEGUN',
-  Running = 'RUNNING',
-  Ended = 'ENDED',
+  Begun = 'BEGUN',
+  Started = 'STARTED',
+  Finished = 'FINISHED',
 }
 
 export function createContestWebAPI() {

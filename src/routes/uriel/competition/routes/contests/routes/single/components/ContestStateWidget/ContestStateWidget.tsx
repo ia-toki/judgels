@@ -1,4 +1,4 @@
-import { Callout, Intent } from '@blueprintjs/core';
+import { Alert, Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
@@ -9,6 +9,7 @@ import { AppState } from '../../../../../../../../../modules/store';
 import { selectContest } from '../../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../../modules/contestWebConfigSelectors';
 import { contestWebConfigActions as injectedContestWebConfigActions } from '../../modules/contestWebConfigActions';
+import { contestActions as injectedContestActions } from '../../../../modules/contestActions';
 
 import './ContestStateWidget.css';
 
@@ -16,13 +17,16 @@ export interface ContestStateWidgetProps {
   contest: Contest;
   contestState: ContestState;
   remainingContestStateDuration?: number;
-  onFetchContestWebConfig: (contestJid: string) => void;
+  onFetchContestWebConfig: (contestJid: string) => Promise<void>;
+  onStartVirtualContest: (contestJid: string) => Promise<void>;
 }
 
 interface ContestStateWidgetState {
   baseRemainingDuration?: number;
   baseTimeForRemainingDuration?: number;
   remainingDuration?: number;
+  isVirtualContestAlertOpen?: boolean;
+  isVirtualContestButtonLoading?: boolean;
 }
 
 // TODO(fushar): unit tests
@@ -60,26 +64,56 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
         <div className="contest-state-widget__left">{leftComponent}</div>
         <div className="contest-state-widget__right">{rightComponent}</div>
         <div className="clearfix" />
+        {this.renderVirtualContestAlert()}
       </Callout>
     );
   }
+
+  private renderVirtualContestAlert = () => (
+    <Alert
+      isOpen={this.state.isVirtualContestAlertOpen || false}
+      confirmButtonText="Yes, start my participation"
+      onConfirm={this.startVirtualContest}
+      cancelButtonText="Cancel"
+      onCancel={this.cancelVirtualContest}
+      intent={Intent.WARNING}
+      icon="time"
+    >
+      Are you sure you want to start your participation in this contest?
+    </Alert>
+  );
 
   private getWidgetComponents = (): any => {
     const contestState = this.props.contestState;
 
     if (contestState === ContestState.NotBegun) {
       return {
-        leftComponent: <span>Contest hasn't begun yet.</span>,
-        rightComponent: <span>Begins in {this.getRemainingDuration()}</span>,
+        leftComponent: <span>Contest hasn't started yet.</span>,
+        rightComponent: <span>Starts in {this.getRemainingDuration()}</span>,
       };
     }
-    if (contestState === ContestState.Running) {
+    if (contestState === ContestState.Begun) {
+      return {
+        leftComponent: (
+          <Button
+            small
+            intent={Intent.WARNING}
+            onClick={this.alertVirtualContest}
+            loading={this.state.isVirtualContestButtonLoading}
+          >
+            Click here to start your participation
+          </Button>
+        ),
+        rightComponent: <span>Ends in {this.getRemainingDuration()}</span>,
+      };
+    }
+    if (contestState === ContestState.Started) {
       return {
         leftComponent: <span>Contest is running.</span>,
         rightComponent: <span>Ends in {this.getRemainingDuration()}</span>,
       };
     }
-    if (contestState === ContestState.Ended) {
+    if (contestState === ContestState.Finished) {
       return {
         leftComponent: <span>Contest is over.</span>,
       };
@@ -105,9 +139,24 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
 
     this.currentTimeout = setTimeout(() => this.refreshRemainingDuration(), 500);
   };
+
+  private alertVirtualContest = () => {
+    this.setState({ isVirtualContestAlertOpen: true });
+  };
+
+  private cancelVirtualContest = () => {
+    this.setState({ isVirtualContestAlertOpen: false, isVirtualContestButtonLoading: false });
+  };
+
+  private startVirtualContest = async () => {
+    this.setState({ isVirtualContestAlertOpen: false, isVirtualContestButtonLoading: true });
+    await this.props.onStartVirtualContest(this.props.contest.jid);
+    await this.props.onFetchContestWebConfig(this.props.contest.jid);
+    this.setState({ isVirtualContestButtonLoading: false });
+  };
 }
 
-export function createContestStateWidget(contestWebConfigActions) {
+export function createContestStateWidget(contestWebConfigActions, contestActions) {
   const mapStateToProps = (state: AppState) =>
     ({
       contest: selectContest(state)!,
@@ -117,9 +166,10 @@ export function createContestStateWidget(contestWebConfigActions) {
 
   const mapDispatchToProps = {
     onFetchContestWebConfig: contestWebConfigActions.fetch,
+    onStartVirtualContest: contestActions.startVirtual,
   };
 
   return connect(mapStateToProps, mapDispatchToProps)(ContestStateWidget);
 }
 
-export default createContestStateWidget(injectedContestWebConfigActions);
+export default createContestStateWidget(injectedContestWebConfigActions, injectedContestActions);

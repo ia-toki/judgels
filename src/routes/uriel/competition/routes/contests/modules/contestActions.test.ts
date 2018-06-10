@@ -17,6 +17,7 @@ describe('contestActions', () => {
       getActiveContests: jest.fn(),
       getPastContests: jest.fn(),
       getContestById: jest.fn(),
+      startVirtual: jest.fn(),
     };
   });
 
@@ -71,6 +72,19 @@ describe('contestActions', () => {
 
     it('puts the contest', () => {
       expect(dispatch).toHaveBeenCalledWith(PutContest.create(contest));
+    });
+  });
+
+  describe('startVirtual()', () => {
+    const { startVirtual } = contestActions;
+    const doStartVirtual = async () => startVirtual(contestId)(dispatch, getState, { contestAPI });
+
+    beforeEach(async () => {
+      await doStartVirtual();
+    });
+
+    it('calls API to start virtual contest', () => {
+      expect(contestAPI.startVirtual).toHaveBeenCalledWith(token, contestId);
     });
   });
 });

@@ -25,5 +25,12 @@ export const contestActions = {
     };
   },
 
+  startVirtual: (contestId: string) => {
+    return async (dispatch, getState, { contestAPI }) => {
+      const token = selectToken(getState());
+      await contestAPI.startVirtual(token, contestId);
+    };
+  },
+
   clear: DelContest.create,
 };

@@ -2,7 +2,7 @@ import { stringify } from 'query-string';
 
 import { APP_CONFIG } from '../../../conf';
 import { Page } from '../pagination';
-import { get } from '../http';
+import { get, post } from '../http';
 
 export interface Contest {
   id: number;
@@ -36,6 +36,10 @@ export function createContestAPI() {
 
     getContestById: (token: string, contestId: number): Promise<Contest> => {
       return get(`${baseURL}/id/${contestId}`, token);
+    },
+
+    startVirtual: (token: string, contestJid: string): Promise<Contest> => {
+      return post(`${baseURL}/${contestJid}/virtual`, token);
     },
   };
 }
