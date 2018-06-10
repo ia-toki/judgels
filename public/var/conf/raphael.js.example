@@ -10,4 +10,9 @@ window.conf = {
     urielUrl: 'http://uriel',
     jerahmeelUrl: 'http://jerahmeel',
   },
+  welcomeBanner: {
+    title: 'Welcome to TLX',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+  },
 };

@@ -24,13 +24,17 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
       </Link>
     </li>
   ));
-  return (
-    <div className="breadcrumbs">
-      <div className="breadcrumbs__content">
-        <ul className="pt-breadcrumbs">{items}</ul>
+  if (props.breadcrumbs.length === 0) {
+    return null;
+  } else {
+    return (
+      <div className="breadcrumbs">
+        <div className="breadcrumbs__content">
+          <ul className="pt-breadcrumbs">{items}</ul>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export function createBreadcrumbs() {
