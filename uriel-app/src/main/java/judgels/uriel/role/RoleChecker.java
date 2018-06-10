@@ -43,6 +43,13 @@ public class RoleChecker {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 
+    public boolean canStartVirtualContest(String userJid, Contest contest) {
+        return contestRoleDao.isContestant(userJid, contest.getJid())
+                && contestTimer.hasBegun(contest)
+                && !contestTimer.hasEnded(contest)
+                && !contestTimer.hasStarted(contest, userJid);
+    }
+
     public boolean canViewPublishedAnnouncements(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }

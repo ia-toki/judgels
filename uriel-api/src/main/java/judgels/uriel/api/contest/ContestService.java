@@ -32,12 +32,19 @@ public interface ContestService {
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestId") long contestId);
 
+    @POST
+    @Path("/{contestJid}/virtual")
+    void startVirtual(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid);
+
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
     Page<Contest> getContests(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("page") Optional<Integer> page);
+
     @GET
     @Path("/active")
     @Produces(APPLICATION_JSON)

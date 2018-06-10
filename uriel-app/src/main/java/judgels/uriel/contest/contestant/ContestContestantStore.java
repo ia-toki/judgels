@@ -2,6 +2,7 @@ package judgels.uriel.contest.contestant;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import java.time.Clock;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +17,12 @@ import judgels.uriel.persistence.ContestContestantModel;
 
 public class ContestContestantStore {
     private final ContestContestantDao contestantDao;
+    private final Clock clock;
 
     @Inject
-    public ContestContestantStore(ContestContestantDao contestantDao) {
+    public ContestContestantStore(ContestContestantDao contestantDao, Clock clock) {
         this.contestantDao = contestantDao;
+        this.clock = clock;
     }
 
     // temporary
@@ -33,6 +36,13 @@ public class ContestContestantStore {
     public Optional<ContestContestant> findContestant(String contestJid, String userJid) {
         return contestantDao.selectByContestJidAndUserJid(contestJid, userJid)
                 .map(ContestContestantStore::fromModel);
+    }
+
+    public void startVirtualContest(String contestJid, String userJid) {
+        contestantDao.selectByContestJidAndUserJid(contestJid, userJid).ifPresent(model -> {
+            model.contestStartTime = clock.instant();
+            contestantDao.update(model);
+        });
     }
 
     public Page<String> getContestantJids(String contestJid, SelectionOptions options) {

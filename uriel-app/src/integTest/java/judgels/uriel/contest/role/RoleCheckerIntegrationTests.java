@@ -5,12 +5,14 @@ import static judgels.uriel.UrielIntegrationTestPersistenceModule.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
+import java.time.Duration;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
@@ -56,7 +58,11 @@ class RoleCheckerIntegrationTests {
     private Contest contestBFinished;
     private Contest contestC;
 
+    private ContestStore contestStore;
+    private ContestModuleStore moduleStore;
+    private ContestContestantStore contestantStore;
     private ContestSupervisorStore supervisorStore;
+    private ContestManagerStore managerStore;
 
     private RoleChecker roleChecker;
 
@@ -67,64 +73,19 @@ class RoleCheckerIntegrationTests {
                 .build();
 
         AdminRoleStore adminRoleStore = component.adminRoleStore();
-        ContestStore contestStore = component.contestStore();
-        ContestModuleStore moduleStore = component.contestModuleStore();
-        ContestContestantStore contestantStore = component.contestContestantStore();
+        contestStore = component.contestStore();
+        moduleStore = component.contestModuleStore();
+        contestantStore = component.contestContestantStore();
         supervisorStore = component.contestSupervisorStore();
-        ContestManagerStore managerStore = component.contestManagerStore();
+        managerStore = component.contestManagerStore();
 
         roleChecker = component.roleChecker();
 
         adminRoleStore.addAdmin(ADMIN);
 
-        contestA = contestStore.createContest(new ContestData.Builder()
-                .name("Contest A")
-                .beginTime(NOW.plusMillis(1))
-                .build());
-        contestAStarted = contestStore.createContest(new ContestData.Builder()
-                .name("Contest A - Started")
-                .beginTime(NOW)
-                .build());
-        contestB = contestStore.createContest(new ContestData.Builder()
-                .name("Contest B")
-                .beginTime(NOW.plusMillis(1))
-                .build());
-        contestBStarted = contestStore.createContest(new ContestData.Builder()
-                .name("Contest B - Started")
-                .beginTime(NOW)
-                .build());
-        contestBFinished = contestStore.createContest(new ContestData.Builder()
-                .name("Contest B - Ended")
-                .beginTime(NOW.minus(10, HOURS))
-                .build());
-        contestC = contestStore.createContest(new ContestData.Builder()
-                .name("Contest C")
-                .beginTime(NOW.plusMillis(1))
-                .build());
-
-        moduleStore.upsertRegistrationModule(contestA.getJid());
-        moduleStore.upsertRegistrationModule(contestAStarted.getJid());
-        contestantStore.upsertContestant(contestB.getJid(), CONTESTANT);
-        contestantStore.upsertContestant(contestBStarted.getJid(), CONTESTANT);
-        contestantStore.upsertContestant(contestBFinished.getJid(), CONTESTANT);
-        supervisorStore.upsertSupervisor(
-                contestB.getJid(),
-                new ContestSupervisorData.Builder()
-                        .userJid(SUPERVISOR)
-                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
-        supervisorStore.upsertSupervisor(
-                contestBStarted.getJid(),
-                new ContestSupervisorData.Builder()
-                        .userJid(SUPERVISOR)
-                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
-        supervisorStore.upsertSupervisor(
-                contestBFinished.getJid(),
-                new ContestSupervisorData.Builder()
-                        .userJid(SUPERVISOR)
-                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
-        managerStore.upsertManager(contestB.getJid(), MANAGER);
-        managerStore.upsertManager(contestBStarted.getJid(), MANAGER);
-        managerStore.upsertManager(contestBFinished.getJid(), MANAGER);
+        prepareContestA();
+        prepareContestB();
+        prepareContestC();
     }
 
     @Test
@@ -170,6 +131,22 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canViewContest(MANAGER, contestBStarted)).isTrue();
         assertThat(roleChecker.canViewContest(MANAGER, contestBFinished)).isTrue();
         assertThat(roleChecker.canViewContest(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
+    void start_virtual_contest() {
+        moduleStore.upsertVirtualModule(
+                contestB.getJid(),
+                new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(1)).build());
+        moduleStore.upsertVirtualModule(
+                contestBStarted.getJid(),
+                new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(1)).build());
+
+        contestantStore.startVirtualContest(contestBStarted.getJid(), ANOTHER_CONTESTANT);
+
+        assertThat(roleChecker.canStartVirtualContest(CONTESTANT, contestB)).isFalse();
+        assertThat(roleChecker.canStartVirtualContest(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(roleChecker.canStartVirtualContest(ANOTHER_CONTESTANT, contestBStarted)).isFalse();
     }
 
     @Test
@@ -645,6 +622,61 @@ class RoleCheckerIntegrationTests {
         assertThat(roleChecker.canAddContestants(MANAGER, contestC)).isFalse();
     }
 
+    private void prepareContestA() {
+        contestA = contestStore.createContest(new ContestData.Builder()
+                .name("Contest A")
+                .beginTime(NOW.plusMillis(1))
+                .build());
+        contestAStarted = contestStore.createContest(new ContestData.Builder()
+                .name("Contest A - Started")
+                .beginTime(NOW)
+                .build());
+
+        moduleStore.upsertRegistrationModule(contestA.getJid());
+        moduleStore.upsertRegistrationModule(contestAStarted.getJid());
+    }
+
+    private void prepareContestB() {
+        contestB = contestStore.createContest(new ContestData.Builder()
+                .name("Contest B")
+                .beginTime(NOW.plusMillis(1))
+                .build());
+        contestBStarted = contestStore.createContest(new ContestData.Builder()
+                .name("Contest B - Started")
+                .beginTime(NOW)
+                .duration(Duration.ofHours(5))
+                .build());
+        contestBFinished = contestStore.createContest(new ContestData.Builder()
+                .name("Contest B - Ended")
+                .beginTime(NOW.minus(10, HOURS))
+                .build());
+
+        contestantStore.upsertContestant(contestB.getJid(), CONTESTANT);
+        contestantStore.upsertContestant(contestBStarted.getJid(), CONTESTANT);
+        contestantStore.upsertContestant(contestBStarted.getJid(), ANOTHER_CONTESTANT);
+        contestantStore.upsertContestant(contestBFinished.getJid(), CONTESTANT);
+
+        supervisorStore.upsertSupervisor(
+                contestB.getJid(),
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR)
+                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
+        supervisorStore.upsertSupervisor(
+                contestBStarted.getJid(),
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR)
+                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
+        supervisorStore.upsertSupervisor(
+                contestBFinished.getJid(),
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR)
+                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
+
+        managerStore.upsertManager(contestB.getJid(), MANAGER);
+        managerStore.upsertManager(contestBStarted.getJid(), MANAGER);
+        managerStore.upsertManager(contestBFinished.getJid(), MANAGER);
+    }
+
     private void addSupervisorToContestBWithPermission(SupervisorPermissionType type) {
         supervisorStore.upsertSupervisor(
                 contestB.getJid(),
@@ -661,5 +693,12 @@ class RoleCheckerIntegrationTests {
                 new ContestSupervisorData.Builder()
                         .userJid(SUPERVISOR)
                         .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
+    }
+
+    private void prepareContestC() {
+        contestC = contestStore.createContest(new ContestData.Builder()
+                .name("Contest C")
+                .beginTime(NOW.plusMillis(1))
+                .build());
     }
 }

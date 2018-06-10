@@ -36,6 +36,10 @@ public class ContestModuleStore {
         upsertModule(contestJid, FROZEN_SCOREBOARD, config);
     }
 
+    public void upsertVirtualModule(String contestJid, VirtualModuleConfig config) {
+        upsertModule(contestJid, VIRTUAL, config);
+    }
+
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.class);
     }

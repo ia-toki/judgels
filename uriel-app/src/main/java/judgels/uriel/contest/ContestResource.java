@@ -15,21 +15,26 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestService;
+import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.role.RoleChecker;
 
 public class ContestResource implements ContestService {
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
     private final ContestStore contestStore;
+    private final ContestContestantStore contestantStore;
 
     @Inject
     public ContestResource(
             ActorChecker actorChecker,
             RoleChecker roleChecker,
-            ContestStore contestStore) {
+            ContestStore contestStore,
+            ContestContestantStore contestantStore) {
+
         this.actorChecker = actorChecker;
         this.roleChecker = roleChecker;
         this.contestStore = contestStore;
+        this.contestantStore = contestantStore;
     }
 
     @Override
@@ -50,6 +55,16 @@ public class ContestResource implements ContestService {
 
         checkAllowed(roleChecker.canViewContest(actorJid, contest));
         return contest;
+    }
+
+    @Override
+    @UnitOfWork
+    public void startVirtual(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        checkAllowed(roleChecker.canStartVirtualContest(actorJid, contest));
+
+        contestantStore.startVirtualContest(contestJid, actorJid);
     }
 
     @Override
