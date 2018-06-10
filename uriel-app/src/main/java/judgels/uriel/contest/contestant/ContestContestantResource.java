@@ -14,23 +14,23 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.role.RoleChecker;
 
 public class ContestContestantResource implements ContestContestantService {
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
     private final ContestStore contestStore;
+    private final ContestContestantRoleChecker contestantRoleChecker;
     private final ContestContestantStore contestantStore;
 
     @Inject
     public ContestContestantResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
             ContestStore contestStore,
+            ContestContestantRoleChecker contestantRoleChecker,
             ContestContestantStore contestantStore) {
+
         this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
         this.contestStore = contestStore;
+        this.contestantRoleChecker = contestantRoleChecker;
         this.contestantStore = contestantStore;
     }
 
@@ -45,7 +45,7 @@ public class ContestContestantResource implements ContestContestantService {
     public List<String> addContestants(AuthHeader authHeader, String contestJid, List<String> contestantJids) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canAddContestants(actorJid, contest));
+        checkAllowed(contestantRoleChecker.canAddContestants(actorJid, contest));
 
         return contestantStore.addContestants(contestJid, contestantJids);
     }

@@ -22,13 +22,12 @@ import judgels.uriel.api.contest.clarification.ContestClarificationService;
 import judgels.uriel.api.contest.clarification.ContestClarificationsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.role.RoleChecker;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 
 public class ContestClarificationResource implements ContestClarificationService {
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
     private final ContestStore contestStore;
+    private final ContestClarificationRoleChecker clarificationRoleChecker;
     private final ContestClarificationStore clarificationStore;
     private final ContestProblemStore problemStore;
     private final BasicAuthHeader sandalphonClientAuthHeader;
@@ -37,16 +36,16 @@ public class ContestClarificationResource implements ContestClarificationService
     @Inject
     public ContestClarificationResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
             ContestStore contestStore,
+            ContestClarificationRoleChecker clarificationRoleChecker,
             ContestClarificationStore clarificationStore,
             ContestProblemStore problemStore,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
 
         this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
         this.contestStore = contestStore;
+        this.clarificationRoleChecker = clarificationRoleChecker;
         this.clarificationStore = clarificationStore;
         this.problemStore = problemStore;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
@@ -62,7 +61,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canCreateClarification(actorJid, contest));
+        checkAllowed(clarificationRoleChecker.canCreateClarification(actorJid, contest));
 
         return clarificationStore.createClarification(contestJid, clarificationData);
     }
@@ -76,7 +75,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canViewOwnClarifications(actorJid, contest));
+        checkAllowed(clarificationRoleChecker.canViewOwnClarifications(actorJid, contest));
 
         List<ContestClarification> clarifications = clarificationStore.getClarifications(contestJid, actorJid);
         Set<String> problemJids = clarifications

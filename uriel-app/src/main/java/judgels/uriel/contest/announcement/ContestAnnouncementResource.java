@@ -13,23 +13,22 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementService;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.role.RoleChecker;
 
 public class ContestAnnouncementResource implements ContestAnnouncementService {
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
     private final ContestStore contestStore;
+    private final ContestAnnouncementRoleChecker announcementRoleChecker;
     private final ContestAnnouncementStore announcementStore;
 
     @Inject
     public ContestAnnouncementResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
             ContestStore contestStore,
+            ContestAnnouncementRoleChecker announcementRoleChecker,
             ContestAnnouncementStore announcementStore) {
 
         this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
+        this.announcementRoleChecker = announcementRoleChecker;
         this.contestStore = contestStore;
         this.announcementStore = announcementStore;
     }
@@ -39,7 +38,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
     public List<ContestAnnouncement> getPublishedAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canViewPublishedAnnouncements(actorJid, contest));
+        checkAllowed(announcementRoleChecker.canViewPublishedAnnouncements(actorJid, contest));
 
         return announcementStore.getAnnouncements(contestJid, actorJid);
     }

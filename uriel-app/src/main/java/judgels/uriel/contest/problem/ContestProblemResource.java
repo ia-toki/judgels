@@ -27,15 +27,14 @@ import judgels.uriel.api.contest.problem.ContestContestantProblemsResponse;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.style.ContestStyleStore;
-import judgels.uriel.role.RoleChecker;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 import judgels.uriel.sandalphon.SandalphonConfiguration;
 
 public class ContestProblemResource implements ContestProblemService {
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
     private final ContestStore contestStore;
     private final ContestStyleStore styleStore;
+    private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
     private final SandalphonConfiguration sandalphonConfig;
     private final BasicAuthHeader sandalphonClientAuthHeader;
@@ -44,18 +43,18 @@ public class ContestProblemResource implements ContestProblemService {
     @Inject
     public ContestProblemResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
             ContestStore contestStore,
             ContestStyleStore styleStore,
+            ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
             SandalphonConfiguration sandalphonConfig,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
 
         this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
         this.contestStore = contestStore;
         this.styleStore = styleStore;
+        this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
         this.sandalphonConfig = sandalphonConfig;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
@@ -67,7 +66,7 @@ public class ContestProblemResource implements ContestProblemService {
     public ContestContestantProblemsResponse getMyProblems(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canViewProblems(actorJid, contest));
+        checkAllowed(problemRoleChecker.canViewProblems(actorJid, contest));
 
         List<ContestContestantProblem> contestantProblems = problemStore.getContestantProblems(contestJid, actorJid);
         Set<String> problemJids =
@@ -93,7 +92,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canViewProblems(actorJid, contest));
+        checkAllowed(problemRoleChecker.canViewProblems(actorJid, contest));
 
         ContestContestantProblem contestantProblem =
                 checkFound(problemStore.findContestantProblemByAlias(contestJid, actorJid, problemAlias));
@@ -101,7 +100,8 @@ public class ContestProblemResource implements ContestProblemService {
 
         ProblemInfo problem = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
 
-        Optional<String> reasonNotAllowedToSubmit = roleChecker.canSubmitProblem(actorJid, contest, contestantProblem);
+        Optional<String> reasonNotAllowedToSubmit =
+                problemRoleChecker.canSubmitProblem(actorJid, contest, contestantProblem);
 
         ProblemWorksheet worksheet =
                 clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);

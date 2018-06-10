@@ -14,26 +14,25 @@ import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.role.RoleChecker;
 
 public class ContestScoreboardResource implements ContestScoreboardService {
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
     private final ContestStore contestStore;
+    private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestScoreboardFetcher scoreboardFetcher;
     private final UserService userService;
 
     @Inject
     public ContestScoreboardResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
             ContestStore contestStore,
+            ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestScoreboardFetcher scoreboardFetcher,
             UserService userService) {
 
         this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
         this.contestStore = contestStore;
+        this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.scoreboardFetcher = scoreboardFetcher;
         this.userService = userService;
     }
@@ -43,10 +42,10 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     public Optional<ContestScoreboardResponse> getScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canViewDefaultScoreboard(actorJid, contest));
+        checkAllowed(scoreboardRoleChecker.canViewDefaultScoreboard(actorJid, contest));
 
         return scoreboardFetcher
-                .fetchScoreboard(contest, actorJid, roleChecker.canSuperviseScoreboard(actorJid, contest))
+                .fetchScoreboard(contest, actorJid, scoreboardRoleChecker.canSuperviseScoreboard(actorJid, contest))
                 .map(this::buildResponse);
     }
 
@@ -55,10 +54,11 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     public Optional<ContestScoreboardResponse> getFrozenScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canViewDefaultScoreboard(actorJid, contest));
+        checkAllowed(scoreboardRoleChecker.canViewDefaultScoreboard(actorJid, contest));
 
+        boolean canSuperviseScoreboard = scoreboardRoleChecker.canSuperviseScoreboard(actorJid, contest);
         return scoreboardFetcher
-                .fetchFrozenScoreboard(contest, actorJid, roleChecker.canSuperviseScoreboard(actorJid, contest))
+                .fetchFrozenScoreboard(contest, actorJid, canSuperviseScoreboard)
                 .map(this::buildResponse);
     }
 

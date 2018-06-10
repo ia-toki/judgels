@@ -16,23 +16,22 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.contest.contestant.ContestContestantStore;
-import judgels.uriel.role.RoleChecker;
 
 public class ContestResource implements ContestService {
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
+    private final ContestRoleChecker contestRoleChecker;
     private final ContestStore contestStore;
     private final ContestContestantStore contestantStore;
 
     @Inject
     public ContestResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
+            ContestRoleChecker contestRoleChecker,
             ContestStore contestStore,
             ContestContestantStore contestantStore) {
 
         this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
+        this.contestRoleChecker = contestRoleChecker;
         this.contestStore = contestStore;
         this.contestantStore = contestantStore;
     }
@@ -43,7 +42,7 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
 
-        checkAllowed(roleChecker.canViewContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
         return contest;
     }
 
@@ -53,7 +52,7 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestById(contestId));
 
-        checkAllowed(roleChecker.canViewContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
         return contest;
     }
 
@@ -62,7 +61,7 @@ public class ContestResource implements ContestService {
     public void startVirtual(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canStartVirtualContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canStartVirtualContest(actorJid, contest));
 
         contestantStore.startVirtualContest(contestJid, actorJid);
     }
@@ -109,7 +108,7 @@ public class ContestResource implements ContestService {
     @UnitOfWork
     public Contest createContest(AuthHeader authHeader, ContestData contestData) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canCreateContest(actorJid));
+        checkAllowed(contestRoleChecker.canCreateContest(actorJid));
 
         return contestStore.createContest(contestData);
     }

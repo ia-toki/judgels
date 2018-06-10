@@ -22,9 +22,12 @@ import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.web.ContestState;
 import judgels.uriel.api.contest.web.ContestWebConfig;
 import judgels.uriel.contest.ContestTimer;
+import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
+import judgels.uriel.contest.problem.ContestProblemRoleChecker;
+import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
+import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestClarificationDao;
-import judgels.uriel.role.RoleChecker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -38,7 +41,10 @@ class ContestWebConfigFetcherTests {
     private static final Duration TO_END = Duration.ofSeconds(2);
     private static final Duration TO_FINISH = Duration.ofSeconds(3);
 
-    @Mock private RoleChecker roleChecker;
+    @Mock private ContestProblemRoleChecker problemRoleChecker;
+    @Mock private ContestSubmissionRoleChecker submissionRoleChecker;
+    @Mock private ContestClarificationRoleChecker clarificationRoleChecker;
+    @Mock private ContestScoreboardRoleChecker scoreboardRoleChecker;
     @Mock private ContestAnnouncementDao announcementDao;
     @Mock private ContestClarificationDao clarificationDao;
     @Mock private ContestTimer contestTimer;
@@ -51,7 +57,10 @@ class ContestWebConfigFetcherTests {
         initMocks(this);
 
         webConfigFetcher = new ContestWebConfigFetcher(
-                roleChecker,
+                problemRoleChecker,
+                submissionRoleChecker,
+                clarificationRoleChecker,
+                scoreboardRoleChecker,
                 announcementDao,
                 clarificationDao,
                 contestTimer);
@@ -70,23 +79,19 @@ class ContestWebConfigFetcherTests {
         when(contestTimer.getDurationToEndTime(contest)).thenReturn(TO_END);
         when(contestTimer.getDurationToFinishTime(contest, USER)).thenReturn(TO_FINISH);
 
-        when(roleChecker.canViewPublishedAnnouncements(USER, contest)).thenReturn(true);
-        when(roleChecker.canViewPublishedAnnouncements(CONTESTANT, contest)).thenReturn(true);
-        when(roleChecker.canViewPublishedAnnouncements(SUPERVISOR, contest)).thenReturn(true);
+        when(problemRoleChecker.canViewProblems(USER, contest)).thenReturn(true);
+        when(problemRoleChecker.canViewProblems(CONTESTANT, contest)).thenReturn(true);
+        when(problemRoleChecker.canViewProblems(SUPERVISOR, contest)).thenReturn(true);
 
-        when(roleChecker.canViewProblems(USER, contest)).thenReturn(true);
-        when(roleChecker.canViewProblems(CONTESTANT, contest)).thenReturn(true);
-        when(roleChecker.canViewProblems(SUPERVISOR, contest)).thenReturn(true);
+        when(scoreboardRoleChecker.canViewDefaultScoreboard(USER, contest)).thenReturn(true);
+        when(scoreboardRoleChecker.canViewDefaultScoreboard(CONTESTANT, contest)).thenReturn(true);
+        when(scoreboardRoleChecker.canViewDefaultScoreboard(SUPERVISOR, contest)).thenReturn(true);
 
-        when(roleChecker.canViewDefaultScoreboard(USER, contest)).thenReturn(true);
-        when(roleChecker.canViewDefaultScoreboard(CONTESTANT, contest)).thenReturn(true);
-        when(roleChecker.canViewDefaultScoreboard(SUPERVISOR, contest)).thenReturn(true);
+        when(submissionRoleChecker.canViewOwnSubmissions(CONTESTANT, contest)).thenReturn(true);
+        when(submissionRoleChecker.canViewOwnSubmissions(SUPERVISOR, contest)).thenReturn(true);
 
-        when(roleChecker.canViewOwnSubmissions(CONTESTANT, contest)).thenReturn(true);
-        when(roleChecker.canViewOwnSubmissions(SUPERVISOR, contest)).thenReturn(true);
-
-        when(roleChecker.canViewOwnClarifications(CONTESTANT, contest)).thenReturn(true);
-        when(roleChecker.canViewOwnClarifications(SUPERVISOR, contest)).thenReturn(true);
+        when(clarificationRoleChecker.canViewOwnClarifications(CONTESTANT, contest)).thenReturn(true);
+        when(clarificationRoleChecker.canViewOwnClarifications(SUPERVISOR, contest)).thenReturn(true);
     }
 
     @Test

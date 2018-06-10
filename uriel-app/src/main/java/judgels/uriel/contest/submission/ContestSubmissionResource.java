@@ -41,20 +41,21 @@ import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionService;
 import judgels.uriel.api.contest.submission.ContestSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.style.ContestStyleConfig;
 import judgels.uriel.contest.style.ContestStyleStore;
-import judgels.uriel.role.RoleChecker;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
     private final ContestStore contestStore;
     private final ContestStyleStore styleStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
     private final ContestSubmissionClient submissionClient;
+    private final ContestSubmissionRoleChecker submissionRoleChecker;
+    private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestSubmissionStore submissionStore;
     private final ContestProblemStore problemStore;
     private final UserService userService;
@@ -64,24 +65,26 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     @Inject
     public ContestSubmissionResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
             ContestStore contestStore,
             ContestStyleStore styleStore,
             ContestProblemStore problemStore,
             SubmissionSourceBuilder submissionSourceBuilder,
             ContestSubmissionClient submissionClient,
+            ContestSubmissionRoleChecker submissionRoleChecker,
+            ContestProblemRoleChecker problemRoleChecker,
             ContestSubmissionStore submissionStore,
             UserService userService,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
 
         this.actorChecker = actorChecker;
-        this.roleChecker = roleChecker;
         this.contestStore = contestStore;
         this.styleStore = styleStore;
         this.problemStore = problemStore;
         this.submissionSourceBuilder = submissionSourceBuilder;
         this.submissionClient = submissionClient;
+        this.submissionRoleChecker = submissionRoleChecker;
+        this.problemRoleChecker = problemRoleChecker;
         this.submissionStore = submissionStore;
         this.userService = userService;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
@@ -97,7 +100,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(roleChecker.canViewOwnSubmissions(actorJid, contest));
+        checkAllowed(submissionRoleChecker.canViewOwnSubmissions(actorJid, contest));
 
         SelectionOptions.Builder options = new SelectionOptions.Builder();
         options.orderDir(OrderDir.DESC);
@@ -124,7 +127,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.findSubmissionById(submissionId));
         Contest contest = checkFound(contestStore.findContestByJid(submission.getContainerJid()));
-        checkAllowed(roleChecker.canViewSubmission(actorJid, contest, submission.getUserJid()));
+        checkAllowed(submissionRoleChecker.canViewSubmission(actorJid, contest, submission.getUserJid()));
 
         ContestProblem contestProblem =
                 checkFound(problemStore.findProblem(contest.getJid(), submission.getProblemJid()));
@@ -163,7 +166,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
         ContestContestantProblem contestantProblem =
                 checkFound(problemStore.findContestantProblem(contestJid, actorJid, problemJid));
-        checkAllowed(roleChecker.canSubmitProblem(actorJid, contest, contestantProblem));
+        checkAllowed(problemRoleChecker.canSubmitProblem(actorJid, contest, contestantProblem));
 
         ContestStyleConfig styleConfig = styleStore.getStyleConfig(contestJid);
         LanguageRestriction contestGradingLanguageRestriction = styleConfig.getGradingLanguageRestriction();
