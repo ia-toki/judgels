@@ -35,5 +35,7 @@ class UserProfileServiceIntegrationTests extends AbstractServiceIntegrationTests
         profileService.updateProfile(adminHeader, user.getJid(), profile);
 
         assertThat(profileService.getProfile(adminHeader, user.getJid())).isEqualTo(profile);
+
+        assertThat(profileService.getPublicProfile(user.getJid())).isEqualTo(profile.toPublic());
     }
 }
