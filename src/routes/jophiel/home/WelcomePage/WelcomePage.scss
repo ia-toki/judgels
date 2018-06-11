@@ -1,8 +1,9 @@
 .banner {
   position: relative;
   height: 330px;
-  margin-top: -50px; 
-  width: 100%;
+  margin-top: -50px;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 
 .banner__contents {
@@ -33,6 +34,10 @@
 }
 
 @media only screen and (max-width: 600px) {
+  .banner {
+    margin-top: -10px;
+  }
+
   .banner__contents {
     max-width: 100%;
     margin: 0px 30px 30px;
