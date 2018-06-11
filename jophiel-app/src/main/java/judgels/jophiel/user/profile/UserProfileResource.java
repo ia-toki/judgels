@@ -6,6 +6,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.profile.PublicUserProfile;
 import judgels.jophiel.api.user.profile.UserProfile;
 import judgels.jophiel.api.user.profile.UserProfileService;
 import judgels.jophiel.role.RoleChecker;
@@ -50,5 +51,12 @@ public class UserProfileResource implements UserProfileService {
 
         User user = checkFound(userStore.findUserByJid(userJid));
         return userProfileStore.upsertProfile(user.getJid(), userProfile);
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public PublicUserProfile getPublicProfile(String userJid) {
+        User user = checkFound(userStore.findUserByJid(userJid));
+        return userProfileStore.getProfile(user.getJid()).toPublic();
     }
 }

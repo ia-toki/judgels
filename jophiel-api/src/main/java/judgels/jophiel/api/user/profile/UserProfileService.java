@@ -19,6 +19,11 @@ public interface UserProfileService {
     @Produces(APPLICATION_JSON)
     UserProfile getProfile(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
 
+    @GET
+    @Path("/public")
+    @Produces(APPLICATION_JSON)
+    PublicUserProfile getPublicProfile(@PathParam("userJid") String userJid);
+
     @PUT
     @Path("/")
     @Consumes(APPLICATION_JSON)

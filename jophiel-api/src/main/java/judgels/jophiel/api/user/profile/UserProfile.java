@@ -20,5 +20,11 @@ public interface UserProfile {
     Optional<String> getProvince();
     Optional<String> getCountry();
 
+    default PublicUserProfile toPublic() {
+        return new PublicUserProfile.Builder()
+                .name(getName())
+                .build();
+    }
+
     class Builder extends ImmutableUserProfile.Builder {}
 }
