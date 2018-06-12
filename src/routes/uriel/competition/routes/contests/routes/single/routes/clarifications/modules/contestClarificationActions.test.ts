@@ -1,6 +1,7 @@
 import { contestClarificationActions } from './contestClarificationActions';
 import { contestJid, sessionState, token } from '../../../../../../../../../../fixtures/state';
 import {
+  ContestClarificationConfig,
   ContestClarificationData,
   ContestClarificationsResponse,
 } from '../../../../../../../../../../modules/api/uriel/contestClarification';
@@ -18,6 +19,7 @@ describe('contestClarificationActions', () => {
 
     contestClarificationAPI = {
       createClarification: jest.fn(),
+      getClarificationConfig: jest.fn(),
       getMyClarifications: jest.fn(),
     };
     toastActions = {
@@ -38,6 +40,22 @@ describe('contestClarificationActions', () => {
     it('calls API to get create contest clarification', () => {
       expect(contestClarificationAPI.createClarification).toHaveBeenCalledWith(token, contestJid, data);
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Clarification submitted.');
+    });
+  });
+
+  describe('fetchConfig()', () => {
+    const { fetchConfig } = contestClarificationActions;
+    const doFetchConfig = async () => fetchConfig(contestJid, 'id')(dispatch, getState, { contestClarificationAPI });
+
+    beforeEach(async () => {
+      const response = {} as ContestClarificationConfig;
+      contestClarificationAPI.getClarificationConfig.mockReturnValue(response);
+
+      await doFetchConfig();
+    });
+
+    it('calls API to get contest clarification config', () => {
+      expect(contestClarificationAPI.getClarificationConfig).toHaveBeenCalledWith(token, contestJid, 'id');
     });
   });
 

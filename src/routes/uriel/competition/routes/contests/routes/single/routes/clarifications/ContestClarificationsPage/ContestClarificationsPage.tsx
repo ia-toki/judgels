@@ -54,11 +54,11 @@ class ContestClarificationsPage extends React.Component<
   }
 
   private refreshClarifications = async () => {
-    const { data, problemJids, problemAliasesMap, problemNamesMap } = await this.props.onFetchMyClarifications(
+    const { data, problemAliasesMap, problemNamesMap } = await this.props.onFetchMyClarifications(
       this.props.contest.jid,
       this.props.statementLanguage
     );
-    this.setState({ clarifications: data, problemJids, problemAliasesMap, problemNamesMap });
+    this.setState({ clarifications: data, problemAliasesMap, problemNamesMap });
   };
 
   private renderClarifications = () => {
@@ -89,16 +89,7 @@ class ContestClarificationsPage extends React.Component<
   };
 
   private renderCreateDialog = () => {
-    const { problemJids, problemAliasesMap, problemNamesMap } = this.state;
-    if (!problemJids || !problemAliasesMap || !problemNamesMap) {
-      return null;
-    }
-
-    const props: any = {
-      contestJid: this.props.contest.jid,
-      problemJids,
-      problemAliasesMap,
-      problemNamesMap,
+    const props = {
       onRefreshClarifications: this.refreshClarifications,
     };
     return (

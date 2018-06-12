@@ -1,4 +1,4 @@
-import { Button, Dialog, Intent } from '@blueprintjs/core';
+import { Button, Callout, Dialog, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
@@ -6,24 +6,30 @@ import { change } from 'redux-form';
 import ContestClarificationCreateForm, {
   ContestClarificationCreateFormData,
 } from '../../ContestClarificationCreateForm/ContestClarificationCreateForm';
-import { ContestClarificationData } from '../../../../../../../../../../../modules/api/uriel/contestClarification';
+import {
+  ContestClarificationConfig,
+  ContestClarificationData,
+} from '../../../../../../../../../../../modules/api/uriel/contestClarification';
+import { selectStatementLanguage } from '../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { AppState } from '../../../../../../../../../../../modules/store';
+import { selectContest } from '../../../../../../modules/contestSelectors';
+import { Contest } from '../../../../../../../../../../../modules/api/uriel/contest';
 import { contestClarificationActions as injectedContestClarificationActions } from '../../modules/contestClarificationActions';
 
 export interface ContestClarificationCreateDialogProps {
-  contestJid: string;
-  problemJids: string[];
-  problemAliasesMap: { [problemJid: string]: string };
-  problemNamesMap: { [problemJid: string]: string };
   onRefreshClarifications: () => Promise<void>;
 }
 
 export interface ContestClarificationCreateDialogConnectedProps {
+  contest: Contest;
+  statementLanguage: string;
+  onFetchClarificationConfig: (contestJid: string, language: string) => Promise<ContestClarificationConfig>;
   onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
-  onSubmitCreateClarification: () => Promise<void>;
   onSetDefaultTopic: (contestJid: string) => void;
 }
 
 interface ContestClarificationCreateDialogState {
+  config?: ContestClarificationConfig;
   isDialogOpen?: boolean;
   isDialogLoading?: boolean;
 }
@@ -34,24 +40,32 @@ class ContestClarificationCreateDialog extends React.Component<
 > {
   state: ContestClarificationCreateDialogState = {};
 
-  componentDidMount() {
-    this.props.onSetDefaultTopic(this.props.contestJid);
-  }
-
-  componentDidUpdate() {
-    this.props.onSetDefaultTopic(this.props.contestJid);
+  async componentDidMount() {
+    const config = await this.props.onFetchClarificationConfig(this.props.contest.jid, this.props.statementLanguage);
+    if (config.isAllowedToCreateClarification) {
+      this.props.onSetDefaultTopic(this.props.contest.jid);
+    }
+    this.setState({ config });
   }
 
   render() {
+    const { config } = this.state;
+    if (!config) {
+      return null;
+    }
+
     return (
       <>
-        {this.renderButton()}
-        {this.renderDialog()}
+        {this.renderButton(config)}
+        {this.renderDialog(config)}
       </>
     );
   }
 
-  private renderButton = () => {
+  private renderButton = (config: ContestClarificationConfig) => {
+    if (!config.isAllowedToCreateClarification) {
+      return <Callout icon="ban-circle">No more clarifications are allowed.</Callout>;
+    }
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New Clarification
@@ -63,12 +77,12 @@ class ContestClarificationCreateDialog extends React.Component<
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = () => {
+  private renderDialog = (config: ContestClarificationConfig) => {
     const props: any = {
-      contestJid: this.props.contestJid,
-      problemJids: this.props.problemJids,
-      problemAliasesMap: this.props.problemAliasesMap,
-      problemNamesMap: this.props.problemNamesMap,
+      contestJid: this.props.contest.jid,
+      problemJids: config.problemJids,
+      problemAliasesMap: config.problemAliasesMap,
+      problemNamesMap: config.problemNamesMap,
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createClarification,
     };
@@ -98,19 +112,26 @@ class ContestClarificationCreateDialog extends React.Component<
 
   private createClarification = async (data: ContestClarificationCreateFormData) => {
     this.setState({ isDialogLoading: true });
-    await this.props.onCreateClarification(this.props.contestJid, data);
+    await this.props.onCreateClarification(this.props.contest.jid, data);
     await this.props.onRefreshClarifications();
     this.setState({ isDialogLoading: false, isDialogOpen: false });
   };
 }
 
 function createContestClarificationCreateDialog(contestClarificationActions) {
+  const mapStateToProps = (state: AppState) => ({
+    contest: selectContest(state)!,
+    statementLanguage: selectStatementLanguage(state),
+  });
+
   const mapDispatchToProps = dispatch => ({
+    onFetchClarificationConfig: (contestJid: string, language: string) =>
+      dispatch(contestClarificationActions.fetchConfig(contestJid, language)),
     onCreateClarification: (contestJid: string, data: ContestClarificationData) =>
       dispatch(contestClarificationActions.create(contestJid, data)),
     onSetDefaultTopic: (contestJid: string) => dispatch(change('contest-clarification-create', 'topicJid', contestJid)),
   });
-  return connect(undefined, mapDispatchToProps)(ContestClarificationCreateDialog);
+  return connect(mapStateToProps, mapDispatchToProps)(ContestClarificationCreateDialog);
 }
 
 export default createContestClarificationCreateDialog(injectedContestClarificationActions);
