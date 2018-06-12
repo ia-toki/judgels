@@ -1,6 +1,7 @@
 package judgels.sandalphon.hibernate;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public abstract class AbstractGradingHibernateDao<M extends AbstractGradingModel
             return ImmutableMap.of();
         }
 
-        ImmutableMap.Builder<String, M> result = ImmutableMap.builder();
+        Map<String, M> result = Maps.newHashMap();
 
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<M> query = criteriaQuery();
@@ -72,6 +73,6 @@ public abstract class AbstractGradingHibernateDao<M extends AbstractGradingModel
             result.put(model.submissionJid, model);
         }
 
-        return result.build();
+        return ImmutableMap.copyOf(result);
     }
 }
