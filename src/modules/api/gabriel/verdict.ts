@@ -19,7 +19,6 @@ const verdictIntentsMap = {
 };
 
 const verdictDisplayCodeMap = {
-  [VerdictCode.PND]: '...',
   [VerdictCode.ERR]: 'ERR',
   [VerdictCode.SKP]: 'SKIPPED',
 };
