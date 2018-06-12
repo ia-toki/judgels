@@ -23,7 +23,22 @@
 }
 
 .banner__button {
-  margin-right: 40px;
+  margin-right: 15px;
+}
+
+.banner__image {
+  position: absolute;
+  height: 330px;
+  width: 100%;
+  object-fit: cover;
+  filter: opacity(40%);
+}
+
+.banner__overlay {
+  position: absolute;
+  height: 330px;
+  width: 100%;
+  object-fit: cover;
 }
 
 .banner__image {

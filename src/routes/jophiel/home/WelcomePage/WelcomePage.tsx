@@ -17,12 +17,12 @@ export const WelcomePage = () => (
         <img src={bannerImage} className="banner__image" />
       </div>
       <div>
-        <img src={overlayImage} className="banner__image" />
+        <img src={overlayImage} className="banner__overlay" />
       </div>
       <div className="banner__contents">
         <div>
           <h1 className="banner__text">{APP_CONFIG.welcomeBanner.title}</h1>
-          <span className="banner__text">{APP_CONFIG.welcomeBanner.description}</span>
+          <p className="banner__text">{APP_CONFIG.welcomeBanner.description}</p>
         </div>
         <div className="banner__buttons">
           <ButtonLink to="/register" intent={Intent.PRIMARY} className="banner__button">
