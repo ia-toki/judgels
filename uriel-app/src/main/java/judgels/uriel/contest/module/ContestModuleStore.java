@@ -1,6 +1,7 @@
 package judgels.uriel.contest.module;
 
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
+import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.SCOREBOARD;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
@@ -33,6 +35,10 @@ public class ContestModuleStore {
         upsertModule(contestJid, CLARIFICATION, Collections.emptyMap());
     }
 
+    public void upsertClarificationTimeLimitModule(String contestJid, ClarificationTimeLimitModuleConfig config) {
+        upsertModule(contestJid, CLARIFICATION_TIME_LIMIT, config);
+    }
+
     public void upsertRegistrationModule(String contestJid) {
         upsertModule(contestJid, REGISTRATION, Collections.emptyMap());
     }
@@ -49,6 +55,10 @@ public class ContestModuleStore {
         return moduleDao.selectByContestJidAndType(contestJid, CLARIFICATION).isPresent();
     }
 
+    public Optional<ClarificationTimeLimitModuleConfig> getClarificationTimeLimitModuleConfig(String contestJid) {
+        return getModuleConfig(contestJid, CLARIFICATION_TIME_LIMIT, ClarificationTimeLimitModuleConfig.class);
+    }
+
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.class);
     }
@@ -62,7 +72,19 @@ public class ContestModuleStore {
     }
 
     public void upsertModule(String contestJid, ContestModuleType type, Object config) {
-        ContestModuleModel model = new ContestModuleModel();
+        Optional<ContestModuleModel> maybeModel = moduleDao.selectByContestJidAndType(contestJid, type);
+        if (maybeModel.isPresent()) {
+            ContestModuleModel model = maybeModel.get();
+            toModel(contestJid, type, config, model);
+            moduleDao.update(model);
+        } else {
+            ContestModuleModel model = new ContestModuleModel();
+            toModel(contestJid, type, config, model);
+            moduleDao.insert(model);
+        }
+    }
+
+    private void toModel(String contestJid, ContestModuleType type, Object config, ContestModuleModel model) {
         model.contestJid = contestJid;
         model.name = type.name();
         model.enabled = true;
@@ -72,8 +94,6 @@ public class ContestModuleStore {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
-        moduleDao.insert(model);
     }
 
     private <T> Optional<T> getModuleConfig(String contestJid, ContestModuleType module, Class<T> configClass) {

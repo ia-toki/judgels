@@ -3,6 +3,8 @@ package judgels.uriel.contest.clarification;
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.CLARIFICATION;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Duration;
+import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,55 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
         moduleStore.upsertClarificationModule(contestB.getJid());
         moduleStore.upsertClarificationModule(contestBStarted.getJid());
         moduleStore.upsertClarificationModule(contestBFinished.getJid());
+    }
+
+    @Test
+    void create_clarification() {
+        assertThat(checker.canCreateClarification(ADMIN, contestA)).isFalse();
+        assertThat(checker.canCreateClarification(ADMIN, contestAStarted)).isFalse();
+        assertThat(checker.canCreateClarification(ADMIN, contestB)).isFalse();
+        assertThat(checker.canCreateClarification(ADMIN, contestBStarted)).isFalse();
+        assertThat(checker.canCreateClarification(ADMIN, contestC)).isFalse();
+
+        assertThat(checker.canCreateClarification(USER, contestA)).isFalse();
+        assertThat(checker.canCreateClarification(USER, contestAStarted)).isFalse();
+        assertThat(checker.canCreateClarification(USER, contestB)).isFalse();
+        assertThat(checker.canCreateClarification(USER, contestC)).isFalse();
+
+        assertThat(checker.canCreateClarification(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canCreateClarification(CONTESTANT, contestB)).isFalse();
+
+        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isTrue();
+        moduleStore.upsertClarificationTimeLimitModule(
+                contestBStarted.getJid(),
+                new ClarificationTimeLimitModuleConfig.Builder()
+                        .clarificationDuration(Duration.ofHours(3))
+                        .build());
+        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isTrue();
+        moduleStore.upsertClarificationTimeLimitModule(
+                contestBStarted.getJid(),
+                new ClarificationTimeLimitModuleConfig.Builder()
+                        .clarificationDuration(Duration.ofHours(1))
+                        .build());
+        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isFalse();
+
+        assertThat(checker.canCreateClarification(CONTESTANT, contestBFinished)).isFalse();
+        assertThat(checker.canCreateClarification(CONTESTANT, contestC)).isFalse();
+
+        assertThat(checker.canCreateClarification(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canCreateClarification(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canCreateClarification(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canCreateClarification(SUPERVISOR, contestC)).isFalse();
+        addSupervisorToContestBWithPermission(CLARIFICATION);
+        assertThat(checker.canCreateClarification(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canCreateClarification(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canCreateClarification(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canCreateClarification(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(checker.canCreateClarification(MANAGER, contestA)).isFalse();
+        assertThat(checker.canCreateClarification(MANAGER, contestB)).isFalse();
+        assertThat(checker.canCreateClarification(MANAGER, contestBStarted)).isFalse();
+        assertThat(checker.canCreateClarification(MANAGER, contestC)).isFalse();
     }
 
     @Test

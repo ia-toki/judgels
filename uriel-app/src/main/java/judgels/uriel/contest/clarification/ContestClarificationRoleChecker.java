@@ -2,9 +2,11 @@ package judgels.uriel.contest.clarification;
 
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.CLARIFICATION;
 
+import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -35,10 +37,19 @@ public class ContestClarificationRoleChecker {
     }
 
     public boolean canCreateClarification(String userJid, Contest contest) {
-        return contestRoleDao.isContestant(userJid, contest.getJid())
+        boolean can = contestRoleDao.isContestant(userJid, contest.getJid())
                 && moduleStore.hasClarificationModule(contest.getJid())
                 && contestTimer.hasStarted(contest, userJid)
                 && !contestTimer.hasFinished(contest, userJid);
+
+        Optional<ClarificationTimeLimitModuleConfig> config =
+                moduleStore.getClarificationTimeLimitModuleConfig(contest.getJid());
+        if (config.isPresent()) {
+            Duration currentDuration = contestTimer.getDurationFromBeginTime(contest);
+            Duration allowedDuration = config.get().getClarificationDuration();
+            can = can && currentDuration.compareTo(allowedDuration) < 0;
+        }
+        return can;
     }
 
     public boolean canViewOwnClarifications(String userJid, Contest contest) {

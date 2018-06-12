@@ -32,6 +32,10 @@ public class ContestTimer {
         return !clock.instant().isBefore(contest.getBeginTime());
     }
 
+    public Duration getDurationFromBeginTime(Contest contest) {
+        return Duration.between(contest.getBeginTime(), clock.instant());
+    }
+
     public boolean hasStarted(Contest contest, String userJid) {
         if (!hasBegun(contest)) {
             return false;

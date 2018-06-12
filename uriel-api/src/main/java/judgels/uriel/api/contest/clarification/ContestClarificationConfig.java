@@ -6,11 +6,12 @@ import java.util.Map;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestClarificationsResponse.class)
-public interface ContestClarificationsResponse {
-    List<ContestClarification> getData();
+@JsonDeserialize(as = ImmutableContestClarificationConfig.class)
+public interface ContestClarificationConfig {
+    boolean getIsAllowedToCreateClarification();
+    List<String> getProblemJids();
     Map<String, String> getProblemAliasesMap();
     Map<String, String> getProblemNamesMap();
 
-    class Builder extends ImmutableContestClarificationsResponse.Builder {}
+    class Builder extends ImmutableContestClarificationConfig.Builder {}
 }

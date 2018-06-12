@@ -98,7 +98,7 @@ public abstract class AbstractRoleCheckerIntegrationTests {
                 .build());
         contestBStarted = contestStore.createContest(new ContestData.Builder()
                 .name("Contest B - Started")
-                .beginTime(NOW)
+                .beginTime(NOW.minus(2, HOURS))
                 .duration(Duration.ofHours(5))
                 .build());
         contestBFinished = contestStore.createContest(new ContestData.Builder()

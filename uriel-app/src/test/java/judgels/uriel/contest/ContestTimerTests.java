@@ -61,12 +61,12 @@ class ContestTimerTests {
 
         @Test
         void test_durations() {
-            assertDurations(1, 2, 5);
-            assertDurations(2, 1, 4);
-            assertDurations(3, 0, 3);
-            assertDurations(4, -1, 2);
-            assertDurations(5, -1, 1);
-            assertDurations(6, -1, 0);
+            assertDurations(1, 2, -1, 5);
+            assertDurations(2, 1, -1, 4);
+            assertDurations(3, 0, 0, 3);
+            assertDurations(4, -1, 1, 2);
+            assertDurations(5, -1, 2, 1);
+            assertDurations(6, -1, 3, 0);
         }
 
         private void assertStates(long at, boolean begun, boolean ended) {
@@ -88,12 +88,12 @@ class ContestTimerTests {
             doAssertStates(timer, contest, USER, begun, false, ended, ended);
         }
 
-        private void assertDurations(long at, long toBegin, long toEnd) {
+        private void assertDurations(long at, long toBegin, long fromBegin, long toEnd) {
             Clock clock = new FixedClock(Instant.ofEpochSecond(at));
 
             when(moduleStore.getVirtualModuleConfig(CONTEST)).thenReturn(Optional.empty());
             ContestTimer timer = new ContestTimer(contestantStore, moduleStore, clock);
-            doAssertDurations(timer, contest, GUEST, toBegin, toEnd, toEnd);
+            doAssertDurations(timer, contest, GUEST, toBegin, fromBegin, toEnd, toEnd);
 
             when(moduleStore.getVirtualModuleConfig(CONTEST))
                     .thenReturn(Optional.of(new VirtualModuleConfig.Builder()
@@ -104,7 +104,7 @@ class ContestTimerTests {
                             .userJid(USER)
                             .build()));
             timer = new ContestTimer(contestantStore, moduleStore, clock);
-            doAssertDurations(timer, contest, USER, toBegin, toEnd, toEnd);
+            doAssertDurations(timer, contest, USER, toBegin, fromBegin, toEnd, toEnd);
         }
     }
 
@@ -146,18 +146,18 @@ class ContestTimerTests {
 
             @Test
             void test_durations() {
-                assertDurations(1, 2, -1, 11);
-                assertDurations(2, 1, -1, 10);
-                assertDurations(3, 0, -1, 9);
-                assertDurations(4, -1, -1, 8);
-                assertDurations(5, -1, -1, 7);
-                assertDurations(6, -1, 3, 6);
-                assertDurations(7, -1, 2, 5);
-                assertDurations(8, -1, 1, 4);
-                assertDurations(9, -1, 0, 3);
-                assertDurations(10, -1, -1, 2);
-                assertDurations(11, -1, -1, 1);
-                assertDurations(12, -1, -1, 0);
+                assertDurations(1, 2, -1, -1, 11);
+                assertDurations(2, 1, -1, -1, 10);
+                assertDurations(3, 0, 0, -1, 9);
+                assertDurations(4, -1, 1, -1, 8);
+                assertDurations(5, -1, 2, -1, 7);
+                assertDurations(6, -1, 3, 3, 6);
+                assertDurations(7, -1, 4, 2, 5);
+                assertDurations(8, -1, 5, 1, 4);
+                assertDurations(9, -1, 6, 0, 3);
+                assertDurations(10, -1, -1, -1, 2);
+                assertDurations(11, -1, -1, -1, 1);
+                assertDurations(12, -1, -1, -1, 0);
             }
         }
 
@@ -197,15 +197,15 @@ class ContestTimerTests {
 
             @Test
             void test_durations() {
-                assertDurations(1, 2, -1, 8);
-                assertDurations(2, 1, -1, 7);
-                assertDurations(3, 0, -1, 6);
-                assertDurations(4, -1, -1, 5);
-                assertDurations(5, -1, -1, 4);
-                assertDurations(6, -1, 3, 3);
-                assertDurations(7, -1, 2, 2);
-                assertDurations(8, -1, 1, 1);
-                assertDurations(9, -1, 0, 0);
+                assertDurations(1, 2, -1, -1, 8);
+                assertDurations(2, 1, -1, -1, 7);
+                assertDurations(3, 0, 0, -1, 6);
+                assertDurations(4, -1, 1, -1, 5);
+                assertDurations(5, -1, 2, -1, 4);
+                assertDurations(6, -1, 3, 3, 3);
+                assertDurations(7, -1, 4, 2, 2);
+                assertDurations(8, -1, 5, 1, 1);
+                assertDurations(9, -1, 6, 0, 0);
             }
         }
 
@@ -221,7 +221,7 @@ class ContestTimerTests {
             doAssertStates(timer, contest, USER, begun, started, finished, ended);
         }
 
-        private void assertDurations(long at, long toBegin, long toFinish, long toEnd) {
+        private void assertDurations(long at, long toBegin, long fromBegin, long toFinish, long toEnd) {
             Clock clock = new FixedClock(Instant.ofEpochSecond(at));
 
             when(contestantStore.findContestant(CONTEST, USER)).thenReturn(
@@ -230,7 +230,7 @@ class ContestTimerTests {
                             .contestStartTime(Instant.ofEpochSecond(6))
                             .build()));
             ContestTimer timer = new ContestTimer(contestantStore, moduleStore, clock);
-            doAssertDurations(timer, contest, USER, toBegin, toFinish, toEnd);
+            doAssertDurations(timer, contest, USER, toBegin, fromBegin, toFinish, toEnd);
         }
     }
 
@@ -263,11 +263,15 @@ class ContestTimerTests {
             Contest contest,
             String userJid,
             long toBegin,
+            long fromBegin,
             long toFinish,
             long toEnd) {
 
         if (toBegin != -1) {
             assertThat(timer.getDurationToBeginTime(contest)).isEqualTo(Duration.ofSeconds(toBegin));
+        }
+        if (fromBegin != -1) {
+            assertThat(timer.getDurationFromBeginTime(contest)).isEqualTo(Duration.ofSeconds(fromBegin));
         }
         if (toFinish != -1) {
             assertThat(timer.getDurationToFinishTime(contest, userJid)).isEqualTo(Duration.ofSeconds(toFinish));

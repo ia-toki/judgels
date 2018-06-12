@@ -18,6 +18,7 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.clarification.ContestClarification;
+import judgels.uriel.api.contest.clarification.ContestClarificationConfig;
 import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationService;
 import judgels.uriel.api.contest.clarification.ContestClarificationsResponse;
@@ -69,16 +70,20 @@ public class ContestClarificationResource implements ContestClarificationService
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestClarificationsResponse getMyClarifications(
+    public ContestClarificationConfig getClarificationConfig(
             AuthHeader authHeader,
             String contestJid,
             Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
-        checkAllowed(clarificationRoleChecker.canViewOwnClarifications(actorJid, contest));
 
-        List<ContestClarification> clarifications = clarificationStore.getClarifications(contestJid, actorJid);
+        if (!clarificationRoleChecker.canCreateClarification(actorJid, contest)) {
+            return new ContestClarificationConfig.Builder()
+                    .isAllowedToCreateClarification(false)
+                    .build();
+        }
+
         List<String> problemJids = problemStore.getOpenProblemJids(contestJid);
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Map<String, String> problemAliasesMap = problemStore.findProblemAliasesByJids(contestJid, problemJidsSet);
@@ -90,9 +95,42 @@ public class ContestClarificationResource implements ContestClarificationService
                         e -> e.getKey(),
                         e -> SandalphonUtils.getProblemName(e.getValue(), language)));
 
+        return new ContestClarificationConfig.Builder()
+                .isAllowedToCreateClarification(true)
+                .problemJids(problemJids)
+                .problemAliasesMap(problemAliasesMap)
+                .problemNamesMap(problemNamesMap)
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ContestClarificationsResponse getMyClarifications(
+            AuthHeader authHeader,
+            String contestJid,
+            Optional<String> language) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        checkAllowed(clarificationRoleChecker.canViewOwnClarifications(actorJid, contest));
+
+        List<ContestClarification> clarifications = clarificationStore.getClarifications(contestJid, actorJid);
+        Set<String> problemJids = clarifications
+                .stream()
+                .map(ContestClarification::getTopicJid)
+                .filter(topicJid -> !topicJid.equals(contestJid))
+                .collect(Collectors.toSet());
+        Map<String, String> problemAliasesMap = problemStore.findProblemAliasesByJids(contestJid, problemJids);
+        Map<String, String> problemNamesMap = clientProblemService.findProblemsByJids(
+                sandalphonClientAuthHeader,
+                problemJids).entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        e -> e.getKey(),
+                        e -> SandalphonUtils.getProblemName(e.getValue(), language)));
+
         return new ContestClarificationsResponse.Builder()
                 .data(clarifications)
-                .problemJids(problemJids)
                 .problemAliasesMap(problemAliasesMap)
                 .problemNamesMap(problemNamesMap)
                 .build();
