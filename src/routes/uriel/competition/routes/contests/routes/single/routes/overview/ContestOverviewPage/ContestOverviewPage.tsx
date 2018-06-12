@@ -1,9 +1,9 @@
 import { Callout, Intent } from '@blueprintjs/core';
-import * as HTMLReactParser from 'html-react-parser';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
+import { HtmlText } from '../../../../../../../../../../components/HtmlText/HtmlText';
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../../../modules/store';
@@ -36,7 +36,7 @@ class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps> 
   }
 
   private renderDescription = (description: string) => {
-    return description && <div className="html-text">{HTMLReactParser(description)}</div>;
+    return description && <HtmlText>{description}</HtmlText>;
   };
 }
 

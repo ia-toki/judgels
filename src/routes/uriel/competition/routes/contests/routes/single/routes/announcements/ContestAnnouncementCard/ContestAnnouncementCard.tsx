@@ -1,8 +1,8 @@
 import { Callout } from '@blueprintjs/core';
-import * as HTMLReactParser from 'html-react-parser';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
+import { HtmlText } from '../../../../../../../../../../components/HtmlText/HtmlText';
 import { ContestAnnouncement } from '../../../../../../../../../../modules/api/uriel/contestAnnouncement';
 
 import './ContestAnnouncementCard.css';
@@ -20,6 +20,6 @@ export const ContestAnnouncementCard = (props: ContestAnnouncementCardProps) => 
     </p>
     <div className="clearfix" />
     <hr />
-    <div className="html-txt">{HTMLReactParser(props.announcement.content)}</div>
+    <HtmlText>{props.announcement.content}</HtmlText>
   </Callout>
 );

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import * as HTMLReactParser from 'html-react-parser';
 
+import { HtmlText } from '../../HtmlText/HtmlText';
 import { ContentCard } from '../../ContentCard/ContentCard';
 import { ProblemStatement } from '../../../modules/api/sandalphon/problem';
 
@@ -31,7 +31,9 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
             </tr>
           </tbody>
         </table>
-        <div className="problem-statement__text html-text">{HTMLReactParser(statement.text)}</div>
+        <div className="problem-statement__text">
+          <HtmlText>{statement.text}</HtmlText>
+        </div>
       </ContentCard>
     );
   }
