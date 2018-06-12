@@ -59,13 +59,11 @@ export class ContestAnnouncementsPage extends React.PureComponent<
       );
     }
 
-    return (
-      <>
-        {announcements.map(announcement => (
-          <ContestAnnouncementCard key={announcement.jid} announcement={announcement} />
-        ))}
-      </>
-    );
+    return announcements.map(announcement => (
+      <div className="content-card__section" key={announcement.jid}>
+        <ContestAnnouncementCard announcement={announcement} />
+      </div>
+    ));
   };
 }
 

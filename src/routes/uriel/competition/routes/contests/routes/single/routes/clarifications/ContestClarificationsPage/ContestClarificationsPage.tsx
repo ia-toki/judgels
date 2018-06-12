@@ -77,18 +77,15 @@ class ContestClarificationsPage extends React.Component<
       );
     }
 
-    return (
-      <>
-        {clarifications.map(clarification => (
-          <ContestClarificationCard
-            key={clarification.jid}
-            clarification={clarification}
-            problemAlias={problemAliasesMap![clarification.topicJid]}
-            problemName={problemNamesMap![clarification.topicJid]}
-          />
-        ))}
-      </>
-    );
+    return clarifications.map(clarification => (
+      <div className="content-card__section" key={clarification.jid}>
+        <ContestClarificationCard
+          clarification={clarification}
+          problemAlias={problemAliasesMap![clarification.topicJid]}
+          problemName={problemNamesMap![clarification.topicJid]}
+        />
+      </div>
+    ));
   };
 
   private renderCreateDialog = () => {
@@ -104,7 +101,11 @@ class ContestClarificationsPage extends React.Component<
       problemNamesMap,
       onRefreshClarifications: this.refreshClarifications,
     };
-    return <ContestClarificationCreateDialog {...props} />;
+    return (
+      <div className="content-card__section">
+        <ContestClarificationCreateDialog {...props} />
+      </div>
+    );
   };
 }
 
