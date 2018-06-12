@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestClarificationsResponse.class)
 public interface ContestClarificationsResponse {
     List<ContestClarification> getData();
+    List<String> getProblemJids();
     Map<String, String> getProblemAliasesMap();
     Map<String, String> getProblemNamesMap();
 

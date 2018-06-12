@@ -62,11 +62,8 @@ public class ContestProblemStore {
                         .build());
     }
 
-    public Set<String> getOpenProblemJids(String contestJid) {
-        return problemDao.selectAllOpenByContestJid(contestJid)
-                .stream()
-                .map(model -> model.problemJid)
-                .collect(Collectors.toSet());
+    public List<String> getOpenProblemJids(String contestJid) {
+        return Lists.transform(problemDao.selectAllOpenByContestJid(contestJid), model -> model.problemJid);
     }
 
     public List<ContestProblem> getProblems(String contestJid) {

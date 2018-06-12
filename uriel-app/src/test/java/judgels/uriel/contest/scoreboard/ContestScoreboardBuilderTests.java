@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import java.time.Instant;
 import java.util.Optional;
 import judgels.gabriel.api.LanguageRestriction;
@@ -123,7 +123,7 @@ class ContestScoreboardBuilderTests {
 
         when(ioiScoreboardProcessor.parseFromString(mapper, "json")).thenReturn(ioiScoreboard);
 
-        when(problemStore.getOpenProblemJids(CONTEST_JID)).thenReturn(ImmutableSet.of("p1", "p3"));
+        when(problemStore.getOpenProblemJids(CONTEST_JID)).thenReturn(ImmutableList.of("p1", "p3"));
 
         IoiScoreboard filteredScoreboard = mock(IoiScoreboard.class);
         when(ioiScoreboardProcessor.filterProblemJids(eq(ioiScoreboard), anySet(), any()))

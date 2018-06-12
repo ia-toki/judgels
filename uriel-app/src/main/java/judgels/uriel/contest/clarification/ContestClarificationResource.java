@@ -3,6 +3,7 @@ package judgels.uriel.contest.clarification;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
@@ -78,15 +79,12 @@ public class ContestClarificationResource implements ContestClarificationService
         checkAllowed(clarificationRoleChecker.canViewOwnClarifications(actorJid, contest));
 
         List<ContestClarification> clarifications = clarificationStore.getClarifications(contestJid, actorJid);
-        Set<String> problemJids = clarifications
-                .stream()
-                .map(ContestClarification::getTopicJid)
-                .filter(jid -> !jid.equals(contestJid))
-                .collect(Collectors.toSet());
-        Map<String, String> problemAliasesMap = problemStore.findProblemAliasesByJids(contestJid, problemJids);
+        List<String> problemJids = problemStore.getOpenProblemJids(contestJid);
+        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
+        Map<String, String> problemAliasesMap = problemStore.findProblemAliasesByJids(contestJid, problemJidsSet);
         Map<String, String> problemNamesMap = clientProblemService.findProblemsByJids(
                 sandalphonClientAuthHeader,
-                problemJids).entrySet()
+                problemJidsSet).entrySet()
                 .stream()
                 .collect(Collectors.toMap(
                         e -> e.getKey(),
@@ -94,6 +92,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         return new ContestClarificationsResponse.Builder()
                 .data(clarifications)
+                .problemJids(problemJids)
                 .problemAliasesMap(problemAliasesMap)
                 .problemNamesMap(problemNamesMap)
                 .build();

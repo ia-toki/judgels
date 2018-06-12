@@ -19,6 +19,7 @@ public interface ContestClarificationService {
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     ContestClarification createClarification(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,

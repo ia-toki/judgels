@@ -84,7 +84,7 @@ public class ContestScoreboardBuilder {
             return scoreboard;
         }
 
-        Set<String> openProblemJids = problemStore.getOpenProblemJids(contest.getJid());
+        Set<String> openProblemJids = ImmutableSet.copyOf(problemStore.getOpenProblemJids(contest.getJid()));
         if (openProblemJids.size() != scoreboard.getState().getContestantJids().size()) {
             IoiContestStyleConfig config = styleStore.getIoiStyleConfig(contest.getJid());
             IoiScoreboardProcessor ioiProcessor = (IoiScoreboardProcessor) processor;
