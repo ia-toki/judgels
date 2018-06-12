@@ -28,6 +28,7 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
     public List<ContestClarificationModel> selectAllByContestJidAndUserJid(String contestJid, String userJid) {
         return selectAll(new FilterOptions.Builder<ContestClarificationModel>()
                 .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
+                .putColumnsEq(ContestClarificationModel_.createdBy, userJid)
                 .build(), new SelectionOptions.Builder()
                 .orderDir(OrderDir.DESC)
                 .build());
@@ -37,6 +38,7 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
     public long selectCountAnsweredByContestJidAndUserJid(String contestJid, String userJid) {
         return selectCount(new FilterOptions.Builder<ContestClarificationModel>()
                 .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
+                .putColumnsEq(ContestClarificationModel_.createdBy, userJid)
                 .putColumnsEq(ContestClarificationModel_.status, ContestClarificationStatus.ANSWERED.name())
                 .build());
     }
