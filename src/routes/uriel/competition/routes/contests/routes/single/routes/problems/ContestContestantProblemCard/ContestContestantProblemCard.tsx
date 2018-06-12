@@ -31,7 +31,7 @@ export class ContestContestantProblemCard extends React.PureComponent<ContestCon
             </span>
           </Link>
         </div>
-        <div data-key="status" className="contestant-problem__status">
+        <div data-key="status" className="contestant-problem__status secondary-info">
           {this.renderStatus()}
         </div>
         <div className="clearfix" />

@@ -60,7 +60,7 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
   render() {
     const { leftComponent, rightComponent } = this.getWidgetComponents();
     return (
-      <Callout intent={Intent.PRIMARY}>
+      <Callout intent={Intent.PRIMARY} className="secondary-info">
         <div className="contest-state-widget__left">{leftComponent}</div>
         <div className="contest-state-widget__right">{rightComponent}</div>
         <div className="clearfix" />

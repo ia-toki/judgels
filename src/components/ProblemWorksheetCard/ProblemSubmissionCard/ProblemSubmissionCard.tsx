@@ -25,7 +25,7 @@ export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmission
   private renderSubmissionForm = () => {
     if (this.props.reasonNotAllowedToSubmit) {
       return (
-        <Callout icon="ban-circle">
+        <Callout icon="ban-circle" className="secondary-info">
           <span data-key="reason-not-allowed-to-submit">{this.props.reasonNotAllowedToSubmit}</span>
         </Callout>
       );

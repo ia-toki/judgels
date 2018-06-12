@@ -64,7 +64,11 @@ class ContestClarificationCreateDialog extends React.Component<
 
   private renderButton = (config: ContestClarificationConfig) => {
     if (!config.isAllowedToCreateClarification) {
-      return <Callout icon="ban-circle">No more clarifications are allowed.</Callout>;
+      return (
+        <Callout icon="ban-circle" className="secondary-info">
+          No more clarifications are allowed.
+        </Callout>
+      );
     }
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
