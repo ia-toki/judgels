@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Switch, withRouter } from 'react-router';
+import { Switch, withRouter, Route } from 'react-router';
 
 import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
@@ -12,6 +12,7 @@ import ActivatePage from './activate/ActivatePage/ActivatePage';
 import ForgotPasswordPage from './forgotPassword/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPage';
 import AccountRoutes from './account/routes/AccountRoutes';
+import ProfilesPage from './profiles/ProfilesPage/ProfilesPage';
 
 const JophielRoutes = () => (
   <div>
@@ -25,6 +26,7 @@ const JophielRoutes = () => (
       <GuestRoute exact path="/forgot-password" component={ForgotPasswordPage} />
       <GuestRoute exact path="/reset-password/:emailCode" component={ResetPasswordPage} />
       <UserRoute path="/account" component={AccountRoutes} />
+      <Route path="/profiles/:username" component={ProfilesPage} />
     </Switch>
   </div>
 );

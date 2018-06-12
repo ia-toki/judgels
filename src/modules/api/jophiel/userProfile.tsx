@@ -13,6 +13,10 @@ export interface UserProfile {
   shirtSize?: string;
 }
 
+export interface PublicUserProfile {
+  name?: string;
+}
+
 export const userProfileGender = {
   ['MALE']: 'Male',
   ['FEMALE']: 'Female',
@@ -24,6 +28,10 @@ export function createUserProfileAPI() {
   return {
     getProfile: (token: string, userJid: string): Promise<UserProfile> => {
       return get(`${baseURL}/${userJid}/profile`, token);
+    },
+
+    getPublicProfile: (userJid: string): Promise<PublicUserProfile> => {
+      return get(`${baseURL}/${userJid}/profile/public`);
     },
 
     updateProfile: (token: string, userJid: string, userProfile: UserProfile): Promise<void> => {
