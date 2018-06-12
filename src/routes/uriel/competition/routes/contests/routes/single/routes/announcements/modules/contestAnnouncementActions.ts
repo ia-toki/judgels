@@ -10,7 +10,7 @@ export const contestAnnouncementActions = {
 
   alertNew: () => {
     return async (dispatch, getState, { toastActions }) => {
-      toastActions.showAlertToast('You have new notification(s).');
+      toastActions.showAlertToast('You have new announcement(s).');
     };
   },
 };
