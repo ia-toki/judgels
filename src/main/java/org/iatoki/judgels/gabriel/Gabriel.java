@@ -78,7 +78,12 @@ public final class Gabriel {
             builder.registerTypeAdapter(byte[].class, (JsonDeserializer<byte[]>) (json, typeOfT, context) -> Base64.getDecoder().decode(json.getAsString()));
             Gson gson = builder.create();
 
-            GradingRequest request = gson.fromJson(message.getMessage(), GradingRequest.class);
+            GradingRequest request;
+            try {
+                request = gson.fromJson(message.getMessage(), GradingRequest.class);
+            } catch (Exception e) {
+                request = new Gson().fromJson(message.getMessage(), GradingRequest.class);
+            }
 
             GabrielLogger.getLogger().info("New grading request: {}", request.getGradingJid());
 
