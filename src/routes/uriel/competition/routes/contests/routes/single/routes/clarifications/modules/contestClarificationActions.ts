@@ -1,6 +1,15 @@
 import { selectToken } from '../../../../../../../../../../modules/session/sessionSelectors';
+import { ContestClarificationData } from '../../../../../../../../../../modules/api/uriel/contestClarification';
 
 export const contestClarificationActions = {
+  create: (contestJid: string, data: ContestClarificationData) => {
+    return async (dispatch, getState, { contestClarificationAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await contestClarificationAPI.createClarification(token, contestJid, data);
+      toastActions.showSuccessToast('Clarification submitted.');
+    };
+  },
+
   fetchMyList: (contestJid: string, language: string) => {
     return async (dispatch, getState, { contestClarificationAPI }) => {
       const token = selectToken(getState());

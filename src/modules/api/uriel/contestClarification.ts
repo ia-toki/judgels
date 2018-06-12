@@ -1,4 +1,4 @@
-import { get } from '../http';
+import { get, post } from '../http';
 import { APP_CONFIG } from '../../../conf';
 
 export enum ContestClarificationStatus {
@@ -21,8 +21,15 @@ export interface ContestClarification {
   answeredTime?: number;
 }
 
+export interface ContestClarificationData {
+  topicJid: string;
+  title: string;
+  question: string;
+}
+
 export interface ContestClarificationsResponse {
   data: ContestClarification[];
+  problemJids: string[];
   problemAliasesMap: { [problemJid: string]: string };
   problemNamesMap: { [problemJid: string]: string };
 }
@@ -31,6 +38,10 @@ export function createContestClarificationAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
+    createClarification: (token: string, contestJid: string, data: ContestClarificationData): Promise<void> => {
+      return post(`${baseURL}/${contestJid}/clarifications`, token, data);
+    },
+
     getMyClarifications: (
       token: string,
       contestJid: string,

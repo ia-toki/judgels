@@ -6,6 +6,7 @@ import { FormattedRelative } from 'react-intl';
 import { ContentCard } from '../ContentCard/ContentCard';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { UserInfo } from '../../modules/api/jophiel/user';
+import { constructProblemName } from '../../modules/api/sandalphon/problem';
 import { Submission } from '../../modules/api/sandalphon/submission';
 import { GradingEngineCode } from '../../modules/api/gabriel/engine';
 import { getGradingLanguageName } from '../../modules/api/gabriel/language';
@@ -18,8 +19,8 @@ export interface SubmissionDetailsProps {
   submission: Submission;
   source: SubmissionSource;
   user: UserInfo;
-  problemName: string;
-  problemAlias: string;
+  problemName?: string;
+  problemAlias?: string;
   containerTitle: string;
   containerName: string;
 }
@@ -75,7 +76,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               </tr>
               <tr>
                 <td>Problem</td>
-                <td>{(problemAlias ? problemAlias + '. ' : '') + problemName}</td>
+                <td>{constructProblemName(problemName, problemAlias)}</td>
               </tr>
               <tr>
                 <td>{containerTitle}</td>

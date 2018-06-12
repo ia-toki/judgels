@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
+import ContestClarificationCreateDialog from '../ContestClarificationCard/ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 import {
   ContestClarification,
@@ -15,6 +16,8 @@ import { selectContest } from '../../../../../modules/contestSelectors';
 import { contestClarificationActions as injectedContestClarificationActions } from '../modules/contestClarificationActions';
 import { selectStatementLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 
+import './ContestClarificationsPage.css';
+
 export interface ContestClarificationsPageProps {
   contest: Contest;
   statementLanguage: string;
@@ -23,8 +26,10 @@ export interface ContestClarificationsPageProps {
 
 interface ContestClarificationsPageState {
   clarifications?: ContestClarification[];
+  problemJids?: string[];
   problemAliasesMap?: { [problemJid: string]: string };
   problemNamesMap?: { [problemJid: string]: string };
+  isCreateDialogOpen?: boolean;
 }
 
 class ContestClarificationsPage extends React.Component<
@@ -34,11 +39,7 @@ class ContestClarificationsPage extends React.Component<
   state: ContestClarificationsPageState = {};
 
   async componentDidMount() {
-    const { data, problemAliasesMap, problemNamesMap } = await this.props.onFetchMyClarifications(
-      this.props.contest.jid,
-      this.props.statementLanguage
-    );
-    this.setState({ clarifications: data, problemAliasesMap, problemNamesMap });
+    await this.refreshClarifications();
   }
 
   render() {
@@ -46,10 +47,19 @@ class ContestClarificationsPage extends React.Component<
       <ContentCard>
         <h3>Clarifications</h3>
         <hr />
+        {this.renderCreateDialog()}
         {this.renderClarifications()}
       </ContentCard>
     );
   }
+
+  private refreshClarifications = async () => {
+    const { data, problemJids, problemAliasesMap, problemNamesMap } = await this.props.onFetchMyClarifications(
+      this.props.contest.jid,
+      this.props.statementLanguage
+    );
+    this.setState({ clarifications: data, problemJids, problemAliasesMap, problemNamesMap });
+  };
 
   private renderClarifications = () => {
     const { clarifications, problemAliasesMap, problemNamesMap } = this.state;
@@ -79,6 +89,22 @@ class ContestClarificationsPage extends React.Component<
         ))}
       </>
     );
+  };
+
+  private renderCreateDialog = () => {
+    const { problemJids, problemAliasesMap, problemNamesMap } = this.state;
+    if (!problemJids || !problemAliasesMap || !problemNamesMap) {
+      return null;
+    }
+
+    const props: any = {
+      contestJid: this.props.contest.jid,
+      problemJids,
+      problemAliasesMap,
+      problemNamesMap,
+      onRefreshClarifications: this.refreshClarifications,
+    };
+    return <ContestClarificationCreateDialog {...props} />;
   };
 }
 

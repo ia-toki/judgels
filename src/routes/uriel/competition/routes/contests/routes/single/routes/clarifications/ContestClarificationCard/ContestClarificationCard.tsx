@@ -1,5 +1,4 @@
 import { Callout, Classes, Intent, Tag } from '@blueprintjs/core';
-import * as HTMLReactParser from 'html-react-parser';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
@@ -30,7 +29,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
         </p>
         <div className="clearfix" />
         <hr />
-        <div className="html-txt">{HTMLReactParser(clarification.question)}</div>
+        <div className="multiline-text">{clarification.question}</div>
         <Callout
           className="contest-clarification-card contest-clarification-card__answer"
           intent={Intent.WARNING}
@@ -63,7 +62,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
         </p>
         <div className="clearfix" />
         <hr />
-        <div className="html-txt">{HTMLReactParser(clarification.answer)}</div>
+        <div className="multiline-text">{clarification.answer}</div>
       </>
     );
   };

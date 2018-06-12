@@ -10,6 +10,10 @@ export function getProblemName(problem: ProblemInfo, language: string) {
   return problem.namesByLanguage[language] || problem.namesByLanguage[problem.defaultLanguage];
 }
 
+export function constructProblemName(name?: string, alias?: string) {
+  return (alias && alias + '. ') + (name || '');
+}
+
 export interface ProblemStatement {
   name: string;
   timeLimit: number;

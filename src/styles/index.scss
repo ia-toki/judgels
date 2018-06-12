@@ -141,6 +141,10 @@ table {
   }
 }
 
+.multiline-text {
+  white-space: pre-wrap;
+}
+
 .clearfix {
   &::after {
     display: block;
