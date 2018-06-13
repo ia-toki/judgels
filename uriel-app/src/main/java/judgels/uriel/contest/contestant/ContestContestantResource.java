@@ -58,6 +58,16 @@ public class ContestContestantResource implements ContestContestantService {
     }
 
     @Override
+    @UnitOfWork(readOnly = true)
+    public long getContestantsCount(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        checkAllowed(contestantRoleChecker.canGetContestants(actorJid, contest));
+
+        return contestantStore.getContestantsCount(contestJid);
+    }
+
+    @Override
     @UnitOfWork
     public void register(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);

@@ -23,6 +23,13 @@ public interface ContestContestantService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
 
+    @GET
+    @Path("/count")
+    @Produces(APPLICATION_JSON)
+    long getContestantsCount(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid);
+
     @POST
     @Path("/me")
     void register(

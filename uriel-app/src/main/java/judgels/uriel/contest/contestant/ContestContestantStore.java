@@ -50,6 +50,10 @@ public class ContestContestantStore {
         });
     }
 
+    public long getContestantsCount(String contestJid) {
+        return contestantDao.selectCountByContestJid(contestJid);
+    }
+
     public Set<String> getContestants(String contestJid) {
         return contestantDao.selectAllByContestJid(contestJid)
                 .stream()

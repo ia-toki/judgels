@@ -73,6 +73,8 @@ public class ContestWebConfigFetcher {
         ContestState contestState;
         Optional<Duration> remainingContestStateDuration = Optional.empty();
 
+        // TODO(fushar): refactor into separate "fetcher"
+
         if (contestTimer.hasFinished(contest, userJid)) {
             contestState = ContestState.FINISHED;
         } else if (contestTimer.hasStarted(contest, userJid)) {
