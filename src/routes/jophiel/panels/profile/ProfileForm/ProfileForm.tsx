@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 import { FormTableTextInput } from '../../../../../components/forms/FormTableTextInput/FormTableTextInput';
-import { Required } from '../../../../../components/forms/validations';
 import { HorizontalDivider } from '../../../../../components/HorizontalDivider/HorizontalDivider';
 import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
 import { ActionButtons } from '../../../../../components/ActionButtons/ActionButtons';
@@ -15,8 +14,6 @@ import { UserProfile } from '../../../../../modules/api/jophiel/userProfile';
 const nameField: any = {
   name: 'name',
   label: 'Name',
-  labelHelper: 'required',
-  validate: [Required],
 };
 
 const genderField: any = {
