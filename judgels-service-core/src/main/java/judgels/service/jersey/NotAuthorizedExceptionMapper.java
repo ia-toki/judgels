@@ -15,7 +15,7 @@ public class NotAuthorizedExceptionMapper implements ExceptionMapper<NotAuthoriz
         // This is a hack because currently http-remoting does not support 401 exception :(
 
         Map<String, String> serializableError = Maps.newHashMap();
-        serializableError.put("errorType", "CUSTOM_CLIENT");
+        serializableError.put("errorCode", "CUSTOM_CLIENT");
         serializableError.put("errorName", "Judgels:Unauthorized");
 
         return Response
