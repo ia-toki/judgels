@@ -6,7 +6,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableSelectionOptions.class)
 public interface SelectionOptions {
-    SelectionOptions DEFAULT = new Builder().build();
+    SelectionOptions DEFAULT_PAGED = new Builder().pageSize(20).build();
+    SelectionOptions DEFAULT_ALL = new Builder().pageSize(0).build();
 
     int getPage();
     int getPageSize();
@@ -16,7 +17,6 @@ public interface SelectionOptions {
     class Builder extends ImmutableSelectionOptions.Builder {
         public Builder() {
             page(1);
-            pageSize(20);
             orderBy("id");
             orderDir(OrderDir.ASC);
         }

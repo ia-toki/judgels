@@ -207,46 +207,46 @@ class HibernateDaoIntegrationTests {
 
         Page<ExampleModel> page = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.column1, "a1")
-                .build(), new SelectionOptions.Builder().build());
+                .build());
         assertThat(page.getTotalData()).isEqualTo(2);
         assertThat(page.getData()).containsExactly(model1, model2);
 
         page = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.column2, "b1")
-                .build(), new SelectionOptions.Builder().build());
+                .build());
         assertThat(page.getTotalData()).isEqualTo(3);
         assertThat(page.getData()).containsExactly(model1, model3, model4);
 
         page = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.column2, "b2")
-                .build(), new SelectionOptions.Builder().build());
+                .build());
         assertThat(page.getTotalData()).isEqualTo(1);
         assertThat(page.getData()).containsExactly(model2);
 
         page = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.column2, "b3")
-                .build(), new SelectionOptions.Builder().build());
+                .build());
         assertThat(page.getTotalData()).isZero();
         assertThat(page.getData()).isEmpty();
 
         page = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.column1, "a1")
                 .putColumnsEq(ExampleModel_.column2, "b1")
-                .build(), new SelectionOptions.Builder().build());
+                .build());
         assertThat(page.getTotalData()).isEqualTo(1);
         assertThat(page.getData()).containsExactly(model1);
 
         page = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.column1, "a2")
                 .putColumnsEq(ExampleModel_.column2, "b1")
-                .build(), new SelectionOptions.Builder().build());
+                .build());
         assertThat(page.getTotalData()).isEqualTo(2);
         assertThat(page.getData()).containsExactly(model3, model4);
 
         page = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.column1, "a2")
                 .putColumnsEq(ExampleModel_.column2, "b2")
-                .build(), new SelectionOptions.Builder().build());
+                .build());
         assertThat(page.getTotalData()).isZero();
         assertThat(page.getData()).isEmpty();
     }
@@ -291,16 +291,12 @@ class HibernateDaoIntegrationTests {
         Page<ExampleModel> models = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.uniqueColumn1, "x")
                 .putColumnsIn(ExampleModel_.column1, ImmutableSet.of("a", "d"))
-                .build(), new SelectionOptions.Builder()
-                .pageSize(0)
                 .build());
         assertThat(models.getData()).containsExactly(model1, model4);
 
         models = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
                 .putColumnsEq(ExampleModel_.uniqueColumn1, "x")
                 .putColumnsIn(ExampleModel_.column1, ImmutableSet.of())
-                .build(), new SelectionOptions.Builder()
-                .pageSize(0)
                 .build());
         assertThat(models.getData()).isEmpty();
     }
@@ -363,16 +359,17 @@ class HibernateDaoIntegrationTests {
         dao.insert(model3);
 
         Page<ExampleModel> models = dao.selectPaged(
-                new FilterOptions.Builder<ExampleModel>().build(),
-                new SelectionOptions.Builder().build());
+                new FilterOptions.Builder<ExampleModel>().build());
         assertThat(models.getData()).containsExactly(model1, model2, model3);
 
         models = dao.selectPaged(new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
                 .orderBy("column1")
                 .build());
         assertThat(models.getData()).containsExactly(model2, model1, model3);
 
         models = dao.selectPaged(new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
                 .orderBy("column1")
                 .orderDir(OrderDir.DESC)
                 .build());

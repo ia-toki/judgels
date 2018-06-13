@@ -21,7 +21,7 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     Page<M> selectPaged(FilterOptions<M> filterOptions, SelectionOptions selectionOptions);
 
     default Page<M> selectPaged(FilterOptions<M> filterOptions) {
-        return selectPaged(filterOptions, SelectionOptions.DEFAULT);
+        return selectPaged(filterOptions, SelectionOptions.DEFAULT_PAGED);
     }
 
     default Page<M> selectPaged(SelectionOptions selectionOptions) {
@@ -31,7 +31,7 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     List<M> selectAll(FilterOptions<M> filterOptions, SelectionOptions selectionOptions);
 
     default List<M> selectAll(FilterOptions<M> filterOptions) {
-        return selectAll(filterOptions, SelectionOptions.DEFAULT);
+        return selectAll(filterOptions, SelectionOptions.DEFAULT_ALL);
     }
 
     default List<M> selectAll(SelectionOptions selectionOptions) {
