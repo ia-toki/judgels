@@ -18,7 +18,7 @@ public interface SelectionOptions {
         public Builder() {
             page(1);
             orderBy("id");
-            orderDir(OrderDir.ASC);
+            orderDir(OrderDir.DESC);
         }
     }
 }
