@@ -1,6 +1,7 @@
 package judgels.jophiel.user.superadmin;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Optional;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.role.SuperadminRoleStore;
@@ -24,16 +25,19 @@ public class SuperadminCreator {
 
     @UnitOfWork
     public void create() {
-        if (userStore.findUserByUsername(USERNAME).isPresent()) {
+        Optional<User> maybeUser = userStore.findUserByUsername(USERNAME);
+        User user;
+        if (maybeUser.isPresent()) {
+            user = maybeUser.get();
             LOGGER.info("superadmin user already exists");
         } else {
-            User user = userStore.createUser(new UserData.Builder()
+            user = userStore.createUser(new UserData.Builder()
                     .username(USERNAME)
                     .password(PASSWORD)
                     .email(USERNAME + "@jophiel.judgels")
                     .build());
-            superadminRoleStore.setSuperadmin(user.getJid());
             LOGGER.info("Created superadmin user");
         }
+        superadminRoleStore.setSuperadmin(user.getJid());
     }
 }

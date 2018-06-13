@@ -1,7 +1,6 @@
 package judgels.jophiel.user.superadmin;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,11 +31,15 @@ class SuperadminCreatorTests {
     @Test
     void skips_existing_superadmin() {
         when(userStore.findUserByUsername("superadmin"))
-                .thenReturn(Optional.of(mock(User.class)));
+                .thenReturn(Optional.of(new User.Builder()
+                        .jid("superadminUserJid")
+                        .username("superadmin")
+                        .build()));
 
         creator.create();
 
         verify(userStore, times(0)).createUser(any());
+        verify(superadminRoleStore).setSuperadmin("superadminUserJid");
     }
 
     @Test
