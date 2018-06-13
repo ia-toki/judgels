@@ -52,6 +52,12 @@ public interface UserService {
     Map<String, UserInfo> findUsersByJids(Set<String> jids);
 
     @POST
+    @Path("/countries")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Map<String, String> findUserCountriesByJids(Set<String> jids);
+
+    @POST
     @Path("/usernames")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)

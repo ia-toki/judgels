@@ -83,7 +83,7 @@ public class UserResource implements UserService {
     }
 
     @Override
-    @UnitOfWork
+    @UnitOfWork(readOnly = true)
     public Map<String, UserInfo> findUsersByJids(Set<String> jids) {
         return userStore.findUsersByJids(jids).entrySet()
                 .stream()
@@ -92,8 +92,15 @@ public class UserResource implements UserService {
                         e -> new UserInfo.Builder().username(e.getValue().getUsername()).build()));
     }
 
+    // TODO (fushar): tests
     @Override
-    @UnitOfWork
+    @UnitOfWork(readOnly = true)
+    public Map<String, String> findUserCountriesByJids(Set<String> jids) {
+        return userStore.findUserCountriesByJids(jids);
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
     public Map<String, User> findUsersByUsernames(Set<String> usernames) {
         return userStore.findUsersByUsernames(usernames);
     }

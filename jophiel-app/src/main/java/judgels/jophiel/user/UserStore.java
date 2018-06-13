@@ -16,6 +16,8 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserModel;
+import judgels.jophiel.persistence.UserProfileDao;
+import judgels.jophiel.persistence.UserProfileModel;
 import judgels.jophiel.user.avatar.UserAvatarFs;
 import judgels.jophiel.user.password.PasswordHash;
 import judgels.persistence.api.Page;
@@ -23,11 +25,13 @@ import judgels.persistence.api.SelectionOptions;
 
 public class UserStore {
     private final UserDao userDao;
+    private final UserProfileDao profileDao;
     private final FileSystem userAvatarFs;
 
     @Inject
-    public UserStore(UserDao userDao, @UserAvatarFs FileSystem userAvatarFs) {
+    public UserStore(UserDao userDao, UserProfileDao profileDao, @UserAvatarFs FileSystem userAvatarFs) {
         this.userDao = userDao;
+        this.profileDao = profileDao;
         this.userAvatarFs = userAvatarFs;
     }
 
@@ -143,6 +147,14 @@ public class UserStore {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public Map<String, String> findUserCountriesByJids(Set<String> jids) {
+        Map<String, UserProfileModel> profileModelsByUserJid = profileDao.selectAllByUserJids(jids);
+        return profileModelsByUserJid.entrySet()
+                .stream()
+                .filter(e -> e.getValue().nationality != null)
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().nationality));
     }
 
     public Map<String, User> findUsersByUsernames(Set<String> usernames) {
