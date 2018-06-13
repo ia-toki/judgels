@@ -20,7 +20,6 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jophiel.api.user.UserInfo;
 import judgels.jophiel.api.user.UserService;
-import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.SandalphonUtils;
@@ -102,8 +101,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.findContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewOwnSubmissions(actorJid, contest));
 
-        SelectionOptions.Builder options = new SelectionOptions.Builder();
-        options.orderDir(OrderDir.DESC);
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
         Page<Submission> data = submissionStore.getSubmissions(contestJid, actorJid, options.build());

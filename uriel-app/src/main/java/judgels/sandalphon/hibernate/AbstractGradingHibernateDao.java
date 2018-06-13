@@ -14,8 +14,6 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.Model_;
-import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.sandalphon.persistence.AbstractGradingModel;
 import judgels.sandalphon.persistence.AbstractGradingModel_;
@@ -34,12 +32,8 @@ public abstract class AbstractGradingHibernateDao<M extends AbstractGradingModel
         FilterOptions<M> filterOptions = new FilterOptions.Builder<M>()
                 .putColumnsEq(AbstractGradingModel_.submissionJid, submissionJid)
                 .build();
-        SelectionOptions selectionOptions = new SelectionOptions.Builder()
-                .orderBy("id")
-                .orderDir(OrderDir.DESC)
-                .build();
 
-        return selectAll(filterOptions, selectionOptions).stream().findFirst();
+        return selectAll(filterOptions).stream().findFirst();
     }
 
     @Override

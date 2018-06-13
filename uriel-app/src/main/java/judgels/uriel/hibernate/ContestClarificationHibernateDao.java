@@ -6,8 +6,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
-import judgels.persistence.api.OrderDir;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
 import judgels.uriel.persistence.ContestClarificationDao;
@@ -29,8 +27,6 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
         return selectAll(new FilterOptions.Builder<ContestClarificationModel>()
                 .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
                 .putColumnsEq(ContestClarificationModel_.createdBy, userJid)
-                .build(), new SelectionOptions.Builder()
-                .orderDir(OrderDir.DESC)
                 .build());
     }
 

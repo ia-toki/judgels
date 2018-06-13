@@ -80,13 +80,13 @@ class ContestStoreIntegrationTests {
                 new ContestSupervisorData.Builder().userJid(USER_2).permission(SupervisorPermission.all()).build());
         managerStore.upsertManager(contestC.getJid(), USER_3);
 
-        assertThat(getContests(ADMIN)).containsExactly(contestA, contestB, contestC, contestD);
-        assertThat(getContests(USER_1)).containsExactly(contestA, contestD);
-        assertThat(getContests(USER_2)).containsExactly(contestA, contestB, contestD);
-        assertThat(getContests(USER_3)).containsExactly(contestA, contestC, contestD);
+        assertThat(getContests(ADMIN)).containsExactly(contestD, contestC, contestB, contestA);
+        assertThat(getContests(USER_1)).containsExactly(contestD, contestA);
+        assertThat(getContests(USER_2)).containsExactly(contestD, contestB, contestA);
+        assertThat(getContests(USER_3)).containsExactly(contestD, contestC, contestA);
     }
 
     private List<Contest> getContests(String userJid) {
-        return store.getContests(userJid, SelectionOptions.DEFAULT).getData();
+        return store.getContests(userJid, SelectionOptions.DEFAULT_PAGED).getData();
     }
 }

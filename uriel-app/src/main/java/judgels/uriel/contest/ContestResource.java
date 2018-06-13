@@ -7,7 +7,6 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.service.actor.ActorChecker;
@@ -71,9 +70,8 @@ public class ContestResource implements ContestService {
     public Page<Contest> getContests(Optional<AuthHeader> authHeader, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
 
-        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         options.orderBy("beginTime");
-        options.orderDir(OrderDir.DESC);
         page.ifPresent(options::page);
 
         return contestStore.getContests(actorJid, options.build());
@@ -84,9 +82,8 @@ public class ContestResource implements ContestService {
     public List<Contest> getActiveContests(Optional<AuthHeader> authHeader) {
         String actorJid = actorChecker.check(authHeader);
 
-        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL);
         options.orderBy("beginTime");
-        options.orderDir(OrderDir.DESC);
 
         return contestStore.getActiveContests(actorJid, options.build());
     }
@@ -96,9 +93,8 @@ public class ContestResource implements ContestService {
     public Page<Contest> getPastContests(Optional<AuthHeader> authHeader, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
 
-        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         options.orderBy("beginTime");
-        options.orderDir(OrderDir.DESC);
         page.ifPresent(options::page);
 
         return contestStore.getPastContests(actorJid, options.build());
