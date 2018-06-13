@@ -2,9 +2,7 @@ package judgels.uriel.contest.contestant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.ImmutableList;
-import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
+import java.util.Set;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
@@ -37,20 +35,10 @@ class ContestContestantStoreIntegrationTests {
     void can_do_basic_crud() {
         Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
 
-        store.addContestants(contest.getJid(), ImmutableList.of("A", "B"));
+        store.upsertContestant(contest.getJid(), "A");
+        store.upsertContestant(contest.getJid(), "B");
 
-        Page<String> contestantJids = store.getContestantJids(contest.getJid(), SelectionOptions.DEFAULT);
-        assertThat(contestantJids.getData()).containsOnly("A", "B");
-    }
-
-    @Test
-    void can_add_without_duplication() {
-        Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
-
-        store.addContestants(contest.getJid(), ImmutableList.of("A", "B"));
-        store.addContestants(contest.getJid(), ImmutableList.of("A", "B", "B", "C", "D"));
-
-        Page<String> contestantJids = store.getContestantJids(contest.getJid(), SelectionOptions.DEFAULT);
-        assertThat(contestantJids.getData()).containsOnly("A", "B", "C", "D");
+        Set<String> contestantJids = store.getContestants(contest.getJid());
+        assertThat(contestantJids).containsOnly("A", "B");
     }
 }

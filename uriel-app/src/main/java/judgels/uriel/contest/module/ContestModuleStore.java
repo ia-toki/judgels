@@ -63,6 +63,11 @@ public class ContestModuleStore {
         return getModuleConfig(contestJid, FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.class);
     }
 
+    public boolean hasRegistrationModule(String contestJid) {
+        return moduleDao.selectByContestJidAndType(contestJid, REGISTRATION).isPresent();
+    }
+
+
     public Optional<ScoreboardModuleConfig> getScoreboardModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, SCOREBOARD, ScoreboardModuleConfig.class);
     }

@@ -17,5 +17,8 @@ public class ContestContestantModel extends Model {
     @Column(nullable = false)
     public String userJid;
 
+    @Column(nullable = false)
+    public String status;
+
     public Instant contestStartTime;
 }

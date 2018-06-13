@@ -1,8 +1,9 @@
 package judgels.uriel.hibernate;
 
+import static judgels.uriel.api.contest.contestant.ContestContestantStatus.APPROVED;
+
 import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
@@ -12,8 +13,6 @@ import javax.persistence.criteria.Subquery;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
-import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
@@ -36,22 +35,25 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
         return selectByFilter(new FilterOptions.Builder<ContestContestantModel>()
                 .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
                 .putColumnsEq(ContestContestantModel_.userJid, userJid)
+                .putColumnsEq(ContestContestantModel_.status, APPROVED.name())
                 .build());
     }
 
     @Override
-    public Set<ContestContestantModel> selectAllByContestJidAndUserJids(String contestJid, List<String> userJids) {
+    public Set<ContestContestantModel> selectAllByContestJidAndUserJids(String contestJid, Set<String> userJids) {
         return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
                 .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
                 .putColumnsIn(ContestContestantModel_.userJid, userJids)
+                .putColumnsEq(ContestContestantModel_.status, APPROVED.name())
                 .build()));
     }
 
     @Override
-    public Page<ContestContestantModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
-        return selectPaged(new FilterOptions.Builder<ContestContestantModel>()
+    public Set<ContestContestantModel> selectAllByContestJid(String contestJid) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
                 .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
-                .build(), options);
+                .putColumnsEq(ContestContestantModel_.status, APPROVED.name())
+                .build()));
     }
 
     static CustomPredicateFilter<ContestModel> hasContestant(String userJid) {
@@ -61,7 +63,8 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
 
             sq.where(
                     cb.equal(subRoot.get(ContestContestantModel_.contestJid), root.get(ContestModel_.jid)),
-                    cb.equal(subRoot.get(ContestContestantModel_.userJid), userJid));
+                    cb.equal(subRoot.get(ContestContestantModel_.userJid), userJid),
+                    cb.equal(subRoot.get(ContestContestantModel_.status), APPROVED.name()));
             sq.select(subRoot);
 
             return cb.exists(sq);

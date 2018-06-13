@@ -14,7 +14,7 @@ import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.palantir.remoting.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
@@ -102,11 +102,11 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
         contestantService.addContestants(
                 ADMIN_HEADER,
                 contestA.getJid(),
-                ImmutableList.of(USER_A_JID));
+                ImmutableSet.of(USER_A_JID));
         contestantService.addContestants(
                 ADMIN_HEADER,
                 contestB.getJid(),
-                ImmutableList.of(USER_A_JID, USER_B_JID));
+                ImmutableSet.of(USER_A_JID, USER_B_JID));
 
         Page<Contest> contests = contestService.getContests(of(USER_A_HEADER), empty());
         assertThat(contests.getData()).containsExactly(contestB, contestA);
