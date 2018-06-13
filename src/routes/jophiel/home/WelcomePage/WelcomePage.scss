@@ -1,6 +1,6 @@
 .banner {
   position: relative;
-  height: 330px;
+  height: 350px;
   margin-top: -50px;
   margin-left: -10px;
   margin-right: -10px;
@@ -9,7 +9,8 @@
 .banner__contents {
   position: absolute;
   margin-left: 100px;
-  max-width: 50%;
+  margin-right: 50px;
+  max-width: 600px;
 }
 
 .banner__text {
@@ -28,7 +29,7 @@
 
 .banner__image {
   position: absolute;
-  height: 330px;
+  height: 350px;
   width: 100%;
   object-fit: cover;
   filter: opacity(40%);
@@ -36,14 +37,7 @@
 
 .banner__overlay {
   position: absolute;
-  height: 330px;
-  width: 100%;
-  object-fit: cover;
-}
-
-.banner__image {
-  position: absolute;
-  height: 330px;
+  height: 350px;
   width: 100%;
   object-fit: cover;
 }
