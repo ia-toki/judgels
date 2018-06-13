@@ -18,6 +18,7 @@ import { createContestAPI } from './api/uriel/contest';
 import { createContestWebAPI } from './api/uriel/contestWeb';
 import { createContestAnnouncementAPI } from './api/uriel/contestAnnouncement';
 import { createContestClarificationAPI } from './api/uriel/contestClarification';
+import { createContestContestantAPI } from './api/uriel/contestContestant';
 import { createContestProblemAPI } from './api/uriel/contestProblem';
 import { createContestScoreboardAPI } from './api/uriel/contestScoreboard';
 import { createContestSubmissionAPI } from './api/uriel/contestSubmission';
@@ -73,6 +74,7 @@ export const store = createStore<AppState>(
         contestWebAPI: createContestWebAPI(),
         contestAnnouncementAPI: createContestAnnouncementAPI(),
         contestClarificationAPI: createContestClarificationAPI(),
+        contestContestantAPI: createContestContestantAPI(),
         contestProblemAPI: createContestProblemAPI(),
         contestScoreboardAPI: createContestScoreboardAPI(),
         contestSubmissionAPI: createContestSubmissionAPI(),

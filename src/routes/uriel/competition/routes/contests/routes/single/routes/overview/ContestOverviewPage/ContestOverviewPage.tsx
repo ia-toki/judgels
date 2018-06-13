@@ -4,6 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { HtmlText } from '../../../../../../../../../../components/HtmlText/HtmlText';
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
+import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
@@ -16,13 +17,28 @@ interface ContestOverviewPageProps extends RouteComponentProps<{ contestJid: str
 
 class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps> {
   render() {
-    const { contest } = this.props;
-
-    return <ContentCard>{this.renderDescription(contest.description)}</ContentCard>;
+    return (
+      <>
+        {this.renderRegistration()}
+        {this.renderDescription()}
+      </>
+    );
   }
 
-  private renderDescription = (description?: string) => {
-    return description && <HtmlText>{description}</HtmlText>;
+  private renderRegistration = () => {
+    return <ContestRegistrationCard />;
+  };
+
+  private renderDescription = () => {
+    const { description } = this.props.contest;
+    if (!description) {
+      return null;
+    }
+    return (
+      <ContentCard>
+        <HtmlText>{description}</HtmlText>
+      </ContentCard>
+    );
   };
 }
 
