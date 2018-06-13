@@ -135,8 +135,13 @@ public class ContestProblemResource implements ContestProblemService {
     }
 
     private String replaceRenderUrls(String statementText, String problemJid) {
-        return statementText.replaceAll(
-                "src=\"render/",
-                String.format("src=\"%s/api/v2/problems/%s/render/", sandalphonConfig.getBaseUrl(), problemJid));
+        String baseUrl = sandalphonConfig.getBaseUrl();
+        return statementText
+                .replaceAll(
+                        "src=\"render/",
+                        String.format("src=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid))
+                .replaceAll(
+                        "href=\"render/",
+                        String.format("href=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid));
     }
 }
