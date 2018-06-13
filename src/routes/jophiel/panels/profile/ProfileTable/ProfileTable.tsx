@@ -18,7 +18,7 @@ export const ProfileTable = (props: ProfileTableProps) => {
       title: 'Gender',
       value: profile.gender && userProfileGender[profile.gender],
     },
-    { key: 'nationality', title: 'Nationality', value: profile.nationality },
+    { key: 'nationality', title: 'Country', value: profile.nationality },
     { key: 'homeAddress', title: 'Home address', value: profile.homeAddress },
     { key: 'shirtSize', title: 'Shirt size', value: profile.shirtSize },
   ];
@@ -28,7 +28,7 @@ export const ProfileTable = (props: ProfileTableProps) => {
     { key: 'country', title: 'Country', value: profile.country },
     {
       key: 'province',
-      title: 'Province/state',
+      title: 'Province/State',
       value: profile.province,
     },
     { key: 'city', title: 'City', value: profile.city },

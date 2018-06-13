@@ -23,7 +23,7 @@ const genderField: any = {
 
 const nationalityField: any = {
   name: 'nationality',
-  label: 'Nationality',
+  label: 'Country',
 };
 
 const homeAddressField: any = {
@@ -48,7 +48,7 @@ const countryField: any = {
 
 const provinceField: any = {
   name: 'province',
-  label: 'Province/state',
+  label: 'Province/State',
 };
 
 const cityField: any = {
