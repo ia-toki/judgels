@@ -15,7 +15,6 @@ import judgels.jophiel.api.user.UserInfo;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.role.RoleChecker;
 import judgels.jophiel.session.SessionStore;
-import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.service.actor.ActorChecker;
@@ -55,8 +54,7 @@ public class UserResource implements UserService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewUserList(actorJid));
 
-        SelectionOptions.Builder options = new SelectionOptions.Builder();
-        options.orderDir(OrderDir.DESC);
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
         return userStore.getUsers(options.build());
     }

@@ -31,7 +31,7 @@ public class UserProfileHibernateDao extends HibernateDao<UserProfileModel> impl
     public Map<String, UserProfileModel> selectAllByUserJids(Set<String> userJids) {
         return selectAll(new FilterOptions.Builder<UserProfileModel>()
                 .putColumnsIn(UserProfileModel_.userJid, userJids)
-                .build()).getData()
+                .build())
                 .stream()
                 .collect(Collectors.toMap(m -> m.userJid, m -> m));
     }

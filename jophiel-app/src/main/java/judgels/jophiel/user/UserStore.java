@@ -79,7 +79,7 @@ public class UserStore {
     }
 
     public Page<User> getUsers(SelectionOptions options) {
-        Page<UserModel> models = userDao.selectAll(options);
+        Page<UserModel> models = userDao.selectPaged(options);
         return models.mapData(data -> Lists.transform(data, UserStore::fromModel));
     }
 

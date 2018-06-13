@@ -29,6 +29,6 @@ public class SessionHibernateDao extends UnmodifiableHibernateDao<SessionModel> 
     public List<SessionModel> selectAllByUserJid(String userJid) {
         return selectAll(new FilterOptions.Builder<SessionModel>()
                 .putColumnsEq(SessionModel_.userJid, userJid)
-                .build()).getData();
+                .build());
     }
 }

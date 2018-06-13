@@ -77,8 +77,8 @@ class UserStoreIntegrationTests {
 
         User budi = store.findUserByUsername("budi").get();
 
-        Page<User> users = store.getUsers(SelectionOptions.DEFAULT);
-        assertThat(users.getData()).containsExactly(user, nano, budi);
+        Page<User> users = store.getUsers(SelectionOptions.DEFAULT_PAGED);
+        assertThat(users.getData()).containsExactly(budi, nano, user);
     }
 
     @Test
@@ -157,6 +157,6 @@ class UserStoreIntegrationTests {
 
         assertThat(store.getUsersByTerm("di"))
                 .extracting("username")
-                .containsExactly("andi", "dimas");
+                .containsExactly("dimas", "andi");
     }
 }

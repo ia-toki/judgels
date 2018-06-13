@@ -51,7 +51,7 @@ public class UserResetPasswordHibernateDao extends HibernateDao<UserResetPasswor
                 .addCustomPredicates((cb, cq, root) -> cb.isFalse(root.get(UserResetPasswordModel_.consumed)))
                 .addCustomPredicates((cb, cq, root) ->
                         cb.between(root.get(Model_.createdAt), cb.literal(pastInstant), cb.literal(currentInstant)))
-                .build()).getData()
+                .build())
                 .stream()
                 .findFirst();
     }
