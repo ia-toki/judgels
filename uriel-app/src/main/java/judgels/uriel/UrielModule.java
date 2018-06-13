@@ -10,6 +10,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Optional;
 import javax.inject.Singleton;
+import javax.ws.rs.NotAuthorizedException;
 import judgels.jophiel.api.user.MyService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.jersey.JudgelsObjectMappers;
@@ -38,8 +39,11 @@ public class UrielModule {
             try {
                 return Optional.of(myService.getMyself(authHeader).getJid());
             } catch (RemoteException e) {
-                return Optional.empty();
+                if (e.getStatus() == 401) {
+                    throw new NotAuthorizedException(e);
+                }
             }
+            return Optional.empty();
         });
     }
 }
