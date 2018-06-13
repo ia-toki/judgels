@@ -1,5 +1,8 @@
+import { stringify } from 'query-string';
+
 import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
+import { Page } from '../pagination';
 
 export interface User {
   jid: string;
@@ -32,6 +35,11 @@ export function createUserAPI() {
 
     findUsersByUsernames: (usernames: string[]): Promise<UsernamesMap> => {
       return post(`${baseURL}/usernames`, undefined, usernames);
+    },
+
+    getUsers: (token: string, page: number): Promise<Page<User>> => {
+      const params = stringify({ page });
+      return get(`${baseURL}/?${params}`, token);
     },
   };
 }

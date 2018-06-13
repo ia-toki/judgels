@@ -1,4 +1,4 @@
-import { AccountRoutes } from './jophiel/accounts/AccountRoutes';
+import AccountRoutes from './jophiel/accounts/AccountRoutes';
 import JophielRoutes from './jophiel/JophielRoutes';
 import UrielRoutes from './uriel/UrielRoutes';
 import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
@@ -14,7 +14,7 @@ function shouldShowRoute(id: string, role: JophielRole) {
 const appRoutes = [
   {
     id: 'account',
-    title: 'Account Gate',
+    title: 'Accounts',
     route: {
       path: '/accounts',
       component: AccountRoutes,
