@@ -83,7 +83,7 @@ class ContestRegistrantsDialog extends React.PureComponent<
     ));
 
     return (
-      <table className="pt-html-table pt-html-table-striped">
+      <table className="pt-html-table pt-html-table-striped table-list">
         <thead>
           <tr>
             <th>Country</th>
