@@ -43,7 +43,7 @@ class SessionServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> userService.getUser(AuthHeader.of(sessionToken), user.getJid()))
-                .withMessageContaining("401");
+                .withMessageContaining("Judgels:Unauthorized");
 
         // test login with email
         assertThatCode(() -> sessionService.logIn(Credentials.of("user@domain.com", "password")))
