@@ -1,4 +1,4 @@
-import AccountRoutes from './jophiel/accounts/AccountRoutes';
+import SuperadminRoutes from './superadmin/SuperadminRoutes';
 import JophielRoutes from './jophiel/JophielRoutes';
 import UrielRoutes from './uriel/UrielRoutes';
 import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
@@ -17,7 +17,7 @@ const appRoutes = [
     title: 'Accounts',
     route: {
       path: '/accounts',
-      component: AccountRoutes,
+      component: SuperadminRoutes,
     },
   },
   {
