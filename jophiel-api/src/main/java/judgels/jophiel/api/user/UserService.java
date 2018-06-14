@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
 
@@ -43,7 +44,11 @@ public interface UserService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    Page<User> getUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @QueryParam("page") Optional<Integer> page);
+    Page<User> getUsers(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("page") Optional<Integer> page,
+            @QueryParam("orderBy") Optional<String> orderBy,
+            @QueryParam("orderDir") Optional<OrderDir> orderDir);
 
     @POST
     @Path("/jids")

@@ -39,8 +39,8 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(userService.usernameExists("random")).isFalse();
         assertThat(userService.emailExists("random@random.com")).isFalse();
 
-        Page<User> users = userService.getUsers(adminHeader, empty());
-        assertThat(users.getData()).contains(nano, budi);
+        Page<User> users = userService.getUsers(adminHeader, empty(), empty(), empty());
+        assertThat(users.getData()).containsSequence(budi, nano);
     }
 
     @Test
