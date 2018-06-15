@@ -3,6 +3,7 @@ package judgels.uriel.contest.module;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
+import static judgels.uriel.api.contest.module.ContestModuleType.PAUSED;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
@@ -39,12 +40,16 @@ public class ContestModuleStore {
         upsertModule(contestJid, CLARIFICATION_TIME_LIMIT, config);
     }
 
-    public void upsertRegistrationModule(String contestJid) {
-        upsertModule(contestJid, REGISTRATION, Collections.emptyMap());
-    }
-
     public void upsertFrozenScoreboardModule(String contestJid, FrozenScoreboardModuleConfig config) {
         upsertModule(contestJid, FROZEN_SCOREBOARD, config);
+    }
+
+    public void upsertPausedModule(String contestJid) {
+        upsertModule(contestJid, PAUSED, Collections.emptyMap());
+    }
+
+    public void upsertRegistrationModule(String contestJid) {
+        upsertModule(contestJid, REGISTRATION, Collections.emptyMap());
     }
 
     public void upsertVirtualModule(String contestJid, VirtualModuleConfig config) {
@@ -61,6 +66,10 @@ public class ContestModuleStore {
 
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.class);
+    }
+
+    public boolean hasPausedModule(String contestJid) {
+        return moduleDao.selectByContestJidAndType(contestJid, PAUSED).isPresent();
     }
 
     public boolean hasRegistrationModule(String contestJid) {

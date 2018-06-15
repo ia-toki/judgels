@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.contest.ContestTimer;
+import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestRoleDao;
@@ -15,6 +16,7 @@ public class ContestSubmissionRoleChecker {
     private final AdminRoleDao adminRoleDao;
     private final ContestRoleDao contestRoleDao;
     private final ContestTimer contestTimer;
+    private final ContestModuleStore moduleStore;
     private final ContestSupervisorStore supervisorStore;
 
     @Inject
@@ -22,23 +24,30 @@ public class ContestSubmissionRoleChecker {
             AdminRoleDao adminRoleDao,
             ContestRoleDao contestRoleDao,
             ContestTimer contestTimer,
+            ContestModuleStore moduleStore,
             ContestSupervisorStore supervisorStore) {
 
         this.adminRoleDao = adminRoleDao;
         this.contestTimer = contestTimer;
         this.contestRoleDao = contestRoleDao;
+        this.moduleStore = moduleStore;
         this.supervisorStore = supervisorStore;
     }
 
     public boolean canViewSubmission(String userJid, Contest contest, String submissionUserJid) {
-        return userJid.equals(submissionUserJid) || isSupervisorWithSubmissionPermissionOrAbove(userJid, contest);
+        if (canSuperviseSubmissions(userJid, contest)) {
+            return true;
+        }
+        return canViewOwnSubmissions(userJid, contest)
+                && userJid.equals(submissionUserJid);
     }
 
     public boolean canViewOwnSubmissions(String userJid, Contest contest) {
         if (canSuperviseSubmissions(userJid, contest)) {
             return true;
         }
-        return contestRoleDao.isContestantOrAbove(userJid, contest.getJid())
+        return contestRoleDao.isContestant(userJid, contest.getJid())
+                && !moduleStore.hasPausedModule(contest.getJid())
                 && contestTimer.hasStarted(contest, userJid);
     }
 

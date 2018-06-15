@@ -39,6 +39,7 @@ public class ContestClarificationRoleChecker {
     public boolean canCreateClarification(String userJid, Contest contest) {
         boolean can = contestRoleDao.isContestant(userJid, contest.getJid())
                 && moduleStore.hasClarificationModule(contest.getJid())
+                && !moduleStore.hasPausedModule(contest.getJid())
                 && contestTimer.hasStarted(contest, userJid)
                 && !contestTimer.hasFinished(contest, userJid);
 
@@ -53,11 +54,12 @@ public class ContestClarificationRoleChecker {
     }
 
     public boolean canViewOwnClarifications(String userJid, Contest contest) {
-        if (adminRoleDao.isAdmin(userJid) || isSupervisorWithClarificationPermissionOrAbove(userJid, contest)) {
+        if (isSupervisorWithClarificationPermissionOrAbove(userJid, contest)) {
             return true;
         }
         return contestRoleDao.isContestant(userJid, contest.getJid())
                 && moduleStore.hasClarificationModule(contest.getJid())
+                && !moduleStore.hasPausedModule(contest.getJid())
                 && contestTimer.hasStarted(contest, userJid);
     }
 

@@ -43,10 +43,10 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
     }
 
     @Override
-    public boolean isContestantOrAbove(String userJid, String contestJid) {
+    public boolean isSupervisorOrAbove(String userJid, String contestJid) {
         return selectByFilter(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasContestJid(contestJid))
-                .addCustomPredicates(hasContestantOrAbove(userJid))
+                .addCustomPredicates(hasSupervisorOrAbove(userJid))
                 .build()).isPresent();
     }
 
@@ -66,9 +66,8 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
                 hasManager(userJid));
     }
 
-    static CustomPredicateFilter<ContestModel> hasContestantOrAbove(String userJid) {
+    static CustomPredicateFilter<ContestModel> hasSupervisorOrAbove(String userJid) {
         return or(
-                hasContestant(userJid),
                 hasSupervisor(userJid),
                 hasManager(userJid));
     }

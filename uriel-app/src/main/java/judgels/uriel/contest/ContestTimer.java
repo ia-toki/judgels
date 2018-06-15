@@ -24,6 +24,10 @@ public class ContestTimer {
         this.clock = clock;
     }
 
+    public boolean isPaused(Contest contest) {
+        return moduleStore.hasPausedModule(contest.getJid());
+    }
+
     public Duration getDurationToBeginTime(Contest contest) {
         return Duration.between(clock.instant(), contest.getBeginTime());
     }

@@ -21,14 +21,27 @@ class ContestSubmissionRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
     void view_submission() {
         assertThat(checker.canViewSubmission(ADMIN, contestB, CONTESTANT)).isTrue();
 
-        assertThat(checker.canViewSubmission(CONTESTANT, contestB, CONTESTANT)).isTrue();
+        assertThat(checker.canViewSubmission(CONTESTANT, contestB, CONTESTANT)).isFalse();
+        assertThat(checker.canViewSubmission(CONTESTANT, contestBStarted, CONTESTANT)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewSubmission(CONTESTANT, contestBStarted, CONTESTANT)).isFalse();
         assertThat(checker.canViewSubmission(CONTESTANT, contestB, ANOTHER_CONTESTANT)).isFalse();
+        assertThat(checker.canViewSubmission(CONTESTANT, contestBStarted, ANOTHER_CONTESTANT)).isFalse();
 
         assertThat(checker.canViewSubmission(SUPERVISOR, contestB, CONTESTANT)).isFalse();
+        assertThat(checker.canViewSubmission(SUPERVISOR, contestBStarted, CONTESTANT)).isFalse();
         addSupervisorToContestBWithPermission(SUBMISSION);
         assertThat(checker.canViewSubmission(SUPERVISOR, contestB, CONTESTANT)).isTrue();
+        assertThat(checker.canViewSubmission(SUPERVISOR, contestBStarted, CONTESTANT)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewSubmission(SUPERVISOR, contestB, CONTESTANT)).isTrue();
+        assertThat(checker.canViewSubmission(SUPERVISOR, contestBStarted, CONTESTANT)).isTrue();
 
         assertThat(checker.canViewSubmission(MANAGER, contestB, CONTESTANT)).isTrue();
+        assertThat(checker.canViewSubmission(MANAGER, contestBStarted, CONTESTANT)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewSubmission(MANAGER, contestB, CONTESTANT)).isTrue();
+        assertThat(checker.canViewSubmission(MANAGER, contestBStarted, CONTESTANT)).isTrue();
     }
 
     @Test
@@ -49,22 +62,30 @@ class ContestSubmissionRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
         assertThat(checker.canViewOwnSubmissions(CONTESTANT, contestAStarted)).isFalse();
         assertThat(checker.canViewOwnSubmissions(CONTESTANT, contestB)).isFalse();
         assertThat(checker.canViewOwnSubmissions(CONTESTANT, contestBStarted)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewOwnSubmissions(CONTESTANT, contestBStarted)).isFalse();
         assertThat(checker.canViewOwnSubmissions(CONTESTANT, contestC)).isFalse();
 
         assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestAStarted)).isFalse();
         assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestBStarted)).isFalse();
         assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(SUBMISSION);
         assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestAStarted)).isFalse();
         assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestBStarted)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestBStarted)).isTrue();
         assertThat(checker.canViewOwnSubmissions(SUPERVISOR, contestC)).isFalse();
 
         assertThat(checker.canViewOwnSubmissions(MANAGER, contestA)).isFalse();
         assertThat(checker.canViewOwnSubmissions(MANAGER, contestAStarted)).isFalse();
+        assertThat(checker.canViewOwnSubmissions(MANAGER, contestB)).isTrue();
+        assertThat(checker.canViewOwnSubmissions(MANAGER, contestBStarted)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
         assertThat(checker.canViewOwnSubmissions(MANAGER, contestB)).isTrue();
         assertThat(checker.canViewOwnSubmissions(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canViewOwnSubmissions(MANAGER, contestC)).isFalse();

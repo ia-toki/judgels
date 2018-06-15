@@ -46,14 +46,16 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
         moduleStore.upsertClarificationTimeLimitModule(
                 contestBStarted.getJid(),
                 new ClarificationTimeLimitModuleConfig.Builder()
-                        .clarificationDuration(Duration.ofHours(3))
+                        .clarificationDuration(Duration.ofHours(1))
                         .build());
-        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isFalse();
         moduleStore.upsertClarificationTimeLimitModule(
                 contestBStarted.getJid(),
                 new ClarificationTimeLimitModuleConfig.Builder()
-                        .clarificationDuration(Duration.ofHours(1))
+                        .clarificationDuration(Duration.ofHours(3))
                         .build());
+        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
         assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isFalse();
 
         assertThat(checker.canCreateClarification(CONTESTANT, contestBFinished)).isFalse();
@@ -91,6 +93,8 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
         assertThat(checker.canViewOwnClarifications(CONTESTANT, contestA)).isFalse();
         assertThat(checker.canViewOwnClarifications(CONTESTANT, contestB)).isFalse();
         assertThat(checker.canViewOwnClarifications(CONTESTANT, contestBStarted)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewOwnClarifications(CONTESTANT, contestBStarted)).isFalse();
         assertThat(checker.canViewOwnClarifications(CONTESTANT, contestC)).isFalse();
 
         assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestA)).isFalse();
@@ -101,9 +105,15 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
         assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestBStarted)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestBStarted)).isTrue();
         assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestC)).isFalse();
 
         assertThat(checker.canViewOwnClarifications(MANAGER, contestA)).isFalse();
+        assertThat(checker.canViewOwnClarifications(MANAGER, contestB)).isTrue();
+        assertThat(checker.canViewOwnClarifications(MANAGER, contestBStarted)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
         assertThat(checker.canViewOwnClarifications(MANAGER, contestB)).isTrue();
         assertThat(checker.canViewOwnClarifications(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canViewOwnClarifications(MANAGER, contestC)).isFalse();

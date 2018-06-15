@@ -4,5 +4,6 @@ public enum ContestState {
     NOT_BEGUN,
     BEGUN,
     STARTED,
-    FINISHED
+    FINISHED,
+    PAUSED,
 }
