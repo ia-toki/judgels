@@ -67,6 +67,8 @@ public class ContestContestantStore {
         contestantDao.selectByContestJidAndUserJid(contestJid, userJid).ifPresent(model -> {
             model.contestStartTime = clock.instant();
             contestantDao.update(model);
+
+            contestantCache.invalidate(contestJid + SEPARATOR + userJid);
         });
     }
 
