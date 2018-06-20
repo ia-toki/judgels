@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.UrielCacheUtils;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
@@ -57,6 +58,10 @@ public abstract class AbstractRoleCheckerIntegrationTests {
     protected ContestContestantStore contestantStore;
     protected ContestSupervisorStore supervisorStore;
     protected ContestManagerStore managerStore;
+
+    protected AbstractRoleCheckerIntegrationTests() {
+        UrielCacheUtils.setShortDuration(Duration.ZERO);
+    }
 
     protected void prepare(SessionFactory sessionFactory) {
         component = DaggerUrielIntegrationTestComponent.builder()

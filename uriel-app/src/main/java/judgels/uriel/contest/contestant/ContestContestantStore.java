@@ -1,24 +1,37 @@
 package judgels.uriel.contest.contestant;
 
+import static judgels.uriel.UrielCacheUtils.SEPARATOR;
+import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import static judgels.uriel.api.contest.contestant.ContestContestantStatus.APPROVED;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import java.time.Clock;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
 
+@Singleton
 public class ContestContestantStore {
     private final ContestContestantDao contestantDao;
     private final Clock clock;
+
+    private final Cache<String, ContestContestant> contestantCache;
 
     @Inject
     public ContestContestantStore(ContestContestantDao contestantDao, Clock clock) {
         this.contestantDao = contestantDao;
         this.clock = clock;
+
+        this.contestantCache = Caffeine.newBuilder()
+                .maximumSize(1000)
+                .expireAfterWrite(getShortDuration())
+                .build();
     }
 
     public void upsertContestant(String contestJid, String userJid) {
@@ -39,8 +52,15 @@ public class ContestContestantStore {
     }
 
     public Optional<ContestContestant> findContestant(String contestJid, String userJid) {
+        return Optional.ofNullable(contestantCache.get(
+                contestJid + SEPARATOR + userJid,
+                $ -> findContestantUncached(contestJid, userJid)));
+    }
+
+    public ContestContestant findContestantUncached(String contestJid, String userJid) {
         return contestantDao.selectByContestJidAndUserJid(contestJid, userJid)
-                .map(ContestContestantStore::fromModel);
+                .map(ContestContestantStore::fromModel)
+                .orElse(null);
     }
 
     public void startVirtualContest(String contestJid, String userJid) {

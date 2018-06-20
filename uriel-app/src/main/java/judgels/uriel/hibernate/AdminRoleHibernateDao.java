@@ -1,5 +1,9 @@
 package judgels.uriel.hibernate;
 
+import static judgels.uriel.UrielCacheUtils.getShortDuration;
+
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import java.time.Clock;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,13 +16,24 @@ import org.hibernate.SessionFactory;
 
 @Singleton
 public class AdminRoleHibernateDao extends UnmodifiableHibernateDao<AdminRoleModel> implements AdminRoleDao {
+    private final LoadingCache<String, Boolean> adminCache;
+
     @Inject
     public AdminRoleHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
+
+        this.adminCache = Caffeine.newBuilder()
+                .maximumSize(1_000)
+                .expireAfterWrite(getShortDuration())
+                .build(this::isAdminUncached);
     }
 
     @Override
     public boolean isAdmin(String userJid) {
+        return adminCache.get(userJid);
+    }
+
+    private boolean isAdminUncached(String userJid) {
         return selectByUniqueColumn(AdminRoleModel_.userJid, userJid).isPresent();
     }
 }

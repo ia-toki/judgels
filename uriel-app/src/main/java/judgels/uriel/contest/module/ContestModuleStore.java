@@ -1,5 +1,7 @@
 package judgels.uriel.contest.module;
 
+import static judgels.uriel.UrielCacheUtils.SEPARATOR;
+import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
@@ -10,10 +12,13 @@ import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
@@ -22,14 +27,25 @@ import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
 
+@Singleton
 public class ContestModuleStore {
     private final ContestModuleDao moduleDao;
     private final ObjectMapper mapper;
 
+    private final Cache<String, Optional<?>> moduleCache;
+
     @Inject
     public ContestModuleStore(ContestModuleDao moduleDao, ObjectMapper mapper) {
+
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA " + getShortDuration());
+
         this.moduleDao = moduleDao;
         this.mapper = mapper;
+
+        this.moduleCache = Caffeine.newBuilder()
+                .maximumSize(1_000)
+                .expireAfterWrite(getShortDuration())
+                .build();
     }
 
     public void upsertClarificationModule(String contestJid) {
@@ -110,7 +126,14 @@ public class ContestModuleStore {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private <T> Optional<T> getModuleConfig(String contestJid, ContestModuleType module, Class<T> configClass) {
+        return (Optional<T>) moduleCache.get(
+                contestJid + SEPARATOR + module.name(),
+                $ -> getModuleConfigUncached(contestJid, module, configClass));
+    }
+
+    private <T> Optional<T> getModuleConfigUncached(String contestJid, ContestModuleType module, Class<T> configClass) {
         return moduleDao.selectByContestJidAndType(contestJid, module)
                 .map(model -> parseConfig(model.config, configClass));
     }
