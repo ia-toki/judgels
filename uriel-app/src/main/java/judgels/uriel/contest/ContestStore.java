@@ -2,6 +2,8 @@ package judgels.uriel.contest;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.util.List;
@@ -20,18 +22,39 @@ public class ContestStore {
     private final AdminRoleDao adminRoleDao;
     private final ContestDao contestDao;
 
+    private final LoadingCache<String, Contest> contestByJidCache;
+    private final LoadingCache<Long, Contest> contestByIdCache;
+
     @Inject
     public ContestStore(AdminRoleDao adminRoleDao, ContestDao contestDao) {
         this.adminRoleDao = adminRoleDao;
         this.contestDao = contestDao;
+
+        // TODO(fushar): increase expiration time when we can update contests without using legacy Uriel.
+        this.contestByJidCache = Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterWrite(Duration.ofSeconds(5))
+                .build(this::findContestByJidUncached);
+        this.contestByIdCache = Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterWrite(Duration.ofSeconds(5))
+                .build(this::findContestByIdUncached);
     }
 
     public Optional<Contest> findContestByJid(String contestJid) {
-        return contestDao.selectByJid(contestJid).map(ContestStore::fromModel);
+        return Optional.ofNullable(contestByJidCache.get(contestJid));
+    }
+
+    private Contest findContestByJidUncached(String contestJid) {
+        return contestDao.selectByJid(contestJid).map(ContestStore::fromModel).orElse(null);
     }
 
     public Optional<Contest> findContestById(long contestId) {
-        return contestDao.select(contestId).map(ContestStore::fromModel);
+        return Optional.ofNullable(contestByIdCache.get(contestId));
+    }
+
+    private Contest findContestByIdUncached(long contestId) {
+        return contestDao.select(contestId).map(ContestStore::fromModel).orElse(null);
     }
 
     public Page<Contest> getContests(String userJid, SelectionOptions options) {
