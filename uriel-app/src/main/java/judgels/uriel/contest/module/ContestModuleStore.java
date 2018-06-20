@@ -36,9 +36,6 @@ public class ContestModuleStore {
 
     @Inject
     public ContestModuleStore(ContestModuleDao moduleDao, ObjectMapper mapper) {
-
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA " + getShortDuration());
-
         this.moduleDao = moduleDao;
         this.mapper = mapper;
 
