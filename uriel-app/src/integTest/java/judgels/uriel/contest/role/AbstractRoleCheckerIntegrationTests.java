@@ -60,7 +60,7 @@ public abstract class AbstractRoleCheckerIntegrationTests {
     protected ContestManagerStore managerStore;
 
     protected AbstractRoleCheckerIntegrationTests() {
-        UrielCacheUtils.setShortDuration(Duration.ZERO);
+        UrielCacheUtils.removeDurations();
     }
 
     protected void prepare(SessionFactory sessionFactory) {

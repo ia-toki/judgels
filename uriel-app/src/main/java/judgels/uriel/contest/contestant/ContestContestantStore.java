@@ -57,7 +57,7 @@ public class ContestContestantStore {
                 $ -> findContestantUncached(contestJid, userJid)));
     }
 
-    public ContestContestant findContestantUncached(String contestJid, String userJid) {
+    private ContestContestant findContestantUncached(String contestJid, String userJid) {
         return contestantDao.selectByContestJidAndUserJid(contestJid, userJid)
                 .map(ContestContestantStore::fromModel)
                 .orElse(null);
