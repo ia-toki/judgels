@@ -52,6 +52,6 @@ export class IoiScoreboardTable extends React.PureComponent<IoiScoreboardTablePr
   };
 
   private renderProblemCell = (idx: number, score: number | null) => {
-    return <td key={idx}>{score || '-'}</td>;
+    return <td key={idx}>{score === null ? '-' : score}</td>;
   };
 }

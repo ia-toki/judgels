@@ -19,8 +19,8 @@ describe('IoiScoreboardTable', () => {
         {
           rank: 1,
           contestantJid: 'JIDUSER2',
-          scores: [70, 30, 90],
-          totalScores: 190,
+          scores: [70, 30, 0],
+          totalScores: 100,
           lastAffectingPenalty: 0,
         },
         {
@@ -84,6 +84,6 @@ describe('IoiScoreboardTable', () => {
       .find('tbody')
       .children()
       .map(mapRow);
-    expect(points).toEqual([['190', '70', '30', '90'], ['60', '50', '-', '10']]);
+    expect(points).toEqual([['100', '70', '30', '0'], ['60', '50', '-', '10']]);
   });
 });
