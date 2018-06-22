@@ -7,6 +7,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.service.actor.ActorChecker;
@@ -84,6 +85,7 @@ public class ContestResource implements ContestService {
 
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL);
         options.orderBy("beginTime");
+        options.orderDir(OrderDir.ASC);
 
         return contestStore.getActiveContests(actorJid, options.build());
     }
