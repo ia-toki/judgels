@@ -79,7 +79,12 @@ ol li, ul li {
   margin-bottom: 2px;
 }
 
+code, pre {
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+}
+
 pre {
+  font-size: 13px;
   background-color: #f5f5f5;
   padding: 9px;
   overflow: auto;
