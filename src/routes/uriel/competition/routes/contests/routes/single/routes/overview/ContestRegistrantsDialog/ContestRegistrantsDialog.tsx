@@ -62,14 +62,14 @@ class ContestRegistrantsDialog extends React.PureComponent<
     }
 
     const sortedContestants = contestants.slice().sort((jid1, jid2) => {
-      const country1 = userCountriesMap[jid1] || '~';
-      const country2 = userCountriesMap[jid2] || '~';
+      const country1 = userCountriesMap[jid1] || 'ZZ';
+      const country2 = userCountriesMap[jid2] || 'ZZ';
       if (country1 !== country2) {
         return country1.localeCompare(country2);
       }
 
-      const username1 = (usersMap[jid1] && usersMap[jid1].username) || '~';
-      const username2 = (usersMap[jid2] && usersMap[jid2].username) || '~';
+      const username1 = (usersMap[jid1] && usersMap[jid1].username) || 'ZZ';
+      const username2 = (usersMap[jid2] && usersMap[jid2].username) || 'ZZ';
       return username1.localeCompare(username2);
     });
 
