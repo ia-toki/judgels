@@ -82,6 +82,13 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
                 $ -> isManagerUncached(userJid, contestJid));
     }
 
+    @Override
+    public void invalidateCaches(String userJid, String contestJid) {
+        viewerOrAboveCache.invalidate(userJid + SEPARATOR + contestJid);
+        contestantCache.invalidate(userJid + SEPARATOR + contestJid);
+        managerCache.invalidate(userJid + SEPARATOR + contestJid);
+    }
+
     private boolean isManagerUncached(String userJid, String contestJid) {
         return selectByFilter(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasContestJid(contestJid))

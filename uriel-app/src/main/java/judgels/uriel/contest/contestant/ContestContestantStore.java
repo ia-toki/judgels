@@ -15,17 +15,20 @@ import javax.inject.Singleton;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
+import judgels.uriel.persistence.ContestRoleDao;
 
 @Singleton
 public class ContestContestantStore {
     private final ContestContestantDao contestantDao;
+    private final ContestRoleDao roleDao;
     private final Clock clock;
 
     private final Cache<String, ContestContestant> contestantCache;
 
     @Inject
-    public ContestContestantStore(ContestContestantDao contestantDao, Clock clock) {
+    public ContestContestantStore(ContestContestantDao contestantDao, ContestRoleDao roleDao, Clock clock) {
         this.contestantDao = contestantDao;
+        this.roleDao = roleDao;
         this.clock = clock;
 
         this.contestantCache = Caffeine.newBuilder()
@@ -45,10 +48,16 @@ public class ContestContestantStore {
             toModel(contestJid, userJid, model);
             contestantDao.insert(model);
         }
+
+        contestantCache.invalidate(contestJid + SEPARATOR + userJid);
+        roleDao.invalidateCaches(userJid, contestJid);
     }
 
     public void removeContestant(String contestJid, String userJid) {
         contestantDao.selectByContestJidAndUserJid(contestJid, userJid).ifPresent(contestantDao::delete);
+
+        contestantCache.invalidate(contestJid + SEPARATOR + userJid);
+        roleDao.invalidateCaches(userJid, contestJid);
     }
 
     public Optional<ContestContestant> findContestant(String contestJid, String userJid) {
@@ -69,6 +78,7 @@ public class ContestContestantStore {
             contestantDao.update(model);
 
             contestantCache.invalidate(contestJid + SEPARATOR + userJid);
+            roleDao.invalidateCaches(userJid, contestJid);
         });
     }
 
