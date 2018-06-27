@@ -28,11 +28,14 @@ public class ActorChecker {
             throw new NotAuthorizedException(Response.SC_UNAUTHORIZED);
         }
 
-        String actorJid = actorExtractor.extractJid(authHeader)
-                .orElseThrow(() -> new NotAuthorizedException(Response.SC_UNAUTHORIZED));
+        Optional<String> actorJid = actorExtractor.extractJid(authHeader);
 
-        PerRequestActorProvider.setJid(actorJid);
-
-        return actorJid;
+        if (actorJid.isPresent()) {
+            PerRequestActorProvider.setJid(actorJid.get());
+            return actorJid.get();
+        } else {
+            PerRequestActorProvider.clearJid();
+            throw new NotAuthorizedException(Response.SC_UNAUTHORIZED);
+        }
     }
 }
