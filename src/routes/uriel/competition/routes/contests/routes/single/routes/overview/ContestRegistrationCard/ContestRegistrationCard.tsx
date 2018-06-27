@@ -8,12 +8,14 @@ import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistr
 import { ContestContestantState } from '../../../../../../../../../../modules/api/uriel/contestContestant';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../../../modules/store';
+import { selectIsLoggedIn } from '../../../../../../../../../../modules/session/sessionSelectors';
 import { selectContest } from '../../../../../modules/contestSelectors';
 import { contestContestantActions as injectedContestContestantActions } from '../../../modules/contestContestantActions';
 
 import './ContestRegistrationCard.css';
 
 export interface ContestRegistrationCardProps {
+  isLoggedIn: boolean;
   contest: Contest;
   onFetchMyContestantState: (contestJid: string) => Promise<ContestContestantState>;
   onFetchContestantsCount: (contestJid: string) => Promise<number>;
@@ -36,10 +38,21 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
   }
 
   render() {
+    if (!this.props.isLoggedIn) {
+      return (
+        <Callout icon="ban-circle" className="contest-registration-card--error secondary-info">
+          Please log in to register.
+        </Callout>
+      );
+    }
     return <Callout className="contest-registration-card">{this.renderCard()}</Callout>;
   }
 
   private refresh = async () => {
+    if (!this.props.isLoggedIn) {
+      return;
+    }
+
     const [contestantState, contestantsCount] = await Promise.all([
       this.props.onFetchMyContestantState(this.props.contest.jid),
       this.props.onFetchContestantsCount(this.props.contest.jid),
@@ -145,6 +158,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
 
 function createContestRegistrationCard(contestContestantActions) {
   const mapStateToProps = (state: AppState) => ({
+    isLoggedIn: selectIsLoggedIn(state),
     contest: selectContest(state)!,
   });
   const mapDispatchToProps = {

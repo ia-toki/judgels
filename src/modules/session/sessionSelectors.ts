@@ -1,5 +1,9 @@
 import { AppState } from '../store';
 
+export function selectIsLoggedIn(state: AppState) {
+  return state.session.isLoggedIn;
+}
+
 export function selectToken(state: AppState) {
   return state.session.token!;
 }
