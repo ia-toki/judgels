@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
 import judgels.uriel.persistence.ContestAnnouncementDao;
@@ -27,6 +28,9 @@ public class ContestAnnouncementHibernateDao extends JudgelsHibernateDao<Contest
         return selectAll(new FilterOptions.Builder<ContestAnnouncementModel>()
                 .putColumnsEq(ContestAnnouncementModel_.contestJid, contestJid)
                 .putColumnsEq(ContestAnnouncementModel_.status, ContestAnnouncementStatus.PUBLISHED.name())
+                .build(), new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_ALL)
+                .orderBy("updatedAt")
                 .build());
     }
 
