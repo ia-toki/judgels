@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import judgels.gabriel.api.GradingResultDetails;
@@ -95,7 +97,7 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         Grading.Builder grading = new Grading.Builder()
                 .id(model.id)
                 .jid(model.jid)
-                .verdict(model.verdictCode)
+                .verdict(parseVerdictCode(model.verdictCode, model.verdictName))
                 .score(model.score);
 
         if (model.details != null) {
@@ -118,5 +120,16 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         }
 
         return Optional.of(grading.build());
+    }
+
+    // TODO(fushar): this is a workaround to parse the worst subtask verdict in a subtasked problem.
+    // We should refactor this, by updating Gabriel.
+    private static String parseVerdictCode(String code, String name) {
+        Pattern pattern = Pattern.compile("^.*\\(worst: (.*)\\)$");
+        Matcher matcher = pattern.matcher(name);
+        if (matcher.matches()) {
+            return matcher.group(1);
+        }
+        return code;
     }
 }
