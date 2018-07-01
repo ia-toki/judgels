@@ -9,6 +9,8 @@ import { selectRecaptchaSiteKey, selectUserRegistrationUseRecaptcha } from '../.
 import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
 import { registerActions as injectedRegisterActions } from '../modules/registerActions';
 
+import './RegisterPage.css';
+
 export interface RegisterPageProps {
   onRegister: (data: RegisterFormData) => Promise<void>;
   useRecaptcha: boolean;
