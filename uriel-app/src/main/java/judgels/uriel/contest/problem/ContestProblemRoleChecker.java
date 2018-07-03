@@ -9,6 +9,7 @@ import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.contest.ContestTimer;
+import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestRoleDao;
@@ -18,23 +19,35 @@ public class ContestProblemRoleChecker {
     private final ContestRoleDao contestRoleDao;
     private final ContestTimer contestTimer;
     private final ContestSupervisorStore supervisorStore;
+    private final ContestModuleStore moduleStore;
 
     @Inject
     public ContestProblemRoleChecker(
             AdminRoleDao adminRoleDao,
             ContestRoleDao contestRoleDao,
             ContestTimer contestTimer,
-            ContestSupervisorStore supervisorStore) {
+            ContestSupervisorStore supervisorStore,
+            ContestModuleStore moduleStore) {
 
         this.adminRoleDao = adminRoleDao;
         this.contestTimer = contestTimer;
         this.contestRoleDao = contestRoleDao;
         this.supervisorStore = supervisorStore;
+        this.moduleStore = moduleStore;
     }
 
     public boolean canViewProblems(String userJid, Contest contest) {
         if (canSuperviseProblems(userJid, contest)) {
             return true;
+        }
+
+        // TODO (fushar): TEST!!
+        if (moduleStore.getVirtualModuleConfig(contest.getJid()).isPresent()) {
+            if (contestTimer.hasEnded(contest)) {
+                return true;
+            }
+            return contestRoleDao.isContestant(userJid, contest.getJid())
+                    && contestTimer.hasStarted(contest, userJid);
         }
         return contestRoleDao.isViewerOrAbove(userJid, contest.getJid()) && contestTimer.hasStarted(contest, userJid);
     }
