@@ -1,8 +1,14 @@
 package judgels.uriel.contest.problem;
 
+import static java.time.temporal.ChronoUnit.HOURS;
+import static judgels.uriel.UrielIntegrationTestPersistenceModule.NOW;
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.PROBLEM;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Duration;
+import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
@@ -31,6 +37,7 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
         assertThat(checker.canViewProblems(USER, contestA)).isFalse();
         assertThat(checker.canViewProblems(USER, contestAStarted)).isTrue();
         assertThat(checker.canViewProblems(USER, contestB)).isFalse();
+        assertThat(checker.canViewProblems(USER, contestBStarted)).isFalse();
         assertThat(checker.canViewProblems(USER, contestC)).isFalse();
 
         assertThat(checker.canViewProblems(CONTESTANT, contestA)).isFalse();
@@ -56,6 +63,78 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
         assertThat(checker.canViewProblems(MANAGER, contestB)).isTrue();
         assertThat(checker.canViewProblems(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canViewProblems(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
+    void view_problems_virtual() {
+        Contest contestAFinished = contestStore.createContest(new ContestData.Builder()
+                .name("Contest A - Ended")
+                .beginTime(NOW.minus(10, HOURS))
+                .build());
+
+        moduleStore.upsertVirtualModule(
+                contestA.getJid(),
+                new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(1)).build());
+        moduleStore.upsertVirtualModule(
+                contestAStarted.getJid(),
+                new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(1)).build());
+        moduleStore.upsertRegistrationModule(contestAFinished.getJid());
+        moduleStore.upsertVirtualModule(
+                contestAFinished.getJid(),
+                new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(1)).build());
+        moduleStore.upsertVirtualModule(
+                contestB.getJid(),
+                new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(1)).build());
+        moduleStore.upsertVirtualModule(
+                contestBStarted.getJid(),
+                new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(1)).build());
+        moduleStore.upsertVirtualModule(
+                contestBFinished.getJid(),
+                new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(1)).build());
+
+        contestantStore.startVirtualContest(contestBStarted.getJid(), CONTESTANT);
+
+        assertThat(checker.canViewProblems(ADMIN, contestA)).isTrue();
+        assertThat(checker.canViewProblems(ADMIN, contestAStarted)).isTrue();
+        assertThat(checker.canViewProblems(ADMIN, contestAFinished)).isTrue();
+        assertThat(checker.canViewProblems(ADMIN, contestB)).isTrue();
+        assertThat(checker.canViewProblems(ADMIN, contestBStarted)).isTrue();
+        assertThat(checker.canViewProblems(ADMIN, contestBFinished)).isTrue();
+
+        assertThat(checker.canViewProblems(USER, contestA)).isFalse();
+        assertThat(checker.canViewProblems(USER, contestAStarted)).isFalse();
+        assertThat(checker.canViewProblems(USER, contestAFinished)).isTrue();
+        assertThat(checker.canViewProblems(USER, contestB)).isFalse();
+        assertThat(checker.canViewProblems(USER, contestBStarted)).isFalse();
+        assertThat(checker.canViewProblems(USER, contestBFinished)).isFalse();
+
+        assertThat(checker.canViewProblems(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canViewProblems(CONTESTANT, contestAStarted)).isFalse();
+        assertThat(checker.canViewProblems(CONTESTANT, contestAFinished)).isTrue();
+        assertThat(checker.canViewProblems(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canViewProblems(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canViewProblems(CONTESTANT, contestBFinished)).isTrue();
+
+        assertThat(checker.canViewProblems(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestAStarted)).isFalse();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestAFinished)).isTrue();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestBFinished)).isTrue();
+        addSupervisorToContestBWithPermission(PROBLEM);
+        assertThat(checker.canViewProblems(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestAStarted)).isFalse();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestAFinished)).isTrue();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canViewProblems(SUPERVISOR, contestBFinished)).isTrue();
+
+        assertThat(checker.canViewProblems(MANAGER, contestA)).isFalse();
+        assertThat(checker.canViewProblems(MANAGER, contestAStarted)).isFalse();
+        assertThat(checker.canViewProblems(MANAGER, contestAFinished)).isTrue();
+        assertThat(checker.canViewProblems(MANAGER, contestB)).isTrue();
+        assertThat(checker.canViewProblems(MANAGER, contestBStarted)).isTrue();
+        assertThat(checker.canViewProblems(MANAGER, contestBFinished)).isTrue();
     }
 
     @Test

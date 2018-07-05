@@ -41,13 +41,12 @@ public class ContestProblemRoleChecker {
             return true;
         }
 
-        // TODO (fushar): TEST!!
         if (moduleStore.getVirtualModuleConfig(contest.getJid()).isPresent()) {
-            if (contestTimer.hasEnded(contest)) {
-                return true;
-            }
-            return contestRoleDao.isContestant(userJid, contest.getJid())
+            boolean asContestant = contestRoleDao.isContestant(userJid, contest.getJid())
                     && contestTimer.hasStarted(contest, userJid);
+            boolean asViewerOrAbove = contestRoleDao.isViewerOrAbove(userJid, contest.getJid())
+                    && contestTimer.hasEnded(contest);
+            return asContestant || asViewerOrAbove;
         }
         return contestRoleDao.isViewerOrAbove(userJid, contest.getJid()) && contestTimer.hasStarted(contest, userJid);
     }
