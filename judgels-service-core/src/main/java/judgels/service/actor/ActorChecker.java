@@ -17,6 +17,8 @@ public class ActorChecker {
     }
 
     public String check(Optional<AuthHeader> authHeader) {
+        PerRequestActorProvider.clearJid();
+
         if (!authHeader.isPresent()) {
             return GUEST;
         }
@@ -24,18 +26,17 @@ public class ActorChecker {
     }
 
     public String check(@Nullable AuthHeader authHeader) {
+        PerRequestActorProvider.clearJid();
+
         if (authHeader == null) {
             throw new NotAuthorizedException(Response.SC_UNAUTHORIZED);
         }
 
-        Optional<String> actorJid = actorExtractor.extractJid(authHeader);
+        String actorJid = actorExtractor.extractJid(authHeader)
+                .orElseThrow(() -> new NotAuthorizedException(Response.SC_UNAUTHORIZED));
 
-        if (actorJid.isPresent()) {
-            PerRequestActorProvider.setJid(actorJid.get());
-            return actorJid.get();
-        } else {
-            PerRequestActorProvider.clearJid();
-            throw new NotAuthorizedException(Response.SC_UNAUTHORIZED);
-        }
+        PerRequestActorProvider.setJid(actorJid);
+
+        return actorJid;
     }
 }
