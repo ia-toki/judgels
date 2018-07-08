@@ -15,7 +15,7 @@ before_deploy:
   - sudo apt-add-repository ppa:ansible/ansible -y
   - sudo apt-get -q update
   - sudo apt-get install -y ansible python-pip
-  - sudo pip install docker-py
+  - sudo pip install docker
 
 deploy:
   skip_cleanup: true
