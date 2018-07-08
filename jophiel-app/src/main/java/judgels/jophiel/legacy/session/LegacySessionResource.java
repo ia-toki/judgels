@@ -4,9 +4,12 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkAllowed;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.net.URI;
 import java.util.Date;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -97,11 +100,24 @@ public class LegacySessionResource {
             @PathParam("authCode") String authCode,
             @PathParam("redirectUri") String redirectUri) {
 
-        Session session =  sessionStore.findSessionByAuthCode(authCode).orElseThrow(IllegalArgumentException::new);
+        Optional<Session> session = Optional.empty();
+
+        // Hack: wait until the auth code actually got written to db
+        for (int i = 0; i < 3; i++) {
+            session = sessionStore.findSessionByAuthCode(authCode);
+            if (session.isPresent()) {
+                break;
+            }
+            Uninterruptibles.sleepUninterruptibly(500, TimeUnit.MILLISECONDS);
+        }
+        if (!session.isPresent()) {
+            throw new IllegalArgumentException();
+        }
+
         return Response.seeOther(URI.create(redirectUri))
                 .cookie(new NewCookie(
                         COOKIE_NAME,
-                        session.getUserJid(),
+                        session.get().getUserJid(),
                         "/",
                         uriInfo.getBaseUri().getHost(),
                         null,
@@ -116,7 +132,7 @@ public class LegacySessionResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork
     public Session postLogIn(@PathParam("authCode") String authCode) {
-        Session session =  sessionStore.findSessionByAuthCode(authCode).orElseThrow(IllegalArgumentException::new);
+        Session session = sessionStore.findSessionByAuthCode(authCode).orElseThrow(IllegalArgumentException::new);
         sessionStore.deleteAuthCode(authCode);
         return session;
     }
