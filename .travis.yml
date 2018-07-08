@@ -20,8 +20,8 @@ before_deploy:
   - git clone --depth=1 -q "https://github.com/judgels-dev/judgels"
   - sudo apt-add-repository ppa:ansible/ansible -y
   - sudo apt-get -q update
-  - sudo apt-get install -y ansible docker.io python-pip
-  - sudo pip install docker-py
+  - sudo apt-get install -y ansible python-pip
+  - sudo pip install docker
 
 deploy:
   skip_cleanup: true
