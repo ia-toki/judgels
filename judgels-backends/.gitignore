@@ -2,8 +2,8 @@
 
 build/
 out/
-generated_src/
-generated_testSrc/
+generated/
+generated_tests/
 
 .idea/
 *.iml
@@ -12,4 +12,3 @@ generated_testSrc/
 
 *.log
 *.log.gz
-

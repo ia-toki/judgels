@@ -1,7 +1,7 @@
 sourceSets {
     integTest {
         java {
-            compileClasspath += main.output + test.output + project.configurations.processor
+            compileClasspath += main.output + test.output + project.configurations.annotationProcessor
             runtimeClasspath += main.output + test.output
             srcDir file('src/integTest/java')
         }
@@ -33,25 +33,19 @@ idea.module {
     }
 }
 
-task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
+task integTest(type: Test) {
     group 'Verification'
-    description 'Runs integration tests on the JUnit Platform.'
+    description 'Runs the integration tests.'
 
     dependencies {
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
         testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
-        testRuntime "org.junit.platform:junit-platform-console:$junitPlatformVersion"
     }
 
+    testClassesDirs = sourceSets.integTest.output.classesDirs
     classpath = sourceSets.integTest.runtimeClasspath
-    systemProperties['jar.path'] = jar.archivePath
 
-    main 'org.junit.platform.console.ConsoleLauncher'
-    args = [
-            '--scan-classpath', sourceSets.integTest.output.classesDirs.asPath,
-            '--reports-dir', "${buildDir}/test-results/junit-platform-integ"
-    ]
-
-    test.dependsOn junitPlatformIntegTest
+    check.dependsOn integTest
 }
 
 dependencies {
@@ -61,10 +55,12 @@ dependencies {
     compile "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     compile "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
 
+    compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    compileOnly "org.immutables:value:$immutablesVersion"
+
     testCompile project(':judgels-commons:judgels-persistence-testing')
     testCompile "org.assertj:assertj-core:$assertJVersion"
-    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
 
-    processor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
-    processor "org.immutables:value:$immutablesVersion"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
 }

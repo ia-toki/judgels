@@ -7,10 +7,11 @@ dependencies {
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
 
+    compileOnly "org.immutables:value:$immutablesVersion"
+
     testCompile "com.google.guava:guava:$guavaVersion"
     testCompile "org.assertj:assertj-core:$assertJVersion"
-    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
-    processor "org.immutables:value:$immutablesVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
 }
