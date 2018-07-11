@@ -1,0 +1,9 @@
+apply from: '../gradle/publishing.gradle'
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
+    compile "org.iatoki.judgels:judgels-service-api:$judgelsServiceVersion"
+
+    processor "org.immutables:value:$immutablesVersion"
+}

@@ -1,0 +1,5 @@
+rootProject.name = "sealtiel"
+
+include "sealtiel-api"
+include "sealtiel-app"
+include "sealtiel-dist"
