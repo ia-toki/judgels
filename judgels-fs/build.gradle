@@ -1,0 +1,10 @@
+apply from: '../gradle/publishing.gradle'
+
+dependencies {
+    compile "com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
+
+    processor "com.google.dagger:dagger-compiler:$daggerVersion"
+    processor "org.immutables:value:$immutablesVersion"
+}

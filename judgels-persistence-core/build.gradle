@@ -1,0 +1,72 @@
+apply from: '../gradle/publishing.gradle'
+
+sourceSets {
+    integTest {
+        java {
+            compileClasspath += main.output + test.output + project.configurations.processor
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integTest/java')
+        }
+        resources.srcDir file('src/integTest/resources')
+    }
+}
+
+configurations {
+    integTestCompile.extendsFrom testCompile
+    integTestRuntime.extendsFrom testRuntime
+}
+
+idea.module {
+    scopes.TEST.plus += [configurations.integTestRuntimeClasspath, configurations.integTestCompileClasspath]
+
+    testSourceDirs += file('src/integTest/java')
+    testSourceDirs += file('src/integTest/resources')
+
+    iml.withXml {
+        def content = it.asNode().component.find { it.'@name' == 'NewModuleRootManager' }.content[0]
+        content.sourceFolder.each { sourceFolder ->
+            if (sourceFolder.@url?.endsWith('/resources')) {
+                sourceFolder.attributes().with {
+                    boolean isTestSource = (remove('isTestSource') == 'true')
+                    put('type', isTestSource ? 'java-test-resource' : 'java-resource')
+                }
+            }
+        }
+    }
+}
+
+task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
+    group 'Verification'
+    description 'Runs integration tests on the JUnit Platform.'
+
+    dependencies {
+        testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
+        testRuntime "org.junit.platform:junit-platform-console:$junitPlatformVersion"
+    }
+
+    classpath = sourceSets.integTest.runtimeClasspath
+    systemProperties['jar.path'] = jar.archivePath
+
+    main 'org.junit.platform.console.ConsoleLauncher'
+    args = [
+            '--scan-classpath', sourceSets.integTest.output.classesDirs.asPath,
+            '--reports-dir', "${buildDir}/test-results/junit-platform-integ"
+    ]
+
+    test.dependsOn junitPlatformIntegTest
+}
+
+dependencies {
+    compile project(':judgels-persistence-api')
+    compile "org.apache.commons:commons-rng-core:$apacheCommonsRngVersion"
+    compile "org.apache.commons:commons-rng-simple:$apacheCommonsRngVersion"
+    compile "org.apache.commons:commons-text:$apacheCommonsTextVersion"
+    compile "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
+
+    testCompile project(':judgels-persistence-testing')
+    testCompile "org.assertj:assertj-core:$assertJVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+
+    processor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    processor "org.immutables:value:$immutablesVersion"
+}

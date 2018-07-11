@@ -1,0 +1,8 @@
+apply from: '../gradle/publishing.gradle'
+
+dependencies {
+    compile project(':judgels-persistence-core')
+
+    compile "com.h2database:h2:$h2Version"
+    compile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+}

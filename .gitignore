@@ -1,0 +1,13 @@
+.gradle/
+
+build/
+out/
+generated_src/
+generated_testSrc/
+.idea/
+
+*.iml
+*.ipr
+*.iws
+
+.idea/

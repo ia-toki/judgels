@@ -1,0 +1,7 @@
+apply from: '../gradle/publishing.gradle'
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+
+    processor "org.immutables:value:$immutablesVersion"
+}
