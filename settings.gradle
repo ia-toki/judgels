@@ -1,9 +1,0 @@
-rootProject.name = "judgels-commons"
-
-include "judgels-fs"
-include "judgels-persistence-api"
-include "judgels-persistence-core"
-include "judgels-persistence-testing"
-include "judgels-recaptcha"
-include "judgels-service-api"
-include "judgels-service-core"

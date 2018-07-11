@@ -4,10 +4,12 @@ build/
 out/
 generated_src/
 generated_testSrc/
-.idea/
 
+.idea/
 *.iml
 *.ipr
 *.iws
 
-.idea/
+*.log
+*.log.gz
+

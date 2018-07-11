@@ -1,5 +1,3 @@
-apply from: '../gradle/publishing.gradle'
-
 sourceSets {
     integTest {
         java {
@@ -57,13 +55,13 @@ task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
 }
 
 dependencies {
-    compile project(':judgels-persistence-api')
+    compile project(':judgels-commons:judgels-persistence-api')
     compile "org.apache.commons:commons-rng-core:$apacheCommonsRngVersion"
     compile "org.apache.commons:commons-rng-simple:$apacheCommonsRngVersion"
     compile "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     compile "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
 
-    testCompile project(':judgels-persistence-testing')
+    testCompile project(':judgels-commons:judgels-persistence-testing')
     testCompile "org.assertj:assertj-core:$assertJVersion"
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
 
