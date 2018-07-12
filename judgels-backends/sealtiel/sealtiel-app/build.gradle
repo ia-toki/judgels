@@ -1,7 +1,7 @@
 sourceSets {
     integTest {
         java {
-            compileClasspath += main.output + test.output + project.configurations.processor
+            compileClasspath += main.output + test.output + project.configurations.annotationProcessor
             runtimeClasspath += main.output + test.output
             srcDir file('src/integTest/java')
         }
@@ -33,45 +33,42 @@ idea.module {
     }
 }
 
-task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
+task integTest(type: Test) {
     group 'Verification'
-    description 'Runs integration tests on the JUnit Platform.'
+    description 'Runs the integration tests.'
 
     dependencies {
-        testRuntime "org.junit.platform:junit-platform-console:$junitPlatformVersion"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+        testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
     }
 
+    testClassesDirs = sourceSets.integTest.output.classesDirs
     classpath = sourceSets.integTest.runtimeClasspath
-    systemProperties['jar.path'] = jar.archivePath
 
-    main 'org.junit.platform.console.ConsoleLauncher'
-    args = [
-            '--scan-classpath', sourceSets.integTest.output.classesDirs.asPath,
-            '--reports-dir', "${buildDir}/test-results/junit-platform-integ"
-    ]
+    check.dependsOn integTest
 }
 
-test.dependsOn junitPlatformIntegTest
-
 dependencies {
-    compile project(':sealtiel-api')
+    compile project(':sealtiel:sealtiel-api')
+    compile project(':judgels-commons:judgels-service-core')
 
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "com.rabbitmq:amqp-client:$rabbitmqAmqpClientVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
-    compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
 
     testCompile "org.assertj:assertj-core:$assertJVersion"
-    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
-    testCompile "org.junit.platform:junit-platform-runner:$junitPlatformVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
     integTestCompile "com.palantir.remoting3:jaxrs-clients:$httpRemotingVersion"
+    integTestCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     integTestCompile "org.testcontainers:testcontainers:$testContainersVersion"
     integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
 
-    processor "com.google.dagger:dagger-compiler:$daggerVersion"
-    processor "org.immutables:value:$immutablesVersion"
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
+    compileOnly "org.immutables:value:$immutablesVersion"
+
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
 }

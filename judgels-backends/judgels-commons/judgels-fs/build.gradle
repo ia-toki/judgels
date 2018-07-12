@@ -4,6 +4,7 @@ dependencies {
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.google.guava:guava:$guavaVersion"
 
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.immutables:value:$immutablesVersion"
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"

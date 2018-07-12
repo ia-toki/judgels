@@ -1,0 +1,9 @@
+dependencies {
+    compile project(':judgels-commons:judgels-service-api')
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
+
+    compileOnly "org.immutables:value:$immutablesVersion"
+
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+}
