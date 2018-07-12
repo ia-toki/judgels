@@ -1,7 +1,7 @@
 sourceSets {
     integTest {
         java {
-            compileClasspath += main.output + test.output + project.configurations.processor
+            compileClasspath += main.output + test.output + project.configurations.annotationProcessor
             runtimeClasspath += main.output + test.output
             srcDir file('src/integTest/java')
         }
@@ -54,8 +54,11 @@ task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
 test.dependsOn junitPlatformIntegTest
 
 dependencies {
-    compile project(':jophiel-api')
-
+    compile project(':jophiel:jophiel-api')
+    compile project(':judgels-commons:judgels-fs')
+    compile project(':judgels-commons:persistence-core')
+    compile project(':judgels-commons:recaptcha')
+    compile project(':judgels-commons:service-core')
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
@@ -63,10 +66,10 @@ dependencies {
     compile "io.dropwizard:dropwizard-forms:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
     compile "org.apache.commons:commons-email:$commonsEmailVersion"
-    compile "org.iatoki.judgels:judgels-fs:$judgelsFsVersion"
-    compile "org.iatoki.judgels:judgels-persistence-core:$judgelsPersistenceVersion"
-    compile "org.iatoki.judgels:judgels-recaptcha:$judgelsRecaptchaVersion"
-    compile "org.iatoki.judgels:judgels-service-core:$judgelsServiceVersion"
+
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
+    compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    compileOnly "org.immutables:value:$immutablesVersion"
 
     runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
 
@@ -76,13 +79,14 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
-    integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
     integTestCompile "com.palantir.remoting-api:test-utils:$httpRemotingApiVersion"
+    integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
+    integTestCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     integTestCompile "org.subethamail:subethasmtp-wiser:$wiserVersion"
 
     integTestRuntime "javax.servlet:javax.servlet-api:$servletApiVersion"
 
-    processor "com.google.dagger:dagger-compiler:$daggerVersion"
-    processor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
-    processor "org.immutables:value:$immutablesVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
 }

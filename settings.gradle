@@ -1,5 +1,0 @@
-rootProject.name = "jophiel"
-
-include "jophiel-api"
-include "jophiel-app"
-include "jophiel-dist"
