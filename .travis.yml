@@ -1,0 +1,14 @@
+sudo: false
+
+language: java
+cache:
+  directories:
+    - $HOME/.gradle
+
+git:
+  depth: false
+
+script:
+  - python3 scripts/ci.py check > ci.sh
+  - chmod +x ci.sh
+  - ./ci.sh

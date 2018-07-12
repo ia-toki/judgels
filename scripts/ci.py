@@ -1,0 +1,68 @@
+import subprocess
+import sys
+
+from collections import OrderedDict
+
+
+MODULES = OrderedDict([
+    (':judgels-commons:judgels-fs', set()),
+    (':judgels-commons:judgels-persistence-core', {':judgels-commons:judgels-persistence-testing'}),
+    (':judgels-commons:judgels-persistence-testing', {':judgels-commons:judgels-persistence-core'}),
+    (':judgels-commons:judgels-recaptcha', set()),
+    (':judgels-commons:judgels-service-api', set()),
+    (':judgels-commons:judgels-service-core', {':judgels-commons:judgels-service-api'}),
+
+    (':sealtiel:sealtiel-api', {':judgels-commons:judgels-service-api'}),
+    (':sealtiel:sealtiel-app', {':sealtiel:sealtiel-api', ':judgels-commons:judgels-service-core'}),
+    (':sealtiel:sealtiel-dist', set()),
+    (':sealtiel', {':sealtiel:sealtiel-app', ':sealtiel:sealtiel-api', ':sealtiel:sealtiel-dist'})
+])
+
+PROJECTS = [
+    ':judgels-commons:judgels-fs',
+    ':judgels-commons:judgels-persistence-core',
+    ':judgels-commons:judgels-recaptcha',
+    ':judgels-commons:judgels-service-core',
+    ':sealtiel'
+]
+
+def flatten_dependencies():
+    for module in MODULES.keys():
+        deps = MODULES[module].copy()
+        for dep in deps:
+            MODULES[module] |= MODULES[dep]
+        MODULES[module].add(module)
+
+
+def die(message):
+    print('[ERROR] {}'.format(message))
+    sys.exit(1)
+
+
+def run(command, working_dir):
+    p = subprocess.Popen(['bash', '-c', command], cwd=working_dir, stdout=subprocess.PIPE)
+    return p.communicate()[0].decode('utf-8')
+
+
+def check():
+    changed_files = run('git diff --name-only origin/master', '.')
+
+    changed_modules = set()
+    for module in MODULES.keys():
+        if module.replace(':', '/') in changed_files:
+            changed_modules.add(module)
+
+    print('set -ex')
+    for project in PROJECTS:
+        if MODULES[project].intersection(changed_modules):
+            print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
+
+
+flatten_dependencies()
+
+if len(sys.argv) < 2:
+    die('Usage: python3 ci.py <command>')
+
+command = sys.argv[1]
+if command == 'check':
+    check()
