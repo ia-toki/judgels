@@ -1,0 +1,32 @@
+- block:
+  - name: Create sealtiel container mount volume
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/sealtiel/var
+      - /judgels/sealtiel/var/conf
+
+  - name: Generate sealtiel config
+    template:
+      src: "{{ playbook_dir }}/../../../deployment-repo/conf/sealtiel.yml"
+      dest: /judgels/sealtiel/var/conf/sealtiel.yml
+
+  - name: Pull sealtiel image
+    docker_image:
+      name: judgels/sealtiel
+      tag: "{{ sealtiel_version | default('latest', true) }}"
+      force: yes
+
+  - name: Run a sealtiel container
+    docker_container:
+      name: sealtiel
+      image: "judgels/sealtiel:{{ sealtiel_version | default('latest', true) }}"
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/sealtiel/var:/judgels/sealtiel/var"
+  tags:
+    - sealtiel-deploy

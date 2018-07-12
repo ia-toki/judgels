@@ -1,7 +1,7 @@
 - block:
   - name: Build sealtiel image and push it to DockerHub
     docker_image:
-      path: "{{ playbook_dir }}/../.."
+      path: "{{ playbook_dir }}/../../../judgels-backends/sealtiel/sealtiel-dist"
       name: judgels/sealtiel
       force: yes
       push: yes

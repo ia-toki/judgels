@@ -1,0 +1,11 @@
+- block:
+  - name: Add cron job to renew certificates
+    cron:
+      name: Renew certificates
+      weekday: 0
+      job: docker exec nginx-certbot certbot renew
+      user: root
+      cron_file: cert-renew
+
+  tags:
+    - cert-renew-cron

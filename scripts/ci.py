@@ -26,6 +26,10 @@ PROJECTS = [
     ':sealtiel'
 ]
 
+SERVICES = [
+    ':sealtiel'
+]
+
 def flatten_dependencies():
     for module in MODULES.keys():
         deps = MODULES[module].copy()
@@ -44,18 +48,32 @@ def run(command, working_dir):
     return p.communicate()[0].decode('utf-8')
 
 
-def check():
+def get_changed_modules():
     changed_files = run('git diff --name-only origin/master', '.')
 
     changed_modules = set()
     for module in MODULES.keys():
         if module.replace(':', '/') in changed_files:
             changed_modules.add(module)
+    return changed_modules
+
+
+def check():
+    changed_modules = get_changed_modules()
 
     print('set -ex')
     for project in PROJECTS:
         if MODULES[project].intersection(changed_modules):
             print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
+
+
+def deploy():
+    changed_modules = get_changed_modules()
+
+    print('set -ex')
+    for service in SERVICES:
+        if MODULES[service].intersection(changed_modules):
+            print('./scripts/deploy_{}.sh'.format(service.replace(':', '')))
 
 
 flatten_dependencies()
@@ -66,3 +84,5 @@ if len(sys.argv) < 2:
 command = sys.argv[1]
 if command == 'check':
     check()
+elif command == 'deploy':
+    deploy()

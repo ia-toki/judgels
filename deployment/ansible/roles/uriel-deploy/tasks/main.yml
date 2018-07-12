@@ -1,0 +1,33 @@
+- block:
+  - name: Create uriel container mount volume
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/uriel/var
+      - /judgels/uriel/var/conf
+      - /judgels/uriel/var/data
+
+  - name: Generate uriel config
+    template:
+      src: "{{ playbook_dir }}/../../../deployment/conf/uriel.yml"
+      dest: /judgels/uriel/var/conf/uriel.yml
+
+  - name: Pull uriel image
+    docker_image:
+      name: judgels/uriel
+      tag: "{{ uriel_version | default('latest', true) }}"
+      force: yes
+
+  - name: Run a uriel container
+    docker_container:
+      name: uriel
+      image: "judgels/uriel:{{ uriel_version | default('latest', true) }}"
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/uriel/var:/judgels/uriel/var"
+  tags:
+    - uriel-deploy

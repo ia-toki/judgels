@@ -1,0 +1,32 @@
+- block:
+  - name: Create raphael container mount volume
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/raphael/var
+      - /judgels/raphael/var/conf
+
+  - name: Generate raphael config
+    template:
+      src: "{{ playbook_dir }}/../../../deployment/conf/raphael.js"
+      dest: /judgels/raphael/var/conf/raphael.js
+
+  - name: Pull raphael image
+    docker_image:
+      name: judgels/raphael
+      tag: "{{ raphael_version | default('latest', true) }}"
+      force: yes
+
+  - name: Run a raphael container
+    docker_container:
+      name: raphael
+      image: "judgels/raphael:{{ raphael_version | default('latest', true) }}"
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/raphael/var:/judgels/raphael/var"
+  tags:
+    - raphael-deploy

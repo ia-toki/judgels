@@ -1,0 +1,33 @@
+- block:
+  - name: Create jophiel container mount volume
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/jophiel/var
+      - /judgels/jophiel/var/conf
+      - /judgels/jophiel/var/data
+
+  - name: Generate jophiel config
+    template:
+      src: "{{ playbook_dir }}/../../../deployment/conf/jophiel.yml"
+      dest: /judgels/jophiel/var/conf/jophiel.yml
+
+  - name: Pull jophiel image
+    docker_image:
+      name: judgels/jophiel
+      tag: "{{ jophiel_version | default('latest', true) }}"
+      force: yes
+
+  - name: Run a jophiel container
+    docker_container:
+      name: jophiel
+      image: "judgels/jophiel:{{ jophiel_version | default('latest', true) }}"
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/jophiel/var:/judgels/jophiel/var"
+  tags:
+    - jophiel-deploy
