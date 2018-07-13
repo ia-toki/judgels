@@ -6,11 +6,17 @@ from collections import OrderedDict
 
 MODULES = OrderedDict([
     (':judgels-commons:judgels-fs', set()),
+    (':judgels-commons:judgels-persistence-api', set()),
     (':judgels-commons:judgels-persistence-core', {':judgels-commons:judgels-persistence-testing'}),
     (':judgels-commons:judgels-persistence-testing', {':judgels-commons:judgels-persistence-core'}),
     (':judgels-commons:judgels-recaptcha', set()),
     (':judgels-commons:judgels-service-api', set()),
     (':judgels-commons:judgels-service-core', {':judgels-commons:judgels-service-api'}),
+
+    (':jophiel:jophiel-api', {':judgels-commons:judgels-persistence-api', ':judgels-commons:judgels-service-api'}),
+    (':jophiel:jophiel-app', {':jophiel:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-recaptcha', ':judgels-commons:judgels-service-core'}),
+    (':jophiel:jophiel-dist', set()),
+    (':jophiel', {':jophiel:jophiel-app', ':jophiel:jophiel-api', ':jophiel:jophiel-dist'}),
 
     (':sealtiel:sealtiel-api', {':judgels-commons:judgels-service-api'}),
     (':sealtiel:sealtiel-app', {':sealtiel:sealtiel-api', ':judgels-commons:judgels-service-core'}),
@@ -23,10 +29,12 @@ PROJECTS = [
     ':judgels-commons:judgels-persistence-core',
     ':judgels-commons:judgels-recaptcha',
     ':judgels-commons:judgels-service-core',
+    ':jophiel',
     ':sealtiel'
 ]
 
 SERVICES = [
+    ':jophiel',
     ':sealtiel'
 ]
 

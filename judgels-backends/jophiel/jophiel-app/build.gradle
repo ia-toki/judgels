@@ -33,39 +33,34 @@ idea.module {
     }
 }
 
-task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
+task integTest(type: Test) {
     group 'Verification'
-    description 'Runs integration tests on the JUnit Platform.'
+    description 'Runs the integration tests.'
 
     dependencies {
-        testRuntime "org.junit.platform:junit-platform-console:$junitPlatformVersion"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+        testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
     }
 
+    testClassesDirs = sourceSets.integTest.output.classesDirs
     classpath = sourceSets.integTest.runtimeClasspath
-    systemProperties['jar.path'] = jar.archivePath
 
-    main 'org.junit.platform.console.ConsoleLauncher'
-    args = [
-            '--scan-classpath', sourceSets.integTest.output.classesDirs.asPath,
-            '--reports-dir', "${buildDir}/test-results/junit-platform-integ"
-    ]
+    check.dependsOn integTest
 }
-
-test.dependsOn junitPlatformIntegTest
 
 dependencies {
     compile project(':jophiel:jophiel-api')
     compile project(':judgels-commons:judgels-fs')
-    compile project(':judgels-commons:persistence-core')
-    compile project(':judgels-commons:recaptcha')
-    compile project(':judgels-commons:service-core')
+    compile project(':judgels-commons:judgels-persistence-core')
+    compile project(':judgels-commons:judgels-recaptcha')
+    compile project(':judgels-commons:judgels-service-core')
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-forms:$dropwizardVersion"
     compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
-    compile "org.apache.commons:commons-email:$commonsEmailVersion"
+    compile "org.apache.commons:commons-email:$apacheCommonsEmailVersion"
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
@@ -73,9 +68,9 @@ dependencies {
 
     runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
 
+    testCompile project(':judgels-commons:judgels-persistence-testing')
     testCompile "org.assertj:assertj-core:$assertJVersion"
     testCompile "org.awaitility:awaitility:$awaitilityVersion"
-    testCompile "org.iatoki.judgels:judgels-persistence-testing:$judgelsPersistenceVersion"
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
