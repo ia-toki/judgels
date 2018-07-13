@@ -3,9 +3,10 @@ sudo: required
 language: java
 cache:
   directories:
-    - $HOME/.cache/pip/
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+    - $HOME/.cache/pip
+    - $HOME/.gradle/caches
+    - $HOME/.gradle/wrapper
+    - $HOME/docker
 
 services:
   - docker
