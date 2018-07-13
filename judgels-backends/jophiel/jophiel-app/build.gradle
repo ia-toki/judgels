@@ -1,0 +1,92 @@
+sourceSets {
+    integTest {
+        java {
+            compileClasspath += main.output + test.output + project.configurations.annotationProcessor
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integTest/java')
+        }
+        resources.srcDir file('src/integTest/resources')
+    }
+}
+
+configurations {
+    integTestCompile.extendsFrom testCompile
+    integTestRuntime.extendsFrom testRuntime
+}
+
+idea.module {
+    scopes.TEST.plus += [configurations.integTestRuntimeClasspath, configurations.integTestCompileClasspath]
+
+    testSourceDirs += file('src/integTest/java')
+    testSourceDirs += file('src/integTest/resources')
+
+    iml.withXml {
+        def content = it.asNode().component.find { it.'@name' == 'NewModuleRootManager' }.content[0]
+        content.sourceFolder.each { sourceFolder ->
+            if (sourceFolder.@url?.endsWith('/resources')) {
+                sourceFolder.attributes().with {
+                    boolean isTestSource = (remove('isTestSource') == 'true')
+                    put('type', isTestSource ? 'java-test-resource' : 'java-resource')
+                }
+            }
+        }
+    }
+}
+
+task junitPlatformIntegTest(type: JavaExec, dependsOn: jar) {
+    group 'Verification'
+    description 'Runs integration tests on the JUnit Platform.'
+
+    dependencies {
+        testRuntime "org.junit.platform:junit-platform-console:$junitPlatformVersion"
+    }
+
+    classpath = sourceSets.integTest.runtimeClasspath
+    systemProperties['jar.path'] = jar.archivePath
+
+    main 'org.junit.platform.console.ConsoleLauncher'
+    args = [
+            '--scan-classpath', sourceSets.integTest.output.classesDirs.asPath,
+            '--reports-dir', "${buildDir}/test-results/junit-platform-integ"
+    ]
+}
+
+test.dependsOn junitPlatformIntegTest
+
+dependencies {
+    compile project(':jophiel:jophiel-api')
+    compile project(':judgels-commons:judgels-fs')
+    compile project(':judgels-commons:persistence-core')
+    compile project(':judgels-commons:recaptcha')
+    compile project(':judgels-commons:service-core')
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
+    compile "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
+    compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
+    compile "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+    compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
+    compile "org.apache.commons:commons-email:$commonsEmailVersion"
+
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
+    compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    compileOnly "org.immutables:value:$immutablesVersion"
+
+    runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
+
+    testCompile "org.assertj:assertj-core:$assertJVersion"
+    testCompile "org.awaitility:awaitility:$awaitilityVersion"
+    testCompile "org.iatoki.judgels:judgels-persistence-testing:$judgelsPersistenceVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+
+    integTestCompile "com.palantir.remoting-api:test-utils:$httpRemotingApiVersion"
+    integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
+    integTestCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    integTestCompile "org.subethamail:subethasmtp-wiser:$wiserVersion"
+
+    integTestRuntime "javax.servlet:javax.servlet-api:$servletApiVersion"
+
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+}

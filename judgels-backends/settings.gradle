@@ -8,6 +8,10 @@ include ':judgels-commons:judgels-recaptcha'
 include ':judgels-commons:judgels-service-api'
 include ':judgels-commons:judgels-service-core'
 
+include ':jophiel:jophiel-api'
+include ':jophiel:jophiel-app'
+include ':jophiel:jophiel-dist'
+
 include ':sealtiel:sealtiel-api'
 include ':sealtiel:sealtiel-app'
 include ':sealtiel:sealtiel-dist'

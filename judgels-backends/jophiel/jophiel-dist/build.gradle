@@ -1,0 +1,42 @@
+plugins {
+    id 'com.palantir.sls-java-service-distribution' version '2.6.0'
+    id 'com.palantir.launch-config' version '1.1.0'
+}
+
+dependencies {
+    runtime project(':jophiel-app')
+}
+
+distribution {
+    serviceName 'jophiel'
+    serviceGroup 'judgels'
+    mainClass 'judgels.jophiel.JophielApplication'
+    args 'server', 'var/conf/jophiel.yml'
+}
+
+task dbStatus(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Checks database migration status.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.jophiel.JophielApplication'
+    args = [ 'db', 'status', 'var/conf/jophiel.yml' ]
+}
+
+task dbMigrate(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Migrates database to the latest version.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.jophiel.JophielApplication'
+    args = [ 'db', 'migrate', 'var/conf/jophiel.yml' ]
+}
+
+task dbDump(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Dumps current database schema.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.jophiel.JophielApplication'
+    args = [ 'db', 'dump', 'var/conf/jophiel.yml' ]
+}
