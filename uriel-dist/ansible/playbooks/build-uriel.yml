@@ -1,0 +1,5 @@
+- hosts: local
+  connection: local
+  gather_facts: false
+  roles:
+    - name: uriel-build

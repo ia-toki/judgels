@@ -1,0 +1,10 @@
+- block:
+  - name: Build uriel image and push it to DockerHub
+    docker_image:
+      path: "{{ playbook_dir }}/../.."
+      name: judgels/uriel
+      force: yes
+      push: yes
+
+  tags:
+    - uriel-build
