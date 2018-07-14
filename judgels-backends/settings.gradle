@@ -15,3 +15,7 @@ include ':jophiel:jophiel-dist'
 include ':sealtiel:sealtiel-api'
 include ':sealtiel:sealtiel-app'
 include ':sealtiel:sealtiel-dist'
+
+include ':uriel:uriel-api'
+include ':uriel:uriel-app'
+include ':uriel:uriel-dist'

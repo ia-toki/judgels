@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    runtime project(':uriel-app')
+    runtime project(':uriel:uriel-app')
 }
 
 distribution {

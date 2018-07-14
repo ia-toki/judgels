@@ -21,7 +21,12 @@ MODULES = OrderedDict([
     (':sealtiel:sealtiel-api', {':judgels-commons:judgels-service-api'}),
     (':sealtiel:sealtiel-app', {':sealtiel:sealtiel-api', ':judgels-commons:judgels-service-core'}),
     (':sealtiel:sealtiel-dist', set()),
-    (':sealtiel', {':sealtiel:sealtiel-app', ':sealtiel:sealtiel-api', ':sealtiel:sealtiel-dist'})
+    (':sealtiel', {':sealtiel:sealtiel-app', ':sealtiel:sealtiel-api', ':sealtiel:sealtiel-dist'}),
+
+    (':uriel:uriel-api', {':judgels-commons:judgels-persistence-api', ':judgels-commons:judgels-service-api'}),
+    (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-core', ':sealtiel:sealtiel-api'}),
+    (':uriel:uriel-dist', set()),
+    (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
 ])
 
 PROJECTS = [
@@ -30,12 +35,14 @@ PROJECTS = [
     ':judgels-commons:judgels-recaptcha',
     ':judgels-commons:judgels-service-core',
     ':jophiel',
-    ':sealtiel'
+    ':sealtiel',
+    ':uriel'
 ]
 
 SERVICES = [
     ':jophiel',
-    ':sealtiel'
+    ':sealtiel',
+    ':uriel'
 ]
 
 def flatten_dependencies():
