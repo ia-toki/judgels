@@ -1,8 +1,11 @@
+import os
 import subprocess
 import sys
 
 from collections import OrderedDict
 
+
+FORCE_CI = '[force-ci]'
 
 MODULES = OrderedDict([
     (':judgels-commons:judgels-fs', set()),
@@ -58,13 +61,16 @@ def die(message):
     sys.exit(1)
 
 
-def run(command, working_dir):
-    p = subprocess.Popen(['bash', '-c', command], cwd=working_dir, stdout=subprocess.PIPE)
+def run(command):
+    p = subprocess.Popen(['bash', '-c', command], cwd='.', stdout=subprocess.PIPE)
     return p.communicate()[0].decode('utf-8')
 
 
-def get_changed_modules():
-    changed_files = run('git diff --name-only origin/master', '.')
+def get_changed_modules(branch_to_compare):
+    if branch_to_compare == FORCE_CI:
+        return MODULES.keys()
+
+    changed_files = run('git diff --name-only {}'.format(branch_to_compare))
 
     changed_modules = set()
     for module in MODULES.keys():
@@ -73,8 +79,8 @@ def get_changed_modules():
     return changed_modules
 
 
-def check():
-    changed_modules = get_changed_modules()
+def check(branch_to_compare):
+    changed_modules = get_changed_modules(branch_to_compare)
 
     print('set -ex')
     for project in PROJECTS:
@@ -82,8 +88,8 @@ def check():
             print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
 
 
-def deploy():
-    changed_modules = get_changed_modules()
+def deploy(branch_to_compare):
+    changed_modules = get_changed_modules(branch_to_compare)
 
     print('set -ex')
     for service in SERVICES:
@@ -96,8 +102,14 @@ flatten_dependencies()
 if len(sys.argv) < 2:
     die('Usage: python3 ci.py <command>')
 
-command = sys.argv[1]
+command, commit_range, commit_message = sys.argv[1], os.environ['TRAVIS_COMMIT_RANGE'], os.environ['TRAVIS_COMMIT_MESSAGE']
+branch_to_compare = commit_range.split('...')[0]
+if FORCE_CI in commit_message or not 'commit' in run('git cat-file -t {}'.format(branch_to_compare)):
+    branch_to_compare = FORCE_CI
+
+print('echo "Running continuous integration against {}"'.format(branch_to_compare))
+
 if command == 'check':
-    check()
+    check(branch_to_compare)
 elif command == 'deploy':
-    deploy()
+    deploy(branch_to_compare)
