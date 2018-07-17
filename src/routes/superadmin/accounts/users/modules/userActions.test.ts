@@ -2,7 +2,7 @@ import { userActions } from './userActions';
 import { AppState } from '../../../../../modules/store';
 import { user } from '../../../../../fixtures/state';
 import { sessionState, token } from '../../../../../fixtures/state';
-import { Page } from '../../../../../modules/api/pagination';
+import { Page, OrderDir } from '../../../../../modules/api/pagination';
 import { User } from '../../../../../modules/api/jophiel/user';
 
 describe('userActions', () => {
@@ -20,8 +20,10 @@ describe('userActions', () => {
 
   describe('fetchList()', () => {
     const currentPage = 1;
+    const orderBy = 'username';
+    const orderDir = OrderDir.ASC;
     const { fetchList } = userActions;
-    const doFetchList = async () => fetchList(currentPage)(dispatch, getState, { userAPI });
+    const doFetchList = async () => fetchList(currentPage, orderBy, orderDir)(dispatch, getState, { userAPI });
 
     beforeEach(async () => {
       const users: Page<User> = {
@@ -34,7 +36,7 @@ describe('userActions', () => {
     });
 
     it('calls API to get user', () => {
-      expect(userAPI.getUsers).toHaveBeenCalledWith(token, currentPage);
+      expect(userAPI.getUsers).toHaveBeenCalledWith(token, currentPage, orderBy, orderDir);
     });
   });
 });

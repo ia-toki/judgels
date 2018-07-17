@@ -2,7 +2,7 @@ import { stringify } from 'query-string';
 
 import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
-import { Page } from '../pagination';
+import { Page, OrderDir } from '../pagination';
 
 export interface User {
   jid: string;
@@ -37,8 +37,8 @@ export function createUserAPI() {
       return post(`${baseURL}/usernames`, undefined, usernames);
     },
 
-    getUsers: (token: string, page: number): Promise<Page<User>> => {
-      const params = stringify({ page });
+    getUsers: (token: string, page: number, orderBy?: string, orderDir?: OrderDir): Promise<Page<User>> => {
+      const params = stringify({ page, orderBy, orderDir });
       return get(`${baseURL}/?${params}`, token);
     },
   };

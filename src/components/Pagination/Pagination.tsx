@@ -90,7 +90,7 @@ interface PaginationContainerProps {
 }
 
 interface PaginationContainerConnectedProps extends RouteComponentProps<{ page: string }> {
-  onAppendRoute: (nextPage: number) => any;
+  onAppendRoute: (nextPage: number, queries: any) => any;
 }
 
 interface PaginationContainerState {
@@ -122,7 +122,8 @@ class PaginationContainer extends React.PureComponent<
   }
 
   private onChangePage = async (nextPage: number) => {
-    this.props.onAppendRoute(nextPage);
+    const queries = parse(this.props.location.search);
+    this.props.onAppendRoute(nextPage, queries);
     const totalData = await this.props.onChangePage(nextPage);
     this.setState({ totalData });
   };
@@ -130,10 +131,12 @@ class PaginationContainer extends React.PureComponent<
 
 function createPagination() {
   const mapDispatchToProps = {
-    onAppendRoute: (nextPage: number) => {
+    onAppendRoute: (nextPage: number, queries: any) => {
       let query = '';
       if (nextPage > 1) {
-        query = stringify({ page: nextPage });
+        query = stringify({ ...queries, page: nextPage });
+      } else {
+        query = stringify({ ...queries, page: undefined });
       }
       return push({ search: query });
     },
