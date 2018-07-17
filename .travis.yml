@@ -2,10 +2,12 @@ sudo: required
 
 language: java
 cache:
+  yarn: true
   directories:
     - $HOME/.cache/pip
     - $HOME/.gradle/caches
     - $HOME/.gradle/wrapper
+    - judgels-frontends/raphael/node_modules
 
 services:
   - docker

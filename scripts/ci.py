@@ -30,6 +30,8 @@ MODULES = OrderedDict([
     (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-core', ':sealtiel:sealtiel-api'}),
     (':uriel:uriel-dist', set()),
     (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
+
+    (':raphael', set())
 ])
 
 PROJECTS = [
@@ -39,13 +41,15 @@ PROJECTS = [
     ':judgels-commons:judgels-service-core',
     ':jophiel',
     ':sealtiel',
-    ':uriel'
+    ':uriel',
+    ':raphael'
 ]
 
 SERVICES = [
     ':jophiel',
     ':sealtiel',
-    ':uriel'
+    ':uriel',
+    ':raphael'
 ]
 
 def flatten_dependencies():
@@ -85,7 +89,10 @@ def check(branch_to_compare):
     print('set -ex')
     for project in PROJECTS:
         if MODULES[project].intersection(changed_modules):
-            print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
+            if project == ':raphael':
+                print('yarn --cwd=`pwd`/judgels-frontends/raphael install && yarn --cwd=`pwd`/judgels-frontends/raphael test')
+            else:
+                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
 
 
 def deploy(branch_to_compare):
