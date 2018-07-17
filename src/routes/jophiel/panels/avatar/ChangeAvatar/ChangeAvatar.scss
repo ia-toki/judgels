@@ -1,0 +1,27 @@
+.card-change-avatar__content {
+  display: flex;
+}
+
+.card-change-avatar__panel {
+  flex-grow: 1;
+  margin-bottom: 15px;
+
+  img {
+    max-width: 200px;
+  }
+}
+
+.card-change-avatar__dropzone {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 70px;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 750px) {
+  .card-change-avatar__content {
+    display: block;
+  }
+}

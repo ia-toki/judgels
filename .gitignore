@@ -1,18 +1,12 @@
-.gradle/
+.DS_STORE
 
 build/
-out/
-generated_src/
-generated_testSrc/
+node_modules/
 
-uriel.yml
+raphael.js
+
+*.css
 
 .idea/
-*.iml
-*.ipr
-*.iws
-
-*.log
-*.log.gz
 
 *.retry

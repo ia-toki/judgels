@@ -1,0 +1,26 @@
+.single-contest-routes__header {
+  margin-top: -4px;
+  padding-bottom: 8px;
+}
+
+.tab-item-with-widget {
+  display: inline-block;
+  width: 190px;
+}
+
+.tab-item-with-widget__name {
+  float: left;
+}
+
+.tab-item-with-widget__widget {
+  float: right;
+}
+
+@media only screen and (max-width: 750px) {
+  .single-contest-routes__header {
+    h2 {
+      font-size: 20px;
+      line-height: 22px !important;
+    }
+  }
+}

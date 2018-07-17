@@ -1,0 +1,40 @@
+@import '../../styles/base';
+
+.widget-user__avatar {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.widget-user__link {
+  margin-right: 20px;
+  font-size: 0.9 * $font-size;
+}
+
+.widget-user__burger, .widget-user__menu-helper {
+  display: none;
+}
+
+.widget-user__menu a {
+  color: $text-color !important;
+}
+
+.widget-user__user__username {
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  .widget-user__avatar, .widget-user__avatar-menu, .widget-user__link {
+    display: none;
+  }
+
+  .widget-user__burger, .widget-user__menu-helper {
+    display: block;
+    cursor: pointer;
+
+    svg {
+      float: left;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+window.conf = {
+  name: 'Judgels',
+  slogan: 'Judgment Angels',
+  apiUrls: {
+    jophiel: 'http://localhost:9001/api/v2',
+    legacyJophiel: 'http://localhost:9001/api/legacy',
+    uriel: 'http://localhost:9004/api/v2',
+  },
+  tempHome: {
+    urielUrl: 'http://uriel',
+    jerahmeelUrl: 'http://jerahmeel',
+  },
+  welcomeBanner: {
+    title: 'Welcome to Judgels',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+  },
+};

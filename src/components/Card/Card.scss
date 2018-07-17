@@ -1,0 +1,31 @@
+@import '../../styles/base';
+
+.card__title {
+  background-color: #fbfbfc;
+  height: 45px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-bottom: 1px;
+}
+
+.card__title__text {
+  float: left;
+}
+
+.card__title__action {
+  float: left;
+  margin-left: 15px;
+  margin-top: -8px;
+}
+
+.card__title__action_right {
+  float: right;
+  margin-left: 15px;
+  margin-top: -8px;
+}
+
+.card__content {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-bottom: 10px;
+}

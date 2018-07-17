@@ -1,0 +1,15 @@
+.contestant-problem__name {
+  float: left;
+}
+
+.contestant-problem__status {
+  float: right;
+}
+
+.clearfix {
+  &::after {
+    display: block;
+    content: '';
+    clear: both;
+  }
+}

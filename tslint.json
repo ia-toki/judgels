@@ -1,0 +1,45 @@
+{
+  "extends": [
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "class-name": true,
+    "comment-format": [true, "check-space"],
+    "curly": true,
+    "forin": true,
+    "interface-name": [true, "never-prefix"],
+    "jsdoc-format": true,
+    "jsx-boolean-value": [true, "never"],
+    "label-position": true,
+    "member-ordering": [true, {"order": "fields-first"}],
+    "no-any": false,
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-console": [true],
+    "no-construct": true,
+    "no-debugger": true,
+    "no-duplicate-variable": true,
+    "no-empty": true,
+    "no-eval": true,
+    "no-shadowed-variable": true,
+    "no-string-literal": true,
+    "no-switch-case-fall-through": true,
+    "no-unused-expression": true,
+    "radix": true,
+    "switch-default": true,
+    "trailing-comma": [false],
+    "triple-equals": [true, "allow-null-check"],
+    "typedef": [
+      true,
+      "property-declaration"
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case"
+    ]
+  }
+}

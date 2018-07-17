@@ -2,16 +2,15 @@
 
 set -ex
 
-cd "$(dirname "$0")"/../uriel-dist
+cd "$(dirname "$0")"/..
 
-../gradlew clean distTar
-tar -xf build/distributions/uriel-* --strip-components=1 -C build/distributions
-rm build/distributions/*.tgz
+GENERATE_SOURCEMAP=false yarn build
+rm -rf dist/build && mv build dist/
 
 ansible --version
 
-cd ansible
-ansible-playbook -e @../../deployment/conf/global.yml playbooks/build-uriel.yml
+cd dist/ansible
+ansible-playbook -e @../../deployment/conf/global.yml playbooks/build-raphael.yml
 
 cd ../../judgels/ansible
-ansible-playbook -e @../../deployment/conf/global.yml playbooks/deploy-uriel.yml
+ansible-playbook -e @../../deployment/conf/global.yml playbooks/deploy-raphael.yml
