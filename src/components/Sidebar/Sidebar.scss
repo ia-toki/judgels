@@ -1,0 +1,53 @@
+@import '../../styles/base';
+
+.card-sidebar {
+  *:focus {
+    outline: none;
+  }
+
+  .card__content {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .pt-tab-list {
+    left: -20px;
+    width: 270px;
+  }
+
+  .pt-tab-indicator {
+    background-color: #eef2fb !important;
+    border-radius: 0 !important;
+    border-left: 3px solid $primary-color;
+  }
+
+  .pt-tab {
+    padding-left: 20px !important;
+    line-height: 50px;
+    height: 50px;
+  }
+
+  .pt-tab[aria-selected="true"] {
+    font-weight: bold;
+    color: $text-color;
+  }
+
+  .pt-tab[aria-selected="false"] {
+    color: $primary-color;
+  }
+}
+
+.card-sidebar__arrow {
+  line-height: 50px !important;
+  color: $primary-color !important;
+  float: right;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .card-sidebar {
+    .pt-tab-list {
+      left: -20px;
+    }
+  }
+}

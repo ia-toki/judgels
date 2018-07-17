@@ -1,0 +1,16 @@
+@import '../../styles/base';
+
+.footer {
+  max-width: 1160px;
+  margin: 50px auto;
+  color: #666666;
+  font-size: $font-size-small;
+}
+
+.footer__left {
+  float: left;
+}
+
+.footer__right {
+  float: right;
+}

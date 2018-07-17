@@ -1,0 +1,19 @@
+@import '../../styles/base';
+
+.breadcrumbs {
+  width: 100%;
+  ul {
+    height: 40px;
+    line-height: 40px;
+  }
+}
+
+.breadcrumbs__content {
+  max-width: 1140px;
+  margin-left: auto;
+  margin-right: auto;
+
+  a {
+    font-size: $font-size-small !important;
+  }
+}

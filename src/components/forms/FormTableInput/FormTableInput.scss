@@ -1,0 +1,27 @@
+@import '../../../styles/base';
+
+.form-table-input td {
+  line-height: 40px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.form-table-input__group-label {
+  padding-top: 5px;
+}
+
+.form-table-input__label {
+  font-weight: bold;
+}
+
+.form-table-input__label-helper {
+  font-size: $font-size-small;
+}
+
+.form-table-input__group {
+  margin-bottom: 10px;
+}
+
+.form-table-input .pt-form-helper-text {
+  line-height: 20px;
+}

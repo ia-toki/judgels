@@ -1,0 +1,12 @@
+@import '../../../../styles/base';
+
+.form-register__actions {
+  display: flex;
+}
+
+.form-register__actions-login {
+  margin-left: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: $font-size-small;
+}

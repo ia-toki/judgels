@@ -1,0 +1,16 @@
+@import '../../../styles/base';
+
+.layout-single-col {
+  max-width: 560px;
+  margin: auto;
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .layout-single-col {
+    min-height: 300px;
+  }
+}
