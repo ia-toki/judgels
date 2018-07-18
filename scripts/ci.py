@@ -31,7 +31,8 @@ MODULES = OrderedDict([
     (':uriel:uriel-dist', set()),
     (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
 
-    (':raphael', set())
+    (':raphael:package.json', set()),
+    (':raphael', {':raphael:package.json'})
 ])
 
 PROJECTS = [
@@ -89,8 +90,10 @@ def check(branch_to_compare):
     print('set -ex')
     for project in PROJECTS:
         if MODULES[project].intersection(changed_modules):
-            if project == ':raphael':
-                print('yarn --cwd=`pwd`/judgels-frontends/raphael install && yarn --cwd=`pwd`/judgels-frontends/raphael test')
+            if ':raphael' in project:
+                if ':package.json' in project:
+                    print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
+                print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
             else:
                 print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
 
