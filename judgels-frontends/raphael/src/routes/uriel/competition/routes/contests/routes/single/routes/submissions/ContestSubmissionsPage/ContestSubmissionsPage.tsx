@@ -17,7 +17,7 @@ import Pagination from '../../../../../../../../../../components/Pagination/Pagi
 
 export interface ContestSubmissionsPageProps {
   contest: Contest;
-  onFetchMySubmissions: (contestJid: string, page: number) => Promise<ContestSubmissionsResponse>;
+  onGetMySubmissions: (contestJid: string, page: number) => Promise<ContestSubmissionsResponse>;
 }
 
 interface ContestSubmissionsPageState {
@@ -75,10 +75,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 
   private onChangePage = async (nextPage: number) => {
-    const { data, usersMap, problemAliasesMap } = await this.props.onFetchMySubmissions(
-      this.props.contest.jid,
-      nextPage
-    );
+    const { data, usersMap, problemAliasesMap } = await this.props.onGetMySubmissions(this.props.contest.jid, nextPage);
     this.setState({
       submissions: data,
       usersMap,
@@ -94,7 +91,7 @@ function createContestSubmissionsPage(contestSubmissionActions) {
   });
 
   const mapDispatchToProps = {
-    onFetchMySubmissions: contestSubmissionActions.fetchMyList,
+    onGetMySubmissions: contestSubmissionActions.getMySubmissions,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));

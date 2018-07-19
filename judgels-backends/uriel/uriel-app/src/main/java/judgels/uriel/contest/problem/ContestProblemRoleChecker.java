@@ -84,7 +84,7 @@ public class ContestProblemRoleChecker {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }
-        Optional<ContestSupervisor> supervisor = supervisorStore.findSupervisor(contest.getJid(), userJid);
+        Optional<ContestSupervisor> supervisor = supervisorStore.getSupervisor(contest.getJid(), userJid);
         return supervisor.isPresent() && supervisor.get().getPermission().allows(PROBLEM);
     }
 }

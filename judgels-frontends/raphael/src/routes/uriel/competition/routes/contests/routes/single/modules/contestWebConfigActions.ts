@@ -2,13 +2,13 @@ import { selectToken } from '../../../../../../../../modules/session/sessionSele
 import { DelWebConfig, PutWebConfig } from '../../../modules/contestWebConfigReducer';
 
 export const contestWebConfigActions = {
-  fetch: (contestJid: string) => {
+  getWebConfig: (contestJid: string) => {
     return async (dispatch, getState, { contestWebAPI }) => {
       const token = selectToken(getState());
-      const config = await contestWebAPI.getConfig(token, contestJid);
+      const config = await contestWebAPI.getWebConfig(token, contestJid);
       dispatch(PutWebConfig.create(config));
     };
   },
 
-  clear: DelWebConfig.create,
+  clearConfig: DelWebConfig.create,
 };

@@ -33,7 +33,7 @@ public class LegacyUserResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public User getUserByUsername(@PathParam("username") String username) {
-        return checkFound(userStore.findUserByUsername(username));
+        return checkFound(userStore.getUserByUsername(username));
     }
 
     @GET

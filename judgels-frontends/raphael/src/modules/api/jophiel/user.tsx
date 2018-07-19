@@ -33,7 +33,7 @@ export function createUserAPI() {
       return get(`${baseURL}/email/${email}/exists`);
     },
 
-    findUsersByUsernames: (usernames: string[]): Promise<UsernamesMap> => {
+    getUsersByUsernames: (usernames: string[]): Promise<UsernamesMap> => {
       return post(`${baseURL}/usernames`, undefined, usernames);
     },
 

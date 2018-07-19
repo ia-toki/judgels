@@ -13,7 +13,7 @@ describe('ResetPasswordPage', () => {
 
   beforeEach(() => {
     resetPasswordActions = {
-      reset: jest.fn().mockReturnValue({ type: 'mock-reset', then: fn => fn() }),
+      resetPassword: jest.fn().mockReturnValue({ type: 'mock-reset', then: fn => fn() }),
     };
 
     const store = createStore(combineReducers({ form: formReducer }));
@@ -38,6 +38,6 @@ describe('ResetPasswordPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(resetPasswordActions.reset).toHaveBeenCalledWith('code123', 'pass');
+    expect(resetPasswordActions.resetPassword).toHaveBeenCalledWith('code123', 'pass');
   });
 });

@@ -22,12 +22,13 @@ describe('resetPasswordActions', () => {
     };
   });
 
-  describe('reset()', () => {
-    const { reset } = resetPasswordActions;
-    const doReset = async () => reset('code123', 'pass')(dispatch, getState, { userAccountAPI, toastActions });
+  describe('resetPassword()', () => {
+    const { resetPassword } = resetPasswordActions;
+    const doResetPassword = async () =>
+      resetPassword('code123', 'pass')(dispatch, getState, { userAccountAPI, toastActions });
 
     it('calls API to reset password', async () => {
-      await doReset();
+      await doResetPassword();
 
       expect(userAccountAPI.resetPassword).toHaveBeenCalledWith({
         emailCode: 'code123',
@@ -39,7 +40,7 @@ describe('resetPasswordActions', () => {
       beforeEach(async () => {
         userAccountAPI.resetPassword.mockImplementation(() => Promise.resolve());
 
-        await doReset();
+        await doResetPassword();
       });
 
       it('succeeds with toast', () => {
@@ -62,7 +63,7 @@ describe('resetPasswordActions', () => {
       });
 
       it('throws a more descriptive error', async () => {
-        await expect(doReset()).rejects.toEqual(new Error('Invalid code.'));
+        await expect(doResetPassword()).rejects.toEqual(new Error('Invalid code.'));
       });
     });
   });

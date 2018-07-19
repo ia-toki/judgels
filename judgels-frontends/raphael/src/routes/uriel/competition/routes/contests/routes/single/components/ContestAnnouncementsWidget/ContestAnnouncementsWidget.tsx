@@ -31,7 +31,7 @@ function createContestAnnouncementsWidget(contestAnnouncementActions) {
     announcementsCount: selectContestWebConfig(state)!.announcementsCount,
   });
   const mapDispatchToProps = {
-    onAlertNewAnnouncements: contestAnnouncementActions.alertNew,
+    onAlertNewAnnouncements: contestAnnouncementActions.alertNewAnnouncements,
   };
 
   return connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsWidget);

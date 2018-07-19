@@ -27,13 +27,13 @@ public class ContestScoreboardStore {
                 .build();
     }
 
-    public Optional<RawContestScoreboard> findScoreboard(String contestJid, ContestScoreboardType type) {
+    public Optional<RawContestScoreboard> getScoreboard(String contestJid, ContestScoreboardType type) {
         return Optional.ofNullable(scoreboardCache.get(
                 contestJid + SEPARATOR + type.name(),
-                $ -> findScoreboardUncached(contestJid, type).orElse(null)));
+                $ -> getScoreboardUncached(contestJid, type).orElse(null)));
     }
 
-    private Optional<RawContestScoreboard> findScoreboardUncached(String contestJid, ContestScoreboardType type) {
+    private Optional<RawContestScoreboard> getScoreboardUncached(String contestJid, ContestScoreboardType type) {
         return scoreboardDao.selectByContestJidAndType(contestJid, type).map(this::fromModel);
     }
 

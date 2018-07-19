@@ -17,7 +17,7 @@ export interface ContestStateWidgetProps {
   contest: Contest;
   contestState: ContestState;
   remainingContestStateDuration?: number;
-  onFetchContestWebConfig: (contestJid: string) => Promise<void>;
+  onGetContestWebConfig: (contestJid: string) => Promise<void>;
   onStartVirtualContest: (contestJid: string) => Promise<void>;
 }
 
@@ -134,7 +134,7 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
     this.setState({ remainingDuration });
 
     if (remainingDuration === 0) {
-      this.props.onFetchContestWebConfig(this.props.contest.jid);
+      this.props.onGetContestWebConfig(this.props.contest.jid);
     }
 
     this.currentTimeout = setTimeout(() => this.refreshRemainingDuration(), 500);
@@ -151,7 +151,7 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
   private startVirtualContest = async () => {
     this.setState({ isVirtualContestAlertOpen: false, isVirtualContestButtonLoading: true });
     await this.props.onStartVirtualContest(this.props.contest.jid);
-    await this.props.onFetchContestWebConfig(this.props.contest.jid);
+    await this.props.onGetContestWebConfig(this.props.contest.jid);
     this.setState({ isVirtualContestButtonLoading: false });
   };
 }
@@ -165,8 +165,8 @@ export function createContestStateWidget(contestWebConfigActions, contestActions
     } as Partial<ContestStateWidgetProps>);
 
   const mapDispatchToProps = {
-    onFetchContestWebConfig: contestWebConfigActions.fetch,
-    onStartVirtualContest: contestActions.startVirtual,
+    onGetContestWebConfig: contestWebConfigActions.getWebConfig,
+    onStartVirtualContest: contestActions.startVirtualContest,
   };
 
   return connect(mapStateToProps, mapDispatchToProps)(ContestStateWidget);

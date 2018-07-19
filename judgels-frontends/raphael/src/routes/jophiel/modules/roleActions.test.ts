@@ -19,9 +19,9 @@ describe('roleActions', () => {
     };
   });
 
-  describe('get()', () => {
-    const { get } = roleActions;
-    const doGet = async () => get()(dispatch, getState, { myAPI });
+  describe('getMyRole()', () => {
+    const { getMyRole } = roleActions;
+    const doGet = async () => getMyRole()(dispatch, getState, { myAPI });
 
     const role = JophielRole.Superadmin;
 

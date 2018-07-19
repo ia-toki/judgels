@@ -24,16 +24,16 @@ describe('profileActions', () => {
     };
   });
 
-  describe('fetch()', () => {
-    const { fetch } = profileActions;
-    const doFetch = async () => fetch()(dispatch, getState, { userProfileAPI });
+  describe('getProfile()', () => {
+    const { getProfile } = profileActions;
+    const doGetProfile = async () => getProfile()(dispatch, getState, { userProfileAPI });
 
     const profile: UserProfile = { name: 'First Last' };
 
     beforeEach(async () => {
       userProfileAPI.getProfile.mockImplementation(() => profile);
 
-      await doFetch();
+      await doGetProfile();
     });
 
     it('calls API to get user profile', () => {
@@ -45,9 +45,9 @@ describe('profileActions', () => {
     });
   });
 
-  describe('update()', () => {
-    const { update } = profileActions;
-    const doUpdate = async () => update(profile)(dispatch, getState, { userProfileAPI, toastActions });
+  describe('updateProfile()', () => {
+    const { updateProfile } = profileActions;
+    const doUpdateProfile = async () => updateProfile(profile)(dispatch, getState, { userProfileAPI, toastActions });
 
     const profile: UserProfile = { name: 'First Last' };
     const newProfile: UserProfile = { name: 'Last First' };
@@ -55,7 +55,7 @@ describe('profileActions', () => {
     beforeEach(async () => {
       userProfileAPI.updateProfile.mockImplementation(() => newProfile);
 
-      await doUpdate();
+      await doUpdateProfile();
     });
 
     it('calls API to update user profile', () => {

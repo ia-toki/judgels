@@ -3,7 +3,7 @@ import { SubmissionError } from 'redux-form';
 import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
 
 export const registerActions = {
-  register: (userRegistrationData: UserRegistrationData) => {
+  registerUser: (userRegistrationData: UserRegistrationData) => {
     return async (dispatch, getState, { userAPI, userAccountAPI }) => {
       const usernameExists = await userAPI.usernameExists(userRegistrationData.username);
       const emailExists = await userAPI.emailExists(userRegistrationData.email);

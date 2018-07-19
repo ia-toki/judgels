@@ -34,7 +34,7 @@ public interface ContestService {
 
     @POST
     @Path("/{contestJid}/virtual")
-    void startVirtual(
+    void startVirtualContest(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
 

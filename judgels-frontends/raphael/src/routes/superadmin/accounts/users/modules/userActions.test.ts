@@ -18,12 +18,12 @@ describe('userActions', () => {
     };
   });
 
-  describe('fetchList()', () => {
+  describe('getUsers()', () => {
     const currentPage = 1;
     const orderBy = 'username';
     const orderDir = OrderDir.ASC;
-    const { fetchList } = userActions;
-    const doFetchList = async () => fetchList(currentPage, orderBy, orderDir)(dispatch, getState, { userAPI });
+    const { getUsers } = userActions;
+    const doGetUsers = async () => getUsers(currentPage, orderBy, orderDir)(dispatch, getState, { userAPI });
 
     beforeEach(async () => {
       const users: Page<User> = {
@@ -32,10 +32,10 @@ describe('userActions', () => {
       };
       userAPI.getUsers.mockReturnValue(users);
 
-      await doFetchList();
+      await doGetUsers();
     });
 
-    it('calls API to get user', () => {
+    it('calls API to get users', () => {
       expect(userAPI.getUsers).toHaveBeenCalledWith(token, currentPage, orderBy, orderDir);
     });
   });

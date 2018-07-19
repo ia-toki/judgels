@@ -30,7 +30,7 @@ const ActivatePage = (props: ActivatePageProps) => {
 };
 
 interface ActivatePageContainerProps extends RouteComponentProps<{ emailCode: string }> {
-  onActivate: (emailCode: string) => Promise<void>;
+  onActivateUser: (emailCode: string) => Promise<void>;
 }
 
 interface ActivatePageContainerState {
@@ -43,7 +43,7 @@ class ActivatePageContainer extends React.PureComponent<ActivatePageContainerPro
   };
 
   async componentDidMount() {
-    await this.props.onActivate(this.props.match.params.emailCode);
+    await this.props.onActivateUser(this.props.match.params.emailCode);
     this.setState({
       isFetching: false,
     });
@@ -56,7 +56,7 @@ class ActivatePageContainer extends React.PureComponent<ActivatePageContainerPro
 
 export function createActivatePage(activateActions) {
   const mapDispatchToProps = {
-    onActivate: activateActions.activate,
+    onActivateUser: activateActions.activateUser,
   };
 
   return withRouter<any>(connect(undefined, mapDispatchToProps)(ActivatePageContainer));

@@ -43,12 +43,12 @@ public class ContestContestantResource implements ContestContestantService {
     @UnitOfWork(readOnly = true)
     public ContestContestantsResponse getContestants(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canGetContestants(actorJid, contest));
 
         Set<String> userJids = contestantStore.getContestants(contestJid);
-        Map<String, UserInfo> usersMap = userService.findUsersByJids(userJids);
-        Map<String, String> userCountriesMap = userService.findUserCountriesByJids(userJids);
+        Map<String, UserInfo> usersMap = userService.getUsersByJids(userJids);
+        Map<String, String> userCountriesMap = userService.getUserCountriesByJids(userJids);
 
         return new ContestContestantsResponse.Builder()
                 .data(userJids)
@@ -61,7 +61,7 @@ public class ContestContestantResource implements ContestContestantService {
     @UnitOfWork(readOnly = true)
     public long getContestantsCount(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canGetContestants(actorJid, contest));
 
         return contestantStore.getContestantsCount(contestJid);
@@ -69,9 +69,9 @@ public class ContestContestantResource implements ContestContestantService {
 
     @Override
     @UnitOfWork
-    public void register(AuthHeader authHeader, String contestJid) {
+    public void registerMyselfAsContestant(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canRegister(actorJid, contest));
 
         contestantStore.upsertContestant(contestJid, actorJid);
@@ -79,9 +79,9 @@ public class ContestContestantResource implements ContestContestantService {
 
     @Override
     @UnitOfWork
-    public void unregister(AuthHeader authHeader, String contestJid) {
+    public void unregisterMyselfAsContestant(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canUnregister(actorJid, contest));
 
         contestantStore.removeContestant(contestJid, actorJid);
@@ -91,7 +91,7 @@ public class ContestContestantResource implements ContestContestantService {
     @UnitOfWork(readOnly = true)
     public ContestContestantState getMyContestantState(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         return contestantRoleChecker.getContestantState(actorJid, contest);
     }
@@ -100,7 +100,7 @@ public class ContestContestantResource implements ContestContestantService {
     @UnitOfWork
     public void addContestants(AuthHeader authHeader, String contestJid, Set<String> userJids) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canSuperviseContestants(actorJid, contest));
 
         userJids.forEach(jid -> contestantStore.upsertContestant(contestJid, jid));

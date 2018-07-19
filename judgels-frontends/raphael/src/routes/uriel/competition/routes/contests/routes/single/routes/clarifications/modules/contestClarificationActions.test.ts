@@ -27,50 +27,52 @@ describe('contestClarificationActions', () => {
     };
   });
 
-  describe('create()', () => {
+  describe('createClarification()', () => {
     const data = { title: 'Clarification' } as ContestClarificationData;
-    const { create } = contestClarificationActions;
-    const doCreate = async () =>
-      create(contestJid, data)(dispatch, getState, { contestClarificationAPI, toastActions });
+    const { createClarification } = contestClarificationActions;
+    const doCreateClarification = async () =>
+      createClarification(contestJid, data)(dispatch, getState, { contestClarificationAPI, toastActions });
 
     beforeEach(async () => {
-      await doCreate();
+      await doCreateClarification();
     });
 
-    it('calls API to get create contest clarification', () => {
+    it('calls API to create clarification', () => {
       expect(contestClarificationAPI.createClarification).toHaveBeenCalledWith(token, contestJid, data);
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Clarification submitted.');
     });
   });
 
-  describe('fetchConfig()', () => {
-    const { fetchConfig } = contestClarificationActions;
-    const doFetchConfig = async () => fetchConfig(contestJid, 'id')(dispatch, getState, { contestClarificationAPI });
+  describe('getClarificationConfig()', () => {
+    const { getClarificationConfig } = contestClarificationActions;
+    const doGetClarificationConfig = async () =>
+      getClarificationConfig(contestJid, 'id')(dispatch, getState, { contestClarificationAPI });
 
     beforeEach(async () => {
       const response = {} as ContestClarificationConfig;
       contestClarificationAPI.getClarificationConfig.mockReturnValue(response);
 
-      await doFetchConfig();
+      await doGetClarificationConfig();
     });
 
-    it('calls API to get contest clarification config', () => {
+    it('calls API to get clarification config', () => {
       expect(contestClarificationAPI.getClarificationConfig).toHaveBeenCalledWith(token, contestJid, 'id');
     });
   });
 
-  describe('fetchMyList()', () => {
-    const { fetchMyList } = contestClarificationActions;
-    const doFetchMyList = async () => fetchMyList(contestJid, 'id')(dispatch, getState, { contestClarificationAPI });
+  describe('getMyClarifications()', () => {
+    const { getMyClarifications } = contestClarificationActions;
+    const doGetMyClarifications = async () =>
+      getMyClarifications(contestJid, 'id')(dispatch, getState, { contestClarificationAPI });
 
     beforeEach(async () => {
       const response = {} as ContestClarificationsResponse;
       contestClarificationAPI.getMyClarifications.mockReturnValue(response);
 
-      await doFetchMyList();
+      await doGetMyClarifications();
     });
 
-    it('calls API to get contest clarifications', () => {
+    it('calls API to get my clarifications', () => {
       expect(contestClarificationAPI.getMyClarifications).toHaveBeenCalledWith(token, contestJid, 'id');
     });
   });

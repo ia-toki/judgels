@@ -88,7 +88,7 @@ public class UserAvatarResource implements UserAvatarService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
 
-        User user = checkFound(userStore.findUserByJid(userJid));
+        User user = checkFound(userStore.getUserByJid(userJid));
 
         String extension = Files.getFileExtension(fileDetails.getFileName());
         String destFilename = user.getJid() + "-" + RandomCodeGenerator.newCode() + "." + extension;

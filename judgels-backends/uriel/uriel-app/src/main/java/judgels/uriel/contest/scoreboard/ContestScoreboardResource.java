@@ -41,7 +41,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     @UnitOfWork(readOnly = true)
     public Optional<ContestScoreboardResponse> getScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canViewDefaultScoreboard(actorJid, contest));
 
         return scoreboardFetcher
@@ -53,7 +53,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     @UnitOfWork(readOnly = true)
     public Optional<ContestScoreboardResponse> getFrozenScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canViewDefaultScoreboard(actorJid, contest));
 
         boolean canSuperviseScoreboard = scoreboardRoleChecker.canSuperviseScoreboard(actorJid, contest);
@@ -65,7 +65,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private ContestScoreboardResponse buildResponse(ContestScoreboard scoreboard) {
         return new ContestScoreboardResponse.Builder()
                 .data(scoreboard)
-                .usersMap(userService.findUsersByJids(scoreboard.getScoreboard().getState().getContestantJids()))
+                .usersMap(userService.getUsersByJids(scoreboard.getScoreboard().getState().getContestantJids()))
                 .build();
     }
 }

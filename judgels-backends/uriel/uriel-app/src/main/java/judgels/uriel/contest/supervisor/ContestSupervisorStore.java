@@ -21,7 +21,7 @@ public class ContestSupervisorStore {
         this.mapper = mapper;
     }
 
-    public Optional<ContestSupervisor> findSupervisor(String contestJid, String userJid) {
+    public Optional<ContestSupervisor> getSupervisor(String contestJid, String userJid) {
         return supervisorDao.selectByContestJidAndUserJid(contestJid, userJid)
                 .map(this::fromModel);
     }

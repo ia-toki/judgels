@@ -65,14 +65,14 @@ public class ContestProblemResource implements ContestProblemService {
     @UnitOfWork(readOnly = true)
     public ContestContestantProblemsResponse getMyProblems(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(problemRoleChecker.canViewProblems(actorJid, contest));
 
         List<ContestContestantProblem> contestantProblems = problemStore.getContestantProblems(contestJid, actorJid);
         Set<String> problemJids =
                 contestantProblems.stream().map(p -> p.getProblem().getProblemJid()).collect(Collectors.toSet());
 
-        Map<String, ProblemInfo> problemsMap = clientProblemService.findProblemsByJids(
+        Map<String, ProblemInfo> problemsMap = clientProblemService.getProblemsByJids(
                 sandalphonClientAuthHeader,
                 problemJids);
 
@@ -91,11 +91,11 @@ public class ContestProblemResource implements ContestProblemService {
             Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(problemRoleChecker.canViewProblems(actorJid, contest));
 
         ContestContestantProblem contestantProblem =
-                checkFound(problemStore.findContestantProblemByAlias(contestJid, actorJid, problemAlias));
+                checkFound(problemStore.getContestantProblemByAlias(contestJid, actorJid, problemAlias));
         String problemJid = contestantProblem.getProblem().getProblemJid();
 
         ProblemInfo problem = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);

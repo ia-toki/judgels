@@ -25,7 +25,7 @@ public class SuperadminCreator {
 
     @UnitOfWork
     public void create() {
-        Optional<User> maybeUser = userStore.findUserByUsername(USERNAME);
+        Optional<User> maybeUser = userStore.getUserByUsername(USERNAME);
         User user;
         if (maybeUser.isPresent()) {
             user = maybeUser.get();

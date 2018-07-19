@@ -12,7 +12,7 @@ import { registerActions as injectedRegisterActions } from '../modules/registerA
 import './RegisterPage.css';
 
 export interface RegisterPageProps {
-  onRegister: (data: RegisterFormData) => Promise<void>;
+  onRegisterUser: (data: RegisterFormData) => Promise<void>;
   useRecaptcha: boolean;
   recaptchaSiteKey?: string;
 }
@@ -49,7 +49,7 @@ export class RegisterPage extends React.PureComponent<RegisterPageProps, Registe
       };
       content = (
         <Card title="Register" className="card-register">
-          <RegisterForm onSubmit={this.onRegister} {...registerFormProps} />
+          <RegisterForm onSubmit={this.onRegisterUser} {...registerFormProps} />
         </Card>
       );
     }
@@ -57,8 +57,8 @@ export class RegisterPage extends React.PureComponent<RegisterPageProps, Registe
     return <SingleColumnLayout>{content}</SingleColumnLayout>;
   }
 
-  private onRegister = async (data: RegisterFormData) => {
-    await this.props.onRegister(data);
+  private onRegisterUser = async (data: RegisterFormData) => {
+    await this.props.onRegisterUser(data);
     this.setState({
       registeredUser: {
         username: data.username,
@@ -75,7 +75,7 @@ export function createRegisterPage(registerActions) {
   });
 
   const mapDispatchToProps = {
-    onRegister: (data: RegisterFormData) => {
+    onRegisterUser: (data: RegisterFormData) => {
       const userRegistrationData: UserRegistrationData = {
         username: data.username,
         password: data.password,
@@ -83,7 +83,7 @@ export function createRegisterPage(registerActions) {
         name: data.name,
         recaptchaResponse: data.recaptchaResponse,
       };
-      return registerActions.register(userRegistrationData);
+      return registerActions.registerUser(userRegistrationData);
     },
   };
 

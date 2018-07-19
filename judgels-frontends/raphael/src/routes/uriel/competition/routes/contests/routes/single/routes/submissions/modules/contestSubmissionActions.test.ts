@@ -28,25 +28,27 @@ describe('contestSubmissionActions', () => {
     };
   });
 
-  describe('fetchMyList()', () => {
-    const { fetchMyList } = contestSubmissionActions;
-    const doFetch = async () => fetchMyList(contestJid, 3)(dispatch, getState, { contestSubmissionAPI });
+  describe('getMySubmissions()', () => {
+    const { getMySubmissions } = contestSubmissionActions;
+    const doGetMySubmissions = async () =>
+      getMySubmissions(contestJid, 3)(dispatch, getState, { contestSubmissionAPI });
 
     beforeEach(async () => {
       const submissions = {} as ContestSubmissionsResponse;
       contestSubmissionAPI.getMySubmissions.mockReturnValue(submissions);
 
-      await doFetch();
+      await doGetMySubmissions();
     });
 
-    it('calls API to get contest submissions', () => {
+    it('calls API to get my submissions', () => {
       expect(contestSubmissionAPI.getMySubmissions).toHaveBeenCalledWith(token, contestJid, 3);
     });
   });
 
-  describe('fetchWithSource()', () => {
-    const { fetchWithSource } = contestSubmissionActions;
-    const doFetch = async () => fetchWithSource(contestJid, 3, 'id')(dispatch, getState, { contestSubmissionAPI });
+  describe('getSubmissionWithSource()', () => {
+    const { getSubmissionWithSource } = contestSubmissionActions;
+    const doGetSubmissionWithSource = async () =>
+      getSubmissionWithSource(contestJid, 3, 'id')(dispatch, getState, { contestSubmissionAPI });
 
     describe('when the contestJid matches', () => {
       beforeEach(async () => {
@@ -55,10 +57,10 @@ describe('contestSubmissionActions', () => {
         } as SubmissionWithSourceResponse;
         contestSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
 
-        await doFetch();
+        await doGetSubmissionWithSource();
       });
 
-      it('calls API to get contest submission', () => {
+      it('calls API to get submission with source', () => {
         expect(contestSubmissionAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3, 'id');
       });
     });
@@ -71,14 +73,14 @@ describe('contestSubmissionActions', () => {
         contestSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
       });
 
-      it('calls API to get contest submission', async () => {
-        await expect(doFetch()).rejects.toMatchObject({});
+      it('throws not found error', async () => {
+        await expect(doGetSubmissionWithSource()).rejects.toMatchObject({});
       });
     });
   });
 
-  describe('submit()', () => {
-    const { submit } = contestSubmissionActions;
+  describe('createSubmission()', () => {
+    const { createSubmission } = contestSubmissionActions;
     const sourceFiles = {
       encoder: {} as File,
       decoder: {} as File,
@@ -87,14 +89,14 @@ describe('contestSubmissionActions', () => {
       gradingLanguage: 'Pascal',
       sourceFiles,
     };
-    const doSubmit = async () =>
-      submit(contestJid, 1, problemJid, data)(dispatch, getState, { contestSubmissionAPI, toastActions });
+    const doCreateSubmission = async () =>
+      createSubmission(contestJid, 1, problemJid, data)(dispatch, getState, { contestSubmissionAPI, toastActions });
 
     beforeEach(async () => {
-      await doSubmit();
+      await doCreateSubmission();
     });
 
-    it('calls API to get create a submission', () => {
+    it('calls API to create a submission', () => {
       expect(contestSubmissionAPI.createSubmission).toHaveBeenCalledWith(token, contestJid, problemJid, 'Pascal', {
         'sourceFiles.encoder': {} as File,
         'sourceFiles.decoder': {} as File,

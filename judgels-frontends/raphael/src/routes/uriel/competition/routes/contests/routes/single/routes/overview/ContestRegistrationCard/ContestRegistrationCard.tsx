@@ -17,10 +17,10 @@ import './ContestRegistrationCard.css';
 export interface ContestRegistrationCardProps {
   isLoggedIn: boolean;
   contest: Contest;
-  onFetchMyContestantState: (contestJid: string) => Promise<ContestContestantState>;
-  onFetchContestantsCount: (contestJid: string) => Promise<number>;
-  onRegister: (contestJid: string) => Promise<void>;
-  onUnregister: (contestJid: string) => Promise<void>;
+  onGetMyContestantState: (contestJid: string) => Promise<ContestContestantState>;
+  onGetContestantsCount: (contestJid: string) => Promise<number>;
+  onRegisterMyselfAsContestant: (contestJid: string) => Promise<void>;
+  onUnregisterMyselfAsContestant: (contestJid: string) => Promise<void>;
 }
 
 interface ContestRegistrationCardState {
@@ -54,8 +54,8 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     }
 
     const [contestantState, contestantsCount] = await Promise.all([
-      this.props.onFetchMyContestantState(this.props.contest.jid),
-      this.props.onFetchContestantsCount(this.props.contest.jid),
+      this.props.onGetMyContestantState(this.props.contest.jid),
+      this.props.onGetContestantsCount(this.props.contest.jid),
     ]);
     this.setState({ contestantState, contestantsCount });
   };
@@ -137,14 +137,14 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
 
   private register = async () => {
     this.setState({ isActionButtonLoading: true });
-    await this.props.onRegister(this.props.contest.jid);
+    await this.props.onRegisterMyselfAsContestant(this.props.contest.jid);
     this.setState({ isActionButtonLoading: false });
     await this.refresh();
   };
 
   private unregister = async () => {
     this.setState({ isActionButtonLoading: true });
-    await this.props.onUnregister(this.props.contest.jid);
+    await this.props.onUnregisterMyselfAsContestant(this.props.contest.jid);
     this.setState({ isActionButtonLoading: false });
     await this.refresh();
   };
@@ -162,10 +162,10 @@ function createContestRegistrationCard(contestContestantActions) {
     contest: selectContest(state)!,
   });
   const mapDispatchToProps = {
-    onFetchMyContestantState: contestContestantActions.fetchMyState,
-    onFetchContestantsCount: contestContestantActions.fetchCount,
-    onRegister: contestContestantActions.register,
-    onUnregister: contestContestantActions.unregister,
+    onGetMyContestantState: contestContestantActions.getMyContestantState,
+    onGetContestantsCount: contestContestantActions.getContestantsCount,
+    onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
+    onUnregisterMyselfAsContestant: contestContestantActions.unregisterMyselfAsContestant,
   };
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));
 }

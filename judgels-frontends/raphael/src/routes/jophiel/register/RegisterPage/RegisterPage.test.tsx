@@ -13,19 +13,19 @@ import { jophielReducer } from '../../modules/jophielReducer';
 describe('RegisterPageShallow', () => {
   let wrapper: ShallowWrapper;
 
-  let onRegister: jest.Mock<any>;
+  let onRegisterUser: jest.Mock<any>;
 
   const render = () => {
     const props: RegisterPageProps = {
       useRecaptcha: false,
-      onRegister,
+      onRegisterUser,
     };
 
     wrapper = shallow(<RegisterPage {...props} />);
   };
 
   beforeEach(() => {
-    onRegister = jest.fn();
+    onRegisterUser = jest.fn();
     render();
   });
 
@@ -52,7 +52,7 @@ describe('RegisterPage', () => {
 
   beforeEach(() => {
     registerActions = {
-      register: jest.fn().mockReturnValue({ type: 'mock-register', then: fn => fn() }),
+      registerUser: jest.fn().mockReturnValue({ type: 'mock-register', then: fn => fn() }),
     };
 
     const store = createStore<Partial<AppState>>(
@@ -92,7 +92,7 @@ describe('RegisterPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(registerActions.register.mock.calls[0][0]).toEqual({
+    expect(registerActions.registerUser.mock.calls[0][0]).toEqual({
       username: 'user',
       name: 'name',
       email: 'email@domain.com',

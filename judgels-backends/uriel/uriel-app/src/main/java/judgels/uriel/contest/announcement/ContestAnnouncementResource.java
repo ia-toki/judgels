@@ -37,7 +37,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
     @UnitOfWork(readOnly = true)
     public List<ContestAnnouncement> getPublishedAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(announcementRoleChecker.canViewPublishedAnnouncements(actorJid, contest));
 
         return announcementStore.getAnnouncements(contestJid, actorJid);

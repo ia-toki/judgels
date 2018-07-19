@@ -46,7 +46,7 @@ public class UserResource implements UserService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewUser(actorJid, userJid));
 
-        return checkFound(userStore.findUserByJid(userJid));
+        return checkFound(userStore.getUserByJid(userJid));
     }
 
     @Override
@@ -71,13 +71,13 @@ public class UserResource implements UserService {
     @Override
     @UnitOfWork(readOnly = true)
     public boolean usernameExists(String username) {
-        return userStore.findUserByUsername(username).isPresent();
+        return userStore.getUserByUsername(username).isPresent();
     }
 
     @Override
     @UnitOfWork(readOnly = true)
     public boolean emailExists(String email) {
-        return userStore.findUserByEmail(email).isPresent();
+        return userStore.getUserByEmail(email).isPresent();
     }
 
     @Override
@@ -91,8 +91,8 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, UserInfo> findUsersByJids(Set<String> jids) {
-        return userStore.findUsersByJids(jids).entrySet()
+    public Map<String, UserInfo> getUsersByJids(Set<String> jids) {
+        return userStore.getUsersByJids(jids).entrySet()
                 .stream()
                 .collect(Collectors.toMap(
                         e -> e.getKey(),
@@ -102,14 +102,14 @@ public class UserResource implements UserService {
     // TODO (fushar): tests
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, String> findUserCountriesByJids(Set<String> jids) {
-        return userStore.findUserCountriesByJids(jids);
+    public Map<String, String> getUserCountriesByJids(Set<String> jids) {
+        return userStore.getUserCountriesByJids(jids);
     }
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, User> findUsersByUsernames(Set<String> usernames) {
-        return userStore.findUsersByUsernames(usernames);
+    public Map<String, User> getUsersByUsernames(Set<String> usernames) {
+        return userStore.getUsersByUsernames(usernames);
     }
 
     @Override

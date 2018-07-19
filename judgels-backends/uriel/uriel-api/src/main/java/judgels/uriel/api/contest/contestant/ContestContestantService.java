@@ -32,13 +32,13 @@ public interface ContestContestantService {
 
     @POST
     @Path("/me")
-    void register(
+    void registerMyselfAsContestant(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
 
     @DELETE
     @Path("/me")
-    void unregister(
+    void unregisterMyselfAsContestant(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
 

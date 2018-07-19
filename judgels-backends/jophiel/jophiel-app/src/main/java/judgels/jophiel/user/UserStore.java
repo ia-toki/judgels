@@ -41,36 +41,36 @@ public class UserStore {
         return fromModel(userDao.insert(model));
     }
 
-    public Optional<User> findUserByJid(String userJid) {
+    public Optional<User> getUserByJid(String userJid) {
         return userDao.selectByJid(userJid).map(UserStore::fromModel);
     }
 
-    public Optional<String> findUserEmailByJid(String userJid) {
+    public Optional<String> getUserEmailByJid(String userJid) {
         return userDao.selectByJid(userJid).map(model -> model.email);
     }
 
-    public Map<String, User> findUsersByJids(Set<String> userJids) {
+    public Map<String, User> getUsersByJids(Set<String> userJids) {
         Map<String, UserModel> userModels = userDao.selectByJids(userJids);
         return userModels.values().stream().map(UserStore::fromModel).collect(Collectors.toMap(User::getJid, p -> p));
     }
 
-    public Optional<User> findUserByUsername(String username) {
+    public Optional<User> getUserByUsername(String username) {
         return userDao.selectByUsername(username).map(UserStore::fromModel);
     }
 
-    public Optional<User> findUserByUsernameAndPassword(String username, String password) {
+    public Optional<User> getUserByUsernameAndPassword(String username, String password) {
         return userDao.selectByUsername(username)
                 .filter(model -> validatePassword(password, model.password))
                 .map(UserStore::fromModel);
     }
 
-    public Optional<User> findUserByEmailAndPassword(String email, String password) {
+    public Optional<User> getUserByEmailAndPassword(String email, String password) {
         return userDao.selectByEmail(email)
                 .filter(model -> validatePassword(password, model.password))
                 .map(UserStore::fromModel);
     }
 
-    public Optional<User> findUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         return userDao.selectByEmail(email).map(UserStore::fromModel);
     }
 
@@ -120,6 +120,21 @@ public class UserStore {
         });
     }
 
+    public Map<String, String> getUserCountriesByJids(Set<String> jids) {
+        Map<String, UserProfileModel> profileModelsByUserJid = profileDao.selectAllByUserJids(jids);
+        return profileModelsByUserJid.entrySet()
+                .stream()
+                .filter(e -> e.getValue().nationality != null)
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().nationality));
+    }
+
+    public Map<String, User> getUsersByUsernames(Set<String> usernames) {
+        Map<String, UserModel> userModelByUsernames = userDao.selectAllByUsernames(usernames);
+        return userModelByUsernames.values().stream()
+                .map(UserStore::fromModel)
+                .collect(Collectors.toMap(User::getUsername, p -> p));
+    }
+
     private static User fromModel(UserModel model) {
         return new User.Builder()
                 .jid(model.jid)
@@ -147,20 +162,5 @@ public class UserStore {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public Map<String, String> findUserCountriesByJids(Set<String> jids) {
-        Map<String, UserProfileModel> profileModelsByUserJid = profileDao.selectAllByUserJids(jids);
-        return profileModelsByUserJid.entrySet()
-                .stream()
-                .filter(e -> e.getValue().nationality != null)
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().nationality));
-    }
-
-    public Map<String, User> findUsersByUsernames(Set<String> usernames) {
-        Map<String, UserModel> userModelByUsernames = userDao.selectAllByUsernames(usernames);
-        return userModelByUsernames.values().stream()
-                .map(UserStore::fromModel)
-                .collect(Collectors.toMap(User::getUsername, p -> p));
     }
 }

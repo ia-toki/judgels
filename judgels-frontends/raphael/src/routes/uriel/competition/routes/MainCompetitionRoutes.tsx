@@ -6,7 +6,7 @@ import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
 } from '../../../../components/ContentWithSidebar/ContentWithSidebar';
-import ContestListPage from './contests/ContestListPage/ContestListPage';
+import ContestsPage from './contests/ContestsPage/ContestsPage';
 
 const MainCompetitionRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
@@ -15,7 +15,7 @@ const MainCompetitionRoutes = () => {
       titleIcon: 'timeline-events',
       title: 'Contests',
       routeComponent: Route,
-      component: ContestListPage,
+      component: ContestsPage,
     },
   ];
 

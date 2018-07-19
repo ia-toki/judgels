@@ -1,9 +1,9 @@
 import { PutWebConfig } from './webConfigReducer';
 
 export const webConfigActions = {
-  get: () => {
+  getWebConfig: () => {
     return async (dispatch, getState, { webAPI }) => {
-      const webConfig = await webAPI.getConfig();
+      const webConfig = await webAPI.getWebConfig();
       dispatch(PutWebConfig.create(webConfig));
     };
   },

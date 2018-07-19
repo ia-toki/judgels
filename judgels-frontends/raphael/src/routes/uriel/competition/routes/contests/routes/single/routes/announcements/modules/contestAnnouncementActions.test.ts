@@ -17,19 +17,19 @@ describe('contestAnnouncementActions', () => {
     };
   });
 
-  describe('fetchPublishedList()', () => {
-    const { fetchPublishedList } = contestAnnouncementActions;
-    const doFetchPublishedList = async () =>
-      fetchPublishedList(contestJid)(dispatch, getState, { contestAnnouncementAPI });
+  describe('getPublishedAnnouncements()', () => {
+    const { getPublishedAnnouncements } = contestAnnouncementActions;
+    const doGetPublishedAnnouncements = async () =>
+      getPublishedAnnouncements(contestJid)(dispatch, getState, { contestAnnouncementAPI });
 
     beforeEach(async () => {
       const announcements = [] as ContestAnnouncement[];
       contestAnnouncementAPI.getPublishedAnnouncements.mockReturnValue(announcements);
 
-      await doFetchPublishedList();
+      await doGetPublishedAnnouncements();
     });
 
-    it('calls API to get contest announcements', () => {
+    it('calls API to get published announcements', () => {
       expect(contestAnnouncementAPI.getPublishedAnnouncements).toHaveBeenCalledWith(token, contestJid);
     });
   });

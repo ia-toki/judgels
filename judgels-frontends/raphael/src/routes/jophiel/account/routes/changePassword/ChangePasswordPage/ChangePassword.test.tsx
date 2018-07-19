@@ -13,7 +13,7 @@ describe('ChangePasswordPage', () => {
 
   beforeEach(() => {
     changePasswordActions = {
-      changePassword: jest.fn().mockReturnValue({ type: 'mock-changePassword' }),
+      updateMyPassword: jest.fn().mockReturnValue({ type: 'mock-changePassword' }),
     };
 
     const store = createStore(combineReducers({ form: formReducer }));
@@ -41,6 +41,6 @@ describe('ChangePasswordPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(changePasswordActions.changePassword).toHaveBeenCalledWith('oldPass', 'newPass');
+    expect(changePasswordActions.updateMyPassword).toHaveBeenCalledWith('oldPass', 'newPass');
   });
 });

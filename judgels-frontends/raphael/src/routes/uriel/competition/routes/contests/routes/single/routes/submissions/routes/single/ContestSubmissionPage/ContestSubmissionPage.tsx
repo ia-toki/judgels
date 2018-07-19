@@ -19,7 +19,7 @@ import { selectStatementLanguage } from '../../../../../../../../../../../../mod
 export interface ContestSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   contest: Contest;
   statementLanguage: string;
-  onFetchSubmissionWithSource: (
+  onGetSubmissionWithSource: (
     contestJid: string,
     submissionId: number,
     language: string
@@ -38,7 +38,7 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
   state: ContestSubmissionPageState = {};
 
   async componentDidMount() {
-    const { data, user, problemName, problemAlias, containerName } = await this.props.onFetchSubmissionWithSource(
+    const { data, user, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
       this.props.contest.jid,
       +this.props.match.params.submissionId,
       this.props.statementLanguage
@@ -89,7 +89,7 @@ function createContestSubmissionPage(contestSubmissionActions) {
   });
 
   const mapDispatchToProps = {
-    onFetchSubmissionWithSource: contestSubmissionActions.fetchWithSource,
+    onGetSubmissionWithSource: contestSubmissionActions.getSubmissionWithSource,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionPage));

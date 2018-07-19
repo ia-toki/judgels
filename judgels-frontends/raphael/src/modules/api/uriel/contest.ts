@@ -38,7 +38,7 @@ export function createContestAPI() {
       return get(`${baseURL}/id/${contestId}`, token);
     },
 
-    startVirtual: (token: string, contestJid: string): Promise<Contest> => {
+    startVirtualContest: (token: string, contestJid: string): Promise<Contest> => {
       return post(`${baseURL}/${contestJid}/virtual`, token);
     },
   };

@@ -21,7 +21,7 @@ describe('ContestProblemPage', () => {
 
   beforeEach(() => {
     contestProblemActions = {
-      fetchWorksheet: jest.fn().mockReturnValue(() =>
+      getProblemWorksheet: jest.fn().mockReturnValue(() =>
         Promise.resolve({
           contestantProblem: {
             problem: {
@@ -49,7 +49,7 @@ describe('ContestProblemPage', () => {
       ),
     };
     contestSubmissionActions = {
-      submit: jest.fn(),
+      createSubmission: jest.fn(),
     };
 
     const store = createStore(
@@ -82,7 +82,7 @@ describe('ContestProblemPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestSubmissionActions.submit).toHaveBeenCalledWith(contestJid, 1, problemJid, {
+    expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith(contestJid, 1, problemJid, {
       gradingLanguage: preferredGradingLanguage,
       sourceFiles: {
         encoder: { name: 'encoder.cpp', size: 1000 } as File,

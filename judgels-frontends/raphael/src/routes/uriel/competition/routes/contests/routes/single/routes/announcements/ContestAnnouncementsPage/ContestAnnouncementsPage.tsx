@@ -13,7 +13,7 @@ import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnou
 
 export interface ContestAnnouncementsPageProps {
   contest: Contest;
-  onFetchPublishedAnnouncements: (contestJid: string) => Promise<ContestAnnouncement[]>;
+  onGetPublishedAnnouncements: (contestJid: string) => Promise<ContestAnnouncement[]>;
 }
 
 interface ContestAnnouncementsPageState {
@@ -27,7 +27,7 @@ export class ContestAnnouncementsPage extends React.PureComponent<
   state: ContestAnnouncementsPageState = {};
 
   async componentDidMount() {
-    const announcements = await this.props.onFetchPublishedAnnouncements(this.props.contest.jid);
+    const announcements = await this.props.onGetPublishedAnnouncements(this.props.contest.jid);
     this.setState({
       announcements,
     });
@@ -73,7 +73,7 @@ function createContestAnnouncementsPage(contestAnnouncementActions) {
   });
 
   const mapDispatchToProps = {
-    onFetchPublishedAnnouncements: contestAnnouncementActions.fetchPublishedList,
+    onGetPublishedAnnouncements: contestAnnouncementActions.getPublishedAnnouncements,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));

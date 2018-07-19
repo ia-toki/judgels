@@ -12,7 +12,7 @@ export interface ChangeAvatarPanelProps {
   onDropAccepted: (files: File[]) => Promise<void>;
   onDropRejected: (files: File[]) => Promise<void>;
   onRenderAvatar: () => Promise<string>;
-  onRemoveAvatar: () => Promise<void>;
+  onDeleteAvatar: () => Promise<void>;
 }
 
 interface ChangeAvatarPanelState {
@@ -33,7 +33,7 @@ export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProp
         <h4>Current avatar</h4>
         <img src={this.state.avatarUrl} />
         <div>
-          <Button intent={Intent.DANGER} onClick={this.props.onRemoveAvatar}>
+          <Button intent={Intent.DANGER} onClick={this.props.onDeleteAvatar}>
             Remove avatar
           </Button>
         </div>

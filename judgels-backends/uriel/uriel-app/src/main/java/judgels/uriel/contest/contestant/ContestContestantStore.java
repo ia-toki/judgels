@@ -60,13 +60,13 @@ public class ContestContestantStore {
         roleDao.invalidateCaches(userJid, contestJid);
     }
 
-    public Optional<ContestContestant> findContestant(String contestJid, String userJid) {
+    public Optional<ContestContestant> getContestant(String contestJid, String userJid) {
         return Optional.ofNullable(contestantCache.get(
                 contestJid + SEPARATOR + userJid,
-                $ -> findContestantUncached(contestJid, userJid)));
+                $ -> getContestantUncached(contestJid, userJid)));
     }
 
-    private ContestContestant findContestantUncached(String contestJid, String userJid) {
+    private ContestContestant getContestantUncached(String contestJid, String userJid) {
         return contestantDao.selectByContestJidAndUserJid(contestJid, userJid)
                 .map(ContestContestantStore::fromModel)
                 .orElse(null);

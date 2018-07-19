@@ -47,7 +47,7 @@ public interface ClientProblemService {
     @Path("/jids")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, ProblemInfo> findProblemsByJids(
+    Map<String, ProblemInfo> getProblemsByJids(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             Set<String> jids);
 }

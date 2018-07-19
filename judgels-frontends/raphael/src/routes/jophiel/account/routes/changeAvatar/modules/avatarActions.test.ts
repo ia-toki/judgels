@@ -23,13 +23,13 @@ describe('avatarActions', () => {
     };
   });
 
-  describe('change()', () => {
+  describe('updateAvatar()', () => {
     const file = {} as File;
-    const { change } = avatarActions;
-    const doChange = async () => change(file)(dispatch, getState, { userAvatarAPI, toastActions });
+    const { updateAvatar } = avatarActions;
+    const doUpdateAvatar = async () => updateAvatar(file)(dispatch, getState, { userAvatarAPI, toastActions });
 
     beforeEach(async () => {
-      await doChange();
+      await doUpdateAvatar();
     });
 
     it('calls API to update avatar', () => {
@@ -38,12 +38,12 @@ describe('avatarActions', () => {
     });
   });
 
-  describe('remove()', () => {
-    const { remove } = avatarActions;
-    const doRemove = async () => remove()(dispatch, getState, { userAvatarAPI, toastActions });
+  describe('deleteAvatar()', () => {
+    const { deleteAvatar } = avatarActions;
+    const doDeleteAvatar = async () => deleteAvatar()(dispatch, getState, { userAvatarAPI, toastActions });
 
     beforeEach(async () => {
-      await doRemove();
+      await doDeleteAvatar();
     });
 
     it('calls API to delete avatar', () => {
@@ -52,13 +52,13 @@ describe('avatarActions', () => {
     });
   });
 
-  describe('reject()', () => {
-    const { reject } = avatarActions;
-    const doReject = async (file: File) => reject(file)(dispatch, getState, { toastActions });
+  describe('rejectAvatar()', () => {
+    const { rejectAvatar } = avatarActions;
+    const doRejectAvatar = async (file: File) => rejectAvatar(file)(dispatch, getState, { toastActions });
 
     it('rejects when the file size is too large', async () => {
       const file = { size: 2 * MAX_AVATAR_FILE_SIZE } as File;
-      await doReject(file);
+      await doRejectAvatar(file);
       expect(toastActions.showErrorToast).toHaveBeenCalled();
     });
   });

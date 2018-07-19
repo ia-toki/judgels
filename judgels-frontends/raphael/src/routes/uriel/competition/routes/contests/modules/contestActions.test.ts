@@ -17,29 +17,29 @@ describe('contestActions', () => {
       getActiveContests: jest.fn(),
       getPastContests: jest.fn(),
       getContestById: jest.fn(),
-      startVirtual: jest.fn(),
+      startVirtualContest: jest.fn(),
     };
   });
 
-  describe('fetchActiveList()', () => {
-    const { fetchActiveList } = contestActions;
-    const doFetchActiveList = async () => fetchActiveList()(dispatch, getState, { contestAPI });
+  describe('getActiveContests()', () => {
+    const { getActiveContests } = contestActions;
+    const doGetActiveContests = async () => getActiveContests()(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
       const contestList: Contest[] = [contest];
       contestAPI.getActiveContests.mockImplementation(() => contestList);
 
-      await doFetchActiveList();
+      await doGetActiveContests();
     });
 
-    it('calls API to get active contest list', () => {
+    it('calls API to get active contests', () => {
       expect(contestAPI.getActiveContests).toHaveBeenCalledWith(token);
     });
   });
 
-  describe('fetchPastPage()', () => {
-    const { fetchPastPage } = contestActions;
-    const doFetchPastPage = async () => fetchPastPage(2, 20)(dispatch, getState, { contestAPI });
+  describe('getPastContests()', () => {
+    const { getPastContests } = contestActions;
+    const doGetPastContests = async () => getPastContests(2, 20)(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
       const contestPage: ContestPage = {
@@ -48,22 +48,22 @@ describe('contestActions', () => {
       };
       contestAPI.getPastContests.mockImplementation(() => contestPage);
 
-      await doFetchPastPage();
+      await doGetPastContests();
     });
 
-    it('calls API to get past contest list', () => {
+    it('calls API to get past contests', () => {
       expect(contestAPI.getPastContests).toHaveBeenCalledWith(token, 2, 20);
     });
   });
 
-  describe('fetchById()', () => {
-    const { fetchById } = contestActions;
-    const doFetch = async () => fetchById(contestId)(dispatch, getState, { contestAPI });
+  describe('getContestById()', () => {
+    const { getContestById } = contestActions;
+    const doGetContestById = async () => getContestById(contestId)(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
       contestAPI.getContestById.mockImplementation(() => contest);
 
-      await doFetch();
+      await doGetContestById();
     });
 
     it('calls API to get contest', () => {
@@ -75,16 +75,16 @@ describe('contestActions', () => {
     });
   });
 
-  describe('startVirtual()', () => {
-    const { startVirtual } = contestActions;
-    const doStartVirtual = async () => startVirtual(contestId)(dispatch, getState, { contestAPI });
+  describe('startVirtualContest()', () => {
+    const { startVirtualContest } = contestActions;
+    const doStartVirtualContest = async () => startVirtualContest(contestId)(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
-      await doStartVirtual();
+      await doStartVirtualContest();
     });
 
     it('calls API to start virtual contest', () => {
-      expect(contestAPI.startVirtual).toHaveBeenCalledWith(token, contestId);
+      expect(contestAPI.startVirtualContest).toHaveBeenCalledWith(token, contestId);
     });
   });
 });

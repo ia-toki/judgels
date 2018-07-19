@@ -24,12 +24,12 @@ import './ContestProblemPage.css';
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
   statementLanguage: string;
-  onFetchProblemWorksheet: (
+  onGetProblemWorksheet: (
     contestJid: string,
     problemAlias: string,
     language: string
   ) => Promise<ContestContestantProblemWorksheet>;
-  onSubmit: (
+  onCreateSubmission: (
     contestJid: string,
     contestId: number,
     problemJid: string,
@@ -48,7 +48,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   state: ContestProblemPageState = {};
 
   async componentDidMount() {
-    const { defaultLanguage, languages, contestantProblem, worksheet } = await this.props.onFetchProblemWorksheet(
+    const { defaultLanguage, languages, contestantProblem, worksheet } = await this.props.onGetProblemWorksheet(
       this.props.contest.jid,
       this.props.match.params.problemAlias,
       this.props.statementLanguage
@@ -73,9 +73,9 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     );
   }
 
-  private onSubmit = async (data: ProblemSubmissionFormData) => {
+  private onCreateSubmission = async (data: ProblemSubmissionFormData) => {
     const { problem } = this.state.contestantProblem!;
-    return await this.props.onSubmit(this.props.contest.jid, this.props.contest.id, problem.problemJid, data);
+    return await this.props.onCreateSubmission(this.props.contest.jid, this.props.contest.id, problem.problemJid, data);
   };
 
   private renderStatementLanguageWidget = () => {
@@ -110,7 +110,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       <ProblemWorksheetCard
         alias={contestantProblem.problem.alias}
         worksheet={worksheet}
-        onSubmit={this.onSubmit}
+        onSubmit={this.onCreateSubmission}
         submissionWarning={submissionWarning}
       />
     );
@@ -124,8 +124,8 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
   });
 
   const mapDispatchToProps = {
-    onFetchProblemWorksheet: contestProblemActions.fetchWorksheet,
-    onSubmit: contestSubmissionActions.submit,
+    onGetProblemWorksheet: contestProblemActions.getProblemWorksheet,
+    onCreateSubmission: contestSubmissionActions.createSubmission,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));

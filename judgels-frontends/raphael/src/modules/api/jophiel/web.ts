@@ -14,7 +14,7 @@ export function createWebAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.jophiel}/web`;
 
   return {
-    getConfig: (): Promise<WebConfig> => {
+    getWebConfig: (): Promise<WebConfig> => {
       return get(`${baseURL}/config`);
     },
   };

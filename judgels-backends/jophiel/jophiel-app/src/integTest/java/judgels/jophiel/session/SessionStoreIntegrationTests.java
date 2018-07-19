@@ -30,22 +30,22 @@ class SessionStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        assertThat(store.findSessionByToken("token123")).isEmpty();
+        assertThat(store.getSessionByToken("token123")).isEmpty();
 
         store.createSession("token123", "userJid");
         store.createSession("token223", "userJid");
         store.createSession("token323", "userJid2");
 
-        Session session = store.findSessionByToken("token123").get();
+        Session session = store.getSessionByToken("token123").get();
         assertThat(session.getToken()).isEqualTo("token123");
         assertThat(session.getUserJid()).isEqualTo("userJid");
 
         store.deleteSessionsByUserJid("userJid");
         currentSession.flush();
 
-        assertThat(store.findSessionByToken("token123")).isEmpty();
-        assertThat(store.findSessionByToken("token223")).isEmpty();
-        assertThat(store.findSessionByToken("token323")).isNotEmpty();
+        assertThat(store.getSessionByToken("token123")).isEmpty();
+        assertThat(store.getSessionByToken("token223")).isEmpty();
+        assertThat(store.getSessionByToken("token323")).isNotEmpty();
     }
 
     @Test

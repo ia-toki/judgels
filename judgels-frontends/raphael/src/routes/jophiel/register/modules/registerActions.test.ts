@@ -23,15 +23,16 @@ describe('registerActions', () => {
     };
   });
 
-  describe('register()', () => {
-    const { register } = registerActions;
+  describe('registerUser)', () => {
+    const { registerUser } = registerActions;
     const userRegistrationData: UserRegistrationData = {
       username: 'user',
       name: 'name',
       email: 'email@domain.com',
       password: 'pass',
     };
-    const doRegister = async () => register(userRegistrationData)(dispatch, getState, { userAPI, userAccountAPI });
+    const doRegisterUser = async () =>
+      registerUser(userRegistrationData)(dispatch, getState, { userAPI, userAccountAPI });
 
     describe('when username already exists', () => {
       beforeEach(async () => {
@@ -42,7 +43,7 @@ describe('registerActions', () => {
       it('throws SubmissionError', async () => {
         setTimeout(() => {
           expect(async () => {
-            await doRegister();
+            await doRegisterUser();
           }).toThrow(SubmissionError);
         });
       });
@@ -57,7 +58,7 @@ describe('registerActions', () => {
       it('throws SubmissionError', async () => {
         setTimeout(() => {
           expect(async () => {
-            await doRegister();
+            await doRegisterUser();
           }).toThrow(SubmissionError);
         });
       });
@@ -70,7 +71,7 @@ describe('registerActions', () => {
       });
 
       it('tries to register user', async () => {
-        await doRegister();
+        await doRegisterUser();
 
         expect(userAccountAPI.registerUser).toHaveBeenCalledWith(userRegistrationData);
       });

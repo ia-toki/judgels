@@ -60,9 +60,9 @@ public class LegacySessionResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork
     public LegacySession logIn(Credentials credentials) {
-        User user = userStore.findUserByUsernameAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
+        User user = userStore.getUserByUsernameAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
                 .orElseGet(() ->
-                    userStore.findUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
+                    userStore.getUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
                     .orElseThrow(ForbiddenException::new));
 
         checkAllowed(userRegistrationEmailStore.isUserActivated(user.getJid()));
@@ -104,7 +104,7 @@ public class LegacySessionResource {
 
         // Hack: wait until the auth code actually got written to db
         for (int i = 0; i < 3; i++) {
-            session = sessionStore.findSessionByAuthCode(authCode);
+            session = sessionStore.getSessionByAuthCode(authCode);
             if (session.isPresent()) {
                 break;
             }
@@ -132,7 +132,7 @@ public class LegacySessionResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork
     public Session postLogIn(@PathParam("authCode") String authCode) {
-        Session session = sessionStore.findSessionByAuthCode(authCode).orElseThrow(IllegalArgumentException::new);
+        Session session = sessionStore.getSessionByAuthCode(authCode).orElseThrow(IllegalArgumentException::new);
         sessionStore.deleteAuthCode(authCode);
         return session;
     }

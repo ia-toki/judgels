@@ -62,7 +62,7 @@ public class ContestClarificationResource implements ContestClarificationService
             ContestClarificationData clarificationData) {
 
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canCreateClarification(actorJid, contest));
 
         return clarificationStore.createClarification(contestJid, clarificationData);
@@ -76,7 +76,7 @@ public class ContestClarificationResource implements ContestClarificationService
             Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         if (!clarificationRoleChecker.canCreateClarification(actorJid, contest)) {
             return new ContestClarificationConfig.Builder()
@@ -86,8 +86,8 @@ public class ContestClarificationResource implements ContestClarificationService
 
         List<String> problemJids = problemStore.getOpenProblemJids(contestJid);
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
-        Map<String, String> problemAliasesMap = problemStore.findProblemAliasesByJids(contestJid, problemJidsSet);
-        Map<String, String> problemNamesMap = clientProblemService.findProblemsByJids(
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJidsSet);
+        Map<String, String> problemNamesMap = clientProblemService.getProblemsByJids(
                 sandalphonClientAuthHeader,
                 problemJidsSet).entrySet()
                 .stream()
@@ -111,7 +111,7 @@ public class ContestClarificationResource implements ContestClarificationService
             Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canViewOwnClarifications(actorJid, contest));
 
         List<ContestClarification> clarifications = clarificationStore.getClarifications(contestJid, actorJid);
@@ -120,8 +120,8 @@ public class ContestClarificationResource implements ContestClarificationService
                 .map(ContestClarification::getTopicJid)
                 .filter(topicJid -> !topicJid.equals(contestJid))
                 .collect(Collectors.toSet());
-        Map<String, String> problemAliasesMap = problemStore.findProblemAliasesByJids(contestJid, problemJids);
-        Map<String, String> problemNamesMap = clientProblemService.findProblemsByJids(
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
+        Map<String, String> problemNamesMap = clientProblemService.getProblemsByJids(
                 sandalphonClientAuthHeader,
                 problemJids).entrySet()
                 .stream()

@@ -31,7 +31,7 @@ class UserStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        assertThat(store.findUserByUsername("username")).isEmpty();
+        assertThat(store.getUserByUsername("username")).isEmpty();
 
         UserData userData = new UserData.Builder()
                 .username("username")
@@ -40,14 +40,14 @@ class UserStoreIntegrationTests {
                 .build();
         store.createUser(userData);
 
-        User user = store.findUserByUsername("username").get();
+        User user = store.getUserByUsername("username").get();
         assertThat(user.getJid()).isNotEmpty();
         assertThat(user.getUsername()).isEqualTo("username");
-        assertThat(store.findUserEmailByJid(user.getJid())).contains("email@domain.com");
+        assertThat(store.getUserEmailByJid(user.getJid())).contains("email@domain.com");
 
         assertThat(store.getUserAvatarUrl(user.getJid())).isEmpty();
 
-        assertThat(store.findUserByJid(user.getJid())).contains(user);
+        assertThat(store.getUserByJid(user.getJid())).contains(user);
 
         userData = new UserData.Builder()
                 .username("new.username")
@@ -57,7 +57,7 @@ class UserStoreIntegrationTests {
 
         user = store.updateUser(user.getJid(), userData).get();
         assertThat(user.getUsername()).isEqualTo("new.username");
-        assertThat(store.findUserEmailByJid(user.getJid())).contains("new.email@domain.com");
+        assertThat(store.getUserEmailByJid(user.getJid())).contains("new.email@domain.com");
 
         UserData nanoData = new UserData.Builder()
                 .username("nano")
@@ -66,7 +66,7 @@ class UserStoreIntegrationTests {
                 .build();
         store.createUser(nanoData);
 
-        User nano = store.findUserByUsername("nano").get();
+        User nano = store.getUserByUsername("nano").get();
 
         UserData budiData = new UserData.Builder()
                 .username("budi")
@@ -75,7 +75,7 @@ class UserStoreIntegrationTests {
                 .build();
         store.createUser(budiData);
 
-        User budi = store.findUserByUsername("budi").get();
+        User budi = store.getUserByUsername("budi").get();
 
         Page<User> users = store.getUsers(SelectionOptions.DEFAULT_PAGED);
         assertThat(users.getData()).containsExactly(budi, nano, user);
@@ -92,7 +92,7 @@ class UserStoreIntegrationTests {
 
         store.updateUserAvatar(user.getJid(), "avatar.jpg");
 
-        user = store.findUserByJid(user.getJid()).get();
+        user = store.getUserByJid(user.getJid()).get();
         assertThat(store.getUserAvatarUrl(user.getJid())).contains("/fake/avatar.jpg");
     }
 

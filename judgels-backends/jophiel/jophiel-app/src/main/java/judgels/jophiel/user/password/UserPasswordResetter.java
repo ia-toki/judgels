@@ -32,9 +32,9 @@ public class UserPasswordResetter {
 
         String userJid = userResetPasswordStore.consumeEmailCode(emailCode, FORGOT_PASSWORD_EXPIRATION)
                 .orElseThrow(IllegalArgumentException::new);
-        User user = userStore.findUserByJid(userJid)
+        User user = userStore.getUserByJid(userJid)
                 .orElseThrow(IllegalStateException::new);
-        String email = userStore.findUserEmailByJid(userJid)
+        String email = userStore.getUserEmailByJid(userJid)
                 .orElseThrow(IllegalStateException::new);
 
         userStore.updateUserPassword(user.getJid(), data.getNewPassword());

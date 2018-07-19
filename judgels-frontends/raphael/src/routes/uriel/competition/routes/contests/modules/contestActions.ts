@@ -2,21 +2,21 @@ import { DelContest, PutContest } from './contestReducer';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 
 export const contestActions = {
-  fetchActiveList: () => {
+  getActiveContests: () => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
       return await contestAPI.getActiveContests(token);
     };
   },
 
-  fetchPastPage: (page: number, pageSize: number) => {
+  getPastContests: (page: number, pageSize: number) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
       return await contestAPI.getPastContests(token, page, pageSize);
     };
   },
 
-  fetchById: (contestId: string) => {
+  getContestById: (contestId: string) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
       const contest = await contestAPI.getContestById(token, contestId);
@@ -25,12 +25,12 @@ export const contestActions = {
     };
   },
 
-  startVirtual: (contestId: string) => {
+  startVirtualContest: (contestId: string) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
-      await contestAPI.startVirtual(token, contestId);
+      await contestAPI.startVirtualContest(token, contestId);
     };
   },
 
-  clear: DelContest.create,
+  clearContest: DelContest.create,
 };

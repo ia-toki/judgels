@@ -8,9 +8,9 @@ import { contestWebConfigActions as injectedContestWebConfigActions } from '../m
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
 export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestId: string }> {
-  onFetchContest: (contestId: number) => Promise<Contest>;
+  onGetContest: (contestId: number) => Promise<Contest>;
   onClearContest: () => void;
-  onFetchContestWebConfig: (contestJid: string) => void;
+  onGetContestWebConfig: (contestJid: string) => void;
   onClearContestWebConfig: () => void;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
@@ -20,7 +20,7 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
   private currentTimeout;
 
   async componentDidMount() {
-    const contest = await this.props.onFetchContest(+this.props.match.params.contestId);
+    const contest = await this.props.onGetContest(+this.props.match.params.contestId);
     this.props.onPushBreadcrumb(this.props.match.url, contest.name);
 
     await this.refreshWebConfig(contest.jid);
@@ -41,19 +41,19 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
   }
 
   private refreshWebConfig = async (contestJid: string) => {
-    await this.props.onFetchContestWebConfig(contestJid);
+    await this.props.onGetContestWebConfig(contestJid);
     this.currentTimeout = setTimeout(() => this.refreshWebConfig(contestJid), 20000);
   };
 }
 
 export function createSingleContestDataRoute(contestActions, contestWebConfigActions, breadcrumbsActions) {
   const mapDispatchToProps = {
-    onFetchContest: contestActions.fetchById,
-    onFetchContestWebConfig: contestWebConfigActions.fetch,
-    onClearContestWebConfig: contestWebConfigActions.clear,
-    onClearContest: contestActions.clear,
-    onPushBreadcrumb: breadcrumbsActions.push,
-    onPopBreadcrumb: breadcrumbsActions.pop,
+    onGetContest: contestActions.getContestById,
+    onGetContestWebConfig: contestWebConfigActions.getWebConfig,
+    onClearContestWebConfig: contestWebConfigActions.clearConfig,
+    onClearContest: contestActions.clearContest,
+    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
 
   return withRouter<any>(connect(undefined, mapDispatchToProps)(SingleContestDataRoute));

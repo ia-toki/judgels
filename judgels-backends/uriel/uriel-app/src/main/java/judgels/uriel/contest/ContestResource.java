@@ -40,7 +40,7 @@ public class ContestResource implements ContestService {
     @UnitOfWork(readOnly = true)
     public Contest getContest(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
         return contest;
@@ -50,7 +50,7 @@ public class ContestResource implements ContestService {
     @UnitOfWork(readOnly = true)
     public Contest getContestById(Optional<AuthHeader> authHeader, long contestId) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestById(contestId));
+        Contest contest = checkFound(contestStore.getContestById(contestId));
 
         checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
         return contest;
@@ -58,9 +58,9 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork
-    public void startVirtual(AuthHeader authHeader, String contestJid) {
+    public void startVirtualContest(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canStartVirtualContest(actorJid, contest));
 
         contestantStore.startVirtualContest(contestJid, actorJid);

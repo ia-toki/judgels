@@ -6,10 +6,10 @@ import { avatarActions as injectedAvatarActions } from '../modules/avatarActions
 
 export function createChangeAvatarPage(avatarActions) {
   const mapDispatchToProps = {
-    onDropAccepted: (files: File[]) => avatarActions.change(files[0]),
-    onDropRejected: (files: File[]) => avatarActions.reject(files[0]),
-    onRenderAvatar: avatarActions.render,
-    onRemoveAvatar: avatarActions.remove,
+    onDropAccepted: (files: File[]) => avatarActions.updateAvatar(files[0]),
+    onDropRejected: (files: File[]) => avatarActions.rejectAvatar(files[0]),
+    onRenderAvatar: avatarActions.renderAvatar,
+    onDeleteAvatar: avatarActions.deleteAvatar,
   };
 
   return connect(undefined, mapDispatchToProps)(ChangeAvatarPanel);

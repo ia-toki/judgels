@@ -62,7 +62,7 @@ class ContestScoreboardFetcherTests {
         when(typeFetcher.fetchViewableTypes(CONTEST_JID, CAN_SUPERVISE_SCOREBOARD))
                 .thenReturn(ImmutableList.of(OFFICIAL, FROZEN));
 
-        when(scoreboardStore.findScoreboard(CONTEST_JID, OFFICIAL))
+        when(scoreboardStore.getScoreboard(CONTEST_JID, OFFICIAL))
                 .thenReturn(Optional.of(raw));
 
         when(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, OFFICIAL, CAN_SUPERVISE_SCOREBOARD))
@@ -77,7 +77,7 @@ class ContestScoreboardFetcherTests {
         when(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, FROZEN, CAN_SUPERVISE_SCOREBOARD))
                 .thenReturn(scoreboard);
 
-        when(scoreboardStore.findScoreboard(CONTEST_JID, FROZEN))
+        when(scoreboardStore.getScoreboard(CONTEST_JID, FROZEN))
                 .thenReturn(Optional.of(raw));
 
         assertThat(scoreboardFetcher.fetchFrozenScoreboard(contest, USER_JID, CAN_SUPERVISE_SCOREBOARD))

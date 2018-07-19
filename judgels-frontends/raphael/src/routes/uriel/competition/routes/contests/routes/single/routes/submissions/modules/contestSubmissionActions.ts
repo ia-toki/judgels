@@ -4,14 +4,14 @@ import { ProblemSubmissionFormData } from '../../../../../../../../../../compone
 import { push } from 'react-router-redux';
 
 export const contestSubmissionActions = {
-  fetchMyList: (contestJid: string, page: number) => {
+  getMySubmissions: (contestJid: string, page: number) => {
     return async (dispatch, getState, { contestSubmissionAPI }) => {
       const token = selectToken(getState());
       return await contestSubmissionAPI.getMySubmissions(token, contestJid, page);
     };
   },
 
-  fetchWithSource: (contestJid: string, submissionId: number, language: string) => {
+  getSubmissionWithSource: (contestJid: string, submissionId: number, language: string) => {
     return async (dispatch, getState, { contestSubmissionAPI }) => {
       const token = selectToken(getState());
       const submissionWithSource = await contestSubmissionAPI.getSubmissionWithSource(token, submissionId, language);
@@ -22,7 +22,7 @@ export const contestSubmissionActions = {
     };
   },
 
-  submit: (contestJid: string, contestId: number, problemJid: string, data: ProblemSubmissionFormData) => {
+  createSubmission: (contestJid: string, contestId: number, problemJid: string, data: ProblemSubmissionFormData) => {
     return async (dispatch, getState, { contestSubmissionAPI, toastActions }) => {
       const token = selectToken(getState());
       let sourceFiles = {};

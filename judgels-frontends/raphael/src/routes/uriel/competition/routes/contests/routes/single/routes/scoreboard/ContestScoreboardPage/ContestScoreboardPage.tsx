@@ -26,7 +26,7 @@ import { selectMaybeUserJid } from '../../../../../../../../../../modules/sessio
 export interface ContestScoreboardPageProps {
   userJid?: string;
   contest: Contest;
-  onFetchScoreboard: (contestJid: string) => Promise<ContestScoreboardResponse | null>;
+  onGetScoreboard: (contestJid: string) => Promise<ContestScoreboardResponse | null>;
 }
 
 interface ContestScoreboardPageState {
@@ -38,7 +38,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
   state: ContestScoreboardPageState = {};
 
   async componentDidMount() {
-    const response = await this.props.onFetchScoreboard(this.props.contest.jid);
+    const response = await this.props.onGetScoreboard(this.props.contest.jid);
     if (!response) {
       this.setState({ scoreboard: [] });
     } else {
@@ -138,7 +138,7 @@ function createContestScoreboardPage(contestScoreboardActions) {
     } as Partial<ContestScoreboardPageProps>);
 
   const mapDispatchToProps = {
-    onFetchScoreboard: contestScoreboardActions.fetch,
+    onGetScoreboard: contestScoreboardActions.getScoreboard,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));

@@ -3,7 +3,7 @@ import { BadRequestError } from '../../../../../../modules/api/error';
 import { push } from 'react-router-redux';
 
 export const changePasswordActions = {
-  changePassword: (oldPassword: string, newPassword: string) => {
+  updateMyPassword: (oldPassword: string, newPassword: string) => {
     return async (dispatch, getState, { myAPI, toastActions }) => {
       const token = selectToken(getState());
 

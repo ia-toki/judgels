@@ -3,7 +3,7 @@ import { PutRole } from './roleReducer';
 import { JophielRole } from '../../../modules/api/jophiel/my';
 
 export const roleActions = {
-  get: () => {
+  getMyRole: () => {
     return async (dispatch, getState, { myAPI }) => {
       const token = selectToken(getState());
       let role;

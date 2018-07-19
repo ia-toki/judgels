@@ -3,9 +3,9 @@ import * as React from 'react';
 
 import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 
-import './ContestListTable.css';
+import './ContestsTable.css';
 
-export const BlankContestListTable = () => (
+export const BlankContestsTable = () => (
   <Card className="contest-list-container">
     <div className="flex-row justify-content-space-between contest-list-item-container">
       <div>

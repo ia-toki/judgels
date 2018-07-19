@@ -13,7 +13,7 @@ describe('ActivatePage', () => {
 
   beforeEach(() => {
     activateActions = {
-      activate: jest.fn(code => ({ type: 'mock-activate', emailCode: code })),
+      activateUser: jest.fn(code => ({ type: 'mock-activate', emailCode: code })),
     };
 
     store = createMockStore<Partial<AppState>>()({});

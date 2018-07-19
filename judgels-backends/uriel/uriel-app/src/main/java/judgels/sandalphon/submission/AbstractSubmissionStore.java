@@ -35,7 +35,7 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         this.mapper = mapper;
     }
 
-    public Optional<Submission> findSubmissionById(long submissionId) {
+    public Optional<Submission> getSubmissionById(long submissionId) {
         return submissionDao.select(submissionId).map(model -> {
             Optional<GM> gradingModel = gradingDao.selectLatestBySubmissionJid(model.jid);
             return submissionFromModels(model, gradingModel.orElse(null));

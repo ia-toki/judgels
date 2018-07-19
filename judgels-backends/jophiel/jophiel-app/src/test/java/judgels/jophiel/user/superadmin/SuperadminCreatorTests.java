@@ -30,7 +30,7 @@ class SuperadminCreatorTests {
 
     @Test
     void skips_existing_superadmin() {
-        when(userStore.findUserByUsername("superadmin"))
+        when(userStore.getUserByUsername("superadmin"))
                 .thenReturn(Optional.of(new User.Builder()
                         .jid("superadminUserJid")
                         .username("superadmin")

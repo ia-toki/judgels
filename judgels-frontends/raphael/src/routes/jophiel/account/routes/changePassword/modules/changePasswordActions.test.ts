@@ -25,16 +25,16 @@ describe('changePasswordActions', () => {
     };
   });
 
-  describe('changePassword()', () => {
-    const { changePassword } = changePasswordActions;
-    const doChangePassword = async () =>
-      changePassword('oldPass', 'newPass')(dispatch, getState, {
+  describe('updateMyPassword()', () => {
+    const { updateMyPassword } = changePasswordActions;
+    const doUpdateMyPassword = async () =>
+      updateMyPassword('oldPass', 'newPass')(dispatch, getState, {
         myAPI,
         toastActions,
       });
 
     it('tries to change password', async () => {
-      await doChangePassword();
+      await doUpdateMyPassword();
 
       expect(myAPI.updateMyPassword).toHaveBeenCalledWith(token, {
         oldPassword: 'oldPass',
@@ -44,7 +44,7 @@ describe('changePasswordActions', () => {
 
     describe('when the old password is correct', () => {
       beforeEach(async () => {
-        await doChangePassword();
+        await doUpdateMyPassword();
       });
 
       it('succeeds with toast', () => {
@@ -67,7 +67,7 @@ describe('changePasswordActions', () => {
       });
 
       it('throws a more descriptive error', async () => {
-        await expect(doChangePassword()).rejects.toEqual(new Error('Incorrect old password.'));
+        await expect(doUpdateMyPassword()).rejects.toEqual(new Error('Incorrect old password.'));
       });
     });
   });

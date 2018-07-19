@@ -31,7 +31,7 @@ function createContestClarificationsWidget(contestClarificationActions) {
     answeredClarificationsCount: selectContestWebConfig(state)!.answeredClarificationsCount,
   });
   const mapDispatchToProps = {
-    onAlertNewAnsweredClarifications: contestClarificationActions.alertNewAnswered,
+    onAlertNewAnsweredClarifications: contestClarificationActions.alertNewAnsweredClarifications,
   };
 
   return connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsWidget);

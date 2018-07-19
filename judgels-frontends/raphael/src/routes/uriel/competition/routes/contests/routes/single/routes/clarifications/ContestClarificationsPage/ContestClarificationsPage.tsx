@@ -21,7 +21,7 @@ import './ContestClarificationsPage.css';
 export interface ContestClarificationsPageProps {
   contest: Contest;
   statementLanguage: string;
-  onFetchMyClarifications: (contestJid: string, language: string) => Promise<ContestClarificationsResponse>;
+  onGetMyClarifications: (contestJid: string, language: string) => Promise<ContestClarificationsResponse>;
 }
 
 interface ContestClarificationsPageState {
@@ -54,7 +54,7 @@ class ContestClarificationsPage extends React.Component<
   }
 
   private refreshClarifications = async () => {
-    const { data, problemAliasesMap, problemNamesMap } = await this.props.onFetchMyClarifications(
+    const { data, problemAliasesMap, problemNamesMap } = await this.props.onGetMyClarifications(
       this.props.contest.jid,
       this.props.statementLanguage
     );
@@ -107,7 +107,7 @@ function createContestClarificationsPage(contestClarificationActions) {
   });
 
   const mapDispatchToProps = {
-    onFetchMyClarifications: contestClarificationActions.fetchMyList,
+    onGetMyClarifications: contestClarificationActions.getMyClarifications,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage));

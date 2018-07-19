@@ -2,7 +2,7 @@ import { selectToken } from '../../../../../../../../../../modules/session/sessi
 import { ContestClarificationData } from '../../../../../../../../../../modules/api/uriel/contestClarification';
 
 export const contestClarificationActions = {
-  create: (contestJid: string, data: ContestClarificationData) => {
+  createClarification: (contestJid: string, data: ContestClarificationData) => {
     return async (dispatch, getState, { contestClarificationAPI, toastActions }) => {
       const token = selectToken(getState());
       await contestClarificationAPI.createClarification(token, contestJid, data);
@@ -10,21 +10,21 @@ export const contestClarificationActions = {
     };
   },
 
-  fetchConfig: (contestJid: string, language: string) => {
+  getClarificationConfig: (contestJid: string, language: string) => {
     return async (dispatch, getState, { contestClarificationAPI }) => {
       const token = selectToken(getState());
       return await contestClarificationAPI.getClarificationConfig(token, contestJid, language);
     };
   },
 
-  fetchMyList: (contestJid: string, language: string) => {
+  getMyClarifications: (contestJid: string, language: string) => {
     return async (dispatch, getState, { contestClarificationAPI }) => {
       const token = selectToken(getState());
       return await contestClarificationAPI.getMyClarifications(token, contestJid, language);
     };
   },
 
-  alertNewAnswered: () => {
+  alertNewAnsweredClarifications: () => {
     return async (dispatch, getState, { toastActions }) => {
       toastActions.showAlertToast('You have new answered clarification(s).');
     };

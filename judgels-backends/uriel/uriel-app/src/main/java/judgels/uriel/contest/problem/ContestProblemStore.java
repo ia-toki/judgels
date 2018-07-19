@@ -25,17 +25,12 @@ public class ContestProblemStore {
         this.submissionDao = submissionDao;
     }
 
-    public Optional<ContestProblem> findProblem(String contestJid, String problemJid) {
+    public Optional<ContestProblem> getProblem(String contestJid, String problemJid) {
         return problemDao.selectByContestJidAndProblemJid(contestJid, problemJid)
                 .map(ContestProblemStore::fromModel);
     }
 
-    public Optional<ContestProblem> findProblemByAlias(String contestJid, String problemAlias) {
-        return problemDao.selectByContestJidAndProblemAlias(contestJid, problemAlias)
-                .map(ContestProblemStore::fromModel);
-    }
-
-    public Optional<ContestContestantProblem> findContestantProblem(
+    public Optional<ContestContestantProblem> getContestantProblem(
             String contestJid,
             String userJid,
             String problemJid) {
@@ -43,7 +38,7 @@ public class ContestProblemStore {
                 .map(model -> contestantProblemFromModel(model, userJid));
     }
 
-    public Optional<ContestContestantProblem> findContestantProblemByAlias(
+    public Optional<ContestContestantProblem> getContestantProblemByAlias(
             String contestJid,
             String userJid,
             String problemAlias) {
@@ -73,7 +68,7 @@ public class ContestProblemStore {
                 .collect(Collectors.toList());
     }
 
-    public Map<String, String> findProblemAliasesByJids(String contestJid, Set<String> problemJids) {
+    public Map<String, String> getProblemAliasesByJids(String contestJid, Set<String> problemJids) {
         Map<String, String> problemAliases = problemDao.selectAllByContestJid(contestJid)
                 .stream()
                 .collect(Collectors.toMap(m -> m.problemJid, m -> m.alias));

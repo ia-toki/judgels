@@ -28,7 +28,7 @@ export function createContestWebAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    getConfig: (token: string, contestJid: string): Promise<ContestWebConfig> => {
+    getWebConfig: (token: string, contestJid: string): Promise<ContestWebConfig> => {
       return get(`${baseURL}/${contestJid}/web/config`, token);
     },
   };

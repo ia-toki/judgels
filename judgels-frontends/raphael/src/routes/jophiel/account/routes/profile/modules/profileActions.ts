@@ -3,7 +3,7 @@ import { PutProfile } from '../../../../../../modules/session/sessionReducer';
 import { UserProfile } from 'modules/api/jophiel/userProfile';
 
 export const profileActions = {
-  fetch: () => {
+  getProfile: () => {
     return async (dispatch, getState, { userProfileAPI }) => {
       const token = selectToken(getState());
       const userJid = selectUserJid(getState());
@@ -13,7 +13,7 @@ export const profileActions = {
     };
   },
 
-  update: (profile: UserProfile) => {
+  updateProfile: (profile: UserProfile) => {
     return async (dispatch, getState, { userProfileAPI, toastActions }) => {
       const token = selectToken(getState());
       const userJid = selectUserJid(getState());

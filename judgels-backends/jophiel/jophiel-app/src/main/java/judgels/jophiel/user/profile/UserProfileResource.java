@@ -39,7 +39,7 @@ public class UserProfileResource implements UserProfileService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewUser(actorJid, userJid));
 
-        User user = checkFound(userStore.findUserByJid(userJid));
+        User user = checkFound(userStore.getUserByJid(userJid));
         return userProfileStore.getProfile(user.getJid());
     }
 
@@ -49,14 +49,14 @@ public class UserProfileResource implements UserProfileService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
 
-        User user = checkFound(userStore.findUserByJid(userJid));
+        User user = checkFound(userStore.getUserByJid(userJid));
         return userProfileStore.upsertProfile(user.getJid(), userProfile);
     }
 
     @Override
     @UnitOfWork(readOnly = true)
     public PublicUserProfile getPublicProfile(String userJid) {
-        User user = checkFound(userStore.findUserByJid(userJid));
+        User user = checkFound(userStore.getUserByJid(userJid));
         return userProfileStore.getProfile(user.getJid()).toPublic();
     }
 }

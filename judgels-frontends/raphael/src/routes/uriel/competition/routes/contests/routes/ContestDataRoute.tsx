@@ -25,8 +25,8 @@ class ContestsDataRoute extends React.Component<ContestsDataRouteProps> {
 
 export function createContestsDataRoute(breadcrumbsActions) {
   const mapDispatchToProps = {
-    onPushBreadcrumb: breadcrumbsActions.push,
-    onPopBreadcrumb: breadcrumbsActions.pop,
+    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
 
   return withRouter<any>(connect(undefined, mapDispatchToProps)(ContestsDataRoute));

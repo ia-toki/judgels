@@ -36,26 +36,26 @@ public class ContestStore {
         this.contestByJidCache = Caffeine.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
-                .build(this::findContestByJidUncached);
+                .build(this::getContestByJidUncached);
         this.contestByIdCache = Caffeine.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
-                .build(this::findContestByIdUncached);
+                .build(this::getContestByIdUncached);
     }
 
-    public Optional<Contest> findContestByJid(String contestJid) {
+    public Optional<Contest> getContestByJid(String contestJid) {
         return Optional.ofNullable(contestByJidCache.get(contestJid));
     }
 
-    private Contest findContestByJidUncached(String contestJid) {
+    private Contest getContestByJidUncached(String contestJid) {
         return contestDao.selectByJid(contestJid).map(ContestStore::fromModel).orElse(null);
     }
 
-    public Optional<Contest> findContestById(long contestId) {
+    public Optional<Contest> getContestById(long contestId) {
         return Optional.ofNullable(contestByIdCache.get(contestId));
     }
 
-    private Contest findContestByIdUncached(long contestId) {
+    private Contest getContestByIdUncached(long contestId) {
         return contestDao.select(contestId).map(ContestStore::fromModel).orElse(null);
     }
 

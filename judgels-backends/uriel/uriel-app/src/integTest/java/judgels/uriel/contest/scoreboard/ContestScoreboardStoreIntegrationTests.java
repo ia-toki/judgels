@@ -38,8 +38,8 @@ class ContestScoreboardStoreIntegrationTests {
         Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
         contestStore.createContest(new ContestData.Builder().name("contestB").build());
 
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).isEmpty();
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).isEmpty();
+        assertThat(store.getScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).isEmpty();
+        assertThat(store.getScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).isEmpty();
 
         RawContestScoreboard scoreboard1 = store.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
                 .type(ContestScoreboardType.OFFICIAL)
@@ -50,8 +50,8 @@ class ContestScoreboardStoreIntegrationTests {
                 .scoreboard("frozen1")
                 .build());
 
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(scoreboard1);
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(scoreboard2);
+        assertThat(store.getScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(scoreboard1);
+        assertThat(store.getScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(scoreboard2);
 
         // TODO(fushar): move these assertions to service integration tests instead
         assertThat(scoreboard1.getType()).isEqualTo(ContestScoreboardType.OFFICIAL);
@@ -67,7 +67,7 @@ class ContestScoreboardStoreIntegrationTests {
                 .scoreboard("frozen2")
                 .build());
 
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(scoreboard1);
-        assertThat(store.findScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(scoreboard2);
+        assertThat(store.getScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).contains(scoreboard1);
+        assertThat(store.getScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).contains(scoreboard2);
     }
 }

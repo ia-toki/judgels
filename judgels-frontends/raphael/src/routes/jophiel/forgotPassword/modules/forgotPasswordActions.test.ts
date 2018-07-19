@@ -16,12 +16,13 @@ describe('forgotPasswordActions', () => {
     };
   });
 
-  describe('requestToReset()', () => {
-    const { requestToReset } = forgotPasswordActions;
-    const doRequestToReset = async () => requestToReset('email@domain.com')(dispatch, getState, { userAccountAPI });
+  describe('requestToResetPassword()', () => {
+    const { requestToResetPassword } = forgotPasswordActions;
+    const doRequestToResetPassword = async () =>
+      requestToResetPassword('email@domain.com')(dispatch, getState, { userAccountAPI });
 
     it('calls API to request to reset password', async () => {
-      await doRequestToReset();
+      await doRequestToResetPassword();
 
       expect(userAccountAPI.requestToResetPassword).toHaveBeenCalledWith('email@domain.com');
     });
@@ -34,7 +35,7 @@ describe('forgotPasswordActions', () => {
       });
 
       it('throws with descriptive error', async () => {
-        await expect(doRequestToReset()).rejects.toEqual(new Error('Email not found.'));
+        await expect(doRequestToResetPassword()).rejects.toEqual(new Error('Email not found.'));
       });
     });
   });

@@ -22,13 +22,13 @@ import { webConfigActions as injectedWebConfigActions } from './jophiel/modules/
 interface AppProps {
   title: string;
   role: JophielRole;
-  onGetRole: () => void;
+  onGetMyRole: () => void;
   onGetWebConfig: () => void;
 }
 
 class App extends React.PureComponent<AppProps> {
   componentDidMount() {
-    this.props.onGetRole();
+    this.props.onGetMyRole();
     this.props.onGetWebConfig();
   }
 
@@ -65,8 +65,8 @@ export function createApp(roleActions, webConfigActions) {
     role: selectRole(state),
   });
   const mapDispatchToProps = {
-    onGetRole: roleActions.get,
-    onGetWebConfig: webConfigActions.get,
+    onGetMyRole: roleActions.getMyRole,
+    onGetWebConfig: webConfigActions.getWebConfig,
   };
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(App));
 }

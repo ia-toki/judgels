@@ -22,7 +22,7 @@ import { contestProblemActions as injectedContestProblemActions } from '../modul
 export interface ContestProblemsPageProps {
   contest: Contest;
   statementLanguage: string;
-  onFetchMyProblems: (contestJid: string) => Promise<ContestContestantProblemsResponse>;
+  onGetMyProblems: (contestJid: string) => Promise<ContestContestantProblemsResponse>;
 }
 
 interface ContestProblemsPageState {
@@ -36,7 +36,7 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
   state: ContestProblemsPageState = {};
 
   async componentDidMount() {
-    const { data, problemsMap } = await this.props.onFetchMyProblems(this.props.contest.jid);
+    const { data, problemsMap } = await this.props.onGetMyProblems(this.props.contest.jid);
     const { defaultLanguage, uniqueLanguages } = consolidateLanguages(problemsMap, this.props.statementLanguage);
 
     this.setState({
@@ -146,7 +146,7 @@ export function createContestProblemsPage(contestProblemActions) {
   });
 
   const mapDispatchToProps = {
-    onFetchMyProblems: contestProblemActions.fetchMyList,
+    onGetMyProblems: contestProblemActions.getMyProblems,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemsPage));

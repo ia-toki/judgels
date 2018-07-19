@@ -48,7 +48,7 @@ public class ContestTimer {
         if (!config.isPresent()) {
             return true;
         }
-        Optional<ContestContestant> contestant = contestantStore.findContestant(contest.getJid(), userJid);
+        Optional<ContestContestant> contestant = contestantStore.getContestant(contest.getJid(), userJid);
         if (!contestant.isPresent()) {
             return true;
         }
@@ -80,7 +80,7 @@ public class ContestTimer {
         if (!config.isPresent()) {
             return contest.getEndTime();
         }
-        Optional<ContestContestant> contestant = contestantStore.findContestant(contest.getJid(), userJid);
+        Optional<ContestContestant> contestant = contestantStore.getContestant(contest.getJid(), userJid);
         if (!contestant.isPresent() || !contestant.get().getContestStartTime().isPresent()) {
             return contest.getEndTime();
         }

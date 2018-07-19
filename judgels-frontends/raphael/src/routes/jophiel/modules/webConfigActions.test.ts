@@ -13,13 +13,13 @@ describe('webConfigActions', () => {
     getState = jest.fn();
 
     webAPI = {
-      getConfig: jest.fn(),
+      getWebConfig: jest.fn(),
     };
   });
 
-  describe('get()', () => {
-    const { get } = webConfigActions;
-    const doGet = async () => get()(dispatch, getState, { webAPI });
+  describe('getWebConfig()', () => {
+    const { getWebConfig } = webConfigActions;
+    const doGetWebConfig = async () => getWebConfig()(dispatch, getState, { webAPI });
 
     const webConfig: WebConfig = {
       userRegistration: {
@@ -28,13 +28,13 @@ describe('webConfigActions', () => {
     };
 
     beforeEach(async () => {
-      webAPI.getConfig.mockImplementation(() => webConfig);
+      webAPI.getWebConfig.mockImplementation(() => webConfig);
 
-      await doGet();
+      await doGetWebConfig();
     });
 
     it('calls API to get web config', () => {
-      expect(webAPI.getConfig).toHaveBeenCalled();
+      expect(webAPI.getWebConfig).toHaveBeenCalled();
     });
 
     it('puts the web config', () => {

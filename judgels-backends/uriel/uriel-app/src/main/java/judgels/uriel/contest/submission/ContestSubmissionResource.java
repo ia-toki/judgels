@@ -98,7 +98,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewOwnSubmissions(actorJid, contest));
 
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
@@ -110,8 +110,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         return new ContestSubmissionsResponse.Builder()
                 .data(data)
-                .usersMap(userService.findUsersByJids(userJids))
-                .problemAliasesMap(problemStore.findProblemAliasesByJids(contestJid, problemJids))
+                .usersMap(userService.getUsersByJids(userJids))
+                .problemAliasesMap(problemStore.getProblemAliasesByJids(contestJid, problemJids))
                 .build();
     }
 
@@ -123,18 +123,18 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
-        Submission submission = checkFound(submissionStore.findSubmissionById(submissionId));
-        Contest contest = checkFound(contestStore.findContestByJid(submission.getContainerJid()));
+        Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
+        Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
         checkAllowed(submissionRoleChecker.canViewSubmission(actorJid, contest, submission.getUserJid()));
 
         ContestProblem contestProblem =
-                checkFound(problemStore.findProblem(contest.getJid(), submission.getProblemJid()));
+                checkFound(problemStore.getProblem(contest.getJid(), submission.getProblemJid()));
         ProblemInfo problem =
                 clientProblemService.getProblem(sandalphonClientAuthHeader, contestProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
         UserInfo user = checkFound(Optional.ofNullable(
-                userService.findUsersByJids(ImmutableSet.of(userJid)).get(userJid)));
+                userService.getUsersByJids(ImmutableSet.of(userJid)).get(userJid)));
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
@@ -161,9 +161,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         String problemJid = checkNotNull(parts.getField("problemJid"), "problemJid").getValue();
         String gradingLanguage = checkNotNull(parts.getField("gradingLanguage"), "gradingLanguage").getValue();
 
-        Contest contest = checkFound(contestStore.findContestByJid(contestJid));
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         ContestContestantProblem contestantProblem =
-                checkFound(problemStore.findContestantProblem(contestJid, actorJid, problemJid));
+                checkFound(problemStore.getContestantProblem(contestJid, actorJid, problemJid));
         checkAllowed(problemRoleChecker.canSubmitProblem(actorJid, contest, contestantProblem));
 
         ContestStyleConfig styleConfig = styleStore.getStyleConfig(contestJid);

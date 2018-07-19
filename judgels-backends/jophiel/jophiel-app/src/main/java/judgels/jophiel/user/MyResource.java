@@ -32,7 +32,7 @@ public class MyResource implements MyService {
     @UnitOfWork(readOnly = true)
     public User getMyself(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        return checkFound(userStore.findUserByJid(actorJid));
+        return checkFound(userStore.getUserByJid(actorJid));
     }
 
     @Override

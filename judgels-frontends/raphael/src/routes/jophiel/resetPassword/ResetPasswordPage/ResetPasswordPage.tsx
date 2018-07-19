@@ -31,7 +31,7 @@ const ResetPasswordPageContainer = (props: ResetPasswordContainerProps) => {
 export function createResetPasswordPage(resetPasswordActions) {
   const mapDispatchToProps = {
     onResetPassword: (emailCode: string, data: ResetPasswordFormData) =>
-      resetPasswordActions.reset(emailCode, data.password),
+      resetPasswordActions.resetPassword(emailCode, data.password),
   };
 
   return withRouter<any>(connect(undefined, mapDispatchToProps)(ResetPasswordPageContainer));

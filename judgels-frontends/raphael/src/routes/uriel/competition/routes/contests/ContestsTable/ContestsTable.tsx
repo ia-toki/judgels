@@ -6,17 +6,17 @@ import { FormattedDate } from '../../../../../../components/FormattedDate/Format
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 
-import './ContestListTable.css';
+import './ContestsTable.css';
 
-export interface ContestListTableProps {
-  contestList: Contest[];
+export interface ContestsTableProps {
+  contests: Contest[];
   buttonIntent: Intent;
 }
 
-export class ContestListTable extends React.PureComponent<ContestListTableProps, {}> {
+export class ContestsTable extends React.PureComponent<ContestsTableProps, {}> {
   render() {
-    const { contestList } = this.props;
-    const list = contestList.map(contest => (
+    const { contests } = this.props;
+    const list = contests.map(contest => (
       <div key={contest.jid} className="flex-row justify-content-space-between contest-list-item-container">
         <div>
           <h4 className="contest-list-item-name">{contest.name}</h4>

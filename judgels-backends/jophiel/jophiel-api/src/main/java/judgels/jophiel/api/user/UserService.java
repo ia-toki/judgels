@@ -54,19 +54,19 @@ public interface UserService {
     @Path("/jids")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, UserInfo> findUsersByJids(Set<String> jids);
+    Map<String, UserInfo> getUsersByJids(Set<String> jids);
 
     @POST
     @Path("/countries")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, String> findUserCountriesByJids(Set<String> jids);
+    Map<String, String> getUserCountriesByJids(Set<String> jids);
 
     @POST
     @Path("/usernames")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, User> findUsersByUsernames(Set<String> usernames);
+    Map<String, User> getUsersByUsernames(Set<String> usernames);
 
     @POST
     @Path("/passwords")

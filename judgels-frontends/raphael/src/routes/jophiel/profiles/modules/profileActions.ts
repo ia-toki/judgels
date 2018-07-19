@@ -1,9 +1,9 @@
 import { NotFoundError } from '../../../../modules/api/error';
 
-export const profilesActions = {
-  fetchPublic: (username: string) => {
+export const profileActions = {
+  getPublicProfile: (username: string) => {
     return async (dispatch, getState, { userProfileAPI, userAPI }) => {
-      const users = await userAPI.findUsersByUsernames([username]);
+      const users = await userAPI.getUsersByUsernames([username]);
       if (users[username] === undefined) {
         throw new NotFoundError();
       }

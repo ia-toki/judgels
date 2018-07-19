@@ -38,34 +38,34 @@ describe('SingleContestDataRoute', () => {
 
   beforeEach(() => {
     contestActions = {
-      fetchById: jest.fn().mockReturnValue(() => Promise.resolve({ jid: 'jid123', name: 'Contest 123' })),
-      clear: jest.fn().mockReturnValue({ type: 'clear' }),
+      getContestById: jest.fn().mockReturnValue(() => Promise.resolve({ jid: 'jid123', name: 'Contest 123' })),
+      clearContest: jest.fn().mockReturnValue({ type: 'clear' }),
     };
     contestWebConfigActions = {
-      fetch: jest.fn().mockReturnValue(() => Promise.resolve({ visibleTabs: [ContestTab.Announcements] })),
-      clear: jest.fn().mockReturnValue({ type: 'clear' }),
+      getWebConfig: jest.fn().mockReturnValue(() => Promise.resolve({ visibleTabs: [ContestTab.Announcements] })),
+      clearConfig: jest.fn().mockReturnValue({ type: 'clear' }),
     };
 
     breadcrumbsActions = {
-      push: jest.fn().mockReturnValue({ type: 'push' }),
-      pop: jest.fn().mockReturnValue({ type: 'pop' }),
+      pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
+      popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
     };
   });
 
   test('navigation', async () => {
     render('/competition/contests/123');
     await new Promise(resolve => setImmediate(resolve));
-    expect(contestActions.fetchById).toHaveBeenCalledWith(123);
-    expect(contestWebConfigActions.fetch).toHaveBeenCalledWith('jid123');
-    expect(breadcrumbsActions.push).toHaveBeenCalledWith('/competition/contests/123', 'Contest 123');
+    expect(contestActions.getContestById).toHaveBeenCalledWith(123);
+    expect(contestWebConfigActions.getWebConfig).toHaveBeenCalledWith('jid123');
+    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/competition/contests/123', 'Contest 123');
 
     history.push('/competition/contests/123/');
     await new Promise(resolve => setImmediate(resolve));
 
     history.push('/other');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.pop).toHaveBeenCalledWith('/competition/contests/123');
-    expect(contestActions.clear).toHaveBeenCalled();
-    expect(contestWebConfigActions.clear).toHaveBeenCalled();
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/competition/contests/123');
+    expect(contestActions.clearContest).toHaveBeenCalled();
+    expect(contestWebConfigActions.clearConfig).toHaveBeenCalled();
   });
 });

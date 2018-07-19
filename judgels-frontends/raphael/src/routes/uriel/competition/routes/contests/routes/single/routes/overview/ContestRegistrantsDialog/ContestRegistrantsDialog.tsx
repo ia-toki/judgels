@@ -20,7 +20,7 @@ export interface ContestRegistrantsDialogProps {
 
 export interface ContestRegistrantsDialogConnectedProps {
   contest: Contest;
-  onFetchContestants: (contestJid: string) => Promise<ContestContestantsResponse>;
+  onGetContestants: (contestJid: string) => Promise<ContestContestantsResponse>;
 }
 
 interface ContestRegistrantsDialogState {
@@ -36,7 +36,7 @@ class ContestRegistrantsDialog extends React.PureComponent<
   state: ContestRegistrantsDialogState = {};
 
   async componentDidMount() {
-    const { data, usersMap, userCountriesMap } = await this.props.onFetchContestants(this.props.contest.jid);
+    const { data, usersMap, userCountriesMap } = await this.props.onGetContestants(this.props.contest.jid);
     this.setState({ contestants: data, usersMap, userCountriesMap });
   }
 
@@ -101,7 +101,7 @@ function createContestRegistrantsDialog(contestContestantActions) {
     contest: selectContest(state)!,
   });
   const mapDispatchToProps = {
-    onFetchContestants: contestContestantActions.fetchContestants,
+    onGetContestants: contestContestantActions.getContestants,
   };
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog));
 }

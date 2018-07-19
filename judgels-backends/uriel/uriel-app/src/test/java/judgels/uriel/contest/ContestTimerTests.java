@@ -80,7 +80,7 @@ class ContestTimerTests {
                     .thenReturn(Optional.of(new VirtualModuleConfig.Builder()
                             .virtualDuration(Duration.ofSeconds(1))
                             .build()));
-            when(contestantStore.findContestant(CONTEST, USER)).thenReturn(
+            when(contestantStore.getContestant(CONTEST, USER)).thenReturn(
                     Optional.of(new ContestContestant.Builder()
                             .userJid(USER)
                             .build()));
@@ -99,7 +99,7 @@ class ContestTimerTests {
                     .thenReturn(Optional.of(new VirtualModuleConfig.Builder()
                             .virtualDuration(Duration.ofSeconds(1))
                             .build()));
-            when(contestantStore.findContestant(CONTEST, USER)).thenReturn(
+            when(contestantStore.getContestant(CONTEST, USER)).thenReturn(
                     Optional.of(new ContestContestant.Builder()
                             .userJid(USER)
                             .build()));
@@ -212,7 +212,7 @@ class ContestTimerTests {
         private void assertStates(long at, boolean begun, boolean started, boolean finished, boolean ended) {
             Clock clock = new FixedClock(Instant.ofEpochSecond(at));
 
-            when(contestantStore.findContestant(CONTEST, USER)).thenReturn(
+            when(contestantStore.getContestant(CONTEST, USER)).thenReturn(
                     Optional.of(new ContestContestant.Builder()
                             .userJid(USER)
                             .contestStartTime(Instant.ofEpochSecond(6))
@@ -224,7 +224,7 @@ class ContestTimerTests {
         private void assertDurations(long at, long toBegin, long fromBegin, long toFinish, long toEnd) {
             Clock clock = new FixedClock(Instant.ofEpochSecond(at));
 
-            when(contestantStore.findContestant(CONTEST, USER)).thenReturn(
+            when(contestantStore.getContestant(CONTEST, USER)).thenReturn(
                     Optional.of(new ContestContestant.Builder()
                             .userJid(USER)
                             .contestStartTime(Instant.ofEpochSecond(6))

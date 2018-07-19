@@ -45,13 +45,13 @@ public class ContestScoreboardFetcher {
             ContestScoreboardType type,
             boolean canSuperviseScoreboard) {
 
-        Optional<RawContestScoreboard> rawScoreboard = scoreboardStore.findScoreboard(contest.getJid(), type);
+        Optional<RawContestScoreboard> rawScoreboard = scoreboardStore.getScoreboard(contest.getJid(), type);
         ContestScoreboardType actualType;
 
         // TODO(fushar): keep frozen scoreboard in database even after being unfrozen
         if (type == ContestScoreboardType.FROZEN && !rawScoreboard.isPresent()) {
             actualType = ContestScoreboardType.OFFICIAL;
-            rawScoreboard = scoreboardStore.findScoreboard(contest.getJid(), actualType);
+            rawScoreboard = scoreboardStore.getScoreboard(contest.getJid(), actualType);
         } else {
             actualType = type;
         }

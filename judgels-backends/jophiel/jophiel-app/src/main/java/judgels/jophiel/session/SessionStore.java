@@ -31,17 +31,17 @@ public class SessionStore {
         legacySessionDao.insert(model);
     }
 
-    public Optional<Session> findSessionByToken(String token) {
+    public Optional<Session> getSessionByToken(String token) {
         return sessionDao.selectByToken(token).map(SessionStore::fromModel);
     }
 
-    public Optional<Session> findSessionByAuthCode(String authCode) {
-        return legacySessionDao.findByAuthCode(authCode).flatMap(legacyModel ->
+    public Optional<Session> getSessionByAuthCode(String authCode) {
+        return legacySessionDao.getByAuthCode(authCode).flatMap(legacyModel ->
                 sessionDao.selectByToken(legacyModel.token).map(SessionStore::fromModel));
     }
 
     public void deleteAuthCode(String authCode) {
-        legacySessionDao.findByAuthCode(authCode).ifPresent(legacySessionDao::delete);
+        legacySessionDao.getByAuthCode(authCode).ifPresent(legacySessionDao::delete);
     }
 
     public void deleteSessionByToken(String token) {

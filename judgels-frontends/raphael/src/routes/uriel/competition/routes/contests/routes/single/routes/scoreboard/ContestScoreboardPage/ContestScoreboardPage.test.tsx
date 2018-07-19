@@ -10,12 +10,12 @@ import { ContestScoreboardType } from '../../../../../../../../../../modules/api
 
 describe('ContestScoreboardPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let onFetchScoreboard: jest.Mock<any>;
+  let onGetScoreboard: jest.Mock<any>;
 
   const render = () => {
     const props: ContestScoreboardPageProps = {
       contest,
-      onFetchScoreboard,
+      onGetScoreboard,
     };
 
     wrapper = mount(
@@ -26,12 +26,12 @@ describe('ContestScoreboardPage', () => {
   };
 
   beforeEach(() => {
-    onFetchScoreboard = jest.fn();
+    onGetScoreboard = jest.fn();
   });
 
   describe('when there is no scoreboard', () => {
     beforeEach(() => {
-      onFetchScoreboard.mockReturnValue(Promise.resolve(null));
+      onGetScoreboard.mockReturnValue(Promise.resolve(null));
       render();
     });
 
@@ -63,7 +63,7 @@ describe('ContestScoreboardPage', () => {
         },
         usersMap: {},
       };
-      onFetchScoreboard.mockReturnValue(Promise.resolve(response));
+      onGetScoreboard.mockReturnValue(Promise.resolve(response));
 
       render();
     });
@@ -96,7 +96,7 @@ describe('ContestScoreboardPage', () => {
         },
         usersMap: {},
       };
-      onFetchScoreboard.mockReturnValue(Promise.resolve(response));
+      onGetScoreboard.mockReturnValue(Promise.resolve(response));
 
       render();
     });

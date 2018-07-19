@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import { BadRequestError } from '../../../../modules/api/error';
 
 export const resetPasswordActions = {
-  reset: (emailCode: string, newPassword: string) => {
+  resetPassword: (emailCode: string, newPassword: string) => {
     return async (dispatch, getState, { userAccountAPI, toastActions }) => {
       try {
         await userAccountAPI.resetPassword({ emailCode, newPassword });

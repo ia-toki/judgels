@@ -1,10 +1,10 @@
-import { profilesActions } from './profilesActions';
+import { profileActions } from './profileActions';
 import { user } from '../../../../fixtures/state';
 import { AppState } from '../../../../modules/store';
 import { PublicUserProfile } from '../../../../modules/api/jophiel/userProfile';
 import { UsernamesMap } from '../../../../modules/api/jophiel/user';
 
-describe('profilesActions', () => {
+describe('profileActions', () => {
   let dispatch: jest.Mock<any>;
   let userProfileAPI: jest.Mocked<any>;
   let userAPI: jest.Mocked<any>;
@@ -18,26 +18,27 @@ describe('profilesActions', () => {
     };
 
     userAPI = {
-      findUsersByUsernames: jest.fn(),
+      getUsersByUsernames: jest.fn(),
     };
   });
 
-  describe('fetchPublic()', () => {
-    const { fetchPublic } = profilesActions;
-    const doFetchPublic = async () => fetchPublic(user.username)(dispatch, getState, { userProfileAPI, userAPI });
+  describe('getPublicProfile()', () => {
+    const { getPublicProfile } = profileActions;
+    const doGetPublicProfile = async () =>
+      getPublicProfile(user.username)(dispatch, getState, { userProfileAPI, userAPI });
 
     describe('when user found', () => {
       beforeEach(async () => {
         const publicUserProfile: PublicUserProfile = { name: 'dummy' };
         const users: UsernamesMap = { [user.username]: user };
-        userAPI.findUsersByUsernames.mockReturnValue(users);
+        userAPI.getUsersByUsernames.mockReturnValue(users);
         userProfileAPI.getPublicProfile.mockReturnValue(publicUserProfile);
 
-        await doFetchPublic();
+        await doGetPublicProfile();
       });
 
       it('calls API to get user', () => {
-        expect(userAPI.findUsersByUsernames).toHaveBeenCalledWith([user.username]);
+        expect(userAPI.getUsersByUsernames).toHaveBeenCalledWith([user.username]);
       });
 
       it('calls API to get public profile', () => {
@@ -48,11 +49,11 @@ describe('profilesActions', () => {
     describe('when user not found', () => {
       beforeEach(async () => {
         const users: UsernamesMap = {};
-        userAPI.findUsersByUsernames.mockReturnValue(users);
+        userAPI.getUsersByUsernames.mockReturnValue(users);
       });
 
       it('throws NotFoundError', async () => {
-        await expect(doFetchPublic()).rejects.toMatchObject({});
+        await expect(doGetPublicProfile()).rejects.toMatchObject({});
       });
     });
   });

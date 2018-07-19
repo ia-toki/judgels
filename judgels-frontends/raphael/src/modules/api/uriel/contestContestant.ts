@@ -27,11 +27,11 @@ export function createContestContestantAPI() {
       return get(`${baseURL}/${contestJid}/contestants/count`, token);
     },
 
-    register: (token: string, contestJid: string): Promise<void> => {
+    registerMyselfAsContestant: (token: string, contestJid: string): Promise<void> => {
       return post(`${baseURL}/${contestJid}/contestants/me`, token);
     },
 
-    unregister: (token: string, contestJid: string): Promise<void> => {
+    unregisterMyselfAsContestant: (token: string, contestJid: string): Promise<void> => {
       return delete_(`${baseURL}/${contestJid}/contestants/me`, token);
     },
 

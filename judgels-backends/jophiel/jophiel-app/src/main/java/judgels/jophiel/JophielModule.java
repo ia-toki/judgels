@@ -24,6 +24,6 @@ public class JophielModule {
     @Singleton
     static ActorChecker actorChecker(SessionStore sessionStore) {
         return new ActorChecker(authHeader ->
-                sessionStore.findSessionByToken(authHeader.getBearerToken()).map(Session::getUserJid));
+                sessionStore.getSessionByToken(authHeader.getBearerToken()).map(Session::getUserJid));
     }
 }

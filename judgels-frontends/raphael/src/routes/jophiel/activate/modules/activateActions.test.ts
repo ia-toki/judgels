@@ -15,13 +15,13 @@ describe('activateActions', () => {
     };
   });
 
-  describe('activate()', () => {
-    const { activate } = activateActions;
+  describe('activateUser()', () => {
+    const { activateUser } = activateActions;
     const emailCode = 'code';
-    const doActivate = async () => activate(emailCode)(dispatch, getState, { userAccountAPI });
+    const doActivateUser = async () => activateUser(emailCode)(dispatch, getState, { userAccountAPI });
 
     beforeEach(async () => {
-      await doActivate();
+      await doActivateUser();
     });
 
     it('calls API to activate user', async () => {

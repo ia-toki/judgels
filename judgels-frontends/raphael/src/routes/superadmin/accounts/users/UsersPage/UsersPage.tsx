@@ -17,7 +17,7 @@ import { UserRef } from '../../../../../components/UserRef/UserRef';
 import './UsersPage.css';
 
 export interface UsersPageProps extends RouteComponentProps<{ page: number; orderDir: OrderDir; orderBy: string }> {
-  onFetchList: (page: number, orderBy?: string, orderDir?: OrderDir) => Promise<Page<User>>;
+  onGetUsers: (page: number, orderBy?: string, orderDir?: OrderDir) => Promise<Page<User>>;
   onAppendRoute: (queries: any) => any;
 }
 
@@ -128,7 +128,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
 
   private updateUsers = async () => {
     const { page, orderBy, orderDir } = this.state;
-    const users = await this.props.onFetchList(page, orderBy, orderDir);
+    const users = await this.props.onGetUsers(page, orderBy, orderDir);
     this.setState({ users });
     return users;
   };
@@ -136,7 +136,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
 
 function createUsersPage(userActions) {
   const mapDispatchToProps = {
-    onFetchList: userActions.fetchList,
+    onGetUsers: userActions.getUsers,
     onAppendRoute: (queries: any) => {
       return push({ search: stringify(queries) });
     },

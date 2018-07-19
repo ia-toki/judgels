@@ -12,7 +12,7 @@ import ActivatePage from './activate/ActivatePage/ActivatePage';
 import ForgotPasswordPage from './forgotPassword/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPage';
 import AccountRoutes from './account/routes/AccountRoutes';
-import ProfilesPage from './profiles/ProfilesPage/ProfilesPage';
+import PublicProfilePage from './profiles/PublicProfilePage/PublicProfilePage';
 
 const JophielRoutes = () => (
   <div>
@@ -26,7 +26,7 @@ const JophielRoutes = () => (
       <GuestRoute exact path="/forgot-password" component={ForgotPasswordPage} />
       <GuestRoute exact path="/reset-password/:emailCode" component={ResetPasswordPage} />
       <UserRoute path="/account" component={AccountRoutes} />
-      <Route path="/profiles/:username" component={ProfilesPage} />
+      <Route path="/profiles/:username" component={PublicProfilePage} />
     </Switch>
   </div>
 );

@@ -52,7 +52,7 @@ class ContestSupervisorStoreIntegrationTests {
                 .permission(SupervisorPermission.all())
                 .build());
 
-        assertThat(store.findSupervisor(contest.getJid(), USER_1)).contains(supervisor1);
+        assertThat(store.getSupervisor(contest.getJid(), USER_1)).contains(supervisor1);
 
         // TODO(fushar): move these assertions to service integration tests instead
         assertThat(supervisor1.getUserJid())

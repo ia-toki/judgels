@@ -17,18 +17,18 @@ describe('contestScoreboardActions', () => {
     };
   });
 
-  describe('fetch()', () => {
-    const { fetch } = contestScoreboardActions;
-    const doFetch = async () => fetch(contestJid)(dispatch, getState, { contestScoreboardAPI });
+  describe('getScoreboard()', () => {
+    const { getScoreboard } = contestScoreboardActions;
+    const doGetScoreboard = async () => getScoreboard(contestJid)(dispatch, getState, { contestScoreboardAPI });
 
     beforeEach(async () => {
       const scoreboard = {} as ContestScoreboardResponse;
       contestScoreboardAPI.getScoreboard.mockReturnValue(scoreboard);
 
-      await doFetch();
+      await doGetScoreboard();
     });
 
-    it('calls API to get contest scoreboard', () => {
+    it('calls API to get scoreboard', () => {
       expect(contestScoreboardAPI.getScoreboard).toHaveBeenCalledWith(token, contestJid);
     });
   });

@@ -23,7 +23,7 @@ export interface ContestClarificationCreateDialogProps {
 export interface ContestClarificationCreateDialogConnectedProps {
   contest: Contest;
   statementLanguage: string;
-  onFetchClarificationConfig: (contestJid: string, language: string) => Promise<ContestClarificationConfig>;
+  onGetClarificationConfig: (contestJid: string, language: string) => Promise<ContestClarificationConfig>;
   onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
   onSetDefaultTopic: (contestJid: string) => void;
 }
@@ -41,7 +41,7 @@ class ContestClarificationCreateDialog extends React.Component<
   state: ContestClarificationCreateDialogState = {};
 
   async componentDidMount() {
-    const config = await this.props.onFetchClarificationConfig(this.props.contest.jid, this.props.statementLanguage);
+    const config = await this.props.onGetClarificationConfig(this.props.contest.jid, this.props.statementLanguage);
     if (config.isAllowedToCreateClarification) {
       this.props.onSetDefaultTopic(this.props.contest.jid);
     }
@@ -129,10 +129,10 @@ function createContestClarificationCreateDialog(contestClarificationActions) {
   });
 
   const mapDispatchToProps = dispatch => ({
-    onFetchClarificationConfig: (contestJid: string, language: string) =>
-      dispatch(contestClarificationActions.fetchConfig(contestJid, language)),
+    onGetClarificationConfig: (contestJid: string, language: string) =>
+      dispatch(contestClarificationActions.getClarificationConfig(contestJid, language)),
     onCreateClarification: (contestJid: string, data: ContestClarificationData) =>
-      dispatch(contestClarificationActions.create(contestJid, data)),
+      dispatch(contestClarificationActions.createClarification(contestJid, data)),
     onSetDefaultTopic: (contestJid: string) => dispatch(change('contest-clarification-create', 'topicJid', contestJid)),
   });
   return connect(mapStateToProps, mapDispatchToProps)(ContestClarificationCreateDialog);

@@ -3,24 +3,24 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { PublicUserProfile } from '../../../../modules/api/jophiel/userProfile';
-import { profilesActions as injectedProfilesActions } from '../modules/profilesActions';
+import { profileActions as injectedProfileActions } from '../modules/profileActions';
 import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 
-interface ProfilesPageProps extends RouteComponentProps<{ username: string }> {
-  onFetchProfile: (username: string) => Promise<PublicUserProfile>;
+interface PublicProfilePageProps extends RouteComponentProps<{ username: string }> {
+  onGetPublicProfile: (username: string) => Promise<PublicUserProfile>;
 }
 
-interface ProfilesPageState {
+interface PublicProfilePageState {
   profile?: PublicUserProfile;
 }
 
-class ProfilesPage extends React.PureComponent<ProfilesPageProps, ProfilesPageState> {
-  state: ProfilesPageState = {};
+class PublicProfilePage extends React.PureComponent<PublicProfilePageProps, PublicProfilePageState> {
+  state: PublicProfilePageState = {};
 
   async componentDidMount() {
-    const profile = await this.props.onFetchProfile(this.props.match.params.username);
+    const profile = await this.props.onGetPublicProfile(this.props.match.params.username);
     this.setState({ profile });
   }
 
@@ -40,11 +40,11 @@ class ProfilesPage extends React.PureComponent<ProfilesPageProps, ProfilesPageSt
   }
 }
 
-export function createProfilesPage(profilesActions) {
+export function createPublicProfilePage(profileActions) {
   const mapDispatchToProps = {
-    onFetchProfile: profilesActions.fetchPublic,
+    onGetPublicProfile: profileActions.getPublicProfile,
   };
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(ProfilesPage));
+  return withRouter<any>(connect(undefined, mapDispatchToProps)(PublicProfilePage));
 }
 
-export default createProfilesPage(injectedProfilesActions);
+export default createPublicProfilePage(injectedProfileActions);

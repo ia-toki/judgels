@@ -16,7 +16,7 @@ public interface ContestWebService {
     @GET
     @Path("/config")
     @Produces(APPLICATION_JSON)
-    ContestWebConfig getConfig(
+    ContestWebConfig getWebConfig(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 }

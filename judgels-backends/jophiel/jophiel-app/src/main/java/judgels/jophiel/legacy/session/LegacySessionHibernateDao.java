@@ -18,12 +18,7 @@ public class LegacySessionHibernateDao extends UnmodifiableHibernateDao<LegacySe
     }
 
     @Override
-    public Optional<LegacySessionModel> findByAuthCode(String authCode) {
+    public Optional<LegacySessionModel> getByAuthCode(String authCode) {
         return selectByUniqueColumn(LegacySessionModel_.authCode, authCode);
-    }
-
-    @Override
-    public Optional<LegacySessionModel> findByToken(String token) {
-        return selectByUniqueColumn(LegacySessionModel_.token, token);
     }
 }

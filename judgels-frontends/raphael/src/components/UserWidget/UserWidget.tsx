@@ -120,7 +120,7 @@ export function createUserWidget(avatarActions) {
     } as Partial<UserWidgetProps>);
 
   const mapDispatchToProps = {
-    onRenderAvatar: avatarActions.render,
+    onRenderAvatar: avatarActions.renderAvatar,
   };
 
   return connect(mapStateToProps, mapDispatchToProps)(UserWidget);

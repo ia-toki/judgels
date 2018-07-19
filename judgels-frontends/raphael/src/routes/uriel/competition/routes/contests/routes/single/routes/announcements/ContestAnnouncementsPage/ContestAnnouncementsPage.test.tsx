@@ -9,12 +9,12 @@ import { ContestAnnouncement } from '../../../../../../../../../../modules/api/u
 
 describe('ContestAnnouncementsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let onFetchPublishedAnnouncements: jest.Mock<any>;
+  let onGetPublishedAnnouncements: jest.Mock<any>;
 
   const render = () => {
     const props: ContestAnnouncementsPageProps = {
       contest,
-      onFetchPublishedAnnouncements,
+      onGetPublishedAnnouncements,
     };
 
     wrapper = mount(
@@ -25,12 +25,12 @@ describe('ContestAnnouncementsPage', () => {
   };
 
   beforeEach(() => {
-    onFetchPublishedAnnouncements = jest.fn();
+    onGetPublishedAnnouncements = jest.fn();
   });
 
   describe('when there are no announcements', () => {
     beforeEach(() => {
-      onFetchPublishedAnnouncements.mockReturnValue(Promise.resolve([]));
+      onGetPublishedAnnouncements.mockReturnValue(Promise.resolve([]));
       render();
     });
 
@@ -61,7 +61,7 @@ describe('ContestAnnouncementsPage', () => {
           updatedTime: 0,
         } as ContestAnnouncement,
       ];
-      onFetchPublishedAnnouncements.mockReturnValue(Promise.resolve(announcements));
+      onGetPublishedAnnouncements.mockReturnValue(Promise.resolve(announcements));
 
       render();
     });
