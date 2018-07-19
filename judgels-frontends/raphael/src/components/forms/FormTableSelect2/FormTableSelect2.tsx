@@ -7,6 +7,8 @@ import { getIntentClassName } from '../meta';
 import { FormInputProps } from '../props';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
 
+import './FormTableSelect2.css';
+
 export interface FormTableSelect2Props extends FormInputProps {
   optionValues: string[];
   optionNamesMap: { [key: string]: string };
