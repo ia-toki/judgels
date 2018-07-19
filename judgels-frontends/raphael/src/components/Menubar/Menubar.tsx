@@ -1,9 +1,7 @@
 import { Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, RouteProps } from 'react-router';
-import { withRouter, matchPath } from 'react-router-dom';
-import { push } from 'react-router-redux';
+import { RouteComponentProps, RouteProps, withRouter } from 'react-router';
+import { matchPath, Link } from 'react-router-dom';
 
 import './Menubar.css';
 
@@ -18,11 +16,7 @@ export interface MenubarProps {
   homeRoute?: MenubarItem;
 }
 
-export interface MenubarConnectedProps extends RouteComponentProps<{}> {
-  onNavigate: (url: string) => any;
-}
-
-class Menubar extends React.Component<MenubarProps & MenubarConnectedProps> {
+class Menubar extends React.Component<MenubarProps & RouteComponentProps<{}>> {
   render() {
     const selectedTabId = this.getActiveItemId();
     const homeRoute = this.props.homeRoute;
@@ -30,16 +24,16 @@ class Menubar extends React.Component<MenubarProps & MenubarConnectedProps> {
     return (
       <div className="menubar">
         <div className="menubar__content">
-          <Tabs id="menubar" renderActiveTabPanelOnly selectedTabId={selectedTabId} onChange={this.onTabChange}>
+          <Tabs id="menubar" renderActiveTabPanelOnly selectedTabId={selectedTabId}>
             {homeRoute ? (
               <Tab key={homeRoute.id} id={homeRoute.id}>
-                {homeRoute.title}
+                <Link to={this.resolveUrl(homeRoute.id)}>{homeRoute.title}</Link>
               </Tab>
             ) : null}
             {this.props.items.map(item => {
               return (
                 <Tab key={item.id} id={item.id}>
-                  {item.title}
+                  <Link to={this.resolveUrl(item.id)}>{item.title}</Link>
                 </Tab>
               );
             })}
@@ -62,7 +56,7 @@ class Menubar extends React.Component<MenubarProps & MenubarConnectedProps> {
     }
   };
 
-  private onTabChange = newTabId => {
+  private resolveUrl = newTabId => {
     const { homeRoute, items, match } = this.props;
     let newTabItem;
     if (homeRoute && homeRoute.id === newTabId) {
@@ -71,18 +65,10 @@ class Menubar extends React.Component<MenubarProps & MenubarConnectedProps> {
       newTabItem = items.find(item => item.id === newTabId);
     }
     if (!newTabItem) {
-      return;
+      return '';
     }
-    const path = (match.path === '/' ? '' : match.path) + (newTabItem.route.path ? newTabItem.route.path : '/');
-    this.props.onNavigate(path);
+    return (match.path === '/' ? '' : match.path) + (newTabItem.route.path ? newTabItem.route.path : '/');
   };
 }
 
-function createMenubar() {
-  const mapDispatchToProps = {
-    onNavigate: push,
-  };
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(Menubar));
-}
-
-export default createMenubar();
+export default withRouter<any>(Menubar);

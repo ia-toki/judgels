@@ -3,7 +3,6 @@ import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import { push } from 'react-router-redux';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
 import ContentWithSidebar, { ContentWithSidebarProps } from './ContentWithSidebar';
@@ -93,18 +92,12 @@ describe('ContentWithSidebar', () => {
         expect(wrapper.find(SecondComponent)).toHaveLength(1);
       });
 
-      describe('when another item is clicked', () => {
-        beforeEach(() => {
-          wrapper
-            .find('[role="tab"]')
-            .at(2)
-            .simulate('click');
-          wrapper.update();
-        });
-
-        it('pushes the url to that item', () => {
-          expect(store.getActions()).toContainEqual(push('/parent/third'));
-        });
+      it('has the correct links', () => {
+        const link = wrapper
+          .find('[role="tab"]')
+          .at(2)
+          .find('a');
+        expect(link.props().href).toEqual('/parent/third');
       });
     });
 
@@ -160,18 +153,12 @@ describe('ContentWithSidebar', () => {
         expect(wrapper.find(SecondComponent)).toHaveLength(1);
       });
 
-      describe('when the first item is clicked', () => {
-        beforeEach(() => {
-          wrapper
-            .find('[role="tab"]')
-            .at(0)
-            .simulate('click');
-          wrapper.update();
-        });
-
-        it('pushes the url to that item without suffix', () => {
-          expect(store.getActions()).toContainEqual(push('/parent/'));
-        });
+      it('has the correct first link without suffix', () => {
+        const link = wrapper
+          .find('[role="tab"]')
+          .at(0)
+          .find('a');
+        expect(link.props().href).toEqual('/parent/');
       });
     });
 

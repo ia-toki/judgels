@@ -1,9 +1,7 @@
 import { IconName } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps, Switch, withRouter } from 'react-router';
-import { push } from 'react-router-redux';
 
 import { Sidebar, SidebarItem } from '../Sidebar/Sidebar';
 
@@ -80,7 +78,7 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
         action={this.props.action}
         activeItemId={this.getActiveItemId()}
         items={sidebarItems}
-        onItemClick={this.onItemClick}
+        onResolveItemUrl={this.onResolveItemUrl}
       />
     );
   };
@@ -111,8 +109,8 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
     );
   };
 
-  private onItemClick = (itemId: string) => {
-    return this.props.onItemClick(this.props.match.url, itemId);
+  private onResolveItemUrl = (itemId: string) => {
+    return resolveUrl(this.props.match.url, itemId);
   };
 
   private getActiveItemId = () => {
@@ -126,11 +124,4 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
   };
 }
 
-function createContentWithSidebar() {
-  const mapDispatchToProps = {
-    onItemClick: (parentPath: string, itemId: string) => push(resolveUrl(parentPath, itemId)),
-  };
-  return connect(undefined, mapDispatchToProps)(ContentWithSidebar);
-}
-
-export default withRouter<any>(createContentWithSidebar());
+export default withRouter<any>(ContentWithSidebar);

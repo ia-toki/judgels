@@ -1,5 +1,6 @@
 import { Icon, IconName, Popover, Position, Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import { Card } from '../Card/Card';
 
@@ -16,7 +17,7 @@ export interface SidebarProps {
   action?: JSX.Element;
   activeItemId: string;
   items: SidebarItem[];
-  onItemClick: (parentPath: string, itemId: string) => void;
+  onResolveItemUrl: (itemId: string) => string;
 }
 
 export interface SidebarState {
@@ -27,7 +28,7 @@ export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
   state: SidebarState = { isResponsivePopoverOpen: false };
 
   render() {
-    const { title, action, activeItemId, items } = this.props;
+    const { title, action, activeItemId, items, onResolveItemUrl } = this.props;
 
     const tabs = items.map(item => {
       const titleIcon = item.titleIcon && <Icon icon={item.titleIcon} />;
@@ -38,11 +39,11 @@ export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
 
       return (
         <Tab key={item.id} id={item.id}>
-          <span>
+          <Link to={onResolveItemUrl(item.id)}>
             {titleIcon}
             {titleIcon && <span>&nbsp;&nbsp;</span>}
             {item.title}
-          </span>
+          </Link>
           {icon}
         </Tab>
       );
@@ -95,9 +96,7 @@ export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
     this.setState({ isResponsivePopoverOpen: state });
   };
 
-  private onResponsiveItemClick = (parentPath: string, itemId: string) => {
-    this.props.onItemClick(parentPath, itemId);
-
+  private onResponsiveItemClick = () => {
     setTimeout(() => {
       this.setState({ isResponsivePopoverOpen: false });
     }, 200);

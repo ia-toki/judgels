@@ -2,7 +2,6 @@ import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import { push } from 'react-router-redux';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
 import Menubar, { MenubarProps } from './Menubar';
@@ -95,17 +94,12 @@ describe('Menubar', () => {
       expect(items.at(2).prop('aria-selected')).toEqual(false);
     });
 
-    describe('when another item is clicked', () => {
-      beforeEach(() => {
-        wrapper
-          .find('[role="tab"]')
-          .at(2)
-          .simulate('click');
-        wrapper.update();
-      });
-      it('pushes the url to that item', () => {
-        expect(store.getActions()).toContainEqual(push('/parent/third'));
-      });
+    it('has the correct links', () => {
+      const link = wrapper
+        .find('[role="tab"]')
+        .at(2)
+        .find('a');
+      expect(link.props().href).toEqual('/parent/third');
     });
   });
 
@@ -138,18 +132,12 @@ describe('Menubar', () => {
       expect(items.at(2).prop('aria-selected')).toEqual(false);
     });
 
-    describe('when another item is clicked', () => {
-      beforeEach(() => {
-        wrapper
-          .find('[role="tab"]')
-          .at(2)
-          .simulate('click');
-        wrapper.update();
-      });
-
-      it('pushes the url to that item', () => {
-        expect(store.getActions()).toContainEqual(push('/third'));
-      });
+    it('has the correct links', () => {
+      const link = wrapper
+        .find('[role="tab"]')
+        .at(2)
+        .find('a');
+      expect(link.props().href).toEqual('/third');
     });
   });
 });
