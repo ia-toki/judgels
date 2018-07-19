@@ -1,26 +1,30 @@
 import { Card, Intent } from '@blueprintjs/core';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
-import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 import { FormattedDate } from '../../../../../../components/FormattedDate/FormattedDate';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 
-import './ContestsTable.css';
+import './ContestTable.css';
 
-export interface ContestsTableProps {
+export interface ContestTableProps {
   contests: Contest[];
   buttonIntent: Intent;
 }
 
-export class ContestsTable extends React.PureComponent<ContestsTableProps, {}> {
+export class ContestTable extends React.PureComponent<ContestTableProps, {}> {
   render() {
     const { contests } = this.props;
     const list = contests.map(contest => (
-      <div key={contest.jid} className="flex-row justify-content-space-between contest-list-item-container">
+      <Link
+        key={contest.jid}
+        to={`/competition/contests/${contest.id}`}
+        className="flex-row justify-content-space-between contest-table-item-container"
+      >
         <div>
-          <h4 className="contest-list-item-name">{contest.name}</h4>
-          <p className="contest-list-item-date">
+          <h4 className="contest-table-item-name">{contest.name}</h4>
+          <p className="contest-table-item-date">
             <small>
               {this.renderBeginTime(contest)}
               {this.renderDurationSeparator(contest)}
@@ -28,21 +32,10 @@ export class ContestsTable extends React.PureComponent<ContestsTableProps, {}> {
             </small>
           </p>
         </div>
-        <div className="flex-column contest-list-item-info">
-          <div className="flex-row justify-content-flex-end">
-            <ButtonLink
-              to={`/competition/contests/${contest.id}`}
-              intent={this.props.buttonIntent}
-              className="contest-list-view-result"
-            >
-              View
-            </ButtonLink>
-          </div>
-        </div>
-      </div>
+      </Link>
     ));
 
-    return <Card className="contest-list-container">{list}</Card>;
+    return <Card className="contest-table-container">{list}</Card>;
   }
 
   private renderBeginTime = (contest: Contest) => {

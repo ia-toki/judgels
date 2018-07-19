@@ -6,8 +6,8 @@ import { RouteComponentProps } from 'react-router';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { Card } from '../../../../../../components/Card/Card';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { BlankContestsTable } from '../ContestsTable/BlankContestsTable';
-import { ContestsTable } from '../ContestsTable/ContestsTable';
+import { BlankContestTable } from '../ContestTable/BlankContestTable';
+import { ContestTable } from '../ContestTable/ContestTable';
 import { Contest, ContestPage } from '../../../../../../modules/api/uriel/contest';
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 
@@ -49,16 +49,16 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     }
     return (
       <Card title="Active contests">
-        <ContestsTable contests={contests} buttonIntent={Intent.PRIMARY} />
+        <ContestTable contests={contests} buttonIntent={Intent.PRIMARY} />
       </Card>
     );
   };
 
   private renderPastContests = (contests?: ContestPage) => {
     if (!contests || !this.state.activeContests) {
-      return <BlankContestsTable />;
+      return <BlankContestTable />;
     }
-    return <ContestsTable contests={contests.data} buttonIntent={Intent.NONE} />;
+    return <ContestTable contests={contests.data} buttonIntent={Intent.NONE} />;
   };
 
   private onChangePage = async (nextPage: number) => {
