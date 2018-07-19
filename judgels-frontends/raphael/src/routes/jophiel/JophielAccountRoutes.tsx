@@ -1,0 +1,15 @@
+import * as React from 'react';
+import * as Loadable from 'react-loadable';
+
+import { LoadingState } from '../../components/LoadingState/LoadingState';
+
+const LoadableAccountRoutes = Loadable({
+  loader: () => import('./account/routes/AccountRoutes'),
+  loading: () => <LoadingState large />,
+});
+
+export default class JophielAccountRoutes extends React.PureComponent {
+  render() {
+    return <LoadableAccountRoutes />;
+  }
+}
