@@ -1,3 +1,5 @@
+@import '../../../../../../styles/base';
+
 .contest-table-container > :first-child {
   margin-top: -20px;
 }
@@ -26,7 +28,7 @@
 }
 
 .contest-table-item-container:hover {
-  background-color: #eef2fb;
+  background-color: $div-hover-color;
   cursor: pointer;
   text-decoration: none;
 }

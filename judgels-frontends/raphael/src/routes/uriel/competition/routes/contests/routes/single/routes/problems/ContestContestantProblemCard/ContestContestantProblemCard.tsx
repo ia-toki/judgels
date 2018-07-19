@@ -24,17 +24,19 @@ export class ContestContestantProblemCard extends React.PureComponent<ContestCon
 
     return (
       <ContentCard>
-        <div className="contestant-problem__name">
-          <Link to={`/competition/contests/${contest.id}/problems/${problem.alias}`}>
-            <span data-key="name">
-              {problem.alias}. {problemName}
-            </span>
-          </Link>
-        </div>
-        <div data-key="status" className="contestant-problem__status secondary-info">
-          {this.renderStatus()}
-        </div>
-        <div className="clearfix" />
+        <Link className="contestant-problem-card" to={`/competition/contests/${contest.id}/problems/${problem.alias}`}>
+          <div>
+            <div className="contestant-problem-card__name">
+              <span data-key="name">
+                {problem.alias}. {problemName}
+              </span>
+            </div>
+            <div data-key="status" className="contestant-problem-card__status secondary-info">
+              {this.renderStatus()}
+            </div>
+            <div className="clearfix" />
+          </div>
+        </Link>
       </ContentCard>
     );
   }
