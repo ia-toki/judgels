@@ -10,6 +10,7 @@ import { Contest } from '../../../../../../../../../../modules/api/uriel/contest
 import { AppState } from '../../../../../../../../../../modules/store';
 import { selectIsLoggedIn } from '../../../../../../../../../../modules/session/sessionSelectors';
 import { selectContest } from '../../../../../modules/contestSelectors';
+import { contestWebConfigActions as injectedContestWebConfigActions } from '../../../modules/contestWebConfigActions';
 import { contestContestantActions as injectedContestContestantActions } from '../../../modules/contestContestantActions';
 
 import './ContestRegistrationCard.css';
@@ -19,6 +20,7 @@ export interface ContestRegistrationCardProps {
   contest: Contest;
   onGetMyContestantState: (contestJid: string) => Promise<ContestContestantState>;
   onGetContestantsCount: (contestJid: string) => Promise<number>;
+  onGetContestWebConfig: (contestJid: string) => Promise<void>;
   onRegisterMyselfAsContestant: (contestJid: string) => Promise<void>;
   onUnregisterMyselfAsContestant: (contestJid: string) => Promise<void>;
 }
@@ -56,6 +58,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     const [contestantState, contestantsCount] = await Promise.all([
       this.props.onGetMyContestantState(this.props.contest.jid),
       this.props.onGetContestantsCount(this.props.contest.jid),
+      this.props.onGetContestWebConfig(this.props.contest.jid),
     ]);
     this.setState({ contestantState, contestantsCount });
   };
@@ -156,12 +159,13 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
   };
 }
 
-function createContestRegistrationCard(contestContestantActions) {
+function createContestRegistrationCard(contestWebConfigActions, contestContestantActions) {
   const mapStateToProps = (state: AppState) => ({
     isLoggedIn: selectIsLoggedIn(state),
     contest: selectContest(state)!,
   });
   const mapDispatchToProps = {
+    onGetContestWebConfig: contestWebConfigActions.getWebConfig,
     onGetMyContestantState: contestContestantActions.getMyContestantState,
     onGetContestantsCount: contestContestantActions.getContestantsCount,
     onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
@@ -170,4 +174,4 @@ function createContestRegistrationCard(contestContestantActions) {
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));
 }
 
-export default createContestRegistrationCard(injectedContestContestantActions);
+export default createContestRegistrationCard(injectedContestWebConfigActions, injectedContestContestantActions);
