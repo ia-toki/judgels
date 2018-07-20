@@ -6,11 +6,11 @@ import { withRouter } from 'react-router';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { PublicUserProfile } from '../../../../../../../../modules/api/jophiel/userProfile';
 import { AppState } from '../../../../../../../../modules/store';
+import { getRatingLeague } from '../../../../../../../../modules/api/jophiel/userRating';
 import { selectPublicProfile } from '../../../../../modules/publicProfileSelectors';
 import { avatarActions as injectedAvatarActions } from '../../../../../../modules/avatarActions';
 
 import './ProfileSummaryPage.css';
-import { LeagueColor } from '../../../../../../../../components/LeagueColor/LeagueColor';
 
 interface ProfileSummaryPageProps {
   profile: PublicUserProfile;
@@ -53,11 +53,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   };
 
   private renderUsername = (profile: PublicUserProfile) => {
-    return (
-      <div>
-        <LeagueColor rating={profile.rating}>{profile.username}</LeagueColor>
-      </div>
-    );
+    return <div className={getRatingLeague(profile.rating)}>{profile.username}</div>;
   };
 }
 
