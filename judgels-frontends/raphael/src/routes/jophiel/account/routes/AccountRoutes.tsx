@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { FullPageLayout } from '../../../../components/layouts/FullPageLayout/FullPageLayout';
+import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import UserRoute from '../../../../components/UserRoute/UserRoute';
 import ProfilePage from './profile/ProfilePage/ProfilePage';
 import ChangePasswordPage from './changePassword/ChangePasswordPage/ChangePasswordPage';
@@ -41,6 +42,7 @@ const AccountRoutes = () => {
 
   return (
     <FullPageLayout>
+      <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );

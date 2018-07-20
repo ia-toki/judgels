@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../../../../../components/layouts/FullPageLayout/FullPageLayout';
+import { ScrollToTopOnMount } from '../../../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import ContentWithSidebar, {
@@ -47,6 +48,7 @@ const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
 
   return (
     <FullPageLayout>
+      <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );

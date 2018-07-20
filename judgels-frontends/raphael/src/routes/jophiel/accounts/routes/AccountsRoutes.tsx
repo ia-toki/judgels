@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Route } from 'react-router';
 
 import { FullPageLayout } from '../../../../components/layouts/FullPageLayout/FullPageLayout';
+import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
@@ -27,6 +28,7 @@ const AccountRoutes = () => {
 
   return (
     <FullPageLayout>
+      <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps} />
     </FullPageLayout>
   );
