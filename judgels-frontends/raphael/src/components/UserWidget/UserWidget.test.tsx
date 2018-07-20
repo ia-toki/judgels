@@ -3,10 +3,12 @@ import * as React from 'react';
 
 import { UserWidget, UserWidgetProps } from './UserWidget';
 import { User } from '../../modules/api/jophiel/user';
+import { PublicUserProfile } from '../../modules/api/jophiel/userProfile';
 
 describe('UserWidget', () => {
   let user: User | undefined;
   let onRenderAvatar = () => Promise.resolve('url');
+  let onGetPublicProfile = () => Promise.resolve({} as PublicUserProfile);
 
   let wrapper: ShallowWrapper;
 
@@ -14,6 +16,7 @@ describe('UserWidget', () => {
     const props: any = {
       user,
       onRenderAvatar,
+      onGetPublicProfile,
     } as Partial<UserWidgetProps>;
 
     wrapper = shallow(<UserWidget {...props} />);
