@@ -1,17 +1,5 @@
 @import '../../../../../../../../../../styles/base';
 
-.contestant-problem-card {
-  display: block;
-  margin: -15px;
-  padding: 15px;
-}
-
-.contestant-problem-card:hover {
-  background-color: $div-hover-color;
-  cursor: pointer;
-  text-decoration: none;
-}
-
 .contestant-problem-card__name {
   float: left;
 }

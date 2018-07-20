@@ -1,8 +1,7 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
-import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
+import { ContentCardLink } from '../../../../../../../../../../components/ContentCardLink/ContentCardLink';
 import { Contest } from '../../../../../../../../../../modules/api/uriel/contest';
 import {
   ContestContestantProblem,
@@ -23,21 +22,17 @@ export class ContestContestantProblemCard extends React.PureComponent<ContestCon
     const { contest, problemName } = this.props;
 
     return (
-      <ContentCard>
-        <Link className="contestant-problem-card" to={`/competition/contests/${contest.id}/problems/${problem.alias}`}>
-          <div>
-            <div className="contestant-problem-card__name">
-              <span data-key="name">
-                {problem.alias}. {problemName}
-              </span>
-            </div>
-            <div data-key="status" className="contestant-problem-card__status secondary-info">
-              {this.renderStatus()}
-            </div>
-            <div className="clearfix" />
-          </div>
-        </Link>
-      </ContentCard>
+      <ContentCardLink to={`/competition/contests/${contest.id}/problems/${problem.alias}`}>
+        <div className="contestant-problem-card__name">
+          <span data-key="name">
+            {problem.alias}. {problemName}
+          </span>
+        </div>
+        <div data-key="status" className="contestant-problem-card__status secondary-info">
+          {this.renderStatus()}
+        </div>
+        <div className="clearfix" />
+      </ContentCardLink>
     );
   }
 

@@ -1,0 +1,14 @@
+@import '../../styles/base';
+
+.content-card-link {
+  display: block;
+  margin: -15px;
+  padding: 15px;
+  overflow: auto;
+}
+
+.content-card-link:hover {
+  background-color: $div-hover-color;
+  cursor: pointer;
+  text-decoration: none;
+}

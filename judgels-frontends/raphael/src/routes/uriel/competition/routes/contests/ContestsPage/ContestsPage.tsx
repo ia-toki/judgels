@@ -1,4 +1,3 @@
-import { Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
@@ -6,8 +5,8 @@ import { RouteComponentProps } from 'react-router';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { Card } from '../../../../../../components/Card/Card';
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { BlankContestTable } from '../ContestTable/BlankContestTable';
-import { ContestTable } from '../ContestTable/ContestTable';
+import { LoadingContestCard } from '../ContestCard/LoadingContestCard';
+import { ContestCard } from '../ContestCard/ContestCard';
 import { Contest, ContestPage } from '../../../../../../modules/api/uriel/contest';
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 
@@ -49,16 +48,16 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     }
     return (
       <Card title="Active contests">
-        <ContestTable contests={contests} buttonIntent={Intent.PRIMARY} />
+        {contests.map(contest => <ContestCard key={contest.jid} contest={contest} />)}
       </Card>
     );
   };
 
   private renderPastContests = (contests?: ContestPage) => {
     if (!contests || !this.state.activeContests) {
-      return <BlankContestTable />;
+      return <LoadingContestCard />;
     }
-    return <ContestTable contests={contests.data} buttonIntent={Intent.NONE} />;
+    return contests.data.map(contest => <ContestCard key={contest.jid} contest={contest} />);
   };
 
   private onChangePage = async (nextPage: number) => {
