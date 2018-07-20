@@ -29,7 +29,7 @@
 
   .pt-tab[aria-selected="true"] {
     font-weight: 600;
-    background-color: #fbfbfb;
+    background-color: $header-color;
     color: $text-color;
   }
 

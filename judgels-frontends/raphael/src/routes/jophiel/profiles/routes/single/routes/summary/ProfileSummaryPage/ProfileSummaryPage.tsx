@@ -25,13 +25,23 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   state: ProfileSummaryPageState = {};
 
   async componentDidMount() {
-    const avatarUrl = await this.props.onRenderAvatar(this.props.profile.userJid);
-    this.setState({ avatarUrl });
+    await this.refreshSummary();
+  }
+
+  async componentDidUpdate(prevProps: ProfileSummaryPageProps) {
+    if (this.props.profile !== prevProps.profile) {
+      await this.refreshSummary();
+    }
   }
 
   render() {
     return this.renderBasicProfile();
   }
+
+  private refreshSummary = async () => {
+    const avatarUrl = await this.props.onRenderAvatar(this.props.profile.userJid);
+    this.setState({ avatarUrl });
+  };
 
   private renderBasicProfile = () => {
     const { avatarUrl } = this.state;
@@ -41,11 +51,12 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
 
     const { profile } = this.props;
     return (
-      <Card>
+      <Card className="basic-profile-card">
         <img className="basic-profile-card__avatar" src={avatarUrl} />
         <div className="basic-profile-card__details">
-          {this.renderUsername(profile)}
-          <div>{profile.name}</div>
+          <div>{this.renderUsername(profile)}</div>
+          <div>{this.renderName(profile)}</div>
+          <div>{this.renderCountry(profile)}</div>
         </div>
         <div className="clearfix" />
       </Card>
@@ -53,7 +64,15 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   };
 
   private renderUsername = (profile: PublicUserProfile) => {
-    return <div className={getRatingLeague(profile.rating)}>{profile.username}</div>;
+    return <span className={getRatingLeague(profile.rating)}>{profile.username}</span>;
+  };
+
+  private renderName = (profile: PublicUserProfile) => {
+    return profile.name;
+  };
+
+  private renderCountry = (profile: PublicUserProfile) => {
+    return profile.country;
   };
 }
 

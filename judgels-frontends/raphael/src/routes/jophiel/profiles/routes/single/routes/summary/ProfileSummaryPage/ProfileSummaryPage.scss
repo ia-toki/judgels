@@ -1,10 +1,17 @@
+@import '../../../../../../../../styles/base';
+
+.basic-profile-card {
+  background-color: $header-color;
+}
+
 .basic-profile-card__avatar {
   float: left;
-  max-height: 150px;
-  max-width: 150px;
-  margin-right: 10px;
+  max-height: 120px;
+  max-width: 120px;
+  margin-right: 40px;
 }
 
 .basic-profile-card__details {
   float: left;
+  font-size: 16px;
 }

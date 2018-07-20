@@ -18,6 +18,14 @@ class SingleProfileDataRoute extends React.Component<SingleProfileDataRouteProps
     this.props.onPushBreadcrumb(this.props.match.url, this.props.match.params.username);
   }
 
+  componentDidUpdate(prevProps: SingleProfileDataRouteProps) {
+    if (this.props.match.params.username !== prevProps.match.params.username) {
+      this.props.onGetPublicProfile(this.props.match.params.username);
+      this.props.onPopBreadcrumb(this.props.match.url.replace(/\/+$/, ''));
+      this.props.onPushBreadcrumb(this.props.match.url, this.props.match.params.username);
+    }
+  }
+
   componentWillUnmount() {
     this.props.onClearPublicProfile();
     this.props.onPopBreadcrumb(this.props.match.url.replace(/\/+$/, ''));
