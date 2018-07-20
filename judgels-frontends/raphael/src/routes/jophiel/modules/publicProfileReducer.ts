@@ -1,6 +1,6 @@
 import { TypedAction, TypedReducer } from 'redoodle';
 
-import { PublicUserProfile } from '../../../../modules/api/jophiel/userProfile';
+import { PublicUserProfile } from '../../../modules/api/jophiel/userProfile';
 
 export interface PublicProfileState {
   value?: PublicUserProfile;
@@ -9,7 +9,7 @@ export interface PublicProfileState {
 export const INITIAL_STATE: PublicProfileState = {};
 
 export const PutPublicProfile = TypedAction.define('jophiel/publicProfile/PUT')<PublicUserProfile>();
-export const DelPublicProfile = TypedAction.defineWithoutPayload('publicProfile/profile/DEL')();
+export const DelPublicProfile = TypedAction.defineWithoutPayload('jophiel/publicProfile/profile/DEL')();
 
 function createPublicProfileReducer() {
   const builder = TypedReducer.builder<PublicProfileState>();

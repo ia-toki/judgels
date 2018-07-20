@@ -6,7 +6,7 @@ import { UserProfile } from '../../../../../modules/api/jophiel/userProfile';
 import ProfileForm from '../ProfileForm/ProfileForm';
 import { ProfileTable } from '../ProfileTable/ProfileTable';
 
-import './Profile.css';
+import './ProfilePanel.css';
 
 export interface ProfilePanelProps {
   profile: UserProfile;

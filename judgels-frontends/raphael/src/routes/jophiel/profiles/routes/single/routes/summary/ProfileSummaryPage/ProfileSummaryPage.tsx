@@ -7,14 +7,14 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { PublicUserProfile } from '../../../../../../../../modules/api/jophiel/userProfile';
 import { AppState } from '../../../../../../../../modules/store';
 import { getRatingLeague } from '../../../../../../../../modules/api/jophiel/userRating';
-import { selectPublicProfile } from '../../../../../modules/publicProfileSelectors';
+import { selectPublicProfile } from '../../../../../../modules/publicProfileSelectors';
 import { avatarActions as injectedAvatarActions } from '../../../../../../modules/avatarActions';
 
 import './ProfileSummaryPage.css';
 
 interface ProfileSummaryPageProps {
   profile: PublicUserProfile;
-  onRenderAvatar: () => Promise<string>;
+  onRenderAvatar: (userJid?: string) => Promise<string>;
 }
 
 interface ProfileSummaryPageState {
@@ -25,7 +25,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   state: ProfileSummaryPageState = {};
 
   async componentDidMount() {
-    const avatarUrl = await this.props.onRenderAvatar();
+    const avatarUrl = await this.props.onRenderAvatar(this.props.profile.userJid);
     this.setState({ avatarUrl });
   }
 

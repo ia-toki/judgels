@@ -1,8 +1,7 @@
 import { profileActions } from './profileActions';
-import { UserProfile } from '../../../../../../modules/api/jophiel/userProfile';
-import { AppState } from '../../../../../../modules/store';
-import { sessionState, token, userJid } from '../../../../../../fixtures/state';
-import { PutProfile } from '../../../../../../modules/session/sessionReducer';
+import { UserProfile } from '../../../modules/api/jophiel/userProfile';
+import { AppState } from '../../../modules/store';
+import { sessionState, token, userJid } from '../../../fixtures/state';
 
 describe('profileActions', () => {
   let dispatch: jest.Mock<any>;
@@ -26,7 +25,7 @@ describe('profileActions', () => {
 
   describe('getProfile()', () => {
     const { getProfile } = profileActions;
-    const doGetProfile = async () => getProfile()(dispatch, getState, { userProfileAPI });
+    const doGetProfile = async () => getProfile(userJid)(dispatch, getState, { userProfileAPI });
 
     const profile: UserProfile = { name: 'First Last' };
 
@@ -39,15 +38,12 @@ describe('profileActions', () => {
     it('calls API to get user profile', () => {
       expect(userProfileAPI.getProfile).toHaveBeenCalledWith(token, userJid);
     });
-
-    it('puts the profile', () => {
-      expect(dispatch).toHaveBeenCalledWith(PutProfile.create(profile));
-    });
   });
 
   describe('updateProfile()', () => {
     const { updateProfile } = profileActions;
-    const doUpdateProfile = async () => updateProfile(profile)(dispatch, getState, { userProfileAPI, toastActions });
+    const doUpdateProfile = async () =>
+      updateProfile(userJid, profile)(dispatch, getState, { userProfileAPI, toastActions });
 
     const profile: UserProfile = { name: 'First Last' };
     const newProfile: UserProfile = { name: 'Last First' };
@@ -62,8 +58,7 @@ describe('profileActions', () => {
       expect(userProfileAPI.updateProfile).toHaveBeenCalledWith(token, userJid, profile);
     });
 
-    it('puts the new profile', () => {
-      expect(dispatch).toHaveBeenCalledWith(PutProfile.create(newProfile));
+    it('shows success toast', () => {
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Profile updated.');
     });
   });

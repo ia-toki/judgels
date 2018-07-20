@@ -3,6 +3,7 @@ package judgels.jophiel.api.user.profile;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
+import judgels.jophiel.api.user.User;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -20,9 +21,10 @@ public interface UserProfile {
     Optional<String> getProvince();
     Optional<String> getCountry();
 
-    default PublicUserProfile toPublic(String username) {
+    default PublicUserProfile toPublic(User user) {
         return new PublicUserProfile.Builder()
-                .username(username)
+                .userJid(user.getJid())
+                .username(user.getUsername())
                 .name(getName())
                 .build();
     }

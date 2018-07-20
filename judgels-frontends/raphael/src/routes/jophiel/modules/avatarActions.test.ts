@@ -1,7 +1,6 @@
 import { AppState } from '../../../modules/store';
 import { sessionState, token, userJid } from '../../../fixtures/state';
-import { avatarActions } from './avatarActions';
-import { MAX_AVATAR_FILE_SIZE } from '../panels/avatar/ChangeAvatar/ChangeAvatar';
+import { avatarActions, MAX_AVATAR_FILE_SIZE } from './avatarActions';
 
 describe('avatarActions', () => {
   let dispatch: jest.Mock<any>;
@@ -26,7 +25,7 @@ describe('avatarActions', () => {
   describe('updateAvatar()', () => {
     const file = {} as File;
     const { updateAvatar } = avatarActions;
-    const doUpdateAvatar = async () => updateAvatar(file)(dispatch, getState, { userAvatarAPI, toastActions });
+    const doUpdateAvatar = async () => updateAvatar(userJid, file)(dispatch, getState, { userAvatarAPI, toastActions });
 
     beforeEach(async () => {
       await doUpdateAvatar();
@@ -40,7 +39,7 @@ describe('avatarActions', () => {
 
   describe('deleteAvatar()', () => {
     const { deleteAvatar } = avatarActions;
-    const doDeleteAvatar = async () => deleteAvatar()(dispatch, getState, { userAvatarAPI, toastActions });
+    const doDeleteAvatar = async () => deleteAvatar(userJid)(dispatch, getState, { userAvatarAPI, toastActions });
 
     beforeEach(async () => {
       await doDeleteAvatar();

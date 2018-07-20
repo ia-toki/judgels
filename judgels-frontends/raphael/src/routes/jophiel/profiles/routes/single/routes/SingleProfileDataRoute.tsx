@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { publicProfileActions as injectedPublicProfileActions } from '../../../modules/publicProfileActions';
+import { publicProfileActions as injectedPublicProfileActions } from '../../../../modules/publicProfileActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
 export interface SingleProfileDataRouteProps extends RouteComponentProps<{ username: string }> {

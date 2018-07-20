@@ -11,10 +11,10 @@ describe('UserWidget', () => {
   let wrapper: ShallowWrapper;
 
   const render = () => {
-    const props: UserWidgetProps = {
+    const props: any = {
       user,
       onRenderAvatar,
-    };
+    } as Partial<UserWidgetProps>;
 
     wrapper = shallow(<UserWidget {...props} />);
   };

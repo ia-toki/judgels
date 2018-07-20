@@ -1,11 +1,14 @@
-import { selectToken, selectUserJid } from '../../../modules/session/sessionSelectors';
-import { MAX_AVATAR_FILE_SIZE } from '../panels/avatar/ChangeAvatar/ChangeAvatar';
+import { selectToken } from '../../../modules/session/sessionSelectors';
+
+export const MAX_AVATAR_FILE_SIZE = 100 * 1024;
 
 export const avatarActions = {
-  renderAvatar: () => {
+  renderAvatar: (userJid?: string) => {
     return async (dispatch, getState, { userAvatarAPI }) => {
-      const userJid = selectUserJid(getState());
-      const avatarExists = await userAvatarAPI.avatarExists(userJid);
+      let avatarExists = false;
+      if (userJid) {
+        avatarExists = avatarExists || (await userAvatarAPI.avatarExists(userJid));
+      }
       if (avatarExists) {
         return await userAvatarAPI.renderAvatar(userJid);
       }
@@ -13,10 +16,9 @@ export const avatarActions = {
     };
   },
 
-  updateAvatar: (file: File) => {
+  updateAvatar: (userJid: string, file: File) => {
     return async (dispatch, getState, { userAvatarAPI, toastActions }) => {
       const token = selectToken(getState());
-      const userJid = selectUserJid(getState());
       await userAvatarAPI.updateAvatar(token, userJid, file);
 
       toastActions.showSuccessToast('Avatar updated.');
@@ -24,10 +26,9 @@ export const avatarActions = {
     };
   },
 
-  deleteAvatar: () => {
+  deleteAvatar: (userJid: string) => {
     return async (dispatch, getState, { userAvatarAPI, toastActions }) => {
       const token = selectToken(getState());
-      const userJid = selectUserJid(getState());
       await userAvatarAPI.deleteAvatar(token, userJid);
 
       toastActions.showSuccessToast('Avatar removed.');

@@ -4,10 +4,9 @@ import Dropzone from 'react-dropzone';
 
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
+import { MAX_AVATAR_FILE_SIZE } from '../../../modules/avatarActions';
 
-import './ChangeAvatar.css';
-
-export const MAX_AVATAR_FILE_SIZE = 100 * 1024;
+import './ChangeAvatarPanel.css';
 
 export interface ChangeAvatarPanelProps {
   onDropAccepted: (files: File[]) => Promise<void>;

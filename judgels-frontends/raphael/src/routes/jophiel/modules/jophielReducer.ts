@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 
 import { webConfigReducer, WebConfigState } from './webConfigReducer';
 import { roleReducer, RoleState } from './roleReducer';
-import { publicProfileReducer, PublicProfileState } from '../profiles/modules/publicProfileReducer';
+import { publicProfileReducer, PublicProfileState } from './publicProfileReducer';
 
 export interface JophielState {
   webConfig: WebConfigState;

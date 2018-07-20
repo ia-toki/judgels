@@ -12,7 +12,7 @@ import ContentWithSidebar, {
 import { PublicUserProfile } from '../../../../../../modules/api/jophiel/userProfile';
 import { AppState } from '../../../../../../modules/store';
 import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
-import { selectPublicProfile } from '../../../modules/publicProfileSelectors';
+import { selectPublicProfile } from '../../../../modules/publicProfileSelectors';
 
 interface SingleProfileRoutesProps {
   profile?: PublicUserProfile;

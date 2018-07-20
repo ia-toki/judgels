@@ -1,8 +1,8 @@
 import { publicProfileActions } from './publicProfileActions';
-import { user } from '../../../../fixtures/state';
-import { AppState } from '../../../../modules/store';
-import { PublicUserProfile } from '../../../../modules/api/jophiel/userProfile';
-import { UsernamesMap } from '../../../../modules/api/jophiel/user';
+import { user, userJid } from '../../../fixtures/state';
+import { AppState } from '../../../modules/store';
+import { PublicUserProfile } from '../../../modules/api/jophiel/userProfile';
+import { UsernamesMap } from '../../../modules/api/jophiel/user';
 import { PutPublicProfile } from './publicProfileReducer';
 
 describe('publicProfileActions', () => {
@@ -24,7 +24,7 @@ describe('publicProfileActions', () => {
   });
 
   describe('getPublicProfile()', () => {
-    const profile: PublicUserProfile = { username: 'dummy', name: 'dummy' };
+    const profile: PublicUserProfile = { userJid, username: 'dummy', name: 'dummy' };
     const { getPublicProfile } = publicProfileActions;
     const doGetPublicProfile = async () =>
       getPublicProfile(user.username)(dispatch, getState, { userProfileAPI, userAPI });

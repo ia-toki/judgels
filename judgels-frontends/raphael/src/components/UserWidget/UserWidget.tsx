@@ -1,37 +1,38 @@
 import { Icon, Menu, MenuDivider, MenuItem, Popover, Position } from '@blueprintjs/core';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { User } from '../../modules/api/jophiel/user';
+import { PublicUserProfile } from '../../modules/api/jophiel/userProfile';
 import { AppState } from '../../modules/store';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 import { avatarActions as injectedAvatarActions } from '../../routes/jophiel/modules/avatarActions';
+import { publicProfileActions as injectedPublicProfileActions } from '../../routes/jophiel/modules/publicProfileActions';
 
 import './UserWidget.css';
 
 export interface UserWidgetProps {
   user?: User;
-  onRenderAvatar: () => Promise<string>;
+  onRenderAvatar: (userJid?: string) => Promise<string>;
+  onGetPublicProfile: (userJid: string, skipDispatch: boolean) => Promise<PublicUserProfile>;
 }
 
 interface UserWidgetState {
   avatarUrl?: string;
+  profile?: PublicUserProfile;
 }
 
 export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetState> {
   state: UserWidgetState = {};
 
   async componentDidMount() {
-    if (this.props.user) {
-      const avatarUrl = await this.props.onRenderAvatar();
-      this.setState({ avatarUrl });
-    }
+    await this.refreshUser();
   }
 
   async componentDidUpdate(prevProps: UserWidgetProps) {
     if (this.props.user !== prevProps.user) {
-      await this.componentDidMount();
+      await this.refreshUser();
     }
   }
 
@@ -42,6 +43,20 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
       return this.renderForGuest();
     }
   }
+
+  private refreshUser = async () => {
+    let avatarUrl: string;
+    let profile: PublicUserProfile | undefined = undefined;
+
+    const { user, onRenderAvatar, onGetPublicProfile } = this.props;
+
+    if (user) {
+      [avatarUrl, profile] = await Promise.all([onRenderAvatar(user.jid), onGetPublicProfile(user.username, true)]);
+    } else {
+      avatarUrl = await onRenderAvatar();
+    }
+    this.setState({ avatarUrl, profile });
+  };
 
   private renderForUser = (user: User) => {
     const menu = (
@@ -113,17 +128,17 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
   };
 }
 
-export function createUserWidget(avatarActions) {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      user: state.session.user,
-    } as Partial<UserWidgetProps>);
+export function createUserWidget(avatarActions, publicProfileActions) {
+  const mapStateToProps = (state: AppState) => ({
+    user: state.session.user,
+  });
 
   const mapDispatchToProps = {
     onRenderAvatar: avatarActions.renderAvatar,
+    onGetPublicProfile: publicProfileActions.getPublicProfile,
   };
 
-  return connect(mapStateToProps, mapDispatchToProps)(UserWidget);
+  return connect<any>(mapStateToProps, mapDispatchToProps)(UserWidget);
 }
 
-export default createUserWidget(injectedAvatarActions);
+export default createUserWidget(injectedAvatarActions, injectedPublicProfileActions);

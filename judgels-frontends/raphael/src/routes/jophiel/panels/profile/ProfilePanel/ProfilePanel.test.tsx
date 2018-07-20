@@ -7,7 +7,7 @@ import { reducer as formReducer } from 'redux-form';
 
 import { UserProfile } from '../../../../../modules/api/jophiel/userProfile';
 import { AppState } from '../../../../../modules/store';
-import { ProfilePanel } from './Profile';
+import { ProfilePanel } from './ProfilePanel';
 
 describe('ProfilePanel', () => {
   let onUpdateProfile: jest.Mock<any>;
