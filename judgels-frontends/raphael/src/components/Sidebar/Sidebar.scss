@@ -26,6 +26,12 @@
   }
 
   .pt-tab {
+    a {
+      width: 100%;
+      position: absolute;
+    }
+
+    position: relative;
     padding-left: 20px !important;
     line-height: 50px;
     height: 50px;
