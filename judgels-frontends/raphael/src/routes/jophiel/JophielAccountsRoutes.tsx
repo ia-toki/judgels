@@ -3,13 +3,13 @@ import * as Loadable from 'react-loadable';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const LoadableAccountRoutes = Loadable({
-  loader: () => import('./accounts/AccountRoutes'),
+const LoadableAccountsRoutes = Loadable({
+  loader: () => import('./accounts/routes/AccountsRoutes'),
   loading: () => <LoadingState large />,
 });
 
-export default class SuperadminRoutes extends React.PureComponent {
+export default class JophielAccountsRoutes extends React.PureComponent {
   render() {
-    return <LoadableAccountRoutes />;
+    return <LoadableAccountsRoutes />;
   }
 }

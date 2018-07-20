@@ -1,9 +1,9 @@
 import { userActions } from './userActions';
-import { AppState } from '../../../../../modules/store';
-import { user } from '../../../../../fixtures/state';
-import { sessionState, token } from '../../../../../fixtures/state';
-import { Page, OrderDir } from '../../../../../modules/api/pagination';
-import { User } from '../../../../../modules/api/jophiel/user';
+import { AppState } from '../../../../../../modules/store';
+import { user } from '../../../../../../fixtures/state';
+import { sessionState, token } from '../../../../../../fixtures/state';
+import { Page, OrderDir } from '../../../../../../modules/api/pagination';
+import { User } from '../../../../../../modules/api/jophiel/user';
 
 describe('userActions', () => {
   let dispatch: jest.Mock<any>;

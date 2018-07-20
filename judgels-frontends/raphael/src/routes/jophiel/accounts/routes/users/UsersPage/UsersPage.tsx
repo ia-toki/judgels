@@ -5,14 +5,14 @@ import { push } from 'react-router-redux';
 import { parse, stringify } from 'query-string';
 import { Icon } from '@blueprintjs/core';
 
-import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { Card } from '../../../../../components/Card/Card';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { Card } from '../../../../../../components/Card/Card';
 import { userActions as injectedUserActions } from '../modules/userActions';
-import { Page, OrderDir } from '../../../../../modules/api/pagination';
-import { User } from '../../../../../modules/api/jophiel/user';
-import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../components/Pagination/Pagination';
-import { UserRef } from '../../../../../components/UserRef/UserRef';
+import { Page, OrderDir } from '../../../../../../modules/api/pagination';
+import { User } from '../../../../../../modules/api/jophiel/user';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../../components/Pagination/Pagination';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
 
 import './UsersPage.css';
 
