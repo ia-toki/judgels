@@ -63,6 +63,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
       <Menu className="widget-user__menu">
         <MenuItem className="widget-user__menu-helper" icon="user" text={user.username} disabled />
         <MenuDivider className="widget-user__menu-helper" />
+        <MenuItemLink text="My profile" to={`/profiles/${user.username}`} />
         <MenuItemLink text="My account" to="/account" />
         <MenuItemLink text="Log out" to="/logout" />
       </Menu>
