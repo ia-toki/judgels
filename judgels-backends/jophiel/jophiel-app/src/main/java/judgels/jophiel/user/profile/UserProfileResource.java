@@ -57,6 +57,6 @@ public class UserProfileResource implements UserProfileService {
     @UnitOfWork(readOnly = true)
     public PublicUserProfile getPublicProfile(String userJid) {
         User user = checkFound(userStore.getUserByJid(userJid));
-        return userProfileStore.getProfile(user.getJid()).toPublic();
+        return userProfileStore.getProfile(user.getJid()).toPublic(user.getUsername());
     }
 }

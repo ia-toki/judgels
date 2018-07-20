@@ -20,8 +20,9 @@ public interface UserProfile {
     Optional<String> getProvince();
     Optional<String> getCountry();
 
-    default PublicUserProfile toPublic() {
+    default PublicUserProfile toPublic(String username) {
         return new PublicUserProfile.Builder()
+                .username(username)
                 .name(getName())
                 .build();
     }

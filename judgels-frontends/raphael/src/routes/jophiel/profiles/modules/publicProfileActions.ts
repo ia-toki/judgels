@@ -1,6 +1,7 @@
 import { NotFoundError } from '../../../../modules/api/error';
+import { DelPublicProfile, PutPublicProfile } from './publicProfileReducer';
 
-export const profileActions = {
+export const publicProfileActions = {
   getPublicProfile: (username: string) => {
     return async (dispatch, getState, { userProfileAPI, userAPI }) => {
       const users = await userAPI.getUsersByUsernames([username]);
@@ -8,7 +9,10 @@ export const profileActions = {
         throw new NotFoundError();
       }
       const userJid = users[username].jid;
-      return await userProfileAPI.getPublicProfile(userJid);
+      const profile = await userProfileAPI.getPublicProfile(userJid);
+      dispatch(PutPublicProfile.create(profile));
     };
   },
+
+  clearPublicProfile: DelPublicProfile.create,
 };

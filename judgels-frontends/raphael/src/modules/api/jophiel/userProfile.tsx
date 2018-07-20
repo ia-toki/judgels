@@ -14,6 +14,7 @@ export interface UserProfile {
 }
 
 export interface PublicUserProfile {
+  username: string;
   name?: string;
 }
 

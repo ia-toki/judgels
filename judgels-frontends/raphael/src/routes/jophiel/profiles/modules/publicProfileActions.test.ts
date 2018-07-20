@@ -1,10 +1,11 @@
-import { profileActions } from './profileActions';
+import { publicProfileActions } from './publicProfileActions';
 import { user } from '../../../../fixtures/state';
 import { AppState } from '../../../../modules/store';
 import { PublicUserProfile } from '../../../../modules/api/jophiel/userProfile';
 import { UsernamesMap } from '../../../../modules/api/jophiel/user';
+import { PutPublicProfile } from './publicProfileReducer';
 
-describe('profileActions', () => {
+describe('publicProfileActions', () => {
   let dispatch: jest.Mock<any>;
   let userProfileAPI: jest.Mocked<any>;
   let userAPI: jest.Mocked<any>;
@@ -23,16 +24,16 @@ describe('profileActions', () => {
   });
 
   describe('getPublicProfile()', () => {
-    const { getPublicProfile } = profileActions;
+    const profile: PublicUserProfile = { username: 'dummy', name: 'dummy' };
+    const { getPublicProfile } = publicProfileActions;
     const doGetPublicProfile = async () =>
       getPublicProfile(user.username)(dispatch, getState, { userProfileAPI, userAPI });
 
     describe('when user found', () => {
       beforeEach(async () => {
-        const publicUserProfile: PublicUserProfile = { name: 'dummy' };
         const users: UsernamesMap = { [user.username]: user };
         userAPI.getUsersByUsernames.mockReturnValue(users);
-        userProfileAPI.getPublicProfile.mockReturnValue(publicUserProfile);
+        userProfileAPI.getPublicProfile.mockReturnValue(profile);
 
         await doGetPublicProfile();
       });
@@ -43,6 +44,10 @@ describe('profileActions', () => {
 
       it('calls API to get public profile', () => {
         expect(userProfileAPI.getPublicProfile).toHaveBeenCalledWith(user.jid);
+      });
+
+      it('puts the public profile', () => {
+        expect(dispatch).toHaveBeenCalledWith(PutPublicProfile.create(profile));
       });
     });
 
