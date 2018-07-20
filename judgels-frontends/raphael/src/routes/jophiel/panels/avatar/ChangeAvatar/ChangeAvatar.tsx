@@ -3,6 +3,7 @@ import * as React from 'react';
 import Dropzone from 'react-dropzone';
 
 import { Card } from '../../../../../components/Card/Card';
+import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 
 import './ChangeAvatar.css';
 
@@ -28,10 +29,15 @@ export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProp
   }
 
   render() {
-    const currentAvatar = this.state.avatarUrl && (
+    const { avatarUrl } = this.state;
+    if (!avatarUrl) {
+      return <LoadingState />;
+    }
+
+    const currentAvatar = avatarUrl.startsWith('http') && (
       <div className="card-change-avatar__panel">
         <h4>Current avatar</h4>
-        <img src={this.state.avatarUrl} />
+        <img src={avatarUrl} />
         <div>
           <Button intent={Intent.DANGER} onClick={this.props.onDeleteAvatar}>
             Remove avatar

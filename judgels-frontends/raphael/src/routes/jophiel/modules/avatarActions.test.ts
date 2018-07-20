@@ -1,7 +1,7 @@
-import { AppState } from '../../../../../../modules/store';
-import { sessionState, token, userJid } from '../../../../../../fixtures/state';
+import { AppState } from '../../../modules/store';
+import { sessionState, token, userJid } from '../../../fixtures/state';
 import { avatarActions } from './avatarActions';
-import { MAX_AVATAR_FILE_SIZE } from '../../../../panels/avatar/ChangeAvatar/ChangeAvatar';
+import { MAX_AVATAR_FILE_SIZE } from '../panels/avatar/ChangeAvatar/ChangeAvatar';
 
 describe('avatarActions', () => {
   let dispatch: jest.Mock<any>;

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { User } from '../../modules/api/jophiel/user';
 import { AppState } from '../../modules/store';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
-import { avatarActions as injectedAvatarActions } from '../../routes/jophiel/account/routes/changeAvatar/modules/avatarActions';
+import { avatarActions as injectedAvatarActions } from '../../routes/jophiel/modules/avatarActions';
 
 import './UserWidget.css';
 

@@ -1,36 +1,75 @@
+import { Card } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { SingleColumnLayout } from '../../../../../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
-import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { PublicUserProfile } from '../../../../../../../../modules/api/jophiel/userProfile';
 import { AppState } from '../../../../../../../../modules/store';
 import { selectPublicProfile } from '../../../../../modules/publicProfileSelectors';
+import { avatarActions as injectedAvatarActions } from '../../../../../../modules/avatarActions';
+
+import './ProfileSummaryPage.css';
+import { LeagueColor } from '../../../../../../../../components/LeagueColor/LeagueColor';
 
 interface ProfileSummaryPageProps {
   profile: PublicUserProfile;
+  onRenderAvatar: () => Promise<string>;
 }
 
-class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps> {
-  render() {
-    return (
-      <SingleColumnLayout>
-        <ContentCard>
-          <div>username: {this.props.profile.username}</div>
-          <div>name: {this.props.profile.name}</div>
-        </ContentCard>
-      </SingleColumnLayout>
-    );
+interface ProfileSummaryPageState {
+  avatarUrl?: string;
+}
+
+class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, ProfileSummaryPageState> {
+  state: ProfileSummaryPageState = {};
+
+  async componentDidMount() {
+    const avatarUrl = await this.props.onRenderAvatar();
+    this.setState({ avatarUrl });
   }
+
+  render() {
+    return this.renderBasicProfile();
+  }
+
+  private renderBasicProfile = () => {
+    const { avatarUrl } = this.state;
+    if (!avatarUrl) {
+      return <LoadingState />;
+    }
+
+    const { profile } = this.props;
+    return (
+      <Card>
+        <img className="basic-profile-card__avatar" src={avatarUrl} />
+        <div className="basic-profile-card__details">
+          {this.renderUsername(profile)}
+          <div>{profile.name}</div>
+        </div>
+        <div className="clearfix" />
+      </Card>
+    );
+  };
+
+  private renderUsername = (profile: PublicUserProfile) => {
+    return (
+      <div>
+        <LeagueColor rating={profile.rating}>{profile.username}</LeagueColor>
+      </div>
+    );
+  };
 }
 
-function createProfileSummaryPage() {
+function createProfileSummaryPage(avatarActions) {
   const mapStateToProps = (state: AppState) => ({
     profile: selectPublicProfile(state),
   });
+  const mapDispatchToProps = {
+    onRenderAvatar: avatarActions.renderAvatar,
+  };
 
-  return withRouter<any>(connect(mapStateToProps)(ProfileSummaryPage));
+  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ProfileSummaryPage));
 }
 
-export default createProfileSummaryPage();
+export default createProfileSummaryPage(injectedAvatarActions);

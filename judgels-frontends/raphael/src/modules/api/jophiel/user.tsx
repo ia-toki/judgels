@@ -11,6 +11,7 @@ export interface User {
 
 export interface UserInfo {
   username: string;
+  rating?: number;
 }
 
 export interface UsersMap {

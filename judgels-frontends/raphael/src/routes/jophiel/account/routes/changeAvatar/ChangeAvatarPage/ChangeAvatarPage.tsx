@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ChangeAvatarPanel } from '../../../../panels/avatar/ChangeAvatar/ChangeAvatar';
-import { avatarActions as injectedAvatarActions } from '../modules/avatarActions';
+import { avatarActions as injectedAvatarActions } from '../../../../modules/avatarActions';
 
 export function createChangeAvatarPage(avatarActions) {
   const mapDispatchToProps = {

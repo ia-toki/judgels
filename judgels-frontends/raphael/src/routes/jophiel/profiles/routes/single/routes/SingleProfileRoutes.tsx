@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
 import { FullPageLayout } from '../../../../../../components/layouts/FullPageLayout/FullPageLayout';
+import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import ContentWithSidebar, {
   ContentWithSidebarItem,
@@ -34,8 +35,14 @@ const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
   ];
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
-    title: profile.username,
+    title: 'Profile Menu',
+    action: (
+      <ButtonLink to="/home" className="pt-small pt-icon-chevron-left">
+        Back
+      </ButtonLink>
+    ),
     items: sidebarItems,
+    smallContent: true,
   };
 
   return (

@@ -15,6 +15,7 @@ export interface UserProfile {
 
 export interface PublicUserProfile {
   username: string;
+  rating?: number;
   name?: string;
 }
 

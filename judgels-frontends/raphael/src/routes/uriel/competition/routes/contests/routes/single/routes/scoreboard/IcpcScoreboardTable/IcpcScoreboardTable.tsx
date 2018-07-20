@@ -1,6 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import { UserRef } from '../../../../../../../../../../components/UserRef/UserRef';
 import {
   IcpcScoreboardProblemState,
   IcpcScoreboard,
@@ -37,7 +38,7 @@ export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTable
     let cells = [
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
-        {this.props.usersMap[entry.contestantJid] && this.props.usersMap[entry.contestantJid].username}
+        {this.props.usersMap[entry.contestantJid] && <UserRef user={this.props.usersMap[entry.contestantJid]} />}
       </td>,
       <td key="totalAccepted">
         <strong>{entry.totalAccepted}</strong>

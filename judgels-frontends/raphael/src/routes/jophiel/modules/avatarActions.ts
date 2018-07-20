@@ -1,5 +1,5 @@
-import { selectToken, selectUserJid } from '../../../../../../modules/session/sessionSelectors';
-import { MAX_AVATAR_FILE_SIZE } from '../../../../panels/avatar/ChangeAvatar/ChangeAvatar';
+import { selectToken, selectUserJid } from '../../../modules/session/sessionSelectors';
+import { MAX_AVATAR_FILE_SIZE } from '../panels/avatar/ChangeAvatar/ChangeAvatar';
 
 export const avatarActions = {
   renderAvatar: () => {
@@ -9,6 +9,7 @@ export const avatarActions = {
       if (avatarExists) {
         return await userAvatarAPI.renderAvatar(userJid);
       }
+      return require('../../../assets/images/avatar-default.png');
     };
   },
 

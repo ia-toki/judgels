@@ -1,5 +1,7 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 
+import { UserRef } from '../../../../../../../../../../components/UserRef/UserRef';
 import {
   IoiScoreboard,
   IoiScoreboardContent,
@@ -9,7 +11,6 @@ import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 import { UsersMap } from '../../../../../../../../../../modules/api/jophiel/user';
 
 import './IoiScoreboardTable.css';
-import * as classNames from 'classnames';
 
 export class IoiScoreboardTableProps {
   userJid?: string;
@@ -36,7 +37,7 @@ export class IoiScoreboardTable extends React.PureComponent<IoiScoreboardTablePr
     let cells = [
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
-        {this.props.usersMap[entry.contestantJid] && this.props.usersMap[entry.contestantJid].username}
+        {this.props.usersMap[entry.contestantJid] && <UserRef user={this.props.usersMap[entry.contestantJid]} />}
       </td>,
       <td key="totalScores">
         <strong>{entry.totalScores}</strong>
