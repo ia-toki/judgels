@@ -26,6 +26,7 @@ public interface UserProfile {
                 .userJid(user.getJid())
                 .username(user.getUsername())
                 .name(getName())
+                .nationality(getNationality())
                 .build();
     }
 

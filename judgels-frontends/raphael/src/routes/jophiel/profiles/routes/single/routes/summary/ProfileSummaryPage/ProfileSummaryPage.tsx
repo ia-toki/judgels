@@ -1,4 +1,3 @@
-import { Card } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -11,6 +10,7 @@ import { selectPublicProfile } from '../../../../../../modules/publicProfileSele
 import { avatarActions as injectedAvatarActions } from '../../../../../../modules/avatarActions';
 
 import './ProfileSummaryPage.css';
+import { Card } from '../../../../../../../../components/Card/Card';
 
 interface ProfileSummaryPageProps {
   profile: PublicUserProfile;
@@ -51,28 +51,39 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
 
     const { profile } = this.props;
     return (
-      <Card className="basic-profile-card">
-        <img className="basic-profile-card__avatar" src={avatarUrl} />
-        <div className="basic-profile-card__details">
-          <div>{this.renderUsername(profile)}</div>
-          <div>{this.renderName(profile)}</div>
-          <div>{this.renderCountry(profile)}</div>
-        </div>
+      <Card title="Basic profile" className="basic-profile-card">
+        {this.renderMain(profile, avatarUrl)}
+        <div className="basic-profile-card__divider" />
+        {this.renderDetails(profile)}
         <div className="clearfix" />
       </Card>
     );
   };
 
-  private renderUsername = (profile: PublicUserProfile) => {
-    return <span className={getRatingLeague(profile.rating)}>{profile.username}</span>;
+  private renderMain = (profile: PublicUserProfile, avatarUrl: string) => {
+    return (
+      <div className="basic-profile-card__main">
+        <img className="basic-profile-card__avatar" src={avatarUrl} />
+        <p className={getRatingLeague(profile.rating)}>{profile.username}</p>
+        <p>{profile.nationality}</p>
+      </div>
+    );
   };
 
-  private renderName = (profile: PublicUserProfile) => {
-    return profile.name;
-  };
-
-  private renderCountry = (profile: PublicUserProfile) => {
-    return profile.country;
+  private renderDetails = (profile: PublicUserProfile) => {
+    return (
+      <div className="basic-profile-card__details">
+        <div className="basic-profile-card__details-keys">
+          {profile.name && <p>Name:</p>}
+          <p>Rating:</p>
+        </div>
+        <div className="basic-profile-card__details-values">
+          {profile.name && <p>{profile.name}</p>}
+          <p>{profile.rating || '-'}</p>
+        </div>
+        <div className="clearfix" />
+      </div>
+    );
   };
 }
 

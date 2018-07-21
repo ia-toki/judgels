@@ -18,7 +18,7 @@ export interface PublicUserProfile {
   username: string;
   rating?: number;
   name?: string;
-  country?: string;
+  nationality?: string;
 }
 
 export const userProfileGender = {

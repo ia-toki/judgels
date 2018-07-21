@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 public interface PublicUserProfile {
     String getUserJid();
     String getUsername();
+    Optional<String> getNationality();
     Optional<String> getName();
 
     class Builder extends ImmutablePublicUserProfile.Builder {}
