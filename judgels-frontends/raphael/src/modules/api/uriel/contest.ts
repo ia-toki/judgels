@@ -25,6 +25,11 @@ export function createContestAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
+    getContests: (token: string, page: number, pageSize: number): Promise<ContestPage> => {
+      const params = stringify({ page, pageSize });
+      return get(`${baseURL}?${params}`, token);
+    },
+
     getActiveContests: (token: string): Promise<Contest[]> => {
       return get(`${baseURL}/active`, token);
     },

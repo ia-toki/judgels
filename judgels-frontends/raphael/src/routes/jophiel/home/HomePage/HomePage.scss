@@ -1,10 +1,7 @@
-@import '../../../../styles/base';
-
-.home__text {
-  text-align: center;
+.home-page-row {
+  width: 100%;
 }
 
-.home__icon {
-  color: $primary-color;
-  font-size: 30px !important;
+.home-page-row__half {
+  width: 50%;
 }
