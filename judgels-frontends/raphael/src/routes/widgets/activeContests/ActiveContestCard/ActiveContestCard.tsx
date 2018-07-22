@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
+import { TimeanddateLink } from '../../../../components/TimeanddateLink/TimeanddateLink';
 import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
 import { Contest } from '../../../../modules/api/uriel/contest';
 
@@ -25,13 +26,18 @@ export class ActiveContestCard extends React.PureComponent<ActiveContestCardProp
   }
 
   private renderBeginTime = (contest: Contest) => {
-    if (new Date().getTime() >= contest.beginTime) {
-      return 'in progress';
+    let text = <>in progress</>;
+    if (new Date().getTime() < contest.beginTime) {
+      text = (
+        <>
+          starts <FormattedRelative value={contest.beginTime} />
+        </>
+      );
     }
     return (
-      <>
-        starts <FormattedRelative value={contest.beginTime} />
-      </>
+      <TimeanddateLink time={contest.beginTime} message={contest.name}>
+        {text}
+      </TimeanddateLink>
     );
   };
 }

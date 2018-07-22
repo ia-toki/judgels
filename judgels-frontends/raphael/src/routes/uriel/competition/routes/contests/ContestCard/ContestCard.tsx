@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { TimeanddateLink } from '../../../../../../components/TimeanddateLink/TimeanddateLink';
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { FormattedDate } from '../../../../../../components/FormattedDate/FormattedDate';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
@@ -25,6 +26,10 @@ export class ContestCard extends React.PureComponent<ContestCardProps> {
   }
 
   private renderBeginTime = (contest: Contest) => {
-    return <FormattedDate value={contest.beginTime} />;
+    return (
+      <TimeanddateLink time={contest.beginTime} message={contest.name}>
+        <FormattedDate value={contest.beginTime} />
+      </TimeanddateLink>
+    );
   };
 }

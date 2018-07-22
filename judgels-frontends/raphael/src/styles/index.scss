@@ -25,11 +25,11 @@ h1, h2, h3, h4, h5 {
 
 p {
   line-height: 20px;
+}
 
-  small {
-    color: $small-color !important;
-    line-height: 14px !important;
-  }
+small {
+  color: $small-color !important;
+  line-height: 14px !important;
 }
 
 h2 {

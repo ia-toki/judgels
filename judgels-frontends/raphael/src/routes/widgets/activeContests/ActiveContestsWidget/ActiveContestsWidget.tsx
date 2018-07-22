@@ -8,6 +8,8 @@ import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveCont
 import { Contest } from '../../../../modules/api/uriel/contest';
 import { activeContestWidgetActions as injectedActiveContestWidgetActions } from '../modules/activeContestsWidgetActions';
 
+import './ActiveContestsWidget.css';
+
 interface ActiveContestsWidgetProps {
   onGetActiveContests: () => Promise<Contest[]>;
 }
