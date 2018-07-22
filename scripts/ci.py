@@ -75,12 +75,17 @@ def get_changed_modules(branch_to_compare):
     if branch_to_compare == FORCE_CI:
         return MODULES.keys()
 
-    changed_files = run('git diff --name-only {}'.format(branch_to_compare))
+    changed_files = run('git diff --name-only {}'.format(branch_to_compare)).split('\n')
 
     changed_modules = set()
     for module in MODULES.keys():
-        if module.replace(':', '/') in changed_files:
-            changed_modules.add(module)
+        for file in changed_files:
+            if 'judgels-backends' + module.replace(':', '/') in file:
+                changed_modules.add(module)
+                break
+            if 'judgels-frontends' + module.replace(':', '/') in file:
+                changed_modules.add(module)
+                break
     return changed_modules
 
 
