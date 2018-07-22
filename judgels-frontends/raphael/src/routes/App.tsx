@@ -6,7 +6,6 @@ import DocumentTitle from 'react-document-title';
 
 import { getAppRoutes, getHomeRoute } from './AppRoutes';
 import Header from '../components/Header/Header';
-import LabsRoutes from './labs/LabsRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
@@ -46,7 +45,6 @@ class App extends React.PureComponent<AppProps> {
               <Breadcrumbs />
               <Switch>
                 {appRoutes.map(item => <Route key={item.id} {...item.route} />)}
-                <Route path="/labs" component={LabsRoutes} />
                 <Route {...homeRoute.route} />
               </Switch>
               <Route component={LegacyJophielRoutes} />
