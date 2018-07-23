@@ -28,7 +28,7 @@ import { toastActions } from './toast/toastActions';
 import { toastMiddleware } from './toast/toastMiddleware';
 import { tokenGateMiddleware } from './tokenGate/tokenGateMiddleware';
 import { jophielReducer, JophielState } from '../routes/jophiel/modules/jophielReducer';
-import { urielReducer, UrielState } from '../routes/uriel/competition/modules/urielReducer';
+import { urielReducer, UrielState } from '../routes/uriel/modules/urielReducer';
 import { breadcrumbsReducer, BreadcrumbsState } from './breadcrumbs/breadcrumbsReducer';
 
 export interface AppState {

@@ -31,7 +31,7 @@ class ActiveContestsWidget extends React.PureComponent<ActiveContestsWidgetProps
       <Card title="Active contests">
         {this.renderActiveContests()}
 
-        <Link to={'/competition/contests'}>
+        <Link to={'/contests'}>
           <small>See all contests...</small>
         </Link>
       </Card>

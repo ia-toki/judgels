@@ -1,6 +1,6 @@
 import JophielRoutes from './jophiel/JophielRoutes';
 import JophielAccountsRoutes from './jophiel/JophielAccountsRoutes';
-import UrielRoutes from './uriel/UrielRoutes';
+import UrielContestsRoutes from './uriel/UrielContestsRoutes';
 import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
 import { JophielRole } from '../modules/api/jophiel/my';
 
@@ -21,11 +21,11 @@ const appRoutes = [
     },
   },
   {
-    id: 'competition',
-    title: 'Competition',
+    id: 'contests',
+    title: 'Contests',
     route: {
-      path: '/competition',
-      component: UrielRoutes,
+      path: '/contests',
+      component: UrielContestsRoutes,
     },
   },
   {
