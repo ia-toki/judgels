@@ -3,8 +3,7 @@ import { Switch, withRouter, Route } from 'react-router';
 
 import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
-import { HomePage } from './home/HomePage/HomePage';
-import { WelcomePage } from './home/WelcomePage/WelcomePage';
+import FrontPage from './home/FrontPage/FrontPage';
 import LoginPage from './login/LoginPage/LoginPage';
 import LogoutPage from './logout/LogoutPage/LogoutPage';
 import RegisterPage from './register/RegisterPage/RegisterPage';
@@ -17,8 +16,7 @@ import JophielProfilesRoutes from './JophielProfilesRoutes';
 const JophielRoutes = () => (
   <div>
     <Switch>
-      <GuestRoute exact path="/" component={WelcomePage} />
-      <UserRoute exact path="/home" component={HomePage} />
+      <Route exact path="/" component={FrontPage} />
       <GuestRoute exact path="/login" component={LoginPage} />
       <UserRoute exact path="/logout" component={LogoutPage} />
       <GuestRoute exact path="/register" component={RegisterPage} />
