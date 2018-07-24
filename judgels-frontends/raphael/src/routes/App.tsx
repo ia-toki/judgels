@@ -7,6 +7,7 @@ import DocumentTitle from 'react-document-title';
 import { getAppRoutes, getHomeRoute } from './AppRoutes';
 import Header from '../components/Header/Header';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
+import LegacyCompetitionRoute from './legacyUriel/LegacyCompetitionRoute';
 import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
 import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
@@ -48,6 +49,7 @@ class App extends React.PureComponent<AppProps> {
                 <Route {...homeRoute.route} />
               </Switch>
               <Route component={LegacyJophielRoutes} />
+              <Route path="/competition/contests/:contestSlug" component={LegacyCompetitionRoute} />
               <Footer />
             </AppContent>
           </div>
