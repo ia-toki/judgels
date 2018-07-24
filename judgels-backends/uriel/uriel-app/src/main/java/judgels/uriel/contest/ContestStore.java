@@ -27,6 +27,7 @@ public class ContestStore {
 
     private final LoadingCache<String, Contest> contestByJidCache;
     private final LoadingCache<Long, Contest> contestByIdCache;
+    private final LoadingCache<String, Contest> contestBySlugCache;
 
     @Inject
     public ContestStore(AdminRoleDao adminRoleDao, ContestDao contestDao) {
@@ -41,6 +42,10 @@ public class ContestStore {
                 .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
                 .build(this::getContestByIdUncached);
+        this.contestBySlugCache = Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterWrite(getShortDuration())
+                .build(this::getContestBySlugUncached);
     }
 
     public Optional<Contest> getContestByJid(String contestJid) {
@@ -57,6 +62,14 @@ public class ContestStore {
 
     private Contest getContestByIdUncached(long contestId) {
         return contestDao.select(contestId).map(ContestStore::fromModel).orElse(null);
+    }
+
+    public Optional<Contest> getContestBySlug(String contestSlug) {
+        return Optional.ofNullable(contestBySlugCache.get(contestSlug));
+    }
+
+    private Contest getContestBySlugUncached(String contestSlug) {
+        return contestDao.selectBySlug(contestSlug).map(ContestStore::fromModel).orElse(null);
     }
 
     public Page<Contest> getContests(String userJid, SelectionOptions options) {
@@ -91,6 +104,7 @@ public class ContestStore {
                 .id(model.id)
                 .jid(model.jid)
                 .name(model.name)
+                .slug(Optional.ofNullable(model.slug))
                 .description(model.description)
                 .style(ContestStyle.valueOf(model.style))
                 .beginTime(model.beginTime)
@@ -100,6 +114,7 @@ public class ContestStore {
 
     private static void toModel(ContestData data, ContestModel model) {
         model.name = data.getName();
+        model.slug = data.getSlug().orElse(null);
         model.description = data.getDescription();
         model.style = data.getStyle().name();
         model.beginTime = data.getBeginTime();

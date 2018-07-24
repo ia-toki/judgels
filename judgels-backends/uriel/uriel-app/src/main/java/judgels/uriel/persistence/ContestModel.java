@@ -13,6 +13,8 @@ public class ContestModel extends JudgelsModel {
     @Column(nullable = false)
     public String name;
 
+    public String slug;
+
     @Column(columnDefinition = "TEXT", nullable = false)
     public String description;
 

@@ -9,10 +9,10 @@ export const contestActions = {
     };
   },
 
-  getContestById: (contestId: string) => {
+  getContestBySlug: (contestSlug: string) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
-      const contest = await contestAPI.getContestById(token, contestId);
+      const contest = await contestAPI.getContestBySlug(token, contestSlug);
       dispatch(PutContest.create(contest));
       return contest;
     };

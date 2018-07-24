@@ -7,8 +7,8 @@ import { contestActions as injectedContestActions } from '../../../modules/conte
 import { contestWebConfigActions as injectedContestWebConfigActions } from '../modules/contestWebConfigActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestId: string }> {
-  onGetContest: (contestId: number) => Promise<Contest>;
+export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestSlug: string }> {
+  onGetContest: (contestSlug: string) => Promise<Contest>;
   onClearContest: () => void;
   onGetContestWebConfig: (contestJid: string) => void;
   onClearContestWebConfig: () => void;
@@ -20,7 +20,7 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
   private currentTimeout;
 
   async componentDidMount() {
-    const contest = await this.props.onGetContest(+this.props.match.params.contestId);
+    const contest = await this.props.onGetContest(this.props.match.params.contestSlug);
     this.props.onPushBreadcrumb(this.props.match.url, contest.name);
 
     await this.refreshWebConfig(contest.jid);
@@ -48,7 +48,7 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
 
 export function createSingleContestDataRoute(contestActions, contestWebConfigActions, breadcrumbsActions) {
   const mapDispatchToProps = {
-    onGetContest: contestActions.getContestById,
+    onGetContest: contestActions.getContestBySlug,
     onGetContestWebConfig: contestWebConfigActions.getWebConfig,
     onClearContestWebConfig: contestWebConfigActions.clearConfig,
     onClearContest: contestActions.clearContest,

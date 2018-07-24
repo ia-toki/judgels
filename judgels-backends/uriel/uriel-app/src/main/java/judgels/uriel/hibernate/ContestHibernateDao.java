@@ -5,6 +5,7 @@ import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasViewerOrAbove;
 
 import java.time.Clock;
 import java.util.List;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.Expression;
@@ -29,6 +30,12 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         this.clock = clock;
     }
 
+    @Override
+    public Optional<ContestModel> selectBySlug(String contestSlug) {
+        return selectByFilter(new FilterOptions.Builder<ContestModel>()
+                .putColumnsEq(ContestModel_.slug, contestSlug)
+                .build());
+    }
 
     @Override
     public List<ContestModel> selectAllActive(SelectionOptions options) {

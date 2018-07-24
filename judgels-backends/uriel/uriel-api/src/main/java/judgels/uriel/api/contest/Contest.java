@@ -3,6 +3,7 @@ package judgels.uriel.api.contest;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -11,6 +12,7 @@ public interface Contest {
     long getId();
     String getJid();
     String getName();
+    Optional<String> getSlug();
     String getDescription();
     ContestStyle getStyle();
     Instant getBeginTime();

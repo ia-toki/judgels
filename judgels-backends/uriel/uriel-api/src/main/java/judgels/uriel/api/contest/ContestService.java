@@ -26,11 +26,11 @@ public interface ContestService {
             @PathParam("contestJid") String contestJid);
 
     @GET
-    @Path("/id/{contestId}")
+    @Path("/slug/{contestSlug}")
     @Produces(APPLICATION_JSON)
-    Contest getContestById(
+    Contest getContestBySlug(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
-            @PathParam("contestId") long contestId);
+            @PathParam("contestSlug") String contestSlug);
 
     @POST
     @Path("/{contestJid}/virtual")

@@ -16,6 +16,7 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.contest.contestant.ContestContestantStore;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class ContestResource implements ContestService {
     private final ActorChecker actorChecker;
@@ -48,9 +49,14 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Contest getContestById(Optional<AuthHeader> authHeader, long contestId) {
+    public Contest getContestBySlug(Optional<AuthHeader> authHeader, String contestSlug) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.getContestById(contestId));
+
+        long maybeContestId = NumberUtils.toInt(contestSlug, 0);
+        Contest contest = checkFound(Optional.ofNullable(
+                contestStore.getContestBySlug(contestSlug)
+                        .orElseGet(() -> contestStore.getContestById(maybeContestId)
+                                .orElse(null))));
 
         checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
         return contest;

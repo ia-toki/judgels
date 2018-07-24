@@ -68,6 +68,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
         Contest contestA = contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("TOKI Open Contest A")
                 .description("This is contest A")
+                .slug("contest-A")
                 .style(ContestStyle.ICPC)
                 .beginTime(Instant.ofEpochSecond(42))
                 .duration(Duration.ofHours(5))
@@ -80,7 +81,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(contestA.getDuration()).isEqualTo(Duration.ofHours(5));
 
         assertThat(contestService.getContest(of(ADMIN_HEADER), contestA.getJid())).isEqualTo(contestA);
-        assertThat(contestService.getContestById(of(ADMIN_HEADER), contestA.getId())).isEqualTo(contestA);
+        assertThat(contestService.getContestBySlug(of(ADMIN_HEADER), contestA.getSlug().get())).isEqualTo(contestA);
         assertThatRemoteExceptionThrownBy(
                 () -> contestService.getContest(of(AuthHeader.of("randomToken")), contestA.getJid()))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
@@ -91,6 +92,7 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .build());
 
         assertThat(contestService.getContest(of(ADMIN_HEADER), contestB.getJid())).isEqualTo(contestB);
+        assertThat(contestService.getContestBySlug(of(ADMIN_HEADER), "" + contestB.getId())).isEqualTo(contestB);
 
         contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
                 .name("TOKI Open Contest - Testing")

@@ -30,7 +30,7 @@ describe('SingleContestDataRoute', () => {
     mount(
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <Route path="/contests/:contestId" component={SingleContestDataRoute} />
+          <Route path="/contests/:contestSlug" component={SingleContestDataRoute} />
         </ConnectedRouter>
       </Provider>
     );
@@ -38,7 +38,7 @@ describe('SingleContestDataRoute', () => {
 
   beforeEach(() => {
     contestActions = {
-      getContestById: jest.fn().mockReturnValue(() => Promise.resolve({ jid: 'jid123', name: 'Contest 123' })),
+      getContestBySlug: jest.fn().mockReturnValue(() => Promise.resolve({ jid: 'jid123', name: 'Contest 123' })),
       clearContest: jest.fn().mockReturnValue({ type: 'clear' }),
     };
     contestWebConfigActions = {
@@ -53,18 +53,18 @@ describe('SingleContestDataRoute', () => {
   });
 
   test('navigation', async () => {
-    render('/contests/123');
+    render('/contests/ioi');
     await new Promise(resolve => setImmediate(resolve));
-    expect(contestActions.getContestById).toHaveBeenCalledWith(123);
+    expect(contestActions.getContestBySlug).toHaveBeenCalledWith('ioi');
     expect(contestWebConfigActions.getWebConfig).toHaveBeenCalledWith('jid123');
-    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/contests/123', 'Contest 123');
+    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/contests/ioi', 'Contest 123');
 
-    history.push('/contests/123/');
+    history.push('/contests/ioi/');
     await new Promise(resolve => setImmediate(resolve));
 
     history.push('/other');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/contests/123');
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/contests/ioi');
     expect(contestActions.clearContest).toHaveBeenCalled();
     expect(contestWebConfigActions.clearConfig).toHaveBeenCalled();
   });

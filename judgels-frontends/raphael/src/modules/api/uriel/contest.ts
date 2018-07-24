@@ -8,6 +8,7 @@ export interface Contest {
   id: number;
   jid: string;
   name: string;
+  slug?: string;
   description: string;
   style: ContestStyle;
   beginTime: number;
@@ -39,8 +40,8 @@ export function createContestAPI() {
       return get(`${baseURL}/past?${params}`, token);
     },
 
-    getContestById: (token: string, contestId: number): Promise<Contest> => {
-      return get(`${baseURL}/id/${contestId}`, token);
+    getContestBySlug: (token: string, contestSlug: string): Promise<Contest> => {
+      return get(`${baseURL}/slug/${contestSlug}`, token);
     },
 
     startVirtualContest: (token: string, contestJid: string): Promise<Contest> => {

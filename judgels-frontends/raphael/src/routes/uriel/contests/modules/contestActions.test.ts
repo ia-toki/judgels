@@ -16,7 +16,7 @@ describe('contestActions', () => {
     contestAPI = {
       getActiveContests: jest.fn(),
       getContests: jest.fn(),
-      getContestById: jest.fn(),
+      getContestBySlug: jest.fn(),
       startVirtualContest: jest.fn(),
     };
   });
@@ -40,18 +40,18 @@ describe('contestActions', () => {
     });
   });
 
-  describe('getContestById()', () => {
-    const { getContestById } = contestActions;
-    const doGetContestById = async () => getContestById(contestId)(dispatch, getState, { contestAPI });
+  describe('getContestBySlug()', () => {
+    const { getContestBySlug } = contestActions;
+    const doGetContestBySlug = async () => getContestBySlug('ioi')(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
-      contestAPI.getContestById.mockImplementation(() => contest);
+      contestAPI.getContestBySlug.mockImplementation(() => contest);
 
-      await doGetContestById();
+      await doGetContestBySlug();
     });
 
     it('calls API to get contest', () => {
-      expect(contestAPI.getContestById).toHaveBeenCalledWith(token, contestId);
+      expect(contestAPI.getContestBySlug).toHaveBeenCalledWith(token, 'ioi');
     });
 
     it('puts the contest', () => {

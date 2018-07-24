@@ -9,8 +9,8 @@ import SingleContestDataRoute from './routes/single/routes/SingleContestDataRout
 const MainContestRoutes = () => (
   <div>
     <Route exact path="/contests" component={ContestsRoutes} />
-    <Route path="/contests/:contestId" component={SingleContestDataRoute} />
-    <Route path="/contests/:contestId" component={SingleContestRoutes} />
+    <Route path="/contests/:contestSlug" component={SingleContestDataRoute} />
+    <Route path="/contests/:contestSlug" component={SingleContestRoutes} />
   </div>
 );
 
