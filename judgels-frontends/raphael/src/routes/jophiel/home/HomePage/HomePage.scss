@@ -3,12 +3,22 @@
   width: 100%;
 }
 
-.home-page-row__half {
-  width: 50%;
+.home-page-row__left {
+  width: 66.66%;
+  float: left;
+  padding-right: 5px;
+}
+
+.home-page-row__right {
+  width: 33.33%;
+  float: left;
+  padding-left: 5px;
 }
 
 @media only screen and (max-width: 600px) {
-  .home-page-row__half {
+  .home-page-row__left, .home-page-row__right {
     width: 100%;
+    float: none;
+    padding: 0;
   }
 }
