@@ -1,7 +1,14 @@
 .home-page-row {
+  margin-top: 10px;
   width: 100%;
 }
 
 .home-page-row__half {
   width: 50%;
+}
+
+@media only screen and (max-width: 600px) {
+  .home-page-row__half {
+    width: 100%;
+  }
 }
