@@ -26,7 +26,6 @@ public class ContestStore {
     private final ContestDao contestDao;
 
     private final LoadingCache<String, Contest> contestByJidCache;
-    private final LoadingCache<Long, Contest> contestByIdCache;
     private final LoadingCache<String, Contest> contestBySlugCache;
 
     @Inject
@@ -38,10 +37,6 @@ public class ContestStore {
                 .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
                 .build(this::getContestByJidUncached);
-        this.contestByIdCache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(getShortDuration())
-                .build(this::getContestByIdUncached);
         this.contestBySlugCache = Caffeine.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
@@ -54,14 +49,6 @@ public class ContestStore {
 
     private Contest getContestByJidUncached(String contestJid) {
         return contestDao.selectByJid(contestJid).map(ContestStore::fromModel).orElse(null);
-    }
-
-    public Optional<Contest> getContestById(long contestId) {
-        return Optional.ofNullable(contestByIdCache.get(contestId));
-    }
-
-    private Contest getContestByIdUncached(long contestId) {
-        return contestDao.select(contestId).map(ContestStore::fromModel).orElse(null);
     }
 
     public Optional<Contest> getContestBySlug(String contestSlug) {
@@ -104,7 +91,7 @@ public class ContestStore {
                 .id(model.id)
                 .jid(model.jid)
                 .name(model.name)
-                .slug(Optional.ofNullable(model.slug))
+                .slug(Optional.ofNullable(model.slug).orElse("" + model.id))
                 .description(model.description)
                 .style(ContestStyle.valueOf(model.style))
                 .beginTime(model.beginTime)

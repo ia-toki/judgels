@@ -12,12 +12,14 @@ import javax.persistence.criteria.Expression;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.Model_;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModel_;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.SessionFactory;
 
 @Singleton
@@ -32,8 +34,11 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
     @Override
     public Optional<ContestModel> selectBySlug(String contestSlug) {
+        // if no slug matches, treat it as ID for legacy reasons
         return selectByFilter(new FilterOptions.Builder<ContestModel>()
-                .putColumnsEq(ContestModel_.slug, contestSlug)
+                .addCustomPredicates((cb, cq, root) -> cb.or(
+                        cb.equal(root.get(ContestModel_.slug), contestSlug),
+                        cb.equal(root.get(Model_.id), NumberUtils.toInt(contestSlug, 0))))
                 .build());
     }
 

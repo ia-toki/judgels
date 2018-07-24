@@ -14,7 +14,7 @@ interface LegacyCompetitionRouteProps extends RouteComponentProps<{ contestSlug:
 class LegacyCompetitionRoute extends React.Component<LegacyCompetitionRouteProps> {
   async componentDidMount() {
     const contest = await this.props.onGetContest(this.props.match.params.contestSlug);
-    this.props.onRedirect(`/contests/${contest.slug || contest.id}`);
+    this.props.onRedirect(`/contests/${contest.slug}`);
   }
 
   render() {

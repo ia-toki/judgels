@@ -16,7 +16,7 @@ export class ActiveContestCard extends React.PureComponent<ActiveContestCardProp
     const { contest } = this.props;
 
     return (
-      <ContentCardLink to={`/contests/${contest.slug || contest.id}`}>
+      <ContentCardLink to={`/contests/${contest.slug}`}>
         <h4 className="active-contest-card-name">{contest.name}</h4>
         <p className="active-contest-card-date">
           <small>{this.renderBeginTime(contest)}</small>
