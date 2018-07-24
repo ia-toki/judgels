@@ -54,9 +54,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
     if (submissions.totalData === 0) {
       return (
         <p>
-          <small>
-            <em>No submissions.</em>
-          </small>
+          <small>No submissions.</small>
         </p>
       );
     }

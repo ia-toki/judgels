@@ -92,9 +92,7 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
     if (contestantProblems.length === 0) {
       return (
         <p>
-          <small>
-            <em>No problems.</em>
-          </small>
+          <small>No problems.</small>
         </p>
       );
     }

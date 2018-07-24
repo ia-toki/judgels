@@ -103,9 +103,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     if (scoreboard.length === 0) {
       return (
         <p>
-          <small>
-            <em>No scoreboard.</em>
-          </small>
+          <small>No scoreboard.</small>
         </p>
       );
     }

@@ -52,9 +52,7 @@ export class ContestAnnouncementsPage extends React.PureComponent<
     if (announcements.length === 0) {
       return (
         <p>
-          <small>
-            <em>No announcements.</em>
-          </small>
+          <small>No announcements.</small>
         </p>
       );
     }

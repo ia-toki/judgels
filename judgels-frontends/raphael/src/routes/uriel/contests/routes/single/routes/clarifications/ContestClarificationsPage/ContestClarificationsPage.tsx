@@ -70,9 +70,7 @@ class ContestClarificationsPage extends React.Component<
     if (clarifications.length === 0) {
       return (
         <p>
-          <small>
-            <em>No clarifications.</em>
-          </small>
+          <small>No clarifications.</small>
         </p>
       );
     }
