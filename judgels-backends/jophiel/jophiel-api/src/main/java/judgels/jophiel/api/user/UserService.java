@@ -51,10 +51,17 @@ public interface UserService {
             @QueryParam("orderDir") Optional<OrderDir> orderDir);
 
     @POST
-    @Path("/jids")
+    @Path("/infos")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, UserInfo> getUsersByJids(Set<String> jids);
+    Map<String, UserInfo> getUserInfosByJids(Set<String> jids);
+
+    // TODO (fushar): accept time as parameter
+    @POST
+    @Path("/infos/past")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Map<String, UserInfo> getPastUserInfosByJids(Set<String> jids);
 
     @POST
     @Path("/countries")

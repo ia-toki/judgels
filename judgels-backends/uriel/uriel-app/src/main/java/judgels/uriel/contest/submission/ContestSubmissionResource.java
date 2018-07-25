@@ -110,7 +110,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         return new ContestSubmissionsResponse.Builder()
                 .data(data)
-                .usersMap(userService.getUsersByJids(userJids))
+                .usersMap(userService.getUserInfosByJids(userJids))
                 .problemAliasesMap(problemStore.getProblemAliasesByJids(contestJid, problemJids))
                 .build();
     }
@@ -134,7 +134,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         String userJid = submission.getUserJid();
         UserInfo user = checkFound(Optional.ofNullable(
-                userService.getUsersByJids(ImmutableSet.of(userJid)).get(userJid)));
+                userService.getUserInfosByJids(ImmutableSet.of(userJid)).get(userJid)));
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()

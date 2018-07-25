@@ -2,6 +2,7 @@ package judgels.jophiel.api.user.profile;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
@@ -36,6 +37,6 @@ class UserProfileServiceIntegrationTests extends AbstractServiceIntegrationTests
 
         assertThat(profileService.getProfile(adminHeader, user.getJid())).isEqualTo(profile);
 
-        assertThat(profileService.getPublicProfile(user.getJid())).isEqualTo(profile.toPublic(user));
+        assertThat(profileService.getPublicProfile(user.getJid())).isEqualTo(profile.toPublic(user, Optional.empty()));
     }
 }

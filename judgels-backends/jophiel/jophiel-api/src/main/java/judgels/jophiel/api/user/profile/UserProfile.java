@@ -21,10 +21,11 @@ public interface UserProfile {
     Optional<String> getProvince();
     Optional<String> getCountry();
 
-    default PublicUserProfile toPublic(User user) {
+    default PublicUserProfile toPublic(User user, Optional<Integer> rating) {
         return new PublicUserProfile.Builder()
                 .userJid(user.getJid())
                 .username(user.getUsername())
+                .rating(rating)
                 .name(getName())
                 .nationality(getNationality())
                 .build();

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { PublicUserProfile } from '../../../../../../../../modules/api/jophiel/userProfile';
 import { AppState } from '../../../../../../../../modules/store';
-import { getRatingLeague } from '../../../../../../../../modules/api/jophiel/userRating';
+import { getLeagueClass } from '../../../../../../../../modules/api/jophiel/userRating';
 import { selectPublicProfile } from '../../../../../../modules/publicProfileSelectors';
 import { avatarActions as injectedAvatarActions } from '../../../../../../modules/avatarActions';
 
@@ -64,7 +64,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
     return (
       <div className="basic-profile-card__main">
         <img className="basic-profile-card__avatar" src={avatarUrl} />
-        <p className={getRatingLeague(profile.rating)}>{profile.username}</p>
+        <p className={getLeagueClass(profile.rating)}>{profile.username}</p>
         <p>{profile.nationality}</p>
       </div>
     );
@@ -79,7 +79,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
         </div>
         <div className="basic-profile-card__details-values">
           {profile.name && <p>{profile.name}</p>}
-          <p>{profile.rating || '-'}</p>
+          <p className={getLeagueClass(profile.rating)}>{profile.rating || '-'}</p>
         </div>
         <div className="clearfix" />
       </div>

@@ -8,6 +8,8 @@ import judgels.jophiel.persistence.AdminRoleModel;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.jophiel.persistence.UserModel;
 import judgels.jophiel.persistence.UserProfileModel;
+import judgels.jophiel.persistence.UserRatingEventModel;
+import judgels.jophiel.persistence.UserRatingModel;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 
@@ -19,6 +21,8 @@ public class JophielHibernateBundle extends HibernateBundle<JophielApplicationCo
                 SessionModel.class,
                 UserModel.class,
                 UserProfileModel.class,
+                UserRatingModel.class,
+                UserRatingEventModel.class,
                 UserRegistrationEmailModel.class,
                 UserResetPasswordModel.class);
     }
