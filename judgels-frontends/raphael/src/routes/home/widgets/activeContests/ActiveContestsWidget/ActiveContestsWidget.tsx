@@ -28,12 +28,12 @@ class ActiveContestsWidget extends React.PureComponent<ActiveContestsWidgetProps
 
   render() {
     return (
-      <Card title="Active contests">
+      <Card title="Active contests" className="active-contests-widget">
         {this.renderActiveContests()}
 
-        <Link to={'/contests'}>
-          <small>See all contests...</small>
-        </Link>
+        <small>
+          <Link to={'/contests'}>See all contests...</Link>
+        </small>
       </Card>
     );
   }
