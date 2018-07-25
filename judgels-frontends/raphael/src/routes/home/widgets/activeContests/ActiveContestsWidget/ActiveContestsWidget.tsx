@@ -2,10 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Card } from '../../../../components/Card/Card';
+import { Card } from '../../../../../components/Card/Card';
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
 import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';
-import { Contest } from '../../../../modules/api/uriel/contest';
+import { Contest } from '../../../../../modules/api/uriel/contest';
 import { activeContestWidgetActions as injectedActiveContestWidgetActions } from '../modules/activeContestsWidgetActions';
 
 import './ActiveContestsWidget.css';

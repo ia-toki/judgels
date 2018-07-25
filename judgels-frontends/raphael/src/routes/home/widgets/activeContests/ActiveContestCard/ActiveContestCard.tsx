@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
-import { TimeanddateLink } from '../../../../components/TimeanddateLink/TimeanddateLink';
-import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
-import { Contest } from '../../../../modules/api/uriel/contest';
+import { TimeanddateLink } from '../../../../../components/TimeanddateLink/TimeanddateLink';
+import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
+import { Contest } from '../../../../../modules/api/uriel/contest';
 
 import './ActiveContestCard.css';
 
