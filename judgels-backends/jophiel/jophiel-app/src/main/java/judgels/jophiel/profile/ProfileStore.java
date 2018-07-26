@@ -1,5 +1,6 @@
 package judgels.jophiel.profile;
 
+import com.google.common.collect.ImmutableSet;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
@@ -46,8 +47,13 @@ public class ProfileStore {
 
     public Optional<BasicProfile> getBasicProfile(Instant time, String userJid) {
         return userStore.getUserByJid(userJid).map(user -> {
+            Map<String, Integer> ratings = ratingStore.getRatings(time, ImmutableSet.of(userJid));
+            UserInfo info = infoStore.getInfo(userJid);
+
             return new BasicProfile.Builder()
                     .username(user.getUsername())
+                    .rating(Optional.ofNullable(ratings.get(userJid)))
+                    .name(info.getNationality())
                     .build();
         });
     }
