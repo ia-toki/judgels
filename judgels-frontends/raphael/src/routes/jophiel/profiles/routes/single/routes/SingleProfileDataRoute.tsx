@@ -21,7 +21,12 @@ class SingleProfileDataRoute extends React.Component<SingleProfileDataRouteProps
   componentDidUpdate(prevProps: SingleProfileDataRouteProps) {
     if (this.props.match.params.username !== prevProps.match.params.username) {
       this.props.onGetUserJid(this.props.match.params.username);
-      this.props.onPopBreadcrumb(this.props.match.url.replace(/\/+$/, ''));
+      this.props.onPopBreadcrumb(
+        this.props.match.url.replace(
+          new RegExp(`/${this.props.match.params.username}/*$`),
+          `/${prevProps.match.params.username}`
+        )
+      );
       this.props.onPushBreadcrumb(this.props.match.url, this.props.match.params.username);
     }
   }
