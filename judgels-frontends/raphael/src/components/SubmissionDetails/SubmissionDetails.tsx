@@ -3,6 +3,7 @@ import * as base64 from 'base-64';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
+import { UserRef } from '../UserRef/UserRef';
 import { ContentCard } from '../ContentCard/ContentCard';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { Profile } from '../../modules/api/jophiel/profile';
@@ -72,7 +73,9 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
             <tbody>
               <tr>
                 <td>Author</td>
-                <td>{profile.username}</td>
+                <td>
+                  <UserRef profile={profile} />
+                </td>
               </tr>
               <tr>
                 <td>Problem</td>
