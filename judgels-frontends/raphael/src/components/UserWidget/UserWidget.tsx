@@ -4,23 +4,23 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { User } from '../../modules/api/jophiel/user';
-import { PublicUserProfile } from '../../modules/api/jophiel/userProfile';
+import { Profile } from '../../modules/api/jophiel/profile';
 import { AppState } from '../../modules/store';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 import { avatarActions as injectedAvatarActions } from '../../routes/jophiel/modules/avatarActions';
-import { publicProfileActions as injectedPublicProfileActions } from '../../routes/jophiel/modules/publicProfileActions';
+import { profileActions as injectedProfileActions } from '../../routes/jophiel/modules/profileActions';
 
 import './UserWidget.css';
 
 export interface UserWidgetProps {
   user?: User;
   onRenderAvatar: (userJid?: string) => Promise<string>;
-  onGetPublicProfile: (userJid: string, skipDispatch: boolean) => Promise<PublicUserProfile>;
+  onGetProfile: (userJid: string) => Promise<Profile>;
 }
 
 interface UserWidgetState {
   avatarUrl?: string;
-  profile?: PublicUserProfile;
+  profile?: Profile;
 }
 
 export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetState> {
@@ -46,12 +46,12 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
 
   private refreshUser = async () => {
     let avatarUrl: string;
-    let profile: PublicUserProfile | undefined = undefined;
+    let profile: Profile | undefined = undefined;
 
-    const { user, onRenderAvatar, onGetPublicProfile } = this.props;
+    const { user, onRenderAvatar, onGetProfile } = this.props;
 
     if (user) {
-      [avatarUrl, profile] = await Promise.all([onRenderAvatar(user.jid), onGetPublicProfile(user.username, true)]);
+      [avatarUrl, profile] = await Promise.all([onRenderAvatar(user.jid), onGetProfile(user.jid)]);
     } else {
       avatarUrl = await onRenderAvatar();
     }
@@ -129,17 +129,17 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
   };
 }
 
-export function createUserWidget(avatarActions, publicProfileActions) {
+export function createUserWidget(avatarActions, profileActions) {
   const mapStateToProps = (state: AppState) => ({
     user: state.session.user,
   });
 
   const mapDispatchToProps = {
     onRenderAvatar: avatarActions.renderAvatar,
-    onGetPublicProfile: publicProfileActions.getPublicProfile,
+    onGetProfile: profileActions.getProfile,
   };
 
   return connect<any>(mapStateToProps, mapDispatchToProps)(UserWidget);
 }
 
-export default createUserWidget(injectedAvatarActions, injectedPublicProfileActions);
+export default createUserWidget(injectedAvatarActions, injectedProfileActions);

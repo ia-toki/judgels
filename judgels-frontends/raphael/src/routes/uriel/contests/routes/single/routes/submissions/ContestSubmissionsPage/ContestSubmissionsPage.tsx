@@ -6,7 +6,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { AppState } from '../../../../../../../../modules/store';
 import { selectContest } from '../../../../../modules/contestSelectors';
-import { UsersMap } from '../../../../../../../../modules/api/jophiel/user';
+import { ProfilesMap } from '../../../../../../../../modules/api/jophiel/profile';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { ContestSubmissionsResponse } from '../../../../../../../../modules/api/uriel/contestSubmission';
 import { Page } from '../../../../../../../../modules/api/pagination';
@@ -22,7 +22,7 @@ export interface ContestSubmissionsPageProps {
 
 interface ContestSubmissionsPageState {
   submissions?: Page<Submission>;
-  usersMap?: UsersMap;
+  profilesMap?: ProfilesMap;
   problemAliasesMap?: { [problemJid: string]: string };
 }
 
@@ -73,10 +73,13 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 
   private onChangePage = async (nextPage: number) => {
-    const { data, usersMap, problemAliasesMap } = await this.props.onGetMySubmissions(this.props.contest.jid, nextPage);
+    const { data, profilesMap, problemAliasesMap } = await this.props.onGetMySubmissions(
+      this.props.contest.jid,
+      nextPage
+    );
     this.setState({
       submissions: data,
-      usersMap,
+      profilesMap,
       problemAliasesMap,
     });
     return data.totalData;

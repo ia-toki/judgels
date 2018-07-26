@@ -6,7 +6,7 @@ import java.util.Optional;
 import javax.inject.Singleton;
 import judgels.jophiel.mailer.Mailer;
 import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.profile.UserProfileStore;
+import judgels.jophiel.user.info.UserInfoStore;
 import judgels.recaptcha.RecaptchaVerifier;
 
 @Module
@@ -21,7 +21,7 @@ public class UserRegistrationModule {
     @Singleton
     Optional<UserRegisterer> userRegisterer(
             UserStore userStore,
-            UserProfileStore userProfileStore,
+            UserInfoStore userInfoStore,
             UserRegistrationEmailStore userRegistrationEmailStore,
             Optional<Mailer> mailer,
             Optional<RecaptchaVerifier> recaptchaVerifier) {
@@ -37,7 +37,7 @@ public class UserRegistrationModule {
 
         return Optional.of(new UserRegisterer(
                 userStore,
-                userProfileStore,
+                userInfoStore,
                 userRegistrationEmailStore,
                 new UserRegistrationEmailMailer(mailer.get(), config.getActivationEmailTemplate()),
                 actualRecaptchaVerifier));

@@ -1,6 +1,6 @@
 import { APP_CONFIG } from '../../../conf';
 import { get } from '../http';
-import { UsersMap } from '../jophiel/user';
+import { ProfilesMap } from '../jophiel/profile';
 import { Scoreboard } from './scoreboard';
 
 export interface ContestScoreboard {
@@ -16,7 +16,7 @@ export enum ContestScoreboardType {
 
 export interface ContestScoreboardResponse {
   data: ContestScoreboard;
-  usersMap: UsersMap;
+  profilesMap: ProfilesMap;
 }
 
 export function createContestScoreboardAPI() {

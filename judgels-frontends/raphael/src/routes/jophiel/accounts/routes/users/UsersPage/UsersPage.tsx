@@ -87,7 +87,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
         {data.map(user => (
           <tr>
             <td>
-              <UserRef user={user} />
+              <UserRef profile={user} />
             </td>
           </tr>
         ))}

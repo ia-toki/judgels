@@ -4,8 +4,8 @@ import com.palantir.remoting3.clients.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.MyService;
-import judgels.jophiel.api.user.UserService;
 import judgels.service.jaxrs.JaxRsClients;
 
 @Module
@@ -19,8 +19,8 @@ public class JophielModule {
 
     @Provides
     @Singleton
-    UserService userService(UserAgent agent) {
-        return JaxRsClients.create(UserService.class, config.getBaseUrl(), agent);
+    ProfileService profileService(UserAgent agent) {
+        return JaxRsClients.create(ProfileService.class, config.getBaseUrl(), agent);
     }
 
     @Provides

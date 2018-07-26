@@ -7,7 +7,7 @@ import judgels.jophiel.legacy.session.LegacySessionHibernateDao;
 import judgels.jophiel.persistence.AdminRoleDao;
 import judgels.jophiel.persistence.SessionDao;
 import judgels.jophiel.persistence.UserDao;
-import judgels.jophiel.persistence.UserProfileDao;
+import judgels.jophiel.persistence.UserInfoDao;
 import judgels.jophiel.persistence.UserRatingDao;
 import judgels.jophiel.persistence.UserRatingEventDao;
 import judgels.jophiel.persistence.UserRegistrationEmailDao;
@@ -38,7 +38,7 @@ public class JophielHibernateDaoModule {
     }
 
     @Provides
-    static UserProfileDao userProfileDao(UserProfileHibernateDao dao) {
+    static UserInfoDao userInfoDao(UserInfoHibernateDao dao) {
         return dao;
     }
 

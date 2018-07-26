@@ -1,12 +1,12 @@
 import { APP_CONFIG } from '../../../conf';
 import { get, postMultipart } from '../http';
 import { Page } from '../pagination';
-import { UsersMap } from '../jophiel/user';
+import { ProfilesMap } from '../jophiel/profile';
 import { Submission, SubmissionWithSourceResponse } from '../sandalphon/submission';
 
 export interface ContestSubmissionsResponse {
   data: Page<Submission>;
-  usersMap: UsersMap;
+  profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
 }
 

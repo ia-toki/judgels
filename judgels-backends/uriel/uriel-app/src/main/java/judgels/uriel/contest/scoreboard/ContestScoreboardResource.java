@@ -6,7 +6,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
-import judgels.jophiel.api.user.UserService;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -20,7 +20,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private final ContestStore contestStore;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestScoreboardFetcher scoreboardFetcher;
-    private final UserService userService;
+    private final ProfileService profileService;
 
     @Inject
     public ContestScoreboardResource(
@@ -28,13 +28,13 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             ContestStore contestStore,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestScoreboardFetcher scoreboardFetcher,
-            UserService userService) {
+            ProfileService profileService) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
         this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.scoreboardFetcher = scoreboardFetcher;
-        this.userService = userService;
+        this.profileService = profileService;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private ContestScoreboardResponse buildResponse(ContestScoreboard scoreboard) {
         return new ContestScoreboardResponse.Builder()
                 .data(scoreboard)
-                .usersMap(userService.getPastUserInfosByJids(scoreboard.getScoreboard().getState().getContestantJids()))
+                .profilesMap(profileService.getPastProfiles(scoreboard.getScoreboard().getState().getContestantJids()))
                 .build();
     }
 }

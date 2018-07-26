@@ -18,8 +18,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
-import judgels.jophiel.api.user.UserInfo;
-import judgels.jophiel.api.user.UserService;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.SandalphonUtils;
@@ -57,7 +57,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestSubmissionStore submissionStore;
     private final ContestProblemStore problemStore;
-    private final UserService userService;
+    private final ProfileService profileService;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
 
@@ -72,7 +72,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestSubmissionStore submissionStore,
-            UserService userService,
+            ProfileService profileService,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
 
@@ -85,7 +85,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.submissionStore = submissionStore;
-        this.userService = userService;
+        this.profileService = profileService;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
     }
@@ -110,7 +110,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         return new ContestSubmissionsResponse.Builder()
                 .data(data)
-                .usersMap(userService.getUserInfosByJids(userJids))
+                .profilesMap(profileService.getPastProfiles(userJids))
                 .problemAliasesMap(problemStore.getProblemAliasesByJids(contestJid, problemJids))
                 .build();
     }
@@ -133,8 +133,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 clientProblemService.getProblem(sandalphonClientAuthHeader, contestProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
-        UserInfo user = checkFound(Optional.ofNullable(
-                userService.getUserInfosByJids(ImmutableSet.of(userJid)).get(userJid)));
+        Profile profile = checkFound(Optional.ofNullable(
+                profileService.getPastProfiles(ImmutableSet.of(userJid)).get(userJid)));
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
@@ -144,7 +144,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         return new SubmissionWithSourceResponse.Builder()
                 .data(submissionWithSource)
-                .user(user)
+                .profile(profile)
                 .problemAlias(contestProblem.getAlias())
                 .problemName(SandalphonUtils.getProblemName(problem, language))
                 .containerName(contest.getName())

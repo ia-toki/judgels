@@ -9,14 +9,14 @@ import {
   IcpcScoreboardEntry,
 } from '../../../../../../../../modules/api/uriel/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
-import { UsersMap } from '../../../../../../../../modules/api/jophiel/user';
+import { ProfilesMap } from '../../../../../../../../modules/api/jophiel/profile';
 
 import './IcpcScoreboardTable.css';
 
 export class IcpcScoreboardTableProps {
   userJid?: string;
   scoreboard: IcpcScoreboard;
-  usersMap: UsersMap;
+  profilesMap: ProfilesMap;
 }
 
 export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTableProps> {
@@ -38,7 +38,9 @@ export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTable
     let cells = [
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
-        {this.props.usersMap[entry.contestantJid] && <UserRef user={this.props.usersMap[entry.contestantJid]} />}
+        {this.props.profilesMap[entry.contestantJid] && (
+          <UserRef profile={this.props.profilesMap[entry.contestantJid]} />
+        )}
       </td>,
       <td key="totalAccepted">
         <strong>{entry.totalAccepted}</strong>

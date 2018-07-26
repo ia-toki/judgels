@@ -7,10 +7,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import judgels.jophiel.persistence.UserRatingDao;
 import judgels.jophiel.persistence.UserRatingEventDao;
 import judgels.jophiel.persistence.UserRatingEventModel;
 
+@Singleton
 public class UserRatingStore {
     private final UserRatingDao ratingDao;
     private final UserRatingEventDao ratingEventDao;

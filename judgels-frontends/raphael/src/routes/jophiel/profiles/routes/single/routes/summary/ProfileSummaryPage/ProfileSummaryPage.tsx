@@ -2,22 +2,25 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { Card } from '../../../../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import { PublicUserProfile } from '../../../../../../../../modules/api/jophiel/userProfile';
+import { BasicProfile } from '../../../../../../../../modules/api/jophiel/profile';
 import { AppState } from '../../../../../../../../modules/store';
 import { getLeagueClass } from '../../../../../../../../modules/api/jophiel/userRating';
-import { selectPublicProfile } from '../../../../../../modules/publicProfileSelectors';
+import { selectUserJid } from '../../../../../../modules/profileSelectors';
 import { avatarActions as injectedAvatarActions } from '../../../../../../modules/avatarActions';
+import { profileActions as injectedProfileActions } from '../../../../../../modules/profileActions';
 
 import './ProfileSummaryPage.css';
-import { Card } from '../../../../../../../../components/Card/Card';
 
 interface ProfileSummaryPageProps {
-  profile: PublicUserProfile;
+  userJid: string;
   onRenderAvatar: (userJid?: string) => Promise<string>;
+  onGetBasicProfile: (userJid: string) => Promise<BasicProfile>;
 }
 
 interface ProfileSummaryPageState {
+  basicProfile?: BasicProfile;
   avatarUrl?: string;
 }
 
@@ -29,7 +32,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   }
 
   async componentDidUpdate(prevProps: ProfileSummaryPageProps) {
-    if (this.props.profile !== prevProps.profile) {
+    if (this.props.userJid !== prevProps.userJid) {
       await this.refreshSummary();
     }
   }
@@ -39,28 +42,30 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   }
 
   private refreshSummary = async () => {
-    const avatarUrl = await this.props.onRenderAvatar(this.props.profile.userJid);
-    this.setState({ avatarUrl });
+    const [avatarUrl, basicProfile] = await Promise.all([
+      this.props.onRenderAvatar(this.props.userJid),
+      this.props.onGetBasicProfile(this.props.userJid),
+    ]);
+    this.setState({ avatarUrl, basicProfile });
   };
 
   private renderBasicProfile = () => {
-    const { avatarUrl } = this.state;
-    if (!avatarUrl) {
+    const { avatarUrl, basicProfile } = this.state;
+    if (!avatarUrl || !basicProfile) {
       return <LoadingState />;
     }
 
-    const { profile } = this.props;
     return (
       <Card title="Basic profile" className="basic-profile-card">
-        {this.renderMain(profile, avatarUrl)}
+        {this.renderMain(basicProfile, avatarUrl)}
         <div className="basic-profile-card__divider" />
-        {this.renderDetails(profile)}
+        {this.renderDetails(basicProfile)}
         <div className="clearfix" />
       </Card>
     );
   };
 
-  private renderMain = (profile: PublicUserProfile, avatarUrl: string) => {
+  private renderMain = (profile: BasicProfile, avatarUrl: string) => {
     return (
       <div className="basic-profile-card__main">
         <img className="basic-profile-card__avatar" src={avatarUrl} />
@@ -70,7 +75,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
     );
   };
 
-  private renderDetails = (profile: PublicUserProfile) => {
+  private renderDetails = (profile: BasicProfile) => {
     return (
       <div className="basic-profile-card__details">
         <div className="basic-profile-card__details-keys">
@@ -87,15 +92,16 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   };
 }
 
-function createProfileSummaryPage(avatarActions) {
+function createProfileSummaryPage(avatarActions, profileActions) {
   const mapStateToProps = (state: AppState) => ({
-    profile: selectPublicProfile(state),
+    userJid: selectUserJid(state),
   });
   const mapDispatchToProps = {
     onRenderAvatar: avatarActions.renderAvatar,
+    onGetBasicProfile: profileActions.getBasicProfile,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ProfileSummaryPage));
 }
 
-export default createProfileSummaryPage(injectedAvatarActions);
+export default createProfileSummaryPage(injectedAvatarActions, injectedProfileActions);

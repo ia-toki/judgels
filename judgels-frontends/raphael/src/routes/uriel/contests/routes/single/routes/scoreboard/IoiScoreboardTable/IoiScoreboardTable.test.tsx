@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
-import { UsersMap } from '../../../../../../../../modules/api/jophiel/user';
+import { ProfilesMap } from '../../../../../../../../modules/api/jophiel/profile';
 import { IoiScoreboard } from '../../../../../../../../modules/api/uriel/scoreboard';
 import { IoiScoreboardTable, IoiScoreboardTableProps } from './IoiScoreboardTable';
 
@@ -34,13 +34,13 @@ describe('IoiScoreboardTable', () => {
     },
   };
 
-  const usersMap: UsersMap = {
+  const profilesMap: ProfilesMap = {
     JIDUSER1: { username: 'username1' },
     JIDUSER2: { username: 'username2' },
   };
 
   beforeEach(() => {
-    const props = { scoreboard, usersMap };
+    const props = { scoreboard, profilesMap };
     wrapper = shallow(<IoiScoreboardTable {...props} />);
   });
 
@@ -56,7 +56,7 @@ describe('IoiScoreboardTable', () => {
     beforeEach(() => {
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
-      const props = { scoreboard: incognitoScoreboard, usersMap };
+      const props = { scoreboard: incognitoScoreboard, profilesMap };
       wrapper = shallow(<IoiScoreboardTable {...props} />);
     });
 

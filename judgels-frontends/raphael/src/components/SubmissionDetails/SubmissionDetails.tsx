@@ -5,7 +5,7 @@ import { FormattedRelative } from 'react-intl';
 
 import { ContentCard } from '../ContentCard/ContentCard';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
-import { UserInfo } from '../../modules/api/jophiel/user';
+import { Profile } from '../../modules/api/jophiel/profile';
 import { constructProblemName } from '../../modules/api/sandalphon/problem';
 import { Submission } from '../../modules/api/sandalphon/submission';
 import { GradingEngineCode } from '../../modules/api/gabriel/engine';
@@ -18,7 +18,7 @@ import './SubmissionDetails.css';
 export interface SubmissionDetailsProps {
   submission: Submission;
   source: SubmissionSource;
-  user: UserInfo;
+  profile: Profile;
   problemName?: string;
   problemAlias?: string;
   containerTitle: string;
@@ -55,7 +55,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
   };
 
   private renderGeneralInfo = () => {
-    const { submission, user, problemAlias, problemName, containerTitle, containerName } = this.props;
+    const { submission, profile, problemAlias, problemName, containerTitle, containerName } = this.props;
     const grading = submission.latestGrading;
 
     return (
@@ -72,7 +72,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
             <tbody>
               <tr>
                 <td>Author</td>
-                <td>{user.username}</td>
+                <td>{profile.username}</td>
               </tr>
               <tr>
                 <td>Problem</td>

@@ -9,10 +9,11 @@ import thunk from 'redux-thunk';
 import { createSessionAPI } from './api/jophiel/session';
 import { createLegacySessionAPI } from './api/jophiel/legacySession';
 import { createMyAPI } from './api/jophiel/my';
+import { createProfileAPI } from './api/jophiel/profile';
 import { createUserAPI } from './api/jophiel/user';
 import { createUserAccountAPI } from './api/jophiel/userAccount';
 import { createUserAvatarAPI } from './api/jophiel/userAvatar';
-import { createUserProfileAPI } from './api/jophiel/userProfile';
+import { createUserInfoAPI } from './api/jophiel/userInfo';
 import { createWebAPI } from './api/jophiel/web';
 import { createContestAPI } from './api/uriel/contest';
 import { createContestWebAPI } from './api/uriel/contestWeb';
@@ -65,11 +66,11 @@ export const store = createStore<AppState>(
         sessionAPI: createSessionAPI(),
         legacySessionAPI: createLegacySessionAPI(),
         myAPI: createMyAPI(),
-        webAPI: createWebAPI(),
+        profileAPI: createProfileAPI(),
         userAPI: createUserAPI(),
         userAccountAPI: createUserAccountAPI(),
         userAvatarAPI: createUserAvatarAPI(),
-        userProfileAPI: createUserProfileAPI(),
+        userInfoAPI: createUserInfoAPI(),
         contestAPI: createContestAPI(),
         contestWebAPI: createContestWebAPI(),
         contestAnnouncementAPI: createContestAnnouncementAPI(),
@@ -78,6 +79,7 @@ export const store = createStore<AppState>(
         contestProblemAPI: createContestProblemAPI(),
         contestScoreboardAPI: createContestScoreboardAPI(),
         contestSubmissionAPI: createContestSubmissionAPI(),
+        webAPI: createWebAPI(),
         toastActions,
       }),
       routerMiddleware(history)

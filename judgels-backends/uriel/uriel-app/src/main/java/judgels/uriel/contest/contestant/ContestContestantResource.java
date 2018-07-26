@@ -7,8 +7,8 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
-import judgels.jophiel.api.user.UserInfo;
-import judgels.jophiel.api.user.UserService;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -22,7 +22,7 @@ public class ContestContestantResource implements ContestContestantService {
     private final ContestStore contestStore;
     private final ContestContestantRoleChecker contestantRoleChecker;
     private final ContestContestantStore contestantStore;
-    private final UserService userService;
+    private final ProfileService profileService;
 
     @Inject
     public ContestContestantResource(
@@ -30,13 +30,13 @@ public class ContestContestantResource implements ContestContestantService {
             ContestStore contestStore,
             ContestContestantRoleChecker contestantRoleChecker,
             ContestContestantStore contestantStore,
-            UserService userService) {
+            ProfileService profileService) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
         this.contestantRoleChecker = contestantRoleChecker;
         this.contestantStore = contestantStore;
-        this.userService = userService;
+        this.profileService = profileService;
     }
 
     @Override
@@ -47,13 +47,11 @@ public class ContestContestantResource implements ContestContestantService {
         checkAllowed(contestantRoleChecker.canGetContestants(actorJid, contest));
 
         Set<String> userJids = contestantStore.getContestants(contestJid);
-        Map<String, UserInfo> usersMap = userService.getPastUserInfosByJids(userJids);
-        Map<String, String> userCountriesMap = userService.getUserCountriesByJids(userJids);
+        Map<String, Profile> profilesMap = profileService.getPastProfiles(userJids);
 
         return new ContestContestantsResponse.Builder()
                 .data(userJids)
-                .usersMap(usersMap)
-                .userCountriesMap(userCountriesMap)
+                .profilesMap(profilesMap)
                 .build();
     }
 

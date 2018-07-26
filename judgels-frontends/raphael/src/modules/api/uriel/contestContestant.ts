@@ -1,11 +1,10 @@
-import { UsersMap } from '../jophiel/user';
+import { ProfilesMap } from '../jophiel/profile';
 import { APP_CONFIG } from '../../../conf';
 import { delete_, get, post } from '../http';
 
 export interface ContestContestantsResponse {
   data: string[];
-  usersMap: UsersMap;
-  userCountriesMap: { [userJid: string]: string };
+  profilesMap: ProfilesMap;
 }
 
 export enum ContestContestantState {

@@ -1,6 +1,6 @@
 import { get } from '../http';
 import { APP_CONFIG } from '../../../conf';
-import { UsersMap } from '../jophiel/user';
+import { ProfilesMap } from '../jophiel/profile';
 
 export interface ContestAnnouncement {
   id: number;
@@ -13,7 +13,7 @@ export interface ContestAnnouncement {
 
 export interface ContestAnnouncementsResponse {
   data: ContestAnnouncement[];
-  usersMap: UsersMap;
+  profilesMap: ProfilesMap;
 }
 
 export function createContestAnnouncementAPI() {

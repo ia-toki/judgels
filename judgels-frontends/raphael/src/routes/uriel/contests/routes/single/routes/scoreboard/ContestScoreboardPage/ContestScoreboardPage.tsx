@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import { UsersMap } from '../../../../../../../../modules/api/jophiel/user';
+import { ProfilesMap } from '../../../../../../../../modules/api/jophiel/profile';
 import { Contest, ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
 import {
   ContestScoreboard,
@@ -31,7 +31,7 @@ export interface ContestScoreboardPageProps {
 
 interface ContestScoreboardPageState {
   scoreboard?: ContestScoreboard[];
-  usersMap?: UsersMap;
+  profilesMap?: ProfilesMap;
 }
 
 export class ContestScoreboardPage extends React.PureComponent<ContestScoreboardPageProps, ContestScoreboardPageState> {
@@ -42,10 +42,10 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     if (!response) {
       this.setState({ scoreboard: [] });
     } else {
-      const { data, usersMap } = response;
+      const { data, profilesMap } = response;
       this.setState({
         scoreboard: [data],
-        usersMap,
+        profilesMap,
       });
     }
   }
@@ -95,7 +95,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
   };
 
   private renderScoreboard = () => {
-    const { scoreboard, usersMap } = this.state;
+    const { scoreboard, profilesMap } = this.state;
     if (!scoreboard) {
       return <LoadingState />;
     }
@@ -113,7 +113,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
         <IcpcScoreboardTable
           userJid={this.props.userJid}
           scoreboard={scoreboard[0].scoreboard as IcpcScoreboard}
-          usersMap={usersMap!}
+          profilesMap={profilesMap!}
         />
       );
     } else {
@@ -121,7 +121,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
         <IoiScoreboardTable
           userJid={this.props.userJid}
           scoreboard={scoreboard[0].scoreboard as IoiScoreboard}
-          usersMap={usersMap!}
+          profilesMap={profilesMap!}
         />
       );
     }

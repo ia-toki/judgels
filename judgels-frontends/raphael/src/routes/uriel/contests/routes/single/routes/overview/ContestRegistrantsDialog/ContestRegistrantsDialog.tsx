@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import { UsersMap } from '../../../../../../../../modules/api/jophiel/user';
+import { ProfilesMap } from '../../../../../../../../modules/api/jophiel/profile';
 import { ContestContestantsResponse } from '../../../../../../../../modules/api/uriel/contestContestant';
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { AppState } from '../../../../../../../../modules/store';
@@ -25,8 +25,7 @@ export interface ContestRegistrantsDialogConnectedProps {
 
 interface ContestRegistrantsDialogState {
   contestants?: string[];
-  usersMap?: UsersMap;
-  userCountriesMap?: { [userJid: string]: string };
+  profilesMap?: ProfilesMap;
 }
 
 class ContestRegistrantsDialog extends React.PureComponent<
@@ -36,8 +35,8 @@ class ContestRegistrantsDialog extends React.PureComponent<
   state: ContestRegistrantsDialogState = {};
 
   async componentDidMount() {
-    const { data, usersMap, userCountriesMap } = await this.props.onGetContestants(this.props.contest.jid);
-    this.setState({ contestants: data, usersMap, userCountriesMap });
+    const { data, profilesMap } = await this.props.onGetContestants(this.props.contest.jid);
+    this.setState({ contestants: data, profilesMap });
   }
 
   render() {
@@ -56,28 +55,28 @@ class ContestRegistrantsDialog extends React.PureComponent<
   }
 
   private renderRegistrants = () => {
-    const { contestants, usersMap, userCountriesMap } = this.state;
-    if (!contestants || !usersMap || !userCountriesMap) {
+    const { contestants, profilesMap } = this.state;
+    if (!contestants || !profilesMap) {
       return <LoadingState />;
     }
 
     const sortedContestants = contestants.slice().sort((jid1, jid2) => {
-      const country1 = userCountriesMap[jid1] || 'ZZ';
-      const country2 = userCountriesMap[jid2] || 'ZZ';
+      const country1 = (profilesMap[jid1] && profilesMap[jid1].nationality) || 'ZZ';
+      const country2 = (profilesMap[jid2] && profilesMap[jid2].nationality) || 'ZZ';
       if (country1 !== country2) {
         return country1.localeCompare(country2);
       }
 
-      const username1 = (usersMap[jid1] && usersMap[jid1].username) || 'ZZ';
-      const username2 = (usersMap[jid2] && usersMap[jid2].username) || 'ZZ';
+      const username1 = (profilesMap[jid1] && profilesMap[jid1].username) || 'ZZ';
+      const username2 = (profilesMap[jid2] && profilesMap[jid2].username) || 'ZZ';
       return username1.localeCompare(username2);
     });
 
     const rows = sortedContestants.map(jid => (
       <tr key={jid}>
-        <td>{userCountriesMap[jid]}</td>
+        <td>{profilesMap[jid].nationality}</td>
         <td>
-          <UserRef user={usersMap[jid]} />
+          <UserRef profile={profilesMap[jid]} />
         </td>
       </tr>
     ));

@@ -9,18 +9,17 @@ import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
 } from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
-import { PublicUserProfile } from '../../../../../../modules/api/jophiel/userProfile';
 import { AppState } from '../../../../../../modules/store';
 import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
-import { selectPublicProfile } from '../../../../modules/publicProfileSelectors';
+import { selectUserJid } from '../../../../modules/profileSelectors';
 
 interface SingleProfileRoutesProps {
-  profile?: PublicUserProfile;
+  userJid?: string;
 }
 
 const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
-  const { profile } = props;
-  if (!profile) {
+  const { userJid } = props;
+  if (!userJid) {
     return <LoadingState large />;
   }
 
@@ -50,7 +49,7 @@ const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
 
 function createSingleProfileRoutes() {
   const mapStateToProps = (state: AppState) => ({
-    profile: selectPublicProfile(state),
+    userJid: selectUserJid(state),
   });
   return withRouter<any>(connect(mapStateToProps)(SingleProfileRoutes));
 }

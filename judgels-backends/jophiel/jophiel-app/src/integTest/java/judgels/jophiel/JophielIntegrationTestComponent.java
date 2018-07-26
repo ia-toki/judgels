@@ -9,7 +9,7 @@ import judgels.jophiel.role.SuperadminRoleStore;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.avatar.UserAvatarIntegrationTestModule;
-import judgels.jophiel.user.profile.UserProfileStore;
+import judgels.jophiel.user.info.UserInfoStore;
 import judgels.jophiel.user.registration.UserRegistrationEmailStore;
 
 @Component(modules = {
@@ -24,6 +24,6 @@ public interface JophielIntegrationTestComponent {
     RoleStore roleStore();
     SessionStore sessionStore();
     UserStore userStore();
-    UserProfileStore userProfileStore();
+    UserInfoStore userInfoStore();
     UserRegistrationEmailStore userRegistrationEmailStore();
 }

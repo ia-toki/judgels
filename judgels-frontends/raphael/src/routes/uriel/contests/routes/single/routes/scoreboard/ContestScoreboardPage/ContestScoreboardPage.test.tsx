@@ -61,7 +61,7 @@ describe('ContestScoreboardPage', () => {
           },
           updatedTime: 0,
         },
-        usersMap: {},
+        profilesMap: {},
       };
       onGetScoreboard.mockReturnValue(Promise.resolve(response));
 
@@ -94,7 +94,7 @@ describe('ContestScoreboardPage', () => {
           },
           updatedTime: 0,
         },
-        usersMap: {},
+        profilesMap: {},
       };
       onGetScoreboard.mockReturnValue(Promise.resolve(response));
 

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FullPageLayout } from '../../../../components/layouts/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import UserRoute from '../../../../components/UserRoute/UserRoute';
-import ProfilePage from './profile/ProfilePage/ProfilePage';
+import InfoPage from './info/InfoPage/InfoPage';
 import ChangePasswordPage from './changePassword/ChangePasswordPage/ChangePasswordPage';
 import ChangeAvatarPage from './changeAvatar/ChangeAvatarPage/ChangeAvatarPage';
 import ContentWithSidebar, {
@@ -15,10 +15,10 @@ import { withBreadcrumb } from '../../../../components/BreadcrumbWrapper/Breadcr
 const AccountRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
     {
-      id: 'profile',
-      title: 'Profile',
+      id: 'info',
+      title: 'Info',
       routeComponent: UserRoute,
-      component: ProfilePage,
+      component: InfoPage,
     },
     {
       id: 'avatar',

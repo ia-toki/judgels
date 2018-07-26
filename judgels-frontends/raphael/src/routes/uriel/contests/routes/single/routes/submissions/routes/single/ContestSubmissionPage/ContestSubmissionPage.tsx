@@ -12,7 +12,7 @@ import {
   SubmissionWithSource,
   SubmissionWithSourceResponse,
 } from '../../../../../../../../../../modules/api/sandalphon/submission';
-import { UserInfo } from '../../../../../../../../../../modules/api/jophiel/user';
+import { Profile } from '../../../../../../../../../../modules/api/jophiel/profile';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../modules/contestSubmissionActions';
 import { selectStatementLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 
@@ -28,7 +28,7 @@ export interface ContestSubmissionPageProps extends RouteComponentProps<{ submis
 
 interface ContestSubmissionPageState {
   submissionWithSource?: SubmissionWithSource;
-  user?: UserInfo;
+  profile?: Profile;
   problemName?: string;
   problemAlias?: string;
   containerName?: string;
@@ -38,14 +38,14 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
   state: ContestSubmissionPageState = {};
 
   async componentDidMount() {
-    const { data, user, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
+    const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
       this.props.contest.jid,
       +this.props.match.params.submissionId,
       this.props.statementLanguage
     );
     this.setState({
       submissionWithSource: data,
-      user,
+      profile,
       problemName,
       problemAlias,
       containerName,
@@ -63,7 +63,7 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
   }
 
   private renderSubmission = () => {
-    const { submissionWithSource, user, problemName, problemAlias, containerName } = this.state;
+    const { submissionWithSource, profile, problemName, problemAlias, containerName } = this.state;
     if (!submissionWithSource) {
       return <LoadingState />;
     }
@@ -72,7 +72,7 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
       <SubmissionDetails
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
-        user={user!}
+        profile={profile!}
         problemName={problemName!}
         problemAlias={problemAlias!}
         containerTitle="Contest"

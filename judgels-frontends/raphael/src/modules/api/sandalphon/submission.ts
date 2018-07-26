@@ -1,5 +1,5 @@
 import { Grading } from '../gabriel/grading';
-import { UserInfo } from '../jophiel/user';
+import { Profile } from '../jophiel/profile';
 import { SubmissionSource } from '../gabriel/submission';
 
 export interface Submission {
@@ -21,7 +21,7 @@ export interface SubmissionWithSource {
 
 export interface SubmissionWithSourceResponse {
   data: SubmissionWithSource;
-  user: UserInfo;
+  profile: Profile;
   problemName: string;
   problemAlias: string;
   containerName: string;

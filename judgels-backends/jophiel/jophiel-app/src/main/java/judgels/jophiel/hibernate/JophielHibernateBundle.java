@@ -6,8 +6,8 @@ import judgels.jophiel.JophielApplicationConfiguration;
 import judgels.jophiel.legacy.session.LegacySessionModel;
 import judgels.jophiel.persistence.AdminRoleModel;
 import judgels.jophiel.persistence.SessionModel;
+import judgels.jophiel.persistence.UserInfoModel;
 import judgels.jophiel.persistence.UserModel;
-import judgels.jophiel.persistence.UserProfileModel;
 import judgels.jophiel.persistence.UserRatingEventModel;
 import judgels.jophiel.persistence.UserRatingModel;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
@@ -20,7 +20,7 @@ public class JophielHibernateBundle extends HibernateBundle<JophielApplicationCo
                 LegacySessionModel.class,
                 SessionModel.class,
                 UserModel.class,
-                UserProfileModel.class,
+                UserInfoModel.class,
                 UserRatingModel.class,
                 UserRatingEventModel.class,
                 UserRegistrationEmailModel.class,
