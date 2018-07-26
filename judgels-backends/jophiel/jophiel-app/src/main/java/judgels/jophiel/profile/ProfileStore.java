@@ -10,10 +10,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.info.UserInfoStore;
 import judgels.jophiel.user.rating.UserRatingStore;
+import judgels.jophiel.user.rating.UserWithRating;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 
 @Singleton
 public class ProfileStore {
@@ -34,15 +38,28 @@ public class ProfileStore {
 
         return userStore.getUsersByJids(userJids).entrySet()
                 .stream()
-                .collect(Collectors.toMap(
-                        e -> e.getKey(),
-                        e -> new Profile.Builder()
-                                .username(e.getValue().getUsername())
-                                .nationality(
-                                        Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getNationality))
-                                .rating(
-                                        Optional.ofNullable(ratings.get(e.getKey())))
-                                .build()));
+                .collect(Collectors.toMap(e -> e.getKey(), e -> new Profile.Builder()
+                        .username(e.getValue().getUsername())
+                        .nationality(Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getNationality))
+                        .rating(Optional.ofNullable(ratings.get(e.getKey())))
+                        .build()));
+    }
+
+    public Page<Profile> getTopRatedProfiles(Instant time, SelectionOptions options) {
+        Page<UserWithRating> ratings = ratingStore.getTopRatings(time, options);
+        Set<String> userJids = ratings.getData().stream().map(UserWithRating::getUserJid).collect(Collectors.toSet());
+        Map<String, User> users = userStore.getUsersByJids(userJids);
+        Map<String, UserInfo> infos = infoStore.getInfos(userJids);
+
+        return ratings.mapData(data -> data
+                .stream()
+                .filter(e -> users.containsKey(e.getUserJid()))
+                .map(e -> new Profile.Builder()
+                        .username(users.get(e.getUserJid()).getUsername())
+                        .nationality(Optional.ofNullable(infos.get(e.getUserJid())).flatMap(UserInfo::getNationality))
+                        .rating(Optional.of(e.getRating()))
+                        .build())
+                .collect(Collectors.toList()));
     }
 
     public Optional<BasicProfile> getBasicProfile(Instant time, String userJid) {

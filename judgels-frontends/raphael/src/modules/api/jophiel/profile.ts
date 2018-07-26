@@ -1,5 +1,6 @@
 import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
+import { Page } from '../pagination';
 
 export interface Profile {
   username?: string;
@@ -24,6 +25,10 @@ export function createProfileAPI() {
   return {
     getProfiles: (userJids: string[]): Promise<Profile> => {
       return post(`${baseURL}`, undefined, userJids);
+    },
+
+    getTopRatedProfiles: (page?: number, pageSize?: string): Promise<Page<Profile>> => {
+      return get(`${baseURL}/top`);
     },
 
     getBasicProfile: (userJid: string): Promise<BasicProfile> => {

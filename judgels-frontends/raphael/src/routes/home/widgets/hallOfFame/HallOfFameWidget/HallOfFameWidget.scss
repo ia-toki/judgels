@@ -1,0 +1,25 @@
+.hall-of-fame-widget {
+  .card__content {
+    padding: 0;
+  }
+}
+
+
+.hall-of-fame-widget__table {
+  td, th {
+    border-bottom: none;
+  }
+
+  th {
+    border-top: none;
+  }
+
+  .col-rank {
+    border-left: none;
+    width: 35px;
+  }
+
+  .col-rating {
+    border-right: none;
+  }
+}

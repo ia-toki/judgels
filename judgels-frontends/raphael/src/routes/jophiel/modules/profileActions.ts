@@ -25,6 +25,12 @@ export const profileActions = {
     };
   },
 
+  getTopRatedProfiles: (page?: number, pageSize?: number) => {
+    return async (dispatch, getState, { profileAPI }) => {
+      return await profileAPI.getTopRatedProfiles(page, pageSize);
+    };
+  },
+
   getBasicProfile: (userJid: string) => {
     return async (dispatch, getState, { profileAPI }) => {
       return await profileAPI.getBasicProfile(userJid);

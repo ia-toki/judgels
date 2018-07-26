@@ -6,7 +6,7 @@ import { Card } from '../../../../../components/Card/Card';
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
 import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';
 import { Contest } from '../../../../../modules/api/uriel/contest';
-import { activeContestWidgetActions as injectedActiveContestWidgetActions } from '../modules/activeContestsWidgetActions';
+import { contestActions as injectedContestActions } from '../../../../uriel/contests/modules/contestActions';
 
 import './ActiveContestsWidget.css';
 
@@ -54,11 +54,11 @@ class ActiveContestsWidget extends React.PureComponent<ActiveContestsWidgetProps
   };
 }
 
-export function createActiveContestsWidget(activeContestsWidgetActions) {
+export function createActiveContestsWidget(contestActions) {
   const mapDispatchToProps = {
-    onGetActiveContests: activeContestsWidgetActions.getActiveContests,
+    onGetActiveContests: contestActions.getActiveContests,
   };
   return connect(undefined, mapDispatchToProps)(ActiveContestsWidget);
 }
 
-export default createActiveContestsWidget(injectedActiveContestWidgetActions);
+export default createActiveContestsWidget(injectedContestActions);

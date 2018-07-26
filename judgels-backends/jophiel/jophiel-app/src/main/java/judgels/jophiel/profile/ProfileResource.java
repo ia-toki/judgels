@@ -6,12 +6,15 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 
 @Singleton
 public class ProfileResource implements ProfileService {
@@ -34,6 +37,16 @@ public class ProfileResource implements ProfileService {
     @UnitOfWork(readOnly = true)
     public Map<String, Profile> getPastProfiles(Set<String> userJids) {
         return profileStore.getProfiles(Instant.ofEpochMilli(0), userJids);
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Page<Profile> getTopRatedProfiles(Optional<Integer> page, Optional<Integer> pageSize) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        page.ifPresent(options::page);
+        pageSize.ifPresent(options::pageSize);
+
+        return profileStore.getTopRatedProfiles(clock.instant(), options.build());
     }
 
     @Override

@@ -9,6 +9,13 @@ export const contestActions = {
     };
   },
 
+  getActiveContests: () => {
+    return async (dispatch, getState, { contestAPI }) => {
+      const token = selectToken(getState());
+      return await contestAPI.getActiveContests(token);
+    };
+  },
+
   getContestBySlug: (contestSlug: string) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
