@@ -1,5 +1,25 @@
 @import '../../styles/base';
 
+.widget-user__profile {
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle !important;
+  background-color: #f4f5f6;
+
+  svg {
+    vertical-align: middle !important;
+  }
+}
+
+.widget-user__avatar-wrapper {
+  height: 60px;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
 .widget-user__avatar {
   height: 40px;
   width: 40px;

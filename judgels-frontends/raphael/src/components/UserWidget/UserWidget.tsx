@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { User } from '../../modules/api/jophiel/user';
+import { getRatingClass } from '../../modules/api/jophiel/userRating';
 import { Profile } from '../../modules/api/jophiel/profile';
 import { AppState } from '../../modules/store';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
@@ -37,8 +38,8 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
   }
 
   render() {
-    if (this.props.user) {
-      return this.renderForUser(this.props.user);
+    if (this.state.profile) {
+      return this.renderForUser(this.state.profile);
     } else {
       return this.renderForGuest();
     }
@@ -58,12 +59,12 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
     this.setState({ avatarUrl, profile });
   };
 
-  private renderForUser = (user: User) => {
+  private renderForUser = (profile: Profile) => {
     const menu = (
       <Menu className="widget-user__menu">
-        <MenuItem className="widget-user__menu-helper" icon="user" text={user.username} disabled />
+        <MenuItem className="widget-user__menu-helper" icon="user" text={profile.username} disabled />
         <MenuDivider className="widget-user__menu-helper" />
-        <MenuItemLink text="My profile" to={`/profiles/${user.username}`} />
+        <MenuItemLink text="My profile" to={`/profiles/${profile.username}`} />
         <MenuItemLink text="My account" to="/account" />
         <MenuItemLink text="Log out" to="/logout" />
       </Menu>
@@ -71,11 +72,13 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
 
     const popover = (
       <Popover className="widget-user__avatar-menu" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
-        <div>
-          <span data-key="username" className="widget-user__user__username">
-            {user.username}
+        <div className="widget-user__profile">
+          <span className="widget-user__user__username">
+            <span data-key="username" className={getRatingClass(profile.rating)}>
+              {profile.username}
+            </span>
           </span>{' '}
-          <Icon icon="chevron-down" />
+          <Icon icon="chevron-down" color="#252627" />
         </div>
       </Popover>
     );
@@ -88,7 +91,11 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
 
     return (
       <div className="pt-navbar-group pt-align-right">
-        {this.state.avatarUrl && <img src={this.state.avatarUrl} className="widget-user__avatar" />}
+        {this.state.avatarUrl && (
+          <div className="widget-user__avatar-wrapper">
+            <img src={this.state.avatarUrl} className="widget-user__avatar" />
+          </div>
+        )}
         {popover}
         {responsivePopover}
       </div>

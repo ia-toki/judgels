@@ -4,9 +4,11 @@ import { Card } from '../../../../../components/Card/Card';
 import { getRatingClass } from '../../../../../modules/api/jophiel/userRating';
 import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
+import './RatingSystemPage.css';
+
 const RatingSystemPage = () => (
   <Card title="Rating system">
-    <table className="pt-html-table table-list">
+    <table className="pt-html-table table-list rating-system-page">
       <thead>
         <tr>
           <th>Rating</th>
