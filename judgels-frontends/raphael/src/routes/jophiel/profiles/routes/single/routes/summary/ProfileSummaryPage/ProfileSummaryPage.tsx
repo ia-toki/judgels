@@ -57,10 +57,12 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
 
     return (
       <Card title="Basic profile" className="basic-profile-card">
-        {this.renderMain(basicProfile, avatarUrl)}
-        <div className="basic-profile-card__divider" />
-        {this.renderDetails(basicProfile)}
-        <div className="clearfix" />
+        <div className="basic-profile-card__wrapper">
+          {this.renderMain(basicProfile, avatarUrl)}
+          <div className="basic-profile-card__divider" />
+          {this.renderDetails(basicProfile)}
+          <div className="clearfix" />
+        </div>
       </Card>
     );
   };
@@ -68,7 +70,9 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   private renderMain = (profile: BasicProfile, avatarUrl: string) => {
     return (
       <div className="basic-profile-card__main">
-        <img className="basic-profile-card__avatar" src={avatarUrl} />
+        <div className="basic-profile-card__avatar-wrapper">
+          <img className="basic-profile-card__avatar" src={avatarUrl} />
+        </div>
         <p className={getLeagueClass(profile.rating)}>{profile.username}</p>
         <p>{profile.nationality}</p>
       </div>
@@ -78,15 +82,18 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   private renderDetails = (profile: BasicProfile) => {
     return (
       <div className="basic-profile-card__details">
-        <div className="basic-profile-card__details-keys">
-          {profile.name && <p>Name:</p>}
-          <p>Rating:</p>
-        </div>
-        <div className="basic-profile-card__details-values">
-          {profile.name && <p>{profile.name}</p>}
-          <p className={getLeagueClass(profile.rating)}>{profile.rating || '-'}</p>
-        </div>
-        <div className="clearfix" />
+        <table className="pt-html-table pt-html-table-striped basic-profile-card__details-table">
+          <tbody>
+            <tr>
+              <td className="basic-profile-card__details-keys">Name</td>
+              <td>{profile.name || '-'}</td>
+            </tr>
+            <tr>
+              <td className="basic-profile-card__details-keys">Rating</td>
+              <td className={getLeagueClass(profile.rating)}>{profile.rating || '-'}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   };

@@ -4,39 +4,65 @@
   p {
     line-height: 16px;
   }
+
+  .card__content {
+    padding: 0;
+  }
+}
+
+.basic-profile-card__wrapper {
+  display: flex;
 }
 
 .basic-profile-card__main {
-  float: left;
-  width: 180px;
+  padding: 15px;
+  width: 220px;
   height: 180px;
   font-size: 16px;
   text-align: center;
 }
 
 .basic-profile-card__divider {
-  float: left;
   height: 220px;
   border-right: 1px solid #d2d3d5;
-  margin: -20px 15px;
+  width: 5px;
+}
+
+.basic-profile-card__avatar-wrapper {
+  height: 120px;
+  width: 120px;
+  margin: auto;
+  margin-bottom: 15px;
 }
 
 .basic-profile-card__avatar {
   max-height: 120px;
   max-width: 120px;
-  margin-bottom: 10px;
 }
 
 .basic-profile-card__details {
-  float: left;
+  flex-grow: 1;
+}
+
+.basic-profile-card__details-table {
+  margin-top: -1px;
 }
 
 .basic-profile-card__details-keys {
-  float: left;
   font-weight: bold;
-  width: 70px;
+  width: 100px;
 }
 
-.basic-profile-card__details-values {
-  float: left;
+@media only screen and (max-width: 600px) {
+  .basic-profile-card__wrapper {
+    display: block;
+  }
+
+  .basic-profile-card__divider {
+    display: none;
+  }
+
+  .basic-profile-card__details {
+    margin-top: 40px;
+  }
 }

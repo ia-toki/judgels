@@ -4,22 +4,27 @@
   }
 }
 
-
 .hall-of-fame-widget__table {
   td, th {
-    border-bottom: none;
+    border-bottom: none !important;
   }
 
   th {
-    border-top: none;
+    border-top: none !important;;
+  }
+
+  tr:nth-child(1) {
+    td {
+      border-top: none !important;;
+    }
   }
 
   .col-rank {
-    border-left: none;
+    border-left: none !important;;
     width: 35px;
   }
 
   .col-rating {
-    border-right: none;
+    border-right: none !important;;
   }
 }

@@ -69,8 +69,9 @@ public class ProfileStore {
 
             return new BasicProfile.Builder()
                     .username(user.getUsername())
+                    .nationality(info.getNationality())
                     .rating(Optional.ofNullable(ratings.get(userJid)))
-                    .name(info.getNationality())
+                    .name(info.getName())
                     .build();
         });
     }
