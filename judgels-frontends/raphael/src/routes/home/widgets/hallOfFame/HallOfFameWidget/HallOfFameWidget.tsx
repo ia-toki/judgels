@@ -41,7 +41,11 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
 
   private renderTable = (profiles: Profile[]) => {
     if (profiles.length === 0) {
-      return <small>No data yet.</small>;
+      return (
+        <div className="hall-of-fame-widget__empty">
+          <small>No data yet.</small>
+        </div>
+      );
     }
 
     const rows = profiles.map((profile, idx) => (
