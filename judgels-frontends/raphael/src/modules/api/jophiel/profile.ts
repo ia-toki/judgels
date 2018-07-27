@@ -1,6 +1,7 @@
 import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../http';
 import { Page } from '../pagination';
+import { stringify } from 'query-string';
 
 export interface Profile {
   username?: string;
@@ -28,7 +29,8 @@ export function createProfileAPI() {
     },
 
     getTopRatedProfiles: (page?: number, pageSize?: string): Promise<Page<Profile>> => {
-      return get(`${baseURL}/top`);
+      const params = stringify({ page, pageSize });
+      return get(`${baseURL}/top/?${params}`);
     },
 
     getBasicProfile: (userJid: string): Promise<BasicProfile> => {

@@ -2,6 +2,7 @@ import JophielRoutes from './jophiel/JophielRoutes';
 import JophielAccountsRoutes from './jophiel/JophielAccountsRoutes';
 import UrielContestsRoutes from './uriel/UrielContestsRoutes';
 import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
+import JudgelsRankingRoutes from './ranking/JudgelsRankingRoutes';
 import { JophielRole } from '../modules/api/jophiel/my';
 
 function shouldShowRoute(id: string, role: JophielRole) {
@@ -26,6 +27,14 @@ const appRoutes = [
     route: {
       path: '/contests',
       component: UrielContestsRoutes,
+    },
+  },
+  {
+    id: 'ranking',
+    title: 'Ranking',
+    route: {
+      path: '/ranking',
+      component: JudgelsRankingRoutes,
     },
   },
   {

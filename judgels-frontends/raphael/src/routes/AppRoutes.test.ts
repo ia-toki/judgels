@@ -9,18 +9,18 @@ describe('AppRoutes', () => {
   };
 
   test('admin', () => {
-    testAppRoutes(JophielRole.Admin, ['account', 'contests', 'training']);
+    testAppRoutes(JophielRole.Admin, ['account', 'contests', 'ranking', 'training']);
   });
 
   test('superadmin', () => {
-    testAppRoutes(JophielRole.Superadmin, ['account', 'contests', 'training']);
+    testAppRoutes(JophielRole.Superadmin, ['account', 'contests', 'ranking', 'training']);
   });
 
   test('user', () => {
-    testAppRoutes(JophielRole.User, ['contests', 'training']);
+    testAppRoutes(JophielRole.User, ['contests', 'ranking', 'training']);
   });
 
   test('guest', () => {
-    testAppRoutes(JophielRole.Guest, ['contests', 'training']);
+    testAppRoutes(JophielRole.Guest, ['contests', 'ranking', 'training']);
   });
 });
