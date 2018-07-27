@@ -22,7 +22,7 @@ export function withBreadcrumb(breadcrumbTitle: string) {
       }
 
       componentWillUnmount() {
-        this.props.onPopBreadcrumb(this.props.match.url);
+        this.props.onPopBreadcrumb(this.props.match.url.replace(/\/+$/, ''));
       }
     }
 
