@@ -34,6 +34,8 @@
 }
 
 .rating-legend {
-  color: #bb0000 !important;
   font-weight: bold;
+  background: linear-gradient(0deg, #bb0000 0%, #bb0000 50%, #000000 51%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
