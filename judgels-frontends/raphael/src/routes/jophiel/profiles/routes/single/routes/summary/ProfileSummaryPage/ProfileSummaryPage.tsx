@@ -6,7 +6,7 @@ import { Card } from '../../../../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { BasicProfile } from '../../../../../../../../modules/api/jophiel/profile';
 import { AppState } from '../../../../../../../../modules/store';
-import { getLeagueClass } from '../../../../../../../../modules/api/jophiel/userRating';
+import { getRatingClass } from '../../../../../../../../modules/api/jophiel/userRating';
 import { selectUserJid } from '../../../../../../modules/profileSelectors';
 import { avatarActions as injectedAvatarActions } from '../../../../../../modules/avatarActions';
 import { profileActions as injectedProfileActions } from '../../../../../../modules/profileActions';
@@ -73,7 +73,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
         <div className="basic-profile-card__avatar-wrapper">
           <img className="basic-profile-card__avatar" src={avatarUrl} />
         </div>
-        <p className={getLeagueClass(profile.rating)}>{profile.username}</p>
+        <p className={getRatingClass(profile.rating)}>{profile.username}</p>
         <p>{profile.nationality}</p>
       </div>
     );
@@ -90,7 +90,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
             </tr>
             <tr>
               <td className="basic-profile-card__details-keys">Rating</td>
-              <td className={getLeagueClass(profile.rating)}>{profile.rating || '-'}</td>
+              <td className={getRatingClass(profile.rating)}>{profile.rating || '-'}</td>
             </tr>
           </tbody>
         </table>

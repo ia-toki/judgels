@@ -30,19 +30,19 @@ const appRoutes = [
     },
   },
   {
-    id: 'ranking',
-    title: 'Ranking',
-    route: {
-      path: '/ranking',
-      component: JudgelsRankingRoutes,
-    },
-  },
-  {
     id: 'training',
     title: 'Training',
     route: {
       path: '/training',
       component: JerahmeelRoutes,
+    },
+  },
+  {
+    id: 'ranking',
+    title: 'Ranking',
+    route: {
+      path: '/ranking',
+      component: JudgelsRankingRoutes,
     },
   },
 ];

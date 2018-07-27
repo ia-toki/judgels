@@ -1,4 +1,4 @@
-export function getLeague(rating?: number) {
+export function getRatingName(rating?: number) {
   if (rating === null || rating === undefined) {
     return 'unrated';
   }
@@ -23,6 +23,6 @@ export function getLeague(rating?: number) {
   return 'legend';
 }
 
-export function getLeagueClass(rating?: number) {
-  return 'league-' + getLeague(rating);
+export function getRatingClass(rating?: number) {
+  return 'rating-' + getRatingName(rating);
 }

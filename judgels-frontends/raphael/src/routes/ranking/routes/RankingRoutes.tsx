@@ -9,6 +9,7 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import RatingsPage from './ratings/RatingsPage/RatingsPage';
+import RatingSystemPage from './ratings/RatingSystemPage/RatingSystemPage';
 
 const RankingRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
@@ -18,6 +19,13 @@ const RankingRoutes = () => {
       title: 'Top ratings',
       routeComponent: Route,
       component: RatingsPage,
+    },
+    {
+      id: 'rating-system',
+      titleIcon: 'property',
+      title: 'Rating system',
+      routeComponent: Route,
+      component: RatingSystemPage,
     },
   ];
 
