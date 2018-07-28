@@ -67,6 +67,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userAvatarResource());
         env.jersey().register(component.userProfileResource());
+        env.jersey().register(component.userRatingResource());
         env.jersey().register(component.webResource());
         env.jersey().register(component.versionResource());
     }
