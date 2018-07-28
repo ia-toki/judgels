@@ -1,5 +1,6 @@
 package judgels.jophiel.hibernate;
 
+import com.google.common.collect.ImmutableMap;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
@@ -26,13 +27,17 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
 
     @Override
     public Map<String, UserRatingModel> selectAllByTimeAndUserJids(Instant time, Set<String> userJids) {
+        if (userJids.isEmpty()) {
+            return ImmutableMap.of();
+        }
+
         // selects the row for each `userJid` with the latest `time` before the given time
 
         Query<UserRatingModel> query = currentSession().createQuery(
                 "SELECT t1 FROM jophiel_user_rating t1 "
                 + "LEFT OUTER JOIN jophiel_user_rating t2 "
                 + "ON (t1.userJid = t2.userJid AND t1.time < t2.time) "
-                + "WHERE t1.time < :time AND t1.userJid IN (:userJids) AND t2.userJid IS NULL",
+                + "WHERE t1.time < :time AND t1.userJid IN :userJids AND t2.userJid IS NULL",
                 UserRatingModel.class);
 
         query.setParameter("time", time);
