@@ -1,4 +1,4 @@
-package judgels.jophiel.api.profile;
+package judgels.jophiel.api.info;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;

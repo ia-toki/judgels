@@ -4,12 +4,12 @@ import { get, put } from 'modules/api/http';
 export interface UserInfo {
   name?: string;
   gender?: string;
-  nationality?: string;
-  homeAddress?: string;
-  institution?: string;
   country?: string;
-  province?: string;
-  city?: string;
+  homeAddress?: string;
+  institutionName?: string;
+  institutionCountry?: string;
+  institutionProvince?: string;
+  institutionCity?: string;
   shirtSize?: string;
 }
 

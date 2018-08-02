@@ -10,9 +10,9 @@ import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.jophiel.api.profile.BasicProfile;
-import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.profile.ProfileService;
+import judgels.jophiel.api.info.BasicProfile;
+import judgels.jophiel.api.info.Profile;
+import judgels.jophiel.api.info.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 

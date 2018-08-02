@@ -1,4 +1,4 @@
-package judgels.jophiel.api.profile;
+package judgels.jophiel.api.info;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 

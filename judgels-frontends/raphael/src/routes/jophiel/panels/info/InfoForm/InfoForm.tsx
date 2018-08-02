@@ -22,7 +22,7 @@ const genderField: any = {
 };
 
 const nationalityField: any = {
-  name: 'nationality',
+  name: 'country',
   label: 'Country',
 };
 
@@ -37,22 +37,22 @@ const shirtSizeField: any = {
 };
 
 const institutionField: any = {
-  name: 'institution',
+  name: 'institutionName',
   label: 'Name',
 };
 
-const countryField: any = {
-  name: 'country',
+const institutionCountryField: any = {
+  name: 'institutionCountry',
   label: 'Country',
 };
 
-const provinceField: any = {
-  name: 'province',
+const institutionProvinceField: any = {
+  name: 'institutionProvince',
   label: 'Province/State',
 };
 
-const cityField: any = {
-  name: 'city',
+const institutionCityField: any = {
+  name: 'institutionCity',
   label: 'City',
 };
 
@@ -105,12 +105,12 @@ const InfoForm = (props: InfoFormProps) => {
       <table className="bp3-html-table bp3-html-table-striped">
         <tbody>
           <Field component={FormTableTextInput} {...institutionField} />
-          <Field component={FormTableSelect} {...countryField}>
+          <Field component={FormTableSelect} {...institutionCountryField}>
             <option />
             {countryOptions}
           </Field>
-          <Field component={FormTableTextInput} {...provinceField} />
-          <Field component={FormTableTextInput} {...cityField} />
+          <Field component={FormTableTextInput} {...institutionProvinceField} />
+          <Field component={FormTableTextInput} {...institutionCityField} />
         </tbody>
       </table>
 

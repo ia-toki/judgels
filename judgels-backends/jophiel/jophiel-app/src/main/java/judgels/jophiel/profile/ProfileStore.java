@@ -8,8 +8,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.jophiel.api.profile.BasicProfile;
-import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.info.BasicProfile;
+import judgels.jophiel.api.info.Profile;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.user.UserStore;
@@ -40,7 +40,7 @@ public class ProfileStore {
                 .stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> new Profile.Builder()
                         .username(e.getValue().getUsername())
-                        .nationality(Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getNationality))
+                        .nationality(Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getCountry))
                         .rating(Optional.ofNullable(ratings.get(e.getKey())))
                         .build()));
     }
@@ -56,7 +56,7 @@ public class ProfileStore {
                 .filter(e -> users.containsKey(e.getUserJid()))
                 .map(e -> new Profile.Builder()
                         .username(users.get(e.getUserJid()).getUsername())
-                        .nationality(Optional.ofNullable(infos.get(e.getUserJid())).flatMap(UserInfo::getNationality))
+                        .nationality(Optional.ofNullable(infos.get(e.getUserJid())).flatMap(UserInfo::getCountry))
                         .rating(Optional.of(e.getRating()))
                         .build())
                 .collect(Collectors.toList()));
@@ -69,7 +69,7 @@ public class ProfileStore {
 
             return new BasicProfile.Builder()
                     .username(user.getUsername())
-                    .nationality(info.getNationality())
+                    .nationality(info.getCountry())
                     .rating(Optional.ofNullable(ratings.get(userJid)))
                     .name(info.getName())
                     .build();

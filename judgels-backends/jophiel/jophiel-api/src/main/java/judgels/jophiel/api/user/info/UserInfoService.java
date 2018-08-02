@@ -12,7 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/users/{userJid}/profile")
+@Path("/api/v2/users/{userJid}/info")
 public interface UserInfoService {
     @GET
     @Path("/")

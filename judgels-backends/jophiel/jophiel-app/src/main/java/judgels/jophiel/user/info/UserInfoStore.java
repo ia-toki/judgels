@@ -46,12 +46,12 @@ public class UserInfoStore {
         model.userJid = userJid;
         model.name = profile.getName().orElse(null);
         model.gender = profile.getGender().orElse(null);
-        model.nationality = profile.getNationality().orElse(null);
-        model.homeAddress = profile.getHomeAddress().orElse(null);
-        model.institution = profile.getInstitution().orElse(null);
         model.country = profile.getCountry().orElse(null);
-        model.province = profile.getProvince().orElse(null);
-        model.city = profile.getCity().orElse(null);
+        model.homeAddress = profile.getHomeAddress().orElse(null);
+        model.institutionName = profile.getInstitutionName().orElse(null);
+        model.institutionCountry = profile.getInstitutionCountry().orElse(null);
+        model.institutionProvince = profile.getInstitutionProvince().orElse(null);
+        model.institutionCity = profile.getInstitutionCity().orElse(null);
         model.shirtSize = profile.getShirtSize().orElse(null);
     }
 
@@ -59,12 +59,12 @@ public class UserInfoStore {
         return new UserInfo.Builder()
                 .name(Optional.ofNullable(model.name))
                 .gender(Optional.ofNullable(model.gender))
-                .nationality(Optional.ofNullable(model.nationality))
-                .homeAddress(Optional.ofNullable(model.homeAddress))
-                .institution(Optional.ofNullable(model.institution))
                 .country(Optional.ofNullable(model.country))
-                .province(Optional.ofNullable(model.province))
-                .city(Optional.ofNullable(model.city))
+                .homeAddress(Optional.ofNullable(model.homeAddress))
+                .institutionName(Optional.ofNullable(model.institutionName))
+                .institutionCountry(Optional.ofNullable(model.institutionCountry))
+                .institutionProvince(Optional.ofNullable(model.institutionProvince))
+                .institutionCity(Optional.ofNullable(model.institutionCity))
                 .shirtSize(Optional.ofNullable(model.shirtSize))
                 .build();
     }

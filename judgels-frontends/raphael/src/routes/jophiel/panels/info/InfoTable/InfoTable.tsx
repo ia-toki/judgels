@@ -18,20 +18,20 @@ export const InfoTable = (props: InfoTableProps) => {
       title: 'Gender',
       value: info.gender && userInfoGender[info.gender],
     },
-    { key: 'nationality', title: 'Country', value: info.nationality },
+    { key: 'country', title: 'Country', value: info.country },
     { key: 'homeAddress', title: 'Home address', value: info.homeAddress },
     { key: 'shirtSize', title: 'Shirt size', value: info.shirtSize },
   ];
 
   const institutionRows: FormTableRow[] = [
-    { key: 'institution', title: 'Name', value: info.institution },
-    { key: 'country', title: 'Country', value: info.country },
+    { key: 'institutionName', title: 'Name', value: info.institutionName },
+    { key: 'institutionCountry', title: 'Country', value: info.institutionCountry },
     {
-      key: 'province',
+      key: 'institutionProvince',
       title: 'Province/State',
-      value: info.province,
+      value: info.institutionProvince,
     },
-    { key: 'city', title: 'City', value: info.city },
+    { key: 'institutionCity', title: 'City', value: info.institutionCity },
   ];
 
   return (

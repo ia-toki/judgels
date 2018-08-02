@@ -7,14 +7,13 @@ import javax.persistence.Table;
 import judgels.persistence.Model;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
-@Entity(name = "jophiel_user_profile")
+@Entity(name = "jophiel_user_info")
 @Table(indexes = {
-        @Index(columnList = "nationality"),
-        @Index(columnList = "institution"),
         @Index(columnList = "country"),
-        @Index(columnList = "province"),
-        @Index(columnList = "city")
-        })
+        @Index(columnList = "institutionName"),
+        @Index(columnList = "institutionCountry"),
+        @Index(columnList = "institutionProvince"),
+        @Index(columnList = "institutionCity")})
 public class UserInfoModel extends Model {
     @Column(unique = true, nullable = false)
     public String userJid;
@@ -23,18 +22,18 @@ public class UserInfoModel extends Model {
 
     public String gender;
 
-    public String nationality;
+    public String country;
 
     @Column(columnDefinition = "TEXT")
     public String homeAddress;
 
     public String shirtSize;
 
-    public String institution;
+    public String institutionName;
 
-    public String country;
+    public String institutionCountry;
 
-    public String province;
+    public String institutionProvince;
 
-    public String city;
+    public String institutionCity;
 }

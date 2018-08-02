@@ -11,14 +11,14 @@ import org.immutables.value.Value;
 public interface UserInfo {
     Optional<String> getName();
     Optional<String> getGender();
-    Optional<String> getNationality();
+    Optional<String> getCountry();
     Optional<String> getHomeAddress();
     Optional<String> getShirtSize();
 
-    Optional<String> getInstitution();
-    Optional<String> getCity();
-    Optional<String> getProvince();
-    Optional<String> getCountry();
+    Optional<String> getInstitutionName();
+    Optional<String> getInstitutionCity();
+    Optional<String> getInstitutionProvince();
+    Optional<String> getInstitutionCountry();
 
     class Builder extends ImmutableUserInfo.Builder {}
 }

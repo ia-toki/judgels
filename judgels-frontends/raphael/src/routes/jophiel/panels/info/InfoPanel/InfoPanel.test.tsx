@@ -19,13 +19,13 @@ describe('InfoPanel', () => {
     const info: UserInfo = {
       name: 'My Name',
       gender: 'MALE',
-      nationality: 'Indonesia',
+      country: 'Indonesia',
       homeAddress: 'My Address',
       shirtSize: 'XL',
-      institution: 'My Institution',
-      country: 'United Kingdom',
-      province: 'My Province',
-      city: 'My City',
+      institutionName: 'My Institution',
+      institutionCountry: 'United Kingdom',
+      institutionProvince: 'My Province',
+      institutionCity: 'My City',
     };
 
     const store: Store<Partial<AppState>> = createStore(combineReducers({ form: formReducer }));
@@ -42,13 +42,13 @@ describe('InfoPanel', () => {
   it('has working info form', async () => {
     expect(wrapper.find('[data-key="name"]').text()).toEqual('My Name');
     expect(wrapper.find('[data-key="gender"]').text()).toEqual('Male');
-    expect(wrapper.find('[data-key="nationality"]').text()).toEqual('Indonesia');
+    expect(wrapper.find('[data-key="country"]').text()).toEqual('Indonesia');
     expect(wrapper.find('[data-key="homeAddress"]').text()).toEqual('My Address');
     expect(wrapper.find('[data-key="shirtSize"]').text()).toEqual('XL');
-    expect(wrapper.find('[data-key="institution"]').text()).toEqual('My Institution');
-    expect(wrapper.find('[data-key="country"]').text()).toEqual('United Kingdom');
-    expect(wrapper.find('[data-key="province"]').text()).toEqual('My Province');
-    expect(wrapper.find('[data-key="city"]').text()).toEqual('My City');
+    expect(wrapper.find('[data-key="institutionName"]').text()).toEqual('My Institution');
+    expect(wrapper.find('[data-key="institutionCountry"]').text()).toEqual('United Kingdom');
+    expect(wrapper.find('[data-key="institutionProvince"]').text()).toEqual('My Province');
+    expect(wrapper.find('[data-key="institutionCity"]').text()).toEqual('My City');
 
     wrapper.find('button[data-key="edit"]').simulate('click');
 
@@ -58,8 +58,8 @@ describe('InfoPanel', () => {
     const gender = wrapper.find('select[name="gender"]');
     gender.simulate('change', { target: { value: 'FEMALE' } });
 
-    const nationality = wrapper.find('select[name="nationality"]');
-    nationality.simulate('change', { target: { value: 'Singapore' } });
+    const country = wrapper.find('select[name="country"]');
+    country.simulate('change', { target: { value: 'Singapore' } });
 
     const homeAddress = wrapper.find('textarea[name="homeAddress"]');
     homeAddress.simulate('change', { target: { value: 'My New Address' } });
@@ -67,19 +67,19 @@ describe('InfoPanel', () => {
     const shirtSize = wrapper.find('select[name="shirtSize"]');
     shirtSize.simulate('change', { target: { value: 'S' } });
 
-    const institution = wrapper.find('input[name="institution"]');
-    institution.simulate('change', { target: { value: 'My New Institution' } });
+    const institutionName = wrapper.find('input[name="institutionName"]');
+    institutionName.simulate('change', { target: { value: 'My New Institution' } });
 
-    const country = wrapper.find('select[name="country"]');
-    country.simulate('change', { target: { value: 'United States' } });
+    const institutionCountry = wrapper.find('select[name="institutionCountry"]');
+    institutionCountry.simulate('change', { target: { value: 'United States' } });
 
-    const province = wrapper.find('input[name="province"]');
-    province.simulate('change', {
+    const institutionProvince = wrapper.find('input[name="institutionProvince"]');
+    institutionProvince.simulate('change', {
       target: { value: 'My New Province' },
     });
 
-    const city = wrapper.find('input[name="city"]');
-    city.simulate('change', { target: { value: 'My New City' } });
+    const institutionCity = wrapper.find('input[name="institutionCity"]');
+    institutionCity.simulate('change', { target: { value: 'My New City' } });
 
     const form = wrapper.find('form');
     form.simulate('submit');
@@ -87,13 +87,13 @@ describe('InfoPanel', () => {
     expect(onUpdateInfo).toHaveBeenCalledWith({
       name: 'My New Name',
       gender: 'FEMALE',
-      nationality: 'Singapore',
+      country: 'Singapore',
       homeAddress: 'My New Address',
       shirtSize: 'S',
-      institution: 'My New Institution',
-      country: 'United States',
-      province: 'My New Province',
-      city: 'My New City',
+      institutionName: 'My New Institution',
+      institutionCountry: 'United States',
+      institutionProvince: 'My New Province',
+      institutionCity: 'My New City',
     });
   });
 });

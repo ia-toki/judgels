@@ -1,4 +1,4 @@
-package judgels.jophiel.user.profile;
+package judgels.jophiel.user.info;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,7 +7,6 @@ import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.persistence.UserInfoModel;
-import judgels.jophiel.user.info.UserInfoStore;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,13 +34,13 @@ class UserInfoStoreIntegrationTests {
         UserInfo profile = new UserInfo.Builder()
                 .name("First Last")
                 .gender("MALE")
-                .nationality("id")
+                .country("id")
                 .homeAddress("address")
                 .shirtSize("L")
-                .institution("university")
-                .country("nation")
-                .province("province")
-                .city("town")
+                .institutionName("university")
+                .institutionCountry("nation")
+                .institutionProvince("province")
+                .institutionCity("town")
                 .build();
         store.upsertInfo(USER_JID, profile);
         assertThat(store.getInfo(USER_JID)).isEqualTo(profile);

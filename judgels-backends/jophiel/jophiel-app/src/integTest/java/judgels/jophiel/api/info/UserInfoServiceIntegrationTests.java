@@ -25,13 +25,13 @@ class UserInfoServiceIntegrationTests extends AbstractServiceIntegrationTests {
         UserInfo info = new UserInfo.Builder()
                 .name("Alpha")
                 .gender("MALE")
-                .nationality("id")
+                .country("id")
                 .homeAddress("address")
                 .shirtSize("L")
-                .institution("university")
-                .country("nation")
-                .province("province")
-                .city("town")
+                .institutionName("university")
+                .institutionCountry("nation")
+                .institutionProvince("province")
+                .institutionCity("town")
                 .build();
 
         infoService.updateInfo(adminHeader, user.getJid(), info);
