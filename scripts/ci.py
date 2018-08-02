@@ -95,8 +95,8 @@ def check(branch_to_compare):
     print('set -ex')
     for project in PROJECTS:
         if MODULES[project].intersection(changed_modules):
-            if ':raphael' in project:
-                if ':package.json' in project:
+            if ':raphael' in changed_modules:
+                if ':raphael:package.json' in changed_modules:
                     print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
             else:
