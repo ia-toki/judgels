@@ -15,7 +15,7 @@ export class ScoreboardTable extends React.PureComponent<ScoreboardTableProps> {
   render() {
     return (
       <table
-        className={classNames('pt-html-table', 'pt-html-table-striped', 'scoreboard__content', this.props.className)}
+        className={classNames('bp3-html-table', 'bp3-html-table-striped', 'scoreboard__content', this.props.className)}
       >
         {this.renderHeader(this.props.state)}
         {this.props.children}

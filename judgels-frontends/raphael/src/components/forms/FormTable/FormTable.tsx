@@ -23,7 +23,7 @@ export const FormTable = (props: FormTableProps) => {
   ));
 
   return (
-    <table className="pt-html-table pt-html-table-striped">
+    <table className="bp3-html-table bp3-html-table-striped">
       <tbody>{rows}</tbody>
     </table>
   );

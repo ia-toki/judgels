@@ -15,7 +15,7 @@ export const FormTextInput = (props: FormTextInputProps) => (
     <input
       {...props.input}
       type={props.type || 'text'}
-      className={classNames('pt-input', getIntentClassName(props.meta))}
+      className={classNames('bp3-input', getIntentClassName(props.meta))}
     />
     <FormInputValidation meta={props.meta} />
   </FormGroup>

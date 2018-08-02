@@ -59,7 +59,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
     }
     return (
       <Card title="Users">
-        <table className="pt-html-table pt-html-table-striped table-list users-page">
+        <table className="bp3-html-table bp3-html-table-striped table-list users-page">
           {this.renderHeader()}
           {this.renderRows(users.data)}
         </table>

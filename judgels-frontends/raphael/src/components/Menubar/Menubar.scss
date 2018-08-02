@@ -18,7 +18,7 @@
     outline: none;
   }
 
-  .pt-tab {
+  .bp3-tab {
     padding-left: 20px;
     padding-right: 20px;
     margin-right: 0;
@@ -27,18 +27,18 @@
     color: $primary-color;
   }
 
-  .pt-tab[aria-selected="true"] {
+  .bp3-tab[aria-selected="true"] {
     font-weight: 600;
-    background-color: $header-color;
+    background-color: $header-color !important;
     color: $text-color;
   }
 
-  .pt-tab-indicator-wrapper {
+  .bp3-tab-indicator-wrapper {
     height: 45px !important;
     z-index: 1;
   }
 
-  .pt-tab-indicator {
+  .bp3-tab-indicator {
     background-color: $primary-color;
   }
 }

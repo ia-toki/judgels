@@ -72,7 +72,7 @@ const InfoForm = (props: InfoFormProps) => {
   return (
     <form onSubmit={props.handleSubmit}>
       <h4>My info</h4>
-      <table className="pt-html-table pt-html-table-striped">
+      <table className="bp3-html-table bp3-html-table-striped">
         <tbody>
           <Field component={FormTableTextInput} {...nameField} />
           <Field component={FormTableSelect} {...genderField}>
@@ -102,7 +102,7 @@ const InfoForm = (props: InfoFormProps) => {
       <HorizontalInnerDivider />
 
       <h4>My institution (school/organization represented)</h4>
-      <table className="pt-html-table pt-html-table-striped">
+      <table className="bp3-html-table bp3-html-table-striped">
         <tbody>
           <Field component={FormTableTextInput} {...institutionField} />
           <Field component={FormTableSelect} {...countryField}>

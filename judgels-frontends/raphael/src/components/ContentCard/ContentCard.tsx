@@ -9,6 +9,6 @@ export interface ContentCardProps {
 
 export const ContentCard = (props: ContentCardProps) => (
   <div className={props.className}>
-    <div className="pt-card content-card">{props.children}</div>
+    <div className="bp3-card content-card">{props.children}</div>
   </div>
 );

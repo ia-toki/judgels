@@ -9,7 +9,7 @@ import './FormTableSelect.css';
 export const FormTableSelect = (props: FormTableInputProps) => {
   return (
     <FormTableInput {...props}>
-      <div className="pt-select">
+      <div className="bp3-select">
         <select {...props.input} className={classNames(getIntentClassName(props.meta))}>
           {props.children}
         </select>

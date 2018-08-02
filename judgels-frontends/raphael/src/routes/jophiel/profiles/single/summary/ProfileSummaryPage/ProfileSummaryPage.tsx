@@ -83,7 +83,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   private renderDetails = (profile: BasicProfile) => {
     return (
       <div className="basic-profile-card__details">
-        <table className="pt-html-table pt-html-table-striped basic-profile-card__details-table">
+        <table className="bp3-html-table bp3-html-table-striped basic-profile-card__details-table">
           <tbody>
             <tr>
               <td className="basic-profile-card__details-keys">Name</td>

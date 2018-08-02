@@ -67,17 +67,17 @@ class Pagination extends React.PureComponent<PaginationProps, {}> {
         pageCount={this.getTotalPages()}
         pageRangeDisplayed={3}
         marginPagesDisplayed={2}
-        pageClassName="pt-button pagination__item"
+        pageClassName="bp3-button pagination__item"
         previousLabel="<"
         nextLabel=">"
         pageLinkClassName="pagination__link"
         nextLinkClassName="pagination__link"
         previousLinkClassName="pagination__link"
-        breakClassName="pt-button pt-disabled"
-        containerClassName="pt-button-group"
-        activeClassName="pt-button pt-active pagination__item"
-        previousClassName="pt-button pagination__item"
-        nextClassName="pt-button pagination__item"
+        breakClassName="bp3-button bp3-disabled"
+        containerClassName="bp3-button-group"
+        activeClassName="bp3-button bp3-active pagination__item"
+        previousClassName="bp3-button pagination__item"
+        nextClassName="bp3-button pagination__item"
         onPageChange={this.onChangePage}
       />
     );

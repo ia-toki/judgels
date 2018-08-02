@@ -18,7 +18,7 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
     <li key={item.link}>
       <Link
         to={item.link}
-        className={classNames('pt-breadcrumb', { 'pt-breadcrumb-current': idx === props.breadcrumbs.length - 1 })}
+        className={classNames('bp3-breadcrumb', { 'bp3-breadcrumb-current': idx === props.breadcrumbs.length - 1 })}
       >
         {item.title}
       </Link>
@@ -27,7 +27,7 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
   return (
     <div className="breadcrumbs">
       <div className="breadcrumbs__content">
-        <ul className="pt-breadcrumbs">{items}</ul>
+        <ul className="bp3-breadcrumbs">{items}</ul>
       </div>
     </div>
   );

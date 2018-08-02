@@ -63,7 +63,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <>
         <h4>General Info</h4>
         <ContentCard>
-          <table className="pt-html-table pt-html-table-striped submission-details">
+          <table className="bp3-html-table bp3-html-table-striped submission-details">
             <thead>
               <tr>
                 <th className="col-info">Info</th>
@@ -129,7 +129,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <>
         <h4>Subtask Results</h4>
         <ContentCard>
-          <table className="pt-html-table pt-html-table-striped submission-details">
+          <table className="bp3-html-table bp3-html-table-striped submission-details">
             <thead>
               <tr>
                 <th className="col-id">ID</th>
@@ -167,7 +167,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <>
         <h4>Sample Test Data Results</h4>
         <ContentCard>
-          <table className="pt-html-table pt-html-table-striped submission-details">
+          <table className="bp3-html-table bp3-html-table-striped submission-details">
             <thead>
               <tr>
                 <th className="col-id">ID</th>
@@ -212,7 +212,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         ...groups,
         <ContentCard key={idx}>
           {hasSubtasks && this.renderTestGroupHeading(idx, group.testCaseResults)}
-          <table className="pt-html-table pt-html-table-striped submission-details">
+          <table className="bp3-html-table bp3-html-table-striped submission-details">
             <thead>
               <tr>
                 <th className="col-id">ID</th>

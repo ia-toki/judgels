@@ -25,7 +25,7 @@ export class InfoPanel extends React.PureComponent<InfoPanelProps, InfoPanelStat
     const action = this.state.isEditing ? (
       undefined
     ) : (
-      <Button data-key="edit" text="Edit" intent={Intent.PRIMARY} className="pt-small" onClick={this.toggleEdit} />
+      <Button data-key="edit" text="Edit" intent={Intent.PRIMARY} className="bp3-small" onClick={this.toggleEdit} />
     );
 
     return (

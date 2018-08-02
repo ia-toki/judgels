@@ -59,7 +59,7 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
     ));
 
     return (
-      <table className="pt-html-table pt-html-table-striped table-list hall-of-fame-widget__table">
+      <table className="bp3-html-table bp3-html-table-striped table-list hall-of-fame-widget__table">
         <thead>
           <tr>
             <th className="col-rank">#</th>

@@ -10,8 +10,8 @@ export interface ButtonLinkProps extends LinkProps {
 
 export const ButtonLink = (props: ButtonLinkProps) => {
   const { intent, ...linkProps } = props;
-  const className = classNames('pt-button', props.className, {
-    'pt-intent-primary': intent === Intent.PRIMARY,
+  const className = classNames('bp3-button', props.className, {
+    'bp3-intent-primary': intent === Intent.PRIMARY,
   });
 
   return <Link {...linkProps} as="button" className={className} />;

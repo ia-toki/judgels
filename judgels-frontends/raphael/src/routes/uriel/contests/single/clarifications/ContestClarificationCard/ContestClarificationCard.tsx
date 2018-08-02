@@ -19,7 +19,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
 
     return (
       <Callout className="contest-clarification-card">
-        <h4 className={Classes.CALLOUT_TITLE}>
+        <h4>
           {clarification.title} &nbsp; <Tag>{topic}</Tag>
         </h4>
         <p className="contest-clarification-card__info">
@@ -54,7 +54,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
     }
     return (
       <>
-        <h4 className={Classes.CALLOUT_TITLE}>Answer:</h4>
+        <h4 className={Classes.HEADING}>Answer:</h4>
         <p className="contest-clarification-card__info">
           <small>
             answered <FormattedRelative value={clarification.answeredTime!} />

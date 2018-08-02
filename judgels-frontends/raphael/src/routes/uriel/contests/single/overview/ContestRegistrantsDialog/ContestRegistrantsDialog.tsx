@@ -45,9 +45,9 @@ class ContestRegistrantsDialog extends React.PureComponent<
 
     return (
       <Dialog isOpen onClose={this.props.onClose} title={`Registrants${contestantsCount}`} canOutsideClickClose={false}>
-        <div className="pt-dialog-body contest-registrants-dialog__body">{this.renderRegistrants()}</div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp3-dialog-body contest-registrants-dialog__body">{this.renderRegistrants()}</div>
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
             <Button text="Close" onClick={this.props.onClose} />
           </div>
         </div>
@@ -83,7 +83,7 @@ class ContestRegistrantsDialog extends React.PureComponent<
     ));
 
     return (
-      <table className="pt-html-table pt-html-table-striped table-list">
+      <table className="bp3-html-table bp3-html-table-striped table-list">
         <thead>
           <tr>
             <th>Country</th>

@@ -13,7 +13,7 @@ export const FormTableTextInput = (props: FormTableTextInputProps) => (
     <input
       {...props.input}
       type={props.type || 'text'}
-      className={classNames('pt-input', getIntentClassName(props.meta))}
+      className={classNames('bp3-input', getIntentClassName(props.meta))}
     />
   </FormTableInput>
 );

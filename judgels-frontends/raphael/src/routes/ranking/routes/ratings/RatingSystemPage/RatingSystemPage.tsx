@@ -8,7 +8,7 @@ import './RatingSystemPage.css';
 
 const RatingSystemPage = () => (
   <Card title="Rating system">
-    <table className="pt-html-table table-list rating-system-page">
+    <table className="bp3-html-table table-list rating-system-page">
       <thead>
         <tr>
           <th>Rating</th>

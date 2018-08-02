@@ -10,7 +10,7 @@ export const FormTableTextArea = (props: FormTableInputProps) => (
   <FormTableInput {...props}>
     <textarea
       {...props.input}
-      className={classNames('pt-input', 'form-table-textarea', getIntentClassName(props.meta))}
+      className={classNames('bp3-input', 'form-table-textarea', getIntentClassName(props.meta))}
       rows={5}
     />
   </FormTableInput>

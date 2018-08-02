@@ -91,7 +91,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
     );
 
     return (
-      <div className="pt-navbar-group pt-align-right">
+      <div className="bp3-navbar-group bp3-align-right">
         {this.state.avatarUrl && (
           <div className="widget-user__avatar-wrapper">
             <img src={this.state.avatarUrl} className="widget-user__avatar" />
@@ -105,7 +105,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
 
   private renderForGuest = () => {
     return (
-      <div className="pt-navbar-group pt-align-right">
+      <div className="bp3-navbar-group bp3-align-right">
         <div className="widget-user__link">
           <Link data-key="login" to="/login">
             Log in

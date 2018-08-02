@@ -12,7 +12,7 @@ export const FormTextArea = (props: FormInputProps) => (
   <FormGroup labelFor={props.input.name} label={props.label} intent={getIntent(props.meta)}>
     <textarea
       {...props.input}
-      className={classNames('pt-input', 'form-table-textarea', getIntentClassName(props.meta))}
+      className={classNames('bp3-input', 'form-table-textarea', getIntentClassName(props.meta))}
       rows={5}
     />
     <FormInputValidation meta={props.meta} />

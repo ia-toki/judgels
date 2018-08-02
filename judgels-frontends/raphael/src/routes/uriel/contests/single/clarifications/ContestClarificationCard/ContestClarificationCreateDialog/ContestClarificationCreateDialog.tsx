@@ -102,9 +102,9 @@ class ContestClarificationCreateDialog extends React.Component<
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className="pt-dialog-body">{fields}</div>
-      <div className="pt-dialog-footer">
-        <div className="pt-dialog-footer-actions">
+      <div className="bp3-dialog-body">{fields}</div>
+      <div className="bp3-dialog-footer">
+        <div className="bp3-dialog-footer-actions">
           <Button text="Cancel" onClick={this.toggleDialog} />
           {submitButton}
         </div>

@@ -7,4 +7,4 @@ export interface FormInputValidationProps {
 }
 
 export const FormInputValidation = (props: FormInputValidationProps) =>
-  isValid(props.meta) ? null : <div className="form-text-input-error pt-form-helper-text">{props.meta.error}</div>;
+  isValid(props.meta) ? null : <div className="form-text-input-error bp3-form-helper-text">{props.meta.error}</div>;
