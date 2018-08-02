@@ -1,4 +1,4 @@
-import { Callout, Classes, Intent, Tag } from '@blueprintjs/core';
+import { Callout, Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
@@ -52,7 +52,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
     }
     return (
       <>
-        <h4 className={Classes.HEADING}>Answer:</h4>
+        <h4>Answer:</h4>
         <p className="contest-clarification-card__info">
           <small>
             answered <FormattedRelative value={clarification.answeredTime!} />
