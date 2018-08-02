@@ -2,7 +2,7 @@
 
 .header {
   background-color: $primary-color !important;
-  height: 60px;
+  height: 50px;
 }
 
 .header, .header a {
@@ -15,12 +15,12 @@
 
 .header__wrapper {
   margin: 0 auto;
-  padding-top: 5px;
   max-width: 1250px;
 }
 
 .header__logo {
-  width: 40px;
+  margin-top: 3px;
+  height: 40px;
 }
 
 .header__title {
