@@ -23,11 +23,11 @@ export function createUserInfoAPI() {
 
   return {
     getInfo: (token: string, userJid: string): Promise<UserInfo> => {
-      return get(`${baseURL}/${userJid}/profile`, token);
+      return get(`${baseURL}/${userJid}/info`, token);
     },
 
     updateInfo: (token: string, userJid: string, userInfo: UserInfo): Promise<void> => {
-      return put(`${baseURL}/${userJid}/profile`, token, userInfo);
+      return put(`${baseURL}/${userJid}/info`, token, userInfo);
     },
   };
 }
