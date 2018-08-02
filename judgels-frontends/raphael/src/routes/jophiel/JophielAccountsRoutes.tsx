@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as Loadable from 'react-loadable';
 
-import { LoadingState } from '../../components/LoadingState/LoadingState';
+import { LoadingState } from 'components/LoadingState/LoadingState';
 
 const LoadableAccountsRoutes = Loadable({
-  loader: () => import('./accounts/routes/AccountsRoutes'),
+  loader: () => import('./accounts/AccountsRoutes'),
   loading: () => <LoadingState large />,
 });
 

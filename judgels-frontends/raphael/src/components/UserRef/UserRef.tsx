@@ -2,8 +2,8 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Profile } from '../../modules/api/jophiel/profile';
-import { getRatingClass } from '../../modules/api/jophiel/userRating';
+import { Profile } from 'modules/api/jophiel/profile';
+import { getRatingClass } from 'modules/api/jophiel/userRating';
 
 import './UserRef.css';
 

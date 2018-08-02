@@ -1,4 +1,4 @@
-import { LanguageRestriction } from '../gabriel/language';
+import { LanguageRestriction } from 'modules/api/gabriel/language';
 
 export interface ProblemInfo {
   slug: string;

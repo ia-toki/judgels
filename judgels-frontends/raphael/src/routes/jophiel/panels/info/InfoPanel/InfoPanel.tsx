@@ -1,8 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Card } from '../../../../../components/Card/Card';
-import { UserInfo } from '../../../../../modules/api/jophiel/userInfo';
+import { Card } from 'components/Card/Card';
+import { UserInfo } from 'modules/api/jophiel/userInfo';
+
 import InfoForm from '../InfoForm/InfoForm';
 import { InfoTable } from '../InfoTable/InfoTable';
 

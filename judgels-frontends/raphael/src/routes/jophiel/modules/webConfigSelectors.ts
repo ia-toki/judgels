@@ -1,4 +1,4 @@
-import { AppState } from '../../../modules/store';
+import { AppState } from 'modules/store';
 
 export function selectRecaptchaSiteKey(state: AppState) {
   const value = state.jophiel.webConfig.value;

@@ -1,5 +1,5 @@
-import { selectToken } from '../../../modules/session/sessionSelectors';
-import { UserInfo } from '../../../modules/api/jophiel/userInfo';
+import { selectToken } from 'modules/session/sessionSelectors';
+import { UserInfo } from 'modules/api/jophiel/userInfo';
 
 export const infoActions = {
   getInfo: (userJid: string) => {

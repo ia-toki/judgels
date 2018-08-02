@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
+import { ContentCard } from 'components/ContentCard/ContentCard';
 
 export const LoadingActiveContestCard = () => (
   <ContentCard>

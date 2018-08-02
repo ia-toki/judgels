@@ -1,3 +1,5 @@
+import { ContestTab, ContestWebConfig } from 'modules/api/uriel/contestWeb';
+
 import {
   contestWebConfigReducer,
   ContestWebConfigState,
@@ -5,7 +7,6 @@ import {
   INITIAL_STATE,
   PutWebConfig,
 } from './contestWebConfigReducer';
-import { ContestTab, ContestWebConfig } from '../../../../modules/api/uriel/contestWeb';
 
 describe('contestWebConfigReducer', () => {
   test('PUT', () => {

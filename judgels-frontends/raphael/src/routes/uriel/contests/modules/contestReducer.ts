@@ -1,6 +1,6 @@
 import { TypedAction, TypedReducer } from 'redoodle';
 
-import { Contest } from '../../../../modules/api/uriel/contest';
+import { Contest } from 'modules/api/uriel/contest';
 
 export interface ContestState {
   value?: Contest;

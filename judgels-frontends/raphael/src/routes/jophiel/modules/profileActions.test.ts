@@ -1,7 +1,8 @@
+import { user } from 'fixtures/state';
+import { AppState } from 'modules/store';
+import { UsernamesMap } from 'modules/api/jophiel/user';
+
 import { profileActions } from './profileActions';
-import { user } from '../../../fixtures/state';
-import { AppState } from '../../../modules/store';
-import { UsernamesMap } from '../../../modules/api/jophiel/user';
 import { PutUserJid } from './profileReducer';
 
 describe('profileActions', () => {

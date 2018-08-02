@@ -1,5 +1,6 @@
+import { selectToken } from 'modules/session/sessionSelectors';
+
 import { DelContest, PutContest } from './contestReducer';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
 
 export const contestActions = {
   getContests: (page: number, pageSize: number) => {

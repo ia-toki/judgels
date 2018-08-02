@@ -1,6 +1,6 @@
 import { TypedAction, TypedReducer } from 'redoodle';
 
-import { JophielRole } from '../../../modules/api/jophiel/my';
+import { JophielRole } from 'modules/api/jophiel/my';
 
 export interface RoleState {
   value: JophielRole;

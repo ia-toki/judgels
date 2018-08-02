@@ -1,7 +1,8 @@
 import { SubmissionError } from 'redux-form';
 
+import { UserRegistrationData } from 'modules/api/jophiel/userAccount';
+
 import { registerActions } from './registerActions';
-import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
 
 describe('registerActions', () => {
   let dispatch: jest.Mock<any>;

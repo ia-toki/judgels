@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { Contest } from '../../modules/api/uriel/contest';
+import { Contest } from 'modules/api/uriel/contest';
+
 import { contestActions as injectedContestActions } from '../uriel/contests/modules/contestActions';
 
 interface LegacyCompetitionRouteProps extends RouteComponentProps<{ contestSlug: string }> {

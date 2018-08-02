@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Switch, withRouter, Route } from 'react-router';
 
-import GuestRoute from '../../components/GuestRoute/GuestRoute';
-import UserRoute from '../../components/UserRoute/UserRoute';
+import GuestRoute from 'components/GuestRoute/GuestRoute';
+import UserRoute from 'components/UserRoute/UserRoute';
+
 import HomePage from '../home/HomePage/HomePage';
 import LoginPage from './login/LoginPage/LoginPage';
 import LogoutPage from './logout/LogoutPage/LogoutPage';

@@ -1,5 +1,5 @@
-import { APP_CONFIG } from '../../../conf';
-import { delete_, get, postMultipart } from '../http';
+import { APP_CONFIG } from 'conf';
+import { delete_, get, postMultipart } from 'modules/api/http';
 
 export function createUserAvatarAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users`;

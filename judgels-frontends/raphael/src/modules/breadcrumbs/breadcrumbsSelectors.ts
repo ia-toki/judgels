@@ -1,5 +1,5 @@
-import { APP_CONFIG } from '../../conf';
-import { AppState } from '../store';
+import { APP_CONFIG } from 'conf';
+import { AppState } from 'modules/store';
 
 export function selectSortedBreadcrumbs(state: AppState) {
   return state.breadcrumbs.values.slice().sort((a, b) => a.link.length - b.link.length);

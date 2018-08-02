@@ -2,8 +2,9 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import Dropzone from 'react-dropzone';
 
-import { Card } from '../../../../../components/Card/Card';
-import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
+import { Card } from 'components/Card/Card';
+import { LoadingState } from 'components/LoadingState/LoadingState';
+
 import { MAX_AVATAR_FILE_SIZE } from '../../../modules/avatarActions';
 
 import './ChangeAvatarPanel.css';

@@ -7,7 +7,8 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { AppState } from '../../modules/store';
+import { AppState } from 'modules/store';
+
 import Pagination, { PaginationProps } from './Pagination';
 
 describe('Pagination', () => {

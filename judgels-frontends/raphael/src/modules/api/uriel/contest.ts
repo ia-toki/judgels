@@ -1,8 +1,8 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from '../../../conf';
-import { Page } from '../pagination';
-import { get, post } from '../http';
+import { APP_CONFIG } from 'conf';
+import { get, post } from 'modules/api/http';
+import { Page } from 'modules/api/pagination';
 
 export interface Contest {
   id: number;

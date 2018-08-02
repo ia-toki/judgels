@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { HtmlText } from '../../HtmlText/HtmlText';
-import { ContentCard } from '../../ContentCard/ContentCard';
-import { ProblemStatement } from '../../../modules/api/sandalphon/problem';
+import { HtmlText } from 'components/HtmlText/HtmlText';
+import { ContentCard } from 'components/ContentCard/ContentCard';
+import { ProblemStatement } from 'modules/api/sandalphon/problem';
 
 import './ProblemStatementCard.css';
 

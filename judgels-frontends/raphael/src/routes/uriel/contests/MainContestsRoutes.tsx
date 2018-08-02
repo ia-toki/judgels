@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Route, withRouter } from 'react-router';
 
-import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import ContestsRoutes from './routes/ContestsRoutes';
-import SingleContestRoutes from './routes/single/routes/SingleContestRoutes';
-import SingleContestDataRoute from './routes/single/routes/SingleContestDataRoute';
+import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
+
+import ContestsRoutes from './ContestsRoutes';
+import SingleContestRoutes from './single/SingleContestRoutes';
+import SingleContestDataRoute from './single/SingleContestDataRoute';
 
 const MainContestRoutes = () => (
   <div>

@@ -1,6 +1,6 @@
 import { setWith, TypedAction, TypedReducer } from 'redoodle';
 
-import { User } from '../api/jophiel/user';
+import { User } from 'modules/api/jophiel/user';
 
 export interface SessionState {
   isLoggedIn: boolean;

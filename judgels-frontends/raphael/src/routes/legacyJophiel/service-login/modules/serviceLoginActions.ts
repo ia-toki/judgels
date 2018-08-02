@@ -1,6 +1,6 @@
-import { ForbiddenError } from '../../../../modules/api/error';
-import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { ForbiddenError } from 'modules/api/error';
+import { PutToken, PutUser } from 'modules/session/sessionReducer';
+import { selectToken } from 'modules/session/sessionSelectors';
 
 export const serviceLoginActions = {
   logIn: (usernameOrEmail: string, password: string, redirectUri: string, returnUri: string) => {

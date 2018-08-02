@@ -1,8 +1,9 @@
+import { ContestPage } from 'modules/api/uriel/contest';
+import { AppState } from 'modules/store';
+import { contest, contestId, sessionState, token } from 'fixtures/state';
+
 import { contestActions } from './contestActions';
 import { PutContest } from './contestReducer';
-import { ContestPage } from '../../../../modules/api/uriel/contest';
-import { contest, contestId, sessionState, token } from '../../../../fixtures/state';
-import { AppState } from '../../../../modules/store';
 
 describe('contestActions', () => {
   let dispatch: jest.Mock<any>;

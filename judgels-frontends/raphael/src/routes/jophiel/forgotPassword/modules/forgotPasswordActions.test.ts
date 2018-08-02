@@ -1,5 +1,6 @@
+import { NotFoundError } from 'modules/api/error';
+
 import { forgotPasswordActions } from './forgotPasswordActions';
-import { NotFoundError } from '../../../../modules/api/error';
 
 describe('forgotPasswordActions', () => {
   let dispatch: jest.Mock<any>;

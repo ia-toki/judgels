@@ -1,6 +1,6 @@
-import { ProfilesMap } from '../jophiel/profile';
-import { APP_CONFIG } from '../../../conf';
-import { delete_, get, post } from '../http';
+import { APP_CONFIG } from 'conf';
+import { delete_, get, post } from 'modules/api/http';
+import { ProfilesMap } from 'modules/api/jophiel/profile';
 
 export interface ContestContestantsResponse {
   data: string[];

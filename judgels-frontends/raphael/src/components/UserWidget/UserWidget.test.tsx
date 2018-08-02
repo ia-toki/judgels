@@ -1,9 +1,10 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
+import { User } from 'modules/api/jophiel/user';
+import { Profile } from 'modules/api/jophiel/profile';
+
 import { UserWidget, UserWidgetProps } from './UserWidget';
-import { User } from '../../modules/api/jophiel/user';
-import { Profile } from '../../modules/api/jophiel/profile';
 
 describe('UserWidget', () => {
   let user: User | undefined;

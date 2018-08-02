@@ -1,5 +1,6 @@
+import { UnauthorizedError } from 'modules/api/error';
+
 import { tokenGateActions as injectedTokenGateActions } from './tokenGateActions';
-import { UnauthorizedError } from '../api/error';
 
 export function createTokenGateMiddleware(tokenGateActions) {
   return store => next => async action => {

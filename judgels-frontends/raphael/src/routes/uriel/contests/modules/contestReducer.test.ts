@@ -1,5 +1,6 @@
+import { Contest } from 'modules/api/uriel/contest';
+
 import { contestReducer, ContestState, DelContest, INITIAL_STATE, PutContest } from './contestReducer';
-import { Contest } from '../../../../modules/api/uriel/contest';
 
 describe('contestReducer', () => {
   test('PUT', () => {

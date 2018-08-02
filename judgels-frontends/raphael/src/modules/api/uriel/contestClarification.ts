@@ -1,5 +1,5 @@
-import { get, post } from '../http';
-import { APP_CONFIG } from '../../../conf';
+import { APP_CONFIG } from 'conf';
+import { get, post } from 'modules/api/http';
 
 export enum ContestClarificationStatus {
   Asked = 'ASKED',

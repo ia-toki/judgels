@@ -1,5 +1,6 @@
+import { UnauthorizedError } from 'modules/api/error';
+
 import { createTokenGateMiddleware } from './tokenGateMiddleware';
-import { UnauthorizedError } from '../api/error';
 
 describe('tokenGateMiddleware', () => {
   let tokenGateActions: jest.Mocked<any>;

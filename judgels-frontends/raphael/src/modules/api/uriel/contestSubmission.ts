@@ -1,8 +1,8 @@
-import { APP_CONFIG } from '../../../conf';
-import { get, postMultipart } from '../http';
-import { Page } from '../pagination';
-import { ProfilesMap } from '../jophiel/profile';
-import { Submission, SubmissionWithSourceResponse } from '../sandalphon/submission';
+import { APP_CONFIG } from 'conf';
+import { get, postMultipart } from 'modules/api/http';
+import { Page } from 'modules/api/pagination';
+import { ProfilesMap } from 'modules/api/jophiel/profile';
+import { Submission, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submission';
 
 export interface ContestSubmissionsResponse {
   data: Page<Submission>;

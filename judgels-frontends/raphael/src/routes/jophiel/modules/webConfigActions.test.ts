@@ -1,6 +1,7 @@
+import { WebConfig } from 'modules/api/jophiel/web';
+
 import { webConfigActions } from './webConfigActions';
 import { PutWebConfig } from './webConfigReducer';
-import { WebConfig } from '../../../modules/api/jophiel/web';
 
 describe('webConfigActions', () => {
   let dispatch: jest.Mock<any>;

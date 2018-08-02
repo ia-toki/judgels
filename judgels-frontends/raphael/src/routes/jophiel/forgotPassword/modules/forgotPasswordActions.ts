@@ -1,4 +1,4 @@
-import { NotFoundError } from '../../../../modules/api/error';
+import { NotFoundError } from 'modules/api/error';
 
 export const forgotPasswordActions = {
   requestToResetPassword: (email: string) => {

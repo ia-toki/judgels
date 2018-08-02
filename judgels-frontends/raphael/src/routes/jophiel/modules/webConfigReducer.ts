@@ -1,6 +1,6 @@
 import { TypedAction, TypedReducer } from 'redoodle';
 
-import { WebConfig } from '../../../modules/api/jophiel/web';
+import { WebConfig } from 'modules/api/jophiel/web';
 
 export interface WebConfigState {
   value?: WebConfig;

@@ -5,8 +5,9 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
+import { AppState } from 'modules/store';
+
 import ContentWithSidebar, { ContentWithSidebarProps } from './ContentWithSidebar';
-import { AppState } from '../../modules/store';
 
 describe('ContentWithSidebar', () => {
   let store: MockStore<Partial<AppState>>;

@@ -1,6 +1,6 @@
 import { push } from 'react-router-redux';
 
-import { BadRequestError } from '../../../../modules/api/error';
+import { BadRequestError } from 'modules/api/error';
 
 export const resetPasswordActions = {
   resetPassword: (emailCode: string, newPassword: string) => {

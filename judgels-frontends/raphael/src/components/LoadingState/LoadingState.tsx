@@ -1,7 +1,7 @@
 import { ProgressBar } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { SingleColumnLayout } from '../layouts/SingleColumnLayout/SingleColumnLayout';
+import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
 
 import './LoadingState.css';
 

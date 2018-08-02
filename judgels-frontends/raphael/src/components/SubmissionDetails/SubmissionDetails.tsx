@@ -3,16 +3,16 @@ import * as base64 from 'base-64';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
-import { UserRef } from '../UserRef/UserRef';
-import { ContentCard } from '../ContentCard/ContentCard';
-import { VerdictTag } from '../VerdictTag/VerdictTag';
-import { Profile } from '../../modules/api/jophiel/profile';
-import { constructProblemName } from '../../modules/api/sandalphon/problem';
-import { Submission } from '../../modules/api/sandalphon/submission';
-import { GradingEngineCode } from '../../modules/api/gabriel/engine';
-import { getGradingLanguageName } from '../../modules/api/gabriel/language';
-import { TestCaseResult } from '../../modules/api/gabriel/grading';
-import { SubmissionSource } from '../../modules/api/gabriel/submission';
+import { UserRef } from 'components/UserRef/UserRef';
+import { ContentCard } from 'components/ContentCard/ContentCard';
+import { VerdictTag } from 'components/VerdictTag/VerdictTag';
+import { constructProblemName } from 'modules/api/sandalphon/problem';
+import { Submission } from 'modules/api/sandalphon/submission';
+import { GradingEngineCode } from 'modules/api/gabriel/engine';
+import { getGradingLanguageName } from 'modules/api/gabriel/language';
+import { TestCaseResult } from 'modules/api/gabriel/grading';
+import { SubmissionSource } from 'modules/api/gabriel/submission';
+import { Profile } from 'modules/api/jophiel/profile';
 
 import './SubmissionDetails.css';
 

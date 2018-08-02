@@ -1,5 +1,6 @@
+import { statementLanguageDisplayNamesMap } from 'modules/api/sandalphon/language';
+
 import { PutStatementLanguage } from './webPrefsReducer';
-import { statementLanguageDisplayNamesMap } from '../api/sandalphon/language';
 
 export const webPrefsActions = {
   switchStatementLanguage: (language: string) => {

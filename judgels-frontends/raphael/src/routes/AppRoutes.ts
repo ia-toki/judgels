@@ -1,9 +1,10 @@
+import { JophielRole } from 'modules/api/jophiel/my';
+
 import JophielRoutes from './jophiel/JophielRoutes';
 import JophielAccountsRoutes from './jophiel/JophielAccountsRoutes';
 import UrielContestsRoutes from './uriel/UrielContestsRoutes';
 import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
 import JudgelsRankingRoutes from './ranking/JudgelsRankingRoutes';
-import { JophielRole } from '../modules/api/jophiel/my';
 
 function shouldShowRoute(id: string, role: JophielRole) {
   if (id === 'account' && role !== JophielRole.Superadmin && role !== JophielRole.Admin) {

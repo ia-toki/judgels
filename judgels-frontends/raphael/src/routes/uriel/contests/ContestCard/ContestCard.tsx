@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { TimeanddateLink } from '../../../../components/TimeanddateLink/TimeanddateLink';
-import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
-import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
-import { Contest } from '../../../../modules/api/uriel/contest';
+import { TimeanddateLink } from 'components/TimeanddateLink/TimeanddateLink';
+import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
+import { FormattedDate } from 'components/FormattedDate/FormattedDate';
+import { Contest } from 'modules/api/uriel/contest';
 
 import './ContestCard.css';
 

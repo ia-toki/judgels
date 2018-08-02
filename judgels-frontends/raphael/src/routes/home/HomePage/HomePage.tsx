@@ -2,13 +2,14 @@ import { Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { FullPageLayout } from '../../../components/layouts/FullPageLayout/FullPageLayout';
-import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
+import { APP_CONFIG } from 'conf';
+import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
+import { ButtonLink } from 'components/ButtonLink/ButtonLink';
+import { AppState } from 'modules/store';
+import { selectIsLoggedIn } from 'modules/session/sessionSelectors';
+
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
 import HallOfFameWidget from '../widgets/hallOfFame/HallOfFameWidget/HallOfFameWidget';
-import { AppState } from '../../../modules/store';
-import { selectIsLoggedIn } from '../../../modules/session/sessionSelectors';
-import { APP_CONFIG } from '../../../conf';
 
 import './HomePage.css';
 

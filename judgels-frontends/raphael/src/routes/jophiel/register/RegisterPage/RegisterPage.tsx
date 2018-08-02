@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import { Card } from 'components/Card/Card';
+import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
+import { AppState } from 'modules/store';
+import { UserRegistrationData } from 'modules/api/jophiel/userAccount';
+
 import RegisterForm, { RegisterFormData } from '../RegisterForm/RegisterForm';
-import { Card } from '../../../../components/Card/Card';
-import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
-import { AppState } from '../../../../modules/store';
 import { selectRecaptchaSiteKey, selectUserRegistrationUseRecaptcha } from '../../modules/webConfigSelectors';
-import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
 import { registerActions as injectedRegisterActions } from '../modules/registerActions';
 
 import './RegisterPage.css';

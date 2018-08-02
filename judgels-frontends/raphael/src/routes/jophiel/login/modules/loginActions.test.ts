@@ -1,9 +1,10 @@
+import { ForbiddenError } from 'modules/api/error';
+import { JophielRole } from 'modules/api/jophiel/my';
+import { PutToken, PutUser } from 'modules/session/sessionReducer';
+import { token, user, userJid } from 'fixtures/state';
+
 import { loginActions } from './loginActions';
-import { ForbiddenError } from '../../../../modules/api/error';
-import { JophielRole } from '../../../../modules/api/jophiel/my';
-import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 import { PutRole } from '../../modules/roleReducer';
-import { token, user, userJid } from '../../../../fixtures/state';
 
 describe('loginActions', () => {
   const authCode = 'authCode';

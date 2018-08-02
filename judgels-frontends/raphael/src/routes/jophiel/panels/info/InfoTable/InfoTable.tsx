@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { UserInfo, userInfoGender } from '../../../../../modules/api/jophiel/userInfo';
-import { FormTable, FormTableRow } from '../../../../../components/forms/FormTable/FormTable';
-import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
+import { FormTable, FormTableRow } from 'components/forms/FormTable/FormTable';
+import { HorizontalInnerDivider } from 'components/HorizontalInnerDivider/HorizontalInnerDivider';
+import { UserInfo, userInfoGender } from 'modules/api/jophiel/userInfo';
 
 export interface InfoTableProps {
   info: UserInfo;

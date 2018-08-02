@@ -2,10 +2,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
+import { Card } from 'components/Card/Card';
+import { AppState } from 'modules/store';
+
 import LoginForm, { LoginFormData } from '../../../jophiel/login/LoginForm/LoginForm';
-import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
-import { Card } from '../../../../components/Card/Card';
-import { AppState } from '../../../../modules/store';
 import { serviceLoginActions as injectedServiceLoginActions } from '../modules/serviceLoginActions';
 
 interface ServiceLoginPageProps {

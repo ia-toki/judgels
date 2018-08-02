@@ -1,6 +1,6 @@
-import { UnauthorizedError } from '../../../../modules/api/error';
-import { DelSession } from '../../../../modules/session/sessionReducer';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { UnauthorizedError } from 'modules/api/error';
+import { DelSession } from 'modules/session/sessionReducer';
+import { selectToken } from 'modules/session/sessionSelectors';
 
 export const serviceLogoutActions = {
   logOut: (redirectUri: string) => {

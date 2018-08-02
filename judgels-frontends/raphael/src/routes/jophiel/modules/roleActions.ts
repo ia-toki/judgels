@@ -1,6 +1,7 @@
-import { selectToken } from '../../../modules/session/sessionSelectors';
+import { selectToken } from 'modules/session/sessionSelectors';
+import { JophielRole } from 'modules/api/jophiel/my';
+
 import { PutRole } from './roleReducer';
-import { JophielRole } from '../../../modules/api/jophiel/my';
 
 export const roleActions = {
   getMyRole: () => {

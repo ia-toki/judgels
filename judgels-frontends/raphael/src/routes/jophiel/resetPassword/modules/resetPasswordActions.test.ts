@@ -1,7 +1,8 @@
 import { push } from 'react-router-redux';
 
+import { BadRequestError } from 'modules/api/error';
+
 import { resetPasswordActions } from './resetPasswordActions';
-import { BadRequestError } from '../../../../modules/api/error';
 
 describe('resetPasswordActions', () => {
   let dispatch: jest.Mock<any>;

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as Loadable from 'react-loadable';
 
-import { LoadingState } from '../../components/LoadingState/LoadingState';
+import { LoadingState } from 'components/LoadingState/LoadingState';
 
 const LoadableTrainingRoutes = Loadable({
-  loader: () => import('./training/routes/TrainingRoutes'),
+  loader: () => import('./training/TrainingRoutes'),
   loading: () => <LoadingState large />,
 });
 

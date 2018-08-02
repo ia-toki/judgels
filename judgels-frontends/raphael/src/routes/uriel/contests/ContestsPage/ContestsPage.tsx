@@ -2,11 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 
-import Pagination from '../../../../components/Pagination/Pagination';
-import { Card } from '../../../../components/Card/Card';
+import Pagination from 'components/Pagination/Pagination';
+import { Card } from 'components/Card/Card';
+import { ContestPage } from 'modules/api/uriel/contest';
+
 import { LoadingContestCard } from '../ContestCard/LoadingContestCard';
 import { ContestCard } from '../ContestCard/ContestCard';
-import { ContestPage } from '../../../../modules/api/uriel/contest';
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 
 export interface ContestsPageProps extends RouteComponentProps<{}> {

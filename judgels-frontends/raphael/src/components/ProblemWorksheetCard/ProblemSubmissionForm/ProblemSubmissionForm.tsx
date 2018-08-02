@@ -1,20 +1,24 @@
 import { Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { FormTableFileInput } from '../../forms/FormTableFileInput/FormTableFileInput';
-import { FormTableSelect2 } from '../../forms/FormTableSelect2/FormTableSelect2';
-import { CompatibleFilenameExtensionForGradingLanguage, MaxFileSize300KB, Required } from '../../forms/validations';
-import { ProblemSubmissionConfig } from '../../../modules/api/sandalphon/problem';
-import { GradingEngineCode } from '../../../modules/api/gabriel/engine';
+import { FormTableFileInput } from 'components/forms/FormTableFileInput/FormTableFileInput';
+import { FormTableSelect2 } from 'components/forms/FormTableSelect2/FormTableSelect2';
+import {
+  CompatibleFilenameExtensionForGradingLanguage,
+  MaxFileSize300KB,
+  Required,
+} from 'components/forms/validations';
+import { ProblemSubmissionConfig } from 'modules/api/sandalphon/problem';
+import { GradingEngineCode } from 'modules/api/gabriel/engine';
 import {
   gradingLanguageNamesMap,
   getAllowedGradingLanguages,
   preferredGradingLanguage,
-} from '../../../modules/api/gabriel/language';
+} from 'modules/api/gabriel/language';
 
 import './ProblemSubmissionForm.css';
-import { connect } from 'react-redux';
 
 export interface ProblemSubmissionFormData {
   gradingLanguage: string;

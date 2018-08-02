@@ -1,5 +1,6 @@
-import { APP_CONFIG } from '../../../conf';
-import { get, post } from '../http';
+import { APP_CONFIG } from 'conf';
+import { get, post } from 'modules/api/http';
+
 import { User } from './user';
 
 export enum JophielRole {

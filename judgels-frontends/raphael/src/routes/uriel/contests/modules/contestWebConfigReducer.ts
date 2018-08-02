@@ -1,6 +1,6 @@
 import { TypedAction, TypedReducer } from 'redoodle';
 
-import { ContestWebConfig } from '../../../../modules/api/uriel/contestWeb';
+import { ContestWebConfig } from 'modules/api/uriel/contestWeb';
 
 export interface ContestWebConfigState {
   value?: ContestWebConfig;

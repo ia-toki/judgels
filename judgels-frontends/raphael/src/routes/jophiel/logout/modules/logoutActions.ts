@@ -1,8 +1,9 @@
-import { UnauthorizedError } from '../../../../modules/api/error';
-import { DelSession } from '../../../../modules/session/sessionReducer';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { UnauthorizedError } from 'modules/api/error';
+import { DelSession } from 'modules/session/sessionReducer';
+import { selectToken } from 'modules/session/sessionSelectors';
+import { JophielRole } from 'modules/api/jophiel/my';
+
 import { PutRole } from '../../modules/roleReducer';
-import { JophielRole } from '../../../../modules/api/jophiel/my';
 
 export const logoutActions = {
   logOut: (currentPath: string) => {

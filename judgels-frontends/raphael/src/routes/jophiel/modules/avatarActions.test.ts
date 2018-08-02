@@ -1,5 +1,6 @@
-import { AppState } from '../../../modules/store';
-import { sessionState, token, userJid } from '../../../fixtures/state';
+import { AppState } from 'modules/store';
+import { sessionState, token, userJid } from 'fixtures/state';
+
 import { avatarActions, MAX_AVATAR_FILE_SIZE } from './avatarActions';
 
 describe('avatarActions', () => {

@@ -3,13 +3,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { User } from '../../modules/api/jophiel/user';
-import { getRatingClass } from '../../modules/api/jophiel/userRating';
-import { Profile } from '../../modules/api/jophiel/profile';
-import { AppState } from '../../modules/store';
+import { User } from 'modules/api/jophiel/user';
+import { getRatingClass } from 'modules/api/jophiel/userRating';
+import { Profile } from 'modules/api/jophiel/profile';
+import { AppState } from 'modules/store';
+import { avatarActions as injectedAvatarActions } from 'routes/jophiel/modules/avatarActions';
+import { profileActions as injectedProfileActions } from 'routes/jophiel/modules/profileActions';
+
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
-import { avatarActions as injectedAvatarActions } from '../../routes/jophiel/modules/avatarActions';
-import { profileActions as injectedProfileActions } from '../../routes/jophiel/modules/profileActions';
 
 import './UserWidget.css';
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { Card } from '../../../../../components/Card/Card';
-import { getRatingClass } from '../../../../../modules/api/jophiel/userRating';
-import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { Card } from 'components/Card/Card';
+import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { getRatingClass } from 'modules/api/jophiel/userRating';
 
 import './RatingSystemPage.css';
 

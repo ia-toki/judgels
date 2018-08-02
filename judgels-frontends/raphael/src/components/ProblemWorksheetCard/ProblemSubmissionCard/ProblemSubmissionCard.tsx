@@ -1,9 +1,10 @@
 import { Callout } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContentCard } from '../../ContentCard/ContentCard';
+import { ContentCard } from 'components/ContentCard/ContentCard';
+import { ProblemSubmissionConfig } from 'modules/api/sandalphon/problem';
+
 import ProblemSubmissionForm, { ProblemSubmissionFormData } from '../ProblemSubmissionForm/ProblemSubmissionForm';
-import { ProblemSubmissionConfig } from '../../../modules/api/sandalphon/problem';
 
 export interface ProblemSubmissionCardProps {
   config: ProblemSubmissionConfig;

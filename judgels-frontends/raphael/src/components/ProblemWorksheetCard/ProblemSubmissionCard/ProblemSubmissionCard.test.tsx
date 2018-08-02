@@ -5,9 +5,10 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
+import { LanguageRestriction } from 'modules/api/gabriel/language';
+import { GradingEngineCode } from 'modules/api/gabriel/engine';
+
 import { ProblemSubmissionCard, ProblemSubmissionCardProps } from './ProblemSubmissionCard';
-import { LanguageRestriction } from '../../../modules/api/gabriel/language';
-import { GradingEngineCode } from '../../../modules/api/gabriel/engine';
 
 describe('ProblemSubmissionCard', () => {
   let gradingEngine: string;

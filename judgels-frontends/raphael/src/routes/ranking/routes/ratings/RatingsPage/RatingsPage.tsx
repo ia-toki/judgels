@@ -3,13 +3,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { Card } from '../../../../../components/Card/Card';
-import Pagination from '../../../../../components/Pagination/Pagination';
-import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
-import { UserRef } from '../../../../../components/UserRef/UserRef';
-import { Page } from '../../../../../modules/api/pagination';
-import { Profile } from '../../../../../modules/api/jophiel/profile';
-import { profileActions as injectedProfileActions } from '../../../../jophiel/modules/profileActions';
+import { Card } from 'components/Card/Card';
+import Pagination from 'components/Pagination/Pagination';
+import { LoadingState } from 'components/LoadingState/LoadingState';
+import { UserRef } from 'components/UserRef/UserRef';
+import { Page } from 'modules/api/pagination';
+import { Profile } from 'modules/api/jophiel/profile';
+import { profileActions as injectedProfileActions } from 'routes/jophiel/modules/profileActions';
 
 import './RatingsPage.css';
 

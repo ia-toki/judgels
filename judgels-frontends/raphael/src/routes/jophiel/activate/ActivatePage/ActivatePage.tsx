@@ -3,10 +3,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
-import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
-import { Card } from '../../../../components/Card/Card';
-import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
+import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
+import { ButtonLink } from 'components/ButtonLink/ButtonLink';
+import { Card } from 'components/Card/Card';
+import { HorizontalDivider } from 'components/HorizontalDivider/HorizontalDivider';
+
 import { activateActions as injectedActivateActions } from '../modules/activateActions';
 
 interface ActivatePageProps {

@@ -1,5 +1,5 @@
-import { APP_CONFIG } from '../../../conf';
-import { get, put } from '../http';
+import { APP_CONFIG } from 'conf';
+import { get, put } from 'modules/api/http';
 
 export interface UserInfo {
   name?: string;

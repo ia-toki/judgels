@@ -1,4 +1,5 @@
-import { NotFoundError } from '../../../modules/api/error';
+import { NotFoundError } from 'modules/api/error';
+
 import { DelUserJid, PutUserJid } from './profileReducer';
 
 export const profileActions = {

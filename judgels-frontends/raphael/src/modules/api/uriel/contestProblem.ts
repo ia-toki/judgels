@@ -1,6 +1,6 @@
-import { APP_CONFIG } from '../../../conf';
-import { get } from '../http';
-import { ProblemInfo, ProblemWorksheet } from '../sandalphon/problem';
+import { APP_CONFIG } from 'conf';
+import { get } from 'modules/api/http';
+import { ProblemInfo, ProblemWorksheet } from 'modules/api/sandalphon/problem';
 
 export enum ContestProblemStatus {
   Open = 'OPEN',

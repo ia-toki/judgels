@@ -1,5 +1,6 @@
-import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
-import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
+import { BadRequestError, ForbiddenError } from 'modules/api/error';
+import { PutToken, PutUser } from 'modules/session/sessionReducer';
+
 import { PutRole } from '../../modules/roleReducer';
 
 export const loginActions = {

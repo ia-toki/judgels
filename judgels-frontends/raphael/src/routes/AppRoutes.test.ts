@@ -1,4 +1,5 @@
-import { JophielRole } from '../modules/api/jophiel/my';
+import { JophielRole } from 'modules/api/jophiel/my';
+
 import { getAppRoutes } from './AppRoutes';
 
 describe('AppRoutes', () => {

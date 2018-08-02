@@ -1,6 +1,6 @@
-import { Grading } from '../gabriel/grading';
-import { Profile } from '../jophiel/profile';
-import { SubmissionSource } from '../gabriel/submission';
+import { Profile } from 'modules/api/jophiel/profile';
+import { Grading } from 'modules/api/gabriel/grading';
+import { SubmissionSource } from 'modules/api/gabriel/submission';
 
 export interface Submission {
   id: number;

@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import { Card } from 'components/Card/Card';
+import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
+
 import ForgotPasswordForm, { ForgotPasswordFormData } from '../ForgotPasswordForm/ForgotPasswordForm';
-import { Card } from '../../../../components/Card/Card';
-import { SingleColumnLayout } from '../../../../components/layouts/SingleColumnLayout/SingleColumnLayout';
 import { forgotPasswordActions as injectedForgotPasswordActions } from '../modules/forgotPasswordActions';
 
 export interface ForgotPasswordPageProps {

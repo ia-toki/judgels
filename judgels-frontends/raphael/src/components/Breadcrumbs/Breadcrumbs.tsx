@@ -3,9 +3,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Breadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
-import { selectSortedBreadcrumbs } from '../../modules/breadcrumbs/breadcrumbsSelectors';
-import { AppState } from '../../modules/store';
+import { Breadcrumb } from 'modules/breadcrumbs/breadcrumbsReducer';
+import { selectSortedBreadcrumbs } from 'modules/breadcrumbs/breadcrumbsSelectors';
+import { AppState } from 'modules/store';
 
 import './Breadcrumbs.css';
 

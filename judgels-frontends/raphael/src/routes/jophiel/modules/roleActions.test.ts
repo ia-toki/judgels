@@ -1,8 +1,9 @@
+import { JophielRole } from 'modules/api/jophiel/my';
+import { AppState } from 'modules/store';
+import { sessionState, token } from 'fixtures/state';
+
 import { roleActions } from './roleActions';
 import { PutRole } from './roleReducer';
-import { JophielRole } from '../../../modules/api/jophiel/my';
-import { AppState } from '../../../modules/store';
-import { sessionState, token } from '../../../fixtures/state';
 
 describe('roleActions', () => {
   let dispatch: jest.Mock<any>;
