@@ -46,9 +46,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
     if (!clarification.answer) {
       return (
         <p>
-          <small>
-            <em>Not answered yet.</em>
-          </small>
+          <small>Not answered yet.</small>
         </p>
       );
     }
