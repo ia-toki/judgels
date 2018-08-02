@@ -82,7 +82,9 @@
   }
 
   .card-sidebar__responsive__menu {
-    line-height: 50px;
+    svg {
+      height: inherit;
+    }
   }
 
   .bp3-overlay-content {
