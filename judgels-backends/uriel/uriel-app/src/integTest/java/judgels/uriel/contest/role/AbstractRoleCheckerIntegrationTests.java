@@ -84,11 +84,11 @@ public abstract class AbstractRoleCheckerIntegrationTests {
 
     protected void prepareContestA() {
         contestA = contestStore.createContest(new ContestData.Builder()
-                .name("Contest A")
+                .slug("contest-a")
                 .beginTime(NOW.plusMillis(1))
                 .build());
         contestAStarted = contestStore.createContest(new ContestData.Builder()
-                .name("Contest A - Started")
+                .slug("contest-a-started")
                 .beginTime(NOW)
                 .build());
 
@@ -98,16 +98,16 @@ public abstract class AbstractRoleCheckerIntegrationTests {
 
     protected void prepareContestB() {
         contestB = contestStore.createContest(new ContestData.Builder()
-                .name("Contest B")
+                .slug("contest-b")
                 .beginTime(NOW.plusMillis(1))
                 .build());
         contestBStarted = contestStore.createContest(new ContestData.Builder()
-                .name("Contest B - Started")
+                .slug("contest-b-started")
                 .beginTime(NOW.minus(2, HOURS))
                 .duration(Duration.ofHours(5))
                 .build());
         contestBFinished = contestStore.createContest(new ContestData.Builder()
-                .name("Contest B - Ended")
+                .slug("contest-b-ended")
                 .beginTime(NOW.minus(10, HOURS))
                 .build());
 
@@ -139,7 +139,7 @@ public abstract class AbstractRoleCheckerIntegrationTests {
 
     protected void prepareContestC() {
         contestC = contestStore.createContest(new ContestData.Builder()
-                .name("Contest C")
+                .slug("contest-c")
                 .beginTime(NOW.plusMillis(1))
                 .build());
     }

@@ -40,8 +40,8 @@ class ContestSupervisorStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
-        contestStore.createContest(new ContestData.Builder().name("contestB").build());
+        Contest contest = contestStore.createContest(new ContestData.Builder().slug("contest-a").build());
+        contestStore.createContest(new ContestData.Builder().slug("contest-b").build());
 
         ContestSupervisor supervisor1 = store.upsertSupervisor(contest.getJid(), new ContestSupervisorData.Builder()
                 .userJid(USER_1)

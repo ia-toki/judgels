@@ -33,8 +33,8 @@ class ContestStyleStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
-        contestStore.createContest(new ContestData.Builder().name("contestB").build());
+        Contest contest = contestStore.createContest(new ContestData.Builder().slug("contest-a").build());
+        contestStore.createContest(new ContestData.Builder().slug("contest-b").build());
 
         IoiContestStyleConfig config = new IoiContestStyleConfig.Builder()
                 .languageRestriction(LanguageRestriction.noRestriction())

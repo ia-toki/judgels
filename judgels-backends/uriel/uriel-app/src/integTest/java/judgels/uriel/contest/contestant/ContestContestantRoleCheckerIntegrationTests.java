@@ -24,7 +24,7 @@ class ContestContestantRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
     @Test
     void register() {
         Contest contestAFinished = contestStore.createContest(new ContestData.Builder()
-                .name("Contest A - Ended")
+                .slug("contest-a-ended")
                 .beginTime(NOW.minus(10, HOURS))
                 .build());
         moduleStore.upsertRegistrationModule(contestAFinished.getJid());

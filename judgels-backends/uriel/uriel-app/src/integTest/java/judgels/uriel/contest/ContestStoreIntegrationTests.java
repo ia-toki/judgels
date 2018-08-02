@@ -65,10 +65,10 @@ class ContestStoreIntegrationTests {
 
     @Test
     void get_contests() {
-        Contest contestA = store.createContest(new ContestData.Builder().name("contestA").build());
-        Contest contestB = store.createContest(new ContestData.Builder().name("contestB").build());
-        Contest contestC = store.createContest(new ContestData.Builder().name("contestC").build());
-        Contest contestD = store.createContest(new ContestData.Builder().name("contestD").build());
+        Contest contestA = store.createContest(new ContestData.Builder().slug("contest-a").build());
+        Contest contestB = store.createContest(new ContestData.Builder().slug("contest-b").build());
+        Contest contestC = store.createContest(new ContestData.Builder().slug("contest-c").build());
+        Contest contestD = store.createContest(new ContestData.Builder().slug("contest-d").build());
 
         adminRoleStore.addAdmin(ADMIN);
         moduleStore.upsertRegistrationModule(contestD.getJid());

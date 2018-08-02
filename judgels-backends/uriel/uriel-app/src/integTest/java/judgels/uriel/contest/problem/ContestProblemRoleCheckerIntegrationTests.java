@@ -68,7 +68,7 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
     @Test
     void view_problems_virtual() {
         Contest contestAFinished = contestStore.createContest(new ContestData.Builder()
-                .name("Contest A - Ended")
+                .slug("contest-a-ended")
                 .beginTime(NOW.minus(10, HOURS))
                 .build());
 

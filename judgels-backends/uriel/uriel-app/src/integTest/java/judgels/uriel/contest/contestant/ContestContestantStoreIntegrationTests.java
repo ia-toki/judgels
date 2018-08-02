@@ -33,7 +33,7 @@ class ContestContestantStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contest = contestStore.createContest(new ContestData.Builder().name("contestA").build());
+        Contest contest = contestStore.createContest(new ContestData.Builder().slug("contest-a").build());
 
         store.upsertContestant(contest.getJid(), "A");
         store.upsertContestant(contest.getJid(), "B");

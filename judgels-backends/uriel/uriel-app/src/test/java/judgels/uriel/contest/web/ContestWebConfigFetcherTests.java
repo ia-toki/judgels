@@ -69,6 +69,7 @@ class ContestWebConfigFetcherTests {
         contest = new Contest.Builder()
                 .id(1)
                 .jid("jid")
+                .slug("slug")
                 .name("name")
                 .description("description")
                 .style(ContestStyle.IOI)
