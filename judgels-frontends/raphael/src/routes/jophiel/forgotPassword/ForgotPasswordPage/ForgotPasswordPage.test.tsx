@@ -46,7 +46,7 @@ describe('ForgotPasswordPage', () => {
 
   beforeEach(() => {
     forgotPasswordActions = {
-      requestToReset: jest.fn().mockReturnValue({ type: 'mock-requestToReset' }),
+      requestToResetPassword: jest.fn().mockReturnValue({ type: 'mock-requestToReset' }),
     };
 
     const store = createStore(combineReducers({ form: formReducer }));
@@ -68,6 +68,6 @@ describe('ForgotPasswordPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(forgotPasswordActions.requestToReset).toHaveBeenCalledWith('email@domain.com');
+    expect(forgotPasswordActions.requestToResetPassword).toHaveBeenCalledWith('email@domain.com');
   });
 });

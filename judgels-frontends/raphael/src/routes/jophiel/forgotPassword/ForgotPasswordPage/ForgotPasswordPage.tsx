@@ -46,7 +46,7 @@ export class ForgotPasswordPage extends React.PureComponent<ForgotPasswordPagePr
 
 export function createForgotPasswordPage(forgotPasswordActions) {
   const mapDispatchToProps = {
-    onForgetPassword: (data: ForgotPasswordFormData) => forgotPasswordActions.requestToReset(data.email),
+    onForgetPassword: (data: ForgotPasswordFormData) => forgotPasswordActions.requestToResetPassword(data.email),
   };
 
   return connect(undefined, mapDispatchToProps)(ForgotPasswordPage);
