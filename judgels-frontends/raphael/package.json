@@ -2,9 +2,9 @@
   "name": "raphael",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^3.0.0",
-    "@blueprintjs/icons": "^3.0.0",
-    "@blueprintjs/select": "^3.0.0",
+    "@blueprintjs/core": "3.2.0",
+    "@blueprintjs/icons": "3.0.0",
+    "@blueprintjs/select": "3.1.0",
     "base-64": "^0.1.0",
     "classnames": "^2.2.5",
     "history": "^4.7.2",
