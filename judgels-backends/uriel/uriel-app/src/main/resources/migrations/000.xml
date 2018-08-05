@@ -24,6 +24,9 @@
             <column name="duration" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="locked" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>

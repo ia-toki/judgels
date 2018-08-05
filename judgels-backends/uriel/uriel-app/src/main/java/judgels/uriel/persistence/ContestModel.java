@@ -27,4 +27,7 @@ public class ContestModel extends JudgelsModel {
 
     @Column(nullable = false)
     public long duration;
+
+    @Column(nullable = false)
+    public boolean locked;
 }
