@@ -7,14 +7,14 @@ import { Page } from 'modules/api/pagination';
 export interface Profile {
   username?: string;
   rating?: number;
-  nationality?: string;
+  country?: string;
 }
 
 export interface BasicProfile {
   username: string;
   rating?: number;
   name?: string;
-  nationality?: string;
+  country?: string;
 }
 
 export interface ProfilesMap {

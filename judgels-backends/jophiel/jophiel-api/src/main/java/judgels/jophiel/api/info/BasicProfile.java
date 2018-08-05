@@ -9,7 +9,7 @@ import org.immutables.value.Value;
 public interface BasicProfile {
     String getUsername();
     Optional<Integer> getRating();
-    Optional<String> getNationality();
+    Optional<String> getCountry();
     Optional<String> getName();
 
     class Builder extends ImmutableBasicProfile.Builder {}

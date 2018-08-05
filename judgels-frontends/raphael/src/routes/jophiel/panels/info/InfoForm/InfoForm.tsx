@@ -1,5 +1,4 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as CountryList from 'country-list';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
@@ -9,6 +8,7 @@ import { HorizontalInnerDivider } from 'components/HorizontalInnerDivider/Horizo
 import { ActionButtons } from 'components/ActionButtons/ActionButtons';
 import { FormTableTextArea } from 'components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableSelect } from 'components/forms/FormTableSelect/FormTableSelect';
+import { countriesData } from 'assets/data/countries';
 import { UserInfo } from 'modules/api/jophiel/userInfo';
 
 const nameField: any = {
@@ -21,7 +21,7 @@ const genderField: any = {
   label: 'Gender',
 };
 
-const nationalityField: any = {
+const countryField: any = {
   name: 'country',
   label: 'Country',
 };
@@ -61,13 +61,11 @@ export interface InfoFormProps extends InjectedFormProps<UserInfo> {
 }
 
 const InfoForm = (props: InfoFormProps) => {
-  const countryOptions = CountryList()
-    .getNames()
-    .map(name => (
-      <option key={name} value={name}>
-        {name}
-      </option>
-    ));
+  const countryOptions = countriesData.map(country => (
+    <option key={country.code} value={country.code}>
+      {country.name}
+    </option>
+  ));
 
   return (
     <form onSubmit={props.handleSubmit}>
@@ -80,7 +78,7 @@ const InfoForm = (props: InfoFormProps) => {
             <option value="MALE">Male</option>
             <option value="FEMALE">Female</option>
           </Field>
-          <Field component={FormTableSelect} {...nationalityField}>
+          <Field component={FormTableSelect} {...countryField}>
             <option />
             {countryOptions}
           </Field>

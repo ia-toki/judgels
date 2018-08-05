@@ -7,6 +7,7 @@ import { LoadingState } from 'components/LoadingState/LoadingState';
 import { AppState } from 'modules/store';
 import { BasicProfile } from 'modules/api/jophiel/profile';
 import { getRatingClass } from 'modules/api/jophiel/userRating';
+import { getCountryName } from 'assets/data/countries';
 
 import { selectUserJid } from '../../../../modules/profileSelectors';
 import { avatarActions as injectedAvatarActions } from '../../../../modules/avatarActions';
@@ -75,7 +76,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
           <img className="basic-profile-card__avatar" src={avatarUrl} />
         </div>
         <p className={getRatingClass(profile.rating)}>{profile.username}</p>
-        <p>{profile.nationality}</p>
+        <p>{getCountryName(profile.country)}</p>
       </div>
     );
   };

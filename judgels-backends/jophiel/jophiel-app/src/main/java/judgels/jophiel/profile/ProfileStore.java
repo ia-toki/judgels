@@ -40,7 +40,7 @@ public class ProfileStore {
                 .stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> new Profile.Builder()
                         .username(e.getValue().getUsername())
-                        .nationality(Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getCountry))
+                        .country(Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getCountry))
                         .rating(Optional.ofNullable(ratings.get(e.getKey())))
                         .build()));
     }
@@ -56,7 +56,7 @@ public class ProfileStore {
                 .filter(e -> users.containsKey(e.getUserJid()))
                 .map(e -> new Profile.Builder()
                         .username(users.get(e.getUserJid()).getUsername())
-                        .nationality(Optional.ofNullable(infos.get(e.getUserJid())).flatMap(UserInfo::getCountry))
+                        .country(Optional.ofNullable(infos.get(e.getUserJid())).flatMap(UserInfo::getCountry))
                         .rating(Optional.of(e.getRating()))
                         .build())
                 .collect(Collectors.toList()));
@@ -69,7 +69,7 @@ public class ProfileStore {
 
             return new BasicProfile.Builder()
                     .username(user.getUsername())
-                    .nationality(info.getCountry())
+                    .country(info.getCountry())
                     .rating(Optional.ofNullable(ratings.get(userJid)))
                     .name(info.getName())
                     .build();

@@ -9,6 +9,7 @@ import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { ContestContestantsResponse } from 'modules/api/uriel/contestContestant';
 import { Contest } from 'modules/api/uriel/contest';
 import { AppState } from 'modules/store';
+import { getCountryName } from 'assets/data/countries';
 
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
@@ -62,8 +63,8 @@ class ContestRegistrantsDialog extends React.PureComponent<
     }
 
     const sortedContestants = contestants.slice().sort((jid1, jid2) => {
-      const country1 = (profilesMap[jid1] && profilesMap[jid1].nationality) || 'ZZ';
-      const country2 = (profilesMap[jid2] && profilesMap[jid2].nationality) || 'ZZ';
+      const country1 = (profilesMap[jid1] && getCountryName(profilesMap[jid1].country)) || 'ZZ';
+      const country2 = (profilesMap[jid2] && getCountryName(profilesMap[jid2].country)) || 'ZZ';
       if (country1 !== country2) {
         return country1.localeCompare(country2);
       }
@@ -75,7 +76,7 @@ class ContestRegistrantsDialog extends React.PureComponent<
 
     const rows = sortedContestants.map(jid => (
       <tr key={jid}>
-        <td>{profilesMap[jid].nationality}</td>
+        <td>{profilesMap[jid] && getCountryName(profilesMap[jid].country)}</td>
         <td>
           <UserRef profile={profilesMap[jid]} />
         </td>
