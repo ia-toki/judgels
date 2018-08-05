@@ -4,6 +4,7 @@ import static judgels.sandalphon.SandalphonUtils.combineLanguageRestrictions;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableMap;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
@@ -71,10 +72,9 @@ public class ContestProblemResource implements ContestProblemService {
         List<ContestContestantProblem> contestantProblems = problemStore.getContestantProblems(contestJid, actorJid);
         Set<String> problemJids =
                 contestantProblems.stream().map(p -> p.getProblem().getProblemJid()).collect(Collectors.toSet());
-
-        Map<String, ProblemInfo> problemsMap = clientProblemService.getProblemsByJids(
-                sandalphonClientAuthHeader,
-                problemJids);
+        Map<String, ProblemInfo> problemsMap = problemJids.isEmpty()
+                ? ImmutableMap.of()
+                : clientProblemService.getProblemsByJids(sandalphonClientAuthHeader, problemJids);
 
         return new ContestContestantProblemsResponse.Builder()
                 .data(contestantProblems)

@@ -3,6 +3,7 @@ package judgels.uriel.contest.clarification;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
@@ -87,13 +88,15 @@ public class ContestClarificationResource implements ContestClarificationService
         List<String> problemJids = problemStore.getOpenProblemJids(contestJid);
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJidsSet);
-        Map<String, String> problemNamesMap = clientProblemService.getProblemsByJids(
-                sandalphonClientAuthHeader,
-                problemJidsSet).entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        e -> e.getKey(),
-                        e -> SandalphonUtils.getProblemName(e.getValue(), language)));
+        Map<String, String> problemNamesMap = problemJids.isEmpty()
+                ? ImmutableMap.of()
+                : clientProblemService.getProblemsByJids(
+                        sandalphonClientAuthHeader,
+                        problemJidsSet).entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                e -> e.getKey(),
+                                e -> SandalphonUtils.getProblemName(e.getValue(), language)));
 
         return new ContestClarificationConfig.Builder()
                 .isAllowedToCreateClarification(true)
@@ -121,13 +124,15 @@ public class ContestClarificationResource implements ContestClarificationService
                 .filter(topicJid -> !topicJid.equals(contestJid))
                 .collect(Collectors.toSet());
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
-        Map<String, String> problemNamesMap = clientProblemService.getProblemsByJids(
-                sandalphonClientAuthHeader,
-                problemJids).entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        e -> e.getKey(),
-                        e -> SandalphonUtils.getProblemName(e.getValue(), language)));
+        Map<String, String> problemNamesMap = problemJids.isEmpty()
+                ? ImmutableMap.of()
+                : clientProblemService.getProblemsByJids(
+                        sandalphonClientAuthHeader,
+                        problemJids).entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                e -> e.getKey(),
+                                e -> SandalphonUtils.getProblemName(e.getValue(), language)));
 
         return new ContestClarificationsResponse.Builder()
                 .data(clarifications)
