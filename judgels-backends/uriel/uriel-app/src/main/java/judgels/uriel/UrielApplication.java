@@ -32,6 +32,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
 
         bootstrap.addBundle(hibernateBundle);
         bootstrap.addBundle(new MultiPartBundle());
+        bootstrap.addBundle(new UrielMigrationsBundle());
         bootstrap.addBundle(new WebSecurityBundle());
     }
 

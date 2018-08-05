@@ -1,10 +1,13 @@
 package judgels.uriel.persistence;
 
 import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import judgels.sandalphon.persistence.AbstractGradingModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "uriel_contest_programming_grading")
+@Table(indexes = {@Index(columnList = "submissionJid")})
 public class ContestGradingModel extends AbstractGradingModel {
     public ContestGradingModel() {}
 

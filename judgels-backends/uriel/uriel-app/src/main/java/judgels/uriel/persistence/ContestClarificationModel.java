@@ -9,7 +9,7 @@ import judgels.persistence.JudgelsModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "uriel_contest_clarification")
-@Table(indexes = {@Index(columnList = "contestJid")})
+@Table(indexes = {@Index(columnList = "contestJid,createdBy")})
 @JidPrefix("COCL")
 public class ContestClarificationModel extends JudgelsModel {
     @Column(nullable = false)
