@@ -19,11 +19,11 @@ describe('InfoPanel', () => {
     const info: UserInfo = {
       name: 'My Name',
       gender: 'MALE',
-      country: 'Indonesia',
+      country: 'ID',
       homeAddress: 'My Address',
       shirtSize: 'XL',
       institutionName: 'My Institution',
-      institutionCountry: 'United Kingdom',
+      institutionCountry: 'GB',
       institutionProvince: 'My Province',
       institutionCity: 'My City',
     };
@@ -59,7 +59,7 @@ describe('InfoPanel', () => {
     gender.simulate('change', { target: { value: 'FEMALE' } });
 
     const country = wrapper.find('select[name="country"]');
-    country.simulate('change', { target: { value: 'Singapore' } });
+    country.simulate('change', { target: { value: 'SG' } });
 
     const homeAddress = wrapper.find('textarea[name="homeAddress"]');
     homeAddress.simulate('change', { target: { value: 'My New Address' } });
@@ -87,7 +87,7 @@ describe('InfoPanel', () => {
     expect(onUpdateInfo).toHaveBeenCalledWith({
       name: 'My New Name',
       gender: 'FEMALE',
-      country: 'Singapore',
+      country: 'SG',
       homeAddress: 'My New Address',
       shirtSize: 'S',
       institutionName: 'My New Institution',
