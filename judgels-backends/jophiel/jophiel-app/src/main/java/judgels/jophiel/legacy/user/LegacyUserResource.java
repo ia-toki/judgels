@@ -6,6 +6,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.net.URI;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -51,5 +52,12 @@ public class LegacyUserResource {
         String resJson = mapper.writeValueAsString(res);
 
         return Response.ok(callback + "(" + resJson + ");", "application/javascript").build();
+    }
+
+    @GET
+    @Path("/{userJid}/profile")
+    @UnitOfWork(readOnly = true)
+    public Response getUserProfile(@PathParam("userJid") String userJid) {
+        return Response.temporaryRedirect(URI.create("/api/v2/users/" + userJid + "/info")).build();
     }
 }
