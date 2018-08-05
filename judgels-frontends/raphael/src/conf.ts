@@ -5,7 +5,6 @@ export interface ApiUrlsConfig {
 }
 
 export interface TempHomeConfig {
-  urielUrl: string;
   jerahmeelUrl: string;
 }
 

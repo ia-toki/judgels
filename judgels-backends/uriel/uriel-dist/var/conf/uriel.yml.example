@@ -40,7 +40,7 @@ webSecurity:
     allowedOrigins: "*"
 
 uriel:
-  baseDataDir: /judgels/uriel/var/data
+  baseDataDir: var/data
 
   jophiel:
     baseUrl: http://localhost:9001
@@ -65,5 +65,4 @@ uriel:
 
   submission:
     fs:
-      type: aws
-      s3BucketName: judgels-uriel-submissions
+      type: local

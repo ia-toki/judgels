@@ -40,11 +40,11 @@ webSecurity:
     allowedOrigins: "*"
 
 jophiel:
-  baseDataDir: /judgels/jophiel/var/data
+  baseDataDir: var/data
 
   mailer:
-    host: xxx
-    port: 25
+    host: smtp.mailtrap.io
+    port: 2525
     useSsl: false
     username: xxx
     password: xxx

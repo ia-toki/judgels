@@ -7,7 +7,6 @@ window.conf = {
     uriel: 'http://localhost:9004/api/v2',
   },
   tempHome: {
-    urielUrl: 'http://uriel',
     jerahmeelUrl: 'http://jerahmeel',
   },
   welcomeBanner: {
