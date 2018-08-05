@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <changeSet author="fushar (generated)" id="1533314894449-1">
+    <changeSet author="fushar" id="initial-1">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -36,7 +36,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-2">
+    <changeSet author="fushar" id="initial-2">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_announcement">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -68,7 +68,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-3">
+    <changeSet author="fushar" id="initial-3">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_clarification">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -104,7 +104,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-4">
+    <changeSet author="fushar" id="initial-4">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_contestant">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -131,7 +131,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-5">
+    <changeSet author="fushar" id="initial-5">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_manager">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -154,7 +154,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-6">
+    <changeSet author="fushar" id="initial-6">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_module">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -183,7 +183,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-7">
+    <changeSet author="fushar" id="initial-7">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_problem">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -215,7 +215,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-8">
+    <changeSet author="fushar" id="initial-8">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_programming_grading">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -248,7 +248,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-9">
+    <changeSet author="fushar" id="initial-9">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -280,7 +280,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-10">
+    <changeSet author="fushar" id="initial-10">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_scoreboard">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -306,7 +306,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-11">
+    <changeSet author="fushar" id="initial-11">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_style">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -329,7 +329,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-12">
+    <changeSet author="fushar" id="initial-12">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_supervisor">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -355,7 +355,7 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-13">
+    <changeSet author="fushar" id="initial-13">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_role_admin">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -370,69 +370,69 @@
             <column name="createdIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-14">
+    <changeSet author="fushar" id="initial-14">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, userJid" constraintName="UK45hxnne8od4pdhybnd930w07l" schemaName="judgels_uriel" tableName="uriel_contest_contestant"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-15">
+    <changeSet author="fushar" id="initial-15">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_31bukg10v6vb0g1geqw3cjkkv" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-16">
+    <changeSet author="fushar" id="initial-16">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="userJid" constraintName="UK_37si4aj9gp3e55v8jeb8lx9kb" schemaName="judgels_uriel" tableName="uriel_role_admin"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-17">
+    <changeSet author="fushar" id="initial-17">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid" constraintName="UK_56rjtorowjdwtdn8mom662fp2" schemaName="judgels_uriel" tableName="uriel_contest_style"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-18">
+    <changeSet author="fushar" id="initial-18">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_adeallsvutm9c4m36au217pvg" schemaName="judgels_uriel" tableName="uriel_contest_announcement"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-19">
+    <changeSet author="fushar" id="initial-19">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="slug" constraintName="UK_gp1qdsas0orwg5u56h7pnh4n" schemaName="judgels_uriel" tableName="uriel_contest"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-20">
+    <changeSet author="fushar" id="initial-20">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_gqcnex00ovnt8d5rq6d76bass" schemaName="judgels_uriel" tableName="uriel_contest"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-21">
+    <changeSet author="fushar" id="initial-21">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_jwyicp3b1scwm3vvv8sivxdw9" schemaName="judgels_uriel" tableName="uriel_contest_clarification"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-22">
+    <changeSet author="fushar" id="initial-22">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_sy161g33y36hehn5sko51i1jn" schemaName="judgels_uriel" tableName="uriel_contest_programming_grading"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-23">
+    <changeSet author="fushar" id="initial-23">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, type" constraintName="UKbggs4uifbgwkkxihw9y7vifhc" schemaName="judgels_uriel" tableName="uriel_contest_scoreboard"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-24">
+    <changeSet author="fushar" id="initial-24">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, userJid" constraintName="UKdaiefm51hj5vwi2vdtdk4ikea" schemaName="judgels_uriel" tableName="uriel_contest_manager"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-25">
+    <changeSet author="fushar" id="initial-25">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, problemJid" constraintName="UKgttlrf4iibxhm3d2y8rdn5esp" schemaName="judgels_uriel" tableName="uriel_contest_problem"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-26">
+    <changeSet author="fushar" id="initial-26">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, alias" constraintName="UKh7g3p966bhbslkp2ibsgaly30" schemaName="judgels_uriel" tableName="uriel_contest_problem"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-27">
+    <changeSet author="fushar" id="initial-27">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, userJid" constraintName="UKk8r7m30pnkrtv1y4v5kyut0kb" schemaName="judgels_uriel" tableName="uriel_contest_supervisor"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-28">
+    <changeSet author="fushar" id="initial-28">
         <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, name" constraintName="UKo6l5h43wdnqei1t83hjr931vx" schemaName="judgels_uriel" tableName="uriel_contest_module"/>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-29">
+    <changeSet author="fushar" id="initial-29">
         <createIndex catalogName="judgels_uriel" indexName="IDX1cyb0r6cdun72v1ub6qwnnd9h" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission">
             <column name="containerJid"/>
             <column name="createdBy"/>
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533460662012-30">
+    <changeSet author="fushar" id="1533460662012-30">
         <createIndex catalogName="judgels_uriel" indexName="IDX8t0ysvra0nsleb55g0afe3gc1" schemaName="judgels_uriel" tableName="uriel_contest_programming_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-30">
+    <changeSet author="fushar" id="initial-30">
         <createIndex catalogName="judgels_uriel" indexName="IDXkrgx965c55gfya3hkrtvodj34" schemaName="judgels_uriel" tableName="uriel_contest_announcement">
             <column name="contestJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar (generated)" id="1533314894449-31">
+    <changeSet author="fushar" id="initial-31">
         <createIndex catalogName="judgels_uriel" indexName="IDXrjpnpgk6hq4ri9wqpcfxcsql0" schemaName="judgels_uriel" tableName="uriel_contest_clarification">
             <column name="contestJid"/>
             <column name="createdBy"/>

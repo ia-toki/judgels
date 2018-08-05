@@ -21,7 +21,6 @@ database:
     charSet: UTF-8
     hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
     hibernate.generate_statistics: false
-    hibernate.hbm2ddl.auto: update
 
 logging:
   appenders:
