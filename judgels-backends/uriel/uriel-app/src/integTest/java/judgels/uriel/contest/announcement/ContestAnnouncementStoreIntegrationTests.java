@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestAnnouncementModel.class})
 class ContestAnnouncementStoreIntegrationTests {
-    private static final String USER = "userJid";
-
     private ContestStore contestStore;
     private ContestAnnouncementStore store;
 
@@ -60,15 +58,13 @@ class ContestAnnouncementStoreIntegrationTests {
                         .status(ContestAnnouncementStatus.PUBLISHED)
                         .build());
 
-        // TODO(fushar): move these assertions to service integration tests instead
+        // TODO(indravb6): move these assertions to service integration tests instead
         assertThat(announcement1.getUserJid()).isEqualTo(ACTOR);
         assertThat(announcement1.getTitle()).isEqualTo("Contest extension");
         assertThat(announcement1.getContent()).isEqualTo("The contest is extended by 30 mins");
         assertThat(announcement1.getStatus()).isEqualTo(ContestAnnouncementStatus.PUBLISHED);
 
-        List<ContestAnnouncement> announcements = store.getAnnouncements(contest.getJid(), USER);
-
-        // TODO(fushar): assert the order
+        List<ContestAnnouncement> announcements = store.getPublishedAnnouncements(contest.getJid());
         assertThat(announcements).containsOnly(announcement3, announcement1);
     }
 }

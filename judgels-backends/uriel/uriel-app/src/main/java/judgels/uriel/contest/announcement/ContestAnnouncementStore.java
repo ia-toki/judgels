@@ -23,7 +23,7 @@ public class ContestAnnouncementStore {
         return fromModel(announcementDao.insert(model));
     }
 
-    public List<ContestAnnouncement> getAnnouncements(String contestJid, String userJid) {
+    public List<ContestAnnouncement> getPublishedAnnouncements(String contestJid) {
         return Lists.transform(
                 announcementDao.selectAllPublishedByContestJid(contestJid),
                 ContestAnnouncementStore::fromModel);

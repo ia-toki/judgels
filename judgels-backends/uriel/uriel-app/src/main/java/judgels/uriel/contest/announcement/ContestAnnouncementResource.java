@@ -40,6 +40,6 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(announcementRoleChecker.canViewPublishedAnnouncements(actorJid, contest));
 
-        return announcementStore.getAnnouncements(contestJid, actorJid);
+        return announcementStore.getPublishedAnnouncements(contestJid);
     }
 }
