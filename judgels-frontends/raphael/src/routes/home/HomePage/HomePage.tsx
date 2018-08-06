@@ -70,6 +70,7 @@ class HomePage extends React.Component<HomePageProps> {
         <div className="home-widget-row__one-third">
           <HallOfFameWidget />
         </div>
+        <div className="clearfix" />
       </div>
     );
   };
