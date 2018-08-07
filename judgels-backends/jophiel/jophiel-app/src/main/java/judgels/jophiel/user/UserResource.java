@@ -89,8 +89,8 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, User> getUsersByUsernames(Set<String> usernames) {
-        return userStore.getUsersByUsernames(usernames);
+    public Map<String, String> translateUsernamesToJids(Set<String> usernames) {
+        return userStore.translateUsernamesToJids(usernames);
     }
 
     @Override

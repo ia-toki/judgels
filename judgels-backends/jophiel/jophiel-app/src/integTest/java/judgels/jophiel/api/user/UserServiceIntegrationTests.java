@@ -44,7 +44,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     }
 
     @Test
-    void get_users_by_usernames() {
+    void translate_users_to_jids() {
         User user1 = userService.createUser(adminHeader, new UserData.Builder()
                 .username("gama")
                 .password("pass")
@@ -58,14 +58,14 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .build());
 
         Set<String> usernames = ImmutableSet.of(user1.getUsername(), user2.getUsername());
-        Map<String, User> usersByUsernames = userService.getUsersByUsernames(usernames);
+        Map<String, String> usersByUsernames = userService.translateUsernamesToJids(usernames);
         assertThat(usersByUsernames).containsOnly(
-                new SimpleEntry<>(user1.getUsername(), user1),
-                new SimpleEntry<>(user2.getUsername(), user2));
+                new SimpleEntry<>(user1.getUsername(), user1.getJid()),
+                new SimpleEntry<>(user2.getUsername(), user2.getJid()));
 
         // must ignore not found usernames
         usernames = ImmutableSet.of(user1.getUsername(), "88888");
-        usersByUsernames = userService.getUsersByUsernames(usernames);
-        assertThat(usersByUsernames).containsExactly(new SimpleEntry<>(user1.getUsername(), user1));
+        usersByUsernames = userService.translateUsernamesToJids(usernames);
+        assertThat(usersByUsernames).containsExactly(new SimpleEntry<>(user1.getUsername(), user1.getJid()));
     }
 }
