@@ -18,6 +18,33 @@ class ContestAnnouncementRoleCheckerIntegrationTests extends AbstractRoleChecker
     }
 
     @Test
+    void create_announcement() {
+        assertThat(checker.canCreateAnnouncement(ADMIN, contestA)).isTrue();
+        assertThat(checker.canCreateAnnouncement(ADMIN, contestB)).isTrue();
+        assertThat(checker.canCreateAnnouncement(ADMIN, contestC)).isTrue();
+
+        assertThat(checker.canCreateAnnouncement(USER, contestA)).isFalse();
+        assertThat(checker.canCreateAnnouncement(USER, contestB)).isFalse();
+        assertThat(checker.canCreateAnnouncement(USER, contestC)).isFalse();
+
+        assertThat(checker.canCreateAnnouncement(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canCreateAnnouncement(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canCreateAnnouncement(CONTESTANT, contestC)).isFalse();
+
+        assertThat(checker.canCreateAnnouncement(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canCreateAnnouncement(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canCreateAnnouncement(SUPERVISOR, contestC)).isFalse();
+        addSupervisorToContestBWithPermission(ANNOUNCEMENT);
+        assertThat(checker.canCreateAnnouncement(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canCreateAnnouncement(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canCreateAnnouncement(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(checker.canCreateAnnouncement(MANAGER, contestA)).isFalse();
+        assertThat(checker.canCreateAnnouncement(MANAGER, contestB)).isTrue();
+        assertThat(checker.canCreateAnnouncement(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
     void view_published_announcements() {
         assertThat(checker.canViewPublishedAnnouncements(ADMIN, contestA)).isTrue();
         assertThat(checker.canViewPublishedAnnouncements(ADMIN, contestB)).isTrue();
