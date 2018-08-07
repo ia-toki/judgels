@@ -5,7 +5,7 @@ import { DelUserJid, PutUserJid } from './profileReducer';
 export const profileActions = {
   getUserJid: (username: string) => {
     return async (dispatch, getState, { userAPI }) => {
-      const users = await userAPI.getUsersByUsernames([username]);
+      const users = await userAPI.translateUsernamesToJids([username]);
       if (users[username] === undefined) {
         throw new NotFoundError();
       }

@@ -9,12 +9,8 @@ export interface User {
   username: string;
 }
 
-export interface Jid {
-  jid: string;
-}
-
 export interface UsernamesMap {
-  [username: string]: Jid;
+  [username: string]: string;
 }
 
 export function createUserAPI() {
