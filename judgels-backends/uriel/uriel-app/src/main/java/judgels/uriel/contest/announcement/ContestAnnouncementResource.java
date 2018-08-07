@@ -11,6 +11,7 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
+import judgels.uriel.api.contest.announcement.ContestAnnouncementData;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementService;
 import judgels.uriel.contest.ContestStore;
 
@@ -41,5 +42,18 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
         checkAllowed(announcementRoleChecker.canViewPublishedAnnouncements(actorJid, contest));
 
         return announcementStore.getPublishedAnnouncements(contestJid);
+    }
+
+    @Override
+    @UnitOfWork
+    public ContestAnnouncement createAnnouncement(
+            AuthHeader authHeader,
+            String contestJid,
+            ContestAnnouncementData announcementData) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(announcementRoleChecker.canCreateAnnouncement(actorJid, contest));
+
+        return announcementStore.createAnnouncement(contestJid, announcementData);
     }
 }

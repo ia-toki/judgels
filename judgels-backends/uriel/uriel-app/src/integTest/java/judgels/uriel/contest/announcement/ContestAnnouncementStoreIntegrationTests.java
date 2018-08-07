@@ -1,6 +1,5 @@
 package judgels.uriel.contest.announcement;
 
-import static judgels.uriel.UrielIntegrationTestPersistenceModule.ACTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -57,12 +56,6 @@ class ContestAnnouncementStoreIntegrationTests {
                         .content("g++ version is 4.9.2")
                         .status(ContestAnnouncementStatus.PUBLISHED)
                         .build());
-
-        // TODO(indravb6): move these assertions to service integration tests instead
-        assertThat(announcement1.getUserJid()).isEqualTo(ACTOR);
-        assertThat(announcement1.getTitle()).isEqualTo("Contest extension");
-        assertThat(announcement1.getContent()).isEqualTo("The contest is extended by 30 mins");
-        assertThat(announcement1.getStatus()).isEqualTo(ContestAnnouncementStatus.PUBLISHED);
 
         List<ContestAnnouncement> announcements = store.getPublishedAnnouncements(contest.getJid());
         assertThat(announcements).containsOnly(announcement3, announcement1);
