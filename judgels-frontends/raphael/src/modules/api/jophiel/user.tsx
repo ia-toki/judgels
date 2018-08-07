@@ -26,7 +26,7 @@ export function createUserAPI() {
     },
 
     translateUsernamesToJids: (usernames: string[]): Promise<UsernamesMap> => {
-      return post(`${baseURL}/usernames`, undefined, usernames);
+      return post(`${baseURL}/username-to-jid`, undefined, usernames);
     },
 
     getUsers: (token: string, page: number, orderBy?: string, orderDir?: OrderDir): Promise<Page<User>> => {

@@ -9,7 +9,7 @@ export const profileActions = {
       if (users[username] === undefined) {
         throw new NotFoundError();
       }
-      const userJid = users[username].jid;
+      const userJid = users[username];
       dispatch(PutUserJid.create(userJid));
     };
   },
