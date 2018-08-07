@@ -14,7 +14,7 @@ describe('profileActions', () => {
     dispatch = jest.fn();
 
     userAPI = {
-      getUsersByUsernames: jest.fn(),
+      translateUsernamesToJids: jest.fn(),
     };
   });
 
@@ -24,14 +24,14 @@ describe('profileActions', () => {
 
     describe('when user found', () => {
       beforeEach(async () => {
-        const users: UsernamesMap = { [user.username]: user };
-        userAPI.getUsersByUsernames.mockReturnValue(users);
+        const userJidsByUsername: UsernamesMap = { [user.username]: user.jid };
+        userAPI.translateUsernamesToJids.mockReturnValue(userJidsByUsername);
 
         await doGetUserJid();
       });
 
       it('calls API to get user', () => {
-        expect(userAPI.getUsersByUsernames).toHaveBeenCalledWith([user.username]);
+        expect(userAPI.translateUsernamesToJids).toHaveBeenCalledWith([user.username]);
       });
 
       it('puts the user jid', () => {
@@ -42,7 +42,7 @@ describe('profileActions', () => {
     describe('when user not found', () => {
       beforeEach(async () => {
         const users: UsernamesMap = {};
-        userAPI.getUsersByUsernames.mockReturnValue(users);
+        userAPI.translateUsernamesToJids.mockReturnValue(users);
       });
 
       it('throws NotFoundError', async () => {

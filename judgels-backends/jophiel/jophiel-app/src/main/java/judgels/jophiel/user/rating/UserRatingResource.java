@@ -40,11 +40,11 @@ public class UserRatingResource implements UserRatingService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canUpdateUserList(actorJid));
 
-        Map<String, User> usersMap = userStore.getUsersByUsernames(userRatingUpdateData.getRatingsMap().keySet());
+        Map<String, String> jidsByUsernamesMap = userStore.translateUsernamesToJids(userRatingUpdateData.getRatingsMap().keySet());
         Map<String, UserRating> ratingsMap = userRatingUpdateData.getRatingsMap().entrySet()
                 .stream()
-                .filter(e -> usersMap.containsKey(e.getKey()))
-                .collect(Collectors.toMap(e -> usersMap.get(e.getKey()).getJid(), e -> e.getValue()));
+                .filter(e ->  jidsByUsernamesMap.containsKey(e.getKey()))
+                .collect(Collectors.toMap(e ->  jidsByUsernamesMap.get(e.getKey()), e -> e.getValue()));
 
         ratingStore.updateRatings(userRatingUpdateData.getTime(), userRatingUpdateData.getEventJid(), ratingsMap);
     }

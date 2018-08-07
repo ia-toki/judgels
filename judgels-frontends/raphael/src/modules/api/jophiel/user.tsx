@@ -10,7 +10,7 @@ export interface User {
 }
 
 export interface UsernamesMap {
-  [username: string]: User;
+  [username: string]: string;
 }
 
 export function createUserAPI() {
@@ -25,8 +25,8 @@ export function createUserAPI() {
       return get(`${baseURL}/email/${email}/exists`);
     },
 
-    getUsersByUsernames: (usernames: string[]): Promise<UsernamesMap> => {
-      return post(`${baseURL}/usernames`, undefined, usernames);
+    translateUsernamesToJids: (usernames: string[]): Promise<UsernamesMap> => {
+      return post(`${baseURL}/username-to-jid`, undefined, usernames);
     },
 
     getUsers: (token: string, page: number, orderBy?: string, orderDir?: OrderDir): Promise<Page<User>> => {

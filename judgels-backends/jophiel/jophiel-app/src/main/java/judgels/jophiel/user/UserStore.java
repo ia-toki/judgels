@@ -116,11 +116,11 @@ public class UserStore {
         });
     }
 
-    public Map<String, User> getUsersByUsernames(Set<String> usernames) {
+    public Map<String, String> translateUsernamesToJids(Set<String> usernames) {
         Map<String, UserModel> userModelByUsernames = userDao.selectAllByUsernames(usernames);
         return userModelByUsernames.values().stream()
                 .map(UserStore::fromModel)
-                .collect(Collectors.toMap(User::getUsername, p -> p));
+                .collect(Collectors.toMap(User::getUsername, User::getJid));
     }
 
     private static User fromModel(UserModel model) {

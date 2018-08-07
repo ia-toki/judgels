@@ -51,10 +51,10 @@ public interface UserService {
             @QueryParam("orderDir") Optional<OrderDir> orderDir);
 
     @POST
-    @Path("/usernames")
+    @Path("/username-to-jid")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, User> getUsersByUsernames(Set<String> usernames);
+    Map<String, String> translateUsernamesToJids(Set<String> usernames);
 
     @POST
     @Path("/passwords")
