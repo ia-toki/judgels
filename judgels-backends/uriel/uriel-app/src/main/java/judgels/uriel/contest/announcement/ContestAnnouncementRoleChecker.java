@@ -13,17 +13,17 @@ import judgels.uriel.persistence.ContestRoleDao;
 public class ContestAnnouncementRoleChecker {
     private final AdminRoleDao adminRoleDao;
     private final ContestRoleDao contestRoleDao;
-    private final ContestSupervisorStore contestSupervisorStore;
+    private final ContestSupervisorStore supervisorStore;
 
     @Inject
     public ContestAnnouncementRoleChecker(
             AdminRoleDao adminRoleDao,
             ContestRoleDao contestRoleDao,
-            ContestSupervisorStore contestSupervisorStore) {
+            ContestSupervisorStore supervisorStore) {
 
         this.adminRoleDao = adminRoleDao;
         this.contestRoleDao = contestRoleDao;
-        this.contestSupervisorStore = contestSupervisorStore;
+        this.supervisorStore = supervisorStore;
     }
 
     public boolean canViewPublishedAnnouncements(String userJid, Contest contest) {
@@ -34,7 +34,7 @@ public class ContestAnnouncementRoleChecker {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }
-        Optional<ContestSupervisor> supervisor = contestSupervisorStore.getSupervisor(contest.getJid(), userJid);
+        Optional<ContestSupervisor> supervisor = supervisorStore.getSupervisor(contest.getJid(), userJid);
         return supervisor.isPresent() && supervisor.get().getPermission().allows(ANNOUNCEMENT);
     }
 }

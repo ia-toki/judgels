@@ -3,6 +3,8 @@ package judgels.uriel.api.contest.announcement;
 import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.of;
 import static judgels.uriel.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
+import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.DRAFT;
+import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.PUBLISHED;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
@@ -38,7 +40,7 @@ import org.junit.jupiter.api.Test;
 class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static WireMockServer mockJophiel;
     private ContestService contestService = createService(ContestService.class);
-    private ContestAnnouncementService contestAnnouncementService = createService(ContestAnnouncementService.class);
+    private ContestAnnouncementService announcementService = createService(ContestAnnouncementService.class);
 
     @BeforeAll
     static void startMocks() {
@@ -75,39 +77,39 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
         ContestAnnouncementData announcementData1 = new ContestAnnouncementData.Builder()
                 .title("this is title 1")
                 .content("this is content 1")
-                .status(ContestAnnouncementStatus.PUBLISHED)
+                .status(PUBLISHED)
                 .build();
 
-        ContestAnnouncement contestAnnouncement1 = contestAnnouncementService.createAnnouncement(
+        ContestAnnouncement announcement1 = announcementService.createAnnouncement(
                 ADMIN_HEADER, contest.getJid(), announcementData1);
-        assertThatRemoteExceptionThrownBy(() -> contestAnnouncementService.createAnnouncement(
+        assertThatRemoteExceptionThrownBy(() -> announcementService.createAnnouncement(
                 USER_A_HEADER, contest.getJid(), announcementData1))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
-        assertThat(contestAnnouncement1.getUserJid()).isEqualTo(ADMIN_JID);
-        assertThat(contestAnnouncement1.getTitle()).isEqualTo("this is title 1");
-        assertThat(contestAnnouncement1.getContent()).isEqualTo("this is content 1");
-        assertThat(contestAnnouncement1.getStatus()).isEqualTo(ContestAnnouncementStatus.PUBLISHED);
+        assertThat(announcement1.getUserJid()).isEqualTo(ADMIN_JID);
+        assertThat(announcement1.getTitle()).isEqualTo("this is title 1");
+        assertThat(announcement1.getContent()).isEqualTo("this is content 1");
+        assertThat(announcement1.getStatus()).isEqualTo(PUBLISHED);
 
         ContestAnnouncementData announcementData2 = new ContestAnnouncementData.Builder()
                 .title("this is title 2")
                 .content("this is content 2")
-                .status(ContestAnnouncementStatus.PUBLISHED)
+                .status(PUBLISHED)
                 .build();
         ContestAnnouncementData announcementData3 = new ContestAnnouncementData.Builder()
                 .title("this is title 3")
                 .content("this is content 3")
-                .status(ContestAnnouncementStatus.DRAFT)
+                .status(DRAFT)
                 .build();
 
-        ContestAnnouncement contestAnnouncement2 = contestAnnouncementService.createAnnouncement(
+        ContestAnnouncement announcement2 = announcementService.createAnnouncement(
                 ADMIN_HEADER, contest.getJid(), announcementData2);
-        ContestAnnouncement contestAnnouncement3 = contestAnnouncementService.createAnnouncement(
+        ContestAnnouncement announcement3 = announcementService.createAnnouncement(
                 ADMIN_HEADER, contest.getJid(), announcementData3);
 
-        List<ContestAnnouncement> publishedAnnouncements = contestAnnouncementService
+        List<ContestAnnouncement> publishedAnnouncements = announcementService
                 .getPublishedAnnouncements(of(ADMIN_HEADER), contest.getJid());
 
-        assertThat(publishedAnnouncements).containsOnly(contestAnnouncement1, contestAnnouncement2);
+        assertThat(publishedAnnouncements).containsOnly(announcement1, announcement2);
     }
 }
