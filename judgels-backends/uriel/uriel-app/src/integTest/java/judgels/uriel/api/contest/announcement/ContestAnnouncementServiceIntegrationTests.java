@@ -108,7 +108,6 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
         List<ContestAnnouncement> publishedAnnouncements = contestAnnouncementService
                 .getPublishedAnnouncements(of(ADMIN_HEADER), contest.getJid());
 
-        assertThat(publishedAnnouncements).contains(contestAnnouncement1, contestAnnouncement2);
-        assertThat(publishedAnnouncements).doesNotContain(contestAnnouncement3);
+        assertThat(publishedAnnouncements).containsOnly(contestAnnouncement1, contestAnnouncement2);
     }
 }
