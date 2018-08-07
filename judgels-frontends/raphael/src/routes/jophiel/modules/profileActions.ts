@@ -5,11 +5,11 @@ import { DelUserJid, PutUserJid } from './profileReducer';
 export const profileActions = {
   getUserJid: (username: string) => {
     return async (dispatch, getState, { userAPI }) => {
-      const users = await userAPI.translateUsernamesToJids([username]);
-      if (users[username] === undefined) {
+      const userJidsByUsername = await userAPI.translateUsernamesToJids([username]);
+      if (userJidsByUsername[username] === undefined) {
         throw new NotFoundError();
       }
-      const userJid = users[username];
+      const userJid = userJidsByUsername[username];
       dispatch(PutUserJid.create(userJid));
     };
   },

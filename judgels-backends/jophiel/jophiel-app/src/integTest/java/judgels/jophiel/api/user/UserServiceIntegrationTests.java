@@ -58,14 +58,14 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .build());
 
         Set<String> usernames = ImmutableSet.of(user1.getUsername(), user2.getUsername());
-        Map<String, String> usersByUsernames = userService.translateUsernamesToJids(usernames);
-        assertThat(usersByUsernames).containsOnly(
+        Map<String, String> jidsByUsernames = userService.translateUsernamesToJids(usernames);
+        assertThat(jidsByUsernames).containsOnly(
                 new SimpleEntry<>(user1.getUsername(), user1.getJid()),
                 new SimpleEntry<>(user2.getUsername(), user2.getJid()));
 
         // must ignore not found usernames
         usernames = ImmutableSet.of(user1.getUsername(), "88888");
-        usersByUsernames = userService.translateUsernamesToJids(usernames);
-        assertThat(usersByUsernames).containsExactly(new SimpleEntry<>(user1.getUsername(), user1.getJid()));
+        jidsByUsernames = userService.translateUsernamesToJids(usernames);
+        assertThat(jidsByUsernames).containsExactly(new SimpleEntry<>(user1.getUsername(), user1.getJid()));
     }
 }
