@@ -6,5 +6,15 @@
       force: yes
       push: yes
 
+  - name: Tag uriel latest version
+    docker_image:
+      name: judgels/uriel:latest
+      repository: "judgels/uriel:{{ judgels_version }}"
+      force: yes
+      pull: no
+      push: yes
+      state: present
+    when: judgels_version is defined
+
   tags:
     - uriel-build

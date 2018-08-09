@@ -5,7 +5,7 @@ import sys
 from collections import OrderedDict
 
 
-FORCE_CI = '[force-ci]'
+FORCE_CI = '[force ci]'
 
 MODULES = OrderedDict([
     (':judgels-commons:judgels-fs', set()),
@@ -89,6 +89,13 @@ def get_changed_modules(branch_to_compare):
     return changed_modules
 
 
+def get_tag_env():
+    tag = run('git describe --exact-match --tags HEAD').strip()
+    if not tag:
+        return ''
+    return 'JUDGELS_VERSION={} '.format(tag)
+
+
 def check(branch_to_compare):
     changed_modules = get_changed_modules(branch_to_compare)
 
@@ -104,12 +111,13 @@ def check(branch_to_compare):
 
 
 def deploy(branch_to_compare):
-    changed_modules = get_changed_modules(branch_to_compare)
+    tag_env = get_tag_env()
+    changed_modules = MODULES.keys() if tag_env else get_changed_modules(branch_to_compare)
 
     print('set -ex')
     for service in SERVICES:
         if MODULES[service].intersection(changed_modules):
-            print('./scripts/deploy_{}.sh'.format(service.replace(':', '')))
+            print('{}./scripts/deploy_{}.sh'.format(tag_env, service.replace(':', '')))
 
 
 flatten_dependencies()
@@ -119,6 +127,7 @@ if len(sys.argv) < 2:
 
 command, commit_range, commit_message = sys.argv[1], os.environ['TRAVIS_COMMIT_RANGE'], os.environ['TRAVIS_COMMIT_MESSAGE']
 branch_to_compare = commit_range.split('...')[0]
+
 if FORCE_CI in commit_message or not 'commit' in run('git cat-file -t {}'.format(branch_to_compare)):
     branch_to_compare = FORCE_CI
 

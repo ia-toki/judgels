@@ -11,5 +11,5 @@ rm build/distributions/*.tgz
 cd ../../../deployment/ansible
 
 ansible --version
-ansible-playbook -e @../../deployment-repo/conf/global.yml playbooks/build-jophiel.yml
-ansible-playbook -e @../../deployment-repo/conf/global.yml playbooks/deploy-jophiel.yml
+ansible-playbook -e @../../deployment-repo/conf/global.yml -e judgels_version=$JUDGELS_VERSION playbooks/build-jophiel.yml
+ansible-playbook -e @../../deployment-repo/conf/global.yml -e judgels_version=$JUDGELS_VERSION playbooks/deploy-jophiel.yml

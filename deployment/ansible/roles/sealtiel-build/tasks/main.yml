@@ -6,5 +6,15 @@
       force: yes
       push: yes
 
+  - name: Tag sealtiel latest version
+    docker_image:
+      name: judgels/sealtiel:latest
+      repository: "judgels/sealtiel:{{ judgels_version }}"
+      force: yes
+      pull: no
+      push: yes
+      state: present
+    when: judgels_version is defined
+
   tags:
     - sealtiel-build
