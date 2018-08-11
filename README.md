@@ -51,6 +51,9 @@ Judgels has been used in the following contests:
 - **APIO** (Asia-Pacific Informatics Olympiad)
   - APIO 2015, Indonesia
 
+- **TOKI Open Contests**
+  - TOKI Regular Open Contests
+
 ### Indonesian contests
 
 - **OSN Informatika** (Olimpiade Sains Nasional Informatika / National Olympiad in Informatics)
@@ -59,11 +62,11 @@ Judgels has been used in the following contests:
   - OSN 2017
   - OSN 2018
 
-- **GEMASTIK** (Pagelaran Mahasiswa Nasional Bidang Teknologi Informasi dan Komunikasi)
+- **Pemrograman GEMASTIK** (Pagelaran Mahasiswa Nasional Bidang Teknologi Informasi dan Komunikasi)
   - GEMASTIK 2016
   - GEMASTIK 2017
 
-- **CompFest** (Computer Festival)
+- **Pemrograman CompFest** (Computer Festival)
   - CompFest 2017
 
 - **Indo2SV Selection**
