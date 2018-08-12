@@ -6,7 +6,6 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.api.user.rating.UserRatingUpdateData;
@@ -40,11 +39,12 @@ public class UserRatingResource implements UserRatingService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canUpdateUserList(actorJid));
 
-        Map<String, String> jidsByUsernamesMap = userStore.translateUsernamesToJids(userRatingUpdateData.getRatingsMap().keySet());
+        Map<String, String> jidsByUsernamesMap = userStore.translateUsernamesToJids(
+                userRatingUpdateData.getRatingsMap().keySet());
         Map<String, UserRating> ratingsMap = userRatingUpdateData.getRatingsMap().entrySet()
                 .stream()
                 .filter(e ->  jidsByUsernamesMap.containsKey(e.getKey()))
-                .collect(Collectors.toMap(e ->  jidsByUsernamesMap.get(e.getKey()), e -> e.getValue()));
+                .collect(Collectors.toMap(e -> jidsByUsernamesMap.get(e.getKey()), e -> e.getValue()));
 
         ratingStore.updateRatings(userRatingUpdateData.getTime(), userRatingUpdateData.getEventJid(), ratingsMap);
     }
