@@ -12,20 +12,20 @@
 
 ## Features
 
-**Problem management**
+### Problem management
 - multilanguage problem statements
 - batch, interactive, output-only, and functional (like IOI 2010 and above) problem types
 - custom checker (scorer)
 - subtasks with different points
 - version control
 
-**Contest management**
+### Contest management
 - IOI- and ICPC-style contests
 - virtual contests, where contestants can start at different times
 - public contest registration
 - announcements, clarifications, scoreboards
 
-**As a platform**
+### As a platform
 - distributed microservices that can be scaled independently
 - easy deployment using Docker
 
@@ -67,7 +67,9 @@ Judgels has been used in the following contests:
   - GEMASTIK 2017
 
 - **Pemrograman CompFest** (Computer Festival)
+  - CompFest 2016
   - CompFest 2017
+  - CompFest 2018
 
 - **Indo2SV Selection**
   - Indo2SV 2015
