@@ -1,7 +1,15 @@
 .user-ref {
-  text-decoration: none !important;
-}
+  .user-ref__flag {
+    vertical-align: middle;
+    margin-right: 4px;
+  }
 
-.user-ref:hover {
-  text-decoration: none !important;
+  .user-ref__username {
+    vertical-align: middle;
+    text-decoration: none !important;
+  }
+
+  .user-ref__username:hover {
+    text-decoration: none !important;
+  }
 }

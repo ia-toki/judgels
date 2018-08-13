@@ -35,7 +35,7 @@ export class IoiScoreboardTable extends React.PureComponent<IoiScoreboardTablePr
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
         {this.props.profilesMap[entry.contestantJid] && (
-          <UserRef profile={this.props.profilesMap[entry.contestantJid]} />
+          <UserRef profile={this.props.profilesMap[entry.contestantJid]} showFlag />
         )}
       </td>,
       <td key="totalScores">

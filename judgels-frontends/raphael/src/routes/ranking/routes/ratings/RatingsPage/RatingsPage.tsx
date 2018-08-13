@@ -48,7 +48,7 @@ class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
       <tr key={profile.username}>
         <td className="col-rank">{baseRank + idx}</td>
         <td>
-          <UserRef profile={profile} />
+          <UserRef profile={profile} showFlag />
         </td>
         <td>{profile.rating}</td>
       </tr>
