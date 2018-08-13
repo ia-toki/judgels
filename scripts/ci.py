@@ -99,10 +99,9 @@ def get_tag_env():
 def check(branch_to_compare):
     changed_modules = get_changed_modules(branch_to_compare)
 
-    print('set -ex')
     for project in PROJECTS:
         if MODULES[project].intersection(changed_modules):
-            if ':raphael' in changed_modules:
+            if project == ':raphael':
                 if ':raphael:package.json' in changed_modules:
                     print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
@@ -126,12 +125,18 @@ if len(sys.argv) < 2:
     die('Usage: python3 ci.py <command>')
 
 command, commit_range, commit_message = sys.argv[1], os.environ['TRAVIS_COMMIT_RANGE'], os.environ['TRAVIS_COMMIT_MESSAGE']
-branch_to_compare = commit_range.split('...')[0]
 
-if FORCE_CI in commit_message or not 'commit' in run('git cat-file -t {}'.format(branch_to_compare)):
+branch_to_compare = None
+if FORCE_CI in commit_message or not commit_range:
     branch_to_compare = FORCE_CI
+else:
+    branch_to_compare = commit_range.split('...')[0]
+    if not 'commit' in run('git cat-file -t {}'.format(branch_to_compare)):
+        branch_to_compare = FORCE_CI
 
 print('echo "Running continuous integration against {}"'.format(branch_to_compare))
+
+print('set -ex')
 
 if command == 'check':
     check(branch_to_compare)
