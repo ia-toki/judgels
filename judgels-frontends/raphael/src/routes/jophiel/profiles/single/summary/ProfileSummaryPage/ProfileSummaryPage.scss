@@ -40,6 +40,15 @@
   max-width: 120px;
 }
 
+.basic-profile-card__flag {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.basic-profile-card__country {
+  vertical-align: middle;
+}
+
 .basic-profile-card__details {
   flex-grow: 1;
 }
