@@ -65,7 +65,9 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private ContestScoreboardResponse buildResponse(ContestScoreboard scoreboard) {
         return new ContestScoreboardResponse.Builder()
                 .data(scoreboard)
-                .profilesMap(profileService.getPastProfiles(scoreboard.getScoreboard().getState().getContestantJids()))
+                .profilesMap(profileService.getProfiles(
+                        scoreboard.getScoreboard().getState().getContestantJids(),
+                        scoreboard.getUpdatedTime()))
                 .build();
     }
 }

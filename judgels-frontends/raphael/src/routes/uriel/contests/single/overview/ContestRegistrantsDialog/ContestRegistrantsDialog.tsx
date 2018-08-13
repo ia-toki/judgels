@@ -63,6 +63,12 @@ class ContestRegistrantsDialog extends React.PureComponent<
     }
 
     const sortedContestants = contestants.slice().sort((jid1, jid2) => {
+      const rating1 = (profilesMap[jid1] && profilesMap[jid1].rating) || 0;
+      const rating2 = (profilesMap[jid2] && profilesMap[jid2].rating) || 0;
+      if (rating1 !== rating2) {
+        return rating2 - rating1;
+      }
+
       const country1 = (profilesMap[jid1] && getCountryName(profilesMap[jid1].country)) || 'ZZ';
       const country2 = (profilesMap[jid2] && getCountryName(profilesMap[jid2].country)) || 'ZZ';
       if (country1 !== country2) {
@@ -78,7 +84,7 @@ class ContestRegistrantsDialog extends React.PureComponent<
       <tr key={jid}>
         <td>{profilesMap[jid] && getCountryName(profilesMap[jid].country)}</td>
         <td>
-          <UserRef profile={profilesMap[jid]} />
+          <UserRef profile={profilesMap[jid]} showFlag />
         </td>
       </tr>
     ));

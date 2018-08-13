@@ -2,6 +2,7 @@ package judgels.jophiel.api.info;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -20,14 +21,15 @@ public interface ProfileService {
     @Path("/")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, Profile> getProfiles(Set<String> userJids);
+    Map<String, Profile> getProfiles(Set<String> userJids, @QueryParam("beforeTime") Optional<Long> time);
 
-    // TODO (fushar): accept time as parameter
-    @POST
-    @Path("/past")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    Map<String, Profile> getPastProfiles(Set<String> userJids);
+    default Map<String, Profile> getProfiles(Set<String> userJids) {
+        return getProfiles(userJids, Optional.empty());
+    }
+
+    default Map<String, Profile> getProfiles(Set<String> userJids, Instant time) {
+        return getProfiles(userJids, Optional.of(time.toEpochMilli()));
+    }
 
     @GET
     @Path("/top")

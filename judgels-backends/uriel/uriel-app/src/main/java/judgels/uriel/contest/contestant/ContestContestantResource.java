@@ -47,7 +47,7 @@ public class ContestContestantResource implements ContestContestantService {
         checkAllowed(contestantRoleChecker.canGetContestants(actorJid, contest));
 
         Set<String> userJids = contestantStore.getContestants(contestJid);
-        Map<String, Profile> profilesMap = profileService.getPastProfiles(userJids);
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids, contest.getBeginTime());
 
         return new ContestContestantsResponse.Builder()
                 .data(userJids)
