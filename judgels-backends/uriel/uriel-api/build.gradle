@@ -6,5 +6,6 @@ dependencies {
 
     compileOnly "org.immutables:value:$immutablesVersion"
 
+
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }
