@@ -16,19 +16,19 @@ export interface UserRefProps {
 export class UserRef extends React.PureComponent<UserRefProps> {
   render() {
     return (
-      <div className="user-ref">
+      <>
         {this.renderFlag()}
         {this.renderUsername()}
-      </div>
+      </>
     );
   }
 
   private renderFlag = () => {
     const { profile, showFlag } = this.props;
     if (!showFlag || !profile.country) {
-      return null;
+      return <div className="user-ref__flag-dummy" />;
     }
-    return <FlagIcon code={profile.country} size={18} className="user-ref__flag" />;
+    return <FlagIcon code={profile.country} size={20} className="user-ref__flag" />;
   };
 
   private renderUsername = () => {
