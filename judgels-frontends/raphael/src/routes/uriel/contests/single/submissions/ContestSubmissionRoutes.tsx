@@ -6,8 +6,8 @@ import ContestSubmissionPage from './single/ContestSubmissionPage/ContestSubmiss
 
 const ContestSubmissionRoutes = () => (
   <div>
-    <Route exact path="/contests/:contestId/submissions" component={ContestSubmissionsPage} />
-    <Route path="/contests/:contestId/submissions/:submissionId" component={ContestSubmissionPage} />
+    <Route exact path="/contests/:contestSlug/submissions" component={ContestSubmissionsPage} />
+    <Route path="/contests/:contestSlug/submissions/:submissionId" component={ContestSubmissionPage} />
   </div>
 );
 

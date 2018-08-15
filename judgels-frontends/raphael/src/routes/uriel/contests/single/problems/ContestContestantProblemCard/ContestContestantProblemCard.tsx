@@ -19,7 +19,7 @@ export class ContestContestantProblemCard extends React.PureComponent<ContestCon
     const { contest, problemName } = this.props;
 
     return (
-      <ContentCardLink to={`/contests/${contest.id}/problems/${problem.alias}`}>
+      <ContentCardLink to={`/contests/${contest.slug}/problems/${problem.alias}`}>
         <div className="contestant-problem-card__name">
           <span data-key="name">
             {problem.alias}. {problemName}

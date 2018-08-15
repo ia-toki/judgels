@@ -58,7 +58,7 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
           <FormattedRelative value={submission.time} />{' '}
         </td>
         <td className="cell-centered">
-          <Link to={`/contests/${contest.id}/submissions/${submission.id}`}>
+          <Link to={`/contests/${contest.slug}/submissions/${submission.id}`}>
             <Icon icon="search" />
           </Link>
         </td>

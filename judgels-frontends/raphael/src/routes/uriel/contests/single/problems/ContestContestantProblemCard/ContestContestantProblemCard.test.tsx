@@ -2,7 +2,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
 import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
-import { Contest } from 'modules/api/uriel/contest';
+import { contest } from 'fixtures/state';
 import { ContestContestantProblem, ContestProblem, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
 
 import { ContestContestantProblemCard, ContestContestantProblemCardProps } from './ContestContestantProblemCard';
@@ -11,7 +11,6 @@ describe('ContestContestantProblemCard', () => {
   let wrapper: ShallowWrapper<ContestContestantProblemCardProps>;
 
   const render = (problem: ContestProblem) => {
-    const contest = { id: 123, jid: 'jid123' } as Contest;
     const contestantProblem: ContestContestantProblem = {
       problem,
       totalSubmissions: 10,
@@ -31,7 +30,7 @@ describe('ContestContestantProblemCard', () => {
     });
 
     expect(wrapper.find('[data-key="name"]').text()).toEqual('A. The Problem');
-    expect(wrapper.find(ContentCardLink).props().to).toEqual('/contests/123/problems/A');
+    expect(wrapper.find(ContentCardLink).props().to).toEqual('/contests/contest-a/problems/A');
   });
 
   test('open problem with submissions limit', () => {

@@ -6,8 +6,8 @@ import ContestProblemPage from './single/ContestProblemPage/ContestProblemPage';
 
 const ContestProblemRoutes = () => (
   <div>
-    <Route exact path="/contests/:contestId/problems" component={ContestProblemsPage} />
-    <Route path="/contests/:contestId/problems/:problemAlias" component={ContestProblemPage} />
+    <Route exact path="/contests/:contestSlug/problems" component={ContestProblemsPage} />
+    <Route path="/contests/:contestSlug/problems/:problemAlias" component={ContestProblemPage} />
   </div>
 );
 
