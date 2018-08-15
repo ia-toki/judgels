@@ -25,7 +25,10 @@ export class UserRef extends React.PureComponent<UserRefProps> {
 
   private renderFlag = () => {
     const { profile, showFlag } = this.props;
-    if (!showFlag || !profile.country) {
+    if (!showFlag) {
+      return null;
+    }
+    if (!profile.country) {
       return <div className="user-ref__flag-dummy" />;
     }
     return <FlagIcon code={profile.country} size={20} className="user-ref__flag" />;
