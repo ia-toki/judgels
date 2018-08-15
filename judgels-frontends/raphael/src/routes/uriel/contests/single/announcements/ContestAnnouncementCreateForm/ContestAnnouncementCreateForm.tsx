@@ -6,6 +6,7 @@ import { Required } from 'components/forms/validations';
 import { FormTextInput } from 'components/forms/FormTextInput/FormTextInput';
 import { FormSelect2 } from 'components/forms/FormSelect2/FormSelect2';
 import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
+import { ContestAnnouncementStatus } from 'modules/api/uriel/contestAnnouncement';
 
 export interface ContestAnnouncementCreateFormData {
   status: string;
@@ -22,8 +23,8 @@ const ContestAnnouncementCreateForm = (props: ContestAnnouncementCreateFormProps
     name: 'status',
     label: 'Status',
     validate: [Required],
-    optionValues: ['DRAFT', 'PUBLISHED'],
-    optionNamesMap: { DRAFT: 'DRAFT', PUBLISHED: 'PUBLISHED' },
+    optionValues: [ContestAnnouncementStatus.Draft, ContestAnnouncementStatus.Published],
+    optionNamesMap: { [ContestAnnouncementStatus.Draft]: 'Draft', [ContestAnnouncementStatus.Published]: 'Published' },
   };
 
   const titleField: any = {
@@ -53,5 +54,5 @@ const ContestAnnouncementCreateForm = (props: ContestAnnouncementCreateFormProps
 
 export default reduxForm<ContestAnnouncementCreateFormData>({
   form: 'contest-announcement-create',
-  initialValues: { status: 'PUBLISHED' },
+  initialValues: { status: ContestAnnouncementStatus.Published },
 })(ContestAnnouncementCreateForm);

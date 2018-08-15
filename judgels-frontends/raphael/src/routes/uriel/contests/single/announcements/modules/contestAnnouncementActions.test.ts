@@ -3,6 +3,7 @@ import {
   ContestAnnouncement,
   ContestAnnouncementData,
   ContestAnnouncementConfig,
+  ContestAnnouncementStatus,
 } from 'modules/api/uriel/contestAnnouncement';
 import { AppState } from 'modules/store';
 
@@ -50,7 +51,7 @@ describe('contestAnnouncementActions', () => {
     const data = {
       title: 'announcement title',
       content: 'announcement content',
-      status: 'PUBLISHED',
+      status: ContestAnnouncementStatus.Published,
     } as ContestAnnouncementData;
     const doCreateAnnouncement = async () =>
       createAnnouncement(contestJid, data)(dispatch, getState, { contestAnnouncementAPI, toastActions });

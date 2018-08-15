@@ -1,9 +1,9 @@
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
+import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-import { Provider } from 'react-redux';
 
 import { contest } from 'fixtures/state';
 import { ContestAnnouncement } from 'modules/api/uriel/contestAnnouncement';
