@@ -2,13 +2,17 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
+import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 
+import { selectContest } from '../modules/contestSelectors';
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 import { contestWebConfigActions as injectedContestWebConfigActions } from './modules/contestWebConfigActions';
 
 export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestSlug: string }> {
+  contest?: Contest;
+
   onGetContest: (contestSlug: string) => Promise<Contest>;
   onClearContest: () => void;
   onGetContestWebConfig: (contestJid: string) => void;
@@ -21,10 +25,21 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
   private currentTimeout;
 
   async componentDidMount() {
-    const contest = await this.props.onGetContest(this.props.match.params.contestSlug);
-    this.props.onPushBreadcrumb(this.props.match.url, contest.name);
+    const { contest, match } = this.props;
 
-    await this.refreshWebConfig(contest.jid);
+    // Optimization:
+    // If the current contest slug is equal to the persisted one, then assume the JID is still the same,
+    if (contest && contest.slug === match.params.contestSlug) {
+      this.refreshWebConfig(contest.jid);
+    }
+
+    // so that we don't have to wait until we get the contest from backend.
+    const newContest = await this.props.onGetContest(match.params.contestSlug);
+    this.props.onPushBreadcrumb(this.props.match.url, newContest.name);
+
+    if (!contest || contest.slug !== match.params.contestSlug) {
+      this.refreshWebConfig(newContest.jid);
+    }
   }
 
   componentWillUnmount() {
@@ -48,6 +63,11 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
 }
 
 export function createSingleContestDataRoute(contestActions, contestWebConfigActions, breadcrumbsActions) {
+  const mapStateToProps = (state: AppState) =>
+    ({
+      contest: selectContest(state),
+    } as Partial<SingleContestDataRouteProps>);
+
   const mapDispatchToProps = {
     onGetContest: contestActions.getContestBySlug,
     onGetContestWebConfig: contestWebConfigActions.getWebConfig,
@@ -57,7 +77,7 @@ export function createSingleContestDataRoute(contestActions, contestWebConfigAct
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
 
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(SingleContestDataRoute));
+  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestDataRoute));
 }
 
 export default createSingleContestDataRoute(

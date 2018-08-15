@@ -18,7 +18,11 @@ describe('SingleContestDataRoute', () => {
   let contestWebConfigActions: jest.Mocked<any>;
   let breadcrumbsActions: jest.Mocked<any>;
 
-  const store = createMockStore([thunk])({});
+  const store = createMockStore([thunk])({
+    uriel: {
+      contest: {},
+    },
+  });
 
   const render = (currentPath: string) => {
     history = createMemoryHistory({ initialEntries: [currentPath] });

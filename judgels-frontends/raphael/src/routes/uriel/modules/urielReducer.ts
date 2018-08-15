@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/es/storage';
 
 import { contestReducer, ContestState } from '../contests/modules/contestReducer';
 import { contestWebConfigReducer, ContestWebConfigState } from '../contests/modules/contestWebConfigReducer';
@@ -9,6 +11,6 @@ export interface UrielState {
 }
 
 export const urielReducer = combineReducers<UrielState>({
-  contest: contestReducer,
+  contest: persistReducer({ key: 'urielContest', storage }, contestReducer),
   contestWebConfig: contestWebConfigReducer,
 });

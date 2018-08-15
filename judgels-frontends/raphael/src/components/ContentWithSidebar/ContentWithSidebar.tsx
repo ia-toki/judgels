@@ -32,6 +32,7 @@ export interface ContentWithSidebarItem {
   title: string | JSX.Element;
   routeComponent: any;
   component: any;
+  disabled?: boolean;
 }
 
 export interface ContentWithSidebarProps {
@@ -63,7 +64,7 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
   }
 
   private renderSidebar = () => {
-    const sidebarItems = this.props.items.map(
+    const sidebarItems = this.props.items.filter(item => !item.disabled).map(
       item =>
         ({
           id: item.id,

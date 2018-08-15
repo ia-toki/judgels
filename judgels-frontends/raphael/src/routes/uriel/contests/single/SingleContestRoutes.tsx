@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router';
+import { Route, RouteComponentProps, withRouter } from 'react-router';
 
 import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from 'components/ScrollToTopOnMount/ScrollToTopOnMount';
@@ -28,18 +28,22 @@ import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
 
 import './SingleContestRoutes.css';
 
-interface SingleContestRoutesProps {
+interface SingleContestRoutesProps extends RouteComponentProps<{ contestSlug: string }> {
   contest?: Contest;
   contestWebConfig?: ContestWebConfig;
 }
 
 const SingleContestRoutes = (props: SingleContestRoutesProps) => {
   const { contest, contestWebConfig } = props;
-  if (!contest || !contestWebConfig) {
+
+  // Optimization:
+  // We wait until we get the contest from the backend only if the current slug is different from the persisted one.
+  if (!contest || contest.slug !== props.match.params.contestSlug) {
     return <LoadingState large />;
   }
 
-  let sidebarItems: ContentWithSidebarItem[] = [
+  const visibleTabs = contestWebConfig && contestWebConfig.visibleTabs;
+  const sidebarItems: ContentWithSidebarItem[] = [
     {
       id: '@',
       titleIcon: 'properties',
@@ -47,85 +51,63 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       routeComponent: Route,
       component: ContestOverviewPage,
     },
+    {
+      id: 'announcements',
+      titleIcon: 'notifications',
+      title: (
+        <div className="tab-item-with-widget">
+          <div className="tab-item-with-widget__name">Announcements</div>
+          <div className="tab-item-with-widget__widget">
+            <ContestAnnouncementsWidget />
+          </div>
+          <div className="clearfix" />
+        </div>
+      ),
+      routeComponent: Route,
+      component: ContestAnnouncementsPage,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Announcements) === -1,
+    },
+    {
+      id: 'problems',
+      titleIcon: 'manual',
+      title: 'Problems',
+      routeComponent: Route,
+      component: ContestProblemRoutes,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Problems) === -1,
+    },
+    {
+      id: 'submissions',
+      titleIcon: 'layers',
+      title: 'Submissions',
+      routeComponent: Route,
+      component: ContestSubmissionRoutes,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Submissions) === -1,
+    },
+    {
+      id: 'clarifications',
+      titleIcon: 'chat',
+      title: (
+        <div className="tab-item-with-widget">
+          <div className="tab-item-with-widget__name">Clarifications</div>
+          <div className="tab-item-with-widget__widget">
+            <ContestClarificationsWidget />
+          </div>
+          <div className="clearfix" />
+        </div>
+      ),
+      routeComponent: Route,
+      component: ContestClarificationsPage,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Clarifications) === -1,
+    },
+    {
+      id: 'scoreboard',
+      titleIcon: 'th',
+      title: 'Scoreboard',
+      routeComponent: Route,
+      component: ContestScoreboardPage,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Scoreboard) === -1,
+    },
   ];
-
-  const visibleTabs = contestWebConfig!.visibleTabs;
-  if (visibleTabs.indexOf(ContestTab.Announcements) !== -1) {
-    sidebarItems = [
-      ...sidebarItems,
-      {
-        id: 'announcements',
-        titleIcon: 'notifications',
-        title: (
-          <div className="tab-item-with-widget">
-            <div className="tab-item-with-widget__name">Announcements</div>
-            <div className="tab-item-with-widget__widget">
-              <ContestAnnouncementsWidget />
-            </div>
-            <div className="clearfix" />
-          </div>
-        ),
-        routeComponent: Route,
-        component: ContestAnnouncementsPage,
-      },
-    ];
-  }
-  if (visibleTabs.indexOf(ContestTab.Problems) !== -1) {
-    sidebarItems = [
-      ...sidebarItems,
-      {
-        id: 'problems',
-        titleIcon: 'manual',
-        title: 'Problems',
-        routeComponent: Route,
-        component: ContestProblemRoutes,
-      },
-    ];
-  }
-  if (visibleTabs.indexOf(ContestTab.Submissions) !== -1) {
-    sidebarItems = [
-      ...sidebarItems,
-      {
-        id: 'submissions',
-        titleIcon: 'layers',
-        title: 'Submissions',
-        routeComponent: Route,
-        component: ContestSubmissionRoutes,
-      },
-    ];
-  }
-  if (visibleTabs.indexOf(ContestTab.Clarifications) !== -1) {
-    sidebarItems = [
-      ...sidebarItems,
-      {
-        id: 'clarifications',
-        titleIcon: 'chat',
-        title: (
-          <div className="tab-item-with-widget">
-            <div className="tab-item-with-widget__name">Clarifications</div>
-            <div className="tab-item-with-widget__widget">
-              <ContestClarificationsWidget />
-            </div>
-            <div className="clearfix" />
-          </div>
-        ),
-        routeComponent: Route,
-        component: ContestClarificationsPage,
-      },
-    ];
-  }
-  if (visibleTabs.indexOf(ContestTab.Scoreboard) !== -1) {
-    sidebarItems = [
-      ...sidebarItems,
-      {
-        id: 'scoreboard',
-        titleIcon: 'th',
-        title: 'Scoreboard',
-        routeComponent: Route,
-        component: ContestScoreboardPage,
-      },
-    ];
-  }
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Contest Menu',
@@ -137,8 +119,8 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     items: sidebarItems,
     contentHeader: (
       <div className="single-contest-routes__header">
-        <h2>{contest.name}</h2>
-        <ContestStateWidget />
+        <h2>{contest && contest.name}</h2>
+        {contestWebConfig && <ContestStateWidget />}
       </div>
     ),
   };
@@ -152,10 +134,11 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
 };
 
 function createSingleContestRoutes() {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state),
-    contestWebConfig: selectContestWebConfig(state),
-  });
+  const mapStateToProps = (state: AppState) =>
+    ({
+      contest: selectContest(state),
+      contestWebConfig: selectContestWebConfig(state),
+    } as Partial<SingleContestRoutesProps>);
   return withRouter<any>(connect(mapStateToProps)(SingleContestRoutes));
 }
 

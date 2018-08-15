@@ -12,8 +12,7 @@ import { ContestProblemStatus } from 'modules/api/uriel/contestProblem';
 import { contest, contestJid, problemJid } from 'fixtures/state';
 
 import { createContestProblemPage } from './ContestProblemPage';
-import { urielReducer } from '../../../../../modules/urielReducer';
-import { PutContest } from '../../../../modules/contestReducer';
+import { contestReducer, PutContest } from '../../../../modules/contestReducer';
 
 describe('ContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
@@ -54,7 +53,11 @@ describe('ContestProblemPage', () => {
     };
 
     const store = createStore(
-      combineReducers({ form: formReducer, webPrefs: webPrefsReducer, uriel: urielReducer }),
+      combineReducers({
+        form: formReducer,
+        webPrefs: webPrefsReducer,
+        uriel: combineReducers({ contest: contestReducer }),
+      }),
       applyMiddleware(thunk)
     );
     store.dispatch(PutContest.create(contest));

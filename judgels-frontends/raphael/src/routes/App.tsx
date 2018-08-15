@@ -13,7 +13,7 @@ import { JophielRole } from 'modules/api/jophiel/my';
 import { AppState } from 'modules/store';
 import { selectDocumentTitle } from 'modules/breadcrumbs/breadcrumbsSelectors';
 
-import { getAppRoutes, getHomeRoute } from './AppRoutes';
+import { getAppRoutes, getHomeRoute, getVisibleAppRoutes } from './AppRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import LegacyCompetitionRoute from './legacyUriel/LegacyCompetitionRoute';
 import { selectRole } from './jophiel/modules/roleSelectors';
@@ -34,7 +34,8 @@ class App extends React.PureComponent<AppProps> {
   }
 
   render() {
-    const appRoutes = getAppRoutes(this.props.role);
+    const appRoutes = getAppRoutes();
+    const visibleAppRoutes = getVisibleAppRoutes(this.props.role);
     const homeRoute = getHomeRoute();
 
     return (
@@ -42,7 +43,7 @@ class App extends React.PureComponent<AppProps> {
         <IntlProvider locale={navigator.language}>
           <div>
             <Header />
-            <Menubar items={appRoutes} homeRoute={homeRoute} />
+            <Menubar items={visibleAppRoutes} homeRoute={homeRoute} />
             <AppContent>
               <Breadcrumbs />
               <Switch>

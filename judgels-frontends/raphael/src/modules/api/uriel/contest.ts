@@ -8,7 +8,7 @@ export interface Contest {
   id: number;
   jid: string;
   name: string;
-  slug?: string;
+  slug: string;
   description: string;
   style: ContestStyle;
   beginTime: number;

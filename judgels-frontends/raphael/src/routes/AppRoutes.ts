@@ -56,7 +56,11 @@ const homeRoute = {
   },
 };
 
-export function getAppRoutes(role: JophielRole) {
+export function getAppRoutes() {
+  return appRoutes;
+}
+
+export function getVisibleAppRoutes(role: JophielRole) {
   return appRoutes.filter(route => shouldShowRoute(route.id, role));
 }
 

@@ -1,10 +1,10 @@
 import { JophielRole } from 'modules/api/jophiel/my';
 
-import { getAppRoutes } from './AppRoutes';
+import { getVisibleAppRoutes } from './AppRoutes';
 
 describe('AppRoutes', () => {
   const testAppRoutes = (role: JophielRole, expectedIds: Array<string>) => {
-    const appRoutes = getAppRoutes(role);
+    const appRoutes = getVisibleAppRoutes(role);
     const ids = appRoutes.map(route => route.id);
     expect(ids).toEqual(expectedIds);
   };
