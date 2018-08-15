@@ -47,7 +47,7 @@ const ContestAnnouncementCreateForm = (props: ContestAnnouncementCreateFormProps
     </>
   );
 
-  const submitButton = <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={props.submitting} />;
+  const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={props.submitting} />;
 
   return <form onSubmit={props.handleSubmit}>{props.renderFormComponents(fields, submitButton)}</form>;
 };
