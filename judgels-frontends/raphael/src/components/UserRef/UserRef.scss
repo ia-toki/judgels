@@ -1,7 +1,20 @@
-.user-ref {
+.user-ref__flag-dummy {
+  width: 20px;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.user-ref__flag {
+  height: 18px !important;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.user-ref__username {
+  vertical-align: middle;
   text-decoration: none !important;
 }
 
-.user-ref:hover {
+.user-ref__username:hover {
   text-decoration: none !important;
 }

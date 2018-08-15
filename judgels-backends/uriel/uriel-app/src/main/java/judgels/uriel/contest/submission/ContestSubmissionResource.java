@@ -110,7 +110,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         return new ContestSubmissionsResponse.Builder()
                 .data(data)
-                .profilesMap(profileService.getPastProfiles(userJids))
+                .profilesMap(profileService.getProfiles(userJids, contest.getBeginTime()))
                 .problemAliasesMap(problemStore.getProblemAliasesByJids(contestJid, problemJids))
                 .build();
     }
@@ -134,7 +134,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         String userJid = submission.getUserJid();
         Profile profile = checkFound(Optional.ofNullable(
-                profileService.getPastProfiles(ImmutableSet.of(userJid)).get(userJid)));
+                profileService.getProfiles(ImmutableSet.of(userJid), contest.getBeginTime()).get(userJid)));
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()

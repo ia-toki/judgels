@@ -29,14 +29,8 @@ public class ProfileResource implements ProfileService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, Profile> getProfiles(Set<String> userJids) {
-        return profileStore.getProfiles(clock.instant(), userJids);
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public Map<String, Profile> getPastProfiles(Set<String> userJids) {
-        return profileStore.getProfiles(Instant.ofEpochMilli(0), userJids);
+    public Map<String, Profile> getProfiles(Set<String> userJids, Optional<Long> time) {
+        return profileStore.getProfiles(time.map(Instant::ofEpochMilli).orElse(clock.instant()), userJids);
     }
 
     @Override

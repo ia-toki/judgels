@@ -5,6 +5,10 @@ table.scoreboard__content {
     text-align: center;
     border: 1px #dee0e1 solid;
     vertical-align: middle;
+
+    strong {
+      font-weight: bold;
+    }
   }
 
   th {

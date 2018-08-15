@@ -52,7 +52,7 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
       <tr key={profile.username}>
         <td className="col-rank">{idx + 1}</td>
         <td>
-          <UserRef profile={profile} />
+          <UserRef profile={profile} showFlag />
         </td>
         <td className="col-rating">{profile.rating}</td>
       </tr>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import FlagIcon from 'react-flag-kit/lib/FlagIcon';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -76,7 +77,19 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
           <img className="basic-profile-card__avatar" src={avatarUrl} />
         </div>
         <p className={getRatingClass(profile.rating)}>{profile.username}</p>
-        <p>{getCountryName(profile.country)}</p>
+        {this.renderCountry(profile)}
+      </div>
+    );
+  };
+
+  private renderCountry = (profile: BasicProfile) => {
+    if (!profile.country) {
+      return null;
+    }
+    return (
+      <div>
+        <FlagIcon code={profile.country} size={24} className="basic-profile-card__flag" />
+        <span className="basic-profile-card__country">{getCountryName(profile.country)}</span>
       </div>
     );
   };
