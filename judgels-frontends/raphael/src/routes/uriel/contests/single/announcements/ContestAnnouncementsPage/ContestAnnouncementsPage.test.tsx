@@ -38,10 +38,13 @@ describe('ContestAnnouncementsPage', () => {
 
   beforeEach(() => {
     onGetPublishedAnnouncements = jest.fn();
+    onGetAnnouncementConfig = jest.fn();
+    onCreateAnnouncement = jest.fn();
   });
 
   describe('when there are no announcements', () => {
     beforeEach(() => {
+      onGetAnnouncementConfig.mockReturnValue(Promise.resolve({ isAllowedToCreateAnnouncement: true }));
       onGetPublishedAnnouncements.mockReturnValue(Promise.resolve([]));
       render();
     });
