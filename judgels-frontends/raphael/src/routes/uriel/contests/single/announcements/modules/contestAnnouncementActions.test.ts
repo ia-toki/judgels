@@ -62,7 +62,7 @@ describe('contestAnnouncementActions', () => {
 
     it('calls API to create announcements', () => {
       expect(contestAnnouncementAPI.createAnnouncement).toHaveBeenCalledWith(token, contestJid, data);
-      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement submitted.');
+      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement created.');
     });
   });
 
