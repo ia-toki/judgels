@@ -6,15 +6,22 @@ import { LoadingState } from 'components/LoadingState/LoadingState';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestAnnouncement } from 'modules/api/uriel/contestAnnouncement';
+import {
+  ContestAnnouncement,
+  ContestAnnouncementConfig,
+  ContestAnnouncementData,
+} from 'modules/api/uriel/contestAnnouncement';
 
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../modules/contestAnnouncementActions';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
+import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCard/ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
 
 export interface ContestAnnouncementsPageProps {
   contest: Contest;
   onGetPublishedAnnouncements: (contestJid: string) => Promise<ContestAnnouncement[]>;
+  onGetAnnouncementConfig: (contestJid: string) => Promise<ContestAnnouncementConfig>;
+  onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
 }
 
 interface ContestAnnouncementsPageState {
@@ -28,10 +35,7 @@ export class ContestAnnouncementsPage extends React.PureComponent<
   state: ContestAnnouncementsPageState = {};
 
   async componentDidMount() {
-    const announcements = await this.props.onGetPublishedAnnouncements(this.props.contest.jid);
-    this.setState({
-      announcements,
-    });
+    await this.refreshAnnouncement();
   }
 
   render() {
@@ -39,6 +43,7 @@ export class ContestAnnouncementsPage extends React.PureComponent<
       <ContentCard>
         <h3>Announcements</h3>
         <hr />
+        {this.renderCreateDialog()}
         {this.renderAnnouncements()}
       </ContentCard>
     );
@@ -64,6 +69,27 @@ export class ContestAnnouncementsPage extends React.PureComponent<
       </div>
     ));
   };
+
+  private refreshAnnouncement = async () => {
+    const announcements = await this.props.onGetPublishedAnnouncements(this.props.contest.jid);
+    this.setState({
+      announcements,
+    });
+  };
+
+  private renderCreateDialog = () => {
+    const props = {
+      contest: this.props.contest,
+      onRefreshAnnouncements: this.refreshAnnouncement,
+      onGetAnnouncementConfig: this.props.onGetAnnouncementConfig,
+      onCreateAnnouncement: this.props.onCreateAnnouncement,
+    };
+    return (
+      <div className="content-card__section">
+        <ContestAnnouncementCreateDialog {...props} />
+      </div>
+    );
+  };
 }
 
 function createContestAnnouncementsPage(contestAnnouncementActions) {
@@ -73,6 +99,9 @@ function createContestAnnouncementsPage(contestAnnouncementActions) {
 
   const mapDispatchToProps = {
     onGetPublishedAnnouncements: contestAnnouncementActions.getPublishedAnnouncements,
+    onGetAnnouncementConfig: (contestJid: string) => contestAnnouncementActions.getAnnouncementConfig(contestJid),
+    onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) =>
+      contestAnnouncementActions.createAnnouncement(contestJid, data),
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));

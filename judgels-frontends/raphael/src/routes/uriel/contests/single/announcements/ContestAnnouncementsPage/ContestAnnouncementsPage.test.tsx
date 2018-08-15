@@ -1,6 +1,9 @@
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
+import { combineReducers, createStore } from 'redux';
+import { reducer as formReducer } from 'redux-form';
+import { Provider } from 'react-redux';
 
 import { contest } from 'fixtures/state';
 import { ContestAnnouncement } from 'modules/api/uriel/contestAnnouncement';
@@ -11,16 +14,24 @@ import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnou
 describe('ContestAnnouncementsPage', () => {
   let wrapper: ReactWrapper<any, any>;
   let onGetPublishedAnnouncements: jest.Mock<any>;
+  let onGetAnnouncementConfig: jest.Mock<any>;
+  let onCreateAnnouncement: jest.Mock<any>;
 
   const render = () => {
     const props: ContestAnnouncementsPageProps = {
       contest,
       onGetPublishedAnnouncements,
+      onGetAnnouncementConfig,
+      onCreateAnnouncement,
     };
+
+    const store = createStore(combineReducers({ form: formReducer }));
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
-        <ContestAnnouncementsPage {...props} />
+        <Provider store={store}>
+          <ContestAnnouncementsPage {...props} />
+        </Provider>
       </IntlProvider>
     );
   };
