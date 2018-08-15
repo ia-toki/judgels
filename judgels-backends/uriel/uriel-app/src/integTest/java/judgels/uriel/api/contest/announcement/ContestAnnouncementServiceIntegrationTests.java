@@ -86,9 +86,9 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                 USER_A_HEADER, contest.getJid(), announcementData1))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
-        assertThat(announcementService.getAnnouncementConfig(ADMIN_HEADER, contest.getJid())
+        assertThat(announcementService.getAnnouncementConfig(of(ADMIN_HEADER), contest.getJid())
                 .getIsAllowedToCreateAnnouncement()).isTrue();
-        assertThat(announcementService.getAnnouncementConfig(USER_A_HEADER, contest.getJid())
+        assertThat(announcementService.getAnnouncementConfig(of(USER_A_HEADER), contest.getJid())
                 .getIsAllowedToCreateAnnouncement()).isFalse();
 
         assertThat(announcement1.getUserJid()).isEqualTo(ADMIN_JID);

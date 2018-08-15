@@ -36,6 +36,6 @@ public interface ContestAnnouncementService {
     @Path("/config")
     @Produces(APPLICATION_JSON)
     ContestAnnouncementConfig getAnnouncementConfig(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 }

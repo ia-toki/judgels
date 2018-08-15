@@ -60,7 +60,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestAnnouncementConfig getAnnouncementConfig(AuthHeader authHeader, String contestJid) {
+    public ContestAnnouncementConfig getAnnouncementConfig(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         boolean canCreateAnnouncement = announcementRoleChecker.canCreateAnnouncement(actorJid, contest);
