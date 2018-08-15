@@ -69,7 +69,7 @@ export class ContestAnnouncementCreateDialog extends React.Component<
       <Dialog
         isOpen={this.state.isDialogOpen || false}
         onClose={this.toggleDialog}
-        title="Create new Announcement"
+        title="Create new announcement"
         canOutsideClickClose={false}
       >
         <ContestAnnouncementCreateForm {...props} />
