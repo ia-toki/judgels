@@ -10,7 +10,7 @@ import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
 export interface ContestAnnouncementCreateFormData {
   status: string;
   title: string;
-  question: string;
+  content: string;
 }
 
 export interface ContestAnnouncementCreateFormProps extends InjectedFormProps<ContestAnnouncementCreateFormData> {
@@ -32,7 +32,7 @@ const ContestAnnouncementCreateForm = (props: ContestAnnouncementCreateFormProps
     validate: [Required],
   };
 
-  const questionField: any = {
+  const contentField: any = {
     name: 'content',
     label: 'Content',
     validate: [Required],
@@ -42,7 +42,7 @@ const ContestAnnouncementCreateForm = (props: ContestAnnouncementCreateFormProps
     <>
       <Field component={FormSelect2} {...statusField} />
       <Field component={FormTextInput} {...titleField} />
-      <Field component={FormTextArea} {...questionField} />
+      <Field component={FormTextArea} {...contentField} />
     </>
   );
 
