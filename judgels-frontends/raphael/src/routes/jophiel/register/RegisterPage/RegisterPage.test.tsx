@@ -1,51 +1,16 @@
-import { mount, ReactWrapper, shallow, ShallowWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import thunk from 'redux-thunk';
 
 import { AppState } from 'modules/store';
 
-import { createRegisterPage, RegisterPage, RegisterPageProps } from './RegisterPage';
+import { createRegisterPage } from './RegisterPage';
 import RegisterForm from '../RegisterForm/RegisterForm';
 import { jophielReducer } from '../../modules/jophielReducer';
-
-describe('RegisterPageShallow', () => {
-  let wrapper: ShallowWrapper;
-
-  let onRegisterUser: jest.Mock<any>;
-
-  const render = () => {
-    const props: RegisterPageProps = {
-      useRecaptcha: false,
-      onRegisterUser,
-    };
-
-    wrapper = shallow(<RegisterPage {...props} />);
-  };
-
-  beforeEach(() => {
-    onRegisterUser = jest.fn();
-    render();
-  });
-
-  it('shows the activation page after registration', async () => {
-    const form = wrapper.find(RegisterForm);
-    expect(form).toHaveLength(1);
-
-    (form.props().onSubmit as any)({
-      username: 'user',
-      email: 'email@domain.com',
-    });
-
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
-    expect(wrapper.find(RegisterForm)).toHaveLength(0);
-    expect(wrapper.find('[data-key="instruction"]').text()).toContain('email@domain.com');
-  });
-});
 
 describe('RegisterPage', () => {
   let registerActions: jest.Mocked<any>;
@@ -53,28 +18,33 @@ describe('RegisterPage', () => {
 
   beforeEach(() => {
     registerActions = {
-      registerUser: jest.fn().mockReturnValue({ type: 'mock-register', then: fn => fn() }),
+      getWebConfig: jest.fn().mockReturnValue(() => Promise.resolve({ useRecaptcha: false })),
+      registerUser: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
 
     const store = createStore<Partial<AppState>>(
       combineReducers({
         form: formReducer,
         jophiel: jophielReducer,
-      })
+      }),
+      applyMiddleware(thunk)
     );
 
-    const RegisterPageLocal = createRegisterPage(registerActions);
+    const RegisterPage = createRegisterPage(registerActions);
 
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <RegisterPageLocal />
+          <RegisterPage />
         </MemoryRouter>
       </Provider>
     );
   });
 
-  test('register form', () => {
+  test('register form', async () => {
+    await new Promise(resolve => setImmediate(resolve));
+    wrapper.update();
+
     const username = wrapper.find('input[name="username"]');
     username.simulate('change', { target: { value: 'user' } });
 
@@ -99,5 +69,11 @@ describe('RegisterPage', () => {
       email: 'email@domain.com',
       password: 'pass',
     });
+
+    await new Promise(resolve => setImmediate(resolve));
+    wrapper.update();
+
+    expect(wrapper.find(RegisterForm)).toHaveLength(0);
+    expect(wrapper.find('[data-key="instruction"]').text()).toContain('email@domain.com');
   });
 });

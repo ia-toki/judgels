@@ -15,8 +15,7 @@ import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.password.UserResetPasswordModule;
 import judgels.jophiel.user.registration.UserRegistrationModule;
-import judgels.jophiel.web.WebConfiguration;
-import judgels.jophiel.web.WebModule;
+import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.recaptcha.RecaptchaModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.service.jersey.JudgelsObjectMappers;
@@ -49,9 +48,10 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
                 .userAvatarModule(new UserAvatarModule(baseDataDir, jophielConfig.getUserAvatarConfig()))
-                .userRegistrationModule(new UserRegistrationModule(jophielConfig.getUserRegistrationConfig()))
+                .userRegistrationModule(new UserRegistrationModule(
+                        jophielConfig.getUserRegistrationConfig(),
+                        UserRegistrationWebConfig.fromServerConfig(jophielConfig)))
                 .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
-                .webModule(new WebModule(WebConfiguration.fromServerConfig(jophielConfig)))
                 .build();
 
         component.superadminCreator().create();
@@ -67,6 +67,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userAvatarResource());
         env.jersey().register(component.userProfileResource());
+        env.jersey().register(component.userRegistrationWebResource());
         env.jersey().register(component.userRatingResource());
         env.jersey().register(component.webResource());
         env.jersey().register(component.versionResource());

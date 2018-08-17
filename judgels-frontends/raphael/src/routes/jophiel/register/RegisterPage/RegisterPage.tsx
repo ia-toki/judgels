@@ -3,32 +3,41 @@ import { connect } from 'react-redux';
 
 import { Card } from 'components/Card/Card';
 import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
-import { AppState } from 'modules/store';
 import { UserRegistrationData } from 'modules/api/jophiel/userAccount';
+import { UserRegistrationWebConfig } from 'modules/api/jophiel/userRegistration';
 
 import RegisterForm, { RegisterFormData } from '../RegisterForm/RegisterForm';
-import { selectRecaptchaSiteKey, selectUserRegistrationUseRecaptcha } from '../../modules/webConfigSelectors';
 import { registerActions as injectedRegisterActions } from '../modules/registerActions';
 
 import './RegisterPage.css';
 
 export interface RegisterPageProps {
+  onGetWebConfig: () => Promise<UserRegistrationWebConfig>;
   onRegisterUser: (data: RegisterFormData) => Promise<void>;
-  useRecaptcha: boolean;
-  recaptchaSiteKey?: string;
 }
 
 interface RegisterPageState {
+  config?: UserRegistrationWebConfig;
   registeredUser?: {
     username: string;
     email: string;
   };
 }
 
-export class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageState> {
+class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageState> {
   state: RegisterPageState = {};
 
+  async componentDidMount() {
+    const config = await this.props.onGetWebConfig();
+    this.setState({ config });
+  }
+
   render() {
+    const { config } = this.state;
+    if (!config) {
+      return null;
+    }
+
     let content: JSX.Element;
     if (this.state.registeredUser) {
       content = (
@@ -45,8 +54,8 @@ export class RegisterPage extends React.PureComponent<RegisterPageProps, Registe
       );
     } else {
       const registerFormProps = {
-        useRecaptcha: this.props.useRecaptcha,
-        recaptchaSiteKey: this.props.recaptchaSiteKey,
+        useRecaptcha: config.useRecaptcha,
+        recaptchaSiteKey: config.recaptcha && config.recaptcha.siteKey,
       };
       content = (
         <Card title="Register" className="card-register">
@@ -70,12 +79,8 @@ export class RegisterPage extends React.PureComponent<RegisterPageProps, Registe
 }
 
 export function createRegisterPage(registerActions) {
-  const mapStateToProps = (state: AppState) => ({
-    useRecaptcha: selectUserRegistrationUseRecaptcha(state),
-    recaptchaSiteKey: selectRecaptchaSiteKey(state),
-  });
-
   const mapDispatchToProps = {
+    onGetWebConfig: registerActions.getWebConfig,
     onRegisterUser: (data: RegisterFormData) => {
       const userRegistrationData: UserRegistrationData = {
         username: data.username,
@@ -88,10 +93,7 @@ export function createRegisterPage(registerActions) {
     },
   };
 
-  // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/19989
-  const RegisterWrapper = (props: RegisterPageProps) => <RegisterPage {...props} />;
-
-  return connect(mapStateToProps, mapDispatchToProps)(RegisterWrapper);
+  return connect(undefined, mapDispatchToProps)(RegisterPage);
 }
 
 export default createRegisterPage(injectedRegisterActions);

@@ -19,10 +19,9 @@ import judgels.jophiel.user.info.UserInfoResource;
 import judgels.jophiel.user.password.UserResetPasswordModule;
 import judgels.jophiel.user.rating.UserRatingResource;
 import judgels.jophiel.user.registration.UserRegistrationModule;
+import judgels.jophiel.user.registration.web.UserRegistrationWebResource;
 import judgels.jophiel.user.superadmin.SuperadminCreator;
 import judgels.jophiel.user.superadmin.SuperadminModule;
-import judgels.jophiel.web.WebModule;
-import judgels.jophiel.web.WebResource;
 import judgels.recaptcha.RecaptchaModule;
 
 @Component(modules = {
@@ -36,8 +35,7 @@ import judgels.recaptcha.RecaptchaModule;
         SuperadminModule.class,
         UserAvatarModule.class,
         UserRegistrationModule.class,
-        UserResetPasswordModule.class,
-        WebModule.class})
+        UserResetPasswordModule.class})
 @Singleton
 public interface JophielComponent {
     SuperadminCreator superadminCreator();
@@ -51,7 +49,8 @@ public interface JophielComponent {
     UserAccountResource userAccountResource();
     UserAvatarResource userAvatarResource();
     UserInfoResource userProfileResource();
+    UserRegistrationWebResource userRegistrationWebResource();
     UserRatingResource userRatingResource();
     VersionResource versionResource();
-    WebResource webResource();
+    UserRegistrationWebResource webResource();
 }

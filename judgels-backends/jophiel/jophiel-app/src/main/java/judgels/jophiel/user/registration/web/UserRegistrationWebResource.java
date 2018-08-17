@@ -1,4 +1,4 @@
-package judgels.jophiel.web;
+package judgels.jophiel.user.registration.web;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -7,19 +7,19 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-@Path("/api/v2/web")
-public class WebResource {
-    private final WebConfiguration config;
+@Path("/api/v2/user-registration/web")
+public class UserRegistrationWebResource {
+    private final UserRegistrationWebConfig config;
 
     @Inject
-    public WebResource(WebConfiguration config) {
+    public UserRegistrationWebResource(UserRegistrationWebConfig config) {
         this.config = config;
     }
 
     @GET
     @Path("/config")
     @Produces(APPLICATION_JSON)
-    public WebConfiguration getConfig() {
+    public UserRegistrationWebConfig getConfig() {
         return config;
     }
 }

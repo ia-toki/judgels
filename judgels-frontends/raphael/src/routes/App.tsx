@@ -18,19 +18,16 @@ import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import LegacyCompetitionRoute from './legacyUriel/LegacyCompetitionRoute';
 import { selectRole } from './jophiel/modules/roleSelectors';
 import { roleActions as injectedRoleActions } from './jophiel/modules/roleActions';
-import { webConfigActions as injectedWebConfigActions } from './jophiel/modules/webConfigActions';
 
 interface AppProps {
   title: string;
   role: JophielRole;
   onGetMyRole: () => void;
-  onGetWebConfig: () => void;
 }
 
 class App extends React.PureComponent<AppProps> {
   componentDidMount() {
     this.props.onGetMyRole();
-    this.props.onGetWebConfig();
   }
 
   render() {
@@ -61,16 +58,15 @@ class App extends React.PureComponent<AppProps> {
   }
 }
 
-export function createApp(roleActions, webConfigActions) {
+export function createApp(roleActions) {
   const mapStateToProps = (state: AppState) => ({
     title: selectDocumentTitle(state),
     role: selectRole(state),
   });
   const mapDispatchToProps = {
     onGetMyRole: roleActions.getMyRole,
-    onGetWebConfig: webConfigActions.getWebConfig,
   };
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(App));
 }
 
-export default createApp(injectedRoleActions, injectedWebConfigActions);
+export default createApp(injectedRoleActions);

@@ -7,14 +7,22 @@ import javax.inject.Singleton;
 import judgels.jophiel.mailer.Mailer;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.info.UserInfoStore;
+import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.recaptcha.RecaptchaVerifier;
 
 @Module
 public class UserRegistrationModule {
     private final UserRegistrationConfiguration config;
+    private final UserRegistrationWebConfig webConfig;
 
-    public UserRegistrationModule(UserRegistrationConfiguration config) {
+    public UserRegistrationModule(UserRegistrationConfiguration config, UserRegistrationWebConfig webConfig) {
         this.config = config;
+        this.webConfig = webConfig;
+    }
+
+    @Provides
+    UserRegistrationWebConfig webConfig() {
+        return webConfig;
     }
 
     @Provides

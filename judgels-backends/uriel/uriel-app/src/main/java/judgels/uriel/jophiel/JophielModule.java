@@ -16,6 +16,10 @@ public class JophielModule {
         this.config = config;
     }
 
+    @Provides
+    JophielConfiguration jophielConfig() {
+        return config;
+    }
 
     @Provides
     @Singleton

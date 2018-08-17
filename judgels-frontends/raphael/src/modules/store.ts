@@ -14,7 +14,7 @@ import { createUserAPI } from './api/jophiel/user';
 import { createUserAccountAPI } from './api/jophiel/userAccount';
 import { createUserAvatarAPI } from './api/jophiel/userAvatar';
 import { createUserInfoAPI } from './api/jophiel/userInfo';
-import { createWebAPI } from './api/jophiel/web';
+import { createUserRegistrationWebAPI } from './api/jophiel/userRegistration';
 import { createContestAPI } from './api/uriel/contest';
 import { createContestWebAPI } from './api/uriel/contestWeb';
 import { createContestAnnouncementAPI } from './api/uriel/contestAnnouncement';
@@ -71,6 +71,7 @@ export const store = createStore<AppState>(
         userAccountAPI: createUserAccountAPI(),
         userAvatarAPI: createUserAvatarAPI(),
         userInfoAPI: createUserInfoAPI(),
+        userRegistrationWebAPI: createUserRegistrationWebAPI(),
         contestAPI: createContestAPI(),
         contestWebAPI: createContestWebAPI(),
         contestAnnouncementAPI: createContestAnnouncementAPI(),
@@ -79,7 +80,6 @@ export const store = createStore<AppState>(
         contestProblemAPI: createContestProblemAPI(),
         contestScoreboardAPI: createContestScoreboardAPI(),
         contestSubmissionAPI: createContestSubmissionAPI(),
-        webAPI: createWebAPI(),
         toastActions,
       }),
       routerMiddleware(history)
