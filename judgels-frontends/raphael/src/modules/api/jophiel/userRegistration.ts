@@ -9,10 +9,10 @@ export interface UserRegistrationWebConfig {
 }
 
 export function createUserRegistrationWebAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-registration/web`;
+  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users/registration/web`;
 
   return {
-    getConfig: (): Promise<UserRegistrationWebConfig> => {
+    getWebConfig: (): Promise<UserRegistrationWebConfig> => {
       return get(`${baseURL}/config`);
     },
   };

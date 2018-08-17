@@ -7,7 +7,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-@Path("/api/v2/user-registration/web")
+@Path("/api/v2/users/registration/web")
 public class UserRegistrationWebResource {
     private final UserRegistrationWebConfig config;
 

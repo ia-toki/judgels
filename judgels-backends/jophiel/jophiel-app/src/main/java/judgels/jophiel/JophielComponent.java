@@ -52,5 +52,4 @@ public interface JophielComponent {
     UserRegistrationWebResource userRegistrationWebResource();
     UserRatingResource userRatingResource();
     VersionResource versionResource();
-    UserRegistrationWebResource webResource();
 }

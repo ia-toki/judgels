@@ -5,7 +5,7 @@ import { UserRegistrationData } from 'modules/api/jophiel/userAccount';
 export const registerActions = {
   getWebConfig: () => {
     return async (dispatch, getState, { userRegistrationWebAPI }) => {
-      return await userRegistrationWebAPI.getConfig();
+      return await userRegistrationWebAPI.getWebConfig();
     };
   },
 
