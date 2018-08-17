@@ -15,6 +15,11 @@ export interface Contest {
   duration: number;
 }
 
+export interface ContestDescription {
+  jid: string;
+  description: string;
+}
+
 export enum ContestStyle {
   ICPC = 'ICPC',
   IOI = 'IOI',
@@ -46,6 +51,10 @@ export function createContestAPI() {
 
     startVirtualContest: (token: string, contestJid: string): Promise<Contest> => {
       return post(`${baseURL}/${contestJid}/virtual`, token);
+    },
+
+    getContestDescription: (token: string, contestJid: string): Promise<ContestDescription> => {
+      return get(`${baseURL}/${contestJid}`, token); 
     },
   };
 }

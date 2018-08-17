@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { HtmlText } from 'components/HtmlText/HtmlText';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
-import { Contest } from 'modules/api/uriel/contest';
+import { ContestDescription } from 'modules/api/uriel/contest';
 import { AppState } from 'modules/store';
 
 import { selectContest } from '../../../modules/contestSelectors';
@@ -13,7 +13,7 @@ import { selectContest } from '../../../modules/contestSelectors';
 import './ContestOverviewPage.css';
 
 interface ContestOverviewPageProps extends RouteComponentProps<{ contestJid: string }> {
-  contest: Contest;
+  contestDescription: ContestDescription;
 }
 
 class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps> {
@@ -31,22 +31,24 @@ class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps> 
   };
 
   private renderDescription = () => {
-    const { description } = this.props.contest;
+    const { description } = this.props.contestDescription;
     if (!description) {
       return null;
     }
+    
     return (
       <ContentCard>
         <HtmlText>{description}</HtmlText>
       </ContentCard>
     );
   };
+  
 }
 
 function createContestOverviewPage() {
   const mapStateToProps = (state: AppState) =>
     ({
-      contest: selectContest(state)!,
+      contestDescription: selectContest(state)!,
     } as Partial<ContestOverviewPageProps>);
 
   return withRouter<any>(connect(mapStateToProps)(ContestOverviewPage));

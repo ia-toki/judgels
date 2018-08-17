@@ -110,4 +110,14 @@ public class ContestResource implements ContestService {
 
         return contestStore.createContest(contestData);
     }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Contest getContestDescription(Optional<AuthHeader> authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+
+        return contest;
+    }
 }
