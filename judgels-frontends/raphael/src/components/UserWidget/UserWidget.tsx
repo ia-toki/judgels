@@ -23,44 +23,46 @@ export interface UserWidgetProps {
 interface UserWidgetState {
   avatarUrl?: string;
   profile?: Profile;
+  loaded?: boolean;
 }
 
 export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetState> {
   state: UserWidgetState = {};
 
-  async componentDidMount() {
-    await this.refreshUser();
+  componentDidMount() {
+    this.refreshUser();
   }
 
   async componentDidUpdate(prevProps: UserWidgetProps) {
     if (this.props.user !== prevProps.user) {
-      await this.refreshUser();
+      this.refreshUser();
     }
   }
 
   render() {
+    if (!this.state.loaded) {
+      return null;
+    }
     if (this.state.profile) {
-      return this.renderForUser(this.state.profile);
+      return this.renderForUser(this.state.avatarUrl!, this.state.profile);
     } else {
       return this.renderForGuest();
     }
   }
 
   private refreshUser = async () => {
-    let avatarUrl: string;
-    let profile: Profile | undefined = undefined;
-
     const { user, onRenderAvatar, onGetProfile } = this.props;
 
+    const loaded = true;
     if (user) {
-      [avatarUrl, profile] = await Promise.all([onRenderAvatar(user.jid), onGetProfile(user.jid)]);
+      const [avatarUrl, profile] = await Promise.all([onRenderAvatar(user.jid), onGetProfile(user.jid)]);
+      this.setState({ avatarUrl, profile, loaded });
     } else {
-      avatarUrl = await onRenderAvatar();
+      this.setState({ loaded });
     }
-    this.setState({ avatarUrl, profile });
   };
 
-  private renderForUser = (profile: Profile) => {
+  private renderForUser = (avatarUrl: string, profile: Profile) => {
     const menu = (
       <Menu className="widget-user__menu">
         <MenuItem className="widget-user__menu-helper" icon="user" text={profile.username} disabled />
@@ -92,11 +94,9 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
 
     return (
       <div className="bp3-navbar-group bp3-align-right">
-        {this.state.avatarUrl && (
-          <div className="widget-user__avatar-wrapper">
-            <img src={this.state.avatarUrl} className="widget-user__avatar" />
-          </div>
-        )}
+        <div className="widget-user__avatar-wrapper">
+          <img src={avatarUrl} className="widget-user__avatar" />
+        </div>
         {popover}
         {responsivePopover}
       </div>

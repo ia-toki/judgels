@@ -3,16 +3,15 @@ import { selectToken } from 'modules/session/sessionSelectors';
 export const MAX_AVATAR_FILE_SIZE = 100 * 1024;
 
 export const avatarActions = {
+  avatarExists: (userJid?: string) => {
+    return async (dispatch, getState, { userAvatarAPI }) => {
+      return await userAvatarAPI.avatarExists(userJid);
+    };
+  },
+
   renderAvatar: (userJid?: string) => {
     return async (dispatch, getState, { userAvatarAPI }) => {
-      let avatarExists = false;
-      if (userJid) {
-        avatarExists = avatarExists || (await userAvatarAPI.avatarExists(userJid));
-      }
-      if (avatarExists) {
-        return await userAvatarAPI.renderAvatar(userJid);
-      }
-      return require('../../../assets/images/avatar-default.png');
+      return await userAvatarAPI.renderAvatar(userJid);
     };
   },
 

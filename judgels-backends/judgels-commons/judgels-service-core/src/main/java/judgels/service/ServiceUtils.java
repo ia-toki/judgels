@@ -4,11 +4,13 @@ import static javax.ws.rs.core.HttpHeaders.CACHE_CONTROL;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.HttpHeaders.LAST_MODIFIED;
 
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -50,42 +52,89 @@ public class ServiceUtils {
             if (!imageFile.exists()) {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
+            return buildImageResponse(imageFile, ifModifiedSince);
+        }
+    }
 
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-            if (ifModifiedSince.isPresent()) {
-                try {
-                    Date lastModified = sdf.parse(ifModifiedSince.get());
-                    if (imageFile.lastModified() <= lastModified.getTime()) {
-                        return Response.notModified().build();
-                    }
-                } catch (ParseException e2) {
-                    // nothing
-                }
-            }
-
-            Response.ResponseBuilder response = Response.ok();
-            response.header(CACHE_CONTROL, "no-transform,public,max-age=300,s-maxage=900");
-            response.header(LAST_MODIFIED, sdf.format(new Date(imageFile.lastModified())));
-
+    public static Response buildImageResponse(File imageFile, Optional<String> ifModifiedSince) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+        if (ifModifiedSince.isPresent()) {
             try {
-                BufferedImage img = ImageIO.read(imageFile);
-                if (img == null) {
-                    response.header(CONTENT_TYPE, URLConnection.guessContentTypeFromName(imageFile.getName()));
-                    response.entity(Files.toByteArray(imageFile));
-                    return response.build();
+                Date lastModified = sdf.parse(ifModifiedSince.get());
+                if (imageFile.lastModified() <= lastModified.getTime()) {
+                    return Response.notModified().build();
                 }
-
-                String type = Files.getFileExtension(imageFile.getAbsolutePath());
-                response.header(CONTENT_TYPE, "image/" + type);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(img, type, baos);
-                response.entity(baos.toByteArray());
-
-                return response.build();
-            } catch (IOException e2) {
-                return Response.serverError().build();
+            } catch (ParseException e2) {
+                // nothing
             }
+        }
+
+        Response.ResponseBuilder response = Response.ok();
+        response.header(CACHE_CONTROL, "no-transform,public,max-age=300,s-maxage=900");
+        response.header(LAST_MODIFIED, sdf.format(new Date(imageFile.lastModified())));
+
+        try {
+            BufferedImage img = ImageIO.read(imageFile);
+            if (img == null) {
+                response.header(CONTENT_TYPE, URLConnection.guessContentTypeFromName(imageFile.getName()));
+                response.entity(Files.toByteArray(imageFile));
+                return response.build();
+            }
+
+            String type = Files.getFileExtension(imageFile.getAbsolutePath());
+            return buildImageResponse(response, img, type);
+        } catch (IOException e2) {
+            return Response.serverError().build();
+        }
+    }
+
+    public static Response buildImageResponse(
+            InputStream stream,
+            String type,
+            Date lastModifiedStream,
+            Optional<String> ifModifiedSince) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+        if (ifModifiedSince.isPresent()) {
+            try {
+                Date lastModified = sdf.parse(ifModifiedSince.get());
+                if (lastModifiedStream.getTime() <= lastModified.getTime()) {
+                    return Response.notModified().build();
+                }
+            } catch (ParseException e2) {
+                // nothing
+            }
+        }
+
+        Response.ResponseBuilder response = Response.ok();
+        response.header(CACHE_CONTROL, "no-transform,public,max-age=300,s-maxage=900");
+        response.header(LAST_MODIFIED, lastModifiedStream);
+
+        try {
+            BufferedImage img = ImageIO.read(stream);
+            if (img == null) {
+                response.header(CONTENT_TYPE, "image/" + type);
+                response.entity(ByteStreams.toByteArray(stream));
+                return response.build();
+            }
+
+            return buildImageResponse(response, img, type);
+        } catch (IOException e2) {
+            return Response.serverError().build();
+        }
+    }
+
+    private static Response buildImageResponse(Response.ResponseBuilder response, BufferedImage img, String type) {
+        try {
+            response.header(CONTENT_TYPE, "image/" + type);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(img, type, baos);
+            response.entity(baos.toByteArray());
+
+            return response.build();
+        } catch (IOException e2) {
+            return Response.serverError().build();
         }
     }
 }

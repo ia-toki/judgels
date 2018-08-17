@@ -12,11 +12,13 @@ import './ChangeAvatarPanel.css';
 export interface ChangeAvatarPanelProps {
   onDropAccepted: (files: File[]) => Promise<void>;
   onDropRejected: (files: File[]) => Promise<void>;
+  onAvatarExists: () => Promise<boolean>;
   onRenderAvatar: () => Promise<string>;
   onDeleteAvatar: () => Promise<void>;
 }
 
 interface ChangeAvatarPanelState {
+  avatarExists?: boolean;
   avatarUrl?: string;
 }
 
@@ -24,17 +26,17 @@ export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProp
   state: ChangeAvatarPanelState = {};
 
   async componentDidMount() {
-    const avatarUrl = await this.props.onRenderAvatar();
-    this.setState({ avatarUrl });
+    const [avatarExists, avatarUrl] = await Promise.all([this.props.onAvatarExists(), this.props.onRenderAvatar()]);
+    this.setState({ avatarExists, avatarUrl });
   }
 
   render() {
-    const { avatarUrl } = this.state;
+    const { avatarExists, avatarUrl } = this.state;
     if (!avatarUrl) {
       return <LoadingState />;
     }
 
-    const currentAvatar = avatarUrl.startsWith('http') && (
+    const currentAvatar = avatarExists && (
       <div className="card-change-avatar__panel">
         <h4>Current avatar</h4>
         <img src={avatarUrl} />

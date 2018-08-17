@@ -12,6 +12,7 @@ import com.google.common.io.Files;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -32,6 +33,8 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 public class UserAvatarResource implements UserAvatarService {
+    private static final String DEFAULT_AVATAR = "assets/avatar-default.png";
+
     private final ActorChecker actorChecker;
     private final RoleChecker roleChecker;
     private final UserStore userStore;
@@ -71,8 +74,15 @@ public class UserAvatarResource implements UserAvatarService {
             @HeaderParam(IF_MODIFIED_SINCE) Optional<String> ifModifiedSince,
             @PathParam("userJid") String userJid) {
 
-        String avatarUrl = checkFound(userStore.getUserAvatarUrl(userJid));
-        return buildImageResponse(avatarUrl, ifModifiedSince);
+        Optional<String> avatarUrl = userStore.getUserAvatarUrl(userJid);
+        if (avatarUrl.isPresent()) {
+            return buildImageResponse(avatarUrl.get(), ifModifiedSince);
+        }
+        return buildImageResponse(
+                UserAvatarResource.class.getClassLoader().getResourceAsStream(DEFAULT_AVATAR),
+                "png",
+                new Date(1532822400),
+                ifModifiedSince);
     }
 
     @POST
