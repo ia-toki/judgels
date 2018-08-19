@@ -30,7 +30,10 @@ class ContestOverviewPage extends React.PureComponent<
   state: ContestOverviewPageState = {};
 
   async componentDidMount() {
-    await this.refreshDescription();
+    const description = await this.props.onGetContestDescription(this.props.contest.jid);
+    this.setState({
+      description,
+    });
   }
 
   render() {
@@ -41,13 +44,6 @@ class ContestOverviewPage extends React.PureComponent<
       </>
     );
   }
-
-  private refreshDescription = async () => {
-    const description = await this.props.onGetContestDescription(this.props.contest.jid);
-    this.setState({
-      description,
-    });
-  };
 
   private renderRegistration = () => {
     return <ContestRegistrationCard />;

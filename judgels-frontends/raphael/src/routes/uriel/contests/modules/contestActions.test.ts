@@ -85,7 +85,7 @@ describe('contestActions', () => {
       await doGetContestDescription();
     });
 
-    it('calls API to get contest', () => {
+    it('calls API to get contest description', () => {
       expect(contestAPI.getContestDescription).toHaveBeenCalledWith(token, contestJid);
     });
   }); 

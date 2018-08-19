@@ -9,7 +9,6 @@ export interface Contest {
   jid: string;
   name: string;
   slug: string;
-  description: string;
   style: ContestStyle;
   beginTime: number;
   duration: number;

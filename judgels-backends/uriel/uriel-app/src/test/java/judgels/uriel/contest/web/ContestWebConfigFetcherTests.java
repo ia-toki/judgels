@@ -71,7 +71,6 @@ class ContestWebConfigFetcherTests {
                 .jid("jid")
                 .slug("slug")
                 .name("name")
-                .description("description")
                 .style(ContestStyle.IOI)
                 .beginTime(Instant.ofEpochSecond(42))
                 .duration(Duration.of(5, HOURS))

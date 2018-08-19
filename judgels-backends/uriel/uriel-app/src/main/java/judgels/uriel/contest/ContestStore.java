@@ -88,9 +88,14 @@ public class ContestStore {
     }
 
     public ContestDescription getContestDescription(Contest contest) {
-        return new ContestDescription.Builder()
-                .description(contest.getDescription())
-                .build();
+        ContestDescription.Builder contestDescriptionBuilder = new ContestDescription.Builder();
+        ContestModel contestModel = contestDao.selectByJid(contest.getJid()).orElseGet(null);
+        if (contestModel != null) {
+            contestDescriptionBuilder.description(contestModel.description);
+        } else {
+            contestDescriptionBuilder.description(null);
+        }
+        return contestDescriptionBuilder.build();
     }
 
     private static Contest fromModel(ContestModel model) {
@@ -99,7 +104,6 @@ public class ContestStore {
                 .jid(model.jid)
                 .slug(Optional.ofNullable(model.slug).orElse("" + model.id))
                 .name(model.name)
-                .description(model.description)
                 .style(ContestStyle.valueOf(model.style))
                 .beginTime(model.beginTime)
                 .duration(Duration.of(model.duration, MILLIS))

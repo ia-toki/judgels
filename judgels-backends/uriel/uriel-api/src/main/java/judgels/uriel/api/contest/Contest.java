@@ -12,7 +12,6 @@ public interface Contest {
     String getJid();
     String getName();
     String getSlug();
-    String getDescription();
     ContestStyle getStyle();
     Instant getBeginTime();
     Duration getDuration();

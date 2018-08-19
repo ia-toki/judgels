@@ -75,10 +75,13 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .build());
 
         assertThat(contestA.getName()).isEqualTo("TOKI Open Contest A");
-        assertThat(contestA.getDescription()).isEqualTo("This is contest A");
         assertThat(contestA.getStyle()).isEqualTo(ContestStyle.ICPC);
         assertThat(contestA.getBeginTime()).isEqualTo(Instant.ofEpochSecond(42));
         assertThat(contestA.getDuration()).isEqualTo(Duration.ofHours(5));
+
+        ContestDescription contestDescriptionA = contestService.getContestDescription(of(ADMIN_HEADER),
+                                                    contestA.getJid());
+        assertThat(contestDescriptionA.getDescription()).isEqualTo("This is contest A");
 
         assertThat(contestService.getContest(of(ADMIN_HEADER), contestA.getJid())).isEqualTo(contestA);
         assertThat(contestService.getContestBySlug(of(ADMIN_HEADER), contestA.getSlug())).isEqualTo(contestA);
