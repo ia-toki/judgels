@@ -118,7 +118,8 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        ContestDescription contestDescription = checkFound(contestStore.getContestDescription(contest.getJid()));
 
-        return contestStore.getContestDescription(contest);
+        return contestDescription;
     }
 }

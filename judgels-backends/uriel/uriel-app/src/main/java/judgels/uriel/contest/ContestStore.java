@@ -87,15 +87,11 @@ public class ContestStore {
         return fromModel(contestDao.insert(model));
     }
 
-    public ContestDescription getContestDescription(Contest contest) {
-        ContestDescription.Builder contestDescriptionBuilder = new ContestDescription.Builder();
-        ContestModel contestModel = contestDao.selectByJid(contest.getJid()).orElseGet(null);
-        if (contestModel != null) {
-            contestDescriptionBuilder.description(contestModel.description);
-        } else {
-            contestDescriptionBuilder.description(null);
-        }
-        return contestDescriptionBuilder.build();
+    public Optional<ContestDescription> getContestDescription(String contestJid) {
+        return contestDao.selectByJid(contestJid).map(model -> new ContestDescription.Builder()
+                    .description(model.description)
+                    .build()
+        );
     }
 
     private static Contest fromModel(ContestModel model) {
