@@ -1,22 +1,38 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
+import { LoadingState } from 'components/LoadingState/LoadingState';
+import { AppState } from 'modules/store';
+import { Contest, ContestDescription } from 'modules/api/uriel/contest';
 import { HtmlText } from 'components/HtmlText/HtmlText';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
-import { ContestDescription } from 'modules/api/uriel/contest';
-import { AppState } from 'modules/store';
 
 import { selectContest } from '../../../modules/contestSelectors';
+import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 
 import './ContestOverviewPage.css';
 
-interface ContestOverviewPageProps extends RouteComponentProps<{ contestJid: string }> {
-  contestDescription: ContestDescription;
+export interface ContestOverviewPageProps {
+  contest: Contest;
+  onGetContestDescription: (contestJid: string) => Promise<ContestDescription>;
 }
 
-class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps> {
+interface ContestOverviewPageState {
+  description?: ContestDescription;
+}
+
+class ContestOverviewPage extends React.PureComponent<
+  ContestOverviewPageProps,
+  ContestOverviewPageState
+> {
+  state: ContestOverviewPageState = {};
+
+  async componentDidMount() {
+    await this.refreshDescription();
+  }
+
   render() {
     return (
       <>
@@ -26,32 +42,45 @@ class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps> 
     );
   }
 
+  private refreshDescription = async () => {
+    const description = await this.props.onGetContestDescription(this.props.contest.jid);
+    this.setState({
+      description,
+    });
+  };
+
   private renderRegistration = () => {
     return <ContestRegistrationCard />;
   };
 
   private renderDescription = () => {
-    const { description } = this.props.contestDescription;
+    const { description } = this.state;
+
     if (!description) {
+      return <LoadingState />;
+    }
+
+    if (!description.description) {
       return null;
     }
     
     return (
       <ContentCard>
-        <HtmlText>{description}</HtmlText>
+        <HtmlText>{description.description}</HtmlText>
       </ContentCard>
     );
   };
-  
 }
 
-function createContestOverviewPage() {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      contestDescription: selectContest(state)!,
-    } as Partial<ContestOverviewPageProps>);
+function createContestOverviewPage(contestActions) {
+  const mapStateToProps = (state: AppState) => ({
+    contest: selectContest(state)!,
+  });
+  const mapDispatchToProps = {
+    onGetContestDescription: contestActions.getContestDescription,
+  };
 
-  return withRouter<any>(connect(mapStateToProps)(ContestOverviewPage));
+  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage));
 }
 
-export default createContestOverviewPage();
+export default createContestOverviewPage(injectedContestActions);

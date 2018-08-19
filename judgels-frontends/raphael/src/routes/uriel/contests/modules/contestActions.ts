@@ -36,9 +36,7 @@ export const contestActions = {
   getContestDescription: (contestJid: string) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
-      const contestDescription = await contestAPI.getContestDescription(token, contestJid);
-      dispatch(PutContest.create(contestDescription));
-      return contestDescription;
+      return await contestAPI.getContestDescription(token, contestJid);
     };
   },
 

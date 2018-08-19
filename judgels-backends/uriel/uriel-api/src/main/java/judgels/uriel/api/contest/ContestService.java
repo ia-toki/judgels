@@ -66,7 +66,7 @@ public interface ContestService {
     @GET
     @Path("/{contestJid}/description")
     @Produces(APPLICATION_JSON)
-    Contest getContestDescription(
+    ContestDescription getContestDescription(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 }

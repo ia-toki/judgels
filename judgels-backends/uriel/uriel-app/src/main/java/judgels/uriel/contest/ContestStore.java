@@ -15,6 +15,7 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestDescription;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestDao;
@@ -84,6 +85,12 @@ public class ContestStore {
         ContestModel model = new ContestModel();
         toModel(contestData, model);
         return fromModel(contestDao.insert(model));
+    }
+
+    public ContestDescription getContestDescription(Contest contest) {
+        return new ContestDescription.Builder()
+                .description(contest.getDescription())
+                .build();
     }
 
     private static Contest fromModel(ContestModel model) {

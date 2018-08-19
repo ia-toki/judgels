@@ -16,7 +16,6 @@ export interface Contest {
 }
 
 export interface ContestDescription {
-  jid: string;
   description: string;
 }
 
@@ -54,7 +53,7 @@ export function createContestAPI() {
     },
 
     getContestDescription: (token: string, contestJid: string): Promise<ContestDescription> => {
-      return get(`${baseURL}/${contestJid}`, token); 
+      return get(`${baseURL}/${contestJid}/description`, token); 
     },
   };
 }
