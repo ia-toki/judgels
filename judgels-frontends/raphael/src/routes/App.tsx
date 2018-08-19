@@ -9,25 +9,25 @@ import { AppContent } from 'components/AppContent/AppContent';
 import Menubar from 'components/Menubar/Menubar';
 import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
 import { Footer } from 'components/Footer/Footer';
-import { JophielRole } from 'modules/api/jophiel/my';
+import { JophielRole } from 'modules/api/jophiel/role';
 import { AppState } from 'modules/store';
 import { selectDocumentTitle } from 'modules/breadcrumbs/breadcrumbsSelectors';
 
 import { getAppRoutes, getHomeRoute, getVisibleAppRoutes } from './AppRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import LegacyCompetitionRoute from './legacyUriel/LegacyCompetitionRoute';
-import { selectRole } from './jophiel/modules/roleSelectors';
-import { roleActions as injectedRoleActions } from './jophiel/modules/roleActions';
+import { selectRole } from './jophiel/modules/userWebSelectors';
+import { userWebActions as injectedUserWebActions } from './jophiel/modules/userWebActions';
 
 interface AppProps {
   title: string;
   role: JophielRole;
-  onGetMyRole: () => void;
+  onGetUserWebConfig: () => void;
 }
 
 class App extends React.PureComponent<AppProps> {
   componentDidMount() {
-    this.props.onGetMyRole();
+    this.props.onGetUserWebConfig();
   }
 
   render() {
@@ -58,15 +58,15 @@ class App extends React.PureComponent<AppProps> {
   }
 }
 
-export function createApp(roleActions) {
+export function createApp(userWebActions) {
   const mapStateToProps = (state: AppState) => ({
     title: selectDocumentTitle(state),
     role: selectRole(state),
   });
   const mapDispatchToProps = {
-    onGetMyRole: roleActions.getMyRole,
+    onGetUserWebConfig: userWebActions.getWebConfig,
   };
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(App));
 }
 
-export default createApp(injectedRoleActions);
+export default createApp(injectedUserWebActions);

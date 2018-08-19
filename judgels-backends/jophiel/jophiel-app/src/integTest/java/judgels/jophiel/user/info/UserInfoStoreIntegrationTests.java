@@ -31,7 +31,7 @@ class UserInfoStoreIntegrationTests {
         assertThat(store.getInfo(USER_JID))
                 .isEqualTo(new UserInfo.Builder().build());
 
-        UserInfo profile = new UserInfo.Builder()
+        UserInfo info = new UserInfo.Builder()
                 .name("First Last")
                 .gender("MALE")
                 .country("id")
@@ -42,11 +42,11 @@ class UserInfoStoreIntegrationTests {
                 .institutionProvince("province")
                 .institutionCity("town")
                 .build();
-        store.upsertInfo(USER_JID, profile);
-        assertThat(store.getInfo(USER_JID)).isEqualTo(profile);
+        store.upsertInfo(USER_JID, info);
+        assertThat(store.getInfo(USER_JID)).isEqualTo(info);
 
         UserInfo newUserInfo = new UserInfo.Builder()
-                .from(profile)
+                .from(info)
                 .gender("FEMALE")
                 .build();
         store.upsertInfo(USER_JID, newUserInfo);

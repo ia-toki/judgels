@@ -2,13 +2,7 @@ import { APP_CONFIG } from 'conf';
 import { get, post } from 'modules/api/http';
 
 import { User } from './user';
-
-export enum JophielRole {
-  Guest = 'guest',
-  User = 'user',
-  Admin = 'admin',
-  Superadmin = 'superadmin',
-}
+import { JophielRole } from './role';
 
 export interface PasswordUpdateData {
   oldPassword: string;

@@ -2,8 +2,9 @@ import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import thunk from 'redux-thunk';
 
 import { createLoginPage } from './LoginPage';
 
@@ -13,10 +14,10 @@ describe('LoginPage', () => {
 
   beforeEach(() => {
     loginActions = {
-      logIn: jest.fn().mockReturnValue({ type: 'mock-login' }),
+      logIn: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
     const LoginPage = createLoginPage(loginActions);
 
     wrapper = mount(

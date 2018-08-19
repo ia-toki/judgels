@@ -8,16 +8,17 @@ import { UserWidget, UserWidgetProps } from './UserWidget';
 
 describe('UserWidget', () => {
   let user: User | undefined;
+  let profile: Profile | undefined;
   let onRenderAvatar = () => Promise.resolve('url');
-  let onGetProfile = () => Promise.resolve({ username: 'user' } as Profile);
 
   let wrapper: ShallowWrapper;
 
   const render = () => {
     const props: any = {
       user,
+      isWebConfigLoaded: true,
+      profile,
       onRenderAvatar,
-      onGetProfile,
     } as Partial<UserWidgetProps>;
 
     wrapper = shallow(<UserWidget {...props} />);
@@ -25,6 +26,7 @@ describe('UserWidget', () => {
 
   beforeEach(() => {
     user = undefined;
+    profile = undefined;
   });
 
   describe('when the user is not logged in', () => {
@@ -41,6 +43,7 @@ describe('UserWidget', () => {
   describe('when the user is logged in', () => {
     beforeEach(() => {
       user = { jid: 'jid123', username: 'user' };
+      profile = { username: 'user' } as Profile;
       render();
     });
 

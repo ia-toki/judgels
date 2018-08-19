@@ -1,7 +1,7 @@
 package judgels.sandalphon.api.submission;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.jophiel.api.info.Profile;
+import judgels.jophiel.api.profile.Profile;
 import org.immutables.value.Value;
 
 @Value.Immutable

@@ -8,7 +8,7 @@ import { getRatingClass } from 'modules/api/jophiel/userRating';
 import { Profile } from 'modules/api/jophiel/profile';
 import { AppState } from 'modules/store';
 import { avatarActions as injectedAvatarActions } from 'routes/jophiel/modules/avatarActions';
-import { profileActions as injectedProfileActions } from 'routes/jophiel/modules/profileActions';
+import { selectUserProfile, selectIsUserWebConfigLoaded } from 'routes/jophiel/modules/userWebSelectors';
 
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 
@@ -16,14 +16,13 @@ import './UserWidget.css';
 
 export interface UserWidgetProps {
   user?: User;
+  isWebConfigLoaded?: boolean;
+  profile?: Profile;
   onRenderAvatar: (userJid?: string) => Promise<string>;
-  onGetProfile: (userJid: string) => Promise<Profile>;
 }
 
 interface UserWidgetState {
   avatarUrl?: string;
-  profile?: Profile;
-  loaded?: boolean;
 }
 
 export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetState> {
@@ -40,25 +39,21 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
   }
 
   render() {
-    if (!this.state.loaded) {
+    if (!this.props.isWebConfigLoaded) {
       return null;
     }
-    if (this.state.profile) {
-      return this.renderForUser(this.state.avatarUrl!, this.state.profile);
+    if (this.props.profile) {
+      return this.renderForUser(this.state.avatarUrl!, this.props.profile);
     } else {
       return this.renderForGuest();
     }
   }
 
   private refreshUser = async () => {
-    const { user, onRenderAvatar, onGetProfile } = this.props;
-
-    const loaded = true;
+    const { user, onRenderAvatar } = this.props;
     if (user) {
-      const [avatarUrl, profile] = await Promise.all([onRenderAvatar(user.jid), onGetProfile(user.jid)]);
-      this.setState({ avatarUrl, profile, loaded });
-    } else {
-      this.setState({ loaded });
+      const avatarUrl = await onRenderAvatar(user.jid);
+      this.setState({ avatarUrl });
     }
   };
 
@@ -137,17 +132,18 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
   };
 }
 
-export function createUserWidget(avatarActions, profileActions) {
+export function createUserWidget(avatarActions) {
   const mapStateToProps = (state: AppState) => ({
     user: state.session.user,
+    isWebConfigLoaded: selectIsUserWebConfigLoaded(state),
+    profile: selectUserProfile(state),
   });
 
   const mapDispatchToProps = {
     onRenderAvatar: avatarActions.renderAvatar,
-    onGetProfile: profileActions.getProfile,
   };
 
   return connect<any>(mapStateToProps, mapDispatchToProps)(UserWidget);
 }
 
-export default createUserWidget(injectedAvatarActions, injectedProfileActions);
+export default createUserWidget(injectedAvatarActions);

@@ -1,4 +1,4 @@
-package judgels.jophiel.user;
+package judgels.jophiel.user.account;
 
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -6,9 +6,10 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.UserAccountService;
+import judgels.jophiel.api.user.account.UserAccountService;
 import judgels.jophiel.api.user.password.PasswordResetData;
 import judgels.jophiel.api.user.registration.UserRegistrationData;
+import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.password.UserPasswordResetter;
 import judgels.jophiel.user.registration.UserRegisterer;
 import judgels.jophiel.user.registration.UserRegistrationEmailStore;

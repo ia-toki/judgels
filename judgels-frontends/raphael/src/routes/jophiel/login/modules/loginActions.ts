@@ -1,11 +1,11 @@
 import { BadRequestError, ForbiddenError } from 'modules/api/error';
 import { PutToken, PutUser } from 'modules/session/sessionReducer';
 
-import { PutRole } from '../../modules/roleReducer';
+import { PutWebConfig } from '../../modules/userWebReducer';
 
 export const loginActions = {
   logIn: (currentPath: string, usernameOrEmail: string, password: string) => {
-    return async (dispatch, getState, { legacySessionAPI, myAPI, toastActions }) => {
+    return async (dispatch, getState, { legacySessionAPI, myAPI, userWebAPI, toastActions }) => {
       let session;
       try {
         session = await legacySessionAPI.logIn(usernameOrEmail, password);
@@ -19,12 +19,13 @@ export const loginActions = {
         }
       }
 
-      const [user, role] = await Promise.all([myAPI.getMyself(session.token), myAPI.getMyRole(session.token)]);
+      const { token } = session;
+      const [user, config] = await Promise.all([myAPI.getMyself(session.token), userWebAPI.getWebConfig(token)]);
 
       toastActions.showToast(`Welcome, ${user.username}.`);
       dispatch(PutToken.create(session.token));
       dispatch(PutUser.create(user));
-      dispatch(PutRole.create(role));
+      dispatch(PutWebConfig.create(config));
 
       legacySessionAPI.preparePostLogin(session.authCode, encodeURIComponent(currentPath));
     };

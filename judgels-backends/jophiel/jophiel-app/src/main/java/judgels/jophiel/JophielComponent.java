@@ -11,8 +11,8 @@ import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.profile.ProfileResource;
 import judgels.jophiel.session.SessionResource;
 import judgels.jophiel.user.MyResource;
-import judgels.jophiel.user.UserAccountResource;
 import judgels.jophiel.user.UserResource;
+import judgels.jophiel.user.account.UserAccountResource;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.avatar.UserAvatarResource;
 import judgels.jophiel.user.info.UserInfoResource;
@@ -22,6 +22,7 @@ import judgels.jophiel.user.registration.UserRegistrationModule;
 import judgels.jophiel.user.registration.web.UserRegistrationWebResource;
 import judgels.jophiel.user.superadmin.SuperadminCreator;
 import judgels.jophiel.user.superadmin.SuperadminModule;
+import judgels.jophiel.user.web.UserWebResource;
 import judgels.recaptcha.RecaptchaModule;
 
 @Component(modules = {
@@ -51,5 +52,6 @@ public interface JophielComponent {
     UserInfoResource userProfileResource();
     UserRegistrationWebResource userRegistrationWebResource();
     UserRatingResource userRatingResource();
+    UserWebResource userWebResource();
     VersionResource versionResource();
 }

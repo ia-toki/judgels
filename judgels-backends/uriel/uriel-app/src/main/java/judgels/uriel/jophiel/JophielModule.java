@@ -4,7 +4,7 @@ import com.palantir.remoting3.clients.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
-import judgels.jophiel.api.info.ProfileService;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.MyService;
 import judgels.service.jaxrs.JaxRsClients;
 

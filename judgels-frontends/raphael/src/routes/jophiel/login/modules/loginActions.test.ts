@@ -1,19 +1,22 @@
 import { ForbiddenError } from 'modules/api/error';
-import { JophielRole } from 'modules/api/jophiel/my';
+import { JophielRole } from 'modules/api/jophiel/role';
+import { UserWebConfig } from 'modules/api/jophiel/userWeb';
 import { PutToken, PutUser } from 'modules/session/sessionReducer';
 import { token, user, userJid } from 'fixtures/state';
 
 import { loginActions } from './loginActions';
-import { PutRole } from '../../modules/roleReducer';
+import { PutWebConfig } from '../../modules/userWebReducer';
 
 describe('loginActions', () => {
   const authCode = 'authCode';
+  const config: UserWebConfig = { role: JophielRole.User };
 
   let dispatch: jest.Mock<any>;
   let getState: jest.Mock<any>;
 
   let legacySessionAPI: jest.Mocked<any>;
   let myAPI: jest.Mocked<any>;
+  let userWebAPI: jest.Mocked<any>;
   let toastActions: jest.Mocked<any>;
 
   beforeEach(() => {
@@ -26,7 +29,9 @@ describe('loginActions', () => {
     };
     myAPI = {
       getMyself: jest.fn(),
-      getMyRole: jest.fn(),
+    };
+    userWebAPI = {
+      getWebConfig: jest.fn(),
     };
     toastActions = {
       showToast: jest.fn(),
@@ -40,12 +45,14 @@ describe('loginActions', () => {
       logIn('path', 'user', 'pass')(dispatch, getState, {
         legacySessionAPI,
         myAPI,
+        userWebAPI,
         toastActions,
       });
 
     it('calls API to logs in', async () => {
       legacySessionAPI.logIn.mockImplementation(() => Promise.resolve({ authCode, token }));
       myAPI.getMyself.mockImplementation(() => Promise.resolve<any>({ jid: userJid }));
+      userWebAPI.getWebConfig.mockImplementation(() => Promise.resolve(config));
 
       await doLogIn();
 
@@ -56,7 +63,7 @@ describe('loginActions', () => {
       beforeEach(async () => {
         legacySessionAPI.logIn.mockImplementation(() => Promise.resolve({ authCode, token }));
         myAPI.getMyself.mockImplementation(() => Promise.resolve(user));
-        myAPI.getMyRole.mockImplementation(() => Promise.resolve(JophielRole.User));
+        userWebAPI.getWebConfig.mockImplementation(() => Promise.resolve(config));
 
         await doLogIn();
       });
@@ -72,7 +79,10 @@ describe('loginActions', () => {
       it('puts the session', () => {
         expect(dispatch).toHaveBeenCalledWith(PutToken.create(token));
         expect(dispatch).toHaveBeenCalledWith(PutUser.create(user));
-        expect(dispatch).toHaveBeenCalledWith(PutRole.create(JophielRole.User));
+      });
+
+      it('puts the web config', () => {
+        expect(dispatch).toHaveBeenCalledWith(PutWebConfig.create(config));
       });
     });
 

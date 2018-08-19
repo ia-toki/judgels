@@ -1,10 +1,11 @@
+import { UnauthorizedError } from 'modules/api/error';
+import { JophielRole } from 'modules/api/jophiel/role';
+import { DelSession } from 'modules/session/sessionReducer';
+import { AppState } from 'modules/store';
+import { sessionState, token } from 'fixtures/state';
+
 import { logoutActions } from './logoutActions';
-import { UnauthorizedError } from '../../../../modules/api/error';
-import { DelSession } from '../../../../modules/session/sessionReducer';
-import { AppState } from '../../../../modules/store';
-import { PutRole } from '../../modules/roleReducer';
-import { JophielRole } from '../../../../modules/api/jophiel/my';
-import { sessionState, token } from '../../../../fixtures/state';
+import { PutWebConfig } from '../../modules/userWebReducer';
 
 describe('logoutActions', () => {
   let dispatch: jest.Mock<any>;
@@ -41,7 +42,7 @@ describe('logoutActions', () => {
 
       it('deletes the session', () => {
         expect(dispatch).toHaveBeenCalledWith(DelSession.create());
-        expect(dispatch).toHaveBeenCalledWith(PutRole.create(JophielRole.Guest));
+        expect(dispatch).toHaveBeenCalledWith(PutWebConfig.create({ role: JophielRole.Guest }));
       });
 
       it('redirects to post logout url', () => {

@@ -1,4 +1,4 @@
-import { JophielRole } from 'modules/api/jophiel/my';
+import { JophielRole } from 'modules/api/jophiel/role';
 
 import { getVisibleAppRoutes } from './AppRoutes';
 
