@@ -14,6 +14,7 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestDescription;
 import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 
@@ -109,5 +110,16 @@ public class ContestResource implements ContestService {
         checkAllowed(contestRoleChecker.canCreateContest(actorJid));
 
         return contestStore.createContest(contestData);
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ContestDescription getContestDescription(Optional<AuthHeader> authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        ContestDescription contestDescription = checkFound(contestStore.getContestDescription(contest.getJid()));
+
+        return contestDescription;
     }
 }

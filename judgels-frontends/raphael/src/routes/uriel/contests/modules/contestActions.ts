@@ -33,5 +33,12 @@ export const contestActions = {
     };
   },
 
+  getContestDescription: (contestJid: string) => {
+    return async (dispatch, getState, { contestAPI }) => {
+      const token = selectToken(getState());
+      return await contestAPI.getContestDescription(token, contestJid);
+    };
+  },
+
   clearContest: DelContest.create,
 };

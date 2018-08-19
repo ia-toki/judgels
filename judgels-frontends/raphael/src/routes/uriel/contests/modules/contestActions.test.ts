@@ -1,6 +1,6 @@
 import { ContestPage } from 'modules/api/uriel/contest';
 import { AppState } from 'modules/store';
-import { contest, contestId, sessionState, token } from 'fixtures/state';
+import { contest, contestId, sessionState, token, contestJid } from 'fixtures/state';
 
 import { contestActions } from './contestActions';
 import { PutContest } from './contestReducer';
@@ -19,6 +19,7 @@ describe('contestActions', () => {
       getContests: jest.fn(),
       getContestBySlug: jest.fn(),
       startVirtualContest: jest.fn(),
+      getContestDescription: jest.fn(),
     };
   });
 
@@ -72,4 +73,20 @@ describe('contestActions', () => {
       expect(contestAPI.startVirtualContest).toHaveBeenCalledWith(token, contestId);
     });
   });
+
+    
+  describe('getContestDescription()', () => {
+    const { getContestDescription } = contestActions;
+    const doGetContestDescription = async () => getContestDescription(contestJid)(dispatch, getState, { contestAPI });
+
+    beforeEach(async () => {
+      contestAPI.getContestDescription.mockImplementation(() => contest);
+
+      await doGetContestDescription();
+    });
+
+    it('calls API to get contest description', () => {
+      expect(contestAPI.getContestDescription).toHaveBeenCalledWith(token, contestJid);
+    });
+  }); 
 });

@@ -9,10 +9,13 @@ export interface Contest {
   jid: string;
   name: string;
   slug: string;
-  description: string;
   style: ContestStyle;
   beginTime: number;
   duration: number;
+}
+
+export interface ContestDescription {
+  description: string;
 }
 
 export enum ContestStyle {
@@ -46,6 +49,10 @@ export function createContestAPI() {
 
     startVirtualContest: (token: string, contestJid: string): Promise<Contest> => {
       return post(`${baseURL}/${contestJid}/virtual`, token);
+    },
+
+    getContestDescription: (token: string, contestJid: string): Promise<ContestDescription> => {
+      return get(`${baseURL}/${contestJid}/description`, token); 
     },
   };
 }

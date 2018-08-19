@@ -1,22 +1,41 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
+import { LoadingState } from 'components/LoadingState/LoadingState';
+import { AppState } from 'modules/store';
+import { Contest, ContestDescription } from 'modules/api/uriel/contest';
 import { HtmlText } from 'components/HtmlText/HtmlText';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
-import { Contest } from 'modules/api/uriel/contest';
-import { AppState } from 'modules/store';
 
 import { selectContest } from '../../../modules/contestSelectors';
+import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 
 import './ContestOverviewPage.css';
 
-interface ContestOverviewPageProps extends RouteComponentProps<{ contestJid: string }> {
+export interface ContestOverviewPageProps {
   contest: Contest;
+  onGetContestDescription: (contestJid: string) => Promise<ContestDescription>;
 }
 
-class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps> {
+interface ContestOverviewPageState {
+  description?: ContestDescription;
+}
+
+class ContestOverviewPage extends React.PureComponent<
+  ContestOverviewPageProps,
+  ContestOverviewPageState
+> {
+  state: ContestOverviewPageState = {};
+
+  async componentDidMount() {
+    const description = await this.props.onGetContestDescription(this.props.contest.jid);
+    this.setState({
+      description,
+    });
+  }
+
   render() {
     return (
       <>
@@ -31,25 +50,33 @@ class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps> 
   };
 
   private renderDescription = () => {
-    const { description } = this.props.contest;
+    const { description } = this.state;
+
     if (!description) {
+      return <LoadingState />;
+    }
+
+    if (!description.description) {
       return null;
     }
+    
     return (
       <ContentCard>
-        <HtmlText>{description}</HtmlText>
+        <HtmlText>{description.description}</HtmlText>
       </ContentCard>
     );
   };
 }
 
-function createContestOverviewPage() {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      contest: selectContest(state)!,
-    } as Partial<ContestOverviewPageProps>);
+function createContestOverviewPage(contestActions) {
+  const mapStateToProps = (state: AppState) => ({
+    contest: selectContest(state)!,
+  });
+  const mapDispatchToProps = {
+    onGetContestDescription: contestActions.getContestDescription,
+  };
 
-  return withRouter<any>(connect(mapStateToProps)(ContestOverviewPage));
+  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage));
 }
 
-export default createContestOverviewPage();
+export default createContestOverviewPage(injectedContestActions);
