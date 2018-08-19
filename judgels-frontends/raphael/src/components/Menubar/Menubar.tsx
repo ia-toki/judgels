@@ -24,7 +24,7 @@ class Menubar extends React.Component<MenubarProps & RouteComponentProps<{}>> {
     return (
       <div className="menubar">
         <div className="menubar__content">
-          <Tabs id="menubar" renderActiveTabPanelOnly selectedTabId={selectedTabId}>
+          <Tabs id="menubar" renderActiveTabPanelOnly animate={false} selectedTabId={selectedTabId}>
             {homeRoute ? (
               <Tab key={homeRoute.id} id={homeRoute.id}>
                 <Link to={this.resolveUrl(homeRoute.id)}>{homeRoute.title}</Link>
