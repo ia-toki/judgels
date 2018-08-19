@@ -11,6 +11,7 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.web.ContestWebConfig;
 import judgels.uriel.api.contest.web.ContestWebService;
+import judgels.uriel.api.contest.web.ContestWithWebConfig;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 
@@ -34,7 +35,19 @@ public class ContestWebResource implements ContestWebService {
     }
 
     @Override
-    @UnitOfWork
+    @UnitOfWork(readOnly = true)
+    public ContestWithWebConfig getContestBySlugWithWebConfig(Optional<AuthHeader> authHeader, String contestSlug) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestBySlug(contestSlug));
+        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        return new ContestWithWebConfig.Builder()
+                .contest(contest)
+                .config(webConfigFetcher.fetchConfig(actorJid, contest))
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
     public ContestWebConfig getWebConfig(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));

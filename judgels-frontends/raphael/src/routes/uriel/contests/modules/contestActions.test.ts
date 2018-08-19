@@ -74,7 +74,6 @@ describe('contestActions', () => {
     });
   });
 
-    
   describe('getContestDescription()', () => {
     const { getContestDescription } = contestActions;
     const doGetContestDescription = async () => getContestDescription(contestJid)(dispatch, getState, { contestAPI });
@@ -88,5 +87,5 @@ describe('contestActions', () => {
     it('calls API to get contest description', () => {
       expect(contestAPI.getContestDescription).toHaveBeenCalledWith(token, contestJid);
     });
-  }); 
+  });
 });

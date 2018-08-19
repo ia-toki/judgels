@@ -8,14 +8,12 @@ import { ConnectedRouter } from 'react-router-redux';
 import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { ContestTab } from 'modules/api/uriel/contestWeb';
-
 import { createSingleContestDataRoute } from './SingleContestDataRoute';
 
 describe('SingleContestDataRoute', () => {
   let history: MemoryHistory;
   let contestActions: jest.Mocked<any>;
-  let contestWebConfigActions: jest.Mocked<any>;
+  let contestWebActions: jest.Mocked<any>;
   let breadcrumbsActions: jest.Mocked<any>;
 
   const store = createMockStore([thunk])({
@@ -27,11 +25,7 @@ describe('SingleContestDataRoute', () => {
   const render = (currentPath: string) => {
     history = createMemoryHistory({ initialEntries: [currentPath] });
 
-    const SingleContestDataRoute = createSingleContestDataRoute(
-      contestActions,
-      contestWebConfigActions,
-      breadcrumbsActions
-    );
+    const SingleContestDataRoute = createSingleContestDataRoute(contestActions, contestWebActions, breadcrumbsActions);
     mount(
       <Provider store={store}>
         <ConnectedRouter history={history}>
@@ -43,12 +37,13 @@ describe('SingleContestDataRoute', () => {
 
   beforeEach(() => {
     contestActions = {
-      getContestBySlug: jest.fn().mockReturnValue(() => Promise.resolve({ jid: 'jid123', name: 'Contest 123' })),
       clearContest: jest.fn().mockReturnValue({ type: 'clear' }),
     };
-    contestWebConfigActions = {
-      getWebConfig: jest.fn().mockReturnValue(() => Promise.resolve({ visibleTabs: [ContestTab.Announcements] })),
-      clearConfig: jest.fn().mockReturnValue({ type: 'clear' }),
+    contestWebActions = {
+      getContestBySlugWithWebConfig: jest
+        .fn()
+        .mockReturnValue(() => Promise.resolve({ contest: { jid: 'jid123', name: 'Contest 123' } })),
+      clearWebConfig: jest.fn().mockReturnValue({ type: 'clear' }),
     };
 
     breadcrumbsActions = {
@@ -60,8 +55,7 @@ describe('SingleContestDataRoute', () => {
   test('navigation', async () => {
     render('/contests/ioi');
     await new Promise(resolve => setImmediate(resolve));
-    expect(contestActions.getContestBySlug).toHaveBeenCalledWith('ioi');
-    expect(contestWebConfigActions.getWebConfig).toHaveBeenCalledWith('jid123');
+    expect(contestWebActions.getContestBySlugWithWebConfig).toHaveBeenCalledWith('ioi');
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/contests/ioi', 'Contest 123');
 
     history.push('/contests/ioi/');
@@ -71,6 +65,6 @@ describe('SingleContestDataRoute', () => {
     await new Promise(resolve => setImmediate(resolve));
     expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/contests/ioi');
     expect(contestActions.clearContest).toHaveBeenCalled();
-    expect(contestWebConfigActions.clearConfig).toHaveBeenCalled();
+    expect(contestWebActions.clearWebConfig).toHaveBeenCalled();
   });
 });

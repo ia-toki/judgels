@@ -11,7 +11,7 @@ import { selectIsLoggedIn } from 'modules/session/sessionSelectors';
 
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestWebConfigActions as injectedContestWebConfigActions } from '../../modules/contestWebConfigActions';
+import { contestWebActions as injectedContestWebActions } from '../../modules/contestWebActions';
 import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
 
 import './ContestRegistrationCard.css';
@@ -160,13 +160,13 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
   };
 }
 
-function createContestRegistrationCard(contestWebConfigActions, contestContestantActions) {
+function createContestRegistrationCard(contestWebActions, contestContestantActions) {
   const mapStateToProps = (state: AppState) => ({
     isLoggedIn: selectIsLoggedIn(state),
     contest: selectContest(state)!,
   });
   const mapDispatchToProps = {
-    onGetContestWebConfig: contestWebConfigActions.getWebConfig,
+    onGetContestWebConfig: contestWebActions.getWebConfig,
     onGetMyContestantState: contestContestantActions.getMyContestantState,
     onGetContestantsCount: contestContestantActions.getContestantsCount,
     onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
@@ -175,4 +175,4 @@ function createContestRegistrationCard(contestWebConfigActions, contestContestan
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));
 }
 
-export default createContestRegistrationCard(injectedContestWebConfigActions, injectedContestContestantActions);
+export default createContestRegistrationCard(injectedContestWebActions, injectedContestContestantActions);

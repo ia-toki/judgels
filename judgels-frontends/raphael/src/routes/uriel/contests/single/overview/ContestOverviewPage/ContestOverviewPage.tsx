@@ -23,10 +23,7 @@ interface ContestOverviewPageState {
   description?: ContestDescription;
 }
 
-class ContestOverviewPage extends React.PureComponent<
-  ContestOverviewPageProps,
-  ContestOverviewPageState
-> {
+class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps, ContestOverviewPageState> {
   state: ContestOverviewPageState = {};
 
   async componentDidMount() {
@@ -59,7 +56,7 @@ class ContestOverviewPage extends React.PureComponent<
     if (!description.description) {
       return null;
     }
-    
+
     return (
       <ContentCard>
         <HtmlText>{description.description}</HtmlText>

@@ -8,8 +8,8 @@ export interface ContestWebConfigState {
 
 export const INITIAL_STATE: ContestWebConfigState = {};
 
-export const PutWebConfig = TypedAction.define('uriel/contest/webConfig/PUT')<ContestWebConfig>();
-export const DelWebConfig = TypedAction.defineWithoutPayload('uriel/contest/webConfig/DEL')();
+export const PutWebConfig = TypedAction.define('uriel/contest/web/PUT_CONFIG')<ContestWebConfig>();
+export const DelWebConfig = TypedAction.defineWithoutPayload('uriel/contest/web/DEL_CONFIG')();
 
 function createContestWebConfigReducer() {
   const builder = TypedReducer.builder<ContestWebConfigState>();

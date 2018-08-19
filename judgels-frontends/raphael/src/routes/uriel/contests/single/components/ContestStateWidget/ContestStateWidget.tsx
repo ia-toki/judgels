@@ -9,7 +9,7 @@ import { AppState } from 'modules/store';
 
 import { selectContest } from '../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
-import { contestWebConfigActions as injectedContestWebConfigActions } from '../../modules/contestWebConfigActions';
+import { contestWebActions as injectedContestWebConfigActions } from '../../modules/contestWebActions';
 import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 
 import './ContestStateWidget.css';
@@ -157,7 +157,7 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
   };
 }
 
-export function createContestStateWidget(contestWebConfigActions, contestActions) {
+export function createContestStateWidget(contestWebActions, contestActions) {
   const mapStateToProps = (state: AppState) =>
     ({
       contest: selectContest(state)!,
@@ -166,7 +166,7 @@ export function createContestStateWidget(contestWebConfigActions, contestActions
     } as Partial<ContestStateWidgetProps>);
 
   const mapDispatchToProps = {
-    onGetContestWebConfig: contestWebConfigActions.getWebConfig,
+    onGetContestWebConfig: contestWebActions.getWebConfig,
     onStartVirtualContest: contestActions.startVirtualContest,
   };
 

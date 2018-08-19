@@ -11,10 +11,17 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/contests/{contestJid}/web")
+@Path("/api/v2/contests/web")
 public interface ContestWebService {
     @GET
-    @Path("/config")
+    @Path("/slug/{contestSlug}/with-config")
+    @Produces(APPLICATION_JSON)
+    ContestWithWebConfig getContestBySlugWithWebConfig(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestSlug") String contestSlug);
+
+    @GET
+    @Path("/{contestJid}/config")
     @Produces(APPLICATION_JSON)
     ContestWebConfig getWebConfig(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,

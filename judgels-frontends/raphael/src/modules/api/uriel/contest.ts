@@ -52,7 +52,7 @@ export function createContestAPI() {
     },
 
     getContestDescription: (token: string, contestJid: string): Promise<ContestDescription> => {
-      return get(`${baseURL}/${contestJid}/description`, token); 
+      return get(`${baseURL}/${contestJid}/description`, token);
     },
   };
 }

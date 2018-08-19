@@ -4,17 +4,18 @@ import { connect } from 'react-redux';
 
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
+import { ContestWithWebConfig } from 'modules/api/uriel/contestWeb';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 
 import { selectContest } from '../modules/contestSelectors';
 import { contestActions as injectedContestActions } from '../modules/contestActions';
-import { contestWebConfigActions as injectedContestWebConfigActions } from './modules/contestWebConfigActions';
+import { contestWebActions as injectedContestWebActions } from './modules/contestWebActions';
 
 export interface SingleContestDataRouteProps extends RouteComponentProps<{ contestSlug: string }> {
   contest?: Contest;
 
-  onGetContest: (contestSlug: string) => Promise<Contest>;
   onClearContest: () => void;
+  onGetContestBySlugWithWebConfig: (contestJid: string) => Promise<ContestWithWebConfig>;
   onGetContestWebConfig: (contestJid: string) => void;
   onClearContestWebConfig: () => void;
   onPushBreadcrumb: (link: string, title: string) => void;
@@ -22,6 +23,8 @@ export interface SingleContestDataRouteProps extends RouteComponentProps<{ conte
 }
 
 class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps> {
+  private static GET_CONFIG_TIMEOUT = 20000;
+
   private currentTimeout;
 
   async componentDidMount() {
@@ -30,15 +33,21 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
     // Optimization:
     // If the current contest slug is equal to the persisted one, then assume the JID is still the same,
     if (contest && contest.slug === match.params.contestSlug) {
-      this.refreshWebConfig(contest.jid);
+      this.currentTimeout = setTimeout(
+        () => this.refreshWebConfig(contest.jid),
+        SingleContestDataRoute.GET_CONFIG_TIMEOUT
+      );
     }
 
     // so that we don't have to wait until we get the contest from backend.
-    const newContest = await this.props.onGetContest(match.params.contestSlug);
+    const { contest: newContest } = await this.props.onGetContestBySlugWithWebConfig(match.params.contestSlug);
     this.props.onPushBreadcrumb(this.props.match.url, newContest.name);
 
     if (!contest || contest.slug !== match.params.contestSlug) {
-      this.refreshWebConfig(newContest.jid);
+      this.currentTimeout = setTimeout(
+        () => this.refreshWebConfig(newContest.jid),
+        SingleContestDataRoute.GET_CONFIG_TIMEOUT
+      );
     }
   }
 
@@ -58,20 +67,23 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
 
   private refreshWebConfig = async (contestJid: string) => {
     await this.props.onGetContestWebConfig(contestJid);
-    this.currentTimeout = setTimeout(() => this.refreshWebConfig(contestJid), 20000);
+    this.currentTimeout = setTimeout(
+      () => this.refreshWebConfig(contestJid),
+      SingleContestDataRoute.GET_CONFIG_TIMEOUT
+    );
   };
 }
 
-export function createSingleContestDataRoute(contestActions, contestWebConfigActions, breadcrumbsActions) {
+export function createSingleContestDataRoute(contestActions, contestWebActions, breadcrumbsActions) {
   const mapStateToProps = (state: AppState) =>
     ({
       contest: selectContest(state),
     } as Partial<SingleContestDataRouteProps>);
 
   const mapDispatchToProps = {
-    onGetContest: contestActions.getContestBySlug,
-    onGetContestWebConfig: contestWebConfigActions.getWebConfig,
-    onClearContestWebConfig: contestWebConfigActions.clearConfig,
+    onGetContestBySlugWithWebConfig: contestWebActions.getContestBySlugWithWebConfig,
+    onGetContestWebConfig: contestWebActions.getWebConfig,
+    onClearContestWebConfig: contestWebActions.clearWebConfig,
     onClearContest: contestActions.clearContest,
     onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
@@ -82,6 +94,6 @@ export function createSingleContestDataRoute(contestActions, contestWebConfigAct
 
 export default createSingleContestDataRoute(
   injectedContestActions,
-  injectedContestWebConfigActions,
+  injectedContestWebActions,
   injectedBreadcrumbsActions
 );
