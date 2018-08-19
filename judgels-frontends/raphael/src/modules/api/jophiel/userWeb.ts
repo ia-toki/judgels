@@ -9,11 +9,11 @@ export interface UserWebConfig {
 }
 
 export function createUserWebAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users/me/web`;
+  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users/web`;
 
   return {
     getWebConfig: (token: string): Promise<UserWebConfig> => {
-      return get(`${baseURL}/config`, token);
+      return get(`${baseURL}/me/config`, token);
     },
   };
 }

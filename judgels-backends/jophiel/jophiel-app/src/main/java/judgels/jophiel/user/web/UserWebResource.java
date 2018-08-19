@@ -1,22 +1,16 @@
 package judgels.jophiel.user.web;
 
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import judgels.jophiel.api.user.web.UserWebConfig;
+import judgels.jophiel.api.user.web.UserWebService;
 import judgels.jophiel.profile.ProfileResource;
 import judgels.jophiel.user.MyResource;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/users/me/web")
-public class UserWebResource {
+public class UserWebResource implements UserWebService {
     private final ActorChecker actorChecker;
     private final MyResource myResource;
     private final ProfileResource profileResource;
@@ -28,11 +22,9 @@ public class UserWebResource {
         this.profileResource = profileResource;
     }
 
-    @GET
-    @Path("/config")
-    @Produces(APPLICATION_JSON)
+    @Override
     @UnitOfWork(readOnly = true)
-    public UserWebConfig getWebConfig(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
+    public UserWebConfig getWebConfig(AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
         return new UserWebConfig.Builder()
                 .role(myResource.getMyRole(authHeader))

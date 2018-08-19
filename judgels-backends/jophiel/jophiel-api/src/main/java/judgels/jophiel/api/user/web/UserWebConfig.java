@@ -1,4 +1,4 @@
-package judgels.jophiel.user.web;
+package judgels.jophiel.api.user.web;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import judgels.jophiel.api.profile.Profile;
