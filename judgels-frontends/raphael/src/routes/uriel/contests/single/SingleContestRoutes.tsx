@@ -15,6 +15,7 @@ import { ContestTab, ContestWebConfig } from 'modules/api/uriel/contestWeb';
 import { AppState } from 'modules/store';
 
 import ContestStateWidget from './components/ContestStateWidget/ContestStateWidget';
+import { LoadingContestStateWidget } from './components/ContestStateWidget/LoadingContestStateWidget';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
@@ -120,7 +121,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     contentHeader: (
       <div className="single-contest-routes__header">
         <h2>{contest && contest.name}</h2>
-        {contestWebConfig && <ContestStateWidget />}
+        {contestWebConfig ? <ContestStateWidget /> : <LoadingContestStateWidget />}
       </div>
     ),
   };
