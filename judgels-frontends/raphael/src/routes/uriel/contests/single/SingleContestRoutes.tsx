@@ -120,7 +120,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     items: sidebarItems,
     contentHeader: (
       <div className="single-contest-routes__header">
-        <h2>{contest && contest.name}</h2>
+        <h2>{contest.name}</h2>
         {contestWebConfig ? <ContestStateWidget /> : <LoadingContestStateWidget />}
       </div>
     ),
