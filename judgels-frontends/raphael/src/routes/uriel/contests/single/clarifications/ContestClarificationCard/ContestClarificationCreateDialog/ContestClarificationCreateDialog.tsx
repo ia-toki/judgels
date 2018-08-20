@@ -70,7 +70,7 @@ class ContestClarificationCreateDialog extends React.Component<
     }
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
-        New Clarification
+        New clarification
       </Button>
     );
   };
