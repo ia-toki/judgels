@@ -57,7 +57,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   async componentDidUpdate(prevProps: ContestProblemPageProps, prevState: ContestProblemPageState) {
     if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.worksheet) {
       this.setState({ worksheet: undefined });
-    } else if (!this.state.worksheet) {
+    } else if (!this.state.worksheet && prevState.worksheet) {
       await this.componentDidMount();
     }
   }
