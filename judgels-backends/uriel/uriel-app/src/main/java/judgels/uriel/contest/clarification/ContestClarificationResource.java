@@ -117,7 +117,10 @@ public class ContestClarificationResource implements ContestClarificationService
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canViewOwnClarifications(actorJid, contest));
 
-        List<ContestClarification> clarifications = clarificationStore.getClarifications(contestJid, actorJid);
+        List<ContestClarification> clarifications =
+                clarificationRoleChecker.isSupervisorWithClarificationPermissionOrAbove(actorJid, contest)
+                        ? clarificationStore.getAllClarifications(contestJid)
+                        : clarificationStore.getClarifications(contestJid, actorJid);
         Set<String> problemJids = clarifications
                 .stream()
                 .map(ContestClarification::getTopicJid)
