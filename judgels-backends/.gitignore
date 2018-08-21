@@ -5,6 +5,8 @@ out/
 generated/
 generated_tests/
 
+data/
+
 .idea/
 *.iml
 *.ipr

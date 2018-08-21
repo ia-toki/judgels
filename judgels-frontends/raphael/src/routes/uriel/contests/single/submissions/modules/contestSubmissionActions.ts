@@ -23,7 +23,7 @@ export const contestSubmissionActions = {
     };
   },
 
-  createSubmission: (contestJid: string, contestId: number, problemJid: string, data: ProblemSubmissionFormData) => {
+  createSubmission: (contestJid: string, contestSlug: string, problemJid: string, data: ProblemSubmissionFormData) => {
     return async (dispatch, getState, { contestSubmissionAPI, toastActions }) => {
       const token = selectToken(getState());
       let sourceFiles = {};
@@ -36,7 +36,7 @@ export const contestSubmissionActions = {
       toastActions.showSuccessToast('Solution submitted.');
 
       window.scrollTo(0, 0);
-      dispatch(push(`/contests/${contestId}/submissions`));
+      dispatch(push(`/contests/${contestSlug}/submissions`));
     };
   },
 };

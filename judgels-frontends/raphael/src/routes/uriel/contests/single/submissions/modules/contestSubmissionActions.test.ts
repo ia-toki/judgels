@@ -91,7 +91,10 @@ describe('contestSubmissionActions', () => {
       sourceFiles,
     };
     const doCreateSubmission = async () =>
-      createSubmission(contestJid, 1, problemJid, data)(dispatch, getState, { contestSubmissionAPI, toastActions });
+      createSubmission(contestJid, 'contest-a', problemJid, data)(dispatch, getState, {
+        contestSubmissionAPI,
+        toastActions,
+      });
 
     beforeEach(async () => {
       await doCreateSubmission();
@@ -103,7 +106,7 @@ describe('contestSubmissionActions', () => {
         'sourceFiles.decoder': {} as File,
       });
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Solution submitted.');
-      expect(dispatch).toHaveBeenCalledWith(push(`/contests/1/submissions`));
+      expect(dispatch).toHaveBeenCalledWith(push(`/contests/contest-a/submissions`));
     });
   });
 });
