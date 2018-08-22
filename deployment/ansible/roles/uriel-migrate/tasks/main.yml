@@ -1,0 +1,12 @@
+- block:
+  - name: Run a uriel container to do db migration
+    docker_container:
+      name: java
+      image: openjdk:8
+      restart: yes
+      network_mode: host
+      volumes:
+        - "{{ playbook_dir }}/../../../judgels-backends:/judgels/judgels-backends"
+      command: "/bin/bash -c cd /judgels/judgels-backends/uriel && ../gradlew dbMigrate"
+  tags:
+    - uriel-migrate
