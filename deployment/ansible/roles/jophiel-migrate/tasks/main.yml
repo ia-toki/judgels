@@ -1,12 +1,13 @@
 - block:
-  - name: Run a uriel container to do db migration
+  - name: Run a jophiel container to do db migration
     docker_container:
-      name: java
-      image: openjdk:8
+      name: uriel
+      image: "judgels/jophiel:{{ jophiel_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:
-        - "{{ playbook_dir }}/../../../judgels-backends:/judgels/judgels-backends"
-      command: "/bin/bash -c cd /judgels/judgels-backends/jophiel && ../gradlew dbMigrate"
+        - "/judgels/jophiel/var:/judgels/jophiel/var"
+      env:
+        SERVICE: dbMigrate
   tags:
     - jophiel-migrate

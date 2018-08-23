@@ -29,5 +29,7 @@
       network_mode: host
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
+      env:
+        SERVICE: run
   tags:
     - jophiel-deploy
