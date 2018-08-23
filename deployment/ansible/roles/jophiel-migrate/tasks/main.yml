@@ -1,13 +1,12 @@
 - block:
   - name: Run a jophiel container to do db migration
     docker_container:
-      name: uriel
+      name: jophiel
       image: "judgels/jophiel:{{ jophiel_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
-      env:
-        SERVICE: dbMigrate
+      command: dbMigrate
   tags:
     - jophiel-migrate

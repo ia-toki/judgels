@@ -1,4 +1,4 @@
-- hosts: localhost
+- hosts: competition
   gather_facts: false
   roles:
     - name: uriel-migrate

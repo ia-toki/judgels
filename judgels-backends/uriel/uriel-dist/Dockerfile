@@ -7,11 +7,11 @@ WORKDIR /judgels/uriel
 EXPOSE 9004 9104
 
 COPY build/distributions .
-COPY init.sh .
 
 RUN addgroup -S judgels && adduser -S -g judgels judgels && chown -R judgels var
 USER judgels
 
 VOLUME var/conf
 
-CMD ["/bin/bash", "-c", "./init.sh ${SERVICE}"]
+ENTRYPOINT ["./init.sh"]
+CMD ["console"]

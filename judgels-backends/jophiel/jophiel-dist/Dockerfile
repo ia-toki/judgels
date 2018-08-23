@@ -10,6 +10,6 @@ WORKDIR /judgels/jophiel
 EXPOSE 9001 9101
 
 COPY build/distributions .
-COPY init.sh .
 
-CMD ["/bin/bash", "-c", "./init.sh ${SERVICE}"]
+ENTRYPOINT ["./init.sh"]
+CMD ["console"]

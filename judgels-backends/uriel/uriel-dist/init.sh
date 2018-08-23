@@ -2,12 +2,14 @@
 
 set -ex
 
-SERVICE=$1
+COMMAND=$1
 
-if [[ ! -z ${SERVICE} ]]; then
-    if [[ "$SERVICE" == "run" ]]; then
-        ./service/bin/init.sh console
-    elif [[ "$SERVICE" == "dbMigrate" ]]; then
-        ./service/bin/uriel db migrate
-    fi
+if [[ -z ${COMMAND} ]]; then
+	COMMAND="console"
+fi
+
+if [[ "$COMMAND" == "console" ]]; then
+    ./service/bin/init.sh console
+elif [[ "$COMMAND" == "dbMigrate" ]]; then
+    ./service/bin/uriel db migrate
 fi

@@ -7,7 +7,6 @@
       network_mode: host
       volumes:
         - "/judgels/uriel/var:/judgels/uriel/var"
-      env:
-        SERVICE: dbMigrate
+      command: dbMigrate
   tags:
     - uriel-migrate

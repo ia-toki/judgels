@@ -1,4 +1,4 @@
-- hosts: localhost
+- hosts: frontgate
   gather_facts: false
   roles:
     - name: jophiel-migrate
