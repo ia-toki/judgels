@@ -30,6 +30,12 @@ public class ContestClarificationStore {
                 ContestClarificationStore::fromModel);
     }
 
+    public List<ContestClarification> getClarifications(String contestJid) {
+        return Lists.transform(
+                clarificationDao.selectAllByContestJid(contestJid),
+                ContestClarificationStore::fromModel);
+    }
+
     private static ContestClarification fromModel(ContestClarificationModel model) {
         return new ContestClarification.Builder()
                 .id(model.id)

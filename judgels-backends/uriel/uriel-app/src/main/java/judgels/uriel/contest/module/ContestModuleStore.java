@@ -61,6 +61,10 @@ public class ContestModuleStore {
         upsertModule(contestJid, PAUSED, Collections.emptyMap());
     }
 
+    public void disablePausedModule(String contestJid) {
+        disableModule(contestJid, PAUSED, Collections.emptyMap());
+    }
+
     public void upsertRegistrationModule(String contestJid) {
         upsertModule(contestJid, REGISTRATION, Collections.emptyMap());
     }
@@ -98,7 +102,7 @@ public class ContestModuleStore {
         return getModuleConfig(contestJid, VIRTUAL, VirtualModuleConfig.class);
     }
 
-    public void upsertModule(String contestJid, ContestModuleType type, Object config) {
+    private void upsertModule(String contestJid, ContestModuleType type, Object config) {
         Optional<ContestModuleModel> maybeModel = moduleDao.selectByContestJidAndType(contestJid, type);
         if (maybeModel.isPresent()) {
             ContestModuleModel model = maybeModel.get();
@@ -111,10 +115,35 @@ public class ContestModuleStore {
         }
     }
 
+    private void disableModule(String contestJid, ContestModuleType type, Object config) {
+        Optional<ContestModuleModel> maybeModel = moduleDao.selectByContestJidAndType(contestJid, type);
+        if (maybeModel.isPresent()) {
+            ContestModuleModel model = maybeModel.get();
+            disableModel(contestJid, type, config, model);
+            moduleDao.update(model);
+        } else {
+            ContestModuleModel model = new ContestModuleModel();
+            disableModel(contestJid, type, config, model);
+            moduleDao.insert(model);
+        }
+    }
+
     private void toModel(String contestJid, ContestModuleType type, Object config, ContestModuleModel model) {
         model.contestJid = contestJid;
         model.name = type.name();
         model.enabled = true;
+
+        try {
+            model.config = mapper.writeValueAsString(config);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void disableModel(String contestJid, ContestModuleType type, Object config, ContestModuleModel model) {
+        model.contestJid = contestJid;
+        model.name = type.name();
+        model.enabled = false;
 
         try {
             model.config = mapper.writeValueAsString(config);
