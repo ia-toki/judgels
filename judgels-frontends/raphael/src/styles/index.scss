@@ -94,13 +94,19 @@ code, pre {
 
 code {
   font-size: 12px;
-  padding: 5px;
+  padding: 3px;
 }
 
 pre {
   font-size: 13px;
   padding: 9px;
   overflow: auto;
+
+  code {
+    padding: initial;
+    border: initial;
+    border-radius: initial;
+  }
 }
 
 em {
