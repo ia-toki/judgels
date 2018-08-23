@@ -43,7 +43,7 @@ public abstract class AbstractRoleCheckerIntegrationTests {
     protected static final String ANOTHER_CONTESTANT = "anotherContestantJid";
     protected static final String SUPERVISOR = "supervisorJid";
     protected static final String MANAGER = "managerJid";
-    protected static final String SUPERVISOR_CONTESTANT = "supervisorContestantJid"
+    protected static final String SUPERVISOR_CONTESTANT = "supervisorContestantJid";
 
     protected Contest contestA;
     protected Contest contestAStarted;
@@ -179,6 +179,22 @@ public abstract class AbstractRoleCheckerIntegrationTests {
                 contestBFinished.getJid(),
                 new ContestSupervisorData.Builder()
                         .userJid(SUPERVISOR)
+                        .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
+
+        supervisorStore.upsertSupervisor(
+                contestB.getJid(),
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR_CONTESTANT)
+                        .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
+        supervisorStore.upsertSupervisor(
+                contestBStarted.getJid(),
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR_CONTESTANT)
+                        .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
+        supervisorStore.upsertSupervisor(
+                contestBFinished.getJid(),
+                new ContestSupervisorData.Builder()
+                        .userJid(SUPERVISOR_CONTESTANT)
                         .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
     }
 }

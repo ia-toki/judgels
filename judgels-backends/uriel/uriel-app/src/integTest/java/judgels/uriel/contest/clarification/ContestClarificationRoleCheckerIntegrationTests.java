@@ -113,7 +113,7 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
         assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestA)).isFalse();
         assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestB)).isFalse();
         assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestC)).isFalse()
+        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestC)).isFalse();
         addSupervisorToContestBWithPermission(CLARIFICATION);
         assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestB)).isTrue();
