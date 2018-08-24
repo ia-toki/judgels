@@ -15,7 +15,7 @@ import {
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../modules/contestAnnouncementActions';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
-import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCard/ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
+import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
 
 export interface ContestAnnouncementsPageProps {
   contest: Contest;

@@ -4,13 +4,13 @@ import { withRouter } from 'react-router';
 
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
-import ContestClarificationCreateDialog from '../ContestClarificationCard/ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestClarification, ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
 import { AppState } from 'modules/store';
-
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
+
+import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
+import ContestClarificationCreateDialog from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestClarificationActions as injectedContestClarificationActions } from '../modules/contestClarificationActions';
 

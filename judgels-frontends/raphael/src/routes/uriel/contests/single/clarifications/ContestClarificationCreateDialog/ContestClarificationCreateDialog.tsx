@@ -5,14 +5,14 @@ import { change } from 'redux-form';
 
 import ContestClarificationCreateForm, {
   ContestClarificationCreateFormData,
-} from '../../ContestClarificationCreateForm/ContestClarificationCreateForm';
+} from '../ContestClarificationCreateForm/ContestClarificationCreateForm';
 import { ContestClarificationConfig, ContestClarificationData } from 'modules/api/uriel/contestClarification';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 
-import { selectContest } from '../../../../modules/contestSelectors';
-import { contestClarificationActions as injectedContestClarificationActions } from '../../modules/contestClarificationActions';
+import { selectContest } from '../../../modules/contestSelectors';
+import { contestClarificationActions as injectedContestClarificationActions } from '../modules/contestClarificationActions';
 
 export interface ContestClarificationCreateDialogProps {
   onRefreshClarifications: () => Promise<void>;

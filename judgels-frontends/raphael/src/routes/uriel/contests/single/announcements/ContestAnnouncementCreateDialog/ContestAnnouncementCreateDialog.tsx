@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ContestAnnouncementConfig, ContestAnnouncementData } from 'modules/api/uriel/contestAnnouncement';
 import { Contest } from 'modules/api/uriel/contest';
 
-import ContestAnnouncementCreateForm from '../../ContestAnnouncementCreateForm/ContestAnnouncementCreateForm';
+import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/ContestAnnouncementCreateForm';
 
 export interface ContestAnnouncementCreateDialogProps {
   contest: Contest;
