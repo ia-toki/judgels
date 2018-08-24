@@ -8,8 +8,8 @@ if [[ -z ${COMMAND} ]]; then
 	COMMAND="console"
 fi
 
-if [[ "$COMMAND" == "console" ]]; then
-    ./service/bin/init.sh console
-elif [[ "$COMMAND" == "dbMigrate" ]]; then
+if [[ "$COMMAND" == "dbMigrate" ]]; then
     ./service/bin/jophiel db migrate
+else 
+    ./service/bin/init.sh $COMMAND
 fi
