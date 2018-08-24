@@ -13,4 +13,5 @@ USER judgels
 
 VOLUME var/conf
 
-CMD ["service/bin/init.sh", "console"]
+ENTRYPOINT ["./init.sh"]
+CMD ["console"]

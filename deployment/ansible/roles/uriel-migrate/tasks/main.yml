@@ -1,0 +1,12 @@
+- block:
+  - name: Run a uriel container to do db migration
+    docker_container:
+      name: uriel
+      image: "judgels/uriel:{{ uriel_version | default('latest', true) }}"
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/uriel/var:/judgels/uriel/var"
+      command: dbMigrate
+  tags:
+    - uriel-migrate

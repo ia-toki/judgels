@@ -11,5 +11,5 @@ EXPOSE 9001 9101
 
 COPY build/distributions .
 
-ENTRYPOINT ["./service/bin/init.sh"]
+ENTRYPOINT ["./init.sh"]
 CMD ["console"]
