@@ -1,5 +1,6 @@
 import { user } from 'fixtures/state';
 import { AppState } from 'modules/store';
+import { NotFoundError } from 'modules/api/error';
 import { UsernamesMap } from 'modules/api/jophiel/user';
 
 import { profileActions } from './profileActions';
@@ -46,7 +47,7 @@ describe('profileActions', () => {
       });
 
       it('throws NotFoundError', async () => {
-        await expect(doGetUserJid()).rejects.toMatchObject({});
+        await expect(doGetUserJid()).rejects.toBeInstanceOf(NotFoundError);
       });
     });
   });

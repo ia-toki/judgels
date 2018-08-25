@@ -22,13 +22,8 @@ describe('toastMiddleware', () => {
     const applyMiddleware = action => createToastMiddleware(toastAction)(store)(next)(action);
 
     it('shows the error toast', async () => {
-      setTimeout(() => {
-        expect(async () => {
-          await applyMiddleware(myAction);
-        }).toThrow('error');
-
-        expect(toastAction.showErrorToast).toHaveBeenCalledWith(error);
-      });
+      await expect(applyMiddleware(myAction)).rejects.toMatchObject(error);
+      expect(toastAction.showErrorToast).toHaveBeenCalledWith(error);
     });
   });
 

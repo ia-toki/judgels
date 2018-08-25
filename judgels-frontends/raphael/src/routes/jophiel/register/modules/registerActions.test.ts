@@ -42,11 +42,7 @@ describe('registerActions', () => {
       });
 
       it('throws SubmissionError', async () => {
-        setTimeout(() => {
-          expect(async () => {
-            await doRegisterUser();
-          }).toThrow(SubmissionError);
-        });
+        await expect(doRegisterUser()).rejects.toBeInstanceOf(SubmissionError);
       });
     });
 
@@ -57,11 +53,7 @@ describe('registerActions', () => {
       });
 
       it('throws SubmissionError', async () => {
-        setTimeout(() => {
-          expect(async () => {
-            await doRegisterUser();
-          }).toThrow(SubmissionError);
-        });
+        await expect(doRegisterUser()).rejects.toBeInstanceOf(SubmissionError);
       });
     });
 
@@ -69,11 +61,11 @@ describe('registerActions', () => {
       beforeEach(async () => {
         userAPI.usernameExists.mockImplementation(() => Promise.resolve(false));
         userAPI.emailExists.mockImplementation(() => Promise.resolve(false));
+
+        await doRegisterUser();
       });
 
       it('tries to register user', async () => {
-        await doRegisterUser();
-
         expect(userAccountAPI.registerUser).toHaveBeenCalledWith(userRegistrationData);
       });
     });

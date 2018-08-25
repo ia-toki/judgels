@@ -18,24 +18,34 @@ describe('tokenGateMiddleware', () => {
 
   describe('when the action throws UnauthorizedError', () => {
     const error = new UnauthorizedError('token expired' as any);
-    const next = async action => {
+    const next = async () => {
       throw error;
     };
     const applyMiddleware = action => createTokenGateMiddleware(tokenGateActions)(store)(next)(action);
 
-    it('redirects to logout', async () => {
-      setTimeout(() => {
-        expect(async () => {
-          await applyMiddleware(myAction);
-        }).toThrow('token expired');
+    beforeEach(async () => {
+      await applyMiddleware(myAction);
+    });
 
-        expect(tokenGateActions.redirectToLogout).toHaveBeenCalled();
-      });
+    it('redirects to logout', () => {
+      expect(tokenGateActions.redirectToLogout).toHaveBeenCalled();
+    });
+  });
+
+  describe('when the action throws any other error', () => {
+    const error = new Error('other error');
+    const next = async () => {
+      throw error;
+    };
+    const applyMiddleware = action => createTokenGateMiddleware(tokenGateActions)(store)(next)(action);
+
+    it('rethrows the error', async () => {
+      await expect(applyMiddleware(myAction)).rejects.toEqual(error);
     });
   });
 
   describe('when the action does not throw any error', () => {
-    const next = async action => nextAction;
+    const next = async () => nextAction;
     const applyMiddleware = action => createTokenGateMiddleware(tokenGateActions)(store)(next)(action);
 
     it('just passes the action through', async () => {

@@ -2,6 +2,7 @@ import { push } from 'react-router-redux';
 
 import { contestJid, problemJid, sessionState, token } from 'fixtures/state';
 import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProblemSubmissionForm/ProblemSubmissionForm';
+import { NotFoundError } from 'modules/api/error';
 import { SubmissionWithSourceResponse } from 'modules/api/sandalphon/submission';
 import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission';
 import { AppState } from 'modules/store';
@@ -75,7 +76,7 @@ describe('contestSubmissionActions', () => {
       });
 
       it('throws not found error', async () => {
-        await expect(doGetSubmissionWithSource()).rejects.toMatchObject({});
+        await expect(doGetSubmissionWithSource()).rejects.toBeInstanceOf(NotFoundError);
       });
     });
   });
