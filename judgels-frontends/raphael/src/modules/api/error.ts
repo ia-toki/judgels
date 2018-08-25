@@ -3,8 +3,8 @@ export class BadRequestError {
   message: string;
   stack?: string;
 
-  constructor(message?: string) {
-    const error = new Error(message);
+  constructor(message?: SerializableError) {
+    const error = new Error(message && message.errorName);
     this.stack = error.stack;
     this.message = error.message;
   }
@@ -15,8 +15,8 @@ export class UnauthorizedError {
   message: string;
   stack?: string;
 
-  constructor(message?: string) {
-    const error = new Error(message);
+  constructor(message?: SerializableError) {
+    const error = new Error(message && message.errorName);
     this.stack = error.stack;
     this.message = error.message;
   }
@@ -27,8 +27,8 @@ export class ForbiddenError {
   message: string;
   stack?: string;
 
-  constructor(message?: string) {
-    const error = new Error(message);
+  constructor(message?: SerializableError) {
+    const error = new Error(message && message.errorName);
     this.stack = error.stack;
     this.message = error.message;
   }
@@ -39,8 +39,8 @@ export class NotFoundError {
   message: string;
   stack?: string;
 
-  constructor(message?: string) {
-    const error = new Error(message);
+  constructor(message?: SerializableError) {
+    const error = new Error(message && message.errorName);
     this.stack = error.stack;
     this.message = error.message;
   }
@@ -51,9 +51,13 @@ export class RemoteError {
   message: string;
   stack?: string;
 
-  constructor(message?: string) {
-    const error = new Error(message);
+  constructor(message?: SerializableError) {
+    const error = new Error(message && message.errorName);
     this.stack = error.stack;
     this.message = error.message;
   }
+}
+
+export interface SerializableError {
+  errorName: string;
 }

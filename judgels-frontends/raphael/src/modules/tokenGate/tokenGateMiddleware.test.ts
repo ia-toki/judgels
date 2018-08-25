@@ -17,7 +17,7 @@ describe('tokenGateMiddleware', () => {
   });
 
   describe('when the action throws UnauthorizedError', () => {
-    const error = new UnauthorizedError('token expired');
+    const error = new UnauthorizedError('token expired' as any);
     const next = async action => {
       throw error;
     };

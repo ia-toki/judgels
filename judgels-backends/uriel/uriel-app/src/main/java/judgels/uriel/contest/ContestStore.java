@@ -16,6 +16,7 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestDescription;
+import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestDao;
@@ -82,6 +83,13 @@ public class ContestStore {
     }
 
     public Contest createContest(ContestData contestData) {
+        if (contestData.getSlug().isPresent()) {
+            String slug = contestData.getSlug().get();
+            if (contestDao.selectBySlug(slug).isPresent()) {
+                throw ContestErrors.contestSlugAlreadyExists(slug);
+            }
+        }
+
         ContestModel model = new ContestModel();
         toModel(contestData, model);
         return fromModel(contestDao.insert(model));

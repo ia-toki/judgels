@@ -7,11 +7,23 @@ import { Page } from 'modules/api/pagination';
 export interface Contest {
   id: number;
   jid: string;
-  name: string;
   slug: string;
+  name: string;
   style: ContestStyle;
   beginTime: number;
   duration: number;
+}
+
+export interface ContestConfig {
+  isAllowedToCreateContest: boolean;
+}
+
+export interface ContestData {
+  slug: string;
+  name?: string;
+  style?: ContestStyle;
+  beginTime?: number;
+  duration?: number;
 }
 
 export interface ContestDescription {
@@ -25,10 +37,18 @@ export enum ContestStyle {
 
 export interface ContestPage extends Page<Contest> {}
 
+export enum ContestErrors {
+  SlugAlreadyExists = 'Uriel:ContestSlugAlreadyExists',
+}
+
 export function createContestAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
+    createContest: (token: string, data: ContestData): Promise<Contest> => {
+      return post(baseURL, token, data);
+    },
+
     getContests: (token: string, page: number, pageSize: number): Promise<ContestPage> => {
       const params = stringify({ page, pageSize });
       return get(`${baseURL}?${params}`, token);
@@ -53,6 +73,10 @@ export function createContestAPI() {
 
     getContestDescription: (token: string, contestJid: string): Promise<ContestDescription> => {
       return get(`${baseURL}/${contestJid}/description`, token);
+    },
+
+    getContestConfig: (token: string): Promise<ContestConfig> => {
+      return get(`${baseURL}/config`, token);
     },
   };
 }

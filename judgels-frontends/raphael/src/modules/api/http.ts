@@ -8,25 +8,27 @@ async function call(url: string, init: RequestInit): Promise<any> {
     throw new RemoteError();
   }
 
+  const json = response.json().catch(() => {
+    return;
+  });
+
   if (response.status === 400) {
-    throw new BadRequestError();
+    throw new BadRequestError(await json);
   }
   if (response.status === 401) {
     throw new UnauthorizedError();
   }
   if (response.status === 403) {
-    throw new ForbiddenError();
+    throw new ForbiddenError(await json);
   }
   if (response.status === 404) {
-    throw new NotFoundError();
+    throw new NotFoundError(await json);
   }
   if (response.status < 200 || response.status >= 300) {
-    throw new RemoteError();
+    throw new RemoteError(await json);
   }
 
-  return response.json().catch(() => {
-    return;
-  });
+  return json;
 }
 
 async function request(method: string, url: string, token?: string, headers?: any, body?: any): Promise<any> {

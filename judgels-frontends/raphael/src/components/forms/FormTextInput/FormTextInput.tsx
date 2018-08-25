@@ -15,6 +15,7 @@ export const FormTextInput = (props: FormTextInputProps) => (
     <input
       {...props.input}
       type={props.type || 'text'}
+      autoFocus={props.autoFocus}
       className={classNames('bp3-input', getIntentClassName(props.meta))}
     />
     <FormInputValidation meta={props.meta} />

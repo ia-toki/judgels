@@ -11,4 +11,5 @@ export interface FormInputProps {
   meta: FormInputMeta;
   label: string;
   labelHelper?: string;
+  autoFocus?: boolean;
 }

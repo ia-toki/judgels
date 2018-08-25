@@ -19,9 +19,9 @@ public interface ContestData {
     class Builder extends ImmutableContestData.Builder {
         public Builder() {
             description("");
-            name("Contest");
-            style(ContestStyle.IOI);
-            beginTime(Instant.ofEpochSecond(1514764800));
+            name("Unnamed Contest");
+            style(ContestStyle.ICPC);
+            beginTime(Instant.ofEpochSecond(4102444800L)); // 1 January 2100
             duration(Duration.ofHours(5));
         }
     }

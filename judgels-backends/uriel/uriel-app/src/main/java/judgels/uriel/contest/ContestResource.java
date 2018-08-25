@@ -13,6 +13,7 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestConfig;
 import judgels.uriel.api.contest.ContestData;
 import judgels.uriel.api.contest.ContestDescription;
 import judgels.uriel.api.contest.ContestService;
@@ -118,8 +119,17 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
-        ContestDescription contestDescription = checkFound(contestStore.getContestDescription(contest.getJid()));
+        return checkFound(contestStore.getContestDescription(contest.getJid()));
+    }
 
-        return contestDescription;
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ContestConfig getContestConfig(Optional<AuthHeader> authHeader) {
+        String actorJid = actorChecker.check(authHeader);
+        boolean canCreateContest = contestRoleChecker.canCreateContest(actorJid);
+
+        return new ContestConfig.Builder()
+                .isAllowedToCreateContest(canCreateContest)
+                .build();
     }
 }

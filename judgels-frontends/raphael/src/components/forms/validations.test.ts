@@ -4,6 +4,7 @@ import {
   EmailAddress,
   MaxFileSize300KB,
   Required,
+  Slug,
   Username,
 } from './validations';
 
@@ -18,6 +19,14 @@ test('Username', () => {
   expect(Username(' fushar ')).toBeTruthy();
   expect(Username('fushar@')).toBeTruthy();
   expect(Username('_fus4.r')).toBeUndefined();
+});
+
+test('Slug', () => {
+  expect(Slug('fu')).toBeTruthy();
+  expect(Slug('fusharfusharfusharfushar')).toBeTruthy();
+  expect(Slug(' fushar ')).toBeTruthy();
+  expect(Slug('fushar.')).toBeTruthy();
+  expect(Slug('fus-4-r')).toBeUndefined();
 });
 
 test('EmailAddress', () => {

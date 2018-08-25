@@ -1,7 +1,10 @@
 package judgels.uriel.contest;
 
+import static judgels.uriel.api.contest.ContestErrors.CONTEST_SLUG_ALREADY_EXISTS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.palantir.remoting.api.errors.ServiceException;
 import java.util.List;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
@@ -64,11 +67,15 @@ class ContestStoreIntegrationTests {
     }
 
     @Test
-    void get_contests() {
+    void can_do_basic_crud() {
         Contest contestA = store.createContest(new ContestData.Builder().slug("contest-a").build());
         Contest contestB = store.createContest(new ContestData.Builder().slug("contest-b").build());
         Contest contestC = store.createContest(new ContestData.Builder().slug("contest-c").build());
         Contest contestD = store.createContest(new ContestData.Builder().slug("contest-d").build());
+
+        assertThatThrownBy(() -> store.createContest(new ContestData.Builder().slug("contest-d").build()))
+                .isInstanceOf(ServiceException.class)
+                .hasMessageContaining(CONTEST_SLUG_ALREADY_EXISTS.name());
 
         adminRoleStore.addAdmin(ADMIN);
         moduleStore.upsertRegistrationModule(contestD.getJid());

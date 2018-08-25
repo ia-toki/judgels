@@ -16,8 +16,8 @@ export const contestId = '123';
 export const contest: Contest = {
   id: 1,
   jid: contestJid,
-  name: 'Contest',
   slug: 'contest-a',
+  name: 'Contest',
   style: ContestStyle.ICPC,
   beginTime: 123,
   duration: 456,
