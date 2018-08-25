@@ -36,7 +36,7 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
         Query<UserRatingModel> query = currentSession().createQuery(
                 "SELECT t1 FROM jophiel_user_rating t1 "
                 + "LEFT OUTER JOIN jophiel_user_rating t2 "
-                + "ON (t1.userJid = t2.userJid AND t1.time < t2.time) "
+                + "ON (t1.userJid = t2.userJid AND t1.time < t2.time AND t2.time < :time) "
                 + "WHERE t1.time < :time AND t1.userJid IN :userJids AND t2.userJid IS NULL",
                 UserRatingModel.class);
 
@@ -53,7 +53,7 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
         Query<Long> countQuery = currentSession().createQuery(
                 "SELECT COUNT(*) FROM jophiel_user_rating t1 "
                         + "LEFT OUTER JOIN jophiel_user_rating t2 "
-                        + "ON (t1.userJid = t2.userJid AND t1.time < t2.time) "
+                        + "ON (t1.userJid = t2.userJid AND t1.time < t2.time AND t2.time < :time) "
                         + "WHERE t1.time < :time AND t2.userJid IS NULL ",
                 Long.class);
 
@@ -63,7 +63,7 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
         Query<UserRatingModel> dataQuery = currentSession().createQuery(
                 "SELECT t1 FROM jophiel_user_rating t1 "
                         + "LEFT OUTER JOIN jophiel_user_rating t2 "
-                        + "ON (t1.userJid = t2.userJid AND t1.time < t2.time) "
+                        + "ON (t1.userJid = t2.userJid AND t1.time < t2.time AND t2.time < :time) "
                         + "WHERE t1.time < :time AND t2.userJid IS NULL "
                         + "ORDER BY t1.publicRating DESC",
                 UserRatingModel.class);
