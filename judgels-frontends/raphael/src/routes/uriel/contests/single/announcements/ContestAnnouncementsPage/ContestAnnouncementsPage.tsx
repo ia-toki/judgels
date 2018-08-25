@@ -84,11 +84,7 @@ export class ContestAnnouncementsPage extends React.PureComponent<
       onGetAnnouncementConfig: this.props.onGetAnnouncementConfig,
       onCreateAnnouncement: this.props.onCreateAnnouncement,
     };
-    return (
-      <div className="content-card__section">
-        <ContestAnnouncementCreateDialog {...props} />
-      </div>
-    );
+    return <ContestAnnouncementCreateDialog {...props} />;
   };
 }
 

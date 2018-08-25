@@ -88,11 +88,7 @@ class ContestClarificationsPage extends React.Component<
     const props = {
       onRefreshClarifications: this.refreshClarifications,
     };
-    return (
-      <div className="content-card__section">
-        <ContestClarificationCreateDialog {...props} />
-      </div>
-    );
+    return <ContestClarificationCreateDialog {...props} />;
   };
 }
 

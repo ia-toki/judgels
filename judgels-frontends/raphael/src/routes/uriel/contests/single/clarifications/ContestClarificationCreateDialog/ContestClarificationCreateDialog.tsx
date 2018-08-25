@@ -29,7 +29,6 @@ export interface ContestClarificationCreateDialogConnectedProps {
 interface ContestClarificationCreateDialogState {
   config?: ContestClarificationConfig;
   isDialogOpen?: boolean;
-  isDialogLoading?: boolean;
 }
 
 class ContestClarificationCreateDialog extends React.Component<
@@ -101,7 +100,7 @@ class ContestClarificationCreateDialog extends React.Component<
   };
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
-    <>
+    <div className="content-card__section">
       <div className="bp3-dialog-body">{fields}</div>
       <div className="bp3-dialog-footer">
         <div className="bp3-dialog-footer-actions">
@@ -109,14 +108,13 @@ class ContestClarificationCreateDialog extends React.Component<
           {submitButton}
         </div>
       </div>
-    </>
+    </div>
   );
 
   private createClarification = async (data: ContestClarificationCreateFormData) => {
-    this.setState({ isDialogLoading: true });
     await this.props.onCreateClarification(this.props.contest.jid, data);
     await this.props.onRefreshClarifications();
-    this.setState({ isDialogLoading: false, isDialogOpen: false });
+    this.setState({ isDialogOpen: false });
   };
 }
 

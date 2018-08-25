@@ -16,7 +16,6 @@ export interface ContestAnnouncementCreateDialogProps {
 interface ContestAnnouncementCreateDialogState {
   config?: ContestAnnouncementConfig;
   isDialogOpen?: boolean;
-  isDialogLoading?: boolean;
 }
 
 export class ContestAnnouncementCreateDialog extends React.Component<
@@ -78,7 +77,7 @@ export class ContestAnnouncementCreateDialog extends React.Component<
   };
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
-    <>
+    <div className="content-card__section">
       <div className="bp3-dialog-body">{fields}</div>
       <div className="bp3-dialog-footer">
         <div className="bp3-dialog-footer-actions">
@@ -86,13 +85,12 @@ export class ContestAnnouncementCreateDialog extends React.Component<
           {submitButton}
         </div>
       </div>
-    </>
+    </div>
   );
 
   private createAnnouncement = async (data: ContestAnnouncementData) => {
-    this.setState({ isDialogLoading: true });
     await this.props.onCreateAnnouncement(this.props.contest.jid, data);
     await this.props.onRefreshAnnouncements();
-    this.setState({ isDialogLoading: false, isDialogOpen: false });
+    this.setState({ isDialogOpen: false });
   };
 }
