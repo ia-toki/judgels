@@ -52,10 +52,10 @@ class ContestClarificationCreateDialog extends React.Component<
     }
 
     return (
-      <>
+      <div className="content-card__section">
         {this.renderButton(config)}
         {this.renderDialog(config)}
-      </>
+      </div>
     );
   }
 
@@ -100,7 +100,7 @@ class ContestClarificationCreateDialog extends React.Component<
   };
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
-    <div className="content-card__section">
+    <>
       <div className="bp3-dialog-body">{fields}</div>
       <div className="bp3-dialog-footer">
         <div className="bp3-dialog-footer-actions">
@@ -108,7 +108,7 @@ class ContestClarificationCreateDialog extends React.Component<
           {submitButton}
         </div>
       </div>
-    </div>
+    </>
   );
 
   private createClarification = async (data: ContestClarificationCreateFormData) => {
