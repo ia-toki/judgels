@@ -31,6 +31,13 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
     }
 
     @Override
+    public List<ContestClarificationModel> selectAllByContestJid(String contestJid) {
+        return selectAll(new FilterOptions.Builder<ContestClarificationModel>()
+                .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
+                .build());
+    }
+
+    @Override
     public long selectCountAnsweredByContestJidAndUserJid(String contestJid, String userJid) {
         return selectCount(new FilterOptions.Builder<ContestClarificationModel>()
                 .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
