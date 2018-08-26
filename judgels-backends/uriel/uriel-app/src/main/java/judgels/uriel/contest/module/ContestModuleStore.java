@@ -117,15 +117,9 @@ public class ContestModuleStore {
 
     private void disableModule(String contestJid, ContestModuleType type, Object config) {
         Optional<ContestModuleModel> maybeModel = moduleDao.selectByContestJidAndType(contestJid, type);
-        if (maybeModel.isPresent()) {
-            ContestModuleModel model = maybeModel.get();
-            disableModel(contestJid, type, config, model);
-            moduleDao.update(model);
-        } else {
-            ContestModuleModel model = new ContestModuleModel();
-            disableModel(contestJid, type, config, model);
-            moduleDao.insert(model);
-        }
+        ContestModuleModel model = maybeModel.get();
+        disableModel(contestJid, type, config, model);
+        moduleDao.update(model);
     }
 
     private void toModel(String contestJid, ContestModuleType type, Object config, ContestModuleModel model) {

@@ -91,7 +91,7 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
         assertThat(checker.canViewOwnClarifications(ADMIN, contestAStarted)).isTrue();
         assertThat(checker.canViewOwnClarifications(ADMIN, contestB)).isTrue();
         assertThat(checker.canViewOwnClarifications(ADMIN, contestBStarted)).isTrue();
-        assertThat(checker.canViewOwnClarifications(ADMIN, contestC)).isTrue();
+        assertThat(checker.canViewOwnClarifications(ADMIN, contestC)).isFalse();
 
         assertThat(checker.canViewOwnClarifications(USER, contestA)).isFalse();
         assertThat(checker.canViewOwnClarifications(USER, contestAStarted)).isFalse();
@@ -146,7 +146,7 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
         assertThat(checker.canViewAllClarifications(ADMIN, contestAStarted)).isTrue();
         assertThat(checker.canViewAllClarifications(ADMIN, contestB)).isTrue();
         assertThat(checker.canViewAllClarifications(ADMIN, contestBStarted)).isTrue();
-        assertThat(checker.canViewAllClarifications(ADMIN, contestC)).isTrue();
+        assertThat(checker.canViewAllClarifications(ADMIN, contestC)).isFalse();
 
         assertThat(checker.canViewAllClarifications(USER, contestA)).isFalse();
         assertThat(checker.canViewAllClarifications(USER, contestAStarted)).isFalse();
