@@ -118,7 +118,7 @@ public class ContestModuleStore {
     private void disableModule(String contestJid, ContestModuleType type, Object config) {
         Optional<ContestModuleModel> maybeModel = moduleDao.selectByContestJidAndType(contestJid, type);
         ContestModuleModel model = maybeModel.get();
-        disableModel(contestJid, type, config, model);
+        model.enabled = false;
         moduleDao.update(model);
     }
 
@@ -126,18 +126,6 @@ public class ContestModuleStore {
         model.contestJid = contestJid;
         model.name = type.name();
         model.enabled = true;
-
-        try {
-            model.config = mapper.writeValueAsString(config);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void disableModel(String contestJid, ContestModuleType type, Object config, ContestModuleModel model) {
-        model.contestJid = contestJid;
-        model.name = type.name();
-        model.enabled = false;
 
         try {
             model.config = mapper.writeValueAsString(config);
