@@ -62,7 +62,7 @@ public class ContestModuleStore {
     }
 
     public void disablePausedModule(String contestJid) {
-        disableModule(contestJid, PAUSED, Collections.emptyMap());
+        disableModule(contestJid, PAUSED);
     }
 
     public void upsertRegistrationModule(String contestJid) {
@@ -115,11 +115,13 @@ public class ContestModuleStore {
         }
     }
 
-    private void disableModule(String contestJid, ContestModuleType type, Object config) {
+    private void disableModule(String contestJid, ContestModuleType type) {
         Optional<ContestModuleModel> maybeModel = moduleDao.selectByContestJidAndType(contestJid, type);
-        ContestModuleModel model = maybeModel.get();
-        model.enabled = false;
-        moduleDao.update(model);
+        if (maybeModel.isPresent()) {
+            ContestModuleModel model = maybeModel.get();
+            model.enabled = false;
+            moduleDao.update(model);
+        }
     }
 
     private void toModel(String contestJid, ContestModuleType type, Object config, ContestModuleModel model) {
