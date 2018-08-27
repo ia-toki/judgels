@@ -10,12 +10,20 @@ export interface ContestSubmissionsResponse {
   problemAliasesMap: { [problemJid: string]: string };
 }
 
+export interface ContestSubmissionConfig {
+  isAllowedToViewAllSubmissions: boolean;
+}
+
 export function createContestSubmissionAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests/submissions`;
 
   return {
-    getMySubmissions: (token: string, contestJid: string, page: number): Promise<ContestSubmissionsResponse> => {
-      return get(`${baseURL}/mine?contestJid=${contestJid}&page=${page}`, token);
+    getSubmissions: (token: string, contestJid: string, page: number): Promise<ContestSubmissionsResponse> => {
+      return get(`${baseURL}?contestJid=${contestJid}&page=${page}`, token);
+    },
+
+    getSubmissionConfig: (token: string, contestJid: string): Promise<ContestSubmissionConfig> => {
+      return get(`${baseURL}/config?contestJid=${contestJid}`, token);
     },
 
     getSubmissionWithSource: (

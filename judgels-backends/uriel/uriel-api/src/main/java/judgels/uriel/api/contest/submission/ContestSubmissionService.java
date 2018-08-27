@@ -13,18 +13,25 @@ import javax.ws.rs.QueryParam;
 import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/contests")
+@Path("/api/v2/contests/submissions")
 public interface ContestSubmissionService {
     @GET
-    @Path("/submissions/mine")
+    @Path("/")
     @Produces(APPLICATION_JSON)
-    ContestSubmissionsResponse getMySubmissions(
+    ContestSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("page") Optional<Integer> page);
 
     @GET
-    @Path("/submissions/id/{submissionId}")
+    @Path("/config")
+    @Produces(APPLICATION_JSON)
+    ContestSubmissionConfig getSubmissionConfig(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid);
+
+    @GET
+    @Path("/id/{submissionId}")
     @Produces(APPLICATION_JSON)
     SubmissionWithSourceResponse getSubmissionWithSourceById(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,

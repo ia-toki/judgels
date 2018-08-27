@@ -42,7 +42,7 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         });
     }
 
-    public Page<Submission> getSubmissions(String containerJid, String userJid, SelectionOptions options) {
+    public Page<Submission> getSubmissions(String containerJid, Optional<String> userJid, SelectionOptions options) {
         Page<SM> submissionModels = submissionDao.selectPaged(containerJid, userJid, options);
         Set<String> submissionJids = submissionModels.getData().stream().map(m -> m.jid).collect(Collectors.toSet());
         Map<String, GM> gradingModels = gradingDao.selectAllLatestBySubmissionJids(submissionJids);

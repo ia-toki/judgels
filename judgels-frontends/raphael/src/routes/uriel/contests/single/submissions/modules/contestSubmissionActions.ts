@@ -5,10 +5,17 @@ import { selectToken } from 'modules/session/sessionSelectors';
 import { NotFoundError } from 'modules/api/error';
 
 export const contestSubmissionActions = {
-  getMySubmissions: (contestJid: string, page: number) => {
+  getSubmissions: (contestJid: string, page: number) => {
     return async (dispatch, getState, { contestSubmissionAPI }) => {
       const token = selectToken(getState());
-      return await contestSubmissionAPI.getMySubmissions(token, contestJid, page);
+      return await contestSubmissionAPI.getSubmissions(token, contestJid, page);
+    };
+  },
+
+  getSubmissionConfig: (contestJid: string) => {
+    return async (dispatch, getState, { contestSubmissionAPI }) => {
+      const token = selectToken(getState());
+      return await contestSubmissionAPI.getSubmissionConfig(token, contestJid);
     };
   },
 

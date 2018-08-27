@@ -8,7 +8,7 @@ import Pagination from 'components/Pagination/Pagination';
 import { AppState } from 'modules/store';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission';
+import { ContestSubmissionConfig, ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission';
 import { Page } from 'modules/api/pagination';
 import { Submission } from 'modules/api/sandalphon/submission';
 
@@ -18,10 +18,12 @@ import { contestSubmissionActions as injectedContestSubmissionActions } from '..
 
 export interface ContestSubmissionsPageProps {
   contest: Contest;
-  onGetMySubmissions: (contestJid: string, page: number) => Promise<ContestSubmissionsResponse>;
+  onGetSubmissions: (contestJid: string, page: number) => Promise<ContestSubmissionsResponse>;
+  onGetSubmissionConfig: (contestJid: string) => Promise<ContestSubmissionConfig>;
 }
 
 interface ContestSubmissionsPageState {
+  config?: ContestSubmissionConfig;
   submissions?: Page<Submission>;
   profilesMap?: ProfilesMap;
   problemAliasesMap?: { [problemJid: string]: string };
@@ -35,6 +37,11 @@ export class ContestSubmissionsPage extends React.PureComponent<
 
   state: ContestSubmissionsPageState = {};
 
+  async componentDidMount() {
+    const config = await this.props.onGetSubmissionConfig(this.props.contest.jid);
+    this.setState({ config });
+  }
+
   render() {
     return (
       <ContentCard>
@@ -47,8 +54,8 @@ export class ContestSubmissionsPage extends React.PureComponent<
   }
 
   private renderSubmissions = () => {
-    const { submissions, problemAliasesMap } = this.state;
-    if (!submissions) {
+    const { config, submissions, profilesMap, problemAliasesMap } = this.state;
+    if (!config || !submissions || !profilesMap || !problemAliasesMap) {
       return <LoadingState />;
     }
 
@@ -64,7 +71,9 @@ export class ContestSubmissionsPage extends React.PureComponent<
       <ContestSubmissionsTable
         contest={this.props.contest}
         submissions={submissions.data}
-        problemAliasesMap={problemAliasesMap!}
+        profilesMap={profilesMap}
+        problemAliasesMap={problemAliasesMap}
+        showUserColumn={config.isAllowedToViewAllSubmissions}
       />
     );
   };
@@ -74,7 +83,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 
   private onChangePage = async (nextPage: number) => {
-    const { data, profilesMap, problemAliasesMap } = await this.props.onGetMySubmissions(
+    const { data, profilesMap, problemAliasesMap } = await this.props.onGetSubmissions(
       this.props.contest.jid,
       nextPage
     );
@@ -93,7 +102,8 @@ function createContestSubmissionsPage(contestSubmissionActions) {
   });
 
   const mapDispatchToProps = {
-    onGetMySubmissions: contestSubmissionActions.getMySubmissions,
+    onGetSubmissions: contestSubmissionActions.getSubmissions,
+    onGetSubmissionConfig: contestSubmissionActions.getSubmissionConfig,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));

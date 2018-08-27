@@ -92,6 +92,50 @@ class ContestSubmissionRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
     }
 
     @Test
+    void view_all_submissions() {
+        assertThat(checker.canViewAllSubmissions(ADMIN, contestA)).isTrue();
+        assertThat(checker.canViewAllSubmissions(ADMIN, contestAStarted)).isTrue();
+        assertThat(checker.canViewAllSubmissions(ADMIN, contestB)).isTrue();
+        assertThat(checker.canViewAllSubmissions(ADMIN, contestBStarted)).isTrue();
+        assertThat(checker.canViewAllSubmissions(ADMIN, contestC)).isTrue();
+
+        assertThat(checker.canViewAllSubmissions(USER, contestA)).isFalse();
+        assertThat(checker.canViewAllSubmissions(USER, contestAStarted)).isFalse();
+        assertThat(checker.canViewAllSubmissions(USER, contestB)).isFalse();
+        assertThat(checker.canViewAllSubmissions(USER, contestBStarted)).isFalse();
+        assertThat(checker.canViewAllSubmissions(USER, contestC)).isFalse();
+
+        assertThat(checker.canViewAllSubmissions(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canViewAllSubmissions(CONTESTANT, contestAStarted)).isFalse();
+        assertThat(checker.canViewAllSubmissions(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canViewAllSubmissions(CONTESTANT, contestBStarted)).isFalse();
+
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestAStarted)).isFalse();
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestC)).isFalse();
+        addSupervisorToContestBWithPermission(SUBMISSION);
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestAStarted)).isFalse();
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestBStarted)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canViewAllSubmissions(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(checker.canViewAllSubmissions(MANAGER, contestA)).isFalse();
+        assertThat(checker.canViewAllSubmissions(MANAGER, contestAStarted)).isFalse();
+        assertThat(checker.canViewAllSubmissions(MANAGER, contestB)).isTrue();
+        assertThat(checker.canViewAllSubmissions(MANAGER, contestBStarted)).isTrue();
+        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewAllSubmissions(MANAGER, contestB)).isTrue();
+        assertThat(checker.canViewAllSubmissions(MANAGER, contestBStarted)).isTrue();
+        assertThat(checker.canViewAllSubmissions(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
     void supervise_submissions() {
         assertThat(checker.canSuperviseSubmissions(ADMIN, contestA)).isTrue();
         assertThat(checker.canSuperviseSubmissions(ADMIN, contestB)).isTrue();

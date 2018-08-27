@@ -37,6 +37,7 @@ import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
+import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import judgels.uriel.api.contest.submission.ContestSubmissionService;
 import judgels.uriel.api.contest.submission.ContestSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
@@ -92,7 +93,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestSubmissionsResponse getMySubmissions(
+    public ContestSubmissionsResponse getSubmissions(
             AuthHeader authHeader,
             String contestJid,
             Optional<Integer> page) {
@@ -101,17 +102,33 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewOwnSubmissions(actorJid, contest));
 
+        Optional<String> userJid = submissionRoleChecker.canViewAllSubmissions(actorJid, contest)
+                ? Optional.empty()
+                : Optional.of(actorJid);
+
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
-        Page<Submission> data = submissionStore.getSubmissions(contestJid, actorJid, options.build());
+        Page<Submission> data = submissionStore.getSubmissions(contest.getJid(), userJid, options.build());
         Set<String> userJids = data.getData().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         Set<String> problemJids = data.getData().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
 
         return new ContestSubmissionsResponse.Builder()
                 .data(data)
                 .profilesMap(profileService.getProfiles(userJids, contest.getBeginTime()))
-                .problemAliasesMap(problemStore.getProblemAliasesByJids(contestJid, problemJids))
+                .problemAliasesMap(problemStore.getProblemAliasesByJids(contest.getJid(), problemJids))
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ContestSubmissionConfig getSubmissionConfig(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+
+        boolean canViewAllSubmissions = submissionRoleChecker.canViewAllSubmissions(actorJid, contest);
+        return new ContestSubmissionConfig.Builder()
+                .isAllowedToViewAllSubmissions(canViewAllSubmissions)
                 .build();
     }
 

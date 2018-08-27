@@ -3,6 +3,7 @@ package judgels.sandalphon.hibernate;
 import java.time.Clock;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Tuple;
@@ -28,11 +29,12 @@ public abstract class AbstractSubmissionHibernateDao<M extends AbstractSubmissio
     }
 
     @Override
-    public final Page<M> selectPaged(String containerJid, String userJid, SelectionOptions options) {
-        return selectPaged(new FilterOptions.Builder<M>()
-                .putColumnsEq(AbstractSubmissionModel_.containerJid, containerJid)
-                .putColumnsEq(JudgelsModel_.createdBy, userJid)
-                .build(), options);
+    public final Page<M> selectPaged(String containerJid, Optional<String> userJid, SelectionOptions options) {
+        FilterOptions.Builder<M> filterOptions = new FilterOptions.Builder<>();
+        filterOptions.putColumnsEq(AbstractSubmissionModel_.containerJid, containerJid);
+        userJid.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
+
+        return selectPaged(filterOptions.build(), options);
     }
 
     @Override

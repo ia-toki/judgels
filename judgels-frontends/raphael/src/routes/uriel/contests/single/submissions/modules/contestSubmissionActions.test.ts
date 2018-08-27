@@ -8,6 +8,7 @@ import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission'
 import { AppState } from 'modules/store';
 
 import { contestSubmissionActions } from './contestSubmissionActions';
+import { ContestSubmissionConfig } from '../../../../../../modules/api/uriel/contestSubmission';
 
 describe('contestSubmissionActions', () => {
   let dispatch: jest.Mock<any>;
@@ -20,7 +21,8 @@ describe('contestSubmissionActions', () => {
     dispatch = jest.fn();
 
     contestSubmissionAPI = {
-      getMySubmissions: jest.fn(),
+      getSubmissions: jest.fn(),
+      getSubmissionConfig: jest.fn(),
       getSubmissionWithSource: jest.fn(),
       createSubmission: jest.fn(),
     };
@@ -30,20 +32,36 @@ describe('contestSubmissionActions', () => {
     };
   });
 
-  describe('getMySubmissions()', () => {
-    const { getMySubmissions } = contestSubmissionActions;
-    const doGetMySubmissions = async () =>
-      getMySubmissions(contestJid, 3)(dispatch, getState, { contestSubmissionAPI });
+  describe('getSubmissions()', () => {
+    const { getSubmissions } = contestSubmissionActions;
+    const doGetSubmissions = async () => getSubmissions(contestJid, 3)(dispatch, getState, { contestSubmissionAPI });
 
     beforeEach(async () => {
       const submissions = {} as ContestSubmissionsResponse;
-      contestSubmissionAPI.getMySubmissions.mockReturnValue(submissions);
+      contestSubmissionAPI.getSubmissions.mockReturnValue(submissions);
 
-      await doGetMySubmissions();
+      await doGetSubmissions();
     });
 
-    it('calls API to get my submissions', () => {
-      expect(contestSubmissionAPI.getMySubmissions).toHaveBeenCalledWith(token, contestJid, 3);
+    it('calls API to get submissions', () => {
+      expect(contestSubmissionAPI.getSubmissions).toHaveBeenCalledWith(token, contestJid, 3);
+    });
+  });
+
+  describe('getSubmissionConfig()', () => {
+    const { getSubmissionConfig } = contestSubmissionActions;
+    const doGetSubmissionConfig = async () =>
+      getSubmissionConfig(contestJid)(dispatch, getState, { contestSubmissionAPI });
+
+    beforeEach(async () => {
+      const config = {} as ContestSubmissionConfig;
+      contestSubmissionAPI.getSubmissionConfig.mockReturnValue(config);
+
+      await doGetSubmissionConfig();
+    });
+
+    it('calls API to get submission config', () => {
+      expect(contestSubmissionAPI.getSubmissionConfig).toHaveBeenCalledWith(token, contestJid);
     });
   });
 

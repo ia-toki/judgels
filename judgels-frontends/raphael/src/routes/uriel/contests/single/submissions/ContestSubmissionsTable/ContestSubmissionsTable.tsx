@@ -3,7 +3,9 @@ import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 import { Link } from 'react-router-dom';
 
+import { UserRef } from 'components/UserRef/UserRef';
 import { VerdictTag } from 'components/VerdictTag/VerdictTag';
+import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Submission } from 'modules/api/sandalphon/submission';
 import { getGradingLanguageName } from 'modules/api/gabriel/language';
 import { Contest } from 'modules/api/uriel/contest';
@@ -13,7 +15,9 @@ import './ContestSubmissionsTable.css';
 export interface ContestSubmissionsTableProps {
   contest: Contest;
   submissions: Submission[];
+  profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
+  showUserColumn: boolean;
 }
 
 export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {
@@ -31,6 +35,7 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
       <thead>
         <tr>
           <th className="col-id">ID</th>
+          {this.props.showUserColumn && <th className="col-user">User</th>}
           <th className="col-prob">Prob</th>
           <th className="col-lang">Lang</th>
           <th className="col-verdict">Verdict</th>
@@ -43,11 +48,16 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
   };
 
   private renderRows = () => {
-    const { contest, submissions, problemAliasesMap } = this.props;
+    const { contest, submissions, profilesMap, problemAliasesMap, showUserColumn } = this.props;
 
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
         <td>{submission.id}</td>
+        {showUserColumn && (
+          <td>
+            <UserRef profile={profilesMap[submission.userJid]} />
+          </td>
+        )}
         <td>{problemAliasesMap[submission.problemJid]}</td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
         <td className="cell-centered">

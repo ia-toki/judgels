@@ -35,7 +35,7 @@ public class ContestSubmissionRoleChecker {
     }
 
     public boolean canViewSubmission(String userJid, Contest contest, String submissionUserJid) {
-        if (canSuperviseSubmissions(userJid, contest)) {
+        if (canViewAllSubmissions(userJid, contest)) {
             return true;
         }
         return canViewOwnSubmissions(userJid, contest)
@@ -43,12 +43,16 @@ public class ContestSubmissionRoleChecker {
     }
 
     public boolean canViewOwnSubmissions(String userJid, Contest contest) {
-        if (canSuperviseSubmissions(userJid, contest)) {
+        if (canViewAllSubmissions(userJid, contest)) {
             return true;
         }
         return contestRoleDao.isContestant(userJid, contest.getJid())
                 && !moduleStore.hasPausedModule(contest.getJid())
                 && contestTimer.hasStarted(contest, userJid);
+    }
+
+    public boolean canViewAllSubmissions(String userJid, Contest contest) {
+        return canSuperviseSubmissions(userJid, contest);
     }
 
     public boolean canSuperviseSubmissions(String userJid, Contest contest) {
