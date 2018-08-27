@@ -9,3 +9,15 @@
     padding-bottom: 8px !important;
   }
 }
+
+.table-list-condensed {
+  td, th {
+    border: 1px #dee0e1 solid;
+    vertical-align: middle;
+  }
+
+  td {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+}

@@ -23,7 +23,7 @@ export interface ContestSubmissionsTableProps {
 export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {
   render() {
     return (
-      <table className="bp3-html-table bp3-html-table-striped table-list submissions">
+      <table className="bp3-html-table bp3-html-table-striped table-list-condensed submissions">
         {this.renderHeader()}
         {this.renderRows()}
       </table>
