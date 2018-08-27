@@ -1,4 +1,4 @@
-import { Button, Dialog, Intent } from '@blueprintjs/core';
+import { Button, Dialog, Intent, Switch } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { ContestAnnouncementConfig, ContestAnnouncementData } from 'modules/api/uriel/contestAnnouncement';
@@ -8,7 +8,7 @@ import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/Cont
 
 export interface ContestAnnouncementCreateDialogProps {
   contest: Contest;
-  onRefreshAnnouncements: () => Promise<void>;
+  onRefreshAnnouncements: (isShowDrafts: boolean) => Promise<void>;
   onGetAnnouncementConfig: (contestJid: string) => Promise<ContestAnnouncementConfig>;
   onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
 }
@@ -16,13 +16,14 @@ export interface ContestAnnouncementCreateDialogProps {
 interface ContestAnnouncementCreateDialogState {
   config?: ContestAnnouncementConfig;
   isDialogOpen?: boolean;
+  isShowDrafts: boolean;
 }
 
 export class ContestAnnouncementCreateDialog extends React.Component<
   ContestAnnouncementCreateDialogProps,
   ContestAnnouncementCreateDialogState
 > {
-  state: ContestAnnouncementCreateDialogState = {};
+  state: ContestAnnouncementCreateDialogState = {isShowDrafts: false};
 
   async componentDidMount() {
     const config = await this.props.onGetAnnouncementConfig(this.props.contest.jid);
@@ -48,11 +49,20 @@ export class ContestAnnouncementCreateDialog extends React.Component<
       return;
     }
     return (
-      <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
-        New announcement
-      </Button>
+      <>
+        <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
+          New announcement
+        </Button>
+        <Switch className='contest-announcement-card__draft-switch' checked={this.state.isShowDrafts} label="Show drafts" onChange={this.toggleShowDrafts} />
+      </>
     );
   };
+
+  private toggleShowDrafts = async () => {
+    let newState = !this.state.isShowDrafts
+    this.setState(prevState => ({ isShowDrafts: !prevState.isShowDrafts }))
+    await this.props.onRefreshAnnouncements(newState);
+  }
 
   private toggleDialog = () => {
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
@@ -90,7 +100,7 @@ export class ContestAnnouncementCreateDialog extends React.Component<
 
   private createAnnouncement = async (data: ContestAnnouncementData) => {
     await this.props.onCreateAnnouncement(this.props.contest.jid, data);
-    await this.props.onRefreshAnnouncements();
+    await this.props.onRefreshAnnouncements(this.state.isShowDrafts);
     this.setState({ isDialogOpen: false });
   };
 }

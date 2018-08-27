@@ -24,6 +24,16 @@ public class ContestAnnouncementHibernateDao extends JudgelsHibernateDao<Contest
     }
 
     @Override
+    public List<ContestAnnouncementModel> selectAllByContestJid(String contestJid) {
+        return selectAll(new FilterOptions.Builder<ContestAnnouncementModel>()
+                .putColumnsEq(ContestAnnouncementModel_.contestJid, contestJid)
+                .build(), new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_ALL)
+                .orderBy("updatedAt")
+                .build());
+    }
+
+    @Override
     public List<ContestAnnouncementModel> selectAllPublishedByContestJid(String contestJid) {
         return selectAll(new FilterOptions.Builder<ContestAnnouncementModel>()
                 .putColumnsEq(ContestAnnouncementModel_.contestJid, contestJid)
