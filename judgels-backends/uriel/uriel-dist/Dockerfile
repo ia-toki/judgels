@@ -1,17 +1,15 @@
 FROM openjdk:8u151-jre-alpine3.7
 
-RUN apk add --no-cache bash
+RUN addgroup -S judgels && adduser -S -g judgels judgels
+RUN apk add --no-cache bash procps
+
+USER judgels
 
 WORKDIR /judgels/uriel
 
 EXPOSE 9004 9104
 
 COPY build/distributions .
-
-RUN addgroup -S judgels && adduser -S -g judgels judgels && chown -R judgels var
-USER judgels
-
-VOLUME var/conf
 
 ENTRYPOINT ["./init.sh"]
 CMD ["console"]
