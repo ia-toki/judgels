@@ -196,7 +196,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     }
 
     @POST
-    @Path("/submissions")
+    @Path("/")
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
     public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
