@@ -29,7 +29,7 @@ export interface SubmissionDetailsProps {
 export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProps> {
   render() {
     return (
-      <div>
+      <div className="submission-details">
         {this.renderGeneralInfo()}
         {this.renderDetails()}
         {this.renderSourceFiles()}
@@ -129,7 +129,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <>
         <h4>Subtask Results</h4>
         <ContentCard>
-          <table className="bp3-html-table bp3-html-table-striped submission-details">
+          <table className="bp3-html-table bp3-html-table-striped">
             <thead>
               <tr>
                 <th className="col-id">ID</th>
@@ -251,10 +251,10 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         </h5>
         <pre>{base64.decode(source.submissionFiles[key].content)}</pre>
         {details && (
-          <>
+          <div className="compilation-output">
             <h5>Compilation Output</h5>
-            <pre>{base64.decode(details.compilationOutputs[key])}</pre>
-          </>
+            <pre>kago</pre>
+          </div>
         )}
       </ContentCard>
     ));
