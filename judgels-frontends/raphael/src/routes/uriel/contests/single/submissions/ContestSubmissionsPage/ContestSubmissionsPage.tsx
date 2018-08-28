@@ -42,6 +42,7 @@ interface ContestSubmissionsPageState {
     username?: string;
     problemAlias?: string;
   };
+  isFilterLoading?: boolean;
 }
 
 export class ContestSubmissionsPage extends React.PureComponent<
@@ -77,7 +78,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
   }
 
   private renderFilterWidget = () => {
-    const { config, filter: { username, problemAlias } } = this.state;
+    const { config, filter: { username, problemAlias }, isFilterLoading } = this.state;
     if (!config || !config.isAllowedToViewAllSubmissions) {
       return null;
     }
@@ -90,6 +91,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
         username={username}
         problemAlias={problemAlias}
         onFilter={this.onFilter}
+        isLoading={!!isFilterLoading}
       />
     );
   };
@@ -151,6 +153,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
       submissions: data,
       profilesMap,
       problemAliasesMap,
+      isFilterLoading: false,
     });
     return data;
   };
@@ -164,8 +167,10 @@ export class ContestSubmissionsPage extends React.PureComponent<
 
   private onFilter = async (username?: string, problemAlias?: string) => {
     const filter = { username, problemAlias };
-    await this.refreshSubmissions(username, problemAlias, 1);
-    this.setState({ filter });
+    this.setState(prevState => ({
+      filter,
+      isFilterLoading: prevState.filter.username !== username || prevState.filter.problemAlias !== problemAlias,
+    }));
     this.props.onAppendRoute(filter);
   };
 }

@@ -15,6 +15,7 @@ export interface ContestSubmissionFilterFormData {
 export interface ContestSubmissionFilterFormProps extends InjectedFormProps<ContestSubmissionFilterFormData> {
   usernames: string[];
   problemAliases: string[];
+  isLoading: boolean;
 }
 
 const ContestSubmissionFilterForm = (props: ContestSubmissionFilterFormProps) => {
@@ -39,7 +40,7 @@ const ContestSubmissionFilterForm = (props: ContestSubmissionFilterFormProps) =>
 
   return (
     <form onSubmit={props.handleSubmit} className="contest-submission-filter-form">
-      <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={props.submitting} />
+      <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={props.isLoading} />
       <Field component={FormSelect2} {...problemField} />
       <Field component={FormSelect2} {...userField} />
     </form>

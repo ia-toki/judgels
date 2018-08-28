@@ -8,6 +8,7 @@ export interface ContestSubmissionFilterWidgetProps {
   usernames: string[];
   problemAliases: string[];
   onFilter: (username?: string, problemAlias?: string) => Promise<void>;
+  isLoading: boolean;
 
   username?: string;
   problemAlias?: string;
@@ -15,12 +16,13 @@ export interface ContestSubmissionFilterWidgetProps {
 
 export class ContestSubmissionFilterWidget extends React.Component<ContestSubmissionFilterWidgetProps> {
   render() {
-    const { usernames, problemAliases, username, problemAlias } = this.props;
+    const { usernames, problemAliases, isLoading, username, problemAlias } = this.props;
     const sortedUsernames = usernames.slice().sort((username1, username2) => username1.localeCompare(username2));
 
     const formProps = {
       usernames: ['-', ...sortedUsernames],
       problemAliases: ['-', ...problemAliases],
+      isLoading,
       initialValues: {
         username: username || '-',
         problemAlias: problemAlias || '-',
