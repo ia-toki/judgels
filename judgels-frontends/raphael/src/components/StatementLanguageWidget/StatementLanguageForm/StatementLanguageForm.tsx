@@ -18,6 +18,7 @@ interface StatementLanguageFormProps extends InjectedFormProps<StatementLanguage
 
 const StatementLanguageForm = (props: StatementLanguageFormProps) => {
   const field: any = {
+    className: 'form-statement-language',
     name: 'statementLanguage',
     label: 'Language: ',
     optionValues: props.statementLanguages,

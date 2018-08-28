@@ -1,4 +1,5 @@
 import { FormGroup } from '@blueprintjs/core';
+import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { getIntent } from '../meta';
@@ -20,7 +21,11 @@ export const FormTableInput = (props: FormTableInputProps) => (
       </div>
     </td>
     <td>
-      <FormGroup intent={getIntent(props.meta)} helperText={props.inputHelper} className="form-table-input__group">
+      <FormGroup
+        intent={getIntent(props.meta)}
+        helperText={props.inputHelper}
+        className={classNames('form-table-input__group', props.className)}
+      >
         {props.children}
         <FormInputValidation meta={props.meta} />
       </FormGroup>

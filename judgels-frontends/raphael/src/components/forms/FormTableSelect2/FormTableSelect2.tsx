@@ -1,4 +1,4 @@
-import { Button, MenuItem } from '@blueprintjs/core';
+import { Alignment, Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import * as classNames from 'classnames';
 import * as React from 'react';
@@ -29,7 +29,11 @@ export class FormTableSelect2 extends React.PureComponent<FormTableSelect2Props>
           inputProps={inputProps}
           filterable={false}
         >
-          <Button text={this.props.optionNamesMap[this.props.input.value]} rightIcon="caret-down" />
+          <Button
+            alignText={Alignment.LEFT}
+            text={this.props.optionNamesMap[this.props.input.value]}
+            rightIcon="caret-down"
+          />
         </SelectC>
       </FormTableInput>
     );

@@ -1,6 +1,12 @@
 .statement-language-form__field {
-  width: 230px;
+  width: 280px;
   float: left;
+
+  .form-statement-language {
+    button {
+      width: 200px;
+    }
+  }
 }
 
 .statement-language-form__button {
