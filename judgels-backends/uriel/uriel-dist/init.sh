@@ -9,7 +9,7 @@ if [[ -z ${COMMAND} ]]; then
 fi
 
 if [[ "$COMMAND" == "dbMigrate" ]]; then
-    ./service/bin/uriel db migrate
+    exec ./service/bin/uriel db migrate
 else 
-    ./service/bin/init.sh $COMMAND
+    exec ./service/bin/init.sh $COMMAND
 fi
