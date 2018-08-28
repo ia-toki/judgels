@@ -1,4 +1,4 @@
-import { Button, FormGroup, MenuItem } from '@blueprintjs/core';
+import { Alignment, Button, FormGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import * as classNames from 'classnames';
 import * as React from 'react';
@@ -18,9 +18,14 @@ export class FormSelect2 extends React.PureComponent<FormSelect2Props> {
     const { onChange, ...inputProps } = this.props.input;
 
     return (
-      <FormGroup labelFor={this.props.input.name} label={this.props.label} intent={getIntent(this.props.meta)}>
+      <FormGroup
+        className={this.props.className}
+        labelFor={this.props.input.name}
+        label={this.props.label}
+        intent={getIntent(this.props.meta)}
+      >
         <SelectC
-          className={classNames(getIntentClassName(this.props.meta))}
+          className={classNames('form-group__select', getIntentClassName(this.props.meta))}
           items={this.props.optionValues}
           itemRenderer={this.renderOption as any}
           onItemSelect={onChange}
@@ -28,7 +33,11 @@ export class FormSelect2 extends React.PureComponent<FormSelect2Props> {
           filterable={false}
           popoverProps={{ usePortal: false }}
         >
-          <Button text={this.props.optionNamesMap[this.props.input.value]} rightIcon="caret-down" />
+          <Button
+            alignText={Alignment.LEFT}
+            text={this.props.optionNamesMap[this.props.input.value]}
+            rightIcon="caret-down"
+          />
         </SelectC>
         <FormInputValidation meta={this.props.meta} />
       </FormGroup>

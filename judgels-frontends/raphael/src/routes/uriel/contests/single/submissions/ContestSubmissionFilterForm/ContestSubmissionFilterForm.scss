@@ -1,0 +1,33 @@
+.contest-submission-filter-form {
+  .form-username {
+    min-width: 250px;
+    button {
+      width: 200px;
+    }
+  }
+
+  .form-problem-alias {
+    min-width: 180px;
+    button {
+      width: 110px;
+    }
+  }
+
+  .form-username, .form-problem-alias {
+    float: right;
+    label {
+      float: left;
+      width: initial;
+      line-height: 30px;
+      margin-right: 5px;
+    }
+    .form-group-select {
+      float: left;
+      width: initial;
+    }
+  }
+
+  button {
+    float: right;
+  }
+}

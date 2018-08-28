@@ -29,10 +29,16 @@ public abstract class AbstractSubmissionHibernateDao<M extends AbstractSubmissio
     }
 
     @Override
-    public final Page<M> selectPaged(String containerJid, Optional<String> userJid, SelectionOptions options) {
+    public final Page<M> selectPaged(
+            String containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid,
+            SelectionOptions options) {
+
         FilterOptions.Builder<M> filterOptions = new FilterOptions.Builder<>();
         filterOptions.putColumnsEq(AbstractSubmissionModel_.containerJid, containerJid);
         userJid.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
+        problemJid.ifPresent(jid -> filterOptions.putColumnsEq(AbstractSubmissionModel_.problemJid, jid));
 
         return selectPaged(filterOptions.build(), options);
     }

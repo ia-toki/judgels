@@ -1,6 +1,9 @@
+import { stringify } from 'query-string';
+
 import { APP_CONFIG } from 'conf';
 import { get, postMultipart } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
+import { UsernamesMap } from 'modules/api/jophiel/user';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Submission, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submission';
 
@@ -12,18 +15,29 @@ export interface ContestSubmissionsResponse {
 
 export interface ContestSubmissionConfig {
   isAllowedToViewAllSubmissions: boolean;
+  usernamesMap: UsernamesMap;
+  problemJids: string[];
+  problemAliasesMap: { [problemJid: string]: string };
 }
 
 export function createContestSubmissionAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests/submissions`;
 
   return {
-    getSubmissions: (token: string, contestJid: string, page: number): Promise<ContestSubmissionsResponse> => {
-      return get(`${baseURL}?contestJid=${contestJid}&page=${page}`, token);
+    getSubmissions: (
+      token: string,
+      contestJid: string,
+      userJid?: string,
+      problemJid?: string,
+      page?: number
+    ): Promise<ContestSubmissionsResponse> => {
+      const params = stringify({ contestJid, userJid, problemJid, page });
+      return get(`${baseURL}?${params}`, token);
     },
 
     getSubmissionConfig: (token: string, contestJid: string): Promise<ContestSubmissionConfig> => {
-      return get(`${baseURL}/config?contestJid=${contestJid}`, token);
+      const params = stringify({ contestJid });
+      return get(`${baseURL}/config?${params}`, token);
     },
 
     getSubmissionWithSource: (
@@ -31,8 +45,8 @@ export function createContestSubmissionAPI() {
       submissionId: number,
       language: string
     ): Promise<SubmissionWithSourceResponse> => {
-      const languageParam = language ? `?language=${language}` : '';
-      return get(`${baseURL}/id/${submissionId}${languageParam}`, token);
+      const params = stringify({ language });
+      return get(`${baseURL}/id/${submissionId}?${params}`, token);
     },
 
     createSubmission: (

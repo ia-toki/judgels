@@ -6,8 +6,11 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,6 +44,7 @@ import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import judgels.uriel.api.contest.submission.ContestSubmissionService;
 import judgels.uriel.api.contest.submission.ContestSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.style.ContestStyleConfig;
@@ -57,6 +61,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestSubmissionStore submissionStore;
+    private final ContestContestantStore contestantStore;
     private final ContestProblemStore problemStore;
     private final ProfileService profileService;
     private final BasicAuthHeader sandalphonClientAuthHeader;
@@ -67,12 +72,13 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ActorChecker actorChecker,
             ContestStore contestStore,
             ContestStyleStore styleStore,
-            ContestProblemStore problemStore,
             SubmissionSourceBuilder submissionSourceBuilder,
             ContestSubmissionClient submissionClient,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestSubmissionStore submissionStore,
+            ContestContestantStore contestantStore,
+            ContestProblemStore problemStore,
             ProfileService profileService,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
@@ -80,12 +86,13 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
         this.styleStore = styleStore;
-        this.problemStore = problemStore;
         this.submissionSourceBuilder = submissionSourceBuilder;
         this.submissionClient = submissionClient;
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.submissionStore = submissionStore;
+        this.contestantStore = contestantStore;
+        this.problemStore = problemStore;
         this.profileService = profileService;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
@@ -96,20 +103,23 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     public ContestSubmissionsResponse getSubmissions(
             AuthHeader authHeader,
             String contestJid,
+            Optional<String> userJid,
+            Optional<String> problemJid,
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewOwnSubmissions(actorJid, contest));
 
-        Optional<String> userJid = submissionRoleChecker.canViewAllSubmissions(actorJid, contest)
-                ? Optional.empty()
+        Optional<String> actualUserJid = submissionRoleChecker.canViewAllSubmissions(actorJid, contest)
+                ? userJid
                 : Optional.of(actorJid);
 
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
-        Page<Submission> data = submissionStore.getSubmissions(contest.getJid(), userJid, options.build());
+        Page<Submission> data =
+                submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, options.build());
         Set<String> userJids = data.getData().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         Set<String> problemJids = data.getData().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
 
@@ -126,9 +136,26 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
-        boolean canViewAllSubmissions = submissionRoleChecker.canViewAllSubmissions(actorJid, contest);
+        if (!submissionRoleChecker.canViewAllSubmissions(actorJid, contest)) {
+            return new ContestSubmissionConfig.Builder()
+                    .isAllowedToViewAllSubmissions(false)
+                    .build();
+        }
+
+        Set<String> userJids = contestantStore.getContestants(contestJid);
+        Map<String, String> usernamesMap = userJids.isEmpty()
+                ? ImmutableMap.of()
+                : profileService.getProfiles(userJids).entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
+        List<String> problemJids = problemStore.getOpenProblemJids(contestJid);
+        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJidsSet);
         return new ContestSubmissionConfig.Builder()
-                .isAllowedToViewAllSubmissions(canViewAllSubmissions)
+                .isAllowedToViewAllSubmissions(true)
+                .usernamesMap(usernamesMap)
+                .problemJids(problemJids)
+                .problemAliasesMap(problemAliasesMap)
                 .build();
     }
 

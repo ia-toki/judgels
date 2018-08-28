@@ -21,6 +21,8 @@ public interface ContestSubmissionService {
     ContestSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") Optional<String> userJid,
+            @QueryParam("problemJid") Optional<String> problemJid,
             @QueryParam("page") Optional<Integer> page);
 
     @GET

@@ -34,7 +34,8 @@ describe('contestSubmissionActions', () => {
 
   describe('getSubmissions()', () => {
     const { getSubmissions } = contestSubmissionActions;
-    const doGetSubmissions = async () => getSubmissions(contestJid, 3)(dispatch, getState, { contestSubmissionAPI });
+    const doGetSubmissions = async () =>
+      getSubmissions(contestJid, 'userJid', 'problemJid', 3)(dispatch, getState, { contestSubmissionAPI });
 
     beforeEach(async () => {
       const submissions = {} as ContestSubmissionsResponse;
@@ -44,7 +45,7 @@ describe('contestSubmissionActions', () => {
     });
 
     it('calls API to get submissions', () => {
-      expect(contestSubmissionAPI.getSubmissions).toHaveBeenCalledWith(token, contestJid, 3);
+      expect(contestSubmissionAPI.getSubmissions).toHaveBeenCalledWith(token, contestJid, 'userJid', 'problemJid', 3);
     });
   });
 

@@ -9,6 +9,10 @@ import judgels.persistence.api.SelectionOptions;
 
 public interface BaseSubmissionDao<M extends AbstractSubmissionModel> extends JudgelsDao<M> {
     M createSubmissionModel();
-    Page<M> selectPaged(String containerJid, Optional<String> userJid, SelectionOptions options);
+    Page<M> selectPaged(
+            String containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid,
+            SelectionOptions options);
     Map<String, Long> selectCounts(String containerJid, String userJid, Set<String> problemJids);
 }
