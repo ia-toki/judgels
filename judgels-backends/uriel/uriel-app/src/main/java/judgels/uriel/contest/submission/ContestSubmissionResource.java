@@ -122,11 +122,15 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, options.build());
         Set<String> userJids = data.getData().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         Set<String> problemJids = data.getData().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = userJids.isEmpty()
+                ? ImmutableMap.of()
+                : profileService.getProfiles(userJids, contest.getBeginTime());
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
 
         return new ContestSubmissionsResponse.Builder()
                 .data(data)
-                .profilesMap(profileService.getProfiles(userJids, contest.getBeginTime()))
-                .problemAliasesMap(problemStore.getProblemAliasesByJids(contest.getJid(), problemJids))
+                .profilesMap(profilesMap)
+                .problemAliasesMap(problemAliasesMap)
                 .build();
     }
 

@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.service.actor.ActorChecker;
@@ -35,6 +37,7 @@ public class ContestClarificationResource implements ContestClarificationService
     private final ContestProblemStore problemStore;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
+    private final ProfileService profileService;
 
     @Inject
     public ContestClarificationResource(
@@ -44,7 +47,8 @@ public class ContestClarificationResource implements ContestClarificationService
             ContestClarificationStore clarificationStore,
             ContestProblemStore problemStore,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
-            ClientProblemService clientProblemService) {
+            ClientProblemService clientProblemService,
+            ProfileService profileService) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
@@ -53,6 +57,7 @@ public class ContestClarificationResource implements ContestClarificationService
         this.problemStore = problemStore;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
+        this.profileService = profileService;
     }
 
     @Override
@@ -108,7 +113,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestClarificationsResponse getMyClarifications(
+    public ContestClarificationsResponse getClarifications(
             AuthHeader authHeader,
             String contestJid,
             Optional<String> language) {
@@ -117,15 +122,20 @@ public class ContestClarificationResource implements ContestClarificationService
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canViewOwnClarifications(actorJid, contest));
 
-        List<ContestClarification> clarifications =
+        List<ContestClarification> data =
                 clarificationRoleChecker.canViewAllClarifications(actorJid, contest)
                         ? clarificationStore.getClarifications(contestJid)
                         : clarificationStore.getClarifications(contestJid, actorJid);
-        Set<String> problemJids = clarifications
+
+        Set<String> userJids = data.stream().map(ContestClarification::getUserJid).collect(Collectors.toSet());
+        Set<String> problemJids = data
                 .stream()
                 .map(ContestClarification::getTopicJid)
                 .filter(topicJid -> !topicJid.equals(contestJid))
                 .collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = userJids.isEmpty()
+                ? ImmutableMap.of()
+                : profileService.getProfiles(userJids, contest.getBeginTime());
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
         Map<String, String> problemNamesMap = problemJids.isEmpty()
                 ? ImmutableMap.of()
@@ -138,7 +148,8 @@ public class ContestClarificationResource implements ContestClarificationService
                                 e -> SandalphonUtils.getProblemName(e.getValue(), language)));
 
         return new ContestClarificationsResponse.Builder()
-                .data(clarifications)
+                .data(data)
+                .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
                 .problemNamesMap(problemNamesMap)
                 .build();

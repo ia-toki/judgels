@@ -2,20 +2,30 @@ import { Callout, Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
+import { UserRef } from 'components/UserRef/UserRef';
+import { Profile } from 'modules/api/jophiel/profile';
 import { ContestClarification } from 'modules/api/uriel/contestClarification';
 
 import './ContestClarificationCard.css';
 
 export interface ContestClarificationCardProps {
   clarification: ContestClarification;
+  profile?: Profile;
   problemAlias?: string;
   problemName?: string;
 }
 
 export class ContestClarificationCard extends React.PureComponent<ContestClarificationCardProps> {
   render() {
-    const { clarification, problemAlias, problemName } = this.props;
+    const { clarification, profile, problemAlias, problemName } = this.props;
     const topic = problemAlias ? problemAlias + '. ' + problemName : 'General';
+    const by = profile ? (
+      <>
+        &nbsp;<small>by</small> <UserRef profile={profile} />
+      </>
+    ) : (
+      ''
+    );
 
     return (
       <Callout className="contest-clarification-card">
@@ -26,6 +36,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
           <small>
             asked <FormattedRelative value={clarification.time} />
           </small>
+          {by}
         </p>
         <div className="clearfix" />
         <hr />

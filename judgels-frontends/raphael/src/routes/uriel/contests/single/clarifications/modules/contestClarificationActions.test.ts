@@ -21,7 +21,7 @@ describe('contestClarificationActions', () => {
     contestClarificationAPI = {
       createClarification: jest.fn(),
       getClarificationConfig: jest.fn(),
-      getMyClarifications: jest.fn(),
+      getClarifications: jest.fn(),
     };
     toastActions = {
       showSuccessToast: jest.fn(),
@@ -61,20 +61,20 @@ describe('contestClarificationActions', () => {
     });
   });
 
-  describe('getMyClarifications()', () => {
-    const { getMyClarifications } = contestClarificationActions;
+  describe('getClarifications()', () => {
+    const { getClarifications } = contestClarificationActions;
     const doGetMyClarifications = async () =>
-      getMyClarifications(contestJid, 'id')(dispatch, getState, { contestClarificationAPI });
+      getClarifications(contestJid, 'id')(dispatch, getState, { contestClarificationAPI });
 
     beforeEach(async () => {
       const response = {} as ContestClarificationsResponse;
-      contestClarificationAPI.getMyClarifications.mockReturnValue(response);
+      contestClarificationAPI.getClarifications.mockReturnValue(response);
 
       await doGetMyClarifications();
     });
 
     it('calls API to get my clarifications', () => {
-      expect(contestClarificationAPI.getMyClarifications).toHaveBeenCalledWith(token, contestJid, 'id');
+      expect(contestClarificationAPI.getClarifications).toHaveBeenCalledWith(token, contestJid, 'id');
     });
   });
 });

@@ -4,9 +4,11 @@ import { withRouter } from 'react-router';
 
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { LoadingState } from 'components/LoadingState/LoadingState';
+import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestClarification, ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
 import { AppState } from 'modules/store';
+import { selectUserJid } from 'modules/session/sessionSelectors';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
@@ -17,14 +19,16 @@ import { contestClarificationActions as injectedContestClarificationActions } fr
 import './ContestClarificationsPage.css';
 
 export interface ContestClarificationsPageProps {
+  userJid: string;
   contest: Contest;
   statementLanguage: string;
-  onGetMyClarifications: (contestJid: string, language: string) => Promise<ContestClarificationsResponse>;
+  onGetClarifications: (contestJid: string, language: string) => Promise<ContestClarificationsResponse>;
 }
 
 interface ContestClarificationsPageState {
   clarifications?: ContestClarification[];
   problemJids?: string[];
+  profilesMap?: ProfilesMap;
   problemAliasesMap?: { [problemJid: string]: string };
   problemNamesMap?: { [problemJid: string]: string };
   isCreateDialogOpen?: boolean;
@@ -52,15 +56,15 @@ class ContestClarificationsPage extends React.Component<
   }
 
   private refreshClarifications = async () => {
-    const { data, problemAliasesMap, problemNamesMap } = await this.props.onGetMyClarifications(
+    const { data, profilesMap, problemAliasesMap, problemNamesMap } = await this.props.onGetClarifications(
       this.props.contest.jid,
       this.props.statementLanguage
     );
-    this.setState({ clarifications: data, problemAliasesMap, problemNamesMap });
+    this.setState({ clarifications: data, profilesMap, problemAliasesMap, problemNamesMap });
   };
 
   private renderClarifications = () => {
-    const { clarifications, problemAliasesMap, problemNamesMap } = this.state;
+    const { clarifications, profilesMap, problemAliasesMap, problemNamesMap } = this.state;
     if (!clarifications) {
       return <LoadingState />;
     }
@@ -77,6 +81,7 @@ class ContestClarificationsPage extends React.Component<
       <div className="content-card__section" key={clarification.jid}>
         <ContestClarificationCard
           clarification={clarification}
+          profile={this.props.userJid === clarification.userJid ? undefined : profilesMap![clarification.userJid]}
           problemAlias={problemAliasesMap![clarification.topicJid]}
           problemName={problemNamesMap![clarification.topicJid]}
         />
@@ -94,12 +99,13 @@ class ContestClarificationsPage extends React.Component<
 
 function createContestClarificationsPage(contestClarificationActions) {
   const mapStateToProps = (state: AppState) => ({
+    userJid: selectUserJid(state),
     contest: selectContest(state)!,
     statementLanguage: selectStatementLanguage(state),
   });
 
   const mapDispatchToProps = {
-    onGetMyClarifications: contestClarificationActions.getMyClarifications,
+    onGetClarifications: contestClarificationActions.getClarifications,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage));

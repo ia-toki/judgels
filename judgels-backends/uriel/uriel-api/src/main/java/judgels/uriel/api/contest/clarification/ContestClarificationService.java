@@ -34,9 +34,9 @@ public interface ContestClarificationService {
             @QueryParam("language") Optional<String> language);
 
     @GET
-    @Path("/mine")
+    @Path("/")
     @Produces(APPLICATION_JSON)
-    ContestClarificationsResponse getMyClarifications(
+    ContestClarificationsResponse getClarifications(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             @QueryParam("language") Optional<String> language);
