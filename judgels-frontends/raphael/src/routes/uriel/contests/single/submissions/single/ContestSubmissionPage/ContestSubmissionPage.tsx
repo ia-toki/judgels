@@ -62,6 +62,8 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
 
   private renderSubmission = () => {
     const { submissionWithSource, profile, problemName, problemAlias, containerName } = this.state;
+    const { contest } = this.props;
+
     if (!submissionWithSource) {
       return <LoadingState />;
     }
@@ -73,6 +75,7 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
         profile={profile!}
         problemName={problemName!}
         problemAlias={problemAlias!}
+        problemUrl={`/contests/${contest.slug}/problems/${problemAlias}`}
         containerTitle="Contest"
         containerName={containerName!}
       />

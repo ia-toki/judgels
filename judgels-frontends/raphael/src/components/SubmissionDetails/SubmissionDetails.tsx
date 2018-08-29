@@ -2,6 +2,7 @@ import { Tag } from '@blueprintjs/core';
 import * as base64 from 'base-64';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
+import { Link } from 'react-router-dom';
 
 import { UserRef } from 'components/UserRef/UserRef';
 import { ContentCard } from 'components/ContentCard/ContentCard';
@@ -22,6 +23,7 @@ export interface SubmissionDetailsProps {
   profile: Profile;
   problemName?: string;
   problemAlias?: string;
+  problemUrl?: string;
   containerTitle: string;
   containerName: string;
 }
@@ -56,7 +58,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
   };
 
   private renderGeneralInfo = () => {
-    const { submission, profile, problemAlias, problemName, containerTitle, containerName } = this.props;
+    const { submission, profile, problemAlias, problemName, containerTitle, containerName, problemUrl } = this.props;
     const grading = submission.latestGrading;
 
     return (
@@ -79,7 +81,13 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               </tr>
               <tr>
                 <td>Problem</td>
-                <td>{constructProblemName(problemName, problemAlias)}</td>
+                <td>
+                  {!!problemUrl ? (
+                    <Link to={problemUrl}>{constructProblemName(problemName, problemAlias)}</Link>
+                  ) : (
+                    constructProblemName(problemName, problemAlias)
+                  )}
+                </td>
               </tr>
               <tr>
                 <td>{containerTitle}</td>
