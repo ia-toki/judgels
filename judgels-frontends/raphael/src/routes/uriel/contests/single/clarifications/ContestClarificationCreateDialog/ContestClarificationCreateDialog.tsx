@@ -1,7 +1,6 @@
 import { Button, Callout, Dialog, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { change } from 'redux-form';
 
 import ContestClarificationCreateForm, {
   ContestClarificationCreateFormData,
@@ -23,7 +22,6 @@ export interface ContestClarificationCreateDialogConnectedProps {
   statementLanguage: string;
   onGetClarificationConfig: (contestJid: string, language: string) => Promise<ContestClarificationConfig>;
   onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
-  onSetDefaultTopic: (contestJid: string) => void;
 }
 
 interface ContestClarificationCreateDialogState {
@@ -39,9 +37,6 @@ class ContestClarificationCreateDialog extends React.Component<
 
   async componentDidMount() {
     const config = await this.props.onGetClarificationConfig(this.props.contest.jid, this.props.statementLanguage);
-    if (config.isAllowedToCreateClarification) {
-      this.props.onSetDefaultTopic(this.props.contest.jid);
-    }
     this.setState({ config });
   }
 
@@ -86,6 +81,9 @@ class ContestClarificationCreateDialog extends React.Component<
       problemNamesMap: config.problemNamesMap,
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createClarification,
+      initialValues: {
+        topicJid: this.props.contest.jid,
+      },
     };
     return (
       <Dialog
@@ -124,13 +122,10 @@ function createContestClarificationCreateDialog(contestClarificationActions) {
     statementLanguage: selectStatementLanguage(state),
   });
 
-  const mapDispatchToProps = dispatch => ({
-    onGetClarificationConfig: (contestJid: string, language: string) =>
-      dispatch(contestClarificationActions.getClarificationConfig(contestJid, language)),
-    onCreateClarification: (contestJid: string, data: ContestClarificationData) =>
-      dispatch(contestClarificationActions.createClarification(contestJid, data)),
-    onSetDefaultTopic: (contestJid: string) => dispatch(change('contest-clarification-create', 'topicJid', contestJid)),
-  });
+  const mapDispatchToProps = {
+    onGetClarificationConfig: contestClarificationActions.getClarificationConfig,
+    onCreateClarification: contestClarificationActions.createClarification,
+  };
   return connect(mapStateToProps, mapDispatchToProps)(ContestClarificationCreateDialog);
 }
 
