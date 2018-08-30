@@ -11,10 +11,12 @@ import java.time.Duration;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
 import judgels.uriel.api.contest.web.ContestState;
 import judgels.uriel.api.contest.web.ContestTab;
 import judgels.uriel.api.contest.web.ContestWebConfig;
 import judgels.uriel.contest.ContestTimer;
+import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
@@ -23,6 +25,7 @@ import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestClarificationDao;
 
 public class ContestWebConfigFetcher {
+    private final ContestAnnouncementRoleChecker announcementRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestClarificationRoleChecker clarificationRoleChecker;
@@ -33,6 +36,7 @@ public class ContestWebConfigFetcher {
 
     @Inject
     public ContestWebConfigFetcher(
+            ContestAnnouncementRoleChecker announcementRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestClarificationRoleChecker clarificationRoleChecker,
@@ -41,6 +45,7 @@ public class ContestWebConfigFetcher {
             ContestClarificationDao clarificationDao,
             ContestTimer contestTimer) {
 
+        this.announcementRoleChecker = announcementRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.submissionRoleChecker = submissionRoleChecker;
         this.clarificationRoleChecker = clarificationRoleChecker;
@@ -90,16 +95,30 @@ public class ContestWebConfigFetcher {
             remainingContestStateDuration = Optional.of(contestTimer.getDurationToBeginTime(contest));
         }
 
-        long announcementsCount = announcementDao.selectCountPublishedByContestJid(contest.getJid());
-        long answeredClarificationsCount =
-                clarificationDao.selectCountAnsweredByContestJidAndUserJid(contest.getJid(), userJid);
+        String contestJid = contest.getJid();
+
+        long announcementCount = 0;
+        if (!announcementRoleChecker.canCreateAnnouncement(userJid, contest)) {
+            announcementCount = announcementDao.selectCountPublishedByContestJid(contestJid);
+        }
+
+        long clarificationCount;
+        ContestClarificationStatus clarificationStatus;
+        if (clarificationRoleChecker.canCreateClarification(userJid, contest)) {
+            clarificationStatus = ContestClarificationStatus.ANSWERED;
+            clarificationCount = clarificationDao.selectCountAnsweredByContestJidAndUserJid(contestJid, userJid);
+        } else {
+            clarificationStatus = ContestClarificationStatus.ASKED;
+            clarificationCount = clarificationDao.selectCountAskedByContestJid(contestJid);
+        }
 
         return new ContestWebConfig.Builder()
                 .visibleTabs(visibleTabs.build())
                 .contestState(contestState)
                 .remainingContestStateDuration(remainingContestStateDuration)
-                .announcementsCount(announcementsCount)
-                .answeredClarificationsCount(answeredClarificationsCount)
+                .announcementCount(announcementCount)
+                .clarificationCount(clarificationCount)
+                .clarificationStatus(clarificationStatus)
                 .build();
     }
 }

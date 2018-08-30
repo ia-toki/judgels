@@ -1,5 +1,5 @@
 import { selectToken } from 'modules/session/sessionSelectors';
-import { ContestClarificationData } from 'modules/api/uriel/contestClarification';
+import { ContestClarificationData, ContestClarificationStatus } from 'modules/api/uriel/contestClarification';
 
 export const contestClarificationActions = {
   createClarification: (contestJid: string, data: ContestClarificationData) => {
@@ -24,9 +24,13 @@ export const contestClarificationActions = {
     };
   },
 
-  alertNewAnsweredClarifications: () => {
+  alertNewClarifications: (status: ContestClarificationStatus) => {
     return async (dispatch, getState, { toastActions }) => {
-      toastActions.showAlertToast('You have new answered clarification(s).');
+      if (status === ContestClarificationStatus.Answered) {
+        toastActions.showAlertToast('You have new answered clarification(s).');
+      } else {
+        toastActions.showAlertToast('You have new clarification(s).');
+      }
     };
   },
 };

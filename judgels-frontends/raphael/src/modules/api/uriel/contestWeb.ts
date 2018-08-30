@@ -2,6 +2,7 @@ import { APP_CONFIG } from 'conf';
 import { get } from 'modules/api/http';
 
 import { Contest } from './contest';
+import { ContestClarificationStatus } from './contestClarification';
 
 export enum ContestTab {
   Announcements = 'ANNOUNCEMENTS',
@@ -20,8 +21,9 @@ export interface ContestWebConfig {
   visibleTabs: ContestTab[];
   contestState: ContestState;
   remainingContestStateDuration?: number;
-  announcementsCount: number;
-  answeredClarificationsCount: number;
+  announcementCount: number;
+  clarificationCount: number;
+  clarificationStatus: ContestClarificationStatus;
 }
 
 export enum ContestState {

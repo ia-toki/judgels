@@ -8,20 +8,20 @@ import { selectContestWebConfig } from '../../../modules/contestWebConfigSelecto
 import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../../announcements/modules/contestAnnouncementActions';
 
 interface ContestAnnouncementsWidgetProps {
-  announcementsCount: number;
+  announcementCount: number;
   onAlertNewAnnouncements: () => void;
 }
 
 class ContestAnnouncementsWidget extends React.Component<ContestAnnouncementsWidgetProps> {
   render() {
-    if (this.props.announcementsCount === 0) {
+    if (this.props.announcementCount === 0) {
       return null;
     }
-    return <Tag>{this.props.announcementsCount}</Tag>;
+    return <Tag className="normal-weight">{this.props.announcementCount}</Tag>;
   }
 
   componentDidUpdate(prevProps: ContestAnnouncementsWidgetProps) {
-    if (this.props.announcementsCount > prevProps.announcementsCount) {
+    if (this.props.announcementCount > prevProps.announcementCount) {
       this.props.onAlertNewAnnouncements();
     }
   }
@@ -29,7 +29,7 @@ class ContestAnnouncementsWidget extends React.Component<ContestAnnouncementsWid
 
 function createContestAnnouncementsWidget(contestAnnouncementActions) {
   const mapStateToProps = (state: AppState) => ({
-    announcementsCount: selectContestWebConfig(state)!.announcementsCount,
+    announcementCount: selectContestWebConfig(state)!.announcementCount,
   });
   const mapDispatchToProps = {
     onAlertNewAnnouncements: contestAnnouncementActions.alertNewAnnouncements,

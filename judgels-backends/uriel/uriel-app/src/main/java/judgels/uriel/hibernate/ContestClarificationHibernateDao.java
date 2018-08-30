@@ -45,4 +45,12 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
                 .putColumnsEq(ContestClarificationModel_.status, ContestClarificationStatus.ANSWERED.name())
                 .build());
     }
+
+    @Override
+    public long selectCountAskedByContestJid(String contestJid) {
+        return selectCount(new FilterOptions.Builder<ContestClarificationModel>()
+                .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
+                .putColumnsEq(ContestClarificationModel_.status, ContestClarificationStatus.ASKED.name())
+                .build());
+    }
 }
