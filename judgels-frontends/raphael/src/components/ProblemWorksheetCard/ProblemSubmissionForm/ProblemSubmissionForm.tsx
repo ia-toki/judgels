@@ -1,7 +1,6 @@
 import { Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { change, Field, InjectedFormProps, reduxForm } from 'redux-form';
+import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 import { FormTableFileInput } from 'components/forms/FormTableFileInput/FormTableFileInput';
 import { FormTableSelect2 } from 'components/forms/FormTableSelect2/FormTableSelect2';
@@ -10,13 +9,8 @@ import {
   MaxFileSize300KB,
   Required,
 } from 'components/forms/validations';
-import { ProblemSubmissionConfig } from 'modules/api/sandalphon/problem';
 import { GradingEngineCode } from 'modules/api/gabriel/engine';
-import {
-  gradingLanguageNamesMap,
-  getAllowedGradingLanguages,
-  preferredGradingLanguage,
-} from 'modules/api/gabriel/language';
+import { gradingLanguageNamesMap } from 'modules/api/gabriel/language';
 
 import './ProblemSubmissionForm.css';
 
@@ -25,14 +19,14 @@ export interface ProblemSubmissionFormData {
   sourceFiles: { [key: string]: File };
 }
 
-interface RawProblemSubmissionFormProps extends InjectedFormProps<ProblemSubmissionFormData> {
+interface ProblemSubmissionFormProps extends InjectedFormProps<ProblemSubmissionFormData> {
   sourceKeys: { [key: string]: string };
   gradingEngine: string;
   gradingLanguages: string[];
   submissionWarning?: string;
 }
 
-class RawProblemSubmissionForm extends React.PureComponent<RawProblemSubmissionFormProps> {
+class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormProps> {
   render() {
     return (
       <form onSubmit={this.props.handleSubmit}>
@@ -90,61 +84,6 @@ class RawProblemSubmissionForm extends React.PureComponent<RawProblemSubmissionF
   };
 }
 
-const RawConnectedProblemSubmissionForm = reduxForm<ProblemSubmissionFormData>({ form: 'problem-submission' })(
-  RawProblemSubmissionForm
-);
-
-interface ProblemSubmissionFormProps {
-  config: ProblemSubmissionConfig;
-  onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
-  onSetDefaultGradingLanguage: (gradingLanguage: string | null) => void;
-  submissionWarning?: string;
-}
-
-interface ProblemSubmissionFormState {
-  gradingLanguages?: string[];
-}
-
-class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormProps, ProblemSubmissionFormState> {
-  state: ProblemSubmissionFormState = {};
-
-  componentDidMount() {
-    const gradingLanguages = getAllowedGradingLanguages(
-      this.props.config.gradingEngine,
-      this.props.config.gradingLanguageRestriction
-    );
-    this.setState({ gradingLanguages });
-
-    let defaultGradingLanguage: string | null = preferredGradingLanguage;
-    if (gradingLanguages.indexOf(defaultGradingLanguage) === -1) {
-      defaultGradingLanguage = gradingLanguages.length === 0 ? null : gradingLanguages[0];
-    }
-    this.props.onSetDefaultGradingLanguage(defaultGradingLanguage);
-  }
-
-  render() {
-    if (!this.state.gradingLanguages) {
-      return null;
-    }
-
-    const props = {
-      onSubmit: this.props.onSubmit,
-      sourceKeys: this.props.config.sourceKeys,
-      gradingEngine: this.props.config.gradingEngine,
-      gradingLanguages: this.state.gradingLanguages,
-      submissionWarning: this.props.submissionWarning,
-    };
-    return <RawConnectedProblemSubmissionForm {...props} />;
-  }
-}
-
-function createProblemSubmissionForm() {
-  const mapDispatchToProps = dispatch => ({
-    onSetDefaultGradingLanguage: gradingLanguage =>
-      dispatch(change('problem-submission', 'gradingLanguage', gradingLanguage)),
-  });
-
-  return connect(undefined, mapDispatchToProps)(ProblemSubmissionForm);
-}
-
-export default createProblemSubmissionForm();
+export default reduxForm<ProblemSubmissionFormData>({
+  form: 'problem-submission',
+})(ProblemSubmissionForm);

@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { ProblemSubmissionConfig } from 'modules/api/sandalphon/problem';
+import { getAllowedGradingLanguages, preferredGradingLanguage } from 'modules/api/gabriel/language';
 
 import ProblemSubmissionForm, { ProblemSubmissionFormData } from '../ProblemSubmissionForm/ProblemSubmissionForm';
 
@@ -24,13 +25,33 @@ export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmission
   }
 
   private renderSubmissionForm = () => {
-    if (this.props.reasonNotAllowedToSubmit) {
+    const { config, onSubmit, reasonNotAllowedToSubmit, submissionWarning } = this.props;
+
+    if (reasonNotAllowedToSubmit) {
       return (
         <Callout icon="ban-circle" className="secondary-info">
-          <span data-key="reason-not-allowed-to-submit">{this.props.reasonNotAllowedToSubmit}</span>
+          <span data-key="reason-not-allowed-to-submit">{reasonNotAllowedToSubmit}</span>
         </Callout>
       );
     }
-    return <ProblemSubmissionForm {...this.props} />;
+
+    const gradingLanguages = getAllowedGradingLanguages(config.gradingEngine, config.gradingLanguageRestriction);
+
+    let defaultGradingLanguage: string | undefined = preferredGradingLanguage;
+    if (gradingLanguages.indexOf(defaultGradingLanguage) === -1) {
+      defaultGradingLanguage = gradingLanguages.length === 0 ? undefined : gradingLanguages[0];
+    }
+
+    const formProps = {
+      sourceKeys: config.sourceKeys,
+      gradingEngine: config.gradingEngine,
+      gradingLanguages,
+      submissionWarning,
+      initialValues: {
+        gradingLanguage: defaultGradingLanguage,
+      },
+    };
+
+    return <ProblemSubmissionForm onSubmit={onSubmit} {...formProps} />;
   };
 }
