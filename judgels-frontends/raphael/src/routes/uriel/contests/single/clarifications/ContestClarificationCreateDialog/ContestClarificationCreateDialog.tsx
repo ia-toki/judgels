@@ -1,4 +1,4 @@
-import { Button, Callout, Dialog, Intent } from '@blueprintjs/core';
+import { Button, Dialog, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
@@ -56,11 +56,7 @@ class ContestClarificationCreateDialog extends React.Component<
 
   private renderButton = (config: ContestClarificationConfig) => {
     if (!config.isAllowedToCreateClarification) {
-      return (
-        <Callout icon="ban-circle" className="secondary-info">
-          No more clarifications are allowed.
-        </Callout>
-      );
+      return null;
     }
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
