@@ -4,7 +4,9 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import { ContentCard } from 'components/ContentCard/ContentCard';
-import StatementLanguageWidget from 'components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget, {
+  StatementLanguageWidgetProps,
+} from 'components/StatementLanguageWidget/StatementLanguageWidget';
 import { ProblemWorksheetCard } from 'components/ProblemWorksheetCard/ProblemWorksheetCard';
 import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProblemSubmissionForm/ProblemSubmissionForm';
 import { AppState } from 'modules/store';
@@ -86,7 +88,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     if (!defaultLanguage || !languages) {
       return null;
     }
-    const props: any = {
+    const props: StatementLanguageWidgetProps = {
       defaultLanguage: defaultLanguage,
       statementLanguages: languages,
     };

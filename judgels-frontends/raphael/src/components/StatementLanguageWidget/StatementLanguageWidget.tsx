@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { change } from 'redux-form';
 
 import { AppState } from 'modules/store';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
@@ -18,39 +17,31 @@ export interface StatementLanguageWidgetProps {
 
 export interface StatementLanguageWidgetConnectedProps {
   statementLanguage: string;
-  onSetInitialLanguage: (language: string) => void;
   onChangeLanguage: (data: StatementLanguageFormData) => Promise<void>;
 }
 
 class StatementLanguageWidget extends React.Component<
   StatementLanguageWidgetProps & StatementLanguageWidgetConnectedProps
 > {
-  componentDidMount() {
-    const { statementLanguage, statementLanguages, defaultLanguage } = this.props;
-
-    if (statementLanguages.indexOf(statementLanguage) !== -1) {
-      this.props.onSetInitialLanguage(statementLanguage);
-    } else {
-      this.props.onSetInitialLanguage(defaultLanguage);
-    }
-  }
-
-  componentDidUpdate(prevProps: StatementLanguageWidgetConnectedProps) {
-    if (this.props.statementLanguage !== prevProps.statementLanguage) {
-      this.componentDidMount();
-    }
-  }
-
   render() {
-    const props = {
-      onSubmit: this.props.onChangeLanguage,
+    const { statementLanguage, statementLanguages, defaultLanguage } = this.props;
+    let initialLanguage;
+    if (statementLanguages.indexOf(statementLanguage) !== -1) {
+      initialLanguage = statementLanguage;
+    } else {
+      initialLanguage = defaultLanguage;
+    }
+    const formProps = {
       statementLanguages: sortLanguagesByName(this.props.statementLanguages),
+      initialValues: {
+        statementLanguage: initialLanguage,
+      },
     };
 
     return (
       <div className="statement-language-widget">
         <div className="statement-language-widget__right">
-          <StatementLanguageForm {...props} />
+          <StatementLanguageForm onSubmit={this.props.onChangeLanguage} {...formProps} />
         </div>
         <div className="clearfix" />
       </div>
@@ -63,11 +54,10 @@ export function createStatementLanguageWidget(webPrefsActions) {
     statementLanguage: selectStatementLanguage(state),
   });
 
-  const mapDispatchToProps = dispatch => ({
+  const mapDispatchToProps = {
     onChangeLanguage: (data: StatementLanguageFormData) =>
-      dispatch(webPrefsActions.switchStatementLanguage(data.statementLanguage)),
-    onSetInitialLanguage: (language: string) => dispatch(change('statement-language', 'statementLanguage', language)),
-  });
+      webPrefsActions.switchStatementLanguage(data.statementLanguage),
+  };
 
   return connect(mapStateToProps, mapDispatchToProps)(StatementLanguageWidget);
 }

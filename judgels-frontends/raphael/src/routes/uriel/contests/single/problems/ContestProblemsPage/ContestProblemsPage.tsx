@@ -4,7 +4,9 @@ import { withRouter } from 'react-router';
 
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { LoadingState } from 'components/LoadingState/LoadingState';
-import StatementLanguageWidget from 'components/StatementLanguageWidget/StatementLanguageWidget';
+import StatementLanguageWidget, {
+  StatementLanguageWidgetProps,
+} from 'components/StatementLanguageWidget/StatementLanguageWidget';
 import { Contest } from 'modules/api/uriel/contest';
 import {
   ContestContestantProblem,
@@ -77,7 +79,7 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
       return null;
     }
 
-    const props: any = {
+    const props: StatementLanguageWidgetProps = {
       defaultLanguage,
       statementLanguages: uniqueLanguages,
     };
