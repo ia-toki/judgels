@@ -8,7 +8,7 @@ import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestClarification, ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
 import { AppState } from 'modules/store';
-import { selectUserJid } from 'modules/session/sessionSelectors';
+import { selectMaybeUserJid } from 'modules/session/sessionSelectors';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
@@ -77,16 +77,23 @@ class ContestClarificationsPage extends React.Component<
       );
     }
 
-    return clarifications.map(clarification => (
-      <div className="content-card__section" key={clarification.jid}>
-        <ContestClarificationCard
-          clarification={clarification}
-          profile={this.props.userJid === clarification.userJid ? undefined : profilesMap![clarification.userJid]}
-          problemAlias={problemAliasesMap![clarification.topicJid]}
-          problemName={problemNamesMap![clarification.topicJid]}
-        />
-      </div>
-    ));
+    return clarifications.map(clarification => {
+      const isSupervisor = this.props.userJid !== clarification.userJid;
+
+      return (
+        <div className="content-card__section" key={clarification.jid}>
+          <ContestClarificationCard
+            clarification={clarification}
+            askerProfile={isSupervisor ? profilesMap![clarification.userJid] : undefined}
+            answererProfile={
+              isSupervisor && clarification.answererJid ? profilesMap![clarification.answererJid] : undefined
+            }
+            problemAlias={problemAliasesMap![clarification.topicJid]}
+            problemName={problemNamesMap![clarification.topicJid]}
+          />
+        </div>
+      );
+    });
   };
 
   private renderCreateDialog = () => {
@@ -99,7 +106,7 @@ class ContestClarificationsPage extends React.Component<
 
 function createContestClarificationsPage(contestClarificationActions) {
   const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
+    userJid: selectMaybeUserJid(state),
     contest: selectContest(state)!,
     statementLanguage: selectStatementLanguage(state),
   });

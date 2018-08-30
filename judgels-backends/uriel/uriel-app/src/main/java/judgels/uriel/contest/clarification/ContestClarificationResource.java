@@ -5,6 +5,7 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
@@ -127,16 +128,27 @@ public class ContestClarificationResource implements ContestClarificationService
                         ? clarificationStore.getClarifications(contestJid)
                         : clarificationStore.getClarifications(contestJid, actorJid);
 
-        Set<String> userJids = data.stream().map(ContestClarification::getUserJid).collect(Collectors.toSet());
+        Set<String> userJids = Sets.union(
+                data.stream().map(ContestClarification::getUserJid).collect(Collectors.toSet()),
+                data
+                        .stream()
+                        .map(ContestClarification::getAnswererJid)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toSet()));
+
         Set<String> problemJids = data
                 .stream()
                 .map(ContestClarification::getTopicJid)
                 .filter(topicJid -> !topicJid.equals(contestJid))
                 .collect(Collectors.toSet());
+
         Map<String, Profile> profilesMap = userJids.isEmpty()
                 ? ImmutableMap.of()
                 : profileService.getProfiles(userJids, contest.getBeginTime());
+
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
+
         Map<String, String> problemNamesMap = problemJids.isEmpty()
                 ? ImmutableMap.of()
                 : clientProblemService.getProblemsByJids(
