@@ -18,6 +18,7 @@ export interface ContestWithWebConfig {
 }
 
 export interface ContestWebConfig {
+  isAllowedToEditContest: boolean;
   visibleTabs: ContestTab[];
   contestState: ContestState;
   remainingContestStateDuration?: number;

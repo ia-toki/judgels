@@ -14,6 +14,7 @@ import { Contest } from 'modules/api/uriel/contest';
 import { ContestTab, ContestWebConfig } from 'modules/api/uriel/contestWeb';
 import { AppState } from 'modules/store';
 
+import { ContestEditDialog } from './components/ContestEditDialog/ContestEditDialog';
 import ContestStateWidget from './components/ContestStateWidget/ContestStateWidget';
 import { LoadingContestStateWidget } from './components/ContestStateWidget/LoadingContestStateWidget';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
@@ -24,18 +25,21 @@ import ContestClarificationsPage from './clarifications/ContestClarificationsPag
 import ContestProblemRoutes from './problems/ContestProblemRoutes';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import ContestSubmissionRoutes from './submissions/ContestSubmissionRoutes';
-import { selectContest } from '../modules/contestSelectors';
+import { EditContest } from '../modules/contestReducer';
+import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
 
 import './SingleContestRoutes.css';
 
 interface SingleContestRoutesProps extends RouteComponentProps<{ contestSlug: string }> {
   contest?: Contest;
+  isEditingContest: boolean;
   contestWebConfig?: ContestWebConfig;
+  onSetNotEditingContest: () => any;
 }
 
 const SingleContestRoutes = (props: SingleContestRoutesProps) => {
-  const { contest, contestWebConfig } = props;
+  const { contest, isEditingContest, contestWebConfig, onSetNotEditingContest } = props;
 
   // Optimization:
   // We wait until we get the contest from the backend only if the current slug is different from the persisted one.
@@ -120,7 +124,18 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     items: sidebarItems,
     contentHeader: (
       <div className="single-contest-routes__header">
-        <h2>{contest.name}</h2>
+        <h2 className="single-contest-routes__title">{contest.name}</h2>
+        {contestWebConfig && (
+          <div className="single-contest-routes__button">
+            <ContestEditDialog
+              contest={contest!}
+              isAllowedToEditContest={contestWebConfig!.isAllowedToEditContest}
+              isEditingContest={isEditingContest}
+              onSetNotEditingContest={onSetNotEditingContest}
+            />
+          </div>
+        )}
+        <div className="clearfix" />
         {contestWebConfig ? <ContestStateWidget /> : <LoadingContestStateWidget />}
       </div>
     ),
@@ -138,9 +153,14 @@ function createSingleContestRoutes() {
   const mapStateToProps = (state: AppState) =>
     ({
       contest: selectContest(state),
+      isEditingContest: selectIsEditingContest(state),
       contestWebConfig: selectContestWebConfig(state),
     } as Partial<SingleContestRoutesProps>);
-  return withRouter<any>(connect(mapStateToProps)(SingleContestRoutes));
+
+  const mapDispatchToProps = {
+    onSetNotEditingContest: () => EditContest.create(false),
+  };
+  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestRoutes));
 }
 
 export default createSingleContestRoutes();

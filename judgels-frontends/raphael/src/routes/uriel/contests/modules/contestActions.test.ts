@@ -7,7 +7,7 @@ import { AppState } from 'modules/store';
 import { contest, contestId, sessionState, token, contestJid } from 'fixtures/state';
 
 import { contestActions } from './contestActions';
-import { PutContest } from './contestReducer';
+import { EditContest, PutContest } from './contestReducer';
 
 describe('contestActions', () => {
   let dispatch: jest.Mock<any>;
@@ -50,6 +50,10 @@ describe('contestActions', () => {
 
       it('pushes the history to the contest page', () => {
         expect(dispatch).toHaveBeenCalledWith(push('/contests/new-contest'));
+      });
+
+      it('immediately opens the edit dialog', () => {
+        expect(dispatch).toHaveBeenCalledWith(EditContest.create(true));
       });
 
       it('shows the success toast', () => {

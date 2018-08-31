@@ -2,7 +2,6 @@ package judgels.uriel.contest;
 
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestRoleDao;
 
@@ -12,12 +11,7 @@ public class ContestRoleChecker {
     private final ContestTimer contestTimer;
 
     @Inject
-    public ContestRoleChecker(
-            AdminRoleDao adminRoleDao,
-            ContestRoleDao contestRoleDao,
-            ContestTimer contestTimer,
-            ContestModuleStore moduleStore) {
-
+    public ContestRoleChecker(AdminRoleDao adminRoleDao, ContestRoleDao contestRoleDao, ContestTimer contestTimer) {
         this.adminRoleDao = adminRoleDao;
         this.contestTimer = contestTimer;
         this.contestRoleDao = contestRoleDao;
@@ -29,6 +23,10 @@ public class ContestRoleChecker {
 
     public boolean canViewContest(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
+    }
+
+    public boolean canEditContest(String userJid, Contest contest) {
+        return adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid());
     }
 
     public boolean canStartVirtualContest(String userJid, Contest contest) {

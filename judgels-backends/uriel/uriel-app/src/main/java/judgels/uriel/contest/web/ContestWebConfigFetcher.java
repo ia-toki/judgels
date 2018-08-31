@@ -15,6 +15,7 @@ import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
 import judgels.uriel.api.contest.web.ContestState;
 import judgels.uriel.api.contest.web.ContestTab;
 import judgels.uriel.api.contest.web.ContestWebConfig;
+import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
@@ -25,6 +26,7 @@ import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestClarificationDao;
 
 public class ContestWebConfigFetcher {
+    private final ContestRoleChecker roleChecker;
     private final ContestAnnouncementRoleChecker announcementRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
@@ -36,6 +38,7 @@ public class ContestWebConfigFetcher {
 
     @Inject
     public ContestWebConfigFetcher(
+            ContestRoleChecker roleChecker,
             ContestAnnouncementRoleChecker announcementRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestSubmissionRoleChecker submissionRoleChecker,
@@ -45,6 +48,7 @@ public class ContestWebConfigFetcher {
             ContestClarificationDao clarificationDao,
             ContestTimer contestTimer) {
 
+        this.roleChecker = roleChecker;
         this.announcementRoleChecker = announcementRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.submissionRoleChecker = submissionRoleChecker;
@@ -56,6 +60,8 @@ public class ContestWebConfigFetcher {
     }
 
     public ContestWebConfig fetchConfig(String userJid, Contest contest) {
+        boolean canEditContest = roleChecker.canEditContest(userJid, contest);
+
         ImmutableSet.Builder<ContestTab> visibleTabs = ImmutableSet.builder();
         visibleTabs.add(ANNOUNCEMENTS);
 
@@ -113,6 +119,7 @@ public class ContestWebConfigFetcher {
         }
 
         return new ContestWebConfig.Builder()
+                .isAllowedToEditContest(canEditContest)
                 .visibleTabs(visibleTabs.build())
                 .contestState(contestState)
                 .remainingContestStateDuration(remainingContestStateDuration)

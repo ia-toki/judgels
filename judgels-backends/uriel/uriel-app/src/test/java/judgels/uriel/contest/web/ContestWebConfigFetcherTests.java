@@ -22,6 +22,7 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.web.ContestState;
 import judgels.uriel.api.contest.web.ContestWebConfig;
+import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
@@ -43,6 +44,7 @@ class ContestWebConfigFetcherTests {
     private static final Duration TO_END = Duration.ofSeconds(2);
     private static final Duration TO_FINISH = Duration.ofSeconds(3);
 
+    @Mock private ContestRoleChecker roleChecker;
     @Mock private ContestAnnouncementRoleChecker announcementRoleChecker;
     @Mock private ContestProblemRoleChecker problemRoleChecker;
     @Mock private ContestSubmissionRoleChecker submissionRoleChecker;
@@ -60,6 +62,7 @@ class ContestWebConfigFetcherTests {
         initMocks(this);
 
         webConfigFetcher = new ContestWebConfigFetcher(
+                roleChecker,
                 announcementRoleChecker,
                 problemRoleChecker,
                 submissionRoleChecker,

@@ -60,6 +60,29 @@ class ContestRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationT
     }
 
     @Test
+    void edit_contest() {
+        assertThat(checker.canEditContest(ADMIN, contestA)).isTrue();
+        assertThat(checker.canEditContest(ADMIN, contestB)).isTrue();
+        assertThat(checker.canEditContest(ADMIN, contestC)).isTrue();
+
+        assertThat(checker.canEditContest(USER, contestA)).isFalse();
+        assertThat(checker.canEditContest(USER, contestB)).isFalse();
+        assertThat(checker.canEditContest(USER, contestC)).isFalse();
+
+        assertThat(checker.canEditContest(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canEditContest(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canEditContest(CONTESTANT, contestC)).isFalse();
+
+        assertThat(checker.canEditContest(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canEditContest(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canEditContest(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(checker.canEditContest(MANAGER, contestA)).isFalse();
+        assertThat(checker.canEditContest(MANAGER, contestB)).isTrue();
+        assertThat(checker.canEditContest(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
     void start_virtual_contest() {
         assertThat(checker.canStartVirtualContest(CONTESTANT, contestB)).isFalse();
         assertThat(checker.canStartVirtualContest(CONTESTANT, contestBStarted)).isTrue();

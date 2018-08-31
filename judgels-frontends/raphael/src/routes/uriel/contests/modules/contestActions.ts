@@ -5,7 +5,7 @@ import { BadRequestError } from 'modules/api/error';
 import { ContestData, ContestErrors } from 'modules/api/uriel/contest';
 import { selectToken } from 'modules/session/sessionSelectors';
 
-import { DelContest, PutContest } from './contestReducer';
+import { DelContest, EditContest, PutContest } from './contestReducer';
 
 export const contestActions = {
   createContest: (data: ContestData) => {
@@ -20,6 +20,7 @@ export const contestActions = {
         throw error;
       }
       dispatch(push(`/contests/${data.slug}`));
+      dispatch(EditContest.create(true));
       toastActions.showSuccessToast('Contest created.');
     };
   },
