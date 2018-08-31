@@ -1,6 +1,7 @@
 package judgels.uriel.persistence;
 
 import java.util.List;
+import java.util.Optional;
 import judgels.persistence.JudgelsDao;
 
 public interface ContestClarificationDao extends JudgelsDao<ContestClarificationModel> {
@@ -8,4 +9,5 @@ public interface ContestClarificationDao extends JudgelsDao<ContestClarification
     List<ContestClarificationModel> selectAllByContestJid(String contestJid);
     long selectCountAnsweredByContestJidAndUserJid(String contestJid, String userJid);
     long selectCountAskedByContestJid(String contestJid);
+    Optional<ContestClarificationModel> selectByContestJid(String contestJid);
 }

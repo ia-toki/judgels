@@ -24,6 +24,11 @@ export interface ContestClarification {
   answeredTime?: number;
 }
 
+export interface ContestClarificationAnswerData {
+  answererJid: string;
+  answer: string;
+}
+
 export interface ContestClarificationData {
   topicJid: string;
   title: string;
@@ -68,6 +73,11 @@ export function createContestClarificationAPI() {
     ): Promise<ContestClarificationsResponse> => {
       const params = stringify({ language });
       return get(`${baseURL}/${contestJid}/clarifications?${params}`, token);
+    },
+
+    createAnswer: (token: string, contestJid: string, data: ContestClarificationAnswerData
+    ):Promise<ContestClarification> => {
+      return post(`${baseURL}/${contestJid}/clarifications/answer`, token, data);
     },
   };
 }

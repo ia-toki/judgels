@@ -1,10 +1,13 @@
 package judgels.uriel.contest.clarification;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.clarification.ContestClarification;
+import judgels.uriel.api.contest.clarification.ContestClarificationAnswerData;
 import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
 import judgels.uriel.persistence.ContestClarificationDao;
@@ -34,6 +37,15 @@ public class ContestClarificationStore {
         return Lists.transform(
                 clarificationDao.selectAllByContestJid(contestJid),
                 ContestClarificationStore::fromModel);
+    }
+
+    public ContestClarification createAnswerForClarification(String contestJid,
+            ContestClarificationAnswerData contestClarificationAnswerData) {
+        ContestClarificationModel model = checkFound(clarificationDao.selectByContestJid(contestJid));
+        model.answer = contestClarificationAnswerData.getAnswer();
+        model.updatedBy = contestClarificationAnswerData.getAnswererJid();
+        model.status = ContestClarificationStatus.ANSWERED.toString();
+        return fromModel(clarificationDao.insert(model));
     }
 
     private static ContestClarification fromModel(ContestClarificationModel model) {

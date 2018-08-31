@@ -1,4 +1,4 @@
-import { Callout, Intent, Tag } from '@blueprintjs/core';
+import {  Callout, Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
@@ -53,6 +53,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
         <div className="clearfix" />
         <hr />
         <div className="multiline-text">{clarification.question}</div>
+        <br />
         <Callout
           className="contest-clarification-card contest-clarification-card__answer"
           intent={answerIntent}
