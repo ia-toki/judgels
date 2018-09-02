@@ -13,4 +13,5 @@ export interface FormInputProps {
   label: string;
   labelHelper?: string;
   autoFocus?: boolean;
+  disabled?: boolean;
 }

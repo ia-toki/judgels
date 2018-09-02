@@ -1,0 +1,64 @@
+@import '../../../../../../styles/base';
+
+.contest-edit-dialog {
+  width: 750px;
+  height: 550px;
+
+  *:focus {
+    outline: none;
+  }
+
+  .bp3-tab-list {
+    width: 150px;
+    background-color: white;
+    margin-right: 10px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-right: 1px;
+  }
+
+  .bp3-tab-panel {
+    width: 100%;
+  }
+
+  .bp3-tab-indicator {
+    background-color: #ebf1f5 !important;
+    border-radius: 0 !important;
+    border-left: 3px solid $primary-color;
+  }
+
+  .bp3-tab {
+    position: relative;
+    padding-left: 20px !important;
+    line-height: 40px;
+    height: 40px;
+  }
+
+  .bp3-tab[aria-selected="true"] {
+    font-weight: bold;
+    color: $text-color;
+
+    svg {
+      display: initial;
+      height: 40px;
+    }
+  }
+
+  .bp3-tab[aria-selected="false"] {
+    color: $text-color;
+
+    svg {
+      display: none;
+    }
+  }
+
+  .contest-edit-dialog__arrow {
+    line-height: 40px !important;
+    color: $primary-color !important;
+    float: right;
+  }
+
+  .right-action-button {
+    float: right;
+  }
+}

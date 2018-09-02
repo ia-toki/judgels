@@ -25,6 +25,12 @@ export const contestActions = {
     };
   },
 
+  updateContest: (data: ContestData) => {
+    return async (dispatch, getState, { contestAPI, toastActions }) => {
+      return 0;
+    };
+  },
+
   getContests: (page: number, pageSize: number) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());

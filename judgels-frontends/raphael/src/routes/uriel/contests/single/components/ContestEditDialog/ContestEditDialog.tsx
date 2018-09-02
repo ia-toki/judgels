@@ -1,7 +1,11 @@
-import { Button, Dialog, Intent } from '@blueprintjs/core';
+import { Button, Dialog, Icon, Intent, Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
+
+import ContestEditGeneralTab from '../ContestEditGeneralTab/ContestEditGeneralTab';
+
+import './ContestEditDialog.css';
 
 export interface ContestEditDialogProps {
   contest: Contest;
@@ -51,15 +55,40 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
   private renderDialog = () => {
     return (
       <Dialog
+        className="contest-edit-dialog"
         isOpen={this.state.isDialogOpen || false}
         onClose={this.toggleDialog}
         title="Contest settings"
         canOutsideClickClose={false}
       >
-        <div className="bp3-dialog-body">WIP</div>
+        <div className="bp3-dialog-body">
+          <Tabs id="contest-edit-dialog-tabs" vertical>
+            <Tab id="general" panel={<ContestEditGeneralTab />}>
+              General
+              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
+            </Tab>
+            <Tab id="description" panel={<div>WIP</div>}>
+              Description
+              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
+            </Tab>
+            <Tab id="style" panel={<div>WIP</div>}>
+              Style
+              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
+            </Tab>
+            <Tab id="modules" panel={<div>WIP</div>}>
+              Modules
+              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
+            </Tab>
+            <Tab id="configs" panel={<div>WIP</div>}>
+              Configs
+              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
+            </Tab>
+          </Tabs>
+        </div>
         <div className="bp3-dialog-footer">
+          <hr />
           <div className="bp3-dialog-footer-actions">
-            <Button text="Cancel" onClick={this.toggleDialog} />
+            <Button text="Close" onClick={this.toggleDialog} />
           </div>
         </div>
       </Dialog>

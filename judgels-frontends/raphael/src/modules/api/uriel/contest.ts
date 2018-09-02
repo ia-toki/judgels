@@ -1,7 +1,7 @@
 import { stringify } from 'query-string';
 
 import { APP_CONFIG } from 'conf';
-import { get, post } from 'modules/api/http';
+import { get, post, put } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
 
 export interface Contest {
@@ -47,6 +47,10 @@ export function createContestAPI() {
   return {
     createContest: (token: string, data: ContestData): Promise<Contest> => {
       return post(baseURL, token, data);
+    },
+
+    updateContest: (token: string, contestJid: string, data: ContestData): Promise<Contest> => {
+      return put(`${baseURL}/${contestJid}`, token, data);
     },
 
     getContests: (token: string, page: number, pageSize: number): Promise<ContestPage> => {
