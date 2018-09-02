@@ -75,4 +75,23 @@
   .contest-edit-dialog-button__text {
     display: none;
   }
+
+  .contest-edit-dialog {
+    width: initial;
+    min-width: 350px;
+    height: initial;
+
+    .bp3-tabs {
+      display: block;
+    }
+
+    .bp3-tab-list {
+      width: 100%;
+      margin-bottom: 25px;
+    }
+
+    .bp3-tab-panel {
+      padding-left: 0 !important;
+    }
+  }
 }
