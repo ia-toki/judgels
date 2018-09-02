@@ -42,8 +42,14 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
       return null;
     }
     return (
-      <Button intent={Intent.PRIMARY} icon="cog" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
-        Settings
+      <Button
+        className="contest-edit-dialog-button"
+        intent={Intent.PRIMARY}
+        icon="cog"
+        onClick={this.toggleDialog}
+        disabled={this.state.isDialogOpen}
+      >
+        <span className="contest-edit-dialog-button__text">Settings</span>
       </Button>
     );
   };

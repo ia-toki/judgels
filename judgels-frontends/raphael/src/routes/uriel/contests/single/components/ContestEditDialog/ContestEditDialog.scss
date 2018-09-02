@@ -62,3 +62,17 @@
     float: right;
   }
 }
+
+.contest-edit-dialog-button {
+  margin-top: 5px;
+}
+
+@media only screen and (max-width: 750px) {
+  .contest-edit-dialog-button {
+    margin-top: -5px;
+  }
+
+  .contest-edit-dialog-button__text {
+    display: none;
+  }
+}
