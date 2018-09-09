@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { AppState } from 'modules/store';
-import { Contest, ContestData } from 'modules/api/uriel/contest';
+import { Contest, ContestUpdateData } from 'modules/api/uriel/contest';
 
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
 import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
@@ -12,7 +12,7 @@ import { contestActions as injectedContestActions } from '../../../modules/conte
 
 interface ContestEditGeneralTabProps {
   contest: Contest;
-  onUpdateContest: (data: ContestData) => void;
+  onUpdateContest: (contestJid: string, data: ContestUpdateData) => void;
 }
 
 interface ContestEditGeneralTabState {
@@ -47,12 +47,24 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
   private renderContent = () => {
     const { contest } = this.props;
     if (this.state.isEditing) {
+      const initialValues: ContestUpdateData = {
+        slug: contest.slug,
+        name: contest.name,
+        style: contest.style,
+        beginTime: contest.beginTime,
+        duration: contest.duration,
+      };
       const formProps = {
         onCancel: this.toggleEdit,
       };
-      return <ContestEditGeneralForm initialValues={contest} {...formProps} />;
+      return <ContestEditGeneralForm initialValues={initialValues} onSubmit={this.updateContest} {...formProps} />;
     }
     return <ContestEditGeneralTable contest={contest} />;
+  };
+
+  private updateContest = async (data: ContestUpdateData) => {
+    await this.props.onUpdateContest(this.props.contest.jid, data);
+    this.toggleEdit();
   };
 
   private toggleEdit = () => {

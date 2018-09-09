@@ -1,7 +1,7 @@
 import { stringify } from 'query-string';
 
 import { APP_CONFIG } from 'conf';
-import { get, post, put } from 'modules/api/http';
+import { get, post } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
 
 export interface Contest {
@@ -18,8 +18,12 @@ export interface ContestConfig {
   isAllowedToCreateContest: boolean;
 }
 
-export interface ContestData {
+export interface ContestCreateData {
   slug: string;
+}
+
+export interface ContestUpdateData {
+  slug?: string;
   name?: string;
   style?: ContestStyle;
   beginTime?: number;
@@ -45,12 +49,12 @@ export function createContestAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    createContest: (token: string, data: ContestData): Promise<Contest> => {
+    createContest: (token: string, data: ContestCreateData): Promise<Contest> => {
       return post(baseURL, token, data);
     },
 
-    updateContest: (token: string, contestJid: string, data: ContestData): Promise<Contest> => {
-      return put(`${baseURL}/${contestJid}`, token, data);
+    updateContest: (token: string, contestJid: string, data: ContestUpdateData): Promise<Contest> => {
+      return post(`${baseURL}/${contestJid}`, token, data);
     },
 
     getContests: (token: string, page: number, pageSize: number): Promise<ContestPage> => {

@@ -14,9 +14,10 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestConfig;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestDescription;
 import judgels.uriel.api.contest.ContestService;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 
 public class ContestResource implements ContestService {
@@ -46,6 +47,16 @@ public class ContestResource implements ContestService {
 
         checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
         return contest;
+    }
+
+    @Override
+    @UnitOfWork
+    public Contest updateContest(AuthHeader authHeader, String contestJid, ContestUpdateData contestUpdateData) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+
+        checkAllowed(contestRoleChecker.canEditContest(actorJid, contest));
+        return checkFound(contestStore.updateContest(contestJid, contestUpdateData));
     }
 
     @Override
@@ -106,11 +117,11 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork
-    public Contest createContest(AuthHeader authHeader, ContestData contestData) {
+    public Contest createContest(AuthHeader authHeader, ContestCreateData contestCreateData) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(contestRoleChecker.canCreateContest(actorJid));
 
-        return contestStore.createContest(contestData);
+        return contestStore.createContest(contestCreateData);
     }
 
     @Override
@@ -119,7 +130,22 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+
         return checkFound(contestStore.getContestDescription(contest.getJid()));
+    }
+
+    @Override
+    @UnitOfWork
+    public ContestDescription updateContestDescription(
+            AuthHeader authHeader,
+            String contestJid,
+            ContestDescription contestDescription) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(contestRoleChecker.canEditContest(actorJid, contest));
+
+        return checkFound(contestStore.updateContestDescription(contest.getJid(), contestDescription));
     }
 
     @Override

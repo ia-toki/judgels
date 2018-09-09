@@ -5,7 +5,8 @@ import static judgels.uriel.UrielIntegrationTestPersistenceModule.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
@@ -23,10 +24,12 @@ class ContestContestantRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
 
     @Test
     void register() {
-        Contest contestAFinished = contestStore.createContest(new ContestData.Builder()
-                .slug("contest-a-ended")
-                .beginTime(NOW.minus(10, HOURS))
-                .build());
+        Contest contestAFinished = contestStore.createContest(
+                new ContestCreateData.Builder().slug("contest-a-finished").build());
+        contestAFinished = contestStore.updateContest(
+                contestAFinished.getJid(),
+                new ContestUpdateData.Builder().beginTime(NOW.minus(10, HOURS)).build()).get();
+
         moduleStore.upsertRegistrationModule(contestAFinished.getJid());
 
         assertThat(checker.canRegister(ADMIN, contestA)).isTrue();

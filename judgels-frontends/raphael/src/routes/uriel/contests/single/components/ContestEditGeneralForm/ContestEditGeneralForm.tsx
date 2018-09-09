@@ -5,21 +5,15 @@ import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { ActionButtons } from 'components/ActionButtons/ActionButtons';
 import { Required, Slug } from 'components/forms/validations';
 import { FormTableTextInput } from 'components/forms/FormTableTextInput/FormTableTextInput';
-import { ContestData } from 'modules/api/uriel/contest';
+import { ContestUpdateData } from 'modules/api/uriel/contest';
 
-interface ContestEditGeneralFormData extends ContestData {}
+interface ContestEditGeneralFormData extends ContestUpdateData {}
 
 interface ContestEditGeneralFormProps extends InjectedFormProps<ContestEditGeneralFormData> {
   onCancel: () => void;
 }
 
 const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
-  const jidField: any = {
-    name: 'jid',
-    label: 'JID',
-    disabled: true,
-  };
-
   const slugField: any = {
     name: 'slug',
     label: 'Slug',
@@ -36,7 +30,6 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
     <form onSubmit={props.handleSubmit}>
       <table className="bp3-html-table bp3-html-table-striped">
         <tbody>
-          <Field component={FormTableTextInput} {...jidField} />
           <Field component={FormTableTextInput} {...slugField} />
           <Field component={FormTableTextInput} {...nameField} />
         </tbody>

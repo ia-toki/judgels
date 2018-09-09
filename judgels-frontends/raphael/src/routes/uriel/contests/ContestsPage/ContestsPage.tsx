@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router';
 
 import Pagination from 'components/Pagination/Pagination';
 import { Card } from 'components/Card/Card';
-import { Contest, ContestConfig, ContestData, ContestPage } from 'modules/api/uriel/contest';
+import { Contest, ContestConfig, ContestCreateData, ContestPage } from 'modules/api/uriel/contest';
 
 import { LoadingContestCard } from '../ContestCard/LoadingContestCard';
 import { ContestCard } from '../ContestCard/ContestCard';
@@ -14,7 +14,7 @@ import { contestActions as injectedContestActions } from '../modules/contestActi
 export interface ContestsPageProps extends RouteComponentProps<{}> {
   onGetContests: (page: number) => Promise<ContestPage>;
   onGetContestConfig: () => Promise<ContestConfig>;
-  onCreateContest: (data: ContestData) => Promise<Contest>;
+  onCreateContest: (data: ContestCreateData) => Promise<Contest>;
 }
 
 export interface ContestsPageState {

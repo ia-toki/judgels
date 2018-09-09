@@ -12,7 +12,8 @@ import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
 import judgels.uriel.api.contest.supervisor.SupervisorPermission;
 import judgels.uriel.contest.contestant.ContestContestantStore;
@@ -68,12 +69,12 @@ class ContestStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contestA = store.createContest(new ContestData.Builder().slug("contest-a").build());
-        Contest contestB = store.createContest(new ContestData.Builder().slug("contest-b").build());
-        Contest contestC = store.createContest(new ContestData.Builder().slug("contest-c").build());
-        Contest contestD = store.createContest(new ContestData.Builder().slug("contest-d").build());
+        Contest contestA = store.createContest(new ContestCreateData.Builder().slug("contest-a").build());
+        Contest contestB = store.createContest(new ContestCreateData.Builder().slug("contest-b").build());
+        Contest contestC = store.createContest(new ContestCreateData.Builder().slug("contest-c").build());
+        Contest contestD = store.createContest(new ContestCreateData.Builder().slug("contest-d").build());
 
-        assertThatThrownBy(() -> store.createContest(new ContestData.Builder().slug("contest-d").build()))
+        assertThatThrownBy(() -> store.createContest(new ContestCreateData.Builder().slug("contest-d").build()))
                 .isInstanceOf(ServiceException.class)
                 .hasMessageContaining(CONTEST_SLUG_ALREADY_EXISTS.name());
 
@@ -91,6 +92,24 @@ class ContestStoreIntegrationTests {
         assertThat(getContests(USER_1)).containsExactly(contestD, contestA);
         assertThat(getContests(USER_2)).containsExactly(contestD, contestB, contestA);
         assertThat(getContests(USER_3)).containsExactly(contestD, contestC, contestA);
+    }
+
+    @Test
+    void throws_on_duplicate_slugs() {
+        Contest contestA = store.createContest(new ContestCreateData.Builder().slug("contest-a").build());
+        store.createContest(new ContestCreateData.Builder().slug("contest-b").build());
+
+        assertThatThrownBy(() -> store.createContest(new ContestCreateData.Builder().slug("contest-a").build()))
+                .isInstanceOf(ServiceException.class)
+                .hasMessageContaining(CONTEST_SLUG_ALREADY_EXISTS.name());
+
+        store.updateContest(contestA.getJid(), new ContestUpdateData.Builder().name("Contest A").build());
+
+        assertThatThrownBy(() -> store.updateContest(
+                contestA.getJid(),
+                new ContestUpdateData.Builder().slug("contest-b").build()))
+                .isInstanceOf(ServiceException.class)
+                .hasMessageContaining(CONTEST_SLUG_ALREADY_EXISTS.name());
     }
 
     private List<Contest> getContests(String userJid) {

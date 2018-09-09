@@ -2,13 +2,13 @@ import { push } from 'react-router-redux';
 import { SubmissionError } from 'redux-form';
 
 import { BadRequestError } from 'modules/api/error';
-import { ContestData, ContestErrors } from 'modules/api/uriel/contest';
+import { ContestCreateData, ContestUpdateData, ContestErrors } from 'modules/api/uriel/contest';
 import { selectToken } from 'modules/session/sessionSelectors';
 
 import { DelContest, EditContest, PutContest } from './contestReducer';
 
 export const contestActions = {
-  createContest: (data: ContestData) => {
+  createContest: (data: ContestCreateData) => {
     return async (dispatch, getState, { contestAPI, toastActions }) => {
       const token = selectToken(getState());
       try {
@@ -25,9 +25,18 @@ export const contestActions = {
     };
   },
 
-  updateContest: (data: ContestData) => {
+  updateContest: (contestJid: string, data: ContestUpdateData) => {
     return async (dispatch, getState, { contestAPI, toastActions }) => {
-      return 0;
+      const token = selectToken(getState());
+      try {
+        await contestAPI.updateContest(token, contestJid, data);
+      } catch (error) {
+        if (error instanceof BadRequestError && error.message === ContestErrors.SlugAlreadyExists) {
+          throw new SubmissionError({ slug: 'Slug already exists' });
+        }
+        throw error;
+      }
+      toastActions.showSuccessToast('Contest updated.');
     };
   },
 

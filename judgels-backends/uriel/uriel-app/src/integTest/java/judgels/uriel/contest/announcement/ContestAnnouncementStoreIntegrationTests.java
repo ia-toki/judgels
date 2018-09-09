@@ -8,7 +8,7 @@ import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementData;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
@@ -36,8 +36,8 @@ class ContestAnnouncementStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contest = contestStore.createContest(new ContestData.Builder().slug("contest-a").build());
-        contestStore.createContest(new ContestData.Builder().slug("contest-b").build());
+        Contest contest = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
+        contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 
         ContestAnnouncement announcement1 =
                 store.createAnnouncement(contest.getJid(), new ContestAnnouncementData.Builder()
