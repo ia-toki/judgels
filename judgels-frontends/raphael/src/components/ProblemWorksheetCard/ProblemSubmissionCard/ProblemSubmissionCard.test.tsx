@@ -72,7 +72,7 @@ describe('ProblemSubmissionCard', () => {
       });
 
       it('shows the preferred grading language as default value in the dropdown', () => {
-        expect(wrapper.find('button[type="button"]').text()).toContain('C++11');
+        expect(wrapper.find('button[data-key="gradingLanguage"]').text()).toContain('C++11');
       });
     });
 
@@ -83,7 +83,7 @@ describe('ProblemSubmissionCard', () => {
       });
 
       it('shows the first grading language as default value in the dropdown', () => {
-        expect(wrapper.find('button[type="button"]').text()).toContain('Pascal');
+        expect(wrapper.find('button[data-key="gradingLanguage"]').text()).toContain('Pascal');
       });
     });
   });
