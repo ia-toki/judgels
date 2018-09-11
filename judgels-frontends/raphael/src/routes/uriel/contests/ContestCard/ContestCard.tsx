@@ -3,6 +3,7 @@ import * as React from 'react';
 import { TimeanddateLink } from 'components/TimeanddateLink/TimeanddateLink';
 import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
 import { FormattedDate } from 'components/FormattedDate/FormattedDate';
+import { FormattedDuration } from 'components/FormattedDuration/FormattedDuration';
 import { Contest } from 'modules/api/uriel/contest';
 
 import './ContestCard.css';
@@ -19,7 +20,9 @@ export class ContestCard extends React.PureComponent<ContestCardProps> {
       <ContentCardLink to={`/contests/${contest.slug}`}>
         <h4 className="contest-card-name">{contest.name}</h4>
         <p className="contest-card-date">
-          <small>{this.renderBeginTime(contest)}</small>
+          <small>
+            {this.renderBeginTime(contest)} | {this.renderDuration(contest)}
+          </small>
         </p>
       </ContentCardLink>
     );
@@ -31,5 +34,9 @@ export class ContestCard extends React.PureComponent<ContestCardProps> {
         <FormattedDate value={contest.beginTime} />
       </TimeanddateLink>
     );
+  };
+
+  private renderDuration = (contest: Contest) => {
+    return <FormattedDuration value={contest.duration} />;
   };
 }
