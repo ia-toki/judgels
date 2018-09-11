@@ -17,6 +17,15 @@
     resize-observer-polyfill "^1.5.0"
     tslib "^1.9.0"
 
+"@blueprintjs/datetime@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/datetime/-/datetime-3.1.0.tgz#579c05e25475e2aa86491036c4faeba6c5444838"
+  dependencies:
+    "@blueprintjs/core" "^3.1.0"
+    classnames "^2.2"
+    react-day-picker "^7.0.7"
+    tslib "^1.9.0"
+
 "@blueprintjs/icons@3.0.0", "@blueprintjs/icons@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-3.0.0.tgz#2eed041dd52c9feed2758ca526f4505911813a31"
@@ -6167,6 +6176,12 @@ react-async-script@^0.9.1:
   resolved "https://registry.yarnpkg.com/react-async-script/-/react-async-script-0.9.1.tgz#d4a496c726fab0c6ef05998ab16e50c742820b60"
   dependencies:
     prop-types ">=15.5.0"
+
+react-day-picker@^7.0.7:
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/react-day-picker/-/react-day-picker-7.2.3.tgz#51722dc66ae3478af2dfdb754350db6a1c521332"
+  dependencies:
+    prop-types "^15.6.2"
 
 react-dev-utils@4.2.1:
   version "4.2.1"

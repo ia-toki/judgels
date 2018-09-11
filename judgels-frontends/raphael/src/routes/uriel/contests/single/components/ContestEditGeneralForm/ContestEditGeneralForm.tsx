@@ -5,9 +5,13 @@ import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { ActionButtons } from 'components/ActionButtons/ActionButtons';
 import { Required, Slug } from 'components/forms/validations';
 import { FormTableTextInput } from 'components/forms/FormTableTextInput/FormTableTextInput';
-import { ContestUpdateData } from 'modules/api/uriel/contest';
+import { FormTableDateInput } from 'components/forms/FormTableDateInput/FormTableDateInput';
 
-interface ContestEditGeneralFormData extends ContestUpdateData {}
+export interface ContestEditGeneralFormData {
+  slug?: string;
+  name?: string;
+  beginTime?: Date;
+}
 
 interface ContestEditGeneralFormProps extends InjectedFormProps<ContestEditGeneralFormData> {
   onCancel: () => void;
@@ -26,12 +30,19 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
     validate: [Required],
   };
 
+  const beginTimeField: any = {
+    name: 'beginTime',
+    label: 'Begin time',
+    validate: [Required],
+  };
+
   return (
     <form onSubmit={props.handleSubmit}>
       <table className="bp3-html-table bp3-html-table-striped">
         <tbody>
           <Field component={FormTableTextInput} {...slugField} />
           <Field component={FormTableTextInput} {...nameField} />
+          <Field component={FormTableDateInput} {...beginTimeField} />
         </tbody>
       </table>
       <hr />

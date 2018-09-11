@@ -6,7 +6,7 @@ import { AppState } from 'modules/store';
 import { Contest, ContestUpdateData } from 'modules/api/uriel/contest';
 
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
-import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
+import ContestEditGeneralForm, { ContestEditGeneralFormData } from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 import { contestWebActions as injectedContestWebActions } from '../../modules/contestWebActions';
@@ -49,12 +49,10 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
   private renderContent = () => {
     const { contest } = this.props;
     if (this.state.isEditing) {
-      const initialValues: ContestUpdateData = {
+      const initialValues: ContestEditGeneralFormData = {
         slug: contest.slug,
         name: contest.name,
-        style: contest.style,
-        beginTime: contest.beginTime,
-        duration: contest.duration,
+        beginTime: new Date(contest.beginTime),
       };
       const formProps = {
         onCancel: this.toggleEdit,
@@ -64,8 +62,13 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
     return <ContestEditGeneralTable contest={contest} />;
   };
 
-  private updateContest = async (data: ContestUpdateData) => {
-    await this.props.onUpdateContest(this.props.contest.jid, this.props.contest.slug, data);
+  private updateContest = async (data: ContestEditGeneralFormData) => {
+    const updateData: ContestUpdateData = {
+      slug: data.slug,
+      name: data.name,
+      beginTime: data.beginTime && data.beginTime.getTime(),
+    };
+    await this.props.onUpdateContest(this.props.contest.jid, this.props.contest.slug, updateData);
     await this.props.onGetContestByJidWithWebConfig(this.props.contest.jid);
     this.toggleEdit();
   };
