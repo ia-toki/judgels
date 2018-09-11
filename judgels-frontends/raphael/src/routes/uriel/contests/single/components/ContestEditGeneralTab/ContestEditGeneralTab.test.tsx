@@ -7,7 +7,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, contestJid, contestSlug } from 'fixtures/state';
+import { contest, contestJid, contestSlug, contestStyle } from 'fixtures/state';
 import { parseDateTime } from 'utils/datetime';
 import { parseDuration } from 'utils/duration';
 
@@ -72,6 +72,7 @@ describe('ContestEditGeneralTab', () => {
     expect(contestActions.updateContest).toHaveBeenCalledWith(contestJid, contestSlug, {
       slug: 'contest-b',
       name: 'Contest B',
+      style: contestStyle,
       beginTime: parseDateTime('2018-09-10 17:00').getTime(),
       duration: parseDuration('6h'),
     });

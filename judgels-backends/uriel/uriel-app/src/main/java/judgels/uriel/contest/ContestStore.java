@@ -121,6 +121,7 @@ public class ContestStore {
 
             contestUpdateData.getSlug().ifPresent(slug -> model.slug = slug);
             contestUpdateData.getName().ifPresent(name -> model.name = name);
+            contestUpdateData.getStyle().ifPresent(style -> model.style = style.name());
             contestUpdateData.getBeginTime().ifPresent(time -> model.beginTime = time);
             contestUpdateData.getDuration().ifPresent(duration -> model.duration = duration.toMillis());
             return fromModel(contestDao.update(model));

@@ -17,6 +17,7 @@ export const ContestEditGeneralTable = (props: ContestEditGeneralTableProps) => 
     { key: 'jid', title: 'JID', value: contest.jid },
     { key: 'slug', title: 'Slug', value: contest.slug },
     { key: 'name', title: 'Name', value: contest.name },
+    { key: 'style', title: 'Style', value: contest.style },
     { key: 'beginTime', title: 'Begin time', value: formatDateTime(new Date(contest.beginTime), true) },
     { key: 'duration', title: 'Duration', value: <FormattedDuration value={contest.duration} /> },
   ];

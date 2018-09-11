@@ -77,10 +77,6 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
               Description
               <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
             </Tab>
-            <Tab id="style" panel={<div>WIP</div>}>
-              Style
-              <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
-            </Tab>
             <Tab id="modules" panel={<div>WIP</div>}>
               Modules
               <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />

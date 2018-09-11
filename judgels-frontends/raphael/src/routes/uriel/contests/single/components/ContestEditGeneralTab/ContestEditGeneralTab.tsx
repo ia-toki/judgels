@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { AppState } from 'modules/store';
-import { Contest, ContestUpdateData } from 'modules/api/uriel/contest';
+import { Contest, ContestStyle, ContestUpdateData } from 'modules/api/uriel/contest';
 import { formatDuration, parseDuration } from 'utils/duration';
 
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
@@ -53,6 +53,7 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
       const initialValues: ContestEditGeneralFormData = {
         slug: contest.slug,
         name: contest.name,
+        style: contest.style,
         beginTime: new Date(contest.beginTime),
         duration: formatDuration(contest.duration),
       };
@@ -68,6 +69,7 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
     const updateData: ContestUpdateData = {
       slug: data.slug,
       name: data.name,
+      style: data.style as ContestStyle,
       beginTime: data.beginTime.getTime(),
       duration: parseDuration(data.duration),
     };
