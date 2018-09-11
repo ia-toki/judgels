@@ -48,6 +48,18 @@ public class ContestWebResource implements ContestWebService {
 
     @Override
     @UnitOfWork(readOnly = true)
+    public ContestWithWebConfig getContestByJidWithWebConfig(Optional<AuthHeader> authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        return new ContestWithWebConfig.Builder()
+                .contest(contest)
+                .config(webConfigFetcher.fetchConfig(actorJid, contest))
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
     public ContestWebConfig getWebConfig(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));

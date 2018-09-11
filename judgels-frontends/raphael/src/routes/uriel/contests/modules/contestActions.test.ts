@@ -21,6 +21,7 @@ describe('contestActions', () => {
 
     contestAPI = {
       createContest: jest.fn(),
+      updateContest: jest.fn(),
       getActiveContests: jest.fn(),
       getContests: jest.fn(),
       getContestBySlug: jest.fn(),
@@ -70,6 +71,72 @@ describe('contestActions', () => {
 
       it('throws SubmissionError', async () => {
         await expect(doCreateContest()).rejects.toEqual(new SubmissionError({ slug: ContestErrors.SlugAlreadyExists }));
+      });
+    });
+  });
+
+  describe('updateContest()', () => {
+    const { updateContest } = contestActions;
+
+    describe('when the slug is not updated', () => {
+      const doUpdateContest = async () =>
+        updateContest(contestJid, 'old-slug', { name: 'New Name' })(dispatch, getState, { contestAPI, toastActions });
+
+      beforeEach(async () => {
+        contestAPI.createContest.mockReturnValue(Promise.resolve({}));
+        await doUpdateContest();
+      });
+
+      it('calls API to update contest', () => {
+        expect(contestAPI.updateContest).toHaveBeenCalledWith(token, contestJid, { name: 'New Name' });
+      });
+
+      it('shows the success toast', () => {
+        expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Contest updated.');
+      });
+    });
+
+    describe('when the slug is updated', () => {
+      const doUpdateContest = async () =>
+        updateContest(contestJid, 'old-slug', { slug: 'new-slug', name: 'New Name' })(dispatch, getState, {
+          contestAPI,
+          toastActions,
+        });
+
+      describe('when the slug does not already exist', () => {
+        beforeEach(async () => {
+          contestAPI.createContest.mockReturnValue(Promise.resolve({}));
+          await doUpdateContest();
+        });
+
+        it('calls API to update contest', () => {
+          expect(contestAPI.updateContest).toHaveBeenCalledWith(token, contestJid, {
+            slug: 'new-slug',
+            name: 'New Name',
+          });
+        });
+
+        it('pushes the history to the new contest page', () => {
+          expect(dispatch).toHaveBeenCalledWith(push('/contests/new-slug'));
+        });
+
+        it('shows the success toast', () => {
+          expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Contest updated.');
+        });
+      });
+
+      describe('when the slug already exists', () => {
+        beforeEach(() => {
+          contestAPI.updateContest.mockImplementation(() => {
+            throw new BadRequestError({ errorName: ContestErrors.SlugAlreadyExists });
+          });
+        });
+
+        it('throws SubmissionError', async () => {
+          await expect(doUpdateContest()).rejects.toEqual(
+            new SubmissionError({ slug: ContestErrors.SlugAlreadyExists })
+          );
+        });
       });
     });
   });

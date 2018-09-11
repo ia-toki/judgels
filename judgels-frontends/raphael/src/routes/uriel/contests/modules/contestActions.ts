@@ -25,7 +25,7 @@ export const contestActions = {
     };
   },
 
-  updateContest: (contestJid: string, data: ContestUpdateData) => {
+  updateContest: (contestJid: string, contestSlug: string, data: ContestUpdateData) => {
     return async (dispatch, getState, { contestAPI, toastActions }) => {
       const token = selectToken(getState());
       try {
@@ -37,6 +37,10 @@ export const contestActions = {
         throw error;
       }
       toastActions.showSuccessToast('Contest updated.');
+
+      if (data.slug && data.slug !== contestSlug) {
+        dispatch(push(`/contests/${data.slug}`));
+      }
     };
   },
 

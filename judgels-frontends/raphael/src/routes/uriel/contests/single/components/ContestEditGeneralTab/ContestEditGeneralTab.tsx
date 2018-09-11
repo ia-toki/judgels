@@ -9,10 +9,12 @@ import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditG
 import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestActions as injectedContestActions } from '../../../modules/contestActions';
+import { contestWebActions as injectedContestWebActions } from '../../modules/contestWebActions';
 
 interface ContestEditGeneralTabProps {
   contest: Contest;
-  onUpdateContest: (contestJid: string, data: ContestUpdateData) => void;
+  onGetContestByJidWithWebConfig: (contestJid: string) => Promise<void>;
+  onUpdateContest: (contestJid: string, contestSlug: string, data: ContestUpdateData) => Promise<void>;
 }
 
 interface ContestEditGeneralTabState {
@@ -63,7 +65,8 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
   };
 
   private updateContest = async (data: ContestUpdateData) => {
-    await this.props.onUpdateContest(this.props.contest.jid, data);
+    await this.props.onUpdateContest(this.props.contest.jid, this.props.contest.slug, data);
+    await this.props.onGetContestByJidWithWebConfig(this.props.contest.jid);
     this.toggleEdit();
   };
 
@@ -74,14 +77,15 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
   };
 }
 
-function createContestEditGeneralTab(contestActions) {
+function createContestEditGeneralTab(contestActions, contestWebActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state),
   });
   const mapDispatchToProps = {
+    onGetContestByJidWithWebConfig: contestWebActions.getContestByJidWithWebConfig,
     onUpdateContest: contestActions.updateContest,
   };
   return connect(mapStateToProps, mapDispatchToProps)(ContestEditGeneralTab);
 }
 
-export default createContestEditGeneralTab(injectedContestActions);
+export default createContestEditGeneralTab(injectedContestActions, injectedContestWebActions);
