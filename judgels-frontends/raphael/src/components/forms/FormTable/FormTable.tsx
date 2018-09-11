@@ -5,7 +5,7 @@ import './FormTable.css';
 export interface FormTableRow {
   key: string;
   title: string;
-  value?: string;
+  value?: string | JSX.Element;
 }
 
 export interface FormTableProps {

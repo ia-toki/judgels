@@ -8,9 +8,10 @@ import { FormTableTextInput } from 'components/forms/FormTableTextInput/FormTabl
 import { FormTableDateInput } from 'components/forms/FormTableDateInput/FormTableDateInput';
 
 export interface ContestEditGeneralFormData {
-  slug?: string;
-  name?: string;
-  beginTime?: Date;
+  slug: string;
+  name: string;
+  beginTime: Date;
+  duration: string;
 }
 
 interface ContestEditGeneralFormProps extends InjectedFormProps<ContestEditGeneralFormData> {
@@ -36,6 +37,13 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
     validate: [Required],
   };
 
+  const durationField: any = {
+    name: 'duration',
+    label: 'Duration',
+    validate: [Required],
+    inputHelper: 'Example: 10d 5h 30m 15s',
+  };
+
   return (
     <form onSubmit={props.handleSubmit}>
       <table className="bp3-html-table bp3-html-table-striped">
@@ -43,6 +51,7 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
           <Field component={FormTableTextInput} {...slugField} />
           <Field component={FormTableTextInput} {...nameField} />
           <Field component={FormTableDateInput} {...beginTimeField} />
+          <Field component={FormTableTextInput} {...durationField} />
         </tbody>
       </table>
       <hr />
