@@ -10,8 +10,7 @@
 
   .bp3-tab-list {
     width: 150px;
-    background-color: white;
-    margin-right: 10px;
+    margin-right: 15px;
     padding-top: 1px;
     padding-bottom: 1px;
     padding-right: 1px;
@@ -25,6 +24,7 @@
     background-color: #ebf1f5 !important;
     border-radius: 0 !important;
     border-left: 3px solid $primary-color;
+    left: -3px !important;
   }
 
   .bp3-tab {
@@ -35,6 +35,8 @@
   }
 
   .bp3-tab[aria-selected="true"] {
+    background-color: white !important;
+    border-radius: 0 !important;
     font-weight: bold;
     color: $text-color;
 
