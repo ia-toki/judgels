@@ -29,6 +29,7 @@ export class FormTableDateInput extends React.PureComponent<FormInputProps> {
           maxDate={new Date(4102444800000)}
           timePickerProps={{ showArrowButtons: true }}
           onChange={onChange}
+          inputProps={{ name: inputProps.name }}
           {...inputProps}
         />
         <FormInputValidation meta={props.meta} />

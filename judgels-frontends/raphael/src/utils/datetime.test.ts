@@ -13,7 +13,7 @@ describe('datetime', () => {
   });
 
   test('parseDateTime()', () => {
-    const parsedDate = parseDateTime('2018-08-30 13:10 UTC+7');
+    const parsedDate = parseDateTime('2018-08-30 13:10');
     expect(parsedDate.getFullYear()).toEqual(2018);
     expect(parsedDate.getMonth()).toEqual(7);
     expect(parsedDate.getDate()).toEqual(30);

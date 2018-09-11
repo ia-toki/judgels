@@ -83,7 +83,7 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
   };
 }
 
-function createContestEditGeneralTab(contestActions, contestWebActions) {
+export function createContestEditGeneralTab(contestWebActions, contestActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state),
   });
@@ -94,4 +94,4 @@ function createContestEditGeneralTab(contestActions, contestWebActions) {
   return connect(mapStateToProps, mapDispatchToProps)(ContestEditGeneralTab);
 }
 
-export default createContestEditGeneralTab(injectedContestActions, injectedContestWebActions);
+export default createContestEditGeneralTab(injectedContestWebActions, injectedContestActions);

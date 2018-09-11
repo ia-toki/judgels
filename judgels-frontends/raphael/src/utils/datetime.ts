@@ -18,7 +18,7 @@ export function formatDateTimezoneOffset(date: Date): string {
 }
 
 export function parseDateTime(str: string) {
-  const re = /^(\d+)-(\d+)-(\d+) (\d+):(\d+) UTC/;
+  const re = /^(\d+)-(\d+)-(\d+) (\d+):(\d+)$/;
   const res = re.exec(str);
   if (!res) {
     return new Date();
