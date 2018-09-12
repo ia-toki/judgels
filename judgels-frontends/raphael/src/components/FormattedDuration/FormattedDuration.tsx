@@ -4,14 +4,18 @@ import ReactFormattedDuration from 'react-intl-formatted-duration';
 export interface FormattedDateProps {
   value: number;
 }
-const Span = props => <span {...props} />;
+
+const Text = () => null;
 
 export const FormattedDuration = (props: FormattedDateProps) => {
+  const seconds = Math.floor(props.value / 1000);
+
+  let format = '{hours} {minutes} {seconds}';
+  if (seconds >= 86400) {
+    format = `{days} ${format}`;
+  }
+
   return (
-    <ReactFormattedDuration
-      seconds={Math.floor(props.value / 1000)}
-      format="{days} {hours} {minutes} {seconds}"
-      textComponent={Span}
-    />
+    <ReactFormattedDuration seconds={seconds} format={format} valueComponent={React.Fragment} textComponent={Text} />
   );
 };
