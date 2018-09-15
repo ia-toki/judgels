@@ -41,10 +41,6 @@ dependencies {
     baseline "com.palantir.baseline:gradle-baseline-java-config:$gradleBaselineVersion@zip"
 }
 
-allprojects {
-    version '2.7.0'
-}
-
 subprojects {
     apply plugin: 'idea'
     apply plugin: 'java'

@@ -7,7 +7,7 @@ import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
 import judgels.jophiel.api.user.MyService;
-import judgels.service.ServiceVersion;
+import judgels.service.JudgelsVersion;
 import judgels.service.actor.ActorChecker;
 import judgels.service.actor.CachingActorExtractor;
 import judgels.service.jersey.JudgelsObjectMappers;
@@ -19,7 +19,7 @@ public class UrielModule {
     @Provides
     @Singleton
     static UserAgent userAgent() {
-        return UserAgent.of(UserAgent.Agent.of("uriel", ServiceVersion.INSTANCE));
+        return UserAgent.of(UserAgent.Agent.of("uriel", JudgelsVersion.INSTANCE));
     }
 
     @Provides
