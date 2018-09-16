@@ -35,6 +35,7 @@
   .bp3-tab[aria-selected="true"] {
     background-color: white !important;
     border-left: 3px solid $primary-color;
+    left: -3px;
     border-radius: 0 !important;
     font-weight: bold;
     color: $text-color;
