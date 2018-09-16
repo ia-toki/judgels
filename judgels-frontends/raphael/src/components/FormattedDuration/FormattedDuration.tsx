@@ -5,6 +5,7 @@ export interface FormattedDateProps {
   value: number;
 }
 
+const Value = ({ children }) => <>{children}</>;
 const Text = () => null;
 
 export const FormattedDuration = (props: FormattedDateProps) => {
@@ -15,7 +16,5 @@ export const FormattedDuration = (props: FormattedDateProps) => {
     format = `{days} ${format}`;
   }
 
-  return (
-    <ReactFormattedDuration seconds={seconds} format={format} valueComponent={React.Fragment} textComponent={Text} />
-  );
+  return <ReactFormattedDuration seconds={seconds} format={format} valueComponent={Value} textComponent={Text} />;
 };
