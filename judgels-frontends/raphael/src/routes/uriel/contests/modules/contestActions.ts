@@ -77,7 +77,16 @@ export const contestActions = {
   getContestDescription: (contestJid: string) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
-      return await contestAPI.getContestDescription(token, contestJid);
+      const { description } = await contestAPI.getContestDescription(token, contestJid);
+      return description;
+    };
+  },
+
+  updateContestDescription: (contestJid: string, description: string) => {
+    return async (dispatch, getState, { contestAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await contestAPI.updateContestDescription(token, contestJid, { description });
+      toastActions.showSuccessToast('Description updated.');
     };
   },
 

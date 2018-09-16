@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Contest } from 'modules/api/uriel/contest';
 
 import ContestEditGeneralTab from '../ContestEditGeneralTab/ContestEditGeneralTab';
+import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditDescriptionTab';
 
 import './ContestEditDialog.css';
 
@@ -73,7 +74,7 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
               General
               <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
             </Tab>
-            <Tab id="description" panel={<div>WIP</div>}>
+            <Tab id="description" panel={<ContestEditDescriptionTab />}>
               Description
               <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
             </Tab>

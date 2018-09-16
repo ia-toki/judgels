@@ -83,6 +83,14 @@ export function createContestAPI() {
       return get(`${baseURL}/${contestJid}/description`, token);
     },
 
+    updateContestDescription: (
+      token: string,
+      contestJid: string,
+      description: ContestDescription
+    ): Promise<ContestDescription> => {
+      return post(`${baseURL}/${contestJid}/description`, token, description);
+    },
+
     getContestConfig: (token: string): Promise<ContestConfig> => {
       return get(`${baseURL}/config`, token);
     },

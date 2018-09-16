@@ -27,6 +27,7 @@ describe('contestActions', () => {
       getContestBySlug: jest.fn(),
       startVirtualContest: jest.fn(),
       getContestDescription: jest.fn(),
+      updateContestDescription: jest.fn(),
     };
 
     toastActions = {
@@ -150,7 +151,7 @@ describe('contestActions', () => {
         totalData: 3,
         data: [],
       };
-      contestAPI.getContests.mockImplementation(() => contestPage);
+      contestAPI.getContests.mockReturnValue(Promise.resolve(contestPage));
 
       await doGetContests();
     });
@@ -165,7 +166,7 @@ describe('contestActions', () => {
     const doGetContestBySlug = async () => getContestBySlug('ioi')(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
-      contestAPI.getContestBySlug.mockImplementation(() => contest);
+      contestAPI.getContestBySlug.mockReturnValue(Promise.resolve(contest));
 
       await doGetContestBySlug();
     });
@@ -196,14 +197,40 @@ describe('contestActions', () => {
     const { getContestDescription } = contestActions;
     const doGetContestDescription = async () => getContestDescription(contestJid)(dispatch, getState, { contestAPI });
 
-    beforeEach(async () => {
-      contestAPI.getContestDescription.mockImplementation(() => contest);
+    const description = 'This is a contest';
 
-      await doGetContestDescription();
+    let contestDescription: string;
+
+    beforeEach(async () => {
+      contestAPI.getContestDescription.mockReturnValue(Promise.resolve({ description }));
+
+      contestDescription = await doGetContestDescription();
     });
 
     it('calls API to get contest description', () => {
       expect(contestAPI.getContestDescription).toHaveBeenCalledWith(token, contestJid);
+      expect(contestDescription).toEqual(description);
+    });
+  });
+
+  describe('updateContestDescription()', () => {
+    const { updateContestDescription } = contestActions;
+    const description = 'This is a contest';
+    const doUpdateContestDescription = async () =>
+      updateContestDescription(contestJid, description)(dispatch, getState, { contestAPI, toastActions });
+
+    beforeEach(async () => {
+      contestAPI.updateContestDescription.mockReturnValue(Promise.resolve({}));
+
+      await doUpdateContestDescription();
+    });
+
+    it('calls API to update contest description', () => {
+      expect(contestAPI.updateContestDescription).toHaveBeenCalledWith(token, contestJid, { description });
+    });
+
+    it('shows the success toast', () => {
+      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Description updated.');
     });
   });
 });
