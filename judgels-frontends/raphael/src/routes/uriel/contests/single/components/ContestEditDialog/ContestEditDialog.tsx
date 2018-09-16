@@ -68,7 +68,7 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
         canOutsideClickClose={false}
       >
         <div className="bp3-dialog-body">
-          <Tabs id="contest-edit-dialog-tabs" vertical>
+          <Tabs id="contest-edit-dialog-tabs" vertical animate={false}>
             <Tab id="general" panel={<ContestEditGeneralTab />}>
               General
               <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
