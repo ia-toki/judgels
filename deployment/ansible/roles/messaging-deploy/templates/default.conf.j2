@@ -12,7 +12,7 @@ server {
     }
 
     location / {
-        proxy_pass              http://localhost:{{ sealtiel_port }};
+        proxy_pass              http://localhost:9003;
         proxy_set_header        Host $host;
         proxy_set_header        X-Real-IP $remote_addr;
         proxy_set_header        X-Forwarded-Proto https;
@@ -39,7 +39,7 @@ server {
     }
 
     location / {
-        proxy_pass              http://localhost:{{ rabbitmq_mgmt_port }};
+        proxy_pass              http://localhost:15672;
         proxy_set_header        Host $host;
         proxy_set_header        X-Real-IP $remote_addr;
         proxy_set_header        X-Forwarded-Proto https;

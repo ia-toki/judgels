@@ -17,13 +17,13 @@
   - name: Pull raphael image
     docker_image:
       name: judgels/raphael
-      tag: "{{ raphael_version | default('latest', true) }}"
+      tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a raphael container
     docker_container:
       name: raphael
-      image: "judgels/raphael:{{ raphael_version | default('latest', true) }}"
+      image: "judgels/raphael:{{ judgels_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:
