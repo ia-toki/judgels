@@ -7,6 +7,11 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableFrozenScoreboardModuleConfig.class)
 public interface FrozenScoreboardModuleConfig {
+    FrozenScoreboardModuleConfig DEFAULT = new Builder()
+            .isOfficialScoreboardAllowed(false)
+            .scoreboardFreezeTime(Instant.ofEpochSecond(0))
+            .build();
+
     boolean getIsOfficialScoreboardAllowed();
     Instant getScoreboardFreezeTime();
 

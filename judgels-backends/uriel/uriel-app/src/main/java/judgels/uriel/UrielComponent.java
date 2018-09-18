@@ -7,6 +7,7 @@ import judgels.uriel.contest.ContestResource;
 import judgels.uriel.contest.announcement.ContestAnnouncementResource;
 import judgels.uriel.contest.clarification.ContestClarificationResource;
 import judgels.uriel.contest.contestant.ContestContestantResource;
+import judgels.uriel.contest.module.ContestModuleResource;
 import judgels.uriel.contest.problem.ContestProblemResource;
 import judgels.uriel.contest.scoreboard.ContestScoreboardResource;
 import judgels.uriel.contest.submission.ContestSubmissionResource;
@@ -37,6 +38,7 @@ public interface UrielComponent {
     ContestAnnouncementResource contestAnnouncementResource();
     ContestClarificationResource contestClarificationResource();
     ContestContestantResource contestContestantResource();
+    ContestModuleResource contestModuleResource();
     ContestProblemResource contestProblemResource();
     ContestScoreboardResource contestScoreboardResource();
     ContestSubmissionResource contestSubmissionResource();

@@ -1,7 +1,9 @@
 package judgels.uriel.hibernate;
 
+import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.Root;
@@ -26,12 +28,20 @@ public class ContestModuleHibernateDao extends HibernateDao<ContestModuleModel> 
     }
 
     @Override
-    public Optional<ContestModuleModel> selectByContestJidAndType(String contestJid, ContestModuleType type) {
+    public Optional<ContestModuleModel> selectEnabledByContestJidAndType(String contestJid, ContestModuleType type) {
         return selectByFilter(new FilterOptions.Builder<ContestModuleModel>()
                 .putColumnsEq(ContestModuleModel_.contestJid, contestJid)
                 .putColumnsEq(ContestModuleModel_.name, type.name())
                 .putColumnsEq(ContestModuleModel_.enabled, true)
                 .build());
+    }
+
+    @Override
+    public Set<ContestModuleModel> selectAllEnabledByContestJid(String contestJid) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestModuleModel>()
+                .putColumnsEq(ContestModuleModel_.contestJid, contestJid)
+                .putColumnsEq(ContestModuleModel_.enabled, true)
+                .build()));
     }
 
     static CustomPredicateFilter<ContestModel> hasModule(ContestModuleType type) {

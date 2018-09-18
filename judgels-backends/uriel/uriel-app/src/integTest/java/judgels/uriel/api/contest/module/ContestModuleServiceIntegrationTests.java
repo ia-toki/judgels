@@ -1,0 +1,70 @@
+package judgels.uriel.api.contest.module;
+
+import static judgels.uriel.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
+import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
+import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
+import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
+import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.common.collect.ImmutableSet;
+import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.uriel.AbstractServiceIntegrationTests;
+import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.UrielIntegrationTestComponent;
+import judgels.uriel.UrielIntegrationTestHibernateModule;
+import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.ContestService;
+import judgels.uriel.persistence.AdminRoleModel;
+import judgels.uriel.persistence.ContestModel;
+import judgels.uriel.persistence.ContestModuleModel;
+import judgels.uriel.role.AdminRoleStore;
+import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+@WithHibernateSession(
+        urlSuffix = URIEL_JDBC_SUFFIX,
+        models = {AdminRoleModel.class, ContestModel.class, ContestModuleModel.class})
+class ContestModuleServiceIntegrationTests extends AbstractServiceIntegrationTests {
+    private static WireMockServer mockJophiel;
+    private ContestService contestService = createService(ContestService.class);
+    private ContestModuleService moduleService = createService(ContestModuleService.class);
+
+    @BeforeAll
+    static void startMocks() {
+        mockJophiel = mockJophiel();
+        mockJophiel.start();
+    }
+
+    @BeforeAll
+    static void setUpRoles(SessionFactory sessionFactory) {
+        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
+                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
+                .build();
+
+        AdminRoleStore adminRoleStore = component.adminRoleStore();
+        adminRoleStore.addAdmin(ADMIN_JID);
+    }
+
+    @AfterAll
+    static void shutdownMocks() {
+        mockJophiel.shutdown();
+    }
+
+    @Test
+    void basic_flow() {
+        Contest contest = contestService.createContest(
+                ADMIN_HEADER,
+                new ContestCreateData.Builder().slug("contest").build());
+
+        moduleService.setModules(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(REGISTRATION, CLARIFICATION));
+
+        assertThat(moduleService.getModules(ADMIN_HEADER, contest.getJid()))
+                .containsExactlyInAnyOrder(CLARIFICATION, REGISTRATION);
+    }
+}
