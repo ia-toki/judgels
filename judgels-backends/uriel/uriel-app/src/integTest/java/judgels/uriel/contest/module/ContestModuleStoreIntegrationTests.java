@@ -5,7 +5,6 @@ import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOA
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
-import java.time.Instant;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
@@ -48,14 +47,14 @@ class ContestModuleStoreIntegrationTests {
 
         FrozenScoreboardModuleConfig config1 = new FrozenScoreboardModuleConfig.Builder()
                 .isOfficialScoreboardAllowed(false)
-                .scoreboardFreezeTime(Instant.ofEpochSecond(42))
+                .freezeDurationBeforeEndTime(Duration.ofHours(1))
                 .build();
         store.upsertFrozenScoreboardModule(contest.getJid(), config1);
         assertThat(store.getFrozenScoreboardModuleConfig(contest.getJid())).contains(config1);
 
         FrozenScoreboardModuleConfig config2 = new FrozenScoreboardModuleConfig.Builder()
                 .isOfficialScoreboardAllowed(false)
-                .scoreboardFreezeTime(Instant.ofEpochSecond(43))
+                .freezeDurationBeforeEndTime(Duration.ofHours(1))
                 .build();
         store.upsertFrozenScoreboardModule(contest.getJid(), config2);
 

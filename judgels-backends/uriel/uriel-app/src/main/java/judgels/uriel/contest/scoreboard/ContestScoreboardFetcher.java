@@ -28,7 +28,7 @@ public class ContestScoreboardFetcher {
             boolean canSuperviseScoreboard) {
 
         ContestScoreboardType defaultType =
-                typeFetcher.fetchViewableTypes(contest.getJid(), canSuperviseScoreboard).get(0);
+                typeFetcher.fetchViewableTypes(contest, canSuperviseScoreboard).get(0);
         return fetchScoreboardOfType(contest, userJid, defaultType, canSuperviseScoreboard);
     }
 

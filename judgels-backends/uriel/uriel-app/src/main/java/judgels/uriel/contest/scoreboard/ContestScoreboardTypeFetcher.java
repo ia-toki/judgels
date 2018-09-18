@@ -5,9 +5,11 @@ import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIA
 
 import com.google.common.collect.ImmutableList;
 import java.time.Clock;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -22,14 +24,17 @@ public class ContestScoreboardTypeFetcher {
         this.clock = clock;
     }
 
-    public List<ContestScoreboardType> fetchViewableTypes(String contestJid, boolean canSuperviseScoreboard) {
+    public List<ContestScoreboardType> fetchViewableTypes(Contest contest, boolean canSuperviseScoreboard) {
         Optional<FrozenScoreboardModuleConfig> frozenScoreboardModuleConfig =
-                moduleStore.getFrozenScoreboardModuleConfig(contestJid);
+                moduleStore.getFrozenScoreboardModuleConfig(contest.getJid());
         if (frozenScoreboardModuleConfig.isPresent()) {
             if (frozenScoreboardModuleConfig.get().getIsOfficialScoreboardAllowed()) {
                 return ImmutableList.of(OFFICIAL, FROZEN);
             }
-            if (!clock.instant().isBefore(frozenScoreboardModuleConfig.get().getScoreboardFreezeTime())) {
+            Instant freezeTime = contest.getEndTime().minus(
+                    frozenScoreboardModuleConfig.get().getFreezeDurationBeforeEndTime());
+
+            if (!clock.instant().isBefore(freezeTime)) {
                 if (canSuperviseScoreboard) {
                     return ImmutableList.of(OFFICIAL, FROZEN);
                 }
