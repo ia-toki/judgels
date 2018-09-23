@@ -67,6 +67,7 @@ public class ContestModuleStore {
     public Set<ContestModuleType> getEnabledModules(String contestJid) {
         return moduleDao.selectAllEnabledByContestJid(contestJid)
                 .stream()
+                .filter(model -> isValidModuleType(model.name))
                 .map(model -> ContestModuleType.valueOf(model.name))
                 .filter(type -> !ALWAYS_ENABLED_MODULES.contains(type))
                 .collect(Collectors.toSet());
@@ -194,6 +195,15 @@ public class ContestModuleStore {
             return mapper.readValue(config, clazz);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static boolean isValidModuleType(String type) {
+        try {
+            ContestModuleType.valueOf(type);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 }
