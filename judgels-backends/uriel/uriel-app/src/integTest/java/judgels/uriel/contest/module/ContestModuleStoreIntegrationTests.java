@@ -60,6 +60,8 @@ class ContestModuleStoreIntegrationTests {
 
         store.upsertPausedModule(contest.getJid());
         store.disablePausedModule(contest.getJid());
+        store.upsertPausedModule(contest.getJid());
+        store.disablePausedModule(contest.getJid());
 
         currentSession.flush();
 

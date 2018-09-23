@@ -32,6 +32,7 @@ export enum ContestState {
   Begun = 'BEGUN',
   Started = 'STARTED',
   Finished = 'FINISHED',
+  Paused = 'PAUSED',
 }
 
 export function createContestWebAPI() {

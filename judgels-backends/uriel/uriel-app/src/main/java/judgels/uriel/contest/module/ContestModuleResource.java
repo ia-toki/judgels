@@ -45,11 +45,21 @@ public class ContestModuleResource implements ContestModuleService {
 
     @Override
     @UnitOfWork
-    public void setModules(AuthHeader authHeader, String contestJid, Set<ContestModuleType> modules) {
+    public void enableModule(AuthHeader authHeader, String contestJid, ContestModuleType type) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         checkAllowed(contestRoleChecker.canEditContest(actorJid, contest));
-        moduleStore.setEnabledModules(contest.getJid(), modules);
+        moduleStore.enableModule(contest.getJid(), type);
+    }
+
+    @Override
+    @UnitOfWork
+    public void disableModule(AuthHeader authHeader, String contestJid, ContestModuleType type) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+
+        checkAllowed(contestRoleChecker.canEditContest(actorJid, contest));
+        moduleStore.disableModule(contest.getJid(), type);
     }
 }

@@ -4,7 +4,7 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.Set;
-import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
@@ -23,10 +23,16 @@ public interface ContestModuleService {
             @PathParam("contestJid") String contestJid);
 
     @PUT
-    @Path("/")
-    @Consumes(APPLICATION_JSON)
-    void setModules(
+    @Path("/{type}")
+    void enableModule(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            Set<ContestModuleType> modules);
+            @PathParam("type") ContestModuleType type);
+
+    @DELETE
+    @Path("/{type}")
+    void disableModule(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("type") ContestModuleType type);
 }

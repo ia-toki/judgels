@@ -119,7 +119,12 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
         leftComponent: <span>Contest is over.</span>,
       };
     }
-    return null;
+    if (contestState === ContestState.Paused) {
+      return {
+        leftComponent: <span>Contest is paused.</span>,
+      };
+    }
+    return {};
   };
 
   private getRemainingDuration = () => {

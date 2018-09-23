@@ -4,6 +4,7 @@ import static judgels.uriel.UrielCacheUtils.SEPARATOR;
 import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
+import static judgels.uriel.api.contest.module.ContestModuleType.DELAYED_GRADING;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.PAUSE;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ContestModuleType;
+import judgels.uriel.api.contest.module.DelayedGradingModuleConfig;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
@@ -38,6 +40,7 @@ public class ContestModuleStore {
     private static final Map<ContestModuleType, Object> DEFAULT_CONFIGS = Maps.immutableEnumMap(
             new ImmutableMap.Builder<ContestModuleType, Object>()
                     .put(CLARIFICATION_TIME_LIMIT, ClarificationTimeLimitModuleConfig.DEFAULT)
+                    .put(DELAYED_GRADING, DelayedGradingModuleConfig.DEFAULT)
                     .put(FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.DEFAULT)
                     .put(SCOREBOARD, ScoreboardModuleConfig.DEFAULT)
                     .put(VIRTUAL, VirtualModuleConfig.DEFAULT)
@@ -69,15 +72,26 @@ public class ContestModuleStore {
                 .collect(Collectors.toSet());
     }
 
-    public void setEnabledModules(String contestJid, Set<ContestModuleType> modules) {
-        moduleDao.selectAllEnabledByContestJid(contestJid).forEach(model -> {
+    public void enableModule(String contestJid, ContestModuleType type) {
+        Optional<ContestModuleModel> maybeModel = moduleDao.selectByContestJidAndType(contestJid, type);
+        if (maybeModel.isPresent()) {
+            ContestModuleModel model = maybeModel.get();
+            model.enabled = true;
+            moduleDao.update(model);
+            moduleCache.invalidate(contestJid + SEPARATOR + type.name());
+        } else {
+            upsertModule(contestJid, type, DEFAULT_CONFIGS.getOrDefault(type, Collections.emptyMap()));
+        }
+    }
+
+    public void disableModule(String contestJid, ContestModuleType type) {
+        Optional<ContestModuleModel> maybeModel = moduleDao.selectByContestJidAndType(contestJid, type);
+        if (maybeModel.isPresent()) {
+            ContestModuleModel model = maybeModel.get();
             model.enabled = false;
             moduleDao.update(model);
-            moduleCache.invalidate(contestJid + SEPARATOR + model.name);
-        });
-
-        modules.forEach(module ->
-                upsertModule(contestJid, module, DEFAULT_CONFIGS.getOrDefault(module, Collections.emptyMap())));
+            moduleCache.invalidate(contestJid + SEPARATOR + type.name());
+        }
     }
 
     public void upsertClarificationModule(String contestJid) {
@@ -146,17 +160,6 @@ public class ContestModuleStore {
             ContestModuleModel model = new ContestModuleModel();
             toModel(contestJid, type, config, model);
             moduleDao.insert(model);
-        }
-
-        moduleCache.invalidate(contestJid + SEPARATOR + type.name());
-    }
-
-    private void disableModule(String contestJid, ContestModuleType type) {
-        Optional<ContestModuleModel> maybeModel = moduleDao.selectEnabledByContestJidAndType(contestJid, type);
-        if (maybeModel.isPresent()) {
-            ContestModuleModel model = maybeModel.get();
-            model.enabled = false;
-            moduleDao.update(model);
         }
 
         moduleCache.invalidate(contestJid + SEPARATOR + type.name());

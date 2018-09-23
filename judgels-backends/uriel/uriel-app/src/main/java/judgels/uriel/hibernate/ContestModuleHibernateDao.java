@@ -28,6 +28,14 @@ public class ContestModuleHibernateDao extends HibernateDao<ContestModuleModel> 
     }
 
     @Override
+    public Optional<ContestModuleModel> selectByContestJidAndType(String contestJid, ContestModuleType type) {
+        return selectByFilter(new FilterOptions.Builder<ContestModuleModel>()
+                .putColumnsEq(ContestModuleModel_.contestJid, contestJid)
+                .putColumnsEq(ContestModuleModel_.name, type.name())
+                .build());
+    }
+
+    @Override
     public Optional<ContestModuleModel> selectEnabledByContestJidAndType(String contestJid, ContestModuleType type) {
         return selectByFilter(new FilterOptions.Builder<ContestModuleModel>()
                 .putColumnsEq(ContestModuleModel_.contestJid, contestJid)

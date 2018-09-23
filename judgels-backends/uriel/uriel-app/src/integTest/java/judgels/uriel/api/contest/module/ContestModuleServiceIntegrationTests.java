@@ -3,13 +3,13 @@ package judgels.uriel.api.contest.module;
 import static judgels.uriel.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
+import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.google.common.collect.ImmutableSet;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractServiceIntegrationTests;
 import judgels.uriel.DaggerUrielIntegrationTestComponent;
@@ -62,9 +62,16 @@ class ContestModuleServiceIntegrationTests extends AbstractServiceIntegrationTes
                 ADMIN_HEADER,
                 new ContestCreateData.Builder().slug("contest").build());
 
-        moduleService.setModules(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(REGISTRATION, CLARIFICATION));
+        moduleService.enableModule(ADMIN_HEADER, contest.getJid(), REGISTRATION);
+        moduleService.enableModule(ADMIN_HEADER, contest.getJid(), CLARIFICATION);
 
         assertThat(moduleService.getModules(ADMIN_HEADER, contest.getJid()))
                 .containsExactlyInAnyOrder(CLARIFICATION, REGISTRATION);
+
+        moduleService.disableModule(ADMIN_HEADER, contest.getJid(), REGISTRATION);
+        moduleService.enableModule(ADMIN_HEADER, contest.getJid(), VIRTUAL);
+
+        assertThat(moduleService.getModules(ADMIN_HEADER, contest.getJid()))
+                .containsExactlyInAnyOrder(CLARIFICATION, VIRTUAL);
     }
 }
