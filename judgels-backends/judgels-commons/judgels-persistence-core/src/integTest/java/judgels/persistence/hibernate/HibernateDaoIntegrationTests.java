@@ -175,6 +175,12 @@ class HibernateDaoIntegrationTests {
                 .build());
         assertThat(page.getTotalData()).isEqualTo(2);
         assertThat(page.getData()).containsExactly(model2, model1);
+
+        page = dao.selectPaged(new FilterOptions.Builder<ExampleModel>()
+                .lastId(1)
+                .build());
+        assertThat(page.getTotalData()).isEqualTo(1);
+        assertThat(page.getData()).containsExactly(model2);
     }
 
     @Test

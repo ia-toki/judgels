@@ -17,6 +17,7 @@ public interface SelectionOptions {
     class Builder extends ImmutableSelectionOptions.Builder {
         public Builder() {
             page(1);
+            pageSize(0);
             orderBy("id");
             orderDir(OrderDir.DESC);
         }
