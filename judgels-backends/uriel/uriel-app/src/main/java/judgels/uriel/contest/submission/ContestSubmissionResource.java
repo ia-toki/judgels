@@ -2,6 +2,7 @@ package judgels.uriel.contest.submission;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
@@ -9,20 +10,30 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.io.BufferedOutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.SandalphonUtils;
@@ -53,6 +64,9 @@ import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
+    private static final int MAX_SUBMISSIONS_DOWNLOAD_PAGE_SIZE = 100;
+    private static final String LAST_SUBMISSION_ID_HEADER = "Last-Submission-Id";
+
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestStyleStore styleStore;
@@ -118,8 +132,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
-        Page<Submission> data =
-                submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, options.build());
+        Page<Submission> data = submissionStore
+                .getSubmissions(contest.getJid(), actualUserJid, problemJid, Optional.empty(), options.build());
         Set<String> userJids = data.getData().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         Set<String> problemJids = data.getData().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = userJids.isEmpty()
@@ -230,5 +244,69 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
+    }
+
+    @GET
+    @Path("/download")
+    @UnitOfWork
+    @Produces(APPLICATION_OCTET_STREAM)
+    public Response downloadSubmissions(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") Optional<String> userJid,
+            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("lastSubmissionId") Optional<Long> lastSubmissionId,
+            @QueryParam("limit") Optional<Integer> limit) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canViewAllSubmissions(actorJid, contest));
+
+        int pageSize = Math.min(MAX_SUBMISSIONS_DOWNLOAD_PAGE_SIZE, limit.orElse(MAX_SUBMISSIONS_DOWNLOAD_PAGE_SIZE));
+        SelectionOptions options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .pageSize(pageSize)
+                .orderDir(OrderDir.ASC)
+                .build();
+
+        List<Submission> submissions = submissionStore
+                .getSubmissions(contest.getJid(), userJid, problemJid, lastSubmissionId, options)
+                .getData();
+
+        if (submissions.isEmpty()) {
+            return Response.noContent().build();
+        }
+
+        StreamingOutput stream = output -> {
+            try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(output))) {
+                for (Submission submission : submissions) {
+                    String dirName = submission.getId() + "/" + submission.getJid() + "/";
+
+                    SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
+                    int fileCount = source.getSubmissionFiles().size();
+                    for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
+                        String field = entry.getKey();
+                        SourceFile file = entry.getValue();
+
+                        String filename;
+                        if (fileCount > 1) {
+                            filename = dirName + field + "/" + file.getName();
+                        } else {
+                            filename = dirName + file.getName();
+                        }
+
+                        ZipEntry ze = new ZipEntry(filename);
+                        zos.putNextEntry(ze);
+                        zos.write(file.getContent());
+                        zos.closeEntry();
+                    }
+                }
+            }
+            output.flush();
+        };
+
+        return Response.ok(stream)
+                .header(LAST_SUBMISSION_ID_HEADER, submissions.get(submissions.size() - 1).getId())
+                .build();
     }
 }
