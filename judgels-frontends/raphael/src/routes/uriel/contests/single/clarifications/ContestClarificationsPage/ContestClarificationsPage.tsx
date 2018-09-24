@@ -12,6 +12,7 @@ import { selectMaybeUserJid } from 'modules/session/sessionSelectors';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
+import ContestClarificationAnswerCreateDialog from '../ContestClarificationAnswerCreateDialog/ContestClarificationAnswerCreateDialog';
 import ContestClarificationCreateDialog from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestClarificationActions as injectedContestClarificationActions } from '../modules/contestClarificationActions';
@@ -51,6 +52,7 @@ class ContestClarificationsPage extends React.Component<
         <hr />
         {this.renderCreateDialog()}
         {this.renderClarifications()}
+        {this.renderCreateAnswerDialog()}
       </ContentCard>
     );
   }
@@ -101,6 +103,13 @@ class ContestClarificationsPage extends React.Component<
       onRefreshClarifications: this.refreshClarifications,
     };
     return <ContestClarificationCreateDialog {...props} />;
+  };
+
+  private renderCreateAnswerDialog = () => {
+    const props = {
+        onRefreshClarifications: this.refreshClarifications,
+    };
+    return <ContestClarificationAnswerCreateDialog {...props} />;
   };
 }
 

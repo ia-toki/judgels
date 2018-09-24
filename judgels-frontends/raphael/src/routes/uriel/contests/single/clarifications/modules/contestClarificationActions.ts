@@ -1,5 +1,6 @@
 import { selectToken } from 'modules/session/sessionSelectors';
-import { ContestClarificationData, ContestClarificationStatus } from 'modules/api/uriel/contestClarification';
+import { ContestClarificationData, ContestClarificationAnswerData,
+  ContestClarificationStatus } from 'modules/api/uriel/contestClarification';
 
 export const contestClarificationActions = {
   createClarification: (contestJid: string, data: ContestClarificationData) => {
@@ -31,6 +32,13 @@ export const contestClarificationActions = {
       } else {
         toastActions.showAlertToast('You have new clarification(s).');
       }
+    };
+  },
+
+  createAnswer: (contestJid: string, data: ContestClarificationAnswerData) => {
+    return async (dispatch, getState, { contestClarificationAPI }) => {
+      const token = selectToken(getState());
+      return await contestClarificationAPI.createAnswer(token, contestJid, data);
     };
   },
 };

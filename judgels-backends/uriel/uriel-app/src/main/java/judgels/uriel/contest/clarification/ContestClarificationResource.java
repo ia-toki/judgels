@@ -22,6 +22,7 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.clarification.ContestClarification;
+import judgels.uriel.api.contest.clarification.ContestClarificationAnswerData;
 import judgels.uriel.api.contest.clarification.ContestClarificationConfig;
 import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationService;
@@ -73,6 +74,19 @@ public class ContestClarificationResource implements ContestClarificationService
         checkAllowed(clarificationRoleChecker.canCreateClarification(actorJid, contest));
 
         return clarificationStore.createClarification(contestJid, clarificationData);
+    }
+
+    @Override
+    @UnitOfWork
+    public ContestClarification createAnswerForClarification(
+            AuthHeader authHeader,
+            String contestJid,
+            ContestClarificationAnswerData clarificationAnswerData) {
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(clarificationRoleChecker.canCreateClarification(actorJid, contest));
+        return clarificationStore.createAnswerForClarification(contestJid,
+                clarificationAnswerData);
     }
 
     @Override

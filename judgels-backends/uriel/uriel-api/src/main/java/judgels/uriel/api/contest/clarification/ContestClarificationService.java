@@ -40,4 +40,12 @@ public interface ContestClarificationService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             @QueryParam("language") Optional<String> language);
+
+    @POST
+    @Path("/answer")
+    @Produces(APPLICATION_JSON)
+    ContestClarification createAnswerForClarification(
+      @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+      @PathParam("contestJid") String contestJid,
+            ContestClarificationAnswerData clarificationAnswerData);
 }
