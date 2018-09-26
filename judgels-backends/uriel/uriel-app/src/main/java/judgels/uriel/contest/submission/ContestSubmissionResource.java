@@ -64,7 +64,7 @@ import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
-    private static final int MAX_SUBMISSIONS_DOWNLOAD_PAGE_SIZE = 100;
+    private static final int MAX_DOWNLOAD_SUBMISSIONS_LIMIT = 100;
     private static final String LAST_SUBMISSION_ID_HEADER = "Last-Submission-Id";
 
     private final ActorChecker actorChecker;
@@ -262,38 +262,45 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewAllSubmissions(actorJid, contest));
 
-        int pageSize = Math.min(MAX_SUBMISSIONS_DOWNLOAD_PAGE_SIZE, limit.orElse(MAX_SUBMISSIONS_DOWNLOAD_PAGE_SIZE));
         SelectionOptions options = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_PAGED)
-                .pageSize(pageSize)
+                .pageSize(Math.min(MAX_DOWNLOAD_SUBMISSIONS_LIMIT, limit.orElse(MAX_DOWNLOAD_SUBMISSIONS_LIMIT)))
                 .orderDir(OrderDir.ASC)
                 .build();
 
         List<Submission> submissions = submissionStore
-                .getSubmissions(contest.getJid(), userJid, problemJid, lastSubmissionId, options)
+                .getSubmissions(contestJid, userJid, problemJid, lastSubmissionId, options)
                 .getData();
 
         if (submissions.isEmpty()) {
             return Response.noContent().build();
         }
 
+        Set<String> userJids = contestantStore.getContestants(contestJid);
+        Map<String, String> usernamesMap = userJids.isEmpty()
+                ? ImmutableMap.of()
+                : profileService.getProfiles(userJids).entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
+
+        Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(Collectors.toSet());
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
+
         StreamingOutput stream = output -> {
             try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(output))) {
                 for (Submission submission : submissions) {
-                    String dirName = submission.getId() + "/" + submission.getJid() + "/";
+                    String problemAlias = problemAliasesMap.get(submission.getProblemJid());
+                    String username = usernamesMap.get(submission.getUserJid());
+                    if (problemAlias == null || username == null) {
+                        continue;
+                    }
 
                     SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
-                    int fileCount = source.getSubmissionFiles().size();
                     for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
-                        String field = entry.getKey();
                         SourceFile file = entry.getValue();
-
-                        String filename;
-                        if (fileCount > 1) {
-                            filename = dirName + field + "/" + file.getName();
-                        } else {
-                            filename = dirName + file.getName();
-                        }
+                        String filename = String.format(
+                                "%s/%s~%s/%s",
+                                submission.getId(), problemAlias, username, file.getName());
 
                         ZipEntry ze = new ZipEntry(filename);
                         zos.putNextEntry(ze);
