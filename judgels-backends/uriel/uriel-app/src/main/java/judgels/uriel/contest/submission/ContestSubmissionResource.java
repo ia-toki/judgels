@@ -40,6 +40,7 @@ import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
+import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.sandalphon.api.submission.SubmissionWithSource;
 import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
@@ -295,12 +296,14 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                         continue;
                     }
 
+                    int points = submission.getLatestGrading().map(Grading::getScore).orElse(0);
+
                     SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
                     for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
                         SourceFile file = entry.getValue();
                         String filename = String.format(
-                                "%s/%s~%s/%s",
-                                submission.getId(), problemAlias, username, file.getName());
+                                "%s/%s~%s~%d/%s",
+                                submission.getId(), problemAlias, username, points, file.getName());
 
                         ZipEntry ze = new ZipEntry(filename);
                         zos.putNextEntry(ze);
