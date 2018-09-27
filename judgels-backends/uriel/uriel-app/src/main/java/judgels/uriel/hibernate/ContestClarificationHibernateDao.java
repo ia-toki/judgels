@@ -1,11 +1,12 @@
 package judgels.uriel.hibernate;
 
 import java.time.Clock;
-import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
 import judgels.uriel.persistence.ContestClarificationDao;
@@ -23,18 +24,22 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
     }
 
     @Override
-    public List<ContestClarificationModel> selectAllByContestJidAndUserJid(String contestJid, String userJid) {
-        return selectAll(new FilterOptions.Builder<ContestClarificationModel>()
+    public Page<ContestClarificationModel> selectPagedByContestJidAndUserJid(
+            String contestJid,
+            String userJid,
+            SelectionOptions options) {
+
+        return selectPaged(new FilterOptions.Builder<ContestClarificationModel>()
                 .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
                 .putColumnsEq(ContestClarificationModel_.createdBy, userJid)
-                .build());
+                .build(), options);
     }
 
     @Override
-    public List<ContestClarificationModel> selectAllByContestJid(String contestJid) {
-        return selectAll(new FilterOptions.Builder<ContestClarificationModel>()
+    public Page<ContestClarificationModel> selectPagedByContestJid(String contestJid, SelectionOptions options) {
+        return selectPaged(new FilterOptions.Builder<ContestClarificationModel>()
                 .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
-                .build());
+                .build(), options);
     }
 
     @Override

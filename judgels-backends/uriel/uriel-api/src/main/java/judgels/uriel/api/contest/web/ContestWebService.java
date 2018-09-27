@@ -20,7 +20,6 @@ public interface ContestWebService {
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestSlug") String contestSlug);
 
-
     @GET
     @Path("/{contestJid}/with-config")
     @Produces(APPLICATION_JSON)

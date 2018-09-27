@@ -3,6 +3,7 @@ import { stringify } from 'query-string';
 import { APP_CONFIG } from 'conf';
 import { get, post } from 'modules/api/http';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
+import { Page } from '../pagination';
 
 export enum ContestClarificationStatus {
   Asked = 'ASKED',
@@ -38,7 +39,7 @@ export interface ContestClarificationConfig {
 }
 
 export interface ContestClarificationsResponse {
-  data: ContestClarification[];
+  data: Page<ContestClarification>;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
   problemNamesMap: { [problemJid: string]: string };
@@ -64,9 +65,10 @@ export function createContestClarificationAPI() {
     getClarifications: (
       token: string,
       contestJid: string,
-      language: string
+      language: string,
+      page: number
     ): Promise<ContestClarificationsResponse> => {
-      const params = stringify({ language });
+      const params = stringify({ language, page });
       return get(`${baseURL}/${contestJid}/clarifications?${params}`, token);
     },
   };

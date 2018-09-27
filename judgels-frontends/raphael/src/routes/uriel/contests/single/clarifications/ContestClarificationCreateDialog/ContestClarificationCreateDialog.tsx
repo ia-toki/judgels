@@ -1,27 +1,18 @@
 import { Button, Dialog, Intent } from '@blueprintjs/core';
 import * as React from 'react';
-import { connect } from 'react-redux';
 
 import ContestClarificationCreateForm, {
   ContestClarificationCreateFormData,
 } from '../ContestClarificationCreateForm/ContestClarificationCreateForm';
 import { ContestClarificationConfig, ContestClarificationData } from 'modules/api/uriel/contestClarification';
-import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 
-import { selectContest } from '../../../modules/contestSelectors';
-import { contestClarificationActions as injectedContestClarificationActions } from '../modules/contestClarificationActions';
-
 export interface ContestClarificationCreateDialogProps {
-  onRefreshClarifications: () => Promise<void>;
-}
-
-export interface ContestClarificationCreateDialogConnectedProps {
   contest: Contest;
   statementLanguage: string;
   onGetClarificationConfig: (contestJid: string, language: string) => Promise<ContestClarificationConfig>;
   onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
+  onRefreshClarifications: () => Promise<any>;
 }
 
 interface ContestClarificationCreateDialogState {
@@ -29,8 +20,8 @@ interface ContestClarificationCreateDialogState {
   isDialogOpen?: boolean;
 }
 
-class ContestClarificationCreateDialog extends React.Component<
-  ContestClarificationCreateDialogProps & ContestClarificationCreateDialogConnectedProps,
+export class ContestClarificationCreateDialog extends React.Component<
+  ContestClarificationCreateDialogProps,
   ContestClarificationCreateDialogState
 > {
   state: ContestClarificationCreateDialogState = {};
@@ -111,18 +102,3 @@ class ContestClarificationCreateDialog extends React.Component<
     this.setState({ isDialogOpen: false });
   };
 }
-
-function createContestClarificationCreateDialog(contestClarificationActions) {
-  const mapStateToProps = (state: AppState) => ({
-    contest: selectContest(state)!,
-    statementLanguage: selectStatementLanguage(state),
-  });
-
-  const mapDispatchToProps = {
-    onGetClarificationConfig: contestClarificationActions.getClarificationConfig,
-    onCreateClarification: contestClarificationActions.createClarification,
-  };
-  return connect(mapStateToProps, mapDispatchToProps)(ContestClarificationCreateDialog);
-}
-
-export default createContestClarificationCreateDialog(injectedContestClarificationActions);

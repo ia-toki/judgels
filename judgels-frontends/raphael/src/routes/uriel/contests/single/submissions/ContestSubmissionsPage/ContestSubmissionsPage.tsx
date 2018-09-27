@@ -123,10 +123,14 @@ export class ContestSubmissionsPage extends React.PureComponent<
 
   private renderPagination = () => {
     const { config, filter } = this.state;
+
+    // updates pagination when the filter is updated
+    const key = '' + filter.username + filter.problemAlias;
+
     return (
       config && (
         <Pagination
-          key={'' + filter.username + filter.problemAlias}
+          key={key}
           currentPage={1}
           pageSize={ContestSubmissionsPage.PAGE_SIZE}
           onChangePage={this.onChangePage}

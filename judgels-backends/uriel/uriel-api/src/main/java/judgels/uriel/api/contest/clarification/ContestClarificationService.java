@@ -39,5 +39,6 @@ public interface ContestClarificationService {
     ContestClarificationsResponse getClarifications(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            @QueryParam("language") Optional<String> language);
+            @QueryParam("language") Optional<String> language,
+            @QueryParam("page") Optional<Integer> page);
 }
