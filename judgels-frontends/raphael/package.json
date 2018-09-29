@@ -6,6 +6,7 @@
     "@blueprintjs/datetime": "3.1.0",
     "@blueprintjs/icons": "3.0.0",
     "@blueprintjs/select": "3.1.0",
+    "@types/tinymce": "^4.5.16",
     "base-64": "^0.1.0",
     "classnames": "^2.2.5",
     "history": "^4.7.2",
@@ -34,7 +35,8 @@
     "redux-form": "^7.1.0",
     "redux-persist": "^5.4.0",
     "redux-thunk": "^2.0.0",
-    "reset-css": "^2.2.0"
+    "reset-css": "^2.2.0",
+    "tinymce": "^4.8.2"
   },
   "scripts": {
     "start": "npm-run-all build:css --parallel watch:css start:ts",
