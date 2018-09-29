@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.service.actor.ActorChecker;
@@ -117,27 +119,31 @@ public class ContestClarificationResource implements ContestClarificationService
     public ContestClarificationsResponse getClarifications(
             AuthHeader authHeader,
             String contestJid,
-            Optional<String> language) {
+            Optional<String> language,
+            Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canViewOwnClarifications(actorJid, contest));
 
-        List<ContestClarification> data =
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        page.ifPresent(options::page);
+
+        Page<ContestClarification> data =
                 clarificationRoleChecker.canViewAllClarifications(actorJid, contest)
-                        ? clarificationStore.getClarifications(contestJid)
-                        : clarificationStore.getClarifications(contestJid, actorJid);
+                        ? clarificationStore.getClarifications(contestJid, options.build())
+                        : clarificationStore.getClarifications(contestJid, actorJid, options.build());
 
         Set<String> userJids = Sets.union(
-                data.stream().map(ContestClarification::getUserJid).collect(Collectors.toSet()),
-                data
+                data.getData().stream().map(ContestClarification::getUserJid).collect(Collectors.toSet()),
+                data.getData()
                         .stream()
                         .map(ContestClarification::getAnswererJid)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toSet()));
 
-        Set<String> problemJids = data
+        Set<String> problemJids = data.getData()
                 .stream()
                 .map(ContestClarification::getTopicJid)
                 .filter(topicJid -> !topicJid.equals(contestJid))

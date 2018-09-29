@@ -7,7 +7,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
@@ -67,10 +68,11 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
 
     @Test
     void view_problems_virtual() {
-        Contest contestAFinished = contestStore.createContest(new ContestData.Builder()
-                .slug("contest-a-ended")
-                .beginTime(NOW.minus(10, HOURS))
-                .build());
+        Contest contestAFinished = contestStore.createContest(
+                new ContestCreateData.Builder().slug("contest-a-finished").build());
+        contestAFinished = contestStore.updateContest(
+                contestAFinished.getJid(),
+                new ContestUpdateData.Builder().beginTime(NOW.minus(10, HOURS)).build()).get();
 
         moduleStore.upsertVirtualModule(
                 contestA.getJid(),

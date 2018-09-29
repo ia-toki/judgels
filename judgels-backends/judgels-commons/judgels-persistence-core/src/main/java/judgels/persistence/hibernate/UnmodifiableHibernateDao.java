@@ -16,6 +16,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.Model_;
 import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.UnmodifiableModel;
 import judgels.persistence.api.OrderDir;
@@ -149,6 +150,7 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     private void applyFilters(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<M> root, FilterOptions<M> options) {
+        Predicate filterId = cb.gt(root.get(Model_.id), options.getLastId());
         Predicate filterEq = cb.and(options.getColumnsEq().entrySet()
                 .stream()
                 .map(e -> cb.equal(root.get(e.getKey()), e.getValue()))
@@ -162,6 +164,6 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
                 .map(f -> f.apply(cb, cq, root))
                 .toArray(Predicate[]::new));
 
-        cq.where(cb.and(filterEq, filterIn, filterCustom));
+        cq.where(filterId, filterEq, filterIn, filterCustom);
     }
 }

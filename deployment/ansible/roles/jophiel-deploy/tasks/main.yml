@@ -18,13 +18,13 @@
   - name: Pull jophiel image
     docker_image:
       name: judgels/jophiel
-      tag: "{{ jophiel_version | default('latest', true) }}"
+      tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a jophiel container
     docker_container:
       name: jophiel
-      image: "judgels/jophiel:{{ jophiel_version | default('latest', true) }}"
+      image: "judgels/jophiel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:

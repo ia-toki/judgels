@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import judgels.service.ServiceVersion;
+import judgels.service.JudgelsVersion;
 
 @Path("/api/v2/version")
 public class VersionResource {
@@ -16,6 +16,6 @@ public class VersionResource {
     @GET
     @Produces(TEXT_PLAIN)
     public String getVersion() {
-        return ServiceVersion.INSTANCE;
+        return JudgelsVersion.INSTANCE;
     }
 }

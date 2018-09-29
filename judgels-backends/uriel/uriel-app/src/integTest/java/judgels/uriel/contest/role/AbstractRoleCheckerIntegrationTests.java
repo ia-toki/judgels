@@ -11,7 +11,8 @@ import judgels.uriel.UrielCacheUtils;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
 import judgels.uriel.api.contest.supervisor.SupervisorPermission;
 import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
@@ -84,33 +85,39 @@ public abstract class AbstractRoleCheckerIntegrationTests {
     }
 
     protected void prepareContestA() {
-        contestA = contestStore.createContest(new ContestData.Builder()
-                .slug("contest-a")
-                .beginTime(NOW.plusMillis(1))
-                .build());
-        contestAStarted = contestStore.createContest(new ContestData.Builder()
-                .slug("contest-a-started")
-                .beginTime(NOW)
-                .build());
+        contestA = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
+        contestA = contestStore.updateContest(
+                contestA.getJid(),
+                new ContestUpdateData.Builder().beginTime(NOW.plusMillis(1)).build()).get();
+
+        contestAStarted = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a-started").build());
+        contestAStarted = contestStore.updateContest(
+                contestAStarted.getJid(),
+                new ContestUpdateData.Builder().beginTime(NOW).build()).get();
 
         moduleStore.upsertRegistrationModule(contestA.getJid());
         moduleStore.upsertRegistrationModule(contestAStarted.getJid());
     }
 
     protected void prepareContestB() {
-        contestB = contestStore.createContest(new ContestData.Builder()
-                .slug("contest-b")
-                .beginTime(NOW.plusMillis(1))
-                .build());
-        contestBStarted = contestStore.createContest(new ContestData.Builder()
-                .slug("contest-b-started")
-                .beginTime(NOW.minus(2, HOURS))
-                .duration(Duration.ofHours(5))
-                .build());
-        contestBFinished = contestStore.createContest(new ContestData.Builder()
-                .slug("contest-b-ended")
-                .beginTime(NOW.minus(10, HOURS))
-                .build());
+        contestB = contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
+        contestB = contestStore.updateContest(
+                contestB.getJid(),
+                new ContestUpdateData.Builder().beginTime(NOW.plusMillis(1)).build()).get();
+
+        contestBStarted = contestStore.createContest(new ContestCreateData.Builder().slug("contest-b-started").build());
+        contestBStarted = contestStore.updateContest(
+                contestBStarted.getJid(),
+                new ContestUpdateData.Builder()
+                        .beginTime(NOW.minus(2, HOURS))
+                        .duration(Duration.ofHours(5))
+                        .build()).get();
+
+        contestBFinished = contestStore.createContest(
+                new ContestCreateData.Builder().slug("contest-b-finished").build());
+        contestBFinished = contestStore.updateContest(
+                contestBFinished.getJid(),
+                new ContestUpdateData.Builder().beginTime(NOW.minus(10, HOURS)).build()).get();
 
         contestantStore.upsertContestant(contestB.getJid(), CONTESTANT);
         contestantStore.upsertContestant(contestB.getJid(), SUPERVISOR_CONTESTANT);
@@ -158,10 +165,10 @@ public abstract class AbstractRoleCheckerIntegrationTests {
     }
 
     protected void prepareContestC() {
-        contestC = contestStore.createContest(new ContestData.Builder()
-                .slug("contest-c")
-                .beginTime(NOW.plusMillis(1))
-                .build());
+        contestC = contestStore.createContest(new ContestCreateData.Builder().slug("contest-c").build());
+        contestC = contestStore.updateContest(
+                contestC.getJid(),
+                new ContestUpdateData.Builder().beginTime(NOW.plusMillis(1)).build()).get();
     }
 
     protected void addSupervisorToContestBWithPermission(SupervisorPermissionType type) {

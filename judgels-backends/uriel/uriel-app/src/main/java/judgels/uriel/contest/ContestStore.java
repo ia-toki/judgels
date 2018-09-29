@@ -7,6 +7,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -14,10 +15,11 @@ import javax.inject.Singleton;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestDescription;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
@@ -82,24 +84,61 @@ public class ContestStore {
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 
-    public Contest createContest(ContestData contestData) {
-        if (contestData.getSlug().isPresent()) {
-            String slug = contestData.getSlug().get();
-            if (contestDao.selectBySlug(slug).isPresent()) {
-                throw ContestErrors.contestSlugAlreadyExists(slug);
-            }
+    public Contest createContest(ContestCreateData contestCreateData) {
+        if (contestDao.selectBySlug(contestCreateData.getSlug()).isPresent()) {
+            throw ContestErrors.contestSlugAlreadyExists(contestCreateData.getSlug());
         }
 
         ContestModel model = new ContestModel();
-        toModel(contestData, model);
+        model.slug = contestCreateData.getSlug();
+        model.name = contestCreateData.getSlug();
+        model.description = "";
+        model.style = ContestStyle.ICPC.name();
+        model.beginTime = Instant.ofEpochSecond(4102444800L); // 1 January 2100;
+        model.duration = Duration.ofHours(5).toMillis();
+
         return fromModel(contestDao.insert(model));
     }
 
+    public Optional<Contest> updateContest(String contestJid, ContestUpdateData contestUpdateData) {
+        return contestDao.selectByJid(contestJid).map(model -> {
+            if (contestUpdateData.getSlug().isPresent()) {
+                String newSlug = contestUpdateData.getSlug().get();
+                if (model.slug == null || !model.slug.equals(newSlug)) {
+                    if (contestDao.selectBySlug(newSlug).isPresent()) {
+                        throw ContestErrors.contestSlugAlreadyExists(newSlug);
+                    }
+                }
+            }
+
+            contestByJidCache.invalidate(contestJid);
+            if (model.slug != null) {
+                contestBySlugCache.invalidate(model.slug);
+            }
+            if (contestUpdateData.getSlug().isPresent()) {
+                contestBySlugCache.invalidate(contestUpdateData.getSlug().get());
+            }
+
+            contestUpdateData.getSlug().ifPresent(slug -> model.slug = slug);
+            contestUpdateData.getName().ifPresent(name -> model.name = name);
+            contestUpdateData.getStyle().ifPresent(style -> model.style = style.name());
+            contestUpdateData.getBeginTime().ifPresent(time -> model.beginTime = time);
+            contestUpdateData.getDuration().ifPresent(duration -> model.duration = duration.toMillis());
+            return fromModel(contestDao.update(model));
+        });
+    }
+
     public Optional<ContestDescription> getContestDescription(String contestJid) {
-        return contestDao.selectByJid(contestJid).map(model -> new ContestDescription.Builder()
-                    .description(model.description)
-                    .build()
-        );
+        return contestDao.selectByJid(contestJid).map(
+                model -> new ContestDescription.Builder().description(model.description).build());
+    }
+
+    public Optional<ContestDescription> updateContestDescription(String contestJid, ContestDescription description) {
+        return contestDao.selectByJid(contestJid).map(model -> {
+            model.description = description.getDescription();
+            contestDao.update(model);
+            return description;
+        });
     }
 
     private static Contest fromModel(ContestModel model) {
@@ -112,14 +151,5 @@ public class ContestStore {
                 .beginTime(model.beginTime)
                 .duration(Duration.of(model.duration, MILLIS))
                 .build();
-    }
-
-    private static void toModel(ContestData data, ContestModel model) {
-        model.name = data.getName();
-        model.slug = data.getSlug().orElse(null);
-        model.description = data.getDescription();
-        model.style = data.getStyle().name();
-        model.beginTime = data.getBeginTime();
-        model.duration = data.getDuration().toMillis();
     }
 }

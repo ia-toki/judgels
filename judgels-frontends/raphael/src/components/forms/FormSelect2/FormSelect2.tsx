@@ -34,6 +34,7 @@ export class FormSelect2 extends React.PureComponent<FormSelect2Props> {
           popoverProps={{ usePortal: false }}
         >
           <Button
+            data-key={inputProps.name}
             alignText={Alignment.LEFT}
             text={this.props.optionNamesMap[this.props.input.value]}
             rightIcon="caret-down"

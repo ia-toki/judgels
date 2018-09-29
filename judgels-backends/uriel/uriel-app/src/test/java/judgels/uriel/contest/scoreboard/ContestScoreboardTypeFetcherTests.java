@@ -7,8 +7,10 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
+import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -18,17 +20,21 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 class ContestScoreboardTypeFetcherTests {
-    private static final String CONTEST = "contestJid";
-    private static final Instant FREEZE_TIME = Instant.ofEpochSecond(42);
+    private static final String CONTEST_JID = "contestJid";
+    private static final Duration FREEZE_DURATION = Duration.ofSeconds(10);
 
     @Mock private ContestModuleStore moduleStore;
     @Mock private Clock clock;
+    @Mock private Contest contest;
 
     private ContestScoreboardTypeFetcher typeFetcher;
 
     @BeforeEach
     void before() {
         initMocks(this);
+
+        when(contest.getJid()).thenReturn(CONTEST_JID);
+        when(contest.getEndTime()).thenReturn(Instant.ofEpochSecond(52));
 
         typeFetcher = new ContestScoreboardTypeFetcher(moduleStore, clock);
     }
@@ -45,9 +51,9 @@ class ContestScoreboardTypeFetcherTests {
         class when_not_unfrozen_yet {
             @BeforeEach
             void before() {
-                when(moduleStore.getFrozenScoreboardModuleConfig(CONTEST))
+                when(moduleStore.getFrozenScoreboardModuleConfig(CONTEST_JID))
                         .thenReturn(Optional.of(new FrozenScoreboardModuleConfig.Builder()
-                                .scoreboardFreezeTime(FREEZE_TIME)
+                                .freezeDurationBeforeEndTime(FREEZE_DURATION)
                                 .isOfficialScoreboardAllowed(false)
                                 .build()));
             }
@@ -78,9 +84,9 @@ class ContestScoreboardTypeFetcherTests {
         class when_unfrozen {
             @BeforeEach
             void before() {
-                when(moduleStore.getFrozenScoreboardModuleConfig(CONTEST))
+                when(moduleStore.getFrozenScoreboardModuleConfig(CONTEST_JID))
                         .thenReturn(Optional.of(new FrozenScoreboardModuleConfig.Builder()
-                                .scoreboardFreezeTime(FREEZE_TIME)
+                                .freezeDurationBeforeEndTime(FREEZE_DURATION)
                                 .isOfficialScoreboardAllowed(true)
                                 .build()));
             }
@@ -109,10 +115,10 @@ class ContestScoreboardTypeFetcherTests {
     }
 
     private void assertThatSupervisorsSee(ContestScoreboardType... types) {
-        assertThat(typeFetcher.fetchViewableTypes(CONTEST, true)).containsExactly(types);
+        assertThat(typeFetcher.fetchViewableTypes(contest, true)).containsExactly(types);
     }
 
     private void assertThatContestantsSee(ContestScoreboardType... types) {
-        assertThat(typeFetcher.fetchViewableTypes(CONTEST, false)).containsExactly(types);
+        assertThat(typeFetcher.fetchViewableTypes(contest, false)).containsExactly(types);
     }
 }

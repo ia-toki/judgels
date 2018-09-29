@@ -28,8 +28,10 @@ export class FormTableSelect2 extends React.PureComponent<FormTableSelect2Props>
           onItemSelect={onChange}
           inputProps={inputProps}
           filterable={false}
+          popoverProps={{ usePortal: false }}
         >
           <Button
+            data-key={inputProps.name}
             alignText={Alignment.LEFT}
             text={this.props.optionNamesMap[this.props.input.value]}
             rightIcon="caret-down"
@@ -41,7 +43,13 @@ export class FormTableSelect2 extends React.PureComponent<FormTableSelect2Props>
 
   private renderOption = (value: string, { handleClick, modifiers }) => {
     return (
-      <MenuItem active={modifiers.active} key={value} onClick={handleClick} text={this.props.optionNamesMap[value]} />
+      <MenuItem
+        active={modifiers.active}
+        key={value}
+        data-key={value}
+        onClick={handleClick}
+        text={this.props.optionNamesMap[value]}
+      />
     );
   };
 }

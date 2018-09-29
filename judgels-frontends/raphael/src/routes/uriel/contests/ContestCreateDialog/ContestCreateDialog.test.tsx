@@ -47,6 +47,6 @@ describe('ContestCreateDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onCreateContest).toHaveBeenCalledWith({ slug: 'new-contest', name: 'new-contest' });
+    expect(onCreateContest).toHaveBeenCalledWith({ slug: 'new-contest' });
   });
 });

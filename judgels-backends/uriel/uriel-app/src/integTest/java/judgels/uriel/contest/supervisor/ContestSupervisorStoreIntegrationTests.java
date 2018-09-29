@@ -8,7 +8,7 @@ import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
 import judgels.uriel.api.contest.supervisor.SupervisorPermission;
@@ -40,8 +40,8 @@ class ContestSupervisorStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contest = contestStore.createContest(new ContestData.Builder().slug("contest-a").build());
-        contestStore.createContest(new ContestData.Builder().slug("contest-b").build());
+        Contest contest = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
+        contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 
         ContestSupervisor supervisor1 = store.upsertSupervisor(contest.getJid(), new ContestSupervisorData.Builder()
                 .userJid(USER_1)

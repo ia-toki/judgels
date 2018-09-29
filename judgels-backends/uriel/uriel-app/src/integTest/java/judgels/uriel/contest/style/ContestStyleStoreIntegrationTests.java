@@ -8,7 +8,7 @@ import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestStyleModel;
@@ -33,8 +33,8 @@ class ContestStyleStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contest = contestStore.createContest(new ContestData.Builder().slug("contest-a").build());
-        contestStore.createContest(new ContestData.Builder().slug("contest-b").build());
+        Contest contest = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
+        contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 
         IoiContestStyleConfig config = new IoiContestStyleConfig.Builder()
                 .languageRestriction(LanguageRestriction.noRestriction())

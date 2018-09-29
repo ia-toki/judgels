@@ -64,7 +64,7 @@ describe('contestClarificationActions', () => {
   describe('getClarifications()', () => {
     const { getClarifications } = contestClarificationActions;
     const doGetMyClarifications = async () =>
-      getClarifications(contestJid, 'id')(dispatch, getState, { contestClarificationAPI });
+      getClarifications(contestJid, 'id', 3)(dispatch, getState, { contestClarificationAPI });
 
     beforeEach(async () => {
       const response = {} as ContestClarificationsResponse;
@@ -73,8 +73,8 @@ describe('contestClarificationActions', () => {
       await doGetMyClarifications();
     });
 
-    it('calls API to get my clarifications', () => {
-      expect(contestClarificationAPI.getClarifications).toHaveBeenCalledWith(token, contestJid, 'id');
+    it('calls API to get clarifications', () => {
+      expect(contestClarificationAPI.getClarifications).toHaveBeenCalledWith(token, contestJid, 'id', 3);
     });
   });
 });

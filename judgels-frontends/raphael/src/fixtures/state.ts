@@ -11,16 +11,21 @@ export const sessionState: SessionState = {
   token,
 };
 
-export const contestJid = 'contestJid123';
 export const contestId = '123';
+export const contestJid = 'contestJid123';
+export const contestSlug = 'contest-a';
+export const contestName = 'Contest A';
+export const contestBeginTime = 123456;
+export const contestDuration = 5 * 60 * 60 * 1000;
+export const contestStyle = ContestStyle.ICPC;
 export const contest: Contest = {
   id: 1,
   jid: contestJid,
-  slug: 'contest-a',
-  name: 'Contest',
-  style: ContestStyle.ICPC,
-  beginTime: 123,
-  duration: 456,
+  slug: contestSlug,
+  name: contestName,
+  style: contestStyle,
+  beginTime: contestBeginTime,
+  duration: contestDuration,
 };
 
 export const problemJid = 'problemJid123';

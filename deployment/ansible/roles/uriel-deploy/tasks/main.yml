@@ -18,13 +18,13 @@
   - name: Pull uriel image
     docker_image:
       name: judgels/uriel
-      tag: "{{ uriel_version | default('latest', true) }}"
+      tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a uriel container
     docker_container:
       name: uriel
-      image: "judgels/uriel:{{ uriel_version | default('latest', true) }}"
+      image: "judgels/uriel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:

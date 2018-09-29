@@ -21,11 +21,13 @@ describe('contestActions', () => {
 
     contestAPI = {
       createContest: jest.fn(),
+      updateContest: jest.fn(),
       getActiveContests: jest.fn(),
       getContests: jest.fn(),
       getContestBySlug: jest.fn(),
       startVirtualContest: jest.fn(),
       getContestDescription: jest.fn(),
+      updateContestDescription: jest.fn(),
     };
 
     toastActions = {
@@ -74,6 +76,72 @@ describe('contestActions', () => {
     });
   });
 
+  describe('updateContest()', () => {
+    const { updateContest } = contestActions;
+
+    describe('when the slug is not updated', () => {
+      const doUpdateContest = async () =>
+        updateContest(contestJid, 'old-slug', { name: 'New Name' })(dispatch, getState, { contestAPI, toastActions });
+
+      beforeEach(async () => {
+        contestAPI.createContest.mockReturnValue(Promise.resolve({}));
+        await doUpdateContest();
+      });
+
+      it('calls API to update contest', () => {
+        expect(contestAPI.updateContest).toHaveBeenCalledWith(token, contestJid, { name: 'New Name' });
+      });
+
+      it('shows the success toast', () => {
+        expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Contest updated.');
+      });
+    });
+
+    describe('when the slug is updated', () => {
+      const doUpdateContest = async () =>
+        updateContest(contestJid, 'old-slug', { slug: 'new-slug', name: 'New Name' })(dispatch, getState, {
+          contestAPI,
+          toastActions,
+        });
+
+      describe('when the slug does not already exist', () => {
+        beforeEach(async () => {
+          contestAPI.createContest.mockReturnValue(Promise.resolve({}));
+          await doUpdateContest();
+        });
+
+        it('calls API to update contest', () => {
+          expect(contestAPI.updateContest).toHaveBeenCalledWith(token, contestJid, {
+            slug: 'new-slug',
+            name: 'New Name',
+          });
+        });
+
+        it('pushes the history to the new contest page', () => {
+          expect(dispatch).toHaveBeenCalledWith(push('/contests/new-slug'));
+        });
+
+        it('shows the success toast', () => {
+          expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Contest updated.');
+        });
+      });
+
+      describe('when the slug already exists', () => {
+        beforeEach(() => {
+          contestAPI.updateContest.mockImplementation(() => {
+            throw new BadRequestError({ errorName: ContestErrors.SlugAlreadyExists });
+          });
+        });
+
+        it('throws SubmissionError', async () => {
+          await expect(doUpdateContest()).rejects.toEqual(
+            new SubmissionError({ slug: ContestErrors.SlugAlreadyExists })
+          );
+        });
+      });
+    });
+  });
+
   describe('getContests()', () => {
     const { getContests } = contestActions;
     const doGetContests = async () => getContests(2, 20)(dispatch, getState, { contestAPI });
@@ -83,7 +151,7 @@ describe('contestActions', () => {
         totalData: 3,
         data: [],
       };
-      contestAPI.getContests.mockImplementation(() => contestPage);
+      contestAPI.getContests.mockReturnValue(Promise.resolve(contestPage));
 
       await doGetContests();
     });
@@ -98,7 +166,7 @@ describe('contestActions', () => {
     const doGetContestBySlug = async () => getContestBySlug('ioi')(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
-      contestAPI.getContestBySlug.mockImplementation(() => contest);
+      contestAPI.getContestBySlug.mockReturnValue(Promise.resolve(contest));
 
       await doGetContestBySlug();
     });
@@ -129,14 +197,40 @@ describe('contestActions', () => {
     const { getContestDescription } = contestActions;
     const doGetContestDescription = async () => getContestDescription(contestJid)(dispatch, getState, { contestAPI });
 
-    beforeEach(async () => {
-      contestAPI.getContestDescription.mockImplementation(() => contest);
+    const description = 'This is a contest';
 
-      await doGetContestDescription();
+    let contestDescription: string;
+
+    beforeEach(async () => {
+      contestAPI.getContestDescription.mockReturnValue(Promise.resolve({ description }));
+
+      contestDescription = await doGetContestDescription();
     });
 
     it('calls API to get contest description', () => {
       expect(contestAPI.getContestDescription).toHaveBeenCalledWith(token, contestJid);
+      expect(contestDescription).toEqual(description);
+    });
+  });
+
+  describe('updateContestDescription()', () => {
+    const { updateContestDescription } = contestActions;
+    const description = 'This is a contest';
+    const doUpdateContestDescription = async () =>
+      updateContestDescription(contestJid, description)(dispatch, getState, { contestAPI, toastActions });
+
+    beforeEach(async () => {
+      contestAPI.updateContestDescription.mockReturnValue(Promise.resolve({}));
+
+      await doUpdateContestDescription();
+    });
+
+    it('calls API to update contest description', () => {
+      expect(contestAPI.updateContestDescription).toHaveBeenCalledWith(token, contestJid, { description });
+    });
+
+    it('shows the success toast', () => {
+      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Description updated.');
     });
   });
 });

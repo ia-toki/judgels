@@ -17,13 +17,13 @@
   - name: Pull sealtiel image
     docker_image:
       name: judgels/sealtiel
-      tag: "{{ sealtiel_version | default('latest', true) }}"
+      tag: "{{ judgels_version | default('latest', true) }}"
       force: yes
 
   - name: Run a sealtiel container
     docker_container:
       name: sealtiel
-      image: "judgels/sealtiel:{{ sealtiel_version | default('latest', true) }}"
+      image: "judgels/sealtiel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:

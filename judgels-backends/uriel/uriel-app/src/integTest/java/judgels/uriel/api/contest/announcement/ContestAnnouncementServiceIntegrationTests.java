@@ -13,8 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.palantir.remoting.api.errors.ErrorType;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractServiceIntegrationTests;
@@ -22,9 +20,8 @@ import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestService;
-import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.ContestAnnouncementModel;
 import judgels.uriel.persistence.ContestModel;
@@ -65,14 +62,9 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
 
     @Test
     void basic_flow() {
-        Contest contest = contestService.createContest(ADMIN_HEADER, new ContestData.Builder()
-                .name("TOKI Open Contest A")
-                .description("This is contest A")
-                .slug("contest-A")
-                .style(ContestStyle.ICPC)
-                .beginTime(Instant.ofEpochSecond(42))
-                .duration(Duration.ofHours(5))
-                .build());
+        Contest contest = contestService.createContest(
+                ADMIN_HEADER,
+                new ContestCreateData.Builder().slug("contest").build());
 
         ContestAnnouncementData announcementData1 = new ContestAnnouncementData.Builder()
                 .title("this is title 1")
@@ -81,9 +73,14 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                 .build();
 
         ContestAnnouncement announcement1 = announcementService.createAnnouncement(
-                ADMIN_HEADER, contest.getJid(), announcementData1);
+                ADMIN_HEADER,
+                contest.getJid(),
+                announcementData1);
+
         assertThatRemoteExceptionThrownBy(() -> announcementService.createAnnouncement(
-                USER_A_HEADER, contest.getJid(), announcementData1))
+                USER_A_HEADER,
+                contest.getJid(),
+                announcementData1))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
         assertThat(announcementService.getAnnouncementConfig(of(ADMIN_HEADER), contest.getJid())

@@ -13,6 +13,7 @@ public interface BaseSubmissionDao<M extends AbstractSubmissionModel> extends Ju
             String containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
+            Optional<Long> lastSubmissionId,
             SelectionOptions options);
     Map<String, Long> selectCounts(String containerJid, String userJid, Set<String> problemJids);
 }

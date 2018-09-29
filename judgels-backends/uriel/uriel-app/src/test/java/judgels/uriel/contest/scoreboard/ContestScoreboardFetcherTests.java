@@ -59,7 +59,7 @@ class ContestScoreboardFetcherTests {
 
     @Test
     void fetch_default_scoreboard() {
-        when(typeFetcher.fetchViewableTypes(CONTEST_JID, CAN_SUPERVISE_SCOREBOARD))
+        when(typeFetcher.fetchViewableTypes(contest, CAN_SUPERVISE_SCOREBOARD))
                 .thenReturn(ImmutableList.of(OFFICIAL, FROZEN));
 
         when(scoreboardStore.getScoreboard(CONTEST_JID, OFFICIAL))

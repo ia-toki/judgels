@@ -1,11 +1,16 @@
 package judgels.uriel.persistence;
 
-import java.util.List;
 import judgels.persistence.JudgelsDao;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 
 public interface ContestClarificationDao extends JudgelsDao<ContestClarificationModel> {
-    List<ContestClarificationModel> selectAllByContestJidAndUserJid(String contestJid, String userJid);
-    List<ContestClarificationModel> selectAllByContestJid(String contestJid);
+    Page<ContestClarificationModel> selectPagedByContestJidAndUserJid(
+            String contestJid,
+            String userJid,
+            SelectionOptions options);
+
+    Page<ContestClarificationModel> selectPagedByContestJid(String contestJid, SelectionOptions options);
     long selectCountAnsweredByContestJidAndUserJid(String contestJid, String userJid);
     long selectCountAskedByContestJid(String contestJid);
 }

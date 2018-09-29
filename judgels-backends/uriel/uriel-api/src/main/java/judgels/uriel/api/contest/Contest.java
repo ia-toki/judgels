@@ -10,8 +10,8 @@ import org.immutables.value.Value;
 public interface Contest {
     long getId();
     String getJid();
-    String getName();
     String getSlug();
+    String getName();
     ContestStyle getStyle();
     Instant getBeginTime();
     Duration getDuration();

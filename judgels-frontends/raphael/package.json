@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "3.2.0",
+    "@blueprintjs/datetime": "3.1.0",
     "@blueprintjs/icons": "3.0.0",
     "@blueprintjs/select": "3.1.0",
     "@types/tinymce": "^4.5.16",
@@ -49,7 +50,7 @@
     "lint:ts": "tslint --exclude '**/*.d.ts' 'src/**/*.ts' 'src/**/*.tsx'",
     "lint:prettier": "prettier --list-different 'src/**/*.ts' 'src/**/*.tsx'",
     "format:prettier": "prettier --write 'src/**/*.ts' 'src/**/*.tsx'",
-    "test:ts": "react-scripts-ts test --env=jsdom",
+    "test:ts": "TZ=Asia/Jakarta react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {

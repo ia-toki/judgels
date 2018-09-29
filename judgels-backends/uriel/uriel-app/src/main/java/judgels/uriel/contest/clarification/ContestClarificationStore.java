@@ -1,9 +1,10 @@
 package judgels.uriel.contest.clarification;
 
 import com.google.common.collect.Lists;
-import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.clarification.ContestClarification;
 import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
@@ -24,16 +25,14 @@ public class ContestClarificationStore {
         return fromModel(clarificationDao.insert(model));
     }
 
-    public List<ContestClarification> getClarifications(String contestJid, String userJid) {
-        return Lists.transform(
-                clarificationDao.selectAllByContestJidAndUserJid(contestJid, userJid),
-                ContestClarificationStore::fromModel);
+    public Page<ContestClarification> getClarifications(String contestJid, String userJid, SelectionOptions options) {
+        return clarificationDao.selectPagedByContestJidAndUserJid(contestJid, userJid, options).mapData(
+                data -> Lists.transform(data, ContestClarificationStore::fromModel));
     }
 
-    public List<ContestClarification> getClarifications(String contestJid) {
-        return Lists.transform(
-                clarificationDao.selectAllByContestJid(contestJid),
-                ContestClarificationStore::fromModel);
+    public Page<ContestClarification> getClarifications(String contestJid, SelectionOptions options) {
+        return clarificationDao.selectPagedByContestJid(contestJid, options).mapData(
+                data -> Lists.transform(data, ContestClarificationStore::fromModel));
     }
 
     private static ContestClarification fromModel(ContestClarificationModel model) {

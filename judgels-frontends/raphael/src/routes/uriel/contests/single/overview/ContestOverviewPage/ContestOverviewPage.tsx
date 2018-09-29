@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import { AppState } from 'modules/store';
-import { Contest, ContestDescription } from 'modules/api/uriel/contest';
+import { Contest } from 'modules/api/uriel/contest';
 import { HtmlText } from 'components/HtmlText/HtmlText';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
@@ -16,11 +16,11 @@ import './ContestOverviewPage.css';
 
 export interface ContestOverviewPageProps {
   contest: Contest;
-  onGetContestDescription: (contestJid: string) => Promise<ContestDescription>;
+  onGetContestDescription: (contestJid: string) => Promise<string>;
 }
 
 interface ContestOverviewPageState {
-  description?: ContestDescription;
+  description?: string;
 }
 
 class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps, ContestOverviewPageState> {
@@ -49,17 +49,17 @@ class ContestOverviewPage extends React.PureComponent<ContestOverviewPageProps, 
   private renderDescription = () => {
     const { description } = this.state;
 
-    if (!description) {
+    if (description === undefined) {
       return <LoadingState />;
     }
 
-    if (!description.description) {
+    if (!description) {
       return null;
     }
 
     return (
       <ContentCard>
-        <HtmlText>{description.description}</HtmlText>
+        <HtmlText>{description}</HtmlText>
       </ContentCard>
     );
   };

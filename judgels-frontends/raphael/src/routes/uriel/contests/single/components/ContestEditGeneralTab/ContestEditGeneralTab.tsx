@@ -3,16 +3,19 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { AppState } from 'modules/store';
-import { Contest, ContestData } from 'modules/api/uriel/contest';
+import { Contest, ContestStyle, ContestUpdateData } from 'modules/api/uriel/contest';
+import { formatDuration, parseDuration } from 'utils/duration';
 
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
-import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
+import ContestEditGeneralForm, { ContestEditGeneralFormData } from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestActions as injectedContestActions } from '../../../modules/contestActions';
+import { contestWebActions as injectedContestWebActions } from '../../modules/contestWebActions';
 
 interface ContestEditGeneralTabProps {
   contest: Contest;
-  onUpdateContest: (data: ContestData) => void;
+  onGetContestByJidWithWebConfig: (contestJid: string) => Promise<void>;
+  onUpdateContest: (contestJid: string, contestSlug: string, data: ContestUpdateData) => Promise<void>;
 }
 
 interface ContestEditGeneralTabState {
@@ -47,12 +50,32 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
   private renderContent = () => {
     const { contest } = this.props;
     if (this.state.isEditing) {
+      const initialValues: ContestEditGeneralFormData = {
+        slug: contest.slug,
+        name: contest.name,
+        style: contest.style,
+        beginTime: new Date(contest.beginTime),
+        duration: formatDuration(contest.duration),
+      };
       const formProps = {
         onCancel: this.toggleEdit,
       };
-      return <ContestEditGeneralForm initialValues={contest} {...formProps} />;
+      return <ContestEditGeneralForm initialValues={initialValues} onSubmit={this.updateContest} {...formProps} />;
     }
     return <ContestEditGeneralTable contest={contest} />;
+  };
+
+  private updateContest = async (data: ContestEditGeneralFormData) => {
+    const updateData: ContestUpdateData = {
+      slug: data.slug,
+      name: data.name,
+      style: data.style as ContestStyle,
+      beginTime: data.beginTime.getTime(),
+      duration: parseDuration(data.duration),
+    };
+    await this.props.onUpdateContest(this.props.contest.jid, this.props.contest.slug, updateData);
+    await this.props.onGetContestByJidWithWebConfig(this.props.contest.jid);
+    this.toggleEdit();
   };
 
   private toggleEdit = () => {
@@ -62,14 +85,15 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
   };
 }
 
-function createContestEditGeneralTab(contestActions) {
+export function createContestEditGeneralTab(contestWebActions, contestActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state),
   });
   const mapDispatchToProps = {
+    onGetContestByJidWithWebConfig: contestWebActions.getContestByJidWithWebConfig,
     onUpdateContest: contestActions.updateContest,
   };
   return connect(mapStateToProps, mapDispatchToProps)(ContestEditGeneralTab);
 }
 
-export default createContestEditGeneralTab(injectedContestActions);
+export default createContestEditGeneralTab(injectedContestWebActions, injectedContestActions);

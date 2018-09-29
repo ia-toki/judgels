@@ -10,11 +10,11 @@ import judgels.persistence.JudgelsModel;
 @Entity(name = "uriel_contest")
 @JidPrefix("CONT")
 public class ContestModel extends JudgelsModel {
-    @Column(nullable = false)
-    public String name;
-
     @Column(unique = true)
     public String slug;
+
+    @Column(nullable = false)
+    public String name;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     public String description;

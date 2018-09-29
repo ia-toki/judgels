@@ -1,13 +1,13 @@
 import { Intent, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Contest, ContestConfig, ContestData } from 'modules/api/uriel/contest';
+import { Contest, ContestConfig, ContestCreateData } from 'modules/api/uriel/contest';
 
 import ContestCreateForm from '../ContestCreateForm/ContestCreateForm';
 
 interface ContestCreateDialogProps {
   onGetContestConfig: () => Promise<ContestConfig>;
-  onCreateContest: (data: ContestData) => Promise<Contest>;
+  onCreateContest: (data: ContestCreateData) => Promise<Contest>;
 }
 
 interface ContestCreateDialogState {
@@ -78,8 +78,8 @@ export class ContestCreateDialog extends React.Component<ContestCreateDialogProp
     </>
   );
 
-  private createContest = async (data: ContestData) => {
-    await this.props.onCreateContest({ ...data, name: data.slug });
+  private createContest = async (data: ContestCreateData) => {
+    await this.props.onCreateContest(data);
     this.setState({ isDialogOpen: false });
   };
 }

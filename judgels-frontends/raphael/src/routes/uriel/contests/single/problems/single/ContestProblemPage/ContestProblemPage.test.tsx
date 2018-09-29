@@ -83,6 +83,12 @@ describe('ContestProblemPage', () => {
     const decoder = wrapper.find('input[name="sourceFiles.decoder"]');
     decoder.simulate('change', { target: { files: [{ name: 'decoder.cpp', size: 2000 }] } });
 
+    // TODO(fushar): make this work
+    // See https://github.com/FezVrasta/popper.js/issues/478
+
+    // const gradingLanguageButton = wrapper.find('button[data-key="gradingLanguage"]');
+    // gradingLanguageButton.simulate('click');
+
     const form = wrapper.find('form');
     form.simulate('submit');
 

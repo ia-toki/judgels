@@ -8,7 +8,7 @@ import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestData;
+import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestStore;
@@ -35,8 +35,8 @@ class ContestScoreboardStoreIntegrationTests {
 
     @Test
     void can_do_basic_crud() {
-        Contest contest = contestStore.createContest(new ContestData.Builder().slug("contest-a").build());
-        contestStore.createContest(new ContestData.Builder().slug("contest-b").build());
+        Contest contest = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
+        contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 
         assertThat(store.getScoreboard(contest.getJid(), ContestScoreboardType.OFFICIAL)).isEmpty();
         assertThat(store.getScoreboard(contest.getJid(), ContestScoreboardType.FROZEN)).isEmpty();

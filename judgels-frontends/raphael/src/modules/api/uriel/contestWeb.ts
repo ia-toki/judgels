@@ -32,6 +32,7 @@ export enum ContestState {
   Begun = 'BEGUN',
   Started = 'STARTED',
   Finished = 'FINISHED',
+  Paused = 'PAUSED',
 }
 
 export function createContestWebAPI() {
@@ -40,6 +41,10 @@ export function createContestWebAPI() {
   return {
     getContestBySlugWithWebConfig: (token: string, contestSlug: string): Promise<ContestWithWebConfig> => {
       return get(`${baseURL}/web/slug/${contestSlug}/with-config`, token);
+    },
+
+    getContestByJidWithWebConfig: (token: string, contestJid: string): Promise<ContestWithWebConfig> => {
+      return get(`${baseURL}/web/${contestJid}/with-config`, token);
     },
 
     getWebConfig: (token: string, contestJid: string): Promise<ContestWebConfig> => {
