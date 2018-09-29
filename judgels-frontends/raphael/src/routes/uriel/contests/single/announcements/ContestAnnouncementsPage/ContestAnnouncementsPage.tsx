@@ -19,6 +19,7 @@ import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDia
 
 export interface ContestAnnouncementsPageProps {
   contest: Contest;
+  onGetAllAnnouncements: (contestJid: string) => Promise<ContestAnnouncement[]>;
   onGetPublishedAnnouncements: (contestJid: string) => Promise<ContestAnnouncement[]>;
   onGetAnnouncementConfig: (contestJid: string) => Promise<ContestAnnouncementConfig>;
   onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
@@ -35,7 +36,7 @@ export class ContestAnnouncementsPage extends React.PureComponent<
   state: ContestAnnouncementsPageState = {};
 
   async componentDidMount() {
-    await this.refreshAnnouncement();
+    await this.refreshAnnouncement(false);
   }
 
   render() {
@@ -70,8 +71,14 @@ export class ContestAnnouncementsPage extends React.PureComponent<
     ));
   };
 
-  private refreshAnnouncement = async () => {
-    const announcements = await this.props.onGetPublishedAnnouncements(this.props.contest.jid);
+  private refreshAnnouncement = async (isShowDrafts) => {
+    let getAnnouncements
+    if (isShowDrafts) {
+      getAnnouncements = this.props.onGetAllAnnouncements
+    } else {
+      getAnnouncements = this.props.onGetPublishedAnnouncements
+    }
+    const announcements = await getAnnouncements(this.props.contest.jid);
     this.setState({
       announcements,
     });
@@ -95,6 +102,7 @@ function createContestAnnouncementsPage(contestAnnouncementActions) {
 
   const mapDispatchToProps = {
     onGetPublishedAnnouncements: contestAnnouncementActions.getPublishedAnnouncements,
+    onGetAllAnnouncements: contestAnnouncementActions.getAllAnnouncements,
     onGetAnnouncementConfig: (contestJid: string) => contestAnnouncementActions.getAnnouncementConfig(contestJid),
     onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) =>
       contestAnnouncementActions.createAnnouncement(contestJid, data),

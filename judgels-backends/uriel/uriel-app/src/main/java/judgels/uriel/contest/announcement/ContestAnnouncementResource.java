@@ -37,6 +37,16 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
 
     @Override
     @UnitOfWork(readOnly = true)
+    public List<ContestAnnouncement> getAllAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(announcementRoleChecker.canViewPublishedAnnouncements(actorJid, contest));
+
+        return announcementStore.getAllAnnouncements(contestJid);
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
     public List<ContestAnnouncement> getPublishedAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));

@@ -17,6 +17,13 @@ import judgels.service.api.actor.AuthHeader;
 @Path("/api/v2/contests/{contestJid}/announcements")
 public interface ContestAnnouncementService {
     @GET
+    @Path("/")
+    @Produces(APPLICATION_JSON)
+    List<ContestAnnouncement> getAllAnnouncements(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid);
+
+    @GET
     @Path("/published")
     @Produces(APPLICATION_JSON)
     List<ContestAnnouncement> getPublishedAnnouncements(

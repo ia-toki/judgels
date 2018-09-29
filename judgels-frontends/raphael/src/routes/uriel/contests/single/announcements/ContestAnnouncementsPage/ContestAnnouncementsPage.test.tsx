@@ -13,6 +13,7 @@ import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnou
 
 describe('ContestAnnouncementsPage', () => {
   let wrapper: ReactWrapper<any, any>;
+  let onGetAllAnnouncements: jest.Mock<any>;
   let onGetPublishedAnnouncements: jest.Mock<any>;
   let onGetAnnouncementConfig: jest.Mock<any>;
   let onCreateAnnouncement: jest.Mock<any>;
@@ -20,6 +21,7 @@ describe('ContestAnnouncementsPage', () => {
   const render = () => {
     const props: ContestAnnouncementsPageProps = {
       contest,
+      onGetAllAnnouncements,
       onGetPublishedAnnouncements,
       onGetAnnouncementConfig,
       onCreateAnnouncement,
@@ -37,6 +39,7 @@ describe('ContestAnnouncementsPage', () => {
   };
 
   beforeEach(() => {
+    onGetAllAnnouncements = jest.fn();
     onGetPublishedAnnouncements = jest.fn();
     onGetAnnouncementConfig = jest.fn();
     onCreateAnnouncement = jest.fn();
