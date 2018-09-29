@@ -5,7 +5,7 @@ import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { Required } from 'components/forms/validations';
 import { FormTextInput } from 'components/forms/FormTextInput/FormTextInput';
 import { FormSelect2 } from 'components/forms/FormSelect2/FormSelect2';
-import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
+import { FormRichTextArea } from 'components/forms/FormRichTextArea/FormRichTextArea';
 import { ContestAnnouncementStatus } from 'modules/api/uriel/contestAnnouncement';
 
 export interface ContestAnnouncementCreateFormData {
@@ -43,7 +43,7 @@ const ContestAnnouncementCreateForm = (props: ContestAnnouncementCreateFormProps
     <>
       <Field component={FormSelect2} {...statusField} />
       <Field component={FormTextInput} {...titleField} />
-      <Field component={FormTextArea} {...contentField} />
+      <Field component={FormRichTextArea} {...contentField} />
     </>
   );
 

@@ -345,6 +345,12 @@
   dependencies:
     "@types/jquery" "*"
 
+"@types/tinymce@^4.5.16":
+  version "4.5.16"
+  resolved "https://registry.yarnpkg.com/@types/tinymce/-/tinymce-4.5.16.tgz#d6184583296d9bef5c0fe1c00457e45950009094"
+  dependencies:
+    "@types/jquery" "*"
+
 abab@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
@@ -6800,8 +6806,8 @@ requires-port@1.0.x, requires-port@1.x.x, requires-port@~1.0.0:
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
 reset-css@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/reset-css/-/reset-css-2.2.0.tgz#57ce1d2e8c28cca656c59385dc484f0cb35c5a1d"
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/reset-css/-/reset-css-2.2.1.tgz#fe3204c0c4831979fbb4967c90a992f0164635ed"
 
 resize-observer-polyfill@^1.5.0:
   version "1.5.0"
@@ -7626,6 +7632,10 @@ timers-browserify@^2.0.2:
   resolved "https://registry.yarnpkg.com/timers-browserify/-/timers-browserify-2.0.4.tgz#96ca53f4b794a5e7c0e1bd7cc88a372298fa01e6"
   dependencies:
     setimmediate "^1.0.4"
+
+tinymce@^4.8.2:
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-4.8.2.tgz#2ba65ee56f6641d8dcaca85db3fb36e9b35a3010"
 
 tmp@^0.0.33:
   version "0.0.33"
