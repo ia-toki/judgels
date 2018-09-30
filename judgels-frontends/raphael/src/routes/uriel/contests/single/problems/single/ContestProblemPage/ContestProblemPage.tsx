@@ -20,6 +20,7 @@ import { contestProblemActions as injectedContestProblemActions } from '../../mo
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../submissions/modules/contestSubmissionActions';
 
 import './ContestProblemPage.css';
+import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
@@ -35,6 +36,8 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     problemJid: string,
     data: ProblemSubmissionFormData
   ) => Promise<void>;
+  onPushBreadcrumb: (link: string, title: string) => void;
+  onPopBreadcrumb: (link: string) => void;
 }
 
 interface ContestProblemPageState {
@@ -53,6 +56,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       this.props.match.params.problemAlias,
       this.props.statementLanguage
     );
+    this.props.onPushBreadcrumb(this.props.match.url, `Problem ${contestantProblem.problem.alias}`);
     this.setState({ defaultLanguage, languages, contestantProblem, worksheet });
   }
 
@@ -62,6 +66,10 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     } else if (!this.state.worksheet && prevState.worksheet) {
       await this.componentDidMount();
     }
+  }
+
+  async componentWillUnmount() {
+    this.props.onPopBreadcrumb(this.props.match.url.replace(/\/+$/, ''));
   }
 
   render() {
@@ -122,7 +130,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 }
 
-export function createContestProblemPage(contestProblemActions, contestSubmissionActions) {
+export function createContestProblemPage(contestProblemActions, contestSubmissionActions, breadcrumbsActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
     statementLanguage: selectStatementLanguage(state),
@@ -131,9 +139,15 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
   const mapDispatchToProps = {
     onGetProblemWorksheet: contestProblemActions.getProblemWorksheet,
     onCreateSubmission: contestSubmissionActions.createSubmission,
+    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));
 }
 
-export default createContestProblemPage(injectedContestProblemActions, injectedContestSubmissionActions);
+export default createContestProblemPage(
+    injectedContestProblemActions,
+    injectedContestSubmissionActions,
+    injectedBreadcrumbsActions
+);
