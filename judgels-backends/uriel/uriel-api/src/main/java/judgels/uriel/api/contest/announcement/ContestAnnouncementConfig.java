@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestAnnouncementConfig.class)
 public interface ContestAnnouncementConfig {
     boolean getIsAllowedToCreateAnnouncement();
+    boolean getIsAllowedToEditAnnouncement();
 
     class Builder extends ImmutableContestAnnouncementConfig.Builder {}
 }

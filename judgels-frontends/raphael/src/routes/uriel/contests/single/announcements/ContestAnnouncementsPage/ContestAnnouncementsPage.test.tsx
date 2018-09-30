@@ -16,6 +16,7 @@ describe('ContestAnnouncementsPage', () => {
   let onGetPublishedAnnouncements: jest.Mock<any>;
   let onGetAnnouncementConfig: jest.Mock<any>;
   let onCreateAnnouncement: jest.Mock<any>;
+  let onUpdateAnnouncement: jest.Mock<any>;
 
   const render = () => {
     const props: ContestAnnouncementsPageProps = {
@@ -23,6 +24,7 @@ describe('ContestAnnouncementsPage', () => {
       onGetPublishedAnnouncements,
       onGetAnnouncementConfig,
       onCreateAnnouncement,
+      onUpdateAnnouncement,
     };
 
     const store = createStore(combineReducers({ form: formReducer }));

@@ -9,12 +9,11 @@ import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/Cont
 export interface ContestAnnouncementCreateDialogProps {
   contest: Contest;
   onRefreshAnnouncements: () => Promise<void>;
-  onGetAnnouncementConfig: (contestJid: string) => Promise<ContestAnnouncementConfig>;
+  config: ContestAnnouncementConfig;
   onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
 }
 
 interface ContestAnnouncementCreateDialogState {
-  config?: ContestAnnouncementConfig;
   isDialogOpen?: boolean;
 }
 
@@ -24,13 +23,8 @@ export class ContestAnnouncementCreateDialog extends React.Component<
 > {
   state: ContestAnnouncementCreateDialogState = {};
 
-  async componentDidMount() {
-    const config = await this.props.onGetAnnouncementConfig(this.props.contest.jid);
-    this.setState({ config });
-  }
-
   render() {
-    const { config } = this.state;
+    const { config } = this.props;
     if (!config) {
       return null;
     }

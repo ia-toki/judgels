@@ -87,6 +87,10 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                 .getIsAllowedToCreateAnnouncement()).isTrue();
         assertThat(announcementService.getAnnouncementConfig(of(USER_A_HEADER), contest.getJid())
                 .getIsAllowedToCreateAnnouncement()).isFalse();
+        assertThat(announcementService.getAnnouncementConfig(of(ADMIN_HEADER), contest.getJid())
+                .getIsAllowedToEditAnnouncement()).isTrue();
+        assertThat(announcementService.getAnnouncementConfig(of(USER_A_HEADER), contest.getJid())
+                .getIsAllowedToEditAnnouncement()).isFalse();
 
         assertThat(announcement1.getUserJid()).isEqualTo(ADMIN_JID);
         assertThat(announcement1.getTitle()).isEqualTo("this is title 1");
@@ -113,5 +117,20 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                 .getPublishedAnnouncements(of(ADMIN_HEADER), contest.getJid());
 
         assertThat(publishedAnnouncements).containsOnly(announcement1, announcement2);
+
+        ContestAnnouncementData announcementData4 = new ContestAnnouncementData.Builder()
+                .title("this is new title")
+                .content("this is new content")
+                .status(PUBLISHED)
+                .build();
+
+        ContestAnnouncement announcement4 = announcementService.updateAnnouncement(
+                ADMIN_HEADER, contest.getJid(), announcement1.getJid(), announcementData4);
+
+        publishedAnnouncements = announcementService
+                .getPublishedAnnouncements(of(ADMIN_HEADER), contest.getJid());
+
+        assertThat(publishedAnnouncements.stream().filter(
+                e -> e.getJid().equals(announcement1.getJid())).toArray()).containsOnly(announcement4);
     }
 }

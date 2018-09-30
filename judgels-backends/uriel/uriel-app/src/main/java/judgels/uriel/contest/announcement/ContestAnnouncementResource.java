@@ -64,9 +64,25 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         boolean canCreateAnnouncement = announcementRoleChecker.canCreateAnnouncement(actorJid, contest);
+        boolean canEditAnnouncement = announcementRoleChecker.canEditAnnouncement(actorJid, contest);
 
         return new ContestAnnouncementConfig.Builder()
                 .isAllowedToCreateAnnouncement(canCreateAnnouncement)
+                .isAllowedToEditAnnouncement(canEditAnnouncement)
                 .build();
+    }
+
+    @Override
+    @UnitOfWork
+    public ContestAnnouncement updateAnnouncement(
+            AuthHeader authHeader,
+            String contestJid,
+            String announcementJid,
+            ContestAnnouncementData announcementData) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(announcementRoleChecker.canEditAnnouncement(actorJid, contest));
+
+        return announcementStore.updateAnnouncement(contestJid, announcementJid, announcementData);
     }
 }

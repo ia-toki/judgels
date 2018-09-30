@@ -29,4 +29,12 @@ export const contestAnnouncementActions = {
       return await contestAnnouncementAPI.getAnnouncementConfig(token, contestJid);
     };
   },
+
+  updateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) => {
+    return async (dispatch, getState, { contestAnnouncementAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await contestAnnouncementAPI.updateAnnouncement(token, contestJid, announcementJid, data);
+      toastActions.showSuccessToast('Announcement edited.');
+    };
+  },
 };

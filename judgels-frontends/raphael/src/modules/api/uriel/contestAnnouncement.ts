@@ -1,5 +1,5 @@
 import { APP_CONFIG } from 'conf';
-import { get, post } from 'modules/api/http';
+import { get, post, put } from 'modules/api/http';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 
 export interface ContestAnnouncement {
@@ -13,6 +13,7 @@ export interface ContestAnnouncement {
 
 export interface ContestAnnouncementConfig {
   isAllowedToCreateAnnouncement: boolean;
+  isAllowedToEditAnnouncement: boolean;
 }
 
 export enum ContestAnnouncementStatus {
@@ -49,6 +50,15 @@ export function createContestAnnouncementAPI() {
       data: ContestAnnouncementData
     ): Promise<ContestAnnouncement> => {
       return post(`${baseURL}/${contestJid}/announcements/`, token, data);
+    },
+
+    updateAnnouncement: (
+      token: string,
+      contestJid: string,
+      announcementJid: string,
+      data: ContestAnnouncementData
+    ): Promise<ContestAnnouncement> => {
+      return put(`${baseURL}/${contestJid}/announcements/${announcementJid}`, token, data);
     },
   };
 }

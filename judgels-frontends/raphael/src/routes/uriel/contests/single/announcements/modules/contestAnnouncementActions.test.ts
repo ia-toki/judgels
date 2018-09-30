@@ -1,4 +1,4 @@
-import { contestJid, sessionState, token } from 'fixtures/state';
+import { contestJid, sessionState, token, announcementJid } from 'fixtures/state';
 import {
   ContestAnnouncement,
   ContestAnnouncementData,
@@ -23,6 +23,7 @@ describe('contestAnnouncementActions', () => {
       getPublishedAnnouncements: jest.fn(),
       createAnnouncement: jest.fn(),
       getAnnouncementConfig: jest.fn(),
+      updateAnnouncement: jest.fn(),
     };
     toastActions = {
       showSuccessToast: jest.fn(),
@@ -63,6 +64,29 @@ describe('contestAnnouncementActions', () => {
     it('calls API to create announcements', () => {
       expect(contestAnnouncementAPI.createAnnouncement).toHaveBeenCalledWith(token, contestJid, data);
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement created.');
+    });
+  });
+
+  describe('updateAnnouncement()', () => {
+    const { updateAnnouncement } = contestAnnouncementActions;
+    const data = {
+      title: 'announcement title',
+      content: 'announcement content',
+      status: ContestAnnouncementStatus.Published,
+    } as ContestAnnouncementData;
+    const doUpdateAnnouncement = async () =>
+      updateAnnouncement(contestJid, announcementJid, data)(dispatch, getState, {
+        contestAnnouncementAPI,
+        toastActions,
+      });
+
+    beforeEach(async () => {
+      await doUpdateAnnouncement();
+    });
+
+    it('calls API to update announcements', () => {
+      expect(contestAnnouncementAPI.updateAnnouncement).toHaveBeenCalledWith(token, contestJid, announcementJid, data);
+      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement edited.');
     });
   });
 
