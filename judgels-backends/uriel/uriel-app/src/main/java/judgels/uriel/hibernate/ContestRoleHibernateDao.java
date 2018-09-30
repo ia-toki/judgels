@@ -103,10 +103,4 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
                 hasSupervisor(userJid),
                 hasManager(userJid));
     }
-
-    static CustomPredicateFilter<ContestModel> hasSupervisorOrAbove(String userJid) {
-        return or(
-                hasSupervisor(userJid),
-                hasManager(userJid));
-    }
 }
