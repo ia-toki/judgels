@@ -26,7 +26,6 @@ import org.hibernate.SessionFactory;
 @Singleton
 public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> implements ContestRoleDao {
     private final Cache<String, Boolean> viewerOrAboveCache;
-    private final Cache<String, Boolean> supervisorOrAboveCache;
     private final Cache<String, Boolean> contestantCache;
     private final Cache<String, Boolean> managerCache;
 
@@ -35,10 +34,6 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
         super(sessionFactory, clock, actorProvider);
 
         this.viewerOrAboveCache = Caffeine.newBuilder()
-                .maximumSize(1_000)
-                .expireAfterWrite(getShortDuration())
-                .build();
-        this.supervisorOrAboveCache = Caffeine.newBuilder()
                 .maximumSize(1_000)
                 .expireAfterWrite(getShortDuration())
                 .build();
@@ -67,20 +62,6 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
     }
 
     @Override
-    public boolean isSupervisorOrAbove(String userJid, String contestJid) {
-        return supervisorOrAboveCache.get(
-                userJid + SEPARATOR + contestJid,
-                $ -> isSupervisorOrAboveUncached(userJid, contestJid));
-    }
-
-    private boolean isSupervisorOrAboveUncached(String userJid, String contestJid) {
-        return selectByFilter(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(hasContestJid(contestJid))
-                .addCustomPredicates(hasSupervisorOrAbove(userJid))
-                .build()).isPresent();
-    }
-
-    @Override
     public boolean isContestant(String userJid, String contestJid) {
         return contestantCache.get(
                 userJid + SEPARATOR + contestJid,
@@ -104,7 +85,6 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
     @Override
     public void invalidateCaches(String userJid, String contestJid) {
         viewerOrAboveCache.invalidate(userJid + SEPARATOR + contestJid);
-        supervisorOrAboveCache.invalidate(userJid + SEPARATOR + contestJid);
         contestantCache.invalidate(userJid + SEPARATOR + contestJid);
         managerCache.invalidate(userJid + SEPARATOR + contestJid);
     }

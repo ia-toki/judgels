@@ -27,7 +27,7 @@ public class ContestAnnouncementRoleChecker {
     }
 
     public boolean canViewAllAnnouncements(String userJid, Contest contest) {
-        return adminRoleDao.isAdmin(userJid) || contestRoleDao.isSupervisorOrAbove(userJid, contest.getJid());
+        return isSupervisorWithAnnouncementPermissionOrAbove(userJid, contest);
     }
 
     public boolean canViewPublishedAnnouncements(String userJid, Contest contest) {
@@ -35,6 +35,10 @@ public class ContestAnnouncementRoleChecker {
     }
 
     public boolean canCreateAnnouncement(String userJid, Contest contest) {
+        return isSupervisorWithAnnouncementPermissionOrAbove(userJid, contest);
+    }
+
+    private boolean isSupervisorWithAnnouncementPermissionOrAbove(String userJid, Contest contest) {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }

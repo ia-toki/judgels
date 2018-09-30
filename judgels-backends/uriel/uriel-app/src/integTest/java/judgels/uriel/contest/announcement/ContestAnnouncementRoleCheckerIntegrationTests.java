@@ -86,6 +86,10 @@ class ContestAnnouncementRoleCheckerIntegrationTests extends AbstractRoleChecker
         assertThat(checker.canViewAllAnnouncements(CONTESTANT, contestC)).isFalse();
 
         assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestC)).isFalse();
+        addSupervisorToContestBWithPermission(ANNOUNCEMENT);
+        assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestC)).isFalse();
 
