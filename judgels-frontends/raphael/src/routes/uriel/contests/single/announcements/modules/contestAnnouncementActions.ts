@@ -2,10 +2,10 @@ import { selectToken } from 'modules/session/sessionSelectors';
 import { ContestAnnouncementData } from 'modules/api/uriel/contestAnnouncement';
 
 export const contestAnnouncementActions = {
-  getAllAnnouncements: (contestJid: string) => {
+  getAnnouncements: (contestJid: string) => {
     return async (dispatch, getState, { contestAnnouncementAPI }) => {
       const token = selectToken(getState());
-      return await contestAnnouncementAPI.getAllAnnouncements(token, contestJid);
+      return await contestAnnouncementAPI.getAnnouncements(token, contestJid);
     };
   },
 

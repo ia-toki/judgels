@@ -20,7 +20,7 @@ describe('contestAnnouncementActions', () => {
     dispatch = jest.fn();
 
     contestAnnouncementAPI = {
-      getAllAnnouncements: jest.fn(),
+      getAnnouncements: jest.fn(),
       createAnnouncement: jest.fn(),
       getAnnouncementConfig: jest.fn(),
     };
@@ -29,20 +29,20 @@ describe('contestAnnouncementActions', () => {
     };
   });
 
-  describe('getAllAnnouncements()', () => {
-    const { getAllAnnouncements } = contestAnnouncementActions;
-    const doGetAllAnnouncements = async () =>
-        getAllAnnouncements(contestJid)(dispatch, getState, { contestAnnouncementAPI });
+  describe('getAnnouncements()', () => {
+    const { getAnnouncements } = contestAnnouncementActions;
+    const doGetAnnouncements = async () =>
+        getAnnouncements(contestJid)(dispatch, getState, { contestAnnouncementAPI });
 
     beforeEach(async () => {
       const announcements = [] as ContestAnnouncement[];
-      contestAnnouncementAPI.getAllAnnouncements.mockReturnValue(announcements);
+      contestAnnouncementAPI.getAnnouncements.mockReturnValue(announcements);
 
-      await doGetAllAnnouncements();
+      await doGetAnnouncements();
     });
 
     it('calls API to get published announcements', () => {
-      expect(contestAnnouncementAPI.getAllAnnouncements).toHaveBeenCalledWith(token, contestJid);
+      expect(contestAnnouncementAPI.getAnnouncements).toHaveBeenCalledWith(token, contestJid);
     });
   });
 
