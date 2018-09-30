@@ -56,7 +56,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       this.props.match.params.problemAlias,
       this.props.statementLanguage
     );
-    this.props.onPushBreadcrumb(this.props.match.url, '${contestantProblem.problem.alias}');
+    this.props.onPushBreadcrumb(this.props.match.url, `${contestantProblem.problem.alias}`);
     this.setState({ defaultLanguage, languages, contestantProblem, worksheet });
   }
 
