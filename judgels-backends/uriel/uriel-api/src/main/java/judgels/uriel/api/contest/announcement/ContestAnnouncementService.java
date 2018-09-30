@@ -19,7 +19,7 @@ public interface ContestAnnouncementService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    List<ContestAnnouncement> getAllAnnouncements(
+    List<ContestAnnouncement> getAnnouncements(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 

@@ -38,7 +38,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public List<ContestAnnouncement> getAllAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
+    public List<ContestAnnouncement> getAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         boolean canViewAllAnnouncements = announcementRoleChecker.canViewAllAnnouncements(actorJid, contest);
@@ -46,7 +46,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
                 .canViewPublishedAnnouncements(actorJid, contest);
 
         if (canViewAllAnnouncements) {
-            return announcementStore.getAllAnnouncements(contestJid);
+            return announcementStore.getAnnouncements(contestJid);
         } else if (canViewPublishedAnnouncements) {
             return announcementStore.getPublishedAnnouncements(contestJid);
         } else {

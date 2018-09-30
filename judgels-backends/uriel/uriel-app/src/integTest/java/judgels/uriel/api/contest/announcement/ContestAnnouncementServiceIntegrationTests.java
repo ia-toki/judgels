@@ -113,7 +113,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                 ADMIN_HEADER, contest.getJid(), announcementData3);
 
         List<ContestAnnouncement> allAnnouncements = announcementService
-                .getAllAnnouncements(of(ADMIN_HEADER), contest.getJid());
+                .getAnnouncements(of(ADMIN_HEADER), contest.getJid());
         assertThat(allAnnouncements).containsOnly(announcement1, announcement2, announcement3);
     }
 }

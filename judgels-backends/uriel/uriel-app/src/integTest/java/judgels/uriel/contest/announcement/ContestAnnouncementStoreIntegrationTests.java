@@ -61,7 +61,7 @@ class ContestAnnouncementStoreIntegrationTests {
         List<ContestAnnouncement> announcements = store.getPublishedAnnouncements(contest.getJid());
         assertThat(announcements).containsOnly(announcement3, announcement1);
 
-        List<ContestAnnouncement> announcementsWithDraft = store.getAllAnnouncements(contest.getJid());
+        List<ContestAnnouncement> announcementsWithDraft = store.getAnnouncements(contest.getJid());
         assertThat(announcementsWithDraft).containsExactlyInAnyOrder(announcement3, announcement2, announcement1);
     }
 }
