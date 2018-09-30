@@ -36,7 +36,7 @@ export function createContestAnnouncementAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    getAllAnnouncements: (token: string, contestJid: string): Promise<ContestAnnouncement[]> => {
+    getAnnouncements: (token: string, contestJid: string): Promise<ContestAnnouncement[]> => {
       return get(`${baseURL}/${contestJid}/announcements`, token);
     },
 
