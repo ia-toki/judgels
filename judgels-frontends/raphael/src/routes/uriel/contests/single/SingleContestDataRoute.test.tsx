@@ -63,7 +63,7 @@ describe('SingleContestDataRoute', () => {
 
     history.push('/other');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/contests/ioi');
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/contests/ioi/');
     expect(contestActions.clearContest).toHaveBeenCalled();
     expect(contestWebActions.clearWebConfig).toHaveBeenCalled();
   });
