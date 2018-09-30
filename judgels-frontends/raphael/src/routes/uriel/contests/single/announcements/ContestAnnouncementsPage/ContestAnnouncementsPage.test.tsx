@@ -13,14 +13,14 @@ import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnou
 
 describe('ContestAnnouncementsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let onGetPublishedAnnouncements: jest.Mock<any>;
+  let onGetAnnouncements: jest.Mock<any>;
   let onGetAnnouncementConfig: jest.Mock<any>;
   let onCreateAnnouncement: jest.Mock<any>;
 
   const render = () => {
     const props: ContestAnnouncementsPageProps = {
       contest,
-      onGetPublishedAnnouncements,
+      onGetAnnouncements,
       onGetAnnouncementConfig,
       onCreateAnnouncement,
     };
@@ -37,7 +37,7 @@ describe('ContestAnnouncementsPage', () => {
   };
 
   beforeEach(() => {
-    onGetPublishedAnnouncements = jest.fn();
+    onGetAnnouncements = jest.fn();
     onGetAnnouncementConfig = jest.fn();
     onCreateAnnouncement = jest.fn();
   });
@@ -45,7 +45,7 @@ describe('ContestAnnouncementsPage', () => {
   describe('when there are no announcements', () => {
     beforeEach(() => {
       onGetAnnouncementConfig.mockReturnValue(Promise.resolve({ isAllowedToCreateAnnouncement: true }));
-      onGetPublishedAnnouncements.mockReturnValue(Promise.resolve([]));
+      onGetAnnouncements.mockReturnValue(Promise.resolve([]));
       render();
     });
 
@@ -76,7 +76,7 @@ describe('ContestAnnouncementsPage', () => {
           updatedTime: 0,
         } as ContestAnnouncement,
       ];
-      onGetPublishedAnnouncements.mockReturnValue(Promise.resolve(announcements));
+      onGetAnnouncements.mockReturnValue(Promise.resolve(announcements));
 
       render();
     });
