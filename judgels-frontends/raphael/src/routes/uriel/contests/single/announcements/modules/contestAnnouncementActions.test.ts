@@ -4,6 +4,7 @@ import {
   ContestAnnouncementData,
   ContestAnnouncementConfig,
   ContestAnnouncementStatus,
+  ContestAnnouncementsResponse,
 } from 'modules/api/uriel/contestAnnouncement';
 import { AppState } from 'modules/store';
 
@@ -32,12 +33,17 @@ describe('contestAnnouncementActions', () => {
 
   describe('getAnnouncements()', () => {
     const { getAnnouncements } = contestAnnouncementActions;
-    const doGetAnnouncements = async () =>
-        getAnnouncements(contestJid)(dispatch, getState, { contestAnnouncementAPI });
+    const doGetAnnouncements = async () => getAnnouncements(contestJid)(dispatch, getState, { contestAnnouncementAPI });
 
     beforeEach(async () => {
-      const announcements = [] as ContestAnnouncement[];
-      contestAnnouncementAPI.getAnnouncements.mockReturnValue(announcements);
+      const data = [] as ContestAnnouncement[];
+      const config = {
+        isAllowedToCreateAnnouncement: true,
+        isAllowedToEditAnnouncement: false,
+      } as ContestAnnouncementConfig;
+      const response = { data, config } as ContestAnnouncementsResponse;
+
+      contestAnnouncementAPI.getAnnouncements.mockReturnValue(response);
 
       await doGetAnnouncements();
     });
@@ -87,23 +93,6 @@ describe('contestAnnouncementActions', () => {
     it('calls API to update announcements', () => {
       expect(contestAnnouncementAPI.updateAnnouncement).toHaveBeenCalledWith(token, contestJid, announcementJid, data);
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement edited.');
-    });
-  });
-
-  describe('getAnnouncementConfig()', () => {
-    const { getAnnouncementConfig } = contestAnnouncementActions;
-    const doGetAnnouncementConfig = async () =>
-      getAnnouncementConfig(contestJid)(dispatch, getState, { contestAnnouncementAPI });
-
-    beforeEach(async () => {
-      const response = {} as ContestAnnouncementConfig;
-      contestAnnouncementAPI.getAnnouncementConfig.mockReturnValue(response);
-
-      await doGetAnnouncementConfig();
-    });
-
-    it('calls API to get announcement config', () => {
-      expect(contestAnnouncementAPI.getAnnouncementConfig).toHaveBeenCalledWith(token, contestJid);
     });
   });
 });

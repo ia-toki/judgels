@@ -3,7 +3,6 @@ package judgels.uriel.api.contest.announcement;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -20,7 +19,7 @@ public interface ContestAnnouncementService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    List<ContestAnnouncement> getAnnouncements(
+    ContestAnnouncementsResponse getAnnouncements(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 
@@ -32,13 +31,6 @@ public interface ContestAnnouncementService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             ContestAnnouncementData announcementData);
-
-    @GET
-    @Path("/config")
-    @Produces(APPLICATION_JSON)
-    ContestAnnouncementConfig getAnnouncementConfig(
-            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
-            @PathParam("contestJid") String contestJid);
 
     @PUT
     @Path("/{announcementJid}")

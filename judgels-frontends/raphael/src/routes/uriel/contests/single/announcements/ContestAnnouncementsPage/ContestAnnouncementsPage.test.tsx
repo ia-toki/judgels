@@ -6,7 +6,7 @@ import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { contest } from 'fixtures/state';
-import { ContestAnnouncement } from 'modules/api/uriel/contestAnnouncement';
+import { ContestAnnouncement, ContestAnnouncementConfig } from 'modules/api/uriel/contestAnnouncement';
 
 import { ContestAnnouncementsPage, ContestAnnouncementsPageProps } from './ContestAnnouncementsPage';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
@@ -14,15 +14,17 @@ import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnou
 describe('ContestAnnouncementsPage', () => {
   let wrapper: ReactWrapper<any, any>;
   let onGetAnnouncements: jest.Mock<any>;
-  let onGetAnnouncementConfig: jest.Mock<any>;
   let onCreateAnnouncement: jest.Mock<any>;
   let onUpdateAnnouncement: jest.Mock<any>;
+  const config: ContestAnnouncementConfig = {
+    isAllowedToCreateAnnouncement: true,
+    isAllowedToEditAnnouncement: true,
+  };
 
   const render = () => {
     const props: ContestAnnouncementsPageProps = {
       contest,
       onGetAnnouncements,
-      onGetAnnouncementConfig,
       onCreateAnnouncement,
       onUpdateAnnouncement,
     };
@@ -40,14 +42,12 @@ describe('ContestAnnouncementsPage', () => {
 
   beforeEach(() => {
     onGetAnnouncements = jest.fn();
-    onGetAnnouncementConfig = jest.fn();
     onCreateAnnouncement = jest.fn();
   });
 
   describe('when there are no announcements', () => {
     beforeEach(() => {
-      onGetAnnouncementConfig.mockReturnValue(Promise.resolve({ isAllowedToCreateAnnouncement: true }));
-      onGetAnnouncements.mockReturnValue(Promise.resolve([]));
+      onGetAnnouncements.mockReturnValue(Promise.resolve({ data: [], config }));
       render();
     });
 
@@ -78,7 +78,7 @@ describe('ContestAnnouncementsPage', () => {
           updatedTime: 0,
         } as ContestAnnouncement,
       ];
-      onGetAnnouncements.mockReturnValue(Promise.resolve(announcements));
+      onGetAnnouncements.mockReturnValue(Promise.resolve({ data: announcements, config }));
 
       render();
     });

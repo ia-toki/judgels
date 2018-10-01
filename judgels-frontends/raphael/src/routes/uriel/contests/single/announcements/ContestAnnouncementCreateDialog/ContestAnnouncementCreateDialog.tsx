@@ -1,7 +1,7 @@
 import { Button, Dialog, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContestAnnouncementConfig, ContestAnnouncementData } from 'modules/api/uriel/contestAnnouncement';
+import { ContestAnnouncementData } from 'modules/api/uriel/contestAnnouncement';
 import { Contest } from 'modules/api/uriel/contest';
 
 import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/ContestAnnouncementCreateForm';
@@ -9,7 +9,7 @@ import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/Cont
 export interface ContestAnnouncementCreateDialogProps {
   contest: Contest;
   onRefreshAnnouncements: () => Promise<void>;
-  config: ContestAnnouncementConfig;
+  isAllowedToCreateAnnouncement: boolean;
   onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
 }
 
@@ -24,23 +24,20 @@ export class ContestAnnouncementCreateDialog extends React.Component<
   state: ContestAnnouncementCreateDialogState = {};
 
   render() {
-    const { config } = this.props;
-    if (!config) {
+    const { isAllowedToCreateAnnouncement } = this.props;
+    if (!isAllowedToCreateAnnouncement) {
       return null;
     }
 
     return (
       <div className="content-card__section">
-        {this.renderButton(config)}
+        {this.renderButton()}
         {this.renderDialog()}
       </div>
     );
   }
 
-  private renderButton = (config: ContestAnnouncementConfig) => {
-    if (!config.isAllowedToCreateAnnouncement) {
-      return;
-    }
+  private renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New announcement

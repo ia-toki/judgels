@@ -10,6 +10,7 @@ import {
   ContestAnnouncement,
   ContestAnnouncementConfig,
   ContestAnnouncementData,
+  ContestAnnouncementsResponse,
 } from 'modules/api/uriel/contestAnnouncement';
 
 import { selectContest } from '../../../modules/contestSelectors';
@@ -19,31 +20,23 @@ import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDia
 
 export interface ContestAnnouncementsPageProps {
   contest: Contest;
-  onGetAnnouncements: (contestJid: string) => Promise<ContestAnnouncement[]>;
-  onGetAnnouncementConfig: (contestJid: string) => Promise<ContestAnnouncementConfig>;
+  onGetAnnouncements: (contestJid: string) => Promise<ContestAnnouncementsResponse>;
   onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
   onUpdateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) => void;
 }
 
 interface ContestAnnouncementsPageState {
   announcements?: ContestAnnouncement[];
-  config: ContestAnnouncementConfig;
+  config?: ContestAnnouncementConfig;
 }
 
 export class ContestAnnouncementsPage extends React.PureComponent<
   ContestAnnouncementsPageProps,
   ContestAnnouncementsPageState
 > {
-  state: ContestAnnouncementsPageState = {
-    config: {
-      isAllowedToCreateAnnouncement: false,
-      isAllowedToEditAnnouncement: false,
-    } as ContestAnnouncementConfig,
-  };
+  state: ContestAnnouncementsPageState = {};
 
   async componentDidMount() {
-    const config = await this.props.onGetAnnouncementConfig(this.props.contest.jid);
-    this.setState({ config });
     await this.refreshAnnouncement();
   }
 
@@ -73,7 +66,7 @@ export class ContestAnnouncementsPage extends React.PureComponent<
     }
 
     const props = {
-      config,
+      isAllowedToEditAnnouncement: (config && config.isAllowedToEditAnnouncement) || false,
       contest: this.props.contest,
       onRefreshAnnouncements: this.refreshAnnouncement,
       onUpdateAnnouncement: this.props.onUpdateAnnouncement,
@@ -87,17 +80,18 @@ export class ContestAnnouncementsPage extends React.PureComponent<
   };
 
   private refreshAnnouncement = async () => {
-    const announcements = await this.props.onGetAnnouncements(this.props.contest.jid);
-    this.setState({
-      announcements,
-    });
+    const announcementsResponse = await this.props.onGetAnnouncements(this.props.contest.jid);
+    const config = announcementsResponse.config;
+    const announcements = announcementsResponse.data;
+    this.setState({ config, announcements });
   };
 
   private renderCreateDialog = () => {
+    const { config } = this.state;
     const props = {
       contest: this.props.contest,
       onRefreshAnnouncements: this.refreshAnnouncement,
-      config: this.state.config,
+      isAllowedToCreateAnnouncement: (config && config.isAllowedToCreateAnnouncement) || false,
       onCreateAnnouncement: this.props.onCreateAnnouncement,
     };
     return <ContestAnnouncementCreateDialog {...props} />;
@@ -111,7 +105,6 @@ function createContestAnnouncementsPage(contestAnnouncementActions) {
 
   const mapDispatchToProps = {
     onGetAnnouncements: (contestJid: string) => contestAnnouncementActions.getAnnouncements(contestJid),
-    onGetAnnouncementConfig: (contestJid: string) => contestAnnouncementActions.getAnnouncementConfig(contestJid),
     onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) =>
       contestAnnouncementActions.createAnnouncement(contestJid, data),
     onUpdateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) =>

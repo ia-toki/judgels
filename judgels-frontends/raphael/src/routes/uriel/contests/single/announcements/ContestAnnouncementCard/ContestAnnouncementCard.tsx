@@ -7,7 +7,6 @@ import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/
 import { HtmlText } from 'components/HtmlText/HtmlText';
 import {
   ContestAnnouncement,
-  ContestAnnouncementConfig,
   ContestAnnouncementData,
   ContestAnnouncementStatus,
 } from 'modules/api/uriel/contestAnnouncement';
@@ -17,7 +16,7 @@ import './ContestAnnouncementCard.css';
 
 export interface ContestAnnouncementCardProps {
   announcement: ContestAnnouncement;
-  config: ContestAnnouncementConfig;
+  isAllowedToEditAnnouncement: boolean;
   contest: Contest;
   onRefreshAnnouncements: () => Promise<void>;
   onUpdateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) => void;

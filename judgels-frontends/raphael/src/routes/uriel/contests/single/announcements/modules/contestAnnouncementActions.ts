@@ -23,13 +23,6 @@ export const contestAnnouncementActions = {
     };
   },
 
-  getAnnouncementConfig: (contestJid: string) => {
-    return async (dispatch, getState, { contestAnnouncementAPI }) => {
-      const token = selectToken(getState());
-      return await contestAnnouncementAPI.getAnnouncementConfig(token, contestJid);
-    };
-  },
-
   updateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) => {
     return async (dispatch, getState, { contestAnnouncementAPI, toastActions }) => {
       const token = selectToken(getState());

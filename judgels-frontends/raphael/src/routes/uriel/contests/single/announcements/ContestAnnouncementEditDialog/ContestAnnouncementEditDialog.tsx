@@ -1,12 +1,7 @@
 import { Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import {
-  ContestAnnouncementConfig,
-  ContestAnnouncementData,
-  ContestAnnouncement,
-  ContestAnnouncementStatus,
-} from 'modules/api/uriel/contestAnnouncement';
+import { ContestAnnouncementData, ContestAnnouncement } from 'modules/api/uriel/contestAnnouncement';
 import { Contest } from 'modules/api/uriel/contest';
 
 import ContestAnnouncementEditForm from '../ContestAnnouncementEditForm/ContestAnnouncementEditForm';
@@ -14,7 +9,7 @@ import ContestAnnouncementEditForm from '../ContestAnnouncementEditForm/ContestA
 export interface ContestAnnouncementEditDialogProps {
   contest: Contest;
   announcement: ContestAnnouncement;
-  config: ContestAnnouncementConfig;
+  isAllowedToEditAnnouncement: boolean;
   onRefreshAnnouncements: () => Promise<void>;
   onUpdateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) => void;
 }
@@ -30,23 +25,20 @@ export class ContestAnnouncementEditDialog extends React.Component<
   state: ContestAnnouncementEditDialogState = {};
 
   render() {
-    const { config } = this.props;
-    if (!config) {
+    const { isAllowedToEditAnnouncement } = this.props;
+    if (!isAllowedToEditAnnouncement) {
       return null;
     }
 
     return (
       <>
-        {this.renderButton(config)}
+        {this.renderButton()}
         {this.renderDialog()}
       </>
     );
   }
 
-  private renderButton = (config: ContestAnnouncementConfig) => {
-    if (!config.isAllowedToEditAnnouncement) {
-      return;
-    }
+  private renderButton = () => {
     return (
       <Button icon="edit" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         Edit
@@ -68,7 +60,7 @@ export class ContestAnnouncementEditDialog extends React.Component<
     const initialValues: any = {
       title: props.announcement.title,
       content: props.announcement.content,
-      status: ContestAnnouncementStatus.Published,
+      status: props.announcement.status,
     };
 
     return (

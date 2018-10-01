@@ -15,6 +15,7 @@ import judgels.uriel.api.contest.announcement.ContestAnnouncement;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementConfig;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementData;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementService;
+import judgels.uriel.api.contest.announcement.ContestAnnouncementsResponse;
 import judgels.uriel.contest.ContestStore;
 
 public class ContestAnnouncementResource implements ContestAnnouncementService {
@@ -38,20 +39,33 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public List<ContestAnnouncement> getAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
+    public ContestAnnouncementsResponse getAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        boolean canCreateAnnouncement = announcementRoleChecker.canCreateAnnouncement(actorJid, contest);
+        boolean canEditAnnouncement = announcementRoleChecker.canEditAnnouncement(actorJid, contest);
         boolean canViewAllAnnouncements = announcementRoleChecker.canViewAllAnnouncements(actorJid, contest);
         boolean canViewPublishedAnnouncements = announcementRoleChecker
                 .canViewPublishedAnnouncements(actorJid, contest);
 
+        ContestAnnouncementConfig contestAnnouncementConfig = new ContestAnnouncementConfig.Builder()
+                .isAllowedToCreateAnnouncement(canCreateAnnouncement)
+                .isAllowedToEditAnnouncement(canEditAnnouncement)
+                .build();
+
+        List<ContestAnnouncement> contestAnnouncements;
         if (canViewAllAnnouncements) {
-            return announcementStore.getAnnouncements(contestJid);
+            contestAnnouncements = announcementStore.getAnnouncements(contestJid);
         } else if (canViewPublishedAnnouncements) {
-            return announcementStore.getPublishedAnnouncements(contestJid);
+            contestAnnouncements = announcementStore.getPublishedAnnouncements(contestJid);
         } else {
             throw new ForbiddenException();
         }
+
+        return new ContestAnnouncementsResponse.Builder()
+                .data(contestAnnouncements)
+                .config(contestAnnouncementConfig)
+                .build();
     }
 
     @Override
@@ -65,20 +79,6 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
         checkAllowed(announcementRoleChecker.canCreateAnnouncement(actorJid, contest));
 
         return announcementStore.createAnnouncement(contestJid, announcementData);
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public ContestAnnouncementConfig getAnnouncementConfig(Optional<AuthHeader> authHeader, String contestJid) {
-        String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        boolean canCreateAnnouncement = announcementRoleChecker.canCreateAnnouncement(actorJid, contest);
-        boolean canEditAnnouncement = announcementRoleChecker.canEditAnnouncement(actorJid, contest);
-
-        return new ContestAnnouncementConfig.Builder()
-                .isAllowedToCreateAnnouncement(canCreateAnnouncement)
-                .isAllowedToEditAnnouncement(canEditAnnouncement)
-                .build();
     }
 
     @Override
