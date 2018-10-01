@@ -34,7 +34,7 @@ class SingleProfileDataRoute extends React.Component<SingleProfileDataRouteProps
 
   componentWillUnmount() {
     this.props.onClearUserJid();
-    this.props.onPopBreadcrumb(this.props.match.url.replace(/\/+$/, ''));
+    this.props.onPopBreadcrumb(this.props.match.url);
   }
 
   render() {

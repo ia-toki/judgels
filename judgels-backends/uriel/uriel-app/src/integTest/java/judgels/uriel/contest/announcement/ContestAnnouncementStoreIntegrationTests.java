@@ -45,11 +45,12 @@ class ContestAnnouncementStoreIntegrationTests {
                         .content("The contest is extended by 30 mins")
                         .status(ContestAnnouncementStatus.PUBLISHED)
                         .build());
-        store.createAnnouncement(contest.getJid(), new ContestAnnouncementData.Builder()
-                .title("Snack")
-                .content("Snack is available outside hall")
-                .status(ContestAnnouncementStatus.DRAFT)
-                .build());
+        ContestAnnouncement announcement2 =
+                store.createAnnouncement(contest.getJid(), new ContestAnnouncementData.Builder()
+                        .title("Snack")
+                        .content("Snack is available outside hall")
+                        .status(ContestAnnouncementStatus.DRAFT)
+                        .build());
         ContestAnnouncement announcement3 =
                 store.createAnnouncement(contest.getJid(), new ContestAnnouncementData.Builder()
                         .title("Compiler version")
@@ -59,5 +60,8 @@ class ContestAnnouncementStoreIntegrationTests {
 
         List<ContestAnnouncement> announcements = store.getPublishedAnnouncements(contest.getJid());
         assertThat(announcements).containsOnly(announcement3, announcement1);
+
+        List<ContestAnnouncement> announcementsWithDraft = store.getAnnouncements(contest.getJid());
+        assertThat(announcementsWithDraft).containsExactlyInAnyOrder(announcement3, announcement2, announcement1);
     }
 }

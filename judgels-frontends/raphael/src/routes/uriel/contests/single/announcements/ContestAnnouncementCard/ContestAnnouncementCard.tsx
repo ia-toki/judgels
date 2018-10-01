@@ -1,4 +1,4 @@
-import { Callout } from '@blueprintjs/core';
+import { Callout, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
@@ -9,6 +9,7 @@ import {
   ContestAnnouncement,
   ContestAnnouncementConfig,
   ContestAnnouncementData,
+  ContestAnnouncementStatus,
 } from 'modules/api/uriel/contestAnnouncement';
 import { Contest } from 'modules/api/uriel/contest';
 
@@ -24,6 +25,7 @@ export interface ContestAnnouncementCardProps {
 
 export const ContestAnnouncementCard = (props: ContestAnnouncementCardProps) => (
   <Callout className="contest-announcement-card" title={props.announcement.title}>
+    {props.announcement.status === ContestAnnouncementStatus.Draft ? <Tag>Draft</Tag> : null}
     <p className="contest-announcement-card__info">
       <small>
         published <FormattedRelative value={props.announcement.updatedTime} />{' '}

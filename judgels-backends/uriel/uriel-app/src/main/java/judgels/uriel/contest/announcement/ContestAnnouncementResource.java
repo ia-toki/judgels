@@ -7,6 +7,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
+import javax.ws.rs.ForbiddenException;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -37,12 +38,20 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public List<ContestAnnouncement> getPublishedAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
+    public List<ContestAnnouncement> getAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(announcementRoleChecker.canViewPublishedAnnouncements(actorJid, contest));
+        boolean canViewAllAnnouncements = announcementRoleChecker.canViewAllAnnouncements(actorJid, contest);
+        boolean canViewPublishedAnnouncements = announcementRoleChecker
+                .canViewPublishedAnnouncements(actorJid, contest);
 
-        return announcementStore.getPublishedAnnouncements(contestJid);
+        if (canViewAllAnnouncements) {
+            return announcementStore.getAnnouncements(contestJid);
+        } else if (canViewPublishedAnnouncements) {
+            return announcementStore.getPublishedAnnouncements(contestJid);
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     @Override

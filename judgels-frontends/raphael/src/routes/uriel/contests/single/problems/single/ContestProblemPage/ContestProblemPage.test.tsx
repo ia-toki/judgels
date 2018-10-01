@@ -1,7 +1,8 @@
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
+import { Route } from 'react-router';
+import { ConnectedRouter } from 'react-router-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
@@ -13,11 +14,15 @@ import { contest, contestJid, problemJid } from 'fixtures/state';
 
 import { createContestProblemPage } from './ContestProblemPage';
 import { contestReducer, PutContest } from '../../../../modules/contestReducer';
+import createMemoryHistory from 'history/createMemoryHistory';
+import { MemoryHistory } from 'history';
 
 describe('ContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
   let contestSubmissionActions: jest.Mocked<any>;
+  let breadcrumbsActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
+  let history: MemoryHistory;
 
   beforeEach(() => {
     contestProblemActions = {
@@ -51,6 +56,10 @@ describe('ContestProblemPage', () => {
     contestSubmissionActions = {
       createSubmission: jest.fn(),
     };
+    breadcrumbsActions = {
+      pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
+      popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
+    };
 
     const store = createStore(
       combineReducers({
@@ -62,15 +71,30 @@ describe('ContestProblemPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestProblemPage = createContestProblemPage(contestProblemActions, contestSubmissionActions);
+    const ContestProblemPage = createContestProblemPage(
+      contestProblemActions,
+      contestSubmissionActions,
+      breadcrumbsActions
+    );
 
+    history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/C`] });
     wrapper = mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ContestProblemPage />
-        </MemoryRouter>
+        <ConnectedRouter history={history}>
+          <Route path="/contests/:contestSlug/problems/:problemAlias" component={ContestProblemPage} />
+        </ConnectedRouter>
       </Provider>
     );
+  });
+
+  test('navigation', async () => {
+    await new Promise(resolve => setImmediate(resolve));
+    wrapper.update();
+    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`, 'C');
+
+    history.push('/contests/ioi/');
+    await new Promise(resolve => setImmediate(resolve));
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`);
   });
 
   test('submission form', async () => {

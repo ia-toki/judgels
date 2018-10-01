@@ -54,7 +54,7 @@ class SingleContestDataRoute extends React.Component<SingleContestDataRouteProps
   componentWillUnmount() {
     this.props.onClearContest();
     this.props.onClearContestWebConfig();
-    this.props.onPopBreadcrumb(this.props.match.url.replace(/\/+$/, ''));
+    this.props.onPopBreadcrumb(this.props.match.url);
 
     if (this.currentTimeout) {
       clearTimeout(this.currentTimeout);

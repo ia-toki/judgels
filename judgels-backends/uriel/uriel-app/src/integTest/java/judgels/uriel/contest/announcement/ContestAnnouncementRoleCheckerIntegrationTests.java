@@ -70,4 +70,31 @@ class ContestAnnouncementRoleCheckerIntegrationTests extends AbstractRoleChecker
         assertThat(checker.canViewPublishedAnnouncements(MANAGER, contestB)).isTrue();
         assertThat(checker.canViewPublishedAnnouncements(MANAGER, contestC)).isFalse();
     }
+
+    @Test
+    void view_all_announcements() {
+        assertThat(checker.canViewAllAnnouncements(ADMIN, contestA)).isTrue();
+        assertThat(checker.canViewAllAnnouncements(ADMIN, contestB)).isTrue();
+        assertThat(checker.canViewAllAnnouncements(ADMIN, contestC)).isTrue();
+
+        assertThat(checker.canViewAllAnnouncements(USER, contestA)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(USER, contestB)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(USER, contestC)).isFalse();
+
+        assertThat(checker.canViewAllAnnouncements(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(CONTESTANT, contestC)).isFalse();
+
+        assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestC)).isFalse();
+        addSupervisorToContestBWithPermission(ANNOUNCEMENT);
+        assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canViewAllAnnouncements(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(checker.canViewAllAnnouncements(MANAGER, contestA)).isFalse();
+        assertThat(checker.canViewAllAnnouncements(MANAGER, contestB)).isTrue();
+        assertThat(checker.canViewAllAnnouncements(MANAGER, contestC)).isFalse();
+    }
 }

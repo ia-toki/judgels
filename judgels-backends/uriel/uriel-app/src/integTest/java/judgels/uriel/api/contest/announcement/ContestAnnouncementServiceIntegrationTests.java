@@ -113,10 +113,10 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
         ContestAnnouncement announcement3 = announcementService.createAnnouncement(
                 ADMIN_HEADER, contest.getJid(), announcementData3);
 
-        List<ContestAnnouncement> publishedAnnouncements = announcementService
-                .getPublishedAnnouncements(of(ADMIN_HEADER), contest.getJid());
+        List<ContestAnnouncement> allAnnouncements = announcementService
+                .getAnnouncements(of(ADMIN_HEADER), contest.getJid());
 
-        assertThat(publishedAnnouncements).containsOnly(announcement1, announcement2);
+        assertThat(allAnnouncements).containsOnly(announcement1, announcement2, announcement3);
 
         ContestAnnouncementData announcementData4 = new ContestAnnouncementData.Builder()
                 .title("this is new title")
@@ -127,10 +127,11 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
         ContestAnnouncement announcement4 = announcementService.updateAnnouncement(
                 ADMIN_HEADER, contest.getJid(), announcement1.getJid(), announcementData4);
 
-        publishedAnnouncements = announcementService
-                .getPublishedAnnouncements(of(ADMIN_HEADER), contest.getJid());
+        allAnnouncements = announcementService
+                .getAnnouncements(of(ADMIN_HEADER), contest.getJid());
 
-        assertThat(publishedAnnouncements.stream().filter(
+        assertThat(allAnnouncements.stream().filter(
                 e -> e.getJid().equals(announcement1.getJid())).toArray()).containsOnly(announcement4);
+
     }
 }

@@ -8,6 +8,7 @@ export interface ContestAnnouncement {
   userJid: string;
   title: string;
   content: string;
+  status: string;
   updatedTime: number;
 }
 
@@ -36,8 +37,8 @@ export function createContestAnnouncementAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    getPublishedAnnouncements: (token: string, contestJid: string): Promise<ContestAnnouncement[]> => {
-      return get(`${baseURL}/${contestJid}/announcements/published`, token);
+    getAnnouncements: (token: string, contestJid: string): Promise<ContestAnnouncement[]> => {
+      return get(`${baseURL}/${contestJid}/announcements`, token);
     },
 
     getAnnouncementConfig: (token: string, contestJid: string): Promise<ContestAnnouncementConfig> => {
