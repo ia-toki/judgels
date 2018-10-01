@@ -10,23 +10,29 @@ import 'tinymce/themes/modern/theme';
 import 'tinymce/plugins/paste';
 import 'tinymce/plugins/link';
 
-export const FormRichTextArea = (props: FormInputProps) => {
-  tinymce.init({
-    selector: '.tinymce',
-    skin_url: '/skins/lightgray',
-    branding: false,
-    menubar: 'edit view format',
-    setup: editor => {
-      editor.on('change', () => {
-        props.input.onChange(editor.getContent());
-      });
-    },
-  });
+export class FormRichTextArea extends React.PureComponent<FormInputProps> {
+  componentDidMount() {
+    tinymce.init({
+      selector: '.tinymce',
+      skin_url: '/skins/lightgray',
+      branding: false,
+      menubar: 'edit view format',
+      setup: editor => {
+        editor.on('change', () => {
+          this.props.input.onChange(editor.getContent());
+        });
+      },
+    });
+  }
 
-  return (
-    <FormGroup labelFor={props.input.name} label={props.label} intent={getIntent(props.meta)}>
-      <textarea {...props.input} className="tinymce" />
-      <FormInputValidation meta={props.meta} />
-    </FormGroup>
-  );
-};
+  render() {
+    const { input, label, meta } = this.props;
+
+    return (
+      <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)}>
+        <textarea {...input} className="tinymce" />
+        <FormInputValidation meta={meta} />
+      </FormGroup>
+    );
+  }
+}

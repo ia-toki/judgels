@@ -35,6 +35,15 @@ public class ContestAnnouncementStore {
                 ContestAnnouncementStore::fromModel);
     }
 
+    public ContestAnnouncement updateAnnouncement(
+            String contestJid,
+            String announcementJid,
+            ContestAnnouncementData data) {
+        ContestAnnouncementModel model = announcementDao.selectByJid(announcementJid).get();
+        toModel(contestJid, data, model);
+        return fromModel(announcementDao.update(model));
+    }
+
     private static ContestAnnouncement fromModel(ContestAnnouncementModel model) {
         return new ContestAnnouncement.Builder()
                 .id(model.id)

@@ -1,6 +1,5 @@
 import { APP_CONFIG } from 'conf';
-import { get, post } from 'modules/api/http';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
+import { get, post, put } from 'modules/api/http';
 
 export interface ContestAnnouncement {
   id: number;
@@ -14,6 +13,7 @@ export interface ContestAnnouncement {
 
 export interface ContestAnnouncementConfig {
   isAllowedToCreateAnnouncement: boolean;
+  isAllowedToEditAnnouncement: boolean;
 }
 
 export enum ContestAnnouncementStatus {
@@ -29,19 +29,15 @@ export interface ContestAnnouncementData {
 
 export interface ContestAnnouncementsResponse {
   data: ContestAnnouncement[];
-  profilesMap: ProfilesMap;
+  config: ContestAnnouncementConfig;
 }
 
 export function createContestAnnouncementAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    getAnnouncements: (token: string, contestJid: string): Promise<ContestAnnouncement[]> => {
+    getAnnouncements: (token: string, contestJid: string): Promise<ContestAnnouncementsResponse> => {
       return get(`${baseURL}/${contestJid}/announcements`, token);
-    },
-
-    getAnnouncementConfig: (token: string, contestJid: string): Promise<ContestAnnouncementConfig> => {
-      return get(`${baseURL}/${contestJid}/announcements/config`, token);
     },
 
     createAnnouncement: (
@@ -50,6 +46,15 @@ export function createContestAnnouncementAPI() {
       data: ContestAnnouncementData
     ): Promise<ContestAnnouncement> => {
       return post(`${baseURL}/${contestJid}/announcements/`, token, data);
+    },
+
+    updateAnnouncement: (
+      token: string,
+      contestJid: string,
+      announcementJid: string,
+      data: ContestAnnouncementData
+    ): Promise<ContestAnnouncement> => {
+      return put(`${baseURL}/${contestJid}/announcements/${announcementJid}`, token, data);
     },
   };
 }

@@ -1,9 +1,10 @@
-import { contestJid, sessionState, token } from 'fixtures/state';
+import { contestJid, sessionState, token, announcementJid } from 'fixtures/state';
 import {
   ContestAnnouncement,
   ContestAnnouncementData,
   ContestAnnouncementConfig,
   ContestAnnouncementStatus,
+  ContestAnnouncementsResponse,
 } from 'modules/api/uriel/contestAnnouncement';
 import { AppState } from 'modules/store';
 
@@ -23,6 +24,7 @@ describe('contestAnnouncementActions', () => {
       getAnnouncements: jest.fn(),
       createAnnouncement: jest.fn(),
       getAnnouncementConfig: jest.fn(),
+      updateAnnouncement: jest.fn(),
     };
     toastActions = {
       showSuccessToast: jest.fn(),
@@ -31,12 +33,17 @@ describe('contestAnnouncementActions', () => {
 
   describe('getAnnouncements()', () => {
     const { getAnnouncements } = contestAnnouncementActions;
-    const doGetAnnouncements = async () =>
-        getAnnouncements(contestJid)(dispatch, getState, { contestAnnouncementAPI });
+    const doGetAnnouncements = async () => getAnnouncements(contestJid)(dispatch, getState, { contestAnnouncementAPI });
 
     beforeEach(async () => {
-      const announcements = [] as ContestAnnouncement[];
-      contestAnnouncementAPI.getAnnouncements.mockReturnValue(announcements);
+      const data = [] as ContestAnnouncement[];
+      const config = {
+        isAllowedToCreateAnnouncement: true,
+        isAllowedToEditAnnouncement: false,
+      } as ContestAnnouncementConfig;
+      const response = { data, config } as ContestAnnouncementsResponse;
+
+      contestAnnouncementAPI.getAnnouncements.mockReturnValue(response);
 
       await doGetAnnouncements();
     });
@@ -66,20 +73,26 @@ describe('contestAnnouncementActions', () => {
     });
   });
 
-  describe('getAnnouncementConfig()', () => {
-    const { getAnnouncementConfig } = contestAnnouncementActions;
-    const doGetAnnouncementConfig = async () =>
-      getAnnouncementConfig(contestJid)(dispatch, getState, { contestAnnouncementAPI });
+  describe('updateAnnouncement()', () => {
+    const { updateAnnouncement } = contestAnnouncementActions;
+    const data = {
+      title: 'announcement title',
+      content: 'announcement content',
+      status: ContestAnnouncementStatus.Published,
+    } as ContestAnnouncementData;
+    const doUpdateAnnouncement = async () =>
+      updateAnnouncement(contestJid, announcementJid, data)(dispatch, getState, {
+        contestAnnouncementAPI,
+        toastActions,
+      });
 
     beforeEach(async () => {
-      const response = {} as ContestAnnouncementConfig;
-      contestAnnouncementAPI.getAnnouncementConfig.mockReturnValue(response);
-
-      await doGetAnnouncementConfig();
+      await doUpdateAnnouncement();
     });
 
-    it('calls API to get announcement config', () => {
-      expect(contestAnnouncementAPI.getAnnouncementConfig).toHaveBeenCalledWith(token, contestJid);
+    it('calls API to update announcements', () => {
+      expect(contestAnnouncementAPI.updateAnnouncement).toHaveBeenCalledWith(token, contestJid, announcementJid, data);
+      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement edited.');
     });
   });
 });

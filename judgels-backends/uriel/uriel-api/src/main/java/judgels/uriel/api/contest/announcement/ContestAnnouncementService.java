@@ -3,12 +3,12 @@ package judgels.uriel.api.contest.announcement;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -19,7 +19,7 @@ public interface ContestAnnouncementService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    List<ContestAnnouncement> getAnnouncements(
+    ContestAnnouncementsResponse getAnnouncements(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 
@@ -32,10 +32,13 @@ public interface ContestAnnouncementService {
             @PathParam("contestJid") String contestJid,
             ContestAnnouncementData announcementData);
 
-    @GET
-    @Path("/config")
+    @PUT
+    @Path("/{announcementJid}")
     @Produces(APPLICATION_JSON)
-    ContestAnnouncementConfig getAnnouncementConfig(
-            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
-            @PathParam("contestJid") String contestJid);
+    @Consumes(APPLICATION_JSON)
+    ContestAnnouncement updateAnnouncement(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("announcementJid") String announcementJid,
+            ContestAnnouncementData announcementData);
 }

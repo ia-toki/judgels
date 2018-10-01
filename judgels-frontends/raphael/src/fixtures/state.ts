@@ -29,3 +29,4 @@ export const contest: Contest = {
 };
 
 export const problemJid = 'problemJid123';
+export const announcementJid = 'announcementJid123';
