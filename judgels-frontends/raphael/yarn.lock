@@ -163,12 +163,6 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-slick@^0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@types/react-slick/-/react-slick-0.14.1.tgz#33393647e5b4db678cbedcd96b70c17fc83ead22"
-  dependencies:
-    "@types/react" "*"
-
 "@types/react@*", "@types/react@16.3.8":
   version "16.3.8"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.3.8.tgz#40c7e4eca3f48783e4c4ccee26fc7f5a5a476d84"

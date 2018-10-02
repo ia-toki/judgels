@@ -74,7 +74,6 @@
     "@types/react-router": "^4.0.16",
     "@types/react-router-dom": "^4.2.0",
     "@types/react-router-redux": "^5.0.10",
-    "@types/react-slick": "^0.14.1",
     "@types/redux": "^3.6.0",
     "@types/redux-form": "^7.0.0",
     "@types/redux-mock-store": "^0.0.12",
