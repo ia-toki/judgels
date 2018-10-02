@@ -3,6 +3,8 @@ package judgels.uriel.api.mocks;
 import static com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder.okForJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableMap;
@@ -52,6 +54,11 @@ public class MockJophiel {
                         "jid", USER_B_JID,
                         "username", "userB",
                         "email", "userb@mailinator.com"))));
+
+        mockJophiel.stubFor(post(urlPathEqualTo("/api/v2/profiles/"))
+                .willReturn(okForJson(ImmutableMap.of(
+                        USER_A_JID, ImmutableMap.of("username", "userA"),
+                        USER_B_JID, ImmutableMap.of("username", "userB")))));
 
         return mockJophiel;
     }

@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -41,4 +42,13 @@ public interface ContestClarificationService {
             @PathParam("contestJid") String contestJid,
             @QueryParam("language") Optional<String> language,
             @QueryParam("page") Optional<Integer> page);
+
+    @PUT
+    @Path("/{clarificationJid}/answer")
+    @Consumes(APPLICATION_JSON)
+    void answerClarification(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("clarificationJid") String clarificationJid,
+            ContestClarificationAnswerData clarificationAnswerData);
 }

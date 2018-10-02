@@ -25,6 +25,18 @@ public class ContestClarificationStore {
         return fromModel(clarificationDao.insert(model));
     }
 
+    public Optional<ContestClarification> updateClarificationAnswer(
+            String contestJid,
+            String clarificationJid,
+            String answer) {
+
+        return clarificationDao.selectByContestJidAndClarificationJid(contestJid, clarificationJid).map(model -> {
+            model.answer = answer;
+            model.status = ContestClarificationStatus.ANSWERED.name();
+            return fromModel(clarificationDao.update(model));
+        });
+    }
+
     public Page<ContestClarification> getClarifications(String contestJid, String userJid, SelectionOptions options) {
         return clarificationDao.selectPagedByContestJidAndUserJid(contestJid, userJid, options).mapData(
                 data -> Lists.transform(data, ContestClarificationStore::fromModel));

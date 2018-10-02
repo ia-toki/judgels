@@ -1,6 +1,7 @@
 package judgels.uriel.hibernate;
 
 import java.time.Clock;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
@@ -40,6 +41,17 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
         return selectPaged(new FilterOptions.Builder<ContestClarificationModel>()
                 .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
                 .build(), options);
+    }
+
+    @Override
+    public Optional<ContestClarificationModel> selectByContestJidAndClarificationJid(
+            String contestJid,
+            String clarificationJid) {
+
+        return selectByFilter(new FilterOptions.Builder<ContestClarificationModel>()
+                .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
+                .putColumnsEq(ContestClarificationModel_.jid, clarificationJid)
+                .build());
     }
 
     @Override

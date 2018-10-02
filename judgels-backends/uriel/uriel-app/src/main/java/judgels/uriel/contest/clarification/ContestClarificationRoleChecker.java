@@ -70,6 +70,12 @@ public class ContestClarificationRoleChecker {
                 && isSupervisorWithClarificationPermissionOrAbove(userJid, contest);
     }
 
+
+    public boolean canAnswerClarifications(String userJid, Contest contest) {
+        return moduleStore.hasClarificationModule(contest.getJid())
+                && isSupervisorWithClarificationPermissionOrAbove(userJid, contest);
+    }
+
     private boolean isSupervisorWithClarificationPermissionOrAbove(String userJid, Contest contest) {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
