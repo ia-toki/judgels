@@ -147,7 +147,7 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
 }
 
 export default createContestProblemPage(
-    injectedContestProblemActions,
-    injectedContestSubmissionActions,
-    injectedBreadcrumbsActions
+  injectedContestProblemActions,
+  injectedContestSubmissionActions,
+  injectedBreadcrumbsActions
 );

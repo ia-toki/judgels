@@ -17,8 +17,8 @@ export const PopBreadcrumb = TypedAction.define('breadcrumbs/POP')<{
   link: string;
 }>();
 
-const cleanLink = (link) => {
-  return link.replace(/\/+$/, '')
+const cleanLink = link => {
+  return link.replace(/\/+$/, '');
 };
 
 const createBreadcrumbsReducer = () => {

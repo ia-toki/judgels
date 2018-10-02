@@ -104,6 +104,7 @@ def check(branch_to_compare):
             if project == ':raphael':
                 if ':raphael:package.json' in changed_modules:
                     print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
+                print('yarn --cwd=`pwd`/judgels-frontends/raphael lint')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
             else:
                 print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
