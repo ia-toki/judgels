@@ -29,6 +29,7 @@
     "react-router-dom": "^4.2.0",
     "react-router-redux": "^5.0.0-alpha.8",
     "react-scripts-ts": "2.13.0",
+    "react-syntax-highlighter": "^8.0.1",
     "react-transition-group": "^2.3.0",
     "redoodle": "^2.2.2",
     "redux": "^3.6.0",

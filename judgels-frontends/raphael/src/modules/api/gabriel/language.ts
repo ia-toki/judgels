@@ -22,6 +22,15 @@ export const gradingLanguageFilenameExtensionsMap = {
   OutputOnly: ['zip'],
 };
 
+export const gradingLanguageSyntaxHighlighterValueMap = {
+  C: 'c',
+  Cpp11: 'cpp',
+  Java: 'java',
+  Pascal: 'pascal',
+  Python3: 'python',
+  OutputOnly: '',
+};
+
 export const preferredGradingLanguage = 'Cpp11';
 
 export const gradingLanguages = Object.keys(gradingLanguageNamesMap).sort();
@@ -32,6 +41,10 @@ export function getGradingLanguageName(code: string): string {
 
 export function getGradingLanguageFilenameExtensions(code: string): string[] {
   return gradingLanguageFilenameExtensionsMap[code] || [];
+}
+
+export function getGradingLanguageSyntaxHighlighterValue(code: string): string {
+  return gradingLanguageSyntaxHighlighterValueMap[code] || code;
 }
 
 export function getAllowedGradingLanguages(gradingEngine: string, restriction: LanguageRestriction) {
