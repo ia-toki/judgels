@@ -12,7 +12,7 @@ import { VerdictTag } from 'components/VerdictTag/VerdictTag';
 import { constructProblemName } from 'modules/api/sandalphon/problem';
 import { Submission } from 'modules/api/sandalphon/submission';
 import { GradingEngineCode } from 'modules/api/gabriel/engine';
-import { getGradingLanguageName } from 'modules/api/gabriel/language';
+import { getGradingLanguageName, getGradingLanguageSyntaxHighlighterValue } from 'modules/api/gabriel/language';
 import { TestCaseResult } from 'modules/api/gabriel/grading';
 import { SubmissionSource } from 'modules/api/gabriel/submission';
 import { Profile } from 'modules/api/jophiel/profile';
@@ -259,7 +259,10 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         <h5>
           {key === 'source' ? '' : key + ': '} {source.submissionFiles[key].name}
         </h5>
-        <SyntaxHighlighter language="cpp" style={prism}>
+        <SyntaxHighlighter
+          language={getGradingLanguageSyntaxHighlighterValue(submission.gradingLanguage)}
+          style={prism}
+        >
           {base64.decode(source.submissionFiles[key].content)}
         </SyntaxHighlighter>
         {details && (
