@@ -3,6 +3,8 @@ import * as base64 from 'base-64';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 import { Link } from 'react-router-dom';
+import SyntaxHighlighter from 'react-syntax-highlighter/prism';
+import { prism } from 'react-syntax-highlighter/styles/prism';
 
 import { UserRef } from 'components/UserRef/UserRef';
 import { ContentCard } from 'components/ContentCard/ContentCard';
@@ -257,7 +259,9 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         <h5>
           {key === 'source' ? '' : key + ': '} {source.submissionFiles[key].name}
         </h5>
-        <pre>{base64.decode(source.submissionFiles[key].content)}</pre>
+        <SyntaxHighlighter language="cpp" style={prism}>
+          {base64.decode(source.submissionFiles[key].content)}
+        </SyntaxHighlighter>
         {details && (
           <div className="compilation-output">
             <h5>Compilation Output</h5>
