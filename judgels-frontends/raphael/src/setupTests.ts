@@ -5,6 +5,20 @@ configure({ adapter: new Adapter() });
 
 (window as any).conf = {
   name: 'Judgels',
+  slogan: 'Judgment Angels',
+  apiUrls: {
+    jophiel: 'http://localhost:9001/api/v2',
+    legacyJophiel: 'http://localhost:9001/api/legacy',
+    uriel: 'http://localhost:9004/api/v2',
+  },
+  tempHome: {
+    jerahmeelUrl: 'http://jerahmeel',
+  },
+  welcomeBanner: {
+    title: 'Welcome to Judgels',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+  },
 };
 
 // https://github.com/yahoo/react-intl/issues/465#issuecomment-369566628

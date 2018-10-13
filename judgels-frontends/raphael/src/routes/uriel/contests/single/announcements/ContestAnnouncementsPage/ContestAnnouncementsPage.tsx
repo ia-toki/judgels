@@ -17,6 +17,7 @@ import { selectContest } from '../../../modules/contestSelectors';
 import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../modules/contestAnnouncementActions';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
+import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
 
 export interface ContestAnnouncementsPageProps {
   contest: Contest;
@@ -28,6 +29,7 @@ export interface ContestAnnouncementsPageProps {
 interface ContestAnnouncementsPageState {
   announcements?: ContestAnnouncement[];
   config?: ContestAnnouncementConfig;
+  openEditDialogAnnouncement?: ContestAnnouncement;
 }
 
 export class ContestAnnouncementsPage extends React.PureComponent<
@@ -47,12 +49,13 @@ export class ContestAnnouncementsPage extends React.PureComponent<
         <hr />
         {this.renderCreateDialog()}
         {this.renderAnnouncements()}
+        {this.renderEditDialog()}
       </ContentCard>
     );
   }
 
   private renderAnnouncements = () => {
-    const { announcements, config } = this.state;
+    const { announcements, config, openEditDialogAnnouncement } = this.state;
     if (!announcements) {
       return <LoadingState />;
     }
@@ -74,7 +77,12 @@ export class ContestAnnouncementsPage extends React.PureComponent<
 
     return announcements.map(announcement => (
       <div className="content-card__section" key={announcement.jid}>
-        <ContestAnnouncementCard announcement={announcement} {...props} />
+        <ContestAnnouncementCard
+          announcement={announcement}
+          isEditDialogOpen={!openEditDialogAnnouncement ? false : announcement.jid === openEditDialogAnnouncement.jid}
+          onToggleEditDialog={this.toggleEditDialog}
+          {...props}
+        />
       </div>
     ));
   };
@@ -95,6 +103,24 @@ export class ContestAnnouncementsPage extends React.PureComponent<
       onCreateAnnouncement: this.props.onCreateAnnouncement,
     };
     return <ContestAnnouncementCreateDialog {...props} />;
+  };
+
+  private renderEditDialog = () => {
+    const { config, openEditDialogAnnouncement } = this.state;
+    return (
+      <ContestAnnouncementEditDialog
+        contest={this.props.contest}
+        announcement={openEditDialogAnnouncement}
+        isAllowedToEditAnnouncement={!!(config && config.isAllowedToEditAnnouncement)}
+        onToggleEditDialog={this.toggleEditDialog}
+        onRefreshAnnouncements={this.refreshAnnouncement}
+        onUpdateAnnouncement={this.props.onUpdateAnnouncement}
+      />
+    );
+  };
+
+  private toggleEditDialog = (announcement?: ContestAnnouncement) => {
+    this.setState({ openEditDialogAnnouncement: announcement });
   };
 }
 
