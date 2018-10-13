@@ -10,6 +10,7 @@ import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationStore;
 import judgels.uriel.contest.contestant.ContestContestantRoleChecker;
 import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.contest.file.ContestFileRoleChecker;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
@@ -45,6 +46,7 @@ public interface UrielIntegrationTestComponent {
     ContestAnnouncementRoleChecker contestAnnouncementRoleChecker();
     ContestClarificationRoleChecker contestClarificationRoleChecker();
     ContestContestantRoleChecker contestContestantRoleChecker();
+    ContestFileRoleChecker contestFileRoleChecker();
     ContestProblemRoleChecker contestProblemRoleChecker();
     ContestScoreboardRoleChecker contestScoreboardRoleChecker();
     ContestSubmissionRoleChecker contestSubmissionRoleChecker();

@@ -8,21 +8,20 @@ import javax.inject.Singleton;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
+import judgels.uriel.UrielBaseDataDir;
 
 @Module
 public class SubmissionModule {
-    private final Path baseDataDir;
     private final SubmissionConfiguration config;
 
-    public SubmissionModule(Path baseDataDir, SubmissionConfiguration config) {
-        this.baseDataDir = baseDataDir;
+    public SubmissionModule(SubmissionConfiguration config) {
         this.config = config;
     }
 
     @Provides
     @Singleton
     @SubmissionFs
-    FileSystem submissionFs(Optional<AwsConfiguration> awsConfig) {
+    FileSystem submissionFs(Optional<AwsConfiguration> awsConfig, @UrielBaseDataDir Path baseDataDir) {
         return FileSystems.get(config.getFs(), awsConfig, baseDataDir.resolve("submissions"));
     }
 }

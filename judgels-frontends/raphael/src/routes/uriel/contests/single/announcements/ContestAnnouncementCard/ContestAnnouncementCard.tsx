@@ -2,15 +2,15 @@ import { Callout, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
-import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
-
-import { HtmlText } from 'components/HtmlText/HtmlText';
+import { FormattedContent } from 'components/FormattedContent/FormattedContent';
 import {
   ContestAnnouncement,
   ContestAnnouncementData,
   ContestAnnouncementStatus,
 } from 'modules/api/uriel/contestAnnouncement';
 import { Contest } from 'modules/api/uriel/contest';
+
+import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
 
 import './ContestAnnouncementCard.css';
 
@@ -33,6 +33,6 @@ export const ContestAnnouncementCard = (props: ContestAnnouncementCardProps) => 
     </p>
     <div className="clearfix" />
     <hr />
-    <HtmlText>{props.announcement.content}</HtmlText>
+    <FormattedContent context={{ contestJid: props.contest.jid }}>{props.announcement.content}</FormattedContent>
   </Callout>
 );

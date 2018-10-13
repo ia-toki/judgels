@@ -6,11 +6,10 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import judgels.fs.aws.AwsModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.service.jersey.JudgelsObjectMappers;
+import judgels.uriel.file.FileModule;
 import judgels.uriel.gabriel.GabrielModule;
 import judgels.uriel.hibernate.UrielHibernateBundle;
 import judgels.uriel.hibernate.UrielHibernateModule;
@@ -39,16 +38,16 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
     @Override
     public void run(UrielApplicationConfiguration config, Environment env) {
         UrielConfiguration urielConfig = config.getUrielConfig();
-        Path baseDataDir = Paths.get(urielConfig.getBaseDataDir());
-
         UrielComponent component = DaggerUrielComponent.builder()
+                .urielModule(new UrielModule(urielConfig))
+                .urielHibernateModule(new UrielHibernateModule(hibernateBundle))
                 .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
                 .sandalphonModule(new SandalphonModule(urielConfig.getSandalphonConfig()))
                 .sealtielModule(new SealtielModule(urielConfig.getSealtielConfig()))
                 .gabrielModule(new GabrielModule(urielConfig.getGabrielConfig()))
-                .urielHibernateModule(new UrielHibernateModule(hibernateBundle))
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
-                .submissionModule(new SubmissionModule(baseDataDir, urielConfig.getSubmissionConfig()))
+                .submissionModule(new SubmissionModule(urielConfig.getSubmissionConfig()))
+                .fileModule(new FileModule(urielConfig.getFileConfig()))
                 .build();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
@@ -58,6 +57,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         env.jersey().register(component.contestAnnouncementResource());
         env.jersey().register(component.contestClarificationResource());
         env.jersey().register(component.contestContestantResource());
+        env.jersey().register(component.contestFileResource());
         env.jersey().register(component.contestModuleResource());
         env.jersey().register(component.contestProblemResource());
         env.jersey().register(component.contestScoreboardResource());

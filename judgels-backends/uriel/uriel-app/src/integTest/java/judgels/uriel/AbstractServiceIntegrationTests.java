@@ -13,11 +13,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import judgels.service.jaxrs.JaxRsClients;
-import judgels.uriel.gabriel.GabrielConfiguration;
-import judgels.uriel.jophiel.JophielConfiguration;
-import judgels.uriel.sandalphon.SandalphonConfiguration;
-import judgels.uriel.sealtiel.SealtielConfiguration;
-import judgels.uriel.submission.SubmissionConfiguration;
 import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
@@ -44,14 +39,7 @@ public abstract class AbstractServiceIntegrationTests {
         UrielApplicationConfiguration config = new UrielApplicationConfiguration(
                 dbConfig,
                 WebSecurityConfiguration.DEFAULT,
-                new UrielConfiguration.Builder()
-                        .baseDataDir(baseDataDir.toString())
-                        .jophielConfig(JophielConfiguration.DEFAULT)
-                        .sandalphonConfig(SandalphonConfiguration.DEFAULT)
-                        .sealtielConfig(SealtielConfiguration.DEFAULT)
-                        .gabrielConfig(GabrielConfiguration.DEFAULT)
-                        .submissionConfig(SubmissionConfiguration.DEFAULT)
-                        .build());
+                UrielConfiguration.DEFAULT);
 
         support = new DropwizardTestSupport<>(UrielApplication.class, config);
         support.before();

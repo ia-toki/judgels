@@ -66,3 +66,7 @@ uriel:
   submission:
     fs:
       type: local
+
+  file:
+    fs:
+      type: local

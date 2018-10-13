@@ -1,6 +1,7 @@
 package judgels.service;
 
 import static javax.ws.rs.core.HttpHeaders.CACHE_CONTROL;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_DISPOSITION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.HttpHeaders.LAST_MODIFIED;
 
@@ -40,6 +41,22 @@ public class ServiceUtils {
     public static void checkAllowed(Optional<String> reasonNotAllowed) {
         if (reasonNotAllowed.isPresent()) {
             throw new ForbiddenException(reasonNotAllowed.get());
+        }
+    }
+
+    public static Response buildDownloadResponse(String fileUrl) {
+        try {
+            new URL(fileUrl);
+            return Response.temporaryRedirect(URI.create(fileUrl)).build();
+        } catch (MalformedURLException e) {
+            File file = new File(fileUrl);
+            if (!file.exists()) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            return Response.ok(file)
+                    .header(CONTENT_TYPE, "application/x-download")
+                    .header(CONTENT_DISPOSITION, "attachment; filename=" + file.getName())
+                    .build();
         }
     }
 

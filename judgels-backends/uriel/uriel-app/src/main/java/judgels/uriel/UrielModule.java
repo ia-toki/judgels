@@ -5,6 +5,8 @@ import com.palantir.remoting3.clients.UserAgent;
 import com.palantir.remoting3.ext.jackson.ObjectMappers;
 import dagger.Module;
 import dagger.Provides;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.inject.Singleton;
 import judgels.jophiel.api.user.MyService;
 import judgels.service.JudgelsVersion;
@@ -14,7 +16,17 @@ import judgels.service.jersey.JudgelsObjectMappers;
 
 @Module
 public class UrielModule {
-    private UrielModule() {}
+    private final UrielConfiguration config;
+
+    public UrielModule(UrielConfiguration config) {
+        this.config = config;
+    }
+
+    @Provides
+    @UrielBaseDataDir
+    Path urielBaseDataDir() {
+        return Paths.get(config.getBaseDataDir());
+    }
 
     @Provides
     @Singleton
