@@ -92,7 +92,7 @@ describe('contestAnnouncementActions', () => {
 
     it('calls API to update announcements', () => {
       expect(contestAnnouncementAPI.updateAnnouncement).toHaveBeenCalledWith(token, contestJid, announcementJid, data);
-      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement edited.');
+      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Announcement updated.');
     });
   });
 });

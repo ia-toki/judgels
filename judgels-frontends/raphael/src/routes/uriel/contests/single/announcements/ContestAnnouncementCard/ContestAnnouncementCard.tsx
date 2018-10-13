@@ -1,4 +1,4 @@
-import { Button, Callout, Tag } from '@blueprintjs/core';
+import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
@@ -20,9 +20,12 @@ export class ContestAnnouncementCard extends React.Component<ContestAnnouncement
   render() {
     const { announcement, contest } = this.props;
 
+    const isDraft = announcement.status === ContestAnnouncementStatus.Draft;
+    const intent: Intent = isDraft ? Intent.DANGER : Intent.NONE;
+
     return (
-      <Callout className="contest-announcement-card" title={announcement.title}>
-        {announcement.status === ContestAnnouncementStatus.Draft ? <Tag>Draft</Tag> : null}
+      <Callout className="contest-announcement-card" title={announcement.title} intent={intent} icon={null}>
+        {isDraft ? <Tag intent={intent}>Draft</Tag> : null}
         <p className="contest-announcement-card__info">
           <small>
             published <FormattedRelative value={announcement.updatedTime} /> {this.renderEditDialog()}
@@ -38,7 +41,7 @@ export class ContestAnnouncementCard extends React.Component<ContestAnnouncement
   private renderEditDialog = () => {
     return (
       this.props.isAllowedToEditAnnouncement && (
-        <Button icon="edit" onClick={this.toggleEditDialog} disabled={this.props.isEditDialogOpen}>
+        <Button small onClick={this.toggleEditDialog} disabled={this.props.isEditDialogOpen}>
           Edit
         </Button>
       )

@@ -27,7 +27,7 @@ export const contestAnnouncementActions = {
     return async (dispatch, getState, { contestAnnouncementAPI, toastActions }) => {
       const token = selectToken(getState());
       await contestAnnouncementAPI.updateAnnouncement(token, contestJid, announcementJid, data);
-      toastActions.showSuccessToast('Announcement edited.');
+      toastActions.showSuccessToast('Announcement updated.');
     };
   },
 };
