@@ -128,10 +128,13 @@ class ContestClarificationsPage extends React.Component<
         problemAliasesMap={response.problemAliasesMap}
         problemNamesMap={response.problemNamesMap}
         statementLanguage={this.props.statementLanguage}
-        onCreateClarification={this.props.onCreateClarification}
-        onRefreshClarifications={this.refreshClarifications}
+        onCreateClarification={this.createClarification}
       />
     );
+  };
+  private createClarification = async (contestJid, data) => {
+    await this.props.onCreateClarification(contestJid, data);
+    await this.refreshClarifications();
   };
 }
 

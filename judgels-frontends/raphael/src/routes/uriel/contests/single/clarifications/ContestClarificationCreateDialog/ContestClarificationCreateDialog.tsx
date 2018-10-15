@@ -14,7 +14,6 @@ export interface ContestClarificationCreateDialogProps {
   problemNamesMap: { [problemJid: string]: string };
   statementLanguage: string;
   onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
-  onRefreshClarifications: () => Promise<any>;
 }
 
 interface ContestClarificationCreateDialogState {
@@ -50,11 +49,11 @@ export class ContestClarificationCreateDialog extends React.Component<
 
   private renderDialog = () => {
     const { contest, problemJids, problemAliasesMap, problemNamesMap } = this.props;
-    const props: any = {
+    const props = {
       contestJid: contest.jid,
-      problemJids: problemJids,
-      problemAliasesMap: problemAliasesMap,
-      problemNamesMap: problemNamesMap,
+      problemJids,
+      problemAliasesMap,
+      problemNamesMap,
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createClarification,
       initialValues: {
@@ -87,7 +86,6 @@ export class ContestClarificationCreateDialog extends React.Component<
 
   private createClarification = async (data: ContestClarificationCreateFormData) => {
     await this.props.onCreateClarification(this.props.contest.jid, data);
-    await this.props.onRefreshClarifications();
     this.setState({ isDialogOpen: false });
   };
 }

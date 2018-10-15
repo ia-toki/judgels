@@ -14,12 +14,10 @@ import {
 
 describe('ContestClarificationCreateDialog', () => {
   let onCreateClarification: jest.Mock<any>;
-  let onRefreshClarifications: jest.Mock<any>;
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
     onCreateClarification = jest.fn().mockReturnValue(() => Promise.resolve({}));
-    onRefreshClarifications = jest.fn();
 
     const store = createStore(combineReducers({ form: formReducer }));
 
@@ -30,7 +28,6 @@ describe('ContestClarificationCreateDialog', () => {
       problemNamesMap: { problemJid1: 'Problem 1', problemJid2: 'Problem 2' },
       statementLanguage: 'en',
       onCreateClarification,
-      onRefreshClarifications,
     };
     wrapper = mount(
       <Provider store={store}>
@@ -67,9 +64,5 @@ describe('ContestClarificationCreateDialog', () => {
       title: 'Snack',
       question: 'Is snack provided?',
     });
-
-    await new Promise(resolve => setImmediate(resolve));
-
-    expect(onRefreshClarifications).toHaveBeenCalled();
   });
 });
