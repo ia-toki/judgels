@@ -4,19 +4,20 @@ import * as React from 'react';
 import ContestClarificationCreateForm, {
   ContestClarificationCreateFormData,
 } from '../ContestClarificationCreateForm/ContestClarificationCreateForm';
-import { ContestClarificationConfig, ContestClarificationData } from 'modules/api/uriel/contestClarification';
+import { ContestClarificationData } from 'modules/api/uriel/contestClarification';
 import { Contest } from 'modules/api/uriel/contest';
 
 export interface ContestClarificationCreateDialogProps {
   contest: Contest;
+  problemJids: string[];
+  problemAliasesMap: { [problemJid: string]: string };
+  problemNamesMap: { [problemJid: string]: string };
   statementLanguage: string;
-  onGetClarificationConfig: (contestJid: string, language: string) => Promise<ContestClarificationConfig>;
   onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
   onRefreshClarifications: () => Promise<any>;
 }
 
 interface ContestClarificationCreateDialogState {
-  config?: ContestClarificationConfig;
   isDialogOpen?: boolean;
 }
 
@@ -26,29 +27,16 @@ export class ContestClarificationCreateDialog extends React.Component<
 > {
   state: ContestClarificationCreateDialogState = {};
 
-  async componentDidMount() {
-    const config = await this.props.onGetClarificationConfig(this.props.contest.jid, this.props.statementLanguage);
-    this.setState({ config });
-  }
-
   render() {
-    const { config } = this.state;
-    if (!config) {
-      return null;
-    }
-
     return (
       <div className="content-card__section">
-        {this.renderButton(config)}
-        {this.renderDialog(config)}
+        {this.renderButton()}
+        {this.renderDialog()}
       </div>
     );
   }
 
-  private renderButton = (config: ContestClarificationConfig) => {
-    if (!config.isAllowedToCreateClarification) {
-      return null;
-    }
+  private renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="plus" onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
         New clarification
@@ -60,16 +48,17 @@ export class ContestClarificationCreateDialog extends React.Component<
     this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  private renderDialog = (config: ContestClarificationConfig) => {
+  private renderDialog = () => {
+    const { contest, problemJids, problemAliasesMap, problemNamesMap } = this.props;
     const props: any = {
-      contestJid: this.props.contest.jid,
-      problemJids: config.problemJids,
-      problemAliasesMap: config.problemAliasesMap,
-      problemNamesMap: config.problemNamesMap,
+      contestJid: contest.jid,
+      problemJids: problemJids,
+      problemAliasesMap: problemAliasesMap,
+      problemNamesMap: problemNamesMap,
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createClarification,
       initialValues: {
-        topicJid: this.props.contest.jid,
+        topicJid: contest.jid,
       },
     };
     return (

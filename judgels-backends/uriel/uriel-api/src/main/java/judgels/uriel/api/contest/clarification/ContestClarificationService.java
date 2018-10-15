@@ -27,14 +27,6 @@ public interface ContestClarificationService {
             ContestClarificationData clarificationData);
 
     @GET
-    @Path("/config")
-    @Produces(APPLICATION_JSON)
-    ContestClarificationConfig getClarificationConfig(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @PathParam("contestJid") String contestJid,
-            @QueryParam("language") Optional<String> language);
-
-    @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
     ContestClarificationsResponse getClarifications(

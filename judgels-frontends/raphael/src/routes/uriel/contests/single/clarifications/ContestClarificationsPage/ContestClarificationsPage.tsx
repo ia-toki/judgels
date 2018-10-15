@@ -5,20 +5,15 @@ import { withRouter } from 'react-router';
 import Pagination from 'components/Pagination/Pagination';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { LoadingState } from 'components/LoadingState/LoadingState';
-import { Page } from 'modules/api/pagination';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestClarificationConfig, ContestClarificationData } from 'modules/api/uriel/contestClarification';
-import { ContestClarification, ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
+import { ContestClarificationData } from 'modules/api/uriel/contestClarification';
+import { ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
 import { AppState } from 'modules/store';
 import { selectMaybeUserJid } from 'modules/session/sessionSelectors';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
-import {
-  ContestClarificationCreateDialog,
-  ContestClarificationCreateDialogProps,
-} from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
+import { ContestClarificationCreateDialog } from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestClarificationActions as injectedContestClarificationActions } from '../modules/contestClarificationActions';
 
@@ -29,16 +24,11 @@ export interface ContestClarificationsPageProps {
   contest: Contest;
   statementLanguage: string;
   onGetClarifications: (contestJid: string, language?: string, page?: number) => Promise<ContestClarificationsResponse>;
-  onGetClarificationConfig: (contestJid: string, language: string) => Promise<ContestClarificationConfig>;
   onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
 }
 
 interface ContestClarificationsPageState {
-  clarifications?: Page<ContestClarification>;
-  problemJids?: string[];
-  profilesMap?: ProfilesMap;
-  problemAliasesMap?: { [problemJid: string]: string };
-  problemNamesMap?: { [problemJid: string]: string };
+  response?: ContestClarificationsResponse;
   isCreateDialogOpen?: boolean;
 }
 
@@ -63,21 +53,18 @@ class ContestClarificationsPage extends React.Component<
   }
 
   private refreshClarifications = async (page?: number) => {
-    const { data, profilesMap, problemAliasesMap, problemNamesMap } = await this.props.onGetClarifications(
-      this.props.contest.jid,
-      this.props.statementLanguage,
-      page
-    );
-    this.setState({ clarifications: data, profilesMap, problemAliasesMap, problemNamesMap });
-    return data;
+    const response = await this.props.onGetClarifications(this.props.contest.jid, this.props.statementLanguage, page);
+    this.setState({ response });
+    return response.data;
   };
 
   private renderClarifications = () => {
-    const { clarifications, profilesMap, problemAliasesMap, problemNamesMap } = this.state;
-    if (!clarifications) {
+    const { response } = this.state;
+    if (!response) {
       return <LoadingState />;
     }
 
+    const { data: clarifications, profilesMap, problemAliasesMap, problemNamesMap } = response;
     if (clarifications.data.length === 0) {
       return (
         <p>
@@ -93,12 +80,12 @@ class ContestClarificationsPage extends React.Component<
         <div className="content-card__section" key={clarification.jid}>
           <ContestClarificationCard
             clarification={clarification}
-            askerProfile={isSupervisor ? profilesMap![clarification.userJid] : undefined}
+            askerProfile={isSupervisor ? profilesMap[clarification.userJid] : undefined}
             answererProfile={
-              isSupervisor && clarification.answererJid ? profilesMap![clarification.answererJid] : undefined
+              isSupervisor && clarification.answererJid ? profilesMap[clarification.answererJid] : undefined
             }
-            problemAlias={problemAliasesMap![clarification.topicJid]}
-            problemName={problemNamesMap![clarification.topicJid]}
+            problemAlias={problemAliasesMap[clarification.topicJid]}
+            problemName={problemNamesMap[clarification.topicJid]}
           />
         </div>
       );
@@ -107,7 +94,8 @@ class ContestClarificationsPage extends React.Component<
 
   private renderPagination = () => {
     // updates pagination when a new clarification is created
-    const key = this.state.clarifications ? this.state.clarifications.totalData : 0;
+    const { response } = this.state;
+    const key = response && response.data ? response.data.totalData : 0;
 
     return (
       <Pagination
@@ -125,18 +113,29 @@ class ContestClarificationsPage extends React.Component<
   };
 
   private renderCreateDialog = () => {
-    const props: ContestClarificationCreateDialogProps = {
-      contest: this.props.contest,
-      statementLanguage: this.props.statementLanguage,
-      onGetClarificationConfig: this.props.onGetClarificationConfig,
-      onCreateClarification: this.props.onCreateClarification,
-      onRefreshClarifications: this.refreshClarifications,
-    };
-    return <ContestClarificationCreateDialog {...props} />;
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+    if (!response.config.isAllowedToCreateClarification) {
+      return null;
+    }
+
+    return (
+      <ContestClarificationCreateDialog
+        contest={this.props.contest}
+        problemJids={response.problemJids}
+        problemAliasesMap={response.problemAliasesMap}
+        problemNamesMap={response.problemNamesMap}
+        statementLanguage={this.props.statementLanguage}
+        onCreateClarification={this.props.onCreateClarification}
+        onRefreshClarifications={this.refreshClarifications}
+      />
+    );
   };
 }
 
-function createContestClarificationsPage(contestClarificationActions) {
+export function createContestClarificationsPage(contestClarificationActions) {
   const mapStateToProps = (state: AppState) => ({
     userJid: selectMaybeUserJid(state),
     contest: selectContest(state)!,
@@ -145,7 +144,6 @@ function createContestClarificationsPage(contestClarificationActions) {
 
   const mapDispatchToProps = {
     onGetClarifications: contestClarificationActions.getClarifications,
-    onGetClarificationConfig: contestClarificationActions.getClarificationConfig,
     onCreateClarification: contestClarificationActions.createClarification,
   };
 

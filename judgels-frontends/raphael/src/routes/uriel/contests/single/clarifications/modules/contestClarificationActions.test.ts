@@ -1,9 +1,5 @@
 import { contestJid, sessionState, token } from 'fixtures/state';
-import {
-  ContestClarificationConfig,
-  ContestClarificationData,
-  ContestClarificationsResponse,
-} from 'modules/api/uriel/contestClarification';
+import { ContestClarificationData, ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
 import { AppState } from 'modules/store';
 
 import { contestClarificationActions } from './contestClarificationActions';
@@ -41,23 +37,6 @@ describe('contestClarificationActions', () => {
     it('calls API to create clarification', () => {
       expect(contestClarificationAPI.createClarification).toHaveBeenCalledWith(token, contestJid, data);
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Clarification submitted.');
-    });
-  });
-
-  describe('getClarificationConfig()', () => {
-    const { getClarificationConfig } = contestClarificationActions;
-    const doGetClarificationConfig = async () =>
-      getClarificationConfig(contestJid, 'id')(dispatch, getState, { contestClarificationAPI });
-
-    beforeEach(async () => {
-      const response = {} as ContestClarificationConfig;
-      contestClarificationAPI.getClarificationConfig.mockReturnValue(response);
-
-      await doGetClarificationConfig();
-    });
-
-    it('calls API to get clarification config', () => {
-      expect(contestClarificationAPI.getClarificationConfig).toHaveBeenCalledWith(token, contestJid, 'id');
     });
   });
 

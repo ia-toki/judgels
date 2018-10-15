@@ -80,43 +80,6 @@ public class ContestClarificationResource implements ContestClarificationService
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestClarificationConfig getClarificationConfig(
-            AuthHeader authHeader,
-            String contestJid,
-            Optional<String> language) {
-
-        String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-
-        if (!clarificationRoleChecker.canCreateClarification(actorJid, contest)) {
-            return new ContestClarificationConfig.Builder()
-                    .isAllowedToCreateClarification(false)
-                    .build();
-        }
-
-        List<String> problemJids = problemStore.getOpenProblemJids(contestJid);
-        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJidsSet);
-        Map<String, String> problemNamesMap = problemJids.isEmpty()
-                ? ImmutableMap.of()
-                : clientProblemService.getProblemsByJids(
-                        sandalphonClientAuthHeader,
-                        problemJidsSet).entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(
-                                e -> e.getKey(),
-                                e -> SandalphonUtils.getProblemName(e.getValue(), language)));
-
-        return new ContestClarificationConfig.Builder()
-                .isAllowedToCreateClarification(true)
-                .problemJids(problemJids)
-                .problemAliasesMap(problemAliasesMap)
-                .problemNamesMap(problemNamesMap)
-                .build();
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
     public ContestClarificationsResponse getClarifications(
             AuthHeader authHeader,
             String contestJid,
@@ -135,6 +98,11 @@ public class ContestClarificationResource implements ContestClarificationService
                         ? clarificationStore.getClarifications(contestJid, options.build())
                         : clarificationStore.getClarifications(contestJid, actorJid, options.build());
 
+        boolean canCreateClarification = clarificationRoleChecker.canCreateClarification(actorJid, contest);
+        ContestClarificationConfig config = new ContestClarificationConfig.Builder()
+                .isAllowedToCreateClarification(canCreateClarification)
+                .build();
+
         Set<String> userJids = Sets.union(
                 data.getData().stream().map(ContestClarification::getUserJid).collect(Collectors.toSet()),
                 data.getData()
@@ -144,23 +112,20 @@ public class ContestClarificationResource implements ContestClarificationService
                         .map(Optional::get)
                         .collect(Collectors.toSet()));
 
-        Set<String> problemJids = data.getData()
-                .stream()
-                .map(ContestClarification::getTopicJid)
-                .filter(topicJid -> !topicJid.equals(contestJid))
-                .collect(Collectors.toSet());
+        List<String> problemJids = problemStore.getOpenProblemJids(contestJid);
+        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
 
         Map<String, Profile> profilesMap = userJids.isEmpty()
                 ? ImmutableMap.of()
                 : profileService.getProfiles(userJids, contest.getBeginTime());
 
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJidsSet);
 
         Map<String, String> problemNamesMap = problemJids.isEmpty()
                 ? ImmutableMap.of()
                 : clientProblemService.getProblemsByJids(
                         sandalphonClientAuthHeader,
-                        problemJids).entrySet()
+                        problemJidsSet).entrySet()
                         .stream()
                         .collect(Collectors.toMap(
                                 e -> e.getKey(),
@@ -168,7 +133,9 @@ public class ContestClarificationResource implements ContestClarificationService
 
         return new ContestClarificationsResponse.Builder()
                 .data(data)
+                .config(config)
                 .profilesMap(profilesMap)
+                .problemJids(problemJids)
                 .problemAliasesMap(problemAliasesMap)
                 .problemNamesMap(problemNamesMap)
                 .build();
