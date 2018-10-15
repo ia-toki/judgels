@@ -29,7 +29,7 @@ export interface ContestClarificationsPageProps {
 
 interface ContestClarificationsPageState {
   response?: ContestClarificationsResponse;
-  isCreateDialogOpen?: boolean;
+  lastCreateClarificationTime?: number;
 }
 
 class ContestClarificationsPage extends React.Component<
@@ -94,8 +94,8 @@ class ContestClarificationsPage extends React.Component<
 
   private renderPagination = () => {
     // updates pagination when a new clarification is created
-    const { response } = this.state;
-    const key = response && response.data ? response.data.totalData : 0;
+    const { lastCreateClarificationTime } = this.state;
+    const key = lastCreateClarificationTime || 0;
 
     return (
       <Pagination
@@ -134,7 +134,7 @@ class ContestClarificationsPage extends React.Component<
   };
   private createClarification = async (contestJid, data) => {
     await this.props.onCreateClarification(contestJid, data);
-    await this.refreshClarifications();
+    this.setState({ lastCreateClarificationTime: new Date().getTime() });
   };
 }
 
