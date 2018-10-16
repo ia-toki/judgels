@@ -9,29 +9,22 @@ import ContestAnnouncementEditForm from '../ContestAnnouncementEditForm/ContestA
 export interface ContestAnnouncementEditDialogProps {
   contest: Contest;
   announcement?: ContestAnnouncement;
-  isAllowedToEditAnnouncement: boolean;
   onToggleEditDialog: () => void;
-  onRefreshAnnouncements: () => Promise<void>;
   onUpdateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) => void;
 }
 
 export class ContestAnnouncementEditDialog extends React.Component<ContestAnnouncementEditDialogProps> {
   render() {
-    const { contest, announcement, isAllowedToEditAnnouncement } = this.props;
-    if (!isAllowedToEditAnnouncement) {
-      return null;
-    }
+    const { announcement } = this.props;
 
-    const props: any = {
-      announcement: announcement,
-      contestJid: contest.jid,
+    const props = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.updateAnnouncement,
-    };
-    const initialValues: any = announcement && {
-      title: props.announcement.title,
-      content: props.announcement.content,
-      status: props.announcement.status,
+      initialValues: announcement && {
+        title: announcement.title,
+        content: announcement.content,
+        status: announcement.status,
+      },
     };
 
     return (
@@ -41,7 +34,7 @@ export class ContestAnnouncementEditDialog extends React.Component<ContestAnnoun
         title="Edit announcement"
         canOutsideClickClose={false}
       >
-        <ContestAnnouncementEditForm {...props} initialValues={initialValues} />
+        <ContestAnnouncementEditForm {...props} />
       </Dialog>
     );
   }
@@ -60,7 +53,6 @@ export class ContestAnnouncementEditDialog extends React.Component<ContestAnnoun
 
   private updateAnnouncement = async (data: ContestAnnouncementData) => {
     await this.props.onUpdateAnnouncement(this.props.contest.jid, this.props.announcement!.jid, data);
-    await this.props.onRefreshAnnouncements();
     this.closeDialog();
   };
 

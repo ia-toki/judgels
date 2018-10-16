@@ -8,8 +8,6 @@ import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/Cont
 
 export interface ContestAnnouncementCreateDialogProps {
   contest: Contest;
-  onRefreshAnnouncements: () => Promise<void>;
-  isAllowedToCreateAnnouncement: boolean;
   onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
 }
 
@@ -24,11 +22,6 @@ export class ContestAnnouncementCreateDialog extends React.Component<
   state: ContestAnnouncementCreateDialogState = {};
 
   render() {
-    const { isAllowedToCreateAnnouncement } = this.props;
-    if (!isAllowedToCreateAnnouncement) {
-      return null;
-    }
-
     return (
       <div className="content-card__section">
         {this.renderButton()}
@@ -51,7 +44,6 @@ export class ContestAnnouncementCreateDialog extends React.Component<
 
   private renderDialog = () => {
     const props: any = {
-      contestJid: this.props.contest.jid,
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.createAnnouncement,
     };
@@ -81,7 +73,6 @@ export class ContestAnnouncementCreateDialog extends React.Component<
 
   private createAnnouncement = async (data: ContestAnnouncementData) => {
     await this.props.onCreateAnnouncement(this.props.contest.jid, data);
-    await this.props.onRefreshAnnouncements();
     this.setState({ isDialogOpen: false });
   };
 }

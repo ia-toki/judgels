@@ -8,7 +8,6 @@ import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 import {
   ContestAnnouncement,
-  ContestAnnouncementConfig,
   ContestAnnouncementData,
   ContestAnnouncementsResponse,
 } from 'modules/api/uriel/contestAnnouncement';
@@ -27,19 +26,18 @@ export interface ContestAnnouncementsPageProps {
 }
 
 interface ContestAnnouncementsPageState {
-  announcements?: ContestAnnouncement[];
-  config?: ContestAnnouncementConfig;
+  response?: ContestAnnouncementsResponse;
   openEditDialogAnnouncement?: ContestAnnouncement;
 }
 
-export class ContestAnnouncementsPage extends React.PureComponent<
+class ContestAnnouncementsPage extends React.PureComponent<
   ContestAnnouncementsPageProps,
   ContestAnnouncementsPageState
 > {
   state: ContestAnnouncementsPageState = {};
 
   async componentDidMount() {
-    await this.refreshAnnouncement();
+    await this.refreshAnnouncements();
   }
 
   render() {
@@ -55,10 +53,12 @@ export class ContestAnnouncementsPage extends React.PureComponent<
   }
 
   private renderAnnouncements = () => {
-    const { announcements, config, openEditDialogAnnouncement } = this.state;
-    if (!announcements) {
+    const { response, openEditDialogAnnouncement } = this.state;
+    if (!response) {
       return <LoadingState />;
     }
+
+    const { data: announcements, config } = response;
 
     if (announcements.length === 0) {
       return (
@@ -69,9 +69,9 @@ export class ContestAnnouncementsPage extends React.PureComponent<
     }
 
     const props = {
-      isAllowedToEditAnnouncement: (config && config.isAllowedToEditAnnouncement) || false,
+      isAllowedToEditAnnouncement: config.isAllowedToEditAnnouncement,
       contest: this.props.contest,
-      onRefreshAnnouncements: this.refreshAnnouncement,
+      onRefreshAnnouncements: this.refreshAnnouncements,
       onUpdateAnnouncement: this.props.onUpdateAnnouncement,
     };
 
@@ -87,34 +87,50 @@ export class ContestAnnouncementsPage extends React.PureComponent<
     ));
   };
 
-  private refreshAnnouncement = async () => {
-    const announcementsResponse = await this.props.onGetAnnouncements(this.props.contest.jid);
-    const config = announcementsResponse.config;
-    const announcements = announcementsResponse.data;
-    this.setState({ config, announcements });
+  private refreshAnnouncements = async () => {
+    const response = await this.props.onGetAnnouncements(this.props.contest.jid);
+    this.setState({ response });
+  };
+
+  private createAnnouncement = async (contestJid, data) => {
+    await this.props.onCreateAnnouncement(contestJid, data);
+    await this.refreshAnnouncements();
+  };
+
+  private updateAnnouncement = async (contestJid, announcementJid, data) => {
+    await this.props.onUpdateAnnouncement(contestJid, announcementJid, data);
+    await this.refreshAnnouncements();
   };
 
   private renderCreateDialog = () => {
-    const { config } = this.state;
-    const props = {
-      contest: this.props.contest,
-      onRefreshAnnouncements: this.refreshAnnouncement,
-      isAllowedToCreateAnnouncement: (config && config.isAllowedToCreateAnnouncement) || false,
-      onCreateAnnouncement: this.props.onCreateAnnouncement,
-    };
-    return <ContestAnnouncementCreateDialog {...props} />;
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+    if (!response.config.isAllowedToCreateAnnouncement) {
+      return null;
+    }
+
+    return (
+      <ContestAnnouncementCreateDialog contest={this.props.contest} onCreateAnnouncement={this.createAnnouncement} />
+    );
   };
 
   private renderEditDialog = () => {
-    const { config, openEditDialogAnnouncement } = this.state;
+    const { response, openEditDialogAnnouncement } = this.state;
+    if (!response) {
+      return null;
+    }
+    if (!response.config.isAllowedToEditAnnouncement) {
+      return null;
+    }
+
     return (
       <ContestAnnouncementEditDialog
         contest={this.props.contest}
         announcement={openEditDialogAnnouncement}
-        isAllowedToEditAnnouncement={!!(config && config.isAllowedToEditAnnouncement)}
         onToggleEditDialog={this.toggleEditDialog}
-        onRefreshAnnouncements={this.refreshAnnouncement}
-        onUpdateAnnouncement={this.props.onUpdateAnnouncement}
+        onUpdateAnnouncement={this.updateAnnouncement}
       />
     );
   };
@@ -124,17 +140,15 @@ export class ContestAnnouncementsPage extends React.PureComponent<
   };
 }
 
-function createContestAnnouncementsPage(contestAnnouncementActions) {
+export function createContestAnnouncementsPage(contestAnnouncementActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
   });
 
   const mapDispatchToProps = {
-    onGetAnnouncements: (contestJid: string) => contestAnnouncementActions.getAnnouncements(contestJid),
-    onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) =>
-      contestAnnouncementActions.createAnnouncement(contestJid, data),
-    onUpdateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) =>
-      contestAnnouncementActions.updateAnnouncement(contestJid, announcementJid, data),
+    onGetAnnouncements: contestAnnouncementActions.getAnnouncements,
+    onCreateAnnouncement: contestAnnouncementActions.createAnnouncement,
+    onUpdateAnnouncement: contestAnnouncementActions.updateAnnouncement,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));

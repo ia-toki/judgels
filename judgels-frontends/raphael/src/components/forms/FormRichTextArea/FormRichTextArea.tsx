@@ -12,17 +12,19 @@ import 'tinymce/plugins/link';
 
 export class FormRichTextArea extends React.PureComponent<FormInputProps> {
   componentDidMount() {
-    tinymce.init({
-      selector: '.tinymce',
-      skin_url: '/skins/lightgray',
-      branding: false,
-      menubar: 'edit view format',
-      setup: editor => {
-        editor.on('change', () => {
-          this.props.input.onChange(editor.getContent());
-        });
-      },
-    });
+    if (tinymce) {
+      tinymce.init({
+        selector: '.tinymce',
+        skin_url: '/skins/lightgray',
+        branding: false,
+        menubar: 'edit view format',
+        setup: editor => {
+          editor.on('change', () => {
+            this.props.input.onChange(editor.getContent());
+          });
+        },
+      });
+    }
   }
 
   render() {

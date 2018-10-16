@@ -2,52 +2,60 @@ import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
+import { MemoryRouter } from 'react-router';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import thunk from 'redux-thunk';
 
 import { contest } from 'fixtures/state';
-import { ContestAnnouncement, ContestAnnouncementConfig } from 'modules/api/uriel/contestAnnouncement';
+import { ContestAnnouncement, ContestAnnouncementsResponse } from 'modules/api/uriel/contestAnnouncement';
 
-import { ContestAnnouncementsPage, ContestAnnouncementsPageProps } from './ContestAnnouncementsPage';
+import { createContestAnnouncementsPage } from './ContestAnnouncementsPage';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
+import { contestReducer, PutContest } from '../../../modules/contestReducer';
 
 describe('ContestAnnouncementsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let onGetAnnouncements: jest.Mock<any>;
-  let onCreateAnnouncement: jest.Mock<any>;
-  let onUpdateAnnouncement: jest.Mock<any>;
-  const config: ContestAnnouncementConfig = {
-    isAllowedToCreateAnnouncement: true,
-    isAllowedToEditAnnouncement: true,
+  let contestAnnouncementActions: jest.Mocked<any>;
+
+  const response: ContestAnnouncementsResponse = {
+    data: [],
+    config: {
+      isAllowedToCreateAnnouncement: true,
+      isAllowedToEditAnnouncement: true,
+    },
   };
 
   const render = () => {
-    const props: ContestAnnouncementsPageProps = {
-      contest,
-      onGetAnnouncements,
-      onCreateAnnouncement,
-      onUpdateAnnouncement,
-    };
+    const store = createStore(
+      combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
+      applyMiddleware(thunk)
+    );
+    store.dispatch(PutContest.create(contest));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const ContestAnnouncementsPage = createContestAnnouncementsPage(contestAnnouncementActions);
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
-          <ContestAnnouncementsPage {...props} />
+          <MemoryRouter>
+            <ContestAnnouncementsPage />
+          </MemoryRouter>
         </Provider>
       </IntlProvider>
     );
   };
 
   beforeEach(() => {
-    onGetAnnouncements = jest.fn();
-    onCreateAnnouncement = jest.fn();
+    contestAnnouncementActions = {
+      getAnnouncements: jest.fn().mockReturnValue(() => Promise.resolve(response)),
+      createAnnouncement: jest.fn().mockReturnValue(() => Promise.resolve({})),
+      updateAnnouncement: jest.fn().mockReturnValue(() => Promise.resolve({})),
+    };
   });
 
   describe('when there are no announcements', () => {
     beforeEach(() => {
-      onGetAnnouncements.mockReturnValue(Promise.resolve({ data: [], config }));
       render();
     });
 
@@ -78,7 +86,9 @@ describe('ContestAnnouncementsPage', () => {
           updatedTime: 0,
         } as ContestAnnouncement,
       ];
-      onGetAnnouncements.mockReturnValue(Promise.resolve({ data: announcements, config }));
+      contestAnnouncementActions.getAnnouncements.mockReturnValue(() =>
+        Promise.resolve({ ...response, data: announcements })
+      );
 
       render();
     });
