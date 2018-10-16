@@ -22,9 +22,11 @@ describe('ContestClarificationsPage', () => {
 
   const response: ContestClarificationsResponse = {
     data: { data: [], totalData: 0 },
-    config: { isAllowedToCreateClarification: true },
+    config: {
+      isAllowedToCreateClarification: true,
+      problemJids: ['problemJid1', 'problemJid2'],
+    },
     profilesMap: {},
-    problemJids: ['problemJid1', 'problemJid2'],
     problemAliasesMap: { problemJid1: 'A', problemJid2: 'B' },
     problemNamesMap: { problemJid1: 'Problem 1', problemJid2: 'Problem 2' },
   };

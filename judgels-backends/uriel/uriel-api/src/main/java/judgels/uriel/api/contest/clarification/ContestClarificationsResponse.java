@@ -1,7 +1,6 @@
 package judgels.uriel.api.contest.clarification;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.List;
 import java.util.Map;
 import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
@@ -13,7 +12,6 @@ public interface ContestClarificationsResponse {
     Page<ContestClarification> getData();
     ContestClarificationConfig getConfig();
     Map<String, Profile> getProfilesMap();
-    List<String> getProblemJids();
     Map<String, String> getProblemAliasesMap();
     Map<String, String> getProblemNamesMap();
 

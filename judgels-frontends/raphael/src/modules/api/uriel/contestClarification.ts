@@ -34,13 +34,13 @@ export interface ContestClarificationData {
 
 export interface ContestClarificationConfig {
   isAllowedToCreateClarification: boolean;
+  problemJids: string[];
 }
 
 export interface ContestClarificationsResponse {
   data: Page<ContestClarification>;
   config: ContestClarificationConfig;
   profilesMap: ProfilesMap;
-  problemJids: string[];
   problemAliasesMap: { [problemJid: string]: string };
   problemNamesMap: { [problemJid: string]: string };
 }

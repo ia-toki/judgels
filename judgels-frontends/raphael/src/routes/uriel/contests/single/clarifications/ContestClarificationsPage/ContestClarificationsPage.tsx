@@ -117,14 +117,15 @@ class ContestClarificationsPage extends React.Component<
     if (!response) {
       return null;
     }
-    if (!response.config.isAllowedToCreateClarification) {
+    const { config } = response;
+    if (!config.isAllowedToCreateClarification) {
       return null;
     }
 
     return (
       <ContestClarificationCreateDialog
         contest={this.props.contest}
-        problemJids={response.problemJids}
+        problemJids={config.problemJids}
         problemAliasesMap={response.problemAliasesMap}
         problemNamesMap={response.problemNamesMap}
         statementLanguage={this.props.statementLanguage}
