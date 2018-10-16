@@ -45,10 +45,7 @@ describe('ContestEditGeneralTab', () => {
     );
   });
 
-  test('contest edit general tab form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
+  test('contest edit general tab form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 

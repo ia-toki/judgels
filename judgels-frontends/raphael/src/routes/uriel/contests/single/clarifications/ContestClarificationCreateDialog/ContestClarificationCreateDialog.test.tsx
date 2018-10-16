@@ -38,7 +38,7 @@ describe('ContestClarificationCreateDialog', () => {
     );
   });
 
-  test('create clarification dialog form', async () => {
+  test('create clarification dialog form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
