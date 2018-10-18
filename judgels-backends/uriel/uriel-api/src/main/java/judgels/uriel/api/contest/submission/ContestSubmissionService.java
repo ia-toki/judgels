@@ -26,13 +26,6 @@ public interface ContestSubmissionService {
             @QueryParam("page") Optional<Integer> page);
 
     @GET
-    @Path("/config")
-    @Produces(APPLICATION_JSON)
-    ContestSubmissionConfig getSubmissionConfig(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("contestJid") String contestJid);
-
-    @GET
     @Path("/id/{submissionId}")
     @Produces(APPLICATION_JSON)
     SubmissionWithSourceResponse getSubmissionWithSourceById(

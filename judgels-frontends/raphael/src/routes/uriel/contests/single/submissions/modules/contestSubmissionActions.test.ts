@@ -8,7 +8,6 @@ import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission'
 import { AppState } from 'modules/store';
 
 import { contestSubmissionActions } from './contestSubmissionActions';
-import { ContestSubmissionConfig } from '../../../../../../modules/api/uriel/contestSubmission';
 
 describe('contestSubmissionActions', () => {
   let dispatch: jest.Mock<any>;
@@ -46,23 +45,6 @@ describe('contestSubmissionActions', () => {
 
     it('calls API to get submissions', () => {
       expect(contestSubmissionAPI.getSubmissions).toHaveBeenCalledWith(token, contestJid, 'userJid', 'problemJid', 3);
-    });
-  });
-
-  describe('getSubmissionConfig()', () => {
-    const { getSubmissionConfig } = contestSubmissionActions;
-    const doGetSubmissionConfig = async () =>
-      getSubmissionConfig(contestJid)(dispatch, getState, { contestSubmissionAPI });
-
-    beforeEach(async () => {
-      const config = {} as ContestSubmissionConfig;
-      contestSubmissionAPI.getSubmissionConfig.mockReturnValue(config);
-
-      await doGetSubmissionConfig();
-    });
-
-    it('calls API to get submission config', () => {
-      expect(contestSubmissionAPI.getSubmissionConfig).toHaveBeenCalledWith(token, contestJid);
     });
   });
 

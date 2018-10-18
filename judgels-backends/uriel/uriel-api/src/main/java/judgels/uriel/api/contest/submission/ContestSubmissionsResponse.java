@@ -11,6 +11,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestSubmissionsResponse.class)
 public interface ContestSubmissionsResponse {
     Page<Submission> getData();
+    ContestSubmissionConfig getConfig();
     Map<String, Profile> getProfilesMap();
     Map<String, String> getProblemAliasesMap();
 

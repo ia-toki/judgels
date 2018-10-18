@@ -9,8 +9,10 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.BufferedOutputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -126,54 +128,57 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewOwnSubmissions(actorJid, contest));
 
-        Optional<String> actualUserJid = submissionRoleChecker.canViewAllSubmissions(actorJid, contest)
-                ? userJid
-                : Optional.of(actorJid);
+        boolean canViewAllSubmissions = submissionRoleChecker.canViewAllSubmissions(actorJid, contest);
+        Optional<String> actualUserJid = canViewAllSubmissions ? userJid : Optional.of(actorJid);
 
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
         Page<Submission> data = submissionStore
                 .getSubmissions(contest.getJid(), actualUserJid, problemJid, Optional.empty(), options.build());
-        Set<String> userJids = data.getData().stream().map(Submission::getUserJid).collect(Collectors.toSet());
-        Set<String> problemJids = data.getData().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
+
+        List<String> userJidsSortedByUsername;
+        Set<String> userJids;
+
+        List<String> problemJidsSortedByAlias;
+        Set<String> problemJids;
+
+        if (canViewAllSubmissions) {
+            userJids = contestantStore.getContestants(contestJid);
+            userJidsSortedByUsername = Lists.newArrayList(userJids);
+
+            problemJidsSortedByAlias = problemStore.getOpenProblemJids(contestJid);
+            problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
+        } else {
+            userJidsSortedByUsername = Collections.emptyList();
+            userJids = data.getData().stream().map(Submission::getUserJid).collect(Collectors.toSet());
+
+            problemJidsSortedByAlias = Collections.emptyList();
+            problemJids = data.getData().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
+        }
+
         Map<String, Profile> profilesMap = userJids.isEmpty()
-                ? ImmutableMap.of()
+                ? Collections.emptyMap()
                 : profileService.getProfiles(userJids, contest.getBeginTime());
+
+        userJidsSortedByUsername.sort((u1, u2) -> {
+            String usernameA = profilesMap.containsKey(u1) ? profilesMap.get(u1).getUsername() : u1;
+            String usernameB = profilesMap.containsKey(u2) ? profilesMap.get(u2).getUsername() : u2;
+            return usernameA.compareTo(usernameB);
+        });
+
+        ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
+                .isAllowedToViewAllSubmissions(canViewAllSubmissions)
+                .userJids(userJidsSortedByUsername)
+                .problemJids(problemJidsSortedByAlias)
+                .build();
+
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
 
         return new ContestSubmissionsResponse.Builder()
                 .data(data)
+                .config(config)
                 .profilesMap(profilesMap)
-                .problemAliasesMap(problemAliasesMap)
-                .build();
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public ContestSubmissionConfig getSubmissionConfig(AuthHeader authHeader, String contestJid) {
-        String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-
-        if (!submissionRoleChecker.canViewAllSubmissions(actorJid, contest)) {
-            return new ContestSubmissionConfig.Builder()
-                    .isAllowedToViewAllSubmissions(false)
-                    .build();
-        }
-
-        Set<String> userJids = contestantStore.getContestants(contestJid);
-        Map<String, String> usernamesMap = userJids.isEmpty()
-                ? ImmutableMap.of()
-                : profileService.getProfiles(userJids).entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
-        List<String> problemJids = problemStore.getOpenProblemJids(contestJid);
-        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJidsSet);
-        return new ContestSubmissionConfig.Builder()
-                .isAllowedToViewAllSubmissions(true)
-                .usernamesMap(usernamesMap)
-                .problemJids(problemJids)
                 .problemAliasesMap(problemAliasesMap)
                 .build();
     }

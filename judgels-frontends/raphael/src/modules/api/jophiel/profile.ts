@@ -5,7 +5,7 @@ import { get, post } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
 
 export interface Profile {
-  username?: string;
+  username: string;
   rating?: number;
   country?: string;
 }

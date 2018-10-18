@@ -12,13 +12,6 @@ export const contestSubmissionActions = {
     };
   },
 
-  getSubmissionConfig: (contestJid: string) => {
-    return async (dispatch, getState, { contestSubmissionAPI }) => {
-      const token = selectToken(getState());
-      return await contestSubmissionAPI.getSubmissionConfig(token, contestJid);
-    };
-  },
-
   getSubmissionWithSource: (contestJid: string, submissionId: number, language: string) => {
     return async (dispatch, getState, { contestSubmissionAPI }) => {
       const token = selectToken(getState());

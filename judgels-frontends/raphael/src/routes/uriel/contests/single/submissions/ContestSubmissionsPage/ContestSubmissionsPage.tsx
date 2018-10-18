@@ -8,11 +8,8 @@ import { LoadingState } from 'components/LoadingState/LoadingState';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import Pagination from 'components/Pagination/Pagination';
 import { AppState } from 'modules/store';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestSubmissionConfig, ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission';
-import { Page } from 'modules/api/pagination';
-import { Submission } from 'modules/api/sandalphon/submission';
+import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission';
 
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 import { ContestSubmissionFilterWidget } from '../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
@@ -27,21 +24,17 @@ export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
     problemJid?: string,
     page?: number
   ) => Promise<ContestSubmissionsResponse>;
-  onGetSubmissionConfig: (contestJid: string) => Promise<ContestSubmissionConfig>;
   onAppendRoute: (queries) => any;
 }
 
+interface ContestSubmissionsFilter {
+  username?: string;
+  problemAlias?: string;
+}
+
 interface ContestSubmissionsPageState {
-  config?: ContestSubmissionConfig;
-
-  submissions?: Page<Submission>;
-  profilesMap?: ProfilesMap;
-  problemAliasesMap?: { [problemJid: string]: string };
-
-  filter: {
-    username?: string;
-    problemAlias?: string;
-  };
+  response?: ContestSubmissionsResponse;
+  filter?: ContestSubmissionsFilter;
   isFilterLoading?: boolean;
 }
 
@@ -51,18 +44,18 @@ export class ContestSubmissionsPage extends React.PureComponent<
 > {
   private static PAGE_SIZE = 20;
 
-  state: ContestSubmissionsPageState = { filter: {} };
+  state: ContestSubmissionsPageState = {};
 
   async componentDidMount() {
-    const config = await this.props.onGetSubmissionConfig(this.props.contest.jid);
     const queries = parse(this.props.location.search);
-    this.setState({
-      config,
-      filter: {
-        username: queries.username as string,
-        problemAlias: queries.problemAlias as string,
-      },
-    });
+    const username = queries.username as string;
+    const problemAlias = queries.problemAlias as string;
+
+    if (username || problemAlias) {
+      await this.refreshSubmissions();
+    }
+
+    this.setState({ filter: { username, problemAlias } });
   }
 
   render() {
@@ -78,15 +71,20 @@ export class ContestSubmissionsPage extends React.PureComponent<
   }
 
   private renderFilterWidget = () => {
-    const { config, filter: { username, problemAlias }, isFilterLoading } = this.state;
-    if (!config || !config.isAllowedToViewAllSubmissions) {
+    const { response, filter, isFilterLoading } = this.state;
+    if (!response || !filter) {
+      return null;
+    }
+    const { config, profilesMap, problemAliasesMap } = response;
+    const { userJids, problemJids, isAllowedToViewAllSubmissions } = config;
+    if (!isAllowedToViewAllSubmissions) {
       return null;
     }
 
-    const { usernamesMap, problemJids, problemAliasesMap } = config;
+    const { username, problemAlias } = filter;
     return (
       <ContestSubmissionFilterWidget
-        usernames={Object.keys(usernamesMap).map(jid => usernamesMap[jid])}
+        usernames={userJids.map(jid => profilesMap[jid] && profilesMap[jid].username)}
         problemAliases={problemJids.map(jid => problemAliasesMap[jid])}
         username={username}
         problemAlias={problemAlias}
@@ -97,11 +95,12 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 
   private renderSubmissions = () => {
-    const { config, submissions, profilesMap, problemAliasesMap } = this.state;
-    if (!config || !submissions) {
+    const { response } = this.state;
+    if (!response) {
       return <LoadingState />;
     }
 
+    const { data: submissions, config, profilesMap, problemAliasesMap } = response;
     if (submissions.totalData === 0) {
       return (
         <p>
@@ -114,79 +113,79 @@ export class ContestSubmissionsPage extends React.PureComponent<
       <ContestSubmissionsTable
         contest={this.props.contest}
         submissions={submissions.data}
-        profilesMap={profilesMap!}
-        problemAliasesMap={problemAliasesMap!}
+        profilesMap={profilesMap}
+        problemAliasesMap={problemAliasesMap}
         showUserColumn={config.isAllowedToViewAllSubmissions}
       />
     );
   };
 
   private renderPagination = () => {
-    const { config, filter } = this.state;
+    const { filter } = this.state;
+    if (!filter) {
+      return null;
+    }
 
     // updates pagination when the filter is updated
     const key = '' + filter.username + filter.problemAlias;
 
     return (
-      config && (
-        <Pagination
-          key={key}
-          currentPage={1}
-          pageSize={ContestSubmissionsPage.PAGE_SIZE}
-          onChangePage={this.onChangePage}
-        />
-      )
+      <Pagination
+        key={key}
+        currentPage={1}
+        pageSize={ContestSubmissionsPage.PAGE_SIZE}
+        onChangePage={this.onChangePage}
+      />
     );
   };
 
   private onChangePage = async (nextPage: number) => {
-    const { filter } = this.state;
-    const data = await this.refreshSubmissions(filter.username, filter.problemAlias, nextPage);
+    const { username, problemAlias } = this.state.filter!;
+    const data = await this.refreshSubmissions(username, problemAlias, nextPage);
     return data.totalData;
   };
 
   private refreshSubmissions = async (username?: string, problemAlias?: string, page?: number) => {
     const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
-    const { data, profilesMap, problemAliasesMap } = await this.props.onGetSubmissions(
-      this.props.contest.jid,
-      userJid,
-      problemJid,
-      page
-    );
-    this.setState({
-      submissions: data,
-      profilesMap,
-      problemAliasesMap,
-      isFilterLoading: false,
-    });
-    return data;
+    const response = await this.props.onGetSubmissions(this.props.contest.jid, userJid, problemJid, page);
+    this.setState({ response, isFilterLoading: false });
+    return response.data;
   };
 
   private getFilterJids = (username?: string, problemAlias?: string) => {
-    const { usernamesMap, problemJids, problemAliasesMap } = this.state.config!;
-    const userJid = Object.keys(usernamesMap).find(jid => usernamesMap[jid] === username);
+    const { response } = this.state;
+    if (!response) {
+      return {};
+    }
+
+    const { config, profilesMap, problemAliasesMap } = response;
+    const { userJids, problemJids } = config;
+
+    const userJid = userJids.find(jid => profilesMap[jid].username === username);
     const problemJid = problemJids.find(jid => problemAliasesMap[jid] === problemAlias);
     return { userJid, problemJid };
   };
 
   private onFilter = async (username?: string, problemAlias?: string) => {
     const filter = { username, problemAlias };
-    this.setState(prevState => ({
-      filter,
-      isFilterLoading: prevState.filter.username !== username || prevState.filter.problemAlias !== problemAlias,
-    }));
+    this.setState(prevState => {
+      const prevFilter = prevState.filter || {};
+      return {
+        filter,
+        isFilterLoading: prevFilter.username !== username || prevFilter.problemAlias !== problemAlias,
+      };
+    });
     this.props.onAppendRoute(filter);
   };
 }
 
-function createContestSubmissionsPage(contestSubmissionActions) {
+export function createContestSubmissionsPage(contestSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
   });
 
   const mapDispatchToProps = {
     onGetSubmissions: contestSubmissionActions.getSubmissions,
-    onGetSubmissionConfig: contestSubmissionActions.getSubmissionConfig,
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 

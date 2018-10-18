@@ -3,21 +3,20 @@ import { stringify } from 'query-string';
 import { APP_CONFIG } from 'conf';
 import { get, postMultipart } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
-import { UsernamesMap } from 'modules/api/jophiel/user';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Submission, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submission';
 
 export interface ContestSubmissionsResponse {
   data: Page<Submission>;
+  config: ContestSubmissionConfig;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
 }
 
 export interface ContestSubmissionConfig {
   isAllowedToViewAllSubmissions: boolean;
-  usernamesMap: UsernamesMap;
+  userJids: string[];
   problemJids: string[];
-  problemAliasesMap: { [problemJid: string]: string };
 }
 
 export function createContestSubmissionAPI() {
@@ -33,11 +32,6 @@ export function createContestSubmissionAPI() {
     ): Promise<ContestSubmissionsResponse> => {
       const params = stringify({ contestJid, userJid, problemJid, page });
       return get(`${baseURL}?${params}`, token);
-    },
-
-    getSubmissionConfig: (token: string, contestJid: string): Promise<ContestSubmissionConfig> => {
-      const params = stringify({ contestJid });
-      return get(`${baseURL}/config?${params}`, token);
     },
 
     getSubmissionWithSource: (

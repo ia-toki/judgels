@@ -17,10 +17,8 @@ export interface ContestSubmissionFilterWidgetProps {
 export class ContestSubmissionFilterWidget extends React.Component<ContestSubmissionFilterWidgetProps> {
   render() {
     const { usernames, problemAliases, isLoading, username, problemAlias } = this.props;
-    const sortedUsernames = usernames.slice().sort((username1, username2) => username1.localeCompare(username2));
-
     const formProps = {
-      usernames: ['-', ...sortedUsernames],
+      usernames: ['-', ...usernames],
       problemAliases: ['-', ...problemAliases],
       isLoading,
       initialValues: {
