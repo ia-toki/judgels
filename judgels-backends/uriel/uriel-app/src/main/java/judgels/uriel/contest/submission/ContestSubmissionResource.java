@@ -238,7 +238,6 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         LanguageRestriction contestGradingLanguageRestriction = styleConfig.getGradingLanguageRestriction();
 
         SubmissionData data = new SubmissionData.Builder()
-                .userJid(actorJid)
                 .problemJid(problemJid)
                 .containerJid(contestJid)
                 .gradingLanguage(gradingLanguage)

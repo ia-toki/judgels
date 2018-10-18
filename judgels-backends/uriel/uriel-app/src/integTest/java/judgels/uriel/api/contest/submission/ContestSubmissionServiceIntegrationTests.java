@@ -86,7 +86,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegratio
         contestantService.addContestants(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A_JID, USER_B_JID));
 
         submissionStore.createSubmission(new SubmissionData.Builder()
-                .userJid(USER_A_JID)
+//              .userJid(USER_A_JID)
                 .problemJid("problemJid1")
                 .containerJid(contest.getJid())
                 .gradingLanguage("Cpp11")

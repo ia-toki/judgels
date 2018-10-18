@@ -89,7 +89,6 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
     }
 
     private void toModel(SubmissionData data, String gradingEngine, SM model) {
-        model.createdBy = data.getUserJid();
         model.problemJid = data.getProblemJid();
         model.containerJid = data.getContainerJid();
         model.gradingEngine = gradingEngine;

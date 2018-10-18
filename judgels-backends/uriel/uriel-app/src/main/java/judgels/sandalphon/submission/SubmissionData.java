@@ -8,7 +8,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableSubmissionData.class)
 public interface SubmissionData {
-    String getUserJid();
     String getProblemJid();
     String getContainerJid();
     String getGradingLanguage();

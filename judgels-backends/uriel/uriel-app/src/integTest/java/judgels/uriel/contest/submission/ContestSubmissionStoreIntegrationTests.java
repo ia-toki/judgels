@@ -42,35 +42,35 @@ class ContestSubmissionStoreIntegrationTests {
         Contest contestB = contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 
         Submission submission1 = store.createSubmission(new SubmissionData.Builder()
-                .userJid("userJid1")
+//              .userJid("userJid1")
                 .problemJid("problemJid1")
                 .containerJid(contestA.getJid())
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
 
         Submission submission2 = store.createSubmission(new SubmissionData.Builder()
-                .userJid("userJid1")
+//              .userJid("userJid1")
                 .problemJid("problemJid1")
                 .containerJid(contestA.getJid())
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
 
         Submission submission3 = store.createSubmission(new SubmissionData.Builder()
-                .userJid("userJid2")
+//              .userJid("userJid2")
                 .problemJid("problemJid1")
                 .containerJid(contestA.getJid())
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
 
         Submission submission4 = store.createSubmission(new SubmissionData.Builder()
-                .userJid("userJid2")
+//              .userJid("userJid2")
                 .problemJid("problemJid2")
                 .containerJid(contestA.getJid())
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
 
         store.createSubmission(new SubmissionData.Builder()
-                .userJid("userJid1")
+//              .userJid("userJid1")
                 .problemJid("problemJid1")
                 .containerJid(contestB.getJid())
                 .gradingLanguage("Cpp11")
@@ -79,11 +79,11 @@ class ContestSubmissionStoreIntegrationTests {
         assertThat(store.getSubmissions(contestA.getJid(), empty(), empty(), empty(), DEFAULT_ALL).getData())
                 .containsOnly(submission1, submission2, submission3, submission4);
 
-//        assertThat(store.getSubmissions(contestA.getJid(), of("userJid1"), empty(), empty(), DEFAULT_ALL).getData())
-//                .containsOnly(submission1, submission2);
+//      assertThat(store.getSubmissions(contestA.getJid(), of("userJid1"), empty(), empty(), DEFAULT_ALL).getData())
+//              .containsOnly(submission1, submission2);
 //
-//        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), empty(), empty(), DEFAULT_ALL).getData())
-//                .containsOnly(submission3, submission4);
+//      assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), empty(), empty(), DEFAULT_ALL).getData())
+//              .containsOnly(submission3, submission4);
 
         assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid1"), empty(), DEFAULT_ALL).getData())
                 .containsOnly(submission1, submission2, submission3);
@@ -91,8 +91,8 @@ class ContestSubmissionStoreIntegrationTests {
         assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid2"), empty(), DEFAULT_ALL).getData())
                 .containsOnly(submission4);
 
-//        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), of("problemJid2"), empty(), DEFAULT_ALL)
-//                .getData())
-//                .containsOnly(submission3);
+//      assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), of("problemJid2"), empty(), DEFAULT_ALL)
+//              .getData())
+//              .containsOnly(submission3);
     }
 }
