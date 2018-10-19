@@ -1,6 +1,6 @@
 package judgels.uriel.contest.scoreboard;
 
-import static judgels.uriel.UrielIntegrationTestPersistenceModule.NOW;
+import static judgels.persistence.TestClock.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.persistence.hibernate.WithHibernateSession;

@@ -1,17 +1,17 @@
 package judgels.persistence.hibernate;
 
+import static judgels.persistence.TestClock.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneId;
+import java.time.Duration;
 import java.util.Optional;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
+import judgels.persistence.TestActorProvider;
+import judgels.persistence.TestClock;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
@@ -22,80 +22,73 @@ import org.junit.jupiter.api.Test;
 class HibernateDaoIntegrationTests {
     @Test
     void can_do_basic_crud(SessionFactory sessionFactory) {
-        Instant now1 = Instant.ofEpochMilli(42);
-        ExampleHibernateDao dao1 = new ExampleHibernateDao(
-                sessionFactory,
-                new FixedClock(now1),
-                new FixedActorProvider("actor1", "ip1"));
+        TestClock clock = new TestClock();
+        TestActorProvider actorProvider = new TestActorProvider("actor1", "ip1");
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, clock, actorProvider);
 
-        assertThat(dao1.select(1)).isEmpty();
+        assertThat(dao.select(1)).isEmpty();
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "value1";
-        dao1.insert(model1);
+        dao.insert(model1);
 
-        Optional<ExampleModel> maybeModel = dao1.select(1);
+        Optional<ExampleModel> maybeModel = dao.select(1);
         assertThat(maybeModel).isPresent();
         model1 = maybeModel.get();
 
         assertThat(model1.id).isEqualTo(1);
         assertThat(model1.createdBy).isEqualTo("actor1");
-        assertThat(model1.createdAt).isEqualTo(now1);
+        assertThat(model1.createdAt).isEqualTo(NOW);
         assertThat(model1.createdIp).isEqualTo("ip1");
         assertThat(model1.updatedBy).isEqualTo("actor1");
-        assertThat(model1.updatedAt).isEqualTo(now1);
+        assertThat(model1.updatedAt).isEqualTo(NOW);
         assertThat(model1.updatedIp).isEqualTo("ip1");
         assertThat(model1.column1).isEqualTo("value1");
 
-        Instant now2 = Instant.ofEpochMilli(43);
-        ExampleHibernateDao dao2 = new ExampleHibernateDao(
-                sessionFactory,
-                Clock.fixed(now2, ZoneId.systemDefault()),
-                new FixedActorProvider("actor2", "ip2"));
+        clock.tick(Duration.ofSeconds(1));
+        actorProvider.setJid("actor2");
+        actorProvider.setIpAddress("ip2");
 
         model1.column1 = "value2";
-        model1 = dao2.update(model1);
+        model1 = dao.update(model1);
 
         assertThat(model1.id).isEqualTo(1);
         assertThat(model1.createdBy).isEqualTo("actor1");
-        assertThat(model1.createdAt).isEqualTo(now1);
+        assertThat(model1.createdAt).isEqualTo(NOW);
         assertThat(model1.createdIp).isEqualTo("ip1");
         assertThat(model1.updatedBy).isEqualTo("actor2");
-        assertThat(model1.updatedAt).isEqualTo(now2);
+        assertThat(model1.updatedAt).isEqualTo(NOW.plusSeconds(1));
         assertThat(model1.updatedIp).isEqualTo("ip2");
         assertThat(model1.column1).isEqualTo("value2");
 
-        maybeModel = dao2.select(1);
+        maybeModel = dao.select(1);
         assertThat(maybeModel).isPresent();
         model1 = maybeModel.get();
 
         assertThat(model1.id).isEqualTo(1);
         assertThat(model1.createdBy).isEqualTo("actor1");
-        assertThat(model1.createdAt).isEqualTo(now1);
+        assertThat(model1.createdAt).isEqualTo(NOW);
         assertThat(model1.createdIp).isEqualTo("ip1");
         assertThat(model1.updatedBy).isEqualTo("actor2");
-        assertThat(model1.updatedAt).isEqualTo(now2);
+        assertThat(model1.updatedAt).isEqualTo(NOW.plusSeconds(1));
         assertThat(model1.updatedIp).isEqualTo("ip2");
         assertThat(model1.column1).isEqualTo("value2");
 
         ExampleModel model2 = new ExampleModel();
         model2.column1 = "value3";
-        dao1.insert(model2);
+        dao.insert(model2);
 
-        assertThat(dao1.select(1)).isPresent();
-        assertThat(dao1.select(2)).isPresent();
-        assertThat(dao1.select(3)).isEmpty();
+        assertThat(dao.select(1)).isPresent();
+        assertThat(dao.select(2)).isPresent();
+        assertThat(dao.select(3)).isEmpty();
 
-        dao1.delete(model2);
-        assertThat(dao1.select(2)).isEmpty();
+        dao.delete(model2);
+        assertThat(dao.select(2)).isEmpty();
     }
 
     @Test
     void can_select_by_unique_columns(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "value1";
@@ -128,10 +121,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void can_select_and_count_all(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         Page<ExampleModel> page = dao.selectPaged(new SelectionOptions.Builder()
                 .page(1)
@@ -185,10 +175,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void can_select_and_count_all_by_columns(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "a1";
@@ -259,10 +246,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void can_select_and_count_all_by_column_in(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "a";
@@ -309,10 +293,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void can_select_with_custom_predicates(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "a";
@@ -347,10 +328,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void can_select_all_with_order(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(
-                sessionFactory,
-                new FixedClock(),
-                new FixedActorProvider());
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "b";

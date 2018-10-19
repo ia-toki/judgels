@@ -2,14 +2,13 @@ package judgels.jophiel.user.password;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.util.concurrent.Uninterruptibles;
-import java.time.Clock;
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
-import judgels.jophiel.hibernate.UserResetPasswordHibernateDao;
-import judgels.jophiel.persistence.UserResetPasswordDao;
+import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestComponent;
+import judgels.jophiel.JophielIntegrationTestHibernateModule;
+import judgels.jophiel.JophielIntegrationTestPersistenceModule;
 import judgels.jophiel.persistence.UserResetPasswordModel;
-import judgels.persistence.FixedActorProvider;
+import judgels.persistence.TestClock;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,15 +20,20 @@ class UserResetPasswordStoreIntegrationTests {
     private static final String USER_JID = "userJid";
 
     private Session currentSession;
+    private TestClock clock;
     private UserResetPasswordStore store;
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
         currentSession = sessionFactory.getCurrentSession();
+        clock = new TestClock();
 
-        UserResetPasswordDao userResetPasswordDao =
-                new UserResetPasswordHibernateDao(sessionFactory, Clock.systemUTC(), new FixedActorProvider());
-        store = new UserResetPasswordStore(userResetPasswordDao);
+        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
+                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
+                .jophielIntegrationTestPersistenceModule(new JophielIntegrationTestPersistenceModule(clock))
+                .build();
+
+        store = component.userResetPasswordStore();
     }
 
     @Test
@@ -42,6 +46,7 @@ class UserResetPasswordStoreIntegrationTests {
         assertThat(store.consumeEmailCode(code, Duration.ofHours(1))).contains(USER_JID);
 
         currentSession.flush();
+        clock.tick(Duration.ofSeconds(1));
 
         assertThat(store.consumeEmailCode(code, Duration.ofHours(1))).isEmpty();
         String newCode = store.generateEmailCode(USER_JID, Duration.ofHours(1));
@@ -51,6 +56,7 @@ class UserResetPasswordStoreIntegrationTests {
     @Test
     void same_code_is_returned_if_not_expired() {
         String code1 = store.generateEmailCode(USER_JID, Duration.ofHours(1));
+        clock.tick(Duration.ofSeconds(1));
         String code2 = store.generateEmailCode(USER_JID, Duration.ofHours(1));
         assertThat(code1).isEqualTo(code2);
     }
@@ -58,7 +64,7 @@ class UserResetPasswordStoreIntegrationTests {
     @Test
     void different_code_is_returned_if_expired() {
         String code1 = store.generateEmailCode(USER_JID, Duration.ofHours(1));
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        clock.tick(Duration.ofSeconds(1));
         String code2 = store.generateEmailCode(USER_JID, Duration.ofMillis(700));
         assertThat(code1).isNotEqualTo(code2);
     }

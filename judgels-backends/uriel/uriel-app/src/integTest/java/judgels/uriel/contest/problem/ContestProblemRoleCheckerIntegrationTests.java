@@ -1,7 +1,7 @@
 package judgels.uriel.contest.problem;
 
 import static java.time.temporal.ChronoUnit.HOURS;
-import static judgels.uriel.UrielIntegrationTestPersistenceModule.NOW;
+import static judgels.persistence.TestClock.NOW;
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.PROBLEM;
 import static org.assertj.core.api.Assertions.assertThat;
 

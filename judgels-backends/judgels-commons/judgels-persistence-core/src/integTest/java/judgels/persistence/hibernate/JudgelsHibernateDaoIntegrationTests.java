@@ -9,10 +9,10 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import judgels.persistence.ActorProvider;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
 import judgels.persistence.JidPrefix;
 import judgels.persistence.JudgelsModel;
+import judgels.persistence.TestActorProvider;
+import judgels.persistence.TestClock;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 class JudgelsHibernateDaoIntegrationTests {
     @Test
     void can_do_basic_crud(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         assertThat(dao.select(1)).isEmpty();
 
@@ -65,7 +65,7 @@ class JudgelsHibernateDaoIntegrationTests {
 
     @Test
     void can_select_multiple_jids(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new FixedClock(), new FixedActorProvider());
+        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column = "value4";

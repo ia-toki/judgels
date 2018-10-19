@@ -10,6 +10,7 @@ import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.avatar.UserAvatarIntegrationTestModule;
 import judgels.jophiel.user.info.UserInfoStore;
+import judgels.jophiel.user.password.UserResetPasswordStore;
 import judgels.jophiel.user.registration.UserRegistrationEmailStore;
 
 @Component(modules = {
@@ -26,4 +27,5 @@ public interface JophielIntegrationTestComponent {
     UserStore userStore();
     UserInfoStore userInfoStore();
     UserRegistrationEmailStore userRegistrationEmailStore();
+    UserResetPasswordStore userResetPasswordStore();
 }

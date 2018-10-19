@@ -3,30 +3,42 @@ package judgels.uriel;
 import dagger.Module;
 import dagger.Provides;
 import java.time.Clock;
-import java.time.Instant;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
-import judgels.persistence.FixedActorProvider;
-import judgels.persistence.FixedClock;
+import judgels.persistence.TestActorProvider;
+import judgels.persistence.TestClock;
 
 @Module
 public class UrielIntegrationTestPersistenceModule {
-    public static final String ACTOR = "actorJid";
-    public static final String ACTOR_IP = "actorIp";
+    private final Clock clock;
+    private final ActorProvider actorProvider;
 
-    public static final Instant NOW = Instant.ofEpochMilli(42);
+    public UrielIntegrationTestPersistenceModule() {
+        this(new TestClock(), new TestActorProvider());
+    }
 
-    private UrielIntegrationTestPersistenceModule() {}
+    public UrielIntegrationTestPersistenceModule(Clock clock) {
+        this(clock, new TestActorProvider());
+    }
 
-    @Provides
-    @Singleton
-    static Clock clock() {
-        return new FixedClock(NOW);
+    public UrielIntegrationTestPersistenceModule(ActorProvider actorProvider) {
+        this(new TestClock(), actorProvider);
+    }
+
+    public UrielIntegrationTestPersistenceModule(Clock clock, ActorProvider actorProvider) {
+        this.clock = clock;
+        this.actorProvider = actorProvider;
     }
 
     @Provides
     @Singleton
-    static ActorProvider actorProvider() {
-        return new FixedActorProvider(ACTOR, ACTOR_IP);
+    Clock clock() {
+        return clock;
+    }
+
+    @Provides
+    @Singleton
+    ActorProvider actorProvider() {
+        return actorProvider;
     }
 }

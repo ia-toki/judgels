@@ -1,17 +1,20 @@
 package judgels.persistence;
 
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 
-public class FixedClock extends Clock {
-    private final Instant now;
+public class TestClock extends Clock {
+    public static final Instant NOW = Instant.ofEpochMilli(42);
 
-    public FixedClock() {
-        this(Instant.ofEpochMilli(42));
+    private Instant now;
+
+    public TestClock() {
+        this(NOW);
     }
 
-    public FixedClock(Instant now) {
+    public TestClock(Instant now) {
         this.now = now;
     }
 
@@ -28,5 +31,9 @@ public class FixedClock extends Clock {
     @Override
     public Instant instant() {
         return now;
+    }
+
+    public void tick(Duration duration) {
+        now = now.plus(duration);
     }
 }

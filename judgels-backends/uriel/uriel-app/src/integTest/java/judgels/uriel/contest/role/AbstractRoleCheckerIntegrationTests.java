@@ -1,7 +1,7 @@
 package judgels.uriel.contest.role;
 
 import static java.time.temporal.ChronoUnit.HOURS;
-import static judgels.uriel.UrielIntegrationTestPersistenceModule.NOW;
+import static judgels.persistence.TestClock.NOW;
 
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;

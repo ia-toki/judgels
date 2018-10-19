@@ -9,7 +9,7 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
-import judgels.persistence.FixedClock;
+import judgels.persistence.TestClock;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
@@ -70,7 +70,7 @@ class ContestTimerTests {
         }
 
         private void assertStates(long at, boolean begun, boolean ended) {
-            Clock clock = new FixedClock(Instant.ofEpochSecond(at));
+            Clock clock = new TestClock(Instant.ofEpochSecond(at));
 
             when(moduleStore.getVirtualModuleConfig(CONTEST)).thenReturn(Optional.empty());
             ContestTimer timer = new ContestTimer(contestantStore, moduleStore, clock);
@@ -89,7 +89,7 @@ class ContestTimerTests {
         }
 
         private void assertDurations(long at, long toBegin, long fromBegin, long toEnd) {
-            Clock clock = new FixedClock(Instant.ofEpochSecond(at));
+            Clock clock = new TestClock(Instant.ofEpochSecond(at));
 
             when(moduleStore.getVirtualModuleConfig(CONTEST)).thenReturn(Optional.empty());
             ContestTimer timer = new ContestTimer(contestantStore, moduleStore, clock);
@@ -210,7 +210,7 @@ class ContestTimerTests {
         }
 
         private void assertStates(long at, boolean begun, boolean started, boolean finished, boolean ended) {
-            Clock clock = new FixedClock(Instant.ofEpochSecond(at));
+            Clock clock = new TestClock(Instant.ofEpochSecond(at));
 
             when(contestantStore.getContestant(CONTEST, USER)).thenReturn(
                     Optional.of(new ContestContestant.Builder()
@@ -222,7 +222,7 @@ class ContestTimerTests {
         }
 
         private void assertDurations(long at, long toBegin, long fromBegin, long toFinish, long toEnd) {
-            Clock clock = new FixedClock(Instant.ofEpochSecond(at));
+            Clock clock = new TestClock(Instant.ofEpochSecond(at));
 
             when(contestantStore.getContestant(CONTEST, USER)).thenReturn(
                     Optional.of(new ContestContestant.Builder()
