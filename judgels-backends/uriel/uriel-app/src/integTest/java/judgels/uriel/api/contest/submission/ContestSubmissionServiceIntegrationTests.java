@@ -1,7 +1,7 @@
 package judgels.uriel.api.contest.submission;
 
 import static java.util.Optional.empty;
-import static judgels.uriel.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
+import static judgels.uriel.api.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
@@ -15,10 +15,10 @@ import java.time.Instant;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.sandalphon.submission.SubmissionData;
-import judgels.uriel.AbstractServiceIntegrationTests;
 import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
+import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestService;

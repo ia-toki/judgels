@@ -1,6 +1,6 @@
 package judgels.uriel.api.contest.module;
 
-import static judgels.uriel.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
+import static judgels.uriel.api.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
@@ -11,10 +11,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.AbstractServiceIntegrationTests;
 import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestHibernateModule;
+import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestService;

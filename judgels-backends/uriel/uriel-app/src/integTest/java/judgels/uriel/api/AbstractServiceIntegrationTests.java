@@ -1,4 +1,4 @@
-package judgels.uriel;
+package judgels.uriel.api;
 
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
 import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import judgels.service.jaxrs.JaxRsClients;
+import judgels.uriel.UrielApplication;
+import judgels.uriel.UrielApplicationConfiguration;
+import judgels.uriel.UrielConfiguration;
 import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
