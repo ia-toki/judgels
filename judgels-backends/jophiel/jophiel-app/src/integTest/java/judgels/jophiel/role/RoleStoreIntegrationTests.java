@@ -2,9 +2,8 @@ package judgels.jophiel.role;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
-import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.api.role.Role;
 import judgels.jophiel.persistence.AdminRoleModel;
 import judgels.persistence.hibernate.WithHibernateSession;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {AdminRoleModel.class})
-class RoleStoreIntegrationTests {
+class RoleStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String SUPERADMIN = "superadminJid";
     private static final String ADMIN = "adminJid";
     private static final String USER = "userJid";
@@ -24,9 +23,7 @@ class RoleStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
-                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        JophielIntegrationTestComponent component = createComponent(sessionFactory);
 
         superadminRoleStore = component.superadminRoleStore();
         adminRoleStore = component.adminRoleStore();

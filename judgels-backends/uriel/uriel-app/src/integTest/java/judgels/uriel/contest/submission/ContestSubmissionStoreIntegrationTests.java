@@ -9,10 +9,8 @@ import judgels.persistence.TestActorProvider;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.sandalphon.submission.SubmissionData;
-import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
-import judgels.uriel.UrielIntegrationTestHibernateModule;
-import judgels.uriel.UrielIntegrationTestPersistenceModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.contest.ContestStore;
@@ -24,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestGradingModel.class, ContestSubmissionModel.class})
-class ContestSubmissionStoreIntegrationTests {
+class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
     private TestActorProvider actorProvider;
     private ContestStore contestStore;
     private ContestSubmissionStore store;
@@ -32,10 +30,7 @@ class ContestSubmissionStoreIntegrationTests {
     @BeforeEach
     void before(SessionFactory sessionFactory) {
         actorProvider = new TestActorProvider();
-        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
-                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
-                .urielIntegrationTestPersistenceModule(new UrielIntegrationTestPersistenceModule(actorProvider))
-                .build();
+        UrielIntegrationTestComponent component = createComponent(sessionFactory, actorProvider);
 
         contestStore = component.contestStore();
         store = component.contestSubmissionStore();

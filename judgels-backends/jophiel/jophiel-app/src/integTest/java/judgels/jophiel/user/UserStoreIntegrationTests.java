@@ -3,9 +3,8 @@ package judgels.jophiel.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
-import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.persistence.UserModel;
@@ -18,14 +17,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserModel.class})
-class UserStoreIntegrationTests {
+class UserStoreIntegrationTests extends AbstractIntegrationTests {
     private UserStore store;
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
-                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        JophielIntegrationTestComponent component = createComponent(sessionFactory);
         store = component.userStore();
     }
 

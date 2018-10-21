@@ -3,9 +3,8 @@ package judgels.jophiel.session;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
-import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.api.session.Session;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.persistence.hibernate.WithHibernateSession;
@@ -15,15 +14,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {SessionModel.class})
-class SessionStoreIntegrationTests {
+class SessionStoreIntegrationTests extends AbstractIntegrationTests {
     private SessionStore store;
     private org.hibernate.Session currentSession;
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
-                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        JophielIntegrationTestComponent component = createComponent(sessionFactory);
         store = component.sessionStore();
         currentSession = sessionFactory.getCurrentSession();
     }

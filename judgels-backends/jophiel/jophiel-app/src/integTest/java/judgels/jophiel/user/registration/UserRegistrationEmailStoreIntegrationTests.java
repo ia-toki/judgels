@@ -2,9 +2,8 @@ package judgels.jophiel.user.registration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
-import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
@@ -12,16 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserRegistrationEmailModel.class})
-class UserRegistrationEmailStoreIntegrationTests {
+class UserRegistrationEmailStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String USER_JID = "userJid";
 
     private UserRegistrationEmailStore store;
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
-                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        JophielIntegrationTestComponent component = createComponent(sessionFactory);
         store = component.userRegistrationEmailStore();
     }
 

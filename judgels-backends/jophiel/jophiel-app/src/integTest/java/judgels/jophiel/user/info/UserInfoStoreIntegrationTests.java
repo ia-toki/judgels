@@ -2,9 +2,8 @@ package judgels.jophiel.user.info;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
-import judgels.jophiel.JophielIntegrationTestHibernateModule;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.persistence.UserInfoModel;
 import judgels.persistence.hibernate.WithHibernateSession;
@@ -13,16 +12,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserInfoModel.class})
-class UserInfoStoreIntegrationTests {
+class UserInfoStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String USER_JID = "userJid";
 
     private UserInfoStore store;
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
-                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        JophielIntegrationTestComponent component = createComponent(sessionFactory);
         store = component.userInfoStore();
     }
 

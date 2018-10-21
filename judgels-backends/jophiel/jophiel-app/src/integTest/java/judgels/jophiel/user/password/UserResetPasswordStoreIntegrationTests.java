@@ -3,10 +3,8 @@ package judgels.jophiel.user.password;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
-import judgels.jophiel.DaggerJophielIntegrationTestComponent;
+import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
-import judgels.jophiel.JophielIntegrationTestHibernateModule;
-import judgels.jophiel.JophielIntegrationTestPersistenceModule;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.persistence.TestClock;
 import judgels.persistence.hibernate.WithHibernateSession;
@@ -16,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserResetPasswordModel.class})
-class UserResetPasswordStoreIntegrationTests {
+class UserResetPasswordStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String USER_JID = "userJid";
 
     private Session currentSession;
@@ -28,10 +26,7 @@ class UserResetPasswordStoreIntegrationTests {
         currentSession = sessionFactory.getCurrentSession();
         clock = new TestClock();
 
-        JophielIntegrationTestComponent component = DaggerJophielIntegrationTestComponent.builder()
-                .jophielIntegrationTestHibernateModule(new JophielIntegrationTestHibernateModule(sessionFactory))
-                .jophielIntegrationTestPersistenceModule(new JophielIntegrationTestPersistenceModule(clock))
-                .build();
+        JophielIntegrationTestComponent component = createComponent(sessionFactory, clock);
 
         store = component.userResetPasswordStore();
     }

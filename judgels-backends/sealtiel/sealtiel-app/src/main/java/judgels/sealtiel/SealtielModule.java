@@ -1,9 +1,7 @@
 package judgels.sealtiel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
-import io.dropwizard.jackson.Jackson;
 import javax.inject.Singleton;
 import judgels.service.client.ClientChecker;
 
@@ -19,11 +17,5 @@ public class SealtielModule {
     @Singleton
     ClientChecker clientChecker() {
         return new ClientChecker(sealtielConfig.getClients());
-    }
-
-    @Provides
-    @Singleton
-    ObjectMapper objectMapper() {
-        return Jackson.newObjectMapper();
     }
 }

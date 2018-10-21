@@ -3,15 +3,18 @@ dependencies {
 
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.palantir.remoting3:jaxrs-clients:$httpRemotingVersion"
     compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
 
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.immutables:value:$immutablesVersion"
 
     testCompile "com.google.guava:guava:$guavaVersion"
     testCompile "org.assertj:assertj-core:$assertJVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import judgels.service.jaxrs.JaxRsClients;
+import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielApplication;
 import judgels.uriel.UrielApplicationConfiguration;
 import judgels.uriel.UrielConfiguration;
@@ -21,7 +22,7 @@ import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
-public abstract class AbstractServiceIntegrationTests {
+public abstract class AbstractServiceIntegrationTests extends AbstractIntegrationTests {
     public static final String URIEL_JDBC_SUFFIX = "uriel";
     private static DropwizardTestSupport<UrielApplicationConfiguration> support;
     private static Path baseDataDir;

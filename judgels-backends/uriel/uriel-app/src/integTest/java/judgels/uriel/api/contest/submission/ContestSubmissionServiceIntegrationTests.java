@@ -12,12 +12,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableSet;
 import java.time.Instant;
+import judgels.persistence.TestActorProvider;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.sandalphon.submission.SubmissionData;
-import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
-import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
@@ -49,6 +48,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegratio
     private ContestContestantService contestantService = createService(ContestContestantService.class);
     private ContestSubmissionService submissionService = createService(ContestSubmissionService.class);
 
+    private TestActorProvider actorProvider;
     private ContestSubmissionStore submissionStore;
 
     @BeforeAll
@@ -59,9 +59,8 @@ class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegratio
 
     @BeforeEach
     void setUpRoles(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
-                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        actorProvider = new TestActorProvider();
+        UrielIntegrationTestComponent component = createComponent(sessionFactory, actorProvider);
 
         AdminRoleStore adminRoleStore = component.adminRoleStore();
         adminRoleStore.addAdmin(ADMIN_JID);
@@ -85,8 +84,8 @@ class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegratio
 
         contestantService.addContestants(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A_JID, USER_B_JID));
 
+        actorProvider.setJid(USER_A_JID);
         submissionStore.createSubmission(new SubmissionData.Builder()
-//              .userJid(USER_A_JID)
                 .problemJid("problemJid1")
                 .containerJid(contest.getJid())
                 .gradingLanguage("Cpp11")
@@ -96,6 +95,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegratio
                 submissionService.getSubmissions(ADMIN_HEADER, contest.getJid(), empty(), empty(), empty());
 
         Submission submission = response.getData().getData().get(0);
+        assertThat(submission.getUserJid()).isEqualTo(USER_A_JID);
         assertThat(submission.getProblemJid()).isEqualTo("problemJid1");
         assertThat(submission.getContainerJid()).isEqualTo(contest.getJid());
         assertThat(submission.getGradingEngine()).isEqualTo("Batch");

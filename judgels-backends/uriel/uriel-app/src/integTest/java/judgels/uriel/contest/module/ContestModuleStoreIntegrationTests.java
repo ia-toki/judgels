@@ -6,9 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
-import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
@@ -22,7 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestModuleModel.class})
-class ContestModuleStoreIntegrationTests {
+class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
     private ContestStore contestStore;
     private ContestModuleStore store;
 
@@ -32,9 +31,7 @@ class ContestModuleStoreIntegrationTests {
     void before(SessionFactory sessionFactory) {
         currentSession = sessionFactory.getCurrentSession();
 
-        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
-                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
         contestStore = component.contestStore();
         store = component.contestModuleStore();

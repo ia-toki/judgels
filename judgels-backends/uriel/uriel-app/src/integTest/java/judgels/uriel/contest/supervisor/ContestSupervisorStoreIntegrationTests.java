@@ -4,9 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
-import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
@@ -21,7 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestSupervisorModel.class})
-class ContestSupervisorStoreIntegrationTests {
+class ContestSupervisorStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String USER_1 = "user1Jid";
     private static final String USER_2 = "user2Jid";
 
@@ -30,9 +29,7 @@ class ContestSupervisorStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
-                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
         contestStore = component.contestStore();
         store = component.contestSupervisorStore();

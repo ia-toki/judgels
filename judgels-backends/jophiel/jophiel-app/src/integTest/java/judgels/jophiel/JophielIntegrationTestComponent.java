@@ -12,11 +12,16 @@ import judgels.jophiel.user.avatar.UserAvatarIntegrationTestModule;
 import judgels.jophiel.user.info.UserInfoStore;
 import judgels.jophiel.user.password.UserResetPasswordStore;
 import judgels.jophiel.user.registration.UserRegistrationEmailStore;
+import judgels.service.JudgelsModule;
+import judgels.service.JudgelsPersistenceModule;
+import judgels.service.hibernate.JudgelsHibernateModule;
 
 @Component(modules = {
+        JophielModule.class,
         JophielHibernateDaoModule.class,
-        JophielIntegrationTestHibernateModule.class,
-        JophielIntegrationTestPersistenceModule.class,
+        JudgelsModule.class,
+        JudgelsHibernateModule.class,
+        JudgelsPersistenceModule.class,
         UserAvatarIntegrationTestModule.class})
 @Singleton
 public interface JophielIntegrationTestComponent {

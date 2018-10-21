@@ -10,13 +10,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateBundle;
-import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.password.UserResetPasswordModule;
 import judgels.jophiel.user.registration.UserRegistrationModule;
 import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.recaptcha.RecaptchaModule;
+import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.service.jersey.JudgelsObjectMappers;
 
@@ -44,7 +44,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
 
         JophielComponent component = DaggerJophielComponent.builder()
                 .awsModule(new AwsModule(jophielConfig.getAwsConfig()))
-                .jophielHibernateModule(new JophielHibernateModule(hibernateBundle))
+                .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
                 .userAvatarModule(new UserAvatarModule(baseDataDir, jophielConfig.getUserAvatarConfig()))

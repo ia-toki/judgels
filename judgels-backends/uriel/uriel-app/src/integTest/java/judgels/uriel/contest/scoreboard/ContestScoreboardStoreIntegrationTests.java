@@ -4,9 +4,8 @@ import static judgels.persistence.TestClock.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
-import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
@@ -19,15 +18,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestScoreboardModel.class})
-class ContestScoreboardStoreIntegrationTests {
+class ContestScoreboardStoreIntegrationTests extends AbstractIntegrationTests {
     private ContestScoreboardStore store;
     private ContestStore contestStore;
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
-                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
         contestStore = component.contestStore();
         store = component.contestScoreboardStore();

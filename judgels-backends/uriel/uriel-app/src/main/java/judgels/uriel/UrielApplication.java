@@ -7,12 +7,12 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import judgels.fs.aws.AwsModule;
+import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.service.jersey.JudgelsObjectMappers;
 import judgels.uriel.file.FileModule;
 import judgels.uriel.gabriel.GabrielModule;
 import judgels.uriel.hibernate.UrielHibernateBundle;
-import judgels.uriel.hibernate.UrielHibernateModule;
 import judgels.uriel.jophiel.JophielModule;
 import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.sealtiel.SealtielModule;
@@ -39,15 +39,15 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
     public void run(UrielApplicationConfiguration config, Environment env) {
         UrielConfiguration urielConfig = config.getUrielConfig();
         UrielComponent component = DaggerUrielComponent.builder()
-                .urielModule(new UrielModule(urielConfig))
-                .urielHibernateModule(new UrielHibernateModule(hibernateBundle))
+                .awsModule(new AwsModule(urielConfig.getAwsConfig()))
+                .fileModule(new FileModule(urielConfig.getFileConfig()))
+                .gabrielModule(new GabrielModule(urielConfig.getGabrielConfig()))
                 .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
+                .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(urielConfig.getSandalphonConfig()))
                 .sealtielModule(new SealtielModule(urielConfig.getSealtielConfig()))
-                .gabrielModule(new GabrielModule(urielConfig.getGabrielConfig()))
-                .awsModule(new AwsModule(urielConfig.getAwsConfig()))
                 .submissionModule(new SubmissionModule(urielConfig.getSubmissionConfig()))
-                .fileModule(new FileModule(urielConfig.getFileConfig()))
+                .urielModule(new UrielModule(urielConfig))
                 .build();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);

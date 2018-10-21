@@ -8,9 +8,8 @@ import com.palantir.remoting.api.errors.ServiceException;
 import java.util.List;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
-import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestUpdateData;
@@ -38,7 +37,7 @@ import org.junit.jupiter.api.Test;
         ContestSupervisorModel.class,
         ContestManagerModel.class,
         ContestModuleModel.class})
-class ContestStoreIntegrationTests {
+class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String ADMIN = "adminJid";
     private static final String USER_1 = "user1Jid";
     private static final String USER_2 = "user2Jid";
@@ -54,9 +53,7 @@ class ContestStoreIntegrationTests {
 
     @BeforeEach
     void before(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
-                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
         adminRoleStore = component.adminRoleStore();
         moduleStore = component.contestModuleStore();

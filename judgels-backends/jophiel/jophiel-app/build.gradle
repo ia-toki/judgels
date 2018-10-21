@@ -5,7 +5,7 @@ dependencies {
     compile project(':judgels-commons:judgels-fs')
     compile project(':judgels-commons:judgels-persistence-core')
     compile project(':judgels-commons:judgels-recaptcha')
-    compile project(':judgels-commons:judgels-service-core')
+    compile project(':judgels-commons:judgels-service-persistence')
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
     compile "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"

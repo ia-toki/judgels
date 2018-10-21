@@ -6,10 +6,9 @@ import static judgels.persistence.TestClock.NOW;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.DaggerUrielIntegrationTestComponent;
+import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielCacheUtils;
 import judgels.uriel.UrielIntegrationTestComponent;
-import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestUpdateData;
@@ -37,7 +36,7 @@ import org.hibernate.SessionFactory;
         ContestContestantModel.class,
         ContestSupervisorModel.class,
         ContestManagerModel.class})
-public abstract class AbstractRoleCheckerIntegrationTests {
+public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegrationTests {
     protected static final String USER = "userJid";
     protected static final String ADMIN = "adminJid";
     protected static final String CONTESTANT = "contestantJid";
@@ -66,9 +65,7 @@ public abstract class AbstractRoleCheckerIntegrationTests {
     }
 
     protected void prepare(SessionFactory sessionFactory) {
-        component = DaggerUrielIntegrationTestComponent.builder()
-                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        component = createComponent(sessionFactory);
 
         AdminRoleStore adminRoleStore = component.adminRoleStore();
         contestStore = component.contestStore();

@@ -15,9 +15,10 @@ MODULES = OrderedDict([
     (':judgels-commons:judgels-recaptcha', set()),
     (':judgels-commons:judgels-service-api', set()),
     (':judgels-commons:judgels-service-core', {':judgels-commons:judgels-service-api'}),
+    (':judgels-commons:judgels-service-persistence', {':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-service-core'}),
 
     (':jophiel:jophiel-api', {':judgels-commons:judgels-persistence-api', ':judgels-commons:judgels-service-api'}),
-    (':jophiel:jophiel-app', {':jophiel:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-recaptcha', ':judgels-commons:judgels-service-core'}),
+    (':jophiel:jophiel-app', {':jophiel:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-recaptcha', ':judgels-commons:judgels-service-persistence'}),
     (':jophiel:jophiel-dist', set()),
     (':jophiel', {':jophiel:jophiel-app', ':jophiel:jophiel-api', ':jophiel:jophiel-dist'}),
 
@@ -27,7 +28,7 @@ MODULES = OrderedDict([
     (':sealtiel', {':sealtiel:sealtiel-app', ':sealtiel:sealtiel-api', ':sealtiel:sealtiel-dist'}),
 
     (':uriel:uriel-api', {':judgels-commons:judgels-persistence-api', ':judgels-commons:judgels-service-api'}),
-    (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-core', ':sealtiel:sealtiel-api'}),
+    (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':sealtiel:sealtiel-api'}),
     (':uriel:uriel-dist', set()),
     (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
 
@@ -40,6 +41,7 @@ PROJECTS = [
     ':judgels-commons:judgels-persistence-core',
     ':judgels-commons:judgels-recaptcha',
     ':judgels-commons:judgels-service-core',
+    ':judgels-commons:judgels-service-persistence',
     ':jophiel',
     ':sealtiel',
     ':uriel',

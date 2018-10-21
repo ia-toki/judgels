@@ -1,0 +1,11 @@
+dependencies {
+    compile project(':judgels-commons:judgels-persistence-core')
+    compile project(':judgels-commons:judgels-service-core')
+
+    compile "com.google.dagger:dagger:$daggerVersion"
+    compile "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
+
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+}

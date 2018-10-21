@@ -4,7 +4,6 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
-import judgels.jophiel.hibernate.JophielHibernateModule;
 import judgels.jophiel.legacy.session.LegacySessionResource;
 import judgels.jophiel.legacy.user.LegacyUserResource;
 import judgels.jophiel.mailer.MailerModule;
@@ -24,13 +23,17 @@ import judgels.jophiel.user.superadmin.SuperadminCreator;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.UserWebResource;
 import judgels.recaptcha.RecaptchaModule;
+import judgels.service.JudgelsModule;
+import judgels.service.JudgelsPersistenceModule;
+import judgels.service.hibernate.JudgelsHibernateModule;
 
 @Component(modules = {
         AwsModule.class,
         JophielModule.class,
-        JophielHibernateModule.class,
         JophielHibernateDaoModule.class,
-        JophielPersistenceModule.class,
+        JudgelsModule.class,
+        JudgelsHibernateModule.class,
+        JudgelsPersistenceModule.class,
         MailerModule.class,
         RecaptchaModule.class,
         SuperadminModule.class,
@@ -39,13 +42,12 @@ import judgels.recaptcha.RecaptchaModule;
         UserResetPasswordModule.class})
 @Singleton
 public interface JophielComponent {
-    SuperadminCreator superadminCreator();
-
     LegacyUserResource legacyUserResource();
     LegacySessionResource legacySessionResource();
     MyResource myResource();
     ProfileResource profileResource();
     SessionResource sessionResource();
+    SuperadminCreator superadminCreator();
     UserResource userResource();
     UserAccountResource userAccountResource();
     UserAvatarResource userAvatarResource();

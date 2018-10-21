@@ -5,7 +5,7 @@ dependencies {
     compile project(':jophiel:jophiel-api')
     compile project(':judgels-commons:judgels-fs')
     compile project(':judgels-commons:judgels-persistence-core')
-    compile project(':judgels-commons:judgels-service-core')
+    compile project(':judgels-commons:judgels-service-persistence')
     compile project(':sealtiel:sealtiel-api')
 
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"

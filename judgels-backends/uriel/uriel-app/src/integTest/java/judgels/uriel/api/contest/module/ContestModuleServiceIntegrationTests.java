@@ -11,9 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.DaggerUrielIntegrationTestComponent;
 import judgels.uriel.UrielIntegrationTestComponent;
-import judgels.uriel.UrielIntegrationTestHibernateModule;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
@@ -43,9 +41,7 @@ class ContestModuleServiceIntegrationTests extends AbstractServiceIntegrationTes
 
     @BeforeAll
     static void setUpRoles(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = DaggerUrielIntegrationTestComponent.builder()
-                .urielIntegrationTestHibernateModule(new UrielIntegrationTestHibernateModule(sessionFactory))
-                .build();
+        UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
         AdminRoleStore adminRoleStore = component.adminRoleStore();
         adminRoleStore.addAdmin(ADMIN_JID);
