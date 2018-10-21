@@ -52,7 +52,7 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     private ContestManagerStore managerStore;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
         adminRoleStore = component.adminRoleStore();
@@ -65,7 +65,7 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
-    void can_do_basic_crud() {
+    void crud_flow() {
         Contest contestA = store.createContest(new ContestCreateData.Builder().slug("contest-a").build());
         Contest contestB = store.createContest(new ContestCreateData.Builder().slug("contest-b").build());
         Contest contestC = store.createContest(new ContestCreateData.Builder().slug("contest-c").build());

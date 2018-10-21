@@ -11,7 +11,7 @@ class MessageServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static final BasicAuthHeader AUTH_HEADER_2 = BasicAuthHeader.of(CLIENT_2);
 
     @Test
-    void messaging_flow() {
+    void end_to_end_flow() {
         MessageService messageService = createService(MessageService.class);
         assertThat(messageService.receiveMessage(AUTH_HEADER_1)).isEmpty();
 

@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 @WithHibernateSession(models = {JudgelsHibernateDaoIntegrationTests.ExampleModel.class})
 class JudgelsHibernateDaoIntegrationTests {
     @Test
-    void can_do_basic_crud(SessionFactory sessionFactory) {
+    void crud_flow(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         assertThat(dao.select(1)).isEmpty();
@@ -64,7 +64,7 @@ class JudgelsHibernateDaoIntegrationTests {
     }
 
     @Test
-    void can_select_multiple_jids(SessionFactory sessionFactory) {
+    void select_multiple_jids(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();

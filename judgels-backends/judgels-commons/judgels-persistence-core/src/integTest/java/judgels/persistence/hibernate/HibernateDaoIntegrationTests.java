@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 @WithHibernateSession(models = {ExampleModel.class})
 class HibernateDaoIntegrationTests {
     @Test
-    void can_do_basic_crud(SessionFactory sessionFactory) {
+    void crud_flow(SessionFactory sessionFactory) {
         TestClock clock = new TestClock();
         TestActorProvider actorProvider = new TestActorProvider("actor1", "ip1");
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, clock, actorProvider);
@@ -87,7 +87,7 @@ class HibernateDaoIntegrationTests {
     }
 
     @Test
-    void can_select_by_unique_columns(SessionFactory sessionFactory) {
+    void select_by_unique_columns(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
@@ -120,7 +120,7 @@ class HibernateDaoIntegrationTests {
     }
 
     @Test
-    void can_select_and_count_all(SessionFactory sessionFactory) {
+    void select_and_count_all(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         Page<ExampleModel> page = dao.selectPaged(new SelectionOptions.Builder()
@@ -174,7 +174,7 @@ class HibernateDaoIntegrationTests {
     }
 
     @Test
-    void can_select_and_count_all_by_columns(SessionFactory sessionFactory) {
+    void select_and_count_all_by_columns(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
@@ -245,7 +245,7 @@ class HibernateDaoIntegrationTests {
     }
 
     @Test
-    void can_select_and_count_all_by_column_in(SessionFactory sessionFactory) {
+    void select_and_count_all_by_column_in(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
@@ -292,7 +292,7 @@ class HibernateDaoIntegrationTests {
     }
 
     @Test
-    void can_select_with_custom_predicates(SessionFactory sessionFactory) {
+    void select_with_custom_predicates(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
@@ -327,7 +327,7 @@ class HibernateDaoIntegrationTests {
     }
 
     @Test
-    void can_select_all_with_order(SessionFactory sessionFactory) {
+    void select_all_with_order(SessionFactory sessionFactory) {
         ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();

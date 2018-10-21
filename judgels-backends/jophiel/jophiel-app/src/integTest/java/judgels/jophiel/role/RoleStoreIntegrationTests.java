@@ -22,7 +22,7 @@ class RoleStoreIntegrationTests extends AbstractIntegrationTests {
     private RoleStore store;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         JophielIntegrationTestComponent component = createComponent(sessionFactory);
 
         superadminRoleStore = component.superadminRoleStore();

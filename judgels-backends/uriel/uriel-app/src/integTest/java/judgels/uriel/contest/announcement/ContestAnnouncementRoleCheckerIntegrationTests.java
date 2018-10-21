@@ -12,7 +12,7 @@ class ContestAnnouncementRoleCheckerIntegrationTests extends AbstractRoleChecker
     private ContestAnnouncementRoleChecker checker;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         prepare(sessionFactory);
         checker = component.contestAnnouncementRoleChecker();
     }

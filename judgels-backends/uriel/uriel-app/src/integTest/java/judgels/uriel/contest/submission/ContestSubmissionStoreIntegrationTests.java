@@ -28,7 +28,7 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
     private ContestSubmissionStore store;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         actorProvider = new TestActorProvider();
         UrielIntegrationTestComponent component = createComponent(sessionFactory, actorProvider);
 
@@ -37,7 +37,7 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
-    void can_do_basic_crud() {
+    void crud_flow() {
         Contest contestA = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
         Contest contestB = contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 

@@ -14,7 +14,7 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
     private ContestClarificationRoleChecker checker;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         prepare(sessionFactory);
         checker = component.contestClarificationRoleChecker();
 

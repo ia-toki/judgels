@@ -18,7 +18,7 @@ class JophielApplicationConfigurationTests {
             new YamlConfigurationFactory<>(JophielApplicationConfiguration.class, validator, objectMapper, "dw");
 
     @Test
-    void can_deserialize_jophiel_yml() {
+    void jophiel_yml_deserializes() {
         File jophielYml = Paths.get("..", "jophiel-dist", "var", "conf", "jophiel.yml.example").toFile();
         assertThatCode(() -> factory.build(jophielYml))
                 .doesNotThrowAnyException();

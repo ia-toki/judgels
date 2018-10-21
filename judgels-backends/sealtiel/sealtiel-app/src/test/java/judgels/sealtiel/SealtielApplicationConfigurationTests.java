@@ -18,7 +18,7 @@ class SealtielApplicationConfigurationTests {
             new YamlConfigurationFactory<>(SealtielApplicationConfiguration.class, validator, objectMapper, "dw");
 
     @Test
-    void can_deserialize_sealtiel_yml() {
+    void sealtiel_yml_deserizalizes() {
         File sealtielYml = Paths.get("..", "sealtiel-dist", "var", "conf", "sealtiel.yml.example").toFile();
         assertThatCode(() -> factory.build(sealtielYml))
                 .doesNotThrowAnyException();

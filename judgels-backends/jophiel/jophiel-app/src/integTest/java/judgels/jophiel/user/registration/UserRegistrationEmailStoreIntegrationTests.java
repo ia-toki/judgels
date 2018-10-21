@@ -17,7 +17,7 @@ class UserRegistrationEmailStoreIntegrationTests extends AbstractIntegrationTest
     private UserRegistrationEmailStore store;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         JophielIntegrationTestComponent component = createComponent(sessionFactory);
         store = component.userRegistrationEmailStore();
     }
@@ -33,7 +33,7 @@ class UserRegistrationEmailStoreIntegrationTests extends AbstractIntegrationTest
     }
 
     @Test
-    void can_generate_email_code_and_verify() {
+    void generate_email_code_and_verify() {
         String emailCode = store.generateEmailCode(USER_JID);
         assertThat(store.isUserActivated(USER_JID)).isFalse();
 

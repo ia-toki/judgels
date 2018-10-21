@@ -18,13 +18,13 @@ class UserInfoStoreIntegrationTests extends AbstractIntegrationTests {
     private UserInfoStore store;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         JophielIntegrationTestComponent component = createComponent(sessionFactory);
         store = component.userInfoStore();
     }
 
     @Test
-    void can_do_basic_crud() {
+    void crud_flow() {
         assertThat(store.getInfo(USER_JID))
                 .isEqualTo(new UserInfo.Builder().build());
 

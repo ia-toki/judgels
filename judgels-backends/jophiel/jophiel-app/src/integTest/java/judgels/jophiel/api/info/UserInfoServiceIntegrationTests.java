@@ -15,7 +15,7 @@ class UserInfoServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private UserInfoService infoService = createService(UserInfoService.class);
 
     @Test
-    void basic_flow() {
+    void end_to_end_flow() {
         User user = userService.createUser(adminHeader, new UserData.Builder()
                 .username("alpha")
                 .password("pass")

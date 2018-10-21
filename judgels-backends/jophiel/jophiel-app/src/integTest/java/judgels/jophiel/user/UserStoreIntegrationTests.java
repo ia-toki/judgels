@@ -21,13 +21,13 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
     private UserStore store;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         JophielIntegrationTestComponent component = createComponent(sessionFactory);
         store = component.userStore();
     }
 
     @Test
-    void can_do_basic_crud() {
+    void crud_flow() {
         assertThat(store.getUserByUsername("username")).isEmpty();
 
         UserData userData = new UserData.Builder()
@@ -79,7 +79,7 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
-    void can_update_avatar() {
+    void update_avatar() {
         UserData userData = new UserData.Builder()
                 .username("username")
                 .password("password")
@@ -130,7 +130,7 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
-    void can_get_by_term() {
+    void get_by_term() {
         UserData userData = new UserData.Builder()
                 .username("andi")
                 .password("password")

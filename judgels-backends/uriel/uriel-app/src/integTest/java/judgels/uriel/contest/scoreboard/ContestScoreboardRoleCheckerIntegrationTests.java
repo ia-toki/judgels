@@ -12,7 +12,7 @@ class ContestScoreboardRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
     private ContestScoreboardRoleChecker checker;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         prepare(sessionFactory);
         checker = component.contestScoreboardRoleChecker();
     }

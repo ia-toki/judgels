@@ -38,13 +38,13 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
     private ContestAnnouncementService announcementService = createService(ContestAnnouncementService.class);
 
     @BeforeAll
-    static void startMocks() {
+    static void setUpMocks() {
         mockJophiel = mockJophiel();
         mockJophiel.start();
     }
 
     @BeforeAll
-    static void setUpRoles(SessionFactory sessionFactory) {
+    static void setUpSession(SessionFactory sessionFactory) {
         UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
         AdminRoleStore adminRoleStore = component.adminRoleStore();
@@ -52,31 +52,33 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
     }
 
     @AfterAll
-    static void shutdownMocks() {
+    static void tearDownMocks() {
         mockJophiel.shutdown();
     }
 
     @Test
-    void basic_flow() {
+    void end_to_end_flow() {
         Contest contest = contestService.createContest(
                 ADMIN_HEADER,
                 new ContestCreateData.Builder().slug("contest").build());
 
-        ContestAnnouncementData announcementData1 = new ContestAnnouncementData.Builder()
-                .title("this is title 1")
-                .content("this is content 1")
-                .status(PUBLISHED)
-                .build();
-
         ContestAnnouncement announcement1 = announcementService.createAnnouncement(
                 ADMIN_HEADER,
                 contest.getJid(),
-                announcementData1);
+                new ContestAnnouncementData.Builder()
+                        .title("this is title 1")
+                        .content("this is content 1")
+                        .status(PUBLISHED)
+                        .build());
 
         assertThatRemoteExceptionThrownBy(() -> announcementService.createAnnouncement(
                 USER_A_HEADER,
                 contest.getJid(),
-                announcementData1))
+                new ContestAnnouncementData.Builder()
+                        .title("this is title")
+                        .content("this is content")
+                        .status(PUBLISHED)
+                        .build()))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
         assertThat(announcement1.getUserJid()).isEqualTo(ADMIN_JID);
@@ -84,48 +86,47 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
         assertThat(announcement1.getContent()).isEqualTo("this is content 1");
         assertThat(announcement1.getStatus()).isEqualTo(PUBLISHED);
 
-        ContestAnnouncementData announcementData2 = new ContestAnnouncementData.Builder()
-                .title("this is title 2")
-                .content("this is content 2")
-                .status(PUBLISHED)
-                .build();
-        ContestAnnouncementData announcementData3 = new ContestAnnouncementData.Builder()
-                .title("this is title 3")
-                .content("this is content 3")
-                .status(DRAFT)
-                .build();
-
         ContestAnnouncement announcement2 = announcementService.createAnnouncement(
-                ADMIN_HEADER, contest.getJid(), announcementData2);
+                ADMIN_HEADER,
+                contest.getJid(),
+                new ContestAnnouncementData.Builder()
+                        .title("this is title 2")
+                        .content("this is content 2")
+                        .status(PUBLISHED)
+                        .build());
         ContestAnnouncement announcement3 = announcementService.createAnnouncement(
-                ADMIN_HEADER, contest.getJid(), announcementData3);
+                ADMIN_HEADER,
+                contest.getJid(),
+                new ContestAnnouncementData.Builder()
+                        .title("this is title 3")
+                        .content("this is content 3")
+                        .status(DRAFT)
+                        .build());
 
-        ContestAnnouncementsResponse announcementsResponse = announcementService
+        ContestAnnouncementsResponse response = announcementService
                 .getAnnouncements(of(ADMIN_HEADER), contest.getJid());
 
-        ContestAnnouncementConfig config = announcementsResponse.getConfig();
-
+        ContestAnnouncementConfig config = response.getConfig();
         assertThat(config.getIsAllowedToCreateAnnouncement()).isTrue();
         assertThat(config.getIsAllowedToEditAnnouncement()).isTrue();
 
-        List<ContestAnnouncement> allAnnouncements = announcementsResponse.getData();
-
-        assertThat(allAnnouncements).containsOnly(announcement1, announcement2, announcement3);
-
-        ContestAnnouncementData announcementData4 = new ContestAnnouncementData.Builder()
-                .title("this is new title")
-                .content("this is new content")
-                .status(PUBLISHED)
-                .build();
+        List<ContestAnnouncement> announcements = response.getData();
+        assertThat(announcements).containsOnly(announcement1, announcement2, announcement3);
 
         ContestAnnouncement announcement4 = announcementService.updateAnnouncement(
-                ADMIN_HEADER, contest.getJid(), announcement1.getJid(), announcementData4);
+                ADMIN_HEADER,
+                contest.getJid(),
+                announcement1.getJid(),
+                new ContestAnnouncementData.Builder()
+                        .title("this is new title")
+                        .content("this is new content")
+                        .status(PUBLISHED)
+                        .build());
 
-        allAnnouncements = announcementService
+        announcements = announcementService
                 .getAnnouncements(of(ADMIN_HEADER), contest.getJid()).getData();
 
-        assertThat(allAnnouncements.stream().filter(
+        assertThat(announcements.stream().filter(
                 e -> e.getJid().equals(announcement1.getJid())).toArray()).containsOnly(announcement4);
-
     }
 }

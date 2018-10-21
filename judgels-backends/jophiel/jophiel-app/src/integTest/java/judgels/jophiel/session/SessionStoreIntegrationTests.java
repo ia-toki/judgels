@@ -19,14 +19,14 @@ class SessionStoreIntegrationTests extends AbstractIntegrationTests {
     private org.hibernate.Session currentSession;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         JophielIntegrationTestComponent component = createComponent(sessionFactory);
         store = component.sessionStore();
         currentSession = sessionFactory.getCurrentSession();
     }
 
     @Test
-    void can_do_basic_crud() {
+    void crud_flow() {
         assertThat(store.getSessionByToken("token123")).isEmpty();
 
         store.createSession("token123", "userJid");

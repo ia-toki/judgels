@@ -11,7 +11,7 @@ class ContestFileRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrat
     private ContestFileRoleChecker checker;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         prepare(sessionFactory);
         checker = component.contestFileRoleChecker();
     }

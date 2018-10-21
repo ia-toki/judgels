@@ -21,7 +21,7 @@ class ContestStyleStoreIntegrationTests extends AbstractIntegrationTests {
     private ContestStyleStore store;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
         contestStore = component.contestStore();
@@ -29,7 +29,7 @@ class ContestStyleStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
-    void can_do_basic_crud() {
+    void crud_flow() {
         Contest contest = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
         contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 

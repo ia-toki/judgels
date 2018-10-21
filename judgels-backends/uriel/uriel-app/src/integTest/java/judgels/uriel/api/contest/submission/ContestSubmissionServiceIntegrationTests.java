@@ -52,13 +52,13 @@ class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegratio
     private ContestSubmissionStore submissionStore;
 
     @BeforeAll
-    static void startMocks() {
+    static void setUpMocks() {
         mockJophiel = mockJophiel();
         mockJophiel.start();
     }
 
     @BeforeEach
-    void setUpRoles(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         actorProvider = new TestActorProvider();
         UrielIntegrationTestComponent component = createComponent(sessionFactory, actorProvider);
 
@@ -69,12 +69,12 @@ class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegratio
     }
 
     @AfterAll
-    static void shutdownMocks() {
+    static void tearDownMocks() {
         mockJophiel.shutdown();
     }
 
     @Test
-    void basic_flow() {
+    void end_to_end_flow() {
         Contest contest = contestService.createContest(
                 ADMIN_HEADER,
                 new ContestCreateData.Builder().slug("contest").build());

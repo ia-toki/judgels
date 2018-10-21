@@ -22,7 +22,7 @@ class UserResetPasswordStoreIntegrationTests extends AbstractIntegrationTests {
     private UserResetPasswordStore store;
 
     @BeforeEach
-    void before(SessionFactory sessionFactory) {
+    void setUpSession(SessionFactory sessionFactory) {
         currentSession = sessionFactory.getCurrentSession();
         clock = new TestClock();
 
@@ -32,7 +32,7 @@ class UserResetPasswordStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
-    void can_generate_find_consume_code() {
+    void generate_find_consume_code() {
         assertThat(store.consumeEmailCode("code", Duration.ofHours(1))).isEmpty();
 
         store.generateEmailCode("userJid2", Duration.ofHours(1));
