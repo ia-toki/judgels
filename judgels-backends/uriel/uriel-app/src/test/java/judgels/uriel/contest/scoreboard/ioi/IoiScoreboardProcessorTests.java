@@ -131,7 +131,7 @@ class IoiScoreboardProcessorTests {
                 .build();
 
         IoiContestStyleConfig config = new IoiContestStyleConfig.Builder()
-                .languageRestriction(LanguageRestriction.noRestriction())
+                .gradingLanguageRestriction(LanguageRestriction.noRestriction())
                 .build();
         assertThat(scoreboardProcessor.filterProblemJids(scoreboard, ImmutableSet.of("p1", "p3"), config))
                 .isEqualTo(filteredScoreboard);

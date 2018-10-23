@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
+import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
@@ -23,6 +24,26 @@ public class ContestProblemStore {
     public ContestProblemStore(ContestProblemDao problemDao, ContestSubmissionDao submissionDao) {
         this.problemDao = problemDao;
         this.submissionDao = submissionDao;
+    }
+
+    public void upsertProblem(String contestJid, ContestProblemData data) {
+        Optional<ContestProblemModel> maybeModel =
+                problemDao.selectByContestJidAndProblemJid(contestJid, data.getProblemJid());
+        if (maybeModel.isPresent()) {
+            ContestProblemModel model = maybeModel.get();
+            model.alias = data.getAlias();
+            model.status = data.getStatus().name();
+            model.submissionsLimit = data.getSubmissionsLimit();
+            problemDao.update(model);
+        } else {
+            ContestProblemModel model = new ContestProblemModel();
+            model.contestJid = contestJid;
+            model.problemJid = data.getProblemJid();
+            model.alias = data.getAlias();
+            model.status = data.getStatus().name();
+            model.submissionsLimit = data.getSubmissionsLimit();
+            problemDao.insert(model);
+        }
     }
 
     public Optional<ContestProblem> getProblem(String contestJid, String problemJid) {
@@ -87,8 +108,7 @@ public class ContestProblemStore {
     }
 
     private ContestContestantProblem contestantProblemFromModel(ContestProblemModel model, String userJid) {
-        long totalSubmissions =
-                submissionDao.selectCounts(model.contestJid, userJid, ImmutableSet.of(model.problemJid))
+        long totalSubmissions = submissionDao.selectCounts(model.contestJid, userJid, ImmutableSet.of(model.problemJid))
                 .getOrDefault(model.problemJid, 0L);
         return new ContestContestantProblem.Builder()
                 .problem(fromModel(model))

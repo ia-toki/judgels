@@ -111,7 +111,7 @@ class ContestScoreboardBuilderTests {
         when(processorRegistry.get(ContestStyle.IOI)).thenReturn(ioiScoreboardProcessor);
 
         IoiContestStyleConfig config = new IoiContestStyleConfig.Builder()
-                .languageRestriction(LanguageRestriction.noRestriction())
+                .gradingLanguageRestriction(LanguageRestriction.noRestriction())
                 .build();
         when(styleStore.getIoiStyleConfig(CONTEST_JID)).thenReturn(config);
 

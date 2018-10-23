@@ -16,16 +16,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUrielConfiguration.class)
 public interface UrielConfiguration {
-    UrielConfiguration DEFAULT = new Builder()
-            .baseDataDir("/judgels/data/uriel")
-            .jophielConfig(JophielConfiguration.DEFAULT)
-            .sandalphonConfig(SandalphonConfiguration.DEFAULT)
-            .sealtielConfig(SealtielConfiguration.DEFAULT)
-            .gabrielConfig(GabrielConfiguration.DEFAULT)
-            .submissionConfig(SubmissionConfiguration.DEFAULT)
-            .fileConfig(FileConfiguration.DEFAULT)
-            .build();
-
     String getBaseDataDir();
 
     @JsonProperty("jophiel")

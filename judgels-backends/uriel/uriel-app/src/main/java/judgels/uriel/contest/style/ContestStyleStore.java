@@ -3,6 +3,7 @@ package judgels.uriel.contest.style;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.persistence.ContestStyleDao;
 import judgels.uriel.persistence.ContestStyleModel;
@@ -26,15 +27,15 @@ public class ContestStyleStore {
     }
 
     public ContestStyleConfig getStyleConfig(String contestJid) {
-        return getConfig(contestJid, ContestStyleConfig.class);
+        return getConfig(contestJid, ContestStyleConfig.class).orElse(new ContestStyleConfig.Builder().build());
     }
 
     public IcpcContestStyleConfig getIcpcStyleConfig(String contestJid) {
-        return getConfig(contestJid, IcpcContestStyleConfig.class);
+        return getConfig(contestJid, IcpcContestStyleConfig.class).orElse(new IcpcContestStyleConfig.Builder().build());
     }
 
     public IoiContestStyleConfig getIoiStyleConfig(String contestJid) {
-        return getConfig(contestJid, IoiContestStyleConfig.class);
+        return getConfig(contestJid, IoiContestStyleConfig.class).orElse(new IoiContestStyleConfig.Builder().build());
     }
 
     public void upsertConfig(String contestJid, Object config) {
@@ -50,10 +51,9 @@ public class ContestStyleStore {
         styleDao.insert(model);
     }
 
-    private <T> T getConfig(String contestJid, Class<T> configClass) {
+    private <T> Optional<T> getConfig(String contestJid, Class<T> configClass) {
         return styleDao.selectByContestJid(contestJid)
-                .map(model -> parseConfig(model.config, configClass))
-                .orElseThrow(() -> new IllegalStateException("Contest " + contestJid + " is missing style config"));
+                .map(model -> parseConfig(model.config, configClass));
     }
 
     private <T> T parseConfig(String config, Class<T> clazz) {

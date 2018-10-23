@@ -25,6 +25,7 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestContestantProblemWorksheet;
 import judgels.uriel.api.contest.problem.ContestContestantProblemsResponse;
+import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.style.ContestStyleStore;
@@ -60,6 +61,16 @@ public class ContestProblemResource implements ContestProblemService {
         this.sandalphonConfig = sandalphonConfig;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
+    }
+
+    @Override
+    @UnitOfWork
+    public void upsertProblem(AuthHeader authHeader, String contestJid, ContestProblemData data) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(problemRoleChecker.canSuperviseProblems(actorJid, contest));
+
+        problemStore.upsertProblem(contestJid, data);
     }
 
     @Override

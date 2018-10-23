@@ -34,7 +34,7 @@ class ContestStyleStoreIntegrationTests extends AbstractIntegrationTests {
         contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 
         IoiContestStyleConfig config = new IoiContestStyleConfig.Builder()
-                .languageRestriction(LanguageRestriction.noRestriction())
+                .gradingLanguageRestriction(LanguageRestriction.noRestriction())
                 .usingLastAffectingPenalty(true)
                 .build();
 

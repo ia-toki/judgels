@@ -9,5 +9,11 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestStyleConfig.class)
 public interface ContestStyleConfig {
     @JsonProperty("languageRestriction")
-    LanguageRestriction getGradingLanguageRestriction();
+    @Value.Default
+    default LanguageRestriction getGradingLanguageRestriction() {
+        return LanguageRestriction.noRestriction();
+    }
+
+
+    class Builder extends ImmutableContestStyleConfig.Builder {}
 }
