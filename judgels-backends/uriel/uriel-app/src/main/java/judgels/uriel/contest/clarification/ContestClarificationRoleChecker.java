@@ -54,29 +54,19 @@ public class ContestClarificationRoleChecker {
     }
 
     public boolean canViewOwnClarifications(String userJid, Contest contest) {
-        if (!moduleStore.hasClarificationModule(contest.getJid())) {
-            return false;
-        }
-        if (isSupervisorWithClarificationPermissionOrAbove(userJid, contest)) {
+        if (canSuperviseClarifications(userJid, contest)) {
             return true;
         }
         return contestRoleDao.isContestant(userJid, contest.getJid())
+                && moduleStore.hasClarificationModule(contest.getJid())
                 && !moduleStore.hasPausedModule(contest.getJid())
                 && contestTimer.hasStarted(contest, userJid);
     }
 
-    public boolean canViewAllClarifications(String userJid, Contest contest) {
-        return moduleStore.hasClarificationModule(contest.getJid())
-                && isSupervisorWithClarificationPermissionOrAbove(userJid, contest);
-    }
-
-
-    public boolean canAnswerClarifications(String userJid, Contest contest) {
-        return moduleStore.hasClarificationModule(contest.getJid())
-                && isSupervisorWithClarificationPermissionOrAbove(userJid, contest);
-    }
-
-    private boolean isSupervisorWithClarificationPermissionOrAbove(String userJid, Contest contest) {
+    public boolean canSuperviseClarifications(String userJid, Contest contest) {
+        if (!moduleStore.hasClarificationModule(contest.getJid())) {
+            return false;
+        }
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }

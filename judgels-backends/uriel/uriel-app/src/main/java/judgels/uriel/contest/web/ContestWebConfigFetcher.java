@@ -104,7 +104,7 @@ public class ContestWebConfigFetcher {
         String contestJid = contest.getJid();
 
         long announcementCount = 0;
-        if (!announcementRoleChecker.canCreateAnnouncement(userJid, contest)) {
+        if (!announcementRoleChecker.canSuperviseAnnouncements(userJid, contest)) {
             announcementCount = announcementDao.selectCountPublishedByContestJid(contestJid);
         }
 

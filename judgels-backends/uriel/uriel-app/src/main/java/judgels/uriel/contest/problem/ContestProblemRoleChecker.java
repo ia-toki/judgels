@@ -51,17 +51,12 @@ public class ContestProblemRoleChecker {
         return contestRoleDao.isViewerOrAbove(userJid, contest.getJid()) && contestTimer.hasStarted(contest, userJid);
     }
 
-    public boolean canSuperviseProblems(String userJid, Contest contest) {
-        return isSupervisorWithProblemPermissionOrAbove(userJid, contest);
-    }
-
     public Optional<String> canSubmitProblem(
             String userJid,
             Contest contest,
             ContestContestantProblem contestantProblem) {
 
-        if (!contestRoleDao.isContestant(userJid, contest.getJid())
-                && !isSupervisorWithProblemPermissionOrAbove(userJid, contest)) {
+        if (!contestRoleDao.isContestant(userJid, contest.getJid()) && !canSuperviseProblems(userJid, contest)) {
             return Optional.of("You are not a contestant.");
         }
         if (!contestTimer.hasStarted(contest, userJid)) {
@@ -80,7 +75,7 @@ public class ContestProblemRoleChecker {
         return Optional.empty();
     }
 
-    private boolean isSupervisorWithProblemPermissionOrAbove(String userJid, Contest contest) {
+    public boolean canSuperviseProblems(String userJid, Contest contest) {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }

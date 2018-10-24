@@ -51,10 +51,6 @@ public class ContestContestantRoleChecker {
                 && !contestTimer.hasBegun(contest);
     }
 
-    public boolean canSuperviseContestants(String userJid, Contest contest) {
-        return isSupervisorWithContestantPermissionOrAbove(userJid, contest);
-    }
-
     public ContestContestantState getContestantState(String userJid, Contest contest) {
         if (canRegister(userJid, contest)) {
             return ContestContestantState.REGISTRABLE;
@@ -66,7 +62,7 @@ public class ContestContestantRoleChecker {
         return ContestContestantState.NONE;
     }
 
-    private boolean isSupervisorWithContestantPermissionOrAbove(String userJid, Contest contest) {
+    public boolean canSuperviseContestants(String userJid, Contest contest) {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }

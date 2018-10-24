@@ -93,7 +93,7 @@ public class ContestClarificationResource implements ContestClarificationService
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
-        Page<ContestClarification> data = clarificationRoleChecker.canViewAllClarifications(actorJid, contest)
+        Page<ContestClarification> data = clarificationRoleChecker.canSuperviseClarifications(actorJid, contest)
                 ? clarificationStore.getClarifications(contestJid, options.build())
                 : clarificationStore.getClarifications(contestJid, actorJid, options.build());
 
@@ -160,7 +160,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(clarificationRoleChecker.canAnswerClarifications(actorJid, contest));
+        checkAllowed(clarificationRoleChecker.canSuperviseClarifications(actorJid, contest));
 
         checkFound(clarificationStore.updateClarificationAnswer(
                 contestJid,
