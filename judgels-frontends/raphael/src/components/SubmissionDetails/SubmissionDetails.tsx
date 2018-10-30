@@ -1,11 +1,11 @@
 import { Tag } from '@blueprintjs/core';
 import * as base64 from 'base-64';
 import * as React from 'react';
-import { FormattedRelative } from 'react-intl';
 import { Link } from 'react-router-dom';
 import SyntaxHighlighter from 'react-syntax-highlighter/prism';
 import { prism } from 'react-syntax-highlighter/styles/prism';
 
+import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { VerdictTag } from 'components/VerdictTag/VerdictTag';
@@ -110,7 +110,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               <tr>
                 <td>Time</td>
                 <td>
-                  <FormattedRelative value={submission.time} />
+                  <FormattedDate value={submission.time} />
                 </td>
               </tr>
             </tbody>
