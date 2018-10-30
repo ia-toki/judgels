@@ -67,7 +67,7 @@ class ContestClarificationsPage extends React.Component<
       return <LoadingState />;
     }
 
-    const { data: clarifications, profilesMap, problemAliasesMap, problemNamesMap } = response;
+    const { data: clarifications, config, profilesMap, problemAliasesMap, problemNamesMap } = response;
     if (clarifications.data.length === 0) {
       return (
         <p>
@@ -76,29 +76,27 @@ class ContestClarificationsPage extends React.Component<
       );
     }
 
-    return clarifications.data.map(clarification => {
-      const isSupervisor = this.props.userJid !== clarification.userJid;
+    const { canSupervise } = config;
 
-      return (
-        <div className="content-card__section" key={clarification.jid}>
-          <ContestClarificationCard
-            contest={this.props.contest}
-            clarification={clarification}
-            isSupervisor={isSupervisor}
-            askerProfile={isSupervisor ? profilesMap[clarification.userJid] : undefined}
-            answererProfile={
-              isSupervisor && clarification.answererJid ? profilesMap[clarification.answererJid] : undefined
-            }
-            problemAlias={problemAliasesMap[clarification.topicJid]}
-            problemName={problemNamesMap[clarification.topicJid]}
-            isAnswerBoxOpen={openAnswerBoxClarification === clarification}
-            isAnswerBoxLoading={!!this.state.isAnswerBoxLoading}
-            onToggleAnswerBox={this.toggleAnswerBox}
-            onAnswerClarification={this.answerClarification}
-          />
-        </div>
-      );
-    });
+    return clarifications.data.map(clarification => (
+      <div className="content-card__section" key={clarification.jid}>
+        <ContestClarificationCard
+          contest={this.props.contest}
+          clarification={clarification}
+          canSupervise={canSupervise}
+          askerProfile={canSupervise ? profilesMap[clarification.userJid] : undefined}
+          answererProfile={
+            canSupervise && clarification.answererJid ? profilesMap[clarification.answererJid] : undefined
+          }
+          problemAlias={problemAliasesMap[clarification.topicJid]}
+          problemName={problemNamesMap[clarification.topicJid]}
+          isAnswerBoxOpen={openAnswerBoxClarification === clarification}
+          isAnswerBoxLoading={!!this.state.isAnswerBoxLoading}
+          onToggleAnswerBox={this.toggleAnswerBox}
+          onAnswerClarification={this.answerClarification}
+        />
+      </div>
+    ));
   };
 
   private renderPagination = () => {
@@ -131,7 +129,7 @@ class ContestClarificationsPage extends React.Component<
       return null;
     }
     const { config } = response;
-    if (!config.isAllowedToCreateClarification) {
+    if (!config.canCreate) {
       return null;
     }
 

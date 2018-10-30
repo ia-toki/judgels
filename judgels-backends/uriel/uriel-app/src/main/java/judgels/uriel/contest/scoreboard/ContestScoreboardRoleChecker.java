@@ -30,18 +30,14 @@ public class ContestScoreboardRoleChecker {
         this.supervisorStore = supervisorStore;
     }
 
-    public boolean canViewDefaultScoreboard(String userJid, Contest contest) {
-        if (canSuperviseScoreboard(userJid, contest)) {
+    public boolean canViewDefault(String userJid, Contest contest) {
+        if (canSupervise(userJid, contest)) {
             return true;
         }
         return contestRoleDao.isViewerOrAbove(userJid, contest.getJid()) && contestTimer.hasStarted(contest, userJid);
     }
 
-    public boolean canSuperviseScoreboard(String userJid, Contest contest) {
-        return isSupervisorWithScoreboardPermissionOrAbove(userJid, contest);
-    }
-
-    private boolean isSupervisorWithScoreboardPermissionOrAbove(String userJid, Contest contest) {
+    public boolean canSupervise(String userJid, Contest contest) {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }

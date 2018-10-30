@@ -21,7 +21,7 @@ describe('ContestSubmissionsPage', () => {
   const response: ContestSubmissionsResponse = {
     data: { data: [], totalData: 0 },
     config: {
-      isAllowedToViewAllSubmissions: true,
+      canSupervise: true,
       userJids: [],
       problemJids: [],
     },

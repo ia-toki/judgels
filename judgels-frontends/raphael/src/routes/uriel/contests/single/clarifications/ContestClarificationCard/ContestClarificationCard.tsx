@@ -14,7 +14,7 @@ import './ContestClarificationCard.css';
 export interface ContestClarificationCardProps {
   contest: Contest;
   clarification: ContestClarification;
-  isSupervisor: boolean;
+  canSupervise: boolean;
   askerProfile?: Profile;
   answererProfile?: Profile;
   problemAlias?: string;
@@ -27,22 +27,22 @@ export interface ContestClarificationCardProps {
 
 export class ContestClarificationCard extends React.PureComponent<ContestClarificationCardProps> {
   render() {
-    const { clarification, isSupervisor, askerProfile, problemAlias, problemName } = this.props;
+    const { clarification, canSupervise, askerProfile, problemAlias, problemName } = this.props;
 
     const topic = problemAlias ? problemAlias + '. ' + problemName : 'General';
-    const asker = isSupervisor && (
+    const asker = canSupervise && (
       <>
         &nbsp;<small>by</small> <UserRef profile={askerProfile!} />
       </>
     );
 
     let questionIntent: Intent = Intent.NONE;
-    if (isSupervisor && !clarification.answer) {
+    if (canSupervise && !clarification.answer) {
       questionIntent = Intent.WARNING;
     }
 
     let answerIntent: Intent = Intent.NONE;
-    if (!isSupervisor && clarification.answer) {
+    if (!canSupervise && clarification.answer) {
       answerIntent = Intent.WARNING;
     }
 
@@ -75,7 +75,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
     const {
       contest,
       clarification,
-      isSupervisor,
+      canSupervise,
       answererProfile,
       isAnswerBoxOpen,
       isAnswerBoxLoading,
@@ -84,7 +84,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
     } = this.props;
 
     if (!clarification.answer) {
-      if (isSupervisor) {
+      if (canSupervise) {
         return (
           <ContestClarificationAnswerBox
             contest={contest}
@@ -104,7 +104,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
       );
     }
 
-    const answerer = isSupervisor && (
+    const answerer = canSupervise && (
       <>
         &nbsp;<small>by</small> <UserRef profile={answererProfile!} />
       </>

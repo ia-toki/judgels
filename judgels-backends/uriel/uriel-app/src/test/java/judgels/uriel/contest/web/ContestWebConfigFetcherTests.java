@@ -86,19 +86,19 @@ class ContestWebConfigFetcherTests {
         when(contestTimer.getDurationToEndTime(contest)).thenReturn(TO_END);
         when(contestTimer.getDurationToFinishTime(contest, USER)).thenReturn(TO_FINISH);
 
-        when(problemRoleChecker.canViewProblems(USER, contest)).thenReturn(true);
-        when(problemRoleChecker.canViewProblems(CONTESTANT, contest)).thenReturn(true);
-        when(problemRoleChecker.canViewProblems(SUPERVISOR, contest)).thenReturn(true);
+        when(problemRoleChecker.canView(USER, contest)).thenReturn(true);
+        when(problemRoleChecker.canView(CONTESTANT, contest)).thenReturn(true);
+        when(problemRoleChecker.canView(SUPERVISOR, contest)).thenReturn(true);
 
-        when(scoreboardRoleChecker.canViewDefaultScoreboard(USER, contest)).thenReturn(true);
-        when(scoreboardRoleChecker.canViewDefaultScoreboard(CONTESTANT, contest)).thenReturn(true);
-        when(scoreboardRoleChecker.canViewDefaultScoreboard(SUPERVISOR, contest)).thenReturn(true);
+        when(scoreboardRoleChecker.canViewDefault(USER, contest)).thenReturn(true);
+        when(scoreboardRoleChecker.canViewDefault(CONTESTANT, contest)).thenReturn(true);
+        when(scoreboardRoleChecker.canViewDefault(SUPERVISOR, contest)).thenReturn(true);
 
-        when(submissionRoleChecker.canViewOwnSubmissions(CONTESTANT, contest)).thenReturn(true);
-        when(submissionRoleChecker.canViewOwnSubmissions(SUPERVISOR, contest)).thenReturn(true);
+        when(submissionRoleChecker.canViewOwn(CONTESTANT, contest)).thenReturn(true);
+        when(submissionRoleChecker.canViewOwn(SUPERVISOR, contest)).thenReturn(true);
 
-        when(clarificationRoleChecker.canViewOwnClarifications(CONTESTANT, contest)).thenReturn(true);
-        when(clarificationRoleChecker.canViewOwnClarifications(SUPERVISOR, contest)).thenReturn(true);
+        when(clarificationRoleChecker.canViewOwn(CONTESTANT, contest)).thenReturn(true);
+        when(clarificationRoleChecker.canViewOwn(SUPERVISOR, contest)).thenReturn(true);
     }
 
     @Test
@@ -140,7 +140,7 @@ class ContestWebConfigFetcherTests {
         when(contestTimer.hasFinished(contest, USER)).thenReturn(finished);
 
         ContestWebConfig config = webConfigFetcher.fetchConfig(USER, contest);
-        assertThat(config.getContestState()).isEqualTo(state);
-        assertThat(config.getRemainingContestStateDuration()).isEqualTo(Optional.ofNullable(duration));
+        assertThat(config.getState()).isEqualTo(state);
+        assertThat(config.getRemainingStateDuration()).isEqualTo(Optional.ofNullable(duration));
     }
 }

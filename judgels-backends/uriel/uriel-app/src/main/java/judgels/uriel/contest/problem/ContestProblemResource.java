@@ -68,7 +68,7 @@ public class ContestProblemResource implements ContestProblemService {
     public void upsertProblem(AuthHeader authHeader, String contestJid, ContestProblemData data) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(problemRoleChecker.canSuperviseProblems(actorJid, contest));
+        checkAllowed(problemRoleChecker.canSupervise(actorJid, contest));
 
         problemStore.upsertProblem(contestJid, data);
     }
@@ -78,7 +78,7 @@ public class ContestProblemResource implements ContestProblemService {
     public ContestContestantProblemsResponse getMyProblems(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(problemRoleChecker.canViewProblems(actorJid, contest));
+        checkAllowed(problemRoleChecker.canView(actorJid, contest));
 
         List<ContestContestantProblem> contestantProblems = problemStore.getContestantProblems(contestJid, actorJid);
         Set<String> problemJids =
@@ -103,7 +103,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(problemRoleChecker.canViewProblems(actorJid, contest));
+        checkAllowed(problemRoleChecker.canView(actorJid, contest));
 
         ContestContestantProblem contestantProblem =
                 checkFound(problemStore.getContestantProblemByAlias(contestJid, actorJid, problemAlias));
@@ -112,7 +112,7 @@ public class ContestProblemResource implements ContestProblemService {
         ProblemInfo problem = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
 
         Optional<String> reasonNotAllowedToSubmit =
-                problemRoleChecker.canSubmitProblem(actorJid, contest, contestantProblem);
+                problemRoleChecker.canSubmit(actorJid, contest, contestantProblem);
 
         ProblemWorksheet worksheet =
                 clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);

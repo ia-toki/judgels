@@ -15,7 +15,7 @@ public class ContestFileRoleChecker {
         this.contestRoleDao = contestRoleDao;
     }
 
-    public boolean canDownloadFiles(String userJid, Contest contest) {
+    public boolean canView(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 }

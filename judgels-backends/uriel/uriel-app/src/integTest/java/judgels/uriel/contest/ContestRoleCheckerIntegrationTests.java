@@ -28,64 +28,64 @@ class ContestRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationT
     }
 
     @Test
-    void create_contest() {
-        assertThat(checker.canCreateContest(ADMIN)).isTrue();
-        assertThat(checker.canCreateContest(USER)).isFalse();
-        assertThat(checker.canCreateContest(CONTESTANT)).isFalse();
-        assertThat(checker.canCreateContest(SUPERVISOR)).isFalse();
-        assertThat(checker.canCreateContest(MANAGER)).isFalse();
+    void create() {
+        assertThat(checker.canAdminister(ADMIN)).isTrue();
+        assertThat(checker.canAdminister(USER)).isFalse();
+        assertThat(checker.canAdminister(CONTESTANT)).isFalse();
+        assertThat(checker.canAdminister(SUPERVISOR)).isFalse();
+        assertThat(checker.canAdminister(MANAGER)).isFalse();
     }
 
     @Test
-    void view_contest() {
-        assertThat(checker.canViewContest(ADMIN, contestA)).isTrue();
-        assertThat(checker.canViewContest(ADMIN, contestB)).isTrue();
-        assertThat(checker.canViewContest(ADMIN, contestC)).isTrue();
+    void view() {
+        assertThat(checker.canView(ADMIN, contestA)).isTrue();
+        assertThat(checker.canView(ADMIN, contestB)).isTrue();
+        assertThat(checker.canView(ADMIN, contestC)).isTrue();
 
-        assertThat(checker.canViewContest(USER, contestA)).isTrue();
-        assertThat(checker.canViewContest(USER, contestB)).isFalse();
-        assertThat(checker.canViewContest(USER, contestC)).isFalse();
+        assertThat(checker.canView(USER, contestA)).isTrue();
+        assertThat(checker.canView(USER, contestB)).isFalse();
+        assertThat(checker.canView(USER, contestC)).isFalse();
 
-        assertThat(checker.canViewContest(CONTESTANT, contestA)).isTrue();
-        assertThat(checker.canViewContest(CONTESTANT, contestB)).isTrue();
-        assertThat(checker.canViewContest(CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canView(CONTESTANT, contestA)).isTrue();
+        assertThat(checker.canView(CONTESTANT, contestB)).isTrue();
+        assertThat(checker.canView(CONTESTANT, contestC)).isFalse();
 
-        assertThat(checker.canViewContest(SUPERVISOR, contestA)).isTrue();
-        assertThat(checker.canViewContest(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canViewContest(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestA)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestC)).isFalse();
 
-        assertThat(checker.canViewContest(MANAGER, contestA)).isTrue();
-        assertThat(checker.canViewContest(MANAGER, contestB)).isTrue();
-        assertThat(checker.canViewContest(MANAGER, contestC)).isFalse();
+        assertThat(checker.canView(MANAGER, contestA)).isTrue();
+        assertThat(checker.canView(MANAGER, contestB)).isTrue();
+        assertThat(checker.canView(MANAGER, contestC)).isFalse();
     }
 
     @Test
-    void edit_contest() {
-        assertThat(checker.canEditContest(ADMIN, contestA)).isTrue();
-        assertThat(checker.canEditContest(ADMIN, contestB)).isTrue();
-        assertThat(checker.canEditContest(ADMIN, contestC)).isTrue();
+    void manage() {
+        assertThat(checker.canManage(ADMIN, contestA)).isTrue();
+        assertThat(checker.canManage(ADMIN, contestB)).isTrue();
+        assertThat(checker.canManage(ADMIN, contestC)).isTrue();
 
-        assertThat(checker.canEditContest(USER, contestA)).isFalse();
-        assertThat(checker.canEditContest(USER, contestB)).isFalse();
-        assertThat(checker.canEditContest(USER, contestC)).isFalse();
+        assertThat(checker.canManage(USER, contestA)).isFalse();
+        assertThat(checker.canManage(USER, contestB)).isFalse();
+        assertThat(checker.canManage(USER, contestC)).isFalse();
 
-        assertThat(checker.canEditContest(CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canEditContest(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canEditContest(CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canManage(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canManage(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canManage(CONTESTANT, contestC)).isFalse();
 
-        assertThat(checker.canEditContest(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canEditContest(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canEditContest(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canManage(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canManage(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canManage(SUPERVISOR, contestC)).isFalse();
 
-        assertThat(checker.canEditContest(MANAGER, contestA)).isFalse();
-        assertThat(checker.canEditContest(MANAGER, contestB)).isTrue();
-        assertThat(checker.canEditContest(MANAGER, contestC)).isFalse();
+        assertThat(checker.canManage(MANAGER, contestA)).isFalse();
+        assertThat(checker.canManage(MANAGER, contestB)).isTrue();
+        assertThat(checker.canManage(MANAGER, contestC)).isFalse();
     }
 
     @Test
-    void start_virtual_contest() {
-        assertThat(checker.canStartVirtualContest(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canStartVirtualContest(CONTESTANT, contestBStarted)).isTrue();
-        assertThat(checker.canStartVirtualContest(ANOTHER_CONTESTANT, contestBStarted)).isFalse();
+    void start_virtual() {
+        assertThat(checker.canStartVirtual(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canStartVirtual(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canStartVirtual(ANOTHER_CONTESTANT, contestBStarted)).isFalse();
     }
 }

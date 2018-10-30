@@ -17,19 +17,19 @@ public class ContestRoleChecker {
         this.contestRoleDao = contestRoleDao;
     }
 
-    public boolean canCreateContest(String userJid) {
+    public boolean canAdminister(String userJid) {
         return adminRoleDao.isAdmin(userJid);
     }
 
-    public boolean canViewContest(String userJid, Contest contest) {
+    public boolean canView(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 
-    public boolean canEditContest(String userJid, Contest contest) {
+    public boolean canManage(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid());
     }
 
-    public boolean canStartVirtualContest(String userJid, Contest contest) {
+    public boolean canStartVirtual(String userJid, Contest contest) {
         return contestRoleDao.isContestant(userJid, contest.getJid())
                 && contestTimer.hasBegun(contest)
                 && !contestTimer.hasEnded(contest)

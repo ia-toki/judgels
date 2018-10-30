@@ -126,10 +126,10 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewOwnSubmissions(actorJid, contest));
+        checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
 
-        boolean canViewAllSubmissions = submissionRoleChecker.canViewAllSubmissions(actorJid, contest);
-        Optional<String> actualUserJid = canViewAllSubmissions ? userJid : Optional.of(actorJid);
+        boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
+        Optional<String> actualUserJid = canSupervise ? userJid : Optional.of(actorJid);
 
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
@@ -143,7 +143,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         List<String> problemJidsSortedByAlias;
         Set<String> problemJids;
 
-        if (canViewAllSubmissions) {
+        if (canSupervise) {
             userJids = contestantStore.getContestants(contestJid);
             userJidsSortedByUsername = Lists.newArrayList(userJids);
 
@@ -168,7 +168,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         });
 
         ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
-                .isAllowedToViewAllSubmissions(canViewAllSubmissions)
+                .canSupervise(canSupervise)
                 .userJids(userJidsSortedByUsername)
                 .problemJids(problemJidsSortedByAlias)
                 .build();
@@ -193,7 +193,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
         Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
-        checkAllowed(submissionRoleChecker.canViewSubmission(actorJid, contest, submission.getUserJid()));
+        checkAllowed(submissionRoleChecker.canView(actorJid, contest, submission.getUserJid()));
 
         ContestProblem contestProblem =
                 checkFound(problemStore.getProblem(contest.getJid(), submission.getProblemJid()));
@@ -232,7 +232,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         ContestContestantProblem contestantProblem =
                 checkFound(problemStore.getContestantProblem(contestJid, actorJid, problemJid));
-        checkAllowed(problemRoleChecker.canSubmitProblem(actorJid, contest, contestantProblem));
+        checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, contestantProblem));
 
         ContestStyleConfig styleConfig = styleStore.getStyleConfig(contestJid);
         LanguageRestriction contestGradingLanguageRestriction = styleConfig.getGradingLanguageRestriction();
@@ -265,7 +265,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewAllSubmissions(actorJid, contest));
+        checkAllowed(submissionRoleChecker.canSupervise(actorJid, contest));
 
         SelectionOptions options = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_PAGED)

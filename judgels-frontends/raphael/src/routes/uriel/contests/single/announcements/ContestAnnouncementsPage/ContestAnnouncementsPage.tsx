@@ -69,8 +69,8 @@ class ContestAnnouncementsPage extends React.PureComponent<
     }
 
     const props = {
-      isAllowedToEditAnnouncement: config.isAllowedToEditAnnouncement,
       contest: this.props.contest,
+      canSupervise: config.canSupervise,
       onRefreshAnnouncements: this.refreshAnnouncements,
       onUpdateAnnouncement: this.props.onUpdateAnnouncement,
     };
@@ -107,7 +107,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
     if (!response) {
       return null;
     }
-    if (!response.config.isAllowedToCreateAnnouncement) {
+    if (!response.config.canSupervise) {
       return null;
     }
 
@@ -121,7 +121,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
     if (!response) {
       return null;
     }
-    if (!response.config.isAllowedToEditAnnouncement) {
+    if (!response.config.canSupervise) {
       return null;
     }
 

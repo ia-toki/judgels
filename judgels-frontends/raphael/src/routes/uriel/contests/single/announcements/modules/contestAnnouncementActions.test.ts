@@ -37,10 +37,7 @@ describe('contestAnnouncementActions', () => {
 
     beforeEach(async () => {
       const data = [] as ContestAnnouncement[];
-      const config = {
-        isAllowedToCreateAnnouncement: true,
-        isAllowedToEditAnnouncement: false,
-      } as ContestAnnouncementConfig;
+      const config = { canSupervise: true } as ContestAnnouncementConfig;
       const response = { data, config } as ContestAnnouncementsResponse;
 
       contestAnnouncementAPI.getAnnouncements.mockReturnValue(response);

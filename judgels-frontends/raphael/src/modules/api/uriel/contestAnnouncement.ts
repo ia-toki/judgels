@@ -12,8 +12,7 @@ export interface ContestAnnouncement {
 }
 
 export interface ContestAnnouncementConfig {
-  isAllowedToCreateAnnouncement: boolean;
-  isAllowedToEditAnnouncement: boolean;
+  canSupervise: boolean;
 }
 
 export enum ContestAnnouncementStatus {

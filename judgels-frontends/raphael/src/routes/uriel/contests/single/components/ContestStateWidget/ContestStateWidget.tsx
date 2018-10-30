@@ -16,8 +16,8 @@ import './ContestStateWidget.css';
 
 export interface ContestStateWidgetProps {
   contest: Contest;
-  contestState: ContestState;
-  remainingContestStateDuration?: number;
+  state: ContestState;
+  remainingStateDuration?: number;
   onGetContestWebConfig: (contestJid: string) => Promise<void>;
   onStartVirtualContest: (contestJid: string) => Promise<void>;
 }
@@ -37,13 +37,13 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
   private currentTimeout;
 
   static getDerivedStateFromProps(props: ContestStateWidgetProps): ContestStateWidgetState | null {
-    const { remainingContestStateDuration } = props;
-    if (!remainingContestStateDuration) {
+    const { remainingStateDuration } = props;
+    if (!remainingStateDuration) {
       return null;
     }
 
     return {
-      baseRemainingDuration: remainingContestStateDuration,
+      baseRemainingDuration: remainingStateDuration,
       baseTimeForRemainingDuration: new Date().getTime(),
     };
   }
@@ -85,15 +85,15 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
   );
 
   private getWidgetComponents = (): any => {
-    const contestState = this.props.contestState;
+    const state = this.props.state;
 
-    if (contestState === ContestState.NotBegun) {
+    if (state === ContestState.NotBegun) {
       return {
         leftComponent: <span>Contest hasn't started yet.</span>,
         rightComponent: <span>Starts in {this.getRemainingDuration()}</span>,
       };
     }
-    if (contestState === ContestState.Begun) {
+    if (state === ContestState.Begun) {
       return {
         leftComponent: (
           <Button
@@ -108,18 +108,18 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
         rightComponent: <span>Ends in {this.getRemainingDuration()}</span>,
       };
     }
-    if (contestState === ContestState.Started) {
+    if (state === ContestState.Started) {
       return {
         leftComponent: <span>Contest is running.</span>,
         rightComponent: <span>Ends in {this.getRemainingDuration()}</span>,
       };
     }
-    if (contestState === ContestState.Finished) {
+    if (state === ContestState.Finished) {
       return {
         leftComponent: <span>Contest is over.</span>,
       };
     }
-    if (contestState === ContestState.Paused) {
+    if (state === ContestState.Paused) {
       return {
         leftComponent: <span>Contest is paused.</span>,
       };
@@ -166,8 +166,8 @@ export function createContestStateWidget(contestWebActions, contestActions) {
   const mapStateToProps = (state: AppState) =>
     ({
       contest: selectContest(state)!,
-      contestState: selectContestWebConfig(state)!.contestState,
-      remainingContestStateDuration: selectContestWebConfig(state)!.remainingContestStateDuration,
+      state: selectContestWebConfig(state)!.state,
+      remainingStateDuration: selectContestWebConfig(state)!.remainingStateDuration,
     } as Partial<ContestStateWidgetProps>);
 
   const mapDispatchToProps = {

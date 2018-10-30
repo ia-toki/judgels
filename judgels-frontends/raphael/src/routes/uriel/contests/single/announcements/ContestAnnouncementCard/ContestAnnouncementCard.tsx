@@ -9,9 +9,9 @@ import { Contest } from 'modules/api/uriel/contest';
 import './ContestAnnouncementCard.css';
 
 export interface ContestAnnouncementCardProps {
-  announcement: ContestAnnouncement;
-  isAllowedToEditAnnouncement: boolean;
   contest: Contest;
+  announcement: ContestAnnouncement;
+  canSupervise: boolean;
   isEditDialogOpen: boolean;
   onToggleEditDialog: (announcement?: ContestAnnouncement) => void;
 }
@@ -40,7 +40,7 @@ export class ContestAnnouncementCard extends React.Component<ContestAnnouncement
 
   private renderEditDialog = () => {
     return (
-      this.props.isAllowedToEditAnnouncement && (
+      this.props.canSupervise && (
         <Button small onClick={this.toggleEditDialog} disabled={this.props.isEditDialogOpen}>
           Edit
         </Button>

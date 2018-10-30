@@ -22,7 +22,7 @@ import org.mockito.Mock;
 class ContestScoreboardFetcherTests {
     private static final String CONTEST_JID = "contestJid";
     private static final String USER_JID = "userJid";
-    private static final boolean CAN_SUPERVISE_SCOREBOARD = true;
+    private static final boolean CAN_SUPERVISE = true;
 
     @Mock private ContestScoreboardTypeFetcher typeFetcher;
     @Mock private ContestScoreboardStore scoreboardStore;
@@ -59,28 +59,28 @@ class ContestScoreboardFetcherTests {
 
     @Test
     void fetch_default_scoreboard() {
-        when(typeFetcher.fetchViewableTypes(contest, CAN_SUPERVISE_SCOREBOARD))
+        when(typeFetcher.fetchViewableTypes(contest, CAN_SUPERVISE))
                 .thenReturn(ImmutableList.of(OFFICIAL, FROZEN));
 
         when(scoreboardStore.getScoreboard(CONTEST_JID, OFFICIAL))
                 .thenReturn(Optional.of(raw));
 
-        when(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, OFFICIAL, CAN_SUPERVISE_SCOREBOARD))
+        when(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, OFFICIAL, CAN_SUPERVISE))
                 .thenReturn(scoreboard);
 
-        assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, CAN_SUPERVISE_SCOREBOARD))
+        assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, CAN_SUPERVISE))
                 .contains(scoreboard);
     }
 
     @Test
     void fetch_frozen_scoreboard() {
-        when(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, FROZEN, CAN_SUPERVISE_SCOREBOARD))
+        when(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, FROZEN, CAN_SUPERVISE))
                 .thenReturn(scoreboard);
 
         when(scoreboardStore.getScoreboard(CONTEST_JID, FROZEN))
                 .thenReturn(Optional.of(raw));
 
-        assertThat(scoreboardFetcher.fetchFrozenScoreboard(contest, USER_JID, CAN_SUPERVISE_SCOREBOARD))
+        assertThat(scoreboardFetcher.fetchFrozenScoreboard(contest, USER_JID, CAN_SUPERVISE))
                 .contains(scoreboard);
     }
 }

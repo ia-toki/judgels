@@ -39,7 +39,7 @@ public class ContestModuleResource implements ContestModuleService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
-        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canView(actorJid, contest));
         return moduleStore.getEnabledModules(contest.getJid());
     }
 
@@ -49,7 +49,7 @@ public class ContestModuleResource implements ContestModuleService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
-        checkAllowed(contestRoleChecker.canEditContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canManage(actorJid, contest));
         moduleStore.enableModule(contest.getJid(), type);
     }
 
@@ -59,7 +59,7 @@ public class ContestModuleResource implements ContestModuleService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
-        checkAllowed(contestRoleChecker.canEditContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canManage(actorJid, contest));
         moduleStore.disableModule(contest.getJid(), type);
     }
 }

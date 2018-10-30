@@ -15,9 +15,9 @@ import './ContestSubmissionsTable.css';
 export interface ContestSubmissionsTableProps {
   contest: Contest;
   submissions: Submission[];
+  canSupervise: boolean;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
-  showUserColumn: boolean;
 }
 
 export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {
@@ -35,7 +35,7 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
       <thead>
         <tr>
           <th className="col-id">ID</th>
-          {this.props.showUserColumn && <th className="col-user">User</th>}
+          {this.props.canSupervise && <th className="col-user">User</th>}
           <th className="col-prob">Prob</th>
           <th className="col-lang">Lang</th>
           <th className="col-verdict">Verdict</th>
@@ -48,12 +48,12 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
   };
 
   private renderRows = () => {
-    const { contest, submissions, profilesMap, problemAliasesMap, showUserColumn } = this.props;
+    const { contest, submissions, profilesMap, problemAliasesMap, canSupervise } = this.props;
 
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
         <td>{submission.id}</td>
-        {showUserColumn && (
+        {canSupervise && (
           <td>
             <UserRef profile={profilesMap[submission.userJid]} />
           </td>

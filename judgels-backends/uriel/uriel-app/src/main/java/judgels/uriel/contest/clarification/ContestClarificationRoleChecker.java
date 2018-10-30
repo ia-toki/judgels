@@ -36,7 +36,7 @@ public class ContestClarificationRoleChecker {
         this.supervisorStore = supervisorStore;
     }
 
-    public boolean canCreateClarification(String userJid, Contest contest) {
+    public boolean canCreate(String userJid, Contest contest) {
         boolean can = contestRoleDao.isContestant(userJid, contest.getJid())
                 && moduleStore.hasClarificationModule(contest.getJid())
                 && !moduleStore.hasPausedModule(contest.getJid())
@@ -53,8 +53,8 @@ public class ContestClarificationRoleChecker {
         return can;
     }
 
-    public boolean canViewOwnClarifications(String userJid, Contest contest) {
-        if (canSuperviseClarifications(userJid, contest)) {
+    public boolean canViewOwn(String userJid, Contest contest) {
+        if (canSupervise(userJid, contest)) {
             return true;
         }
         return contestRoleDao.isContestant(userJid, contest.getJid())
@@ -63,7 +63,7 @@ public class ContestClarificationRoleChecker {
                 && contestTimer.hasStarted(contest, userJid);
     }
 
-    public boolean canSuperviseClarifications(String userJid, Contest contest) {
+    public boolean canSupervise(String userJid, Contest contest) {
         if (!moduleStore.hasClarificationModule(contest.getJid())) {
             return false;
         }

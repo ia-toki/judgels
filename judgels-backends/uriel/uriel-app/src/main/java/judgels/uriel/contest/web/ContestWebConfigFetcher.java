@@ -60,57 +60,57 @@ public class ContestWebConfigFetcher {
     }
 
     public ContestWebConfig fetchConfig(String userJid, Contest contest) {
-        boolean canEditContest = roleChecker.canEditContest(userJid, contest);
+        boolean canManage = roleChecker.canManage(userJid, contest);
 
         ImmutableSet.Builder<ContestTab> visibleTabs = ImmutableSet.builder();
         visibleTabs.add(ANNOUNCEMENTS);
 
-        if (problemRoleChecker.canViewProblems(userJid, contest)) {
+        if (problemRoleChecker.canView(userJid, contest)) {
             visibleTabs.add(PROBLEMS);
         }
 
-        if (submissionRoleChecker.canViewOwnSubmissions(userJid, contest)) {
+        if (submissionRoleChecker.canViewOwn(userJid, contest)) {
             visibleTabs.add(SUBMISSIONS);
         }
 
-        if (clarificationRoleChecker.canViewOwnClarifications(userJid, contest)) {
+        if (clarificationRoleChecker.canViewOwn(userJid, contest)) {
             visibleTabs.add(CLARIFICATIONS);
         }
 
-        if (scoreboardRoleChecker.canViewDefaultScoreboard(userJid, contest)) {
+        if (scoreboardRoleChecker.canViewDefault(userJid, contest)) {
             visibleTabs.add(SCOREBOARD);
         }
 
-        ContestState contestState;
-        Optional<Duration> remainingContestStateDuration = Optional.empty();
+        ContestState state;
+        Optional<Duration> remainingStateDuration = Optional.empty();
 
         // TODO(fushar): refactor into separate "fetcher"
 
         if (contestTimer.isPaused(contest)) {
-            contestState = ContestState.PAUSED;
+            state = ContestState.PAUSED;
         } else if (contestTimer.hasFinished(contest, userJid)) {
-            contestState = ContestState.FINISHED;
+            state = ContestState.FINISHED;
         } else if (contestTimer.hasStarted(contest, userJid)) {
-            contestState = ContestState.STARTED;
-            remainingContestStateDuration = Optional.of(contestTimer.getDurationToFinishTime(contest, userJid));
+            state = ContestState.STARTED;
+            remainingStateDuration = Optional.of(contestTimer.getDurationToFinishTime(contest, userJid));
         } else if (contestTimer.hasBegun(contest)) {
-            contestState = ContestState.BEGUN;
-            remainingContestStateDuration = Optional.of(contestTimer.getDurationToEndTime(contest));
+            state = ContestState.BEGUN;
+            remainingStateDuration = Optional.of(contestTimer.getDurationToEndTime(contest));
         } else {
-            contestState = ContestState.NOT_BEGUN;
-            remainingContestStateDuration = Optional.of(contestTimer.getDurationToBeginTime(contest));
+            state = ContestState.NOT_BEGUN;
+            remainingStateDuration = Optional.of(contestTimer.getDurationToBeginTime(contest));
         }
 
         String contestJid = contest.getJid();
 
         long announcementCount = 0;
-        if (!announcementRoleChecker.canSuperviseAnnouncements(userJid, contest)) {
+        if (!announcementRoleChecker.canSupervise(userJid, contest)) {
             announcementCount = announcementDao.selectCountPublishedByContestJid(contestJid);
         }
 
         long clarificationCount;
         ContestClarificationStatus clarificationStatus;
-        if (clarificationRoleChecker.canCreateClarification(userJid, contest)) {
+        if (clarificationRoleChecker.canCreate(userJid, contest)) {
             clarificationStatus = ContestClarificationStatus.ANSWERED;
             clarificationCount = clarificationDao.selectCountAnsweredByContestJidAndUserJid(contestJid, userJid);
         } else {
@@ -119,10 +119,10 @@ public class ContestWebConfigFetcher {
         }
 
         return new ContestWebConfig.Builder()
-                .isAllowedToEditContest(canEditContest)
+                .canManage(canManage)
                 .visibleTabs(visibleTabs.build())
-                .contestState(contestState)
-                .remainingContestStateDuration(remainingContestStateDuration)
+                .state(state)
+                .remainingStateDuration(remainingStateDuration)
                 .announcementCount(announcementCount)
                 .clarificationCount(clarificationCount)
                 .clarificationStatus(clarificationStatus)

@@ -10,10 +10,10 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestWebConfig.class)
 public interface ContestWebConfig {
-    boolean getIsAllowedToEditContest();
+    boolean canManage();
     Set<ContestTab> getVisibleTabs();
-    ContestState getContestState();
-    Optional<Duration> getRemainingContestStateDuration();
+    ContestState getState();
+    Optional<Duration> getRemainingStateDuration();
     long getAnnouncementCount();
     long getClarificationCount();
     ContestClarificationStatus getClarificationStatus();

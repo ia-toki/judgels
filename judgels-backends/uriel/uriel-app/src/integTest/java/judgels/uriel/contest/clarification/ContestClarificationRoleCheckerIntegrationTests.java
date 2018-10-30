@@ -27,171 +27,171 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
     }
 
     @Test
-    void create_clarification() {
-        assertThat(checker.canCreateClarification(ADMIN, contestA)).isFalse();
-        assertThat(checker.canCreateClarification(ADMIN, contestAStarted)).isFalse();
-        assertThat(checker.canCreateClarification(ADMIN, contestB)).isFalse();
-        assertThat(checker.canCreateClarification(ADMIN, contestBStarted)).isFalse();
-        assertThat(checker.canCreateClarification(ADMIN, contestC)).isFalse();
+    void create() {
+        assertThat(checker.canCreate(ADMIN, contestA)).isFalse();
+        assertThat(checker.canCreate(ADMIN, contestAStarted)).isFalse();
+        assertThat(checker.canCreate(ADMIN, contestB)).isFalse();
+        assertThat(checker.canCreate(ADMIN, contestBStarted)).isFalse();
+        assertThat(checker.canCreate(ADMIN, contestC)).isFalse();
 
-        assertThat(checker.canCreateClarification(USER, contestA)).isFalse();
-        assertThat(checker.canCreateClarification(USER, contestAStarted)).isFalse();
-        assertThat(checker.canCreateClarification(USER, contestB)).isFalse();
-        assertThat(checker.canCreateClarification(USER, contestC)).isFalse();
+        assertThat(checker.canCreate(USER, contestA)).isFalse();
+        assertThat(checker.canCreate(USER, contestAStarted)).isFalse();
+        assertThat(checker.canCreate(USER, contestB)).isFalse();
+        assertThat(checker.canCreate(USER, contestC)).isFalse();
 
-        assertThat(checker.canCreateClarification(CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canCreateClarification(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR_CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR_CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canCreate(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canCreate(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR_CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR_CONTESTANT, contestB)).isFalse();
 
-        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isTrue();
-        assertThat(checker.canCreateClarification(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canCreate(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canCreate(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
         moduleStore.upsertClarificationTimeLimitModule(
                 contestBStarted.getJid(),
                 new ClarificationTimeLimitModuleConfig.Builder()
                         .clarificationDuration(Duration.ofHours(1))
                         .build());
-        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canCreate(CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
         moduleStore.upsertClarificationTimeLimitModule(
                 contestBStarted.getJid(),
                 new ClarificationTimeLimitModuleConfig.Builder()
                         .clarificationDuration(Duration.ofHours(3))
                         .build());
-        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isTrue();
-        assertThat(checker.canCreateClarification(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canCreate(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canCreate(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
         moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canCreateClarification(CONTESTANT, contestBStarted)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canCreate(CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
 
-        assertThat(checker.canCreateClarification(CONTESTANT, contestBFinished)).isFalse();
-        assertThat(checker.canCreateClarification(CONTESTANT, contestC)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR_CONTESTANT, contestBFinished)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR_CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canCreate(CONTESTANT, contestBFinished)).isFalse();
+        assertThat(checker.canCreate(CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR_CONTESTANT, contestBFinished)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR_CONTESTANT, contestC)).isFalse();
 
-        assertThat(checker.canCreateClarification(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR, contestBStarted)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(CLARIFICATION);
-        assertThat(checker.canCreateClarification(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR, contestBStarted)).isFalse();
-        assertThat(checker.canCreateClarification(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canCreate(SUPERVISOR, contestC)).isFalse();
 
-        assertThat(checker.canCreateClarification(MANAGER, contestA)).isFalse();
-        assertThat(checker.canCreateClarification(MANAGER, contestB)).isFalse();
-        assertThat(checker.canCreateClarification(MANAGER, contestBStarted)).isFalse();
-        assertThat(checker.canCreateClarification(MANAGER, contestC)).isFalse();
+        assertThat(checker.canCreate(MANAGER, contestA)).isFalse();
+        assertThat(checker.canCreate(MANAGER, contestB)).isFalse();
+        assertThat(checker.canCreate(MANAGER, contestBStarted)).isFalse();
+        assertThat(checker.canCreate(MANAGER, contestC)).isFalse();
     }
 
     @Test
-    void view_own_clarifications() {
-        assertThat(checker.canViewOwnClarifications(ADMIN, contestA)).isTrue();
-        assertThat(checker.canViewOwnClarifications(ADMIN, contestAStarted)).isTrue();
-        assertThat(checker.canViewOwnClarifications(ADMIN, contestB)).isTrue();
-        assertThat(checker.canViewOwnClarifications(ADMIN, contestBStarted)).isTrue();
-        assertThat(checker.canViewOwnClarifications(ADMIN, contestC)).isFalse();
+    void view_own() {
+        assertThat(checker.canViewOwn(ADMIN, contestA)).isTrue();
+        assertThat(checker.canViewOwn(ADMIN, contestAStarted)).isTrue();
+        assertThat(checker.canViewOwn(ADMIN, contestB)).isTrue();
+        assertThat(checker.canViewOwn(ADMIN, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwn(ADMIN, contestC)).isFalse();
 
-        assertThat(checker.canViewOwnClarifications(USER, contestA)).isFalse();
-        assertThat(checker.canViewOwnClarifications(USER, contestAStarted)).isFalse();
-        assertThat(checker.canViewOwnClarifications(USER, contestB)).isFalse();
-        assertThat(checker.canViewOwnClarifications(USER, contestC)).isFalse();
+        assertThat(checker.canViewOwn(USER, contestA)).isFalse();
+        assertThat(checker.canViewOwn(USER, contestAStarted)).isFalse();
+        assertThat(checker.canViewOwn(USER, contestB)).isFalse();
+        assertThat(checker.canViewOwn(USER, contestC)).isFalse();
 
-        assertThat(checker.canViewOwnClarifications(CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canViewOwnClarifications(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canViewOwnClarifications(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwn(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canViewOwn(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canViewOwn(CONTESTANT, contestBStarted)).isTrue();
         moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canViewOwnClarifications(CONTESTANT, contestBStarted)).isFalse();
-        assertThat(checker.canViewOwnClarifications(CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canViewOwn(CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canViewOwn(CONTESTANT, contestC)).isFalse();
         moduleStore.disablePausedModule(contestBStarted.getJid());
 
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestBStarted)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestC)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestC)).isFalse();
         addSupervisorToContestBWithPermission(CLARIFICATION);
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestB)).isTrue();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestB)).isTrue();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
         moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR, contestC)).isFalse();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestB)).isTrue();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
-        assertThat(checker.canViewOwnClarifications(SUPERVISOR_CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestB)).isTrue();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestC)).isFalse();
         moduleStore.disablePausedModule(contestBStarted.getJid());
 
-        assertThat(checker.canViewOwnClarifications(MANAGER, contestA)).isFalse();
-        assertThat(checker.canViewOwnClarifications(MANAGER, contestB)).isTrue();
-        assertThat(checker.canViewOwnClarifications(MANAGER, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwn(MANAGER, contestA)).isFalse();
+        assertThat(checker.canViewOwn(MANAGER, contestB)).isTrue();
+        assertThat(checker.canViewOwn(MANAGER, contestBStarted)).isTrue();
         moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canViewOwnClarifications(MANAGER, contestB)).isTrue();
-        assertThat(checker.canViewOwnClarifications(MANAGER, contestBStarted)).isTrue();
-        assertThat(checker.canViewOwnClarifications(MANAGER, contestC)).isFalse();
+        assertThat(checker.canViewOwn(MANAGER, contestB)).isTrue();
+        assertThat(checker.canViewOwn(MANAGER, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwn(MANAGER, contestC)).isFalse();
         moduleStore.disablePausedModule(contestBStarted.getJid());
     }
 
     @Test
-    void supervise_clarifications() {
-        assertThat(checker.canSuperviseClarifications(ADMIN, contestA)).isTrue();
-        assertThat(checker.canSuperviseClarifications(ADMIN, contestAStarted)).isTrue();
-        assertThat(checker.canSuperviseClarifications(ADMIN, contestB)).isTrue();
-        assertThat(checker.canSuperviseClarifications(ADMIN, contestBStarted)).isTrue();
-        assertThat(checker.canSuperviseClarifications(ADMIN, contestC)).isFalse();
+    void supervise() {
+        assertThat(checker.canSupervise(ADMIN, contestA)).isTrue();
+        assertThat(checker.canSupervise(ADMIN, contestAStarted)).isTrue();
+        assertThat(checker.canSupervise(ADMIN, contestB)).isTrue();
+        assertThat(checker.canSupervise(ADMIN, contestBStarted)).isTrue();
+        assertThat(checker.canSupervise(ADMIN, contestC)).isFalse();
 
-        assertThat(checker.canSuperviseClarifications(USER, contestA)).isFalse();
-        assertThat(checker.canSuperviseClarifications(USER, contestAStarted)).isFalse();
-        assertThat(checker.canSuperviseClarifications(USER, contestB)).isFalse();
-        assertThat(checker.canSuperviseClarifications(USER, contestC)).isFalse();
+        assertThat(checker.canSupervise(USER, contestA)).isFalse();
+        assertThat(checker.canSupervise(USER, contestAStarted)).isFalse();
+        assertThat(checker.canSupervise(USER, contestB)).isFalse();
+        assertThat(checker.canSupervise(USER, contestC)).isFalse();
 
-        assertThat(checker.canSuperviseClarifications(CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canSuperviseClarifications(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canSuperviseClarifications(CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canSupervise(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canSupervise(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canSupervise(CONTESTANT, contestBStarted)).isFalse();
         moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canSuperviseClarifications(CONTESTANT, contestBStarted)).isFalse();
-        assertThat(checker.canSuperviseClarifications(CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canSupervise(CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canSupervise(CONTESTANT, contestC)).isFalse();
         moduleStore.disablePausedModule(contestBStarted.getJid());
 
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestBStarted)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestC)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestC)).isFalse();
         addSupervisorToContestBWithPermission(CLARIFICATION);
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestB)).isTrue();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canSupervise(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canSupervise(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestB)).isTrue();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
         moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR, contestC)).isFalse();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestB)).isTrue();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
-        assertThat(checker.canSuperviseClarifications(SUPERVISOR_CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canSupervise(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canSupervise(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestB)).isTrue();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canSupervise(SUPERVISOR_CONTESTANT, contestC)).isFalse();
         moduleStore.disablePausedModule(contestBStarted.getJid());
 
-        assertThat(checker.canSuperviseClarifications(MANAGER, contestA)).isFalse();
-        assertThat(checker.canSuperviseClarifications(MANAGER, contestB)).isTrue();
-        assertThat(checker.canSuperviseClarifications(MANAGER, contestBStarted)).isTrue();
+        assertThat(checker.canSupervise(MANAGER, contestA)).isFalse();
+        assertThat(checker.canSupervise(MANAGER, contestB)).isTrue();
+        assertThat(checker.canSupervise(MANAGER, contestBStarted)).isTrue();
         moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canSuperviseClarifications(MANAGER, contestB)).isTrue();
-        assertThat(checker.canSuperviseClarifications(MANAGER, contestBStarted)).isTrue();
-        assertThat(checker.canSuperviseClarifications(MANAGER, contestC)).isFalse();
+        assertThat(checker.canSupervise(MANAGER, contestB)).isTrue();
+        assertThat(checker.canSupervise(MANAGER, contestBStarted)).isTrue();
+        assertThat(checker.canSupervise(MANAGER, contestC)).isFalse();
         moduleStore.disablePausedModule(contestBStarted.getJid());
     }
 }

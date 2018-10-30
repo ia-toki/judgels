@@ -17,25 +17,25 @@ class ContestFileRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrat
     }
 
     @Test
-    void download_files() {
-        assertThat(checker.canDownloadFiles(ADMIN, contestA)).isTrue();
-        assertThat(checker.canDownloadFiles(ADMIN, contestB)).isTrue();
-        assertThat(checker.canDownloadFiles(ADMIN, contestC)).isTrue();
+    void view() {
+        assertThat(checker.canView(ADMIN, contestA)).isTrue();
+        assertThat(checker.canView(ADMIN, contestB)).isTrue();
+        assertThat(checker.canView(ADMIN, contestC)).isTrue();
 
-        assertThat(checker.canDownloadFiles(USER, contestA)).isTrue();
-        assertThat(checker.canDownloadFiles(USER, contestB)).isFalse();
-        assertThat(checker.canDownloadFiles(USER, contestC)).isFalse();
+        assertThat(checker.canView(USER, contestA)).isTrue();
+        assertThat(checker.canView(USER, contestB)).isFalse();
+        assertThat(checker.canView(USER, contestC)).isFalse();
 
-        assertThat(checker.canDownloadFiles(CONTESTANT, contestA)).isTrue();
-        assertThat(checker.canDownloadFiles(CONTESTANT, contestB)).isTrue();
-        assertThat(checker.canDownloadFiles(CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canView(CONTESTANT, contestA)).isTrue();
+        assertThat(checker.canView(CONTESTANT, contestB)).isTrue();
+        assertThat(checker.canView(CONTESTANT, contestC)).isFalse();
 
-        assertThat(checker.canDownloadFiles(SUPERVISOR, contestA)).isTrue();
-        assertThat(checker.canDownloadFiles(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canDownloadFiles(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestA)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestC)).isFalse();
 
-        assertThat(checker.canDownloadFiles(MANAGER, contestA)).isTrue();
-        assertThat(checker.canDownloadFiles(MANAGER, contestB)).isTrue();
-        assertThat(checker.canDownloadFiles(MANAGER, contestC)).isFalse();
+        assertThat(checker.canView(MANAGER, contestA)).isTrue();
+        assertThat(checker.canView(MANAGER, contestB)).isTrue();
+        assertThat(checker.canView(MANAGER, contestC)).isFalse();
     }
 }

@@ -11,7 +11,7 @@ import './ContestEditDialog.css';
 
 export interface ContestEditDialogProps {
   contest: Contest;
-  isAllowedToEditContest: boolean;
+  canManage: boolean;
   isEditingContest: boolean;
   onSetNotEditingContest: () => void;
 }
@@ -40,7 +40,7 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
   }
 
   private renderButton = () => {
-    if (!this.props.isAllowedToEditContest) {
+    if (!this.props.canManage) {
       return null;
     }
     return (

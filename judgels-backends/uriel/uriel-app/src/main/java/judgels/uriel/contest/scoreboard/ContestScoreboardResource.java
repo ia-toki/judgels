@@ -42,10 +42,10 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     public Optional<ContestScoreboardResponse> getScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(scoreboardRoleChecker.canViewDefaultScoreboard(actorJid, contest));
+        checkAllowed(scoreboardRoleChecker.canViewDefault(actorJid, contest));
 
         return scoreboardFetcher
-                .fetchScoreboard(contest, actorJid, scoreboardRoleChecker.canSuperviseScoreboard(actorJid, contest))
+                .fetchScoreboard(contest, actorJid, scoreboardRoleChecker.canSupervise(actorJid, contest))
                 .map(this::buildResponse);
     }
 
@@ -54,11 +54,11 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     public Optional<ContestScoreboardResponse> getFrozenScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(scoreboardRoleChecker.canViewDefaultScoreboard(actorJid, contest));
+        checkAllowed(scoreboardRoleChecker.canViewDefault(actorJid, contest));
 
-        boolean canSuperviseScoreboard = scoreboardRoleChecker.canSuperviseScoreboard(actorJid, contest);
+        boolean canSupervise = scoreboardRoleChecker.canSupervise(actorJid, contest);
         return scoreboardFetcher
-                .fetchFrozenScoreboard(contest, actorJid, canSuperviseScoreboard)
+                .fetchFrozenScoreboard(contest, actorJid, canSupervise)
                 .map(this::buildResponse);
     }
 

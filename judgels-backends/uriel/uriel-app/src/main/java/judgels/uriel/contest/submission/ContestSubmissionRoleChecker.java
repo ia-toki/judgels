@@ -34,16 +34,16 @@ public class ContestSubmissionRoleChecker {
         this.supervisorStore = supervisorStore;
     }
 
-    public boolean canViewSubmission(String userJid, Contest contest, String submissionUserJid) {
-        if (canViewAllSubmissions(userJid, contest)) {
+    public boolean canView(String userJid, Contest contest, String submissionUserJid) {
+        if (canSupervise(userJid, contest)) {
             return true;
         }
-        return canViewOwnSubmissions(userJid, contest)
+        return canViewOwn(userJid, contest)
                 && userJid.equals(submissionUserJid);
     }
 
-    public boolean canViewOwnSubmissions(String userJid, Contest contest) {
-        if (canViewAllSubmissions(userJid, contest)) {
+    public boolean canViewOwn(String userJid, Contest contest) {
+        if (canSupervise(userJid, contest)) {
             return true;
         }
         return contestRoleDao.isContestant(userJid, contest.getJid())
@@ -51,15 +51,7 @@ public class ContestSubmissionRoleChecker {
                 && contestTimer.hasStarted(contest, userJid);
     }
 
-    public boolean canViewAllSubmissions(String userJid, Contest contest) {
-        return canSuperviseSubmissions(userJid, contest);
-    }
-
-    public boolean canSuperviseSubmissions(String userJid, Contest contest) {
-        return isSupervisorWithSubmissionPermissionOrAbove(userJid, contest);
-    }
-
-    private boolean isSupervisorWithSubmissionPermissionOrAbove(String userJid, Contest contest) {
+    public boolean canSupervise(String userJid, Contest contest) {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }

@@ -6,7 +6,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestConfig.class)
 public interface ContestConfig {
-    boolean getIsAllowedToCreateContest();
+    boolean getCanAdminister();
 
     class Builder extends ImmutableContestConfig.Builder {}
 }

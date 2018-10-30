@@ -39,7 +39,7 @@ public class ContestWebResource implements ContestWebService {
     public ContestWithWebConfig getContestBySlugWithWebConfig(Optional<AuthHeader> authHeader, String contestSlug) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestBySlug(contestSlug));
-        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canView(actorJid, contest));
         return new ContestWithWebConfig.Builder()
                 .contest(contest)
                 .config(webConfigFetcher.fetchConfig(actorJid, contest))
@@ -51,7 +51,7 @@ public class ContestWebResource implements ContestWebService {
     public ContestWithWebConfig getContestByJidWithWebConfig(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canView(actorJid, contest));
         return new ContestWithWebConfig.Builder()
                 .contest(contest)
                 .config(webConfigFetcher.fetchConfig(actorJid, contest))
@@ -63,7 +63,7 @@ public class ContestWebResource implements ContestWebService {
     public ContestWebConfig getWebConfig(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canView(actorJid, contest));
         return webConfigFetcher.fetchConfig(actorJid, contest);
     }
 }

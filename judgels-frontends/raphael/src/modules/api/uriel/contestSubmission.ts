@@ -14,7 +14,7 @@ export interface ContestSubmissionsResponse {
 }
 
 export interface ContestSubmissionConfig {
-  isAllowedToViewAllSubmissions: boolean;
+  canSupervise: boolean;
   userJids: string[];
   problemJids: string[];
 }

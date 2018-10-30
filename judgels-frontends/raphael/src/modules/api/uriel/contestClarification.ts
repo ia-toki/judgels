@@ -37,7 +37,8 @@ export interface ContestClarificationData {
 }
 
 export interface ContestClarificationConfig {
-  isAllowedToCreateClarification: boolean;
+  canCreate: boolean;
+  canSupervise: boolean;
   problemJids: string[];
 }
 

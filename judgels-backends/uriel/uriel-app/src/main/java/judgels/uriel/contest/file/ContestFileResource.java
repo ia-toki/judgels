@@ -44,7 +44,7 @@ public class ContestFileResource {
     public Response downloadFile(@PathParam("contestJid") String contestJid, @PathParam("filename") String filename) {
         String actorJid = actorChecker.check(Optional.empty());
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(fileRoleChecker.canDownloadFiles(actorJid, contest));
+        checkAllowed(fileRoleChecker.canView(actorJid, contest));
 
         return ServiceUtils.buildDownloadResponse(fileFs.getPublicFileUrl(Paths.get(contestJid, filename)));
     }

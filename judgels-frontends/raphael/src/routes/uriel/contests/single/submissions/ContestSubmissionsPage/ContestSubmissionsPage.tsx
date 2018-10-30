@@ -76,8 +76,8 @@ export class ContestSubmissionsPage extends React.PureComponent<
       return null;
     }
     const { config, profilesMap, problemAliasesMap } = response;
-    const { userJids, problemJids, isAllowedToViewAllSubmissions } = config;
-    if (!isAllowedToViewAllSubmissions) {
+    const { userJids, problemJids, canSupervise } = config;
+    if (!canSupervise) {
       return null;
     }
 
@@ -113,9 +113,9 @@ export class ContestSubmissionsPage extends React.PureComponent<
       <ContestSubmissionsTable
         contest={this.props.contest}
         submissions={submissions.data}
+        canSupervise={config.canSupervise}
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
-        showUserColumn={config.isAllowedToViewAllSubmissions}
       />
     );
   };

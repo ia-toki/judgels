@@ -41,15 +41,14 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
     public ContestAnnouncementsResponse getAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(announcementRoleChecker.canViewPublishedAnnouncements(actorJid, contest));
+        checkAllowed(announcementRoleChecker.canViewPublished(actorJid, contest));
 
-        boolean canSuperviseAnnouncements = announcementRoleChecker.canSuperviseAnnouncements(actorJid, contest);
+        boolean canSupervise = announcementRoleChecker.canSupervise(actorJid, contest);
         ContestAnnouncementConfig config = new ContestAnnouncementConfig.Builder()
-                .isAllowedToCreateAnnouncement(canSuperviseAnnouncements)
-                .isAllowedToEditAnnouncement(canSuperviseAnnouncements)
+                .canSupervise(canSupervise)
                 .build();
 
-        List<ContestAnnouncement> data = canSuperviseAnnouncements
+        List<ContestAnnouncement> data = canSupervise
                 ? announcementStore.getAnnouncements(contestJid)
                 : announcementStore.getPublishedAnnouncements(contestJid);
 
@@ -67,7 +66,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
             ContestAnnouncementData announcementData) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(announcementRoleChecker.canSuperviseAnnouncements(actorJid, contest));
+        checkAllowed(announcementRoleChecker.canSupervise(actorJid, contest));
 
         return announcementStore.createAnnouncement(contestJid, announcementData);
     }
@@ -81,7 +80,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
             ContestAnnouncementData announcementData) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(announcementRoleChecker.canSuperviseAnnouncements(actorJid, contest));
+        checkAllowed(announcementRoleChecker.canSupervise(actorJid, contest));
 
         return announcementStore.updateAnnouncement(contestJid, announcementJid, announcementData);
     }

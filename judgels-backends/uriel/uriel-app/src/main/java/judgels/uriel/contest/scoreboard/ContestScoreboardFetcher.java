@@ -22,28 +22,20 @@ public class ContestScoreboardFetcher {
         this.scoreboardBuilder = scoreboardBuilder;
     }
 
-    public Optional<ContestScoreboard> fetchScoreboard(
-            Contest contest,
-            String userJid,
-            boolean canSuperviseScoreboard) {
-
-        ContestScoreboardType defaultType =
-                typeFetcher.fetchViewableTypes(contest, canSuperviseScoreboard).get(0);
-        return fetchScoreboardOfType(contest, userJid, defaultType, canSuperviseScoreboard);
+    public Optional<ContestScoreboard> fetchScoreboard(Contest contest, String userJid, boolean canSupervise) {
+        ContestScoreboardType defaultType = typeFetcher.fetchViewableTypes(contest, canSupervise).get(0);
+        return fetchScoreboardOfType(contest, userJid, defaultType, canSupervise);
     }
 
-    public Optional<ContestScoreboard> fetchFrozenScoreboard(
-            Contest contest,
-            String userJid,
-            boolean canSuperviseScoreboard) {
-        return fetchScoreboardOfType(contest, userJid, ContestScoreboardType.FROZEN, canSuperviseScoreboard);
+    public Optional<ContestScoreboard> fetchFrozenScoreboard(Contest contest, String userJid, boolean canSupervise) {
+        return fetchScoreboardOfType(contest, userJid, ContestScoreboardType.FROZEN, canSupervise);
     }
 
     private Optional<ContestScoreboard> fetchScoreboardOfType(
             Contest contest,
             String userJid,
             ContestScoreboardType type,
-            boolean canSuperviseScoreboard) {
+            boolean canSupervise) {
 
         Optional<RawContestScoreboard> rawScoreboard = scoreboardStore.getScoreboard(contest.getJid(), type);
         ContestScoreboardType actualType;
@@ -56,6 +48,6 @@ public class ContestScoreboardFetcher {
             actualType = type;
         }
         return rawScoreboard.map(raw ->
-                scoreboardBuilder.buildScoreboard(raw, contest, userJid, actualType, canSuperviseScoreboard));
+                scoreboardBuilder.buildScoreboard(raw, contest, userJid, actualType, canSupervise));
     }
 }

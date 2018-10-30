@@ -26,11 +26,11 @@ public class ContestAnnouncementRoleChecker {
         this.supervisorStore = supervisorStore;
     }
 
-    public boolean canViewPublishedAnnouncements(String userJid, Contest contest) {
+    public boolean canViewPublished(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 
-    public boolean canSuperviseAnnouncements(String userJid, Contest contest) {
+    public boolean canSupervise(String userJid, Contest contest) {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }

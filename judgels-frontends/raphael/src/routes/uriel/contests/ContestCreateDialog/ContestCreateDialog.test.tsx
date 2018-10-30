@@ -14,7 +14,7 @@ describe('ContestCreateDialog', () => {
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onGetContestConfig = jest.fn().mockReturnValue(Promise.resolve({ isAllowedToCreateContest: true }));
+    onGetContestConfig = jest.fn().mockReturnValue(Promise.resolve({ canAdminister: true }));
     onCreateContest = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));

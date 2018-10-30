@@ -73,7 +73,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(clarificationRoleChecker.canCreateClarification(actorJid, contest));
+        checkAllowed(clarificationRoleChecker.canCreate(actorJid, contest));
 
         return clarificationStore.createClarification(contestJid, clarificationData);
     }
@@ -88,20 +88,20 @@ public class ContestClarificationResource implements ContestClarificationService
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(clarificationRoleChecker.canViewOwnClarifications(actorJid, contest));
+        checkAllowed(clarificationRoleChecker.canViewOwn(actorJid, contest));
 
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
-        Page<ContestClarification> data = clarificationRoleChecker.canSuperviseClarifications(actorJid, contest)
+        Page<ContestClarification> data = clarificationRoleChecker.canSupervise(actorJid, contest)
                 ? clarificationStore.getClarifications(contestJid, options.build())
                 : clarificationStore.getClarifications(contestJid, actorJid, options.build());
 
         List<String> problemJidsSortedByAlias;
         Set<String> problemJids;
 
-        boolean canCreateClarification = clarificationRoleChecker.canCreateClarification(actorJid, contest);
-        if (canCreateClarification) {
+        boolean canCreate = clarificationRoleChecker.canCreate(actorJid, contest);
+        if (canCreate) {
             problemJidsSortedByAlias = problemStore.getOpenProblemJids(contestJid);
             problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
         } else {
@@ -113,10 +113,10 @@ public class ContestClarificationResource implements ContestClarificationService
                     .collect(Collectors.toSet());
         }
 
-        boolean canAnswerClarification = clarificationRoleChecker.canSuperviseClarifications(actorJid, contest);
+        boolean canSupervise = clarificationRoleChecker.canSupervise(actorJid, contest);
         ContestClarificationConfig config = new ContestClarificationConfig.Builder()
-                .isAllowedToCreateClarification(canCreateClarification)
-                .isAllowedToAnswerClarification(canAnswerClarification)
+                .canCreate(canCreate)
+                .canSupervise(canSupervise)
                 .problemJids(problemJidsSortedByAlias)
                 .build();
 
@@ -162,7 +162,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(clarificationRoleChecker.canSuperviseClarifications(actorJid, contest));
+        checkAllowed(clarificationRoleChecker.canSupervise(actorJid, contest));
 
         checkFound(clarificationStore.updateClarificationAnswer(
                 contestJid,

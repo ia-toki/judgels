@@ -25,7 +25,7 @@ export class ContestCreateDialog extends React.Component<ContestCreateDialogProp
 
   render() {
     const { config } = this.state;
-    if (!config || !config.isAllowedToCreateContest) {
+    if (!config || !config.canAdminister) {
       return null;
     }
 

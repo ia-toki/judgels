@@ -23,7 +23,8 @@ describe('ContestClarificationsPage', () => {
   const response: ContestClarificationsResponse = {
     data: { data: [], totalData: 0 },
     config: {
-      isAllowedToCreateClarification: true,
+      canCreate: true,
+      canSupervise: false,
       problemJids: ['problemJid1', 'problemJid2'],
     },
     profilesMap: { [userJid]: { username: 'username' } },

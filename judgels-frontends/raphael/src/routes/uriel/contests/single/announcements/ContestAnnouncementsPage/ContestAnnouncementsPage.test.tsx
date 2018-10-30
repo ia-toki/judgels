@@ -20,10 +20,7 @@ describe('ContestAnnouncementsPage', () => {
 
   const response: ContestAnnouncementsResponse = {
     data: [],
-    config: {
-      isAllowedToCreateAnnouncement: true,
-      isAllowedToEditAnnouncement: true,
-    },
+    config: { canSupervise: true },
   };
 
   const render = () => {

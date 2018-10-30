@@ -129,7 +129,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
           <div className="single-contest-routes__button">
             <ContestEditDialog
               contest={contest!}
-              isAllowedToEditContest={contestWebConfig!.isAllowedToEditContest}
+              canManage={contestWebConfig!.canManage}
               isEditingContest={isEditingContest}
               onSetNotEditingContest={onSetNotEditingContest}
             />

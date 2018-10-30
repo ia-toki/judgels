@@ -107,8 +107,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                 .getAnnouncements(of(ADMIN_HEADER), contest.getJid());
 
         ContestAnnouncementConfig config = response.getConfig();
-        assertThat(config.getIsAllowedToCreateAnnouncement()).isTrue();
-        assertThat(config.getIsAllowedToEditAnnouncement()).isTrue();
+        assertThat(config.getCanSupervise()).isTrue();
 
         List<ContestAnnouncement> announcements = response.getData();
         assertThat(announcements).containsOnly(announcement1, announcement2, announcement3);

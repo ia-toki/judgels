@@ -45,7 +45,7 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
-        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canView(actorJid, contest));
         return contest;
     }
 
@@ -55,7 +55,7 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
-        checkAllowed(contestRoleChecker.canEditContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canManage(actorJid, contest));
         return checkFound(contestStore.updateContest(contestJid, contestUpdateData));
     }
 
@@ -65,7 +65,7 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestBySlug(contestSlug));
 
-        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canView(actorJid, contest));
         return contest;
     }
 
@@ -74,7 +74,7 @@ public class ContestResource implements ContestService {
     public void startVirtualContest(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestRoleChecker.canStartVirtualContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canStartVirtual(actorJid, contest));
 
         contestantStore.startVirtualContest(contestJid, actorJid);
     }
@@ -119,7 +119,7 @@ public class ContestResource implements ContestService {
     @UnitOfWork
     public Contest createContest(AuthHeader authHeader, ContestCreateData contestCreateData) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(contestRoleChecker.canCreateContest(actorJid));
+        checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
         return contestStore.createContest(contestCreateData);
     }
@@ -129,7 +129,7 @@ public class ContestResource implements ContestService {
     public ContestDescription getContestDescription(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestRoleChecker.canViewContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canView(actorJid, contest));
 
         return checkFound(contestStore.getContestDescription(contest.getJid()));
     }
@@ -143,7 +143,7 @@ public class ContestResource implements ContestService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestRoleChecker.canEditContest(actorJid, contest));
+        checkAllowed(contestRoleChecker.canManage(actorJid, contest));
 
         return checkFound(contestStore.updateContestDescription(contest.getJid(), contestDescription));
     }
@@ -152,10 +152,10 @@ public class ContestResource implements ContestService {
     @UnitOfWork(readOnly = true)
     public ContestConfig getContestConfig(Optional<AuthHeader> authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        boolean canCreateContest = contestRoleChecker.canCreateContest(actorJid);
+        boolean canAdminister = contestRoleChecker.canAdminister(actorJid);
 
         return new ContestConfig.Builder()
-                .isAllowedToCreateContest(canCreateContest)
+                .canAdminister(canAdminister)
                 .build();
     }
 }

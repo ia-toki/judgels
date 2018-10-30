@@ -15,7 +15,7 @@ export interface Contest {
 }
 
 export interface ContestConfig {
-  isAllowedToCreateContest: boolean;
+  canAdminister: boolean;
 }
 
 export interface ContestCreateData {

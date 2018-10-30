@@ -28,46 +28,46 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
     }
 
     @Test
-    void view_problems() {
-        assertThat(checker.canViewProblems(ADMIN, contestA)).isTrue();
-        assertThat(checker.canViewProblems(ADMIN, contestAStarted)).isTrue();
-        assertThat(checker.canViewProblems(ADMIN, contestB)).isTrue();
-        assertThat(checker.canViewProblems(ADMIN, contestBStarted)).isTrue();
-        assertThat(checker.canViewProblems(ADMIN, contestC)).isTrue();
+    void view() {
+        assertThat(checker.canView(ADMIN, contestA)).isTrue();
+        assertThat(checker.canView(ADMIN, contestAStarted)).isTrue();
+        assertThat(checker.canView(ADMIN, contestB)).isTrue();
+        assertThat(checker.canView(ADMIN, contestBStarted)).isTrue();
+        assertThat(checker.canView(ADMIN, contestC)).isTrue();
 
-        assertThat(checker.canViewProblems(USER, contestA)).isFalse();
-        assertThat(checker.canViewProblems(USER, contestAStarted)).isTrue();
-        assertThat(checker.canViewProblems(USER, contestB)).isFalse();
-        assertThat(checker.canViewProblems(USER, contestBStarted)).isFalse();
-        assertThat(checker.canViewProblems(USER, contestC)).isFalse();
+        assertThat(checker.canView(USER, contestA)).isFalse();
+        assertThat(checker.canView(USER, contestAStarted)).isTrue();
+        assertThat(checker.canView(USER, contestB)).isFalse();
+        assertThat(checker.canView(USER, contestBStarted)).isFalse();
+        assertThat(checker.canView(USER, contestC)).isFalse();
 
-        assertThat(checker.canViewProblems(CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canViewProblems(CONTESTANT, contestAStarted)).isTrue();
-        assertThat(checker.canViewProblems(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canViewProblems(CONTESTANT, contestBStarted)).isTrue();
-        assertThat(checker.canViewProblems(CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canView(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canView(CONTESTANT, contestAStarted)).isTrue();
+        assertThat(checker.canView(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canView(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canView(CONTESTANT, contestC)).isFalse();
 
-        assertThat(checker.canViewProblems(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestAStarted)).isTrue();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestAStarted)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(PROBLEM);
-        assertThat(checker.canViewProblems(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestAStarted)).isTrue();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestAStarted)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestC)).isFalse();
 
-        assertThat(checker.canViewProblems(MANAGER, contestA)).isFalse();
-        assertThat(checker.canViewProblems(MANAGER, contestAStarted)).isTrue();
-        assertThat(checker.canViewProblems(MANAGER, contestB)).isTrue();
-        assertThat(checker.canViewProblems(MANAGER, contestBStarted)).isTrue();
-        assertThat(checker.canViewProblems(MANAGER, contestC)).isFalse();
+        assertThat(checker.canView(MANAGER, contestA)).isFalse();
+        assertThat(checker.canView(MANAGER, contestAStarted)).isTrue();
+        assertThat(checker.canView(MANAGER, contestB)).isTrue();
+        assertThat(checker.canView(MANAGER, contestBStarted)).isTrue();
+        assertThat(checker.canView(MANAGER, contestC)).isFalse();
     }
 
     @Test
-    void view_problems_virtual() {
+    void view_virtual() {
         Contest contestAFinished = contestStore.createContest(
                 new ContestCreateData.Builder().slug("contest-a-finished").build());
         contestAFinished = contestStore.updateContest(
@@ -96,78 +96,78 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
 
         contestantStore.startVirtualContest(contestBStarted.getJid(), CONTESTANT);
 
-        assertThat(checker.canViewProblems(ADMIN, contestA)).isTrue();
-        assertThat(checker.canViewProblems(ADMIN, contestAStarted)).isTrue();
-        assertThat(checker.canViewProblems(ADMIN, contestAFinished)).isTrue();
-        assertThat(checker.canViewProblems(ADMIN, contestB)).isTrue();
-        assertThat(checker.canViewProblems(ADMIN, contestBStarted)).isTrue();
-        assertThat(checker.canViewProblems(ADMIN, contestBFinished)).isTrue();
+        assertThat(checker.canView(ADMIN, contestA)).isTrue();
+        assertThat(checker.canView(ADMIN, contestAStarted)).isTrue();
+        assertThat(checker.canView(ADMIN, contestAFinished)).isTrue();
+        assertThat(checker.canView(ADMIN, contestB)).isTrue();
+        assertThat(checker.canView(ADMIN, contestBStarted)).isTrue();
+        assertThat(checker.canView(ADMIN, contestBFinished)).isTrue();
 
-        assertThat(checker.canViewProblems(USER, contestA)).isFalse();
-        assertThat(checker.canViewProblems(USER, contestAStarted)).isFalse();
-        assertThat(checker.canViewProblems(USER, contestAFinished)).isTrue();
-        assertThat(checker.canViewProblems(USER, contestB)).isFalse();
-        assertThat(checker.canViewProblems(USER, contestBStarted)).isFalse();
-        assertThat(checker.canViewProblems(USER, contestBFinished)).isFalse();
+        assertThat(checker.canView(USER, contestA)).isFalse();
+        assertThat(checker.canView(USER, contestAStarted)).isFalse();
+        assertThat(checker.canView(USER, contestAFinished)).isTrue();
+        assertThat(checker.canView(USER, contestB)).isFalse();
+        assertThat(checker.canView(USER, contestBStarted)).isFalse();
+        assertThat(checker.canView(USER, contestBFinished)).isFalse();
 
-        assertThat(checker.canViewProblems(CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canViewProblems(CONTESTANT, contestAStarted)).isFalse();
-        assertThat(checker.canViewProblems(CONTESTANT, contestAFinished)).isTrue();
-        assertThat(checker.canViewProblems(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canViewProblems(CONTESTANT, contestBStarted)).isTrue();
-        assertThat(checker.canViewProblems(CONTESTANT, contestBFinished)).isTrue();
+        assertThat(checker.canView(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canView(CONTESTANT, contestAStarted)).isFalse();
+        assertThat(checker.canView(CONTESTANT, contestAFinished)).isTrue();
+        assertThat(checker.canView(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canView(CONTESTANT, contestBStarted)).isTrue();
+        assertThat(checker.canView(CONTESTANT, contestBFinished)).isTrue();
 
-        assertThat(checker.canViewProblems(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestAStarted)).isFalse();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestAFinished)).isTrue();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestBStarted)).isFalse();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestBFinished)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestAStarted)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestAFinished)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestBFinished)).isTrue();
         addSupervisorToContestBWithPermission(PROBLEM);
-        assertThat(checker.canViewProblems(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestAStarted)).isFalse();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestAFinished)).isTrue();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(checker.canViewProblems(SUPERVISOR, contestBFinished)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestAStarted)).isFalse();
+        assertThat(checker.canView(SUPERVISOR, contestAFinished)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestBFinished)).isTrue();
 
-        assertThat(checker.canViewProblems(MANAGER, contestA)).isFalse();
-        assertThat(checker.canViewProblems(MANAGER, contestAStarted)).isFalse();
-        assertThat(checker.canViewProblems(MANAGER, contestAFinished)).isTrue();
-        assertThat(checker.canViewProblems(MANAGER, contestB)).isTrue();
-        assertThat(checker.canViewProblems(MANAGER, contestBStarted)).isTrue();
-        assertThat(checker.canViewProblems(MANAGER, contestBFinished)).isTrue();
+        assertThat(checker.canView(MANAGER, contestA)).isFalse();
+        assertThat(checker.canView(MANAGER, contestAStarted)).isFalse();
+        assertThat(checker.canView(MANAGER, contestAFinished)).isTrue();
+        assertThat(checker.canView(MANAGER, contestB)).isTrue();
+        assertThat(checker.canView(MANAGER, contestBStarted)).isTrue();
+        assertThat(checker.canView(MANAGER, contestBFinished)).isTrue();
     }
 
     @Test
-    void supervise_problems() {
-        assertThat(checker.canSuperviseProblems(ADMIN, contestA)).isTrue();
-        assertThat(checker.canSuperviseProblems(ADMIN, contestB)).isTrue();
-        assertThat(checker.canSuperviseProblems(ADMIN, contestC)).isTrue();
+    void supervise() {
+        assertThat(checker.canSupervise(ADMIN, contestA)).isTrue();
+        assertThat(checker.canSupervise(ADMIN, contestB)).isTrue();
+        assertThat(checker.canSupervise(ADMIN, contestC)).isTrue();
 
-        assertThat(checker.canSuperviseProblems(USER, contestA)).isFalse();
-        assertThat(checker.canSuperviseProblems(USER, contestB)).isFalse();
-        assertThat(checker.canSuperviseProblems(USER, contestC)).isFalse();
+        assertThat(checker.canSupervise(USER, contestA)).isFalse();
+        assertThat(checker.canSupervise(USER, contestB)).isFalse();
+        assertThat(checker.canSupervise(USER, contestC)).isFalse();
 
-        assertThat(checker.canSuperviseProblems(CONTESTANT, contestA)).isFalse();
-        assertThat(checker.canSuperviseProblems(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canSuperviseProblems(CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canSupervise(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canSupervise(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canSupervise(CONTESTANT, contestC)).isFalse();
 
-        assertThat(checker.canSuperviseProblems(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canSuperviseProblems(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canSuperviseProblems(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestC)).isFalse();
         addSupervisorToContestBWithPermission(PROBLEM);
-        assertThat(checker.canSuperviseProblems(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canSuperviseProblems(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canSuperviseProblems(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canSupervise(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canSupervise(SUPERVISOR, contestC)).isFalse();
 
-        assertThat(checker.canSuperviseProblems(MANAGER, contestA)).isFalse();
-        assertThat(checker.canSuperviseProblems(MANAGER, contestB)).isTrue();
-        assertThat(checker.canSuperviseProblems(MANAGER, contestC)).isFalse();
+        assertThat(checker.canSupervise(MANAGER, contestA)).isFalse();
+        assertThat(checker.canSupervise(MANAGER, contestB)).isTrue();
+        assertThat(checker.canSupervise(MANAGER, contestC)).isFalse();
     }
 
     @Test
-    void submit_problem() {
+    void submit() {
         ContestProblem problem = new ContestProblem.Builder()
                 .problemJid("problemJid")
                 .alias("alias")
@@ -179,46 +179,46 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
                 .totalSubmissions(10)
                 .build();
 
-        assertThat(checker.canSubmitProblem(ADMIN, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(ADMIN, contestAStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmitProblem(ADMIN, contestB, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(ADMIN, contestBStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmitProblem(ADMIN, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(ADMIN, contestC, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(ADMIN, contestA, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(ADMIN, contestAStarted, contestantProblem)).isEmpty();
+        assertThat(checker.canSubmit(ADMIN, contestB, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(ADMIN, contestBStarted, contestantProblem)).isEmpty();
+        assertThat(checker.canSubmit(ADMIN, contestBFinished, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(ADMIN, contestC, contestantProblem)).isPresent();
 
-        assertThat(checker.canSubmitProblem(USER, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(USER, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(USER, contestB, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(USER, contestBStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(USER, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(USER, contestC, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(USER, contestA, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(USER, contestAStarted, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(USER, contestB, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(USER, contestBStarted, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(USER, contestBFinished, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(USER, contestC, contestantProblem)).isPresent();
 
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestB, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestBStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestC, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(CONTESTANT, contestA, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(CONTESTANT, contestAStarted, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(CONTESTANT, contestB, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, contestantProblem)).isEmpty();
+        assertThat(checker.canSubmit(CONTESTANT, contestBFinished, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(CONTESTANT, contestC, contestantProblem)).isPresent();
 
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestB, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestBStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestC, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestA, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestAStarted, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestB, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestBStarted, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestBFinished, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestC, contestantProblem)).isPresent();
         addSupervisorToContestBWithPermission(PROBLEM);
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestB, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestBStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(SUPERVISOR, contestC, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestA, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestAStarted, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestB, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestBStarted, contestantProblem)).isEmpty();
+        assertThat(checker.canSubmit(SUPERVISOR, contestBFinished, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestC, contestantProblem)).isPresent();
 
-        assertThat(checker.canSubmitProblem(MANAGER, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(MANAGER, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(MANAGER, contestB, contestantProblem)).isPresent();
-        assertThat(checker.canSubmitProblem(MANAGER, contestBStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmitProblem(MANAGER, contestC, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(MANAGER, contestA, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(MANAGER, contestAStarted, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(MANAGER, contestB, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(MANAGER, contestBStarted, contestantProblem)).isEmpty();
+        assertThat(checker.canSubmit(MANAGER, contestC, contestantProblem)).isPresent();
 
         ContestContestantProblem contestantProblemClosed = new ContestContestantProblem.Builder()
                 .from(contestantProblem)
@@ -244,17 +244,17 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
                         .build())
                 .build();
 
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestA, contestantProblem))
+        assertThat(checker.canSubmit(CONTESTANT, contestA, contestantProblem))
                 .contains("You are not a contestant.");
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestB, contestantProblem))
+        assertThat(checker.canSubmit(CONTESTANT, contestB, contestantProblem))
                 .contains("Contest has not started yet.");
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestBFinished, contestantProblem))
+        assertThat(checker.canSubmit(CONTESTANT, contestBFinished, contestantProblem))
                 .contains("Contest is over.");
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestBStarted, contestantProblemClosed))
+        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, contestantProblemClosed))
                 .contains("Problem is closed.");
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestBStarted, contestantProblemLimitReached))
+        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, contestantProblemLimitReached))
                 .contains("Submissions limit has been reached.");
-        assertThat(checker.canSubmitProblem(CONTESTANT, contestBStarted, contestantProblemNoLimit))
+        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, contestantProblemNoLimit))
                 .isEmpty();
     }
 }
