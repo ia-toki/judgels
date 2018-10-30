@@ -18,7 +18,8 @@ const usernameOrEmailField: any = {
   name: 'usernameOrEmail',
   label: 'Username or Email',
   validate: [Required],
-} as any;
+  autoFocus: true,
+};
 
 const passwordField: any = {
   name: 'password',

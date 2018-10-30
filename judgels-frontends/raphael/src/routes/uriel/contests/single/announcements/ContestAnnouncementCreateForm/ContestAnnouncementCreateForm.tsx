@@ -31,6 +31,7 @@ const ContestAnnouncementCreateForm = (props: ContestAnnouncementCreateFormProps
     name: 'title',
     label: 'Title',
     validate: [Required],
+    autoFocus: true,
   };
 
   const contentField: any = {
