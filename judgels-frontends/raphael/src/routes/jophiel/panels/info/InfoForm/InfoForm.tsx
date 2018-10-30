@@ -115,8 +115,8 @@ const InfoForm = (props: InfoFormProps) => {
       <HorizontalDivider />
 
       <ActionButtons>
-        <Button type="submit" text="Save changes" intent={Intent.PRIMARY} loading={props.submitting} />
         <Button data-key="cancel" text="Cancel" onClick={props.onCancel} disabled={props.submitting} />
+        <Button type="submit" text="Save changes" intent={Intent.PRIMARY} loading={props.submitting} />
       </ActionButtons>
     </form>
   );
