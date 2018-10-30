@@ -29,4 +29,5 @@ const ContestCreateForm = (props: ContestCreateFormProps) => {
 
 export default reduxForm<ContestCreateFormData>({
   form: 'contest-create',
+  touchOnBlur: false,
 })(ContestCreateForm);

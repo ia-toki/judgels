@@ -56,4 +56,5 @@ const ContestAnnouncementCreateForm = (props: ContestAnnouncementCreateFormProps
 export default reduxForm<ContestAnnouncementCreateFormData>({
   form: 'contest-announcement-create',
   initialValues: { status: ContestAnnouncementStatus.Published },
+  touchOnBlur: false,
 })(ContestAnnouncementCreateForm);

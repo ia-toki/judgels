@@ -29,4 +29,4 @@ const ForgotPasswordForm = (props: InjectedFormProps<ForgotPasswordFormData>) =>
   </form>
 );
 
-export default reduxForm<ForgotPasswordFormData>({ form: 'forgotPassword' })(ForgotPasswordForm);
+export default reduxForm<ForgotPasswordFormData>({ form: 'forgotPassword', touchOnBlur: false })(ForgotPasswordForm);

@@ -65,6 +65,7 @@ const ContestClarificationCreateForm = (props: ContestClarificationCreateFormPro
   return <form onSubmit={props.handleSubmit}>{props.renderFormComponents(fields, submitButton)}</form>;
 };
 
-export default reduxForm<ContestClarificationCreateFormData>({ form: 'contest-clarification-create' })(
-  ContestClarificationCreateForm
-);
+export default reduxForm<ContestClarificationCreateFormData>({
+  form: 'contest-clarification-create',
+  touchOnBlur: false,
+})(ContestClarificationCreateForm);

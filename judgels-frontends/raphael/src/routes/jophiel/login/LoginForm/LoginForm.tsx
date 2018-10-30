@@ -47,4 +47,4 @@ const LoginForm = (props: InjectedFormProps<LoginFormData>) => (
   </form>
 );
 
-export default reduxForm<LoginFormData>({ form: 'login' })(LoginForm);
+export default reduxForm<LoginFormData>({ form: 'login', touchOnBlur: false })(LoginForm);

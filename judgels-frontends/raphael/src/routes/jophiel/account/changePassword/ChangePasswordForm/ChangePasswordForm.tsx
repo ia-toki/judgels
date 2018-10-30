@@ -45,4 +45,4 @@ const ChangePasswordForm = (props: InjectedFormProps<ChangePasswordFormData>) =>
   </form>
 );
 
-export default reduxForm<ChangePasswordFormData>({ form: 'login' })(ChangePasswordForm);
+export default reduxForm<ChangePasswordFormData>({ form: 'login', touchOnBlur: false })(ChangePasswordForm);

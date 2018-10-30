@@ -46,4 +46,6 @@ const StatementLanguageForm = (props: StatementLanguageFormProps) => {
   );
 };
 
-export default reduxForm<StatementLanguageFormData>({ form: 'statement-language' })(StatementLanguageForm);
+export default reduxForm<StatementLanguageFormData>({ form: 'statement-language', touchOnBlur: false })(
+  StatementLanguageForm
+);

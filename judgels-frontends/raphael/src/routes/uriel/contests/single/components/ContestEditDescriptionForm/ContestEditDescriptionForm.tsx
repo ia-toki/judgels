@@ -33,4 +33,5 @@ const ContestEditDescriptionForm = (props: ContestEditDescriptionFormProps) => {
 
 export default reduxForm<ContestEditDescriptionFormData>({
   form: 'contest-description-edit',
+  touchOnBlur: false,
 })(ContestEditDescriptionForm);

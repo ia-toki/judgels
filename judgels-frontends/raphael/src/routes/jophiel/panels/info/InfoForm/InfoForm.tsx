@@ -122,4 +122,4 @@ const InfoForm = (props: InfoFormProps) => {
   );
 };
 
-export default reduxForm<UserInfo>({ form: 'info' })(InfoForm);
+export default reduxForm<UserInfo>({ form: 'info', touchOnBlur: false })(InfoForm);

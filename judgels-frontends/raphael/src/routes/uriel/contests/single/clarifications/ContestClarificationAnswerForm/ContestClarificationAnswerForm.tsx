@@ -34,6 +34,7 @@ const ContestClarificationAnswerForm = (props: ContestClarificationAnswerFormPro
   );
 };
 
-export default reduxForm<ContestClarificationAnswerFormData>({ form: 'contest-clarification-answer' })(
-  ContestClarificationAnswerForm
-);
+export default reduxForm<ContestClarificationAnswerFormData>({
+  form: 'contest-clarification-answer',
+  touchOnBlur: false,
+})(ContestClarificationAnswerForm);

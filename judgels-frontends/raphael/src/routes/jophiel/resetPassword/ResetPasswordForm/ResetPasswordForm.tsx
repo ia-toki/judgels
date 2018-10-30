@@ -39,4 +39,4 @@ const ResetPasswordForm = (props: InjectedFormProps<ResetPasswordFormData>) => (
   </form>
 );
 
-export default reduxForm<ResetPasswordFormData>({ form: 'resetPassword' })(ResetPasswordForm);
+export default reduxForm<ResetPasswordFormData>({ form: 'resetPassword', touchOnBlur: false })(ResetPasswordForm);

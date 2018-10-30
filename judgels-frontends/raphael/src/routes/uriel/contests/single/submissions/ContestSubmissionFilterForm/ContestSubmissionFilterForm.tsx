@@ -49,4 +49,5 @@ const ContestSubmissionFilterForm = (props: ContestSubmissionFilterFormProps) =>
 
 export default reduxForm<ContestSubmissionFilterFormData>({
   form: 'contest-submission-filter',
+  touchOnBlur: false,
 })(ContestSubmissionFilterForm);

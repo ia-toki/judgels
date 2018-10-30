@@ -77,4 +77,5 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
 
 export default reduxForm<ContestEditGeneralFormData>({
   form: 'contest-edit',
+  touchOnBlur: false,
 })(ContestEditGeneralForm);

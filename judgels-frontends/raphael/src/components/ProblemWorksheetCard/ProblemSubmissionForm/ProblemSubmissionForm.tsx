@@ -86,4 +86,5 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
 
 export default reduxForm<ProblemSubmissionFormData>({
   form: 'problem-submission',
+  touchOnBlur: false,
 })(ProblemSubmissionForm);

@@ -89,4 +89,4 @@ const RegisterForm = (props: RegisterFormProps) => {
   );
 };
 
-export default reduxForm<RegisterFormData>({ form: 'register' })(RegisterForm);
+export default reduxForm<RegisterFormData>({ form: 'register', touchOnBlur: false })(RegisterForm);

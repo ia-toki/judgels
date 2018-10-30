@@ -55,4 +55,5 @@ const ContestAnnouncementEditForm = (props: ContestAnnouncementEditFormProps) =>
 
 export default reduxForm<ContestAnnouncementEditFormData>({
   form: 'contest-announcement-edit',
+  touchOnBlur: false,
 })(ContestAnnouncementEditForm);
