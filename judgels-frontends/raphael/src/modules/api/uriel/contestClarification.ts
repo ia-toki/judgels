@@ -1,7 +1,7 @@
 import { stringify } from 'query-string';
 
 import { APP_CONFIG } from 'conf';
-import { get, post } from 'modules/api/http';
+import { get, post, put } from 'modules/api/http';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 
 import { Page } from '../pagination';
@@ -24,6 +24,10 @@ export interface ContestClarification {
   answererJid?: string;
   answer?: string;
   answeredTime?: number;
+}
+
+export interface ContestClarificationAnswer {
+  answer: string;
 }
 
 export interface ContestClarificationData {
@@ -61,6 +65,15 @@ export function createContestClarificationAPI() {
     ): Promise<ContestClarificationsResponse> => {
       const params = stringify({ language, page });
       return get(`${baseURL}/${contestJid}/clarifications?${params}`, token);
+    },
+
+    answerClarification: (
+      token: string,
+      contestJid: string,
+      clarificationJid: string,
+      data: ContestClarificationAnswer
+    ): Promise<void> => {
+      return put(`${baseURL}/${contestJid}/clarifications/${clarificationJid}/answer`, token, data);
     },
   };
 }

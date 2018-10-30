@@ -4,22 +4,32 @@ import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 import { Required } from 'components/forms/validations';
 import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
+import { ActionButtons } from 'components/ActionButtons/ActionButtons';
 
 export interface ContestClarificationAnswerFormData {
   answer: string;
 }
 
-const ContestClarificationAnswerForm = (props: InjectedFormProps<ContestClarificationAnswerFormData>) => {
+export interface ContestClarificationAnswerFormProps extends InjectedFormProps<ContestClarificationAnswerFormData> {
+  isLoading: boolean;
+  onCancel: () => void;
+}
+
+const ContestClarificationAnswerForm = (props: ContestClarificationAnswerFormProps) => {
   const answerField: any = {
     name: 'answer',
     label: 'Answer',
     validate: [Required],
+    autoFocus: true,
   };
 
   return (
     <form onSubmit={props.handleSubmit}>
       <Field component={FormTextArea} {...answerField} />
-      <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={props.submitting} />
+      <ActionButtons leftAlign>
+        <Button type="submit" text="Answer" intent={Intent.PRIMARY} loading={props.isLoading} />
+        <Button text="Cancel" onClick={props.onCancel} />
+      </ActionButtons>
     </form>
   );
 };

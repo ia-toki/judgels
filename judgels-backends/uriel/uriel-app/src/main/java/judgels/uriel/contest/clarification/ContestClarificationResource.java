@@ -113,8 +113,10 @@ public class ContestClarificationResource implements ContestClarificationService
                     .collect(Collectors.toSet());
         }
 
+        boolean canAnswerClarification = clarificationRoleChecker.canSuperviseClarifications(actorJid, contest);
         ContestClarificationConfig config = new ContestClarificationConfig.Builder()
                 .isAllowedToCreateClarification(canCreateClarification)
+                .isAllowedToAnswerClarification(canAnswerClarification)
                 .problemJids(problemJidsSortedByAlias)
                 .build();
 

@@ -6,7 +6,7 @@ import Pagination from 'components/Pagination/Pagination';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestClarificationData } from 'modules/api/uriel/contestClarification';
+import { ContestClarification, ContestClarificationData } from 'modules/api/uriel/contestClarification';
 import { ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
 import { AppState } from 'modules/store';
 import { selectMaybeUserJid } from 'modules/session/sessionSelectors';
@@ -25,11 +25,14 @@ export interface ContestClarificationsPageProps {
   statementLanguage: string;
   onGetClarifications: (contestJid: string, language?: string, page?: number) => Promise<ContestClarificationsResponse>;
   onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
+  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string) => void;
 }
 
 interface ContestClarificationsPageState {
   response?: ContestClarificationsResponse;
-  lastCreateClarificationTime?: number;
+  lastRefreshClarificationsTime?: number;
+  openAnswerBoxClarification?: ContestClarification;
+  isAnswerBoxLoading?: boolean;
 }
 
 class ContestClarificationsPage extends React.Component<
@@ -54,12 +57,12 @@ class ContestClarificationsPage extends React.Component<
 
   private refreshClarifications = async (page?: number) => {
     const response = await this.props.onGetClarifications(this.props.contest.jid, this.props.statementLanguage, page);
-    this.setState({ response });
+    this.setState({ response, isAnswerBoxLoading: false });
     return response.data;
   };
 
   private renderClarifications = () => {
-    const { response } = this.state;
+    const { response, openAnswerBoxClarification } = this.state;
     if (!response) {
       return <LoadingState />;
     }
@@ -79,13 +82,19 @@ class ContestClarificationsPage extends React.Component<
       return (
         <div className="content-card__section" key={clarification.jid}>
           <ContestClarificationCard
+            contest={this.props.contest}
             clarification={clarification}
+            isSupervisor={isSupervisor}
             askerProfile={isSupervisor ? profilesMap[clarification.userJid] : undefined}
             answererProfile={
               isSupervisor && clarification.answererJid ? profilesMap[clarification.answererJid] : undefined
             }
             problemAlias={problemAliasesMap[clarification.topicJid]}
             problemName={problemNamesMap[clarification.topicJid]}
+            isAnswerBoxOpen={openAnswerBoxClarification === clarification}
+            isAnswerBoxLoading={!!this.state.isAnswerBoxLoading}
+            onToggleAnswerBox={this.toggleAnswerBox}
+            onAnswerClarification={this.answerClarification}
           />
         </div>
       );
@@ -93,9 +102,9 @@ class ContestClarificationsPage extends React.Component<
   };
 
   private renderPagination = () => {
-    // updates pagination when a new clarification is created
-    const { lastCreateClarificationTime } = this.state;
-    const key = lastCreateClarificationTime || 0;
+    // updates pagination when clarifications are refreshed
+    const { lastRefreshClarificationsTime } = this.state;
+    const key = lastRefreshClarificationsTime || 0;
 
     return (
       <Pagination
@@ -105,6 +114,10 @@ class ContestClarificationsPage extends React.Component<
         onChangePage={this.onChangePage}
       />
     );
+  };
+
+  private toggleAnswerBox = (clarification?: ContestClarification) => {
+    this.setState({ openAnswerBoxClarification: clarification });
   };
 
   private onChangePage = async (nextPage: number) => {
@@ -133,9 +146,16 @@ class ContestClarificationsPage extends React.Component<
       />
     );
   };
+
   private createClarification = async (contestJid, data) => {
     await this.props.onCreateClarification(contestJid, data);
-    this.setState({ lastCreateClarificationTime: new Date().getTime() });
+    this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
+  };
+
+  private answerClarification = async (contestJid, clarificationJid, data) => {
+    this.setState({ isAnswerBoxLoading: true });
+    await this.props.onAnswerClarification(contestJid, clarificationJid, data);
+    this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
   };
 }
 
@@ -149,6 +169,7 @@ export function createContestClarificationsPage(contestClarificationActions) {
   const mapDispatchToProps = {
     onGetClarifications: contestClarificationActions.getClarifications,
     onCreateClarification: contestClarificationActions.createClarification,
+    onAnswerClarification: contestClarificationActions.answerClarification,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage));

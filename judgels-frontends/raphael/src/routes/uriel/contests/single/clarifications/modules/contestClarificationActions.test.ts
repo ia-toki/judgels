@@ -16,8 +16,8 @@ describe('contestClarificationActions', () => {
 
     contestClarificationAPI = {
       createClarification: jest.fn(),
-      getClarificationConfig: jest.fn(),
       getClarifications: jest.fn(),
+      answerClarification: jest.fn(),
     };
     toastActions = {
       showSuccessToast: jest.fn(),
@@ -54,6 +54,25 @@ describe('contestClarificationActions', () => {
 
     it('calls API to get clarifications', () => {
       expect(contestClarificationAPI.getClarifications).toHaveBeenCalledWith(token, contestJid, 'id', 3);
+    });
+  });
+
+  describe('createClarification()', () => {
+    const { answerClarification } = contestClarificationActions;
+    const doAnswerClarification = async () =>
+      answerClarification(contestJid, 'clarificationJid123', 'Yes.')(dispatch, getState, { contestClarificationAPI });
+
+    beforeEach(async () => {
+      await doAnswerClarification();
+    });
+
+    it('calls API to answer clarification', () => {
+      expect(contestClarificationAPI.answerClarification).toHaveBeenCalledWith(
+        token,
+        contestJid,
+        'clarificationJid123',
+        { answer: 'Yes.' }
+      );
     });
   });
 });

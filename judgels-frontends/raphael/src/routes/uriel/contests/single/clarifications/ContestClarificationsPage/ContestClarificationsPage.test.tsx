@@ -26,7 +26,7 @@ describe('ContestClarificationsPage', () => {
       isAllowedToCreateClarification: true,
       problemJids: ['problemJid1', 'problemJid2'],
     },
-    profilesMap: {},
+    profilesMap: { [userJid]: { username: 'username' } },
     problemAliasesMap: { problemJid1: 'A', problemJid2: 'B' },
     problemNamesMap: { problemJid1: 'Problem 1', problemJid2: 'Problem 2' },
   };
@@ -62,6 +62,7 @@ describe('ContestClarificationsPage', () => {
     contestClarificationActions = {
       getClarifications: jest.fn().mockReturnValue(() => Promise.resolve(response)),
       createClarification: jest.fn().mockReturnValue(() => Promise.resolve({})),
+      answerClarification: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
   });
 
@@ -84,10 +85,12 @@ describe('ContestClarificationsPage', () => {
       const clarifications: ContestClarification[] = [
         {
           jid: 'jid1',
+          userJid,
           time: 12345,
         } as ContestClarification,
         {
           jid: 'jid2',
+          userJid,
           time: 12345,
         } as ContestClarification,
       ];

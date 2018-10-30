@@ -14,6 +14,7 @@ export const FormTextArea = (props: FormInputProps) => (
       {...props.input}
       className={classNames('bp3-input', 'form-table-textarea', getIntentClassName(props.meta))}
       rows={5}
+      autoFocus={props.autoFocus}
     />
     <FormInputValidation meta={props.meta} />
   </FormGroup>

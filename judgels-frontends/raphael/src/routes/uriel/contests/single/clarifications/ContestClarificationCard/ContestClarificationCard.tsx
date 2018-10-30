@@ -4,23 +4,30 @@ import { FormattedRelative } from 'react-intl';
 
 import { UserRef } from 'components/UserRef/UserRef';
 import { Profile } from 'modules/api/jophiel/profile';
+import { Contest } from 'modules/api/uriel/contest';
 import { ContestClarification } from 'modules/api/uriel/contestClarification';
+
+import { ContestClarificationAnswerBox } from '../ContestClarificationAnswerBox/ContestClarificationAnswerBox';
 
 import './ContestClarificationCard.css';
 
 export interface ContestClarificationCardProps {
+  contest: Contest;
   clarification: ContestClarification;
+  isSupervisor: boolean;
   askerProfile?: Profile;
   answererProfile?: Profile;
   problemAlias?: string;
   problemName?: string;
+  isAnswerBoxOpen: boolean;
+  isAnswerBoxLoading: boolean;
+  onToggleAnswerBox: (clarification?: ContestClarification) => void;
+  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string) => void;
 }
 
 export class ContestClarificationCard extends React.PureComponent<ContestClarificationCardProps> {
   render() {
-    const { clarification, askerProfile, problemAlias, problemName } = this.props;
-
-    const isSupervisor = !!askerProfile;
+    const { clarification, isSupervisor, askerProfile, problemAlias, problemName } = this.props;
 
     const topic = problemAlias ? problemAlias + '. ' + problemName : 'General';
     const asker = isSupervisor && (
@@ -65,9 +72,31 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
   }
 
   private renderAnswer = () => {
-    const { clarification, answererProfile } = this.props;
+    const {
+      contest,
+      clarification,
+      isSupervisor,
+      answererProfile,
+      isAnswerBoxOpen,
+      isAnswerBoxLoading,
+      onToggleAnswerBox,
+      onAnswerClarification,
+    } = this.props;
 
     if (!clarification.answer) {
+      if (isSupervisor) {
+        return (
+          <ContestClarificationAnswerBox
+            contest={contest}
+            clarification={clarification}
+            isBoxOpen={isAnswerBoxOpen}
+            isBoxLoading={isAnswerBoxLoading}
+            onToggleBox={onToggleAnswerBox}
+            onAnswerClarification={onAnswerClarification}
+          />
+        );
+      }
+
       return (
         <p>
           <small>Not answered yet.</small>
@@ -75,7 +104,6 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
       );
     }
 
-    const isSupervisor = !!answererProfile;
     const answerer = isSupervisor && (
       <>
         &nbsp;<small>by</small> <UserRef profile={answererProfile!} />

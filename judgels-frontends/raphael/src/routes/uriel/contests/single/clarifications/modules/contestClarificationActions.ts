@@ -17,6 +17,13 @@ export const contestClarificationActions = {
     };
   },
 
+  answerClarification: (contestJid: string, clarificationJid: string, answer: string) => {
+    return async (dispatch, getState, { contestClarificationAPI }) => {
+      const token = selectToken(getState());
+      await contestClarificationAPI.answerClarification(token, contestJid, clarificationJid, { answer });
+    };
+  },
+
   alertNewClarifications: (status: ContestClarificationStatus) => {
     return async (dispatch, getState, { toastActions }) => {
       if (status === ContestClarificationStatus.Answered) {

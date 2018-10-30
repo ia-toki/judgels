@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestClarificationConfig.class)
 public interface ContestClarificationConfig {
     boolean getIsAllowedToCreateClarification();
+    boolean getIsAllowedToAnswerClarification();
     List<String> getProblemJids();
 
     class Builder extends ImmutableContestClarificationConfig.Builder {}
