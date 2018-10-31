@@ -58,8 +58,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
       return <LoadingState />;
     }
 
-    const { data: announcements, config } = response;
-
+    const { data: announcements, config, profilesMap } = response;
     if (announcements.length === 0) {
       return (
         <p>
@@ -68,20 +67,17 @@ class ContestAnnouncementsPage extends React.PureComponent<
       );
     }
 
-    const props = {
-      contest: this.props.contest,
-      canSupervise: config.canSupervise,
-      onRefreshAnnouncements: this.refreshAnnouncements,
-      onUpdateAnnouncement: this.props.onUpdateAnnouncement,
-    };
+    const { canSupervise } = config;
 
     return announcements.map(announcement => (
       <div className="content-card__section" key={announcement.jid}>
         <ContestAnnouncementCard
+          contest={this.props.contest}
           announcement={announcement}
+          canSupervise={canSupervise}
+          profile={canSupervise ? profilesMap[announcement.userJid] : undefined}
           isEditDialogOpen={!openEditDialogAnnouncement ? false : announcement.jid === openEditDialogAnnouncement.jid}
           onToggleEditDialog={this.toggleEditDialog}
-          {...props}
         />
       </div>
     ));

@@ -4,9 +4,15 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -22,18 +28,21 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
     private final ContestStore contestStore;
     private final ContestAnnouncementRoleChecker announcementRoleChecker;
     private final ContestAnnouncementStore announcementStore;
+    private final ProfileService profileService;
 
     @Inject
     public ContestAnnouncementResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
             ContestAnnouncementRoleChecker announcementRoleChecker,
-            ContestAnnouncementStore announcementStore) {
+            ContestAnnouncementStore announcementStore,
+            ProfileService profileService) {
 
         this.actorChecker = actorChecker;
         this.announcementRoleChecker = announcementRoleChecker;
         this.contestStore = contestStore;
         this.announcementStore = announcementStore;
+        this.profileService = profileService;
     }
 
     @Override
@@ -52,9 +61,19 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
                 ? announcementStore.getAnnouncements(contestJid)
                 : announcementStore.getPublishedAnnouncements(contestJid);
 
+        Set<String> userJids = data
+                .stream()
+                .map(ContestAnnouncement::getUserJid)
+                .collect(Collectors.toSet());
+
+        Map<String, Profile> profilesMap = userJids.isEmpty()
+                ? Collections.emptyMap()
+                : profileService.getProfiles(userJids, contest.getBeginTime());
+
         return new ContestAnnouncementsResponse.Builder()
                 .data(data)
                 .config(config)
+                .profilesMap(profilesMap)
                 .build();
     }
 

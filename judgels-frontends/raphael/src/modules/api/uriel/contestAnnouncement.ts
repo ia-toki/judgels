@@ -1,5 +1,6 @@
 import { APP_CONFIG } from 'conf';
 import { get, post, put } from 'modules/api/http';
+import { ProfilesMap } from 'modules/api/jophiel/profile';
 
 export interface ContestAnnouncement {
   id: number;
@@ -29,6 +30,7 @@ export interface ContestAnnouncementData {
 export interface ContestAnnouncementsResponse {
   data: ContestAnnouncement[];
   config: ContestAnnouncementConfig;
+  profilesMap: ProfilesMap;
 }
 
 export function createContestAnnouncementAPI() {

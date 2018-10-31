@@ -21,6 +21,10 @@ describe('ContestAnnouncementsPage', () => {
   const response: ContestAnnouncementsResponse = {
     data: [],
     config: { canSupervise: true },
+    profilesMap: {
+      userJid1: { username: 'username1' },
+      userJid2: { username: 'username2' },
+    },
   };
 
   const render = () => {
