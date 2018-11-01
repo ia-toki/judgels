@@ -12,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/{contestJid}/announcements")
@@ -21,7 +22,8 @@ public interface ContestAnnouncementService {
     @Produces(APPLICATION_JSON)
     ContestAnnouncementsResponse getAnnouncements(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
-            @PathParam("contestJid") String contestJid);
+            @PathParam("contestJid") String contestJid,
+            @QueryParam("page") Optional<Integer> page);
 
     @POST
     @Path("/")

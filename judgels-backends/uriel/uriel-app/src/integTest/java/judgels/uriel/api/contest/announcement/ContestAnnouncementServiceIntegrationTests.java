@@ -1,6 +1,7 @@
 package judgels.uriel.api.contest.announcement;
 
 import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.DRAFT;
@@ -13,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.palantir.remoting.api.errors.ErrorType;
-import java.util.List;
+import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
@@ -104,13 +105,13 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                         .build());
 
         ContestAnnouncementsResponse response = announcementService
-                .getAnnouncements(of(ADMIN_HEADER), contest.getJid());
+                .getAnnouncements(of(ADMIN_HEADER), contest.getJid(), empty());
 
         ContestAnnouncementConfig config = response.getConfig();
         assertThat(config.getCanSupervise()).isTrue();
 
-        List<ContestAnnouncement> announcements = response.getData();
-        assertThat(announcements).containsOnly(announcement1, announcement2, announcement3);
+        Page<ContestAnnouncement> announcements = response.getData();
+        assertThat(announcements.getData()).containsOnly(announcement1, announcement2, announcement3);
 
         ContestAnnouncement announcement4 = announcementService.updateAnnouncement(
                 ADMIN_HEADER,
@@ -123,9 +124,9 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                         .build());
 
         announcements = announcementService
-                .getAnnouncements(of(ADMIN_HEADER), contest.getJid()).getData();
+                .getAnnouncements(of(ADMIN_HEADER), contest.getJid(), empty()).getData();
 
-        assertThat(announcements.stream().filter(
+        assertThat(announcements.getData().stream().filter(
                 e -> e.getJid().equals(announcement1.getJid())).toArray()).containsOnly(announcement4);
     }
 }

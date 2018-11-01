@@ -5,7 +5,6 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -13,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
+import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -47,7 +47,11 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestAnnouncementsResponse getAnnouncements(Optional<AuthHeader> authHeader, String contestJid) {
+    public ContestAnnouncementsResponse getAnnouncements(
+            Optional<AuthHeader> authHeader,
+            String contestJid,
+            Optional<Integer> page) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(announcementRoleChecker.canViewPublished(actorJid, contest));
@@ -57,11 +61,11 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
                 .canSupervise(canSupervise)
                 .build();
 
-        List<ContestAnnouncement> data = canSupervise
-                ? announcementStore.getAnnouncements(contestJid)
-                : announcementStore.getPublishedAnnouncements(contestJid);
+        Page<ContestAnnouncement> data = canSupervise
+                ? announcementStore.getAnnouncements(contestJid, page)
+                : announcementStore.getPublishedAnnouncements(contestJid, page);
 
-        Set<String> userJids = data
+        Set<String> userJids = data.getData()
                 .stream()
                 .map(ContestAnnouncement::getUserJid)
                 .collect(Collectors.toSet());

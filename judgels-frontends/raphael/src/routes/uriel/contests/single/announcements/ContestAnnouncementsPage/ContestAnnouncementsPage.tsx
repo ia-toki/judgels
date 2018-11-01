@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import { ContentCard } from 'components/ContentCard/ContentCard';
+import Pagination from 'components/Pagination/Pagination';
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 import {
@@ -20,13 +21,14 @@ import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/
 
 export interface ContestAnnouncementsPageProps {
   contest: Contest;
-  onGetAnnouncements: (contestJid: string) => Promise<ContestAnnouncementsResponse>;
+  onGetAnnouncements: (contestJid: string, page?: number) => Promise<ContestAnnouncementsResponse>;
   onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
   onUpdateAnnouncement: (contestJid: string, announcementJid: string, data: ContestAnnouncementData) => void;
 }
 
 interface ContestAnnouncementsPageState {
   response?: ContestAnnouncementsResponse;
+  lastRefreshAnnouncementsTime?: number;
   openEditDialogAnnouncement?: ContestAnnouncement;
 }
 
@@ -34,11 +36,9 @@ class ContestAnnouncementsPage extends React.PureComponent<
   ContestAnnouncementsPageProps,
   ContestAnnouncementsPageState
 > {
-  state: ContestAnnouncementsPageState = {};
+  private static PAGE_SIZE = 20;
 
-  async componentDidMount() {
-    await this.refreshAnnouncements();
-  }
+  state: ContestAnnouncementsPageState = {};
 
   render() {
     return (
@@ -47,6 +47,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
         <hr />
         {this.renderCreateDialog()}
         {this.renderAnnouncements()}
+        {this.renderPagination()}
         {this.renderEditDialog()}
       </ContentCard>
     );
@@ -59,7 +60,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
     }
 
     const { data: announcements, config, profilesMap } = response;
-    if (announcements.length === 0) {
+    if (announcements.data.length === 0) {
       return (
         <p>
           <small>No announcements.</small>
@@ -69,7 +70,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
 
     const { canSupervise } = config;
 
-    return announcements.map(announcement => (
+    return announcements.data.map(announcement => (
       <div className="content-card__section" key={announcement.jid}>
         <ContestAnnouncementCard
           contest={this.props.contest}
@@ -83,19 +84,40 @@ class ContestAnnouncementsPage extends React.PureComponent<
     ));
   };
 
-  private refreshAnnouncements = async () => {
-    const response = await this.props.onGetAnnouncements(this.props.contest.jid);
+  private renderPagination = () => {
+    // updates pagination when announcements are refreshed
+    const { lastRefreshAnnouncementsTime } = this.state;
+    const key = lastRefreshAnnouncementsTime || 0;
+
+    return (
+      <Pagination
+        key={key}
+        currentPage={1}
+        pageSize={ContestAnnouncementsPage.PAGE_SIZE}
+        onChangePage={this.onChangePage}
+      />
+    );
+  };
+
+  private onChangePage = async (nextPage: number) => {
+    const data = await this.refreshAnnouncements(nextPage);
+    return data.totalData;
+  };
+
+  private refreshAnnouncements = async (page?: number) => {
+    const response = await this.props.onGetAnnouncements(this.props.contest.jid, page);
     this.setState({ response });
+    return response.data;
   };
 
   private createAnnouncement = async (contestJid, data) => {
     await this.props.onCreateAnnouncement(contestJid, data);
-    await this.refreshAnnouncements();
+    this.setState({ lastRefreshAnnouncementsTime: new Date().getTime() });
   };
 
   private updateAnnouncement = async (contestJid, announcementJid, data) => {
     await this.props.onUpdateAnnouncement(contestJid, announcementJid, data);
-    await this.refreshAnnouncements();
+    this.setState({ lastRefreshAnnouncementsTime: new Date().getTime() });
   };
 
   private renderCreateDialog = () => {

@@ -1,8 +1,10 @@
 package judgels.uriel.contest.announcement;
 
 import com.google.common.collect.Lists;
-import java.util.List;
+import java.util.Optional;
 import javax.inject.Inject;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementData;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
@@ -23,16 +25,20 @@ public class ContestAnnouncementStore {
         return fromModel(announcementDao.insert(model));
     }
 
-    public List<ContestAnnouncement> getAnnouncements(String contestJid) {
-        return Lists.transform(
-                announcementDao.selectAllByContestJid(contestJid),
-                ContestAnnouncementStore::fromModel);
+    public Page<ContestAnnouncement> getAnnouncements(String contestJid, Optional<Integer> page) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        options.orderBy("updatedAt");
+        page.ifPresent(options::page);
+        return announcementDao.selectPagedByContestJid(contestJid, options.build()).mapData(
+                data -> Lists.transform(data, ContestAnnouncementStore::fromModel));
     }
 
-    public List<ContestAnnouncement> getPublishedAnnouncements(String contestJid) {
-        return Lists.transform(
-                announcementDao.selectAllPublishedByContestJid(contestJid),
-                ContestAnnouncementStore::fromModel);
+    public Page<ContestAnnouncement> getPublishedAnnouncements(String contestJid, Optional<Integer> page) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        options.orderBy("updatedAt");
+        page.ifPresent(options::page);
+        return announcementDao.selectPagedPublishedByContestJid(contestJid, options.build()).mapData(
+                data -> Lists.transform(data, ContestAnnouncementStore::fromModel));
     }
 
     public ContestAnnouncement updateAnnouncement(

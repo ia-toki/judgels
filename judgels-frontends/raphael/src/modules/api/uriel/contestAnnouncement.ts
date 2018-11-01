@@ -1,6 +1,8 @@
 import { APP_CONFIG } from 'conf';
 import { get, post, put } from 'modules/api/http';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
+import { Page } from 'modules/api/pagination';
+import { stringify } from 'query-string';
 
 export interface ContestAnnouncement {
   id: number;
@@ -28,7 +30,7 @@ export interface ContestAnnouncementData {
 }
 
 export interface ContestAnnouncementsResponse {
-  data: ContestAnnouncement[];
+  data: Page<ContestAnnouncement>;
   config: ContestAnnouncementConfig;
   profilesMap: ProfilesMap;
 }
@@ -37,8 +39,9 @@ export function createContestAnnouncementAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    getAnnouncements: (token: string, contestJid: string): Promise<ContestAnnouncementsResponse> => {
-      return get(`${baseURL}/${contestJid}/announcements`, token);
+    getAnnouncements: (token: string, contestJid: string, page: number): Promise<ContestAnnouncementsResponse> => {
+      const params = stringify({ page });
+      return get(`${baseURL}/${contestJid}/announcements?${params}`, token);
     },
 
     createAnnouncement: (

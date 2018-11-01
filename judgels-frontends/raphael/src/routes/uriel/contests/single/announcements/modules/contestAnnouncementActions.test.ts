@@ -1,8 +1,6 @@
 import { contestJid, sessionState, token, announcementJid } from 'fixtures/state';
 import {
-  ContestAnnouncement,
   ContestAnnouncementData,
-  ContestAnnouncementConfig,
   ContestAnnouncementStatus,
   ContestAnnouncementsResponse,
 } from 'modules/api/uriel/contestAnnouncement';
@@ -33,20 +31,18 @@ describe('contestAnnouncementActions', () => {
 
   describe('getAnnouncements()', () => {
     const { getAnnouncements } = contestAnnouncementActions;
-    const doGetAnnouncements = async () => getAnnouncements(contestJid)(dispatch, getState, { contestAnnouncementAPI });
+    const doGetAnnouncements = async () =>
+      getAnnouncements(contestJid, 3)(dispatch, getState, { contestAnnouncementAPI });
 
     beforeEach(async () => {
-      const data = [] as ContestAnnouncement[];
-      const config = { canSupervise: true } as ContestAnnouncementConfig;
-      const response = { data, config } as ContestAnnouncementsResponse;
-
+      const response = {} as ContestAnnouncementsResponse;
       contestAnnouncementAPI.getAnnouncements.mockReturnValue(response);
 
       await doGetAnnouncements();
     });
 
-    it('calls API to get published announcements', () => {
-      expect(contestAnnouncementAPI.getAnnouncements).toHaveBeenCalledWith(token, contestJid);
+    it('calls API to get announcements', () => {
+      expect(contestAnnouncementAPI.getAnnouncements).toHaveBeenCalledWith(token, contestJid, 3);
     });
   });
 

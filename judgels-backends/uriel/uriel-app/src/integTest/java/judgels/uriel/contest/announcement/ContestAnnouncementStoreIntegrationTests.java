@@ -2,7 +2,8 @@ package judgels.uriel.contest.announcement;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
+import java.util.Optional;
+import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
@@ -55,10 +56,11 @@ class ContestAnnouncementStoreIntegrationTests extends AbstractIntegrationTests 
                         .status(ContestAnnouncementStatus.PUBLISHED)
                         .build());
 
-        List<ContestAnnouncement> announcements = store.getPublishedAnnouncements(contest.getJid());
-        assertThat(announcements).containsOnly(announcement3, announcement1);
+        Page<ContestAnnouncement> announcements = store.getPublishedAnnouncements(contest.getJid(), Optional.empty());
+        assertThat(announcements.getData()).containsOnly(announcement3, announcement1);
 
-        List<ContestAnnouncement> announcementsWithDraft = store.getAnnouncements(contest.getJid());
-        assertThat(announcementsWithDraft).containsExactlyInAnyOrder(announcement3, announcement2, announcement1);
+        Page<ContestAnnouncement> announcementsWithDraft = store.getAnnouncements(contest.getJid(), Optional.empty());
+        assertThat(announcementsWithDraft.getData())
+                .containsExactlyInAnyOrder(announcement3, announcement2, announcement1);
     }
 }
