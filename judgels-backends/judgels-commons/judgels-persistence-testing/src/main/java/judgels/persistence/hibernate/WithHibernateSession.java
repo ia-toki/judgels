@@ -12,6 +12,5 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Inherited
 @ExtendWith(HibernateSessionExtension.class)
 public @interface WithHibernateSession {
-    String urlSuffix() default "";
     Class<?>[] models();
 }

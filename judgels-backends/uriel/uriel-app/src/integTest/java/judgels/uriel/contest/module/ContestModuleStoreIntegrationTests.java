@@ -15,7 +15,6 @@ import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModuleModel;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,12 +24,8 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
     private ContestStore contestStore;
     private ContestModuleStore store;
 
-    private Session currentSession;
-
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
-        currentSession = sessionFactory.getCurrentSession();
-
         UrielIntegrationTestComponent component = createComponent(sessionFactory);
 
         contestStore = component.contestStore();
@@ -59,8 +54,6 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
         store.disablePausedModule(contest.getJid());
         store.upsertPausedModule(contest.getJid());
         store.disablePausedModule(contest.getJid());
-
-        currentSession.flush();
 
         ClarificationTimeLimitModuleConfig config3 = new ClarificationTimeLimitModuleConfig.Builder()
                 .clarificationDuration(Duration.ofHours(1))

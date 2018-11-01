@@ -4,9 +4,7 @@ import static java.util.Optional.empty;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM_TYPE;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE;
-import static judgels.uriel.api.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_BEARER_TOKEN;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
@@ -21,9 +19,7 @@ import com.google.common.collect.ImmutableSet;
 import java.time.Instant;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.sandalphon.api.submission.Submission;
-import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
@@ -33,27 +29,13 @@ import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
-import judgels.uriel.persistence.AdminRoleModel;
-import judgels.uriel.persistence.ContestContestantModel;
-import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestSubmissionModel;
-import judgels.uriel.role.AdminRoleStore;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.MultiPart;
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(
-        urlSuffix = URIEL_JDBC_SUFFIX,
-        models = {
-                AdminRoleModel.class,
-                ContestModel.class,
-                ContestContestantModel.class,
-                ContestSubmissionModel.class})
 class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static WireMockServer mockJophiel;
     private static WireMockServer mockSandalphon;
@@ -72,14 +54,6 @@ class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegratio
         mockSandalphon.start();
         mockSealtiel = mockSealtiel();
         mockSealtiel.start();
-    }
-
-    @BeforeEach
-    void setUpSession(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = createComponent(sessionFactory);
-
-        AdminRoleStore adminRoleStore = component.adminRoleStore();
-        adminRoleStore.addAdmin(ADMIN_JID);
     }
 
     @AfterAll

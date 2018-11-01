@@ -6,6 +6,7 @@ import judgels.fs.aws.AwsModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.uriel.admin.AdminResource;
 import judgels.uriel.contest.ContestResource;
 import judgels.uriel.contest.announcement.ContestAnnouncementResource;
 import judgels.uriel.contest.clarification.ContestClarificationResource;
@@ -39,6 +40,7 @@ import judgels.uriel.submission.SubmissionModule;
         UrielHibernateDaoModule.class})
 @Singleton
 public interface UrielComponent {
+    AdminResource adminResource();
     ContestAnnouncementResource contestAnnouncementResource();
     ContestClarificationResource contestClarificationResource();
     ContestContestantResource contestContestantResource();

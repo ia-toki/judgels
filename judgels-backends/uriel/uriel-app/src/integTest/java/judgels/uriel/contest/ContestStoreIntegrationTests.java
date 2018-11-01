@@ -75,7 +75,7 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
                 .isInstanceOf(ServiceException.class)
                 .hasMessageContaining(CONTEST_SLUG_ALREADY_EXISTS.name());
 
-        adminRoleStore.addAdmin(ADMIN);
+        adminRoleStore.upsertAdmin(ADMIN);
         moduleStore.upsertRegistrationModule(contestD.getJid());
         contestantStore.upsertContestant(contestA.getJid(), USER_1);
         contestantStore.upsertContestant(contestA.getJid(), USER_2);

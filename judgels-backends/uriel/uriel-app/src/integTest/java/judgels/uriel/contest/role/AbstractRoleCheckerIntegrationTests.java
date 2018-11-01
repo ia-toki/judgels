@@ -74,7 +74,7 @@ public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegr
         supervisorStore = component.contestSupervisorStore();
         managerStore = component.contestManagerStore();
 
-        adminRoleStore.addAdmin(ADMIN);
+        adminRoleStore.upsertAdmin(ADMIN);
 
         prepareContestA();
         prepareContestB();

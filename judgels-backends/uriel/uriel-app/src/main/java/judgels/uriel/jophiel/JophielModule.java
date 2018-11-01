@@ -6,6 +6,7 @@ import dagger.Provides;
 import javax.inject.Singleton;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.MyService;
+import judgels.jophiel.api.user.UserService;
 import judgels.service.jaxrs.JaxRsClients;
 
 @Module
@@ -19,6 +20,12 @@ public class JophielModule {
     @Provides
     JophielConfiguration jophielConfig() {
         return config;
+    }
+
+    @Provides
+    @Singleton
+    UserService userService(UserAgent agent) {
+        return JaxRsClients.create(UserService.class, config.getBaseUrl(), agent);
     }
 
     @Provides

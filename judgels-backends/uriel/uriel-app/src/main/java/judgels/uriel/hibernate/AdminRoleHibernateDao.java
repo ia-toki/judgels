@@ -33,6 +33,11 @@ public class AdminRoleHibernateDao extends UnmodifiableHibernateDao<AdminRoleMod
         return adminCache.get(userJid);
     }
 
+    @Override
+    public void invalidateCache(String userJid) {
+        adminCache.invalidate(userJid);
+    }
+
     private boolean isAdminUncached(String userJid) {
         return selectByUniqueColumn(AdminRoleModel_.userJid, userJid).isPresent();
     }

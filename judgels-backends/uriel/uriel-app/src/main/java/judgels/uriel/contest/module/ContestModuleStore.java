@@ -152,7 +152,7 @@ public class ContestModuleStore {
     }
 
     private void upsertModule(String contestJid, ContestModuleType type, Object config) {
-        Optional<ContestModuleModel> maybeModel = moduleDao.selectEnabledByContestJidAndType(contestJid, type);
+        Optional<ContestModuleModel> maybeModel = moduleDao.selectByContestJidAndType(contestJid, type);
         if (maybeModel.isPresent()) {
             ContestModuleModel model = maybeModel.get();
             toModel(contestJid, type, config, model);

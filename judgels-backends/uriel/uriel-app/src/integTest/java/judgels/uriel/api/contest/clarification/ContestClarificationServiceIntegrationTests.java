@@ -1,7 +1,6 @@
 package judgels.uriel.api.contest.clarification;
 
 import static java.util.Optional.empty;
-import static judgels.uriel.api.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
@@ -14,8 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.time.Instant;
 import java.util.List;
-import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
@@ -24,25 +21,10 @@ import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.module.ContestModuleService;
 import judgels.uriel.api.contest.module.ContestModuleType;
-import judgels.uriel.persistence.AdminRoleModel;
-import judgels.uriel.persistence.ContestClarificationModel;
-import judgels.uriel.persistence.ContestContestantModel;
-import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestModuleModel;
-import judgels.uriel.role.AdminRoleStore;
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(
-        urlSuffix = URIEL_JDBC_SUFFIX,
-        models = {
-                AdminRoleModel.class,
-                ContestModel.class,
-                ContestModuleModel.class,
-                ContestContestantModel.class,
-                ContestClarificationModel.class})
 class ContestClarificationServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static WireMockServer mockJophiel;
     private ContestService contestService = createService(ContestService.class);
@@ -54,14 +36,6 @@ class ContestClarificationServiceIntegrationTests extends AbstractServiceIntegra
     static void setUpMocks() {
         mockJophiel = mockJophiel();
         mockJophiel.start();
-    }
-
-    @BeforeAll
-    static void setUpSession(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = createComponent(sessionFactory);
-
-        AdminRoleStore adminRoleStore = component.adminRoleStore();
-        adminRoleStore.addAdmin(ADMIN_JID);
     }
 
     @AfterAll

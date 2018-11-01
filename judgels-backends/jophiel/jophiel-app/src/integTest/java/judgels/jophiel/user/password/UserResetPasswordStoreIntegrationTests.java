@@ -8,7 +8,6 @@ import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.persistence.TestClock;
 import judgels.persistence.hibernate.WithHibernateSession;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,13 +16,11 @@ import org.junit.jupiter.api.Test;
 class UserResetPasswordStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String USER_JID = "userJid";
 
-    private Session currentSession;
     private TestClock clock;
     private UserResetPasswordStore store;
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
-        currentSession = sessionFactory.getCurrentSession();
         clock = new TestClock();
 
         JophielIntegrationTestComponent component = createComponent(sessionFactory, clock);
@@ -40,7 +37,6 @@ class UserResetPasswordStoreIntegrationTests extends AbstractIntegrationTests {
         String code = store.generateEmailCode(USER_JID, Duration.ofHours(1));
         assertThat(store.consumeEmailCode(code, Duration.ofHours(1))).contains(USER_JID);
 
-        currentSession.flush();
         clock.tick(Duration.ofSeconds(1));
 
         assertThat(store.consumeEmailCode(code, Duration.ofHours(1))).isEmpty();

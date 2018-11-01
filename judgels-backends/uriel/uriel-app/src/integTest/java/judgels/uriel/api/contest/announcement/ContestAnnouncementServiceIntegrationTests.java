@@ -3,7 +3,6 @@ package judgels.uriel.api.contest.announcement;
 import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static judgels.uriel.api.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.DRAFT;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.PUBLISHED;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
@@ -15,24 +14,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.palantir.remoting.api.errors.ErrorType;
 import judgels.persistence.api.Page;
-import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestService;
-import judgels.uriel.persistence.AdminRoleModel;
-import judgels.uriel.persistence.ContestAnnouncementModel;
-import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.role.AdminRoleStore;
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(
-        urlSuffix = URIEL_JDBC_SUFFIX,
-        models = {AdminRoleModel.class, ContestModel.class, ContestAnnouncementModel.class})
 class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static WireMockServer mockJophiel;
     private ContestService contestService = createService(ContestService.class);
@@ -42,14 +31,6 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
     static void setUpMocks() {
         mockJophiel = mockJophiel();
         mockJophiel.start();
-    }
-
-    @BeforeAll
-    static void setUpSession(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = createComponent(sessionFactory);
-
-        AdminRoleStore adminRoleStore = component.adminRoleStore();
-        adminRoleStore.addAdmin(ADMIN_JID);
     }
 
     @AfterAll

@@ -112,7 +112,7 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
         assertThat(checker.canViewOwn(SUPERVISOR, contestC)).isFalse();
         assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestA)).isFalse();
         assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestBStarted)).isTrue();
         assertThat(checker.canViewOwn(SUPERVISOR_CONTESTANT, contestC)).isFalse();
         addSupervisorToContestBWithPermission(CLARIFICATION);
         assertThat(checker.canViewOwn(SUPERVISOR, contestA)).isFalse();

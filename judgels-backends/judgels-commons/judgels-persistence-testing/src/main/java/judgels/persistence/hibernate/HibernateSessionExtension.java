@@ -1,7 +1,5 @@
 package judgels.persistence.hibernate;
 
-import static org.hibernate.cfg.AvailableSettings.ALLOW_UPDATE_OUTSIDE_TRANSACTION;
-import static org.hibernate.cfg.AvailableSettings.AUTOCOMMIT;
 import static org.hibernate.cfg.AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
 import static org.hibernate.cfg.AvailableSettings.DRIVER;
@@ -13,6 +11,7 @@ import java.util.UUID;
 import org.h2.Driver;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.context.internal.ManagedSessionContext;
 import org.hibernate.dialect.H2Dialect;
@@ -44,19 +43,12 @@ public class HibernateSessionExtension implements ParameterResolver, AfterEachCa
             config.addAnnotatedClass(modelClass);
         }
 
-        String urlSuffix = annotation.urlSuffix();
-        if ("".equals(urlSuffix)) {
-            urlSuffix = UUID.randomUUID().toString();
-        }
-
         config.setProperty(DIALECT, H2Dialect.class.getName());
         config.setProperty(DRIVER, Driver.class.getName());
-        config.setProperty(URL, "jdbc:h2:mem:./" + urlSuffix);
+        config.setProperty(URL, "jdbc:h2:mem:./" + UUID.randomUUID().toString());
         config.setProperty(HBM2DDL_AUTO, "create");
         config.setProperty(CURRENT_SESSION_CONTEXT_CLASS, "managed");
         config.setProperty(GENERATE_STATISTICS, "false");
-        config.setProperty(AUTOCOMMIT, "true");
-        config.setProperty(ALLOW_UPDATE_OUTSIDE_TRANSACTION, "true");
 
         SessionFactory sessionFactory = config.buildSessionFactory();
         openSession(sessionFactory, extensionContext);
@@ -64,7 +56,7 @@ public class HibernateSessionExtension implements ParameterResolver, AfterEachCa
     }
 
     @Override
-    public void afterEach(ExtensionContext context) throws Exception {
+    public void afterEach(ExtensionContext context) {
         SessionContext sessionContext = getStore(context).get(context.getUniqueId(), SessionContext.class);
         if (sessionContext != null) {
             sessionContext.getSession().close();
@@ -74,7 +66,7 @@ public class HibernateSessionExtension implements ParameterResolver, AfterEachCa
     }
 
     @Override
-    public void afterAll(ExtensionContext context) throws Exception {
+    public void afterAll(ExtensionContext context) {
         afterEach(context);
     }
 
@@ -84,9 +76,10 @@ public class HibernateSessionExtension implements ParameterResolver, AfterEachCa
 
     private void openSession(SessionFactory sessionFactory, ExtensionContext context) {
         Session session = sessionFactory.openSession();
+        Transaction txn = session.beginTransaction();
         ManagedSessionContext.bind(session);
 
-        SessionContext sessionContext = new SessionContext(sessionFactory, session);
+        SessionContext sessionContext = new SessionContext(sessionFactory, session, txn);
         getStore(context).put(context.getUniqueId(), sessionContext);
     }
 
@@ -105,10 +98,12 @@ public class HibernateSessionExtension implements ParameterResolver, AfterEachCa
     private static class SessionContext {
         private final SessionFactory sessionFactory;
         private final Session session;
+        private final Transaction txn;
 
-        SessionContext(SessionFactory sessionFactory, Session session) {
+        SessionContext(SessionFactory sessionFactory, Session session, Transaction txn) {
             this.sessionFactory = sessionFactory;
             this.session = session;
+            this.txn = txn;
         }
 
         SessionFactory getSessionFactory() {
@@ -117,6 +112,10 @@ public class HibernateSessionExtension implements ParameterResolver, AfterEachCa
 
         Session getSession() {
             return session;
+        }
+
+        Transaction getTransaction() {
+            return txn;
         }
     }
 }

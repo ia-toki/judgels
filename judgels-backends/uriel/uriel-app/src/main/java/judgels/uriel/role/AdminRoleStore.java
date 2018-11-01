@@ -12,9 +12,12 @@ public class AdminRoleStore {
         this.adminRoleDao = adminRoleDao;
     }
 
-    public void addAdmin(String userJid) {
-        AdminRoleModel model = new AdminRoleModel();
-        model.userJid = userJid;
-        adminRoleDao.insert(model);
+    public void upsertAdmin(String userJid) {
+        if (!adminRoleDao.isAdmin(userJid)) {
+            AdminRoleModel model = new AdminRoleModel();
+            model.userJid = userJid;
+            adminRoleDao.insert(model);
+            adminRoleDao.invalidateCache(userJid);
+        }
     }
 }

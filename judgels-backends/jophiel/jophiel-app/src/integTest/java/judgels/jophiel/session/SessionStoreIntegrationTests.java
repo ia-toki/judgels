@@ -16,13 +16,11 @@ import org.junit.jupiter.api.Test;
 @WithHibernateSession(models = {SessionModel.class})
 class SessionStoreIntegrationTests extends AbstractIntegrationTests {
     private SessionStore store;
-    private org.hibernate.Session currentSession;
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
         JophielIntegrationTestComponent component = createComponent(sessionFactory);
         store = component.sessionStore();
-        currentSession = sessionFactory.getCurrentSession();
     }
 
     @Test
@@ -38,7 +36,6 @@ class SessionStoreIntegrationTests extends AbstractIntegrationTests {
         assertThat(session.getUserJid()).isEqualTo("userJid");
 
         store.deleteSessionsByUserJid("userJid");
-        currentSession.flush();
 
         assertThat(store.getSessionByToken("token123")).isEmpty();
         assertThat(store.getSessionByToken("token223")).isEmpty();

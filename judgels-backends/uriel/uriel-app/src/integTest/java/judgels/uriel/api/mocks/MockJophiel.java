@@ -12,14 +12,18 @@ import javax.ws.rs.core.HttpHeaders;
 import judgels.service.api.actor.AuthHeader;
 
 public class MockJophiel {
+    public static final String SUPERADMIN_BEARER_TOKEN = "superadminToken";
     public static final String ADMIN_BEARER_TOKEN = "adminToken";
     public static final String USER_A_BEARER_TOKEN = "userAToken";
     public static final String USER_B_BEARER_TOKEN = "userBToken";
 
+    public static final AuthHeader SUPERADMIN_HEADER = AuthHeader.of(SUPERADMIN_BEARER_TOKEN);
     public static final AuthHeader ADMIN_HEADER = AuthHeader.of(ADMIN_BEARER_TOKEN);
     public static final AuthHeader USER_A_HEADER = AuthHeader.of(USER_A_BEARER_TOKEN);
     public static final AuthHeader USER_B_HEADER = AuthHeader.of(USER_B_BEARER_TOKEN);
 
+    public static final String SUPERADMIN = "admin";
+    public static final String ADMIN = "admin";
     public static final String ADMIN_JID = "adminJid";
     public static final String USER_A_JID = "userAJid";
     public static final String USER_B_JID = "userBJid";
@@ -39,8 +43,8 @@ public class MockJophiel {
         mockJophiel.stubFor(get("/api/v2/users/me/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(ADMIN_BEARER_TOKEN))
                 .willReturn(okForJson(ImmutableMap.of(
-                        "jid", "adminJid",
-                        "username", "admin"))));
+                        "jid", ADMIN_JID,
+                        "username", ADMIN))));
 
         mockJophiel.stubFor(get("/api/v2/users/me/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_A_BEARER_TOKEN))
@@ -54,6 +58,13 @@ public class MockJophiel {
                         "jid", USER_B_JID,
                         "username", "userB",
                         "email", "userb@mailinator.com"))));
+
+        mockJophiel.stubFor(get("/api/v2/users/me/role")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing(SUPERADMIN_BEARER_TOKEN))
+                .willReturn(okForJson("superadmin")));
+
+        mockJophiel.stubFor(post("/api/v2/users/username-to-jid")
+                .willReturn(okForJson(ImmutableMap.of(ADMIN, ADMIN_JID))));
 
         mockJophiel.stubFor(post(urlPathEqualTo("/api/v2/profiles/"))
                 .willReturn(okForJson(ImmutableMap.of(

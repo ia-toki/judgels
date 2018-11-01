@@ -3,9 +3,7 @@ package judgels.uriel.api.contest;
 import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static judgels.uriel.api.AbstractServiceIntegrationTests.URIEL_JDBC_SUFFIX;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
@@ -19,22 +17,13 @@ import com.palantir.remoting.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
 import judgels.persistence.api.Page;
-import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
-import judgels.uriel.persistence.AdminRoleModel;
-import judgels.uriel.persistence.ContestContestantModel;
-import judgels.uriel.role.AdminRoleStore;
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(
-        urlSuffix = URIEL_JDBC_SUFFIX,
-        models = {AdminRoleModel.class, ContestContestantModel.class})
 class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private static WireMockServer mockJophiel;
     private ContestService contestService = createService(ContestService.class);
@@ -44,14 +33,6 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
     static void setUpMocks() {
         mockJophiel = mockJophiel();
         mockJophiel.start();
-    }
-
-    @BeforeAll
-    static void setUpSession(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = createComponent(sessionFactory);
-
-        AdminRoleStore adminRoleStore = component.adminRoleStore();
-        adminRoleStore.addAdmin(ADMIN_JID);
     }
 
     @AfterAll

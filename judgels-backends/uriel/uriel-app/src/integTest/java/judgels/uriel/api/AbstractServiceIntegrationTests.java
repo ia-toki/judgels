@@ -1,5 +1,7 @@
 package judgels.uriel.api;
 
+import static judgels.uriel.api.mocks.MockJophiel.ADMIN;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERADMIN_HEADER;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
 import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
@@ -20,6 +22,7 @@ import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielApplication;
 import judgels.uriel.UrielApplicationConfiguration;
 import judgels.uriel.UrielConfiguration;
+import judgels.uriel.api.admin.AdminService;
 import judgels.uriel.file.FileConfiguration;
 import judgels.uriel.gabriel.GabrielConfiguration;
 import judgels.uriel.jophiel.JophielConfiguration;
@@ -32,6 +35,7 @@ import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractServiceIntegrationTests extends AbstractIntegrationTests {
     public static final String URIEL_JDBC_SUFFIX = "uriel";
@@ -66,6 +70,13 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
 
         support = new DropwizardTestSupport<>(UrielApplication.class, config);
         support.before();
+    }
+
+
+    @BeforeEach
+    void setUpAdmin() {
+        AdminService adminService = createService(AdminService.class);
+        adminService.upsertAdmin(SUPERADMIN_HEADER, ADMIN);
     }
 
     @AfterAll
