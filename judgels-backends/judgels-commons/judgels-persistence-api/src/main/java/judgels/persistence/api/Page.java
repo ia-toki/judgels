@@ -8,13 +8,13 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutablePage.class)
 public interface Page<M> {
-    long getTotalData();
-    List<M> getData();
+    long getTotalCount();
+    List<M> getPage();
 
-    default <R> Page<R> mapData(Function<List<M>, List<R>> func) {
+    default <R> Page<R> mapPage(Function<List<M>, List<R>> func) {
         return new Builder<R>()
-                .totalData(getTotalData())
-                .data(func.apply(getData()))
+                .totalCount(getTotalCount())
+                .page(func.apply(getPage()))
                 .build();
     }
 

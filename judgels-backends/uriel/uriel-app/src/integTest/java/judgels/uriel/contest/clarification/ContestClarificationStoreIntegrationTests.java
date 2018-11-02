@@ -57,7 +57,7 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
                         .question("No balloons?")
                         .build());
 
-        assertThat(store.getClarifications(contestA.getJid(), Optional.empty()).getData())
+        assertThat(store.getClarifications(contestA.getJid(), Optional.empty()).getPage())
                 .containsExactly(clarification2, clarification1);
 
         assertThat(clarification3.getAnswer()).isEmpty();
@@ -65,7 +65,7 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
 
         store.updateClarificationAnswer(contestB.getJid(), clarification3.getJid(), "Yes!");
         ContestClarification answeredClarification3 =
-                store.getClarifications(contestB.getJid(), Optional.empty()).getData().get(0);
+                store.getClarifications(contestB.getJid(), Optional.empty()).getPage().get(0);
 
         assertThat(answeredClarification3.getAnswer()).contains("Yes!");
         assertThat(answeredClarification3.getStatus()).isEqualTo(ContestClarificationStatus.ANSWERED);

@@ -76,7 +76,7 @@ public class UserStore {
 
     public Page<User> getUsers(SelectionOptions options) {
         Page<UserModel> models = userDao.selectPaged(options);
-        return models.mapData(data -> Lists.transform(data, UserStore::fromModel));
+        return models.mapPage(p -> Lists.transform(p, UserStore::fromModel));
     }
 
     public Optional<User> updateUser(String userJid, UserData userData) {

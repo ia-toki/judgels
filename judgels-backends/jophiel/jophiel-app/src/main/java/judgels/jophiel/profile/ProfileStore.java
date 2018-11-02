@@ -51,11 +51,11 @@ public class ProfileStore {
         pageSize.ifPresent(options::pageSize);
 
         Page<UserWithRating> ratings = ratingStore.getTopRatings(time, options.build());
-        Set<String> userJids = ratings.getData().stream().map(UserWithRating::getUserJid).collect(Collectors.toSet());
+        Set<String> userJids = ratings.getPage().stream().map(UserWithRating::getUserJid).collect(Collectors.toSet());
         Map<String, User> users = userStore.getUsersByJids(userJids);
         Map<String, UserInfo> infos = infoStore.getInfos(userJids);
 
-        return ratings.mapData(data -> data
+        return ratings.mapPage(p -> p
                 .stream()
                 .filter(e -> users.containsKey(e.getUserJid()))
                 .map(e -> new Profile.Builder()

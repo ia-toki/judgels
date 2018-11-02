@@ -60,7 +60,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
     }
 
     const { data: announcements, config, profilesMap } = response;
-    if (announcements.data.length === 0) {
+    if (announcements.page.length === 0) {
       return (
         <p>
           <small>No announcements.</small>
@@ -70,7 +70,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
 
     const { canSupervise } = config;
 
-    return announcements.data.map(announcement => (
+    return announcements.page.map(announcement => (
       <div className="content-card__section" key={announcement.jid}>
         <ContestAnnouncementCard
           contest={this.props.contest}
@@ -101,7 +101,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
 
   private onChangePage = async (nextPage: number) => {
     const data = await this.refreshAnnouncements(nextPage);
-    return data.totalData;
+    return data.totalCount;
   };
 
   private refreshAnnouncements = async (page?: number) => {

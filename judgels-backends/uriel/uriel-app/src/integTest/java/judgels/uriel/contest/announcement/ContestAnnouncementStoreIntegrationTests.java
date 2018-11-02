@@ -57,10 +57,10 @@ class ContestAnnouncementStoreIntegrationTests extends AbstractIntegrationTests 
                         .build());
 
         Page<ContestAnnouncement> announcements = store.getPublishedAnnouncements(contest.getJid(), Optional.empty());
-        assertThat(announcements.getData()).containsExactly(announcement3, announcement1);
+        assertThat(announcements.getPage()).containsExactly(announcement3, announcement1);
 
         announcements = store.getAnnouncements(contest.getJid(), Optional.empty());
-        assertThat(announcements.getData()).containsExactly(announcement3, announcement2, announcement1);
+        assertThat(announcements.getPage()).containsExactly(announcement3, announcement2, announcement1);
 
         announcement3 = store.updateAnnouncement(
                 contest.getJid(),
@@ -72,6 +72,6 @@ class ContestAnnouncementStoreIntegrationTests extends AbstractIntegrationTests 
                         .build());
 
         announcements = store.getPublishedAnnouncements(contest.getJid(), Optional.empty());
-        assertThat(announcements.getData()).containsExactly(announcement3, announcement1);
+        assertThat(announcements.getPage()).containsExactly(announcement3, announcement1);
     }
 }

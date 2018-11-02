@@ -68,7 +68,7 @@ class ContestClarificationsPage extends React.Component<
     }
 
     const { data: clarifications, config, profilesMap, problemAliasesMap, problemNamesMap } = response;
-    if (clarifications.data.length === 0) {
+    if (clarifications.page.length === 0) {
       return (
         <p>
           <small>No clarifications.</small>
@@ -78,7 +78,7 @@ class ContestClarificationsPage extends React.Component<
 
     const { canSupervise } = config;
 
-    return clarifications.data.map(clarification => (
+    return clarifications.page.map(clarification => (
       <div className="content-card__section" key={clarification.jid}>
         <ContestClarificationCard
           contest={this.props.contest}
@@ -120,7 +120,7 @@ class ContestClarificationsPage extends React.Component<
 
   private onChangePage = async (nextPage: number) => {
     const data = await this.refreshClarifications(nextPage);
-    return data.totalData;
+    return data.totalCount;
   };
 
   private renderCreateDialog = () => {

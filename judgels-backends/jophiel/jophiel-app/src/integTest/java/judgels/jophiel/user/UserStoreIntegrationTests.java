@@ -75,7 +75,7 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
         User budi = store.getUserByUsername("budi").get();
 
         Page<User> users = store.getUsers(SelectionOptions.DEFAULT_PAGED);
-        assertThat(users.getData()).containsExactly(budi, nano, user);
+        assertThat(users.getPage()).containsExactly(budi, nano, user);
     }
 
     @Test

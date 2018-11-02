@@ -63,7 +63,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
         ContestSubmissionsResponse response =
                 submissionService.getSubmissions(ADMIN_HEADER, contest.getJid(), empty(), empty(), empty());
 
-        Submission submission = response.getData().getData().get(0);
+        Submission submission = response.getData().getPage().get(0);
         assertThat(submission.getUserJid()).isEqualTo(USER_A_JID);
         assertThat(submission.getProblemJid()).isEqualTo("problemJid1");
         assertThat(submission.getContainerJid()).isEqualTo(contest.getJid());

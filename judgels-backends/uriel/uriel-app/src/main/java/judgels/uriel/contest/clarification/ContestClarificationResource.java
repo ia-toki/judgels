@@ -89,7 +89,7 @@ public class ContestClarificationResource implements ContestClarificationService
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canViewOwn(actorJid, contest));
 
-        Page<ContestClarification> data = clarificationRoleChecker.canSupervise(actorJid, contest)
+        Page<ContestClarification> clarifications = clarificationRoleChecker.canSupervise(actorJid, contest)
                 ? clarificationStore.getClarifications(contestJid, page)
                 : clarificationStore.getClarifications(contestJid, actorJid, page);
 
@@ -102,7 +102,7 @@ public class ContestClarificationResource implements ContestClarificationService
             problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
         } else {
             problemJidsSortedByAlias = Collections.emptyList();
-            problemJids = data.getData()
+            problemJids = clarifications.getPage()
                     .stream()
                     .map(ContestClarification::getTopicJid)
                     .filter(topicJid -> !topicJid.equals(contestJid))
@@ -116,7 +116,7 @@ public class ContestClarificationResource implements ContestClarificationService
                 .problemJids(problemJidsSortedByAlias)
                 .build();
 
-        Set<String> userJids = data.getData()
+        Set<String> userJids = clarifications.getPage()
                 .stream()
                 .flatMap(c -> Stream.of(Optional.of(c.getUserJid()), c.getAnswererJid()))
                 .filter(Optional::isPresent)
@@ -140,7 +140,7 @@ public class ContestClarificationResource implements ContestClarificationService
                                 e -> SandalphonUtils.getProblemName(e.getValue(), language)));
 
         return new ContestClarificationsResponse.Builder()
-                .data(data)
+                .data(clarifications)
                 .config(config)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)

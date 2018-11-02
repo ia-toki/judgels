@@ -61,11 +61,11 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
                 .canSupervise(canSupervise)
                 .build();
 
-        Page<ContestAnnouncement> data = canSupervise
+        Page<ContestAnnouncement> announcements = canSupervise
                 ? announcementStore.getAnnouncements(contestJid, page)
                 : announcementStore.getPublishedAnnouncements(contestJid, page);
 
-        Set<String> userJids = data.getData()
+        Set<String> userJids = announcements.getPage()
                 .stream()
                 .map(ContestAnnouncement::getUserJid)
                 .collect(Collectors.toSet());
@@ -75,7 +75,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
                 : profileService.getProfiles(userJids, contest.getBeginTime());
 
         return new ContestAnnouncementsResponse.Builder()
-                .data(data)
+                .data(announcements)
                 .config(config)
                 .profilesMap(profilesMap)
                 .build();

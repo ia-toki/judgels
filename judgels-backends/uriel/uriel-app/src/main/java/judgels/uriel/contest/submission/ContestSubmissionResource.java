@@ -127,7 +127,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         Optional<String> actualUserJid = canSupervise ? userJid : Optional.of(actorJid);
 
-        Page<Submission> data = submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, page);
+        Page<Submission> submissions =
+                submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, page);
 
         List<String> userJidsSortedByUsername;
         Set<String> userJids;
@@ -143,10 +144,10 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
         } else {
             userJidsSortedByUsername = Collections.emptyList();
-            userJids = data.getData().stream().map(Submission::getUserJid).collect(Collectors.toSet());
+            userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
 
             problemJidsSortedByAlias = Collections.emptyList();
-            problemJids = data.getData().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
+            problemJids = submissions.getPage().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
         }
 
         Map<String, Profile> profilesMap = userJids.isEmpty()
@@ -168,7 +169,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
 
         return new ContestSubmissionsResponse.Builder()
-                .data(data)
+                .data(submissions)
                 .config(config)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
@@ -261,7 +262,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         List<Submission> submissions = submissionStore
                 .getSubmissionsForDownload(contestJid, userJid, problemJid, lastSubmissionId, limit)
-                .getData();
+                .getPage();
 
         if (submissions.isEmpty()) {
             return Response.noContent().build();

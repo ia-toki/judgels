@@ -19,7 +19,7 @@ describe('ContestSubmissionsPage', () => {
   let contestSubmissionActions: jest.Mocked<any>;
 
   const response: ContestSubmissionsResponse = {
-    data: { data: [], totalData: 0 },
+    data: { page: [], totalCount: 0 },
     config: {
       canSupervise: true,
       userJids: [],
@@ -98,7 +98,7 @@ describe('ContestSubmissionsPage', () => {
         } as Submission,
       ];
       contestSubmissionActions.getSubmissions.mockReturnValue(() =>
-        Promise.resolve({ ...response, data: { data: submissions, totalData: 2 } })
+        Promise.resolve({ ...response, data: { page: submissions, totalCount: 2 } })
       );
 
       render();

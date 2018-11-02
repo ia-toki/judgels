@@ -72,7 +72,7 @@ public class ContestStore {
         Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
                 ? contestDao.selectPaged(options.build())
                 : contestDao.selectPagedByUserJid(userJid, options.build());
-        return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
+        return models.mapPage(p -> Lists.transform(p, ContestStore::fromModel));
     }
 
     public List<Contest> getActiveContests(String userJid) {
@@ -96,7 +96,7 @@ public class ContestStore {
         Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
                 ? contestDao.selectPagedPast(options.build())
                 : contestDao.selectPagedPastByUserJid(userJid, options.build());
-        return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
+        return models.mapPage(p -> Lists.transform(p, ContestStore::fromModel));
     }
 
     public Contest createContest(ContestCreateData contestCreateData) {

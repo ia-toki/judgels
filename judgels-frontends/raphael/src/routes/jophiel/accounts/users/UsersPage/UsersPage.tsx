@@ -61,7 +61,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
       <Card title="Users">
         <table className="bp3-html-table bp3-html-table-striped table-list users-page">
           {this.renderHeader()}
-          {this.renderRows(users.data)}
+          {this.renderRows(users.page)}
         </table>
         <Pagination currentPage={1} pageSize={UsersPage.PAGE_SIZE} onChangePage={this.onChangePage} />
       </Card>
@@ -111,7 +111,7 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
   private onChangePage = async (nextPage: number) => {
     await this.setState({ page: nextPage });
     const users = await this.updateUsers();
-    return users.totalData;
+    return users.totalCount;
   };
 
   private setOrder = (orderBy: string) => {

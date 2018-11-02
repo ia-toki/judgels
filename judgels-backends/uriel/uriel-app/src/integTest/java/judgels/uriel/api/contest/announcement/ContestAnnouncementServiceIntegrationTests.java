@@ -71,7 +71,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
         assertThat(config.getCanSupervise()).isTrue();
 
         Page<ContestAnnouncement> announcements = response.getData();
-        assertThat(announcements.getData()).containsOnly(announcement1, announcement2, announcement3);
+        assertThat(announcements.getPage()).containsOnly(announcement1, announcement2, announcement3);
 
         announcement1 = announcementService.updateAnnouncement(
                 ADMIN_HEADER,
@@ -84,6 +84,6 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
                         .build());
 
         announcements = announcementService.getAnnouncements(of(ADMIN_HEADER), contest.getJid(), empty()).getData();
-        assertThat(announcements.getData()).containsOnly(announcement1, announcement2, announcement3);
+        assertThat(announcements.getPage()).containsOnly(announcement1, announcement2, announcement3);
     }
 }

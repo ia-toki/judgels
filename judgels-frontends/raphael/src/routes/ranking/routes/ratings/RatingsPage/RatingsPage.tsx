@@ -44,7 +44,7 @@ class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
 
     const page = +(parse(this.props.location.search).page || '1');
     const baseRank = (page - 1) * RatingsPage.PAGE_SIZE + 1;
-    const rows = profiles.data.map((profile, idx) => (
+    const rows = profiles.page.map((profile, idx) => (
       <tr key={profile.username}>
         <td className="col-rank">{baseRank + idx}</td>
         <td>
@@ -71,7 +71,7 @@ class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
   private onChangePage = async (nextPage: number) => {
     const profiles = await this.props.onGetTopRatedProfiles(nextPage, RatingsPage.PAGE_SIZE);
     this.setState({ profiles });
-    return profiles.totalData;
+    return profiles.totalCount;
   };
 }
 

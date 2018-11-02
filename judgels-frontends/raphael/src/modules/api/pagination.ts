@@ -1,6 +1,6 @@
 export interface Page<T> {
-  totalData: number;
-  data: T[];
+  totalCount: number;
+  page: T[];
 }
 
 export enum OrderDir {

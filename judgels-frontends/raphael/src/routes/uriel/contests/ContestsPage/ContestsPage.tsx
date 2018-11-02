@@ -49,13 +49,13 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     if (!contests) {
       return <LoadingContestCard />;
     }
-    return contests.data.map(contest => <ContestCard key={contest.jid} contest={contest} />);
+    return contests.page.map(contest => <ContestCard key={contest.jid} contest={contest} />);
   };
 
   private onChangePage = async (nextPage: number) => {
     const contests = await this.props.onGetContests(nextPage);
     this.setState({ contests });
-    return contests.totalData;
+    return contests.totalCount;
   };
 }
 

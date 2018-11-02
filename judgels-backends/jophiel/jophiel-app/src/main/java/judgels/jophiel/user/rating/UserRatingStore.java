@@ -33,8 +33,8 @@ public class UserRatingStore {
     }
 
     public Page<UserWithRating> getTopRatings(Instant time, SelectionOptions options) {
-        return ratingDao.selectTopPagedByTime(time, options)
-                .mapData(data -> Lists.transform(data, m -> UserWithRating.of(m.userJid, m.publicRating)));
+        return ratingDao.selectTopPagedByTime(time, options).mapPage(
+                p -> Lists.transform(p, m -> UserWithRating.of(m.userJid, m.publicRating)));
     }
 
     public void updateRatings(Instant time, String eventJid, Map<String, UserRating> ratingsMap) {

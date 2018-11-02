@@ -101,7 +101,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
     }
 
     const { data: submissions, config, profilesMap, problemAliasesMap } = response;
-    if (submissions.totalData === 0) {
+    if (submissions.totalCount === 0) {
       return (
         <p>
           <small>No submissions.</small>
@@ -112,7 +112,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
     return (
       <ContestSubmissionsTable
         contest={this.props.contest}
-        submissions={submissions.data}
+        submissions={submissions.page}
         canSupervise={config.canSupervise}
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
@@ -142,7 +142,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
   private onChangePage = async (nextPage: number) => {
     const { username, problemAlias } = this.state.filter!;
     const data = await this.refreshSubmissions(username, problemAlias, nextPage);
-    return data.totalData;
+    return data.totalCount;
   };
 
   private refreshSubmissions = async (username?: string, problemAlias?: string, page?: number) => {

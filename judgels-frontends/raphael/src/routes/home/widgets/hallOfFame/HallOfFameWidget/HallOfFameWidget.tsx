@@ -34,7 +34,7 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
 
     return (
       <Card className="hall-of-fame-widget" title="Hall of fame">
-        {this.renderTable(profiles.data)}
+        {this.renderTable(profiles.page)}
       </Card>
     );
   }

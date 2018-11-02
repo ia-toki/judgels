@@ -75,22 +75,22 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
 
-        assertThat(store.getSubmissions(contestA.getJid(), empty(), empty(), empty()).getData())
+        assertThat(store.getSubmissions(contestA.getJid(), empty(), empty(), empty()).getPage())
                 .containsExactly(submission4, submission3, submission2, submission1);
 
-        assertThat(store.getSubmissions(contestA.getJid(), of("userJid1"), empty(), empty()).getData())
+        assertThat(store.getSubmissions(contestA.getJid(), of("userJid1"), empty(), empty()).getPage())
                 .containsExactly(submission2, submission1);
 
-        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), empty(), empty()).getData())
+        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), empty(), empty()).getPage())
                 .containsExactly(submission4, submission3);
 
-        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid1"), empty()).getData())
+        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid1"), empty()).getPage())
                 .containsExactly(submission3, submission2, submission1);
 
-        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid2"), empty()).getData())
+        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid2"), empty()).getPage())
                 .containsExactly(submission4);
 
-        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), of("problemJid1"), empty()).getData())
+        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), of("problemJid1"), empty()).getPage())
                 .containsExactly(submission3);
     }
 }

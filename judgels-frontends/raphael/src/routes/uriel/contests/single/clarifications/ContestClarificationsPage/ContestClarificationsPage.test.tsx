@@ -21,7 +21,7 @@ describe('ContestClarificationsPage', () => {
   let contestClarificationActions: jest.Mocked<any>;
 
   const response: ContestClarificationsResponse = {
-    data: { data: [], totalData: 0 },
+    data: { page: [], totalCount: 0 },
     config: {
       canCreate: true,
       canSupervise: false,
@@ -96,7 +96,7 @@ describe('ContestClarificationsPage', () => {
         } as ContestClarification,
       ];
       contestClarificationActions.getClarifications.mockReturnValue(() =>
-        Promise.resolve({ ...response, data: { data: clarifications, totalData: 2 } })
+        Promise.resolve({ ...response, data: { page: clarifications, totalCount: 2 } })
       );
 
       render();

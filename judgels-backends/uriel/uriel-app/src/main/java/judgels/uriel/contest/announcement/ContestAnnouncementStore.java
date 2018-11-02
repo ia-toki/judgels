@@ -29,16 +29,16 @@ public class ContestAnnouncementStore {
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         options.orderBy("updatedAt");
         page.ifPresent(options::page);
-        return announcementDao.selectPagedByContestJid(contestJid, options.build()).mapData(
-                data -> Lists.transform(data, ContestAnnouncementStore::fromModel));
+        return announcementDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
+                p -> Lists.transform(p, ContestAnnouncementStore::fromModel));
     }
 
     public Page<ContestAnnouncement> getPublishedAnnouncements(String contestJid, Optional<Integer> page) {
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         options.orderBy("updatedAt");
         page.ifPresent(options::page);
-        return announcementDao.selectPagedPublishedByContestJid(contestJid, options.build()).mapData(
-                data -> Lists.transform(data, ContestAnnouncementStore::fromModel));
+        return announcementDao.selectPagedPublishedByContestJid(contestJid, options.build()).mapPage(
+                p -> Lists.transform(p, ContestAnnouncementStore::fromModel));
     }
 
     public ContestAnnouncement updateAnnouncement(

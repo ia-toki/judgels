@@ -40,7 +40,7 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
         assertThat(userService.emailExists("random@random.com")).isFalse();
 
         Page<User> users = userService.getUsers(adminHeader, empty(), empty(), empty());
-        assertThat(users.getData()).containsSequence(budi, nano);
+        assertThat(users.getPage()).containsSequence(budi, nano);
 
         Set<String> usernames = ImmutableSet.of("nano", "budi");
         Map<String, String> jidsByUsernames = userService.translateUsernamesToJids(usernames);

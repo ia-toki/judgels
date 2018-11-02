@@ -74,9 +74,9 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
                 ImmutableSet.of(USER_A_JID, USER_B_JID));
 
         Page<Contest> contests = contestService.getContests(of(USER_A_HEADER), empty());
-        assertThat(contests.getData()).containsOnly(contestB, contestA);
+        assertThat(contests.getPage()).containsOnly(contestB, contestA);
 
         contests = contestService.getContests(of(USER_B_HEADER), empty());
-        assertThat(contests.getData()).containsOnly(contestB);
+        assertThat(contests.getPage()).containsOnly(contestB);
     }
 }

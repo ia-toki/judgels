@@ -105,12 +105,12 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
 
     @Override
     public Page<M> selectPaged(FilterOptions<M> filterOptions, SelectionOptions selectionOptions) {
-        List<M> data = selectAll(filterOptions, selectionOptions);
-        long totalData = selectCount(filterOptions);
+        List<M> page = selectAll(filterOptions, selectionOptions);
+        long totalCount = selectCount(filterOptions);
 
         return new Page.Builder<M>()
-                .totalData(totalData)
-                .data(data)
+                .totalCount(totalCount)
+                .page(page)
                 .build();
     }
     @Override

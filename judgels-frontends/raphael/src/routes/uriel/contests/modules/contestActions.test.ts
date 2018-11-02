@@ -148,8 +148,8 @@ describe('contestActions', () => {
 
     beforeEach(async () => {
       const contestPage: ContestPage = {
-        totalData: 3,
-        data: [],
+        totalCount: 3,
+        page: [],
       };
       contestAPI.getContests.mockReturnValue(Promise.resolve(contestPage));
 

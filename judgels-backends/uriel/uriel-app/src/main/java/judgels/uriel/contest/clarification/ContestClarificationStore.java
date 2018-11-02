@@ -41,16 +41,16 @@ public class ContestClarificationStore {
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
-        return clarificationDao.selectPagedByContestJidAndUserJid(contestJid, userJid, options.build()).mapData(
-                data -> Lists.transform(data, ContestClarificationStore::fromModel));
+        return clarificationDao.selectPagedByContestJidAndUserJid(contestJid, userJid, options.build()).mapPage(
+                p -> Lists.transform(p, ContestClarificationStore::fromModel));
     }
 
     public Page<ContestClarification> getClarifications(String contestJid, Optional<Integer> page) {
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
-        return clarificationDao.selectPagedByContestJid(contestJid, options.build()).mapData(
-                data -> Lists.transform(data, ContestClarificationStore::fromModel));
+        return clarificationDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
+                p -> Lists.transform(p, ContestClarificationStore::fromModel));
     }
 
     private static ContestClarification fromModel(ContestClarificationModel model) {

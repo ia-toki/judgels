@@ -19,7 +19,7 @@ describe('ContestAnnouncementsPage', () => {
   let contestAnnouncementActions: jest.Mocked<any>;
 
   const response: ContestAnnouncementsResponse = {
-    data: { data: [], totalData: 0 },
+    data: { page: [], totalCount: 0 },
     config: { canSupervise: true },
     profilesMap: {
       userJid1: { username: 'username1' },
@@ -88,7 +88,7 @@ describe('ContestAnnouncementsPage', () => {
         } as ContestAnnouncement,
       ];
       contestAnnouncementActions.getAnnouncements.mockReturnValue(() =>
-        Promise.resolve({ ...response, data: { data: announcements, totalData: 2 } })
+        Promise.resolve({ ...response, data: { page: announcements, totalCount: 2 } })
       );
 
       render();

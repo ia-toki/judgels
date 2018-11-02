@@ -121,6 +121,6 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     private List<Contest> getContests(String userJid) {
-        return store.getContests(userJid, Optional.empty()).getData();
+        return store.getContests(userJid, Optional.empty()).getPage();
     }
 }

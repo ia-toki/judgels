@@ -10,16 +10,16 @@ import './Pagination.css';
 interface PaginationProps {
   currentPage: number;
   pageSize: number;
-  totalData: number;
+  totalCount: number;
   onChangePage: (nextPage: number) => void;
 }
 
 class Pagination extends React.PureComponent<PaginationProps, {}> {
   render() {
-    const { totalData } = this.props;
+    const { totalCount } = this.props;
 
     return (
-      <div className={totalData > 0 ? 'pagination' : 'pagination--hide'}>
+      <div className={totalCount > 0 ? 'pagination' : 'pagination--hide'}>
         {this.renderText()}
         {this.renderNavigation()}
       </div>
@@ -27,8 +27,8 @@ class Pagination extends React.PureComponent<PaginationProps, {}> {
   }
 
   private getTotalPages = () => {
-    const { totalData, pageSize } = this.props;
-    return Math.ceil(totalData / pageSize);
+    const { totalCount, pageSize } = this.props;
+    return Math.ceil(totalCount / pageSize);
   };
 
   private getRange = () => {
@@ -44,16 +44,16 @@ class Pagination extends React.PureComponent<PaginationProps, {}> {
   };
 
   private renderText = () => {
-    const { totalData } = this.props;
+    const { totalCount } = this.props;
     const { start, end } = this.getRange();
 
-    if (totalData === 0) {
+    if (totalCount === 0) {
       return null;
     }
 
     return (
       <p className="pagination__helper-text" data-key="pagination-helper-text">
-        Showing {start}..{Math.min(end, totalData)} of {totalData} results
+        Showing {start}..{Math.min(end, totalCount)} of {totalCount} results
       </p>
     );
   };
@@ -94,14 +94,14 @@ interface PaginationContainerConnectedProps extends RouteComponentProps<{ page: 
 }
 
 interface PaginationContainerState {
-  totalData: number;
+  totalCount: number;
 }
 
 class PaginationContainer extends React.PureComponent<
   PaginationContainerProps & PaginationContainerConnectedProps,
   PaginationContainerState
 > {
-  state: PaginationContainerState = { totalData: 0 };
+  state: PaginationContainerState = { totalCount: 0 };
 
   render() {
     const queries = parse(this.props.location.search);
@@ -115,7 +115,7 @@ class PaginationContainer extends React.PureComponent<
     const props: PaginationProps = {
       currentPage,
       pageSize: this.props.pageSize,
-      totalData: this.state.totalData,
+      totalCount: this.state.totalCount,
       onChangePage: this.onChangePage,
     };
     return <Pagination {...props} />;
@@ -124,8 +124,8 @@ class PaginationContainer extends React.PureComponent<
   private onChangePage = async (nextPage: number) => {
     const queries = parse(this.props.location.search);
     this.props.onAppendRoute(nextPage, queries);
-    const totalData = await this.props.onChangePage(nextPage);
-    this.setState({ totalData });
+    const totalCount = await this.props.onChangePage(nextPage);
+    this.setState({ totalCount });
   };
 }
 

@@ -28,8 +28,8 @@ describe('userActions', () => {
 
     beforeEach(async () => {
       const users: Page<User> = {
-        totalData: 1,
-        data: [user],
+        totalCount: 1,
+        page: [user],
       };
       userAPI.getUsers.mockReturnValue(users);
 

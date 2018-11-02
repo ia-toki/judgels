@@ -45,7 +45,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
                 .build());
 
         List<ContestClarification> clarifications = clarificationService
-                .getClarifications(ADMIN_HEADER, contest.getJid(), empty(), empty()).getData().getData();
+                .getClarifications(ADMIN_HEADER, contest.getJid(), empty(), empty()).getData().getPage();
 
         ContestClarification clarification1 = clarifications.get(0);
         ContestClarification clarification2 = clarifications.get(1);
@@ -66,7 +66,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
         clarificationService.answerClarification(ADMIN_HEADER, contest.getJid(), clarification1.getJid(), answer);
 
         clarifications = clarificationService
-                .getClarifications(ADMIN_HEADER, contest.getJid(), empty(), empty()).getData().getData();
+                .getClarifications(ADMIN_HEADER, contest.getJid(), empty(), empty()).getData().getPage();
         clarification1 = clarifications.get(0);
 
         assertThat(clarification1.getAnswer()).contains("Yes!");

@@ -74,11 +74,11 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
             dataQuery.setMaxResults(options.getPageSize());
         }
 
-        List<UserRatingModel> data = dataQuery.getResultList();
+        List<UserRatingModel> page = dataQuery.getResultList();
 
         return new Page.Builder<UserRatingModel>()
-                .data(data)
-                .totalData(count)
+                .page(page)
+                .totalCount(count)
                 .build();
     }
 }
