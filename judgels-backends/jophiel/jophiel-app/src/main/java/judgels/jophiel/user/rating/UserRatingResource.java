@@ -35,17 +35,16 @@ public class UserRatingResource implements UserRatingService {
 
     @Override
     @UnitOfWork
-    public void updateRatings(AuthHeader authHeader, UserRatingUpdateData userRatingUpdateData) {
+    public void updateRatings(AuthHeader authHeader, UserRatingUpdateData data) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canUpdateUserList(actorJid));
 
-        Map<String, String> jidsByUsernamesMap = userStore.translateUsernamesToJids(
-                userRatingUpdateData.getRatingsMap().keySet());
-        Map<String, UserRating> ratingsMap = userRatingUpdateData.getRatingsMap().entrySet()
+        Map<String, String> jidsByUsernamesMap = userStore.translateUsernamesToJids(data.getRatingsMap().keySet());
+        Map<String, UserRating> ratingsMap = data.getRatingsMap().entrySet()
                 .stream()
                 .filter(e ->  jidsByUsernamesMap.containsKey(e.getKey()))
                 .collect(Collectors.toMap(e -> jidsByUsernamesMap.get(e.getKey()), e -> e.getValue()));
 
-        ratingStore.updateRatings(userRatingUpdateData.getTime(), userRatingUpdateData.getEventJid(), ratingsMap);
+        ratingStore.updateRatings(data.getTime(), data.getEventJid(), ratingsMap);
     }
 }

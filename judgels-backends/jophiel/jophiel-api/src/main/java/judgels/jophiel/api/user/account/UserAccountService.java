@@ -17,7 +17,7 @@ public interface UserAccountService {
     @Path("/register")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    User registerUser(UserRegistrationData userRegistrationData);
+    User registerUser(UserRegistrationData data);
 
     @POST
     @Path("/activate/{emailCode}")
@@ -30,5 +30,5 @@ public interface UserAccountService {
     @POST
     @Path("/reset-password")
     @Consumes(APPLICATION_JSON)
-    void resetPassword(PasswordResetData passwordResetData);
+    void resetPassword(PasswordResetData data);
 }

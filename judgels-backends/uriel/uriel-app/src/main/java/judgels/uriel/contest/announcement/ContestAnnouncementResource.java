@@ -86,12 +86,12 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
     public ContestAnnouncement createAnnouncement(
             AuthHeader authHeader,
             String contestJid,
-            ContestAnnouncementData announcementData) {
+            ContestAnnouncementData data) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(announcementRoleChecker.canSupervise(actorJid, contest));
 
-        return announcementStore.createAnnouncement(contestJid, announcementData);
+        return announcementStore.createAnnouncement(contestJid, data);
     }
 
     @Override
@@ -100,11 +100,11 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
             AuthHeader authHeader,
             String contestJid,
             String announcementJid,
-            ContestAnnouncementData announcementData) {
+            ContestAnnouncementData data) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(announcementRoleChecker.canSupervise(actorJid, contest));
 
-        return announcementStore.updateAnnouncement(contestJid, announcementJid, announcementData);
+        return announcementStore.updateAnnouncement(contestJid, announcementJid, data);
     }
 }

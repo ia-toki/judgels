@@ -14,5 +14,5 @@ public interface UserRatingService {
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
-    void updateRatings(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, UserRatingUpdateData userRatingUpdateData);
+    void updateRatings(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, UserRatingUpdateData data);
 }

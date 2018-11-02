@@ -49,12 +49,12 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork
-    public Contest updateContest(AuthHeader authHeader, String contestJid, ContestUpdateData contestUpdateData) {
+    public Contest updateContest(AuthHeader authHeader, String contestJid, ContestUpdateData data) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
-        return checkFound(contestStore.updateContest(contestJid, contestUpdateData));
+        return checkFound(contestStore.updateContest(contestJid, data));
     }
 
     @Override
@@ -100,11 +100,11 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork
-    public Contest createContest(AuthHeader authHeader, ContestCreateData contestCreateData) {
+    public Contest createContest(AuthHeader authHeader, ContestCreateData data) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
-        return contestStore.createContest(contestCreateData);
+        return contestStore.createContest(data);
     }
 
     @Override
@@ -122,13 +122,13 @@ public class ContestResource implements ContestService {
     public ContestDescription updateContestDescription(
             AuthHeader authHeader,
             String contestJid,
-            ContestDescription contestDescription) {
+            ContestDescription description) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
 
-        return checkFound(contestStore.updateContestDescription(contest.getJid(), contestDescription));
+        return checkFound(contestStore.updateContestDescription(contest.getJid(), description));
     }
 
     @Override

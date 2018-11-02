@@ -35,8 +35,8 @@ public class UserAccountResource implements UserAccountService {
 
     @Override
     @UnitOfWork
-    public User registerUser(UserRegistrationData userRegistrationData) {
-        return checkFound(userRegisterer).register(userRegistrationData);
+    public User registerUser(UserRegistrationData data) {
+        return checkFound(userRegisterer).register(data);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class UserAccountResource implements UserAccountService {
 
     @Override
     @UnitOfWork
-    public void resetPassword(PasswordResetData passwordResetData) {
-        checkFound(userPasswordResetter).reset(passwordResetData);
+    public void resetPassword(PasswordResetData data) {
+        checkFound(userPasswordResetter).reset(data);
     }
 }

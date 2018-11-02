@@ -32,7 +32,7 @@ public interface ContestAnnouncementService {
     ContestAnnouncement createAnnouncement(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            ContestAnnouncementData announcementData);
+            ContestAnnouncementData data);
 
     @PUT
     @Path("/{announcementJid}")
@@ -42,5 +42,5 @@ public interface ContestAnnouncementService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             @PathParam("announcementJid") String announcementJid,
-            ContestAnnouncementData announcementData);
+            ContestAnnouncementData data);
 }

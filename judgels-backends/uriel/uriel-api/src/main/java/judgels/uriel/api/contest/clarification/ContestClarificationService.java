@@ -24,7 +24,7 @@ public interface ContestClarificationService {
     ContestClarification createClarification(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            ContestClarificationData clarificationData);
+            ContestClarificationData data);
 
     @GET
     @Path("/")
@@ -42,5 +42,5 @@ public interface ContestClarificationService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             @PathParam("clarificationJid") String clarificationJid,
-            ContestClarificationAnswerData clarificationAnswerData);
+            ContestClarificationAnswerData data);
 }

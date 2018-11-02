@@ -80,11 +80,11 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public User createUser(AuthHeader authHeader, UserData userData) {
+    public User createUser(AuthHeader authHeader, UserData data) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canCreateUser(actorJid));
 
-        return userStore.createUser(userData);
+        return userStore.createUser(data);
     }
 
     @Override

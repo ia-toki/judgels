@@ -32,7 +32,7 @@ public interface ContestService {
     Contest updateContest(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            ContestUpdateData contestUpdateData);
+            ContestUpdateData data);
 
     @GET
     @Path("/slug/{contestSlug}")
@@ -70,7 +70,7 @@ public interface ContestService {
     @Path("/")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Contest createContest(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestCreateData contestCreateData);
+    Contest createContest(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestCreateData data);
 
     @GET
     @Path("/{contestJid}/description")
@@ -86,7 +86,7 @@ public interface ContestService {
     ContestDescription updateContestDescription(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            ContestDescription contestDescription);
+            ContestDescription description);
 
     @GET
     @Path("/config")

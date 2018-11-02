@@ -68,13 +68,13 @@ public class ContestClarificationResource implements ContestClarificationService
     public ContestClarification createClarification(
             AuthHeader authHeader,
             String contestJid,
-            ContestClarificationData clarificationData) {
+            ContestClarificationData data) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canCreate(actorJid, contest));
 
-        return clarificationStore.createClarification(contestJid, clarificationData);
+        return clarificationStore.createClarification(contestJid, data);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class ContestClarificationResource implements ContestClarificationService
             AuthHeader authHeader,
             String contestJid,
             String clarificationJid,
-            ContestClarificationAnswerData clarificationAnswerData) {
+            ContestClarificationAnswerData data) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -163,6 +163,6 @@ public class ContestClarificationResource implements ContestClarificationService
         checkFound(clarificationStore.updateClarificationAnswer(
                 contestJid,
                 clarificationJid,
-                clarificationAnswerData.getAnswer()));
+                data.getAnswer()));
     }
 }
