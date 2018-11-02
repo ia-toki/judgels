@@ -8,37 +8,20 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
-import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableSet;
 import com.palantir.remoting.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
 import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
-import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
-    private static WireMockServer mockJophiel;
+class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
     private ContestService contestService = createService(ContestService.class);
     private ContestContestantService contestantService = createService(ContestContestantService.class);
-
-    @BeforeAll
-    static void setUpMocks() {
-        mockJophiel = mockJophiel();
-        mockJophiel.start();
-    }
-
-    @AfterAll
-    static void tearDownMocks() {
-        mockJophiel.shutdown();
-    }
 
     @Test
     void end_to_end_flow() {

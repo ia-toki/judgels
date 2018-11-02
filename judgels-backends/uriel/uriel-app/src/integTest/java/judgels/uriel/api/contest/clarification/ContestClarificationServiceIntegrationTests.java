@@ -7,50 +7,24 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
-import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import java.time.Instant;
 import java.util.List;
-import judgels.uriel.api.AbstractServiceIntegrationTests;
+import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestCreateData;
-import judgels.uriel.api.contest.ContestService;
-import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.module.ContestModuleService;
 import judgels.uriel.api.contest.module.ContestModuleType;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class ContestClarificationServiceIntegrationTests extends AbstractServiceIntegrationTests {
-    private static WireMockServer mockJophiel;
-    private ContestService contestService = createService(ContestService.class);
+class ContestClarificationServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
     private ContestModuleService moduleService = createService(ContestModuleService.class);
     private ContestContestantService contestantService = createService(ContestContestantService.class);
     private ContestClarificationService clarificationService = createService(ContestClarificationService.class);
 
-    @BeforeAll
-    static void setUpMocks() {
-        mockJophiel = mockJophiel();
-        mockJophiel.start();
-    }
-
-    @AfterAll
-    static void tearDownMocks() {
-        mockJophiel.shutdown();
-    }
-
     @Test
     void end_to_end_flow() {
-        Contest contest = contestService.createContest(
-                ADMIN_HEADER,
-                new ContestCreateData.Builder().slug("contest").build());
-        contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
-                .beginTime(Instant.now())
-                .build());
+        Contest contest = createContest("contest");
 
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), ContestModuleType.REGISTRATION);
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), ContestModuleType.CLARIFICATION);

@@ -8,23 +8,15 @@ import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_BEARER_TOKEN;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
-import static judgels.uriel.api.mocks.MockJophiel.mockJophiel;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
-import static judgels.uriel.api.mocks.MockSandalphon.mockSandalphon;
-import static judgels.uriel.api.mocks.MockSealtiel.mockSealtiel;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableSet;
-import java.time.Instant;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import judgels.sandalphon.api.submission.Submission;
-import judgels.uriel.api.AbstractServiceIntegrationTests;
+import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestCreateData;
-import judgels.uriel.api.contest.ContestService;
-import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
@@ -32,45 +24,17 @@ import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.MultiPart;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class ContestSubmissionServiceIntegrationTests extends AbstractServiceIntegrationTests {
-    private static WireMockServer mockJophiel;
-    private static WireMockServer mockSandalphon;
-    private static WireMockServer mockSealtiel;
-    private ContestService contestService = createService(ContestService.class);
+class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
     private ContestContestantService contestantService = createService(ContestContestantService.class);
     private ContestProblemService problemService = createService(ContestProblemService.class);
     private ContestSubmissionService submissionService = createService(ContestSubmissionService.class);
     private WebTarget webTarget = createWebTarget();
 
-    @BeforeAll
-    static void setUpMocks() {
-        mockJophiel = mockJophiel();
-        mockJophiel.start();
-        mockSandalphon = mockSandalphon();
-        mockSandalphon.start();
-        mockSealtiel = mockSealtiel();
-        mockSealtiel.start();
-    }
-
-    @AfterAll
-    static void tearDownMocks() {
-        mockJophiel.shutdown();
-        mockSandalphon.shutdown();
-        mockSealtiel.shutdown();
-    }
-
     @Test
     void end_to_end_flow() {
-        Contest contest = contestService.createContest(
-                ADMIN_HEADER,
-                new ContestCreateData.Builder().slug("contest").build());
-        contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
-                .beginTime(Instant.now())
-                .build());
+        Contest contest = createContest("contest");
 
         contestantService.addContestants(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A_JID, USER_B_JID));
         problemService.upsertProblem(ADMIN_HEADER, contest.getJid(), new ContestProblemData.Builder()
