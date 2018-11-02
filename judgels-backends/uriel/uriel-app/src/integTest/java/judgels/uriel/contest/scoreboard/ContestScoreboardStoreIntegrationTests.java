@@ -3,6 +3,7 @@ package judgels.uriel.contest.scoreboard;
 import static judgels.persistence.TestClock.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import judgels.persistence.TestClock;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
@@ -24,7 +25,7 @@ class ContestScoreboardStoreIntegrationTests extends AbstractIntegrationTests {
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
-        UrielIntegrationTestComponent component = createComponent(sessionFactory);
+        UrielIntegrationTestComponent component = createComponent(sessionFactory, new TestClock());
 
         contestStore = component.contestStore();
         store = component.contestScoreboardStore();

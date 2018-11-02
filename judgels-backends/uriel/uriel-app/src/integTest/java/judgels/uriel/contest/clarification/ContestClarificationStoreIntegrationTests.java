@@ -2,7 +2,7 @@ package judgels.uriel.contest.clarification;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.persistence.api.SelectionOptions;
+import java.util.Optional;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
@@ -57,16 +57,15 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
                         .question("No balloons?")
                         .build());
 
-        assertThat(store.getClarifications(contestA.getJid(), SelectionOptions.DEFAULT_ALL).getData())
-                .containsOnly(clarification1, clarification2);
-
+        assertThat(store.getClarifications(contestA.getJid(), Optional.empty()).getData())
+                .containsExactly(clarification2, clarification1);
 
         assertThat(clarification3.getAnswer()).isEmpty();
         assertThat(clarification3.getStatus()).isEqualTo(ContestClarificationStatus.ASKED);
 
         store.updateClarificationAnswer(contestB.getJid(), clarification3.getJid(), "Yes!");
         ContestClarification answeredClarification3 =
-                store.getClarifications(contestB.getJid(), SelectionOptions.DEFAULT_ALL).getData().get(0);
+                store.getClarifications(contestB.getJid(), Optional.empty()).getData().get(0);
 
         assertThat(answeredClarification3.getAnswer()).contains("Yes!");
         assertThat(answeredClarification3.getStatus()).isEqualTo(ContestClarificationStatus.ANSWERED);

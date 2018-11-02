@@ -14,7 +14,6 @@ import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 
 @Singleton
 public class ProfileResource implements ProfileService {
@@ -36,11 +35,7 @@ public class ProfileResource implements ProfileService {
     @Override
     @UnitOfWork(readOnly = true)
     public Page<Profile> getTopRatedProfiles(Optional<Integer> page, Optional<Integer> pageSize) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        page.ifPresent(options::page);
-        pageSize.ifPresent(options::pageSize);
-
-        return profileStore.getTopRatedProfiles(clock.instant(), options.build());
+        return profileStore.getTopRatedProfiles(clock.instant(), page, pageSize);
     }
 
     @Override

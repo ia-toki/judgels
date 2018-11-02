@@ -2,7 +2,6 @@ package judgels.uriel.contest.submission;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static judgels.persistence.api.SelectionOptions.DEFAULT_ALL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.persistence.TestActorProvider;
@@ -76,23 +75,22 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
 
-        assertThat(store.getSubmissions(contestA.getJid(), empty(), empty(), empty(), DEFAULT_ALL).getData())
-                .containsOnly(submission1, submission2, submission3, submission4);
+        assertThat(store.getSubmissions(contestA.getJid(), empty(), empty(), empty()).getData())
+                .containsExactly(submission4, submission3, submission2, submission1);
 
-        assertThat(store.getSubmissions(contestA.getJid(), of("userJid1"), empty(), empty(), DEFAULT_ALL).getData())
-                .containsOnly(submission1, submission2);
+        assertThat(store.getSubmissions(contestA.getJid(), of("userJid1"), empty(), empty()).getData())
+                .containsExactly(submission2, submission1);
 
-        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), empty(), empty(), DEFAULT_ALL).getData())
-                .containsOnly(submission3, submission4);
+        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), empty(), empty()).getData())
+                .containsExactly(submission4, submission3);
 
-        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid1"), empty(), DEFAULT_ALL).getData())
-                .containsOnly(submission1, submission2, submission3);
+        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid1"), empty()).getData())
+                .containsExactly(submission3, submission2, submission1);
 
-        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid2"), empty(), DEFAULT_ALL).getData())
-                .containsOnly(submission4);
+        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid2"), empty()).getData())
+                .containsExactly(submission4);
 
-        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), of("problemJid1"), empty(), DEFAULT_ALL)
-                .getData())
-                .containsOnly(submission3);
+        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), of("problemJid1"), empty()).getData())
+                .containsExactly(submission3);
     }
 }

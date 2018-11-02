@@ -60,7 +60,6 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
                 .build();
         store.upsertClarificationTimeLimitModule(contest.getJid(), config3);
 
-        assertThat(store.getEnabledModules(contest.getJid()))
-                .containsExactlyInAnyOrder(FROZEN_SCOREBOARD, CLARIFICATION_TIME_LIMIT);
+        assertThat(store.getEnabledModules(contest.getJid())).containsOnly(FROZEN_SCOREBOARD, CLARIFICATION_TIME_LIMIT);
     }
 }

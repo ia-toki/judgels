@@ -37,13 +37,19 @@ public class ContestClarificationStore {
         });
     }
 
-    public Page<ContestClarification> getClarifications(String contestJid, String userJid, SelectionOptions options) {
-        return clarificationDao.selectPagedByContestJidAndUserJid(contestJid, userJid, options).mapData(
+    public Page<ContestClarification> getClarifications(String contestJid, String userJid, Optional<Integer> page) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        page.ifPresent(options::page);
+
+        return clarificationDao.selectPagedByContestJidAndUserJid(contestJid, userJid, options.build()).mapData(
                 data -> Lists.transform(data, ContestClarificationStore::fromModel));
     }
 
-    public Page<ContestClarification> getClarifications(String contestJid, SelectionOptions options) {
-        return clarificationDao.selectPagedByContestJid(contestJid, options).mapData(
+    public Page<ContestClarification> getClarifications(String contestJid, Optional<Integer> page) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        page.ifPresent(options::page);
+
+        return clarificationDao.selectPagedByContestJid(contestJid, options.build()).mapData(
                 data -> Lists.transform(data, ContestClarificationStore::fromModel));
     }
 

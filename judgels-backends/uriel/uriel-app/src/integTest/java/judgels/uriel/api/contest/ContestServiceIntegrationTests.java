@@ -42,11 +42,10 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
     @Test
     void end_to_end_flow() {
-        Contest contestA = contestService.createContest(
-                ADMIN_HEADER,
-                new ContestCreateData.Builder().slug("contest-a").build());
+        Contest contestA =
+                contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-a").build());
         contestA = contestService.updateContest(ADMIN_HEADER, contestA.getJid(), new ContestUpdateData.Builder()
-                .name("TOKI Open Contest A")
+                .name("Judgels Open Contest A")
                 .slug("contest-a")
                 .style(ContestStyle.ICPC)
                 .beginTime(Instant.ofEpochSecond(42))
@@ -57,14 +56,13 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .build());
 
         assertThat(contestA.getSlug()).isEqualTo("contest-a");
-        assertThat(contestA.getName()).isEqualTo("TOKI Open Contest A");
+        assertThat(contestA.getName()).isEqualTo("Judgels Open Contest A");
         assertThat(contestA.getStyle()).isEqualTo(ContestStyle.ICPC);
         assertThat(contestA.getBeginTime()).isEqualTo(Instant.ofEpochSecond(42));
         assertThat(contestA.getDuration()).isEqualTo(Duration.ofHours(5));
 
-        ContestDescription contestDescriptionA =
-                contestService.getContestDescription(of(ADMIN_HEADER), contestA.getJid());
-        assertThat(contestDescriptionA.getDescription()).isEqualTo("This is contest A");
+        ContestDescription descriptionA = contestService.getContestDescription(of(ADMIN_HEADER), contestA.getJid());
+        assertThat(descriptionA.getDescription()).isEqualTo("This is contest A");
 
         assertThat(contestService.getContest(of(ADMIN_HEADER), contestA.getJid())).isEqualTo(contestA);
         assertThat(contestService.getContestBySlug(of(ADMIN_HEADER), contestA.getSlug())).isEqualTo(contestA);
@@ -74,19 +72,14 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 () -> contestService.getContest(of(AuthHeader.of("randomToken")), contestAJid))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
-        Contest contestB = contestService.createContest(
-                ADMIN_HEADER,
-                new ContestCreateData.Builder().slug("contest-b").build());
+        Contest contestB =
+                contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-b").build());
 
         assertThat(contestService.getContest(of(ADMIN_HEADER), contestB.getJid())).isEqualTo(contestB);
         assertThat(contestService.getContestBySlug(of(ADMIN_HEADER), "" + contestB.getId())).isEqualTo(contestB);
 
-        contestService.createContest(
-                ADMIN_HEADER,
-                new ContestCreateData.Builder().slug("contest-testing").build());
-        contestService.createContest(
-                ADMIN_HEADER,
-                new ContestCreateData.Builder().slug("contest-random").build());
+        contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-testing").build());
+        contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-random").build());
 
         contestantService.addContestants(
                 ADMIN_HEADER,
@@ -98,9 +91,9 @@ class ContestServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 ImmutableSet.of(USER_A_JID, USER_B_JID));
 
         Page<Contest> contests = contestService.getContests(of(USER_A_HEADER), empty());
-        assertThat(contests.getData()).containsExactly(contestB, contestA);
+        assertThat(contests.getData()).containsOnly(contestB, contestA);
 
         contests = contestService.getContests(of(USER_B_HEADER), empty());
-        assertThat(contests.getData()).containsExactly(contestB);
+        assertThat(contests.getData()).containsOnly(contestB);
     }
 }

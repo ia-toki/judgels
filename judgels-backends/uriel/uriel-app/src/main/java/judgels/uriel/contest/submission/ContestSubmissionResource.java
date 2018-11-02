@@ -11,15 +11,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.io.BufferedOutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -31,22 +28,19 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
-import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
-import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.sandalphon.api.submission.SubmissionWithSource;
 import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
 import judgels.sandalphon.submission.SubmissionData;
+import judgels.sandalphon.submission.SubmissionDownloader;
 import judgels.sandalphon.submission.SubmissionSourceBuilder;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -67,13 +61,13 @@ import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ContestSubmissionResource implements ContestSubmissionService {
-    private static final int MAX_DOWNLOAD_SUBMISSIONS_LIMIT = 100;
     private static final String LAST_SUBMISSION_ID_HEADER = "Last-Submission-Id";
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestStyleStore styleStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
+    private final SubmissionDownloader submissionDownloader;
     private final ContestSubmissionClient submissionClient;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
@@ -90,6 +84,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ContestStore contestStore,
             ContestStyleStore styleStore,
             SubmissionSourceBuilder submissionSourceBuilder,
+            SubmissionDownloader submissionDownloader,
             ContestSubmissionClient submissionClient,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
@@ -104,6 +99,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.contestStore = contestStore;
         this.styleStore = styleStore;
         this.submissionSourceBuilder = submissionSourceBuilder;
+        this.submissionDownloader = submissionDownloader;
         this.submissionClient = submissionClient;
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
@@ -131,11 +127,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         Optional<String> actualUserJid = canSupervise ? userJid : Optional.of(actorJid);
 
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        page.ifPresent(options::page);
-
-        Page<Submission> data = submissionStore
-                .getSubmissions(contest.getJid(), actualUserJid, problemJid, Optional.empty(), options.build());
+        Page<Submission> data = submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, page);
 
         List<String> userJidsSortedByUsername;
         Set<String> userJids;
@@ -267,14 +259,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canSupervise(actorJid, contest));
 
-        SelectionOptions options = new SelectionOptions.Builder()
-                .from(SelectionOptions.DEFAULT_PAGED)
-                .pageSize(Math.min(MAX_DOWNLOAD_SUBMISSIONS_LIMIT, limit.orElse(MAX_DOWNLOAD_SUBMISSIONS_LIMIT)))
-                .orderDir(OrderDir.ASC)
-                .build();
-
         List<Submission> submissions = submissionStore
-                .getSubmissions(contestJid, userJid, problemJid, lastSubmissionId, options)
+                .getSubmissionsForDownload(contestJid, userJid, problemJid, lastSubmissionId, limit)
                 .getData();
 
         if (submissions.isEmpty()) {
@@ -291,33 +277,8 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(Collectors.toSet());
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
 
-        StreamingOutput stream = output -> {
-            try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(output))) {
-                for (Submission submission : submissions) {
-                    String problemAlias = problemAliasesMap.get(submission.getProblemJid());
-                    String username = usernamesMap.get(submission.getUserJid());
-                    if (problemAlias == null || username == null) {
-                        continue;
-                    }
-
-                    int points = submission.getLatestGrading().map(Grading::getScore).orElse(0);
-
-                    SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
-                    for (Map.Entry<String, SourceFile> entry : source.getSubmissionFiles().entrySet()) {
-                        SourceFile file = entry.getValue();
-                        String filename = String.format(
-                                "%s/%s~%s~%d/%s",
-                                submission.getId(), problemAlias, username, points, file.getName());
-
-                        ZipEntry ze = new ZipEntry(filename);
-                        zos.putNextEntry(ze);
-                        zos.write(file.getContent());
-                        zos.closeEntry();
-                    }
-                }
-            }
-            output.flush();
-        };
+        StreamingOutput stream =
+                output -> submissionDownloader.downloadAsZip(output, submissions, usernamesMap, problemAliasesMap);
 
         return Response.ok(stream)
                 .header(LAST_SUBMISSION_ID_HEADER, submissions.get(submissions.size() - 1).getId())

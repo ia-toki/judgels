@@ -57,10 +57,21 @@ class ContestAnnouncementStoreIntegrationTests extends AbstractIntegrationTests 
                         .build());
 
         Page<ContestAnnouncement> announcements = store.getPublishedAnnouncements(contest.getJid(), Optional.empty());
-        assertThat(announcements.getData()).containsOnly(announcement3, announcement1);
+        assertThat(announcements.getData()).containsExactly(announcement3, announcement1);
 
-        Page<ContestAnnouncement> announcementsWithDraft = store.getAnnouncements(contest.getJid(), Optional.empty());
-        assertThat(announcementsWithDraft.getData())
-                .containsExactlyInAnyOrder(announcement3, announcement2, announcement1);
+        announcements = store.getAnnouncements(contest.getJid(), Optional.empty());
+        assertThat(announcements.getData()).containsExactly(announcement3, announcement2, announcement1);
+
+        announcement3 = store.updateAnnouncement(
+                contest.getJid(),
+                announcement3.getJid(),
+                new ContestAnnouncementData.Builder()
+                        .title("Compiler version")
+                        .content("g++ version is NOW 5.0.0")
+                        .status(ContestAnnouncementStatus.PUBLISHED)
+                        .build());
+
+        announcements = store.getPublishedAnnouncements(contest.getJid(), Optional.empty());
+        assertThat(announcements.getData()).containsExactly(announcement3, announcement1);
     }
 }

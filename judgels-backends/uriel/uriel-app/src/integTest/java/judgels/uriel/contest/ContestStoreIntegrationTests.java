@@ -5,8 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.palantir.remoting.api.errors.ServiceException;
+import java.time.Instant;
 import java.util.List;
-import judgels.persistence.api.SelectionOptions;
+import java.util.Optional;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
@@ -44,7 +45,6 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     private static final String USER_3 = "user3Jid";
 
     private ContestStore store;
-
     private AdminRoleStore adminRoleStore;
     private ContestModuleStore moduleStore;
     private ContestContestantStore contestantStore;
@@ -67,9 +67,20 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     @Test
     void crud_flow() {
         Contest contestA = store.createContest(new ContestCreateData.Builder().slug("contest-a").build());
+        contestA = store.updateContest(contestA.getJid(), new ContestUpdateData.Builder()
+                .beginTime(Instant.ofEpochSecond(2)).build()).get();
+
         Contest contestB = store.createContest(new ContestCreateData.Builder().slug("contest-b").build());
+        contestB = store.updateContest(contestB.getJid(), new ContestUpdateData.Builder()
+                .beginTime(Instant.ofEpochSecond(1)).build()).get();
+
         Contest contestC = store.createContest(new ContestCreateData.Builder().slug("contest-c").build());
+        contestC = store.updateContest(contestC.getJid(), new ContestUpdateData.Builder()
+                .beginTime(Instant.ofEpochSecond(3)).build()).get();
+
         Contest contestD = store.createContest(new ContestCreateData.Builder().slug("contest-d").build());
+        contestD = store.updateContest(contestD.getJid(), new ContestUpdateData.Builder()
+                .beginTime(Instant.ofEpochSecond(4)).build()).get();
 
         assertThatThrownBy(() -> store.createContest(new ContestCreateData.Builder().slug("contest-d").build()))
                 .isInstanceOf(ServiceException.class)
@@ -85,9 +96,9 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
                 new ContestSupervisorData.Builder().userJid(USER_2).permission(SupervisorPermission.all()).build());
         managerStore.upsertManager(contestC.getJid(), USER_3);
 
-        assertThat(getContests(ADMIN)).containsExactly(contestD, contestC, contestB, contestA);
+        assertThat(getContests(ADMIN)).containsExactly(contestD, contestC, contestA, contestB);
         assertThat(getContests(USER_1)).containsExactly(contestD, contestA);
-        assertThat(getContests(USER_2)).containsExactly(contestD, contestB, contestA);
+        assertThat(getContests(USER_2)).containsExactly(contestD, contestA, contestB);
         assertThat(getContests(USER_3)).containsExactly(contestD, contestC, contestA);
     }
 
@@ -110,6 +121,6 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     private List<Contest> getContests(String userJid) {
-        return store.getContests(userJid, SelectionOptions.DEFAULT_PAGED).getData();
+        return store.getContests(userJid, Optional.empty()).getData();
     }
 }

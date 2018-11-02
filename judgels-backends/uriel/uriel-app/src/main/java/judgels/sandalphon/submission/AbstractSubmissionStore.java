@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import judgels.gabriel.api.GradingResultDetails;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.Grading;
@@ -21,6 +22,8 @@ import judgels.sandalphon.persistence.BaseGradingDao;
 import judgels.sandalphon.persistence.BaseSubmissionDao;
 
 public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel, GM extends AbstractGradingModel> {
+    private static final int MAX_DOWNLOAD_SUBMISSIONS_LIMIT = 100;
+
     private final BaseSubmissionDao<SM> submissionDao;
     private final BaseGradingDao<GM> gradingDao;
     private final ObjectMapper mapper;
@@ -42,7 +45,35 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         });
     }
 
+    public Page<Submission> getSubmissionsForDownload(
+            String containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid,
+            Optional<Long> lastSubmissionId,
+            Optional<Integer> limit) {
+
+        SelectionOptions options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .pageSize(Math.min(MAX_DOWNLOAD_SUBMISSIONS_LIMIT, limit.orElse(MAX_DOWNLOAD_SUBMISSIONS_LIMIT)))
+                .orderDir(OrderDir.ASC)
+                .build();
+
+        return getSubmissions(containerJid, userJid, problemJid, lastSubmissionId, options);
+    }
+
     public Page<Submission> getSubmissions(
+            String containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid,
+            Optional<Integer> page) {
+
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        page.ifPresent(options::page);
+
+        return getSubmissions(containerJid, userJid, problemJid, Optional.empty(), options.build());
+    }
+
+    private Page<Submission> getSubmissions(
             String containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,

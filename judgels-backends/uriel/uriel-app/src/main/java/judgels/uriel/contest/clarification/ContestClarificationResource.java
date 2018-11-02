@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.service.actor.ActorChecker;
@@ -90,12 +89,9 @@ public class ContestClarificationResource implements ContestClarificationService
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canViewOwn(actorJid, contest));
 
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        page.ifPresent(options::page);
-
         Page<ContestClarification> data = clarificationRoleChecker.canSupervise(actorJid, contest)
-                ? clarificationStore.getClarifications(contestJid, options.build())
-                : clarificationStore.getClarifications(contestJid, actorJid, options.build());
+                ? clarificationStore.getClarifications(contestJid, page)
+                : clarificationStore.getClarifications(contestJid, actorJid, page);
 
         List<String> problemJidsSortedByAlias;
         Set<String> problemJids;

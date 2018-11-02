@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.Contest;
@@ -63,24 +64,38 @@ public class ContestStore {
         return contestDao.selectBySlug(contestSlug).map(ContestStore::fromModel).orElse(null);
     }
 
-    public Page<Contest> getContests(String userJid, SelectionOptions options) {
+    public Page<Contest> getContests(String userJid, Optional<Integer> page) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        options.orderBy("beginTime");
+        page.ifPresent(options::page);
+
         Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
-                ? contestDao.selectPaged(options)
-                : contestDao.selectPagedByUserJid(userJid, options);
+                ? contestDao.selectPaged(options.build())
+                : contestDao.selectPagedByUserJid(userJid, options.build());
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 
-    public List<Contest> getActiveContests(String userJid, SelectionOptions options) {
+    public List<Contest> getActiveContests(String userJid) {
+        SelectionOptions options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_ALL)
+                .orderBy("beginTime")
+                .orderDir(OrderDir.ASC)
+                .build();
+
         List<ContestModel> models = adminRoleDao.isAdmin(userJid)
                 ? contestDao.selectAllActive(options)
                 : contestDao.selectAllActiveByUserJid(userJid, options);
         return Lists.transform(models, ContestStore::fromModel);
     }
 
-    public Page<Contest> getPastContests(String userJid, SelectionOptions options) {
+    public Page<Contest> getPastContests(String userJid, Optional<Integer> page) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        options.orderBy("beginTime");
+        page.ifPresent(options::page);
+
         Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
-                ? contestDao.selectPagedPast(options)
-                : contestDao.selectPagedPastByUserJid(userJid, options);
+                ? contestDao.selectPagedPast(options.build())
+                : contestDao.selectPagedPastByUserJid(userJid, options.build());
         return models.mapData(data -> Lists.transform(data, ContestStore::fromModel));
     }
 

@@ -41,13 +41,11 @@ class ContestModuleServiceIntegrationTests extends AbstractServiceIntegrationTes
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), REGISTRATION);
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), CLARIFICATION);
 
-        assertThat(moduleService.getModules(ADMIN_HEADER, contest.getJid()))
-                .containsExactlyInAnyOrder(CLARIFICATION, REGISTRATION);
+        assertThat(moduleService.getModules(ADMIN_HEADER, contest.getJid())).containsOnly(CLARIFICATION, REGISTRATION);
 
         moduleService.disableModule(ADMIN_HEADER, contest.getJid(), REGISTRATION);
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), VIRTUAL);
 
-        assertThat(moduleService.getModules(ADMIN_HEADER, contest.getJid()))
-                .containsExactlyInAnyOrder(CLARIFICATION, VIRTUAL);
+        assertThat(moduleService.getModules(ADMIN_HEADER, contest.getJid())).containsOnly(CLARIFICATION, VIRTUAL);
     }
 }

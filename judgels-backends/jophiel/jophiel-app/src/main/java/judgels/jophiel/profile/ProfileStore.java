@@ -45,8 +45,12 @@ public class ProfileStore {
                         .build()));
     }
 
-    public Page<Profile> getTopRatedProfiles(Instant time, SelectionOptions options) {
-        Page<UserWithRating> ratings = ratingStore.getTopRatings(time, options);
+    public Page<Profile> getTopRatedProfiles(Instant time, Optional<Integer> page, Optional<Integer> pageSize) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        page.ifPresent(options::page);
+        pageSize.ifPresent(options::pageSize);
+
+        Page<UserWithRating> ratings = ratingStore.getTopRatings(time, options.build());
         Set<String> userJids = ratings.getData().stream().map(UserWithRating::getUserJid).collect(Collectors.toSet());
         Map<String, User> users = userStore.getUsersByJids(userJids);
         Map<String, UserInfo> infos = infoStore.getInfos(userJids);

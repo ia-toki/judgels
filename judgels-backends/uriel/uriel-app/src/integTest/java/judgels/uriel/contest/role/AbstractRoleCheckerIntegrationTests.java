@@ -5,6 +5,7 @@ import static judgels.persistence.TestClock.NOW;
 
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
+import judgels.persistence.TestClock;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielCacheUtils;
@@ -65,7 +66,7 @@ public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegr
     }
 
     protected void prepare(SessionFactory sessionFactory) {
-        component = createComponent(sessionFactory);
+        component = createComponent(sessionFactory, new TestClock());
 
         AdminRoleStore adminRoleStore = component.adminRoleStore();
         contestStore = component.contestStore();

@@ -85,8 +85,8 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                         .status(DRAFT)
                         .build());
 
-        ContestAnnouncementsResponse response = announcementService
-                .getAnnouncements(of(ADMIN_HEADER), contest.getJid(), empty());
+        ContestAnnouncementsResponse response =
+                announcementService.getAnnouncements(of(ADMIN_HEADER), contest.getJid(), empty());
 
         ContestAnnouncementConfig config = response.getConfig();
         assertThat(config.getCanSupervise()).isTrue();
@@ -94,7 +94,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
         Page<ContestAnnouncement> announcements = response.getData();
         assertThat(announcements.getData()).containsOnly(announcement1, announcement2, announcement3);
 
-        ContestAnnouncement announcement4 = announcementService.updateAnnouncement(
+        announcement1 = announcementService.updateAnnouncement(
                 ADMIN_HEADER,
                 contest.getJid(),
                 announcement1.getJid(),
@@ -104,10 +104,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractServiceIntegrat
                         .status(PUBLISHED)
                         .build());
 
-        announcements = announcementService
-                .getAnnouncements(of(ADMIN_HEADER), contest.getJid(), empty()).getData();
-
-        assertThat(announcements.getData().stream().filter(
-                e -> e.getJid().equals(announcement1.getJid())).toArray()).containsOnly(announcement4);
+        announcements = announcementService.getAnnouncements(of(ADMIN_HEADER), contest.getJid(), empty()).getData();
+        assertThat(announcements.getData()).containsOnly(announcement1, announcement2, announcement3);
     }
 }
