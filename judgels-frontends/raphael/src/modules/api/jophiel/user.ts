@@ -29,7 +29,7 @@ export function createUserAPI() {
       return post(`${baseURL}/username-to-jid`, undefined, usernames);
     },
 
-    getUsers: (token: string, page: number, orderBy?: string, orderDir?: OrderDir): Promise<Page<User>> => {
+    getUsers: (token: string, page?: number, orderBy?: string, orderDir?: OrderDir): Promise<Page<User>> => {
       const params = stringify({ page, orderBy, orderDir });
       return get(`${baseURL}/?${params}`, token);
     },

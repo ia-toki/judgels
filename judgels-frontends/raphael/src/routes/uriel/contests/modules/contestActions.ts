@@ -44,7 +44,7 @@ export const contestActions = {
     };
   },
 
-  getContests: (page: number, pageSize: number) => {
+  getContests: (page?: number, pageSize?: number) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
       return await contestAPI.getContests(token, page, pageSize);

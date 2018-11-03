@@ -8,7 +8,7 @@ export const contestProblemActions = {
     };
   },
 
-  getProblemWorksheet: (contestJid: string, problemAlias: string, language: string) => {
+  getProblemWorksheet: (contestJid: string, problemAlias: string, language?: string) => {
     return async (dispatch, getState, { contestProblemAPI }) => {
       const token = selectToken(getState());
       return await contestProblemAPI.getProblemWorksheet(token, contestJid, problemAlias, language);

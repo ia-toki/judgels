@@ -10,7 +10,7 @@ export const contestClarificationActions = {
     };
   },
 
-  getClarifications: (contestJid: string, language: string, page: number) => {
+  getClarifications: (contestJid: string, language?: string, page?: number) => {
     return async (dispatch, getState, { contestClarificationAPI }) => {
       const token = selectToken(getState());
       return await contestClarificationAPI.getClarifications(token, contestJid, language, page);

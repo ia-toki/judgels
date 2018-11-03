@@ -18,13 +18,13 @@ import { userActions as injectedUserActions } from '../modules/userActions';
 import './UsersPage.css';
 
 export interface UsersPageProps extends RouteComponentProps<{ page: number; orderDir: OrderDir; orderBy: string }> {
-  onGetUsers: (page: number, orderBy?: string, orderDir?: OrderDir) => Promise<Page<User>>;
+  onGetUsers: (page?: number, orderBy?: string, orderDir?: OrderDir) => Promise<Page<User>>;
   onAppendRoute: (queries: any) => any;
 }
 
 interface UsersPageState {
   users?: Page<User>;
-  page: number;
+  page?: number;
   orderBy?: string;
   orderDir?: OrderDir;
 }

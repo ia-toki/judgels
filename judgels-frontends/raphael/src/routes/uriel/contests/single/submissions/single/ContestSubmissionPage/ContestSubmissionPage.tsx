@@ -20,7 +20,7 @@ export interface ContestSubmissionPageProps extends RouteComponentProps<{ submis
   onGetSubmissionWithSource: (
     contestJid: string,
     submissionId: number,
-    language: string
+    language?: string
   ) => Promise<SubmissionWithSourceResponse>;
 }
 

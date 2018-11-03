@@ -12,7 +12,7 @@ export const contestSubmissionActions = {
     };
   },
 
-  getSubmissionWithSource: (contestJid: string, submissionId: number, language: string) => {
+  getSubmissionWithSource: (contestJid: string, submissionId: number, language?: string) => {
     return async (dispatch, getState, { contestSubmissionAPI }) => {
       const token = selectToken(getState());
       const submissionWithSource = await contestSubmissionAPI.getSubmissionWithSource(token, submissionId, language);

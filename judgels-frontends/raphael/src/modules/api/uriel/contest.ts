@@ -57,7 +57,7 @@ export function createContestAPI() {
       return post(`${baseURL}/${contestJid}`, token, data);
     },
 
-    getContests: (token: string, page: number, pageSize: number): Promise<ContestPage> => {
+    getContests: (token: string, page?: number, pageSize?: number): Promise<ContestPage> => {
       const params = stringify({ page, pageSize });
       return get(`${baseURL}?${params}`, token);
     },
@@ -66,7 +66,7 @@ export function createContestAPI() {
       return get(`${baseURL}/active`, token);
     },
 
-    getPastContests: (token: string, page: number, pageSize: number): Promise<ContestPage> => {
+    getPastContests: (token: string, page?: number, pageSize?: number): Promise<ContestPage> => {
       const params = stringify({ page, pageSize });
       return get(`${baseURL}/past?${params}`, token);
     },

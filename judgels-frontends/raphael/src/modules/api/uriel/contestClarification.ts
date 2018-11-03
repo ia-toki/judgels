@@ -61,8 +61,8 @@ export function createContestClarificationAPI() {
     getClarifications: (
       token: string,
       contestJid: string,
-      language: string,
-      page: number
+      language?: string,
+      page?: number
     ): Promise<ContestClarificationsResponse> => {
       const params = stringify({ language, page });
       return get(`${baseURL}/${contestJid}/clarifications?${params}`, token);

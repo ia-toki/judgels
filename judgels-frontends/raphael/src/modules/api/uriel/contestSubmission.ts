@@ -25,7 +25,7 @@ export function createContestSubmissionAPI() {
   return {
     getSubmissions: (
       token: string,
-      contestJid: string,
+      contestJid?: string,
       userJid?: string,
       problemJid?: string,
       page?: number
@@ -37,7 +37,7 @@ export function createContestSubmissionAPI() {
     getSubmissionWithSource: (
       token: string,
       submissionId: number,
-      language: string
+      language?: string
     ): Promise<SubmissionWithSourceResponse> => {
       const params = stringify({ language });
       return get(`${baseURL}/id/${submissionId}?${params}`, token);

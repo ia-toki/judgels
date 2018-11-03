@@ -12,7 +12,7 @@ import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog'
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 
 export interface ContestsPageProps extends RouteComponentProps<{}> {
-  onGetContests: (page: number) => Promise<ContestPage>;
+  onGetContests: (page?: number) => Promise<ContestPage>;
   onGetContestConfig: () => Promise<ContestConfig>;
   onCreateContest: (data: ContestCreateData) => Promise<Contest>;
 }

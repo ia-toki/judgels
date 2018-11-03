@@ -28,7 +28,7 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
   onGetProblemWorksheet: (
     contestJid: string,
     problemAlias: string,
-    language: string
+    language?: string
   ) => Promise<ContestContestantProblemWorksheet>;
   onCreateSubmission: (
     contestJid: string,

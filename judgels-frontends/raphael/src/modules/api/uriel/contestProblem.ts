@@ -1,3 +1,5 @@
+import { stringify } from 'query-string';
+
 import { APP_CONFIG } from 'conf';
 import { get } from 'modules/api/http';
 import { ProblemInfo, ProblemWorksheet } from 'modules/api/sandalphon/problem';
@@ -43,10 +45,10 @@ export function createContestProblemAPI() {
       token: string,
       contestJid: string,
       problemAlias: string,
-      language: string
+      language?: string
     ): Promise<ContestContestantProblemWorksheet> => {
-      const languageParam = language ? `?language=${language}` : '';
-      return get(`${baseURL}/${contestJid}/problems/${problemAlias}/worksheet${languageParam}`, token);
+      const params = stringify({ language });
+      return get(`${baseURL}/${contestJid}/problems/${problemAlias}/worksheet?${params}`, token);
     },
   };
 }
