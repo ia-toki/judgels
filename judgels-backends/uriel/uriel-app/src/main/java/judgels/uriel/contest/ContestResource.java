@@ -4,18 +4,19 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.uriel.api.contest.ActiveContestsResponse;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestConfig;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestDescription;
 import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.api.contest.ContestUpdateData;
+import judgels.uriel.api.contest.ContestsResponse;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 
 public class ContestResource implements ContestService {
@@ -79,23 +80,28 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Page<Contest> getContests(Optional<AuthHeader> authHeader, Optional<Integer> page) {
+    public ContestsResponse getContests(Optional<AuthHeader> authHeader, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
-        return contestStore.getContests(actorJid, page);
+
+        Page<Contest> contests = contestStore.getContests(actorJid, page);
+        boolean canAdminister = contestRoleChecker.canAdminister(actorJid);
+        ContestConfig config =  new ContestConfig.Builder()
+                .canAdminister(canAdminister)
+                .build();
+
+        return new ContestsResponse.Builder()
+                .data(contests)
+                .config(config)
+                .build();
     }
 
     @Override
     @UnitOfWork(readOnly = true)
-    public List<Contest> getActiveContests(Optional<AuthHeader> authHeader) {
+    public ActiveContestsResponse getActiveContests(Optional<AuthHeader> authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        return contestStore.getActiveContests(actorJid);
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public Page<Contest> getPastContests(Optional<AuthHeader> authHeader, Optional<Integer> page) {
-        String actorJid = actorChecker.check(authHeader);
-        return contestStore.getPastContests(actorJid, page);
+        return new ActiveContestsResponse.Builder()
+                .data(contestStore.getActiveContests(actorJid))
+                .build();
     }
 
     @Override
@@ -129,16 +135,5 @@ public class ContestResource implements ContestService {
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
 
         return checkFound(contestStore.updateContestDescription(contest.getJid(), description));
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public ContestConfig getContestConfig(Optional<AuthHeader> authHeader) {
-        String actorJid = actorChecker.check(authHeader);
-        boolean canAdminister = contestRoleChecker.canAdminister(actorJid);
-
-        return new ContestConfig.Builder()
-                .canAdminister(canAdminister)
-                .build();
     }
 }

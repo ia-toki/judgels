@@ -151,13 +151,28 @@ describe('contestActions', () => {
         totalCount: 3,
         page: [],
       };
-      contestAPI.getContests.mockReturnValue(Promise.resolve(contestPage));
+      contestAPI.getContests.mockReturnValue(Promise.resolve({ data: contestPage }));
 
       await doGetContests();
     });
 
     it('calls API to get contests', () => {
       expect(contestAPI.getContests).toHaveBeenCalledWith(token, 2, 20);
+    });
+  });
+
+  describe('getActiveContests()', () => {
+    const { getActiveContests } = contestActions;
+    const doGetActiveContests = async () => getActiveContests()(dispatch, getState, { contestAPI });
+
+    beforeEach(async () => {
+      contestAPI.getContests.mockReturnValue(Promise.resolve({ data: [] }));
+
+      await doGetActiveContests();
+    });
+
+    it('calls API to get active contests', () => {
+      expect(contestAPI.getActiveContests).toHaveBeenCalledWith(token);
     });
   });
 

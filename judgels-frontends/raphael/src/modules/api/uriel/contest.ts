@@ -18,6 +18,15 @@ export interface ContestConfig {
   canAdminister: boolean;
 }
 
+export interface ContestsResponse {
+  data: Page<Contest>;
+  config: ContestConfig;
+}
+
+export interface ActiveContestsResponse {
+  data: Contest[];
+}
+
 export interface ContestCreateData {
   slug: string;
 }
@@ -57,18 +66,13 @@ export function createContestAPI() {
       return post(`${baseURL}/${contestJid}`, token, data);
     },
 
-    getContests: (token: string, page?: number, pageSize?: number): Promise<ContestPage> => {
+    getContests: (token: string, page?: number, pageSize?: number): Promise<ContestsResponse> => {
       const params = stringify({ page, pageSize });
       return get(`${baseURL}?${params}`, token);
     },
 
-    getActiveContests: (token: string): Promise<Contest[]> => {
+    getActiveContests: (token: string): Promise<ActiveContestsResponse> => {
       return get(`${baseURL}/active`, token);
-    },
-
-    getPastContests: (token: string, page?: number, pageSize?: number): Promise<ContestPage> => {
-      const params = stringify({ page, pageSize });
-      return get(`${baseURL}/past?${params}`, token);
     },
 
     getContestBySlug: (token: string, contestSlug: string): Promise<Contest> => {
@@ -89,10 +93,6 @@ export function createContestAPI() {
       description: ContestDescription
     ): Promise<ContestDescription> => {
       return post(`${baseURL}/${contestJid}/description`, token, description);
-    },
-
-    getContestConfig: (token: string): Promise<ContestConfig> => {
-      return get(`${baseURL}/config`, token);
     },
   };
 }

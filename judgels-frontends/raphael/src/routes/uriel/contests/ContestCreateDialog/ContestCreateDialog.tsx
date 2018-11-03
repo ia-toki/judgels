@@ -1,34 +1,22 @@
 import { Intent, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Contest, ContestConfig, ContestCreateData } from 'modules/api/uriel/contest';
+import { Contest, ContestCreateData } from 'modules/api/uriel/contest';
 
 import ContestCreateForm from '../ContestCreateForm/ContestCreateForm';
 
 interface ContestCreateDialogProps {
-  onGetContestConfig: () => Promise<ContestConfig>;
   onCreateContest: (data: ContestCreateData) => Promise<Contest>;
 }
 
 interface ContestCreateDialogState {
-  config?: ContestConfig;
   isDialogOpen?: boolean;
 }
 
 export class ContestCreateDialog extends React.Component<ContestCreateDialogProps, ContestCreateDialogState> {
   state: ContestCreateDialogState = {};
 
-  async componentDidMount() {
-    const config = await this.props.onGetContestConfig();
-    this.setState({ config });
-  }
-
   render() {
-    const { config } = this.state;
-    if (!config || !config.canAdminister) {
-      return null;
-    }
-
     return (
       <div className="content-card__section">
         {this.renderButton()}

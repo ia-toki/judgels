@@ -1,5 +1,6 @@
 package judgels.uriel.api.contest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Duration;
 import java.time.Instant;
@@ -16,6 +17,7 @@ public interface Contest {
     Instant getBeginTime();
     Duration getDuration();
 
+    @JsonIgnore
     default Instant getEndTime() {
         return getBeginTime().plus(getDuration());
     }

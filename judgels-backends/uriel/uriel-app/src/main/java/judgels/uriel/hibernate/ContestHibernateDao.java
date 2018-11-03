@@ -1,6 +1,5 @@
 package judgels.uriel.hibernate;
 
-import static judgels.persistence.CustomPredicateFilter.not;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasViewerOrAbove;
 
 import java.time.Clock;
@@ -50,13 +49,6 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     }
 
     @Override
-    public Page<ContestModel> selectPagedPast(SelectionOptions options) {
-        return selectPaged(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(isPast(clock))
-                .build(), options);
-    }
-
-    @Override
     public Page<ContestModel> selectPagedByUserJid(String userJid, SelectionOptions options) {
         return selectPaged(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasViewerOrAbove(userJid))
@@ -71,19 +63,11 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
                 .build(), options);
     }
 
-    @Override
-    public Page<ContestModel> selectPagedPastByUserJid(String userJid, SelectionOptions options) {
-        return selectPaged(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(hasViewerOrAbove(userJid))
-                .addCustomPredicates(isPast(clock))
-                .build(), options);
-    }
-
     static CustomPredicateFilter<ContestModel> hasContestJid(String contestJid) {
         return (cb, cq, root) -> cb.equal(root.get(ContestModel_.jid), contestJid);
     }
 
-    // The following two predicates are currently not testable because H2 does not have 'unix_timestamp' function.
+    // The following predicate is currently not testable because H2 does not have 'unix_timestamp' function.
     static CustomPredicateFilter<ContestModel> isActive(Clock clock) {
         return (cb, cq, root) -> {
             long currentInstantEpoch = clock.instant().toEpochMilli();
@@ -94,9 +78,5 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
             return cb.greaterThanOrEqualTo(endTime, cb.literal(currentInstantEpoch));
         };
-    }
-
-    static CustomPredicateFilter<ContestModel> isPast(Clock clock) {
-        return not(isActive(clock));
     }
 }

@@ -10,9 +10,7 @@ public interface ContestDao extends JudgelsDao<ContestModel> {
     Optional<ContestModel> selectBySlug(String contestSlug);
 
     List<ContestModel> selectAllActive(SelectionOptions options);
-    Page<ContestModel> selectPagedPast(SelectionOptions options);
 
     Page<ContestModel> selectPagedByUserJid(String userJid, SelectionOptions options);
     List<ContestModel> selectAllActiveByUserJid(String userJid, SelectionOptions options);
-    Page<ContestModel> selectPagedPastByUserJid(String userJid, SelectionOptions options);
 }

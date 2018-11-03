@@ -90,12 +90,5 @@ export const contestActions = {
     };
   },
 
-  getContestConfig: () => {
-    return async (dispatch, getState, { contestAPI }) => {
-      const token = selectToken(getState());
-      return await contestAPI.getContestConfig(token);
-    };
-  },
-
   clearContest: DelContest.create,
 };

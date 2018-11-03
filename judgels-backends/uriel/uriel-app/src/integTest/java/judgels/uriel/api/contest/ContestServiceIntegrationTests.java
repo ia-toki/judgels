@@ -14,7 +14,6 @@ import com.google.common.collect.ImmutableSet;
 import com.palantir.remoting.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
-import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import org.junit.jupiter.api.Test;
@@ -73,10 +72,15 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
                 contestB.getJid(),
                 ImmutableSet.of(USER_A_JID, USER_B_JID));
 
-        Page<Contest> contests = contestService.getContests(of(USER_A_HEADER), empty());
-        assertThat(contests.getPage()).containsOnly(contestB, contestA);
+        ContestsResponse response = contestService.getContests(of(USER_A_HEADER), empty());
+        assertThat(response.getData().getPage()).containsOnly(contestB, contestA);
+        assertThat(response.getConfig().getCanAdminister()).isFalse();
 
-        contests = contestService.getContests(of(USER_B_HEADER), empty());
-        assertThat(contests.getPage()).containsOnly(contestB);
+        response = contestService.getContests(of(USER_B_HEADER), empty());
+        assertThat(response.getData().getPage()).containsOnly(contestB);
+        assertThat(response.getConfig().getCanAdminister()).isFalse();
+
+        response = contestService.getContests(of(ADMIN_HEADER), empty());
+        assertThat(response.getConfig().getCanAdminister()).isTrue();
     }
 }

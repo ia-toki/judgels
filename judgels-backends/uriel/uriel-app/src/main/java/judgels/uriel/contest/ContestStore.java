@@ -88,17 +88,6 @@ public class ContestStore {
         return Lists.transform(models, ContestStore::fromModel);
     }
 
-    public Page<Contest> getPastContests(String userJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        options.orderBy("beginTime");
-        page.ifPresent(options::page);
-
-        Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
-                ? contestDao.selectPagedPast(options.build())
-                : contestDao.selectPagedPastByUserJid(userJid, options.build());
-        return models.mapPage(p -> Lists.transform(p, ContestStore::fromModel));
-    }
-
     public Contest createContest(ContestCreateData contestCreateData) {
         if (contestDao.selectBySlug(contestCreateData.getSlug()).isPresent()) {
             throw ContestErrors.contestSlugAlreadyExists(contestCreateData.getSlug());
@@ -109,7 +98,7 @@ public class ContestStore {
         model.name = contestCreateData.getSlug();
         model.description = "";
         model.style = ContestStyle.ICPC.name();
-        model.beginTime = Instant.ofEpochSecond(4102444800L); // 1 January 2100;
+        model.beginTime = Instant.ofEpochSecond(4102444800L); // 1 January 2100
         model.duration = Duration.ofHours(5).toMillis();
 
         return fromModel(contestDao.insert(model));
