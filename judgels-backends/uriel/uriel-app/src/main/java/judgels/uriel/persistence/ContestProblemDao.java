@@ -6,8 +6,8 @@ import judgels.persistence.Dao;
 import judgels.persistence.api.SelectionOptions;
 
 public interface ContestProblemDao extends Dao<ContestProblemModel> {
-    Optional<ContestProblemModel> selectByContestJidAndProblemJid(String contestJid, String problemJid);
-    Optional<ContestProblemModel> selectByContestJidAndProblemAlias(String contestJid, String problemAlias);
-    List<ContestProblemModel> selectAllByContestJid(String contestJid, SelectionOptions options);
+    Optional<ContestProblemModel> selectUsedByContestJidAndProblemJid(String contestJid, String problemJid);
+    Optional<ContestProblemModel> selectUsedByContestJidAndProblemAlias(String contestJid, String problemAlias);
+    List<ContestProblemModel> selectAllUsedByContestJid(String contestJid, SelectionOptions options);
     List<ContestProblemModel> selectAllOpenByContestJid(String contestJid, SelectionOptions options);
 }

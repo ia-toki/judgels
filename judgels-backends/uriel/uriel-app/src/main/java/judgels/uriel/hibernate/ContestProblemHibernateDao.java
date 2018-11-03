@@ -1,5 +1,9 @@
 package judgels.uriel.hibernate;
 
+import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
+import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
+
+import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +13,6 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
-import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
 import judgels.uriel.persistence.ContestProblemModel_;
@@ -23,25 +26,28 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     }
 
     @Override
-    public Optional<ContestProblemModel> selectByContestJidAndProblemJid(String contestJid, String problemJid) {
+    public Optional<ContestProblemModel> selectUsedByContestJidAndProblemJid(String contestJid, String problemJid) {
         return selectByFilter(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
                 .putColumnsEq(ContestProblemModel_.problemJid, problemJid)
+                .putColumnsIn(ContestProblemModel_.status, ImmutableSet.of(OPEN.name(), CLOSED.name()))
                 .build());
     }
 
     @Override
-    public Optional<ContestProblemModel> selectByContestJidAndProblemAlias(String contestJid, String problemAlias) {
+    public Optional<ContestProblemModel> selectUsedByContestJidAndProblemAlias(String contestJid, String problemAlias) {
         return selectByFilter(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
                 .putColumnsEq(ContestProblemModel_.alias, problemAlias)
+                .putColumnsIn(ContestProblemModel_.status, ImmutableSet.of(OPEN.name(), CLOSED.name()))
                 .build());
     }
 
     @Override
-    public List<ContestProblemModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
+    public List<ContestProblemModel> selectAllUsedByContestJid(String contestJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
+                .putColumnsIn(ContestProblemModel_.status, ImmutableSet.of(OPEN.name(), CLOSED.name()))
                 .build(), options);
     }
 
@@ -49,7 +55,7 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     public List<ContestProblemModel> selectAllOpenByContestJid(String contestJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
-                .putColumnsEq(ContestProblemModel_.status, ContestProblemStatus.OPEN.name())
+                .putColumnsEq(ContestProblemModel_.status, OPEN.name())
                 .build(), options);
     }
 }

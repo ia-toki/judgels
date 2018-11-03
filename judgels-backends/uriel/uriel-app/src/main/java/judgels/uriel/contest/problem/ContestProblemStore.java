@@ -30,7 +30,7 @@ public class ContestProblemStore {
 
     public void upsertProblem(String contestJid, ContestProblemData data) {
         Optional<ContestProblemModel> maybeModel =
-                problemDao.selectByContestJidAndProblemJid(contestJid, data.getProblemJid());
+                problemDao.selectUsedByContestJidAndProblemJid(contestJid, data.getProblemJid());
         if (maybeModel.isPresent()) {
             ContestProblemModel model = maybeModel.get();
             model.alias = data.getAlias();
@@ -49,7 +49,7 @@ public class ContestProblemStore {
     }
 
     public Optional<ContestProblem> getProblem(String contestJid, String problemJid) {
-        return problemDao.selectByContestJidAndProblemJid(contestJid, problemJid)
+        return problemDao.selectUsedByContestJidAndProblemJid(contestJid, problemJid)
                 .map(ContestProblemStore::fromModel);
     }
 
@@ -58,7 +58,7 @@ public class ContestProblemStore {
             String userJid,
             String problemJid) {
 
-        return problemDao.selectByContestJidAndProblemJid(contestJid, problemJid)
+        return problemDao.selectUsedByContestJidAndProblemJid(contestJid, problemJid)
                 .map(model -> contestantProblemFromModel(model, userJid));
     }
 
@@ -67,13 +67,13 @@ public class ContestProblemStore {
             String userJid,
             String problemAlias) {
 
-        return problemDao.selectByContestJidAndProblemAlias(contestJid, problemAlias)
+        return problemDao.selectUsedByContestJidAndProblemAlias(contestJid, problemAlias)
                 .map(model -> contestantProblemFromModel(model, userJid));
     }
 
     public List<ContestContestantProblem> getContestantProblems(String contestJid, String userJid) {
         List<ContestProblem> problems = Lists.transform(
-                problemDao.selectAllByContestJid(contestJid, createOptions()),
+                problemDao.selectAllUsedByContestJid(contestJid, createOptions()),
                 ContestProblemStore::fromModel);
 
         Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
@@ -91,7 +91,7 @@ public class ContestProblemStore {
     }
 
     public Map<String, String> getProblemAliasesByJids(String contestJid, Set<String> problemJids) {
-        Map<String, String> problemAliases = problemDao.selectAllByContestJid(contestJid, createOptions())
+        Map<String, String> problemAliases = problemDao.selectAllUsedByContestJid(contestJid, createOptions())
                 .stream()
                 .collect(Collectors.toMap(m -> m.problemJid, m -> m.alias));
         return problemJids
