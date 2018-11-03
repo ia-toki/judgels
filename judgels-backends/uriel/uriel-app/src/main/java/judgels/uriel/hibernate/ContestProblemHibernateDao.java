@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
-import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
@@ -40,23 +39,17 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     }
 
     @Override
-    public List<ContestProblemModel> selectAllByContestJid(String contestJid) {
+    public List<ContestProblemModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
-                .build(), new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
-                .orderBy("alias")
-                .orderDir(OrderDir.ASC)
-                .build());
+                .build(), options);
     }
 
     @Override
-    public List<ContestProblemModel> selectAllOpenByContestJid(String contestJid) {
+    public List<ContestProblemModel> selectAllOpenByContestJid(String contestJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
                 .putColumnsEq(ContestProblemModel_.status, ContestProblemStatus.OPEN.name())
-                .build(), new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
-                .orderBy("alias")
-                .orderDir(OrderDir.ASC)
-                .build());
+                .build(), options);
     }
 }

@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.persistence.api.OrderDir;
+import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemData;
@@ -55,6 +57,7 @@ public class ContestProblemStore {
             String contestJid,
             String userJid,
             String problemJid) {
+
         return problemDao.selectByContestJidAndProblemJid(contestJid, problemJid)
                 .map(model -> contestantProblemFromModel(model, userJid));
     }
@@ -63,12 +66,16 @@ public class ContestProblemStore {
             String contestJid,
             String userJid,
             String problemAlias) {
+
         return problemDao.selectByContestJidAndProblemAlias(contestJid, problemAlias)
                 .map(model -> contestantProblemFromModel(model, userJid));
     }
 
     public List<ContestContestantProblem> getContestantProblems(String contestJid, String userJid) {
-        List<ContestProblem> problems = getProblems(contestJid);
+        List<ContestProblem> problems = Lists.transform(
+                problemDao.selectAllByContestJid(contestJid, createOptions()),
+                ContestProblemStore::fromModel);
+
         Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
         Map<String, Long> submissionCounts = submissionDao.selectCounts(contestJid, userJid, problemJids);
         return Lists.transform(problems, problem ->
@@ -79,23 +86,24 @@ public class ContestProblemStore {
     }
 
     public List<String> getOpenProblemJids(String contestJid) {
-        return Lists.transform(problemDao.selectAllOpenByContestJid(contestJid), model -> model.problemJid);
-    }
-
-    public List<ContestProblem> getProblems(String contestJid) {
-        return problemDao.selectAllByContestJid(contestJid)
-                .stream()
-                .map(ContestProblemStore::fromModel)
-                .collect(Collectors.toList());
+        return Lists.transform(
+                problemDao.selectAllOpenByContestJid(contestJid, createOptions()), model -> model.problemJid);
     }
 
     public Map<String, String> getProblemAliasesByJids(String contestJid, Set<String> problemJids) {
-        Map<String, String> problemAliases = problemDao.selectAllByContestJid(contestJid)
+        Map<String, String> problemAliases = problemDao.selectAllByContestJid(contestJid, createOptions())
                 .stream()
                 .collect(Collectors.toMap(m -> m.problemJid, m -> m.alias));
         return problemJids
                 .stream()
                 .collect(Collectors.toMap(jid -> jid, problemAliases::get));
+    }
+
+    private static SelectionOptions createOptions() {
+        return new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
+                .orderBy("alias")
+                .orderDir(OrderDir.ASC)
+                .build();
     }
 
     private static ContestProblem fromModel(ContestProblemModel model) {
