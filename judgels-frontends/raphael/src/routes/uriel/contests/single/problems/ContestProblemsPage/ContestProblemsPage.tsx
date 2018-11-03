@@ -15,7 +15,7 @@ import {
 } from 'modules/api/uriel/contestProblem';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { consolidateLanguages } from 'modules/api/sandalphon/language';
-import { getProblemName, ProblemInfo } from 'modules/api/sandalphon/problem';
+import { getProblemName } from 'modules/api/sandalphon/problem';
 import { AppState } from 'modules/store';
 
 import { ContestContestantProblemCard } from '../ContestContestantProblemCard/ContestContestantProblemCard';
@@ -29,8 +29,7 @@ export interface ContestProblemsPageProps {
 }
 
 interface ContestProblemsPageState {
-  contestantProblems?: ContestContestantProblem[];
-  problemsMap?: { [problemJid: string]: ProblemInfo };
+  response?: ContestContestantProblemsResponse;
   defaultLanguage?: string;
   uniqueLanguages?: string[];
 }
@@ -39,21 +38,26 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
   state: ContestProblemsPageState = {};
 
   async componentDidMount() {
-    const { data, problemsMap } = await this.props.onGetMyProblems(this.props.contest.jid);
-    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(problemsMap, this.props.statementLanguage);
+    const response = await this.props.onGetMyProblems(this.props.contest.jid);
+    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
+      response.problemsMap,
+      this.props.statementLanguage
+    );
 
     this.setState({
-      contestantProblems: data,
-      problemsMap,
+      response,
       defaultLanguage,
       uniqueLanguages,
     });
   }
 
   async componentDidUpdate(prevProps: ContestProblemsPageProps, prevState: ContestProblemsPageState) {
-    const { problemsMap } = this.state;
-    if (this.props.statementLanguage !== prevProps.statementLanguage && problemsMap) {
-      const { defaultLanguage, uniqueLanguages } = consolidateLanguages(problemsMap, this.props.statementLanguage);
+    const { response } = this.state;
+    if (this.props.statementLanguage !== prevProps.statementLanguage && response) {
+      const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
+        response.problemsMap,
+        this.props.statementLanguage
+      );
 
       this.setState({
         defaultLanguage,
@@ -68,7 +72,7 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
         <h3>Problems</h3>
         <hr />
         {this.renderStatementLanguageWidget()}
-        {this.renderContestantProblems()}
+        {this.renderProblems()}
       </ContentCard>
     );
   }
@@ -86,13 +90,15 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
     return <StatementLanguageWidget {...props} />;
   };
 
-  private renderContestantProblems = () => {
-    const { contestantProblems, problemsMap } = this.state;
-    if (!contestantProblems || !problemsMap) {
+  private renderProblems = () => {
+    const { response } = this.state;
+    if (!response) {
       return <LoadingState />;
     }
 
-    if (contestantProblems.length === 0) {
+    const { data: problems } = response;
+
+    if (problems.length === 0) {
       return (
         <p>
           <small>No problems.</small>
@@ -102,37 +108,33 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
 
     return (
       <div>
-        {this.renderOpenContestantProblems(
-          contestantProblems.filter(p => p.problem.status === ContestProblemStatus.Open)
-        )}
-        {this.renderClosedContestantProblems(
-          contestantProblems.filter(p => p.problem.status === ContestProblemStatus.Closed)
-        )}
+        {this.renderOpenProblems(problems.filter(p => p.problem.status === ContestProblemStatus.Open))}
+        {this.renderClosedProblems(problems.filter(p => p.problem.status === ContestProblemStatus.Closed))}
       </div>
     );
   };
 
-  private renderOpenContestantProblems = (contestantProblems: ContestContestantProblem[]) => {
-    return <div>{this.renderFilteredContestantProblems(contestantProblems)}</div>;
+  private renderOpenProblems = (contestantProblems: ContestContestantProblem[]) => {
+    return <div>{this.renderFilteredProblems(contestantProblems)}</div>;
   };
 
-  private renderClosedContestantProblems = (contestantProblems: ContestContestantProblem[]) => {
+  private renderClosedProblems = (contestantProblems: ContestContestantProblem[]) => {
     return (
       <div>
         {contestantProblems.length !== 0 && <hr />}
-        {this.renderFilteredContestantProblems(contestantProblems)}
+        {this.renderFilteredProblems(contestantProblems)}
       </div>
     );
   };
 
-  private renderFilteredContestantProblems = (contestantProblems: ContestContestantProblem[]) => {
+  private renderFilteredProblems = (contestantProblems: ContestContestantProblem[]) => {
     return contestantProblems.map(contestantProblem => (
       <ContestContestantProblemCard
         key={contestantProblem.problem.problemJid}
         contest={this.props.contest}
         contestantProblem={contestantProblem}
         problemName={getProblemName(
-          this.state.problemsMap![contestantProblem.problem.problemJid],
+          this.state.response!.problemsMap[contestantProblem.problem.problemJid],
           this.state.defaultLanguage!
         )}
       />
