@@ -2,9 +2,8 @@ import { Tag } from '@blueprintjs/core';
 import * as base64 from 'base-64';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import SyntaxHighlighter from 'react-syntax-highlighter/prism';
-import { prism } from 'react-syntax-highlighter/styles/prism';
 
+import { SourceCode } from 'components/SourceCode/SourceCode';
 import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ContentCard } from 'components/ContentCard/ContentCard';
@@ -259,12 +258,9 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         <h5>
           {key === 'source' ? '' : key + ': '} {source.submissionFiles[key].name}
         </h5>
-        <SyntaxHighlighter
-          language={getGradingLanguageSyntaxHighlighterValue(submission.gradingLanguage)}
-          style={prism}
-        >
+        <SourceCode language={getGradingLanguageSyntaxHighlighterValue(submission.gradingLanguage)}>
           {base64.decode(source.submissionFiles[key].content)}
-        </SyntaxHighlighter>
+        </SourceCode>
         {details && (
           <div className="compilation-output">
             <h5>Compilation Output</h5>
