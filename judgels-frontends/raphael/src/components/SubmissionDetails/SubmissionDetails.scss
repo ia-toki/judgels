@@ -41,6 +41,7 @@
   .col-centered {
     text-align: center;
   }
+
   .test-group__id {
     float: left;
   }
@@ -52,6 +53,10 @@
   .test-group__subtasks {
     font-weight: 600;
     margin-right: 5px;
+  }
+
+  .subtask-tag {
+    margin-right: 2px;
   }
 
   .compilation-output {
