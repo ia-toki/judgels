@@ -32,7 +32,7 @@ export class FormRichTextArea extends React.PureComponent<FormInputProps> {
 
     return (
       <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)}>
-        <textarea {...input} className="tinymce" />
+        <textarea {...input} className="tinymce" rows={16} />
         <FormInputValidation meta={meta} />
       </FormGroup>
     );

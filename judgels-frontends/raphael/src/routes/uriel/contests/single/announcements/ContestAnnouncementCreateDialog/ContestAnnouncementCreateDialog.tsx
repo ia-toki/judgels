@@ -6,6 +6,8 @@ import { Contest } from 'modules/api/uriel/contest';
 
 import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/ContestAnnouncementCreateForm';
 
+import './ContestAnnouncementCreateDialog.css';
+
 export interface ContestAnnouncementCreateDialogProps {
   contest: Contest;
   onCreateAnnouncement: (contestJid: string, data: ContestAnnouncementData) => void;
@@ -49,6 +51,7 @@ export class ContestAnnouncementCreateDialog extends React.Component<
     };
     return (
       <Dialog
+        className="contest-announcement-create-dialog"
         isOpen={this.state.isDialogOpen || false}
         onClose={this.toggleDialog}
         title="Create new announcement"
@@ -61,7 +64,7 @@ export class ContestAnnouncementCreateDialog extends React.Component<
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className="bp3-dialog-body">{fields}</div>
+      <div className="bp3-dialog-body contest-announcement-create-dialog-body">{fields}</div>
       <div className="bp3-dialog-footer">
         <div className="bp3-dialog-footer-actions">
           <Button text="Cancel" onClick={this.toggleDialog} />

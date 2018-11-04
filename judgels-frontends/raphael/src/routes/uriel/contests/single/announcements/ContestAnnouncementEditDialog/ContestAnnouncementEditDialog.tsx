@@ -6,6 +6,8 @@ import { Contest } from 'modules/api/uriel/contest';
 
 import ContestAnnouncementEditForm from '../ContestAnnouncementEditForm/ContestAnnouncementEditForm';
 
+import './ContestAnnouncementEditDialog.css';
+
 export interface ContestAnnouncementEditDialogProps {
   contest: Contest;
   announcement?: ContestAnnouncement;
@@ -29,6 +31,7 @@ export class ContestAnnouncementEditDialog extends React.Component<ContestAnnoun
 
     return (
       <Dialog
+        className="contest-announcement-edit-dialog"
         isOpen={!!this.props.announcement}
         onClose={this.closeDialog}
         title="Edit announcement"
@@ -41,7 +44,7 @@ export class ContestAnnouncementEditDialog extends React.Component<ContestAnnoun
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className="bp3-dialog-body">{fields}</div>
+      <div className="bp3-dialog-body contest-announcement-edit-dialog-body">{fields}</div>
       <div className="bp3-dialog-footer">
         <div className="bp3-dialog-footer-actions">
           <Button text="Cancel" onClick={this.closeDialog} />

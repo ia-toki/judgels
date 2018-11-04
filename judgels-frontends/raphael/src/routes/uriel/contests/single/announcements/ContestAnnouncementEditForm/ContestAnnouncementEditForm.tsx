@@ -37,6 +37,7 @@ const ContestAnnouncementEditForm = (props: ContestAnnouncementEditFormProps) =>
   const contentField: any = {
     name: 'content',
     label: 'Content',
+    rows: 16,
     validate: [Required],
   };
 
