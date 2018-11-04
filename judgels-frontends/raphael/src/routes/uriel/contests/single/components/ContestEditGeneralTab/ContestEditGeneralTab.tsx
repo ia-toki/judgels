@@ -32,6 +32,7 @@ class ContestEditGeneralTab extends React.Component<ContestEditGeneralTabProps, 
           General settings
           {this.renderEditButton()}
         </h4>
+        <hr />
         {this.renderContent()}
       </>
     );

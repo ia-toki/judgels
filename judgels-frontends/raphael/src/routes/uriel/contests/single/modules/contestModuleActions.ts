@@ -1,5 +1,5 @@
 import { selectToken } from 'modules/session/sessionSelectors';
-import { ContestModuleType } from 'modules/api/uriel/contestModule';
+import { ContestModulesConfig, ContestModuleType } from 'modules/api/uriel/contestModule';
 
 export const contestModuleActions = {
   getModules: (contestJid: string) => {
@@ -20,6 +20,20 @@ export const contestModuleActions = {
     return async (dispatch, getState, { contestModuleAPI }) => {
       const token = selectToken(getState());
       return await contestModuleAPI.disableModule(token, contestJid, type);
+    };
+  },
+
+  getConfig: (contestJid: string) => {
+    return async (dispatch, getState, { contestModuleAPI }) => {
+      const token = selectToken(getState());
+      return await contestModuleAPI.getConfig(token, contestJid);
+    };
+  },
+
+  upsertConfig: (contestJid: string, config: ContestModulesConfig) => {
+    return async (dispatch, getState, { contestModuleAPI }) => {
+      const token = selectToken(getState());
+      await contestModuleAPI.upsertConfig(token, contestJid, config);
     };
   },
 };

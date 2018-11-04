@@ -26,14 +26,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ContestModuleType;
+import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.DelayedGradingModuleConfig;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
+import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
+import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
+import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
+import judgels.uriel.persistence.ContestStyleDao;
+import judgels.uriel.persistence.ContestStyleModel;
 
 @Singleton
 public class ContestModuleStore {
@@ -48,13 +55,15 @@ public class ContestModuleStore {
 
     private static final Set<ContestModuleType> ALWAYS_ENABLED_MODULES = ImmutableSet.of(SCOREBOARD);
 
+    private final ContestStyleDao styleDao; // TODO(fushar): put style config in module store as well
     private final ContestModuleDao moduleDao;
     private final ObjectMapper mapper;
 
     private final Cache<String, Optional<?>> moduleCache;
 
     @Inject
-    public ContestModuleStore(ContestModuleDao moduleDao, ObjectMapper mapper) {
+    public ContestModuleStore(ContestStyleDao styleDao, ContestModuleDao moduleDao, ObjectMapper mapper) {
+        this.styleDao = styleDao;
         this.moduleDao = moduleDao;
         this.mapper = mapper;
 
@@ -95,12 +104,68 @@ public class ContestModuleStore {
         }
     }
 
+    public ContestModulesConfig getConfig(String contestJid, ContestStyle contestStyle) {
+        ContestModulesConfig.Builder config = new ContestModulesConfig.Builder()
+                .scoreboard(getScoreboardModuleConfig(contestJid))
+                .clarificationTimeLimit(getClarificationTimeLimitModuleConfig(contestJid))
+                .delayedGrading(getDelayedGradingModuleConfig(contestJid))
+                .frozenScoreboard(getFrozenScoreboardModuleConfig(contestJid))
+                .virtual(getVirtualModuleConfig(contestJid));
+
+        if (contestStyle == ContestStyle.IOI) {
+            config.ioiStyle(getIoiStyleModuleConfig(contestJid));
+        } else {
+            config.icpcStyle(getIcpcStyleModuleConfig(contestJid));
+        }
+
+        return config.build();
+    }
+
+    public void upsertConfig(String contestJid, ContestModulesConfig config) {
+        config.getIcpcStyle().ifPresent(c -> upsertIcpcStyleModule(contestJid, c));
+        config.getIoiStyle().ifPresent(c -> upsertIoiStyleModule(contestJid, c));
+
+        upsertScoreboardModule(contestJid, config.getScoreboard());
+
+        config.getClarificationTimeLimit().ifPresent(c -> upsertClarificationTimeLimitModule(contestJid, c));
+        config.getDelayedGrading().ifPresent(c -> upsertDelayedGradingModule(contestJid, c));
+        config.getFrozenScoreboard().ifPresent(c -> upsertFrozenScoreboardModule(contestJid, c));
+        config.getVirtual().ifPresent(c -> upsertVirtualModule(contestJid, c));
+    }
+
+    public void upsertIoiStyleModule(String contestJid, IoiStyleModuleConfig config) {
+        upsertStyleConfig(contestJid, config);
+    }
+
+    public void upsertIcpcStyleModule(String contestJid, IcpcStyleModuleConfig config) {
+        upsertStyleConfig(contestJid, config);
+    }
+
+    public StyleModuleConfig getStyleModuleConfig(String contestJid) {
+        return getStyleConfig(contestJid, StyleModuleConfig.class)
+                .orElse(new StyleModuleConfig.Builder().build());
+    }
+
+    public IcpcStyleModuleConfig getIcpcStyleModuleConfig(String contestJid) {
+        return getStyleConfig(contestJid, IcpcStyleModuleConfig.class)
+                .orElse(new IcpcStyleModuleConfig.Builder().build());
+    }
+
+    public IoiStyleModuleConfig getIoiStyleModuleConfig(String contestJid) {
+        return getStyleConfig(contestJid, IoiStyleModuleConfig.class)
+                .orElse(new IoiStyleModuleConfig.Builder().build());
+    }
+
     public void upsertClarificationModule(String contestJid) {
         upsertModule(contestJid, CLARIFICATION, Collections.emptyMap());
     }
 
     public void upsertClarificationTimeLimitModule(String contestJid, ClarificationTimeLimitModuleConfig config) {
         upsertModule(contestJid, CLARIFICATION_TIME_LIMIT, config);
+    }
+
+    public void upsertDelayedGradingModule(String contestJid, DelayedGradingModuleConfig config) {
+        upsertModule(contestJid, DELAYED_GRADING, config);
     }
 
     public void upsertFrozenScoreboardModule(String contestJid, FrozenScoreboardModuleConfig config) {
@@ -119,6 +184,10 @@ public class ContestModuleStore {
         upsertModule(contestJid, REGISTRATION, Collections.emptyMap());
     }
 
+    public void upsertScoreboardModule(String contestJid, ScoreboardModuleConfig config) {
+        upsertModule(contestJid, SCOREBOARD, config);
+    }
+
     public void upsertVirtualModule(String contestJid, VirtualModuleConfig config) {
         upsertModule(contestJid, VIRTUAL, config);
     }
@@ -129,6 +198,10 @@ public class ContestModuleStore {
 
     public Optional<ClarificationTimeLimitModuleConfig> getClarificationTimeLimitModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, CLARIFICATION_TIME_LIMIT, ClarificationTimeLimitModuleConfig.class);
+    }
+
+    public Optional<DelayedGradingModuleConfig> getDelayedGradingModuleConfig(String contestJid) {
+        return getModuleConfig(contestJid, DELAYED_GRADING, DelayedGradingModuleConfig.class);
     }
 
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {
@@ -143,8 +216,9 @@ public class ContestModuleStore {
         return moduleDao.selectEnabledByContestJidAndType(contestJid, REGISTRATION).isPresent();
     }
 
-    public Optional<ScoreboardModuleConfig> getScoreboardModuleConfig(String contestJid) {
-        return getModuleConfig(contestJid, SCOREBOARD, ScoreboardModuleConfig.class);
+    public ScoreboardModuleConfig getScoreboardModuleConfig(String contestJid) {
+        return getModuleConfig(contestJid, SCOREBOARD, ScoreboardModuleConfig.class)
+                .orElse(ScoreboardModuleConfig.DEFAULT);
     }
 
     public Optional<VirtualModuleConfig> getVirtualModuleConfig(String contestJid) {
@@ -176,6 +250,33 @@ public class ContestModuleStore {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void upsertStyleConfig(String contestJid, Object config) {
+        Optional<ContestStyleModel> maybeModel = styleDao.selectByContestJid(contestJid);
+        if (maybeModel.isPresent()) {
+            ContestStyleModel model = maybeModel.get();
+            try {
+                model.config = mapper.writeValueAsString(config);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+            styleDao.update(model);
+        } else {
+            ContestStyleModel model = new ContestStyleModel();
+            model.contestJid = contestJid;
+            try {
+                model.config = mapper.writeValueAsString(config);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+            styleDao.insert(model);
+        }
+    }
+
+    private <T> Optional<T> getStyleConfig(String contestJid, Class<T> configClass) {
+        return styleDao.selectByContestJid(contestJid)
+                .map(model -> parseConfig(model.config, configClass));
     }
 
     @SuppressWarnings("unchecked")

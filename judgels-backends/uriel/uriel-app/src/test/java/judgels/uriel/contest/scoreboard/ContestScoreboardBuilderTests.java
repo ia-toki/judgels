@@ -11,10 +11,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import java.time.Instant;
-import java.util.Optional;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
@@ -24,8 +24,6 @@ import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ioi.IoiScoreboardProcessor;
-import judgels.uriel.contest.style.ContestStyleStore;
-import judgels.uriel.contest.style.IoiContestStyleConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -36,7 +34,6 @@ class ContestScoreboardBuilderTests {
 
     @Mock private ScoreboardProcessorRegistry processorRegistry;
     @Mock private ScoreboardProcessor scoreboardProcessor;
-    @Mock private ContestStyleStore styleStore;
     @Mock private ContestModuleStore moduleStore;
     @Mock private ContestProblemStore problemStore;
     @Mock private ObjectMapper mapper;
@@ -51,14 +48,18 @@ class ContestScoreboardBuilderTests {
     void before() {
         initMocks(this);
 
-        scoreboardBuilder =
-                new ContestScoreboardBuilder(processorRegistry, styleStore, moduleStore, problemStore, mapper);
+        scoreboardBuilder = new ContestScoreboardBuilder(processorRegistry, moduleStore, problemStore, mapper);
 
         when(processorRegistry.get(any())).thenReturn(scoreboardProcessor);
 
         contest = mock(Contest.class);
         when(contest.getJid()).thenReturn(CONTEST_JID);
         when(contest.getStyle()).thenReturn(ContestStyle.ICPC);
+
+        when(moduleStore.getScoreboardModuleConfig(CONTEST_JID)).thenReturn(
+                new ScoreboardModuleConfig.Builder()
+                        .isIncognitoScoreboard(false)
+                        .build());
 
         raw = new RawContestScoreboard.Builder()
                 .scoreboard("json")
@@ -78,10 +79,10 @@ class ContestScoreboardBuilderTests {
                         .addContestantJids("userJid1")
                         .build());
 
-        when(moduleStore.getScoreboardModuleConfig(CONTEST_JID)).thenReturn(Optional.of(
+        when(moduleStore.getScoreboardModuleConfig(CONTEST_JID)).thenReturn(
                 new ScoreboardModuleConfig.Builder()
                         .isIncognitoScoreboard(true)
-                        .build()));
+                        .build());
 
         when(scoreboardProcessor.filterContestantJids(eq(scoreboard), anySet())).thenReturn(incognitoScoreboard);
 
@@ -110,10 +111,10 @@ class ContestScoreboardBuilderTests {
         IoiScoreboardProcessor ioiScoreboardProcessor = mock(IoiScoreboardProcessor.class);
         when(processorRegistry.get(ContestStyle.IOI)).thenReturn(ioiScoreboardProcessor);
 
-        IoiContestStyleConfig config = new IoiContestStyleConfig.Builder()
+        IoiStyleModuleConfig config = new IoiStyleModuleConfig.Builder()
                 .gradingLanguageRestriction(LanguageRestriction.noRestriction())
                 .build();
-        when(styleStore.getIoiStyleConfig(CONTEST_JID)).thenReturn(config);
+        when(moduleStore.getIoiStyleModuleConfig(CONTEST_JID)).thenReturn(config);
 
         IoiScoreboard ioiScoreboard = mock(IoiScoreboard.class);
         when(ioiScoreboard.getState()).thenReturn(new ScoreboardState.Builder()

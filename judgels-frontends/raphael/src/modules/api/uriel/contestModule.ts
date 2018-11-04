@@ -1,6 +1,7 @@
 import { APP_CONFIG } from 'conf';
 
-import { delete_, get, put } from '../http';
+import { delete_, get, put } from 'modules/api/http';
+import { LanguageRestriction } from 'modules/api/gabriel/language';
 
 export enum ContestModuleType {
   Clarification = 'CLARIFICATION',
@@ -19,7 +20,7 @@ export const moduleTitlesMap = {
   [ContestModuleType.Clarification]: 'Clarification',
   [ContestModuleType.ClarificationTimeLimit]: 'Clarification time limit',
   [ContestModuleType.FrozenScoreboard]: 'Freezable scoreboard',
-  [ContestModuleType.Virtual]: 'Virtual',
+  [ContestModuleType.Virtual]: 'Virtual contest',
   [ContestModuleType.DelayedGrading]: 'Delayed grading',
   [ContestModuleType.File]: 'File',
   [ContestModuleType.Paused]: 'Paused',
@@ -40,11 +41,53 @@ export const allModules: ContestModuleType[] = [
   ContestModuleType.Registration,
   ContestModuleType.Clarification,
   ContestModuleType.ClarificationTimeLimit,
+  ContestModuleType.DelayedGrading,
   ContestModuleType.FrozenScoreboard,
   ContestModuleType.Virtual,
   ContestModuleType.File,
   ContestModuleType.Paused,
 ];
+
+export interface IcpcStyleModuleConfig {
+  languageRestriction: LanguageRestriction;
+  wrongSubmissionPenalty: number;
+}
+
+export interface IoiStyleModuleConfig {
+  languageRestriction: LanguageRestriction;
+  usingLastAffectingPenalty: number;
+}
+
+export interface ClarificationTimeLimitModuleConfig {
+  clarificationDuration: number;
+}
+
+export interface DelayedGradingModuleConfig {
+  delayDuration: number;
+}
+
+export interface FrozenScoreboardModuleConfig {
+  isOfficialScoreboardAllowed: boolean;
+  scoreboardFreezeTime: number; // freezeDurationBeforeEndTime
+}
+
+export interface ScoreboardModuleConfig {
+  isIncognitoScoreboard: boolean;
+}
+
+export interface VirtualModuleConfig {
+  virtualDuration: number;
+}
+
+export interface ContestModulesConfig {
+  icpcStyle?: IcpcStyleModuleConfig;
+  ioiStyle?: IoiStyleModuleConfig;
+  clarificationTimeLimit?: ClarificationTimeLimitModuleConfig;
+  delayedGrading?: DelayedGradingModuleConfig;
+  frozenScoreboard?: FrozenScoreboardModuleConfig;
+  scoreboard?: ScoreboardModuleConfig;
+  virtual?: VirtualModuleConfig;
+}
 
 export function createContestModuleAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
@@ -60,6 +103,14 @@ export function createContestModuleAPI() {
 
     disableModule: (token: string, contestJid: string, type: ContestModuleType): Promise<void> => {
       return delete_(`${baseURL}/${contestJid}/modules/${type}`, token);
+    },
+
+    getConfig: (token: string, contestJid: string): Promise<ContestModulesConfig> => {
+      return get(`${baseURL}/${contestJid}/modules/config`, token);
+    },
+
+    upsertConfig: (token: string, contestJid: string, config: ContestModulesConfig): Promise<void> => {
+      return put(`${baseURL}/${contestJid}/modules/config`, token, config);
     },
   };
 }

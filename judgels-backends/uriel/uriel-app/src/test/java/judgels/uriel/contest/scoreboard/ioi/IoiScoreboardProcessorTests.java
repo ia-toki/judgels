@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
-import judgels.uriel.contest.style.IoiContestStyleConfig;
 import org.junit.jupiter.api.Test;
 
 class IoiScoreboardProcessorTests {
@@ -130,7 +130,7 @@ class IoiScoreboardProcessorTests {
                         .build())
                 .build();
 
-        IoiContestStyleConfig config = new IoiContestStyleConfig.Builder()
+        IoiStyleModuleConfig config = new IoiStyleModuleConfig.Builder()
                 .gradingLanguageRestriction(LanguageRestriction.noRestriction())
                 .build();
         assertThat(scoreboardProcessor.filterProblemJids(scoreboard, ImmutableSet.of("p1", "p3"), config))

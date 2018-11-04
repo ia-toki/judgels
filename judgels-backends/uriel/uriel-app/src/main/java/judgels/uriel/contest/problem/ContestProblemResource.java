@@ -28,14 +28,14 @@ import judgels.uriel.api.contest.problem.ContestContestantProblemsResponse;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.contest.style.ContestStyleStore;
+import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 import judgels.uriel.sandalphon.SandalphonConfiguration;
 
 public class ContestProblemResource implements ContestProblemService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
-    private final ContestStyleStore styleStore;
+    private final ContestModuleStore moduleStore;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
     private final SandalphonConfiguration sandalphonConfig;
@@ -46,7 +46,7 @@ public class ContestProblemResource implements ContestProblemService {
     public ContestProblemResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
-            ContestStyleStore styleStore,
+            ContestModuleStore moduleStore,
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
             SandalphonConfiguration sandalphonConfig,
@@ -55,7 +55,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
-        this.styleStore = styleStore;
+        this.moduleStore = moduleStore;
         this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
         this.sandalphonConfig = sandalphonConfig;
@@ -118,7 +118,7 @@ public class ContestProblemResource implements ContestProblemService {
                 clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
 
         LanguageRestriction contestGradingLanguageRestriction =
-                styleStore.getStyleConfig(contestJid).getGradingLanguageRestriction();
+                moduleStore.getStyleModuleConfig(contestJid).getGradingLanguageRestriction();
         LanguageRestriction problemGradingLanguageRestriction =
                 worksheet.getSubmissionConfig().getGradingLanguageRestriction();
         LanguageRestriction combinedGradingLanguageRestriction =

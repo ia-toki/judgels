@@ -6,6 +6,7 @@ import { Contest } from 'modules/api/uriel/contest';
 import ContestEditGeneralTab from '../ContestEditGeneralTab/ContestEditGeneralTab';
 import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditDescriptionTab';
 import ContestEditModulesTab from '../ContestEditModulesTab/ContestEditModulesTab';
+import ContestEditConfigsTab from '../ContestEditConfigsTab/ContestEditConfigsTab';
 
 import './ContestEditDialog.css';
 
@@ -70,7 +71,7 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
         canOutsideClickClose={false}
       >
         <div className="bp3-dialog-body">
-          <Tabs id="contest-edit-dialog-tabs" vertical>
+          <Tabs id="contest-edit-dialog-tabs" vertical renderActiveTabPanelOnly>
             <Tab id="general" panel={<ContestEditGeneralTab />}>
               General
               <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
@@ -83,7 +84,7 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
               Modules
               <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
             </Tab>
-            <Tab id="configs" panel={<div>WIP</div>}>
+            <Tab id="configs" panel={<ContestEditConfigsTab />}>
               Configs
               <Icon icon="chevron-right" className="contest-edit-dialog__arrow" />
             </Tab>

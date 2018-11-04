@@ -1,4 +1,4 @@
-package judgels.uriel.contest.style;
+package judgels.uriel.api.contest.module;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -6,8 +6,8 @@ import judgels.gabriel.api.LanguageRestriction;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableIcpcContestStyleConfig.class)
-public interface IcpcContestStyleConfig {
+@JsonDeserialize(as = ImmutableIoiStyleModuleConfig.class)
+public interface IoiStyleModuleConfig {
     @JsonProperty("languageRestriction")
     @Value.Default
     default LanguageRestriction getGradingLanguageRestriction() {
@@ -15,9 +15,9 @@ public interface IcpcContestStyleConfig {
     }
 
     @Value.Default
-    default long getWrongSubmissionPenalty() {
-        return 0;
+    default boolean getUsingLastAffectingPenalty() {
+        return false;
     }
 
-    class Builder extends ImmutableIcpcContestStyleConfig.Builder {}
+    class Builder extends ImmutableIoiStyleModuleConfig.Builder {}
 }

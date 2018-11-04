@@ -16,7 +16,7 @@ interface ContestEditDescriptionFormProps extends InjectedFormProps<ContestEditD
 const ContestEditDescriptionForm = (props: ContestEditDescriptionFormProps) => {
   const descriptionField: any = {
     name: 'description',
-    rows: 15,
+    rows: 13,
     validate: [],
   };
 

@@ -46,6 +46,7 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
@@ -53,10 +54,9 @@ import judgels.uriel.api.contest.submission.ContestSubmissionService;
 import judgels.uriel.api.contest.submission.ContestSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.style.ContestStyleConfig;
-import judgels.uriel.contest.style.ContestStyleStore;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
@@ -65,12 +65,12 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
-    private final ContestStyleStore styleStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
     private final SubmissionDownloader submissionDownloader;
     private final ContestSubmissionClient submissionClient;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
+    private final ContestModuleStore moduleStore;
     private final ContestSubmissionStore submissionStore;
     private final ContestContestantStore contestantStore;
     private final ContestProblemStore problemStore;
@@ -82,12 +82,12 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     public ContestSubmissionResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
-            ContestStyleStore styleStore,
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionDownloader submissionDownloader,
             ContestSubmissionClient submissionClient,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
+            ContestModuleStore moduleStore,
             ContestSubmissionStore submissionStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
@@ -97,12 +97,12 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
-        this.styleStore = styleStore;
         this.submissionSourceBuilder = submissionSourceBuilder;
         this.submissionDownloader = submissionDownloader;
         this.submissionClient = submissionClient;
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
+        this.moduleStore = moduleStore;
         this.submissionStore = submissionStore;
         this.contestantStore = contestantStore;
         this.problemStore = problemStore;
@@ -227,7 +227,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 checkFound(problemStore.getContestantProblem(contestJid, actorJid, problemJid));
         checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, contestantProblem));
 
-        ContestStyleConfig styleConfig = styleStore.getStyleConfig(contestJid);
+        StyleModuleConfig styleConfig = moduleStore.getStyleModuleConfig(contestJid);
         LanguageRestriction contestGradingLanguageRestriction = styleConfig.getGradingLanguageRestriction();
 
         SubmissionData data = new SubmissionData.Builder()

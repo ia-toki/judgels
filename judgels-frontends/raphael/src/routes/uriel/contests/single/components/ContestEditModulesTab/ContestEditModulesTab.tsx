@@ -12,8 +12,6 @@ import { contestWebActions as injectedContestWebActions } from '../../modules/co
 import { contestModuleActions as injectedContestModuleActions } from '../../modules/contestModuleActions';
 import { ContestModuleCard } from '../ContestModuleCard/ContestModuleCard';
 
-import './ContestEditModulesTab.css';
-
 interface ContestEditModulesTabProps {
   contest: Contest;
   onGetContestByJidWithWebConfig: (contestJid: string) => Promise<void>;
@@ -37,6 +35,7 @@ class ContestEditModulesTab extends React.Component<ContestEditModulesTabProps, 
     return (
       <>
         <h4>Modules settings</h4>
+        <hr />
         {this.renderContent()}
       </>
     );
@@ -53,7 +52,7 @@ class ContestEditModulesTab extends React.Component<ContestEditModulesTabProps, 
     const disabledModules = allModules.filter(m => modules.indexOf(m) === -1);
 
     return (
-      <div className="contest-edit-modules-tab__content">
+      <div className="contest-edit-dialog__content">
         {this.renderEnabledModules(enabledModules)}
         <hr />
         {this.renderDisabledModules(disabledModules)}

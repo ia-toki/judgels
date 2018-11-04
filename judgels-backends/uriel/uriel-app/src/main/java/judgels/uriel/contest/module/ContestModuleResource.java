@@ -11,6 +11,7 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModuleService;
 import judgels.uriel.api.contest.module.ContestModuleType;
+import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 
@@ -61,5 +62,25 @@ public class ContestModuleResource implements ContestModuleService {
 
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
         moduleStore.disableModule(contest.getJid(), type);
+    }
+
+    @Override
+    @UnitOfWork
+    public ContestModulesConfig getConfig(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+
+        checkAllowed(contestRoleChecker.canView(actorJid, contest));
+        return moduleStore.getConfig(contest.getJid(), contest.getStyle());
+    }
+
+    @Override
+    @UnitOfWork
+    public void upsertConfig(AuthHeader authHeader, String contestJid, ContestModulesConfig config) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+
+        checkAllowed(contestRoleChecker.canManage(actorJid, contest));
+        moduleStore.upsertConfig(contest.getJid(), config);
     }
 }

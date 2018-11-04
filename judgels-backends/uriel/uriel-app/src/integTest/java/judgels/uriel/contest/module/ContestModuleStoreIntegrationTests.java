@@ -5,6 +5,7 @@ import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOA
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
+import judgels.gabriel.api.LanguageRestriction;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
@@ -12,14 +13,16 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
+import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModuleModel;
+import judgels.uriel.persistence.ContestStyleModel;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(models = {ContestModel.class, ContestModuleModel.class})
+@WithHibernateSession(models = {ContestModel.class, ContestModuleModel.class, ContestStyleModel.class})
 class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
     private ContestStore contestStore;
     private ContestModuleStore store;
@@ -36,6 +39,13 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
     void crud_flow() {
         Contest contest = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
         contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
+
+        IoiStyleModuleConfig config = new IoiStyleModuleConfig.Builder()
+                .gradingLanguageRestriction(LanguageRestriction.noRestriction())
+                .usingLastAffectingPenalty(true)
+                .build();
+        store.upsertIoiStyleModule(contest.getJid(), config);
+        assertThat(store.getIoiStyleModuleConfig(contest.getJid())).isEqualTo(config);
 
         FrozenScoreboardModuleConfig config1 = new FrozenScoreboardModuleConfig.Builder()
                 .isOfficialScoreboardAllowed(false)

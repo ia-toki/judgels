@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessor;
-import judgels.uriel.contest.style.IoiContestStyleConfig;
 
 public class IoiScoreboardProcessor implements ScoreboardProcessor {
     @Override
@@ -58,7 +58,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
     public Scoreboard filterProblemJids(
             IoiScoreboard scoreboard,
             Set<String> problemJids,
-            IoiContestStyleConfig config) {
+            IoiStyleModuleConfig config) {
 
         IoiScoreboardEntryComparator comparator;
         if (config.getUsingLastAffectingPenalty()) {

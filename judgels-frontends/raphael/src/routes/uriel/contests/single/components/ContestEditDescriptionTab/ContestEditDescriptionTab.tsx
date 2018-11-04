@@ -14,8 +14,6 @@ import ContestEditDescriptionForm, {
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 
-import './ContestEditDescriptionTab.css';
-
 interface ContestEditDescriptionTabProps {
   contest: Contest;
   onGetContestDescription: (contestJid: string) => Promise<string>;
@@ -44,6 +42,7 @@ class ContestEditDescriptionTab extends React.Component<
           Description settings
           {this.renderEditButton()}
         </h4>
+        <hr />
         {this.renderContent()}
       </>
     );
@@ -96,7 +95,7 @@ class ContestEditDescriptionTab extends React.Component<
       );
     }
     return (
-      <ContentCard className="contest-edit-description-tab__content">
+      <ContentCard className="contest-edit-dialog__content">
         <HtmlText>{description}</HtmlText>
       </ContentCard>
     );
