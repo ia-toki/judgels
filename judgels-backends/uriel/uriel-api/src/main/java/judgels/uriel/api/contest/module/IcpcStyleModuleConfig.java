@@ -16,7 +16,7 @@ public interface IcpcStyleModuleConfig {
 
     @Value.Default
     default long getWrongSubmissionPenalty() {
-        return 0;
+        return 20;
     }
 
     class Builder extends ImmutableIcpcStyleModuleConfig.Builder {}
