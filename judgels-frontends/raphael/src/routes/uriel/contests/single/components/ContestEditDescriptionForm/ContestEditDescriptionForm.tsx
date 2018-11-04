@@ -16,12 +16,12 @@ interface ContestEditDescriptionFormProps extends InjectedFormProps<ContestEditD
 const ContestEditDescriptionForm = (props: ContestEditDescriptionFormProps) => {
   const descriptionField: any = {
     name: 'description',
-    rows: 13,
+    rows: 19,
     validate: [],
   };
 
   return (
-    <form onSubmit={props.handleSubmit}>
+    <form className="contest-edit-dialog__content" onSubmit={props.handleSubmit}>
       <Field component={FormRichTextArea} {...descriptionField} />
       <hr />
       <ActionButtons>

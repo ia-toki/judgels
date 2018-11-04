@@ -55,7 +55,7 @@ export interface IcpcStyleModuleConfig {
 
 export interface IoiStyleModuleConfig {
   languageRestriction: LanguageRestriction;
-  usingLastAffectingPenalty: number;
+  usingLastAffectingPenalty: boolean;
 }
 
 export interface ClarificationTimeLimitModuleConfig {
@@ -82,10 +82,12 @@ export interface VirtualModuleConfig {
 export interface ContestModulesConfig {
   icpcStyle?: IcpcStyleModuleConfig;
   ioiStyle?: IoiStyleModuleConfig;
+
+  scoreboard: ScoreboardModuleConfig;
+
   clarificationTimeLimit?: ClarificationTimeLimitModuleConfig;
   delayedGrading?: DelayedGradingModuleConfig;
   frozenScoreboard?: FrozenScoreboardModuleConfig;
-  scoreboard?: ScoreboardModuleConfig;
   virtual?: VirtualModuleConfig;
 }
 

@@ -9,12 +9,13 @@ import { FormInputValidation } from '../FormInputValidation/FormInputValidation'
 import './FormTableInput.css';
 
 export interface FormTableInputProps extends FormInputProps {
+  keyClassName?: string;
   children?: any;
 }
 
 export const FormTableInput = (props: FormTableInputProps) => (
   <tr className="form-table-input">
-    <td>
+    <td className={props.keyClassName}>
       <div className="form-table-input__group-label">
         <span className="form-table-input__label">{props.label}</span>
         {props.labelHelper && <span className="form-table-input__label-helper"> ({props.labelHelper})</span>}

@@ -3,6 +3,7 @@ import {
   ConfirmPassword,
   EmailAddress,
   MaxFileSize300KB,
+  NonnegativeNumber,
   Required,
   Slug,
   Username,
@@ -11,6 +12,13 @@ import {
 test('Required', () => {
   expect(Required(undefined)).toBeTruthy();
   expect(Required('value')).toBeUndefined();
+});
+
+test('NonnegativeNumber', () => {
+  expect(NonnegativeNumber(undefined)).toBeTruthy();
+  expect(NonnegativeNumber('1')).toBeUndefined();
+  expect(NonnegativeNumber('0')).toBeUndefined();
+  expect(NonnegativeNumber('-1')).toBeTruthy();
 });
 
 test('Username', () => {

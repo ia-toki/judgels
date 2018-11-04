@@ -6,8 +6,10 @@ import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestModulesConfig } from 'modules/api/uriel/contestModule';
 import { LoadingState } from 'components/LoadingState/LoadingState';
+import { formatDuration, parseDuration } from 'utils/duration';
 
 import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
+import ContestEditConfigsForm, { ContestEditConfigsFormData } from '../ContestEditConfigsForm/ContestEditConfigsForm';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestModuleActions as injectedContestModuleActions } from '../../modules/contestModuleActions';
 
@@ -26,7 +28,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
   state: ContestEditConfigsTabState = {};
 
   async componentDidMount() {
-    await this.refreshConfigs();
+    await this.refreshConfig();
   }
 
   render() {
@@ -42,7 +44,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
     );
   }
 
-  private refreshConfigs = async () => {
+  private refreshConfig = async () => {
     const config = await this.props.onGetConfig(this.props.contest.jid);
     this.setState({ config });
   };
@@ -58,29 +60,118 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
   };
 
   private renderContent = () => {
-    const { config } = this.state;
+    const { config, isEditing } = this.state;
     if (config === undefined) {
       return <LoadingState />;
     }
-    // if (isEditing) {
-    //   const initialValues: ContestEditConfigsFormData = {
-    //     Configs: Configs,
-    //   };
-    //   const formProps = {
-    //     onCancel: this.toggleEdit,
-    //   };
-    //   return (
-    //     <ContestEditConfigsForm initialValues={initialValues} onSubmit={this.updateContestConfigs} {...formProps} />
-    //   );
-    // }
+    if (isEditing) {
+      const {
+        icpcStyle,
+        ioiStyle,
+        scoreboard,
+        clarificationTimeLimit,
+        delayedGrading,
+        frozenScoreboard,
+        virtual,
+      } = config;
+
+      let initialValues: ContestEditConfigsFormData = {
+        scoreboardIsIncognito: scoreboard.isIncognitoScoreboard,
+      };
+      if (icpcStyle) {
+        initialValues = { ...initialValues, icpcWrongSubmissionPenalty: '' + icpcStyle.wrongSubmissionPenalty };
+      }
+      if (ioiStyle) {
+        initialValues = { ...initialValues, ioiUsingLastAffectingPenalty: ioiStyle.usingLastAffectingPenalty };
+      }
+      if (clarificationTimeLimit) {
+        initialValues = {
+          ...initialValues,
+          clarificationTimeLimitDuration: formatDuration(clarificationTimeLimit.clarificationDuration),
+        };
+      }
+      if (delayedGrading) {
+        initialValues = { ...initialValues, delayedGradingDuration: formatDuration(delayedGrading.delayDuration) };
+      }
+      if (frozenScoreboard) {
+        initialValues = {
+          ...initialValues,
+          frozenScoreboardFreezeTime: formatDuration(frozenScoreboard.scoreboardFreezeTime),
+          frozenScoreboardIsOfficialAllowed: frozenScoreboard.isOfficialScoreboardAllowed,
+        };
+      }
+      if (virtual) {
+        initialValues = { ...initialValues, virtualDuration: formatDuration(virtual.virtualDuration) };
+      }
+
+      const formProps = {
+        config,
+        onCancel: this.toggleEdit,
+      };
+      return <ContestEditConfigsForm initialValues={initialValues} onSubmit={this.upsertConfig} {...formProps} />;
+    }
     return <ContestEditConfigsTable config={config} />;
   };
 
-  // private updateContestConfigs = async (data: ContestEditConfigsFormData) => {
-  //   await this.props.onUpdateContestConfigs(this.props.contest.jid, data.Configs);
-  //   await this.refreshConfigs();
-  //   this.toggleEdit();
-  // };
+  private upsertConfig = async (data: ContestEditConfigsFormData) => {
+    const {
+      icpcStyle,
+      ioiStyle,
+      clarificationTimeLimit,
+      delayedGrading,
+      frozenScoreboard,
+      virtual,
+    } = this.state.config!;
+
+    let config: ContestModulesConfig = {
+      scoreboard: {
+        isIncognitoScoreboard: data.scoreboardIsIncognito,
+      },
+    };
+    if (icpcStyle) {
+      config = {
+        ...config,
+        icpcStyle: {
+          languageRestriction: { allowedLanguageNames: [] },
+          wrongSubmissionPenalty: +data.icpcWrongSubmissionPenalty!,
+        },
+      };
+    }
+    if (ioiStyle) {
+      config = {
+        ...config,
+        ioiStyle: {
+          languageRestriction: { allowedLanguageNames: [] },
+          usingLastAffectingPenalty: data.ioiUsingLastAffectingPenalty!,
+        },
+      };
+    }
+    if (clarificationTimeLimit) {
+      config = {
+        ...config,
+        clarificationTimeLimit: { clarificationDuration: parseDuration(data.clarificationTimeLimitDuration!) },
+      };
+    }
+    if (delayedGrading) {
+      config = { ...config, delayedGrading: { delayDuration: parseDuration(data.delayedGradingDuration!) } };
+    }
+    if (frozenScoreboard) {
+      config = {
+        ...config,
+        frozenScoreboard: {
+          scoreboardFreezeTime: parseDuration(data.frozenScoreboardFreezeTime!),
+          isOfficialScoreboardAllowed: data.frozenScoreboardIsOfficialAllowed!,
+        },
+      };
+    }
+    if (virtual) {
+      config = { ...config, virtual: { virtualDuration: parseDuration(data.virtualDuration!) } };
+    }
+
+    await this.props.onUpsertConfig(this.props.contest.jid, config);
+    await this.refreshConfig();
+    this.toggleEdit();
+  };
 
   private toggleEdit = () => {
     this.setState((prevState: ContestEditConfigsTabState) => ({

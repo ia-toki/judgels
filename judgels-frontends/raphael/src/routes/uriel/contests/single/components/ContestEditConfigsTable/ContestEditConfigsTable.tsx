@@ -48,8 +48,9 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     ];
     return (
       <div className="contest-edit-configs-table__config">
-        <h5>ICPC style config</h5>
-        <FormTable rows={rows} small keyClassName="contest-edit-configs-table__key" />
+        <h4>ICPC style config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
       </div>
     );
   };
@@ -69,8 +70,9 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     ];
     return (
       <div className="contest-edit-configs-table__config">
-        <h5>IOI style config</h5>
-        <FormTable rows={rows} small keyClassName="contest-edit-configs-table__key" />
+        <h4>IOI style config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
       </div>
     );
   };
@@ -89,8 +91,9 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     ];
     return (
       <div className="contest-edit-configs-table__config">
-        <h5>Clarification time limit config</h5>
-        <FormTable rows={rows} small keyClassName="contest-edit-configs-table__key" />
+        <h4>Clarification time limit config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
       </div>
     );
   };
@@ -105,8 +108,9 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     ];
     return (
       <div className="contest-edit-configs-table__config">
-        <h5>Delayed grading config</h5>
-        <FormTable rows={rows} small keyClassName="contest-edit-configs-table__key" />
+        <h4>Delayed grading config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
       </div>
     );
   };
@@ -121,8 +125,9 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     ];
     return (
       <div className="contest-edit-configs-table__config">
-        <h5>Scoreboard config</h5>
-        <FormTable rows={rows} small keyClassName="contest-edit-configs-table__key" />
+        <h4>Scoreboard config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
       </div>
     );
   };
@@ -147,8 +152,9 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     ];
     return (
       <div className="contest-edit-configs-table__config">
-        <h5>Freezable scoreboard config</h5>
-        <FormTable rows={rows} small keyClassName="contest-edit-configs-table__key" />
+        <h4>Freezable scoreboard config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
       </div>
     );
   };
@@ -163,8 +169,9 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     ];
     return (
       <div className="contest-edit-configs-table__config">
-        <h5>Virtual contest config</h5>
-        <FormTable rows={rows} small keyClassName="contest-edit-configs-table__key" />
+        <h4>Virtual contest config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
       </div>
     );
   };

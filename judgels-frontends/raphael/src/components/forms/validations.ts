@@ -7,6 +7,8 @@ export const Username = value =>
     ? undefined
     : 'Must contain between 3 and 20 alphanumeric characters, dots, or underscores';
 
+export const NonnegativeNumber = value => (+value >= 0 ? undefined : 'Must be a non-negative number');
+
 export const Slug = value =>
   /^[a-zA-Z0-9-]{3,20}$/.test(value) ? undefined : 'Must contain between 3 and 20 alphanumeric characters or dashes';
 
