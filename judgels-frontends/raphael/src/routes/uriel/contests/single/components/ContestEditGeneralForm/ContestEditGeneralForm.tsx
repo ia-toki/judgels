@@ -68,8 +68,8 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
       </table>
       <hr />
       <ActionButtons>
-        <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={props.submitting} />
         <Button text="Cancel" disabled={props.submitting} onClick={props.onCancel} />
+        <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={props.submitting} />
       </ActionButtons>
     </form>
   );
