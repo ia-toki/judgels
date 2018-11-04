@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 import { ActionButtons } from 'components/ActionButtons/ActionButtons';
-import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
+import { FormRichTextArea } from 'components/forms/FormRichTextArea/FormRichTextArea';
 
 export interface ContestEditDescriptionFormData {
   description: string;
@@ -16,16 +16,17 @@ interface ContestEditDescriptionFormProps extends InjectedFormProps<ContestEditD
 const ContestEditDescriptionForm = (props: ContestEditDescriptionFormProps) => {
   const descriptionField: any = {
     name: 'description',
+    rows: 15,
     validate: [],
   };
 
   return (
     <form onSubmit={props.handleSubmit}>
-      <Field component={FormTextArea} {...descriptionField} />
+      <Field component={FormRichTextArea} {...descriptionField} />
       <hr />
       <ActionButtons>
-        <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={props.submitting} />
         <Button text="Cancel" disabled={props.submitting} onClick={props.onCancel} />
+        <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={props.submitting} />
       </ActionButtons>
     </form>
   );
