@@ -129,9 +129,9 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
         applyFilters(cb, cq, root, filterOptions);
 
         if (selectionOptions.getOrderDir() == OrderDir.ASC) {
-            cq.orderBy(cb.asc(root.get(selectionOptions.getOrderBy())));
+            cq.orderBy(cb.asc(root.get(selectionOptions.getOrderBy())), cb.asc(root.get(Model_.id)));
         } else {
-            cq.orderBy(cb.desc(root.get(selectionOptions.getOrderBy())));
+            cq.orderBy(cb.desc(root.get(selectionOptions.getOrderBy())), cb.desc(root.get(Model_.id)));
         }
 
         Query<M> query = currentSession().createQuery(cq);

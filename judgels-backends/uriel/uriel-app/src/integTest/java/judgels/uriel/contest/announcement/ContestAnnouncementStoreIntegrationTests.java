@@ -64,7 +64,6 @@ class ContestAnnouncementStoreIntegrationTests extends AbstractIntegrationTests 
         assertThat(announcements.getPage()).containsExactly(announcement3, announcement1);
 
         announcements = store.getAnnouncements(contest.getJid(), Optional.empty());
-        LOGGER.info("Checking flaky tests: {}", announcements);
 
         assertThat(announcements.getPage()).containsExactly(announcement3, announcement2, announcement1);
 
