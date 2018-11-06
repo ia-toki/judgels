@@ -8,10 +8,17 @@ import { FormTableInput, FormTableInputProps } from '../FormTableInput/FormTable
 import './FormTableCheckbox.css';
 
 export const FormTableCheckbox = (props: FormTableInputProps) => {
-  const { value, ...inputProps } = props.input;
+  const { value, onChange, ...inputProps } = props.input;
+  const newOnChange = ({ target }) => onChange((target as any).checked);
+
   return (
     <FormTableInput {...props}>
-      <Checkbox defaultChecked={!!value} {...inputProps} className={classNames(getIntentClassName(props.meta))} />
+      <Checkbox
+        defaultChecked={!!value}
+        onChange={newOnChange}
+        {...inputProps}
+        className={classNames(getIntentClassName(props.meta))}
+      />
     </FormTableInput>
   );
 };

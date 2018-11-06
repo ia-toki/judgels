@@ -2,8 +2,11 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
+import { allLanguagesAllowed, getGradingLanguageName, gradingLanguages } from 'modules/api/gabriel/language';
 import { ContestModulesConfig } from 'modules/api/uriel/contestModule';
 import { ActionButtons } from 'components/ActionButtons/ActionButtons';
+import { FormTableInput } from 'components/forms/FormTableInput/FormTableInput';
+import { FormCheckbox } from 'components/forms/FormCheckbox/FormCheckbox';
 import { FormTableCheckbox } from 'components/forms/FormTableCheckbox/FormTableCheckbox';
 import { FormTableTextInput } from 'components/forms/FormTableTextInput/FormTableTextInput';
 import { NonnegativeNumber, Required } from 'components/forms/validations';
@@ -11,10 +14,12 @@ import { NonnegativeNumber, Required } from 'components/forms/validations';
 import './ContestEditConfigsForm.css';
 
 export interface ContestEditConfigsFormData {
-  icpcLanguageRestriction?: string;
+  icpcAllowAllLanguages?: boolean;
+  icpcAllowedLanguages?: { [key: string]: string };
   icpcWrongSubmissionPenalty?: string;
 
-  ioiLanguageRestriction?: string;
+  ioiAllowAllLanguages?: boolean;
+  ioiAllowedLanguages?: { [key: string]: string };
   ioiUsingLastAffectingPenalty?: boolean;
 
   scoreboardIsIncognito: boolean;
@@ -34,13 +39,30 @@ export interface ContestEditConfigsFormProps extends InjectedFormProps<ContestEd
   onCancel: () => void;
 }
 
-class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps> {
+interface ContestEditConfigFormState {
+  allowAllLanguages: boolean;
+}
+
+class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps, ContestEditConfigFormState> {
+  state: ContestEditConfigFormState;
+
+  constructor(props: ContestEditConfigsFormProps) {
+    super(props);
+
+    const { icpcStyle, ioiStyle } = props.config;
+    const allowAllLanguages =
+      (!!icpcStyle && allLanguagesAllowed(icpcStyle.languageRestriction)) ||
+      (!!ioiStyle && allLanguagesAllowed(ioiStyle.languageRestriction));
+
+    this.state = { allowAllLanguages };
+  }
+
   render() {
     const { config } = this.props;
     return (
       <form className="contest-edit-dialog__content" onSubmit={this.props.handleSubmit}>
-        {config.ioiStyle && this.renderIoiStyleForm()}
         {config.icpcStyle && this.renderIcpcStyleForm()}
+        {config.ioiStyle && this.renderIoiStyleForm()}
         {config.clarificationTimeLimit && this.renderClarificationTimeLimitForm()}
         {config.delayedGrading && this.renderDelayedGradingForm()}
         {this.renderScoreboardForm()}
@@ -56,26 +78,29 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     );
   }
 
-  private renderIoiStyleForm = () => {
-    const usingLastAffectingPenaltyField: any = {
-      name: 'ioiUsingLastAffectingPenalty',
-      label: 'Using last affecting penalty?',
-      keyClassName: 'contest-edit-configs-form__key',
-    };
-
-    return (
-      <div className="contest-edit-configs-form__config">
-        <h4>IOI style config</h4>
-        <table className="bp3-html-table bp3-html-table-striped">
-          <tbody>
-            <Field component={FormTableCheckbox} {...usingLastAffectingPenaltyField} />
-          </tbody>
-        </table>
-      </div>
-    );
+  private toggleAllowAllLanguagesCheckbox = (e, checked) => {
+    this.setState({ allowAllLanguages: checked });
   };
 
   private renderIcpcStyleForm = () => {
+    const allowedLanguageField: any = {
+      label: 'Allowed languages',
+      meta: {},
+    };
+    const allowAllLanguagesField: any = {
+      name: 'icpcAllowAllLanguages',
+      label: '(all)',
+      onChange: this.toggleAllowAllLanguagesCheckbox,
+    };
+    const allowedLanguageFields = gradingLanguages.map(
+      lang =>
+        ({
+          name: 'icpcAllowedLanguages.' + lang,
+          label: getGradingLanguageName(lang),
+          small: true,
+        } as any)
+    );
+
     const wrongSubmissionPenaltyField: any = {
       name: 'icpcWrongSubmissionPenalty',
       label: 'Wrong submission penalty',
@@ -88,7 +113,54 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
         <h4>ICPC style config</h4>
         <table className="bp3-html-table bp3-html-table-striped">
           <tbody>
+            <FormTableInput {...allowedLanguageField}>
+              <Field component={FormCheckbox} {...allowAllLanguagesField} />
+              {!this.state.allowAllLanguages &&
+                allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
+            </FormTableInput>
             <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  private renderIoiStyleForm = () => {
+    const allowedLanguageField: any = {
+      label: 'Allowed languages',
+      meta: {},
+    };
+    const allowAllLanguagesField: any = {
+      name: 'ioiAllowAllLanguages',
+      label: '(all)',
+      onChange: this.toggleAllowAllLanguagesCheckbox,
+    };
+    const allowedLanguageFields = gradingLanguages.map(
+      lang =>
+        ({
+          name: 'ioiAllowedLanguages.' + lang,
+          label: getGradingLanguageName(lang),
+          small: true,
+        } as any)
+    );
+
+    const usingLastAffectingPenaltyField: any = {
+      name: 'ioiUsingLastAffectingPenalty',
+      label: 'Using last affecting penalty?',
+      keyClassName: 'contest-edit-configs-form__key',
+    };
+
+    return (
+      <div className="contest-edit-configs-form__config">
+        <h4>IOI style config</h4>
+        <table className="bp3-html-table bp3-html-table-striped">
+          <tbody>
+            <FormTableInput {...allowedLanguageField}>
+              <Field component={FormCheckbox} {...allowAllLanguagesField} />
+              {!this.state.allowAllLanguages &&
+                allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
+            </FormTableInput>
+            <Field component={FormTableCheckbox} {...usingLastAffectingPenaltyField} />
           </tbody>
         </table>
       </div>

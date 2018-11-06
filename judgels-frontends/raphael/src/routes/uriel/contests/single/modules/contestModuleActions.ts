@@ -31,9 +31,10 @@ export const contestModuleActions = {
   },
 
   upsertConfig: (contestJid: string, config: ContestModulesConfig) => {
-    return async (dispatch, getState, { contestModuleAPI }) => {
+    return async (dispatch, getState, { contestModuleAPI, toastActions }) => {
       const token = selectToken(getState());
       await contestModuleAPI.upsertConfig(token, contestJid, config);
+      toastActions.showSuccessToast('Configs updated.');
     };
   },
 };

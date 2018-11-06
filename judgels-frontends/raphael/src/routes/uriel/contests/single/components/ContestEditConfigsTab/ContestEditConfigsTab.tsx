@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestModulesConfig } from 'modules/api/uriel/contestModule';
+import { allLanguagesAllowed, LanguageRestriction } from 'modules/api/gabriel/language';
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import { formatDuration, parseDuration } from 'utils/duration';
 
@@ -79,10 +80,20 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
         scoreboardIsIncognito: scoreboard.isIncognitoScoreboard,
       };
       if (icpcStyle) {
-        initialValues = { ...initialValues, icpcWrongSubmissionPenalty: '' + icpcStyle.wrongSubmissionPenalty };
+        initialValues = {
+          ...initialValues,
+          icpcAllowAllLanguages: allLanguagesAllowed(icpcStyle.languageRestriction),
+          icpcAllowedLanguages: this.fromLanguageRestriction(icpcStyle.languageRestriction),
+          icpcWrongSubmissionPenalty: '' + icpcStyle.wrongSubmissionPenalty,
+        };
       }
       if (ioiStyle) {
-        initialValues = { ...initialValues, ioiUsingLastAffectingPenalty: ioiStyle.usingLastAffectingPenalty };
+        initialValues = {
+          ...initialValues,
+          ioiAllowAllLanguages: allLanguagesAllowed(ioiStyle.languageRestriction),
+          ioiAllowedLanguages: this.fromLanguageRestriction(ioiStyle.languageRestriction),
+          ioiUsingLastAffectingPenalty: ioiStyle.usingLastAffectingPenalty,
+        };
       }
       if (clarificationTimeLimit) {
         initialValues = {
@@ -129,19 +140,21 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
       },
     };
     if (icpcStyle) {
+      const allowedLanguageNames = data.icpcAllowAllLanguages ? [] : Object.keys(data.icpcAllowedLanguages!);
       config = {
         ...config,
         icpcStyle: {
-          languageRestriction: { allowedLanguageNames: [] },
+          languageRestriction: { allowedLanguageNames },
           wrongSubmissionPenalty: +data.icpcWrongSubmissionPenalty!,
         },
       };
     }
     if (ioiStyle) {
+      const allowedLanguageNames = data.ioiAllowAllLanguages ? [] : Object.keys(data.ioiAllowedLanguages!);
       config = {
         ...config,
         ioiStyle: {
-          languageRestriction: { allowedLanguageNames: [] },
+          languageRestriction: { allowedLanguageNames },
           usingLastAffectingPenalty: data.ioiUsingLastAffectingPenalty!,
         },
       };
@@ -171,6 +184,10 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
     await this.props.onUpsertConfig(this.props.contest.jid, config);
     await this.refreshConfig();
     this.toggleEdit();
+  };
+
+  private fromLanguageRestriction = (r: LanguageRestriction) => {
+    return Object.assign({}, ...r.allowedLanguageNames.map(l => ({ [l]: true })));
   };
 
   private toggleEdit = () => {

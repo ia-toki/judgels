@@ -1,0 +1,12 @@
+.form-checkbox.bp3-control-indicator::before {
+  display: block !important;
+}
+
+.form-checkbox.bp3-control {
+  font-weight: normal;
+}
+
+.form-checkbox--small {
+  line-height: 20px;
+  margin-bottom: 0;
+}

@@ -33,7 +33,9 @@ export const gradingLanguageSyntaxHighlighterValueMap = {
 
 export const preferredGradingLanguage = 'Cpp11';
 
-export const gradingLanguages = Object.keys(gradingLanguageNamesMap).sort();
+export const gradingLanguages = Object.keys(gradingLanguageNamesMap)
+  .filter(l => l !== 'OutputOnly')
+  .sort();
 
 export function getGradingLanguageName(code: string): string {
   return gradingLanguageNamesMap[code] || code;
@@ -55,4 +57,8 @@ export function getAllowedGradingLanguages(gradingEngine: string, restriction: L
     return gradingLanguages;
   }
   return restriction.allowedLanguageNames;
+}
+
+export function allLanguagesAllowed(r: LanguageRestriction) {
+  return !r.allowedLanguageNames || r.allowedLanguageNames.length === 0;
 }
