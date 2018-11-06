@@ -55,6 +55,13 @@ body {
   letter-spacing: normal;
 }
 
+small {
+  font-size:12px; 
+}
+
+strong {
+  font-weight:600; 
+}
 
 h1, h2, h3, h4, h5 {
   color: #252527 !important;
