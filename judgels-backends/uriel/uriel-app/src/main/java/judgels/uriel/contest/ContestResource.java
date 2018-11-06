@@ -17,12 +17,15 @@ import judgels.uriel.api.contest.ContestDescription;
 import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.ContestsResponse;
+import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.contest.module.ContestModuleStore;
 
 public class ContestResource implements ContestService {
     private final ActorChecker actorChecker;
     private final ContestRoleChecker contestRoleChecker;
     private final ContestStore contestStore;
+    private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
 
     @Inject
@@ -30,11 +33,13 @@ public class ContestResource implements ContestService {
             ActorChecker actorChecker,
             ContestRoleChecker contestRoleChecker,
             ContestStore contestStore,
+            ContestModuleStore moduleStore,
             ContestContestantStore contestantStore) {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
         this.contestStore = contestStore;
+        this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
     }
 
@@ -110,7 +115,10 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
-        return contestStore.createContest(data);
+        Contest contest = contestStore.createContest(data);
+        moduleStore.upsertIcpcStyleModule(contest.getJid(), new IcpcStyleModuleConfig.Builder().build());
+
+        return contest;
     }
 
     @Override
