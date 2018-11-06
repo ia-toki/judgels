@@ -8,6 +8,7 @@ export function createToastActions(toaster) {
       toaster.show({
         message,
         intent: Intent.NONE,
+        timeout: 1500,
       });
     },
 
@@ -16,6 +17,7 @@ export function createToastActions(toaster) {
         icon: 'tick',
         message,
         intent: Intent.SUCCESS,
+        timeout: 1500,
       });
     },
 
