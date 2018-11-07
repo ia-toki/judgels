@@ -20,7 +20,6 @@ export class FormRichTextArea extends React.PureComponent<FormRichTextAreaProps>
       tinymce.init({
         selector: '.tinymce',
         skin_url: '/skins/lightgray',
-        content_style: '',
         content_css: '/skins/raphael/content.css',
         branding: false,
         menubar: 'edit view format',
