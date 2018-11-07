@@ -37,7 +37,9 @@
     "redux-persist": "^5.4.0",
     "redux-thunk": "^2.0.0",
     "reset-css": "^2.2.0",
-    "tinymce": "^4.8.2"
+    "tinymce": "^4.8.2",
+    "typeface-open-sans": "^0.0.54",
+    "typeface-roboto": "^0.0.54"
   },
   "scripts": {
     "start": "npm-run-all build:css --parallel watch:css start:ts",

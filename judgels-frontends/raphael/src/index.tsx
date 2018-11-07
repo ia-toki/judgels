@@ -9,6 +9,9 @@ import 'styles/index.css';
 import App from 'routes/App';
 import { history, persistor, store } from 'modules/store';
 
+require('typeface-open-sans');
+require('typeface-roboto');
+
 // https://github.com/yahoo/react-intl/issues/465#issuecomment-369566628
 const consoleError = console.error.bind(console);
 console.error = (message, ...args) => {
