@@ -7,8 +7,12 @@ import { FormInputValidation } from '../FormInputValidation/FormInputValidation'
 
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
-import 'tinymce/plugins/paste';
+import 'tinymce/plugins/code';
+import 'tinymce/plugins/image';
 import 'tinymce/plugins/link';
+import 'tinymce/plugins/lists';
+import 'tinymce/plugins/paste';
+import 'tinymce/plugins/table';
 
 export interface FormRichTextAreaProps extends FormInputProps {
   rows: number;
@@ -22,7 +26,15 @@ export class FormRichTextArea extends React.PureComponent<FormRichTextAreaProps>
         skin_url: '/skins/lightgray',
         content_css: '/skins/raphael/content.css',
         branding: false,
-        menubar: 'edit view format',
+        menubar: false,
+        plugins: 'code image link lists table',
+        toolbar:
+          'bold italic underline strikethrough subscript superscript blockquote removeformat | ' +
+          'bullist numlist | outdent indent | ' +
+          'alignleft aligncenter alignright alignjustify | ' +
+          'image link table | ' +
+          'styleselect formatselect | ' +
+          'code',
         setup: editor => {
           editor.on('change', () => {
             this.props.input.onChange(editor.getContent());
