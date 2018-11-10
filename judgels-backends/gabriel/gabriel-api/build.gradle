@@ -1,8 +1,7 @@
 dependencies {
-    compile project(':sandalphon:sandalphon-api')
-    compile "com.palantir.remoting-api:errors:$httpRemotingApiVersion"
-
     compileOnly "org.immutables:value:$immutablesVersion"
+
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }

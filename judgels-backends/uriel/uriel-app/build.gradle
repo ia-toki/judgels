@@ -2,7 +2,6 @@ apply from: '../../gradle/integTest.gradle'
 
 dependencies {
     compile project(':uriel:uriel-api')
-    compile project(':jophiel:jophiel-api')
     compile project(':judgels-commons:judgels-fs')
     compile project(':judgels-commons:judgels-persistence-core')
     compile project(':judgels-commons:judgels-service-persistence')

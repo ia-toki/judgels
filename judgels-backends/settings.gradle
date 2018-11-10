@@ -13,6 +13,8 @@ include ':jophiel:jophiel-api'
 include ':jophiel:jophiel-app'
 include ':jophiel:jophiel-dist'
 
+include ':sandalphon:sandalphon-api'
+
 include ':sealtiel:sealtiel-api'
 include ':sealtiel:sealtiel-app'
 include ':sealtiel:sealtiel-dist'
@@ -20,3 +22,5 @@ include ':sealtiel:sealtiel-dist'
 include ':uriel:uriel-api'
 include ':uriel:uriel-app'
 include ':uriel:uriel-dist'
+
+include ':gabriel:gabriel-api'
