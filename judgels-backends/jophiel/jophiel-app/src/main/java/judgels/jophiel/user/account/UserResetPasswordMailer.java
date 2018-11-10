@@ -1,4 +1,4 @@
-package judgels.jophiel.user.password;
+package judgels.jophiel.user.account;
 
 import judgels.jophiel.EmailTemplate;
 import judgels.jophiel.api.user.User;

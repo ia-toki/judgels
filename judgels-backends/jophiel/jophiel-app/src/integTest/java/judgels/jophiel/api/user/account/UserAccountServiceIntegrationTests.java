@@ -14,8 +14,6 @@ import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
-import judgels.jophiel.api.user.password.PasswordResetData;
-import judgels.jophiel.api.user.registration.UserRegistrationData;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
 

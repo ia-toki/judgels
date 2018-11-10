@@ -6,9 +6,9 @@ import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.fs.aws.AwsFsConfiguration;
 import judgels.jophiel.mailer.MailerConfiguration;
+import judgels.jophiel.user.account.UserRegistrationConfiguration;
+import judgels.jophiel.user.account.UserResetPasswordConfiguration;
 import judgels.jophiel.user.avatar.UserAvatarConfiguration;
-import judgels.jophiel.user.password.UserResetPasswordConfiguration;
-import judgels.jophiel.user.registration.UserRegistrationConfiguration;
 import judgels.recaptcha.RecaptchaConfiguration;
 import org.immutables.value.Value;
 

@@ -32,7 +32,7 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.session.SessionTokenGenerator;
 import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.registration.UserRegistrationEmailStore;
+import judgels.jophiel.user.account.UserRegistrationEmailStore;
 import judgels.service.RandomCodeGenerator;
 import judgels.service.api.actor.AuthHeader;
 

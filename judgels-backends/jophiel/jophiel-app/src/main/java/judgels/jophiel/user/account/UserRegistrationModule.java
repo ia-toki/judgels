@@ -1,4 +1,4 @@
-package judgels.jophiel.user.registration;
+package judgels.jophiel.user.account;
 
 import dagger.Module;
 import dagger.Provides;

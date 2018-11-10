@@ -1,4 +1,4 @@
-package judgels.jophiel.user.password;
+package judgels.jophiel.user.account;
 
 import java.time.Duration;
 import java.util.Optional;

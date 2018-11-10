@@ -1,4 +1,4 @@
-package judgels.jophiel.user.password;
+package judgels.jophiel.user.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

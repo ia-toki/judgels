@@ -1,4 +1,4 @@
-package judgels.jophiel.user.password;
+package judgels.jophiel.user;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;

@@ -17,7 +17,6 @@ import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserModel;
 import judgels.jophiel.user.avatar.UserAvatarFs;
-import judgels.jophiel.user.password.PasswordHash;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;

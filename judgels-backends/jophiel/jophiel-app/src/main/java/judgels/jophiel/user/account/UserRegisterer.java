@@ -1,11 +1,11 @@
-package judgels.jophiel.user.registration;
+package judgels.jophiel.user.account;
 
 import java.util.Optional;
 import javax.ws.rs.NotFoundException;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
+import judgels.jophiel.api.user.account.UserRegistrationData;
 import judgels.jophiel.api.user.info.UserInfo;
-import judgels.jophiel.api.user.registration.UserRegistrationData;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.info.UserInfoStore;
 import judgels.recaptcha.RecaptchaVerifier;

@@ -1,8 +1,8 @@
-package judgels.jophiel.user.password;
+package judgels.jophiel.user.account;
 
 import java.time.Duration;
 import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.password.PasswordResetData;
+import judgels.jophiel.api.user.account.PasswordResetData;
 import judgels.jophiel.user.UserStore;
 
 public class UserPasswordResetter {
