@@ -11,8 +11,8 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.password.PasswordsUpdateResponse;
 import judgels.jophiel.api.user.password.UserPasswordService;
 import judgels.jophiel.profile.ProfileStore;
-import judgels.jophiel.role.RoleChecker;
 import judgels.jophiel.session.SessionStore;
+import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -20,7 +20,7 @@ import judgels.service.api.actor.AuthHeader;
 public class UserPasswordResource implements UserPasswordService {
     private final Clock clock;
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
+    private final UserRoleChecker roleChecker;
     private final UserStore userStore;
     private final ProfileStore profileStore;
     private final SessionStore sessionStore;
@@ -29,7 +29,7 @@ public class UserPasswordResource implements UserPasswordService {
     public UserPasswordResource(
             Clock clock,
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
+            UserRoleChecker roleChecker,
             UserStore userStore,
             ProfileStore profileStore,
             SessionStore sessionStore) {
@@ -49,7 +49,7 @@ public class UserPasswordResource implements UserPasswordService {
             Map<String, String> usernameToPasswordMap) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canUpdateUserList(actorJid));
+        checkAllowed(roleChecker.canAdminister(actorJid));
 
         Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernameToPasswordMap.keySet());
         Map<String, String> jidToPasswordMap = usernameToPasswordMap.keySet()

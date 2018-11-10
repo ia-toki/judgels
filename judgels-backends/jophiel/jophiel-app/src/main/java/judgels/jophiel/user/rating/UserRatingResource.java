@@ -9,21 +9,21 @@ import javax.inject.Inject;
 import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.api.user.rating.UserRatingUpdateData;
-import judgels.jophiel.role.RoleChecker;
+import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class UserRatingResource implements UserRatingService {
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
+    private final UserRoleChecker roleChecker;
     private final UserStore userStore;
     private final UserRatingStore ratingStore;
 
     @Inject
     public UserRatingResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
+            UserRoleChecker roleChecker,
             UserStore userStore,
             UserRatingStore ratingStore) {
 
@@ -37,7 +37,7 @@ public class UserRatingResource implements UserRatingService {
     @UnitOfWork
     public void updateRatings(AuthHeader authHeader, UserRatingUpdateData data) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canUpdateUserList(actorJid));
+        checkAllowed(roleChecker.canAdminister(actorJid));
 
         Map<String, String> jidsByUsernamesMap = userStore.translateUsernamesToJids(data.getRatingsMap().keySet());
         Map<String, UserRating> ratingsMap = data.getRatingsMap().entrySet()

@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response;
 import judgels.fs.FileSystem;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.avatar.UserAvatarService;
-import judgels.jophiel.role.RoleChecker;
+import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.service.RandomCodeGenerator;
 import judgels.service.actor.ActorChecker;
@@ -36,14 +36,14 @@ public class UserAvatarResource implements UserAvatarService {
     private static final String DEFAULT_AVATAR = "assets/avatar-default.png";
 
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
+    private final UserRoleChecker roleChecker;
     private final UserStore userStore;
     private final FileSystem avatarFs;
 
     @Inject
     public UserAvatarResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
+            UserRoleChecker roleChecker,
             UserStore userStore,
             @UserAvatarFs FileSystem avatarFs) {
 
@@ -57,7 +57,7 @@ public class UserAvatarResource implements UserAvatarService {
     @UnitOfWork
     public void deleteAvatar(AuthHeader authHeader, String userJid) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
+        checkAllowed(roleChecker.canManage(actorJid, userJid));
 
         checkFound(userStore.updateUserAvatar(userJid, null));
     }
@@ -96,7 +96,7 @@ public class UserAvatarResource implements UserAvatarService {
             @FormDataParam("file") FormDataContentDisposition fileDetails) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
+        checkAllowed(roleChecker.canManage(actorJid, userJid));
 
         User user = checkFound(userStore.getUserByJid(userJid));
 

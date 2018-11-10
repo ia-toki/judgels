@@ -8,21 +8,21 @@ import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.info.UserInfo;
 import judgels.jophiel.api.user.info.UserInfoService;
-import judgels.jophiel.role.RoleChecker;
+import judgels.jophiel.user.UserRoleChecker;
 import judgels.jophiel.user.UserStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class UserInfoResource implements UserInfoService {
     private final ActorChecker actorChecker;
-    private final RoleChecker roleChecker;
+    private final UserRoleChecker roleChecker;
     private final UserStore userStore;
     private final UserInfoStore infoStore;
 
     @Inject
     public UserInfoResource(
             ActorChecker actorChecker,
-            RoleChecker roleChecker,
+            UserRoleChecker roleChecker,
             UserStore userStore,
             UserInfoStore infoStore) {
 
@@ -36,7 +36,7 @@ public class UserInfoResource implements UserInfoService {
     @UnitOfWork(readOnly = true)
     public UserInfo getInfo(AuthHeader authHeader, String userJid) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canViewUser(actorJid, userJid));
+        checkAllowed(roleChecker.canManage(actorJid, userJid));
 
         User user = checkFound(userStore.getUserByJid(userJid));
         return infoStore.getInfo(user.getJid());
@@ -46,7 +46,7 @@ public class UserInfoResource implements UserInfoService {
     @UnitOfWork
     public UserInfo updateInfo(AuthHeader authHeader, String userJid, UserInfo userInfo) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canUpdateUser(actorJid, userJid));
+        checkAllowed(roleChecker.canManage(actorJid, userJid));
 
         User user = checkFound(userStore.getUserByJid(userJid));
         return infoStore.upsertInfo(user.getJid(), userInfo);
