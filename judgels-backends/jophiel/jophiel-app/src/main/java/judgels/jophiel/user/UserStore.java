@@ -18,6 +18,7 @@ import judgels.jophiel.persistence.UserDao;
 import judgels.jophiel.persistence.UserModel;
 import judgels.jophiel.user.avatar.UserAvatarFs;
 import judgels.jophiel.user.password.PasswordHash;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
@@ -74,8 +75,15 @@ public class UserStore {
         return Lists.transform(userDao.selectAllByTerm(term), UserStore::fromModel);
     }
 
-    public Page<User> getUsers(SelectionOptions options) {
-        Page<UserModel> models = userDao.selectPaged(options);
+    public Page<User> getUsers(Optional<Integer> page, Optional<String> orderBy, Optional<OrderDir> orderDir) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .orderBy("username").orderDir(OrderDir.ASC);
+        page.ifPresent(options::page);
+        orderBy.ifPresent(options::orderBy);
+        orderDir.ifPresent(options::orderDir);
+
+        Page<UserModel> models = userDao.selectPaged(options.build());
         return models.mapPage(p -> Lists.transform(p, UserStore::fromModel));
     }
 

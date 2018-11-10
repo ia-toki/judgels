@@ -3,13 +3,13 @@ package judgels.jophiel.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.util.Optional;
 import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.persistence.UserModel;
 import judgels.persistence.api.Page;
-import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.WithHibernateSession;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
@@ -74,7 +74,7 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
 
         User budi = store.getUserByUsername("budi").get();
 
-        Page<User> users = store.getUsers(SelectionOptions.DEFAULT_PAGED);
+        Page<User> users = store.getUsers(Optional.empty(), Optional.empty(), Optional.empty());
         assertThat(users.getPage()).containsExactly(budi, nano, user);
     }
 
