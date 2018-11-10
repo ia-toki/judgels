@@ -11,13 +11,13 @@ describe('changePasswordActions', () => {
 
   const getState = (): Partial<AppState> => ({ session: sessionState });
 
-  let myAPI: jest.Mocked<any>;
+  let myUserAPI: jest.Mocked<any>;
   let toastActions: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
 
-    myAPI = {
+    myUserAPI = {
       updateMyPassword: jest.fn(),
     };
     toastActions = {
@@ -30,14 +30,14 @@ describe('changePasswordActions', () => {
     const { updateMyPassword } = changePasswordActions;
     const doUpdateMyPassword = async () =>
       updateMyPassword('oldPass', 'newPass')(dispatch, getState, {
-        myAPI,
+        myUserAPI,
         toastActions,
       });
 
     it('tries to change password', async () => {
       await doUpdateMyPassword();
 
-      expect(myAPI.updateMyPassword).toHaveBeenCalledWith(token, {
+      expect(myUserAPI.updateMyPassword).toHaveBeenCalledWith(token, {
         oldPassword: 'oldPass',
         newPassword: 'newPass',
       });
@@ -62,7 +62,7 @@ describe('changePasswordActions', () => {
 
       beforeEach(async () => {
         error = new BadRequestError();
-        myAPI.updateMyPassword.mockImplementation(() => {
+        myUserAPI.updateMyPassword.mockImplementation(() => {
           throw error;
         });
       });

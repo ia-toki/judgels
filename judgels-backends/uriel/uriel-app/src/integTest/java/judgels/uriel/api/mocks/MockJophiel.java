@@ -35,35 +35,35 @@ public class MockJophiel {
     public static WireMockServer mockJophiel() {
         WireMockServer mockJophiel = new WireMockServer(JOPHIEL_PORT);
 
-        mockJophiel.stubFor(get("/api/v2/users/me/")
+        mockJophiel.stubFor(get("/api/v2/user/")
                 .willReturn(okForJson(ImmutableMap.of(
                         "jid", "nonadminJid",
                         "username", "nonadmin"))));
 
-        mockJophiel.stubFor(get("/api/v2/users/me/")
+        mockJophiel.stubFor(get("/api/v2/user/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(ADMIN_BEARER_TOKEN))
                 .willReturn(okForJson(ImmutableMap.of(
                         "jid", ADMIN_JID,
                         "username", ADMIN))));
 
-        mockJophiel.stubFor(get("/api/v2/users/me/")
+        mockJophiel.stubFor(get("/api/v2/user/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_A_BEARER_TOKEN))
                 .willReturn(okForJson(ImmutableMap.of(
                         "jid", USER_A_JID,
                         "username", "userA"))));
 
-        mockJophiel.stubFor(get("/api/v2/users/me/")
+        mockJophiel.stubFor(get("/api/v2/user/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_B_BEARER_TOKEN))
                 .willReturn(okForJson(ImmutableMap.of(
                         "jid", USER_B_JID,
                         "username", "userB",
                         "email", "userb@mailinator.com"))));
 
-        mockJophiel.stubFor(get("/api/v2/users/me/role")
+        mockJophiel.stubFor(get("/api/v2/user/role")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(SUPERADMIN_BEARER_TOKEN))
                 .willReturn(okForJson("superadmin")));
 
-        mockJophiel.stubFor(post("/api/v2/users/username-to-jid")
+        mockJophiel.stubFor(post("/api/v2/user-search/username-to-jid")
                 .willReturn(okForJson(ImmutableMap.of(ADMIN, ADMIN_JID))));
 
         mockJophiel.stubFor(post(urlPathEqualTo("/api/v2/profiles/"))

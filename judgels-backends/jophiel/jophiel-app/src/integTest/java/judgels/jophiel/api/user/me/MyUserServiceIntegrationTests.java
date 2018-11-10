@@ -1,4 +1,4 @@
-package judgels.jophiel.api.user;
+package judgels.jophiel.api.user.me;
 
 import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,17 +9,19 @@ import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.role.Role;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
+import judgels.jophiel.api.user.UserData;
+import judgels.jophiel.api.user.UserService;
 import judgels.service.api.actor.AuthHeader;
 import org.junit.jupiter.api.Test;
 
-class MyServiceIntegrationTests extends AbstractServiceIntegrationTests {
+class MyUserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private UserService userService = createService(UserService.class);
-    private MyService myService = createService(MyService.class);
+    private MyUserService myUserService = createService(MyUserService.class);
     private SessionService sessionService = createService(SessionService.class);
 
     @Test
     void get_myself() {
-        assertThat(myService.getMyself(adminHeader).getUsername()).isEqualTo("superadmin");
+        assertThat(myUserService.getMyself(adminHeader).getUsername()).isEqualTo("superadmin");
     }
 
     @Test
@@ -32,7 +34,7 @@ class MyServiceIntegrationTests extends AbstractServiceIntegrationTests {
         AuthHeader authHeader = AuthHeader.of(sessionService.logIn(Credentials.of("charlie", "pass")).getToken());
 
         PasswordUpdateData wrongData = PasswordUpdateData.of("wrongPass", "newPass");
-        assertThatRemoteExceptionThrownBy(() -> myService.updateMyPassword(authHeader, wrongData))
+        assertThatRemoteExceptionThrownBy(() -> myUserService.updateMyPassword(authHeader, wrongData))
                 .isGeneratedFromErrorType(ErrorType.INVALID_ARGUMENT);
 
         assertThatCode(() -> sessionService.logIn(Credentials.of("charlie", "pass")))
@@ -42,7 +44,7 @@ class MyServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
         PasswordUpdateData correctData = PasswordUpdateData.of("pass", "newPass");
-        myService.updateMyPassword(authHeader, correctData);
+        myUserService.updateMyPassword(authHeader, correctData);
 
         assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(Credentials.of("charlie", "pass")))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
@@ -53,9 +55,9 @@ class MyServiceIntegrationTests extends AbstractServiceIntegrationTests {
 
     @Test
     void get_role() {
-        assertThat(myService.getMyRole(adminHeader)).isEqualTo(Role.SUPERADMIN);
+        assertThat(myUserService.getMyRole(adminHeader)).isEqualTo(Role.SUPERADMIN);
 
         AuthHeader charlieHeader = AuthHeader.of(sessionService.logIn(Credentials.of("charlie", "newPass")).getToken());
-        assertThat(myService.getMyRole(charlieHeader)).isEqualTo(Role.USER);
+        assertThat(myUserService.getMyRole(charlieHeader)).isEqualTo(Role.USER);
     }
 }

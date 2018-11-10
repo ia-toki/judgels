@@ -9,10 +9,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/users/web")
+@Path("/api/v2/user-web")
 public interface UserWebService {
     @GET
-    @Path("/me/config")
+    @Path("/config")
     @Produces(APPLICATION_JSON)
     UserWebConfig getWebConfig(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
 }

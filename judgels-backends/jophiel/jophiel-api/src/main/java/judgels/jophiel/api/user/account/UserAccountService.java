@@ -11,7 +11,7 @@ import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.password.PasswordResetData;
 import judgels.jophiel.api.user.registration.UserRegistrationData;
 
-@Path("/api/v2/users/account")
+@Path("/api/v2/user-account")
 public interface UserAccountService {
     @POST
     @Path("/register")

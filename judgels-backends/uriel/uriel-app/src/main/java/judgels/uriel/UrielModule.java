@@ -6,7 +6,7 @@ import dagger.Provides;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.inject.Singleton;
-import judgels.jophiel.api.user.MyService;
+import judgels.jophiel.api.user.me.MyUserService;
 import judgels.service.JudgelsVersion;
 import judgels.service.actor.ActorChecker;
 import judgels.service.actor.CachingActorExtractor;
@@ -33,7 +33,7 @@ public class UrielModule {
 
     @Provides
     @Singleton
-    static ActorChecker actorChecker(MyService myService) {
-        return new ActorChecker(new CachingActorExtractor(myService));
+    static ActorChecker actorChecker(MyUserService myUserService) {
+        return new ActorChecker(new CachingActorExtractor(myUserService));
     }
 }

@@ -61,7 +61,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         env.jersey().register(component.sessionResource());
         env.jersey().register(component.legacySessionResource());
         env.jersey().register(component.legacyUserResource());
-        env.jersey().register(component.myResource());
+        env.jersey().register(component.myUserResource());
         env.jersey().register(component.profileResource());
         env.jersey().register(component.userResource());
         env.jersey().register(component.userAccountResource());
@@ -69,6 +69,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
         env.jersey().register(component.userProfileResource());
         env.jersey().register(component.userRegistrationWebResource());
         env.jersey().register(component.userRatingResource());
+        env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
         env.jersey().register(component.versionResource());
     }

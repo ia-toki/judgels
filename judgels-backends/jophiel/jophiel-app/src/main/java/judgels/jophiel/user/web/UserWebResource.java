@@ -6,17 +6,17 @@ import javax.inject.Inject;
 import judgels.jophiel.api.user.web.UserWebConfig;
 import judgels.jophiel.api.user.web.UserWebService;
 import judgels.jophiel.profile.ProfileResource;
-import judgels.jophiel.user.MyResource;
+import judgels.jophiel.user.me.MyUserResource;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 public class UserWebResource implements UserWebService {
     private final ActorChecker actorChecker;
-    private final MyResource myResource;
+    private final MyUserResource myResource;
     private final ProfileResource profileResource;
 
     @Inject
-    public UserWebResource(ActorChecker actorChecker, MyResource myResource, ProfileResource profileResource) {
+    public UserWebResource(ActorChecker actorChecker, MyUserResource myResource, ProfileResource profileResource) {
         this.actorChecker = actorChecker;
         this.myResource = myResource;
         this.profileResource = profileResource;

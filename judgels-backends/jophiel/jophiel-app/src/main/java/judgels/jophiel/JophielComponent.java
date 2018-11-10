@@ -9,16 +9,17 @@ import judgels.jophiel.legacy.user.LegacyUserResource;
 import judgels.jophiel.mailer.MailerModule;
 import judgels.jophiel.profile.ProfileResource;
 import judgels.jophiel.session.SessionResource;
-import judgels.jophiel.user.MyResource;
 import judgels.jophiel.user.UserResource;
 import judgels.jophiel.user.account.UserAccountResource;
 import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.avatar.UserAvatarResource;
 import judgels.jophiel.user.info.UserInfoResource;
+import judgels.jophiel.user.me.MyUserResource;
 import judgels.jophiel.user.password.UserResetPasswordModule;
 import judgels.jophiel.user.rating.UserRatingResource;
 import judgels.jophiel.user.registration.UserRegistrationModule;
 import judgels.jophiel.user.registration.web.UserRegistrationWebResource;
+import judgels.jophiel.user.search.UserSearchResource;
 import judgels.jophiel.user.superadmin.SuperadminCreator;
 import judgels.jophiel.user.superadmin.SuperadminModule;
 import judgels.jophiel.user.web.UserWebResource;
@@ -44,7 +45,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 public interface JophielComponent {
     LegacyUserResource legacyUserResource();
     LegacySessionResource legacySessionResource();
-    MyResource myResource();
+    MyUserResource myUserResource();
     ProfileResource profileResource();
     SessionResource sessionResource();
     SuperadminCreator superadminCreator();
@@ -54,6 +55,7 @@ public interface JophielComponent {
     UserInfoResource userProfileResource();
     UserRegistrationWebResource userRegistrationWebResource();
     UserRatingResource userRatingResource();
+    UserSearchResource userSearchResource();
     UserWebResource userWebResource();
     VersionResource versionResource();
 }

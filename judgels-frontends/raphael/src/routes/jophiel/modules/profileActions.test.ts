@@ -8,31 +8,31 @@ import { PutUserJid } from './profileReducer';
 
 describe('profileActions', () => {
   let dispatch: jest.Mock<any>;
-  let userAPI: jest.Mocked<any>;
+  let userSearchAPI: jest.Mocked<any>;
   const getState = (): Partial<AppState> => ({});
 
   beforeEach(() => {
     dispatch = jest.fn();
 
-    userAPI = {
+    userSearchAPI = {
       translateUsernamesToJids: jest.fn(),
     };
   });
 
   describe('getUserJid()', () => {
     const { getUserJid } = profileActions;
-    const doGetUserJid = async () => getUserJid(user.username)(dispatch, getState, { userAPI });
+    const doGetUserJid = async () => getUserJid(user.username)(dispatch, getState, { userSearchAPI });
 
     describe('when user found', () => {
       beforeEach(async () => {
         const userJidsByUsername: UsernamesMap = { [user.username]: user.jid };
-        userAPI.translateUsernamesToJids.mockReturnValue(userJidsByUsername);
+        userSearchAPI.translateUsernamesToJids.mockReturnValue(userJidsByUsername);
 
         await doGetUserJid();
       });
 
       it('calls API to get user', () => {
-        expect(userAPI.translateUsernamesToJids).toHaveBeenCalledWith([user.username]);
+        expect(userSearchAPI.translateUsernamesToJids).toHaveBeenCalledWith([user.username]);
       });
 
       it('puts the user jid', () => {
@@ -43,7 +43,7 @@ describe('profileActions', () => {
     describe('when user not found', () => {
       beforeEach(async () => {
         const users: UsernamesMap = {};
-        userAPI.translateUsernamesToJids.mockReturnValue(users);
+        userSearchAPI.translateUsernamesToJids.mockReturnValue(users);
       });
 
       it('throws NotFoundError', async () => {

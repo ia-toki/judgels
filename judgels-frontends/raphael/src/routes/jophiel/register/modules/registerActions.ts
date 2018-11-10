@@ -9,10 +9,10 @@ export const registerActions = {
     };
   },
 
-  registerUser: (userRegistrationData: UserRegistrationData) => {
-    return async (dispatch, getState, { userAPI, userAccountAPI }) => {
-      const usernameExists = await userAPI.usernameExists(userRegistrationData.username);
-      const emailExists = await userAPI.emailExists(userRegistrationData.email);
+  registerUser: (data: UserRegistrationData) => {
+    return async (dispatch, getState, { userSearchAPI, userAccountAPI }) => {
+      const usernameExists = await userSearchAPI.usernameExists(data.username);
+      const emailExists = await userSearchAPI.emailExists(data.email);
 
       if (usernameExists || emailExists) {
         const usernameError = usernameExists ? { username: 'Username already exists' } : {};
@@ -23,7 +23,7 @@ export const registerActions = {
         });
       }
 
-      await userAccountAPI.registerUser(userRegistrationData);
+      await userAccountAPI.registerUser(data);
     };
   },
 };

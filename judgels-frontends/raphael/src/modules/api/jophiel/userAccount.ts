@@ -15,7 +15,7 @@ export interface PasswordResetData {
 }
 
 export function createUserAccountAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users/account`;
+  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-account`;
 
   return {
     registerUser: (userRegistrationData: UserRegistrationData): Promise<void> => {

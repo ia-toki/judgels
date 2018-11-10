@@ -5,16 +5,16 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.palantir.remoting.api.errors.RemoteException;
 import java.time.Duration;
 import java.util.Optional;
-import judgels.jophiel.api.user.MyService;
+import judgels.jophiel.api.user.me.MyUserService;
 import judgels.service.api.actor.ActorExtractor;
 import judgels.service.api.actor.AuthHeader;
 
 public final class CachingActorExtractor implements ActorExtractor {
-    private final MyService myService;
+    private final MyUserService myUserService;
     private final LoadingCache<AuthHeader, String> cache;
 
-    public CachingActorExtractor(MyService myService) {
-        this.myService = myService;
+    public CachingActorExtractor(MyUserService myUserService) {
+        this.myUserService = myUserService;
         this.cache = Caffeine.newBuilder()
                 .maximumSize(1_000)
                 .expireAfterWrite(Duration.ofMinutes(5))
@@ -27,7 +27,7 @@ public final class CachingActorExtractor implements ActorExtractor {
 
     private String extractJidUncached(AuthHeader authHeader) {
         try {
-            return myService.getMyself(authHeader).getJid();
+            return myUserService.getMyself(authHeader).getJid();
         } catch (RemoteException e) {
             if (e.getStatus() != 401) {
                 throw e;

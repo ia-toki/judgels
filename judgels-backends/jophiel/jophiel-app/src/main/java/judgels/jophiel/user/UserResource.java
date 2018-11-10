@@ -6,7 +6,6 @@ import static judgels.service.ServiceUtils.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;
@@ -54,6 +53,7 @@ public class UserResource implements UserService {
             Optional<Integer> page,
             Optional<String> orderBy,
             Optional<OrderDir> orderDir) {
+
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canViewUserList(actorJid));
 
@@ -67,30 +67,12 @@ public class UserResource implements UserService {
     }
 
     @Override
-    @UnitOfWork(readOnly = true)
-    public boolean usernameExists(String username) {
-        return userStore.getUserByUsername(username).isPresent();
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public boolean emailExists(String email) {
-        return userStore.getUserByEmail(email).isPresent();
-    }
-
-    @Override
     @UnitOfWork
     public User createUser(AuthHeader authHeader, UserData data) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canCreateUser(actorJid));
 
         return userStore.createUser(data);
-    }
-
-    @Override
-    @UnitOfWork(readOnly = true)
-    public Map<String, String> translateUsernamesToJids(Set<String> usernames) {
-        return userStore.translateUsernamesToJids(usernames);
     }
 
     @Override

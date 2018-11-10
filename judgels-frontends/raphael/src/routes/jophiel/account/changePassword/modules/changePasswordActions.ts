@@ -5,11 +5,11 @@ import { BadRequestError } from 'modules/api/error';
 
 export const changePasswordActions = {
   updateMyPassword: (oldPassword: string, newPassword: string) => {
-    return async (dispatch, getState, { myAPI, toastActions }) => {
+    return async (dispatch, getState, { myUserAPI, toastActions }) => {
       const token = selectToken(getState());
 
       try {
-        await myAPI.updateMyPassword(token, { oldPassword, newPassword });
+        await myUserAPI.updateMyPassword(token, { oldPassword, newPassword });
       } catch (error) {
         if (error instanceof BadRequestError) {
           throw new Error('Incorrect old password.');

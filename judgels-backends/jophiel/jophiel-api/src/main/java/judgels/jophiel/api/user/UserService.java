@@ -5,7 +5,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -25,16 +24,6 @@ public interface UserService {
     @Produces(APPLICATION_JSON)
     User getUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, @PathParam("userJid") String userJid);
 
-    @GET
-    @Path("/username/{username}/exists")
-    @Produces(APPLICATION_JSON)
-    boolean usernameExists(@PathParam("username") String username);
-
-    @GET
-    @Path("/email/{email}/exists")
-    @Produces(APPLICATION_JSON)
-    boolean emailExists(@PathParam("email") String email);
-
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
@@ -49,12 +38,6 @@ public interface UserService {
             @QueryParam("page") Optional<Integer> page,
             @QueryParam("orderBy") Optional<String> orderBy,
             @QueryParam("orderDir") Optional<OrderDir> orderDir);
-
-    @POST
-    @Path("/username-to-jid")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    Map<String, String> translateUsernamesToJids(Set<String> usernames);
 
     @POST
     @Path("/passwords")

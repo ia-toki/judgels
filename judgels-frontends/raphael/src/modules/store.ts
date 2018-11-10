@@ -8,13 +8,14 @@ import thunk from 'redux-thunk';
 
 import { createSessionAPI } from './api/jophiel/session';
 import { createLegacySessionAPI } from './api/jophiel/legacySession';
-import { createMyAPI } from './api/jophiel/my';
+import { createMyUserAPI } from './api/jophiel/myUser';
 import { createProfileAPI } from './api/jophiel/profile';
 import { createUserAPI } from './api/jophiel/user';
 import { createUserAccountAPI } from './api/jophiel/userAccount';
 import { createUserAvatarAPI } from './api/jophiel/userAvatar';
 import { createUserInfoAPI } from './api/jophiel/userInfo';
 import { createUserRegistrationWebAPI } from './api/jophiel/userRegistration';
+import { createUserSearchAPI } from './api/jophiel/userSearch';
 import { createUserWebAPI } from './api/jophiel/userWeb';
 import { createContestAPI } from './api/uriel/contest';
 import { createContestWebAPI } from './api/uriel/contestWeb';
@@ -67,13 +68,14 @@ export const store = createStore<AppState>(
       thunk.withExtraArgument({
         sessionAPI: createSessionAPI(),
         legacySessionAPI: createLegacySessionAPI(),
-        myAPI: createMyAPI(),
+        myUserAPI: createMyUserAPI(),
         profileAPI: createProfileAPI(),
         userAPI: createUserAPI(),
         userAccountAPI: createUserAccountAPI(),
         userAvatarAPI: createUserAvatarAPI(),
         userInfoAPI: createUserInfoAPI(),
         userRegistrationWebAPI: createUserRegistrationWebAPI(),
+        userSearchAPI: createUserSearchAPI(),
         userWebAPI: createUserWebAPI(),
         contestAPI: createContestAPI(),
         contestWebAPI: createContestWebAPI(),

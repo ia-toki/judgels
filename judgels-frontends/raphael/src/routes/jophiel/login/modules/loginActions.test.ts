@@ -15,7 +15,7 @@ describe('loginActions', () => {
   let getState: jest.Mock<any>;
 
   let legacySessionAPI: jest.Mocked<any>;
-  let myAPI: jest.Mocked<any>;
+  let myUserAPI: jest.Mocked<any>;
   let userWebAPI: jest.Mocked<any>;
   let toastActions: jest.Mocked<any>;
 
@@ -27,7 +27,7 @@ describe('loginActions', () => {
       logIn: jest.fn(),
       preparePostLogin: jest.fn(),
     };
-    myAPI = {
+    myUserAPI = {
       getMyself: jest.fn(),
     };
     userWebAPI = {
@@ -44,14 +44,14 @@ describe('loginActions', () => {
     const doLogIn = async () =>
       logIn('path', 'user', 'pass')(dispatch, getState, {
         legacySessionAPI,
-        myAPI,
+        myUserAPI,
         userWebAPI,
         toastActions,
       });
 
     it('calls API to logs in', async () => {
       legacySessionAPI.logIn.mockImplementation(() => Promise.resolve({ authCode, token }));
-      myAPI.getMyself.mockImplementation(() => Promise.resolve<any>({ jid: userJid }));
+      myUserAPI.getMyself.mockImplementation(() => Promise.resolve<any>({ jid: userJid }));
       userWebAPI.getWebConfig.mockImplementation(() => Promise.resolve(config));
 
       await doLogIn();
@@ -62,7 +62,7 @@ describe('loginActions', () => {
     describe('when the credentials is valid', () => {
       beforeEach(async () => {
         legacySessionAPI.logIn.mockImplementation(() => Promise.resolve({ authCode, token }));
-        myAPI.getMyself.mockImplementation(() => Promise.resolve(user));
+        myUserAPI.getMyself.mockImplementation(() => Promise.resolve(user));
         userWebAPI.getWebConfig.mockImplementation(() => Promise.resolve(config));
 
         await doLogIn();

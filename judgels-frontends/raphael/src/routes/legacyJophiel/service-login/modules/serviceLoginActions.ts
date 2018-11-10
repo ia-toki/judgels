@@ -4,7 +4,7 @@ import { selectToken } from 'modules/session/sessionSelectors';
 
 export const serviceLoginActions = {
   logIn: (usernameOrEmail: string, password: string, redirectUri: string, returnUri: string) => {
-    return async (dispatch, getState, { legacySessionAPI, myAPI }) => {
+    return async (dispatch, getState, { legacySessionAPI, myUserAPI }) => {
       let session;
       try {
         session = await legacySessionAPI.logIn(usernameOrEmail, password);
@@ -16,7 +16,7 @@ export const serviceLoginActions = {
         }
       }
 
-      const user = await myAPI.getMyself(session.token);
+      const user = await myUserAPI.getMyself(session.token);
       dispatch(PutToken.create(session.token));
       dispatch(PutUser.create(user));
 

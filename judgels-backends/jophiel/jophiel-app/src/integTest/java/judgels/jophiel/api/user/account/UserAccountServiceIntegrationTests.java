@@ -1,4 +1,4 @@
-package judgels.jophiel.api.user;
+package judgels.jophiel.api.user.account;
 
 import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +12,8 @@ import java.util.regex.Pattern;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.SessionService;
-import judgels.jophiel.api.user.account.UserAccountService;
+import judgels.jophiel.api.user.UserData;
+import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.api.user.password.PasswordResetData;
 import judgels.jophiel.api.user.registration.UserRegistrationData;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import org.subethamail.wiser.Wiser;
 
 class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests {
     private UserService userService = createService(UserService.class);
-    private UserAccountService userAccountService = createService(UserAccountService.class);
+    private UserAccountService accountService = createService(UserAccountService.class);
     private SessionService sessionService = createService(SessionService.class);
 
     @Test
@@ -29,7 +30,7 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         wiser.setPort(2500);
         wiser.start();
 
-        userAccountService.registerUser(new UserRegistrationData.Builder()
+        accountService.registerUser(new UserRegistrationData.Builder()
                 .username("beta")
                 .name("Beta")
                 .password("pass")
@@ -44,7 +45,7 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
 
         String emailCode = extractEmailCode(email);
 
-        userAccountService.activateUser(emailCode);
+        accountService.activateUser(emailCode);
         assertThatCode(() -> sessionService.logIn(credentials))
                 .doesNotThrowAnyException();
 
@@ -63,7 +64,7 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
                 .email("delta@domain.com")
                 .build());
 
-        userAccountService.requestToResetPassword("delta@domain.com");
+        accountService.requestToResetPassword("delta@domain.com");
 
         assertThatCode(() -> sessionService.logIn(Credentials.of("delta", "pass")))
                 .doesNotThrowAnyException();
@@ -71,11 +72,11 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         String email = readEmail(wiser, 0);
         String emailCode = extractEmailCode(email);
 
-        userAccountService.resetPassword(PasswordResetData.of(emailCode, "newPass"));
+        accountService.resetPassword(PasswordResetData.of(emailCode, "newPass"));
 
         readEmail(wiser, 1);
 
-        userAccountService.requestToResetPassword("delta@domain.com");
+        accountService.requestToResetPassword("delta@domain.com");
         String email2 = readEmail(wiser, 2);
         String emailCode2 = extractEmailCode(email2);
         assertThat(emailCode2).isNotEqualTo(emailCode);
