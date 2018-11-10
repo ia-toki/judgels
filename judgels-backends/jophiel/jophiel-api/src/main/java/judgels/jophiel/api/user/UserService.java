@@ -3,7 +3,6 @@ package judgels.jophiel.api.user;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -38,9 +37,4 @@ public interface UserService {
             @QueryParam("page") Optional<Integer> page,
             @QueryParam("orderBy") Optional<String> orderBy,
             @QueryParam("orderDir") Optional<OrderDir> orderDir);
-
-    @POST
-    @Path("/passwords")
-    @Consumes(APPLICATION_JSON)
-    void updateUserPasswords(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, Map<String, String> jidToPasswordMap);
 }
