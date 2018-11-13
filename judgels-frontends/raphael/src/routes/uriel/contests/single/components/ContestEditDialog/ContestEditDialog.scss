@@ -1,7 +1,7 @@
 @import '../../../../../../styles/base';
 
 .contest-edit-dialog {
-  width: 750px;
+  width: 800px;
   height: 700px;
 
   *:focus {
@@ -71,6 +71,7 @@
 
 .contest-edit-dialog__content {
   max-height: 485px;
+  padding: 2px;
   overflow: auto;
 }
 

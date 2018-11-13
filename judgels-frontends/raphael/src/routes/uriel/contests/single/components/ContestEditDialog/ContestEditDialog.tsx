@@ -69,6 +69,7 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
         onClose={this.toggleDialog}
         title="Contest settings"
         canOutsideClickClose={false}
+        enforceFocus={false}
       >
         <div className="bp3-dialog-body">
           <Tabs id="contest-edit-dialog-tabs" vertical renderActiveTabPanelOnly>
