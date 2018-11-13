@@ -32,10 +32,11 @@ class ContestContestantStoreIntegrationTests extends AbstractIntegrationTests {
     void crud_flow() {
         Contest contest = contestStore.createContest(new ContestCreateData.Builder().slug("contest").build());
 
-        store.upsertContestant(contest.getJid(), "A");
-        store.upsertContestant(contest.getJid(), "B");
+        assertThat(store.upsertContestant(contest.getJid(), "userJidA")).isTrue();
+        assertThat(store.upsertContestant(contest.getJid(), "userJidB")).isTrue();
+        assertThat(store.upsertContestant(contest.getJid(), "userJidA")).isFalse();
 
         Set<String> contestantJids = store.getContestants(contest.getJid());
-        assertThat(contestantJids).containsOnly("A", "B");
+        assertThat(contestantJids).containsOnly("userJidA", "userJidB");
     }
 }

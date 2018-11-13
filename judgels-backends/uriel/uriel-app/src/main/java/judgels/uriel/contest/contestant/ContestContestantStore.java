@@ -37,7 +37,7 @@ public class ContestContestantStore {
                 .build();
     }
 
-    public void upsertContestant(String contestJid, String userJid) {
+    public boolean upsertContestant(String contestJid, String userJid) {
         Optional<ContestContestantModel> maybeModel = contestantDao.selectByContestJidAndUserJid(contestJid, userJid);
         if (maybeModel.isPresent()) {
             ContestContestantModel model = maybeModel.get();
@@ -51,6 +51,8 @@ public class ContestContestantStore {
 
         contestantCache.invalidate(contestJid + SEPARATOR + userJid);
         roleDao.invalidateCaches(userJid, contestJid);
+
+        return !maybeModel.isPresent();
     }
 
     public void removeContestant(String contestJid, String userJid) {

@@ -35,7 +35,7 @@ public class ContestContestantRoleChecker {
         this.supervisorStore = supervisorStore;
     }
 
-    public boolean canGetContestants(String userJid, Contest contest) {
+    public boolean canViewList(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 
@@ -62,7 +62,7 @@ public class ContestContestantRoleChecker {
         return ContestContestantState.NONE;
     }
 
-    public boolean canSuperviseContestants(String userJid, Contest contest) {
+    public boolean canSupervise(String userJid, Contest contest) {
         if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
             return true;
         }

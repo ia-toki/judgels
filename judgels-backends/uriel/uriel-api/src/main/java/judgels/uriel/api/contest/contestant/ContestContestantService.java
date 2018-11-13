@@ -52,8 +52,9 @@ public interface ContestContestantService {
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
-    void addContestants(
+    @Produces(APPLICATION_JSON)
+    ContestContestantUpsertResponse upsertContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            Set<String> userJids);
+            Set<String> usernames);
 }

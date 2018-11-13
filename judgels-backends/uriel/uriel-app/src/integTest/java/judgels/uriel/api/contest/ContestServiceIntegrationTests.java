@@ -4,10 +4,10 @@ import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExcep
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.USER_A;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
+import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
@@ -63,14 +63,8 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-testing").build());
         contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-random").build());
 
-        contestantService.addContestants(
-                ADMIN_HEADER,
-                contestA.getJid(),
-                ImmutableSet.of(USER_A_JID));
-        contestantService.addContestants(
-                ADMIN_HEADER,
-                contestB.getJid(),
-                ImmutableSet.of(USER_A_JID, USER_B_JID));
+        contestantService.upsertContestants(ADMIN_HEADER, contestA.getJid(), ImmutableSet.of(USER_A));
+        contestantService.upsertContestants(ADMIN_HEADER, contestB.getJid(), ImmutableSet.of(USER_A, USER_B));
 
         ContestsResponse response = contestService.getContests(of(USER_A_HEADER), empty());
         assertThat(response.getData().getPage()).containsOnly(contestB, contestA);

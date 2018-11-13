@@ -5,9 +5,10 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM_TYPE;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA_TYPE;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.USER_A;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_BEARER_TOKEN;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
-import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
+import static judgels.uriel.api.mocks.MockJophiel.USER_B;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +37,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
     void end_to_end_flow() {
         Contest contest = createContest("contest");
 
-        contestantService.addContestants(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A_JID, USER_B_JID));
+        contestantService.upsertContestants(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A, USER_B));
         problemService.upsertProblem(ADMIN_HEADER, contest.getJid(), new ContestProblemData.Builder()
                 .problemJid("problemJid1")
                 .alias("A")
