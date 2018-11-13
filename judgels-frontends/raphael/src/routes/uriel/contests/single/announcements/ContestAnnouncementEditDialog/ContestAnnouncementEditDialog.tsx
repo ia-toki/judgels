@@ -36,6 +36,7 @@ export class ContestAnnouncementEditDialog extends React.Component<ContestAnnoun
         onClose={this.closeDialog}
         title="Edit announcement"
         canOutsideClickClose={false}
+        enforceFocus={false}
       >
         <ContestAnnouncementEditForm {...props} />
       </Dialog>
