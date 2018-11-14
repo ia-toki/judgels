@@ -90,7 +90,7 @@ describe('ContestProblemPage', () => {
   test('navigation', async () => {
     await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
-    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`, 'C');
+    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`, 'Problem C');
 
     history.push('/contests/ioi/');
     await new Promise(resolve => setImmediate(resolve));
