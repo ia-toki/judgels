@@ -109,7 +109,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               <tr>
                 <td>Time</td>
                 <td>
-                  <FormattedDate value={submission.time} />
+                  <FormattedDate value={submission.time} showSeconds />
                 </td>
               </tr>
             </tbody>
@@ -295,7 +295,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     return (
       <span>
         {subtaskIds.filter(id => id !== 0).map(id => (
-          <Tag key={id} round>
+          <Tag className="subtask-tag" key={id} round>
             {id}
           </Tag>
         ))}

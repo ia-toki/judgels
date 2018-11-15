@@ -3,6 +3,7 @@ import { FormattedDate as ReactFormattedDate } from 'react-intl';
 
 export interface FormattedDateProps {
   value: number;
+  showSeconds?: boolean;
 }
 
 export const FormattedDate = (props: FormattedDateProps) => (
@@ -14,6 +15,7 @@ export const FormattedDate = (props: FormattedDateProps) => (
     hour="numeric"
     hour12={false}
     minute="numeric"
+    second={props.showSeconds ? 'numeric' : undefined}
     timeZoneName="short"
   />
 );
