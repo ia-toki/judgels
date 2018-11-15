@@ -13,7 +13,7 @@ import judgels.jophiel.api.role.Role;
 import judgels.jophiel.api.user.User;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/user")
+@Path("/api/v2/users/me")
 public interface MyUserService {
     @GET
     @Path("/")

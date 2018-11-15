@@ -9,7 +9,7 @@ export interface PasswordUpdateData {
 }
 
 export function createMyUserAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user`;
+  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users/me`;
 
   return {
     getMyself: (token: string): Promise<User> => {

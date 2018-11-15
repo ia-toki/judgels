@@ -57,31 +57,31 @@ public class MockJophiel {
                 .port(JOPHIEL_PORT)
                 .extensions(new TranslateUsernamesToJidsTransformer(), new GetProfilesTransformer()));
 
-        mockJophiel.stubFor(get("/api/v2/user/")
+        mockJophiel.stubFor(get("/api/v2/users/me/")
                 .willReturn(okForJson(ImmutableMap.of(
                         "jid", "nonadminJid",
                         "username", "nonadmin"))));
 
-        mockJophiel.stubFor(get("/api/v2/user/")
+        mockJophiel.stubFor(get("/api/v2/users/me/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(ADMIN_BEARER_TOKEN))
                 .willReturn(okForJson(ImmutableMap.of(
                         "jid", ADMIN_JID,
                         "username", ADMIN))));
 
-        mockJophiel.stubFor(get("/api/v2/user/")
+        mockJophiel.stubFor(get("/api/v2/users/me/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_A_BEARER_TOKEN))
                 .willReturn(okForJson(ImmutableMap.of(
                         "jid", USER_A_JID,
                         "username", USER_A))));
 
-        mockJophiel.stubFor(get("/api/v2/user/")
+        mockJophiel.stubFor(get("/api/v2/users/me/")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_B_BEARER_TOKEN))
                 .willReturn(okForJson(ImmutableMap.of(
                         "jid", USER_B_JID,
                         "username", USER_B,
                         "email", "userb@mailinator.com"))));
 
-        mockJophiel.stubFor(get("/api/v2/user/role")
+        mockJophiel.stubFor(get("/api/v2/users/me/role")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(SUPERADMIN_BEARER_TOKEN))
                 .willReturn(okForJson("superadmin")));
 
