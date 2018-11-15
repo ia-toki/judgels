@@ -10,6 +10,7 @@ import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { Contest } from 'modules/api/uriel/contest';
 import { SubmissionWithSource, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submission';
 import { Profile } from 'modules/api/jophiel/profile';
+import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../modules/contestSubmissionActions';
@@ -22,6 +23,8 @@ export interface ContestSubmissionPageProps extends RouteComponentProps<{ submis
     submissionId: number,
     language?: string
   ) => Promise<SubmissionWithSourceResponse>;
+  onPushBreadcrumb: (link: string, title: string) => void;
+  onPopBreadcrumb: (link: string) => void;
 }
 
 interface ContestSubmissionPageState {
@@ -41,6 +44,7 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
       +this.props.match.params.submissionId,
       this.props.statementLanguage
     );
+    this.props.onPushBreadcrumb(this.props.match.url, 'Submission #' + data.submission.id);
     this.setState({
       submissionWithSource: data,
       profile,
@@ -48,6 +52,10 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
       problemAlias,
       containerName,
     });
+  }
+
+  async componentWillUnmount() {
+    this.props.onPopBreadcrumb(this.props.match.url);
   }
 
   render() {
@@ -83,7 +91,7 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
   };
 }
 
-function createContestSubmissionPage(contestSubmissionActions) {
+function createContestSubmissionPage(contestSubmissionActions, breadcrumbsActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
     statementLanguage: selectStatementLanguage(state),
@@ -91,9 +99,11 @@ function createContestSubmissionPage(contestSubmissionActions) {
 
   const mapDispatchToProps = {
     onGetSubmissionWithSource: contestSubmissionActions.getSubmissionWithSource,
+    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionPage));
 }
 
-export default createContestSubmissionPage(injectedContestSubmissionActions);
+export default createContestSubmissionPage(injectedContestSubmissionActions, injectedBreadcrumbsActions);
