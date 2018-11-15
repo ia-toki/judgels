@@ -1,11 +1,9 @@
 package judgels.uriel.contest.file;
 
-import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.nio.file.Paths;
-import java.util.Optional;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,7 +12,6 @@ import javax.ws.rs.core.Response;
 import judgels.fs.FileSystem;
 import judgels.service.ServiceUtils;
 import judgels.service.actor.ActorChecker;
-import judgels.uriel.api.contest.Contest;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.file.FileFs;
 
@@ -42,10 +39,7 @@ public class ContestFileResource {
     @Path("/{filename}")
     @UnitOfWork(readOnly = true)
     public Response downloadFile(@PathParam("contestJid") String contestJid, @PathParam("filename") String filename) {
-        String actorJid = actorChecker.check(Optional.empty());
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(fileRoleChecker.canView(actorJid, contest));
-
+        checkFound(contestStore.getContestByJid(contestJid));
         return ServiceUtils.buildDownloadResponse(fileFs.getPublicFileUrl(Paths.get(contestJid, filename)));
     }
 }
