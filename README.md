@@ -55,20 +55,13 @@ Judgels has been used in the following contests:
 ### Indonesian contests
 
 - **OSN Informatika** (Olimpiade Sains Nasional Informatika / National Olympiad in Informatics)
-  - OSN 2015
-  - OSN 2016
-  - OSN 2017
-  - OSN 2018
+  - OSN 2015 - 2018
 
 - **Pemrograman GEMASTIK** (Pagelaran Mahasiswa Nasional Bidang Teknologi Informasi dan Komunikasi)
-  - GEMASTIK 2016
-  - GEMASTIK 2017
+  - GEMASTIK 2016 - 2018
 
 - **Pemrograman CompFest** (Computer Festival)
-  - CompFest 2016
-  - CompFest 2017
-  - CompFest 2018
+  - CompFest 2016 - 2018
 
-- **Indo2SV Selection**
-  - Indo2SV 2015
-  - Indo2SV 2017
+- **Indo2SV Selection** (Selection for Indonesian students to intern in Silicon Valley)
+  - Indo2SV 2015, 2017
