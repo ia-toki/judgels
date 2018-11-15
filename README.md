@@ -4,11 +4,9 @@
 [![GitHub Release](https://img.shields.io/github/tag/ia-toki/judgels.svg)](https://github.com/ia-toki/judgels/releases)
 [![License](https://img.shields.io/github/license/ia-toki/judgels.svg)](https://github.com/ia-toki/judgels/blob/master/LICENSE.txt)
 
-**Judgels** is a competitive programming platform. Using Judgels, we can:
+<img src="https://raw.githubusercontent.com/ia-toki/judgels/master/judgels-frontends/raphael/src/assets/images/logo.png" align="left" height="100"/>
 
-- create programming problems with various types, set up test data, and test solutions.
-- hold programming contests with various configurations.
-- manage users with various authorizations, e.g. contest supervisors, contest managers.
+**Judgels** is a competitive programming platform. With Judgels, you can prepare problems with various types and languages, set up test data, and test solutions. Then, you can run contests with various configurations. Users can be managed with various authorizations: as contestants, supervisors, and managers.
 
 ## Features
 
