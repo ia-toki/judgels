@@ -6,7 +6,7 @@
 
 <img src="https://raw.githubusercontent.com/ia-toki/judgels/master/judgels-frontends/raphael/src/assets/images/logo.png" align="left" height="100"/>
 
-**Judgels** is a competitive programming platform. With Judgels, you can prepare problems with various types and languages, set up test data, and test solutions. Then, you can run contests with various configurations. Users can be managed with various authorizations: as contestants, supervisors, and managers.
+**Judgels** is a competitive programming platform. With Judgels, you can prepare problems with various types and languages, set up test data, and test solutions. Then, you can run contests with various configurations. Users can be managed with various authorizations: as contestants, supervisors, and managers. Equipped with sandboxed grader as well.
 
 ## Features
 
