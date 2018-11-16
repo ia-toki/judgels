@@ -8,17 +8,17 @@ export const contestContestantActions = {
     };
   },
 
-  getContestantsCount: (contestJid: string) => {
+  getApprovedContestantsCount: (contestJid: string) => {
     return async (dispatch, getState, { contestContestantAPI }) => {
       const token = selectToken(getState());
-      return await contestContestantAPI.getContestantsCount(token, contestJid);
+      return await contestContestantAPI.getApprovedContestantsCount(token, contestJid);
     };
   },
 
-  getContestants: (contestJid: string) => {
+  getApprovedContestants: (contestJid: string) => {
     return async (dispatch, getState, { contestContestantAPI }) => {
       const token = selectToken(getState());
-      return await contestContestantAPI.getContestants(token, contestJid);
+      return await contestContestantAPI.getApprovedContestants(token, contestJid);
     };
   },
 

@@ -6,7 +6,7 @@ import judgels.persistence.Dao;
 
 public interface ContestContestantDao extends Dao<ContestContestantModel> {
     Optional<ContestContestantModel> selectByContestJidAndUserJid(String contestJid, String userJid);
-    Set<ContestContestantModel> selectAllByContestJidAndUserJids(String contestJid, Set<String> userJids);
-    long selectCountByContestJid(String contestJid);
+    long selectCountApprovedByContestJid(String contestJid);
     Set<ContestContestantModel> selectAllByContestJid(String contestJid);
+    Set<ContestContestantModel> selectAllApprovedByContestJid(String contestJid);
 }

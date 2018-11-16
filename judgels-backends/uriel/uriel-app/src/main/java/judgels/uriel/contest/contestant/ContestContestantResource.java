@@ -49,12 +49,12 @@ public class ContestContestantResource implements ContestContestantService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestContestantsResponse getContestants(AuthHeader authHeader, String contestJid) {
+    public ContestContestantsResponse getApprovedContestants(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canViewList(actorJid, contest));
 
-        Set<String> userJids = contestantStore.getContestants(contestJid);
+        Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids, contest.getBeginTime());
 
         return new ContestContestantsResponse.Builder()
@@ -65,12 +65,12 @@ public class ContestContestantResource implements ContestContestantService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public long getContestantsCount(AuthHeader authHeader, String contestJid) {
+    public long getApprovedContestantsCount(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canViewList(actorJid, contest));
 
-        return contestantStore.getContestantsCount(contestJid);
+        return contestantStore.getApprovedContestantsCount(contestJid);
     }
 
     @Override

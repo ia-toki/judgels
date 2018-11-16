@@ -84,12 +84,12 @@ public class ContestContestantStore {
         });
     }
 
-    public long getContestantsCount(String contestJid) {
-        return contestantDao.selectCountByContestJid(contestJid);
+    public long getApprovedContestantsCount(String contestJid) {
+        return contestantDao.selectCountApprovedByContestJid(contestJid);
     }
 
-    public Set<String> getContestants(String contestJid) {
-        return contestantDao.selectAllByContestJid(contestJid)
+    public Set<String> getApprovedContestantJids(String contestJid) {
+        return contestantDao.selectAllApprovedByContestJid(contestJid)
                 .stream()
                 .map(model -> model.userJid)
                 .collect(Collectors.toSet());

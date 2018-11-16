@@ -137,10 +137,10 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Set<String> problemJids;
 
         if (canSupervise) {
-            userJids = contestantStore.getContestants(contestJid);
+            userJids = contestantStore.getApprovedContestantJids(contestJid);
             userJidsSortedByUsername = Lists.newArrayList(userJids);
 
-            problemJidsSortedByAlias = problemStore.getOpenProblemJids(contestJid);
+            problemJidsSortedByAlias = problemStore.getUsedProblemJids(contestJid);
             problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
         } else {
             userJidsSortedByUsername = Collections.emptyList();
@@ -268,7 +268,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             return Response.noContent().build();
         }
 
-        Set<String> userJids = contestantStore.getContestants(contestJid);
+        Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
         Map<String, String> usernamesMap = userJids.isEmpty()
                 ? ImmutableMap.of()
                 : profileService.getProfiles(userJids).entrySet()

@@ -40,16 +40,7 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
     }
 
     @Override
-    public Set<ContestContestantModel> selectAllByContestJidAndUserJids(String contestJid, Set<String> userJids) {
-        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
-                .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
-                .putColumnsIn(ContestContestantModel_.userJid, userJids)
-                .putColumnsEq(ContestContestantModel_.status, APPROVED.name())
-                .build()));
-    }
-
-    @Override
-    public long selectCountByContestJid(String contestJid) {
+    public long selectCountApprovedByContestJid(String contestJid) {
         return selectCount(new FilterOptions.Builder<ContestContestantModel>()
                 .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
                 .putColumnsEq(ContestContestantModel_.status, APPROVED.name())
@@ -58,6 +49,13 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
 
     @Override
     public Set<ContestContestantModel> selectAllByContestJid(String contestJid) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
+                .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
+                .build()));
+    }
+
+    @Override
+    public Set<ContestContestantModel> selectAllApprovedByContestJid(String contestJid) {
         return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
                 .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
                 .putColumnsEq(ContestContestantModel_.status, APPROVED.name())

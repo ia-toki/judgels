@@ -17,16 +17,16 @@ import judgels.service.api.actor.AuthHeader;
 @Path("/api/v2/contests/{contestJid}/contestants")
 public interface ContestContestantService {
     @GET
-    @Path("/")
+    @Path("/approved")
     @Produces(APPLICATION_JSON)
-    ContestContestantsResponse getContestants(
+    ContestContestantsResponse getApprovedContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
 
     @GET
-    @Path("/count")
+    @Path("/approved/count")
     @Produces(APPLICATION_JSON)
-    long getContestantsCount(
+    long getApprovedContestantsCount(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
 

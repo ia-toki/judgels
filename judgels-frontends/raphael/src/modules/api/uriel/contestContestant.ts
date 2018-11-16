@@ -18,12 +18,12 @@ export function createContestContestantAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    getContestants: (token: string, contestJid: string): Promise<ContestContestantsResponse> => {
-      return get(`${baseURL}/${contestJid}/contestants`, token);
+    getApprovedContestants: (token: string, contestJid: string): Promise<ContestContestantsResponse> => {
+      return get(`${baseURL}/${contestJid}/contestants/approved`, token);
     },
 
-    getContestantsCount: (token: string, contestJid: string): Promise<number> => {
-      return get(`${baseURL}/${contestJid}/contestants/count`, token);
+    getApprovedContestantsCount: (token: string, contestJid: string): Promise<number> => {
+      return get(`${baseURL}/${contestJid}/contestants/approved/count`, token);
     },
 
     registerMyselfAsContestant: (token: string, contestJid: string): Promise<void> => {

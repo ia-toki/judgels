@@ -20,7 +20,7 @@ export interface ContestRegistrationCardProps {
   isLoggedIn: boolean;
   contest: Contest;
   onGetMyContestantState: (contestJid: string) => Promise<ContestContestantState>;
-  onGetContestantsCount: (contestJid: string) => Promise<number>;
+  onGetApprovedContestantsCount: (contestJid: string) => Promise<number>;
   onGetContestWebConfig: (contestJid: string) => Promise<void>;
   onRegisterMyselfAsContestant: (contestJid: string) => Promise<void>;
   onUnregisterMyselfAsContestant: (contestJid: string) => Promise<void>;
@@ -58,7 +58,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
 
     const [contestantState, contestantsCount] = await Promise.all([
       this.props.onGetMyContestantState(this.props.contest.jid),
-      this.props.onGetContestantsCount(this.props.contest.jid),
+      this.props.onGetApprovedContestantsCount(this.props.contest.jid),
       this.props.onGetContestWebConfig(this.props.contest.jid),
     ]);
     this.setState({ contestantState, contestantsCount });
@@ -168,7 +168,7 @@ function createContestRegistrationCard(contestWebActions, contestContestantActio
   const mapDispatchToProps = {
     onGetContestWebConfig: contestWebActions.getWebConfig,
     onGetMyContestantState: contestContestantActions.getMyContestantState,
-    onGetContestantsCount: contestContestantActions.getContestantsCount,
+    onGetApprovedContestantsCount: contestContestantActions.getApprovedContestantsCount,
     onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
     onUnregisterMyselfAsContestant: contestContestantActions.unregisterMyselfAsContestant,
   };

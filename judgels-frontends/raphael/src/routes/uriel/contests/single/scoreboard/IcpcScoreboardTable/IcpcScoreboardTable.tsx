@@ -39,9 +39,7 @@ export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTable
     let cells = [
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
-        {this.props.profilesMap[entry.contestantJid] && (
-          <UserRef profile={this.props.profilesMap[entry.contestantJid]} showFlag />
-        )}
+        <UserRef profile={this.props.profilesMap[entry.contestantJid]} showFlag />
       </td>,
       <td key="totalAccepted">
         <strong>{entry.totalAccepted}</strong>

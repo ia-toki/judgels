@@ -85,6 +85,11 @@ public class ContestProblemStore {
                         .build());
     }
 
+    public List<String> getUsedProblemJids(String contestJid) {
+        return Lists.transform(
+                problemDao.selectAllUsedByContestJid(contestJid, createOptions()), model -> model.problemJid);
+    }
+
     public List<String> getOpenProblemJids(String contestJid) {
         return Lists.transform(
                 problemDao.selectAllOpenByContestJid(contestJid, createOptions()), model -> model.problemJid);

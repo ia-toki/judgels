@@ -36,7 +36,7 @@ class ContestContestantStoreIntegrationTests extends AbstractIntegrationTests {
         assertThat(store.upsertContestant(contest.getJid(), "userJidB")).isTrue();
         assertThat(store.upsertContestant(contest.getJid(), "userJidA")).isFalse();
 
-        Set<String> contestantJids = store.getContestants(contest.getJid());
+        Set<String> contestantJids = store.getApprovedContestantJids(contest.getJid());
         assertThat(contestantJids).containsOnly("userJidA", "userJidB");
     }
 }

@@ -9,7 +9,7 @@ import { getRatingClass } from 'modules/api/jophiel/userRating';
 import './UserRef.css';
 
 export interface UserRefProps {
-  profile: Profile;
+  profile?: Profile;
   showFlag?: boolean;
 }
 
@@ -28,7 +28,7 @@ export class UserRef extends React.PureComponent<UserRefProps> {
     if (!showFlag) {
       return null;
     }
-    if (!profile.country) {
+    if (!profile || !profile.country) {
       return <div className="user-ref__flag-dummy" />;
     }
     return <FlagIcon code={profile.country} size={20} className="user-ref__flag" />;
@@ -37,12 +37,14 @@ export class UserRef extends React.PureComponent<UserRefProps> {
   private renderUsername = () => {
     const { profile } = this.props;
     return (
-      <Link
-        className={classNames('user-ref__username', getRatingClass(profile.rating))}
-        to={`/profiles/${profile.username}`}
-      >
-        {profile.username}
-      </Link>
+      profile && (
+        <Link
+          className={classNames('user-ref__username', getRatingClass(profile.rating))}
+          to={`/profiles/${profile.username}`}
+        >
+          {profile.username}
+        </Link>
+      )
     );
   };
 }
