@@ -23,6 +23,9 @@ describe('ContestContestantsPage', () => {
       userJid1: { username: 'user1' },
       userJid2: { username: 'user2' },
     },
+    config: {
+      canSupervise: true,
+    },
   };
 
   const render = () => {

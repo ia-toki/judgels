@@ -9,9 +9,14 @@ export interface ContestContestant {
   userJid: string;
 }
 
+export interface ContestContestantConfig {
+  canSupervise: boolean;
+}
+
 export interface ContestContestantsResponse {
   data: Page<ContestContestant>;
   profilesMap: ProfilesMap;
+  config: ContestContestantConfig;
 }
 
 export interface ApprovedContestContestantsResponse {

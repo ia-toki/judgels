@@ -45,5 +45,6 @@ class ContestContestantServiceIntegrationTests extends AbstractContestServiceInt
                 new ContestContestant.Builder().userJid(USER_A_JID).status(ContestContestantStatus.APPROVED).build(),
                 new ContestContestant.Builder().userJid(USER_B_JID).status(ContestContestantStatus.APPROVED).build());
         assertThat(allResponse.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
+        assertThat(allResponse.getConfig().getCanSupervise()).isTrue();
     }
 }

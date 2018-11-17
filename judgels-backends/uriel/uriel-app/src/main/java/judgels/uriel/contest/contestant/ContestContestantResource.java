@@ -22,6 +22,7 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ApprovedContestContestantsResponse;
 import judgels.uriel.api.contest.contestant.ContestContestant;
+import judgels.uriel.api.contest.contestant.ContestContestantConfig;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.contestant.ContestContestantState;
 import judgels.uriel.api.contest.contestant.ContestContestantUpsertResponse;
@@ -58,7 +59,7 @@ public class ContestContestantResource implements ContestContestantService {
     public ContestContestantsResponse getContestants(AuthHeader authHeader, String contestJid, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestantRoleChecker.canSupervise(actorJid, contest));
+        checkAllowed(contestantRoleChecker.canViewList(actorJid, contest));
 
         Page<ContestContestant> contestants = contestantStore.getContestants(contestJid, page);
         Set<String> userJids =
@@ -67,9 +68,15 @@ public class ContestContestantResource implements ContestContestantService {
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids, contest.getBeginTime());
 
+        boolean canSupervise = contestantRoleChecker.canSupervise(actorJid, contest);
+        ContestContestantConfig config = new ContestContestantConfig.Builder()
+                .canSupervise(canSupervise)
+                .build();
+
         return new ContestContestantsResponse.Builder()
                 .data(contestants)
                 .profilesMap(profilesMap)
+                .config(config)
                 .build();
     }
 

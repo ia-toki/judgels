@@ -128,6 +128,29 @@ class ContestContestantRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
     }
 
     @Test
+    void view_list() {
+        assertThat(checker.canViewList(ADMIN, contestA)).isTrue();
+        assertThat(checker.canViewList(ADMIN, contestB)).isTrue();
+        assertThat(checker.canViewList(ADMIN, contestC)).isTrue();
+
+        assertThat(checker.canViewList(USER, contestA)).isFalse();
+        assertThat(checker.canViewList(USER, contestB)).isFalse();
+        assertThat(checker.canViewList(USER, contestC)).isFalse();
+
+        assertThat(checker.canViewList(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canViewList(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canViewList(CONTESTANT, contestC)).isFalse();
+
+        assertThat(checker.canViewList(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canViewList(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canViewList(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(checker.canViewList(MANAGER, contestA)).isFalse();
+        assertThat(checker.canViewList(MANAGER, contestB)).isTrue();
+        assertThat(checker.canViewList(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
     void supervise() {
         assertThat(checker.canSupervise(ADMIN, contestA)).isTrue();
         assertThat(checker.canSupervise(ADMIN, contestB)).isTrue();

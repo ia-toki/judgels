@@ -39,6 +39,12 @@ public class ContestContestantRoleChecker {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 
+    public boolean canViewList(String userJid, Contest contest) {
+        return adminRoleDao.isAdmin(userJid)
+                || contestRoleDao.isManager(userJid, contest.getJid())
+                || supervisorStore.getSupervisor(contest.getJid(), userJid).isPresent();
+    }
+
     public boolean canRegister(String userJid, Contest contest) {
         return !contestRoleDao.isContestant(userJid, contest.getJid())
                 && moduleStore.hasRegistrationModule(contest.getJid())

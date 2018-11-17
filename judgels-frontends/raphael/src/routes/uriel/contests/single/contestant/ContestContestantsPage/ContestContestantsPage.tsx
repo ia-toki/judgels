@@ -91,6 +91,9 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     if (!response) {
       return null;
     }
+    if (!response.config.canSupervise) {
+      return null;
+    }
     return <ContestContestantAddDialog contest={this.props.contest} onUpsertContestants={this.upsertContestants} />;
   };
 
