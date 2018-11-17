@@ -1,5 +1,6 @@
 package judgels.uriel.contest.contestant;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -139,6 +140,8 @@ public class ContestContestantResource implements ContestContestantService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canSupervise(actorJid, contest));
+
+        checkArgument(usernames.size() <= 100, "Cannot add more than 100 users.");
 
         Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(usernames);
 

@@ -5,18 +5,19 @@ import { withRouter } from 'react-router';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import Pagination from 'components/Pagination/Pagination';
+import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestContestantsResponse } from 'modules/api/uriel/contestContestant';
+import { ContestContestantsResponse, ContestContestantUpsertResponse } from 'modules/api/uriel/contestContestant';
 
 import { ContestContestantsTable } from '../ContestContestantsTable/ContestContestantsTable';
+import { ContestContestantAddDialog } from '../ContestContestantAddDialog/ContestContestantAddDialog';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
-
-import { AppState } from 'modules/store';
 
 export interface ContestContestantsPageProps {
   contest: Contest;
   onGetContestants: (contestJid: string, page?: number) => Promise<ContestContestantsResponse>;
+  onUpsertContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
 }
 
 interface ContestContestantsPageState {
@@ -34,6 +35,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
       <ContentCard>
         <h3>Contestants</h3>
         <hr />
+        {this.renderAddDialog()}
         {this.renderContestants()}
         {this.renderPagination()}
       </ContentCard>
@@ -83,6 +85,20 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     this.setState({ response });
     return response.data;
   };
+
+  private renderAddDialog = () => {
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+    return <ContestContestantAddDialog contest={this.props.contest} onUpsertContestants={this.upsertContestants} />;
+  };
+
+  private upsertContestants = async (contestJid, data) => {
+    const response = await this.props.onUpsertContestants(contestJid, data);
+    this.setState({ lastRefreshContestantsTime: new Date().getTime() });
+    return response;
+  };
 }
 
 export function createContestContestantsPage(contestContestantActions) {
@@ -92,6 +108,7 @@ export function createContestContestantsPage(contestContestantActions) {
 
   const mapDispatchToProps = {
     onGetContestants: contestContestantActions.getContestants,
+    onUpsertContestants: contestContestantActions.upsertContestants,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));

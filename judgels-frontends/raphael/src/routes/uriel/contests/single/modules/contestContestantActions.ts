@@ -44,4 +44,12 @@ export const contestContestantActions = {
       toastActions.showSuccessToast('Successfully unregistered from the contest.');
     };
   },
+
+  upsertContestants: (contestJid: string, usernames: string[]) => {
+    return async (dispatch, getState, { contestContestantAPI, toastActions }) => {
+      const token = selectToken(getState());
+      toastActions.showSuccessToast('Contestants added.');
+      return await contestContestantAPI.upsertContestants(token, contestJid, usernames);
+    };
+  },
 };

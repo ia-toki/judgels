@@ -19,6 +19,11 @@ export interface ApprovedContestContestantsResponse {
   profilesMap: ProfilesMap;
 }
 
+export interface ContestContestantUpsertResponse {
+  insertedContestantProfilesMap: ProfilesMap;
+  alreadyContestantProfilesMap: ProfilesMap;
+}
+
 export enum ContestContestantState {
   None = 'NONE',
   Registrable = 'REGISTRABLE',
@@ -55,8 +60,12 @@ export function createContestContestantAPI() {
       return get(`${baseURL}/${contestJid}/contestants/me/state`, token);
     },
 
-    addContestants: (token: string, contestJid: string, userJids: string[]): Promise<void> => {
-      return post(`${baseURL}/${contestJid}/contestants`, token, userJids);
+    upsertContestants: (
+      token: string,
+      contestJid: string,
+      usernames: string[]
+    ): Promise<ContestContestantUpsertResponse> => {
+      return post(`${baseURL}/${contestJid}/contestants`, token, usernames);
     },
   };
 }

@@ -8,12 +8,21 @@ import { FormInputValidation } from '../FormInputValidation/FormInputValidation'
 
 import './FormTextArea.css';
 
-export const FormTextArea = (props: FormInputProps) => (
-  <FormGroup labelFor={props.input.name} label={props.label} intent={getIntent(props.meta)}>
+export interface FormTextAreaProps extends FormInputProps {
+  rows: number;
+}
+
+export const FormTextArea = (props: FormTextAreaProps) => (
+  <FormGroup
+    labelFor={props.input.name}
+    label={props.label}
+    intent={getIntent(props.meta)}
+    labelInfo={props.labelHelper}
+  >
     <textarea
       {...props.input}
       className={classNames('bp3-input', 'form-table-textarea', getIntentClassName(props.meta))}
-      rows={5}
+      rows={props.rows}
       autoFocus={props.autoFocus}
     />
     <FormInputValidation meta={props.meta} />

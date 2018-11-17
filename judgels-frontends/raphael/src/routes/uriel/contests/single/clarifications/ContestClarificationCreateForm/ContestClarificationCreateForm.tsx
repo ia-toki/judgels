@@ -49,6 +49,7 @@ const ContestClarificationCreateForm = (props: ContestClarificationCreateFormPro
   const questionField: any = {
     name: 'question',
     label: 'Question',
+    rows: 5,
     validate: [Required],
   };
 

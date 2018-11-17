@@ -19,6 +19,7 @@ const ContestClarificationAnswerForm = (props: ContestClarificationAnswerFormPro
   const answerField: any = {
     name: 'answer',
     label: 'Answer',
+    rows: 5,
     validate: [Required],
     autoFocus: true,
   };
