@@ -29,6 +29,10 @@ export interface ContestContestantUpsertResponse {
   alreadyContestantProfilesMap: ProfilesMap;
 }
 
+export interface ContestContestantDeleteResponse {
+  deletedContestantProfilesMap: ProfilesMap;
+}
+
 export enum ContestContestantState {
   None = 'NONE',
   Registrable = 'REGISTRABLE',
@@ -70,7 +74,15 @@ export function createContestContestantAPI() {
       contestJid: string,
       usernames: string[]
     ): Promise<ContestContestantUpsertResponse> => {
-      return post(`${baseURL}/${contestJid}/contestants`, token, usernames);
+      return post(`${baseURL}/${contestJid}/contestants/batch-upsert`, token, usernames);
+    },
+
+    deleteContestants: (
+      token: string,
+      contestJid: string,
+      usernames: string[]
+    ): Promise<ContestContestantDeleteResponse> => {
+      return post(`${baseURL}/${contestJid}/contestants/batch-delete`, token, usernames);
     },
   };
 }

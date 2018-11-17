@@ -47,5 +47,11 @@ class ContestContestantStoreIntegrationTests extends AbstractIntegrationTests {
         assertThat(contestants.getPage()).containsExactly(
                 new ContestContestant.Builder().userJid("userJidB").status(ContestContestantStatus.APPROVED).build(),
                 new ContestContestant.Builder().userJid("userJidA").status(ContestContestantStatus.APPROVED).build());
+
+        assertThat(store.deleteContestant(contest.getJid(), "userJidA")).isTrue();
+        assertThat(store.deleteContestant(contest.getJid(), "userJidC")).isFalse();
+
+        contestantJids = store.getApprovedContestantJids(contest.getJid());
+        assertThat(contestantJids).containsOnly("userJidB");
     }
 }

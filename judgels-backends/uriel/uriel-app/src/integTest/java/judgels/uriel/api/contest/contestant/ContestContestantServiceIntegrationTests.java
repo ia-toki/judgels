@@ -22,7 +22,6 @@ class ContestContestantServiceIntegrationTests extends AbstractContestServiceInt
 
         ContestContestantUpsertResponse response =
                 contestantService.upsertContestants(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A));
-
         assertThat(response.getInsertedContestantProfilesMap()).containsOnlyKeys(USER_A);
         assertThat(response.getAlreadyContestantProfilesMap()).isEmpty();
 
@@ -46,5 +45,14 @@ class ContestContestantServiceIntegrationTests extends AbstractContestServiceInt
                 new ContestContestant.Builder().userJid(USER_B_JID).status(ContestContestantStatus.APPROVED).build());
         assertThat(allResponse.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
         assertThat(allResponse.getConfig().getCanSupervise()).isTrue();
+
+        ContestContestantDeleteResponse deleteResponse =
+                contestantService.deleteContestants(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A, "userC"));
+        assertThat(deleteResponse.getDeletedContestantProfilesMap()).containsOnlyKeys(USER_A);
+        assertThat(deleteResponse.getDeletedContestantProfilesMap().get(USER_A).getUsername()).isEqualTo(USER_A);
+
+        approvedResponse =
+                contestantService.getApprovedContestants(ADMIN_HEADER, contest.getJid());
+        assertThat(approvedResponse.getData()).containsOnly(USER_B_JID);
     }
 }

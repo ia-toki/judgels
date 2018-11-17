@@ -23,6 +23,7 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ApprovedContestContestantsResponse;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantConfig;
+import judgels.uriel.api.contest.contestant.ContestContestantDeleteResponse;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.contestant.ContestContestantState;
 import judgels.uriel.api.contest.contestant.ContestContestantUpsertResponse;
@@ -125,7 +126,7 @@ public class ContestContestantResource implements ContestContestantService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(contestantRoleChecker.canUnregister(actorJid, contest));
 
-        contestantStore.removeContestant(contestJid, actorJid);
+        contestantStore.deleteContestant(contestJid, actorJid);
     }
 
     @Override
@@ -174,6 +175,39 @@ public class ContestContestantResource implements ContestContestantService {
         return new ContestContestantUpsertResponse.Builder()
                 .insertedContestantProfilesMap(insertedContestantProfilesMap)
                 .alreadyContestantProfilesMap(alreadyContestantProfilesMap)
+                .build();
+    }
+
+    @Override
+    @UnitOfWork
+    public ContestContestantDeleteResponse deleteContestants(
+            AuthHeader authHeader,
+            String contestJid,
+            Set<String> usernames) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(contestantRoleChecker.canSupervise(actorJid, contest));
+
+        checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
+
+        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(usernames);
+
+        Set<String> userJids = ImmutableSet.copyOf(usernameToJidMap.values());
+        Set<String> deletedContestantUsernames = Sets.newHashSet();
+        usernameToJidMap.forEach((username, userJid) -> {
+            if (contestantStore.deleteContestant(contest.getJid(), userJid)) {
+                deletedContestantUsernames.add(username);
+            }
+        });
+
+        Map<String, Profile> userJidToProfileMap = profileService.getProfiles(userJids);
+        Map<String, Profile> deletedContestantProfilesMap = deletedContestantUsernames
+                .stream()
+                .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
+
+        return new ContestContestantDeleteResponse.Builder()
+                .deletedContestantProfilesMap(deletedContestantProfilesMap)
                 .build();
     }
 }

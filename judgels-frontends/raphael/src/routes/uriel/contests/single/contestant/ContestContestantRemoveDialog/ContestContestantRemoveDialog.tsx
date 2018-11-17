@@ -2,33 +2,33 @@ import { Button, Dialog, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestContestantUpsertResponse } from 'modules/api/uriel/contestContestant';
+import { ContestContestantDeleteResponse } from 'modules/api/uriel/contestContestant';
 
-import ContestContestantAddForm, {
-  ContestContestantAddFormData,
-} from '../ContestContestantAddForm/ContestContestantAddForm';
-import { ContestContestantAddResultTable } from '../ContestContestantAddResultTable/ContestContestantAddResultTable';
+import ContestContestantRemoveForm, {
+  ContestContestantRemoveFormData,
+} from '../ContestContestantRemoveForm/ContestContestantRemoveForm';
+import { ContestContestantRemoveResultTable } from '../ContestContestantRemoveResultTable/ContestContestantRemoveResultTable';
 
-import './ContestContestantAddDialog.css';
+import './ContestContestantRemoveDialog.css';
 
-export interface ContestContestantAddDialogProps {
+export interface ContestContestantRemoveDialogProps {
   contest: Contest;
-  onUpsertContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
+  onDeleteContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantDeleteResponse>;
 }
 
-interface ContestContestantAddDialogState {
+interface ContestContestantRemoveDialogState {
   isDialogOpen?: boolean;
   submitted?: {
     usernames: string[];
-    response: ContestContestantUpsertResponse;
+    response: ContestContestantDeleteResponse;
   };
 }
 
-export class ContestContestantAddDialog extends React.Component<
-  ContestContestantAddDialogProps,
-  ContestContestantAddDialogState
+export class ContestContestantRemoveDialog extends React.Component<
+  ContestContestantRemoveDialogProps,
+  ContestContestantRemoveDialogState
 > {
-  state: ContestContestantAddDialogState = {};
+  state: ContestContestantRemoveDialogState = {};
 
   render() {
     return (
@@ -42,13 +42,13 @@ export class ContestContestantAddDialog extends React.Component<
   private renderButton = () => {
     return (
       <Button
-        className="contest-contestant-add-button"
-        intent={Intent.PRIMARY}
-        icon="plus"
+        className="contest-contestant-remove-button"
+        intent={Intent.DANGER}
+        icon="trash"
         onClick={this.toggleDialog}
         disabled={this.state.isDialogOpen}
       >
-        Add contestants
+        Remove contestants
       </Button>
     );
   };
@@ -59,12 +59,12 @@ export class ContestContestantAddDialog extends React.Component<
 
   private renderDialog = () => {
     const dialogBody =
-      this.state.submitted !== undefined ? this.renderDialogAddResultTable() : this.renderDialogAddForm();
-    const dialogTitle = this.state.submitted !== undefined ? 'Add contestants results' : 'Add contestants';
+      this.state.submitted !== undefined ? this.renderDialogRemoveResultTable() : this.renderDialogRemoveForm();
+    const dialogTitle = this.state.submitted !== undefined ? 'Remove contestants results' : 'Remove contestants';
 
     return (
       <Dialog
-        className="contest-contestant-add-dialog"
+        className="contest-contestant-remove-dialog"
         isOpen={this.state.isDialogOpen || false}
         onClose={this.toggleDialog}
         title={dialogTitle}
@@ -76,24 +76,23 @@ export class ContestContestantAddDialog extends React.Component<
     );
   };
 
-  private renderDialogAddForm = () => {
+  private renderDialogRemoveForm = () => {
     const props: any = {
       renderFormComponents: this.renderDialogForm,
       onSubmit: this.addContestants,
     };
-    return <ContestContestantAddForm {...props} />;
+    return <ContestContestantRemoveForm {...props} />;
   };
 
-  private renderDialogAddResultTable = () => {
+  private renderDialogRemoveResultTable = () => {
     const { usernames, response } = this.state.submitted!;
-    const { insertedContestantProfilesMap, alreadyContestantProfilesMap } = response;
+    const { deletedContestantProfilesMap } = response;
     return (
       <>
-        <div className="bp3-dialog-body contest-contestant-add-dialog-result-body">
-          <ContestContestantAddResultTable
+        <div className="bp3-dialog-body contest-contestant-remove-dialog-result-body">
+          <ContestContestantRemoveResultTable
             usernames={usernames}
-            insertedContestantProfilesMap={insertedContestantProfilesMap}
-            alreadyContestantProfilesMap={alreadyContestantProfilesMap}
+            deletedContestantProfilesMap={deletedContestantProfilesMap}
           />
         </div>
         <div className="bp3-dialog-footer">
@@ -107,7 +106,7 @@ export class ContestContestantAddDialog extends React.Component<
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className="bp3-dialog-body contest-contestant-add-dialog-body">{fields}</div>
+      <div className="bp3-dialog-body contest-contestant-remove-dialog-body">{fields}</div>
       <div className="bp3-dialog-footer">
         <div className="bp3-dialog-footer-actions">
           <Button text="Cancel" onClick={this.toggleDialog} />
@@ -117,13 +116,13 @@ export class ContestContestantAddDialog extends React.Component<
     </>
   );
 
-  private addContestants = async (data: ContestContestantAddFormData) => {
+  private addContestants = async (data: ContestContestantRemoveFormData) => {
     const usernames = data.usernames
       .split('\n')
       .filter(s => s.length > 0)
       .map(s => s.trim());
-    const response = await this.props.onUpsertContestants(this.props.contest.jid, usernames);
-    if (usernames.length !== Object.keys(response.insertedContestantProfilesMap).length) {
+    const response = await this.props.onDeleteContestants(this.props.contest.jid, usernames);
+    if (usernames.length !== Object.keys(response.deletedContestantProfilesMap).length) {
       this.setState({ submitted: { usernames, response } });
     } else {
       this.setState({ isDialogOpen: false });

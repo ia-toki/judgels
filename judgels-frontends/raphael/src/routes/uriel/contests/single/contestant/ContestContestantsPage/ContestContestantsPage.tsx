@@ -7,10 +7,15 @@ import { LoadingState } from 'components/LoadingState/LoadingState';
 import Pagination from 'components/Pagination/Pagination';
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestContestantsResponse, ContestContestantUpsertResponse } from 'modules/api/uriel/contestContestant';
+import {
+  ContestContestantDeleteResponse,
+  ContestContestantsResponse,
+  ContestContestantUpsertResponse,
+} from 'modules/api/uriel/contestContestant';
 
 import { ContestContestantsTable } from '../ContestContestantsTable/ContestContestantsTable';
 import { ContestContestantAddDialog } from '../ContestContestantAddDialog/ContestContestantAddDialog';
+import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/ContestContestantRemoveDialog';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
 
@@ -18,6 +23,7 @@ export interface ContestContestantsPageProps {
   contest: Contest;
   onGetContestants: (contestJid: string, page?: number) => Promise<ContestContestantsResponse>;
   onUpsertContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
+  onDeleteContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantDeleteResponse>;
 }
 
 interface ContestContestantsPageState {
@@ -35,7 +41,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
       <ContentCard>
         <h3>Contestants</h3>
         <hr />
-        {this.renderAddDialog()}
+        {this.renderAddRemoveDialogs()}
         {this.renderContestants()}
         {this.renderPagination()}
       </ContentCard>
@@ -86,7 +92,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     return response.data;
   };
 
-  private renderAddDialog = () => {
+  private renderAddRemoveDialogs = () => {
     const { response } = this.state;
     if (!response) {
       return null;
@@ -94,11 +100,23 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     if (!response.config.canSupervise) {
       return null;
     }
-    return <ContestContestantAddDialog contest={this.props.contest} onUpsertContestants={this.upsertContestants} />;
+    return (
+      <>
+        <ContestContestantAddDialog contest={this.props.contest} onUpsertContestants={this.upsertContestants} />
+        <ContestContestantRemoveDialog contest={this.props.contest} onDeleteContestants={this.deleteContestants} />
+        <div className="clearfix" />
+      </>
+    );
   };
 
   private upsertContestants = async (contestJid, data) => {
     const response = await this.props.onUpsertContestants(contestJid, data);
+    this.setState({ lastRefreshContestantsTime: new Date().getTime() });
+    return response;
+  };
+
+  private deleteContestants = async (contestJid, data) => {
+    const response = await this.props.onDeleteContestants(contestJid, data);
     this.setState({ lastRefreshContestantsTime: new Date().getTime() });
     return response;
   };
@@ -112,6 +130,7 @@ export function createContestContestantsPage(contestContestantActions) {
   const mapDispatchToProps = {
     onGetContestants: contestContestantActions.getContestants,
     onUpsertContestants: contestContestantActions.upsertContestants,
+    onDeleteContestants: contestContestantActions.deleteContestants,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));

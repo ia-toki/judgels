@@ -48,8 +48,22 @@ export const contestContestantActions = {
   upsertContestants: (contestJid: string, usernames: string[]) => {
     return async (dispatch, getState, { contestContestantAPI, toastActions }) => {
       const token = selectToken(getState());
-      toastActions.showSuccessToast('Contestants added.');
-      return await contestContestantAPI.upsertContestants(token, contestJid, usernames);
+      const response = await contestContestantAPI.upsertContestants(token, contestJid, usernames);
+      if (Object.keys(response.insertedContestantProfilesMap).length === usernames.length) {
+        toastActions.showSuccessToast('Contestants added.');
+      }
+      return response;
+    };
+  },
+
+  deleteContestants: (contestJid: string, usernames: string[]) => {
+    return async (dispatch, getState, { contestContestantAPI, toastActions }) => {
+      const token = selectToken(getState());
+      const response = await contestContestantAPI.deleteContestants(token, contestJid, usernames);
+      if (Object.keys(response.deletedContestantProfilesMap).length === usernames.length) {
+        toastActions.showSuccessToast('Contestants removed.');
+      }
+      return response;
     };
   },
 };

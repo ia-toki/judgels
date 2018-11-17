@@ -60,10 +60,19 @@ public interface ContestContestantService {
             @PathParam("contestJid") String contestJid);
 
     @POST
-    @Path("/")
+    @Path("/batch-upsert")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     ContestContestantUpsertResponse upsertContestants(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("contestJid") String contestJid,
+            Set<String> usernames);
+
+    @POST
+    @Path("/batch-delete")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    ContestContestantDeleteResponse deleteContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             Set<String> usernames);

@@ -59,11 +59,15 @@ public class ContestContestantStore {
         return !maybeModel.isPresent();
     }
 
-    public void removeContestant(String contestJid, String userJid) {
-        contestantDao.selectByContestJidAndUserJid(contestJid, userJid).ifPresent(contestantDao::delete);
-
-        contestantCache.invalidate(contestJid + SEPARATOR + userJid);
-        roleDao.invalidateCaches(userJid, contestJid);
+    public boolean deleteContestant(String contestJid, String userJid) {
+        Optional<ContestContestantModel> maybeModel = contestantDao.selectByContestJidAndUserJid(contestJid, userJid);
+        if (maybeModel.isPresent()) {
+            contestantDao.delete(maybeModel.get());
+            contestantCache.invalidate(contestJid + SEPARATOR + userJid);
+            roleDao.invalidateCaches(userJid, contestJid);
+            return true;
+        }
+        return false;
     }
 
     public Optional<ContestContestant> getContestant(String contestJid, String userJid) {
