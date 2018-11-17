@@ -54,13 +54,14 @@ export class ContestContestantAddDialog extends React.Component<
   private renderDialog = () => {
     const dialogBody =
       this.state.submitted !== undefined ? this.renderDialogAddResultTable() : this.renderDialogAddForm();
+    const dialogTitle = this.state.submitted !== undefined ? 'Add contestants results' : 'Add contestants';
 
     return (
       <Dialog
         className="contest-contestant-add-dialog"
         isOpen={this.state.isDialogOpen || false}
         onClose={this.toggleDialog}
-        title="Add contestants"
+        title={dialogTitle}
         canOutsideClickClose={false}
         enforceFocus={false}
       >
@@ -82,7 +83,7 @@ export class ContestContestantAddDialog extends React.Component<
     const { insertedContestantProfilesMap, alreadyContestantProfilesMap } = response;
     return (
       <>
-        <div className="bp3-dialog-body contest-contestant-add-dialog-body">
+        <div className="bp3-dialog-body contest-contestant-add-dialog-result-body">
           <ContestContestantAddResultTable
             usernames={usernames}
             insertedContestantProfilesMap={insertedContestantProfilesMap}
@@ -116,6 +117,10 @@ export class ContestContestantAddDialog extends React.Component<
       .filter(s => s.length > 0)
       .map(s => s.trim());
     const response = await this.props.onUpsertContestants(this.props.contest.jid, usernames);
-    this.setState({ submitted: { usernames, response } });
+    if (usernames.length !== Object.keys(response.insertedContestantProfilesMap).length) {
+      this.setState({ submitted: { usernames, response } });
+    } else {
+      this.setState({ isDialogOpen: false });
+    }
   };
 }

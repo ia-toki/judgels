@@ -18,7 +18,7 @@ const ContestContestantAddForm = (props: ContestContestantAddFormProps) => {
     name: 'usernames',
     label: 'Usernames',
     labelHelper: '(one username per line, max 100 users)',
-    rows: 25,
+    rows: 20,
     validate: [Required],
     autoFocus: true,
   };

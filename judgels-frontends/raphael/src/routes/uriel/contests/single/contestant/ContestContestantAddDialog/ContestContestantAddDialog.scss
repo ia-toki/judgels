@@ -3,5 +3,10 @@
 }
 
 .contest-contestant-add-dialog-body {
-  height: 500px;
+  height: 420px;
+}
+
+.contest-contestant-add-dialog-result-body {
+  height: 420px;
+  overflow-y: auto;
 }
