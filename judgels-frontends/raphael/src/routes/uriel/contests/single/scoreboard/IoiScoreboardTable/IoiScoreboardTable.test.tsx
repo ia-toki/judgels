@@ -1,5 +1,6 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
+import { MemoryRouter } from 'react-router';
 
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { IoiScoreboard } from 'modules/api/uriel/scoreboard';
@@ -7,7 +8,7 @@ import { IoiScoreboard } from 'modules/api/uriel/scoreboard';
 import { IoiScoreboardTable, IoiScoreboardTableProps } from './IoiScoreboardTable';
 
 describe('IoiScoreboardTable', () => {
-  let wrapper: ShallowWrapper<IoiScoreboardTableProps>;
+  let wrapper: ReactWrapper<IoiScoreboardTableProps>;
 
   const scoreboard: IoiScoreboard = {
     state: {
@@ -42,7 +43,11 @@ describe('IoiScoreboardTable', () => {
 
   beforeEach(() => {
     const props = { scoreboard, profilesMap };
-    wrapper = shallow(<IoiScoreboardTable {...props} />);
+    wrapper = mount(
+      <MemoryRouter>
+        <IoiScoreboardTable {...props} />
+      </MemoryRouter>
+    );
   });
 
   test('ranks', () => {
@@ -58,7 +63,11 @@ describe('IoiScoreboardTable', () => {
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
-      wrapper = shallow(<IoiScoreboardTable {...props} />);
+      wrapper = mount(
+        <MemoryRouter>
+          <IoiScoreboardTable {...props} />
+        </MemoryRouter>
+      );
     });
 
     it('only shows question marks', () => {
@@ -70,8 +79,7 @@ describe('IoiScoreboardTable', () => {
     });
   });
 
-  // TODO(fushar): find better way to verify usernames
-  test.skip('display names', () => {
+  test('display names', () => {
     const ranks = wrapper
       .find('tbody')
       .children()

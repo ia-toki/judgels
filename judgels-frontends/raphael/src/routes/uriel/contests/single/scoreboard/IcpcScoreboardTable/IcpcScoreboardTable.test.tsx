@@ -1,5 +1,6 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
+import { MemoryRouter } from 'react-router';
 
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { IcpcScoreboardProblemState, IcpcScoreboard } from 'modules/api/uriel/scoreboard';
@@ -7,7 +8,7 @@ import { IcpcScoreboardProblemState, IcpcScoreboard } from 'modules/api/uriel/sc
 import { IcpcScoreboardTable, IcpcScoreboardTableProps } from './IcpcScoreboardTable';
 
 describe('IcpcScoreboardTable', () => {
-  let wrapper: ShallowWrapper<IcpcScoreboardTableProps>;
+  let wrapper: ReactWrapper<IcpcScoreboardTableProps>;
 
   const scoreboard: IcpcScoreboard = {
     state: {
@@ -54,7 +55,11 @@ describe('IcpcScoreboardTable', () => {
 
   beforeEach(() => {
     const props = { scoreboard, profilesMap };
-    wrapper = shallow(<IcpcScoreboardTable {...props} />);
+    wrapper = mount(
+      <MemoryRouter>
+        <IcpcScoreboardTable {...props} />
+      </MemoryRouter>
+    );
   });
 
   test('ranks', () => {
@@ -70,7 +75,11 @@ describe('IcpcScoreboardTable', () => {
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
-      wrapper = shallow(<IcpcScoreboardTable {...props} />);
+      wrapper = mount(
+        <MemoryRouter>
+          <IcpcScoreboardTable {...props} />
+        </MemoryRouter>
+      );
     });
 
     it('only shows question marks', () => {
@@ -82,8 +91,7 @@ describe('IcpcScoreboardTable', () => {
     });
   });
 
-  // TODO(fushar): find better way to verify usernames
-  test.skip('display names', () => {
+  test('display names', () => {
     const ranks = wrapper
       .find('tbody')
       .children()
