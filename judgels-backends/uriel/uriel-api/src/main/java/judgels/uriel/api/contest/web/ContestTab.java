@@ -6,4 +6,5 @@ public enum ContestTab {
     SUBMISSIONS,
     CLARIFICATIONS,
     SCOREBOARD,
+    CONTESTANTS,
 }

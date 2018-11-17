@@ -6,13 +6,17 @@ import static judgels.uriel.api.contest.contestant.ContestContestantStatus.APPRO
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.collect.Lists;
 import java.time.Clock;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.contestant.ContestContestant;
+import judgels.uriel.api.contest.contestant.ContestContestantStatus;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestRoleDao;
@@ -84,6 +88,13 @@ public class ContestContestantStore {
         });
     }
 
+    public Page<ContestContestant> getContestants(String contestJid, Optional<Integer> page) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        page.ifPresent(options::page);
+        return contestantDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
+                p -> Lists.transform(p, ContestContestantStore::fromModel));
+    }
+
     public long getApprovedContestantsCount(String contestJid) {
         return contestantDao.selectCountApprovedByContestJid(contestJid);
     }
@@ -104,6 +115,7 @@ public class ContestContestantStore {
     private static ContestContestant fromModel(ContestContestantModel model) {
         return new ContestContestant.Builder()
                 .userJid(model.userJid)
+                .status(ContestContestantStatus.valueOf(model.status))
                 .contestStartTime(Optional.ofNullable(model.contestStartTime))
                 .build();
     }

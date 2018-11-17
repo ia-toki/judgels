@@ -1,8 +1,20 @@
+import { stringify } from 'query-string';
+
 import { APP_CONFIG } from 'conf';
 import { delete_, get, post } from 'modules/api/http';
+import { Page } from 'modules/api/pagination';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 
+export interface ContestContestant {
+  userJid: string;
+}
+
 export interface ContestContestantsResponse {
+  data: Page<ContestContestant>;
+  profilesMap: ProfilesMap;
+}
+
+export interface ApprovedContestContestantsResponse {
   data: string[];
   profilesMap: ProfilesMap;
 }
@@ -18,7 +30,12 @@ export function createContestContestantAPI() {
   const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
   return {
-    getApprovedContestants: (token: string, contestJid: string): Promise<ContestContestantsResponse> => {
+    getContestants: (token: string, contestJid: string, page?: number): Promise<ContestContestantsResponse> => {
+      const params = stringify({ page });
+      return get(`${baseURL}/${contestJid}/contestants?${params}`, token);
+    },
+
+    getApprovedContestants: (token: string, contestJid: string): Promise<ApprovedContestContestantsResponse> => {
       return get(`${baseURL}/${contestJid}/contestants/approved`, token);
     },
 

@@ -2,12 +2,16 @@ package judgels.uriel.contest.contestant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
 import java.util.Set;
+import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
+import judgels.uriel.api.contest.contestant.ContestContestant;
+import judgels.uriel.api.contest.contestant.ContestContestantStatus;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestModel;
@@ -38,5 +42,10 @@ class ContestContestantStoreIntegrationTests extends AbstractIntegrationTests {
 
         Set<String> contestantJids = store.getApprovedContestantJids(contest.getJid());
         assertThat(contestantJids).containsOnly("userJidA", "userJidB");
+
+        Page<ContestContestant> contestants = store.getContestants(contest.getJid(), Optional.empty());
+        assertThat(contestants.getPage()).containsExactly(
+                new ContestContestant.Builder().userJid("userJidB").status(ContestContestantStatus.APPROVED).build(),
+                new ContestContestant.Builder().userJid("userJidA").status(ContestContestantStatus.APPROVED).build());
     }
 }

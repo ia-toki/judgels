@@ -2,6 +2,7 @@ package judgels.uriel.contest.web;
 
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
+import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
@@ -19,6 +20,7 @@ import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
+import judgels.uriel.contest.contestant.ContestContestantRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
@@ -32,6 +34,7 @@ public class ContestWebConfigFetcher {
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestClarificationRoleChecker clarificationRoleChecker;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
+    private final ContestContestantRoleChecker contestantRoleChecker;
     private final ContestAnnouncementDao announcementDao;
     private final ContestClarificationDao clarificationDao;
     private final ContestTimer contestTimer;
@@ -44,6 +47,7 @@ public class ContestWebConfigFetcher {
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestClarificationRoleChecker clarificationRoleChecker,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
+            ContestContestantRoleChecker contestantRoleChecker,
             ContestAnnouncementDao announcementDao,
             ContestClarificationDao clarificationDao,
             ContestTimer contestTimer) {
@@ -54,6 +58,7 @@ public class ContestWebConfigFetcher {
         this.submissionRoleChecker = submissionRoleChecker;
         this.clarificationRoleChecker = clarificationRoleChecker;
         this.scoreboardRoleChecker = scoreboardRoleChecker;
+        this.contestantRoleChecker = contestantRoleChecker;
         this.announcementDao = announcementDao;
         this.clarificationDao = clarificationDao;
         this.contestTimer = contestTimer;
@@ -68,17 +73,17 @@ public class ContestWebConfigFetcher {
         if (problemRoleChecker.canView(userJid, contest)) {
             visibleTabs.add(PROBLEMS);
         }
-
         if (submissionRoleChecker.canViewOwn(userJid, contest)) {
             visibleTabs.add(SUBMISSIONS);
         }
-
         if (clarificationRoleChecker.canViewOwn(userJid, contest)) {
             visibleTabs.add(CLARIFICATIONS);
         }
-
         if (scoreboardRoleChecker.canViewDefault(userJid, contest)) {
             visibleTabs.add(SCOREBOARD);
+        }
+        if (contestantRoleChecker.canSupervise(userJid, contest)) {
+            visibleTabs.add(CONTESTANTS);
         }
 
         ContestState state;

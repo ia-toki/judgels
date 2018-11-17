@@ -6,16 +6,21 @@ import static judgels.service.ServiceUtils.checkFound;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
+import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.contestant.ApprovedContestContestantsResponse;
+import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.contestant.ContestContestantState;
 import judgels.uriel.api.contest.contestant.ContestContestantUpsertResponse;
@@ -49,15 +54,37 @@ public class ContestContestantResource implements ContestContestantService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestContestantsResponse getApprovedContestants(AuthHeader authHeader, String contestJid) {
+    public ContestContestantsResponse getContestants(AuthHeader authHeader, String contestJid, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestantRoleChecker.canViewList(actorJid, contest));
+        checkAllowed(contestantRoleChecker.canSupervise(actorJid, contest));
 
-        Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
-        Map<String, Profile> profilesMap = profileService.getProfiles(userJids, contest.getBeginTime());
+        Page<ContestContestant> contestants = contestantStore.getContestants(contestJid, page);
+        Set<String> userJids =
+                contestants.getPage().stream().map(ContestContestant::getUserJid).collect(Collectors.toSet());
+        Map<String, Profile> profilesMap = userJids.isEmpty()
+                ? Collections.emptyMap()
+                : profileService.getProfiles(userJids, contest.getBeginTime());
 
         return new ContestContestantsResponse.Builder()
+                .data(contestants)
+                .profilesMap(profilesMap)
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ApprovedContestContestantsResponse getApprovedContestants(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(contestantRoleChecker.canViewApprovedList(actorJid, contest));
+
+        Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
+        Map<String, Profile> profilesMap = userJids.isEmpty()
+                ? Collections.emptyMap()
+                : profileService.getProfiles(userJids, contest.getBeginTime());
+
+        return new ApprovedContestContestantsResponse.Builder()
                 .data(userJids)
                 .profilesMap(profilesMap)
                 .build();
@@ -68,7 +95,7 @@ public class ContestContestantResource implements ContestContestantService {
     public long getApprovedContestantsCount(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestantRoleChecker.canViewList(actorJid, contest));
+        checkAllowed(contestantRoleChecker.canViewApprovedList(actorJid, contest));
 
         return contestantStore.getApprovedContestantsCount(contestJid);
     }

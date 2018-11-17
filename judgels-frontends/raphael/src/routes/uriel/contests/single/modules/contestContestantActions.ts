@@ -8,6 +8,13 @@ export const contestContestantActions = {
     };
   },
 
+  getContestants: (contestJid: string, page?: number) => {
+    return async (dispatch, getState, { contestContestantAPI }) => {
+      const token = selectToken(getState());
+      return await contestContestantAPI.getContestants(token, contestJid, page);
+    };
+  },
+
   getApprovedContestantsCount: (contestJid: string) => {
     return async (dispatch, getState, { contestContestantAPI }) => {
       const token = selectToken(getState());

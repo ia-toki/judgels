@@ -8,6 +8,7 @@ import static judgels.uriel.api.contest.web.ContestState.PAUSED;
 import static judgels.uriel.api.contest.web.ContestState.STARTED;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
+import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
@@ -26,6 +27,7 @@ import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
+import judgels.uriel.contest.contestant.ContestContestantRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
@@ -50,6 +52,7 @@ class ContestWebConfigFetcherTests {
     @Mock private ContestSubmissionRoleChecker submissionRoleChecker;
     @Mock private ContestClarificationRoleChecker clarificationRoleChecker;
     @Mock private ContestScoreboardRoleChecker scoreboardRoleChecker;
+    @Mock private ContestContestantRoleChecker contestantRoleChecker;
     @Mock private ContestAnnouncementDao announcementDao;
     @Mock private ContestClarificationDao clarificationDao;
     @Mock private ContestTimer contestTimer;
@@ -68,6 +71,7 @@ class ContestWebConfigFetcherTests {
                 submissionRoleChecker,
                 clarificationRoleChecker,
                 scoreboardRoleChecker,
+                contestantRoleChecker,
                 announcementDao,
                 clarificationDao,
                 contestTimer);
@@ -99,6 +103,8 @@ class ContestWebConfigFetcherTests {
 
         when(clarificationRoleChecker.canViewOwn(CONTESTANT, contest)).thenReturn(true);
         when(clarificationRoleChecker.canViewOwn(SUPERVISOR, contest)).thenReturn(true);
+
+        when(contestantRoleChecker.canSupervise(SUPERVISOR, contest)).thenReturn(true);
     }
 
     @Test
@@ -110,7 +116,7 @@ class ContestWebConfigFetcherTests {
                 .containsExactly(ANNOUNCEMENTS, PROBLEMS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
 
         assertThat(webConfigFetcher.fetchConfig(SUPERVISOR, contest).getVisibleTabs())
-                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD, CONTESTANTS);
     }
 
     @Test

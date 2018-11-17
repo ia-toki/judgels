@@ -19,6 +19,7 @@ import ContestStateWidget from './components/ContestStateWidget/ContestStateWidg
 import { LoadingContestStateWidget } from './components/ContestStateWidget/LoadingContestStateWidget';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
+import ContestContestantsPage from './contestant/ContestContestantsPage/ContestContestantsPage';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestClarificationsPage from './clarifications/ContestClarificationsPage/ContestClarificationsPage';
@@ -79,6 +80,14 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       routeComponent: Route,
       component: ContestProblemRoutes,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Problems) === -1,
+    },
+    {
+      id: 'contestants',
+      titleIcon: 'people',
+      title: 'Contestants',
+      routeComponent: Route,
+      component: ContestContestantsPage,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Contestants) === -1,
     },
     {
       id: 'submissions',

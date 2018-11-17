@@ -5,8 +5,7 @@ import { withRouter } from 'react-router';
 
 import { UserRef } from 'components/UserRef/UserRef';
 import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { ContestContestantsResponse } from 'modules/api/uriel/contestContestant';
+import { ApprovedContestContestantsResponse } from 'modules/api/uriel/contestContestant';
 import { Contest } from 'modules/api/uriel/contest';
 import { AppState } from 'modules/store';
 import { getCountryName } from 'assets/data/countries';
@@ -22,12 +21,11 @@ export interface ContestRegistrantsDialogProps {
 
 export interface ContestRegistrantsDialogConnectedProps {
   contest: Contest;
-  onGetApprovedContestants: (contestJid: string) => Promise<ContestContestantsResponse>;
+  onGetApprovedContestants: (contestJid: string) => Promise<ApprovedContestContestantsResponse>;
 }
 
 interface ContestRegistrantsDialogState {
-  contestants?: string[];
-  profilesMap?: ProfilesMap;
+  response?: ApprovedContestContestantsResponse;
 }
 
 class ContestRegistrantsDialog extends React.PureComponent<
@@ -37,12 +35,13 @@ class ContestRegistrantsDialog extends React.PureComponent<
   state: ContestRegistrantsDialogState = {};
 
   async componentDidMount() {
-    const { data, profilesMap } = await this.props.onGetApprovedContestants(this.props.contest.jid);
-    this.setState({ contestants: data, profilesMap });
+    const response = await this.props.onGetApprovedContestants(this.props.contest.jid);
+    this.setState({ response });
   }
 
   render() {
-    const contestantsCount = this.state.contestants !== undefined ? ` (${this.state.contestants.length})` : '';
+    const { response } = this.state;
+    const contestantsCount = response ? ` (${response.data.length})` : '';
 
     return (
       <Dialog isOpen onClose={this.props.onClose} title={`Registrants${contestantsCount}`} canOutsideClickClose={false}>
@@ -57,11 +56,12 @@ class ContestRegistrantsDialog extends React.PureComponent<
   }
 
   private renderRegistrants = () => {
-    const { contestants, profilesMap } = this.state;
-    if (!contestants || !profilesMap) {
+    const { response } = this.state;
+    if (!response) {
       return <LoadingState />;
     }
 
+    const { data: contestants, profilesMap } = response;
     const sortedContestants = contestants.slice().sort((jid1, jid2) => {
       const rating1 = (profilesMap[jid1] && profilesMap[jid1].rating) || 0;
       const rating2 = (profilesMap[jid2] && profilesMap[jid2].rating) || 0;

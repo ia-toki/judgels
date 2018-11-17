@@ -13,6 +13,8 @@ import javax.persistence.criteria.Subquery;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
@@ -48,10 +50,10 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
     }
 
     @Override
-    public Set<ContestContestantModel> selectAllByContestJid(String contestJid) {
-        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
+    public Page<ContestContestantModel> selectPagedByContestJid(String contestJid, SelectionOptions options) {
+        return selectPaged(new FilterOptions.Builder<ContestContestantModel>()
                 .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
-                .build()));
+                .build(), options);
     }
 
     @Override

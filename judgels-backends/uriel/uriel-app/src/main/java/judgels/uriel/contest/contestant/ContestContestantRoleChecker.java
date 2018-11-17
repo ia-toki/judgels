@@ -35,7 +35,7 @@ public class ContestContestantRoleChecker {
         this.supervisorStore = supervisorStore;
     }
 
-    public boolean canViewList(String userJid, Contest contest) {
+    public boolean canViewApprovedList(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 
