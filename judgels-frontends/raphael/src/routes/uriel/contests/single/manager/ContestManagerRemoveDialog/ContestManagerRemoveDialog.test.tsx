@@ -9,7 +9,7 @@ import { contest, contestJid } from 'fixtures/state';
 
 import { ContestManagerRemoveDialog, ContestManagerRemoveDialogProps } from './ContestManagerRemoveDialog';
 
-describe('ContestManagerRemoveDialog', () => {
+describe('AdminRemoveDialog', () => {
   let onDeleteManagers: jest.Mock<any>;
   let wrapper: ReactWrapper<any, any>;
 

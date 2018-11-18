@@ -3,24 +3,24 @@ import * as React from 'react';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 
-export interface ContestContestantAddResultTableProps {
+export interface AdminAddResultTableProps {
   usernames: string[];
-  insertedContestantProfilesMap: ProfilesMap;
-  alreadyContestantProfilesMap: ProfilesMap;
+  insertedAdminProfilesMap: ProfilesMap;
+  alreadyAdminProfilesMap: ProfilesMap;
 }
 
-export class ContestContestantAddResultTable extends React.PureComponent<ContestContestantAddResultTableProps> {
+export class AdminAddResultTable extends React.PureComponent<AdminAddResultTableProps> {
   render() {
     return (
       <>
-        {this.renderContestantsTable('Added contestants', this.props.insertedContestantProfilesMap)}
-        {this.renderContestantsTable('Already contestants', this.props.alreadyContestantProfilesMap)}
-        {this.renderUnknownContestantsTable()}
+        {this.renderAdminsTable('Added admins', this.props.insertedAdminProfilesMap)}
+        {this.renderAdminsTable('Already admins', this.props.alreadyAdminProfilesMap)}
+        {this.renderUnknownAdminsTable()}
       </>
     );
   }
 
-  private renderContestantsTable = (title: string, profilesMap: ProfilesMap) => {
+  private renderAdminsTable = (title: string, profilesMap: ProfilesMap) => {
     const usernames = Object.keys(profilesMap)
       .slice()
       .sort((u1, u2) => u1.localeCompare(u2));
@@ -42,17 +42,17 @@ export class ContestContestantAddResultTable extends React.PureComponent<Contest
         <h5>
           {title} ({usernames.length})
         </h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-dialog-result-table">
+        <table className="bp3-html-table bp3-html-table-striped table-list-condensed uriel-admin-dialog-result-table">
           <tbody>{rows}</tbody>
         </table>
       </>
     );
   };
 
-  private renderUnknownContestantsTable = () => {
+  private renderUnknownAdminsTable = () => {
     const knownUsernames = [
-      ...Object.keys(this.props.insertedContestantProfilesMap),
-      ...Object.keys(this.props.alreadyContestantProfilesMap),
+      ...Object.keys(this.props.insertedAdminProfilesMap),
+      ...Object.keys(this.props.alreadyAdminProfilesMap),
     ];
     const usernames = this.props.usernames
       .filter(u => knownUsernames.indexOf(u) === -1)
@@ -72,7 +72,7 @@ export class ContestContestantAddResultTable extends React.PureComponent<Contest
     return (
       <>
         <h5>Unknown users ({usernames.length})</h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-dialog-result-table">
+        <table className="bp3-html-table bp3-html-table-striped table-list-condensed uriel-admin-dialog-result-table">
           <tbody>{rows}</tbody>
         </table>
       </>

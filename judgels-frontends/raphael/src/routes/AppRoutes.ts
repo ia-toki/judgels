@@ -2,7 +2,7 @@ import { JophielRole } from 'modules/api/jophiel/role';
 
 import JophielRoutes from './jophiel/JophielRoutes';
 import JophielAccountsRoutes from './jophiel/JophielAccountsRoutes';
-import UrielContestsRoutes from './uriel/UrielContestsRoutes';
+import UrielRoutes from './uriel/UrielRoutes';
 import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
 import JudgelsRankingRoutes from './ranking/JudgelsRankingRoutes';
 
@@ -27,7 +27,7 @@ const appRoutes = [
     title: 'Contests',
     route: {
       path: '/contests',
-      component: UrielContestsRoutes,
+      component: UrielRoutes,
     },
   },
   {

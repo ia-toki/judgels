@@ -5,33 +5,30 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from 'fixtures/state';
+import { AdminRemoveDialog, AdminRemoveDialogProps } from './AdminRemoveDialog';
 
-import { ContestManagerAddDialog, ContestManagerAddDialogProps } from './ContestManagerAddDialog';
-
-describe('AdminAddDialog', () => {
-  let onUpsertManagers: jest.Mock<any>;
+describe('AdminRemoveDialog', () => {
+  let onDeleteAdmins: jest.Mock<any>;
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onUpsertManagers = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onDeleteAdmins = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(combineReducers({ form: formReducer }));
 
-    const props: ContestManagerAddDialogProps = {
-      contest,
-      onUpsertManagers,
+    const props: AdminRemoveDialogProps = {
+      onDeleteAdmins,
     };
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <ContestManagerAddDialog {...props} />
+          <AdminRemoveDialog {...props} />
         </MemoryRouter>
       </Provider>
     );
   });
 
-  test('add managers dialog form', () => {
+  test('remove admins dialog form', () => {
     const button = wrapper.find('button');
     button.simulate('click');
 
@@ -43,6 +40,6 @@ describe('AdminAddDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onUpsertManagers).toHaveBeenCalledWith(contestJid, ['andi', 'budi', 'caca']);
+    expect(onDeleteAdmins).toHaveBeenCalledWith(['andi', 'budi', 'caca']);
   });
 });

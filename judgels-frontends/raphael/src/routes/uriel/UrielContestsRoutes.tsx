@@ -1,15 +1,59 @@
 import * as React from 'react';
-import * as Loadable from 'react-loadable';
+import { connect } from 'react-redux';
+import { Route, withRouter } from 'react-router';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
+import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
+import ContentWithSidebar, {
+  ContentWithSidebarItem,
+  ContentWithSidebarProps,
+} from 'components/ContentWithSidebar/ContentWithSidebar';
+import { AppState } from 'modules/store';
+import { JophielRole } from 'modules/api/jophiel/role';
 
-const LoadableContestsRoutes = Loadable({
-  loader: () => import('./contests/MainContestsRoutes'),
-  loading: () => <LoadingState large />,
-});
+import ContestsPage from './contests/ContestsPage/ContestsPage';
+import MainAdminsRoutes from './admins/MainAdminsRoutes';
+import { selectRole } from '../jophiel/modules/userWebSelectors';
 
-export default class UrielContestsRoutes extends React.PureComponent {
-  render() {
-    return <LoadableContestsRoutes />;
-  }
+interface ContestRoutesProps {
+  role: JophielRole;
 }
+
+const UrielContestsRoutes = (props: ContestRoutesProps) => {
+  const sidebarItems: ContentWithSidebarItem[] = [
+    {
+      id: '@',
+      titleIcon: 'timeline-events',
+      title: 'Contests',
+      routeComponent: Route,
+      component: ContestsPage,
+    },
+    {
+      id: '_admins',
+      titleIcon: 'id-number',
+      title: 'Admins',
+      routeComponent: Route,
+      component: MainAdminsRoutes,
+      disabled: props.role !== JophielRole.Superadmin,
+    },
+  ];
+
+  const contentWithSidebarProps: ContentWithSidebarProps = {
+    title: 'Menu',
+    items: sidebarItems,
+  };
+
+  return (
+    <FullPageLayout>
+      <ContentWithSidebar {...contentWithSidebarProps} />
+    </FullPageLayout>
+  );
+};
+
+function createUrielContestsRoutes() {
+  const mapStateToProps = (state: AppState) => ({
+    role: selectRole(state),
+  });
+  return withRouter<any>(connect(mapStateToProps)(UrielContestsRoutes));
+}
+
+export default createUrielContestsRoutes();

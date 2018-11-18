@@ -71,7 +71,7 @@ export class ContestManagerAddResultTable extends React.PureComponent<ContestMan
 
     return (
       <>
-        <h5>Unknown managers ({usernames.length})</h5>
+        <h5>Unknown users ({usernames.length})</h5>
         <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-manager-dialog-result-table">
           <tbody>{rows}</tbody>
         </table>

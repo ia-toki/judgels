@@ -8,6 +8,7 @@ import static judgels.uriel.api.mocks.MockSandalphon.mockSandalphon;
 import static judgels.uriel.api.mocks.MockSealtiel.mockSealtiel;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.common.collect.ImmutableSet;
 import java.time.Instant;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.admin.AdminService;
@@ -42,7 +43,7 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
     @BeforeEach
     void setUpAdmin() {
         AdminService adminService = createService(AdminService.class);
-        adminService.upsertAdmin(SUPERADMIN_HEADER, ADMIN);
+        adminService.upsertAdmins(SUPERADMIN_HEADER, ImmutableSet.of(ADMIN));
     }
 
     protected Contest createContest(String slug) {

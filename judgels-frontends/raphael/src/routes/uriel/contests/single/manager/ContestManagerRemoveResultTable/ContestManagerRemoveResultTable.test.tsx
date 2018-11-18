@@ -7,7 +7,7 @@ import {
   ContestManagerRemoveResultTableProps,
 } from './ContestManagerRemoveResultTable';
 
-describe('ContestManagerRemoveResultTable', () => {
+describe('AdminRemoveResultTable', () => {
   let wrapper: ReactWrapper<any, any>;
   beforeEach(() => {
     const props: ContestManagerRemoveResultTableProps = {

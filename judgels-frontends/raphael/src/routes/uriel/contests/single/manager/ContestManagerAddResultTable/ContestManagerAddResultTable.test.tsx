@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router';
 
 import { ContestManagerAddResultTable, ContestManagerAddResultTableProps } from './ContestManagerAddResultTable';
 
-describe('ContestManagerAddResultTable', () => {
+describe('AdminAddResultTable', () => {
   let wrapper: ReactWrapper<any, any>;
   beforeEach(() => {
     const props: ContestManagerAddResultTableProps = {

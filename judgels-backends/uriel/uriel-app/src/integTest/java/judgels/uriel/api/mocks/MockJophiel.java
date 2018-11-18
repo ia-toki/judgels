@@ -40,10 +40,12 @@ public class MockJophiel {
     public static final AuthHeader USER_A_HEADER = AuthHeader.of(USER_A_BEARER_TOKEN);
     public static final AuthHeader USER_B_HEADER = AuthHeader.of(USER_B_BEARER_TOKEN);
 
+    public static final String SUPERADMIN = "superadmin";
     public static final String ADMIN = "admin";
     public static final String USER_A = "userA";
     public static final String USER_B = "userB";
 
+    public static final String SUPERADMIN_JID = "superadminJid";
     public static final String ADMIN_JID = "adminJid";
     public static final String USER_A_JID = "userAJid";
     public static final String USER_B_JID = "userBJid";
@@ -110,6 +112,9 @@ public class MockJophiel {
             }
 
             Map<String, String> res = new HashMap<>();
+            if (usernames.contains(SUPERADMIN)) {
+                res.put(SUPERADMIN, SUPERADMIN_JID);
+            }
             if (usernames.contains(ADMIN)) {
                 res.put(ADMIN, ADMIN_JID);
             }
@@ -160,6 +165,9 @@ public class MockJophiel {
 
             Map<String, Profile> res = new HashMap<>();
 
+            if (userJids.contains(SUPERADMIN_JID)) {
+                res.put(SUPERADMIN_JID, new Profile.Builder().username(SUPERADMIN).build());
+            }
             if (userJids.contains(ADMIN_JID)) {
                 res.put(ADMIN_JID, new Profile.Builder().username(ADMIN).build());
             }

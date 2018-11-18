@@ -5,6 +5,7 @@ import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import java.time.Clock;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.ActorProvider;
@@ -29,6 +30,11 @@ public class AdminRoleHibernateDao extends UnmodifiableHibernateDao<AdminRoleMod
     }
 
     @Override
+    public Optional<AdminRoleModel> selectByUserJid(String userJid) {
+        return selectByUniqueColumn(AdminRoleModel_.userJid, userJid);
+    }
+
+    @Override
     public boolean isAdmin(String userJid) {
         return adminCache.get(userJid);
     }
@@ -39,6 +45,6 @@ public class AdminRoleHibernateDao extends UnmodifiableHibernateDao<AdminRoleMod
     }
 
     private boolean isAdminUncached(String userJid) {
-        return selectByUniqueColumn(AdminRoleModel_.userJid, userJid).isPresent();
+        return selectByUserJid(userJid).isPresent();
     }
 }

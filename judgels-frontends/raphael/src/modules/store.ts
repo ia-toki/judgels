@@ -17,6 +17,7 @@ import { createUserInfoAPI } from './api/jophiel/userInfo';
 import { createUserRegistrationWebAPI } from './api/jophiel/userRegistration';
 import { createUserSearchAPI } from './api/jophiel/userSearch';
 import { createUserWebAPI } from './api/jophiel/userWeb';
+import { createUrielAdminAPI } from './api/uriel/admin';
 import { createContestAPI } from './api/uriel/contest';
 import { createContestWebAPI } from './api/uriel/contestWeb';
 import { createContestAnnouncementAPI } from './api/uriel/contestAnnouncement';
@@ -78,6 +79,7 @@ export const store = createStore<AppState>(
         userRegistrationWebAPI: createUserRegistrationWebAPI(),
         userSearchAPI: createUserSearchAPI(),
         userWebAPI: createUserWebAPI(),
+        urielAdminAPI: createUrielAdminAPI(),
         contestAPI: createContestAPI(),
         contestWebAPI: createContestWebAPI(),
         contestAnnouncementAPI: createContestAnnouncementAPI(),

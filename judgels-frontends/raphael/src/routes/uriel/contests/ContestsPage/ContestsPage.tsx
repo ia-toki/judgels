@@ -27,7 +27,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
 
   render() {
     return (
-      <Card title="All contests">
+      <Card title="Contests">
         {this.renderCreateDialog()}
         {this.renderContests()}
         {this.renderPagination()}
