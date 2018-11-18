@@ -19,6 +19,8 @@ import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
 
+import './ContestContestantsPage.css';
+
 export interface ContestContestantsPageProps {
   contest: Contest;
   onGetContestants: (contestJid: string, page?: number) => Promise<ContestContestantsResponse>;

@@ -9,8 +9,6 @@ import ContestContestantAddForm, {
 } from '../ContestContestantAddForm/ContestContestantAddForm';
 import { ContestContestantAddResultTable } from '../ContestContestantAddResultTable/ContestContestantAddResultTable';
 
-import './ContestContestantAddDialog.css';
-
 export interface ContestContestantAddDialogProps {
   contest: Contest;
   onUpsertContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
@@ -42,7 +40,7 @@ export class ContestContestantAddDialog extends React.Component<
   private renderButton = () => {
     return (
       <Button
-        className="contest-contestant-add-button"
+        className="contest-contestant-dialog-button"
         intent={Intent.PRIMARY}
         icon="plus"
         onClick={this.toggleDialog}
@@ -64,7 +62,7 @@ export class ContestContestantAddDialog extends React.Component<
 
     return (
       <Dialog
-        className="contest-contestant-add-dialog"
+        className="contest-contestant-dialog"
         isOpen={this.state.isDialogOpen || false}
         onClose={this.toggleDialog}
         title={dialogTitle}
@@ -89,7 +87,7 @@ export class ContestContestantAddDialog extends React.Component<
     const { insertedContestantProfilesMap, alreadyContestantProfilesMap } = response;
     return (
       <>
-        <div className="bp3-dialog-body contest-contestant-add-dialog-result-body">
+        <div className="bp3-dialog-body contest-contestant-dialog-result-body">
           <ContestContestantAddResultTable
             usernames={usernames}
             insertedContestantProfilesMap={insertedContestantProfilesMap}
@@ -107,7 +105,7 @@ export class ContestContestantAddDialog extends React.Component<
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className="bp3-dialog-body contest-contestant-add-dialog-body">{fields}</div>
+      <div className="bp3-dialog-body contest-contestant-dialog-body">{fields}</div>
       <div className="bp3-dialog-footer">
         <div className="bp3-dialog-footer-actions">
           <Button text="Cancel" onClick={this.toggleDialog} />

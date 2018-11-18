@@ -3,8 +3,6 @@ import * as React from 'react';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 
-import './ContestContestantAddResultTable.css';
-
 export interface ContestContestantAddResultTableProps {
   usernames: string[];
   insertedContestantProfilesMap: ProfilesMap;
@@ -44,7 +42,7 @@ export class ContestContestantAddResultTable extends React.PureComponent<Contest
         <h5>
           {title} ({usernames.length})
         </h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-add-result-table">
+        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-dialog-result-table">
           <tbody>{rows}</tbody>
         </table>
       </>
@@ -74,7 +72,7 @@ export class ContestContestantAddResultTable extends React.PureComponent<Contest
     return (
       <>
         <h5>Unknown contestants ({usernames.length})</h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-add-result-table">
+        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-dialog-result-table">
           <tbody>{rows}</tbody>
         </table>
       </>

@@ -3,8 +3,6 @@ import * as React from 'react';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 
-import './ContestContestantRemoveResultTable.css';
-
 export interface ContestContestantRemoveResultTableProps {
   usernames: string[];
   deletedContestantProfilesMap: ProfilesMap;
@@ -42,7 +40,7 @@ export class ContestContestantRemoveResultTable extends React.PureComponent<Cont
         <h5>
           {title} ({usernames.length})
         </h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-remove-result-table">
+        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-dialog-result-table">
           <tbody>{rows}</tbody>
         </table>
       </>
@@ -69,7 +67,7 @@ export class ContestContestantRemoveResultTable extends React.PureComponent<Cont
     return (
       <>
         <h5>Not contestants ({usernames.length})</h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-remove-result-table">
+        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-dialog-result-table">
           <tbody>{rows}</tbody>
         </table>
       </>
