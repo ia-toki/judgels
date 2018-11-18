@@ -15,7 +15,6 @@ import { selectDocumentTitle } from 'modules/breadcrumbs/breadcrumbsSelectors';
 
 import { getAppRoutes, getHomeRoute, getVisibleAppRoutes } from './AppRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
-import LegacyCompetitionRoute from './legacyUriel/LegacyCompetitionRoute';
 import { selectRole } from './jophiel/modules/userWebSelectors';
 import { userWebActions as injectedUserWebActions } from './jophiel/modules/userWebActions';
 
@@ -48,7 +47,6 @@ class App extends React.PureComponent<AppProps> {
                 <Route {...homeRoute.route} />
               </Switch>
               <Route component={LegacyJophielRoutes} />
-              <Route path="/competition/contests/:contestSlug" component={LegacyCompetitionRoute} />
               <Footer />
             </AppContent>
           </div>
