@@ -7,7 +7,7 @@ import {
   ContestContestantRemoveResultTableProps,
 } from './ContestContestantRemoveResultTable';
 
-describe('ContestContestantsRemoveResultTable', () => {
+describe('ContestContestantRemoveResultTable', () => {
   let wrapper: ReactWrapper<any, any>;
   beforeEach(() => {
     const props: ContestContestantRemoveResultTableProps = {

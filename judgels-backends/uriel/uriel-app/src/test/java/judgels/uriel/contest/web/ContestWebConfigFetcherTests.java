@@ -9,6 +9,7 @@ import static judgels.uriel.api.contest.web.ContestState.STARTED;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
+import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
@@ -41,6 +42,7 @@ class ContestWebConfigFetcherTests {
     private static final String USER = "userJid";
     private static final String CONTESTANT = "contestantJid";
     private static final String SUPERVISOR = "supervisorJid";
+    private static final String ADMIN = "adminJid";
 
     private static final Duration TO_BEGIN = Duration.ofSeconds(1);
     private static final Duration TO_END = Duration.ofSeconds(2);
@@ -90,21 +92,28 @@ class ContestWebConfigFetcherTests {
         when(contestTimer.getDurationToEndTime(contest)).thenReturn(TO_END);
         when(contestTimer.getDurationToFinishTime(contest, USER)).thenReturn(TO_FINISH);
 
+        when(roleChecker.canAdminister(ADMIN)).thenReturn(true);
+
         when(problemRoleChecker.canView(USER, contest)).thenReturn(true);
         when(problemRoleChecker.canView(CONTESTANT, contest)).thenReturn(true);
         when(problemRoleChecker.canView(SUPERVISOR, contest)).thenReturn(true);
+        when(problemRoleChecker.canView(ADMIN, contest)).thenReturn(true);
 
         when(scoreboardRoleChecker.canViewDefault(USER, contest)).thenReturn(true);
         when(scoreboardRoleChecker.canViewDefault(CONTESTANT, contest)).thenReturn(true);
         when(scoreboardRoleChecker.canViewDefault(SUPERVISOR, contest)).thenReturn(true);
+        when(scoreboardRoleChecker.canViewDefault(ADMIN, contest)).thenReturn(true);
 
         when(submissionRoleChecker.canViewOwn(CONTESTANT, contest)).thenReturn(true);
         when(submissionRoleChecker.canViewOwn(SUPERVISOR, contest)).thenReturn(true);
+        when(submissionRoleChecker.canViewOwn(ADMIN, contest)).thenReturn(true);
 
         when(clarificationRoleChecker.canViewOwn(CONTESTANT, contest)).thenReturn(true);
         when(clarificationRoleChecker.canViewOwn(SUPERVISOR, contest)).thenReturn(true);
+        when(clarificationRoleChecker.canViewOwn(ADMIN, contest)).thenReturn(true);
 
         when(contestantRoleChecker.canSupervise(SUPERVISOR, contest)).thenReturn(true);
+        when(contestantRoleChecker.canSupervise(ADMIN, contest)).thenReturn(true);
     }
 
     @Test
@@ -116,7 +125,10 @@ class ContestWebConfigFetcherTests {
                 .containsExactly(ANNOUNCEMENTS, PROBLEMS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
 
         assertThat(webConfigFetcher.fetchConfig(SUPERVISOR, contest).getVisibleTabs())
-                .containsExactly(ANNOUNCEMENTS, PROBLEMS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD, CONTESTANTS);
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, CONTESTANTS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
+
+        assertThat(webConfigFetcher.fetchConfig(ADMIN, contest).getVisibleTabs()).containsExactly(
+                ANNOUNCEMENTS, PROBLEMS, CONTESTANTS, MANAGERS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
     }
 
     @Test

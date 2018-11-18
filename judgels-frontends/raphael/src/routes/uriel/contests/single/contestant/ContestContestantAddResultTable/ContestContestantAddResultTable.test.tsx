@@ -7,7 +7,7 @@ import {
   ContestContestantAddResultTableProps,
 } from './ContestContestantAddResultTable';
 
-describe('ContestContestantsAddResultTable', () => {
+describe('ContestContestantAddResultTable', () => {
   let wrapper: ReactWrapper<any, any>;
   beforeEach(() => {
     const props: ContestContestantAddResultTableProps = {

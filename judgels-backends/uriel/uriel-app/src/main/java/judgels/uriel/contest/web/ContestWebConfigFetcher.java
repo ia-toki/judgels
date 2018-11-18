@@ -3,6 +3,7 @@ package judgels.uriel.contest.web;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
+import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
@@ -73,6 +74,12 @@ public class ContestWebConfigFetcher {
         if (problemRoleChecker.canView(userJid, contest)) {
             visibleTabs.add(PROBLEMS);
         }
+        if (contestantRoleChecker.canSupervise(userJid, contest)) {
+            visibleTabs.add(CONTESTANTS);
+        }
+        if (roleChecker.canAdminister(userJid)) {
+            visibleTabs.add(MANAGERS);
+        }
         if (submissionRoleChecker.canViewOwn(userJid, contest)) {
             visibleTabs.add(SUBMISSIONS);
         }
@@ -81,9 +88,6 @@ public class ContestWebConfigFetcher {
         }
         if (scoreboardRoleChecker.canViewDefault(userJid, contest)) {
             visibleTabs.add(SCOREBOARD);
-        }
-        if (contestantRoleChecker.canSupervise(userJid, contest)) {
-            visibleTabs.add(CONTESTANTS);
         }
 
         ContestState state;

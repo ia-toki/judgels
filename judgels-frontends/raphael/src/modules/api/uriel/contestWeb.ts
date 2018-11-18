@@ -7,10 +7,11 @@ import { ContestClarificationStatus } from './contestClarification';
 export enum ContestTab {
   Announcements = 'ANNOUNCEMENTS',
   Problems = 'PROBLEMS',
+  Contestants = 'CONTESTANTS',
+  Managers = 'MANAGERS',
   Submissions = 'SUBMISSIONS',
   Clarifications = 'CLARIFICATIONS',
   Scoreboard = 'SCOREBOARD',
-  Contestants = 'CONTESTANTS',
 }
 
 export interface ContestWithWebConfig {
