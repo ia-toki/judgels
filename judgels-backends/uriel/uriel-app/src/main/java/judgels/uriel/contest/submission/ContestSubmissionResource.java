@@ -136,15 +136,15 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         List<String> problemJidsSortedByAlias;
         Set<String> problemJids;
 
+        userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         if (canSupervise) {
-            userJids = contestantStore.getApprovedContestantJids(contestJid);
+            userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
             userJidsSortedByUsername = Lists.newArrayList(userJids);
 
             problemJidsSortedByAlias = problemStore.getUsedProblemJids(contestJid);
             problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
         } else {
             userJidsSortedByUsername = Collections.emptyList();
-            userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
 
             problemJidsSortedByAlias = Collections.emptyList();
             problemJids = submissions.getPage().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
