@@ -9,7 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/users/ratings")
+@Path("/api/v2/user-rating")
 public interface UserRatingService {
     @POST
     @Path("/")
