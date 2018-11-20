@@ -79,7 +79,7 @@ class ContestScoreboardFetcherTests {
         when(scoreboardStore.getScoreboard(CONTEST_JID, OFFICIAL))
                 .thenReturn(Optional.of(officialRaw));
 
-        when(scoreboardBuilder.buildScoreboard(officialRaw, contest, USER_JID, false))
+        when(scoreboardBuilder.buildScoreboard(officialRaw, contest, USER_JID, false, false))
                 .thenReturn(icpcScoreboard);
 
         assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, false, false, false))
@@ -94,7 +94,7 @@ class ContestScoreboardFetcherTests {
         when(scoreboardStore.getScoreboard(CONTEST_JID, FROZEN))
                 .thenReturn(Optional.of(frozenRaw));
 
-        when(scoreboardBuilder.buildScoreboard(frozenRaw, contest, USER_JID, false))
+        when(scoreboardBuilder.buildScoreboard(frozenRaw, contest, USER_JID, false, false))
                 .thenReturn(icpcScoreboard);
 
         assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, false, false, false))
@@ -109,7 +109,7 @@ class ContestScoreboardFetcherTests {
         when(scoreboardStore.getScoreboard(CONTEST_JID, OFFICIAL))
                 .thenReturn(Optional.of(officialRaw));
 
-        when(scoreboardBuilder.buildScoreboard(officialRaw, contest, USER_JID, false))
+        when(scoreboardBuilder.buildScoreboard(officialRaw, contest, USER_JID, false, false))
                 .thenReturn(icpcScoreboard);
 
         assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, false, false, false))

@@ -42,7 +42,8 @@ public class ContestScoreboardFetcher {
         }
 
         return rawScoreboard.map(raw -> {
-            Scoreboard scoreboard = scoreboardBuilder.buildScoreboard(raw, contest, userJid, showAllProblems);
+            Scoreboard scoreboard =
+                    scoreboardBuilder.buildScoreboard(raw, contest, userJid, canSupervise, showAllProblems);
             return new ContestScoreboard.Builder()
                     .scoreboard(scoreboard)
                     .type(raw.getType())

@@ -85,13 +85,15 @@ class ContestScoreboardBuilderTests {
 
         when(scoreboardProcessor.filterContestantJids(eq(scoreboard), anySet())).thenReturn(incognitoScoreboard);
 
-        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, true))
+        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, false, true))
                 .isEqualTo(incognitoScoreboard);
+        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, true, true))
+                .isEqualTo(scoreboard);
     }
 
     @Test
     void when_not_incognito() {
-        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, true))
+        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, false, true))
                 .isEqualTo(scoreboard);
     }
 
@@ -122,7 +124,7 @@ class ContestScoreboardBuilderTests {
                 .thenReturn(filteredScoreboard);
 
         assertThat(scoreboardBuilder
-                .buildScoreboard(raw, contest, USER_JID, false))
+                .buildScoreboard(raw, contest, USER_JID, false, false))
                 .isEqualTo(filteredScoreboard);
     }
 }

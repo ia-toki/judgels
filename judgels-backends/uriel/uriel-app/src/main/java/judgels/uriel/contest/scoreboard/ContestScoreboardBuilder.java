@@ -37,12 +37,13 @@ public class ContestScoreboardBuilder {
             RawContestScoreboard raw,
             Contest contest,
             String userJid,
+            boolean canSupervise,
             boolean showAllProblems) {
 
         ScoreboardProcessor processor = processorRegistry.get(contest.getStyle());
 
         Scoreboard scoreboard = processor.parseFromString(mapper, raw.getScoreboard());
-        scoreboard = filterContestantJidsIfNecessary(scoreboard, processor, contest, userJid);
+        scoreboard = filterContestantJidsIfNecessary(scoreboard, processor, contest, userJid, canSupervise);
         scoreboard = filterProblemJidsIfNecessary(scoreboard, processor, contest, showAllProblems);
 
         return scoreboard;
@@ -52,7 +53,12 @@ public class ContestScoreboardBuilder {
             Scoreboard scoreboard,
             ScoreboardProcessor processor,
             Contest contest,
-            String userJid) {
+            String userJid,
+            boolean canSupervise) {
+
+        if (canSupervise) {
+            return scoreboard;
+        }
 
         ScoreboardModuleConfig scoreboardModuleConfig = moduleStore.getScoreboardModuleConfig(contest.getJid());
         if (scoreboardModuleConfig.getIsIncognitoScoreboard()) {
