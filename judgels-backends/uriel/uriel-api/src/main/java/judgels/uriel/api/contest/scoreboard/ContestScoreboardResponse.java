@@ -10,6 +10,7 @@ import org.immutables.value.Value;
 public interface ContestScoreboardResponse {
     ContestScoreboard getData();
     Map<String, Profile> getProfilesMap();
+    ContestScoreboardConfig getConfig();
 
     class Builder extends ImmutableContestScoreboardResponse.Builder {}
 }

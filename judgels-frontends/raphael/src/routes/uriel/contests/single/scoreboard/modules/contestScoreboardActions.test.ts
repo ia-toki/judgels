@@ -20,7 +20,8 @@ describe('contestScoreboardActions', () => {
 
   describe('getScoreboard()', () => {
     const { getScoreboard } = contestScoreboardActions;
-    const doGetScoreboard = async () => getScoreboard(contestJid)(dispatch, getState, { contestScoreboardAPI });
+    const doGetScoreboard = async () =>
+      getScoreboard(contestJid, true, false)(dispatch, getState, { contestScoreboardAPI });
 
     beforeEach(async () => {
       const scoreboard = {} as ContestScoreboardResponse;
@@ -30,7 +31,7 @@ describe('contestScoreboardActions', () => {
     });
 
     it('calls API to get scoreboard', () => {
-      expect(contestScoreboardAPI.getScoreboard).toHaveBeenCalledWith(token, contestJid);
+      expect(contestScoreboardAPI.getScoreboard).toHaveBeenCalledWith(token, contestJid, true, false);
     });
   });
 });

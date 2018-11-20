@@ -17,6 +17,7 @@ import judgels.uriel.contest.file.ContestFileRoleChecker;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
+import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
@@ -40,6 +41,7 @@ public interface UrielIntegrationTestComponent {
     ContestClarificationStore contestClarificationStore();
     ContestContestantStore contestContestantStore();
     ContestManagerStore contestManagerStore();
+    ContestProblemStore contestProblemStore();
     ContestScoreboardStore contestScoreboardStore();
     ContestSubmissionStore contestSubmissionStore();
     ContestSupervisorStore contestSupervisorStore();

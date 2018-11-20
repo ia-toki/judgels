@@ -95,6 +95,10 @@ public class ContestProblemStore {
                 problemDao.selectAllOpenByContestJid(contestJid, createOptions()), model -> model.problemJid);
     }
 
+    public boolean hasClosedProblems(String contestJid) {
+        return problemDao.hasClosedByContestJid(contestJid);
+    }
+
     public Map<String, String> getProblemAliasesByJids(String contestJid, Set<String> problemJids) {
         Map<String, String> problemAliases = problemDao.selectAllUsedByContestJid(contestJid, createOptions())
                 .stream()

@@ -3,10 +3,8 @@ package judgels.uriel.contest.scoreboard;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
-import com.google.common.collect.ImmutableList;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
@@ -24,24 +22,21 @@ public class ContestScoreboardTypeFetcher {
         this.clock = clock;
     }
 
-    public List<ContestScoreboardType> fetchViewableTypes(Contest contest, boolean canSuperviseScoreboard) {
+    public ContestScoreboardType fetchDefaultType(Contest contest, boolean canSupervise) {
         Optional<FrozenScoreboardModuleConfig> frozenScoreboardModuleConfig =
                 moduleStore.getFrozenScoreboardModuleConfig(contest.getJid());
         if (frozenScoreboardModuleConfig.isPresent()) {
             if (frozenScoreboardModuleConfig.get().getIsOfficialScoreboardAllowed()) {
-                return ImmutableList.of(OFFICIAL, FROZEN);
+                return OFFICIAL;
             }
             Instant freezeTime = contest.getEndTime().minus(
                     frozenScoreboardModuleConfig.get().getFreezeDurationBeforeEndTime());
 
             if (!clock.instant().isBefore(freezeTime)) {
-                if (canSuperviseScoreboard) {
-                    return ImmutableList.of(OFFICIAL, FROZEN);
-                }
-                return ImmutableList.of(FROZEN);
+                return canSupervise ? OFFICIAL : FROZEN;
             }
         }
 
-        return ImmutableList.of(OFFICIAL);
+        return OFFICIAL;
     }
 }

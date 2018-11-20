@@ -10,4 +10,5 @@ public interface ContestProblemDao extends Dao<ContestProblemModel> {
     Optional<ContestProblemModel> selectUsedByContestJidAndProblemAlias(String contestJid, String problemAlias);
     List<ContestProblemModel> selectAllUsedByContestJid(String contestJid, SelectionOptions options);
     List<ContestProblemModel> selectAllOpenByContestJid(String contestJid, SelectionOptions options);
+    boolean hasClosedByContestJid(String contestJid);
 }

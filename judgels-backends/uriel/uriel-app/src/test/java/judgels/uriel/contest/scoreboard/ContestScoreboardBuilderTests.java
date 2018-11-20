@@ -16,7 +16,6 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
@@ -86,22 +85,14 @@ class ContestScoreboardBuilderTests {
 
         when(scoreboardProcessor.filterContestantJids(eq(scoreboard), anySet())).thenReturn(incognitoScoreboard);
 
-        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, ContestScoreboardType.OFFICIAL, true))
-                .isEqualTo(new ContestScoreboard.Builder()
-                        .type(ContestScoreboardType.OFFICIAL)
-                        .scoreboard(incognitoScoreboard)
-                        .updatedTime(Instant.ofEpochMilli(42))
-                        .build());
+        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, true))
+                .isEqualTo(incognitoScoreboard);
     }
 
     @Test
     void when_not_incognito() {
-        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, ContestScoreboardType.OFFICIAL, true))
-                .isEqualTo(new ContestScoreboard.Builder()
-                        .type(ContestScoreboardType.OFFICIAL)
-                        .scoreboard(scoreboard)
-                        .updatedTime(Instant.ofEpochMilli(42))
-                        .build());
+        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, true))
+                .isEqualTo(scoreboard);
     }
 
     @Test
@@ -131,11 +122,7 @@ class ContestScoreboardBuilderTests {
                 .thenReturn(filteredScoreboard);
 
         assertThat(scoreboardBuilder
-                .buildScoreboard(raw, contest, USER_JID, ContestScoreboardType.OFFICIAL, false))
-                .isEqualTo(new ContestScoreboard.Builder()
-                        .type(ContestScoreboardType.OFFICIAL)
-                        .scoreboard(filteredScoreboard)
-                        .updatedTime(Instant.ofEpochMilli(42))
-                        .build());
+                .buildScoreboard(raw, contest, USER_JID, false))
+                .isEqualTo(filteredScoreboard);
     }
 }

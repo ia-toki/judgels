@@ -9,6 +9,7 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/{contestJid}/scoreboard")
@@ -18,12 +19,7 @@ public interface ContestScoreboardService {
     @Produces(APPLICATION_JSON)
     Optional<ContestScoreboardResponse> getScoreboard(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
-            @PathParam("contestJid") String contestJid);
-
-    @GET
-    @Path("/frozen")
-    @Produces(APPLICATION_JSON)
-    Optional<ContestScoreboardResponse> getFrozenScoreboard(
-            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
-            @PathParam("contestJid") String contestJid);
+            @PathParam("contestJid") String contestJid,
+            @QueryParam("frozen") boolean frozen,
+            @QueryParam("showClosedProblems") boolean showClosedProblems);
 }

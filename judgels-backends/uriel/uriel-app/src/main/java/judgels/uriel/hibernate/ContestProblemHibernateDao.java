@@ -58,4 +58,12 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
                 .putColumnsEq(ContestProblemModel_.status, OPEN.name())
                 .build(), options);
     }
+
+    @Override
+    public boolean hasClosedByContestJid(String contestJid) {
+        return selectCount(new FilterOptions.Builder<ContestProblemModel>()
+                .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
+                .putColumnsEq(ContestProblemModel_.status, CLOSED.name())
+                .build()) > 0;
+    }
 }

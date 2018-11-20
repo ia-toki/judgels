@@ -69,14 +69,14 @@ class ContestScoreboardTypeFetcherTests {
             void when_at_freeze_time() {
                 when(clock.instant()).thenReturn(Instant.ofEpochSecond(42));
                 assertThatContestantsSee(FROZEN);
-                assertThatSupervisorsSee(OFFICIAL, FROZEN);
+                assertThatSupervisorsSee(OFFICIAL);
             }
 
             @Test
             void when_after_freeze_time() {
                 when(clock.instant()).thenReturn(Instant.ofEpochSecond(43));
                 assertThatContestantsSee(FROZEN);
-                assertThatSupervisorsSee(OFFICIAL, FROZEN);
+                assertThatSupervisorsSee(OFFICIAL);
             }
         }
 
@@ -94,31 +94,31 @@ class ContestScoreboardTypeFetcherTests {
             @Test
             void when_before_freeze_time() {
                 when(clock.instant()).thenReturn(Instant.ofEpochSecond(41));
-                assertThatContestantsSee(OFFICIAL, FROZEN);
-                assertThatSupervisorsSee(OFFICIAL, FROZEN);
+                assertThatContestantsSee(OFFICIAL);
+                assertThatSupervisorsSee(OFFICIAL);
             }
 
             @Test
             void when_at_freeze_time() {
                 when(clock.instant()).thenReturn(Instant.ofEpochSecond(42));
-                assertThatContestantsSee(OFFICIAL, FROZEN);
-                assertThatSupervisorsSee(OFFICIAL, FROZEN);
+                assertThatContestantsSee(OFFICIAL);
+                assertThatSupervisorsSee(OFFICIAL);
             }
 
             @Test
             void when_after_freeze_time() {
                 when(clock.instant()).thenReturn(Instant.ofEpochSecond(43));
-                assertThatContestantsSee(OFFICIAL, FROZEN);
-                assertThatSupervisorsSee(OFFICIAL, FROZEN);
+                assertThatContestantsSee(OFFICIAL);
+                assertThatSupervisorsSee(OFFICIAL);
             }
         }
     }
 
-    private void assertThatSupervisorsSee(ContestScoreboardType... types) {
-        assertThat(typeFetcher.fetchViewableTypes(contest, true)).containsExactly(types);
+    private void assertThatSupervisorsSee(ContestScoreboardType type) {
+        assertThat(typeFetcher.fetchDefaultType(contest, true)).isEqualTo(type);
     }
 
-    private void assertThatContestantsSee(ContestScoreboardType... types) {
-        assertThat(typeFetcher.fetchViewableTypes(contest, false)).containsExactly(types);
+    private void assertThatContestantsSee(ContestScoreboardType type) {
+        assertThat(typeFetcher.fetchDefaultType(contest, false)).isEqualTo(type);
     }
 }

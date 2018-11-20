@@ -1,10 +1,14 @@
 package judgels.uriel.contest.scoreboard;
 
+import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
+import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
+
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
+import judgels.uriel.api.contest.scoreboard.Scoreboard;
 
 public class ContestScoreboardFetcher {
     private final ContestScoreboardTypeFetcher typeFetcher;
@@ -22,32 +26,28 @@ public class ContestScoreboardFetcher {
         this.scoreboardBuilder = scoreboardBuilder;
     }
 
-    public Optional<ContestScoreboard> fetchScoreboard(Contest contest, String userJid, boolean canSupervise) {
-        ContestScoreboardType defaultType = typeFetcher.fetchViewableTypes(contest, canSupervise).get(0);
-        return fetchScoreboardOfType(contest, userJid, defaultType, canSupervise);
-    }
-
-    public Optional<ContestScoreboard> fetchFrozenScoreboard(Contest contest, String userJid, boolean canSupervise) {
-        return fetchScoreboardOfType(contest, userJid, ContestScoreboardType.FROZEN, canSupervise);
-    }
-
-    private Optional<ContestScoreboard> fetchScoreboardOfType(
+    public Optional<ContestScoreboard> fetchScoreboard(
             Contest contest,
             String userJid,
-            ContestScoreboardType type,
-            boolean canSupervise) {
+            boolean canSupervise,
+            boolean frozen,
+            boolean showAllProblems) {
 
+        ContestScoreboardType type = frozen ? FROZEN : typeFetcher.fetchDefaultType(contest, canSupervise);
         Optional<RawContestScoreboard> rawScoreboard = scoreboardStore.getScoreboard(contest.getJid(), type);
-        ContestScoreboardType actualType;
 
         // TODO(fushar): keep frozen scoreboard in database even after being unfrozen
-        if (type == ContestScoreboardType.FROZEN && !rawScoreboard.isPresent()) {
-            actualType = ContestScoreboardType.OFFICIAL;
-            rawScoreboard = scoreboardStore.getScoreboard(contest.getJid(), actualType);
-        } else {
-            actualType = type;
+        if (type == FROZEN && !rawScoreboard.isPresent()) {
+            rawScoreboard = scoreboardStore.getScoreboard(contest.getJid(), OFFICIAL);
         }
-        return rawScoreboard.map(raw ->
-                scoreboardBuilder.buildScoreboard(raw, contest, userJid, actualType, canSupervise));
+
+        return rawScoreboard.map(raw -> {
+            Scoreboard scoreboard = scoreboardBuilder.buildScoreboard(raw, contest, userJid, showAllProblems);
+            return new ContestScoreboard.Builder()
+                    .scoreboard(scoreboard)
+                    .type(raw.getType())
+                    .updatedTime(raw.getUpdatedTime())
+                    .build();
+        });
     }
 }

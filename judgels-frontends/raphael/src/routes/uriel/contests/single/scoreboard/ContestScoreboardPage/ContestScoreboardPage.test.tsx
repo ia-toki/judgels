@@ -1,38 +1,54 @@
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router';
+import thunk from 'redux-thunk';
 
-import { contest } from 'fixtures/state';
+import { contest, user } from 'fixtures/state';
+import { PutUser, sessionReducer } from 'modules/session/sessionReducer';
 import { ContestScoreboardResponse } from 'modules/api/uriel/contestScoreboard';
 import { ContestScoreboardType } from 'modules/api/uriel/contestScoreboard';
 
-import { ContestScoreboardPage, ContestScoreboardPageProps } from './ContestScoreboardPage';
+import { createContestScoreboardPage } from './ContestScoreboardPage';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { contestReducer, PutContest } from '../../../modules/contestReducer';
 
 describe('ContestScoreboardPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let onGetScoreboard: jest.Mock<any>;
+  let contestScoreboardActions: jest.Mocked<any>;
 
   const render = () => {
-    const props: ContestScoreboardPageProps = {
-      contest,
-      onGetScoreboard,
-    };
+    const store = createStore(
+      combineReducers({ session: sessionReducer, uriel: combineReducers({ contest: contestReducer }) }),
+      applyMiddleware(thunk)
+    );
+    store.dispatch(PutUser.create(user));
+    store.dispatch(PutContest.create(contest));
+
+    const ContestScoreboardPage = createContestScoreboardPage(contestScoreboardActions);
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
-        <ContestScoreboardPage {...props} />
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestScoreboardPage />
+          </MemoryRouter>
+        </Provider>
       </IntlProvider>
     );
   };
 
   beforeEach(() => {
-    onGetScoreboard = jest.fn();
+    contestScoreboardActions = {
+      getScoreboard: jest.fn(),
+    };
   });
 
   describe('when there is no scoreboard', () => {
     beforeEach(() => {
-      onGetScoreboard.mockReturnValue(Promise.resolve(null));
+      contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(null));
       render();
     });
 
@@ -63,8 +79,9 @@ describe('ContestScoreboardPage', () => {
           updatedTime: 0,
         },
         profilesMap: {},
+        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false },
       };
-      onGetScoreboard.mockReturnValue(Promise.resolve(response));
+      contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(response));
 
       render();
     });
@@ -96,8 +113,9 @@ describe('ContestScoreboardPage', () => {
           updatedTime: 0,
         },
         profilesMap: {},
+        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false },
       };
-      onGetScoreboard.mockReturnValue(Promise.resolve(response));
+      contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(response));
 
       render();
     });

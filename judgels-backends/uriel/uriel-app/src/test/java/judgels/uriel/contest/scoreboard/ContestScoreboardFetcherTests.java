@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import com.google.common.collect.ImmutableList;
 import java.time.Instant;
 import java.util.Optional;
 import judgels.uriel.api.contest.Contest;
@@ -15,6 +14,7 @@ import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
+import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,16 +22,19 @@ import org.mockito.Mock;
 class ContestScoreboardFetcherTests {
     private static final String CONTEST_JID = "contestJid";
     private static final String USER_JID = "userJid";
-    private static final boolean CAN_SUPERVISE = true;
 
     @Mock private ContestScoreboardTypeFetcher typeFetcher;
     @Mock private ContestScoreboardStore scoreboardStore;
     @Mock private ContestScoreboardBuilder scoreboardBuilder;
 
+    @Mock private Scoreboard icpcScoreboard;
+
     private ContestScoreboardFetcher scoreboardFetcher;
     private Contest contest;
-    private RawContestScoreboard raw;
-    private ContestScoreboard scoreboard;
+    private RawContestScoreboard officialRaw;
+    private RawContestScoreboard frozenRaw;
+    private ContestScoreboard officialScoreboard;
+    private ContestScoreboard frozenScoreboard;
 
     @BeforeEach
     void before() {
@@ -43,44 +46,73 @@ class ContestScoreboardFetcherTests {
         when(contest.getJid()).thenReturn(CONTEST_JID);
         when(contest.getStyle()).thenReturn(ContestStyle.ICPC);
 
-        raw = new RawContestScoreboard.Builder()
+        officialRaw = new RawContestScoreboard.Builder()
                 .scoreboard("json")
                 .type(OFFICIAL)
                 .updatedTime(Instant.ofEpochMilli(42))
                 .build();
-
-        scoreboard = new ContestScoreboard.Builder()
-                .type(ContestScoreboardType.OFFICIAL)
-                .scoreboard(mock(IcpcScoreboard.class))
+        frozenRaw = new RawContestScoreboard.Builder()
+                .scoreboard("json")
+                .type(FROZEN)
                 .updatedTime(Instant.ofEpochMilli(42))
                 .build();
 
+        icpcScoreboard = mock(IcpcScoreboard.class);
+
+        officialScoreboard = new ContestScoreboard.Builder()
+                .type(ContestScoreboardType.OFFICIAL)
+                .scoreboard(icpcScoreboard)
+                .updatedTime(Instant.ofEpochMilli(42))
+                .build();
+        frozenScoreboard = new ContestScoreboard.Builder()
+                .type(ContestScoreboardType.FROZEN)
+                .scoreboard(icpcScoreboard)
+                .updatedTime(Instant.ofEpochMilli(42))
+                .build();
     }
 
     @Test
-    void fetch_default_scoreboard() {
-        when(typeFetcher.fetchViewableTypes(contest, CAN_SUPERVISE))
-                .thenReturn(ImmutableList.of(OFFICIAL, FROZEN));
+    void fetch_official_scoreboard() {
+        when(typeFetcher.fetchDefaultType(contest, false))
+                .thenReturn(OFFICIAL);
 
         when(scoreboardStore.getScoreboard(CONTEST_JID, OFFICIAL))
-                .thenReturn(Optional.of(raw));
+                .thenReturn(Optional.of(officialRaw));
 
-        when(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, OFFICIAL, CAN_SUPERVISE))
-                .thenReturn(scoreboard);
+        when(scoreboardBuilder.buildScoreboard(officialRaw, contest, USER_JID, false))
+                .thenReturn(icpcScoreboard);
 
-        assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, CAN_SUPERVISE))
-                .contains(scoreboard);
+        assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, false, false, false))
+                .contains(officialScoreboard);
     }
 
     @Test
     void fetch_frozen_scoreboard() {
-        when(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, FROZEN, CAN_SUPERVISE))
-                .thenReturn(scoreboard);
+        when(typeFetcher.fetchDefaultType(contest, false))
+                .thenReturn(FROZEN);
 
         when(scoreboardStore.getScoreboard(CONTEST_JID, FROZEN))
-                .thenReturn(Optional.of(raw));
+                .thenReturn(Optional.of(frozenRaw));
 
-        assertThat(scoreboardFetcher.fetchFrozenScoreboard(contest, USER_JID, CAN_SUPERVISE))
-                .contains(scoreboard);
+        when(scoreboardBuilder.buildScoreboard(frozenRaw, contest, USER_JID, false))
+                .thenReturn(icpcScoreboard);
+
+        assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, false, false, false))
+                .contains(frozenScoreboard);
+    }
+
+    @Test
+    void fetch_frozen_scoreboard_not_available() {
+        when(typeFetcher.fetchDefaultType(contest, false))
+                .thenReturn(FROZEN);
+
+        when(scoreboardStore.getScoreboard(CONTEST_JID, OFFICIAL))
+                .thenReturn(Optional.of(officialRaw));
+
+        when(scoreboardBuilder.buildScoreboard(officialRaw, contest, USER_JID, false))
+                .thenReturn(icpcScoreboard);
+
+        assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, false, false, false))
+                .contains(officialScoreboard);
     }
 }

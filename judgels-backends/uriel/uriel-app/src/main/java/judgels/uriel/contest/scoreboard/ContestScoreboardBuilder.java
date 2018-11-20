@@ -8,8 +8,6 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -35,23 +33,19 @@ public class ContestScoreboardBuilder {
         this.mapper = mapper;
     }
 
-    public ContestScoreboard buildScoreboard(
+    public Scoreboard buildScoreboard(
             RawContestScoreboard raw,
             Contest contest,
             String userJid,
-            ContestScoreboardType type,
-            boolean isShowingAllProblems) {
+            boolean showAllProblems) {
 
         ScoreboardProcessor processor = processorRegistry.get(contest.getStyle());
+
         Scoreboard scoreboard = processor.parseFromString(mapper, raw.getScoreboard());
         scoreboard = filterContestantJidsIfNecessary(scoreboard, processor, contest, userJid);
-        scoreboard = filterProblemJidsIfNecessary(scoreboard, processor, contest, isShowingAllProblems);
+        scoreboard = filterProblemJidsIfNecessary(scoreboard, processor, contest, showAllProblems);
 
-        return new ContestScoreboard.Builder()
-                .type(type)
-                .scoreboard(scoreboard)
-                .updatedTime(raw.getUpdatedTime())
-                .build();
+        return scoreboard;
     }
 
     private Scoreboard filterContestantJidsIfNecessary(
@@ -61,10 +55,10 @@ public class ContestScoreboardBuilder {
             String userJid) {
 
         ScoreboardModuleConfig scoreboardModuleConfig = moduleStore.getScoreboardModuleConfig(contest.getJid());
-
         if (scoreboardModuleConfig.getIsIncognitoScoreboard()) {
             return processor.filterContestantJids(scoreboard, ImmutableSet.of(userJid));
         }
+
         return scoreboard;
     }
 
@@ -72,14 +66,14 @@ public class ContestScoreboardBuilder {
             Scoreboard scoreboard,
             ScoreboardProcessor processor,
             Contest contest,
-            boolean isShowingAllProblems) {
+            boolean showAllProblems) {
 
-        if (isShowingAllProblems || contest.getStyle() != ContestStyle.IOI) {
+        if (showAllProblems || contest.getStyle() != ContestStyle.IOI) {
             return scoreboard;
         }
 
         Set<String> openProblemJids = ImmutableSet.copyOf(problemStore.getOpenProblemJids(contest.getJid()));
-        if (openProblemJids.size() != scoreboard.getState().getContestantJids().size()) {
+        if (openProblemJids.size() != scoreboard.getState().getProblemJids().size()) {
             IoiStyleModuleConfig config = moduleStore.getIoiStyleModuleConfig(contest.getJid());
             IoiScoreboardProcessor ioiProcessor = (IoiScoreboardProcessor) processor;
             return ioiProcessor.filterProblemJids((IoiScoreboard) scoreboard, openProblemJids, config);

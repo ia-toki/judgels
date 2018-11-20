@@ -3,6 +3,11 @@ package judgels.uriel.contest.scoreboard;
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.SCOREBOARD;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import judgels.uriel.api.contest.problem.ContestProblemData;
+import judgels.uriel.api.contest.problem.ContestProblemStatus;
+import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
+import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
+import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,11 +15,15 @@ import org.junit.jupiter.api.Test;
 
 class ContestScoreboardRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationTests {
     private ContestScoreboardRoleChecker checker;
+    private ContestScoreboardStore scoreboardStore;
+    private ContestProblemStore problemStore;
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
         prepare(sessionFactory);
         checker = component.contestScoreboardRoleChecker();
+        scoreboardStore = component.contestScoreboardStore();
+        problemStore = component.contestProblemStore();
     }
 
     @Test
@@ -53,6 +62,52 @@ class ContestScoreboardRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
         assertThat(checker.canViewDefault(MANAGER, contestB)).isTrue();
         assertThat(checker.canViewDefault(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canViewDefault(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
+    void view_official_and_frozen() {
+        addSupervisorToContestBWithPermission(SCOREBOARD);
+
+        assertThat(checker.canViewOfficialAndFrozen(SUPERVISOR, contestBStarted)).isFalse();
+
+        scoreboardStore.upsertScoreboard(contestBStarted.getJid(), new ContestScoreboardData.Builder()
+                .type(ContestScoreboardType.OFFICIAL)
+                .scoreboard("official")
+                .build());
+        assertThat(checker.canViewOfficialAndFrozen(SUPERVISOR, contestB)).isFalse();
+
+        scoreboardStore.upsertScoreboard(contestBStarted.getJid(), new ContestScoreboardData.Builder()
+                .type(ContestScoreboardType.FROZEN)
+                .scoreboard("frozen")
+                .build());
+        assertThat(checker.canViewOfficialAndFrozen(SUPERVISOR, contestBStarted)).isTrue();
+
+        assertThat(checker.canViewOfficialAndFrozen(CONTESTANT, contestBStarted)).isFalse();
+    }
+
+    @Test
+    void view_closed_problems() {
+        addSupervisorToContestBWithPermission(SCOREBOARD);
+
+        problemStore.upsertProblem(contestBStarted.getJid(), new ContestProblemData.Builder()
+                .problemJid("problemJid1")
+                .alias("A")
+                .status(ContestProblemStatus.OPEN)
+                .submissionsLimit(0)
+                .build());
+
+        assertThat(checker.canViewClosedProblems(SUPERVISOR, contestBStarted)).isFalse();
+
+        problemStore.upsertProblem(contestBStarted.getJid(), new ContestProblemData.Builder()
+                .problemJid("problemJid2")
+                .alias("B")
+                .status(ContestProblemStatus.CLOSED)
+                .submissionsLimit(0)
+                .build());
+
+        assertThat(checker.canViewClosedProblems(SUPERVISOR, contestBStarted)).isTrue();
+
+        assertThat(checker.canViewClosedProblems(CONTESTANT, contestBStarted)).isFalse();
     }
 
     @Test

@@ -26,6 +26,8 @@ import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestManagerModel;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModuleModel;
+import judgels.uriel.persistence.ContestProblemModel;
+import judgels.uriel.persistence.ContestScoreboardModel;
 import judgels.uriel.persistence.ContestSupervisorModel;
 import judgels.uriel.role.AdminRoleStore;
 import org.hibernate.SessionFactory;
@@ -35,6 +37,8 @@ import org.hibernate.SessionFactory;
         ContestModel.class,
         ContestModuleModel.class,
         ContestContestantModel.class,
+        ContestProblemModel.class,
+        ContestScoreboardModel.class,
         ContestSupervisorModel.class,
         ContestManagerModel.class})
 public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegrationTests {
