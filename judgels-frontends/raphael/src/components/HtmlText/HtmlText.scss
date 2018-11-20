@@ -1,3 +1,5 @@
+@import '../../styles/base';
+
 .html-text {
   line-height: 20px !important;
 
@@ -24,5 +26,6 @@
   th {
     background-color: #eeeeee;
     font-weight: bold;
+    color: $text-color;
   }
 }
