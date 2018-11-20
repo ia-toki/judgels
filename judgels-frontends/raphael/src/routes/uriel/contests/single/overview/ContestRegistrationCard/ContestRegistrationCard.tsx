@@ -124,7 +124,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
   private renderViewRegistrantsButton = (contestantsCount: number) => {
     return (
       <Button
-        className="contest-registration-card__item contest-registration-card__registrants"
+        className="contest-registration-card__item"
         icon="people"
         text={`View registrants (${contestantsCount})`}
         onClick={this.toggleRegistrantsDialog}
