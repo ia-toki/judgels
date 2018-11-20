@@ -11,7 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/contests/web")
+@Path("/api/v2/contest-web")
 public interface ContestWebService {
     @GET
     @Path("/slug/{contestSlug}/with-config")

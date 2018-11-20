@@ -38,19 +38,19 @@ export enum ContestState {
 }
 
 export function createContestWebAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contest-web`;
 
   return {
     getContestBySlugWithWebConfig: (token: string, contestSlug: string): Promise<ContestWithWebConfig> => {
-      return get(`${baseURL}/web/slug/${contestSlug}/with-config`, token);
+      return get(`${baseURL}/slug/${contestSlug}/with-config`, token);
     },
 
     getContestByJidWithWebConfig: (token: string, contestJid: string): Promise<ContestWithWebConfig> => {
-      return get(`${baseURL}/web/${contestJid}/with-config`, token);
+      return get(`${baseURL}/${contestJid}/with-config`, token);
     },
 
     getWebConfig: (token: string, contestJid: string): Promise<ContestWebConfig> => {
-      return get(`${baseURL}/web/${contestJid}/config`, token);
+      return get(`${baseURL}/${contestJid}/config`, token);
     },
   };
 }
