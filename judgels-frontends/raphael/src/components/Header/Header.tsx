@@ -6,7 +6,7 @@ import UserWidget from 'components/UserWidget/UserWidget';
 
 import './Header.css';
 
-const logo = require('assets/images/logo.png');
+const logo = require('assets/images/logo-header.png');
 
 export interface HeaderProps {
   userWidget: React.ComponentType<any>;
