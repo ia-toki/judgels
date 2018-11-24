@@ -1,14 +1,14 @@
 buildscript {
     repositories {
         mavenCentral()
-
         maven {
-            url 'http://palantir.bintray.com/releases'
+            url 'https://dl.bintray.com/palantir/releases/'
         }
     }
 
     dependencies {
         classpath "com.palantir.baseline:gradle-baseline-java:$gradleBaselineVersion"
+        classpath "com.palantir.sls-packaging:gradle-sls-packaging:$gradleSlsPackagingVersion"
     }
 }
 
