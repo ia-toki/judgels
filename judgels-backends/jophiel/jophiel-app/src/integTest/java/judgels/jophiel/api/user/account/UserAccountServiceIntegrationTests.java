@@ -1,11 +1,11 @@
 package judgels.jophiel.api.user.account;
 
-import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
+import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.awaitility.Awaitility.await;
 
-import com.palantir.remoting.api.errors.ErrorType;
+import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

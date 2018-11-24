@@ -7,7 +7,7 @@ import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
-import com.palantir.remoting3.clients.UserAgent;
+import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.palantir.websecurity.WebSecurityConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.testing.DropwizardTestSupport;

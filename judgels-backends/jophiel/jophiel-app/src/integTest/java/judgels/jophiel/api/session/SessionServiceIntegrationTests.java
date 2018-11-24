@@ -1,11 +1,11 @@
 package judgels.jophiel.api.session;
 
-import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
+import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import com.palantir.remoting.api.errors.ErrorType;
+import com.palantir.conjure.java.api.errors.ErrorType;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.UserData;

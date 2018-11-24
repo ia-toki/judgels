@@ -29,7 +29,7 @@ dependencies {
     testCompile "com.github.tomakehurst:wiremock:$wiremockVersion"
 
     integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
-    integTestCompile "com.palantir.remoting-api:test-utils:$httpRemotingApiVersion"
+    integTestCompile "com.palantir.conjure.java.api:test-utils:$conjureJavaRuntimeApiVersion"
     integTestCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"

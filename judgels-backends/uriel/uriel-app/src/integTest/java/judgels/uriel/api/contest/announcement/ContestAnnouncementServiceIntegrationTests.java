@@ -1,6 +1,6 @@
 package judgels.uriel.api.contest.announcement;
 
-import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
+import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.announcement.ContestAnnouncementStatus.DRAFT;
@@ -10,7 +10,7 @@ import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.palantir.remoting.api.errors.ErrorType;
+import com.palantir.conjure.java.api.errors.ErrorType;
 import judgels.persistence.api.Page;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;

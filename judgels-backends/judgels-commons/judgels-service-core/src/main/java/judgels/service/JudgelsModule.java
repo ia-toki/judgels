@@ -1,7 +1,7 @@
 package judgels.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.palantir.remoting3.ext.jackson.ObjectMappers;
+import com.palantir.conjure.java.serialization.ObjectMappers;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;

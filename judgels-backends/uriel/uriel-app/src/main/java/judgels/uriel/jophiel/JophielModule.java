@@ -1,6 +1,6 @@
 package judgels.uriel.jophiel;
 
-import com.palantir.remoting3.clients.UserAgent;
+import com.palantir.conjure.java.api.config.service.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;

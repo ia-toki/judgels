@@ -5,14 +5,13 @@ dependencies {
     compile project(':judgels-commons:judgels-service-core')
 
     compile "com.google.dagger:dagger:$daggerVersion"
-    compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
     compile "com.rabbitmq:amqp-client:$rabbitmqAmqpClientVersion"
     compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
 
     testCompile "org.assertj:assertj-core:$assertJVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
-    integTestCompile "com.palantir.remoting3:jaxrs-clients:$httpRemotingVersion"
+    integTestCompile "com.palantir.conjure.java.runtime:conjure-java-jaxrs-client:$conjureJavaRuntimeVersion"
     integTestCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     integTestCompile "org.testcontainers:testcontainers:$testContainersVersion"
     integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"

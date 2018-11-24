@@ -2,7 +2,7 @@ package judgels.service.actor;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.palantir.remoting.api.errors.RemoteException;
+import com.palantir.conjure.java.api.errors.RemoteException;
 import java.time.Duration;
 import java.util.Optional;
 import judgels.jophiel.api.user.me.MyUserService;

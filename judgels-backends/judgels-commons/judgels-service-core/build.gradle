@@ -4,8 +4,8 @@ dependencies {
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
-    compile "com.palantir.remoting3:jaxrs-clients:$httpRemotingVersion"
-    compile "com.palantir.remoting3:jersey-servers:$httpRemotingVersion"
+    compile "com.palantir.conjure.java.runtime:conjure-java-jaxrs-client:$conjureJavaRuntimeVersion"
+    compile "com.palantir.conjure.java.runtime:conjure-java-jersey-server:$conjureJavaRuntimeVersion"
     compile "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"

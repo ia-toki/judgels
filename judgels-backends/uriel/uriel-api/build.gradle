@@ -1,6 +1,6 @@
 dependencies {
     compile project(':sandalphon:sandalphon-api')
-    compile "com.palantir.remoting-api:errors:$httpRemotingApiVersion"
+    compile "com.palantir.conjure.java.api:errors:$conjureJavaRuntimeApiVersion"
 
     compileOnly "org.immutables:value:$immutablesVersion"
 

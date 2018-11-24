@@ -25,7 +25,7 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
 
-    integTestCompile "com.palantir.remoting-api:test-utils:$httpRemotingApiVersion"
+    integTestCompile "com.palantir.conjure.java.api:test-utils:$conjureJavaRuntimeApiVersion"
     integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
     integTestCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
     integTestCompile "org.subethamail:subethasmtp-wiser:$wiserVersion"

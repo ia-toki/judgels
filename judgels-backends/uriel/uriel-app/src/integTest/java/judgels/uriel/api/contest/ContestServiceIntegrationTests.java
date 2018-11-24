@@ -1,6 +1,6 @@
 package judgels.uriel.api.contest;
 
-import static com.palantir.remoting.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
+import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
@@ -11,7 +11,7 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
-import com.palantir.remoting.api.errors.ErrorType;
+import com.palantir.conjure.java.api.errors.ErrorType;
 import java.time.Duration;
 import java.time.Instant;
 import judgels.service.api.actor.AuthHeader;

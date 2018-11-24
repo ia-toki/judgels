@@ -13,7 +13,7 @@ import javax.ws.rs.ext.Provider;
 public class NotAuthorizedExceptionMapper implements ExceptionMapper<NotAuthorizedException> {
     @Override
     public Response toResponse(NotAuthorizedException exception) {
-        // This is a hack because currently http-remoting does not support 401 exception :(
+        // This is a hack because currently Conjure does not support 401 exception :(
 
         Map<String, String> serializableError = Maps.newHashMap();
         serializableError.put("errorCode", "CUSTOM_CLIENT");

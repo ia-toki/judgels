@@ -4,7 +4,7 @@ import static judgels.uriel.api.contest.ContestErrors.CONTEST_SLUG_ALREADY_EXIST
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.palantir.remoting.api.errors.ServiceException;
+import com.palantir.conjure.java.api.errors.ServiceException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;

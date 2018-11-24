@@ -1,6 +1,6 @@
 package judgels.service.jersey;
 
-import com.palantir.remoting3.servers.jersey.HttpRemotingJerseyFeature;
+import com.palantir.conjure.java.server.jersey.ConjureJerseyFeature;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
 import judgels.service.actor.IpAddressFilter;
@@ -10,7 +10,7 @@ public enum JudgelsJerseyFeature implements Feature {
 
     @Override
     public boolean configure(FeatureContext context) {
-        HttpRemotingJerseyFeature.INSTANCE.configure(context);
+        ConjureJerseyFeature.INSTANCE.configure(context);
 
         context.register(new EmptyOptionalExceptionMapper());
         context.register(new NotAuthorizedExceptionMapper());

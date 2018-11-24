@@ -1,8 +1,8 @@
 package judgels.uriel.api.contest;
 
+import com.palantir.conjure.java.api.errors.ErrorType;
+import com.palantir.conjure.java.api.errors.ServiceException;
 import com.palantir.logsafe.SafeArg;
-import com.palantir.remoting.api.errors.ErrorType;
-import com.palantir.remoting.api.errors.ServiceException;
 
 public class ContestErrors {
     private ContestErrors() {}

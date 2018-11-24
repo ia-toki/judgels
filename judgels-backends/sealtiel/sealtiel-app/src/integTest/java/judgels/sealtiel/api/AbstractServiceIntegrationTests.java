@@ -1,6 +1,6 @@
 package judgels.sealtiel.api;
 
-import com.palantir.remoting3.clients.UserAgent;
+import com.palantir.conjure.java.api.config.service.UserAgent;
 import io.dropwizard.testing.DropwizardTestSupport;
 import javax.ws.rs.client.WebTarget;
 import judgels.sealtiel.SealtielApplication;

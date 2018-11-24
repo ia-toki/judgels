@@ -2,21 +2,25 @@ package judgels.service.jaxrs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.palantir.remoting3.clients.ClientConfiguration;
-import com.palantir.remoting3.clients.ClientConfigurations;
-import com.palantir.remoting3.clients.UserAgent;
-import com.palantir.remoting3.ext.jackson.ObjectMappers;
-import com.palantir.remoting3.jaxrs.feignimpl.Java8OptionalAwareContract;
-import com.palantir.remoting3.jaxrs.feignimpl.PathTemplateHeaderEnrichmentContract;
-import com.palantir.remoting3.jaxrs.feignimpl.PathTemplateHeaderRewriter;
-import com.palantir.remoting3.jaxrs.feignimpl.SlashEncodingContract;
-import com.palantir.remoting3.okhttp.OkHttpClients;
+import com.palantir.conjure.java.api.config.service.UserAgent;
+import com.palantir.conjure.java.client.config.ClientConfiguration;
+import com.palantir.conjure.java.client.config.ClientConfigurations;
+import com.palantir.conjure.java.client.jaxrs.feignimpl.Java8OptionalAwareContract;
+import com.palantir.conjure.java.client.jaxrs.feignimpl.PathTemplateHeaderEnrichmentContract;
+import com.palantir.conjure.java.client.jaxrs.feignimpl.PathTemplateHeaderRewriter;
+import com.palantir.conjure.java.client.jaxrs.feignimpl.SlashEncodingContract;
+import com.palantir.conjure.java.okhttp.HostEventsSink;
+import com.palantir.conjure.java.okhttp.HostMetricsRegistry;
+import com.palantir.conjure.java.okhttp.OkHttpClients;
+import com.palantir.conjure.java.serialization.ObjectMappers;
 import feign.Contract;
+import feign.EmptyContainerDecoder;
 import feign.Feign;
 import feign.InputStreamDelegateDecoder;
 import feign.InputStreamDelegateEncoder;
 import feign.Java8OptionalAwareDecoder;
 import feign.Logger;
+import feign.NeverReturnNullDecoder;
 import feign.Request;
 import feign.Retryer;
 import feign.TextDelegateDecoder;
@@ -69,18 +73,20 @@ public class JaxRsClients {
 
     private JaxRsClients() {}
 
-    // Adapted from com.palantir.remoting3.jaxrs.AbstractFeignJaxRsClientBuilder
+    // Adapted from com.palantir.conjure.java.client.jaxrs.AbstractFeignJaxRsClientBuilder.
+    // This exists because we want to modify the object mapper via JudgelsObjectMappers.
     public static <T> T create(Class<T> serviceClass, String uri, UserAgent userAgent) {
         List<String> uris = ImmutableList.of(uri);
         ClientConfiguration clientConfig = ClientConfigurations.of(uris, defaultSslSocketFactory, defaultTrustManager);
         ObjectMapper objectMapper = JudgelsObjectMappers.configure(ObjectMappers.newClientObjectMapper());
+        HostEventsSink eventsSink = new HostMetricsRegistry();
 
         return Feign.builder()
                 .contract(createContract())
                 .encoder(createEncoder(objectMapper))
                 .decoder(createDecoder(objectMapper))
                 .requestInterceptor(PathTemplateHeaderRewriter.INSTANCE)
-                .client(new OkHttpClient(OkHttpClients.create(clientConfig, userAgent, serviceClass)))
+                .client(new OkHttpClient(OkHttpClients.create(clientConfig, userAgent, eventsSink, serviceClass)))
                 .options(createRequestOptions(clientConfig))
                 .logLevel(Logger.Level.NONE)  // we use OkHttp interceptors for logging. (note that NONE is the default)
                 .retryer(new Retryer.Default(0, 0, 1))  // use OkHttp retry mechanism only
@@ -107,9 +113,12 @@ public class JaxRsClients {
     }
 
     private static Decoder createDecoder(ObjectMapper objectMapper) {
-        return new Java8OptionalAwareDecoder(
-                new InputStreamDelegateDecoder(
-                        new TextDelegateDecoder(
-                                new JacksonDecoder(objectMapper))));
+        return new NeverReturnNullDecoder(
+                new Java8OptionalAwareDecoder(
+                        new EmptyContainerDecoder(
+                                objectMapper,
+                                new InputStreamDelegateDecoder(
+                                        new TextDelegateDecoder(
+                                                new JacksonDecoder(objectMapper))))));
     }
 }

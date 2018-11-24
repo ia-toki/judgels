@@ -5,7 +5,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-// https://github.com/palantir/http-remoting/issues/427
+// https://github.com/palantir/conjure-java-runtime/issues/427
 @Provider
 public class EmptyOptionalExceptionMapper implements ExceptionMapper<EmptyOptionalException> {
     @Override
