@@ -58,7 +58,7 @@ describe('IoiScoreboardTable', () => {
     expect(ranks).toEqual(['1', '2']);
   });
 
-  test('incognito ranks', () => {
+  describe('incognito ranks', () => {
     beforeEach(() => {
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };

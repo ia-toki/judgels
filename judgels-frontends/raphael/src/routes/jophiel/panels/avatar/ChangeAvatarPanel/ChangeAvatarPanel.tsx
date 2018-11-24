@@ -41,7 +41,7 @@ export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProp
         <h4>Current avatar</h4>
         <img src={avatarUrl} />
         <div>
-          <Button intent={Intent.DANGER} onClick={this.props.onDeleteAvatar}>
+          <Button intent={Intent.DANGER} onClick={this.deleteAvatar}>
             Remove avatar
           </Button>
         </div>
@@ -55,7 +55,7 @@ export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProp
           accept="image/*"
           multiple={false}
           maxSize={MAX_AVATAR_FILE_SIZE}
-          onDropAccepted={this.props.onDropAccepted}
+          onDropAccepted={this.dropAccepted}
           onDropRejected={this.props.onDropRejected}
         >
           <div className="card-change-avatar__dropzone">Click here or drop a new image (max 100 KB).</div>
@@ -72,4 +72,14 @@ export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProp
       </Card>
     );
   }
+
+  private dropAccepted = async files => {
+    await this.props.onDropAccepted(files);
+    window.location.reload();
+  };
+
+  private deleteAvatar = async () => {
+    await this.props.onDeleteAvatar();
+    window.location.reload();
+  };
 }

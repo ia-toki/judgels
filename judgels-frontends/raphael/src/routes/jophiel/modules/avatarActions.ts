@@ -21,7 +21,6 @@ export const avatarActions = {
       await userAvatarAPI.updateAvatar(token, userJid, file);
 
       toastActions.showSuccessToast('Avatar updated.');
-      window.location.reload();
     };
   },
 
@@ -31,7 +30,6 @@ export const avatarActions = {
       await userAvatarAPI.deleteAvatar(token, userJid);
 
       toastActions.showSuccessToast('Avatar removed.');
-      window.location.reload();
     };
   },
 

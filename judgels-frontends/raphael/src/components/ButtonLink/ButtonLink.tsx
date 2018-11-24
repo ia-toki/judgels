@@ -14,5 +14,5 @@ export const ButtonLink = (props: ButtonLinkProps) => {
     [Classes.INTENT_PRIMARY]: intent === Intent.PRIMARY,
   });
 
-  return <Link {...linkProps} as="button" className={className} />;
+  return <Link {...linkProps} className={className} />;
 };

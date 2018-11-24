@@ -21,6 +21,10 @@ configure({ adapter: new Adapter() });
   },
 };
 
+(window as any).scrollTo = function() {
+  return;
+};
+
 // https://github.com/yahoo/react-intl/issues/465#issuecomment-369566628
 const consoleError = console.error.bind(console);
 console.error = (message, ...args) => {
