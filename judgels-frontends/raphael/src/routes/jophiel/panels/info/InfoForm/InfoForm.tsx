@@ -1,4 +1,4 @@
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
@@ -70,7 +70,7 @@ const InfoForm = (props: InfoFormProps) => {
   return (
     <form onSubmit={props.handleSubmit}>
       <h4>My info</h4>
-      <table className="bp3-html-table bp3-html-table-striped">
+      <HTMLTable striped>
         <tbody>
           <Field component={FormTableTextInput} {...nameField} />
           <Field component={FormTableSelect} {...genderField}>
@@ -95,12 +95,12 @@ const InfoForm = (props: InfoFormProps) => {
             <option value="XXXL">XXXL</option>
           </Field>
         </tbody>
-      </table>
+      </HTMLTable>
 
       <HorizontalInnerDivider />
 
       <h4>My institution (school/organization represented)</h4>
-      <table className="bp3-html-table bp3-html-table-striped">
+      <HTMLTable striped>
         <tbody>
           <Field component={FormTableTextInput} {...institutionField} />
           <Field component={FormTableSelect} {...institutionCountryField}>
@@ -110,7 +110,7 @@ const InfoForm = (props: InfoFormProps) => {
           <Field component={FormTableTextInput} {...institutionProvinceField} />
           <Field component={FormTableTextInput} {...institutionCityField} />
         </tbody>
-      </table>
+      </HTMLTable>
 
       <HorizontalDivider />
 

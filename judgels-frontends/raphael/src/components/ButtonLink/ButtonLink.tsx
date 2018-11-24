@@ -1,4 +1,4 @@
-import { Intent } from '@blueprintjs/core';
+import { Classes, Intent } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps } from 'react-router-dom';
@@ -10,8 +10,8 @@ export interface ButtonLinkProps extends LinkProps {
 
 export const ButtonLink = (props: ButtonLinkProps) => {
   const { intent, ...linkProps } = props;
-  const className = classNames('bp3-button', props.className, {
-    'bp3-intent-primary': intent === Intent.PRIMARY,
+  const className = classNames(Classes.BUTTON, props.className, {
+    [Classes.INTENT_PRIMARY]: intent === Intent.PRIMARY,
   });
 
   return <Link {...linkProps} as="button" className={className} />;

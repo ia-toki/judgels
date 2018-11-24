@@ -1,4 +1,5 @@
-import { Button, Dialog } from '@blueprintjs/core';
+import { Classes, Button, Dialog } from '@blueprintjs/core';
+import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { ContestAnnouncementData, ContestAnnouncement } from 'modules/api/uriel/contestAnnouncement';
@@ -45,9 +46,9 @@ export class ContestAnnouncementEditDialog extends React.Component<ContestAnnoun
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className="bp3-dialog-body contest-announcement-edit-dialog-body">{fields}</div>
-      <div className="bp3-dialog-footer">
-        <div className="bp3-dialog-footer-actions">
+      <div className={classNames(Classes.DIALOG_BODY, 'contest-announcement-edit-dialog-body')}>{fields}</div>
+      <div className={Classes.DIALOG_FOOTER}>
+        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={this.closeDialog} />
           {submitButton}
         </div>

@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -27,8 +28,8 @@ export const FormTable = (props: FormTableProps) => {
   ));
 
   return (
-    <table className="bp3-html-table bp3-html-table-striped">
+    <HTMLTable striped>
       <tbody>{rows}</tbody>
-    </table>
+    </HTMLTable>
   );
 };

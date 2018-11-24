@@ -1,4 +1,5 @@
-import { Button, Dialog, Intent } from '@blueprintjs/core';
+import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
+import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { AdminUpsertResponse } from 'modules/api/uriel/admin';
@@ -80,15 +81,15 @@ export class AdminAddDialog extends React.Component<AdminAddDialogProps, AdminAd
     const { insertedAdminProfilesMap, alreadyAdminProfilesMap } = response;
     return (
       <>
-        <div className="bp3-dialog-body uriel-admin-dialog-result-body">
+        <div className={classNames(Classes.DIALOG_BODY, 'uriel-admin-dialog-result-body')}>
           <AdminAddResultTable
             usernames={usernames}
             insertedAdminProfilesMap={insertedAdminProfilesMap}
             alreadyAdminProfilesMap={alreadyAdminProfilesMap}
           />
         </div>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button text="Done" intent={Intent.PRIMARY} onClick={this.toggleDialog} />
           </div>
         </div>
@@ -98,9 +99,9 @@ export class AdminAddDialog extends React.Component<AdminAddDialogProps, AdminAd
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className="bp3-dialog-body uriel-admin-dialog-body">{fields}</div>
-      <div className="bp3-dialog-footer">
-        <div className="bp3-dialog-footer-actions">
+      <div className={classNames(Classes.DIALOG_BODY, 'uriel-admin-dialog-body')}>{fields}</div>
+      <div className={Classes.DIALOG_FOOTER}>
+        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={this.toggleDialog} />
           {submitButton}
         </div>

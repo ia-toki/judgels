@@ -1,4 +1,5 @@
-import { Button, Dialog } from '@blueprintjs/core';
+import { Classes, Button, Dialog, HTMLTable } from '@blueprintjs/core';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -45,9 +46,11 @@ class ContestRegistrantsDialog extends React.PureComponent<
 
     return (
       <Dialog isOpen onClose={this.props.onClose} title={`Registrants${contestantsCount}`} canOutsideClickClose={false}>
-        <div className="bp3-dialog-body contest-registrants-dialog__body">{this.renderRegistrants()}</div>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
+        <div className={classNames(Classes.DIALOG_BODY, 'contest-registrants-dialog__body')}>
+          {this.renderRegistrants()}
+        </div>
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button text="Close" onClick={this.props.onClose} />
           </div>
         </div>
@@ -90,7 +93,7 @@ class ContestRegistrantsDialog extends React.PureComponent<
     ));
 
     return (
-      <table className="bp3-html-table bp3-html-table-striped table-list">
+      <HTMLTable striped className="table-list">
         <thead>
           <tr>
             <th>Country</th>
@@ -98,7 +101,7 @@ class ContestRegistrantsDialog extends React.PureComponent<
           </tr>
         </thead>
         <tbody>{rows}</tbody>
-      </table>
+      </HTMLTable>
     );
   };
 }

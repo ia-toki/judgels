@@ -1,3 +1,4 @@
+import { Classes } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -18,7 +19,9 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
     <li key={item.link}>
       <Link
         to={item.link}
-        className={classNames('bp3-breadcrumb', { 'bp3-breadcrumb-current': idx === props.breadcrumbs.length - 1 })}
+        className={classNames(Classes.BREADCRUMB, {
+          [Classes.BREADCRUMB_CURRENT]: idx === props.breadcrumbs.length - 1,
+        })}
       >
         {item.title}
       </Link>
@@ -27,7 +30,7 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
   return (
     <div className="breadcrumbs">
       <div className="breadcrumbs__content">
-        <ul className="bp3-breadcrumbs">{items}</ul>
+        <ul className={Classes.BREADCRUMBS}>{items}</ul>
       </div>
     </div>
   );

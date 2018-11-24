@@ -1,4 +1,5 @@
-import { Button, Dialog, Intent } from '@blueprintjs/core';
+import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
+import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
@@ -85,15 +86,15 @@ export class ContestManagerAddDialog extends React.Component<
     const { insertedManagerProfilesMap, alreadyManagerProfilesMap } = response;
     return (
       <>
-        <div className="bp3-dialog-body contest-manager-dialog-result-body">
+        <div className={classNames(Classes.DIALOG_BODY, 'contest-manager-dialog-result-body')}>
           <ContestManagerAddResultTable
             usernames={usernames}
             insertedManagerProfilesMap={insertedManagerProfilesMap}
             alreadyManagerProfilesMap={alreadyManagerProfilesMap}
           />
         </div>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button text="Done" intent={Intent.PRIMARY} onClick={this.toggleDialog} />
           </div>
         </div>
@@ -103,9 +104,9 @@ export class ContestManagerAddDialog extends React.Component<
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className="bp3-dialog-body contest-manager-dialog-body">{fields}</div>
-      <div className="bp3-dialog-footer">
-        <div className="bp3-dialog-footer-actions">
+      <div className={classNames(Classes.DIALOG_BODY, 'contest-manager-dialog-body')}>{fields}</div>
+      <div className={Classes.DIALOG_FOOTER}>
+        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={this.toggleDialog} />
           {submitButton}
         </div>

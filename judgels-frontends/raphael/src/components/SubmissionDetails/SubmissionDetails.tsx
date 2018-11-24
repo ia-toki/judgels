@@ -1,4 +1,4 @@
-import { Tag } from '@blueprintjs/core';
+import { HTMLTable, Tag } from '@blueprintjs/core';
 import * as base64 from 'base-64';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -66,7 +66,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <>
         <h4>General Info</h4>
         <ContentCard>
-          <table className="bp3-html-table bp3-html-table-striped submission-details">
+          <HTMLTable striped className="submission-details">
             <thead>
               <tr>
                 <th className="col-info">Info</th>
@@ -113,7 +113,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
                 </td>
               </tr>
             </tbody>
-          </table>
+          </HTMLTable>
         </ContentCard>
       </>
     );
@@ -138,7 +138,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <>
         <h4>Subtask Results</h4>
         <ContentCard>
-          <table className="bp3-html-table bp3-html-table-striped">
+          <HTMLTable striped>
             <thead>
               <tr>
                 <th className="col-id">ID</th>
@@ -147,7 +147,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               </tr>
             </thead>
             <tbody>{results}</tbody>
-          </table>
+          </HTMLTable>
         </ContentCard>
       </>
     );
@@ -176,7 +176,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <>
         <h4>Sample Test Data Results</h4>
         <ContentCard>
-          <table className="bp3-html-table bp3-html-table-striped submission-details">
+          <HTMLTable striped className="submission-details">
             <thead>
               <tr>
                 <th className="col-id">ID</th>
@@ -188,7 +188,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               </tr>
             </thead>
             <tbody>{results}</tbody>
-          </table>
+          </HTMLTable>
         </ContentCard>
       </>
     );
@@ -221,7 +221,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         ...groups,
         <ContentCard key={idx}>
           {hasSubtasks && this.renderTestGroupHeading(idx, group.testCaseResults)}
-          <table className="bp3-html-table bp3-html-table-striped submission-details">
+          <HTMLTable striped className="submission-details">
             <thead>
               <tr>
                 <th className="col-id">ID</th>
@@ -232,7 +232,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               </tr>
             </thead>
             <tbody>{results}</tbody>
-          </table>
+          </HTMLTable>
         </ContentCard>,
       ];
     }

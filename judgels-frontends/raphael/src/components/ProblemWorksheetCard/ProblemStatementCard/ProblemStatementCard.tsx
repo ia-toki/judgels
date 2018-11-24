@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { HtmlText } from 'components/HtmlText/HtmlText';
@@ -19,7 +20,7 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
         <h2 className="problem-statement__name">
           {alias}. {statement.name}
         </h2>
-        <table className="bp3-html-table bp3-small problem-statement__limits">
+        <HTMLTable condensed className="problem-statement__limits">
           <tbody>
             <tr>
               <td>Time limit</td>
@@ -30,7 +31,7 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
               <td>{this.renderMemoryLimit(statement.memoryLimit)}</td>
             </tr>
           </tbody>
-        </table>
+        </HTMLTable>
         <div className="problem-statement__text">
           <HtmlText>{statement.text}</HtmlText>
         </div>

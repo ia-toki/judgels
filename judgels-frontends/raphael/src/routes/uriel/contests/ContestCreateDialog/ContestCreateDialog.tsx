@@ -1,4 +1,4 @@
-import { Intent, Button, Dialog } from '@blueprintjs/core';
+import { Classes, Intent, Button, Dialog } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Contest, ContestCreateData } from 'modules/api/uriel/contest';
@@ -56,9 +56,9 @@ export class ContestCreateDialog extends React.Component<ContestCreateDialogProp
 
   private renderDialogForm = (fields: JSX.Element, submitButton: JSX.Element) => (
     <>
-      <div className="bp3-dialog-body">{fields}</div>
-      <div className="bp3-dialog-footer">
-        <div className="bp3-dialog-footer-actions">
+      <div className={Classes.DIALOG_BODY}>{fields}</div>
+      <div className={Classes.DIALOG_FOOTER}>
+        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={this.toggleDialog} />
           {submitButton}
         </div>

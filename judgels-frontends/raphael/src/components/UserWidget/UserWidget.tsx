@@ -1,4 +1,4 @@
-import { Icon, Menu, MenuDivider, MenuItem, Popover, Position } from '@blueprintjs/core';
+import { Alignment, Icon, Menu, MenuDivider, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -88,19 +88,19 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
     );
 
     return (
-      <div className="bp3-navbar-group bp3-align-right">
+      <Navbar.Group align={Alignment.RIGHT}>
         <div className="widget-user__avatar-wrapper">
           <img src={avatarUrl} className="widget-user__avatar" />
         </div>
         {popover}
         {responsivePopover}
-      </div>
+      </Navbar.Group>
     );
   };
 
   private renderForGuest = () => {
     return (
-      <div className="bp3-navbar-group bp3-align-right">
+      <Navbar.Group align={Alignment.RIGHT}>
         <div className="widget-user__link">
           <Link data-key="login" to="/login">
             Log in
@@ -112,7 +112,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
           </Link>
         </div>
         {this.renderGuestResponsiveMenu()}
-      </div>
+      </Navbar.Group>
     );
   };
 

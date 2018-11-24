@@ -1,4 +1,4 @@
-import { Icon } from '@blueprintjs/core';
+import { HTMLTable, Icon } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -23,10 +23,10 @@ export interface ContestSubmissionsTableProps {
 export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {
   render() {
     return (
-      <table className="bp3-html-table bp3-html-table-striped table-list-condensed submissions">
+      <HTMLTable striped className="table-list-condensed submissions">
         {this.renderHeader()}
         {this.renderRows()}
-      </table>
+      </HTMLTable>
     );
   }
 

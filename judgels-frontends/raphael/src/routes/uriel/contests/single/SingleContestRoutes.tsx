@@ -1,3 +1,5 @@
+import { Classes } from '@blueprintjs/core';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
@@ -135,7 +137,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Contest Menu',
     action: (
-      <ButtonLink to="/contests" className="bp3-small bp3-icon-chevron-left">
+      <ButtonLink to="/contests" className={classNames(Classes.SMALL, Classes.iconClass('chevron-left'))}>
         Back
       </ButtonLink>
     ),

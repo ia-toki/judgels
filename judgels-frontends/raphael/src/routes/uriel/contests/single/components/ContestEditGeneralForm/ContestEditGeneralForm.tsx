@@ -1,4 +1,4 @@
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
@@ -57,7 +57,7 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
 
   return (
     <form onSubmit={props.handleSubmit}>
-      <table className="bp3-html-table bp3-html-table-striped">
+      <HTMLTable striped>
         <tbody>
           <Field component={FormTableTextInput} {...slugField} />
           <Field component={FormTableTextInput} {...nameField} />
@@ -65,7 +65,7 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
           <Field component={FormTableDateInput} {...beginTimeField} />
           <Field component={FormTableTextInput} {...durationField} />
         </tbody>
-      </table>
+      </HTMLTable>
       <hr />
       <ActionButtons>
         <Button text="Cancel" disabled={props.submitting} onClick={props.onCancel} />

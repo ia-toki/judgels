@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import { parse } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -55,7 +56,7 @@ class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
     ));
 
     return (
-      <table className="bp3-html-table bp3-html-table-striped table-list ratings-page-table">
+      <HTMLTable striped className="table-list ratings-page-table">
         <thead>
           <tr>
             <th className="col-rank">#</th>
@@ -64,7 +65,7 @@ class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
           </tr>
         </thead>
         <tbody>{rows}</tbody>
-      </table>
+      </HTMLTable>
     );
   };
 

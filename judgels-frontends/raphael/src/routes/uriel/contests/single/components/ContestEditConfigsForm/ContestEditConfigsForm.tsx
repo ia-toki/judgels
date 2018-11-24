@@ -1,4 +1,4 @@
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
@@ -111,7 +111,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     return (
       <div className="contest-edit-configs-form__config">
         <h4>ICPC style config</h4>
-        <table className="bp3-html-table bp3-html-table-striped">
+        <HTMLTable striped>
           <tbody>
             <FormTableInput {...allowedLanguageField}>
               <Field component={FormCheckbox} {...allowAllLanguagesField} />
@@ -120,7 +120,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
             </FormTableInput>
             <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
           </tbody>
-        </table>
+        </HTMLTable>
       </div>
     );
   };
@@ -153,7 +153,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     return (
       <div className="contest-edit-configs-form__config">
         <h4>IOI style config</h4>
-        <table className="bp3-html-table bp3-html-table-striped">
+        <HTMLTable striped>
           <tbody>
             <FormTableInput {...allowedLanguageField}>
               <Field component={FormCheckbox} {...allowAllLanguagesField} />
@@ -162,7 +162,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
             </FormTableInput>
             <Field component={FormTableCheckbox} {...usingLastAffectingPenaltyField} />
           </tbody>
-        </table>
+        </HTMLTable>
       </div>
     );
   };
@@ -179,11 +179,11 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     return (
       <div className="contest-edit-configs-form__config">
         <h4>Clarification time limit config</h4>
-        <table className="bp3-html-table bp3-html-table-striped">
+        <HTMLTable striped>
           <tbody>
             <Field component={FormTableTextInput} {...clarificationTimeLimitDurationField} />
           </tbody>
-        </table>
+        </HTMLTable>
       </div>
     );
   };
@@ -200,11 +200,11 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     return (
       <div className="contest-edit-configs-form__config">
         <h4>Delayed grading config</h4>
-        <table className="bp3-html-table bp3-html-table-striped">
+        <HTMLTable striped>
           <tbody>
             <Field component={FormTableTextInput} {...delayedGradingDurationField} />
           </tbody>
-        </table>
+        </HTMLTable>
       </div>
     );
   };
@@ -219,11 +219,11 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     return (
       <div className="contest-edit-configs-form__config">
         <h4>Scoreboard config</h4>
-        <table className="bp3-html-table bp3-html-table-striped">
+        <HTMLTable striped>
           <tbody>
             <Field component={FormTableCheckbox} {...scoreboardIsIncognitoField} />
           </tbody>
-        </table>
+        </HTMLTable>
       </div>
     );
   };
@@ -246,12 +246,12 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     return (
       <div className="contest-edit-configs-form__config">
         <h4>Frozen scoreboard config</h4>
-        <table className="bp3-html-table bp3-html-table-striped">
+        <HTMLTable striped>
           <tbody>
             <Field component={FormTableTextInput} {...frozenScoreboardFreezeTimeField} />
             <Field component={FormTableCheckbox} {...frozenScoreboardIsOfficialAllowedField} />
           </tbody>
-        </table>
+        </HTMLTable>
       </div>
     );
   };
@@ -268,11 +268,11 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
     return (
       <div className="contest-edit-configs-form__config">
         <h4>Virtual contest config</h4>
-        <table className="bp3-html-table bp3-html-table-striped">
+        <HTMLTable striped>
           <tbody>
             <Field component={FormTableTextInput} {...virtualDurationField} />
           </tbody>
-        </table>
+        </HTMLTable>
       </div>
     );
   };

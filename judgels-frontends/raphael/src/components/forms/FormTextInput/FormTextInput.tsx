@@ -1,4 +1,4 @@
-import { FormGroup } from '@blueprintjs/core';
+import { Classes, FormGroup } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -16,7 +16,7 @@ export const FormTextInput = (props: FormTextInputProps) => (
       {...props.input}
       type={props.type || 'text'}
       autoFocus={props.autoFocus}
-      className={classNames('bp3-input', getIntentClassName(props.meta))}
+      className={classNames(Classes.INPUT, getIntentClassName(props.meta))}
     />
     <FormInputValidation meta={props.meta} />
   </FormGroup>

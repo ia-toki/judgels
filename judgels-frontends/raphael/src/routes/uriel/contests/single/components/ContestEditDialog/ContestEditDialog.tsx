@@ -1,4 +1,4 @@
-import { Button, Dialog, Icon, Intent, Tab, Tabs } from '@blueprintjs/core';
+import { Classes, Button, Dialog, Icon, Intent, Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
@@ -71,7 +71,7 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
         canOutsideClickClose={false}
         enforceFocus={false}
       >
-        <div className="bp3-dialog-body">
+        <div className={Classes.DIALOG_BODY}>
           <Tabs id="contest-edit-dialog-tabs" vertical renderActiveTabPanelOnly>
             <Tab id="general" panel={<ContestEditGeneralTab />}>
               General
@@ -91,9 +91,9 @@ export class ContestEditDialog extends React.Component<ContestEditDialogProps, C
             </Tab>
           </Tabs>
         </div>
-        <div className="bp3-dialog-footer">
+        <div className={Classes.DIALOG_FOOTER}>
           <hr />
-          <div className="bp3-dialog-footer-actions">
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button text="Close" onClick={this.toggleDialog} />
           </div>
         </div>

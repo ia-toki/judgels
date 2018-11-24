@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { Card } from 'components/Card/Card';
@@ -9,7 +10,7 @@ import './RatingSystemPage.css';
 const RatingSystemPage = () => (
   <Card title="Rating system">
     <h4>Rating table</h4>
-    <table className="bp3-html-table table-list rating-system-page">
+    <HTMLTable className="table-list rating-system-page">
       <thead>
         <tr>
           <th>Rating</th>
@@ -59,7 +60,7 @@ const RatingSystemPage = () => (
           <td>Division 2</td>
         </tr>
       </tbody>
-    </table>
+    </HTMLTable>
 
     <hr />
 

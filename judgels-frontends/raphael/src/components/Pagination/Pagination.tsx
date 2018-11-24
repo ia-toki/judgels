@@ -1,3 +1,5 @@
+import { Classes } from '@blueprintjs/core';
+import * as classNames from 'classnames';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import * as ReactPaginate from 'react-paginate';
@@ -67,17 +69,17 @@ class Pagination extends React.PureComponent<PaginationProps, {}> {
         pageCount={this.getTotalPages()}
         pageRangeDisplayed={3}
         marginPagesDisplayed={2}
-        pageClassName="bp3-button pagination__item"
+        pageClassName={classNames(Classes.BUTTON, 'pagination__item')}
         previousLabel="<"
         nextLabel=">"
         pageLinkClassName="pagination__link"
         nextLinkClassName="pagination__link"
         previousLinkClassName="pagination__link"
-        breakClassName="bp3-button bp3-disabled"
-        containerClassName="bp3-button-group"
-        activeClassName="bp3-button bp3-active pagination__item"
-        previousClassName="bp3-button pagination__item"
-        nextClassName="bp3-button pagination__item"
+        breakClassName={classNames(Classes.BUTTON, Classes.DISABLED)}
+        containerClassName={Classes.BUTTON_GROUP}
+        activeClassName={classNames(Classes.BUTTON, Classes.ACTIVE, 'pagination__item')}
+        previousClassName={classNames(Classes.BUTTON, 'pagination__item')}
+        nextClassName={classNames(Classes.BUTTON, 'pagination__item')}
         onPageChange={this.onChangePage}
       />
     );

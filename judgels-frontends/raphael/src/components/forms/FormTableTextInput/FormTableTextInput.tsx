@@ -1,3 +1,4 @@
+import { Classes } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -14,7 +15,7 @@ export const FormTableTextInput = (props: FormTableTextInputProps) => (
       {...props.input}
       type={props.type || 'text'}
       disabled={props.disabled}
-      className={classNames('bp3-input', getIntentClassName(props.meta))}
+      className={classNames(Classes.INPUT, getIntentClassName(props.meta))}
     />
   </FormTableInput>
 );

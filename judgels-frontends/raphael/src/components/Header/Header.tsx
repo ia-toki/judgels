@@ -1,3 +1,4 @@
+import { Alignment, Navbar } from '@blueprintjs/core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -17,22 +18,22 @@ class Header extends React.PureComponent<HeaderProps> {
     const UW = this.props.userWidget;
 
     return (
-      <nav className="bp3-navbar header">
+      <Navbar className="header">
         <div className="header__wrapper">
-          <div className="bp3-navbar-group bp3-align-left">
+          <Navbar.Group align={Alignment.LEFT}>
             <div>
               <Link to="/">
                 <img src={logo} className="header__logo" />
               </Link>
             </div>
-            <div className="bp3-navbar-heading header__title">{APP_CONFIG.name}</div>
-            <span className="bp3-navbar-divider" />
+            <Navbar.Heading className="header__title">{APP_CONFIG.name}</Navbar.Heading>
+            <Navbar.Divider />
             <div className="header__subtitle">{APP_CONFIG.slogan}</div>
-          </div>
+          </Navbar.Group>
 
           {<UW />}
         </div>
-      </nav>
+      </Navbar>
     );
   }
 }

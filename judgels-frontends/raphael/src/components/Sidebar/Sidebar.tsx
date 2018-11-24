@@ -77,7 +77,7 @@ export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
         usePortal={false}
       >
         <div>
-          <p className="card-sidebar__responsive__menu">
+          <p>
             <Icon icon="list" iconSize={Icon.SIZE_LARGE} />&nbsp;<small>{title}</small>
           </p>
         </div>

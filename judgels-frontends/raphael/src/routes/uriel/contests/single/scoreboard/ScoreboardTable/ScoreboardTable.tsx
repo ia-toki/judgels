@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -14,12 +15,10 @@ export class ScoreboardTableProps {
 export class ScoreboardTable extends React.PureComponent<ScoreboardTableProps> {
   render() {
     return (
-      <table
-        className={classNames('bp3-html-table', 'bp3-html-table-striped', 'scoreboard__content', this.props.className)}
-      >
+      <HTMLTable striped className={classNames('scoreboard__content', this.props.className)}>
         {this.renderHeader(this.props.state)}
         {this.props.children}
-      </table>
+      </HTMLTable>
     );
   }
 

@@ -1,4 +1,4 @@
-import { FormGroup } from '@blueprintjs/core';
+import { Classes, FormGroup } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -21,7 +21,7 @@ export const FormTextArea = (props: FormTextAreaProps) => (
   >
     <textarea
       {...props.input}
-      className={classNames('bp3-input', 'form-table-textarea', getIntentClassName(props.meta))}
+      className={classNames(Classes.INPUT, 'form-table-textarea', getIntentClassName(props.meta))}
       rows={props.rows}
       autoFocus={props.autoFocus}
     />

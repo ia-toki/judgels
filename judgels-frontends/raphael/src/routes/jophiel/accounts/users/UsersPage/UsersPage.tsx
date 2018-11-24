@@ -3,7 +3,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { parse, stringify } from 'query-string';
-import { Icon } from '@blueprintjs/core';
+import { HTMLTable, Icon } from '@blueprintjs/core';
 
 import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { Card } from 'components/Card/Card';
@@ -59,10 +59,10 @@ export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageStat
     }
     return (
       <Card title="Users">
-        <table className="bp3-html-table bp3-html-table-striped table-list users-page">
+        <HTMLTable striped className="table-list users-page">
           {this.renderHeader()}
           {this.renderRows(users.page)}
-        </table>
+        </HTMLTable>
         <Pagination currentPage={1} pageSize={UsersPage.PAGE_SIZE} onChangePage={this.onChangePage} />
       </Card>
     );

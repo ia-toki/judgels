@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { UserRef } from 'components/UserRef/UserRef';
@@ -40,9 +41,9 @@ export class ContestContestantRemoveResultTable extends React.PureComponent<Cont
         <h5>
           {title} ({usernames.length})
         </h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-dialog-result-table">
+        <HTMLTable striped className="table-list-condensed contest-contestant-dialog-result-table">
           <tbody>{rows}</tbody>
-        </table>
+        </HTMLTable>
       </>
     );
   };
@@ -67,9 +68,9 @@ export class ContestContestantRemoveResultTable extends React.PureComponent<Cont
     return (
       <>
         <h5>Not contestants ({usernames.length})</h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed contest-contestant-dialog-result-table">
+        <HTMLTable striped className="table-list-condensed contest-contestant-dialog-result-table">
           <tbody>{rows}</tbody>
-        </table>
+        </HTMLTable>
       </>
     );
   };

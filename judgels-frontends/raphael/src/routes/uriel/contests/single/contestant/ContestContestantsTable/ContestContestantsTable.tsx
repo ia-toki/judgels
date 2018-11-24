@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { UserRef } from 'components/UserRef/UserRef';
@@ -14,10 +15,10 @@ export interface ContestContestantsTableProps {
 export class ContestContestantsTable extends React.PureComponent<ContestContestantsTableProps> {
   render() {
     return (
-      <table className="bp3-html-table bp3-html-table-striped table-list-condensed contestants-table">
+      <HTMLTable striped className="table-list-condensed contestants-table">
         {this.renderHeader()}
         {this.renderRows()}
-      </table>
+      </HTMLTable>
     );
   }
 

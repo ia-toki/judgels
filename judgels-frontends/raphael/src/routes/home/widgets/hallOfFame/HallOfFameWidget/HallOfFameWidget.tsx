@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
@@ -59,7 +60,7 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
     ));
 
     return (
-      <table className="bp3-html-table bp3-html-table-striped table-list hall-of-fame-widget__table">
+      <HTMLTable striped className="table-list hall-of-fame-widget__table">
         <thead>
           <tr>
             <th className="col-rank">#</th>
@@ -68,7 +69,7 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
           </tr>
         </thead>
         <tbody>{rows}</tbody>
-      </table>
+      </HTMLTable>
     );
   };
 }

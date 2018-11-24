@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 import FlagIcon from 'react-flag-kit/lib/FlagIcon';
 import { connect } from 'react-redux';
@@ -97,7 +98,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
   private renderDetails = (profile: BasicProfile) => {
     return (
       <div className="basic-profile-card__details">
-        <table className="bp3-html-table bp3-html-table-striped basic-profile-card__details-table">
+        <HTMLTable striped className="basic-profile-card__details-table">
           <tbody>
             <tr>
               <td className="basic-profile-card__details-keys">Name</td>
@@ -108,7 +109,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
               <td className={getRatingClass(profile.rating)}>{profile.rating || '-'}</td>
             </tr>
           </tbody>
-        </table>
+        </HTMLTable>
       </div>
     );
   };

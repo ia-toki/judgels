@@ -1,3 +1,4 @@
+import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { UserRef } from 'components/UserRef/UserRef';
@@ -42,9 +43,9 @@ export class AdminAddResultTable extends React.PureComponent<AdminAddResultTable
         <h5>
           {title} ({usernames.length})
         </h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed uriel-admin-dialog-result-table">
+        <HTMLTable striped className="table-list-condensed uriel-admin-dialog-result-table">
           <tbody>{rows}</tbody>
-        </table>
+        </HTMLTable>
       </>
     );
   };
@@ -72,9 +73,9 @@ export class AdminAddResultTable extends React.PureComponent<AdminAddResultTable
     return (
       <>
         <h5>Unknown users ({usernames.length})</h5>
-        <table className="bp3-html-table bp3-html-table-striped table-list-condensed uriel-admin-dialog-result-table">
+        <HTMLTable striped className="table-list-condensed uriel-admin-dialog-result-table">
           <tbody>{rows}</tbody>
-        </table>
+        </HTMLTable>
       </>
     );
   };

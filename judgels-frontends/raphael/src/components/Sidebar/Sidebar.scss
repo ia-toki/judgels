@@ -5,17 +5,13 @@
     outline: none;
   }
 
-  svg {
-    height: 50px;
+  .bp3-icon {
+    padding-bottom: 1px;
   }
 
   .card__content {
     padding-top: 0;
     padding-bottom: 0;
-  }
-
-  .bp3-tag {
-    display: inline;
   }
 
   .bp3-tab-list {
@@ -52,9 +48,9 @@
 }
 
 .card-sidebar__arrow {
-  line-height: 50px !important;
   color: $primary-color !important;
   float: right;
+  padding-top: 15px;
 }
 
 .card-sidebar__full {
@@ -78,12 +74,6 @@
 
     .bp3-tab-list {
       left: 0;
-    }
-  }
-
-  .card-sidebar__responsive__menu {
-    svg {
-      height: inherit;
     }
   }
 

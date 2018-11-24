@@ -1,3 +1,4 @@
+import { HTMLSelect } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -9,11 +10,9 @@ import './FormTableSelect.css';
 export const FormTableSelect = (props: FormTableInputProps) => {
   return (
     <FormTableInput {...props}>
-      <div className="bp3-select">
-        <select {...props.input} className={classNames(getIntentClassName(props.meta))}>
-          {props.children}
-        </select>
-      </div>
+      <HTMLSelect {...props.input} className={classNames(getIntentClassName(props.meta))}>
+        {props.children}
+      </HTMLSelect>
     </FormTableInput>
   );
 };
