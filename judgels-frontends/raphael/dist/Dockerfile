@@ -1,4 +1,4 @@
-FROM nginx:1.13.9-alpine
+FROM nginx:1.15.6-alpine
 
 WORKDIR /judgels/raphael
 
