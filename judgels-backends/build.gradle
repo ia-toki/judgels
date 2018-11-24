@@ -2,7 +2,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            url 'https://dl.bintray.com/palantir/releases/'
+            url 'https://dl.bintray.com/palantir/releases'
         }
     }
 
@@ -24,10 +24,7 @@ allprojects {
         mavenCentral()
 
         maven {
-            url 'http://palantir.bintray.com/releases'
-        }
-        maven {
-            url 'https://dl.bintray.com/judgels/releases'
+            url 'https://dl.bintray.com/palantir/releases'
         }
     }
 
