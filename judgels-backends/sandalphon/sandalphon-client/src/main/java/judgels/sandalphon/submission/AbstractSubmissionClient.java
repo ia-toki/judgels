@@ -9,6 +9,7 @@ import judgels.gabriel.api.GradingRequest;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.SubmissionData;
 import judgels.sandalphon.persistence.AbstractGradingModel;
 import judgels.sandalphon.persistence.AbstractSubmissionModel;
 import judgels.sealtiel.api.message.MessageData;

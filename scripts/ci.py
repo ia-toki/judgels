@@ -19,8 +19,9 @@ MODULES = OrderedDict([
 
     (':jophiel:jophiel-api', {':judgels-commons:judgels-persistence-api', ':judgels-commons:judgels-service-api'}),
     (':jophiel:jophiel-app', {':jophiel:jophiel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-recaptcha', ':judgels-commons:judgels-service-persistence'}),
+    (':jophiel:jophiel-client', {':jophiel:jophiel-api'}),
     (':jophiel:jophiel-dist', set()),
-    (':jophiel', {':jophiel:jophiel-app', ':jophiel:jophiel-api', ':jophiel:jophiel-dist'}),
+    (':jophiel', {':jophiel:jophiel-app', ':jophiel:jophiel-client', ':jophiel:jophiel-api', ':jophiel:jophiel-dist'}),
 
     (':sealtiel:sealtiel-api', {':judgels-commons:judgels-service-api'}),
     (':sealtiel:sealtiel-app', {':sealtiel:sealtiel-api', ':judgels-commons:judgels-service-core'}),
@@ -28,10 +29,11 @@ MODULES = OrderedDict([
     (':sealtiel', {':sealtiel:sealtiel-app', ':sealtiel:sealtiel-api', ':sealtiel:sealtiel-dist'}),
 
     (':sandalphon:sandalphon-api', {':jophiel:jophiel-api', ':gabriel:gabriel-api'}),
-    (':sandalphon', {':sandalphon:sandalphon-api'}),
+    (':sandalphon:sandalphon-client', {':sandalphon:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':sealtiel:sealtiel-api'}),
+    (':sandalphon', {':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client'}),
 
     (':uriel:uriel-api', {':sandalphon:sandalphon-api'}),
-    (':uriel:uriel-app', {':uriel:uriel-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':sealtiel:sealtiel-api'}),
+    (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':sealtiel:sealtiel-api'}),
     (':uriel:uriel-dist', set()),
     (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
 

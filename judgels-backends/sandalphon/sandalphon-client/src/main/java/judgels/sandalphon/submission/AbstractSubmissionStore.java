@@ -16,6 +16,7 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.SubmissionData;
 import judgels.sandalphon.persistence.AbstractGradingModel;
 import judgels.sandalphon.persistence.AbstractSubmissionModel;
 import judgels.sandalphon.persistence.BaseGradingDao;

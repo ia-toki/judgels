@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.sandalphon.api.submission.Submission;
-import judgels.sandalphon.submission.SubmissionData;
+import judgels.sandalphon.api.submission.SubmissionData;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;

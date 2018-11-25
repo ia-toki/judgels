@@ -11,8 +11,10 @@ include ':judgels-commons:judgels-service-persistence'
 
 include ':jophiel:jophiel-api'
 include ':jophiel:jophiel-app'
+include ':jophiel:jophiel-client'
 include ':jophiel:jophiel-dist'
 
+include ':sandalphon:sandalphon-client'
 include ':sandalphon:sandalphon-api'
 
 include ':sealtiel:sealtiel-api'

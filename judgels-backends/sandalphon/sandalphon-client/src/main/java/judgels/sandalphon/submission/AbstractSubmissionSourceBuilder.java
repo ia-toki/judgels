@@ -9,23 +9,20 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
-import judgels.uriel.submission.SubmissionFs;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
-public class SubmissionSourceBuilder {
+public abstract class AbstractSubmissionSourceBuilder {
     private static final String SOURCE_FILES_PART_PREFIX = "sourceFiles.";
 
     private final FileSystem submissionFs;
 
-    @Inject
-    public SubmissionSourceBuilder(@SubmissionFs FileSystem submissionFs) {
+    public AbstractSubmissionSourceBuilder(FileSystem submissionFs) {
         this.submissionFs = submissionFs;
     }
 

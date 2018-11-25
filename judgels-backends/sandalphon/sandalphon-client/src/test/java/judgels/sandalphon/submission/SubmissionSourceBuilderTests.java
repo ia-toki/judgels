@@ -14,12 +14,12 @@ class SubmissionSourceBuilderTests {
 
     private InMemoryFileSystem submissionFs;
 
-    private SubmissionSourceBuilder sourceBuilder;
+    private AbstractSubmissionSourceBuilder sourceBuilder;
 
     @BeforeEach
     void before() {
         submissionFs = new InMemoryFileSystem();
-        sourceBuilder = new SubmissionSourceBuilder(submissionFs);
+        sourceBuilder = new AbstractSubmissionSourceBuilder(submissionFs) {};
     }
 
     @Test

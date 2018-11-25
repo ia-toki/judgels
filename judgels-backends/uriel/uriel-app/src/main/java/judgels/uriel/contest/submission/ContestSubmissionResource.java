@@ -37,11 +37,9 @@ import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.SubmissionData;
 import judgels.sandalphon.api.submission.SubmissionWithSource;
 import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
-import judgels.sandalphon.submission.SubmissionData;
-import judgels.sandalphon.submission.SubmissionDownloader;
-import judgels.sandalphon.submission.SubmissionSourceBuilder;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
@@ -58,6 +56,8 @@ import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
+import judgels.uriel.submission.SubmissionDownloader;
+import judgels.uriel.submission.SubmissionSourceBuilder;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ContestSubmissionResource implements ContestSubmissionService {

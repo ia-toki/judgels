@@ -1,4 +1,4 @@
-package judgels.sandalphon.submission;
+package judgels.sandalphon.api.submission;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;

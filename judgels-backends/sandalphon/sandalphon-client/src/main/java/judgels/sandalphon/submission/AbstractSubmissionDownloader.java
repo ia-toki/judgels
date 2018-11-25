@@ -7,17 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import javax.inject.Inject;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 
-public class SubmissionDownloader {
-    private final SubmissionSourceBuilder sourceBuilder;
+public class AbstractSubmissionDownloader {
+    private final AbstractSubmissionSourceBuilder sourceBuilder;
 
-    @Inject
-    public SubmissionDownloader(SubmissionSourceBuilder sourceBuilder) {
+    public AbstractSubmissionDownloader(AbstractSubmissionSourceBuilder sourceBuilder) {
         this.sourceBuilder = sourceBuilder;
     }
 

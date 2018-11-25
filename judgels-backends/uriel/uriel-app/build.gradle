@@ -2,9 +2,8 @@ apply from: '../../gradle/integTest.gradle'
 
 dependencies {
     compile project(':uriel:uriel-api')
-    compile project(':judgels-commons:judgels-fs')
-    compile project(':judgels-commons:judgels-persistence-core')
-    compile project(':judgels-commons:judgels-service-persistence')
+    compile project(':jophiel:jophiel-client')
+    compile project(':sandalphon:sandalphon-client')
     compile project(':sealtiel:sealtiel-api')
 
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
