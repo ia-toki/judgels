@@ -4,11 +4,13 @@
 [![GitHub Release](https://img.shields.io/github/tag/ia-toki/judgels.svg)](https://github.com/ia-toki/judgels/releases)
 [![License](https://img.shields.io/github/license/ia-toki/judgels.svg)](https://github.com/ia-toki/judgels/blob/master/LICENSE.txt)
 
-<img src="https://raw.githubusercontent.com/ia-toki/judgels/master/judgels-frontends/raphael/src/assets/images/logo.png" align="left" height="100"/>
+<img src="https://raw.githubusercontent.com/ia-toki/judgels/master/judgels-frontends/raphael/src/assets/images/logo.png" align="left" height="100" hspace="5"/>
 
 **Judgels** is a competitive programming platform. With Judgels, you can prepare problems with various types and languages, set up test data, and test solutions. Then, you can run contests with various configurations. Users can be managed with various authorizations: as contestants, supervisors, and managers. Equipped with sandboxed grader as well.
 
 ## Features
+
+These are non-exhaustive lists.
 
 ### Problem management
 - multilanguage problem statements
@@ -39,29 +41,3 @@ of an Autograder System Family](http://www.ioinformatics.org/oi/pdf/v8_2014_69_8
 ## License
 
 GNU GPL version 2.
-
-## Usages
-
-Judgels has been used in the following contests:
-
-### International contests
-
-- **APIO** (Asia-Pacific Informatics Olympiad)
-  - APIO 2015, Indonesia
-
-- **TOKI Open Contests**
-  - TOKI Regular Open Contests
-
-### Indonesian contests
-
-- **OSN Informatika** (Olimpiade Sains Nasional Informatika / National Olympiad in Informatics)
-  - OSN 2015 - 2018
-
-- **Pemrograman GEMASTIK** (Pagelaran Mahasiswa Nasional Bidang Teknologi Informasi dan Komunikasi)
-  - GEMASTIK 2016 - 2018
-
-- **Pemrograman CompFest** (Computer Festival)
-  - CompFest 2016 - 2018
-
-- **Indo2SV Selection** (Selection for Indonesian students to intern in Silicon Valley)
-  - Indo2SV 2015, 2017
