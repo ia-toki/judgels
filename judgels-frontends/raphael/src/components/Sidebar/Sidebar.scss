@@ -77,6 +77,12 @@
     }
   }
 
+  .card-sidebar__responsive-menu {
+    .bp3-icon {
+      padding-bottom: 0 !important;
+    }
+  }
+
   .bp3-overlay-content {
     top: -10px !important;
   }

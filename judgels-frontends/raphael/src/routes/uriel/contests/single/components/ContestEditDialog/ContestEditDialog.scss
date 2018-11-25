@@ -78,6 +78,10 @@
 @media only screen and (max-width: 750px) {
   .contest-edit-dialog-button {
     margin-top: -5px;
+
+    .bp3-icon {
+      margin-right: 0;
+    }
   }
 
   .contest-edit-dialog-button__text {
