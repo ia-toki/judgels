@@ -1,11 +1,13 @@
 dependencies {
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api "javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion"
+    api "com.palantir.conjure.java.api:errors:$conjureJavaRuntimeApiVersion"
+    api "com.palantir.conjure.java.api:service-config:$conjureJavaRuntimeApiVersion"
 
-    compileOnly "org.immutables:value:$immutablesVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
-    testCompile "org.assertj:assertj-core:$assertJVersion"
-    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
 
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }

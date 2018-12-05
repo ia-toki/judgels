@@ -1,6 +1,6 @@
 dependencies {
-    compile project(':judgels-commons:judgels-persistence-core')
+    api project(':judgels-commons:judgels-persistence-core')
 
-    compile "com.h2database:h2:$h2Version"
-    compile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    api "com.h2database:h2:$h2Version"
+    api "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
 }

@@ -40,7 +40,7 @@ dependencies {
 
 subprojects {
     apply plugin: 'idea'
-    apply plugin: 'java'
+    apply plugin: 'java-library'
 
     apply plugin: 'com.palantir.baseline-checkstyle'
     apply plugin: 'com.palantir.baseline-idea'

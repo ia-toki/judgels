@@ -1,35 +1,37 @@
 apply from: '../../gradle/integTest.gradle'
 
 dependencies {
-    compile project(':uriel:uriel-api')
-    compile project(':jophiel:jophiel-client')
-    compile project(':sandalphon:sandalphon-client')
-    compile project(':sealtiel:sealtiel-api')
+    implementation project(':uriel:uriel-api')
+    implementation project(':jophiel:jophiel-client')
+    implementation project(':sandalphon:sandalphon-client')
+    implementation project(':sealtiel:sealtiel-api')
 
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "com.google.dagger:dagger:$daggerVersion"
-    compile "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    compile "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
-    compile "io.dropwizard:dropwizard-core:$dropwizardVersion"
-    compile "io.dropwizard:dropwizard-forms:$dropwizardVersion"
-    compile "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+    implementation "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
+    implementation "io.dropwizard:dropwizard-core:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
-    compileOnly "org.immutables:value:$immutablesVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
     runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
 
-    testCompile project(':judgels-commons:judgels-persistence-testing')
-    testCompile "org.assertj:assertj-core:$assertJVersion"
-    testCompile "org.awaitility:awaitility:$awaitilityVersion"
-    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
-    testCompile "org.mockito:mockito-core:$mockitoVersion"
-    testCompile "com.github.tomakehurst:wiremock:$wiremockVersion"
+    testImplementation project(':judgels-commons:judgels-persistence-testing')
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.awaitility:awaitility:$awaitilityVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "com.github.tomakehurst:wiremock:$wiremockVersion"
 
-    integTestCompile "io.dropwizard:dropwizard-testing:$dropwizardVersion"
-    integTestCompile "com.palantir.conjure.java.api:test-utils:$conjureJavaRuntimeApiVersion"
-    integTestCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    integTestImplementation "io.dropwizard:dropwizard-testing:$dropwizardVersion"
+    integTestImplementation "com.palantir.conjure.java.api:test-utils:$conjureJavaRuntimeApiVersion"
+    integTestImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+
+    integTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"

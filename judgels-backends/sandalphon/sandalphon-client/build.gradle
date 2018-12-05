@@ -1,18 +1,18 @@
 dependencies {
-    compile project(':sandalphon:sandalphon-api')
-    compile project(':judgels-commons:judgels-fs')
-    compile project(':judgels-commons:judgels-persistence-core')
-    compile project(':judgels-commons:judgels-service-persistence')
-    compile project(':sealtiel:sealtiel-api')
+    api project(':sandalphon:sandalphon-api')
+    api project(':judgels-commons:judgels-fs')
+    api project(':judgels-commons:judgels-persistence-core')
+    api project(':judgels-commons:judgels-service-persistence')
+    api project(':sealtiel:sealtiel-api')
 
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api "io.dropwizard:dropwizard-forms:$dropwizardVersion"
 
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
-    compileOnly "org.immutables:value:$immutablesVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
-    testCompile "org.assertj:assertj-core:$assertJVersion"
-    testCompile "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
 
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"

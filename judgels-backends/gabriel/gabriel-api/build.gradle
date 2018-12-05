@@ -1,7 +1,7 @@
 dependencies {
-    compileOnly "org.immutables:value:$immutablesVersion"
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }

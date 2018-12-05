@@ -1,8 +1,8 @@
 dependencies {
-    compile project(':jophiel:jophiel-api')
-    compile project(':gabriel:gabriel-api')
+    api project(':jophiel:jophiel-api')
+    api project(':gabriel:gabriel-api')
 
-    compileOnly "org.immutables:value:$immutablesVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }

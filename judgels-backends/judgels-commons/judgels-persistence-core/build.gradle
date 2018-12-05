@@ -1,65 +1,20 @@
-sourceSets {
-    integTest {
-        java {
-            compileClasspath += main.output + test.output + project.configurations.annotationProcessor
-            runtimeClasspath += main.output + test.output
-            srcDir file('src/integTest/java')
-        }
-        resources.srcDir file('src/integTest/resources')
-    }
-}
-
-configurations {
-    integTestCompile.extendsFrom testCompile
-    integTestRuntime.extendsFrom testRuntime
-}
-
-idea.module {
-    scopes.TEST.plus += [configurations.integTestRuntimeClasspath, configurations.integTestCompileClasspath]
-
-    testSourceDirs += file('src/integTest/java')
-    testSourceDirs += file('src/integTest/resources')
-
-    iml.withXml {
-        def content = it.asNode().component.find { it.'@name' == 'NewModuleRootManager' }.content[0]
-        content.sourceFolder.each { sourceFolder ->
-            if (sourceFolder.@url?.endsWith('/resources')) {
-                sourceFolder.attributes().with {
-                    boolean isTestSource = (remove('isTestSource') == 'true')
-                    put('type', isTestSource ? 'java-test-resource' : 'java-resource')
-                }
-            }
-        }
-    }
-}
-
-task integTest(type: Test) {
-    group 'Verification'
-    description 'Runs the integration tests.'
-
-    dependencies {
-        testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
-        testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
-    }
-
-    testClassesDirs = sourceSets.integTest.output.classesDirs
-    classpath = sourceSets.integTest.runtimeClasspath
-
-    check.dependsOn integTest
-}
+apply from: '../../gradle/integTest.gradle'
 
 dependencies {
-    compile project(':judgels-commons:judgels-persistence-api')
-    compile "org.apache.commons:commons-rng-core:$apacheCommonsRngVersion"
-    compile "org.apache.commons:commons-rng-simple:$apacheCommonsRngVersion"
-    compile "org.apache.commons:commons-text:$apacheCommonsTextVersion"
-    compile "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
+    api project(':judgels-commons:judgels-persistence-api')
+    api "io.dropwizard:dropwizard-hibernate:$dropwizardVersion"
+
+    implementation "org.apache.commons:commons-rng-core:$apacheCommonsRngVersion"
+    implementation "org.apache.commons:commons-rng-simple:$apacheCommonsRngVersion"
+    implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
 
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
-    compileOnly "org.immutables:value:$immutablesVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
-    testCompile project(':judgels-commons:judgels-persistence-testing')
-    testCompile "org.assertj:assertj-core:$assertJVersion"
+    testImplementation project(':judgels-commons:judgels-persistence-testing')
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+
+    integTestAnnotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
 
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"

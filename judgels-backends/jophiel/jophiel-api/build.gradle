@@ -1,10 +1,10 @@
 dependencies {
-    compile project(':judgels-commons:judgels-persistence-api')
-    compile project(':judgels-commons:judgels-service-api')
+    api project(':judgels-commons:judgels-persistence-api')
+    api project(':judgels-commons:judgels-service-api')
 
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 
-    compileOnly "org.immutables:value:$immutablesVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }

@@ -1,15 +1,17 @@
 dependencies {
-    compile project(':judgels-commons:judgels-service-api')
+    api project(':judgels-commons:judgels-service-api')
 
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "com.google.dagger:dagger:$daggerVersion"
-    compile "com.palantir.conjure.java.runtime:conjure-java-jaxrs-client:$conjureJavaRuntimeVersion"
-    compile "com.palantir.conjure.java.runtime:conjure-java-jersey-server:$conjureJavaRuntimeVersion"
-    compile "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api "com.google.dagger:dagger:$daggerVersion"
+    api "io.dropwizard:dropwizard-jersey:$dropwizardVersion"
+
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion"
+    implementation "com.palantir.conjure.java.runtime:conjure-java-jackson-serialization:$conjureJavaRuntimeVersion"
+    implementation "com.palantir.conjure.java.runtime:conjure-java-jaxrs-client:$conjureJavaRuntimeVersion"
+    implementation "com.palantir.conjure.java.runtime:conjure-java-jersey-server:$conjureJavaRuntimeVersion"
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
-    compileOnly "org.immutables:value:$immutablesVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
     testCompile "com.google.guava:guava:$guavaVersion"
     testCompile "org.assertj:assertj-core:$assertJVersion"

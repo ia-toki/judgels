@@ -1,8 +1,7 @@
 dependencies {
-    compile project(':sandalphon:sandalphon-api')
-    compile "com.palantir.conjure.java.api:errors:$conjureJavaRuntimeApiVersion"
+    api project(':sandalphon:sandalphon-api')
 
-    compileOnly "org.immutables:value:$immutablesVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }

@@ -1,6 +1,5 @@
 dependencies {
-    compile project(':jophiel:jophiel-api')
+    api project(':jophiel:jophiel-api')
 
-    compile "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    compile "com.palantir.conjure.java.api:errors:$conjureJavaRuntimeApiVersion"
+    implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
 }

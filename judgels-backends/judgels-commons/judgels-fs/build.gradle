@@ -1,11 +1,12 @@
 dependencies {
-    compile "com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version"
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "com.google.dagger:dagger:$daggerVersion"
-    compile "com.google.guava:guava:$guavaVersion"
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api "com.google.dagger:dagger:$daggerVersion"
+
+    implementation "com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version"
+    implementation "com.google.guava:guava:$guavaVersion"
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
-    compileOnly "org.immutables:value:$immutablesVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"
