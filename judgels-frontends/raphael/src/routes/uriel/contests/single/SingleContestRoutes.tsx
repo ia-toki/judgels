@@ -21,8 +21,8 @@ import ContestStateWidget from './components/ContestStateWidget/ContestStateWidg
 import { LoadingContestStateWidget } from './components/ContestStateWidget/LoadingContestStateWidget';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
-import ContestContestantsPage from './contestant/ContestContestantsPage/ContestContestantsPage';
-import ContestManagersPage from './manager/ContestManagersPage/ContestManagersPage';
+import ContestContestantsPage from './contestants/ContestContestantsPage/ContestContestantsPage';
+import ContestManagersPage from './managers/ContestManagersPage/ContestManagersPage';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestClarificationsPage from './clarifications/ContestClarificationsPage/ContestClarificationsPage';
