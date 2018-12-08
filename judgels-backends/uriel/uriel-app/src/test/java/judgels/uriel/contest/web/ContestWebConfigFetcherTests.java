@@ -9,6 +9,7 @@ import static judgels.uriel.api.contest.web.ContestState.STARTED;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
+import static judgels.uriel.api.contest.web.ContestTab.FILES;
 import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
@@ -29,6 +30,7 @@ import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
 import judgels.uriel.contest.contestant.ContestContestantRoleChecker;
+import judgels.uriel.contest.file.ContestFileRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
@@ -55,6 +57,7 @@ class ContestWebConfigFetcherTests {
     @Mock private ContestClarificationRoleChecker clarificationRoleChecker;
     @Mock private ContestScoreboardRoleChecker scoreboardRoleChecker;
     @Mock private ContestContestantRoleChecker contestantRoleChecker;
+    @Mock private ContestFileRoleChecker fileRoleChecker;
     @Mock private ContestAnnouncementDao announcementDao;
     @Mock private ContestClarificationDao clarificationDao;
     @Mock private ContestTimer contestTimer;
@@ -74,6 +77,7 @@ class ContestWebConfigFetcherTests {
                 clarificationRoleChecker,
                 scoreboardRoleChecker,
                 contestantRoleChecker,
+                fileRoleChecker,
                 announcementDao,
                 clarificationDao,
                 contestTimer);
@@ -114,6 +118,9 @@ class ContestWebConfigFetcherTests {
 
         when(contestantRoleChecker.canSupervise(SUPERVISOR, contest)).thenReturn(true);
         when(contestantRoleChecker.canSupervise(ADMIN, contest)).thenReturn(true);
+
+        when(fileRoleChecker.canSupervise(SUPERVISOR, contest)).thenReturn(true);
+        when(fileRoleChecker.canSupervise(ADMIN, contest)).thenReturn(true);
     }
 
     @Test
@@ -125,10 +132,10 @@ class ContestWebConfigFetcherTests {
                 .containsExactly(ANNOUNCEMENTS, PROBLEMS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
 
         assertThat(webConfigFetcher.fetchConfig(SUPERVISOR, contest).getVisibleTabs())
-                .containsExactly(ANNOUNCEMENTS, PROBLEMS, CONTESTANTS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
+                .containsExactly(ANNOUNCEMENTS, PROBLEMS, CONTESTANTS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD, FILES);
 
         assertThat(webConfigFetcher.fetchConfig(ADMIN, contest).getVisibleTabs()).containsExactly(
-                ANNOUNCEMENTS, PROBLEMS, CONTESTANTS, MANAGERS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD);
+                ANNOUNCEMENTS, PROBLEMS, CONTESTANTS, MANAGERS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD, FILES);
     }
 
     @Test

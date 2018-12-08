@@ -3,6 +3,7 @@ package judgels.uriel.contest.web;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
+import static judgels.uriel.api.contest.web.ContestTab.FILES;
 import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
@@ -22,6 +23,7 @@ import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
 import judgels.uriel.contest.contestant.ContestContestantRoleChecker;
+import judgels.uriel.contest.file.ContestFileRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
@@ -36,6 +38,7 @@ public class ContestWebConfigFetcher {
     private final ContestClarificationRoleChecker clarificationRoleChecker;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestContestantRoleChecker contestantRoleChecker;
+    private final ContestFileRoleChecker fileRoleChecker;
     private final ContestAnnouncementDao announcementDao;
     private final ContestClarificationDao clarificationDao;
     private final ContestTimer contestTimer;
@@ -49,6 +52,7 @@ public class ContestWebConfigFetcher {
             ContestClarificationRoleChecker clarificationRoleChecker,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestContestantRoleChecker contestantRoleChecker,
+            ContestFileRoleChecker fileRoleChecker,
             ContestAnnouncementDao announcementDao,
             ContestClarificationDao clarificationDao,
             ContestTimer contestTimer) {
@@ -60,6 +64,7 @@ public class ContestWebConfigFetcher {
         this.clarificationRoleChecker = clarificationRoleChecker;
         this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.contestantRoleChecker = contestantRoleChecker;
+        this.fileRoleChecker = fileRoleChecker;
         this.announcementDao = announcementDao;
         this.clarificationDao = clarificationDao;
         this.contestTimer = contestTimer;
@@ -88,6 +93,9 @@ public class ContestWebConfigFetcher {
         }
         if (scoreboardRoleChecker.canViewDefault(userJid, contest)) {
             visibleTabs.add(SCOREBOARD);
+        }
+        if (fileRoleChecker.canSupervise(userJid, contest)) {
+            visibleTabs.add(FILES);
         }
 
         ContestState state;

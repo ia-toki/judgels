@@ -8,4 +8,5 @@ public enum ContestTab {
     SUBMISSIONS,
     CLARIFICATIONS,
     SCOREBOARD,
+    FILES,
 }

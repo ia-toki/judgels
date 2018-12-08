@@ -28,6 +28,7 @@ import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/C
 import ContestClarificationsPage from './clarifications/ContestClarificationsPage/ContestClarificationsPage';
 import ContestProblemRoutes from './problems/ContestProblemRoutes';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
+import ContestFilesPage from './files/ContestFilesPage/ContestFilesPage';
 import ContestSubmissionRoutes from './submissions/ContestSubmissionRoutes';
 import { EditContest } from '../modules/contestReducer';
 import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
@@ -131,6 +132,14 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       routeComponent: Route,
       component: ContestScoreboardPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Scoreboard) === -1,
+    },
+    {
+      id: 'files',
+      titleIcon: 'folder-close',
+      title: 'Files',
+      routeComponent: Route,
+      component: ContestFilesPage,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Files) === -1,
     },
   ];
 

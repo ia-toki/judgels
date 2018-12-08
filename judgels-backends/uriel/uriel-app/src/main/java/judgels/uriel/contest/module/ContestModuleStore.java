@@ -5,6 +5,7 @@ import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.DELAYED_GRADING;
+import static judgels.uriel.api.contest.module.ContestModuleType.FILE;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.PAUSE;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
@@ -168,6 +169,10 @@ public class ContestModuleStore {
         upsertModule(contestJid, DELAYED_GRADING, config);
     }
 
+    public void upsertFileModule(String contestJid) {
+        upsertModule(contestJid, FILE, Collections.emptyMap());
+    }
+
     public void upsertFrozenScoreboardModule(String contestJid, FrozenScoreboardModuleConfig config) {
         upsertModule(contestJid, FROZEN_SCOREBOARD, config);
     }
@@ -202,6 +207,10 @@ public class ContestModuleStore {
 
     public Optional<DelayedGradingModuleConfig> getDelayedGradingModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, DELAYED_GRADING, DelayedGradingModuleConfig.class);
+    }
+
+    public boolean hasFileModule(String contestJid) {
+        return moduleDao.selectEnabledByContestJidAndType(contestJid, FILE).isPresent();
     }
 
     public Optional<FrozenScoreboardModuleConfig> getFrozenScoreboardModuleConfig(String contestJid) {

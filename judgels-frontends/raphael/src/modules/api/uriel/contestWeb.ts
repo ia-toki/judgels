@@ -12,6 +12,7 @@ export enum ContestTab {
   Submissions = 'SUBMISSIONS',
   Clarifications = 'CLARIFICATIONS',
   Scoreboard = 'SCOREBOARD',
+  Files = 'FILES',
 }
 
 export interface ContestWithWebConfig {

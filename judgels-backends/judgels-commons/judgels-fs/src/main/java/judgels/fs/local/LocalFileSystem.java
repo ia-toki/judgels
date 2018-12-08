@@ -53,7 +53,7 @@ public final class LocalFileSystem implements FileSystem {
     public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
         File[] files  = baseDir.resolve(dirPath).toFile().listFiles();
         if (files == null) {
-            throw new RuntimeException("Not a directory: " + baseDir.resolve(dirPath));
+            return ImmutableList.of();
         }
 
         List<FileInfo> fileInfos = Lists.newArrayList(Arrays.stream(files)
@@ -75,7 +75,7 @@ public final class LocalFileSystem implements FileSystem {
     public List<FileInfo> listFilesInDirectory(Path dirPath) {
         File[] files  = baseDir.resolve(dirPath).toFile().listFiles();
         if (files == null) {
-            throw new RuntimeException("Not a directory: " + baseDir.resolve(dirPath));
+            return ImmutableList.of();
         }
 
         List<FileInfo> fileInfos = Lists.newArrayList(Arrays.stream(files)
