@@ -25,6 +25,10 @@ public class ContestRoleChecker {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
     }
 
+    public boolean canSupervise(String userJid, Contest contest) {
+        return adminRoleDao.isAdmin(userJid) || contestRoleDao.isSupervisorOrAbove(userJid, contest.getJid());
+    }
+
     public boolean canManage(String userJid, Contest contest) {
         return adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid());
     }

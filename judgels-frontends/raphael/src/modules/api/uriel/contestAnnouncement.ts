@@ -17,6 +17,7 @@ export interface ContestAnnouncement {
 
 export interface ContestAnnouncementConfig {
   canSupervise: boolean;
+  canManage: boolean;
 }
 
 export enum ContestAnnouncementStatus {

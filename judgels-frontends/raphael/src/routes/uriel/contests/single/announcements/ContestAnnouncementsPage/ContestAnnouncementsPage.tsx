@@ -68,7 +68,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
       );
     }
 
-    const { canSupervise } = config;
+    const { canSupervise, canManage } = config;
 
     return announcements.page.map(announcement => (
       <div className="content-card__section" key={announcement.jid}>
@@ -76,6 +76,7 @@ class ContestAnnouncementsPage extends React.PureComponent<
           contest={this.props.contest}
           announcement={announcement}
           canSupervise={canSupervise}
+          canManage={canManage}
           profile={canSupervise ? profilesMap[announcement.userJid] : undefined}
           isEditDialogOpen={!openEditDialogAnnouncement ? false : announcement.jid === openEditDialogAnnouncement.jid}
           onToggleEditDialog={this.toggleEditDialog}

@@ -48,7 +48,6 @@ public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegr
     protected static final String ANOTHER_CONTESTANT = "anotherContestantJid";
     protected static final String SUPERVISOR = "supervisorJid";
     protected static final String MANAGER = "managerJid";
-    protected static final String SUPERVISOR_CONTESTANT = "supervisorContestantJid";
 
     protected Contest contestA;
     protected Contest contestAStarted;
@@ -122,12 +121,9 @@ public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegr
                 new ContestUpdateData.Builder().beginTime(NOW.minus(10, HOURS)).build()).get();
 
         contestantStore.upsertContestant(contestB.getJid(), CONTESTANT);
-        contestantStore.upsertContestant(contestB.getJid(), SUPERVISOR_CONTESTANT);
         contestantStore.upsertContestant(contestBStarted.getJid(), CONTESTANT);
-        contestantStore.upsertContestant(contestBStarted.getJid(), SUPERVISOR_CONTESTANT);
         contestantStore.upsertContestant(contestBStarted.getJid(), ANOTHER_CONTESTANT);
         contestantStore.upsertContestant(contestBFinished.getJid(), CONTESTANT);
-        contestantStore.upsertContestant(contestBFinished.getJid(), SUPERVISOR_CONTESTANT);
 
         supervisorStore.upsertSupervisor(
                 contestB.getJid(),
@@ -143,22 +139,6 @@ public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegr
                 contestBFinished.getJid(),
                 new ContestSupervisorData.Builder()
                         .userJid(SUPERVISOR)
-                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
-
-        supervisorStore.upsertSupervisor(
-                contestB.getJid(),
-                new ContestSupervisorData.Builder()
-                        .userJid(SUPERVISOR_CONTESTANT)
-                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
-        supervisorStore.upsertSupervisor(
-                contestBStarted.getJid(),
-                new ContestSupervisorData.Builder()
-                        .userJid(SUPERVISOR_CONTESTANT)
-                        .permission(SupervisorPermission.of(ImmutableSet.of())).build());
-        supervisorStore.upsertSupervisor(
-                contestBFinished.getJid(),
-                new ContestSupervisorData.Builder()
-                        .userJid(SUPERVISOR_CONTESTANT)
                         .permission(SupervisorPermission.of(ImmutableSet.of())).build());
 
         managerStore.upsertManager(contestB.getJid(), MANAGER);
@@ -188,22 +168,6 @@ public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegr
                 contestBFinished.getJid(),
                 new ContestSupervisorData.Builder()
                         .userJid(SUPERVISOR)
-                        .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
-
-        supervisorStore.upsertSupervisor(
-                contestB.getJid(),
-                new ContestSupervisorData.Builder()
-                        .userJid(SUPERVISOR_CONTESTANT)
-                        .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
-        supervisorStore.upsertSupervisor(
-                contestBStarted.getJid(),
-                new ContestSupervisorData.Builder()
-                        .userJid(SUPERVISOR_CONTESTANT)
-                        .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
-        supervisorStore.upsertSupervisor(
-                contestBFinished.getJid(),
-                new ContestSupervisorData.Builder()
-                        .userJid(SUPERVISOR_CONTESTANT)
                         .permission(SupervisorPermission.of(ImmutableSet.of(type))).build());
     }
 }

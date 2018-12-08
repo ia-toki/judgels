@@ -20,7 +20,7 @@ describe('ContestAnnouncementsPage', () => {
 
   const response: ContestAnnouncementsResponse = {
     data: { page: [], totalCount: 0 },
-    config: { canSupervise: true },
+    config: { canSupervise: true, canManage: true },
     profilesMap: {
       userJid1: { username: 'username1' },
       userJid2: { username: 'username2' },

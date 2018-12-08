@@ -14,6 +14,7 @@ export interface ContestAnnouncementCardProps {
   contest: Contest;
   announcement: ContestAnnouncement;
   canSupervise: boolean;
+  canManage: boolean;
   profile?: Profile;
   isEditDialogOpen: boolean;
   onToggleEditDialog: (announcement?: ContestAnnouncement) => void;
@@ -49,7 +50,7 @@ export class ContestAnnouncementCard extends React.Component<ContestAnnouncement
 
   private renderEditDialog = () => {
     return (
-      this.props.canSupervise && (
+      this.props.canManage && (
         <Button small onClick={this.toggleEditDialog} disabled={this.props.isEditDialogOpen}>
           Edit
         </Button>

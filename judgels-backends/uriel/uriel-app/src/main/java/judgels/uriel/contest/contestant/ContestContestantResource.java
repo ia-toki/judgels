@@ -60,7 +60,7 @@ public class ContestContestantResource implements ContestContestantService {
     public ContestContestantsResponse getContestants(AuthHeader authHeader, String contestJid, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestantRoleChecker.canViewList(actorJid, contest));
+        checkAllowed(contestantRoleChecker.canSupervise(actorJid, contest));
 
         Page<ContestContestant> contestants = contestantStore.getContestants(contestJid, page);
         Set<String> userJids =
@@ -69,9 +69,9 @@ public class ContestContestantResource implements ContestContestantService {
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids, contest.getBeginTime());
 
-        boolean canSupervise = contestantRoleChecker.canSupervise(actorJid, contest);
+        boolean canManage = contestantRoleChecker.canManage(actorJid, contest);
         ContestContestantConfig config = new ContestContestantConfig.Builder()
-                .canSupervise(canSupervise)
+                .canManage(canManage)
                 .build();
 
         return new ContestContestantsResponse.Builder()
@@ -86,7 +86,7 @@ public class ContestContestantResource implements ContestContestantService {
     public ApprovedContestContestantsResponse getApprovedContestants(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestantRoleChecker.canViewApprovedList(actorJid, contest));
+        checkAllowed(contestantRoleChecker.canViewApproved(actorJid, contest));
 
         Set<String> userJids = contestantStore.getApprovedContestantJids(contestJid);
         Map<String, Profile> profilesMap = userJids.isEmpty()
@@ -104,7 +104,7 @@ public class ContestContestantResource implements ContestContestantService {
     public long getApprovedContestantsCount(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestantRoleChecker.canViewApprovedList(actorJid, contest));
+        checkAllowed(contestantRoleChecker.canViewApproved(actorJid, contest));
 
         return contestantStore.getApprovedContestantsCount(contestJid);
     }

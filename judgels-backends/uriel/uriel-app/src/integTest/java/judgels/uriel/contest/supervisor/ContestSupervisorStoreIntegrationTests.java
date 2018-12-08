@@ -1,5 +1,7 @@
 package judgels.uriel.contest.supervisor;
 
+import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.FILE;
+import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.SCOREBOARD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
@@ -11,7 +13,6 @@ import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
 import judgels.uriel.api.contest.supervisor.SupervisorPermission;
-import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestSupervisorModel;
@@ -40,9 +41,11 @@ class ContestSupervisorStoreIntegrationTests extends AbstractIntegrationTests {
         Contest contest = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
         contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 
+        assertThat(store.isSupervisorWithPermission(contest.getJid(), USER_1, SCOREBOARD)).isFalse();
+
         ContestSupervisor supervisor1 = store.upsertSupervisor(contest.getJid(), new ContestSupervisorData.Builder()
                 .userJid(USER_1)
-                .permission(SupervisorPermission.of(ImmutableSet.of(SupervisorPermissionType.SCOREBOARD)))
+                .permission(SupervisorPermission.of(ImmutableSet.of(SCOREBOARD)))
                 .build());
         store.upsertSupervisor(contest.getJid(), new ContestSupervisorData.Builder()
                 .userJid(USER_2)
@@ -50,11 +53,19 @@ class ContestSupervisorStoreIntegrationTests extends AbstractIntegrationTests {
                 .build());
 
         assertThat(store.getSupervisor(contest.getJid(), USER_1)).contains(supervisor1);
+        assertThat(store.isSupervisorWithPermission(contest.getJid(), USER_1, SCOREBOARD)).isTrue();
+
+        assertThat(store.isSupervisorWithPermission(contest.getJid(), USER_1, FILE)).isFalse();
+        store.upsertSupervisor(contest.getJid(), new ContestSupervisorData.Builder()
+                .userJid(USER_1)
+                .permission(SupervisorPermission.of(ImmutableSet.of(FILE, SCOREBOARD)))
+                .build());
+        assertThat(store.isSupervisorWithPermission(contest.getJid(), USER_1, FILE)).isTrue();
 
         // TODO(fushar): move these assertions to service integration tests instead
         assertThat(supervisor1.getUserJid())
                 .isEqualTo(USER_1);
         assertThat(supervisor1.getPermission())
-                .isEqualTo(SupervisorPermission.of(ImmutableSet.of(SupervisorPermissionType.SCOREBOARD)));
+                .isEqualTo(SupervisorPermission.of(ImmutableSet.of(SCOREBOARD)));
     }
 }

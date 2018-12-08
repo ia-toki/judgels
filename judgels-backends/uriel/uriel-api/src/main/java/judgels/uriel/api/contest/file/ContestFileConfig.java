@@ -6,7 +6,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestFileConfig.class)
 public interface ContestFileConfig {
-    boolean getCanSupervise();
+    boolean getCanManage();
 
     class Builder extends ImmutableContestFileConfig.Builder {}
 }

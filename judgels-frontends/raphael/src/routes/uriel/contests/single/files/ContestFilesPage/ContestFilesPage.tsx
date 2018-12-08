@@ -48,7 +48,7 @@ class ContestFilesPage extends React.Component<ContestFilesPageProps, ContestFil
       return null;
     }
     const { config } = response;
-    if (!config.canSupervise) {
+    if (!config.canManage) {
       return null;
     }
     return <ContestFileUploadCard onSubmit={this.uploadFile} />;

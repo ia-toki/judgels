@@ -69,6 +69,7 @@ class ContestAnnouncementServiceIntegrationTests extends AbstractContestServiceI
 
         ContestAnnouncementConfig config = response.getConfig();
         assertThat(config.getCanSupervise()).isTrue();
+        assertThat(config.getCanManage()).isTrue();
 
         Page<ContestAnnouncement> announcements = response.getData();
         assertThat(announcements.getPage()).containsOnly(announcement1, announcement2, announcement3);

@@ -34,8 +34,10 @@ class ContestFileServiceIntegrationTests extends AbstractContestServiceIntegrati
 
         ContestFilesResponse response = fileService.getFiles(ADMIN_HEADER, contest.getJid());
         List<ContestFile> files = response.getData();
+        ContestFileConfig config = response.getConfig();
 
         assertThat(files).extracting("name").containsOnly("editorial.txt", "hints.txt");
+        assertThat(config.getCanManage()).isTrue();
     }
 
     private void uploadFile(Contest contest, String filename, String content) {

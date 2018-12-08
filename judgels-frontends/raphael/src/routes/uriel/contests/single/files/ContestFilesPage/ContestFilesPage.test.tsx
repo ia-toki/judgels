@@ -19,7 +19,7 @@ describe('ContestFilesPage', () => {
 
   const response: ContestFilesResponse = {
     data: [],
-    config: { canSupervise: true },
+    config: { canManage: true },
   };
 
   const render = () => {

@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
 import judgels.uriel.api.contest.supervisor.SupervisorPermission;
+import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
 import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
 
@@ -31,6 +32,11 @@ public class ContestSupervisorStore {
                 .maximumSize(1000)
                 .expireAfterWrite(getShortDuration())
                 .build();
+    }
+
+    public boolean isSupervisorWithPermission(String contestJid, String userJid, SupervisorPermissionType type) {
+        Optional<ContestSupervisor> supervisor = getSupervisor(contestJid, userJid);
+        return supervisor.isPresent() && supervisor.get().getPermission().allows(type);
     }
 
     public Optional<ContestSupervisor> getSupervisor(String contestJid, String userJid) {

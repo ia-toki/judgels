@@ -99,7 +99,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     if (!response) {
       return null;
     }
-    if (!response.config.canSupervise) {
+    if (!response.config.canManage) {
       return null;
     }
     return (

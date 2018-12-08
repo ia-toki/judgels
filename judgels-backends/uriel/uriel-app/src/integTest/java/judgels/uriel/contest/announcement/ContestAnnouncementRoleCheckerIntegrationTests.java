@@ -34,10 +34,6 @@ class ContestAnnouncementRoleCheckerIntegrationTests extends AbstractRoleChecker
         assertThat(checker.canViewPublished(SUPERVISOR, contestA)).isTrue();
         assertThat(checker.canViewPublished(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canViewPublished(SUPERVISOR, contestC)).isFalse();
-        addSupervisorToContestBWithPermission(ANNOUNCEMENT);
-        assertThat(checker.canViewPublished(SUPERVISOR, contestA)).isTrue();
-        assertThat(checker.canViewPublished(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canViewPublished(SUPERVISOR, contestC)).isFalse();
 
         assertThat(checker.canViewPublished(MANAGER, contestA)).isTrue();
         assertThat(checker.canViewPublished(MANAGER, contestB)).isTrue();
@@ -59,15 +55,36 @@ class ContestAnnouncementRoleCheckerIntegrationTests extends AbstractRoleChecker
         assertThat(checker.canSupervise(CONTESTANT, contestC)).isFalse();
 
         assertThat(checker.canSupervise(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canSupervise(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canSupervise(SUPERVISOR, contestC)).isFalse();
-        addSupervisorToContestBWithPermission(ANNOUNCEMENT);
-        assertThat(checker.canSupervise(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canSupervise(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canSupervise(SUPERVISOR, contestC)).isFalse();
 
         assertThat(checker.canSupervise(MANAGER, contestA)).isFalse();
         assertThat(checker.canSupervise(MANAGER, contestB)).isTrue();
         assertThat(checker.canSupervise(MANAGER, contestC)).isFalse();
+    }
+
+    @Test
+    void manage() {
+        assertThat(checker.canManage(ADMIN, contestA)).isTrue();
+        assertThat(checker.canManage(ADMIN, contestB)).isTrue();
+        assertThat(checker.canManage(ADMIN, contestC)).isTrue();
+
+        assertThat(checker.canManage(USER, contestA)).isFalse();
+        assertThat(checker.canManage(USER, contestB)).isFalse();
+        assertThat(checker.canManage(USER, contestC)).isFalse();
+
+        assertThat(checker.canManage(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canManage(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canManage(CONTESTANT, contestC)).isFalse();
+
+        assertThat(checker.canManage(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canManage(SUPERVISOR, contestB)).isFalse();
+        addSupervisorToContestBWithPermission(ANNOUNCEMENT);
+        assertThat(checker.canManage(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canManage(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(checker.canManage(MANAGER, contestA)).isFalse();
+        assertThat(checker.canManage(MANAGER, contestB)).isTrue();
+        assertThat(checker.canManage(MANAGER, contestC)).isFalse();
     }
 }

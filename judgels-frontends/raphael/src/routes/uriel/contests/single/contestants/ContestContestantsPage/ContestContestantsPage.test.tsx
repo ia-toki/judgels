@@ -24,7 +24,7 @@ describe('ContestContestantsPage', () => {
       userJid2: { username: 'user2' },
     },
     config: {
-      canSupervise: true,
+      canManage: true,
     },
   };
 

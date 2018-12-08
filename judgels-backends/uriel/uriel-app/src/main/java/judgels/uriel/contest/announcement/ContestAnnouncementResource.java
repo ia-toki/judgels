@@ -57,8 +57,10 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
         checkAllowed(announcementRoleChecker.canViewPublished(actorJid, contest));
 
         boolean canSupervise = announcementRoleChecker.canSupervise(actorJid, contest);
+        boolean canManage = announcementRoleChecker.canManage(actorJid, contest);
         ContestAnnouncementConfig config = new ContestAnnouncementConfig.Builder()
                 .canSupervise(canSupervise)
+                .canManage(canManage)
                 .build();
 
         Page<ContestAnnouncement> announcements = canSupervise
@@ -89,7 +91,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
             ContestAnnouncementData data) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(announcementRoleChecker.canSupervise(actorJid, contest));
+        checkAllowed(announcementRoleChecker.canManage(actorJid, contest));
 
         return announcementStore.createAnnouncement(contestJid, data);
     }
@@ -103,7 +105,7 @@ public class ContestAnnouncementResource implements ContestAnnouncementService {
             ContestAnnouncementData data) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(announcementRoleChecker.canSupervise(actorJid, contest));
+        checkAllowed(announcementRoleChecker.canManage(actorJid, contest));
 
         return announcementStore.updateAnnouncement(contestJid, announcementJid, data);
     }

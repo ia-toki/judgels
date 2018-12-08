@@ -11,7 +11,7 @@ export interface ContestContestant {
 }
 
 export interface ContestContestantConfig {
-  canSupervise: boolean;
+  canManage: boolean;
 }
 
 export interface ContestContestantsResponse {

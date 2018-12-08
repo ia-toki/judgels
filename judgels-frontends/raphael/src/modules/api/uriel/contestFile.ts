@@ -8,7 +8,7 @@ export interface ContestFile {
 }
 
 export interface ContestFileConfig {
-  canSupervise: boolean;
+  canManage: boolean;
 }
 
 export interface ContestFilesResponse {

@@ -58,11 +58,11 @@ public class ContestFileResource implements ContestFileService {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
 
-        boolean canSupervise = fileRoleChecker.canSupervise(actorJid, contest);
-        checkAllowed(canSupervise);
+        checkAllowed(fileRoleChecker.canSupervise(actorJid, contest));
 
+        boolean canManage = fileRoleChecker.canManage(actorJid, contest);
         ContestFileConfig config = new ContestFileConfig.Builder()
-                .canSupervise(canSupervise)
+                .canManage(canManage)
                 .build();
 
         List<ContestFile> files = Lists.transform(fileFs.listFilesInDirectory(Paths.get(contestJid)),

@@ -2,19 +2,17 @@ package judgels.uriel.contest.contestant;
 
 import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.CONTESTANT;
 
-import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestantState;
-import judgels.uriel.api.contest.supervisor.ContestSupervisor;
+import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.supervisor.ContestSupervisorStore;
-import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestRoleDao;
 
 public class ContestContestantRoleChecker {
-    private final AdminRoleDao adminRoleDao;
+    private final ContestRoleChecker contestRoleChecker;
     private final ContestRoleDao contestRoleDao;
     private final ContestTimer contestTimer;
     private final ContestModuleStore moduleStore;
@@ -22,27 +20,21 @@ public class ContestContestantRoleChecker {
 
     @Inject
     public ContestContestantRoleChecker(
-            AdminRoleDao adminRoleDao,
+            ContestRoleChecker contestRoleChecker,
             ContestRoleDao contestRoleDao,
             ContestTimer contestTimer,
             ContestModuleStore moduleStore,
             ContestSupervisorStore supervisorStore) {
 
-        this.adminRoleDao = adminRoleDao;
+        this.contestRoleChecker = contestRoleChecker;
         this.contestTimer = contestTimer;
         this.contestRoleDao = contestRoleDao;
         this.moduleStore = moduleStore;
         this.supervisorStore = supervisorStore;
     }
 
-    public boolean canViewApprovedList(String userJid, Contest contest) {
-        return adminRoleDao.isAdmin(userJid) || contestRoleDao.isViewerOrAbove(userJid, contest.getJid());
-    }
-
-    public boolean canViewList(String userJid, Contest contest) {
-        return adminRoleDao.isAdmin(userJid)
-                || contestRoleDao.isManager(userJid, contest.getJid())
-                || supervisorStore.getSupervisor(contest.getJid(), userJid).isPresent();
+    public boolean canViewApproved(String userJid, Contest contest) {
+        return contestRoleChecker.canView(userJid, contest);
     }
 
     public boolean canRegister(String userJid, Contest contest) {
@@ -69,10 +61,11 @@ public class ContestContestantRoleChecker {
     }
 
     public boolean canSupervise(String userJid, Contest contest) {
-        if (adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid())) {
-            return true;
-        }
-        Optional<ContestSupervisor> supervisor = supervisorStore.getSupervisor(contest.getJid(), userJid);
-        return supervisor.isPresent() && supervisor.get().getPermission().allows(CONTESTANT);
+        return contestRoleChecker.canSupervise(userJid, contest);
+    }
+
+    public boolean canManage(String userJid, Contest contest) {
+        return contestRoleChecker.canManage(userJid, contest)
+                || supervisorStore.isSupervisorWithPermission(contest.getJid(), userJid, CONTESTANT);
     }
 }
