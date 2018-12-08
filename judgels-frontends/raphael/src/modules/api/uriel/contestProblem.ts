@@ -1,8 +1,9 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from 'conf';
 import { get } from 'modules/api/http';
 import { ProblemInfo, ProblemWorksheet } from 'modules/api/sandalphon/problem';
+
+import { baseContestURL } from './contest';
 
 export enum ContestProblemStatus {
   Open = 'OPEN',
@@ -33,22 +34,20 @@ export interface ContestContestantProblemWorksheet {
   worksheet: ProblemWorksheet;
 }
 
-export function createContestProblemAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/problems`;
 
-  return {
-    getMyProblems: (token: string, contestJid: string): Promise<ContestContestantProblemsResponse> => {
-      return get(`${baseURL}/${contestJid}/problems/mine`, token);
-    },
+export const contestProblemAPI = {
+  getMyProblems: (token: string, contestJid: string): Promise<ContestContestantProblemsResponse> => {
+    return get(`${baseURL(contestJid)}/mine`, token);
+  },
 
-    getProblemWorksheet: (
-      token: string,
-      contestJid: string,
-      problemAlias: string,
-      language?: string
-    ): Promise<ContestContestantProblemWorksheet> => {
-      const params = stringify({ language });
-      return get(`${baseURL}/${contestJid}/problems/${problemAlias}/worksheet?${params}`, token);
-    },
-  };
-}
+  getProblemWorksheet: (
+    token: string,
+    contestJid: string,
+    problemAlias: string,
+    language?: string
+  ): Promise<ContestContestantProblemWorksheet> => {
+    const params = stringify({ language });
+    return get(`${baseURL(contestJid)}/${problemAlias}/worksheet?${params}`, token);
+  },
+};

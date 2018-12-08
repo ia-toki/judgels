@@ -1,10 +1,10 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from 'conf';
 import { get } from 'modules/api/http';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 
 import { Scoreboard } from './scoreboard';
+import { baseContestURL } from './contest';
 
 export interface ContestScoreboard {
   type: ContestScoreboardType;
@@ -28,18 +28,16 @@ export interface ContestScoreboardResponse {
   config: ContestScoreboardConfig;
 }
 
-export function createContestScoreboardAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/scoreboard`;
 
-  return {
-    getScoreboard: (
-      token: string,
-      contestJid: string,
-      frozen?: boolean,
-      showClosedProblems?: boolean
-    ): Promise<ContestScoreboardResponse | null> => {
-      const params = stringify({ frozen, showClosedProblems });
-      return get(`${baseURL}/${contestJid}/scoreboard?${params}`, token);
-    },
-  };
-}
+export const contestScoreboardAPI = {
+  getScoreboard: (
+    token: string,
+    contestJid: string,
+    frozen?: boolean,
+    showClosedProblems?: boolean
+  ): Promise<ContestScoreboardResponse | null> => {
+    const params = stringify({ frozen, showClosedProblems });
+    return get(`${baseURL(contestJid)}?${params}`, token);
+  },
+};

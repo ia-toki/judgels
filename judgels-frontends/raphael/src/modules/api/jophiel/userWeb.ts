@@ -8,12 +8,10 @@ export interface UserWebConfig {
   profile?: Profile;
 }
 
-export function createUserWebAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-web`;
+const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-web`;
 
-  return {
-    getWebConfig: (token: string): Promise<UserWebConfig> => {
-      return get(`${baseURL}/config`, token);
-    },
-  };
-}
+export const userWebAPI = {
+  getWebConfig: (token: string): Promise<UserWebConfig> => {
+    return get(`${baseURL}/config`, token);
+  },
+};

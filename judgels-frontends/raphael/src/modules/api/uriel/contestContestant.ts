@@ -1,9 +1,10 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from 'conf';
 import { delete_, get, post } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
+
+import { baseContestURL } from './contest';
 
 export interface ContestContestant {
   userJid: string;
@@ -40,49 +41,47 @@ export enum ContestContestantState {
   Contestant = 'CONTESTANT',
 }
 
-export function createContestContestantAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/contestants`;
 
-  return {
-    getContestants: (token: string, contestJid: string, page?: number): Promise<ContestContestantsResponse> => {
-      const params = stringify({ page });
-      return get(`${baseURL}/${contestJid}/contestants?${params}`, token);
-    },
+export const contestContestantAPI = {
+  getContestants: (token: string, contestJid: string, page?: number): Promise<ContestContestantsResponse> => {
+    const params = stringify({ page });
+    return get(`${baseURL(contestJid)}?${params}`, token);
+  },
 
-    getApprovedContestants: (token: string, contestJid: string): Promise<ApprovedContestContestantsResponse> => {
-      return get(`${baseURL}/${contestJid}/contestants/approved`, token);
-    },
+  getApprovedContestants: (token: string, contestJid: string): Promise<ApprovedContestContestantsResponse> => {
+    return get(`${baseURL(contestJid)}/approved`, token);
+  },
 
-    getApprovedContestantsCount: (token: string, contestJid: string): Promise<number> => {
-      return get(`${baseURL}/${contestJid}/contestants/approved/count`, token);
-    },
+  getApprovedContestantsCount: (token: string, contestJid: string): Promise<number> => {
+    return get(`${baseURL(contestJid)}/approved/count`, token);
+  },
 
-    registerMyselfAsContestant: (token: string, contestJid: string): Promise<void> => {
-      return post(`${baseURL}/${contestJid}/contestants/me`, token);
-    },
+  registerMyselfAsContestant: (token: string, contestJid: string): Promise<void> => {
+    return post(`${baseURL(contestJid)}/me`, token);
+  },
 
-    unregisterMyselfAsContestant: (token: string, contestJid: string): Promise<void> => {
-      return delete_(`${baseURL}/${contestJid}/contestants/me`, token);
-    },
+  unregisterMyselfAsContestant: (token: string, contestJid: string): Promise<void> => {
+    return delete_(`${baseURL(contestJid)}/me`, token);
+  },
 
-    getMyContestantState: (token: string, contestJid: string): Promise<ContestContestantState> => {
-      return get(`${baseURL}/${contestJid}/contestants/me/state`, token);
-    },
+  getMyContestantState: (token: string, contestJid: string): Promise<ContestContestantState> => {
+    return get(`${baseURL(contestJid)}/me/state`, token);
+  },
 
-    upsertContestants: (
-      token: string,
-      contestJid: string,
-      usernames: string[]
-    ): Promise<ContestContestantUpsertResponse> => {
-      return post(`${baseURL}/${contestJid}/contestants/batch-upsert`, token, usernames);
-    },
+  upsertContestants: (
+    token: string,
+    contestJid: string,
+    usernames: string[]
+  ): Promise<ContestContestantUpsertResponse> => {
+    return post(`${baseURL(contestJid)}/batch-upsert`, token, usernames);
+  },
 
-    deleteContestants: (
-      token: string,
-      contestJid: string,
-      usernames: string[]
-    ): Promise<ContestContestantDeleteResponse> => {
-      return post(`${baseURL}/${contestJid}/contestants/batch-delete`, token, usernames);
-    },
-  };
-}
+  deleteContestants: (
+    token: string,
+    contestJid: string,
+    usernames: string[]
+  ): Promise<ContestContestantDeleteResponse> => {
+    return post(`${baseURL(contestJid)}/batch-delete`, token, usernames);
+  },
+};

@@ -38,20 +38,18 @@ export enum ContestState {
   Paused = 'PAUSED',
 }
 
-export function createContestWebAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contest-web`;
+const baseURL = `${APP_CONFIG.apiUrls.uriel}/contest-web`;
 
-  return {
-    getContestBySlugWithWebConfig: (token: string, contestSlug: string): Promise<ContestWithWebConfig> => {
-      return get(`${baseURL}/slug/${contestSlug}/with-config`, token);
-    },
+export const contestWebAPI = {
+  getContestBySlugWithWebConfig: (token: string, contestSlug: string): Promise<ContestWithWebConfig> => {
+    return get(`${baseURL}/slug/${contestSlug}/with-config`, token);
+  },
 
-    getContestByJidWithWebConfig: (token: string, contestJid: string): Promise<ContestWithWebConfig> => {
-      return get(`${baseURL}/${contestJid}/with-config`, token);
-    },
+  getContestByJidWithWebConfig: (token: string, contestJid: string): Promise<ContestWithWebConfig> => {
+    return get(`${baseURL}/${contestJid}/with-config`, token);
+  },
 
-    getWebConfig: (token: string, contestJid: string): Promise<ContestWebConfig> => {
-      return get(`${baseURL}/${contestJid}/config`, token);
-    },
-  };
-}
+  getWebConfig: (token: string, contestJid: string): Promise<ContestWebConfig> => {
+    return get(`${baseURL}/${contestJid}/config`, token);
+  },
+};

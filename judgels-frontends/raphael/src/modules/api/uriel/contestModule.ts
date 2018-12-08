@@ -1,7 +1,7 @@
-import { APP_CONFIG } from 'conf';
-
 import { delete_, get, put } from 'modules/api/http';
 import { LanguageRestriction } from 'modules/api/gabriel/language';
+
+import { baseContestURL } from './contest';
 
 export enum ContestModuleType {
   Clarification = 'CLARIFICATION',
@@ -91,28 +91,26 @@ export interface ContestModulesConfig {
   virtual?: VirtualModuleConfig;
 }
 
-export function createContestModuleAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/modules`;
 
-  return {
-    getModules: (token: string, contestJid: string): Promise<ContestModuleType[]> => {
-      return get(`${baseURL}/${contestJid}/modules`, token);
-    },
+export const contestModuleAPI = {
+  getModules: (token: string, contestJid: string): Promise<ContestModuleType[]> => {
+    return get(`${baseURL(contestJid)}`, token);
+  },
 
-    enableModule: (token: string, contestJid: string, type: ContestModuleType): Promise<void> => {
-      return put(`${baseURL}/${contestJid}/modules/${type}`, token);
-    },
+  enableModule: (token: string, contestJid: string, type: ContestModuleType): Promise<void> => {
+    return put(`${baseURL(contestJid)}/${type}`, token);
+  },
 
-    disableModule: (token: string, contestJid: string, type: ContestModuleType): Promise<void> => {
-      return delete_(`${baseURL}/${contestJid}/modules/${type}`, token);
-    },
+  disableModule: (token: string, contestJid: string, type: ContestModuleType): Promise<void> => {
+    return delete_(`${baseURL(contestJid)}/${type}`, token);
+  },
 
-    getConfig: (token: string, contestJid: string): Promise<ContestModulesConfig> => {
-      return get(`${baseURL}/${contestJid}/modules/config`, token);
-    },
+  getConfig: (token: string, contestJid: string): Promise<ContestModulesConfig> => {
+    return get(`${baseURL(contestJid)}/config`, token);
+  },
 
-    upsertConfig: (token: string, contestJid: string, config: ContestModulesConfig): Promise<void> => {
-      return put(`${baseURL}/${contestJid}/modules/config`, token, config);
-    },
-  };
-}
+  upsertConfig: (token: string, contestJid: string, config: ContestModulesConfig): Promise<void> => {
+    return put(`${baseURL(contestJid)}/config`, token, config);
+  },
+};

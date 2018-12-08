@@ -23,21 +23,19 @@ export interface AdminDeleteResponse {
   deletedAdminProfilesMap: ProfilesMap;
 }
 
-export function createUrielAdminAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/admins`;
+const baseURL = `${APP_CONFIG.apiUrls.uriel}/admins`;
 
-  return {
-    getAdmins: (token: string, page?: number): Promise<AdminsResponse> => {
-      const params = stringify({ page });
-      return get(`${baseURL}?${params}`, token);
-    },
+export const urielAdminAPI = {
+  getAdmins: (token: string, page?: number): Promise<AdminsResponse> => {
+    const params = stringify({ page });
+    return get(`${baseURL}?${params}`, token);
+  },
 
-    upsertAdmins: (token: string, usernames: string[]): Promise<AdminUpsertResponse> => {
-      return post(`${baseURL}/batch-upsert`, token, usernames);
-    },
+  upsertAdmins: (token: string, usernames: string[]): Promise<AdminUpsertResponse> => {
+    return post(`${baseURL}/batch-upsert`, token, usernames);
+  },
 
-    deleteAdmins: (token: string, usernames: string[]): Promise<AdminDeleteResponse> => {
-      return post(`${baseURL}/batch-delete`, token, usernames);
-    },
-  };
-}
+  deleteAdmins: (token: string, usernames: string[]): Promise<AdminDeleteResponse> => {
+    return post(`${baseURL}/batch-delete`, token, usernames);
+  },
+};

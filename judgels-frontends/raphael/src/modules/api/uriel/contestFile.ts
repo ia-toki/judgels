@@ -1,6 +1,5 @@
-import { APP_CONFIG } from 'conf';
-
 import { get, postMultipart } from '../http';
+import { baseContestURL } from './contest';
 
 export interface ContestFile {
   name: string;
@@ -17,20 +16,18 @@ export interface ContestFilesResponse {
   config: ContestFileConfig;
 }
 
-export function createContestFileAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/files`;
 
-  return {
-    getFiles: (token: string, contestJid: string): Promise<ContestFilesResponse> => {
-      return get(`${baseURL}/${contestJid}/files`, token);
-    },
+export const contestFileAPI = {
+  getFiles: (token: string, contestJid: string): Promise<ContestFilesResponse> => {
+    return get(`${baseURL(contestJid)}`, token);
+  },
 
-    uploadFile: (token: string, contestJid: string, file: File): Promise<void> => {
-      return postMultipart(`${baseURL}/${contestJid}/files`, token, { file: file });
-    },
-  };
-}
+  uploadFile: (token: string, contestJid: string, file: File): Promise<void> => {
+    return postMultipart(`${baseURL(contestJid)}`, token, { file: file });
+  },
 
-export function getDownloadFileUrl(contestJid: string, filename: string) {
-  return `${APP_CONFIG.apiUrls.uriel}/contests/${contestJid}/files/${filename}`;
-}
+  renderDownloadFilesUrl: (contestJid: string) => `${baseContestURL(contestJid)}/files`,
+
+  renderDownloadFileUrl: (contestJid: string, filename: string) => `${baseContestURL(contestJid)}/files/${filename}`,
+};

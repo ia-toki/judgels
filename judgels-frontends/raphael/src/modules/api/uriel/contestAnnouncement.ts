@@ -1,8 +1,9 @@
-import { APP_CONFIG } from 'conf';
 import { get, post, put } from 'modules/api/http';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Page } from 'modules/api/pagination';
 import { stringify } from 'query-string';
+
+import { baseContestURL } from './contest';
 
 export interface ContestAnnouncement {
   id: number;
@@ -35,30 +36,28 @@ export interface ContestAnnouncementsResponse {
   profilesMap: ProfilesMap;
 }
 
-export function createContestAnnouncementAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/announcements`;
 
-  return {
-    getAnnouncements: (token: string, contestJid: string, page?: number): Promise<ContestAnnouncementsResponse> => {
-      const params = stringify({ page });
-      return get(`${baseURL}/${contestJid}/announcements?${params}`, token);
-    },
+export const contestAnnouncementAPI = {
+  getAnnouncements: (token: string, contestJid: string, page?: number): Promise<ContestAnnouncementsResponse> => {
+    const params = stringify({ page });
+    return get(`${baseURL(contestJid)}?${params}`, token);
+  },
 
-    createAnnouncement: (
-      token: string,
-      contestJid: string,
-      data: ContestAnnouncementData
-    ): Promise<ContestAnnouncement> => {
-      return post(`${baseURL}/${contestJid}/announcements/`, token, data);
-    },
+  createAnnouncement: (
+    token: string,
+    contestJid: string,
+    data: ContestAnnouncementData
+  ): Promise<ContestAnnouncement> => {
+    return post(`${baseURL(contestJid)}`, token, data);
+  },
 
-    updateAnnouncement: (
-      token: string,
-      contestJid: string,
-      announcementJid: string,
-      data: ContestAnnouncementData
-    ): Promise<ContestAnnouncement> => {
-      return put(`${baseURL}/${contestJid}/announcements/${announcementJid}`, token, data);
-    },
-  };
-}
+  updateAnnouncement: (
+    token: string,
+    contestJid: string,
+    announcementJid: string,
+    data: ContestAnnouncementData
+  ): Promise<ContestAnnouncement> => {
+    return put(`${baseURL(contestJid)}/${announcementJid}`, token, data);
+  },
+};

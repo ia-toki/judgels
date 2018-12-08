@@ -1,10 +1,10 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from 'conf';
 import { get, post, put } from 'modules/api/http';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 
 import { Page } from '../pagination';
+import { baseContestURL } from './contest';
 
 export enum ContestClarificationStatus {
   Asked = 'ASKED',
@@ -50,31 +50,29 @@ export interface ContestClarificationsResponse {
   problemNamesMap: { [problemJid: string]: string };
 }
 
-export function createContestClarificationAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/clarifications`;
 
-  return {
-    createClarification: (token: string, contestJid: string, data: ContestClarificationData): Promise<void> => {
-      return post(`${baseURL}/${contestJid}/clarifications`, token, data);
-    },
+export const contestClarificationAPI = {
+  createClarification: (token: string, contestJid: string, data: ContestClarificationData): Promise<void> => {
+    return post(`${baseURL(contestJid)}`, token, data);
+  },
 
-    getClarifications: (
-      token: string,
-      contestJid: string,
-      language?: string,
-      page?: number
-    ): Promise<ContestClarificationsResponse> => {
-      const params = stringify({ language, page });
-      return get(`${baseURL}/${contestJid}/clarifications?${params}`, token);
-    },
+  getClarifications: (
+    token: string,
+    contestJid: string,
+    language?: string,
+    page?: number
+  ): Promise<ContestClarificationsResponse> => {
+    const params = stringify({ language, page });
+    return get(`${baseURL(contestJid)}?${params}`, token);
+  },
 
-    answerClarification: (
-      token: string,
-      contestJid: string,
-      clarificationJid: string,
-      data: ContestClarificationAnswer
-    ): Promise<void> => {
-      return put(`${baseURL}/${contestJid}/clarifications/${clarificationJid}/answer`, token, data);
-    },
-  };
-}
+  answerClarification: (
+    token: string,
+    contestJid: string,
+    clarificationJid: string,
+    data: ContestClarificationAnswer
+  ): Promise<void> => {
+    return put(`${baseURL(contestJid)}/${clarificationJid}/answer`, token, data);
+  },
+};

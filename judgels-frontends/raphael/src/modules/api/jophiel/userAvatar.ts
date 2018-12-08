@@ -1,22 +1,21 @@
-import { APP_CONFIG } from 'conf';
 import { delete_, get, postMultipart } from 'modules/api/http';
 
-export function createUserAvatarAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users`;
+import { baseUserURL } from './user';
 
-  return {
-    deleteAvatar: (token: string, userJid: string): Promise<void> => {
-      return delete_(`${baseURL}/${userJid}/avatar`, token);
-    },
+const baseURL = (userJid: string) => `${baseUserURL(userJid)}/avatar`;
 
-    avatarExists: (userJid: string): Promise<boolean> => {
-      return get(`${baseURL}/${userJid}/avatar/exists`);
-    },
+export const userAvatarAPI = {
+  deleteAvatar: (token: string, userJid: string): Promise<void> => {
+    return delete_(`${baseURL(userJid)}`, token);
+  },
 
-    renderAvatar: (userJid: string) => Promise.resolve(`${baseURL}/${userJid}/avatar`),
+  avatarExists: (userJid: string): Promise<boolean> => {
+    return get(`${baseURL(userJid)}/exists`);
+  },
 
-    updateAvatar: (token: string, userJid: string, file: File): Promise<void> => {
-      return postMultipart(`${baseURL}/${userJid}/avatar`, token, { file: file });
-    },
-  };
-}
+  renderAvatar: (userJid: string) => Promise.resolve(`${baseURL(userJid)}`),
+
+  updateAvatar: (token: string, userJid: string, file: File): Promise<void> => {
+    return postMultipart(`${baseURL(userJid)}`, token, { file: file });
+  },
+};

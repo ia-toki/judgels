@@ -1,5 +1,6 @@
-import { APP_CONFIG } from 'conf';
 import { get, put } from 'modules/api/http';
+
+import { baseUserURL } from './user';
 
 export interface UserInfo {
   name?: string;
@@ -18,16 +19,14 @@ export const userInfoGender = {
   ['FEMALE']: 'Female',
 };
 
-export function createUserInfoAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users`;
+const baseURL = (userJid: string) => `${baseUserURL(userJid)}/info`;
 
-  return {
-    getInfo: (token: string, userJid: string): Promise<UserInfo> => {
-      return get(`${baseURL}/${userJid}/info`, token);
-    },
+export const userInfoAPI = {
+  getInfo: (token: string, userJid: string): Promise<UserInfo> => {
+    return get(baseURL(userJid), token);
+  },
 
-    updateInfo: (token: string, userJid: string, userInfo: UserInfo): Promise<void> => {
-      return put(`${baseURL}/${userJid}/info`, token, userInfo);
-    },
-  };
-}
+  updateInfo: (token: string, userJid: string, userInfo: UserInfo): Promise<void> => {
+    return put(baseURL(userJid), token, userInfo);
+  },
+};

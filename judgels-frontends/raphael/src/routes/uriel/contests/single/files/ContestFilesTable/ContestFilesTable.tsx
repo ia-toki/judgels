@@ -4,7 +4,7 @@ import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestFile, getDownloadFileUrl } from 'modules/api/uriel/contestFile';
+import { ContestFile, contestFileAPI } from 'modules/api/uriel/contestFile';
 
 import './ContestFilesTable.css';
 
@@ -45,7 +45,7 @@ export class ContestFilesTable extends React.PureComponent<ContestFilesTableProp
           <FormattedRelative value={file.lastModifiedTime} />
         </td>
         <td className="col-download">
-          <a href={getDownloadFileUrl(this.props.contest.jid, file.name)}>
+          <a href={contestFileAPI.renderDownloadFileUrl(this.props.contest.jid, file.name)}>
             <Icon icon="download" />
           </a>
         </td>

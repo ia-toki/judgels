@@ -1,5 +1,6 @@
-import { APP_CONFIG } from 'conf';
 import { get } from 'modules/api/http';
+
+import { baseUsersURL } from './user';
 
 export interface UserRegistrationWebConfig {
   useRecaptcha: boolean;
@@ -8,12 +9,10 @@ export interface UserRegistrationWebConfig {
   };
 }
 
-export function createUserRegistrationWebAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users/registration/web`;
+const baseURL = `${baseUsersURL}/registration/web`;
 
-  return {
-    getWebConfig: (): Promise<UserRegistrationWebConfig> => {
-      return get(`${baseURL}/config`);
-    },
-  };
-}
+export const userRegistrationWebAPI = {
+  getWebConfig: (): Promise<UserRegistrationWebConfig> => {
+    return get(`${baseURL}/config`);
+  },
+};

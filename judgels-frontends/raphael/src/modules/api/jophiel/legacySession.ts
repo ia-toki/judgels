@@ -7,24 +7,22 @@ export interface LegacySession {
   userJid: string;
 }
 
-export function createLegacySessionAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.legacyJophiel}/session`;
+const baseUrl = `${APP_CONFIG.apiUrls.legacyJophiel}/session`;
 
-  return {
-    logIn: (usernameOrEmail: string, password: string): Promise<LegacySession> => {
-      return post(`${baseURL}/login`, undefined, { usernameOrEmail, password });
-    },
+export const legacySessionAPI = {
+  logIn: (usernameOrEmail: string, password: string): Promise<LegacySession> => {
+    return post(`${baseUrl}/login`, undefined, { usernameOrEmail, password });
+  },
 
-    preparePostLogin: (authCode: string, redirectUri: string) => {
-      window.location.replace(`${baseURL}/prepare-post-login/${authCode}/${redirectUri}`);
-    },
+  preparePostLogin: (authCode: string, redirectUri: string) => {
+    window.location.replace(`${baseUrl}/prepare-post-login/${authCode}/${redirectUri}`);
+  },
 
-    propagateLogin: (token: string) => {
-      return post(`${baseURL}/propagate-login`, token);
-    },
+  propagateLogin: (token: string) => {
+    return post(`${baseUrl}/propagate-login`, token);
+  },
 
-    postLogout: (redirectUri: string) => {
-      window.location.replace(`${baseURL}/post-logout/${redirectUri}`);
-    },
-  };
-}
+  postLogout: (redirectUri: string) => {
+    window.location.replace(`${baseUrl}/post-logout/${redirectUri}`);
+  },
+};

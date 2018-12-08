@@ -54,45 +54,47 @@ export enum ContestErrors {
   SlugAlreadyExists = 'Uriel:ContestSlugAlreadyExists',
 }
 
-export function createContestAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
+export const baseContestsURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
 
-  return {
-    createContest: (token: string, data: ContestCreateData): Promise<Contest> => {
-      return post(baseURL, token, data);
-    },
-
-    updateContest: (token: string, contestJid: string, data: ContestUpdateData): Promise<Contest> => {
-      return post(`${baseURL}/${contestJid}`, token, data);
-    },
-
-    getContests: (token: string, page?: number, pageSize?: number): Promise<ContestsResponse> => {
-      const params = stringify({ page, pageSize });
-      return get(`${baseURL}?${params}`, token);
-    },
-
-    getActiveContests: (token: string): Promise<ActiveContestsResponse> => {
-      return get(`${baseURL}/active`, token);
-    },
-
-    getContestBySlug: (token: string, contestSlug: string): Promise<Contest> => {
-      return get(`${baseURL}/slug/${contestSlug}`, token);
-    },
-
-    startVirtualContest: (token: string, contestJid: string): Promise<Contest> => {
-      return post(`${baseURL}/${contestJid}/virtual`, token);
-    },
-
-    getContestDescription: (token: string, contestJid: string): Promise<ContestDescription> => {
-      return get(`${baseURL}/${contestJid}/description`, token);
-    },
-
-    updateContestDescription: (
-      token: string,
-      contestJid: string,
-      description: ContestDescription
-    ): Promise<ContestDescription> => {
-      return post(`${baseURL}/${contestJid}/description`, token, description);
-    },
-  };
+export function baseContestURL(contestJid: string) {
+  return `${baseContestsURL}/${contestJid}`;
 }
+
+export const contestAPI = {
+  createContest: (token: string, data: ContestCreateData): Promise<Contest> => {
+    return post(baseContestsURL, token, data);
+  },
+
+  updateContest: (token: string, contestJid: string, data: ContestUpdateData): Promise<Contest> => {
+    return post(`${baseContestURL(contestJid)}`, token, data);
+  },
+
+  getContests: (token: string, page?: number, pageSize?: number): Promise<ContestsResponse> => {
+    const params = stringify({ page, pageSize });
+    return get(`${baseContestsURL}?${params}`, token);
+  },
+
+  getActiveContests: (token: string): Promise<ActiveContestsResponse> => {
+    return get(`${baseContestsURL}/active`, token);
+  },
+
+  getContestBySlug: (token: string, contestSlug: string): Promise<Contest> => {
+    return get(`${baseContestsURL}/slug/${contestSlug}`, token);
+  },
+
+  startVirtualContest: (token: string, contestJid: string): Promise<Contest> => {
+    return post(`${baseContestURL(contestJid)}/virtual`, token);
+  },
+
+  getContestDescription: (token: string, contestJid: string): Promise<ContestDescription> => {
+    return get(`${baseContestURL(contestJid)}/description`, token);
+  },
+
+  updateContestDescription: (
+    token: string,
+    contestJid: string,
+    description: ContestDescription
+  ): Promise<ContestDescription> => {
+    return post(`${baseContestURL(contestJid)}/description`, token, description);
+  },
+};

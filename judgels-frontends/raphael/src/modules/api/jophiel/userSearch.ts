@@ -5,20 +5,18 @@ export interface UsernamesMap {
   [username: string]: string;
 }
 
-export function createUserSearchAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-search`;
+const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-search`;
 
-  return {
-    usernameExists: (username: string): Promise<boolean> => {
-      return get(`${baseURL}/username-exists/${username}`);
-    },
+export const userSearchAPI = {
+  usernameExists: (username: string): Promise<boolean> => {
+    return get(`${baseURL}/username-exists/${username}`);
+  },
 
-    emailExists: (email: string): Promise<boolean> => {
-      return get(`${baseURL}/email-exists/${email}`);
-    },
+  emailExists: (email: string): Promise<boolean> => {
+    return get(`${baseURL}/email-exists/${email}`);
+  },
 
-    translateUsernamesToJids: (usernames: string[]): Promise<UsernamesMap> => {
-      return post(`${baseURL}/username-to-jid`, undefined, usernames);
-    },
-  };
-}
+  translateUsernamesToJids: (usernames: string[]): Promise<UsernamesMap> => {
+    return post(`${baseURL}/username-to-jid`, undefined, usernames);
+  },
+};

@@ -14,24 +14,22 @@ export interface PasswordResetData {
   newPassword: string;
 }
 
-export function createUserAccountAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-account`;
+const baseURL = `${APP_CONFIG.apiUrls.jophiel}/user-account`;
 
-  return {
-    registerUser: (userRegistrationData: UserRegistrationData): Promise<void> => {
-      return post(`${baseURL}/register`, undefined, userRegistrationData);
-    },
+export const userAccountAPI = {
+  registerUser: (userRegistrationData: UserRegistrationData): Promise<void> => {
+    return post(`${baseURL}/register`, undefined, userRegistrationData);
+  },
 
-    activateUser: (emailCode: string): Promise<void> => {
-      return post(`${baseURL}/activate/${emailCode}`);
-    },
+  activateUser: (emailCode: string): Promise<void> => {
+    return post(`${baseURL}/activate/${emailCode}`);
+  },
 
-    requestToResetPassword: (email: string): Promise<void> => {
-      return post(`${baseURL}/request-reset-password/${email}`);
-    },
+  requestToResetPassword: (email: string): Promise<void> => {
+    return post(`${baseURL}/request-reset-password/${email}`);
+  },
 
-    resetPassword: (passwordResetData: PasswordResetData): Promise<void> => {
-      return post(`${baseURL}/reset-password`, undefined, passwordResetData);
-    },
-  };
-}
+  resetPassword: (passwordResetData: PasswordResetData): Promise<void> => {
+    return post(`${baseURL}/reset-password`, undefined, passwordResetData);
+  },
+};

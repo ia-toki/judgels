@@ -13,13 +13,15 @@ export interface UsernamesMap {
   [username: string]: string;
 }
 
-export function createUserAPI() {
-  const baseURL = `${APP_CONFIG.apiUrls.jophiel}/users`;
+export const baseUsersURL = `${APP_CONFIG.apiUrls.jophiel}/users`;
 
-  return {
-    getUsers: (token: string, page?: number, orderBy?: string, orderDir?: OrderDir): Promise<Page<User>> => {
-      const params = stringify({ page, orderBy, orderDir });
-      return get(`${baseURL}/?${params}`, token);
-    },
-  };
+export function baseUserURL(userJid: string) {
+  return `${baseUsersURL}/${userJid}`;
 }
+
+export const userAPI = {
+  getUsers: (token: string, page?: number, orderBy?: string, orderDir?: OrderDir): Promise<Page<User>> => {
+    const params = stringify({ page, orderBy, orderDir });
+    return get(`${baseUsersURL}/?${params}`, token);
+  },
+};

@@ -6,29 +6,29 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunk from 'redux-thunk';
 
-import { createSessionAPI } from './api/jophiel/session';
-import { createLegacySessionAPI } from './api/jophiel/legacySession';
-import { createMyUserAPI } from './api/jophiel/myUser';
-import { createProfileAPI } from './api/jophiel/profile';
-import { createUserAPI } from './api/jophiel/user';
-import { createUserAccountAPI } from './api/jophiel/userAccount';
-import { createUserAvatarAPI } from './api/jophiel/userAvatar';
-import { createUserInfoAPI } from './api/jophiel/userInfo';
-import { createUserRegistrationWebAPI } from './api/jophiel/userRegistration';
-import { createUserSearchAPI } from './api/jophiel/userSearch';
-import { createUserWebAPI } from './api/jophiel/userWeb';
-import { createUrielAdminAPI } from './api/uriel/admin';
-import { createContestAPI } from './api/uriel/contest';
-import { createContestWebAPI } from './api/uriel/contestWeb';
-import { createContestAnnouncementAPI } from './api/uriel/contestAnnouncement';
-import { createContestClarificationAPI } from './api/uriel/contestClarification';
-import { createContestContestantAPI } from './api/uriel/contestContestant';
-import { createContestManagerAPI } from './api/uriel/contestManager';
-import { createContestModuleAPI } from './api/uriel/contestModule';
-import { createContestProblemAPI } from './api/uriel/contestProblem';
-import { createContestScoreboardAPI } from './api/uriel/contestScoreboard';
-import { createContestSubmissionAPI } from './api/uriel/contestSubmission';
-import { createContestFileAPI } from './api/uriel/contestFile';
+import { sessionAPI } from './api/jophiel/session';
+import { legacySessionAPI } from './api/jophiel/legacySession';
+import { profileAPI } from './api/jophiel/profile';
+import { userAPI } from './api/jophiel/user';
+import { myUserAPI } from './api/jophiel/myUser';
+import { userAccountAPI } from './api/jophiel/userAccount';
+import { userAvatarAPI } from './api/jophiel/userAvatar';
+import { userInfoAPI } from './api/jophiel/userInfo';
+import { userRegistrationWebAPI } from './api/jophiel/userRegistration';
+import { userSearchAPI } from './api/jophiel/userSearch';
+import { userWebAPI } from './api/jophiel/userWeb';
+import { urielAdminAPI } from './api/uriel/admin';
+import { contestAPI } from './api/uriel/contest';
+import { contestWebAPI } from './api/uriel/contestWeb';
+import { contestAnnouncementAPI } from './api/uriel/contestAnnouncement';
+import { contestClarificationAPI } from './api/uriel/contestClarification';
+import { contestContestantAPI } from './api/uriel/contestContestant';
+import { contestManagerAPI } from './api/uriel/contestManager';
+import { contestModuleAPI } from './api/uriel/contestModule';
+import { contestProblemAPI } from './api/uriel/contestProblem';
+import { contestScoreboardAPI } from './api/uriel/contestScoreboard';
+import { contestSubmissionAPI } from './api/uriel/contestSubmission';
+import { contestFileAPI } from './api/uriel/contestFile';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
 import { toastActions } from './toast/toastActions';
@@ -69,29 +69,29 @@ export const store = createStore<AppState>(
       toastMiddleware,
       tokenGateMiddleware,
       thunk.withExtraArgument({
-        sessionAPI: createSessionAPI(),
-        legacySessionAPI: createLegacySessionAPI(),
-        myUserAPI: createMyUserAPI(),
-        profileAPI: createProfileAPI(),
-        userAPI: createUserAPI(),
-        userAccountAPI: createUserAccountAPI(),
-        userAvatarAPI: createUserAvatarAPI(),
-        userInfoAPI: createUserInfoAPI(),
-        userRegistrationWebAPI: createUserRegistrationWebAPI(),
-        userSearchAPI: createUserSearchAPI(),
-        userWebAPI: createUserWebAPI(),
-        urielAdminAPI: createUrielAdminAPI(),
-        contestAPI: createContestAPI(),
-        contestWebAPI: createContestWebAPI(),
-        contestAnnouncementAPI: createContestAnnouncementAPI(),
-        contestClarificationAPI: createContestClarificationAPI(),
-        contestContestantAPI: createContestContestantAPI(),
-        contestManagerAPI: createContestManagerAPI(),
-        contestModuleAPI: createContestModuleAPI(),
-        contestProblemAPI: createContestProblemAPI(),
-        contestScoreboardAPI: createContestScoreboardAPI(),
-        contestSubmissionAPI: createContestSubmissionAPI(),
-        contestFileAPI: createContestFileAPI(),
+        sessionAPI,
+        legacySessionAPI,
+        profileAPI,
+        userAPI,
+        myUserAPI,
+        userAccountAPI,
+        userAvatarAPI,
+        userInfoAPI,
+        userRegistrationWebAPI,
+        userSearchAPI,
+        userWebAPI,
+        urielAdminAPI,
+        contestAPI,
+        contestWebAPI,
+        contestAnnouncementAPI,
+        contestClarificationAPI,
+        contestContestantAPI,
+        contestManagerAPI,
+        contestModuleAPI,
+        contestProblemAPI,
+        contestScoreboardAPI,
+        contestSubmissionAPI,
+        contestFileAPI,
         toastActions,
       }),
       routerMiddleware(history)

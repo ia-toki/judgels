@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { APP_CONFIG } from 'conf';
+import { contestFileAPI } from 'modules/api/uriel/contestFile';
 
 import { HtmlText } from '../HtmlText/HtmlText';
 
@@ -21,5 +21,5 @@ function formatDownloadUrls(text: string, context: any): string {
   if (!contestJid) {
     return text;
   }
-  return text.replace(/(src|href)="download\//g, `$1="${APP_CONFIG.apiUrls.uriel}/contests/${contestJid}/files/`);
+  return text.replace(/(src|href)="download\//g, `$1="${contestFileAPI.renderDownloadFilesUrl(contestJid)}/`);
 }
