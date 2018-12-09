@@ -1,6 +1,6 @@
 package judgels.uriel.contest.file;
 
-import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.FILE;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.FILE;
 
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
@@ -36,6 +36,6 @@ public class ContestFileRoleChecker {
             return false;
         }
         return contestRoleChecker.canManage(userJid, contest)
-                || supervisorStore.isSupervisorWithPermission(contest.getJid(), userJid, FILE);
+                || supervisorStore.isSupervisorWithManagementPermission(contest.getJid(), userJid, FILE);
     }
 }

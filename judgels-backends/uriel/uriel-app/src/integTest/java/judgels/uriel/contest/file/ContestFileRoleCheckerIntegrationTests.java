@@ -1,6 +1,6 @@
 package judgels.uriel.contest.file;
 
-import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.FILE;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.FILE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;

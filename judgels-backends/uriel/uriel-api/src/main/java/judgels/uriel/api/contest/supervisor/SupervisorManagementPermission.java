@@ -1,6 +1,7 @@
 package judgels.uriel.api.contest.supervisor;
 
-public enum SupervisorPermissionType {
+public enum SupervisorManagementPermission {
+    ALL,
     ANNOUNCEMENT,
     PROBLEM,
     SUBMISSION,

@@ -1,6 +1,6 @@
 package judgels.uriel.contest.announcement;
 
-import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.ANNOUNCEMENT;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.ANNOUNCEMENT;
 
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
@@ -30,6 +30,6 @@ public class ContestAnnouncementRoleChecker {
 
     public boolean canManage(String userJid, Contest contest) {
         return contestRoleChecker.canManage(userJid, contest)
-                || supervisorStore.isSupervisorWithPermission(contest.getJid(), userJid, ANNOUNCEMENT);
+                || supervisorStore.isSupervisorWithManagementPermission(contest.getJid(), userJid, ANNOUNCEMENT);
     }
 }

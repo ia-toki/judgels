@@ -1,6 +1,6 @@
 package judgels.uriel.contest.clarification;
 
-import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.CLARIFICATION;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.CLARIFICATION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;

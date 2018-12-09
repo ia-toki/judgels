@@ -2,7 +2,7 @@ package judgels.uriel.contest.problem;
 
 import static java.time.temporal.ChronoUnit.HOURS;
 import static judgels.persistence.TestClock.NOW;
-import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.PROBLEM;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.PROBLEM;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;

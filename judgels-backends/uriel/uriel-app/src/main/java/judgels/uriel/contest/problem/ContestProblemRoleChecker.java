@@ -1,6 +1,6 @@
 package judgels.uriel.contest.problem;
 
-import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.PROBLEM;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.PROBLEM;
 
 import java.util.Optional;
 import javax.inject.Inject;
@@ -80,6 +80,6 @@ public class ContestProblemRoleChecker {
 
     public boolean canManage(String userJid, Contest contest) {
         return contestRoleChecker.canManage(userJid, contest)
-                || supervisorStore.isSupervisorWithPermission(contest.getJid(), userJid, PROBLEM);
+                || supervisorStore.isSupervisorWithManagementPermission(contest.getJid(), userJid, PROBLEM);
     }
 }

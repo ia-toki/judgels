@@ -1,6 +1,6 @@
 package judgels.uriel.contest.announcement;
 
-import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.ANNOUNCEMENT;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.ANNOUNCEMENT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;

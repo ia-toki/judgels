@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestUpdateData;
-import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
+import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -166,7 +166,7 @@ class ContestContestantRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
 
         assertThat(checker.canManage(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canManage(SUPERVISOR, contestB)).isFalse();
-        addSupervisorToContestBWithPermission(SupervisorPermissionType.CONTESTANT);
+        addSupervisorToContestBWithPermission(SupervisorManagementPermission.CONTESTANT);
         assertThat(checker.canManage(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canManage(SUPERVISOR, contestC)).isFalse();
 

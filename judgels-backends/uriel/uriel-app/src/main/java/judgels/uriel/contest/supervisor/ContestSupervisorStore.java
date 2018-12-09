@@ -7,13 +7,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
-import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
-import judgels.uriel.api.contest.supervisor.SupervisorPermission;
-import judgels.uriel.api.contest.supervisor.SupervisorPermissionType;
+import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
 
@@ -34,9 +34,17 @@ public class ContestSupervisorStore {
                 .build();
     }
 
-    public boolean isSupervisorWithPermission(String contestJid, String userJid, SupervisorPermissionType type) {
+    public boolean isSupervisorWithManagementPermission(
+            String contestJid,
+            String userJid,
+            SupervisorManagementPermission permission) {
+
         Optional<ContestSupervisor> supervisor = getSupervisor(contestJid, userJid);
-        return supervisor.isPresent() && supervisor.get().getPermission().allows(type);
+        if (!supervisor.isPresent()) {
+            return false;
+        }
+        Set<SupervisorManagementPermission> permissions = supervisor.get().getManagementPermissions();
+        return permissions.contains(SupervisorManagementPermission.ALL) || permissions.contains(permission);
     }
 
     public Optional<ContestSupervisor> getSupervisor(String contestJid, String userJid) {
@@ -51,48 +59,60 @@ public class ContestSupervisorStore {
                 .orElse(null);
     }
 
-    public ContestSupervisor upsertSupervisor(String contestJid, ContestSupervisorData data) {
-        Optional<ContestSupervisorModel> maybeModel =
-                supervisorDao.selectByContestJidAndUserJid(contestJid, data.getUserJid());
+    public ContestSupervisor upsertSupervisor(
+            String contestJid,
+            String userJid,
+            Set<SupervisorManagementPermission> managementPermissions) {
+
+        Optional<ContestSupervisorModel> maybeModel = supervisorDao.selectByContestJidAndUserJid(contestJid, userJid);
 
         ContestSupervisor supervisor;
         if (maybeModel.isPresent()) {
             ContestSupervisorModel model = maybeModel.get();
-            toModel(contestJid, data, model);
+            toModel(contestJid, userJid, managementPermissions, model);
             supervisor = fromModel(supervisorDao.update(model));
         } else {
             ContestSupervisorModel model = new ContestSupervisorModel();
-            toModel(contestJid, data, model);
+            toModel(contestJid, userJid, managementPermissions, model);
             supervisor = fromModel(supervisorDao.insert(model));
         }
-        supervisorCache.invalidate(contestJid + SEPARATOR + data.getUserJid());
+        supervisorCache.invalidate(contestJid + SEPARATOR + userJid);
         return supervisor;
     }
 
     private ContestSupervisor fromModel(ContestSupervisorModel model) {
-        SupervisorPermission permission;
+        SupervisorManagementPermissions permissions;
         try {
-            permission = mapper.readValue(model.permission, SupervisorPermission.class);
+            permissions = mapper.readValue(model.permission, SupervisorManagementPermissions.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        Set<SupervisorManagementPermission> managementPermissions = permissions.getIsAllowedAll()
+                ? ImmutableSet.of(SupervisorManagementPermission.ALL)
+                : permissions.getAllowedPermissions();
+
         return new ContestSupervisor.Builder()
                 .userJid(model.userJid)
-                .permission(permission)
+                .managementPermissions(managementPermissions)
                 .build();
     }
 
     private void toModel(
             String contestJid,
-            ContestSupervisorData data,
+            String userJid,
+            Set<SupervisorManagementPermission> managementPermissions,
             ContestSupervisorModel model) {
 
         model.contestJid = contestJid;
-        model.userJid = data.getUserJid();
+        model.userJid = userJid;
+
+        SupervisorManagementPermissions permissions = managementPermissions.contains(SupervisorManagementPermission.ALL)
+                ? SupervisorManagementPermissions.all()
+                : SupervisorManagementPermissions.of(managementPermissions);
 
         try {
-            model.permission = mapper.writeValueAsString(data.getPermission());
+            model.permission = mapper.writeValueAsString(permissions);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

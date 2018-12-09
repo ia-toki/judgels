@@ -1,6 +1,6 @@
 package judgels.uriel.contest.clarification;
 
-import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.CLARIFICATION;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.CLARIFICATION;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -74,6 +74,6 @@ public class ContestClarificationRoleChecker {
             return false;
         }
         return contestRoleChecker.canManage(userJid, contest)
-                || supervisorStore.isSupervisorWithPermission(contest.getJid(), userJid, CLARIFICATION);
+                || supervisorStore.isSupervisorWithManagementPermission(contest.getJid(), userJid, CLARIFICATION);
     }
 }

@@ -1,9 +1,11 @@
 package judgels.uriel.contest;
 
 import static judgels.uriel.api.contest.ContestErrors.CONTEST_SLUG_ALREADY_EXISTS;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.ALL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.google.common.collect.ImmutableSet;
 import com.palantir.conjure.java.api.errors.ServiceException;
 import java.time.Instant;
 import java.util.List;
@@ -14,8 +16,6 @@ import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestUpdateData;
-import judgels.uriel.api.contest.supervisor.ContestSupervisorData;
-import judgels.uriel.api.contest.supervisor.SupervisorPermission;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.manager.ContestManagerStore;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -91,9 +91,7 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
         contestantStore.upsertContestant(contestA.getJid(), USER_1);
         contestantStore.upsertContestant(contestA.getJid(), USER_2);
         contestantStore.upsertContestant(contestA.getJid(), USER_3);
-        supervisorStore.upsertSupervisor(
-                contestB.getJid(),
-                new ContestSupervisorData.Builder().userJid(USER_2).permission(SupervisorPermission.all()).build());
+        supervisorStore.upsertSupervisor(contestB.getJid(), USER_2, ImmutableSet.of(ALL));
         managerStore.upsertManager(contestC.getJid(), USER_3);
 
         assertThat(getContests(ADMIN)).containsExactly(contestD, contestC, contestA, contestB);

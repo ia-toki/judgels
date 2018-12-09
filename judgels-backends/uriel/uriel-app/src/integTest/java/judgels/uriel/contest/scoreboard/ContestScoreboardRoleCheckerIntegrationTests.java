@@ -1,6 +1,6 @@
 package judgels.uriel.contest.scoreboard;
 
-import static judgels.uriel.api.contest.supervisor.SupervisorPermissionType.SCOREBOARD;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.SCOREBOARD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.uriel.api.contest.problem.ContestProblemData;
