@@ -6,6 +6,8 @@ import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermissio
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
+import java.util.Optional;
+import judgels.persistence.api.Page;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
@@ -21,9 +23,6 @@ import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ContestModel.class, ContestSupervisorModel.class})
 class ContestSupervisorStoreIntegrationTests extends AbstractIntegrationTests {
-    private static final String USER_1 = "user1Jid";
-    private static final String USER_2 = "user2Jid";
-
     private ContestStore contestStore;
     private ContestSupervisorStore store;
 
@@ -40,20 +39,29 @@ class ContestSupervisorStoreIntegrationTests extends AbstractIntegrationTests {
         Contest contest = contestStore.createContest(new ContestCreateData.Builder().slug("contest-a").build());
         contestStore.createContest(new ContestCreateData.Builder().slug("contest-b").build());
 
-        assertThat(store.isSupervisorWithManagementPermission(contest.getJid(), USER_1, SCOREBOARD)).isFalse();
+        assertThat(store.isSupervisorWithManagementPermission(contest.getJid(), "userJidA", SCOREBOARD)).isFalse();
 
-        ContestSupervisor supervisor1 = store.upsertSupervisor(contest.getJid(), USER_1, ImmutableSet.of(SCOREBOARD));
-        store.upsertSupervisor(contest.getJid(), USER_2, ImmutableSet.of(ALL));
+        ContestSupervisor supervisorA =
+                store.upsertSupervisor(contest.getJid(), "userJidA", ImmutableSet.of(SCOREBOARD));
+        store.upsertSupervisor(contest.getJid(), "userJidB", ImmutableSet.of(ALL));
 
-        assertThat(store.getSupervisor(contest.getJid(), USER_1)).contains(supervisor1);
-        assertThat(store.isSupervisorWithManagementPermission(contest.getJid(), USER_1, SCOREBOARD)).isTrue();
+        assertThat(store.getSupervisor(contest.getJid(), "userJidA")).contains(supervisorA);
+        assertThat(store.isSupervisorWithManagementPermission(contest.getJid(), "userJidA", SCOREBOARD)).isTrue();
 
-        assertThat(store.isSupervisorWithManagementPermission(contest.getJid(), USER_1, FILE)).isFalse();
-        store.upsertSupervisor(contest.getJid(), USER_1, ImmutableSet.of(FILE, SCOREBOARD));
-        assertThat(store.isSupervisorWithManagementPermission(contest.getJid(), USER_1, FILE)).isTrue();
+        assertThat(store.isSupervisorWithManagementPermission(contest.getJid(), "userJidA", FILE)).isFalse();
+        store.upsertSupervisor(contest.getJid(), "userJidA", ImmutableSet.of(FILE, SCOREBOARD));
+        assertThat(store.isSupervisorWithManagementPermission(contest.getJid(), "userJidA", FILE)).isTrue();
 
-        // TODO(fushar): move these assertions to service integration tests instead
-        assertThat(supervisor1.getUserJid()).isEqualTo(USER_1);
-        assertThat(supervisor1.getManagementPermissions()).isEqualTo(ImmutableSet.of(SCOREBOARD));
+        Page<ContestSupervisor> supervisors = store.getSupervisors(contest.getJid(), Optional.empty());
+        assertThat(supervisors.getPage()).containsOnly(
+                new ContestSupervisor.Builder().userJid("userJidA").addManagementPermissions(FILE, SCOREBOARD).build(),
+                new ContestSupervisor.Builder().userJid("userJidB").addManagementPermissions(ALL).build());
+
+        assertThat(store.deleteSupervisor(contest.getJid(), "userJidA")).isTrue();
+        assertThat(store.deleteSupervisor(contest.getJid(), "userJidC")).isFalse();
+
+        supervisors = store.getSupervisors(contest.getJid(), Optional.empty());
+        assertThat(supervisors.getPage()).containsOnly(
+                new ContestSupervisor.Builder().userJid("userJidB").addManagementPermissions(ALL).build());
     }
 }

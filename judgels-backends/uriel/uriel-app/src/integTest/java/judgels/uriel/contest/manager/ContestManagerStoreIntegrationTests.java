@@ -43,7 +43,6 @@ class ContestManagerStoreIntegrationTests extends AbstractIntegrationTests {
                 new ContestManager.Builder().userJid("userJidA").build(),
                 new ContestManager.Builder().userJid("userJidB").build());
 
-
         assertThat(store.deleteManager(contest.getJid(), "userJidA")).isTrue();
         assertThat(store.deleteManager(contest.getJid(), "userJidC")).isFalse();
 

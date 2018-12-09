@@ -8,10 +8,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.uriel.persistence.ContestSupervisorDao;
@@ -78,6 +81,22 @@ public class ContestSupervisorStore {
         }
         supervisorCache.invalidate(contestJid + SEPARATOR + userJid);
         return supervisor;
+    }
+
+    public boolean deleteSupervisor(String contestJid, String userJid) {
+        Optional<ContestSupervisorModel> maybeModel = supervisorDao.selectByContestJidAndUserJid(contestJid, userJid);
+        if (!maybeModel.isPresent()) {
+            return false;
+        }
+        supervisorDao.delete(maybeModel.get());
+        return true;
+    }
+
+    public Page<ContestSupervisor> getSupervisors(String contestJid, Optional<Integer> page) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        page.ifPresent(options::page);
+        return supervisorDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
+                p -> Lists.transform(p, this::fromModel));
     }
 
     private ContestSupervisor fromModel(ContestSupervisorModel model) {

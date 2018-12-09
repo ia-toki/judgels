@@ -64,6 +64,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         env.jersey().register(component.contestProblemResource());
         env.jersey().register(component.contestScoreboardResource());
         env.jersey().register(component.contestSubmissionResource());
+        env.jersey().register(component.contestSupervisorResource());
         env.jersey().register(component.versionResource());
     }
 }

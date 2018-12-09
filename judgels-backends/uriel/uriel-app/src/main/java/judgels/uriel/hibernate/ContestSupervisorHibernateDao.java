@@ -9,6 +9,8 @@ import javax.persistence.criteria.Subquery;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModel_;
@@ -32,6 +34,13 @@ public class ContestSupervisorHibernateDao extends HibernateDao<ContestSuperviso
                 .putColumnsEq(ContestSupervisorModel_.contestJid, contestJid)
                 .putColumnsEq(ContestSupervisorModel_.userJid, userJid)
                 .build());
+    }
+
+    @Override
+    public Page<ContestSupervisorModel> selectPagedByContestJid(String contestJid, SelectionOptions options) {
+        return selectPaged(new FilterOptions.Builder<ContestSupervisorModel>()
+                .putColumnsEq(ContestSupervisorModel_.contestJid, contestJid)
+                .build(), options);
     }
 
     static CustomPredicateFilter<ContestModel> hasSupervisor(String userJid) {
