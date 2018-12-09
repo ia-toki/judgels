@@ -47,12 +47,6 @@ class ContestScoreboardRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
 
         assertThat(checker.canViewDefault(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canViewDefault(SUPERVISOR, contestAStarted)).isTrue();
-        assertThat(checker.canViewDefault(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canViewDefault(SUPERVISOR, contestBStarted)).isTrue();
-        assertThat(checker.canViewDefault(SUPERVISOR, contestC)).isFalse();
-        addSupervisorToContestBWithPermission(SCOREBOARD);
-        assertThat(checker.canViewDefault(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canViewDefault(SUPERVISOR, contestAStarted)).isTrue();
         assertThat(checker.canViewDefault(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canViewDefault(SUPERVISOR, contestBStarted)).isTrue();
         assertThat(checker.canViewDefault(SUPERVISOR, contestC)).isFalse();
@@ -130,12 +124,6 @@ class ContestScoreboardRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
         assertThat(checker.canSupervise(CONTESTANT, contestBStarted)).isFalse();
         assertThat(checker.canSupervise(CONTESTANT, contestC)).isFalse();
 
-        assertThat(checker.canSupervise(SUPERVISOR, contestA)).isFalse();
-        assertThat(checker.canSupervise(SUPERVISOR, contestAStarted)).isFalse();
-        assertThat(checker.canSupervise(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canSupervise(SUPERVISOR, contestBStarted)).isFalse();
-        assertThat(checker.canSupervise(SUPERVISOR, contestC)).isFalse();
-        addSupervisorToContestBWithPermission(SCOREBOARD);
         assertThat(checker.canSupervise(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canSupervise(SUPERVISOR, contestAStarted)).isFalse();
         assertThat(checker.canSupervise(SUPERVISOR, contestB)).isTrue();
