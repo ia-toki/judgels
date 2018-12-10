@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 public interface ContestClarificationConfig {
     boolean getCanCreate();
     boolean getCanSupervise();
+    boolean getCanManage();
     List<String> getProblemJids();
 
     class Builder extends ImmutableContestClarificationConfig.Builder {}

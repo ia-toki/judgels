@@ -98,7 +98,7 @@ public class ContestFileResource implements ContestFileService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(fileRoleChecker.canSupervise(actorJid, contest));
+        checkAllowed(fileRoleChecker.canManage(actorJid, contest));
 
         fileFs.uploadPublicFile(Paths.get(contestJid, fileDetails.getFileName()), fileStream);
     }

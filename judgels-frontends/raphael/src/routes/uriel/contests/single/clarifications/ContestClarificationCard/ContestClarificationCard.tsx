@@ -15,6 +15,7 @@ export interface ContestClarificationCardProps {
   contest: Contest;
   clarification: ContestClarification;
   canSupervise: boolean;
+  canManage: boolean;
   askerProfile?: Profile;
   answererProfile?: Profile;
   problemAlias?: string;
@@ -76,6 +77,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
       contest,
       clarification,
       canSupervise,
+      canManage,
       answererProfile,
       isAnswerBoxOpen,
       isAnswerBoxLoading,
@@ -84,7 +86,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
     } = this.props;
 
     if (!clarification.answer) {
-      if (canSupervise) {
+      if (canManage) {
         return (
           <ContestClarificationAnswerBox
             contest={contest}

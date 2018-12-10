@@ -89,7 +89,8 @@ public class ContestClarificationResource implements ContestClarificationService
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canViewOwn(actorJid, contest));
 
-        Page<ContestClarification> clarifications = clarificationRoleChecker.canSupervise(actorJid, contest)
+        boolean canSupervise = clarificationRoleChecker.canSupervise(actorJid, contest);
+        Page<ContestClarification> clarifications = canSupervise
                 ? clarificationStore.getClarifications(contestJid, page)
                 : clarificationStore.getClarifications(contestJid, actorJid, page);
 
@@ -109,10 +110,11 @@ public class ContestClarificationResource implements ContestClarificationService
                     .collect(Collectors.toSet());
         }
 
-        boolean canSupervise = clarificationRoleChecker.canSupervise(actorJid, contest);
+        boolean canManage = clarificationRoleChecker.canManage(actorJid, contest);
         ContestClarificationConfig config = new ContestClarificationConfig.Builder()
                 .canCreate(canCreate)
                 .canSupervise(canSupervise)
+                .canManage(canManage)
                 .problemJids(problemJidsSortedByAlias)
                 .build();
 
@@ -158,7 +160,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(clarificationRoleChecker.canSupervise(actorJid, contest));
+        checkAllowed(clarificationRoleChecker.canManage(actorJid, contest));
 
         checkFound(clarificationStore.updateClarificationAnswer(
                 contestJid,

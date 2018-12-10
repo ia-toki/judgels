@@ -25,6 +25,7 @@ describe('ContestClarificationsPage', () => {
     config: {
       canCreate: true,
       canSupervise: false,
+      canManage: false,
       problemJids: ['problemJid1', 'problemJid2'],
     },
     profilesMap: { [userJid]: { username: 'username' } },

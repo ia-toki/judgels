@@ -76,7 +76,7 @@ class ContestClarificationsPage extends React.Component<
       );
     }
 
-    const { canSupervise } = config;
+    const { canSupervise, canManage } = config;
 
     return clarifications.page.map(clarification => (
       <div className="content-card__section" key={clarification.jid}>
@@ -84,6 +84,7 @@ class ContestClarificationsPage extends React.Component<
           contest={this.props.contest}
           clarification={clarification}
           canSupervise={canSupervise}
+          canManage={canManage}
           askerProfile={canSupervise ? profilesMap[clarification.userJid] : undefined}
           answererProfile={
             canSupervise && clarification.answererJid ? profilesMap[clarification.answererJid] : undefined

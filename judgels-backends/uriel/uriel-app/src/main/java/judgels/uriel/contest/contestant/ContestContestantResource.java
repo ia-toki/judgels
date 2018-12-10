@@ -147,7 +147,7 @@ public class ContestContestantResource implements ContestContestantService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestantRoleChecker.canSupervise(actorJid, contest));
+        checkAllowed(contestantRoleChecker.canManage(actorJid, contest));
 
         checkArgument(usernames.size() <= 100, "Cannot add more than 100 users.");
 
@@ -187,7 +187,7 @@ public class ContestContestantResource implements ContestContestantService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestantRoleChecker.canSupervise(actorJid, contest));
+        checkAllowed(contestantRoleChecker.canManage(actorJid, contest));
 
         checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
 

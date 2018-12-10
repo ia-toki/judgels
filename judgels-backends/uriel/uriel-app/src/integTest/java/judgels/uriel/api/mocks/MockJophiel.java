@@ -30,25 +30,85 @@ import judgels.service.api.actor.AuthHeader;
 public class MockJophiel {
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
 
-    public static final String SUPERADMIN_BEARER_TOKEN = "superadminToken";
+    public static final String SUPERADMIN_BEARER_TOKEN = "superAdminToken";
     public static final String ADMIN_BEARER_TOKEN = "adminToken";
+    public static final String MANAGER_BEARER_TOKEN = "managerToken";
+    public static final String SUPERVISOR_BEARER_TOKEN = "supervisorToken";
+    public static final String CONTESTANT_BEARER_TOKEN = "contestantToken";
+    public static final String USER_BEARER_TOKEN = "userToken";
     public static final String USER_A_BEARER_TOKEN = "userAToken";
     public static final String USER_B_BEARER_TOKEN = "userBToken";
 
+    private static final String[] TOKENS = {
+            SUPERADMIN_BEARER_TOKEN,
+            ADMIN_BEARER_TOKEN,
+            MANAGER_BEARER_TOKEN,
+            SUPERVISOR_BEARER_TOKEN,
+            CONTESTANT_BEARER_TOKEN,
+            USER_BEARER_TOKEN,
+            USER_A_BEARER_TOKEN,
+            USER_B_BEARER_TOKEN
+    };
+
     public static final AuthHeader SUPERADMIN_HEADER = AuthHeader.of(SUPERADMIN_BEARER_TOKEN);
     public static final AuthHeader ADMIN_HEADER = AuthHeader.of(ADMIN_BEARER_TOKEN);
+    public static final AuthHeader MANAGER_HEADER = AuthHeader.of(MANAGER_BEARER_TOKEN);
+    public static final AuthHeader SUPERVISOR_HEADER = AuthHeader.of(SUPERVISOR_BEARER_TOKEN);
+    public static final AuthHeader CONTESTANT_HEADER = AuthHeader.of(CONTESTANT_BEARER_TOKEN);
+    public static final AuthHeader USER_HEADER = AuthHeader.of(USER_BEARER_TOKEN);
     public static final AuthHeader USER_A_HEADER = AuthHeader.of(USER_A_BEARER_TOKEN);
     public static final AuthHeader USER_B_HEADER = AuthHeader.of(USER_B_BEARER_TOKEN);
 
+    private static final AuthHeader[] HEADERS = {
+            SUPERADMIN_HEADER,
+            ADMIN_HEADER,
+            MANAGER_HEADER,
+            SUPERVISOR_HEADER,
+            CONTESTANT_HEADER,
+            USER_HEADER,
+            USER_A_HEADER,
+            USER_B_HEADER
+    };
+
     public static final String SUPERADMIN = "superadmin";
     public static final String ADMIN = "admin";
+    public static final String MANAGER = "manager";
+    public static final String SUPERVISOR = "supervisor";
+    public static final String CONTESTANT = "contestant";
+    public static final String USER = "user";
     public static final String USER_A = "userA";
     public static final String USER_B = "userB";
 
+    private static final String[] USERNAMES = {
+            SUPERADMIN,
+            ADMIN,
+            MANAGER,
+            SUPERVISOR,
+            CONTESTANT,
+            USER,
+            USER_A,
+            USER_B
+    };
+
     public static final String SUPERADMIN_JID = "superadminJid";
     public static final String ADMIN_JID = "adminJid";
+    public static final String MANAGER_JID = "managerJid";
+    public static final String SUPERVISOR_JID = "supervisorJid";
+    public static final String CONTESTANT_JID = "contestantJid";
+    public static final String USER_JID = "userJid";
     public static final String USER_A_JID = "userAJid";
     public static final String USER_B_JID = "userBJid";
+
+    private static final String[] JIDS = {
+            SUPERADMIN_JID,
+            ADMIN_JID,
+            MANAGER_JID,
+            SUPERVISOR_JID,
+            CONTESTANT_JID,
+            USER_JID,
+            USER_A_JID,
+            USER_B_JID
+    };
 
     public static final int JOPHIEL_PORT = 9001;
 
@@ -64,28 +124,21 @@ public class MockJophiel {
                         "jid", "nonadminJid",
                         "username", "nonadmin"))));
 
-        mockJophiel.stubFor(get("/api/v2/users/me/")
-                .withHeader(HttpHeaders.AUTHORIZATION, containing(ADMIN_BEARER_TOKEN))
-                .willReturn(okForJson(ImmutableMap.of(
-                        "jid", ADMIN_JID,
-                        "username", ADMIN))));
-
-        mockJophiel.stubFor(get("/api/v2/users/me/")
-                .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_A_BEARER_TOKEN))
-                .willReturn(okForJson(ImmutableMap.of(
-                        "jid", USER_A_JID,
-                        "username", USER_A))));
-
-        mockJophiel.stubFor(get("/api/v2/users/me/")
-                .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_B_BEARER_TOKEN))
-                .willReturn(okForJson(ImmutableMap.of(
-                        "jid", USER_B_JID,
-                        "username", USER_B,
-                        "email", "userb@mailinator.com"))));
+        for (int i = 0; i < TOKENS.length; i++) {
+            mockJophiel.stubFor(get("/api/v2/users/me/")
+                    .withHeader(HttpHeaders.AUTHORIZATION, containing(TOKENS[i]))
+                    .willReturn(okForJson(ImmutableMap.of(
+                            "jid", JIDS[i],
+                            "username", USERNAMES[i]))));
+        }
 
         mockJophiel.stubFor(get("/api/v2/users/me/role")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(SUPERADMIN_BEARER_TOKEN))
                 .willReturn(okForJson("superadmin")));
+
+        mockJophiel.stubFor(get("/api/v2/users/me/role")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing(ADMIN_BEARER_TOKEN))
+                .willReturn(okForJson("admin")));
 
         mockJophiel.stubFor(post("/api/v2/user-search/username-to-jid")
                 .willReturn(aResponse().withStatus(200).withTransformers("username-to-jid")));
@@ -112,17 +165,10 @@ public class MockJophiel {
             }
 
             Map<String, String> res = new HashMap<>();
-            if (usernames.contains(SUPERADMIN)) {
-                res.put(SUPERADMIN, SUPERADMIN_JID);
-            }
-            if (usernames.contains(ADMIN)) {
-                res.put(ADMIN, ADMIN_JID);
-            }
-            if (usernames.contains(USER_A)) {
-                res.put(USER_A, USER_A_JID);
-            }
-            if (usernames.contains(USER_B)) {
-                res.put(USER_B, USER_B_JID);
+            for (int i = 0; i < TOKENS.length; i++) {
+                if (usernames.contains(USERNAMES[i])) {
+                    res.put(USERNAMES[i], JIDS[i]);
+                }
             }
 
             byte[] body;
@@ -164,18 +210,10 @@ public class MockJophiel {
             }
 
             Map<String, Profile> res = new HashMap<>();
-
-            if (userJids.contains(SUPERADMIN_JID)) {
-                res.put(SUPERADMIN_JID, new Profile.Builder().username(SUPERADMIN).build());
-            }
-            if (userJids.contains(ADMIN_JID)) {
-                res.put(ADMIN_JID, new Profile.Builder().username(ADMIN).build());
-            }
-            if (userJids.contains(USER_A_JID)) {
-                res.put(USER_A_JID, new Profile.Builder().username(USER_A).build());
-            }
-            if (userJids.contains(USER_B_JID)) {
-                res.put(USER_B_JID, new Profile.Builder().username(USER_B).build());
+            for (int i = 0; i < TOKENS.length; i++) {
+                if (userJids.contains(JIDS[i])) {
+                    res.put(JIDS[i], new Profile.Builder().username(USERNAMES[i]).build());
+                }
             }
 
             byte[] body;

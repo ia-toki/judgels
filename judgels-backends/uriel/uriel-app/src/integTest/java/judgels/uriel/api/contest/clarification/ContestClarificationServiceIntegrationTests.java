@@ -1,36 +1,51 @@
 package judgels.uriel.api.contest.clarification;
 
+import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
+import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.MANAGER_JID;
+import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
+import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableSet;
+import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.List;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.contestant.ContestContestantService;
-import judgels.uriel.api.contest.module.ContestModuleService;
 import judgels.uriel.api.contest.module.ContestModuleType;
+import judgels.uriel.api.contest.problem.ContestProblemData;
+import judgels.uriel.api.contest.problem.ContestProblemService;
+import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import org.junit.jupiter.api.Test;
 
 class ContestClarificationServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
-    private ContestModuleService moduleService = createService(ContestModuleService.class);
-    private ContestContestantService contestantService = createService(ContestContestantService.class);
+    private ContestProblemService problemService = createService(ContestProblemService.class);
     private ContestClarificationService clarificationService = createService(ContestClarificationService.class);
 
     @Test
     void end_to_end_flow() {
-        Contest contest = createContest("contest");
+        Contest contest = createContestWithRoles("contest");
 
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), ContestModuleType.REGISTRATION);
         moduleService.enableModule(ADMIN_HEADER, contest.getJid(), ContestModuleType.CLARIFICATION);
 
         contestantService.registerMyselfAsContestant(USER_A_HEADER, contest.getJid());
         contestantService.registerMyselfAsContestant(USER_B_HEADER, contest.getJid());
+
+        problemService.upsertProblem(ADMIN_HEADER, contest.getJid(), new ContestProblemData.Builder()
+                .problemJid(PROBLEM_1_JID)
+                .alias("A")
+                .status(ContestProblemStatus.OPEN)
+                .submissionsLimit(0)
+                .build());
+
+        // as contestant
 
         clarificationService.createClarification(USER_A_HEADER, contest.getJid(), new ContestClarificationData.Builder()
                 .topicJid(contest.getJid())
@@ -39,37 +54,81 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
                 .build());
 
         clarificationService.createClarification(USER_B_HEADER, contest.getJid(), new ContestClarificationData.Builder()
-                .topicJid(contest.getJid())
+                .topicJid(PROBLEM_1_JID)
                 .title("Printing")
                 .question("Can we print?")
                 .build());
 
-        List<ContestClarification> clarifications = clarificationService
-                .getClarifications(ADMIN_HEADER, contest.getJid(), empty(), empty()).getData().getPage();
+        ContestClarificationsResponse response = clarificationService
+                .getClarifications(USER_A_HEADER, contest.getJid(), empty(), empty());
 
-        ContestClarification clarification1 = clarifications.get(0);
-        ContestClarification clarification2 = clarifications.get(1);
+        List<ContestClarification> clarifications = response.getData().getPage();
+        assertThat(clarifications.size()).isEqualTo(1);
 
-        assertThat(clarification2.getUserJid()).isEqualTo(USER_A_JID);
-        assertThat(clarification2.getTopicJid()).isEqualTo(contest.getJid());
-        assertThat(clarification2.getTitle()).isEqualTo("Snack");
-        assertThat(clarification2.getQuestion()).isEqualTo("Is snack provided?");
-        assertThat(clarification2.getStatus()).isEqualTo(ContestClarificationStatus.ASKED);
-        assertThat(clarification2.getAnswer()).isEmpty();
-        assertThat(clarification2.getAnswererJid()).isEmpty();
+        ContestClarification clarification = clarifications.get(0);
+        String clarificationJid = clarification.getJid();
 
-        assertThat(clarification1.getUserJid()).isEqualTo(USER_B_JID);
+        assertThat(clarification.getUserJid()).isEqualTo(USER_A_JID);
+        assertThat(clarification.getTopicJid()).isEqualTo(contest.getJid());
+        assertThat(clarification.getTitle()).isEqualTo("Snack");
+        assertThat(clarification.getQuestion()).isEqualTo("Is snack provided?");
+        assertThat(clarification.getStatus()).isEqualTo(ContestClarificationStatus.ASKED);
+        assertThat(clarification.getAnswer()).isEmpty();
+        assertThat(clarification.getAnswererJid()).isEmpty();
+
+        ContestClarificationConfig config = response.getConfig();
+        assertThat(config.getProblemJids()).containsOnly(PROBLEM_1_JID);
+        assertThat(config.getCanCreate()).isTrue();
+        assertThat(config.getCanSupervise()).isFalse();
+
+        // as supervisor
+
+        response = clarificationService.getClarifications(SUPERVISOR_HEADER, contest.getJid(), empty(), empty());
+
+        clarifications = response.getData().getPage();
+        assertThat(clarifications.size()).isEqualTo(2);
+
+        assertThat(ImmutableSet.of(clarifications.get(0).getUserJid(), clarifications.get(1).getUserJid()))
+                .containsOnly(USER_A_JID, USER_B_JID);
+
+        config = response.getConfig();
+        assertThat(config.getProblemJids()).isEmpty();
+        assertThat(config.getCanCreate()).isFalse();
+        assertThat(config.getCanSupervise()).isTrue();
+        assertThat(config.getCanManage()).isFalse();
 
         ContestClarificationAnswerData answer = new ContestClarificationAnswerData.Builder()
                 .answer("Yes!")
                 .build();
-        clarificationService.answerClarification(ADMIN_HEADER, contest.getJid(), clarification1.getJid(), answer);
+
+        assertThatRemoteExceptionThrownBy(() -> clarificationService
+                .answerClarification(SUPERVISOR_HEADER, contest.getJid(), clarificationJid, answer))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+
+        // as manager
+
+        response = clarificationService.getClarifications(MANAGER_HEADER, contest.getJid(), empty(), empty());
+
+        clarifications = response.getData().getPage();
+        assertThat(clarifications.size()).isEqualTo(2);
+
+        assertThat(ImmutableSet.of(clarifications.get(0).getUserJid(), clarifications.get(1).getUserJid()))
+                .containsOnly(USER_A_JID, USER_B_JID);
+
+        config = response.getConfig();
+        assertThat(config.getCanCreate()).isFalse();
+        assertThat(config.getCanSupervise()).isTrue();
+        assertThat(config.getCanManage()).isTrue();
+
+        clarificationService.answerClarification(MANAGER_HEADER, contest.getJid(), clarification.getJid(), answer);
+
+        // as contestants
 
         clarifications = clarificationService
-                .getClarifications(ADMIN_HEADER, contest.getJid(), empty(), empty()).getData().getPage();
-        clarification1 = clarifications.get(0);
+                .getClarifications(USER_A_HEADER, contest.getJid(), empty(), empty()).getData().getPage();
+        clarification = clarifications.get(0);
 
-        assertThat(clarification1.getAnswer()).contains("Yes!");
-        assertThat(clarification1.getAnswererJid()).contains(ADMIN_JID);
+        assertThat(clarification.getAnswer()).contains("Yes!");
+        assertThat(clarification.getAnswererJid()).contains(MANAGER_JID);
     }
 }
