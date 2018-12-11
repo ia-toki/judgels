@@ -62,10 +62,9 @@ public abstract class AbstractContestServiceIntegrationTests extends AbstractSer
         Contest contest = contestService.createContest(
                 ADMIN_HEADER,
                 new ContestCreateData.Builder().slug(slug).build());
-        contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
+        return contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
                 .beginTime(Instant.now())
                 .build());
-        return contest;
     }
 
     protected Contest createContestWithRoles(String slug) {

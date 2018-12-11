@@ -10,6 +10,7 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_A_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
+import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -122,7 +123,7 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
         clarificationService.answerClarification(MANAGER_HEADER, contest.getJid(), clarification.getJid(), answer);
 
-        // as contestants
+        // as contestant
 
         clarifications = clarificationService
                 .getClarifications(USER_A_HEADER, contest.getJid(), empty(), empty()).getData().getPage();
@@ -130,5 +131,23 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
 
         assertThat(clarification.getAnswer()).contains("Yes!");
         assertThat(clarification.getAnswererJid()).contains(MANAGER_JID);
+
+        // as user
+
+        moduleService.enableModule(MANAGER_HEADER, contest.getJid(), ContestModuleType.REGISTRATION);
+
+        assertThatRemoteExceptionThrownBy(
+                () -> clarificationService.getClarifications(USER_HEADER, contest.getJid(), empty(), empty()))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+
+        assertThatRemoteExceptionThrownBy(() -> clarificationService.createClarification(
+                USER_HEADER,
+                contest.getJid(),
+                new ContestClarificationData.Builder()
+                        .topicJid(contest.getJid())
+                        .title("Snack")
+                        .question("Is snack provided?")
+                        .build()))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
     }
 }
