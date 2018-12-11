@@ -55,21 +55,24 @@ public class ContestProblemRoleChecker {
             Contest contest,
             ContestContestantProblem contestantProblem) {
 
-        if (!contestRoleDao.isContestant(userJid, contest.getJid()) && !canSupervise(userJid, contest)) {
+        if (contestTimer.hasFinished(contest, userJid)) {
+            return Optional.of("Contest is over.");
+        }
+        long submissionsLimit = contestantProblem.getProblem().getSubmissionsLimit();
+        if (submissionsLimit != 0 && contestantProblem.getTotalSubmissions() >= submissionsLimit) {
+            return Optional.of("Submissions limit has been reached.");
+        }
+        if (canSupervise(userJid, contest)) {
+            return Optional.empty();
+        }
+        if (!contestRoleDao.isContestant(userJid, contest.getJid())) {
             return Optional.of("You are not a contestant.");
         }
         if (!contestTimer.hasStarted(contest, userJid)) {
             return Optional.of("Contest has not started yet.");
         }
-        if (contestTimer.hasFinished(contest, userJid)) {
-            return Optional.of("Contest is over.");
-        }
         if (contestantProblem.getProblem().getStatus() == ContestProblemStatus.CLOSED) {
             return Optional.of("Problem is closed.");
-        }
-        long submissionsLimit = contestantProblem.getProblem().getSubmissionsLimit();
-        if (submissionsLimit != 0 && contestantProblem.getTotalSubmissions() >= submissionsLimit) {
-            return Optional.of("Submissions limit has been reached.");
         }
         return Optional.empty();
     }

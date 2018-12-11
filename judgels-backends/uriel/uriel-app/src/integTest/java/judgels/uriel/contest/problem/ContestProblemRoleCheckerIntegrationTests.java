@@ -187,12 +187,12 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
                 .totalSubmissions(10)
                 .build();
 
-        assertThat(checker.canSubmit(ADMIN, contestA, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(ADMIN, contestA, contestantProblem)).isEmpty();
         assertThat(checker.canSubmit(ADMIN, contestAStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(ADMIN, contestB, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(ADMIN, contestB, contestantProblem)).isEmpty();
         assertThat(checker.canSubmit(ADMIN, contestBStarted, contestantProblem)).isEmpty();
         assertThat(checker.canSubmit(ADMIN, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(ADMIN, contestC, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(ADMIN, contestC, contestantProblem)).isEmpty();
 
         assertThat(checker.canSubmit(USER, contestA, contestantProblem)).isPresent();
         assertThat(checker.canSubmit(USER, contestAStarted, contestantProblem)).isPresent();
@@ -210,14 +210,14 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
 
         assertThat(checker.canSubmit(SUPERVISOR, contestA, contestantProblem)).isPresent();
         assertThat(checker.canSubmit(SUPERVISOR, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(SUPERVISOR, contestB, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestB, contestantProblem)).isEmpty();
         assertThat(checker.canSubmit(SUPERVISOR, contestBStarted, contestantProblem)).isEmpty();
         assertThat(checker.canSubmit(SUPERVISOR, contestBFinished, contestantProblem)).isPresent();
         assertThat(checker.canSubmit(SUPERVISOR, contestC, contestantProblem)).isPresent();
 
         assertThat(checker.canSubmit(MANAGER, contestA, contestantProblem)).isPresent();
         assertThat(checker.canSubmit(MANAGER, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(MANAGER, contestB, contestantProblem)).isPresent();
+        assertThat(checker.canSubmit(MANAGER, contestB, contestantProblem)).isEmpty();
         assertThat(checker.canSubmit(MANAGER, contestBStarted, contestantProblem)).isEmpty();
         assertThat(checker.canSubmit(MANAGER, contestC, contestantProblem)).isPresent();
 
