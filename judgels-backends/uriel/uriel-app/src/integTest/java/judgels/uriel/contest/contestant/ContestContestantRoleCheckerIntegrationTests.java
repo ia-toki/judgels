@@ -32,8 +32,8 @@ class ContestContestantRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
 
         moduleStore.upsertRegistrationModule(contestAFinished.getJid());
 
-        assertThat(checker.canRegister(ADMIN, contestA)).isTrue();
-        assertThat(checker.canRegister(ADMIN, contestAStarted)).isTrue();
+        assertThat(checker.canRegister(ADMIN, contestA)).isFalse();
+        assertThat(checker.canRegister(ADMIN, contestAStarted)).isFalse();
         assertThat(checker.canRegister(ADMIN, contestAFinished)).isFalse();
         assertThat(checker.canRegister(ADMIN, contestB)).isFalse();
         assertThat(checker.canRegister(ADMIN, contestBStarted)).isFalse();

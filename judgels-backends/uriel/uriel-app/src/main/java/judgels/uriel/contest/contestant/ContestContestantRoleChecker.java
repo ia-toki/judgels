@@ -39,6 +39,7 @@ public class ContestContestantRoleChecker {
 
     public boolean canRegister(String userJid, Contest contest) {
         return !contestRoleDao.isContestant(userJid, contest.getJid())
+                && !canSupervise(userJid, contest)
                 && moduleStore.hasRegistrationModule(contest.getJid())
                 && !contestTimer.hasEnded(contest);
     }
