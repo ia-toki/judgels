@@ -72,10 +72,10 @@ public final class AwsFileSystem implements FileSystem {
 
     @Override
     public String getPublicFileUrl(Path filePath) {
-        String baseUrl = cloudFrontBaseUrl.orElseThrow(
-                () -> new IllegalStateException("cloudFrontBaseUrl was required"));
-
-        return baseUrl + Paths.get("/").resolve(filePath).toString();
+        if (cloudFrontBaseUrl.isPresent()) {
+            return cloudFrontBaseUrl.get() + Paths.get("/").resolve(filePath).toString();
+        }
+        return "https://" + bucketName + ".s3.amazonaws.com/" + filePath.toString();
     }
 
     @Override
