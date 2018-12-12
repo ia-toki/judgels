@@ -15,7 +15,7 @@ class ContestFileUploadForm extends React.PureComponent<InjectedFormProps<Contes
   render() {
     const field: any = {
       name: 'file',
-      label: 'Upload new file',
+      placeholder: 'Upload new file...',
       validate: [Required, MaxFileSize20MB],
     };
 

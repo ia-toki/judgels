@@ -4,7 +4,9 @@ import * as React from 'react';
 import { FormInputProps } from '../props';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
 
-export interface FormTableFileInputProps extends FormInputProps {}
+export interface FormTableFileInputProps extends FormInputProps {
+  placeholder?: string;
+}
 
 const handleChange = onChange => e => {
   e.preventDefault();
@@ -14,11 +16,12 @@ const handleChange = onChange => e => {
 
 export const FormTableFileInput = (props: FormTableFileInputProps) => {
   const { value, onChange, onBlur, ...inputProps } = props.input;
+  const placeholder = props.placeholder || 'Choose file...';
   return (
     <FormTableInput {...props}>
       <FileInput
         inputProps={{ onChange: handleChange(onChange), ...inputProps }}
-        text={value ? value.name : 'Choose file...'}
+        text={value ? value.name : placeholder}
       />
     </FormTableInput>
   );
