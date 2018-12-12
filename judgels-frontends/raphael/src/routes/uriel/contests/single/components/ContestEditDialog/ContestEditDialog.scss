@@ -91,7 +91,7 @@
   .contest-edit-dialog {
     width: initial;
     min-width: 350px;
-    height: initial;
+    height: 900px;
 
     .bp3-tabs {
       display: block;
@@ -105,5 +105,9 @@
     .bp3-tab-panel {
       padding-left: 0 !important;
     }
+  }
+
+  .contest-edit-dialog__content {
+    max-height: 500px;
   }
 }
