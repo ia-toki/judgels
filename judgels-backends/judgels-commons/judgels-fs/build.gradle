@@ -3,6 +3,7 @@ dependencies {
     api "com.google.dagger:dagger:$daggerVersion"
 
     implementation "com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version"
+    implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     implementation "com.google.guava:guava:$guavaVersion"
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"

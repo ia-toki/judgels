@@ -82,7 +82,7 @@ public class ContestFileResource implements ContestFileService {
     @UnitOfWork(readOnly = true)
     public Response downloadFile(@PathParam("contestJid") String contestJid, @PathParam("filename") String filename) {
         checkFound(contestStore.getContestByJid(contestJid));
-        return ServiceUtils.buildDownloadResponse(fileFs.getPublicFileUrl(Paths.get(contestJid, filename)));
+        return ServiceUtils.buildDownloadResponse(fileFs.getPrivateFileUrl(Paths.get(contestJid, filename)));
     }
 
     @POST
@@ -100,6 +100,6 @@ public class ContestFileResource implements ContestFileService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(fileRoleChecker.canManage(actorJid, contest));
 
-        fileFs.uploadPublicFile(Paths.get(contestJid, fileDetails.getFileName()), fileStream);
+        fileFs.uploadPrivateFile(Paths.get(contestJid, fileDetails.getFileName()), fileStream);
     }
 }

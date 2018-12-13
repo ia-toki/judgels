@@ -31,6 +31,14 @@ public class UserAvatarIntegrationTestModule {
         }
 
         @Override
+        public void uploadPrivateFile(Path filePath, InputStream content) {}
+
+        @Override
+        public String getPrivateFileUrl(Path filePath) {
+            return "/fake/" + filePath.toString();
+        }
+
+        @Override
         public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
             return Collections.emptyList();
         }

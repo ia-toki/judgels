@@ -29,6 +29,17 @@ public final class DuplexFileSystem implements FileSystem {
     }
 
     @Override
+    public void uploadPrivateFile(Path filePath, InputStream content) {
+        aws.uploadPrivateFile(filePath, content);
+        local.uploadPrivateFile(filePath, content);
+    }
+
+    @Override
+    public String getPrivateFileUrl(Path filePath) {
+        return aws.getPrivateFileUrl(filePath);
+    }
+
+    @Override
     public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
         try {
             return local.listDirectoriesInDirectory(dirPath);

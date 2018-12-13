@@ -29,6 +29,16 @@ public class InMemoryFileSystem implements FileSystem {
     }
 
     @Override
+    public void uploadPrivateFile(Path filePath, InputStream content) {
+        uploadPublicFile(filePath, content);
+    }
+
+    @Override
+    public String getPrivateFileUrl(Path filePath) {
+        return getPublicFileUrl(filePath);
+    }
+
+    @Override
     public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
         String prefix = dirPath.toString();
         if (!prefix.isEmpty()) {

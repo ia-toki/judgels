@@ -7,11 +7,14 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -23,7 +26,10 @@ import java.io.InputStream;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +41,11 @@ public final class AwsFileSystem implements FileSystem {
     private final AmazonS3 s3;
     private final Optional<String> cloudFrontBaseUrl;
     private final String bucketName;
+
+    private final Cache<String, String> privateFileUrlCache = Caffeine.newBuilder()
+            .maximumSize(100)
+            .expireAfterWrite(Duration.ofHours(5))
+            .build();
 
     public AwsFileSystem(AwsConfiguration config, AwsFsConfiguration fsConfig) {
         AWSCredentials creds = new BasicAWSCredentials(config.getAccessKey(), config.getSecretKey());
@@ -67,7 +78,6 @@ public final class AwsFileSystem implements FileSystem {
         }
 
         s3.putObject(bucketName, destFilePathString, content, objectMetadata);
-        s3.setObjectAcl(bucketName, destFilePathString, CannedAccessControlList.PublicRead);
     }
 
     @Override
@@ -76,6 +86,24 @@ public final class AwsFileSystem implements FileSystem {
             return cloudFrontBaseUrl.get() + Paths.get("/").resolve(filePath).toString();
         }
         return "https://" + bucketName + ".s3.amazonaws.com/" + filePath.toString();
+    }
+
+    @Override
+    public void uploadPrivateFile(Path filePath, InputStream content) {
+        uploadPublicFile(filePath, content);
+
+        String destFilePathString = filePath.toString();
+        s3.setObjectAcl(bucketName, destFilePathString, CannedAccessControlList.PublicRead);
+    }
+
+    @Override
+    public String getPrivateFileUrl(Path filePath) {
+        String key = filePath.toString();
+        return privateFileUrlCache.get(key, $ -> {
+            GeneratePresignedUrlRequest presignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, key);
+            presignedUrlRequest.setExpiration(Date.from(Instant.now().plus(Duration.ofHours(4))));
+            return s3.generatePresignedUrl(presignedUrlRequest).toString();
+        });
     }
 
     @Override

@@ -50,6 +50,16 @@ public final class LocalFileSystem implements FileSystem {
     }
 
     @Override
+    public void uploadPrivateFile(Path filePath, InputStream content) {
+        uploadPublicFile(filePath, content);
+    }
+
+    @Override
+    public String getPrivateFileUrl(Path filePath) {
+        return getPublicFileUrl(filePath);
+    }
+
+    @Override
     public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
         File[] files  = baseDir.resolve(dirPath).toFile().listFiles();
         if (files == null) {
