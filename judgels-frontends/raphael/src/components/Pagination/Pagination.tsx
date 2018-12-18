@@ -88,10 +88,10 @@ class Pagination extends React.PureComponent<PaginationProps, {}> {
 
 interface PaginationContainerProps {
   pageSize: number;
-  onChangePage: (nextPage: number) => Promise<number>;
+  onChangePage: (nextPage: number, name?: string) => Promise<number>;
 }
 
-interface PaginationContainerConnectedProps extends RouteComponentProps<{ page: string }> {
+interface PaginationContainerConnectedProps extends RouteComponentProps<{ page: string, name: string }> {
   onAppendRoute: (nextPage: number, queries: any) => any;
 }
 
@@ -126,7 +126,7 @@ class PaginationContainer extends React.PureComponent<
   private onChangePage = async (nextPage: number) => {
     const queries = parse(this.props.location.search);
     this.props.onAppendRoute(nextPage, queries);
-    const totalCount = await this.props.onChangePage(nextPage);
+    const totalCount = await this.props.onChangePage(nextPage, queries.name);
     this.setState({ totalCount });
   };
 }

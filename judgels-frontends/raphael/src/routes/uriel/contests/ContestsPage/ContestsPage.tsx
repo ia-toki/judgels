@@ -12,7 +12,7 @@ import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog'
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 
 export interface ContestsPageProps extends RouteComponentProps<{}> {
-  onGetContests: (page?: number) => Promise<ContestsResponse>;
+  onGetContests: (page?: number, name?: string) => Promise<ContestsResponse>;
   onCreateContest: (data: ContestCreateData) => Promise<Contest>;
 }
 
@@ -61,8 +61,8 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     return <Pagination currentPage={1} pageSize={ContestsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
-  private onChangePage = async (nextPage: number) => {
-    const response = await this.props.onGetContests(nextPage);
+  private onChangePage = async (nextPage: number, name?: string) => {
+    const response = await this.props.onGetContests(nextPage, name);
     this.setState({ response });
     return response.data.totalCount;
   };
@@ -70,7 +70,9 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
 
 export function createContestsPage(contestActions) {
   const mapDispatchToProps = {
-    onGetContests: contestActions.getContests,
+    onGetContests: (page: number, name?:string) => {
+      return contestActions.getContests(page, undefined, name);
+    },
     onCreateContest: contestActions.createContest,
   };
   return connect(undefined, mapDispatchToProps)(ContestsPage);
