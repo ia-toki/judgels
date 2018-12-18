@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
+import { parse } from 'query-string';
 
 import Pagination from 'components/Pagination/Pagination';
 import { Card } from 'components/Card/Card';
@@ -11,7 +12,7 @@ import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 
-export interface ContestsPageProps extends RouteComponentProps<{}> {
+export interface ContestsPageProps extends RouteComponentProps<{ name: string }> {
   onGetContests: (page?: number, name?: string) => Promise<ContestsResponse>;
   onCreateContest: (data: ContestCreateData) => Promise<Contest>;
 }
@@ -61,8 +62,9 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     return <Pagination currentPage={1} pageSize={ContestsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
-  private onChangePage = async (nextPage: number, name?: string) => {
-    const response = await this.props.onGetContests(nextPage, name);
+  private onChangePage = async (nextPage?: number) => {
+    const queries = parse(this.props.location.search);
+    const response = await this.props.onGetContests(nextPage, queries.name);
     this.setState({ response });
     return response.data.totalCount;
   };
@@ -70,9 +72,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
 
 export function createContestsPage(contestActions) {
   const mapDispatchToProps = {
-    onGetContests: (page: number, name?:string) => {
-      return contestActions.getContests(page, undefined, name);
-    },
+    onGetContests: contestActions.getContests,
     onCreateContest: contestActions.createContest,
   };
   return connect(undefined, mapDispatchToProps)(ContestsPage);

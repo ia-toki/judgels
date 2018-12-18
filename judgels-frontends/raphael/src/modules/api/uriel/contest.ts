@@ -69,8 +69,8 @@ export const contestAPI = {
     return post(`${baseContestURL(contestJid)}`, token, data);
   },
 
-  getContests: (token: string, page?: number, pageSize?: number, name?: string): Promise<ContestsResponse> => {
-    const params = stringify({ page, pageSize, name });
+  getContests: (token: string, page?: number, name?: string): Promise<ContestsResponse> => {
+    const params = stringify({ page, name });
     return get(`${baseContestsURL}?${params}`, token);
   },
 
