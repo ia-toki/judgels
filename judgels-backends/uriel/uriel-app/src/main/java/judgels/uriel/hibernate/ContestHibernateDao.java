@@ -12,6 +12,7 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.Model_;
+import judgels.persistence.SearchOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
@@ -49,10 +50,26 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     }
 
     @Override
-    public Page<ContestModel> selectPagedByUserJid(String userJid, SelectionOptions options) {
-        return selectPaged(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(hasViewerOrAbove(userJid))
-                .build(), options);
+    public Page<ContestModel> selectPaged(SearchOptions searchOptions, SelectionOptions options) {
+        FilterOptions.Builder<ContestModel> filterOptions = new FilterOptions.Builder<ContestModel>();
+
+        applySearchOptions(filterOptions, searchOptions);
+
+        return selectPaged(filterOptions.build(), options);
+    }
+
+    @Override
+    public Page<ContestModel> selectPagedByUserJid(
+            String userJid,
+            SearchOptions searchOptions,
+            SelectionOptions options) {
+
+        FilterOptions.Builder<ContestModel> filterOptions = new FilterOptions.Builder<ContestModel>()
+                .addCustomPredicates(hasViewerOrAbove(userJid));
+
+        applySearchOptions(filterOptions, searchOptions);
+
+        return selectPaged(filterOptions.build(), options);
     }
 
     @Override
@@ -78,5 +95,15 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
             return cb.greaterThanOrEqualTo(endTime, cb.literal(currentInstantEpoch));
         };
+    }
+
+    static void applySearchOptions(FilterOptions.Builder<ContestModel> filterOptions, SearchOptions searchOptions) {
+        if (searchOptions.getTerms().containsKey("name")) {
+            filterOptions.putColumnsLike(ContestModel_.name, contains(searchOptions.getTerms().get("name")));
+        }
+    }
+
+    static String contains(String str) {
+        return "%" + str + "%";
     }
 }

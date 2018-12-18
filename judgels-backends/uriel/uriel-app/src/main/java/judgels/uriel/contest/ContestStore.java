@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.persistence.SearchOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
@@ -64,14 +65,17 @@ public class ContestStore {
         return contestDao.selectBySlug(contestSlug).map(ContestStore::fromModel).orElse(null);
     }
 
-    public Page<Contest> getContests(String userJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
-        options.orderBy("beginTime");
-        page.ifPresent(options::page);
+    public Page<Contest> getContests(String userJid, Optional<String> name, Optional<Integer> page) {
+        SearchOptions.Builder searchOptions = new SearchOptions.Builder();
+        name.ifPresent(e -> searchOptions.putTerms("name", e));
+
+        SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        selectionOptions.orderBy("beginTime");
+        page.ifPresent(selectionOptions::page);
 
         Page<ContestModel> models = adminRoleDao.isAdmin(userJid)
-                ? contestDao.selectPaged(options.build())
-                : contestDao.selectPagedByUserJid(userJid, options.build());
+                ? contestDao.selectPaged(searchOptions.build(), selectionOptions.build())
+                : contestDao.selectPagedByUserJid(userJid, searchOptions.build(), selectionOptions.build());
         return models.mapPage(p -> Lists.transform(p, ContestStore::fromModel));
     }
 

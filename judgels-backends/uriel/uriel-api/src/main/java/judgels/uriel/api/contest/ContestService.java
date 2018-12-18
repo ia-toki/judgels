@@ -50,6 +50,7 @@ public interface ContestService {
     @Produces(APPLICATION_JSON)
     ContestsResponse getContests(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @QueryParam("name") Optional<String> name,
             @QueryParam("page") Optional<Integer> page);
 
     @GET

@@ -159,11 +159,15 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
                 .stream()
                 .map(e -> root.get(e.getKey()).in(e.getValue()))
                 .toArray(Predicate[]::new));
+        Predicate filterLike = cb.and(options.getColumnsLike().entrySet()
+                .stream()
+                .map(e -> cb.like(root.get(e.getKey()), e.getValue()))
+                .toArray(Predicate[]::new));
         Predicate filterCustom = cb.and(options.getCustomPredicates()
                 .stream()
                 .map(f -> f.apply(cb, cq, root))
                 .toArray(Predicate[]::new));
 
-        cq.where(filterId, filterEq, filterIn, filterCustom);
+        cq.where(filterId, filterEq, filterIn, filterLike, filterCustom);
     }
 }
