@@ -11,6 +11,7 @@ public interface FilterOptions<M extends UnmodifiableModel> {
     long getLastId();
     Map<SingularAttribute<? super M, ?>, Object> getColumnsEq();
     Map<SingularAttribute<? super M, ?>, Collection<?>> getColumnsIn();
+    Map<SingularAttribute<? super M, String>, String> getColumnsLike();
     List<CustomPredicateFilter<M>> getCustomPredicates();
 
     class Builder<M extends UnmodifiableModel> extends ImmutableFilterOptions.Builder<M> {

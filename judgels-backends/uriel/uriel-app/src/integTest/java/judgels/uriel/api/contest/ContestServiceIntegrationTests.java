@@ -48,7 +48,7 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-testing").build());
         contestService.createContest(ADMIN_HEADER, new ContestCreateData.Builder().slug("contest-random").build());
 
-        ContestsResponse response = contestService.getContests(of(ADMIN_HEADER), empty());
+        ContestsResponse response = contestService.getContests(of(ADMIN_HEADER), empty(), empty());
         assertThat(response.getData().getPage().size()).isEqualTo(4);
         assertThat(response.getConfig().getCanAdminister()).isTrue();
 
@@ -57,17 +57,17 @@ class ContestServiceIntegrationTests extends AbstractContestServiceIntegrationTe
         contestantService.upsertContestants(MANAGER_HEADER, contestA.getJid(), ImmutableSet.of(USER_A));
         contestantService.upsertContestants(MANAGER_HEADER, contestB.getJid(), ImmutableSet.of(USER_A, USER_B));
 
-        response = contestService.getContests(of(MANAGER_HEADER), empty());
+        response = contestService.getContests(of(MANAGER_HEADER), empty(), empty());
         assertThat(response.getData().getPage()).containsOnly(contestB, contestA);
         assertThat(response.getConfig().getCanAdminister()).isFalse();
 
         // as contestant
 
-        response = contestService.getContests(of(USER_A_HEADER), empty());
+        response = contestService.getContests(of(USER_A_HEADER), empty(), empty());
         assertThat(response.getData().getPage()).containsOnly(contestB, contestA);
         assertThat(response.getConfig().getCanAdminister()).isFalse();
 
-        response = contestService.getContests(of(USER_B_HEADER), empty());
+        response = contestService.getContests(of(USER_B_HEADER), empty(), empty());
         assertThat(response.getData().getPage()).containsOnly(contestB);
         assertThat(response.getConfig().getCanAdminister()).isFalse();
 

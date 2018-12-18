@@ -85,10 +85,14 @@ public class ContestResource implements ContestService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestsResponse getContests(Optional<AuthHeader> authHeader, Optional<Integer> page) {
+    public ContestsResponse getContests(
+            Optional<AuthHeader> authHeader,
+            Optional<String> name,
+            Optional<Integer> page) {
+
         String actorJid = actorChecker.check(authHeader);
 
-        Page<Contest> contests = contestStore.getContests(actorJid, page);
+        Page<Contest> contests = contestStore.getContests(actorJid, name, page);
         boolean canAdminister = contestRoleChecker.canAdminister(actorJid);
         ContestConfig config =  new ContestConfig.Builder()
                 .canAdminister(canAdminister)

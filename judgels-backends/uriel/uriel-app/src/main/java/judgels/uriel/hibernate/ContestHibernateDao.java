@@ -12,6 +12,7 @@ import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.Model_;
+import judgels.persistence.SearchOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
@@ -49,8 +50,17 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     }
 
     @Override
-    public Page<ContestModel> selectPagedByUserJid(String userJid, SelectionOptions options) {
-        return selectPaged(new FilterOptions.Builder<ContestModel>()
+    public Page<ContestModel> selectPaged(SearchOptions searchOptions, SelectionOptions options) {
+        return selectPaged(createFilterOptions(searchOptions).build(), options);
+    }
+
+    @Override
+    public Page<ContestModel> selectPagedByUserJid(
+            String userJid,
+            SearchOptions searchOptions,
+            SelectionOptions options) {
+
+        return selectPaged(createFilterOptions(searchOptions)
                 .addCustomPredicates(hasViewerOrAbove(userJid))
                 .build(), options);
     }
@@ -78,5 +88,15 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
             return cb.greaterThanOrEqualTo(endTime, cb.literal(currentInstantEpoch));
         };
+    }
+
+    private static FilterOptions.Builder<ContestModel> createFilterOptions(SearchOptions searchOptions) {
+        FilterOptions.Builder<ContestModel> filterOptions = new FilterOptions.Builder<>();
+
+        if (searchOptions.getTerms().containsKey("name")) {
+            filterOptions.putColumnsLike(ContestModel_.name, searchOptions.getTerms().get("name"));
+        }
+
+        return filterOptions;
     }
 }
