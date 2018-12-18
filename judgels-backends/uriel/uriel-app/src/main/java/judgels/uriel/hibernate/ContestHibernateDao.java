@@ -90,7 +90,7 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         };
     }
 
-    private FilterOptions.Builder<ContestModel> createFilterOptions(SearchOptions searchOptions) {
+    private static FilterOptions.Builder<ContestModel> createFilterOptions(SearchOptions searchOptions) {
         FilterOptions.Builder<ContestModel> filterOptions = new FilterOptions.Builder<>();
 
         if (searchOptions.getTerms().containsKey("name")) {
