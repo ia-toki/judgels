@@ -7,7 +7,5 @@ import org.immutables.value.Value;
 public interface SearchOptions {
     Map<String, String> getTerms();
 
-    class Builder extends ImmutableSearchOptions.Builder {
-        public Builder() { }
-    }
+    class Builder extends ImmutableSearchOptions.Builder {}
 }

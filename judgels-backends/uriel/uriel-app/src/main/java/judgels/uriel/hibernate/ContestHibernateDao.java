@@ -51,11 +51,7 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
 
     @Override
     public Page<ContestModel> selectPaged(SearchOptions searchOptions, SelectionOptions options) {
-        FilterOptions.Builder<ContestModel> filterOptions = new FilterOptions.Builder<ContestModel>();
-
-        applySearchOptions(filterOptions, searchOptions);
-
-        return selectPaged(filterOptions.build(), options);
+        return selectPaged(createFilterOptions(searchOptions).build(), options);
     }
 
     @Override
@@ -64,12 +60,9 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
             SearchOptions searchOptions,
             SelectionOptions options) {
 
-        FilterOptions.Builder<ContestModel> filterOptions = new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(hasViewerOrAbove(userJid));
-
-        applySearchOptions(filterOptions, searchOptions);
-
-        return selectPaged(filterOptions.build(), options);
+        return selectPaged(createFilterOptions(searchOptions)
+                .addCustomPredicates(hasViewerOrAbove(userJid))
+                .build(), options);
     }
 
     @Override
@@ -97,13 +90,13 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
         };
     }
 
-    static void applySearchOptions(FilterOptions.Builder<ContestModel> filterOptions, SearchOptions searchOptions) {
-        if (searchOptions.getTerms().containsKey("name")) {
-            filterOptions.putColumnsLike(ContestModel_.name, contains(searchOptions.getTerms().get("name")));
-        }
-    }
+    private FilterOptions.Builder<ContestModel> createFilterOptions(SearchOptions searchOptions) {
+        FilterOptions.Builder<ContestModel> filterOptions = new FilterOptions.Builder<>();
 
-    static String contains(String str) {
-        return "%" + str + "%";
+        if (searchOptions.getTerms().containsKey("name")) {
+            filterOptions.putColumnsLike(ContestModel_.name, searchOptions.getTerms().get("name"));
+        }
+
+        return filterOptions;
     }
 }
