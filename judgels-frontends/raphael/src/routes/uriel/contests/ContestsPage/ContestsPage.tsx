@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
+import { parse } from 'query-string';
 
 import Pagination from 'components/Pagination/Pagination';
 import { Card } from 'components/Card/Card';
@@ -11,8 +12,8 @@ import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 
-export interface ContestsPageProps extends RouteComponentProps<{}> {
-  onGetContests: (page?: number) => Promise<ContestsResponse>;
+export interface ContestsPageProps extends RouteComponentProps<{ name: string }> {
+  onGetContests: (name?: string, page?: number) => Promise<ContestsResponse>;
   onCreateContest: (data: ContestCreateData) => Promise<Contest>;
 }
 
@@ -61,8 +62,9 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     return <Pagination currentPage={1} pageSize={ContestsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
   };
 
-  private onChangePage = async (nextPage: number) => {
-    const response = await this.props.onGetContests(nextPage);
+  private onChangePage = async (nextPage?: number) => {
+    const queries = parse(this.props.location.search);
+    const response = await this.props.onGetContests(queries.name, nextPage);
     this.setState({ response });
     return response.data.totalCount;
   };
