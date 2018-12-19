@@ -13,7 +13,7 @@ import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog'
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 
 export interface ContestsPageProps extends RouteComponentProps<{ name: string }> {
-  onGetContests: (page?: number, name?: string) => Promise<ContestsResponse>;
+  onGetContests: (name?: string, page?: number) => Promise<ContestsResponse>;
   onCreateContest: (data: ContestCreateData) => Promise<Contest>;
 }
 
@@ -64,7 +64,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
 
   private onChangePage = async (nextPage?: number) => {
     const queries = parse(this.props.location.search);
-    const response = await this.props.onGetContests(nextPage, queries.name);
+    const response = await this.props.onGetContests(queries.name, nextPage);
     this.setState({ response });
     return response.data.totalCount;
   };

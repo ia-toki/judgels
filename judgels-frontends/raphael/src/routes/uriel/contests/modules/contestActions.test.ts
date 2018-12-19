@@ -144,7 +144,7 @@ describe('contestActions', () => {
 
   describe('getContests()', () => {
     const { getContests } = contestActions;
-    const doGetContests = async () => getContests(2, "contest-name")(dispatch, getState, { contestAPI });
+    const doGetContests = async () => getContests('contest-name', 2)(dispatch, getState, { contestAPI });
 
     beforeEach(async () => {
       const contestPage: ContestPage = {
@@ -157,7 +157,7 @@ describe('contestActions', () => {
     });
 
     it('calls API to get contests', () => {
-      expect(contestAPI.getContests).toHaveBeenCalledWith(token, 2, "contest-name");
+      expect(contestAPI.getContests).toHaveBeenCalledWith(token, 'contest-name', 2);
     });
   });
 

@@ -44,10 +44,10 @@ export const contestActions = {
     };
   },
 
-  getContests: (page?: number, name?: string) => {
+  getContests: (name?: string, page?: number) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());
-      return await contestAPI.getContests(token, page, name);
+      return await contestAPI.getContests(token, name, page);
     };
   },
 
