@@ -11,7 +11,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestWebConfig.class)
 public interface ContestWebConfig {
-    ContestRole getContestRole();
+    ContestRole getRole();
     boolean canManage();
     Set<ContestTab> getVisibleTabs();
     ContestState getState();

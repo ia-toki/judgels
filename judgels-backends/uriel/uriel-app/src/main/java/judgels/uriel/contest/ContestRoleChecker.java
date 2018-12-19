@@ -42,8 +42,6 @@ public class ContestRoleChecker {
     }
 
     public ContestRole getRole(String userJid, Contest contest) {
-        ContestRole contestRole = ContestRole.CONTESTANT;
-
         if (canAdminister(userJid)) {
             return ContestRole.ADMIN;
         } else if (canManage(userJid, contest)) {
@@ -52,6 +50,6 @@ public class ContestRoleChecker {
             return ContestRole.SUPERVISOR;
         }
 
-        return contestRole;
+        return ContestRole.CONTESTANT;
     }
 }

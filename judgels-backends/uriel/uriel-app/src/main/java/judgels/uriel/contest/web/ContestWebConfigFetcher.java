@@ -72,7 +72,7 @@ public class ContestWebConfigFetcher {
     }
 
     public ContestWebConfig fetchConfig(String userJid, Contest contest) {
-        ContestRole contestRole = roleChecker.getRole(userJid, contest);
+        ContestRole role = roleChecker.getRole(userJid, contest);
 
         boolean canManage = roleChecker.canManage(userJid, contest);
 
@@ -139,7 +139,7 @@ public class ContestWebConfigFetcher {
         }
 
         return new ContestWebConfig.Builder()
-                .contestRole(contestRole)
+                .role(role)
                 .canManage(canManage)
                 .visibleTabs(visibleTabs.build())
                 .state(state)
