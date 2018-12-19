@@ -39,7 +39,7 @@ const contestRoleColor = {
   [ContestRole.Manager]: Intent.DANGER,
   [ContestRole.Supervisor]: Intent.WARNING,
   [ContestRole.Contestant]: Intent.PRIMARY,
-}
+};
 
 interface SingleContestRoutesProps extends RouteComponentProps<{ contestSlug: string }> {
   contest?: Contest;
@@ -150,11 +150,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Contest Menu',
-    action: contestWebConfig && (
-      <Tag intent={contestRoleColor[contestWebConfig.role]}>
-        {contestWebConfig.role}
-      </Tag>
-    ),
+    action: contestWebConfig && <Tag intent={contestRoleColor[contestWebConfig.role]}>{contestWebConfig.role}</Tag>,
     items: sidebarItems,
     contentHeader: (
       <div className="single-contest-routes__header">
