@@ -28,7 +28,7 @@ export interface ContestWithWebConfig {
 }
 
 export interface ContestWebConfig {
-  contestRole: ContestRole;
+  role: ContestRole;
   canManage: boolean;
   visibleTabs: ContestTab[];
   state: ContestState;

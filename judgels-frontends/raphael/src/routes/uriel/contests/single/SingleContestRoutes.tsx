@@ -1,7 +1,7 @@
+import { Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
-import { Tag, Intent } from '@blueprintjs/core';
 
 import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from 'components/ScrollToTopOnMount/ScrollToTopOnMount';
@@ -11,7 +11,7 @@ import ContentWithSidebar, {
 } from 'components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestTab, ContestRole, ContestWebConfig } from 'modules/api/uriel/contestWeb';
+import { ContestRole, ContestTab, ContestWebConfig } from 'modules/api/uriel/contestWeb';
 import { AppState } from 'modules/store';
 
 import { ContestEditDialog } from './components/ContestEditDialog/ContestEditDialog';
@@ -34,7 +34,7 @@ import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
 
 import './SingleContestRoutes.css';
 
-export const ContestRoleColor = {
+const contestRoleColor = {
   [ContestRole.Admin]: Intent.DANGER,
   [ContestRole.Manager]: Intent.DANGER,
   [ContestRole.Supervisor]: Intent.WARNING,
@@ -151,8 +151,8 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Contest Menu',
     action: contestWebConfig && (
-      <Tag intent={ContestRoleColor[contestWebConfig.contestRole]}>
-        {contestWebConfig.contestRole}
+      <Tag intent={contestRoleColor[contestWebConfig.role]}>
+        {contestWebConfig.role}
       </Tag>
     ),
     items: sidebarItems,
