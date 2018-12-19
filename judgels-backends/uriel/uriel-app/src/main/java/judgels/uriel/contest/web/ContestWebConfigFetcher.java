@@ -15,6 +15,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
+import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.api.contest.web.ContestState;
 import judgels.uriel.api.contest.web.ContestTab;
 import judgels.uriel.api.contest.web.ContestWebConfig;
@@ -71,6 +72,8 @@ public class ContestWebConfigFetcher {
     }
 
     public ContestWebConfig fetchConfig(String userJid, Contest contest) {
+        ContestRole role = roleChecker.getRole(userJid, contest);
+
         boolean canManage = roleChecker.canManage(userJid, contest);
 
         ImmutableSet.Builder<ContestTab> visibleTabs = ImmutableSet.builder();
@@ -136,6 +139,7 @@ public class ContestWebConfigFetcher {
         }
 
         return new ContestWebConfig.Builder()
+                .role(role)
                 .canManage(canManage)
                 .visibleTabs(visibleTabs.build())
                 .state(state)

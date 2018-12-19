@@ -23,6 +23,7 @@ import java.time.Instant;
 import java.util.Optional;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.api.contest.web.ContestState;
 import judgels.uriel.api.contest.web.ContestWebConfig;
 import judgels.uriel.contest.ContestRoleChecker;
@@ -95,6 +96,11 @@ class ContestWebConfigFetcherTests {
         when(contestTimer.getDurationToBeginTime(contest)).thenReturn(TO_BEGIN);
         when(contestTimer.getDurationToEndTime(contest)).thenReturn(TO_END);
         when(contestTimer.getDurationToFinishTime(contest, USER)).thenReturn(TO_FINISH);
+
+        when(roleChecker.getRole(ADMIN, contest)).thenReturn(ContestRole.ADMIN);
+        when(roleChecker.getRole(SUPERVISOR, contest)).thenReturn(ContestRole.MANAGER);
+        when(roleChecker.getRole(CONTESTANT, contest)).thenReturn(ContestRole.CONTESTANT);
+        when(roleChecker.getRole(USER, contest)).thenReturn(ContestRole.CONTESTANT);
 
         when(roleChecker.canAdminister(ADMIN)).thenReturn(true);
 

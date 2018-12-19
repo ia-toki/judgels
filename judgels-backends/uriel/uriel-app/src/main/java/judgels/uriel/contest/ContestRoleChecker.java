@@ -2,6 +2,7 @@ package judgels.uriel.contest;
 
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestRoleDao;
 
@@ -38,5 +39,17 @@ public class ContestRoleChecker {
                 && contestTimer.hasBegun(contest)
                 && !contestTimer.hasEnded(contest)
                 && !contestTimer.hasStarted(contest, userJid);
+    }
+
+    public ContestRole getRole(String userJid, Contest contest) {
+        if (canAdminister(userJid)) {
+            return ContestRole.ADMIN;
+        } else if (canManage(userJid, contest)) {
+            return ContestRole.MANAGER;
+        } else if (canSupervise(userJid, contest)) {
+            return ContestRole.SUPERVISOR;
+        }
+
+        return ContestRole.CONTESTANT;
     }
 }
