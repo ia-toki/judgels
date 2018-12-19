@@ -15,12 +15,20 @@ export enum ContestTab {
   Files = 'FILES',
 }
 
+export enum ContestRole {
+  Admin = 'ADMIN',
+  Manager = 'MANAGER',
+  Supervisor = 'SUPERVISOR',
+  Contestant = 'CONTESTANT',
+}
+
 export interface ContestWithWebConfig {
   contest: Contest;
   config: ContestWebConfig;
 }
 
 export interface ContestWebConfig {
+  contestRole: ContestRole;
   canManage: boolean;
   visibleTabs: ContestTab[];
   state: ContestState;

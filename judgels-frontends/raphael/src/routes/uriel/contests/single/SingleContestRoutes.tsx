@@ -1,8 +1,7 @@
-import { Classes } from '@blueprintjs/core';
-import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
+import { Tag, Intent } from '@blueprintjs/core';
 
 import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from 'components/ScrollToTopOnMount/ScrollToTopOnMount';
@@ -11,9 +10,8 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from 'components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ButtonLink } from 'components/ButtonLink/ButtonLink';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestTab, ContestWebConfig } from 'modules/api/uriel/contestWeb';
+import { ContestTab, ContestRole, ContestWebConfig } from 'modules/api/uriel/contestWeb';
 import { AppState } from 'modules/store';
 
 import { ContestEditDialog } from './components/ContestEditDialog/ContestEditDialog';
@@ -35,6 +33,13 @@ import { selectContest, selectIsEditingContest } from '../modules/contestSelecto
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
 
 import './SingleContestRoutes.css';
+
+export const ContestRoleColor = {
+  [ContestRole.Admin]: Intent.DANGER,
+  [ContestRole.Manager]: Intent.DANGER,
+  [ContestRole.Supervisor]: Intent.WARNING,
+  [ContestRole.Contestant]: Intent.PRIMARY,
+}
 
 interface SingleContestRoutesProps extends RouteComponentProps<{ contestSlug: string }> {
   contest?: Contest;
@@ -145,10 +150,10 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Contest Menu',
-    action: (
-      <ButtonLink to="/contests" className={classNames(Classes.SMALL, Classes.iconClass('chevron-left'))}>
-        Back
-      </ButtonLink>
+    action: contestWebConfig && (
+      <Tag intent={ContestRoleColor[contestWebConfig.contestRole]}>
+        {contestWebConfig.contestRole}
+      </Tag>
     ),
     items: sidebarItems,
     contentHeader: (
