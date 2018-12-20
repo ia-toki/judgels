@@ -13,7 +13,7 @@ export interface ContestSupervisorAddDialogProps {
   contest: Contest;
   onUpsertSupervisors: (
     contestJid: string,
-    usernames: ContestSupervisorUpsertData
+    data: ContestSupervisorUpsertData
   ) => Promise<ContestSupervisorUpsertResponse>;
 }
 

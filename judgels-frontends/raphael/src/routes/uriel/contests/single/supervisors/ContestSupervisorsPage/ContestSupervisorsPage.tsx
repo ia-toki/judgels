@@ -27,7 +27,7 @@ export interface ContestSupervisorsPageProps {
   onGetSupervisors: (contestJid: string, page?: number) => Promise<ContestSupervisorsResponse>;
   onUpsertSupervisors: (
     contestJid: string,
-    usernames: ContestSupervisorUpsertData
+    data: ContestSupervisorUpsertData
   ) => Promise<ContestSupervisorUpsertResponse>;
   onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestSupervisorDeleteResponse>;
 }

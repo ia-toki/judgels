@@ -3,12 +3,12 @@ package judgels.uriel.contest.web;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
-import static judgels.uriel.api.contest.web.ContestTab.SUPERVISORS;
 import static judgels.uriel.api.contest.web.ContestTab.FILES;
 import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
+import static judgels.uriel.api.contest.web.ContestTab.SUPERVISORS;
 
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;

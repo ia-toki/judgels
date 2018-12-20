@@ -14,6 +14,7 @@ import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
+import static judgels.uriel.api.contest.web.ContestTab.SUPERVISORS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -125,6 +126,8 @@ class ContestWebConfigFetcherTests {
         when(contestantRoleChecker.canSupervise(SUPERVISOR, contest)).thenReturn(true);
         when(contestantRoleChecker.canSupervise(ADMIN, contest)).thenReturn(true);
 
+        when(contestantRoleChecker.canManage(ADMIN, contest)).thenReturn(true);
+
         when(fileRoleChecker.canSupervise(SUPERVISOR, contest)).thenReturn(true);
         when(fileRoleChecker.canSupervise(ADMIN, contest)).thenReturn(true);
     }
@@ -141,7 +144,15 @@ class ContestWebConfigFetcherTests {
                 .containsExactly(ANNOUNCEMENTS, PROBLEMS, CONTESTANTS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD, FILES);
 
         assertThat(webConfigFetcher.fetchConfig(ADMIN, contest).getVisibleTabs()).containsExactly(
-                ANNOUNCEMENTS, PROBLEMS, CONTESTANTS, MANAGERS, SUBMISSIONS, CLARIFICATIONS, SCOREBOARD, FILES);
+                ANNOUNCEMENTS,
+                PROBLEMS,
+                CONTESTANTS,
+                SUPERVISORS,
+                MANAGERS,
+                SUBMISSIONS,
+                CLARIFICATIONS,
+                SCOREBOARD,
+                FILES);
     }
 
     @Test

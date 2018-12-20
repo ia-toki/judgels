@@ -9,11 +9,11 @@ export const contestSupervisorActions = {
     };
   },
 
-  upsertSupervisors: (contestJid: string, usernames: ContestSupervisorUpsertData) => {
+  upsertSupervisors: (contestJid: string, data: ContestSupervisorUpsertData) => {
     return async (dispatch, getState, { contestSupervisorAPI, toastActions }) => {
       const token = selectToken(getState());
-      const response = await contestSupervisorAPI.upsertSupervisors(token, contestJid, usernames);
-      if (Object.keys(response.upsertedSupervisorProfilesMap).length === usernames.usernames.length) {
+      const response = await contestSupervisorAPI.upsertSupervisors(token, contestJid, data);
+      if (Object.keys(response.upsertedSupervisorProfilesMap).length === data.usernames.length) {
         toastActions.showSuccessToast('Supervisors added.');
       }
       return response;
