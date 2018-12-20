@@ -1,4 +1,5 @@
 import { selectToken } from 'modules/session/sessionSelectors';
+import { ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
 
 export const contestSupervisorActions = {
   getSupervisors: (contestJid: string, page?: number) => {
@@ -8,11 +9,11 @@ export const contestSupervisorActions = {
     };
   },
 
-  upsertSupervisors: (contestJid: string, usernames: string[]) => {
+  upsertSupervisors: (contestJid: string, usernames: ContestSupervisorUpsertData) => {
     return async (dispatch, getState, { contestSupervisorAPI, toastActions }) => {
       const token = selectToken(getState());
       const response = await contestSupervisorAPI.upsertSupervisors(token, contestJid, usernames);
-      if (Object.keys(response.upsertedSupervisorProfilesMap).length === usernames.length) {
+      if (Object.keys(response.upsertedSupervisorProfilesMap).length === usernames.usernames.length) {
         toastActions.showSuccessToast('Supervisors added.');
       }
       return response;

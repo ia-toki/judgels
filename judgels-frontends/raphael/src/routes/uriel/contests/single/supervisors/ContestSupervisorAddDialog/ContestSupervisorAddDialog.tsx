@@ -80,7 +80,7 @@ export class ContestSupervisorAddDialog extends React.Component<
   private renderDialogAddForm = () => {
     const props: any = {
       renderFormComponents: this.renderDialogForm,
-      onSubmit: this.addSupervisor,
+      onSubmit: this.addSupervisors,
     };
     return <ContestSupervisorAddForm {...props} />;
   };
@@ -117,16 +117,16 @@ export class ContestSupervisorAddDialog extends React.Component<
     </>
   );
 
-  private addSupervisor = async (data: ContestSupervisorAddFormData) => {
-    const usernames = data.usernames
+  private addSupervisors = async (dataForm: ContestSupervisorAddFormData) => {
+    const usernames = dataForm.usernames
       .split('\n')
       .filter(s => s.length > 0)
       .map(s => s.trim());
-    const usernamesWithPrivileges: ContestSupervisorUpsertData = {
+    const data: ContestSupervisorUpsertData = {
       usernames,
       managementPermissions: [],
     };
-    const response = await this.props.onUpsertSupervisors(this.props.contest.jid, usernamesWithPrivileges);
+    const response = await this.props.onUpsertSupervisors(this.props.contest.jid, data);
     if (usernames.length !== Object.keys(response.upsertedSupervisorProfilesMap).length) {
       this.setState({ submitted: { usernames, response } });
     } else {

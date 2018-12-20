@@ -12,7 +12,7 @@ export enum SupervisorManagementPermission {
   Problem = 'PROBLEM',
   Submission = 'SUBMISSION',
   Clarification = 'CLARIFICATION',
-  Supervisor1 = 'Supervisor',
+  Supervisor = 'SUPERVISOR',
   Team = 'TEAM',
   Scoreboard = 'SCOREBOARD',
   File = 'FILE',
