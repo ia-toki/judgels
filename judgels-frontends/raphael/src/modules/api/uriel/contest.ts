@@ -3,6 +3,7 @@ import { stringify } from 'query-string';
 import { APP_CONFIG } from 'conf';
 import { get, post } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
+import { ContestRole } from './contestWeb';
 
 export interface Contest {
   id: number;
@@ -20,6 +21,7 @@ export interface ContestConfig {
 
 export interface ContestsResponse {
   data: Page<Contest>;
+  rolesMap: Map<string, ContestRole>;
   config: ContestConfig;
 }
 
