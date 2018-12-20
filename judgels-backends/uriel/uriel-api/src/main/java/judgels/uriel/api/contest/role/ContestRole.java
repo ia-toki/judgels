@@ -4,5 +4,6 @@ public enum ContestRole {
     ADMIN,
     MANAGER,
     SUPERVISOR,
-    CONTESTANT
+    CONTESTANT,
+    NONE
 }

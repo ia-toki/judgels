@@ -20,6 +20,7 @@ export enum ContestRole {
   Manager = 'MANAGER',
   Supervisor = 'SUPERVISOR',
   Contestant = 'CONTESTANT',
+  None = 'NONE',
 }
 
 export interface ContestWithWebConfig {
