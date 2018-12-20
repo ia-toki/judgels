@@ -3,6 +3,7 @@ package judgels.uriel.contest.web;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
 import static judgels.uriel.api.contest.web.ContestTab.CONTESTANTS;
+import static judgels.uriel.api.contest.web.ContestTab.SUPERVISORS;
 import static judgels.uriel.api.contest.web.ContestTab.FILES;
 import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
@@ -84,6 +85,9 @@ public class ContestWebConfigFetcher {
         }
         if (contestantRoleChecker.canSupervise(userJid, contest)) {
             visibleTabs.add(CONTESTANTS);
+        }
+        if (contestantRoleChecker.canManage(userJid, contest)) {
+            visibleTabs.add(SUPERVISORS);
         }
         if (roleChecker.canAdminister(userJid)) {
             visibleTabs.add(MANAGERS);

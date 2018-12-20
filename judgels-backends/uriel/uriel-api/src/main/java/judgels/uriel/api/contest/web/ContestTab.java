@@ -4,6 +4,7 @@ public enum ContestTab {
     ANNOUNCEMENTS,
     PROBLEMS,
     CONTESTANTS,
+    SUPERVISORS,
     MANAGERS,
     SUBMISSIONS,
     CLARIFICATIONS,
