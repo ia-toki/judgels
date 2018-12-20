@@ -1,4 +1,3 @@
-import { Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
@@ -31,7 +30,7 @@ import ContestSubmissionRoutes from './submissions/ContestSubmissionRoutes';
 import { EditContest } from '../modules/contestReducer';
 import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
-import { contestRoleColor } from '../ContestRole/ContestRoleColor';
+import { ContestRoleTag } from '../ContestRole/ContestRoleTag';
 
 import './SingleContestRoutes.css';
 
@@ -144,10 +143,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Contest Menu',
-    action: contestWebConfig &&
-      contestRoleColor[contestWebConfig.role] && (
-        <Tag intent={contestRoleColor[contestWebConfig.role]}>{contestWebConfig.role}</Tag>
-      ),
+    action: contestWebConfig && <ContestRoleTag role={contestWebConfig.role} />,
     items: sidebarItems,
     contentHeader: (
       <div className="single-contest-routes__header">

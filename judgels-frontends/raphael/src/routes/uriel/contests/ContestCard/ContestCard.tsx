@@ -1,4 +1,3 @@
-import { Tag } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { TimeanddateLink } from 'components/TimeanddateLink/TimeanddateLink';
@@ -6,10 +5,11 @@ import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
 import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import { FormattedDuration } from 'components/FormattedDuration/FormattedDuration';
 import { Contest } from 'modules/api/uriel/contest';
+import { ContestRole } from 'modules/api/uriel/contestWeb';
+
+import { ContestRoleTag } from '../ContestRole/ContestRoleTag';
 
 import './ContestCard.css';
-import { ContestRole } from '../../../../modules/api/uriel/contestWeb';
-import { contestRoleColor } from '../ContestRole/ContestRoleColor';
 
 export interface ContestCardProps {
   contest: Contest;
@@ -21,15 +21,12 @@ export class ContestCard extends React.PureComponent<ContestCardProps> {
     const { contest, role } = this.props;
 
     return (
-      <ContentCardLink to={`/contests/${contest.slug}`} role={role}>
+      <ContentCardLink to={`/contests/${contest.slug}`}>
         <h4 className="contest-card-name">
           {contest.name}
-          {role &&
-            contestRoleColor[role] && (
-              <Tag className="contest-card-role" intent={contestRoleColor[role]}>
-                {role}
-              </Tag>
-            )}
+          <div className="contest-card-role">
+            <ContestRoleTag role={role} />
+          </div>
         </h4>
         <p className="contest-card-date">
           <small>

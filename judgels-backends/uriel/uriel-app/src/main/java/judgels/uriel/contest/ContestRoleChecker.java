@@ -4,26 +4,18 @@ import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.persistence.AdminRoleDao;
-import judgels.uriel.persistence.ContestContestantDao;
-import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestRoleDao;
 
 public class ContestRoleChecker {
     private final AdminRoleDao adminRoleDao;
     private final ContestRoleDao contestRoleDao;
     private final ContestTimer contestTimer;
-    private final ContestContestantDao contestContestantDao;
 
     @Inject
-    public ContestRoleChecker(
-            AdminRoleDao adminRoleDao,
-            ContestRoleDao contestRoleDao,
-            ContestTimer contestTimer,
-            ContestContestantDao contestContestantDao) {
+    public ContestRoleChecker(AdminRoleDao adminRoleDao, ContestRoleDao contestRoleDao, ContestTimer contestTimer) {
         this.adminRoleDao = adminRoleDao;
         this.contestTimer = contestTimer;
         this.contestRoleDao = contestRoleDao;
-        this.contestContestantDao = contestContestantDao;
     }
 
     public boolean canAdminister(String userJid) {
@@ -56,7 +48,7 @@ public class ContestRoleChecker {
             return ContestRole.MANAGER;
         } else if (canSupervise(userJid, contest)) {
             return ContestRole.SUPERVISOR;
-        } else if (contestContestantDao.selectByContestJidAndUserJid(contest.getJid(), userJid).isPresent()) {
+        } else if (contestRoleDao.isContestant(userJid, contest.getJid())) {
             return ContestRole.CONTESTANT;
         }
 

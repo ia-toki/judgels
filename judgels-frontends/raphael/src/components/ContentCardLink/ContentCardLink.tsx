@@ -4,13 +4,11 @@ import { Link } from 'react-router-dom';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 
 import './ContentCardLink.css';
-import { ContestRole } from '../../modules/api/uriel/contestWeb';
 
 export interface ContentCardLinkProps {
   to: string;
   className?: string;
   children?: any;
-  role?: ContestRole;
 }
 
 export const ContentCardLink = (props: ContentCardLinkProps) => (

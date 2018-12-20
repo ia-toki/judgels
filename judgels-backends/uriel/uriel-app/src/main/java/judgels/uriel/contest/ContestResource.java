@@ -99,7 +99,7 @@ public class ContestResource implements ContestService {
         Map<String, ContestRole> rolesMap = contests.getPage()
                 .stream()
                 .collect(Collectors.toMap(
-                        contest -> contest.getJid(),
+                        Contest::getJid,
                         contest -> contestRoleChecker.getRole(actorJid, contest)));
         boolean canAdminister = contestRoleChecker.canAdminister(actorJid);
         ContestConfig config = new ContestConfig.Builder()
