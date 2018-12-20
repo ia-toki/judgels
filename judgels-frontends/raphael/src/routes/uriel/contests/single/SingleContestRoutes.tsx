@@ -105,7 +105,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       title: 'Supervisors',
       routeComponent: Route,
       component: ContestSupervisorsPage,
-      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Managers) === -1, // TODO(agus): change this to supervisor
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Supervisors) === -1,
     },
     {
       id: 'managers',
