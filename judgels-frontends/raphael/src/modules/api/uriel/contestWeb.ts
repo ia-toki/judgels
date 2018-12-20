@@ -8,6 +8,7 @@ export enum ContestTab {
   Announcements = 'ANNOUNCEMENTS',
   Problems = 'PROBLEMS',
   Contestants = 'CONTESTANTS',
+  Supervisors = 'SUPERVISORS',
   Managers = 'MANAGERS',
   Submissions = 'SUBMISSIONS',
   Clarifications = 'CLARIFICATIONS',

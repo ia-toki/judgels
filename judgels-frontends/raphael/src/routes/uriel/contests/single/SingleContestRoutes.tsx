@@ -20,6 +20,7 @@ import { LoadingContestStateWidget } from './components/ContestStateWidget/Loadi
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
 import ContestContestantsPage from './contestants/ContestContestantsPage/ContestContestantsPage';
+import ContestSupervisorsPage from './supervisors/ContestSupervisorsPage/ContestSupervisorsPage';
 import ContestManagersPage from './managers/ContestManagersPage/ContestManagersPage';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
@@ -97,6 +98,14 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       routeComponent: Route,
       component: ContestContestantsPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Contestants) === -1,
+    },
+    {
+      id: 'supervisors',
+      titleIcon: 'take-action',
+      title: 'Supervisors',
+      routeComponent: Route,
+      component: ContestSupervisorsPage,
+      disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Supervisors) === -1,
     },
     {
       id: 'managers',

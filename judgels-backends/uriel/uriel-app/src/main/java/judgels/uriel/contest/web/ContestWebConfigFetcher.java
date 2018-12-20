@@ -8,6 +8,7 @@ import static judgels.uriel.api.contest.web.ContestTab.MANAGERS;
 import static judgels.uriel.api.contest.web.ContestTab.PROBLEMS;
 import static judgels.uriel.api.contest.web.ContestTab.SCOREBOARD;
 import static judgels.uriel.api.contest.web.ContestTab.SUBMISSIONS;
+import static judgels.uriel.api.contest.web.ContestTab.SUPERVISORS;
 
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
@@ -84,6 +85,9 @@ public class ContestWebConfigFetcher {
         }
         if (contestantRoleChecker.canSupervise(userJid, contest)) {
             visibleTabs.add(CONTESTANTS);
+        }
+        if (contestantRoleChecker.canManage(userJid, contest)) {
+            visibleTabs.add(SUPERVISORS);
         }
         if (roleChecker.canAdminister(userJid)) {
             visibleTabs.add(MANAGERS);
