@@ -134,11 +134,11 @@ public class MockJophiel {
 
         mockJophiel.stubFor(get("/api/v2/users/me/role")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(SUPERADMIN_BEARER_TOKEN))
-                .willReturn(okForJson("superadmin")));
+                .willReturn(okForJson("SUPERADMIN")));
 
         mockJophiel.stubFor(get("/api/v2/users/me/role")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(ADMIN_BEARER_TOKEN))
-                .willReturn(okForJson("admin")));
+                .willReturn(okForJson("ADMIN")));
 
         mockJophiel.stubFor(post("/api/v2/user-search/username-to-jid")
                 .willReturn(aResponse().withStatus(200).withTransformers("username-to-jid")));

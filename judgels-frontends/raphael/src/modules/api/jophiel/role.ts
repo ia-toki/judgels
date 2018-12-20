@@ -1,6 +1,6 @@
 export enum JophielRole {
-  Guest = 'guest',
-  User = 'user',
-  Admin = 'admin',
-  Superadmin = 'superadmin',
+  Guest = 'GUEST',
+  User = 'USER',
+  Admin = 'ADMIN',
+  Superadmin = 'SUPERADMIN',
 }
