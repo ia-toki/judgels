@@ -8,6 +8,7 @@ import { reducer as formReducer } from 'redux-form';
 import { contest, contestJid } from 'fixtures/state';
 
 import { ContestSupervisorAddDialog, ContestSupervisorAddDialogProps } from './ContestSupervisorAddDialog';
+import { ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
 
 describe('ContestSupervisorAddDialog', () => {
   let onUpsertSupervisors: jest.Mock<any>;
@@ -43,6 +44,9 @@ describe('ContestSupervisorAddDialog', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onUpsertSupervisors).toHaveBeenCalledWith(contestJid, ['andi', 'budi', 'caca']);
+    expect(onUpsertSupervisors).toHaveBeenCalledWith(contestJid, {
+      managementPermissions: [],
+      usernames: ['andi', 'budi', 'caca'],
+    } as ContestSupervisorUpsertData);
   });
 });

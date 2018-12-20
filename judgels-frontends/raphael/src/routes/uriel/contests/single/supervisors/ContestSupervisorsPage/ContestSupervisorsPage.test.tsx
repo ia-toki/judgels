@@ -8,23 +8,20 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest } from 'fixtures/state';
-import { ContestContestant, ContestContestantsResponse } from 'modules/api/uriel/contestContestant';
+import { ContestSupervisor, ContestSupervisorsResponse } from 'modules/api/uriel/contestSupervisor';
 
 import { createContestSupervisorsPage } from './ContestSupervisorsPage';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
 
-describe('ContestContestantsPage', () => {
+describe('ContestSupervisorsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestContestantActions: jest.Mocked<any>;
+  let contestSupervisorActions: jest.Mocked<any>;
 
-  const response: ContestContestantsResponse = {
+  const response: ContestSupervisorsResponse = {
     data: { page: [], totalCount: 0 },
     profilesMap: {
       userJid1: { username: 'user1' },
       userJid2: { username: 'user2' },
-    },
-    config: {
-      canManage: true,
     },
   };
 
@@ -35,13 +32,13 @@ describe('ContestContestantsPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestContestantsPage = createContestSupervisorsPage(contestContestantActions);
+    const ContestSupervisorsPage = createContestSupervisorsPage(contestSupervisorActions);
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
           <MemoryRouter>
-            <ContestContestantsPage />
+            <ContestSupervisorsPage />
           </MemoryRouter>
         </Provider>
       </IntlProvider>
@@ -49,43 +46,43 @@ describe('ContestContestantsPage', () => {
   };
 
   beforeEach(() => {
-    contestContestantActions = {
-      getContestants: jest.fn().mockReturnValue(() => Promise.resolve(response)),
+    contestSupervisorActions = {
+      getSupervisors: jest.fn().mockReturnValue(() => Promise.resolve(response)),
     };
   });
 
-  describe('when there are no contestants', () => {
+  describe('when there are no supervisors', () => {
     beforeEach(() => {
       render();
     });
 
-    it('shows placeholder text and no contestants', async () => {
+    it('shows placeholder text and no supervisors', async () => {
       await new Promise(resolve => setImmediate(resolve));
       wrapper.update();
 
-      expect(wrapper.text()).toContain('No contestants.');
+      expect(wrapper.text()).toContain('No supervisors.');
       expect(wrapper.find('tr')).toHaveLength(0);
     });
   });
 
-  describe('when there are contestants', () => {
+  describe('when there are supervisors', () => {
     beforeEach(() => {
-      const contestants: ContestContestant[] = [
+      const supervisors: ContestSupervisor[] = [
         {
           userJid: 'userJid1',
-        } as ContestContestant,
+        } as ContestSupervisor,
         {
           userJid: 'userJid2',
-        } as ContestContestant,
+        } as ContestSupervisor,
       ];
-      contestContestantActions.getContestants.mockReturnValue(() =>
-        Promise.resolve({ ...response, data: { page: contestants, totalCount: 2 } })
+      contestSupervisorActions.getSupervisors.mockReturnValue(() =>
+        Promise.resolve({ ...response, data: { page: supervisors, totalCount: 2 } })
       );
 
       render();
     });
 
-    it('shows the contestants', async () => {
+    it('shows the supervisors', async () => {
       await new Promise(resolve => setImmediate(resolve));
       wrapper.update();
 

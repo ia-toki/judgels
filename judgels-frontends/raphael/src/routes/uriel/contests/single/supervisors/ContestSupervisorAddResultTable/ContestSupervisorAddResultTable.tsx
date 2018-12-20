@@ -7,7 +7,6 @@ import { ProfilesMap } from 'modules/api/jophiel/profile';
 export interface ContestSupervisorAddResultTableProps {
   usernames: string[];
   insertedSupervisorProfilesMap: ProfilesMap;
-  alreadySupervisorProfilesMap: ProfilesMap;
 }
 
 export class ContestSupervisorAddResultTable extends React.PureComponent<ContestSupervisorAddResultTableProps> {
@@ -15,7 +14,6 @@ export class ContestSupervisorAddResultTable extends React.PureComponent<Contest
     return (
       <>
         {this.renderSupervisorsTable('Added supervisors', this.props.insertedSupervisorProfilesMap)}
-        {this.renderSupervisorsTable('Already supervisors', this.props.alreadySupervisorProfilesMap)}
         {this.renderUnknownSupervisorsTable()}
       </>
     );
@@ -51,10 +49,7 @@ export class ContestSupervisorAddResultTable extends React.PureComponent<Contest
   };
 
   private renderUnknownSupervisorsTable = () => {
-    const knownUsernames = [
-      ...Object.keys(this.props.insertedSupervisorProfilesMap),
-      ...Object.keys(this.props.alreadySupervisorProfilesMap),
-    ];
+    const knownUsernames = [...Object.keys(this.props.insertedSupervisorProfilesMap)];
     const usernames = this.props.usernames
       .filter(u => knownUsernames.indexOf(u) === -1)
       .slice()

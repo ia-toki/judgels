@@ -3,12 +3,12 @@ import * as React from 'react';
 
 import { UserRef } from 'components/UserRef/UserRef';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { ContestContestant } from 'modules/api/uriel/contestContestant';
+import { ContestSupervisor } from 'modules/api/uriel/contestSupervisor';
 
 import './ContestSupervisorsTable.css';
 
 export interface ContestSupervisorsTableProps {
-  supervisors: ContestContestant[];
+  supervisors: ContestSupervisor[];
   profilesMap: ProfilesMap;
 }
 

@@ -8,28 +8,32 @@ import Pagination from 'components/Pagination/Pagination';
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 import {
-  ContestContestantDeleteResponse,
-  ContestContestantsResponse,
-  ContestContestantUpsertResponse,
-} from 'modules/api/uriel/contestContestant';
+  ContestSupervisorsResponse,
+  ContestSupervisorDeleteResponse,
+  ContestSupervisorUpsertResponse,
+  ContestSupervisorUpsertData,
+} from 'modules/api/uriel/contestSupervisor';
 
 import { ContestSupervisorsTable } from '../ContestSupervisorsTable/ContestSupervisorsTable';
 import { ContestSupervisorAddDialog } from '../ContestSupervisorAddDialog/ContestSupervisorAddDialog';
 import { ContestSupervisorRemoveDialog } from '../ContestSupervisorRemoveDialog/ContestSupervisorRemoveDialog';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
+import { contestSupervisorActions as injectedContestSupervisorActions } from '../../modules/contestSupervisorActions';
 
 import './ContestSupervisorsPage.css';
 
 export interface ContestSupervisorsPageProps {
   contest: Contest;
-  onGetSupervisors: (contestJid: string, page?: number) => Promise<ContestContestantsResponse>;
-  onUpsertSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
-  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestContestantDeleteResponse>;
+  onGetSupervisors: (contestJid: string, page?: number) => Promise<ContestSupervisorsResponse>;
+  onUpsertSupervisors: (
+    contestJid: string,
+    usernames: ContestSupervisorUpsertData
+  ) => Promise<ContestSupervisorUpsertResponse>;
+  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestSupervisorDeleteResponse>;
 }
 
 interface ContestSupervisorsPageState {
-  response?: ContestContestantsResponse;
+  response?: ContestSupervisorsResponse;
   lastRefreshSupervisorsTime?: number;
 }
 
@@ -99,9 +103,6 @@ class ContestSupervisorsPage extends React.Component<ContestSupervisorsPageProps
     if (!response) {
       return null;
     }
-    if (!response.config.canManage) {
-      return null;
-    }
     return (
       <>
         <ContestSupervisorAddDialog contest={this.props.contest} onUpsertSupervisors={this.upsertSupervisors} />
@@ -130,12 +131,12 @@ export function createContestSupervisorsPage(contestSupervisorActions) {
   });
 
   const mapDispatchToProps = {
-    onGetSupervisors: contestSupervisorActions.getContestants,
-    onUpsertSupervisors: contestSupervisorActions.upsertContestants,
-    onDeleteSupervisors: contestSupervisorActions.deleteContestants,
+    onGetSupervisors: contestSupervisorActions.getSupervisors,
+    onUpsertSupervisors: contestSupervisorActions.upsertSupervisors,
+    onDeleteSupervisors: contestSupervisorActions.deleteSupervisors,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSupervisorsPage));
 }
 
-export default createContestSupervisorsPage(injectedContestContestantActions);
+export default createContestSupervisorsPage(injectedContestSupervisorActions);

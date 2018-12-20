@@ -3,23 +3,25 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestContestantUpsertResponse } from 'modules/api/uriel/contestContestant';
-
 import ContestSupervisorAddForm, {
   ContestSupervisorAddFormData,
 } from '../ContestSupervisorAddForm/ContestSupervisorAddForm';
 import { ContestSupervisorAddResultTable } from '../ContestSupervisorAddResultTable/ContestSupervisorAddResultTable';
+import { ContestSupervisorUpsertResponse, ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
 
 export interface ContestSupervisorAddDialogProps {
   contest: Contest;
-  onUpsertSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
+  onUpsertSupervisors: (
+    contestJid: string,
+    usernames: ContestSupervisorUpsertData
+  ) => Promise<ContestSupervisorUpsertResponse>;
 }
 
 interface ContestSupervisorAddDialogState {
   isDialogOpen?: boolean;
   submitted?: {
     usernames: string[];
-    response: ContestContestantUpsertResponse;
+    response: ContestSupervisorUpsertResponse;
   };
 }
 
@@ -85,17 +87,13 @@ export class ContestSupervisorAddDialog extends React.Component<
 
   private renderDialogAddResultTable = () => {
     const { usernames, response } = this.state.submitted!;
-    const {
-      insertedContestantProfilesMap: insertedSupervisorProfilesMap,
-      alreadyContestantProfilesMap: alreadySupervisorProfilesMap,
-    } = response;
+    const { upsertedSupervisorProfilesMap: insertedSupervisorProfilesMap } = response;
     return (
       <>
         <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-result-body')}>
           <ContestSupervisorAddResultTable
             usernames={usernames}
             insertedSupervisorProfilesMap={insertedSupervisorProfilesMap}
-            alreadySupervisorProfilesMap={alreadySupervisorProfilesMap}
           />
         </div>
         <div className={Classes.DIALOG_FOOTER}>
@@ -124,8 +122,12 @@ export class ContestSupervisorAddDialog extends React.Component<
       .split('\n')
       .filter(s => s.length > 0)
       .map(s => s.trim());
-    const response = await this.props.onUpsertSupervisors(this.props.contest.jid, usernames);
-    if (usernames.length !== Object.keys(response.insertedContestantProfilesMap).length) {
+    const usernamesWithPrivileges: ContestSupervisorUpsertData = {
+      usernames,
+      managementPermissions: [],
+    };
+    const response = await this.props.onUpsertSupervisors(this.props.contest.jid, usernamesWithPrivileges);
+    if (usernames.length !== Object.keys(response.upsertedSupervisorProfilesMap).length) {
       this.setState({ submitted: { usernames, response } });
     } else {
       this.setState({ isDialogOpen: false });

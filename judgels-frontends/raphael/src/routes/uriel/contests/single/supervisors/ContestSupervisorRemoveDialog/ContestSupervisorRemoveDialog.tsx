@@ -3,23 +3,23 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestContestantDeleteResponse } from 'modules/api/uriel/contestContestant';
 
 import ContestSupervisorRemoveForm, {
   ContestSupervisorRemoveFormData,
 } from '../ContestSupervisorRemoveForm/ContestSupervisorRemoveForm';
 import { ContestSupervisorRemoveResultTable } from '../ContestSupervisorRemoveResultTable/ContestSupervisorRemoveResultTable';
+import { ContestSupervisorDeleteResponse } from 'modules/api/uriel/contestSupervisor';
 
 export interface ContestSupervisorRemoveDialogProps {
   contest: Contest;
-  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestContestantDeleteResponse>;
+  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestSupervisorDeleteResponse>;
 }
 
 interface ContestSupervisorRemoveDialogState {
   isDialogOpen?: boolean;
   submitted?: {
     usernames: string[];
-    response: ContestContestantDeleteResponse;
+    response: ContestSupervisorDeleteResponse;
   };
 }
 
@@ -85,7 +85,7 @@ export class ContestSupervisorRemoveDialog extends React.Component<
 
   private renderDialogRemoveResultTable = () => {
     const { usernames, response } = this.state.submitted!;
-    const { deletedContestantProfilesMap: deletedSupervisorProfilesMap } = response;
+    const { deletedSupervisorProfilesMap: deletedSupervisorProfilesMap } = response;
     return (
       <>
         <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-result-body')}>
@@ -121,7 +121,7 @@ export class ContestSupervisorRemoveDialog extends React.Component<
       .filter(s => s.length > 0)
       .map(s => s.trim());
     const response = await this.props.onDeleteSupervisors(this.props.contest.jid, usernames);
-    if (usernames.length !== Object.keys(response.deletedContestantProfilesMap).length) {
+    if (usernames.length !== Object.keys(response.deletedSupervisorProfilesMap).length) {
       this.setState({ submitted: { usernames, response } });
     } else {
       this.setState({ isDialogOpen: false });
