@@ -1,4 +1,4 @@
-package judgels.uriel.api.contest.rating;
+package judgels.uriel.api.contest;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Instant;
@@ -12,5 +12,4 @@ public interface ContestInfo {
     Instant getBeginTime();
 
     class Builder extends ImmutableContestInfo.Builder {}
-
 }

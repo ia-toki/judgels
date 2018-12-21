@@ -10,7 +10,7 @@ public interface UserRatingEvent {
     Instant getTime();
     String getEventJid();
     String getUserJid();
-    int getPublicRating();
+    int getRating();
 
     class Builder extends ImmutableUserRatingEvent.Builder {}
 }

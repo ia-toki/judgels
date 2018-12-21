@@ -23,6 +23,7 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestDescription;
 import judgels.uriel.api.contest.ContestErrors;
+import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.persistence.AdminRoleDao;
@@ -56,12 +57,17 @@ public class ContestStore {
         return Optional.ofNullable(contestByJidCache.get(contestJid));
     }
 
-    public Map<String, Contest> getContestByJids(Set<String> contestJids) {
+    public Map<String, ContestInfo> getContestInfosByJids(Set<String> contestJids) {
         return contestDao.selectByJids(contestJids)
                 .values()
                 .stream()
-                .map(ContestStore::fromModel)
-                .collect(Collectors.toMap(Contest::getJid, c -> c));
+                .collect(Collectors.toMap(
+                        c -> c.jid,
+                        c -> new ContestInfo.Builder()
+                                .slug(c.slug)
+                                .name(c.name)
+                                .beginTime(c.beginTime)
+                                .build()));
     }
 
     private Contest getContestByJidUncached(String contestJid) {

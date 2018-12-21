@@ -56,18 +56,18 @@ public class UserRatingStore {
     }
 
     public List<UserRatingEvent> getRatingEvents(String userJid) {
-        List<UserRatingModel> userRating = ratingDao.selectAllByUserJid(userJid);
-        Map<Instant, UserRatingEventModel> ratingEventMap =
+        List<UserRatingModel> ratings = ratingDao.selectAllByUserJid(userJid);
+        Map<Instant, UserRatingEventModel> ratingEventsMap =
                 ratingEventDao.selectAllByTimes(
-                        userRating.stream()
+                        ratings.stream()
                                 .map(e -> e.time)
                                 .collect(Collectors.toSet()));
-        return userRating.stream()
+        return ratings.stream()
                 .map(e -> new UserRatingEvent.Builder()
                         .time(e.time)
-                        .eventJid(ratingEventMap.get(e.time).eventJid)
+                        .eventJid(ratingEventsMap.get(e.time).eventJid)
                         .userJid(e.userJid)
-                        .publicRating(e.publicRating)
+                        .rating(e.publicRating)
                         .build()
                 ).collect(Collectors.toList());
     }

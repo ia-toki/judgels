@@ -27,9 +27,7 @@ public class UserRatingEventHibernateDao extends UnmodifiableHibernateDao<UserRa
     @Override
     public Map<Instant, UserRatingEventModel> selectAllByTimes(Set<Instant> times) {
         return selectAll(new FilterOptions.Builder<UserRatingEventModel>()
-                .addCustomPredicates((cb, cq, root) -> root
-                        .get(UserRatingEventModel_.time)
-                        .in(times))
+                .putColumnsIn(UserRatingEventModel_.time, times)
                 .build())
                 .stream()
                 .collect(Collectors.toMap(

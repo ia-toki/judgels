@@ -11,8 +11,7 @@ import javax.ws.rs.NotFoundException;
 import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.api.user.search.UserSearchService;
-import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.rating.ContestInfo;
+import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.rating.ContestRating;
 import judgels.uriel.api.contest.rating.ContestRatingHistoryResponse;
 import judgels.uriel.api.contest.rating.ContestRatingService;
@@ -50,28 +49,18 @@ public class ContestRatingResource implements ContestRatingService {
                 .map(UserRatingEvent::getEventJid)
                 .collect(Collectors.toSet());
 
-        Map<String, Contest> contestMap = contestStore.getContestByJids(contestJids);
+        Map<String, ContestInfo> contestInfosMap = contestStore.getContestInfosByJids(contestJids);
 
         List<ContestRating> data = userRatingEvents.stream()
                 .map(e -> new ContestRating.Builder()
                         .contestJid(e.getEventJid())
-                        .rating(e.getPublicRating())
+                        .rating(e.getRating())
                         .build())
                 .collect(Collectors.toList());
 
-        Map<String, ContestInfo> contestInfoMap = contestMap.values().stream()
-                .collect(Collectors.toMap(
-                        Contest::getJid,
-                        c -> new ContestInfo.Builder()
-                                .slug(c.getSlug())
-                                .name(c.getName())
-                                .beginTime(c.getBeginTime())
-                                .build()
-                ));
-
         return new ContestRatingHistoryResponse.Builder()
                 .data(data)
-                .contestMap(contestInfoMap)
+                .contestsMap(contestInfosMap)
                 .build();
     }
 }
