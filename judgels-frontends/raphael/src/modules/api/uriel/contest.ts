@@ -28,6 +28,7 @@ export interface ContestsResponse {
 
 export interface ActiveContestsResponse {
   data: Contest[];
+  rolesMap: Map<string, ContestRole>;
 }
 
 export interface ContestCreateData {

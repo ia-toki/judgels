@@ -9,6 +9,7 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from 'components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from 'components/LoadingState/LoadingState';
+import { ContestRoleTag } from 'components/ContestRole/ContestRoleTag';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestTab, ContestWebConfig } from 'modules/api/uriel/contestWeb';
 import { AppState } from 'modules/store';
@@ -30,7 +31,6 @@ import ContestSubmissionRoutes from './submissions/ContestSubmissionRoutes';
 import { EditContest } from '../modules/contestReducer';
 import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
-import { ContestRoleTag } from '../ContestRole/ContestRoleTag';
 
 import './SingleContestRoutes.css';
 

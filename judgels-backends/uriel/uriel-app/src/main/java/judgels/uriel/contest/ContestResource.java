@@ -4,6 +4,7 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -117,8 +118,17 @@ public class ContestResource implements ContestService {
     @UnitOfWork(readOnly = true)
     public ActiveContestsResponse getActiveContests(Optional<AuthHeader> authHeader) {
         String actorJid = actorChecker.check(authHeader);
+
+        List<Contest> contests = contestStore.getActiveContests(actorJid);
+        Map<String, ContestRole> rolesMap = contests
+                .stream()
+                .collect(Collectors.toMap(
+                        Contest::getJid,
+                        contest -> contestRoleChecker.getRole(actorJid, contest)));
+
         return new ActiveContestsResponse.Builder()
-                .data(contestStore.getActiveContests(actorJid))
+                .data(contests)
+                .rolesMap(rolesMap)
                 .build();
     }
 
