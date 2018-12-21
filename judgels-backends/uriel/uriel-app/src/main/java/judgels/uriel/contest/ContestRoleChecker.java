@@ -42,14 +42,16 @@ public class ContestRoleChecker {
     }
 
     public ContestRole getRole(String userJid, Contest contest) {
-        if (canAdminister(userJid)) {
+        if (adminRoleDao.isAdmin(userJid)) {
             return ContestRole.ADMIN;
-        } else if (canManage(userJid, contest)) {
+        } else if (contestRoleDao.isManager(userJid, contest.getJid())) {
             return ContestRole.MANAGER;
-        } else if (canSupervise(userJid, contest)) {
+        } else if (contestRoleDao.isSupervisorOrAbove(userJid, contest.getJid())) {
             return ContestRole.SUPERVISOR;
+        } else if (contestRoleDao.isContestant(userJid, contest.getJid())) {
+            return ContestRole.CONTESTANT;
         }
 
-        return ContestRole.CONTESTANT;
+        return ContestRole.NONE;
     }
 }

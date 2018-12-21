@@ -4,6 +4,8 @@ import { APP_CONFIG } from 'conf';
 import { get, post } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
 
+import { ContestRole } from './contestWeb';
+
 export interface Contest {
   id: number;
   jid: string;
@@ -20,11 +22,13 @@ export interface ContestConfig {
 
 export interface ContestsResponse {
   data: Page<Contest>;
+  rolesMap: Map<string, ContestRole>;
   config: ContestConfig;
 }
 
 export interface ActiveContestsResponse {
   data: Contest[];
+  rolesMap: Map<string, ContestRole>;
 }
 
 export interface ContestCreateData {

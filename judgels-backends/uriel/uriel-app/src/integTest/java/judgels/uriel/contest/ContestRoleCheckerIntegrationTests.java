@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
+import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -110,5 +111,14 @@ class ContestRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationT
         assertThat(checker.canStartVirtual(CONTESTANT, contestB)).isFalse();
         assertThat(checker.canStartVirtual(CONTESTANT, contestBStarted)).isTrue();
         assertThat(checker.canStartVirtual(ANOTHER_CONTESTANT, contestBStarted)).isFalse();
+    }
+
+    @Test
+    void get_role() {
+        assertThat(checker.getRole(USER, contestB)).isEqualTo(ContestRole.NONE);
+        assertThat(checker.getRole(CONTESTANT, contestB)).isEqualTo(ContestRole.CONTESTANT);
+        assertThat(checker.getRole(SUPERVISOR, contestB)).isEqualTo(ContestRole.SUPERVISOR);
+        assertThat(checker.getRole(MANAGER, contestB)).isEqualTo(ContestRole.MANAGER);
+        assertThat(checker.getRole(ADMIN, contestB)).isEqualTo(ContestRole.ADMIN);
     }
 }

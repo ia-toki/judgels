@@ -45,7 +45,7 @@ class ActiveContestsWidget extends React.PureComponent<ActiveContestsWidgetProps
       return <LoadingActiveContestCard />;
     }
 
-    const { data: contests } = response;
+    const { data: contests, rolesMap } = response;
     if (contests.length === 0) {
       return (
         <p>
@@ -53,7 +53,9 @@ class ActiveContestsWidget extends React.PureComponent<ActiveContestsWidgetProps
         </p>
       );
     }
-    return contests.map(contest => <ActiveContestCard key={contest.jid} contest={contest} />);
+    return contests.map(contest => (
+      <ActiveContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
+    ));
   };
 }
 

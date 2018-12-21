@@ -4,20 +4,28 @@ import { FormattedRelative } from 'react-intl';
 import { TimeanddateLink } from 'components/TimeanddateLink/TimeanddateLink';
 import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
 import { Contest } from 'modules/api/uriel/contest';
+import { ContestRole } from 'modules/api/uriel/contestWeb';
+import { ContestRoleTag } from 'components/ContestRole/ContestRoleTag';
 
 import './ActiveContestCard.css';
 
 export interface ActiveContestCardProps {
   contest: Contest;
+  role?: ContestRole;
 }
 
 export class ActiveContestCard extends React.PureComponent<ActiveContestCardProps> {
   render() {
-    const { contest } = this.props;
+    const { contest, role } = this.props;
 
     return (
       <ContentCardLink to={`/contests/${contest.slug}`}>
-        <h4 className="active-contest-card-name">{contest.name}</h4>
+        <h4 className="active-contest-card-name">
+          {contest.name}
+          <div className="active-contest-card-role">
+            <ContestRoleTag role={role} />
+          </div>
+        </h4>
         <p className="active-contest-card-date">
           <small>{this.renderBeginTime(contest)}</small>
         </p>

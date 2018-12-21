@@ -4,7 +4,10 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
@@ -18,6 +21,7 @@ import judgels.uriel.api.contest.ContestService;
 import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.ContestsResponse;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
+import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 
@@ -93,13 +97,19 @@ public class ContestResource implements ContestService {
         String actorJid = actorChecker.check(authHeader);
 
         Page<Contest> contests = contestStore.getContests(actorJid, name, page);
+        Map<String, ContestRole> rolesMap = contests.getPage()
+                .stream()
+                .collect(Collectors.toMap(
+                        Contest::getJid,
+                        contest -> contestRoleChecker.getRole(actorJid, contest)));
         boolean canAdminister = contestRoleChecker.canAdminister(actorJid);
-        ContestConfig config =  new ContestConfig.Builder()
+        ContestConfig config = new ContestConfig.Builder()
                 .canAdminister(canAdminister)
                 .build();
 
         return new ContestsResponse.Builder()
                 .data(contests)
+                .rolesMap(rolesMap)
                 .config(config)
                 .build();
     }
@@ -108,8 +118,17 @@ public class ContestResource implements ContestService {
     @UnitOfWork(readOnly = true)
     public ActiveContestsResponse getActiveContests(Optional<AuthHeader> authHeader) {
         String actorJid = actorChecker.check(authHeader);
+
+        List<Contest> contests = contestStore.getActiveContests(actorJid);
+        Map<String, ContestRole> rolesMap = contests
+                .stream()
+                .collect(Collectors.toMap(
+                        Contest::getJid,
+                        contest -> contestRoleChecker.getRole(actorJid, contest)));
+
         return new ActiveContestsResponse.Builder()
-                .data(contestStore.getActiveContests(actorJid))
+                .data(contests)
+                .rolesMap(rolesMap)
                 .build();
     }
 

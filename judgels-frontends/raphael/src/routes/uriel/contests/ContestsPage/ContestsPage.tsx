@@ -54,8 +54,10 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
       return <LoadingContestCard />;
     }
 
-    const { data: contests } = response;
-    return contests.page.map(contest => <ContestCard key={contest.jid} contest={contest} />);
+    const { data: contests, rolesMap } = response;
+    return contests.page.map(contest => (
+      <ContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
+    ));
   };
 
   private renderPagination = () => {
