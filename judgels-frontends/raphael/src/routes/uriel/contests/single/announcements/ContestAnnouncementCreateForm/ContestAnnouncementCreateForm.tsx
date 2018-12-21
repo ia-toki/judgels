@@ -37,7 +37,7 @@ const ContestAnnouncementCreateForm = (props: ContestAnnouncementCreateFormProps
   const contentField: any = {
     name: 'content',
     label: 'Content',
-    rows: 16,
+    rows: 15,
     validate: [Required],
   };
 
