@@ -6,7 +6,6 @@ import java.time.Duration;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.api.contest.role.ContestRole;
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
-import net.bytebuddy.implementation.bind.annotation.Super;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
