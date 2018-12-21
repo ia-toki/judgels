@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.api.user.me.MyUserService;
+import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.service.jaxrs.JaxRsClients;
 
@@ -33,6 +34,12 @@ public class JophielModule {
     @Singleton
     UserSearchService userSearchService(UserAgent agent) {
         return JaxRsClients.create(UserSearchService.class, config.getBaseUrl(), agent);
+    }
+
+    @Provides
+    @Singleton
+    UserRatingService userRatingService(UserAgent agent) {
+        return JaxRsClients.create(UserRatingService.class, config.getBaseUrl(), agent);
     }
 
     @Provides

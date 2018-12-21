@@ -11,7 +11,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.persistence.UserRatingDao;
 import judgels.jophiel.persistence.UserRatingModel;
+import judgels.jophiel.persistence.UserRatingModel_;
 import judgels.persistence.ActorProvider;
+import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
@@ -35,9 +37,9 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
 
         Query<UserRatingModel> query = currentSession().createQuery(
                 "SELECT t1 FROM jophiel_user_rating t1 "
-                + "LEFT OUTER JOIN jophiel_user_rating t2 "
-                + "ON (t1.userJid = t2.userJid AND t1.time < t2.time AND t2.time < :time) "
-                + "WHERE t1.time < :time AND t1.userJid IN :userJids AND t2.userJid IS NULL",
+                        + "LEFT OUTER JOIN jophiel_user_rating t2 "
+                        + "ON (t1.userJid = t2.userJid AND t1.time < t2.time AND t2.time < :time) "
+                        + "WHERE t1.time < :time AND t1.userJid IN :userJids AND t2.userJid IS NULL",
                 UserRatingModel.class);
 
         query.setParameter("time", time);
@@ -80,5 +82,12 @@ public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingM
                 .page(page)
                 .totalCount(count)
                 .build();
+    }
+
+    @Override
+    public List<UserRatingModel> selectAllByUserJid(String userJid) {
+        return selectAll(new FilterOptions.Builder<UserRatingModel>()
+                .putColumnsEq(UserRatingModel_.userJid, userJid)
+                .build());
     }
 }
