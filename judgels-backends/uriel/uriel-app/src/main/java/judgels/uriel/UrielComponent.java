@@ -23,6 +23,7 @@ import judgels.uriel.file.FileModule;
 import judgels.uriel.gabriel.GabrielModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.jophiel.JophielModule;
+import judgels.uriel.rating.ContestRatingResource;
 import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.sealtiel.SealtielModule;
 import judgels.uriel.submission.SubmissionModule;
@@ -50,6 +51,7 @@ public interface UrielComponent {
     ContestManagerResource contestManagerResource();
     ContestModuleResource contestModuleResource();
     ContestProblemResource contestProblemResource();
+    ContestRatingResource contestRatingResource();
     ContestResource contestResource();
     ContestScoreboardResource contestScoreboardResource();
     ContestSubmissionResource contestSubmissionResource();

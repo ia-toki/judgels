@@ -2,12 +2,14 @@ package judgels.jophiel.user.rating;
 
 import com.google.common.collect.Lists;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.api.user.rating.UserRating;
+import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.persistence.UserRatingDao;
 import judgels.jophiel.persistence.UserRatingEventDao;
 import judgels.jophiel.persistence.UserRatingEventModel;
@@ -51,5 +53,22 @@ public class UserRatingStore {
             ratingModel.hiddenRating = rating.getHiddenRating();
             ratingDao.insert(ratingModel);
         });
+    }
+
+    public List<UserRatingEvent> getRatingEvents(String userJid) {
+        List<UserRatingModel> userRating = ratingDao.selectAllByUserJid(userJid);
+        Map<Instant, UserRatingEventModel> ratingEventMap =
+                ratingEventDao.selectAllByTimes(
+                        userRating.stream()
+                                .map(e -> e.time)
+                                .collect(Collectors.toSet()));
+        return userRating.stream()
+                .map(e -> new UserRatingEvent.Builder()
+                        .time(e.time)
+                        .eventJid(ratingEventMap.get(e.time).eventJid)
+                        .userJid(e.userJid)
+                        .publicRating(e.publicRating)
+                        .build()
+                ).collect(Collectors.toList());
     }
 }

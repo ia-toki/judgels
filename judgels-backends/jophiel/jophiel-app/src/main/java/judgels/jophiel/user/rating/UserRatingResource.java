@@ -3,10 +3,12 @@ package judgels.jophiel.user.rating;
 import static judgels.service.ServiceUtils.checkAllowed;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.rating.UserRating;
+import judgels.jophiel.api.user.rating.UserRatingEvent;
 import judgels.jophiel.api.user.rating.UserRatingService;
 import judgels.jophiel.api.user.rating.UserRatingUpdateData;
 import judgels.jophiel.user.UserRoleChecker;
@@ -46,5 +48,11 @@ public class UserRatingResource implements UserRatingService {
                 .collect(Collectors.toMap(e -> jidsByUsernamesMap.get(e.getKey()), e -> e.getValue()));
 
         ratingStore.updateRatings(data.getTime(), data.getEventJid(), ratingsMap);
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public List<UserRatingEvent> getRatingHistory(String userJid) {
+        return ratingStore.getRatingEvents(userJid);
     }
 }

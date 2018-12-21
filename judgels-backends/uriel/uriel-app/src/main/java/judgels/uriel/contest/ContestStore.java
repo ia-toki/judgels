@@ -9,7 +9,10 @@ import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.SearchOptions;
@@ -51,6 +54,14 @@ public class ContestStore {
 
     public Optional<Contest> getContestByJid(String contestJid) {
         return Optional.ofNullable(contestByJidCache.get(contestJid));
+    }
+
+    public Map<String, Contest> getContestByJids(Set<String> contestJids) {
+        return contestDao.selectByJids(contestJids)
+                .values()
+                .stream()
+                .map(ContestStore::fromModel)
+                .collect(Collectors.toMap(Contest::getJid, c -> c));
     }
 
     private Contest getContestByJidUncached(String contestJid) {
