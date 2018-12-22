@@ -32,6 +32,7 @@ import ContestSubmissionRoutes from './submissions/ContestSubmissionRoutes';
 import { EditContest } from '../modules/contestReducer';
 import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
+import { ContestIcon } from '../modules/contestIcon';
 
 import './SingleContestRoutes.css';
 
@@ -55,14 +56,14 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
   const sidebarItems: ContentWithSidebarItem[] = [
     {
       id: '@',
-      titleIcon: 'properties',
+      titleIcon: ContestIcon.Overview,
       title: 'Overview',
       routeComponent: Route,
       component: ContestOverviewPage,
     },
     {
       id: 'announcements',
-      titleIcon: 'notifications',
+      titleIcon: ContestIcon.Announcement,
       title: (
         <div className="tab-item-with-widget">
           <div className="tab-item-with-widget__name">Announcements</div>
@@ -78,7 +79,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     },
     {
       id: 'problems',
-      titleIcon: 'manual',
+      titleIcon: ContestIcon.Problems,
       title: 'Problems',
       routeComponent: Route,
       component: ContestProblemRoutes,
@@ -86,7 +87,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     },
     {
       id: 'contestants',
-      titleIcon: 'people',
+      titleIcon: ContestIcon.Contestants,
       title: 'Contestants',
       routeComponent: Route,
       component: ContestContestantsPage,
@@ -94,7 +95,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     },
     {
       id: 'supervisors',
-      titleIcon: 'take-action',
+      titleIcon: ContestIcon.Supervisors,
       title: 'Supervisors',
       routeComponent: Route,
       component: ContestSupervisorsPage,
@@ -102,7 +103,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     },
     {
       id: 'managers',
-      titleIcon: 'key',
+      titleIcon: ContestIcon.Managers,
       title: 'Managers',
       routeComponent: Route,
       component: ContestManagersPage,
@@ -110,7 +111,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     },
     {
       id: 'submissions',
-      titleIcon: 'layers',
+      titleIcon: ContestIcon.Submissions,
       title: 'Submissions',
       routeComponent: Route,
       component: ContestSubmissionRoutes,
@@ -118,7 +119,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     },
     {
       id: 'clarifications',
-      titleIcon: 'chat',
+      titleIcon: ContestIcon.Clarifications,
       title: (
         <div className="tab-item-with-widget">
           <div className="tab-item-with-widget__name">Clarifications</div>
@@ -134,7 +135,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     },
     {
       id: 'scoreboard',
-      titleIcon: 'th',
+      titleIcon: ContestIcon.Scoreboard,
       title: 'Scoreboard',
       routeComponent: Route,
       component: ContestScoreboardPage,
@@ -142,7 +143,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
     },
     {
       id: 'files',
-      titleIcon: 'folder-close',
+      titleIcon: ContestIcon.Files,
       title: 'Files',
       routeComponent: Route,
       component: ContestFilesPage,

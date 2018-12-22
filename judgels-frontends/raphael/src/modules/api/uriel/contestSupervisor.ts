@@ -7,16 +7,33 @@ import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { baseContestURL } from './contest';
 
 export enum SupervisorManagementPermission {
-  None = 'ALL',
+  All = 'ALL',
   Announcement = 'ANNOUNCEMENT',
   Problem = 'PROBLEM',
   Submission = 'SUBMISSION',
   Clarification = 'CLARIFICATION',
-  Supervisor = 'SUPERVISOR',
   Team = 'TEAM',
   Scoreboard = 'SCOREBOARD',
   File = 'FILE',
 }
+
+export const SupervisorPermissionFullNameMap = Object.keys(SupervisorManagementPermission)
+  .filter(p => p !== 'All')
+  .reduce((map, p) => {
+    map[SupervisorManagementPermission[p]] = p;
+    return map;
+  }, {});
+
+export const SupervisorPermissionShortNameMap = {
+  [SupervisorManagementPermission.All]: 'ALL',
+  [SupervisorManagementPermission.Announcement]: 'ANNC',
+  [SupervisorManagementPermission.Problem]: 'PRBM',
+  [SupervisorManagementPermission.Submission]: 'SUBM',
+  [SupervisorManagementPermission.Clarification]: 'CLRF',
+  [SupervisorManagementPermission.Team]: 'TEAM',
+  [SupervisorManagementPermission.Scoreboard]: 'SCRB',
+  [SupervisorManagementPermission.File]: 'FILE',
+};
 
 export interface ContestSupervisor {
   userJid: string;

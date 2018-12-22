@@ -6,9 +6,10 @@ import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { contest, contestJid } from 'fixtures/state';
+import { ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
+import { SupervisorManagementPermission } from 'modules/api/uriel/contestSupervisor';
 
 import { ContestSupervisorAddDialog, ContestSupervisorAddDialogProps } from './ContestSupervisorAddDialog';
-import { ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
 
 describe('ContestSupervisorAddDialog', () => {
   let onUpsertSupervisors: jest.Mock<any>;
@@ -41,11 +42,22 @@ describe('ContestSupervisorAddDialog', () => {
     const usernames = wrapper.find('textarea[name="usernames"]');
     usernames.simulate('change', { target: { value: 'andi\n\nbudi\n caca  \n' } });
 
+    const announcementPermission = wrapper.find('input[name="grantedPermissions.Announcement"]');
+    announcementPermission.simulate('change', { target: { checked: true } });
+
+    const clarificationPermission = wrapper.find('input[name="grantedPermissions.Clarification"]');
+    clarificationPermission.simulate('change', { target: { checked: true } });
+
+    wrapper.update();
+
     const form = wrapper.find('form');
     form.simulate('submit');
 
     expect(onUpsertSupervisors).toHaveBeenCalledWith(contestJid, {
-      managementPermissions: [],
+      managementPermissions: [
+        SupervisorManagementPermission.Announcement,
+        SupervisorManagementPermission.Clarification,
+      ],
       usernames: ['andi', 'budi', 'caca'],
     } as ContestSupervisorUpsertData);
   });
