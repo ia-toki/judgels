@@ -120,11 +120,11 @@ export class ContestSupervisorAddDialog extends React.Component<
     </>
   );
 
-  private getPermissionList(grantedPermissions) {
-    return !grantedPermissions
+  private getPermissionList(managementPermissions) {
+    return !managementPermissions
       ? []
-      : Object.keys(grantedPermissions)
-          .filter(p => grantedPermissions[p])
+      : Object.keys(managementPermissions)
+          .filter(p => managementPermissions[p])
           .map(p => SupervisorManagementPermission[p]);
   }
 
@@ -135,9 +135,7 @@ export class ContestSupervisorAddDialog extends React.Component<
       .map(s => s.trim());
     const data: ContestSupervisorUpsertData = {
       usernames,
-      managementPermissions: dataForm.grantAllPermissions
-        ? [SupervisorManagementPermission.All]
-        : this.getPermissionList(dataForm.grantedPermissions),
+      managementPermissions: this.getPermissionList(dataForm.managementPermissions),
     };
     const response = await this.props.onUpsertSupervisors(this.props.contest.jid, data);
     if (usernames.length !== Object.keys(response.upsertedSupervisorProfilesMap).length) {

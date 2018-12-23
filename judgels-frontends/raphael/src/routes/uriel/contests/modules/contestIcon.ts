@@ -1,8 +1,8 @@
 import { IconName } from '@blueprintjs/core';
 
-export const ContestIcon = {
+export const contestIcon = {
   Overview: 'properties',
-  Announcement: 'notifications',
+  Announcements: 'notifications',
   Problems: 'manual',
   Contestants: 'people',
   Supervisors: 'take-action',
@@ -11,5 +11,5 @@ export const ContestIcon = {
   Clarifications: 'chat',
   Scoreboard: 'th',
   Files: 'folder-close',
-  Team: 'link',
+  Teams: 'link',
 } as { [key: string]: IconName };

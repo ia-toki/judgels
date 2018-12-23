@@ -17,23 +17,27 @@ export enum SupervisorManagementPermission {
   File = 'FILE',
 }
 
-export const SupervisorPermissionFullNameMap = Object.keys(SupervisorManagementPermission)
+export const supervisorPermissionFullNameMap = Object.keys(SupervisorManagementPermission)
   .filter(p => p !== 'All')
   .reduce((map, p) => {
     map[SupervisorManagementPermission[p]] = p;
     return map;
   }, {});
 
-export const SupervisorPermissionShortNameMap = {
+export const supervisorPermissionShortNameMap = {
   [SupervisorManagementPermission.All]: 'ALL',
   [SupervisorManagementPermission.Announcement]: 'ANNC',
-  [SupervisorManagementPermission.Problem]: 'PRBM',
+  [SupervisorManagementPermission.Problem]: 'PROB',
   [SupervisorManagementPermission.Submission]: 'SUBM',
-  [SupervisorManagementPermission.Clarification]: 'CLRF',
+  [SupervisorManagementPermission.Clarification]: 'CLAR',
   [SupervisorManagementPermission.Team]: 'TEAM',
-  [SupervisorManagementPermission.Scoreboard]: 'SCRB',
+  [SupervisorManagementPermission.Scoreboard]: 'SCOR',
   [SupervisorManagementPermission.File]: 'FILE',
 };
+
+export const supervisorPermissionsList = Object.keys(supervisorPermissionFullNameMap).map(
+  p => supervisorPermissionFullNameMap[p]
+);
 
 export interface ContestSupervisor {
   userJid: string;

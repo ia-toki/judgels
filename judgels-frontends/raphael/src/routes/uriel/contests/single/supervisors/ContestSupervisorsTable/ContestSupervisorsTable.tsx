@@ -4,22 +4,22 @@ import * as React from 'react';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { ContestSupervisor } from 'modules/api/uriel/contestSupervisor';
-import { SupervisorPermissionShortNameMap } from 'modules/api/uriel/contestSupervisor';
+import { supervisorPermissionShortNameMap } from 'modules/api/uriel/contestSupervisor';
 import { SupervisorManagementPermission } from 'modules/api/uriel/contestSupervisor';
 
-import { ContestIcon } from '../../../modules/contestIcon';
+import { contestIcon } from '../../../modules/contestIcon';
 
 import './ContestSupervisorsTable.css';
 
-const SupervisorPermissionIconMap = {
+const supervisorPermissionIconMap = {
   [SupervisorManagementPermission.All]: 'ninja',
-  [SupervisorManagementPermission.Announcement]: ContestIcon.Announcement,
-  [SupervisorManagementPermission.Problem]: ContestIcon.Problems,
-  [SupervisorManagementPermission.Submission]: ContestIcon.Submissions,
-  [SupervisorManagementPermission.Clarification]: ContestIcon.Clarifications,
-  [SupervisorManagementPermission.Team]: ContestIcon.Team,
-  [SupervisorManagementPermission.Scoreboard]: ContestIcon.Scoreboard,
-  [SupervisorManagementPermission.File]: ContestIcon.Files,
+  [SupervisorManagementPermission.Announcement]: contestIcon.Announcement,
+  [SupervisorManagementPermission.Problem]: contestIcon.Problems,
+  [SupervisorManagementPermission.Submission]: contestIcon.Submissions,
+  [SupervisorManagementPermission.Clarification]: contestIcon.Clarifications,
+  [SupervisorManagementPermission.Team]: contestIcon.Team,
+  [SupervisorManagementPermission.Scoreboard]: contestIcon.Scoreboard,
+  [SupervisorManagementPermission.File]: contestIcon.Files,
 } as { [key: string]: IconName };
 
 export interface ContestSupervisorsTableProps {
@@ -42,6 +42,7 @@ export class ContestSupervisorsTable extends React.PureComponent<ContestSupervis
       <thead>
         <tr>
           <th className="col-user">User</th>
+          <th className="col-management-permission">Management permissions</th>
         </tr>
       </thead>
     );
@@ -60,10 +61,12 @@ export class ContestSupervisorsTable extends React.PureComponent<ContestSupervis
       <tr key={supervisor.userJid}>
         <td>
           <UserRef profile={profilesMap[supervisor.userJid]} />
+        </td>
+        <td>
           {supervisor.managementPermissions &&
-            supervisor.managementPermissions.reverse().map(p => (
-              <Tag round className="permission-tag" key={p} icon={SupervisorPermissionIconMap[p]}>
-                {SupervisorPermissionShortNameMap[p]}
+            supervisor.managementPermissions.map(p => (
+              <Tag round className="permission-tag" key={p} icon={supervisorPermissionIconMap[p]}>
+                {supervisorPermissionShortNameMap[p]}
               </Tag>
             ))}
         </td>

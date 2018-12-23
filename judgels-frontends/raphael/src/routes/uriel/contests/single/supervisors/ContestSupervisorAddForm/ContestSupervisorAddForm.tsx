@@ -6,30 +6,18 @@ import { Required } from 'components/forms/validations';
 import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
 import { FormTableInput } from 'components/forms/FormTableInput/FormTableInput';
 import { FormCheckbox } from 'components/forms/FormCheckbox/FormCheckbox';
-import { SupervisorManagementPermission } from 'modules/api/uriel/contestSupervisor';
+import { supervisorPermissionsList } from 'modules/api/uriel/contestSupervisor';
 
 export interface ContestSupervisorAddFormData {
   usernames: string;
-  grantAllPermissions?: boolean;
-  grantedPermissions?: { [key: string]: boolean };
+  managementPermissions?: { [key: string]: boolean };
 }
 
 export interface ContestSupervisorAddFormProps extends InjectedFormProps<ContestSupervisorAddFormData> {
   renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
 }
 
-interface ContestSupervisorAddFormState {
-  grantAllPermissions: boolean;
-}
-
-class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormProps, ContestSupervisorAddFormState> {
-  state: ContestSupervisorAddFormState;
-
-  constructor(props: ContestSupervisorAddFormProps) {
-    super(props);
-    this.state = { grantAllPermissions: false };
-  }
-
+class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormProps> {
   render() {
     return (
       <form onSubmit={this.props.handleSubmit}>
@@ -37,10 +25,6 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
       </form>
     );
   }
-
-  private toggleAllowAllLanguagesCheckbox = (e, checked) => {
-    this.setState({ grantAllPermissions: checked });
-  };
 
   private renderSubmitButton() {
     return <Button type="submit" text="Add/update" intent={Intent.PRIMARY} loading={this.props.submitting} />;
@@ -53,7 +37,7 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
           <tr>
             <td colSpan={2}> {this.renderUsernamesField()} </td>
           </tr>
-          {this.renderPrivilegesForm()}
+          {this.renderPermissionsForm()}
         </tbody>
       </HTMLTable>
     );
@@ -64,7 +48,7 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
       name: 'usernames',
       label: 'Usernames',
       labelHelper: '(one username per line, max 100 users)',
-      rows: 5,
+      rows: 8,
       validate: [Required],
       autoFocus: true,
     };
@@ -72,24 +56,16 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
     return <Field component={FormTextArea} {...usernamesField} />;
   }
 
-  private renderPrivilegesForm() {
+  private renderPermissionsForm() {
     const permissionsField: any = {
       label: 'Permissions',
       meta: {},
     };
 
-    const grantAllPermissionsField: any = {
-      name: 'grantAllPermissions',
-      label: 'All',
-      onChange: this.toggleAllowAllLanguagesCheckbox,
-    };
-
-    const privileges = Object.keys(SupervisorManagementPermission).filter(e => e !== 'All');
-
-    const privilegesProps = privileges.map(
+    const permissionsProps = supervisorPermissionsList.map(
       p =>
         ({
-          name: 'grantedPermissions.' + p,
+          name: 'managementPermissions.' + p,
           label: p,
           small: true,
         } as any)
@@ -97,9 +73,7 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
 
     return (
       <FormTableInput {...permissionsField}>
-        <Field component={FormCheckbox} {...grantAllPermissionsField} />
-        {!this.state.grantAllPermissions &&
-          privilegesProps.map(p => <Field key={p.name} component={FormCheckbox} {...p} />)}
+        {permissionsProps.map(p => <Field key={p.name} component={FormCheckbox} {...p} />)}
       </FormTableInput>
     );
   }
@@ -107,5 +81,11 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
 
 export default reduxForm<ContestSupervisorAddFormData>({
   form: 'contest-supervisor-add',
+  initialValues: {
+    managementPermissions: supervisorPermissionsList.reduce((obj, p) => {
+      obj[p] = true;
+      return obj;
+    }, {}),
+  },
   touchOnBlur: false,
 })(ContestSupervisorAddForm);
