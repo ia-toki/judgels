@@ -3,11 +3,13 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
+import { SupervisorManagementPermission } from 'modules/api/uriel/contestSupervisor';
+import { ContestSupervisorUpsertResponse, ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
+
 import ContestSupervisorAddForm, {
   ContestSupervisorAddFormData,
 } from '../ContestSupervisorAddForm/ContestSupervisorAddForm';
 import { ContestSupervisorAddResultTable } from '../ContestSupervisorAddResultTable/ContestSupervisorAddResultTable';
-import { ContestSupervisorUpsertResponse, ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
 
 export interface ContestSupervisorAddDialogProps {
   contest: Contest;
@@ -49,7 +51,7 @@ export class ContestSupervisorAddDialog extends React.Component<
         onClick={this.toggleDialog}
         disabled={this.state.isDialogOpen}
       >
-        Add supervisors
+        Add/update supervisors
       </Button>
     );
   };
@@ -61,7 +63,8 @@ export class ContestSupervisorAddDialog extends React.Component<
   private renderDialog = () => {
     const dialogBody =
       this.state.submitted !== undefined ? this.renderDialogAddResultTable() : this.renderDialogAddForm();
-    const dialogTitle = this.state.submitted !== undefined ? 'Add supervisors results' : 'Add supervisors';
+    const dialogTitle =
+      this.state.submitted !== undefined ? 'Add/update supervisors results' : 'Add/update supervisors';
 
     return (
       <Dialog
@@ -117,6 +120,14 @@ export class ContestSupervisorAddDialog extends React.Component<
     </>
   );
 
+  private getPermissionList(managementPermissions) {
+    return !managementPermissions
+      ? []
+      : Object.keys(managementPermissions)
+          .filter(p => managementPermissions[p])
+          .map(p => SupervisorManagementPermission[p]);
+  }
+
   private addSupervisors = async (dataForm: ContestSupervisorAddFormData) => {
     const usernames = dataForm.usernames
       .split('\n')
@@ -124,7 +135,7 @@ export class ContestSupervisorAddDialog extends React.Component<
       .map(s => s.trim());
     const data: ContestSupervisorUpsertData = {
       usernames,
-      managementPermissions: [],
+      managementPermissions: this.getPermissionList(dataForm.managementPermissions),
     };
     const response = await this.props.onUpsertSupervisors(this.props.contest.jid, data);
     if (usernames.length !== Object.keys(response.upsertedSupervisorProfilesMap).length) {
