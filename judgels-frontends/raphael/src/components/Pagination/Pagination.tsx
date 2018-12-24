@@ -88,6 +88,7 @@ class Pagination extends React.PureComponent<PaginationProps, {}> {
 
 interface PaginationContainerProps {
   pageSize: number;
+  key?: any;
   onChangePage: (nextPage: number) => Promise<number>;
 }
 
@@ -104,6 +105,14 @@ class PaginationContainer extends React.PureComponent<
   PaginationContainerState
 > {
   state: PaginationContainerState = { totalCount: 0 };
+
+  async componentDidUpdate(prevProps) {
+    if (this.props.key !== prevProps.key) {
+      const queries = parse(this.props.location.search);
+      const totalCount = await this.props.onChangePage(queries.page);
+      this.setState({ totalCount });
+    }
+  }
 
   render() {
     const queries = parse(this.props.location.search);
