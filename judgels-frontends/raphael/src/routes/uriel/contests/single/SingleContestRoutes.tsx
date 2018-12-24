@@ -32,7 +32,7 @@ import ContestSubmissionRoutes from './submissions/ContestSubmissionRoutes';
 import { EditContest } from '../modules/contestReducer';
 import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
-import { contestIcon } from '../modules/contestIcon';
+import { contestIcon } from './modules/contestIcon';
 
 import './SingleContestRoutes.css';
 

@@ -4,22 +4,22 @@ import * as React from 'react';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { ContestSupervisor } from 'modules/api/uriel/contestSupervisor';
-import { supervisorPermissionShortNameMap } from 'modules/api/uriel/contestSupervisor';
-import { SupervisorManagementPermission } from 'modules/api/uriel/contestSupervisor';
+import { SupervisorManagementPermission, supervisorPermissionShortNameMap } from 'modules/api/uriel/contestSupervisor';
+import { ContestTab } from 'modules/api/uriel/contestWeb';
 
-import { contestIcon } from '../../../modules/contestIcon';
+import { contestIcon } from '../../modules/contestIcon';
 
 import './ContestSupervisorsTable.css';
 
-const supervisorPermissionIconMap = {
+const managementPermissionTabsMap = {
   [SupervisorManagementPermission.All]: 'ninja',
-  [SupervisorManagementPermission.Announcement]: contestIcon.Announcement,
-  [SupervisorManagementPermission.Problem]: contestIcon.Problems,
-  [SupervisorManagementPermission.Submission]: contestIcon.Submissions,
-  [SupervisorManagementPermission.Clarification]: contestIcon.Clarifications,
-  [SupervisorManagementPermission.Team]: contestIcon.Team,
-  [SupervisorManagementPermission.Scoreboard]: contestIcon.Scoreboard,
-  [SupervisorManagementPermission.File]: contestIcon.Files,
+  [SupervisorManagementPermission.Announcement]: contestIcon[ContestTab.Announcements],
+  [SupervisorManagementPermission.Problem]: contestIcon[ContestTab.Problems],
+  [SupervisorManagementPermission.Submission]: contestIcon[ContestTab.Submissions],
+  [SupervisorManagementPermission.Clarification]: contestIcon[ContestTab.Clarifications],
+  [SupervisorManagementPermission.Team]: contestIcon[ContestTab.Teams],
+  [SupervisorManagementPermission.Scoreboard]: contestIcon[ContestTab.Scoreboard],
+  [SupervisorManagementPermission.File]: contestIcon[ContestTab.Files],
 } as { [key: string]: IconName };
 
 export interface ContestSupervisorsTableProps {
@@ -65,7 +65,7 @@ export class ContestSupervisorsTable extends React.PureComponent<ContestSupervis
         <td>
           {supervisor.managementPermissions &&
             supervisor.managementPermissions.map(p => (
-              <Tag round className="permission-tag" key={p} icon={supervisorPermissionIconMap[p]}>
+              <Tag round className="permission-tag" key={p} icon={managementPermissionTabsMap[p]}>
                 {supervisorPermissionShortNameMap[p]}
               </Tag>
             ))}
