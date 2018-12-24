@@ -5,11 +5,13 @@ import { Contest } from './contest';
 import { ContestClarificationStatus } from './contestClarification';
 
 export enum ContestTab {
+  Overview = 'OVERVIEW',
   Announcements = 'ANNOUNCEMENTS',
   Problems = 'PROBLEMS',
   Contestants = 'CONTESTANTS',
   Supervisors = 'SUPERVISORS',
   Managers = 'MANAGERS',
+  Teams = 'TEAMS',
   Submissions = 'SUBMISSIONS',
   Clarifications = 'CLARIFICATIONS',
   Scoreboard = 'SCOREBOARD',
