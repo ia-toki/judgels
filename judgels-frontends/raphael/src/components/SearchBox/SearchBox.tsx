@@ -14,6 +14,7 @@ export interface SearchBoxProps {
   onSubmit?: (content: string) => any;
   nextRoute?: (content: string, prevQueries: any) => any;
   initialValue?: any;
+  isLoading?: boolean;
 }
 
 const SearchBoxContainer = (props: SearchBoxProps & SearchBoxRouteProps) => {
@@ -24,7 +25,17 @@ const SearchBoxContainer = (props: SearchBoxProps & SearchBoxRouteProps) => {
       props.onSubmit(data.content);
     }
   };
-  return <SearchBoxForm onSubmit={handleSubmit} initialValues={{ content: props.initialValue }} />;
+
+  const { initialValue: content, isLoading } = props;
+
+  const formProps = {
+    isLoading,
+    initialValues: {
+      content,
+    },
+  };
+
+  return <SearchBoxForm onSubmit={handleSubmit} {...formProps} />;
 };
 
 function createSearchBox() {

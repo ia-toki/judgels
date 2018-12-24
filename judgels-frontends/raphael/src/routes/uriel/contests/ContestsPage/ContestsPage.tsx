@@ -20,14 +20,27 @@ export interface ContestsPageProps extends RouteComponentProps<{ name: string }>
   onCreateContest: (data: ContestCreateData) => Promise<Contest>;
 }
 
+interface ContestsFilter {
+  name?: string;
+}
+
 export interface ContestsPageState {
   response?: ContestsResponse;
+  filter?: ContestsFilter;
+  isSearchBoxLoading?: boolean;
 }
 
 class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState> {
   private static PAGE_SIZE = 20;
 
   state: ContestsPageState = {};
+
+  componentWillMount() {
+    const queries = parse(this.props.location.search);
+    const name = queries.name as string;
+
+    this.setState({ filter: { name }, isSearchBoxLoading: false });
+  }
 
   render() {
     return (
@@ -45,13 +58,33 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
         <div className="content-card__section create-contest-button-inline">{this.renderCreateDialog()}</div>
         <div className="content-card__section search-box-inline">{this.renderSearchBox()}</div>
         <div className="clearfix" />
+        {this.renderSearchResultsBanner()}
       </>
     );
   };
 
+  private renderSearchResultsBanner = () => {
+    const filter = this.state.filter || {};
+    if (!filter.name) {
+      return null;
+    }
+
+    return (
+      <div className="content-card__section">
+        Showing results for: <b>{filter.name}</b>
+      </div>
+    );
+  };
+
   private renderSearchBox = () => {
-    const queries = parse(this.props.location.search);
-    return <SearchBox nextRoute={this.searchBoxUpdateQueries} initialValue={queries.name} />;
+    const filter = this.state.filter || {};
+    return (
+      <SearchBox
+        nextRoute={this.searchBoxUpdateQueries}
+        initialValue={filter.name || ''}
+        isLoading={this.state.isSearchBoxLoading}
+      />
+    );
   };
 
   private renderCreateDialog = () => {
@@ -71,19 +104,29 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
   };
 
   private renderPagination = () => {
-    const queries = parse(this.props.location.search);
-    return <Pagination pageSize={ContestsPage.PAGE_SIZE} onChangePage={this.onChangePage} key={queries.name} />;
+    const filter = this.state.filter || {};
+    return <Pagination pageSize={ContestsPage.PAGE_SIZE} onChangePage={this.onChangePage} key={filter.name} />;
   };
 
   private onChangePage = async (nextPage?: number) => {
-    const queries = parse(this.props.location.search);
-    const response = await this.props.onGetContests(queries.name, nextPage);
-    this.setState({ response });
+    const filter = this.state.filter || {};
+    const response = await this.props.onGetContests(filter.name, nextPage);
+    this.setState({ response, isSearchBoxLoading: false });
     return response.data.totalCount;
   };
 
   private searchBoxUpdateQueries = (content: string, queries: any) => {
-    this.setState({ response: undefined });
+    this.setState(prevState => {
+      const prevFilter = prevState.filter || {};
+      const response = prevFilter.name !== content ? undefined : prevState.response;
+      return {
+        filter: {
+          name: content,
+        },
+        response,
+        isSearchBoxLoading: !response,
+      };
+    });
     queries.page = undefined;
     queries.name = content;
     return queries;

@@ -10,7 +10,9 @@ export interface SearchBoxFormData {
   content: string;
 }
 
-export interface SearchBoxFormProps extends InjectedFormProps<SearchBoxFormData> {}
+export interface SearchBoxFormProps extends InjectedFormProps<SearchBoxFormData> {
+  isLoading: boolean;
+}
 
 const SearchBoxForm = (props: SearchBoxFormProps) => {
   const contentField: any = {
@@ -28,7 +30,7 @@ const SearchBoxForm = (props: SearchBoxFormProps) => {
       type="submit"
       text="Search"
       intent={Intent.PRIMARY}
-      loading={props.submitting}
+      loading={props.isLoading || props.submitting}
     />
   );
 
