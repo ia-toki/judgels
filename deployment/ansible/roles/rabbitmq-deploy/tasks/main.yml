@@ -1,12 +1,12 @@
 - block:
   - name: Pull rabbitmq image
     docker_image:
-      name: rabbitmq:3.7.4-management-alpine
+      name: rabbitmq:3.7.8-management-alpine
 
   - name: Run a rabbitmq container
     docker_container:
       name: rabbitmq
-      image: rabbitmq:3.7.4-management-alpine
+      image: rabbitmq:3.7.8-management-alpine
       restart: yes
       network_mode: host
       env:
