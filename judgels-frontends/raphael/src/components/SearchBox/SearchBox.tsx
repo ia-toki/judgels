@@ -4,6 +4,7 @@ import { stringify, parse } from 'query-string';
 import { push } from 'react-router-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
+
 import SearchBoxForm, { SearchBoxFormData } from './SearchBoxForm';
 
 interface SearchBoxRouteProps extends RouteComponentProps<{}> {
@@ -11,19 +12,15 @@ interface SearchBoxRouteProps extends RouteComponentProps<{}> {
 }
 
 export interface SearchBoxProps {
-  onSubmit?: (content: string) => any;
-  nextRoute?: (content: string, prevQueries: any) => any;
-  initialValue?: any;
+  onRouteChange: (content: string, prevQueries: any) => any;
+  initialValue?: string;
   isLoading?: boolean;
 }
 
 const SearchBoxContainer = (props: SearchBoxProps & SearchBoxRouteProps) => {
   const handleSubmit = (data: SearchBoxFormData) => {
     const queries = parse(props.location.search);
-    props.onAppendRoute(props.nextRoute ? props.nextRoute(data.content, queries) : queries);
-    if (props.onSubmit) {
-      props.onSubmit(data.content);
-    }
+    props.onAppendRoute(props.onRouteChange(data.content, queries));
   };
 
   const { initialValue: content, isLoading } = props;
@@ -40,11 +37,7 @@ const SearchBoxContainer = (props: SearchBoxProps & SearchBoxRouteProps) => {
 
 function createSearchBox() {
   const mapDispatchToProps = {
-    onAppendRoute: (queries: any) => {
-      let query = '';
-      query = stringify({ ...queries });
-      return push({ search: query });
-    },
+    onAppendRoute: queries => push({ search: stringify(queries) }),
   };
   return withRouter<any>(connect(undefined, mapDispatchToProps)(SearchBoxContainer));
 }

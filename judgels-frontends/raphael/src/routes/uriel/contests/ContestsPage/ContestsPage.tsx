@@ -13,7 +13,7 @@ import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
 import { contestActions as injectedContestActions } from '../modules/contestActions';
 
-import './ContestPage.css';
+import './ContestsPage.css';
 
 export interface ContestsPageProps extends RouteComponentProps<{ name: string }> {
   onGetContests: (name?: string, page?: number) => Promise<ContestsResponse>;
@@ -28,6 +28,7 @@ export interface ContestsPageState {
   response?: ContestsResponse;
   filter?: ContestsFilter;
   isSearchBoxLoading?: boolean;
+  isContestsListLoading?: boolean;
 }
 
 class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState> {
@@ -39,7 +40,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     const queries = parse(this.props.location.search);
     const name = queries.name as string;
 
-    this.setState({ filter: { name }, isSearchBoxLoading: false });
+    this.setState({ filter: { name }, isSearchBoxLoading: false, isContestsListLoading: true });
   }
 
   render() {
@@ -80,7 +81,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     const filter = this.state.filter || {};
     return (
       <SearchBox
-        nextRoute={this.searchBoxUpdateQueries}
+        onRouteChange={this.searchBoxUpdateQueries}
         initialValue={filter.name || ''}
         isLoading={this.state.isSearchBoxLoading}
       />
@@ -88,12 +89,20 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
   };
 
   private renderCreateDialog = () => {
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+    const { config } = response;
+    if (!config.canAdminister) {
+      return null;
+    }
     return <ContestCreateDialog onCreateContest={this.props.onCreateContest} />;
   };
 
   private renderContests = () => {
-    const { response } = this.state;
-    if (!response) {
+    const { response, isContestsListLoading } = this.state;
+    if (!response || isContestsListLoading) {
       return <LoadingContestCard />;
     }
 
@@ -105,31 +114,30 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
 
   private renderPagination = () => {
     const filter = this.state.filter || {};
-    return <Pagination pageSize={ContestsPage.PAGE_SIZE} onChangePage={this.onChangePage} key={filter.name} />;
+    return <Pagination pageSize={ContestsPage.PAGE_SIZE} onChangePage={this.onChangePage} key={filter.name || ''} />;
   };
 
   private onChangePage = async (nextPage?: number) => {
     const filter = this.state.filter || {};
+    this.setState({ isContestsListLoading: true });
     const response = await this.props.onGetContests(filter.name, nextPage);
-    this.setState({ response, isSearchBoxLoading: false });
+    this.setState({ response, isSearchBoxLoading: false, isContestsListLoading: false });
     return response.data.totalCount;
   };
 
-  private searchBoxUpdateQueries = (content: string, queries: any) => {
+  private searchBoxUpdateQueries = (name: string, queries: any) => {
     this.setState(prevState => {
       const prevFilter = prevState.filter || {};
-      const response = prevFilter.name !== content ? undefined : prevState.response;
+      const isSearchBoxLoading = prevFilter.name !== name;
       return {
         filter: {
-          name: content,
+          name,
         },
-        response,
-        isSearchBoxLoading: !response,
+        isSearchBoxLoading,
+        isContestsListLoading: isSearchBoxLoading,
       };
     });
-    queries.page = undefined;
-    queries.name = content;
-    return queries;
+    return { ...queries, page: undefined, name };
   };
 }
 
