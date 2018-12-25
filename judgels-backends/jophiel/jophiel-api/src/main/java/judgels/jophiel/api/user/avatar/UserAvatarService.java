@@ -21,7 +21,7 @@ public interface UserAvatarService {
     @Produces(APPLICATION_JSON)
     boolean avatarExists(@PathParam("userJid") String userJid);
 
-//    These endpoints are not supported for JAX-RS -based Java clients
+//    These endpoints are not representable as JAX-RS methods
 
 //    @GET
 //    @Path("/")

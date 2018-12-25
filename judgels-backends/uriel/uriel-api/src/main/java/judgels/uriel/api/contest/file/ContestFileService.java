@@ -18,4 +18,20 @@ public interface ContestFileService {
     ContestFilesResponse getFiles(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid);
+
+//    These endpoints are not representable as JAX-RS methods
+
+//    @GET
+//    @Path("/{filename}")
+//    Response downloadFile(@PathParam("contestJid") String contestJid, @PathParam("filename") String filename);
+
+//    @POST
+//    @Path("/")
+//    @Consumes(MULTIPART_FORM_DATA)
+//    void uploadFile(
+//            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+//            @HeaderParam(CONTENT_LENGTH) int contentLength,
+//            @PathParam("contestJid") String contestJid,
+//            @FormDataParam("file") InputStream fileStream,
+//            @FormDataParam("file") FormDataContentDisposition fileDetails);
 }

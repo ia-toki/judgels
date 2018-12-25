@@ -32,4 +32,22 @@ public interface ContestSubmissionService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionId") long submissionId,
             @QueryParam("language") Optional<String> language);
+
+//    These endpoints are not representable as JAX-RS methods
+
+//    @POST
+//    @Path("/")
+//    @Consumes(MULTIPART_FORM_DATA)
+//    void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts);
+
+//    @GET
+//    @Path("/download")
+//    @Produces(APPLICATION_OCTET_STREAM)
+//    Response downloadSubmissions(
+//            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+//            @QueryParam("contestJid") String contestJid,
+//            @QueryParam("userJid") Optional<String> userJid,
+//            @QueryParam("problemJid") Optional<String> problemJid,
+//            @QueryParam("lastSubmissionId") Optional<Long> lastSubmissionId,
+//            @QueryParam("limit") Optional<Integer> limit);
 }
