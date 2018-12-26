@@ -9,6 +9,8 @@ public class JudgelsObjectMappers {
 
     public static ObjectMapper configure(ObjectMapper mapper) {
         mapper
+                .enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .enable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS)
                 .disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)
                 .disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
 
