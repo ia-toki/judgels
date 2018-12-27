@@ -1,12 +1,11 @@
-import { Button, Intent, HTMLTable } from '@blueprintjs/core';
+import { Button, FormGroup, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 import { Required } from 'components/forms/validations';
 import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
-import { FormTableInput } from 'components/forms/FormTableInput/FormTableInput';
 import { FormCheckbox } from 'components/forms/FormCheckbox/FormCheckbox';
-import { supervisorPermissionsList } from 'modules/api/uriel/contestSupervisor';
+import { supervisorManagementPermissions } from 'modules/api/uriel/contestSupervisor';
 
 export interface ContestSupervisorAddFormData {
   usernames: string;
@@ -17,7 +16,13 @@ export interface ContestSupervisorAddFormProps extends InjectedFormProps<Contest
   renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
 }
 
-class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormProps> {
+interface ContestSupervisorAddFormState {
+  allowAllPermissions?: boolean;
+}
+
+class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormProps, ContestSupervisorAddFormState> {
+  state: ContestSupervisorAddFormState = {};
+
   render() {
     return (
       <form onSubmit={this.props.handleSubmit}>
@@ -32,14 +37,10 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
 
   private renderFields() {
     return (
-      <HTMLTable>
-        <tbody>
-          <tr>
-            <td colSpan={2}> {this.renderUsernamesField()} </td>
-          </tr>
-          {this.renderPermissionsForm()}
-        </tbody>
-      </HTMLTable>
+      <>
+        {this.renderUsernamesField()}
+        {this.renderPermissionFields()}
+      </>
     );
   }
 
@@ -56,13 +57,14 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
     return <Field component={FormTextArea} {...usernamesField} />;
   }
 
-  private renderPermissionsForm() {
-    const permissionsField: any = {
-      label: 'Permissions',
-      meta: {},
+  private renderPermissionFields() {
+    const allowAllPermissionsField: any = {
+      name: 'managementPermissions.All',
+      label: '(all)',
+      onChange: this.toggleAllowAllPermissionsCheckbox,
     };
 
-    const permissionsProps = supervisorPermissionsList.map(
+    const permissionFields = supervisorManagementPermissions.filter(p => p !== 'All').map(
       p =>
         ({
           name: 'managementPermissions.' + p,
@@ -72,20 +74,20 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
     );
 
     return (
-      <FormTableInput {...permissionsField}>
-        {permissionsProps.map(p => <Field key={p.name} component={FormCheckbox} {...p} />)}
-      </FormTableInput>
+      <FormGroup label="Management permissions">
+        <Field component={FormCheckbox} {...allowAllPermissionsField} />
+        {!this.state.allowAllPermissions &&
+          permissionFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
+      </FormGroup>
     );
   }
+
+  private toggleAllowAllPermissionsCheckbox = (e, checked) => {
+    this.setState({ allowAllPermissions: checked });
+  };
 }
 
 export default reduxForm<ContestSupervisorAddFormData>({
   form: 'contest-supervisor-add',
-  initialValues: {
-    managementPermissions: supervisorPermissionsList.reduce((obj, p) => {
-      obj[p] = true;
-      return obj;
-    }, {}),
-  },
   touchOnBlur: false,
 })(ContestSupervisorAddForm);

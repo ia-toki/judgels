@@ -4,7 +4,10 @@ import * as React from 'react';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { ContestSupervisor } from 'modules/api/uriel/contestSupervisor';
-import { SupervisorManagementPermission, supervisorPermissionShortNameMap } from 'modules/api/uriel/contestSupervisor';
+import {
+  SupervisorManagementPermission,
+  supervisorManagementPermissionShortNamesMap,
+} from 'modules/api/uriel/contestSupervisor';
 import { ContestTab } from 'modules/api/uriel/contestWeb';
 
 import { contestIcon } from '../../modules/contestIcon';
@@ -13,13 +16,13 @@ import './ContestSupervisorsTable.css';
 
 const managementPermissionTabsMap = {
   [SupervisorManagementPermission.All]: 'ninja',
-  [SupervisorManagementPermission.Announcement]: contestIcon[ContestTab.Announcements],
-  [SupervisorManagementPermission.Problem]: contestIcon[ContestTab.Problems],
-  [SupervisorManagementPermission.Submission]: contestIcon[ContestTab.Submissions],
-  [SupervisorManagementPermission.Clarification]: contestIcon[ContestTab.Clarifications],
-  [SupervisorManagementPermission.Team]: contestIcon[ContestTab.Teams],
+  [SupervisorManagementPermission.Announcements]: contestIcon[ContestTab.Announcements],
+  [SupervisorManagementPermission.Problems]: contestIcon[ContestTab.Problems],
+  [SupervisorManagementPermission.Submissions]: contestIcon[ContestTab.Submissions],
+  [SupervisorManagementPermission.Clarifications]: contestIcon[ContestTab.Clarifications],
+  [SupervisorManagementPermission.Teams]: contestIcon[ContestTab.Teams],
   [SupervisorManagementPermission.Scoreboard]: contestIcon[ContestTab.Scoreboard],
-  [SupervisorManagementPermission.File]: contestIcon[ContestTab.Files],
+  [SupervisorManagementPermission.Files]: contestIcon[ContestTab.Files],
 } as { [key: string]: IconName };
 
 export interface ContestSupervisorsTableProps {
@@ -66,7 +69,7 @@ export class ContestSupervisorsTable extends React.PureComponent<ContestSupervis
           {supervisor.managementPermissions &&
             supervisor.managementPermissions.map(p => (
               <Tag round className="permission-tag" key={p} icon={managementPermissionTabsMap[p]}>
-                {supervisorPermissionShortNameMap[p]}
+                {supervisorManagementPermissionShortNamesMap[p]}
               </Tag>
             ))}
         </td>

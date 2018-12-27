@@ -8,36 +8,27 @@ import { baseContestURL } from './contest';
 
 export enum SupervisorManagementPermission {
   All = 'ALL',
-  Announcement = 'ANNOUNCEMENT',
-  Problem = 'PROBLEM',
-  Submission = 'SUBMISSION',
-  Clarification = 'CLARIFICATION',
-  Team = 'TEAM',
+  Announcements = 'ANNOUNCEMENT',
+  Problems = 'PROBLEM',
+  Submissions = 'SUBMISSION',
+  Clarifications = 'CLARIFICATION',
+  Teams = 'TEAM',
   Scoreboard = 'SCOREBOARD',
-  File = 'FILE',
+  Files = 'FILE',
 }
 
-export const supervisorPermissionFullNameMap = Object.keys(SupervisorManagementPermission)
-  .filter(p => p !== 'All')
-  .reduce((map, p) => {
-    map[SupervisorManagementPermission[p]] = p;
-    return map;
-  }, {});
-
-export const supervisorPermissionShortNameMap = {
+export const supervisorManagementPermissionShortNamesMap = {
   [SupervisorManagementPermission.All]: 'ALL',
-  [SupervisorManagementPermission.Announcement]: 'ANNC',
-  [SupervisorManagementPermission.Problem]: 'PROB',
-  [SupervisorManagementPermission.Submission]: 'SUBM',
-  [SupervisorManagementPermission.Clarification]: 'CLAR',
-  [SupervisorManagementPermission.Team]: 'TEAM',
+  [SupervisorManagementPermission.Announcements]: 'ANNC',
+  [SupervisorManagementPermission.Problems]: 'PROB',
+  [SupervisorManagementPermission.Submissions]: 'SUBM',
+  [SupervisorManagementPermission.Clarifications]: 'CLAR',
+  [SupervisorManagementPermission.Teams]: 'TEAM',
   [SupervisorManagementPermission.Scoreboard]: 'SCOR',
-  [SupervisorManagementPermission.File]: 'FILE',
+  [SupervisorManagementPermission.Files]: 'FILE',
 };
 
-export const supervisorPermissionsList = Object.keys(supervisorPermissionFullNameMap).map(
-  p => supervisorPermissionFullNameMap[p]
-);
+export const supervisorManagementPermissions = Object.keys(SupervisorManagementPermission);
 
 export interface ContestSupervisor {
   userJid: string;
