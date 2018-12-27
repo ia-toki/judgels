@@ -25,10 +25,9 @@ interface ContestsFilter {
 }
 
 export interface ContestsPageState {
-  response?: ContestsResponse;
+  response?: Partial<ContestsResponse>;
   filter?: ContestsFilter;
-  isSearchBoxLoading?: boolean;
-  isContestsListLoading?: boolean;
+  isFilterLoading?: boolean;
 }
 
 class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState> {
@@ -40,7 +39,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     const queries = parse(this.props.location.search);
     const name = queries.name as string;
 
-    this.setState({ filter: { name }, isSearchBoxLoading: false, isContestsListLoading: true });
+    this.setState({ filter: { name }, isFilterLoading: false });
   }
 
   render() {
@@ -57,33 +56,33 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     return (
       <>
         <div className="content-card__section create-contest-button-inline">{this.renderCreateDialog()}</div>
-        <div className="content-card__section search-box-inline">{this.renderSearchBox()}</div>
+        <div className="content-card__section search-box-inline">{this.renderFilter()}</div>
         <div className="clearfix" />
-        {this.renderSearchResultsBanner()}
+        {this.renderFilterResultsBanner()}
       </>
     );
   };
 
-  private renderSearchResultsBanner = () => {
-    const filter = this.state.filter || {};
-    if (!filter.name) {
+  private renderFilterResultsBanner = () => {
+    const name = this.getNameFilter(this.state);
+    if (!name) {
       return null;
     }
 
     return (
       <div className="content-card__section">
-        Showing results for: <b>{filter.name}</b>
+        Showing results for: <b>{name}</b>
       </div>
     );
   };
 
-  private renderSearchBox = () => {
-    const filter = this.state.filter || {};
+  private renderFilter = () => {
+    const name = this.getNameFilter(this.state);
     return (
       <SearchBox
         onRouteChange={this.searchBoxUpdateQueries}
-        initialValue={filter.name || ''}
-        isLoading={this.state.isSearchBoxLoading}
+        initialValue={name || ''}
+        isLoading={this.state.isFilterLoading}
       />
     );
   };
@@ -94,50 +93,64 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
       return null;
     }
     const { config } = response;
-    if (!config.canAdminister) {
+    if (!config || !config.canAdminister) {
       return null;
     }
     return <ContestCreateDialog onCreateContest={this.props.onCreateContest} />;
   };
 
   private renderContests = () => {
-    const { response, isContestsListLoading } = this.state;
-    if (!response || isContestsListLoading) {
+    const { response } = this.state;
+    if (!response) {
       return <LoadingContestCard />;
     }
 
     const { data: contests, rolesMap } = response;
+    if (!contests || !rolesMap) {
+      return <LoadingContestCard />;
+    }
+
     return contests.page.map(contest => (
       <ContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
     ));
   };
 
   private renderPagination = () => {
-    const filter = this.state.filter || {};
-    return <Pagination pageSize={ContestsPage.PAGE_SIZE} onChangePage={this.onChangePage} key={filter.name || ''} />;
+    return (
+      <Pagination
+        pageSize={ContestsPage.PAGE_SIZE}
+        onChangePage={this.onChangePage}
+        key={this.getNameFilter(this.state) || ''}
+      />
+    );
   };
 
   private onChangePage = async (nextPage?: number) => {
-    const filter = this.state.filter || {};
-    this.setState({ isContestsListLoading: true });
-    const response = await this.props.onGetContests(filter.name, nextPage);
-    this.setState({ response, isSearchBoxLoading: false, isContestsListLoading: false });
+    this.setState({ response: { ...this.state.response, data: undefined } });
+    const response = await this.props.onGetContests(this.getNameFilter(this.state), nextPage);
+    this.setState({ response, isFilterLoading: false });
     return response.data.totalCount;
   };
 
   private searchBoxUpdateQueries = (name: string, queries: any) => {
     this.setState(prevState => {
-      const prevFilter = prevState.filter || {};
-      const isSearchBoxLoading = prevFilter.name !== name;
+      const isFilterLoading = this.getNameFilter(prevState) !== name;
       return {
         filter: {
           name,
         },
-        isSearchBoxLoading,
-        isContestsListLoading: isSearchBoxLoading,
+        isFilterLoading,
+        isContestsListLoading: isFilterLoading,
       };
     });
     return { ...queries, page: undefined, name };
+  };
+
+  private getNameFilter = (state: ContestsPageState) => {
+    if (!state.filter || !state.filter.name) {
+      return '';
+    }
+    return state.filter.name;
   };
 }
 
