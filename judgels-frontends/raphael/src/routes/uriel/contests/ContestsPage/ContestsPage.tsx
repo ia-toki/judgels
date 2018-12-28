@@ -92,8 +92,8 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     if (!response) {
       return null;
     }
-    const { config } = response;
-    if (!config || !config.canAdminister) {
+    const config = response.config!;
+    if (!config.canAdminister) {
       return null;
     }
     return <ContestCreateDialog onCreateContest={this.props.onCreateContest} />;
@@ -105,8 +105,9 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
       return <LoadingContestCard />;
     }
 
-    const { data: contests, rolesMap } = response;
-    if (!contests || !rolesMap) {
+    const rolesMap = response.rolesMap!;
+    const contests = response.data;
+    if (!contests) {
       return <LoadingContestCard />;
     }
 
@@ -126,7 +127,9 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
   };
 
   private onChangePage = async (nextPage?: number) => {
-    this.setState({ response: { ...this.state.response, data: undefined } });
+    if (this.state.response) {
+      this.setState({ response: { ...this.state.response, data: undefined } });
+    }
     const response = await this.props.onGetContests(this.getNameFilter(this.state), nextPage);
     this.setState({ response, isFilterLoading: false });
     return response.data.totalCount;
