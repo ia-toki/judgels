@@ -16,8 +16,10 @@ export interface ContestSubmissionsTableProps {
   contest: Contest;
   submissions: Submission[];
   canSupervise: boolean;
+  canManage: boolean;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
+  onRegrade: (submissionJids: string[]) => void;
 }
 
 export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {
@@ -68,13 +70,20 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
           <FormattedRelative value={submission.time} />{' '}
         </td>
         <td className="cell-centered">
-          <Link to={`/contests/${contest.slug}/submissions/${submission.id}`}>
+          <Link className="action" to={`/contests/${contest.slug}/submissions/${submission.id}`}>
             <Icon icon="search" />
           </Link>
+          {this.props.canManage && (
+            <Icon className="action" icon="refresh" intent="primary" onClick={this.onClickRegrade(submission.jid)} />
+          )}
         </td>
       </tr>
     ));
 
     return <tbody>{rows}</tbody>;
+  };
+
+  private onClickRegrade = (submissionJid: string) => {
+    return () => this.props.onRegrade([submissionJid]);
   };
 }

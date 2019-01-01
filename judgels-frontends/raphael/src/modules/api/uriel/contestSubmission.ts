@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 
-import { get, postMultipart } from 'modules/api/http';
+import { get, postMultipart, post } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { Submission, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submission';
@@ -16,8 +16,15 @@ export interface ContestSubmissionsResponse {
 
 export interface ContestSubmissionConfig {
   canSupervise: boolean;
+  canManage: boolean;
   userJids: string[];
   problemJids: string[];
+}
+
+export interface ContestSubmissionRegradeAllData {
+  contestJid?: string;
+  userJid?: string;
+  problemJid?: string;
 }
 
 const baseURL = `${baseContestsURL}/submissions`;
@@ -52,5 +59,17 @@ export const contestSubmissionAPI = {
   ): Promise<void> => {
     const parts = { contestJid, problemJid, gradingLanguage, ...sourceFiles };
     return postMultipart(baseURL, token, parts);
+  },
+
+  regradeSubmissions: (token: string, submissionJids: string[]): Promise<void> => {
+    return post(`${baseURL}/regrade`, token, submissionJids);
+  },
+
+  regradeAllSubmissions: (token: string, contestJid?: string, userJid?: string, problemJid?: string): Promise<void> => {
+    return post(`${baseURL}/regrade/all`, token, {
+      contestJid,
+      userJid,
+      problemJid,
+    } as ContestSubmissionRegradeAllData);
   },
 };

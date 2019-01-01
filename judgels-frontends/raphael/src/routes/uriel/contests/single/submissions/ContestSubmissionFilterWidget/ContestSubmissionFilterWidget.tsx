@@ -27,12 +27,7 @@ export class ContestSubmissionFilterWidget extends React.Component<ContestSubmis
       },
     };
 
-    return (
-      <>
-        <ContestSubmissionFilterForm onSubmit={this.onFilter} {...formProps} />
-        <div className="clearfix " />
-      </>
-    );
+    return <ContestSubmissionFilterForm onSubmit={this.onFilter} {...formProps} />;
   }
 
   private onFilter = async (data: ContestSubmissionFilterFormData) => {

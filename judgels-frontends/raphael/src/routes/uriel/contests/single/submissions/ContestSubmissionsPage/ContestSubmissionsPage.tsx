@@ -1,3 +1,4 @@
+import { Button } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -16,6 +17,8 @@ import { ContestSubmissionFilterWidget } from '../ContestSubmissionFilterWidget/
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
+import './ContestSubmissionsPage.css';
+
 export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
   contest: Contest;
   onGetSubmissions: (
@@ -24,6 +27,8 @@ export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
     problemJid?: string,
     page?: number
   ) => Promise<ContestSubmissionsResponse>;
+  onRegrade: (submissionJids: string[]) => Promise<void>;
+  onRegradeAll: (contestJid: string, userJid?: string, problemJid?: string) => Promise<void>;
   onAppendRoute: (queries) => any;
 }
 
@@ -63,12 +68,26 @@ export class ContestSubmissionsPage extends React.PureComponent<
       <ContentCard>
         <h3>Submissions</h3>
         <hr />
+        {this.renderRegradeAllButton()}
         {this.renderFilterWidget()}
+        <div className="clearfix" />
         {this.renderSubmissions()}
         {this.renderPagination()}
       </ContentCard>
     );
   }
+
+  private renderRegradeAllButton = () => {
+    if (!this.state.response || !this.state.response.config.canManage) {
+      return null;
+    }
+
+    return (
+      <Button className="regrade-button" intent="primary" onClick={this.onRegradeAll}>
+        Regrade all pages
+      </Button>
+    );
+  };
 
   private renderFilterWidget = () => {
     const { response, filter, isFilterLoading } = this.state;
@@ -114,8 +133,10 @@ export class ContestSubmissionsPage extends React.PureComponent<
         contest={this.props.contest}
         submissions={submissions.page}
         canSupervise={config.canSupervise}
+        canManage={config.canManage}
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
+        onRegrade={this.onRegrade}
       />
     );
   };
@@ -166,6 +187,22 @@ export class ContestSubmissionsPage extends React.PureComponent<
     return { userJid, problemJid };
   };
 
+  private onRegrade = async (submissionJids: string[]) => {
+    if (submissionJids.length > 0) {
+      await this.props.onRegrade(submissionJids);
+    }
+  };
+
+  private onRegradeAll = async () => {
+    if (window.confirm('Are you sure you wish to regrade all submissions in all pages?')) {
+      const { username, problemAlias } = this.state.filter!;
+      const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
+      await this.props.onRegradeAll(this.props.contest.jid, userJid, problemJid);
+      const queries = parse(this.props.location.search);
+      await this.refreshSubmissions(username, problemAlias, queries.page);
+    }
+  };
+
   private onFilter = async (username?: string, problemAlias?: string) => {
     const filter = { username, problemAlias };
     this.setState(prevState => {
@@ -186,6 +223,8 @@ export function createContestSubmissionsPage(contestSubmissionActions) {
 
   const mapDispatchToProps = {
     onGetSubmissions: contestSubmissionActions.getSubmissions,
+    onRegrade: contestSubmissionActions.regradeSubmissions,
+    onRegradeAll: contestSubmissionActions.regradeAllSubmissions,
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 

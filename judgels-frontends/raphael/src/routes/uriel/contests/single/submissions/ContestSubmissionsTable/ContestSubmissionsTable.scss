@@ -1,6 +1,9 @@
 @import '../../../../../../styles/table';
 
 .submissions {
+  .col-regrade {
+    width: 7px;
+  }
   .col-id {
     width: 90px;
   }
@@ -27,5 +30,13 @@
 
   .cell-centered {
     text-align: center;
+  }
+
+  .action {
+    cursor: pointer;
+  }
+
+  .action + .action {
+    margin-left: 2px;
   }
 }

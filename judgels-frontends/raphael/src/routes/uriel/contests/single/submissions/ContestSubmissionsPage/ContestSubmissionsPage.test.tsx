@@ -22,6 +22,7 @@ describe('ContestSubmissionsPage', () => {
     data: { page: [], totalCount: 0 },
     config: {
       canSupervise: true,
+      canManage: true,
       userJids: [],
       problemJids: [],
     },
