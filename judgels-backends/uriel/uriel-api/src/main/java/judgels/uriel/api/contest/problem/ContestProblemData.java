@@ -6,8 +6,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestProblemData.class)
 public interface ContestProblemData {
-    String getProblemJid();
     String getAlias();
+    String getSlug();
     ContestProblemStatus getStatus();
     long getSubmissionsLimit();
 

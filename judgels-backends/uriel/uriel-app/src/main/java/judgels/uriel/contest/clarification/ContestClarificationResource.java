@@ -133,7 +133,7 @@ public class ContestClarificationResource implements ContestClarificationService
 
         Map<String, String> problemNamesMap = problemJids.isEmpty()
                 ? Collections.emptyMap()
-                : clientProblemService.getProblemsByJids(
+                : clientProblemService.getProblems(
                         sandalphonClientAuthHeader,
                         problemJids).entrySet()
                         .stream()

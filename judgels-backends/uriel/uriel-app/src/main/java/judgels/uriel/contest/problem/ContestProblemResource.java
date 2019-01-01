@@ -1,9 +1,11 @@
 package judgels.uriel.contest.problem;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static judgels.sandalphon.SandalphonUtils.combineLanguageRestrictions;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
@@ -23,10 +25,12 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
+import judgels.uriel.api.contest.problem.ContestProblemConfig;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.api.contest.problem.ContestProblemWorksheet;
 import judgels.uriel.api.contest.problem.ContestProblemsResponse;
+import judgels.uriel.api.contest.problem.ContestProblemsSetResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.submission.ContestSubmissionStore;
@@ -69,12 +73,43 @@ public class ContestProblemResource implements ContestProblemService {
 
     @Override
     @UnitOfWork
-    public void upsertProblem(AuthHeader authHeader, String contestJid, ContestProblemData data) {
+    public ContestProblemsSetResponse setProblems(
+            AuthHeader authHeader,
+            String contestJid,
+            List<ContestProblemData> data) {
+
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(problemRoleChecker.canSupervise(actorJid, contest));
+        checkAllowed(problemRoleChecker.canManage(actorJid, contest));
 
-        problemStore.upsertProblem(contestJid, data);
+        Set<String> aliases = data.stream().map(ContestProblemData::getAlias).collect(Collectors.toSet());
+        Set<String> slugs = data.stream().map(ContestProblemData::getSlug).collect(Collectors.toSet());
+
+        checkArgument(data.size() <= 100, "Cannot add more than 100 problems.");
+        checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
+        checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
+
+        Map<String, String> slugToJidMap = clientProblemService.translateAllowedSlugsToJids(
+                sandalphonClientAuthHeader,
+                actorJid,
+                slugs);
+
+        ImmutableList.Builder<ContestProblem> setData = ImmutableList.builder();
+        for (ContestProblemData problem : data) {
+            if (slugToJidMap.containsKey(problem.getSlug())) {
+                setData.add(new ContestProblem.Builder()
+                        .alias(problem.getAlias())
+                        .problemJid(slugToJidMap.get(problem.getSlug()))
+                        .status(problem.getStatus())
+                        .submissionsLimit(problem.getSubmissionsLimit())
+                        .build());
+            }
+        }
+
+        problemStore.setProblems(contestJid, setData.build());
+        return new ContestProblemsSetResponse.Builder()
+                .setSlugs(slugToJidMap.keySet())
+                .build();
     }
 
     @Override
@@ -88,14 +123,20 @@ public class ContestProblemResource implements ContestProblemService {
         Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
         Map<String, ProblemInfo> problemsMap = problemJids.isEmpty()
                 ? ImmutableMap.of()
-                : clientProblemService.getProblemsByJids(sandalphonClientAuthHeader, problemJids);
+                : clientProblemService.getProblems(sandalphonClientAuthHeader, problemJids);
         Map<String, Long> totalSubmissionsMap =
                 submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
+
+        boolean canManage = problemRoleChecker.canManage(actorJid, contest);
+        ContestProblemConfig config = new ContestProblemConfig.Builder()
+                .canManage(canManage)
+                .build();
 
         return new ContestProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemsMap)
                 .totalSubmissionsMap(totalSubmissionsMap)
+                .config(config)
                 .build();
     }
 

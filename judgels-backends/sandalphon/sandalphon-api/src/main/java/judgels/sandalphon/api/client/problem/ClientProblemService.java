@@ -47,7 +47,16 @@ public interface ClientProblemService {
     @Path("/jids")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    Map<String, ProblemInfo> getProblemsByJids(
+    Map<String, ProblemInfo> getProblems(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             Set<String> jids);
+
+    @POST
+    @Path("/allowed-slug-to-jid")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Map<String, String> translateAllowedSlugsToJids(
+            @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
+            @QueryParam("userJid") String userJid,
+            Set<String> slugs);
 }

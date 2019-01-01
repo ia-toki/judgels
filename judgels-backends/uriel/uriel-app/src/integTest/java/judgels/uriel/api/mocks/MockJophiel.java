@@ -59,17 +59,6 @@ public class MockJophiel {
     public static final AuthHeader USER_A_HEADER = AuthHeader.of(USER_A_BEARER_TOKEN);
     public static final AuthHeader USER_B_HEADER = AuthHeader.of(USER_B_BEARER_TOKEN);
 
-    private static final AuthHeader[] HEADERS = {
-            SUPERADMIN_HEADER,
-            ADMIN_HEADER,
-            MANAGER_HEADER,
-            SUPERVISOR_HEADER,
-            CONTESTANT_HEADER,
-            USER_HEADER,
-            USER_A_HEADER,
-            USER_B_HEADER
-    };
-
     public static final String SUPERADMIN = "superadmin";
     public static final String ADMIN = "admin";
     public static final String MANAGER = "manager";

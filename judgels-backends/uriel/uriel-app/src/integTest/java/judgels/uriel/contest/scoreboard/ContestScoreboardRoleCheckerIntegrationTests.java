@@ -1,10 +1,12 @@
 package judgels.uriel.contest.scoreboard;
 
+import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
+import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.SCOREBOARD;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.uriel.api.contest.problem.ContestProblemData;
-import judgels.uriel.api.contest.problem.ContestProblemStatus;
+import com.google.common.collect.ImmutableList;
+import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.problem.ContestProblemStore;
@@ -83,24 +85,31 @@ class ContestScoreboardRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
     void view_closed_problems() {
         addSupervisorToContestBWithPermission(SCOREBOARD);
 
-        problemStore.upsertProblem(contestBStarted.getJid(), new ContestProblemData.Builder()
-                .problemJid("problemJid1")
-                .alias("A")
-                .status(ContestProblemStatus.OPEN)
-                .submissionsLimit(0)
-                .build());
+        problemStore.setProblems(contestBStarted.getJid(), ImmutableList.of(
+                new ContestProblem.Builder()
+                        .alias("A")
+                        .problemJid("problemJid1")
+                        .status(OPEN)
+                        .submissionsLimit(0)
+                        .build()));
 
         assertThat(checker.canViewClosedProblems(SUPERVISOR, contestBStarted)).isFalse();
 
-        problemStore.upsertProblem(contestBStarted.getJid(), new ContestProblemData.Builder()
-                .problemJid("problemJid2")
-                .alias("B")
-                .status(ContestProblemStatus.CLOSED)
-                .submissionsLimit(0)
-                .build());
+        problemStore.setProblems(contestBStarted.getJid(), ImmutableList.of(
+                new ContestProblem.Builder()
+                        .alias("A")
+                        .problemJid("problemJid1")
+                        .status(OPEN)
+                        .submissionsLimit(0)
+                        .build(),
+                new ContestProblem.Builder()
+                        .alias("B")
+                        .problemJid("problemJid2")
+                        .status(CLOSED)
+                        .submissionsLimit(0)
+                        .build()));
 
         assertThat(checker.canViewClosedProblems(SUPERVISOR, contestBStarted)).isTrue();
-
         assertThat(checker.canViewClosedProblems(CONTESTANT, contestBStarted)).isFalse();
     }
 

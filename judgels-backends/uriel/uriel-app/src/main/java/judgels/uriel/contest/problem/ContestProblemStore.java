@@ -1,5 +1,6 @@
 package judgels.uriel.contest.problem;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,6 @@ import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
 import judgels.uriel.api.contest.problem.ContestProblem;
-import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
@@ -23,23 +23,49 @@ public class ContestProblemStore {
         this.problemDao = problemDao;
     }
 
-    public void upsertProblem(String contestJid, ContestProblemData data) {
+    public Set<ContestProblem> setProblems(String contestJid, List<ContestProblem> data) {
+        Set<String> problemJids = data.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
+        for (ContestProblemModel model : problemDao.selectAllByContestJid(contestJid, createOptions())) {
+            if (!problemJids.contains(model.problemJid)) {
+                problemDao.delete(model);
+            }
+        }
+
+        ImmutableSet.Builder<ContestProblem> problems = ImmutableSet.builder();
+        for (ContestProblem problem : data) {
+            problems.add(upsertProblem(
+                    contestJid,
+                    problem.getAlias(),
+                    problem.getProblemJid(),
+                    problem.getStatus(),
+                    problem.getSubmissionsLimit()));
+        }
+        return problems.build();
+    }
+
+    private ContestProblem upsertProblem(
+            String contestJid,
+            String alias,
+            String problemJid,
+            ContestProblemStatus status,
+            long submissionsLimit) {
+
         Optional<ContestProblemModel> maybeModel =
-                problemDao.selectByContestJidAndProblemJid(contestJid, data.getProblemJid());
+                problemDao.selectByContestJidAndProblemJid(contestJid, problemJid);
         if (maybeModel.isPresent()) {
             ContestProblemModel model = maybeModel.get();
-            model.alias = data.getAlias();
-            model.status = data.getStatus().name();
-            model.submissionsLimit = data.getSubmissionsLimit();
-            problemDao.update(model);
+            model.alias = alias;
+            model.status = status.name();
+            model.submissionsLimit = submissionsLimit;
+            return fromModel(problemDao.update(model));
         } else {
             ContestProblemModel model = new ContestProblemModel();
             model.contestJid = contestJid;
-            model.problemJid = data.getProblemJid();
-            model.alias = data.getAlias();
-            model.status = data.getStatus().name();
-            model.submissionsLimit = data.getSubmissionsLimit();
-            problemDao.insert(model);
+            model.problemJid = problemJid;
+            model.alias = alias;
+            model.status = status.name();
+            model.submissionsLimit = submissionsLimit;
+            return fromModel(problemDao.insert(model));
         }
     }
 

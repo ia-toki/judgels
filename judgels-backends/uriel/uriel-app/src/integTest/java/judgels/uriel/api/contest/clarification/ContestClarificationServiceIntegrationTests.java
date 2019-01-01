@@ -12,8 +12,10 @@ import static judgels.uriel.api.mocks.MockJophiel.USER_B_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
+import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.List;
@@ -39,12 +41,12 @@ class ContestClarificationServiceIntegrationTests extends AbstractContestService
         contestantService.registerMyselfAsContestant(USER_A_HEADER, contest.getJid());
         contestantService.registerMyselfAsContestant(USER_B_HEADER, contest.getJid());
 
-        problemService.upsertProblem(ADMIN_HEADER, contest.getJid(), new ContestProblemData.Builder()
-                .problemJid(PROBLEM_1_JID)
+        problemService.setProblems(ADMIN_HEADER, contest.getJid(), ImmutableList.of(new ContestProblemData.Builder()
                 .alias("A")
+                .slug(PROBLEM_1_SLUG)
                 .status(ContestProblemStatus.OPEN)
                 .submissionsLimit(0)
-                .build());
+                .build()));
 
         // as contestant
 

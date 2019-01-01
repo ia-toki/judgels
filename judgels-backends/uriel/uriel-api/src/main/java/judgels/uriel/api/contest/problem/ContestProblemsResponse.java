@@ -12,6 +12,7 @@ public interface ContestProblemsResponse {
     List<ContestProblem> getData();
     Map<String, ProblemInfo> getProblemsMap();
     Map<String, Long> getTotalSubmissionsMap();
+    ContestProblemConfig getConfig();
 
     class Builder extends ImmutableContestProblemsResponse.Builder {}
 }
