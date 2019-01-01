@@ -3,21 +3,21 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestManagerUpsertResponse } from 'modules/api/uriel/contestManager';
+import { ContestManagersUpsertResponse } from 'modules/api/uriel/contestManager';
 
 import ContestManagerAddForm, { ContestManagerAddFormData } from '../ContestManagerAddForm/ContestManagerAddForm';
 import { ContestManagerAddResultTable } from '../ContestManagerAddResultTable/ContestManagerAddResultTable';
 
 export interface ContestManagerAddDialogProps {
   contest: Contest;
-  onUpsertManagers: (contestJid: string, usernames: string[]) => Promise<ContestManagerUpsertResponse>;
+  onUpsertManagers: (contestJid: string, usernames: string[]) => Promise<ContestManagersUpsertResponse>;
 }
 
 interface ContestManagerAddDialogState {
   isDialogOpen?: boolean;
   submitted?: {
     usernames: string[];
-    response: ContestManagerUpsertResponse;
+    response: ContestManagersUpsertResponse;
   };
 }
 

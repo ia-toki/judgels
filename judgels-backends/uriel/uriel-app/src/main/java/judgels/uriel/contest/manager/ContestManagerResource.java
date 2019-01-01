@@ -21,10 +21,10 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.manager.ContestManager;
-import judgels.uriel.api.contest.manager.ContestManagerDeleteResponse;
 import judgels.uriel.api.contest.manager.ContestManagerService;
-import judgels.uriel.api.contest.manager.ContestManagerUpsertResponse;
+import judgels.uriel.api.contest.manager.ContestManagersDeleteResponse;
 import judgels.uriel.api.contest.manager.ContestManagersResponse;
+import judgels.uriel.api.contest.manager.ContestManagersUpsertResponse;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 
@@ -75,7 +75,7 @@ public class ContestManagerResource implements ContestManagerService {
 
     @Override
     @UnitOfWork
-    public ContestManagerUpsertResponse upsertManagers(
+    public ContestManagersUpsertResponse upsertManagers(
             AuthHeader authHeader,
             String contestJid,
             Set<String> usernames) {
@@ -107,7 +107,7 @@ public class ContestManagerResource implements ContestManagerService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
-        return new ContestManagerUpsertResponse.Builder()
+        return new ContestManagersUpsertResponse.Builder()
                 .insertedManagerProfilesMap(insertedManagerProfilesMap)
                 .alreadyManagerProfilesMap(alreadyManagerProfilesMap)
                 .build();
@@ -115,7 +115,7 @@ public class ContestManagerResource implements ContestManagerService {
 
     @Override
     @UnitOfWork
-    public ContestManagerDeleteResponse deleteManagers(
+    public ContestManagersDeleteResponse deleteManagers(
             AuthHeader authHeader,
             String contestJid,
             Set<String> usernames) {
@@ -141,7 +141,7 @@ public class ContestManagerResource implements ContestManagerService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
-        return new ContestManagerDeleteResponse.Builder()
+        return new ContestManagersDeleteResponse.Builder()
                 .deletedManagerProfilesMap(deletedManagerProfilesMap)
                 .build();
     }

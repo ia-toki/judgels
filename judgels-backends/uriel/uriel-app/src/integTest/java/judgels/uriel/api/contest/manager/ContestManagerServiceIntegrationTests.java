@@ -24,7 +24,7 @@ class ContestManagerServiceIntegrationTests extends AbstractContestServiceIntegr
 
         // as admin
 
-        ContestManagerUpsertResponse upsertResponse =
+        ContestManagersUpsertResponse upsertResponse =
                 managerService.upsertManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A));
         assertThat(upsertResponse.getInsertedManagerProfilesMap()).containsOnlyKeys(USER_A);
         assertThat(upsertResponse.getAlreadyManagerProfilesMap()).isEmpty();
@@ -44,7 +44,7 @@ class ContestManagerServiceIntegrationTests extends AbstractContestServiceIntegr
                 new ContestManager.Builder().userJid(USER_B_JID).build());
         assertThat(response.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
 
-        ContestManagerDeleteResponse deleteResponse =
+        ContestManagersDeleteResponse deleteResponse =
                 managerService.deleteManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A, "userC"));
         assertThat(deleteResponse.getDeletedManagerProfilesMap()).containsOnlyKeys(USER_A);
         assertThat(deleteResponse.getDeletedManagerProfilesMap().get(USER_A).getUsername()).isEqualTo(USER_A);

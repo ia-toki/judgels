@@ -6,9 +6,9 @@ import judgels.jophiel.api.profile.Profile;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestContestantDeleteResponse.class)
-public interface ContestContestantDeleteResponse {
+@JsonDeserialize(as = ImmutableContestContestantsDeleteResponse.class)
+public interface ContestContestantsDeleteResponse {
     Map<String, Profile> getDeletedContestantProfilesMap();
 
-    class Builder extends ImmutableContestContestantDeleteResponse.Builder {}
+    class Builder extends ImmutableContestContestantsDeleteResponse.Builder {}
 }

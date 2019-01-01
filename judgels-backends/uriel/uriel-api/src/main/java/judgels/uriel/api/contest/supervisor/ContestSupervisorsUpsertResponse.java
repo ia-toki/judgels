@@ -6,9 +6,9 @@ import judgels.jophiel.api.profile.Profile;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestSupervisorUpsertResponse.class)
-public interface ContestSupervisorUpsertResponse {
+@JsonDeserialize(as = ImmutableContestSupervisorsUpsertResponse.class)
+public interface ContestSupervisorsUpsertResponse {
     Map<String, Profile> getUpsertedSupervisorProfilesMap();
 
-    class Builder extends ImmutableContestSupervisorUpsertResponse.Builder {}
+    class Builder extends ImmutableContestSupervisorsUpsertResponse.Builder {}
 }

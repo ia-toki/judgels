@@ -6,10 +6,10 @@ import judgels.jophiel.api.profile.Profile;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableAdminUpsertResponse.class)
-public interface AdminUpsertResponse {
+@JsonDeserialize(as = ImmutableAdminsUpsertResponse.class)
+public interface AdminsUpsertResponse {
     Map<String, Profile> getInsertedAdminProfilesMap();
     Map<String, Profile> getAlreadyAdminProfilesMap();
 
-    class Builder extends ImmutableAdminUpsertResponse.Builder {}
+    class Builder extends ImmutableAdminsUpsertResponse.Builder {}
 }

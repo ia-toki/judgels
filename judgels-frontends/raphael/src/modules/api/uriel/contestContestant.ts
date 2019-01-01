@@ -30,7 +30,7 @@ export interface ContestContestantUpsertResponse {
   alreadyContestantProfilesMap: ProfilesMap;
 }
 
-export interface ContestContestantDeleteResponse {
+export interface ContestContestantsDeleteResponse {
   deletedContestantProfilesMap: ProfilesMap;
 }
 
@@ -81,7 +81,7 @@ export const contestContestantAPI = {
     token: string,
     contestJid: string,
     usernames: string[]
-  ): Promise<ContestContestantDeleteResponse> => {
+  ): Promise<ContestContestantsDeleteResponse> => {
     return post(`${baseURL(contestJid)}/batch-delete`, token, usernames);
   },
 };

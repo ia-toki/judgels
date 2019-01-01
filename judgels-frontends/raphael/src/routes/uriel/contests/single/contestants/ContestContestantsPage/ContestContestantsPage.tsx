@@ -8,7 +8,7 @@ import Pagination from 'components/Pagination/Pagination';
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 import {
-  ContestContestantDeleteResponse,
+  ContestContestantsDeleteResponse,
   ContestContestantsResponse,
   ContestContestantUpsertResponse,
 } from 'modules/api/uriel/contestContestant';
@@ -25,7 +25,7 @@ export interface ContestContestantsPageProps {
   contest: Contest;
   onGetContestants: (contestJid: string, page?: number) => Promise<ContestContestantsResponse>;
   onUpsertContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
-  onDeleteContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantDeleteResponse>;
+  onDeleteContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantsDeleteResponse>;
 }
 
 interface ContestContestantsPageState {

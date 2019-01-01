@@ -2,20 +2,20 @@ import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import { AdminDeleteResponse } from 'modules/api/uriel/admin';
+import { AdminsDeleteResponse } from 'modules/api/uriel/admin';
 
 import AdminRemoveForm, { AdminRemoveFormData } from '../AdminRemoveForm/AdminRemoveForm';
 import { AdminRemoveResultTable } from '../AdminRemoveResultTable/AdminRemoveResultTable';
 
 export interface AdminRemoveDialogProps {
-  onDeleteAdmins: (usernames: string[]) => Promise<AdminDeleteResponse>;
+  onDeleteAdmins: (usernames: string[]) => Promise<AdminsDeleteResponse>;
 }
 
 interface AdminRemoveDialogState {
   isDialogOpen?: boolean;
   submitted?: {
     usernames: string[];
-    response: AdminDeleteResponse;
+    response: AdminsDeleteResponse;
   };
 }
 

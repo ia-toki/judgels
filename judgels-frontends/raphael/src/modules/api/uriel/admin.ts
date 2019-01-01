@@ -14,12 +14,12 @@ export interface AdminsResponse {
   profilesMap: ProfilesMap;
 }
 
-export interface AdminUpsertResponse {
+export interface AdminsUpsertResponse {
   insertedAdminProfilesMap: ProfilesMap;
   alreadyAdminProfilesMap: ProfilesMap;
 }
 
-export interface AdminDeleteResponse {
+export interface AdminsDeleteResponse {
   deletedAdminProfilesMap: ProfilesMap;
 }
 
@@ -31,11 +31,11 @@ export const urielAdminAPI = {
     return get(`${baseURL}?${params}`, token);
   },
 
-  upsertAdmins: (token: string, usernames: string[]): Promise<AdminUpsertResponse> => {
+  upsertAdmins: (token: string, usernames: string[]): Promise<AdminsUpsertResponse> => {
     return post(`${baseURL}/batch-upsert`, token, usernames);
   },
 
-  deleteAdmins: (token: string, usernames: string[]): Promise<AdminDeleteResponse> => {
+  deleteAdmins: (token: string, usernames: string[]): Promise<AdminsDeleteResponse> => {
     return post(`${baseURL}/batch-delete`, token, usernames);
   },
 };

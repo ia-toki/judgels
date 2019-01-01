@@ -23,11 +23,11 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ApprovedContestContestantsResponse;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantConfig;
-import judgels.uriel.api.contest.contestant.ContestContestantDeleteResponse;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.contestant.ContestContestantState;
-import judgels.uriel.api.contest.contestant.ContestContestantUpsertResponse;
+import judgels.uriel.api.contest.contestant.ContestContestantsDeleteResponse;
 import judgels.uriel.api.contest.contestant.ContestContestantsResponse;
+import judgels.uriel.api.contest.contestant.ContestContestantsUpsertResponse;
 import judgels.uriel.contest.ContestStore;
 
 public class ContestContestantResource implements ContestContestantService {
@@ -140,7 +140,7 @@ public class ContestContestantResource implements ContestContestantService {
 
     @Override
     @UnitOfWork
-    public ContestContestantUpsertResponse upsertContestants(
+    public ContestContestantsUpsertResponse upsertContestants(
             AuthHeader authHeader,
             String contestJid,
             Set<String> usernames) {
@@ -172,7 +172,7 @@ public class ContestContestantResource implements ContestContestantService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
-        return new ContestContestantUpsertResponse.Builder()
+        return new ContestContestantsUpsertResponse.Builder()
                 .insertedContestantProfilesMap(insertedContestantProfilesMap)
                 .alreadyContestantProfilesMap(alreadyContestantProfilesMap)
                 .build();
@@ -180,7 +180,7 @@ public class ContestContestantResource implements ContestContestantService {
 
     @Override
     @UnitOfWork
-    public ContestContestantDeleteResponse deleteContestants(
+    public ContestContestantsDeleteResponse deleteContestants(
             AuthHeader authHeader,
             String contestJid,
             Set<String> usernames) {
@@ -206,7 +206,7 @@ public class ContestContestantResource implements ContestContestantService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
-        return new ContestContestantDeleteResponse.Builder()
+        return new ContestContestantsDeleteResponse.Builder()
                 .deletedContestantProfilesMap(deletedContestantProfilesMap)
                 .build();
     }

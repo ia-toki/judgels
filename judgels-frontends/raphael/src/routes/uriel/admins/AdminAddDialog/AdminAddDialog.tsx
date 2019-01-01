@@ -2,20 +2,20 @@ import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import { AdminUpsertResponse } from 'modules/api/uriel/admin';
+import { AdminsUpsertResponse } from 'modules/api/uriel/admin';
 
 import AdminAddForm, { AdminAddFormData } from '../AdminAddForm/AdminAddForm';
 import { AdminAddResultTable } from '../AdminAddResultTable/AdminAddResultTable';
 
 export interface AdminAddDialogProps {
-  onUpsertAdmins: (usernames: string[]) => Promise<AdminUpsertResponse>;
+  onUpsertAdmins: (usernames: string[]) => Promise<AdminsUpsertResponse>;
 }
 
 interface AdminAddDialogState {
   isDialogOpen?: boolean;
   submitted?: {
     usernames: string[];
-    response: AdminUpsertResponse;
+    response: AdminsUpsertResponse;
   };
 }
 

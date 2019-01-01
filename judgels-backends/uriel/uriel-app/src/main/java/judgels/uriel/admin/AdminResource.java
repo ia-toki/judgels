@@ -20,10 +20,10 @@ import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.admin.Admin;
-import judgels.uriel.api.admin.AdminDeleteResponse;
 import judgels.uriel.api.admin.AdminService;
-import judgels.uriel.api.admin.AdminUpsertResponse;
+import judgels.uriel.api.admin.AdminsDeleteResponse;
 import judgels.uriel.api.admin.AdminsResponse;
+import judgels.uriel.api.admin.AdminsUpsertResponse;
 import judgels.uriel.role.AdminRoleStore;
 
 public class AdminResource implements AdminService {
@@ -65,7 +65,7 @@ public class AdminResource implements AdminService {
 
     @Override
     @UnitOfWork
-    public AdminUpsertResponse upsertAdmins(AuthHeader authHeader, Set<String> usernames) {
+    public AdminsUpsertResponse upsertAdmins(AuthHeader authHeader, Set<String> usernames) {
         Role role = myUserService.getMyRole(authHeader);
         checkAllowed(role == Role.SUPERADMIN);
 
@@ -92,7 +92,7 @@ public class AdminResource implements AdminService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
-        return new AdminUpsertResponse.Builder()
+        return new AdminsUpsertResponse.Builder()
                 .insertedAdminProfilesMap(insertedAdminProfilesMap)
                 .alreadyAdminProfilesMap(alreadyAdminProfilesMap)
                 .build();
@@ -100,7 +100,7 @@ public class AdminResource implements AdminService {
 
     @Override
     @UnitOfWork
-    public AdminDeleteResponse deleteAdmins(AuthHeader authHeader, Set<String> usernames) {
+    public AdminsDeleteResponse deleteAdmins(AuthHeader authHeader, Set<String> usernames) {
         Role role = myUserService.getMyRole(authHeader);
         checkAllowed(role == Role.SUPERADMIN);
 
@@ -121,7 +121,7 @@ public class AdminResource implements AdminService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
-        return new AdminDeleteResponse.Builder()
+        return new AdminsDeleteResponse.Builder()
                 .deletedAdminProfilesMap(deletedAdminProfilesMap)
                 .build();
     }

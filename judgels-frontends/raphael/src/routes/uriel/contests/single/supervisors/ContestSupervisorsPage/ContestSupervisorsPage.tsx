@@ -9,8 +9,8 @@ import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
 import {
   ContestSupervisorsResponse,
-  ContestSupervisorDeleteResponse,
-  ContestSupervisorUpsertResponse,
+  ContestSupervisorsDeleteResponse,
+  ContestSupervisorsUpsertResponse,
   ContestSupervisorUpsertData,
 } from 'modules/api/uriel/contestSupervisor';
 
@@ -28,8 +28,8 @@ export interface ContestSupervisorsPageProps {
   onUpsertSupervisors: (
     contestJid: string,
     data: ContestSupervisorUpsertData
-  ) => Promise<ContestSupervisorUpsertResponse>;
-  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestSupervisorDeleteResponse>;
+  ) => Promise<ContestSupervisorsUpsertResponse>;
+  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestSupervisorsDeleteResponse>;
 }
 
 interface ContestSupervisorsPageState {

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { Card } from 'components/Card/Card';
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import Pagination from 'components/Pagination/Pagination';
-import { AdminDeleteResponse, AdminsResponse, AdminUpsertResponse } from 'modules/api/uriel/admin';
+import { AdminsDeleteResponse, AdminsResponse, AdminsUpsertResponse } from 'modules/api/uriel/admin';
 
 import { AdminsTable } from '../AdminsTable/AdminsTable';
 import { AdminAddDialog } from '../AdminAddDialog/AdminAddDialog';
@@ -16,8 +16,8 @@ import './AdminsPage.css';
 
 export interface AdminsPageProps {
   onGetAdmins: (page?: number) => Promise<AdminsResponse>;
-  onUpsertAdmins: (usernames: string[]) => Promise<AdminUpsertResponse>;
-  onDeleteAdmins: (usernames: string[]) => Promise<AdminDeleteResponse>;
+  onUpsertAdmins: (usernames: string[]) => Promise<AdminsUpsertResponse>;
+  onDeleteAdmins: (usernames: string[]) => Promise<AdminsDeleteResponse>;
 }
 
 interface AdminsPageState {

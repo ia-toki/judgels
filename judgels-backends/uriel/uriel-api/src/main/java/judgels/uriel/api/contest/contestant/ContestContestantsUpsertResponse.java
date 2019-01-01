@@ -6,10 +6,10 @@ import judgels.jophiel.api.profile.Profile;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestContestantUpsertResponse.class)
-public interface ContestContestantUpsertResponse {
+@JsonDeserialize(as = ImmutableContestContestantsUpsertResponse.class)
+public interface ContestContestantsUpsertResponse {
     Map<String, Profile> getInsertedContestantProfilesMap();
     Map<String, Profile> getAlreadyContestantProfilesMap();
 
-    class Builder extends ImmutableContestContestantUpsertResponse.Builder {}
+    class Builder extends ImmutableContestContestantsUpsertResponse.Builder {}
 }

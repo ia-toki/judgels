@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestContestantDeleteResponse } from 'modules/api/uriel/contestContestant';
+import { ContestContestantsDeleteResponse } from 'modules/api/uriel/contestContestant';
 
 import ContestContestantRemoveForm, {
   ContestContestantRemoveFormData,
@@ -12,14 +12,14 @@ import { ContestContestantRemoveResultTable } from '../ContestContestantRemoveRe
 
 export interface ContestContestantRemoveDialogProps {
   contest: Contest;
-  onDeleteContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantDeleteResponse>;
+  onDeleteContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantsDeleteResponse>;
 }
 
 interface ContestContestantRemoveDialogState {
   isDialogOpen?: boolean;
   submitted?: {
     usernames: string[];
-    response: ContestContestantDeleteResponse;
+    response: ContestContestantsDeleteResponse;
   };
 }
 

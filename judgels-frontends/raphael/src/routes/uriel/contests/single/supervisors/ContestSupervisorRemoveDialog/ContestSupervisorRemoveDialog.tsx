@@ -8,18 +8,18 @@ import ContestSupervisorRemoveForm, {
   ContestSupervisorRemoveFormData,
 } from '../ContestSupervisorRemoveForm/ContestSupervisorRemoveForm';
 import { ContestSupervisorRemoveResultTable } from '../ContestSupervisorRemoveResultTable/ContestSupervisorRemoveResultTable';
-import { ContestSupervisorDeleteResponse } from 'modules/api/uriel/contestSupervisor';
+import { ContestSupervisorsDeleteResponse } from 'modules/api/uriel/contestSupervisor';
 
 export interface ContestSupervisorRemoveDialogProps {
   contest: Contest;
-  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestSupervisorDeleteResponse>;
+  onDeleteSupervisors: (contestJid: string, usernames: string[]) => Promise<ContestSupervisorsDeleteResponse>;
 }
 
 interface ContestSupervisorRemoveDialogState {
   isDialogOpen?: boolean;
   submitted?: {
     usernames: string[];
-    response: ContestSupervisorDeleteResponse;
+    response: ContestSupervisorsDeleteResponse;
   };
 }
 

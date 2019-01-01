@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
 import { SupervisorManagementPermission } from 'modules/api/uriel/contestSupervisor';
-import { ContestSupervisorUpsertResponse, ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
+import { ContestSupervisorsUpsertResponse, ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
 
 import ContestSupervisorAddForm, {
   ContestSupervisorAddFormData,
@@ -16,14 +16,14 @@ export interface ContestSupervisorAddDialogProps {
   onUpsertSupervisors: (
     contestJid: string,
     data: ContestSupervisorUpsertData
-  ) => Promise<ContestSupervisorUpsertResponse>;
+  ) => Promise<ContestSupervisorsUpsertResponse>;
 }
 
 interface ContestSupervisorAddDialogState {
   isDialogOpen?: boolean;
   submitted?: {
     usernames: string[];
-    response: ContestSupervisorUpsertResponse;
+    response: ContestSupervisorsUpsertResponse;
   };
 }
 

@@ -21,11 +21,11 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
-import judgels.uriel.api.contest.supervisor.ContestSupervisorDeleteResponse;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorService;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorUpsertData;
-import judgels.uriel.api.contest.supervisor.ContestSupervisorUpsertResponse;
+import judgels.uriel.api.contest.supervisor.ContestSupervisorsDeleteResponse;
 import judgels.uriel.api.contest.supervisor.ContestSupervisorsResponse;
+import judgels.uriel.api.contest.supervisor.ContestSupervisorsUpsertResponse;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 
@@ -76,7 +76,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
 
     @Override
     @UnitOfWork
-    public ContestSupervisorUpsertResponse upsertSupervisors(
+    public ContestSupervisorsUpsertResponse upsertSupervisors(
             AuthHeader authHeader,
             String contestJid,
             ContestSupervisorUpsertData data) {
@@ -101,14 +101,14 @@ public class ContestSupervisorResource implements ContestSupervisorService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
-        return new ContestSupervisorUpsertResponse.Builder()
+        return new ContestSupervisorsUpsertResponse.Builder()
                 .upsertedSupervisorProfilesMap(upsertedSupervisorProfilesMap)
                 .build();
     }
 
     @Override
     @UnitOfWork
-    public ContestSupervisorDeleteResponse deleteSupervisors(
+    public ContestSupervisorsDeleteResponse deleteSupervisors(
             AuthHeader authHeader,
             String contestJid,
             Set<String> usernames) {
@@ -134,7 +134,7 @@ public class ContestSupervisorResource implements ContestSupervisorService {
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
-        return new ContestSupervisorDeleteResponse.Builder()
+        return new ContestSupervisorsDeleteResponse.Builder()
                 .deletedSupervisorProfilesMap(deletedSupervisorProfilesMap)
                 .build();
     }

@@ -28,7 +28,7 @@ class ContestSupervisorServiceIntegrationTests extends AbstractContestServiceInt
 
         // as supervisor
 
-        ContestSupervisorUpsertResponse upsertResponse = supervisorService.upsertSupervisors(
+        ContestSupervisorsUpsertResponse upsertResponse = supervisorService.upsertSupervisors(
                 ADMIN_HEADER,
                 contest.getJid(),
                 new ContestSupervisorUpsertData.Builder().addUsernames(USER_A).addManagementPermissions(ALL).build());
@@ -51,7 +51,7 @@ class ContestSupervisorServiceIntegrationTests extends AbstractContestServiceInt
                 new ContestSupervisor.Builder().userJid(USER_B_JID).addManagementPermissions(FILE).build());
         assertThat(response.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
 
-        ContestSupervisorDeleteResponse deleteResponse =
+        ContestSupervisorsDeleteResponse deleteResponse =
                 supervisorService.deleteSupervisors(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A, "userC"));
         assertThat(deleteResponse.getDeletedSupervisorProfilesMap()).containsOnlyKeys(USER_A);
         assertThat(deleteResponse.getDeletedSupervisorProfilesMap().get(USER_A).getUsername()).isEqualTo(USER_A);

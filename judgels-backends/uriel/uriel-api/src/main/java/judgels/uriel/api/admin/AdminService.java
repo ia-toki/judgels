@@ -27,11 +27,11 @@ public interface AdminService {
     @Path("/batch-upsert")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    AdminUpsertResponse upsertAdmins(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, Set<String> usernames);
+    AdminsUpsertResponse upsertAdmins(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, Set<String> usernames);
 
     @POST
     @Path("/batch-delete")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    AdminDeleteResponse deleteAdmins(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, Set<String> usernames);
+    AdminsDeleteResponse deleteAdmins(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, Set<String> usernames);
 }

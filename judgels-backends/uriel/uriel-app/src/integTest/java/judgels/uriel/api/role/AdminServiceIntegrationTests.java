@@ -17,10 +17,10 @@ import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.Optional;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
 import judgels.uriel.api.admin.Admin;
-import judgels.uriel.api.admin.AdminDeleteResponse;
 import judgels.uriel.api.admin.AdminService;
-import judgels.uriel.api.admin.AdminUpsertResponse;
+import judgels.uriel.api.admin.AdminsDeleteResponse;
 import judgels.uriel.api.admin.AdminsResponse;
+import judgels.uriel.api.admin.AdminsUpsertResponse;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ class AdminServiceIntegrationTests extends AbstractServiceIntegrationTests {
     void end_to_end_flow() {
         // as superadmin
 
-        AdminUpsertResponse upsertResponse = adminService.upsertAdmins(SUPERADMIN_HEADER, ImmutableSet.of(USER_A));
+        AdminsUpsertResponse upsertResponse = adminService.upsertAdmins(SUPERADMIN_HEADER, ImmutableSet.of(USER_A));
         assertThat(upsertResponse.getInsertedAdminProfilesMap()).containsOnlyKeys(USER_A);
         assertThat(upsertResponse.getAlreadyAdminProfilesMap()).isEmpty();
 
@@ -62,7 +62,7 @@ class AdminServiceIntegrationTests extends AbstractServiceIntegrationTests {
                 new Admin.Builder().userJid(USER_B_JID).build());
         assertThat(response.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
 
-        AdminDeleteResponse deleteResponse =
+        AdminsDeleteResponse deleteResponse =
                 adminService.deleteAdmins(SUPERADMIN_HEADER, ImmutableSet.of(USER_A, "userC"));
         assertThat(deleteResponse.getDeletedAdminProfilesMap()).containsOnlyKeys(USER_A);
         assertThat(deleteResponse.getDeletedAdminProfilesMap().get(USER_A).getUsername()).isEqualTo(USER_A);

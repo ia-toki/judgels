@@ -40,11 +40,11 @@ export interface ContestSupervisorsResponse {
   profilesMap: ProfilesMap;
 }
 
-export interface ContestSupervisorUpsertResponse {
+export interface ContestSupervisorsUpsertResponse {
   upsertedSupervisorProfilesMap: ProfilesMap;
 }
 
-export interface ContestSupervisorDeleteResponse {
+export interface ContestSupervisorsDeleteResponse {
   deletedSupervisorProfilesMap: ProfilesMap;
 }
 
@@ -65,7 +65,7 @@ export const contestSupervisorAPI = {
     token: string,
     contestJid: string,
     data: ContestSupervisorUpsertData
-  ): Promise<ContestSupervisorUpsertResponse> => {
+  ): Promise<ContestSupervisorsUpsertResponse> => {
     return post(`${baseURL(contestJid)}/batch-upsert`, token, data);
   },
 
@@ -73,7 +73,7 @@ export const contestSupervisorAPI = {
     token: string,
     contestJid: string,
     usernames: string[]
-  ): Promise<ContestSupervisorDeleteResponse> => {
+  ): Promise<ContestSupervisorsDeleteResponse> => {
     return post(`${baseURL(contestJid)}/batch-delete`, token, usernames);
   },
 };

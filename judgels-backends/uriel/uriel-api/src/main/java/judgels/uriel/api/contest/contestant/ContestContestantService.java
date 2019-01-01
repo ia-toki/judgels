@@ -63,7 +63,7 @@ public interface ContestContestantService {
     @Path("/batch-upsert")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    ContestContestantUpsertResponse upsertContestants(
+    ContestContestantsUpsertResponse upsertContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             Set<String> usernames);
@@ -72,7 +72,7 @@ public interface ContestContestantService {
     @Path("/batch-delete")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    ContestContestantDeleteResponse deleteContestants(
+    ContestContestantsDeleteResponse deleteContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             Set<String> usernames);

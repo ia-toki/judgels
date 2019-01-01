@@ -15,12 +15,12 @@ export interface ContestManagersResponse {
   profilesMap: ProfilesMap;
 }
 
-export interface ContestManagerUpsertResponse {
+export interface ContestManagersUpsertResponse {
   insertedManagerProfilesMap: ProfilesMap;
   alreadyManagerProfilesMap: ProfilesMap;
 }
 
-export interface ContestManagerDeleteResponse {
+export interface ContestManagersDeleteResponse {
   deletedManagerProfilesMap: ProfilesMap;
 }
 
@@ -32,11 +32,11 @@ export const contestManagerAPI = {
     return get(`${baseURL(contestJid)}?${params}`, token);
   },
 
-  upsertManagers: (token: string, contestJid: string, usernames: string[]): Promise<ContestManagerUpsertResponse> => {
+  upsertManagers: (token: string, contestJid: string, usernames: string[]): Promise<ContestManagersUpsertResponse> => {
     return post(`${baseURL(contestJid)}/batch-upsert`, token, usernames);
   },
 
-  deleteManagers: (token: string, contestJid: string, usernames: string[]): Promise<ContestManagerDeleteResponse> => {
+  deleteManagers: (token: string, contestJid: string, usernames: string[]): Promise<ContestManagersDeleteResponse> => {
     return post(`${baseURL(contestJid)}/batch-delete`, token, usernames);
   },
 };
