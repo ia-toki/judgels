@@ -6,12 +6,13 @@ import judgels.sandalphon.api.problem.ProblemWorksheet;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestContestantProblemWorksheet.class)
-public interface ContestContestantProblemWorksheet {
+@JsonDeserialize(as = ImmutableContestProblemWorksheet.class)
+public interface ContestProblemWorksheet {
     String getDefaultLanguage();
     Set<String> getLanguages();
-    ContestContestantProblem getContestantProblem();
+    ContestProblem getProblem();
+    long getTotalSubmissions();
     ProblemWorksheet getWorksheet();
 
-    class Builder extends ImmutableContestContestantProblemWorksheet.Builder{}
+    class Builder extends ImmutableContestProblemWorksheet.Builder{}
 }

@@ -5,7 +5,7 @@ import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermissio
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.problem.ContestContestantProblem;
+import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
@@ -53,13 +53,14 @@ public class ContestProblemRoleChecker {
     public Optional<String> canSubmit(
             String userJid,
             Contest contest,
-            ContestContestantProblem contestantProblem) {
+            ContestProblem problem,
+            long totalSubmissions) {
 
         if (contestTimer.hasFinished(contest, userJid)) {
             return Optional.of("Contest is over.");
         }
-        long submissionsLimit = contestantProblem.getProblem().getSubmissionsLimit();
-        if (submissionsLimit != 0 && contestantProblem.getTotalSubmissions() >= submissionsLimit) {
+        long submissionsLimit = problem.getSubmissionsLimit();
+        if (submissionsLimit != 0 && totalSubmissions >= submissionsLimit) {
             return Optional.of("Submissions limit has been reached.");
         }
         if (canSupervise(userJid, contest)) {
@@ -71,7 +72,7 @@ public class ContestProblemRoleChecker {
         if (!contestTimer.hasStarted(contest, userJid)) {
             return Optional.of("Contest has not started yet.");
         }
-        if (contestantProblem.getProblem().getStatus() == ContestProblemStatus.CLOSED) {
+        if (problem.getStatus() == ContestProblemStatus.CLOSED) {
             return Optional.of("Problem is closed.");
         }
         return Optional.empty();

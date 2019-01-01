@@ -4,7 +4,7 @@ export const contestProblemActions = {
   getMyProblems: (contestJid: string) => {
     return async (dispatch, getState, { contestProblemAPI }) => {
       const token = selectToken(getState());
-      return await contestProblemAPI.getMyProblems(token, contestJid);
+      return await contestProblemAPI.getProblems(token, contestJid);
     };
   },
 

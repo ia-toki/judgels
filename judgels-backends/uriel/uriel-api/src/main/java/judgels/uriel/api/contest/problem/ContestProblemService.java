@@ -25,16 +25,16 @@ public interface ContestProblemService {
             ContestProblemData data);
 
     @GET
-    @Path("/mine")
+    @Path("/")
     @Produces(APPLICATION_JSON)
-    ContestContestantProblemsResponse getMyProblems(
+    ContestProblemsResponse getProblems(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid);
 
     @GET
     @Path("/{problemAlias}/worksheet")
     @Produces(APPLICATION_JSON)
-    ContestContestantProblemWorksheet getProblemWorksheet(
+    ContestProblemWorksheet getProblemWorksheet(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
             @PathParam("problemAlias") String problemAlias,

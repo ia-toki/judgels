@@ -22,13 +22,14 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.problem.ContestContestantProblem;
-import judgels.uriel.api.contest.problem.ContestContestantProblemWorksheet;
-import judgels.uriel.api.contest.problem.ContestContestantProblemsResponse;
+import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
+import judgels.uriel.api.contest.problem.ContestProblemWorksheet;
+import judgels.uriel.api.contest.problem.ContestProblemsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.module.ContestModuleStore;
+import judgels.uriel.contest.submission.ContestSubmissionStore;
 import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 import judgels.uriel.sandalphon.SandalphonConfiguration;
 
@@ -38,6 +39,7 @@ public class ContestProblemResource implements ContestProblemService {
     private final ContestModuleStore moduleStore;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
+    private final ContestSubmissionStore submissionStore;
     private final SandalphonConfiguration sandalphonConfig;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
@@ -49,6 +51,7 @@ public class ContestProblemResource implements ContestProblemService {
             ContestModuleStore moduleStore,
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
+            ContestSubmissionStore submissionStore,
             SandalphonConfiguration sandalphonConfig,
             @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
@@ -58,6 +61,7 @@ public class ContestProblemResource implements ContestProblemService {
         this.moduleStore = moduleStore;
         this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
+        this.submissionStore = submissionStore;
         this.sandalphonConfig = sandalphonConfig;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
@@ -75,27 +79,29 @@ public class ContestProblemResource implements ContestProblemService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestContestantProblemsResponse getMyProblems(Optional<AuthHeader> authHeader, String contestJid) {
+    public ContestProblemsResponse getProblems(Optional<AuthHeader> authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(problemRoleChecker.canView(actorJid, contest));
 
-        List<ContestContestantProblem> contestantProblems = problemStore.getContestantProblems(contestJid, actorJid);
-        Set<String> problemJids =
-                contestantProblems.stream().map(p -> p.getProblem().getProblemJid()).collect(Collectors.toSet());
+        List<ContestProblem> problems = problemStore.getProblems(contestJid);
+        Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
         Map<String, ProblemInfo> problemsMap = problemJids.isEmpty()
                 ? ImmutableMap.of()
                 : clientProblemService.getProblemsByJids(sandalphonClientAuthHeader, problemJids);
+        Map<String, Long> totalSubmissionsMap =
+                submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
 
-        return new ContestContestantProblemsResponse.Builder()
-                .data(contestantProblems)
+        return new ContestProblemsResponse.Builder()
+                .data(problems)
                 .problemsMap(problemsMap)
+                .totalSubmissionsMap(totalSubmissionsMap)
                 .build();
     }
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestContestantProblemWorksheet getProblemWorksheet(
+    public ContestProblemWorksheet getProblemWorksheet(
             Optional<AuthHeader> authHeader,
             String contestJid,
             String problemAlias,
@@ -105,14 +111,14 @@ public class ContestProblemResource implements ContestProblemService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(problemRoleChecker.canView(actorJid, contest));
 
-        ContestContestantProblem contestantProblem =
-                checkFound(problemStore.getContestantProblemByAlias(contestJid, actorJid, problemAlias));
-        String problemJid = contestantProblem.getProblem().getProblemJid();
+        ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
+        String problemJid = problem.getProblemJid();
+        ProblemInfo problemInfo = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
 
-        ProblemInfo problem = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
+        long totalSubmissions = submissionStore.getTotalSubmissions(contestJid, actorJid, problemJid);
 
         Optional<String> reasonNotAllowedToSubmit =
-                problemRoleChecker.canSubmit(actorJid, contest, contestantProblem);
+                problemRoleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         ProblemWorksheet worksheet =
                 clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
@@ -137,10 +143,11 @@ public class ContestProblemResource implements ContestProblemService {
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                 .build();
 
-        return new ContestContestantProblemWorksheet.Builder()
-                .defaultLanguage(problem.getDefaultLanguage())
-                .languages(problem.getNamesByLanguage().keySet())
-                .contestantProblem(contestantProblem)
+        return new ContestProblemWorksheet.Builder()
+                .defaultLanguage(problemInfo.getDefaultLanguage())
+                .languages(problemInfo.getNamesByLanguage().keySet())
+                .problem(problem)
+                .totalSubmissions(totalSubmissions)
                 .worksheet(finalWorksheet)
                 .build();
     }

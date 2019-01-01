@@ -1,6 +1,7 @@
 package judgels.sandalphon.submission;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.Map;
@@ -88,6 +89,16 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
 
         return submissionModels.mapPage(p ->
                 Lists.transform(p, sm -> submissionFromModels(sm, gradingModels.get(sm.jid))));
+    }
+
+    public long getTotalSubmissions(String containerJid, String userJid, String problemJid) {
+        Map<String, Long> map = submissionDao.selectCounts(containerJid, userJid, ImmutableSet.of(problemJid));
+        return map.getOrDefault(problemJid, 0L);
+    }
+
+    public Map<String, Long> getTotalSubmissionsMap(String containerJid, String userJid, Set<String> problemJids) {
+        Map<String, Long> map = submissionDao.selectCounts(containerJid, userJid, problemJids);
+        return problemJids.stream().collect(Collectors.toMap(jid -> jid, jid -> map.getOrDefault(jid, 0L)));
     }
 
     public Submission createSubmission(SubmissionData data, String gradingEngine) {

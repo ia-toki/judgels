@@ -13,7 +13,7 @@ import { AppState } from 'modules/store';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { ProblemWorksheet } from 'modules/api/sandalphon/problem';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestContestantProblem, ContestContestantProblemWorksheet } from 'modules/api/uriel/contestProblem';
+import { ContestProblem, ContestProblemWorksheet } from 'modules/api/uriel/contestProblem';
 
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestProblemActions as injectedContestProblemActions } from '../../modules/contestProblemActions';
@@ -29,7 +29,7 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     contestJid: string,
     problemAlias: string,
     language?: string
-  ) => Promise<ContestContestantProblemWorksheet>;
+  ) => Promise<ContestProblemWorksheet>;
   onCreateSubmission: (
     contestJid: string,
     contestSlug: string,
@@ -43,7 +43,8 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
 interface ContestProblemPageState {
   defaultLanguage?: string;
   languages?: string[];
-  contestantProblem?: ContestContestantProblem;
+  problem?: ContestProblem;
+  totalSubmissions?: number;
   worksheet?: ProblemWorksheet;
 }
 
@@ -51,13 +52,13 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   state: ContestProblemPageState = {};
 
   async componentDidMount() {
-    const { defaultLanguage, languages, contestantProblem, worksheet } = await this.props.onGetProblemWorksheet(
+    const { defaultLanguage, languages, problem, totalSubmissions, worksheet } = await this.props.onGetProblemWorksheet(
       this.props.contest.jid,
       this.props.match.params.problemAlias,
       this.props.statementLanguage
     );
-    this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + contestantProblem.problem.alias);
-    this.setState({ defaultLanguage, languages, contestantProblem, worksheet });
+    this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + problem.alias);
+    this.setState({ defaultLanguage, languages, problem, totalSubmissions, worksheet });
   }
 
   async componentDidUpdate(prevProps: ContestProblemPageProps, prevState: ContestProblemPageState) {
@@ -82,7 +83,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   }
 
   private onCreateSubmission = async (data: ProblemSubmissionFormData) => {
-    const { problem } = this.state.contestantProblem!;
+    const problem = this.state.problem!;
     return await this.props.onCreateSubmission(
       this.props.contest.jid,
       this.props.contest.slug,
@@ -108,20 +109,20 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 
   private renderStatement = () => {
-    const { contestantProblem, worksheet } = this.state;
-    if (!contestantProblem || !worksheet) {
+    const { problem, totalSubmissions, worksheet } = this.state;
+    if (!problem || !worksheet) {
       return <LoadingState />;
     }
 
     let submissionWarning;
-    if (contestantProblem.problem.submissionsLimit !== 0) {
-      const submissionsLeft = contestantProblem.problem.submissionsLimit - contestantProblem.totalSubmissions;
+    if (problem.submissionsLimit !== 0) {
+      const submissionsLeft = problem.submissionsLimit - totalSubmissions!;
       submissionWarning = '' + submissionsLeft + ' submissions left.';
     }
 
     return (
       <ProblemWorksheetCard
-        alias={contestantProblem.problem.alias}
+        alias={problem.alias}
         worksheet={worksheet}
         onSubmit={this.onCreateSubmission}
         submissionWarning={submissionWarning}

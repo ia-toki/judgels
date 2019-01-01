@@ -10,7 +10,6 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestUpdateData;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
-import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
@@ -182,80 +181,67 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
                 .status(ContestProblemStatus.OPEN)
                 .submissionsLimit(50)
                 .build();
-        ContestContestantProblem contestantProblem = new ContestContestantProblem.Builder()
-                .problem(problem)
-                .totalSubmissions(10)
+
+        assertThat(checker.canSubmit(ADMIN, contestA, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(ADMIN, contestAStarted, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(ADMIN, contestB, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(ADMIN, contestBStarted, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(ADMIN, contestBFinished, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(ADMIN, contestC, problem, 10)).isEmpty();
+
+        assertThat(checker.canSubmit(USER, contestA, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(USER, contestAStarted, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(USER, contestB, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(USER, contestBStarted, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(USER, contestBFinished, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(USER, contestC, problem, 10)).isPresent();
+
+        assertThat(checker.canSubmit(CONTESTANT, contestA, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(CONTESTANT, contestAStarted, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(CONTESTANT, contestB, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(CONTESTANT, contestBFinished, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(CONTESTANT, contestC, problem, 10)).isPresent();
+
+        assertThat(checker.canSubmit(SUPERVISOR, contestA, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestAStarted, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestB, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(SUPERVISOR, contestBStarted, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(SUPERVISOR, contestBFinished, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(SUPERVISOR, contestC, problem, 10)).isPresent();
+
+        assertThat(checker.canSubmit(MANAGER, contestA, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(MANAGER, contestAStarted, problem, 10)).isPresent();
+        assertThat(checker.canSubmit(MANAGER, contestB, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(MANAGER, contestBStarted, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(MANAGER, contestC, problem, 10)).isPresent();
+
+        ContestProblem problemClosed = new ContestProblem.Builder()
+                .from(problem)
+                .status(ContestProblemStatus.CLOSED)
                 .build();
 
-        assertThat(checker.canSubmit(ADMIN, contestA, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(ADMIN, contestAStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(ADMIN, contestB, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(ADMIN, contestBStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(ADMIN, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(ADMIN, contestC, contestantProblem)).isEmpty();
-
-        assertThat(checker.canSubmit(USER, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(USER, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(USER, contestB, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(USER, contestBStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(USER, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(USER, contestC, contestantProblem)).isPresent();
-
-        assertThat(checker.canSubmit(CONTESTANT, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(CONTESTANT, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(CONTESTANT, contestB, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(CONTESTANT, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(CONTESTANT, contestC, contestantProblem)).isPresent();
-
-        assertThat(checker.canSubmit(SUPERVISOR, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(SUPERVISOR, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(SUPERVISOR, contestB, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(SUPERVISOR, contestBStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(SUPERVISOR, contestBFinished, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(SUPERVISOR, contestC, contestantProblem)).isPresent();
-
-        assertThat(checker.canSubmit(MANAGER, contestA, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(MANAGER, contestAStarted, contestantProblem)).isPresent();
-        assertThat(checker.canSubmit(MANAGER, contestB, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(MANAGER, contestBStarted, contestantProblem)).isEmpty();
-        assertThat(checker.canSubmit(MANAGER, contestC, contestantProblem)).isPresent();
-
-        ContestContestantProblem contestantProblemClosed = new ContestContestantProblem.Builder()
-                .from(contestantProblem)
-                .problem(new ContestProblem.Builder()
-                        .from(contestantProblem.getProblem())
-                        .status(ContestProblemStatus.CLOSED)
-                        .build())
+        ContestProblem problemLimitReached = new ContestProblem.Builder()
+                .from(problem)
+                .submissionsLimit(10)
                 .build();
 
-        ContestContestantProblem contestantProblemLimitReached = new ContestContestantProblem.Builder()
-                .from(contestantProblem)
-                .problem(new ContestProblem.Builder()
-                        .from(contestantProblem.getProblem())
-                        .submissionsLimit(10)
-                        .build())
+        ContestProblem problemNoLimit = new ContestProblem.Builder()
+                .from(problem)
+                .submissionsLimit(0)
                 .build();
 
-        ContestContestantProblem contestantProblemNoLimit = new ContestContestantProblem.Builder()
-                .from(contestantProblem)
-                .problem(new ContestProblem.Builder()
-                        .from(contestantProblem.getProblem())
-                        .submissionsLimit(0)
-                        .build())
-                .build();
-
-        assertThat(checker.canSubmit(CONTESTANT, contestA, contestantProblem))
+        assertThat(checker.canSubmit(CONTESTANT, contestA, problem, 10))
                 .contains("You are not a contestant.");
-        assertThat(checker.canSubmit(CONTESTANT, contestB, contestantProblem))
+        assertThat(checker.canSubmit(CONTESTANT, contestB, problem, 10))
                 .contains("Contest has not started yet.");
-        assertThat(checker.canSubmit(CONTESTANT, contestBFinished, contestantProblem))
+        assertThat(checker.canSubmit(CONTESTANT, contestBFinished, problem, 10))
                 .contains("Contest is over.");
-        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, contestantProblemClosed))
+        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, problemClosed, 10))
                 .contains("Problem is closed.");
-        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, contestantProblemLimitReached))
+        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, problemLimitReached, 10L))
                 .contains("Submissions limit has been reached.");
-        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, contestantProblemNoLimit))
+        assertThat(checker.canSubmit(CONTESTANT, contestBStarted, problemNoLimit, 10))
                 .isEmpty();
     }
 }

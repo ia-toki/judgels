@@ -4,6 +4,8 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.sandalphon.api.submission.Submission;
@@ -74,6 +76,14 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
                 .containerJid(contestB.getJid())
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
+
+        assertThat(store.getTotalSubmissions(contestA.getJid(), "userJid1", "problemJid1")).isEqualTo(2);
+        assertThat(store.getTotalSubmissions(contestA.getJid(), "userJid1", "problemJid2")).isEqualTo(0);
+        assertThat(store.getTotalSubmissionsMap(
+                contestA.getJid(),
+                "userJid2",
+                ImmutableSet.of("problemJid1", "problemJid2", "problemJid3")))
+                .isEqualTo(ImmutableMap.of("problemJid1", 1L, "problemJid2", 1L, "problemJid3", 0L));
 
         assertThat(store.getSubmissions(contestA.getJid(), empty(), empty(), empty()).getPage())
                 .containsExactly(submission4, submission3, submission2, submission1);

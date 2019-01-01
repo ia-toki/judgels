@@ -3,22 +3,19 @@ import * as React from 'react';
 
 import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
 import { contest } from 'fixtures/state';
-import { ContestContestantProblem, ContestProblem, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
+import { ContestProblem, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
 
-import { ContestContestantProblemCard, ContestContestantProblemCardProps } from './ContestContestantProblemCard';
+import { ContestProblemCard, ContestProblemCardProps } from './ContestProblemCard';
 
-describe('ContestContestantProblemCard', () => {
-  let wrapper: ShallowWrapper<ContestContestantProblemCardProps>;
+describe('ContestProblemCard', () => {
+  let wrapper: ShallowWrapper<ContestProblemCardProps>;
 
   const render = (problem: ContestProblem) => {
-    const contestantProblem: ContestContestantProblem = {
-      problem,
-      totalSubmissions: 10,
-    };
+    const totalSubmissions = 10;
     const problemName = 'The Problem';
 
-    const props = { contest, contestantProblem, problemName };
-    wrapper = shallow(<ContestContestantProblemCard {...props} />);
+    const props = { contest, problem, problemName, totalSubmissions };
+    wrapper = shallow(<ContestProblemCard {...props} />);
   };
 
   test('problem name', () => {

@@ -7,10 +7,11 @@ import judgels.sandalphon.api.problem.ProblemInfo;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestContestantProblemsResponse.class)
-public interface ContestContestantProblemsResponse {
-    List<ContestContestantProblem> getData();
+@JsonDeserialize(as = ImmutableContestProblemsResponse.class)
+public interface ContestProblemsResponse {
+    List<ContestProblem> getData();
     Map<String, ProblemInfo> getProblemsMap();
+    Map<String, Long> getTotalSubmissionsMap();
 
-    class Builder extends ImmutableContestContestantProblemsResponse.Builder {}
+    class Builder extends ImmutableContestProblemsResponse.Builder {}
 }

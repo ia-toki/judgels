@@ -1,6 +1,5 @@
 package judgels.uriel.contest.problem;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
@@ -10,22 +9,18 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
-import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
-import judgels.uriel.persistence.ContestSubmissionDao;
 
 public class ContestProblemStore {
     private final ContestProblemDao problemDao;
-    private final ContestSubmissionDao submissionDao;
 
     @Inject
-    public ContestProblemStore(ContestProblemDao problemDao, ContestSubmissionDao submissionDao) {
+    public ContestProblemStore(ContestProblemDao problemDao) {
         this.problemDao = problemDao;
-        this.submissionDao = submissionDao;
     }
 
     public void upsertProblem(String contestJid, ContestProblemData data) {
@@ -53,36 +48,15 @@ public class ContestProblemStore {
                 .map(ContestProblemStore::fromModel);
     }
 
-    public Optional<ContestContestantProblem> getContestantProblem(
-            String contestJid,
-            String userJid,
-            String problemJid) {
-
-        return problemDao.selectByContestJidAndProblemJid(contestJid, problemJid)
-                .map(model -> contestantProblemFromModel(model, userJid));
-    }
-
-    public Optional<ContestContestantProblem> getContestantProblemByAlias(
-            String contestJid,
-            String userJid,
-            String problemAlias) {
-
+    public Optional<ContestProblem> getProblemByAlias(String contestJid, String problemAlias) {
         return problemDao.selectByContestJidAndProblemAlias(contestJid, problemAlias)
-                .map(model -> contestantProblemFromModel(model, userJid));
+                .map(ContestProblemStore::fromModel);
     }
 
-    public List<ContestContestantProblem> getContestantProblems(String contestJid, String userJid) {
-        List<ContestProblem> problems = Lists.transform(
+    public List<ContestProblem> getProblems(String contestJid) {
+        return Lists.transform(
                 problemDao.selectAllByContestJid(contestJid, createOptions()),
                 ContestProblemStore::fromModel);
-
-        Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
-        Map<String, Long> submissionCounts = submissionDao.selectCounts(contestJid, userJid, problemJids);
-        return Lists.transform(problems, problem ->
-                new ContestContestantProblem.Builder()
-                        .problem(problem)
-                        .totalSubmissions(submissionCounts.getOrDefault(problem.getProblemJid(), 0L))
-                        .build());
     }
 
     public List<String> getProblemJids(String contestJid) {
@@ -121,15 +95,6 @@ public class ContestProblemStore {
                 .alias(model.alias)
                 .status(ContestProblemStatus.valueOf(model.status))
                 .submissionsLimit(model.submissionsLimit)
-                .build();
-    }
-
-    private ContestContestantProblem contestantProblemFromModel(ContestProblemModel model, String userJid) {
-        long totalSubmissions = submissionDao.selectCounts(model.contestJid, userJid, ImmutableSet.of(model.problemJid))
-                .getOrDefault(model.problemJid, 0L);
-        return new ContestContestantProblem.Builder()
-                .problem(fromModel(model))
-                .totalSubmissions(totalSubmissions)
                 .build();
     }
 }

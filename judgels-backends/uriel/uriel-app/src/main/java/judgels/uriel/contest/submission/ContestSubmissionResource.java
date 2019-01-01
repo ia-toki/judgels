@@ -45,7 +45,6 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
-import judgels.uriel.api.contest.problem.ContestContestantProblem;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import judgels.uriel.api.contest.submission.ContestSubmissionService;
@@ -223,9 +222,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         String gradingLanguage = checkNotNull(parts.getField("gradingLanguage"), "gradingLanguage").getValue();
 
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        ContestContestantProblem contestantProblem =
-                checkFound(problemStore.getContestantProblem(contestJid, actorJid, problemJid));
-        checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, contestantProblem));
+        ContestProblem problem = checkFound(problemStore.getProblem(contestJid, problemJid));
+        long totalSubmissions = submissionStore.getTotalSubmissions(contestJid, actorJid, problemJid);
+        checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, totalSubmissions));
 
         StyleModuleConfig styleConfig = moduleStore.getStyleModuleConfig(contestJid);
         LanguageRestriction contestGradingLanguageRestriction = styleConfig.getGradingLanguageRestriction();

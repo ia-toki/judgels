@@ -17,28 +17,25 @@ export interface ContestProblem {
   submissionsLimit: number;
 }
 
-export interface ContestContestantProblem {
-  problem: ContestProblem;
-  totalSubmissions: number;
-}
-
-export interface ContestContestantProblemsResponse {
-  data: ContestContestantProblem[];
+export interface ContestProblemsResponse {
+  data: ContestProblem[];
   problemsMap: { [problemJid: string]: ProblemInfo };
+  totalSubmissionsMap: { [problemJid: string]: number };
 }
 
-export interface ContestContestantProblemWorksheet {
+export interface ContestProblemWorksheet {
   defaultLanguage: string;
   languages: string[];
-  contestantProblem: ContestContestantProblem;
+  problem: ContestProblem;
+  totalSubmissions: number;
   worksheet: ProblemWorksheet;
 }
 
 const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/problems`;
 
 export const contestProblemAPI = {
-  getMyProblems: (token: string, contestJid: string): Promise<ContestContestantProblemsResponse> => {
-    return get(`${baseURL(contestJid)}/mine`, token);
+  getProblems: (token: string, contestJid: string): Promise<ContestProblemsResponse> => {
+    return get(baseURL(contestJid), token);
   },
 
   getProblemWorksheet: (
@@ -46,7 +43,7 @@ export const contestProblemAPI = {
     contestJid: string,
     problemAlias: string,
     language?: string
-  ): Promise<ContestContestantProblemWorksheet> => {
+  ): Promise<ContestProblemWorksheet> => {
     const params = stringify({ language });
     return get(`${baseURL(contestJid)}/${problemAlias}/worksheet?${params}`, token);
   },

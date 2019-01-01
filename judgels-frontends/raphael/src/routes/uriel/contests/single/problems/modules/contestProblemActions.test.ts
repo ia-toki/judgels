@@ -1,5 +1,5 @@
 import { contestJid, sessionState, token } from 'fixtures/state';
-import { ContestContestantProblemsResponse, ContestContestantProblemWorksheet } from 'modules/api/uriel/contestProblem';
+import { ContestProblemsResponse, ContestProblemWorksheet } from 'modules/api/uriel/contestProblem';
 import { AppState } from 'modules/store';
 
 import { contestProblemActions } from './contestProblemActions';
@@ -24,7 +24,7 @@ describe('contestProblemActions', () => {
     const doGetMyProblems = async () => getMyProblems(contestJid)(dispatch, getState, { contestProblemAPI });
 
     beforeEach(async () => {
-      const problems = {} as ContestContestantProblemsResponse;
+      const problems = {} as ContestProblemsResponse;
       contestProblemAPI.getMyProblems.mockReturnValue(problems);
 
       await doGetMyProblems();
@@ -41,7 +41,7 @@ describe('contestProblemActions', () => {
       getProblemWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
 
     beforeEach(async () => {
-      const worksheet = {} as ContestContestantProblemWorksheet;
+      const worksheet = {} as ContestProblemWorksheet;
       contestProblemAPI.getProblemWorksheet.mockReturnValue(worksheet);
 
       await doGetProblemWorksheet();

@@ -3,29 +3,29 @@ import * as React from 'react';
 
 import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestContestantProblem, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
+import { ContestProblem, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
 
-import './ContestContestantProblemCard.css';
+import './ContestProblemCard.css';
 
-export interface ContestContestantProblemCardProps {
+export interface ContestProblemCardProps {
   contest: Contest;
-  contestantProblem: ContestContestantProblem;
+  problem: ContestProblem;
   problemName: string;
+  totalSubmissions: number;
 }
 
-export class ContestContestantProblemCard extends React.PureComponent<ContestContestantProblemCardProps> {
+export class ContestProblemCard extends React.PureComponent<ContestProblemCardProps> {
   render() {
-    const { problem } = this.props.contestantProblem;
-    const { contest, problemName } = this.props;
+    const { contest, problem, problemName } = this.props;
 
     return (
       <ContentCardLink to={`/contests/${contest.slug}/problems/${problem.alias}`}>
-        <div className="contestant-problem-card__name">
+        <div className="contest-problem-card__name">
           <span data-key="name">
             {problem.alias}. {problemName}
           </span>
         </div>
-        <div data-key="status" className="contestant-problem-card__status secondary-info">
+        <div data-key="status" className="contest-problem-card__status secondary-info">
           {this.renderStatus()}
         </div>
         <div className="clearfix" />
@@ -34,7 +34,7 @@ export class ContestContestantProblemCard extends React.PureComponent<ContestCon
   }
 
   private renderStatus = () => {
-    const { problem, totalSubmissions } = this.props.contestantProblem;
+    const { problem, totalSubmissions } = this.props;
     if (problem.status === ContestProblemStatus.Closed) {
       return <Tag intent={Intent.DANGER}>CLOSED</Tag>;
     }

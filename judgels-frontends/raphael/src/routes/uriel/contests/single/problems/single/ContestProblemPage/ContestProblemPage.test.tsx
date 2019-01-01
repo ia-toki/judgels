@@ -28,15 +28,13 @@ describe('ContestProblemPage', () => {
     contestProblemActions = {
       getProblemWorksheet: jest.fn().mockReturnValue(() =>
         Promise.resolve({
-          contestantProblem: {
-            problem: {
-              problemJid,
-              alias: 'C',
-              status: ContestProblemStatus.Open,
-              submissionsLimit: 0,
-            },
-            totalSubmissions: 2,
+          problem: {
+            problemJid,
+            alias: 'C',
+            status: ContestProblemStatus.Open,
+            submissionsLimit: 0,
           },
+          totalSubmissions: 2,
           worksheet: {
             statement: {
               name: 'Problem',

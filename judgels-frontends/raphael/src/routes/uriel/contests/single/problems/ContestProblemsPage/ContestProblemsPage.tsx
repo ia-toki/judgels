@@ -8,28 +8,24 @@ import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
 } from 'components/StatementLanguageWidget/StatementLanguageWidget';
 import { Contest } from 'modules/api/uriel/contest';
-import {
-  ContestContestantProblem,
-  ContestContestantProblemsResponse,
-  ContestProblemStatus,
-} from 'modules/api/uriel/contestProblem';
+import { ContestProblem, ContestProblemsResponse, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { consolidateLanguages } from 'modules/api/sandalphon/language';
 import { getProblemName } from 'modules/api/sandalphon/problem';
 import { AppState } from 'modules/store';
 
-import { ContestContestantProblemCard } from '../ContestContestantProblemCard/ContestContestantProblemCard';
+import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestProblemActions as injectedContestProblemActions } from '../modules/contestProblemActions';
 
 export interface ContestProblemsPageProps {
   contest: Contest;
   statementLanguage: string;
-  onGetMyProblems: (contestJid: string) => Promise<ContestContestantProblemsResponse>;
+  onGetMyProblems: (contestJid: string) => Promise<ContestProblemsResponse>;
 }
 
 interface ContestProblemsPageState {
-  response?: ContestContestantProblemsResponse;
+  response?: ContestProblemsResponse;
   defaultLanguage?: string;
   uniqueLanguages?: string[];
 }
@@ -96,7 +92,7 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
       return <LoadingState />;
     }
 
-    const { data: problems } = response;
+    const { data: problems, totalSubmissionsMap } = response;
 
     if (problems.length === 0) {
       return (
@@ -108,35 +104,33 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
 
     return (
       <div>
-        {this.renderOpenProblems(problems.filter(p => p.problem.status === ContestProblemStatus.Open))}
-        {this.renderClosedProblems(problems.filter(p => p.problem.status === ContestProblemStatus.Closed))}
+        {this.renderOpenProblems(problems.filter(p => p.status === ContestProblemStatus.Open), totalSubmissionsMap)}
+        {this.renderClosedProblems(problems.filter(p => p.status === ContestProblemStatus.Closed), totalSubmissionsMap)}
       </div>
     );
   };
 
-  private renderOpenProblems = (contestantProblems: ContestContestantProblem[]) => {
-    return <div>{this.renderFilteredProblems(contestantProblems)}</div>;
+  private renderOpenProblems = (problems: ContestProblem[], totalSubmissionsMap) => {
+    return <div>{this.renderFilteredProblems(problems, totalSubmissionsMap)}</div>;
   };
 
-  private renderClosedProblems = (contestantProblems: ContestContestantProblem[]) => {
+  private renderClosedProblems = (problems: ContestProblem[], totalSubmissionsMap) => {
     return (
       <div>
-        {contestantProblems.length !== 0 && <hr />}
-        {this.renderFilteredProblems(contestantProblems)}
+        {problems.length !== 0 && <hr />}
+        {this.renderFilteredProblems(problems, totalSubmissionsMap)}
       </div>
     );
   };
 
-  private renderFilteredProblems = (contestantProblems: ContestContestantProblem[]) => {
-    return contestantProblems.map(contestantProblem => (
-      <ContestContestantProblemCard
-        key={contestantProblem.problem.problemJid}
+  private renderFilteredProblems = (problems: ContestProblem[], totalSubmissionsMap) => {
+    return problems.map(problem => (
+      <ContestProblemCard
+        key={problem.problemJid}
         contest={this.props.contest}
-        contestantProblem={contestantProblem}
-        problemName={getProblemName(
-          this.state.response!.problemsMap[contestantProblem.problem.problemJid],
-          this.state.defaultLanguage!
-        )}
+        problem={problem}
+        problemName={getProblemName(this.state.response!.problemsMap[problem.problemJid], this.state.defaultLanguage!)}
+        totalSubmissions={totalSubmissionsMap[problem.problemJid]}
       />
     ));
   };
