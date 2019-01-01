@@ -26,7 +26,7 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     }
 
     @Override
-    public Optional<ContestProblemModel> selectUsedByContestJidAndProblemJid(String contestJid, String problemJid) {
+    public Optional<ContestProblemModel> selectByContestJidAndProblemJid(String contestJid, String problemJid) {
         return selectByFilter(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
                 .putColumnsEq(ContestProblemModel_.problemJid, problemJid)
@@ -35,7 +35,7 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     }
 
     @Override
-    public Optional<ContestProblemModel> selectUsedByContestJidAndProblemAlias(String contestJid, String problemAlias) {
+    public Optional<ContestProblemModel> selectByContestJidAndProblemAlias(String contestJid, String problemAlias) {
         return selectByFilter(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
                 .putColumnsEq(ContestProblemModel_.alias, problemAlias)
@@ -44,7 +44,7 @@ public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel
     }
 
     @Override
-    public List<ContestProblemModel> selectAllUsedByContestJid(String contestJid, SelectionOptions options) {
+    public List<ContestProblemModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestProblemModel>()
                 .putColumnsEq(ContestProblemModel_.contestJid, contestJid)
                 .putColumnsIn(ContestProblemModel_.status, ImmutableSet.of(OPEN.name(), CLOSED.name()))

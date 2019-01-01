@@ -141,7 +141,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
             userJidsSortedByUsername = Lists.newArrayList(userJids);
 
-            problemJidsSortedByAlias = problemStore.getUsedProblemJids(contestJid);
+            problemJidsSortedByAlias = problemStore.getProblemJids(contestJid);
             problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
         } else {
             userJidsSortedByUsername = Collections.emptyList();
