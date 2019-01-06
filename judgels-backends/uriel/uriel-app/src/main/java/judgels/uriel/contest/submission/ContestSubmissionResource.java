@@ -161,6 +161,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
                 .canSupervise(canSupervise)
+                .canManage(submissionRoleChecker.canManage(actorJid, contest))
                 .userJids(userJidsSortedByUsername)
                 .problemJids(problemJidsSortedByAlias)
                 .build();

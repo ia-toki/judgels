@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestSubmissionConfig.class)
 public interface ContestSubmissionConfig {
     boolean getCanSupervise();
+    boolean getCanManage();
     List<String> getUserJids();
     List<String> getProblemJids();
 
