@@ -14,7 +14,7 @@ describe('contestProblemActions', () => {
     dispatch = jest.fn();
 
     contestProblemAPI = {
-      getMyProblems: jest.fn(),
+      getProblems: jest.fn(),
       getProblemWorksheet: jest.fn(),
     };
   });
@@ -25,13 +25,13 @@ describe('contestProblemActions', () => {
 
     beforeEach(async () => {
       const problems = {} as ContestProblemsResponse;
-      contestProblemAPI.getMyProblems.mockReturnValue(problems);
+      contestProblemAPI.getProblems.mockReturnValue(problems);
 
       await doGetMyProblems();
     });
 
     it('calls API to get my problems', () => {
-      expect(contestProblemAPI.getMyProblems).toHaveBeenCalledWith(token, contestJid);
+      expect(contestProblemAPI.getProblems).toHaveBeenCalledWith(token, contestJid);
     });
   });
 
