@@ -39,4 +39,22 @@ export const contestSubmissionActions = {
       dispatch(push(`/contests/${contestSlug}/submissions`));
     };
   },
+
+  regradeSubmissions: (submissionJids: string[]) => {
+    return async (dispatch, getState, { contestSubmissionAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await contestSubmissionAPI.regradeSubmissions(token, submissionJids);
+
+      toastActions.showSuccessToast('Regrade request submitted.');
+    };
+  },
+
+  regradeAllSubmissions: (contestJid: string, userJid?: string, problemJid?: string) => {
+    return async (dispatch, getState, { contestSubmissionAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await contestSubmissionAPI.regradeAllSubmissions(token, contestJid, userJid, problemJid);
+
+      toastActions.showSuccessToast('Regrade request submitted.');
+    };
+  },
 };
