@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { Required } from 'components/forms/validations';
+import { Required, Max100Lines } from 'components/forms/validations';
 import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
 
 export interface AdminAddFormData {
@@ -19,7 +19,7 @@ const AdminAddForm = (props: AdminAddFormProps) => {
     label: 'Usernames',
     labelHelper: '(one username per line, max 100 users)',
     rows: 20,
-    validate: [Required],
+    validate: [Required, Max100Lines],
     autoFocus: true,
   };
 

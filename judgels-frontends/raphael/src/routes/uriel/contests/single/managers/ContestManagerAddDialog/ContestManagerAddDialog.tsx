@@ -117,8 +117,8 @@ export class ContestManagerAddDialog extends React.Component<
   private addManagers = async (data: ContestManagerAddFormData) => {
     const usernames = data.usernames
       .split('\n')
-      .filter(s => s.length > 0)
-      .map(s => s.trim());
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
     const response = await this.props.onUpsertManagers(this.props.contest.jid, usernames);
     if (usernames.length !== Object.keys(response.insertedManagerProfilesMap).length) {
       this.setState({ submitted: { usernames, response } });

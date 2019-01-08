@@ -29,6 +29,15 @@ export const MaxFileSize20MB = (value: File) => {
   return value && value.size <= 20 * 1024 * 1024 ? undefined : 'File size must be at most 20 MB';
 };
 
+export const Max100Lines = value => {
+  return value
+    .split('\n')
+    .map(s => s.trim())
+    .filter(s => s.length > 0).length <= 100
+    ? undefined
+    : 'Max 100 lines';
+};
+
 export function CompatibleFilenameExtensionForGradingLanguage(value: File, { gradingLanguage }) {
   if (!gradingLanguage || !value) {
     return undefined;

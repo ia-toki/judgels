@@ -131,8 +131,8 @@ export class ContestSupervisorAddDialog extends React.Component<
   private addSupervisors = async (dataForm: ContestSupervisorAddFormData) => {
     const usernames = dataForm.usernames
       .split('\n')
-      .filter(s => s.length > 0)
-      .map(s => s.trim());
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
     const data: ContestSupervisorUpsertData = {
       usernames,
       managementPermissions: this.getPermissionList(dataForm.managementPermissions),

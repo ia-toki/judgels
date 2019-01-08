@@ -119,8 +119,8 @@ export class ContestContestantAddDialog extends React.Component<
   private addContestants = async (data: ContestContestantAddFormData) => {
     const usernames = data.usernames
       .split('\n')
-      .filter(s => s.length > 0)
-      .map(s => s.trim());
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
     const response = await this.props.onUpsertContestants(this.props.contest.jid, usernames);
     if (usernames.length !== Object.keys(response.insertedContestantProfilesMap).length) {
       this.setState({ submitted: { usernames, response } });

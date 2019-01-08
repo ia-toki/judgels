@@ -112,8 +112,8 @@ export class AdminAddDialog extends React.Component<AdminAddDialogProps, AdminAd
   private addAdmins = async (data: AdminAddFormData) => {
     const usernames = data.usernames
       .split('\n')
-      .filter(s => s.length > 0)
-      .map(s => s.trim());
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
     const response = await this.props.onUpsertAdmins(usernames);
     if (usernames.length !== Object.keys(response.insertedAdminProfilesMap).length) {
       this.setState({ submitted: { usernames, response } });

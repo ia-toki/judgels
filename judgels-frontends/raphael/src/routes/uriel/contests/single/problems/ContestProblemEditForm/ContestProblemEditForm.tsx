@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
+import { Required, Max100Lines } from 'components/forms/validations';
 
 import { ValidProblemsSetData } from '../modules/contestProblemValidations';
 
@@ -20,7 +21,7 @@ const ContestProblemEditForm = (props: ContestProblemEditFormProps) => {
     label: 'Problems',
     labelHelper: '(one problem per line, max 100 problems)',
     rows: 10,
-    validate: [ValidProblemsSetData],
+    validate: [Required, Max100Lines, ValidProblemsSetData],
     autoFocus: true,
   };
 
