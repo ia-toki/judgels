@@ -19,6 +19,7 @@ const AdminAddForm = (props: AdminAddFormProps) => {
     label: 'Usernames',
     labelHelper: '(one username per line, max 100 users)',
     rows: 20,
+    isCode: true,
     validate: [Required, Max100Lines],
     autoFocus: true,
   };

@@ -21,6 +21,7 @@ const ContestProblemEditForm = (props: ContestProblemEditFormProps) => {
     label: 'Problems',
     labelHelper: '(one problem per line, max 100 problems)',
     rows: 10,
+    isCode: true,
     validate: [Required, Max100Lines, ValidProblemsSetData],
     autoFocus: true,
   };

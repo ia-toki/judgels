@@ -50,6 +50,7 @@ class ContestSupervisorAddForm extends React.Component<ContestSupervisorAddFormP
       label: 'Usernames',
       labelHelper: '(one username per line, max 100 users)',
       rows: 8,
+      isCode: true,
       validate: [Required, Max100Lines],
       autoFocus: true,
     };
