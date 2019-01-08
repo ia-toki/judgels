@@ -29,6 +29,13 @@ test('Username', () => {
   expect(Username('_fus4.r')).toBeUndefined();
 });
 
+test('Alias', () => {
+  expect(Slug('fusharfusharfusharfushar')).toBeTruthy();
+  expect(Slug(' A ')).toBeTruthy();
+  expect(Slug('A.')).toBeTruthy();
+  expect(Slug('A-1')).toBeUndefined();
+});
+
 test('Slug', () => {
   expect(Slug('fu')).toBeTruthy();
   expect(Slug('fusharfusharfusharfushar')).toBeTruthy();

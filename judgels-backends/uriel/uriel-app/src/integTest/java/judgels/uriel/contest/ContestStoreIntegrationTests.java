@@ -1,6 +1,6 @@
 package judgels.uriel.contest;
 
-import static judgels.uriel.api.contest.ContestErrors.CONTEST_SLUG_ALREADY_EXISTS;
+import static judgels.uriel.api.contest.ContestErrors.SLUG_ALREADY_EXISTS;
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.ALL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -84,7 +84,7 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
 
         assertThatThrownBy(() -> store.createContest(new ContestCreateData.Builder().slug("contest-d").build()))
                 .isInstanceOf(ServiceException.class)
-                .hasMessageContaining(CONTEST_SLUG_ALREADY_EXISTS.name());
+                .hasMessageContaining(SLUG_ALREADY_EXISTS.name());
 
         adminRoleStore.upsertAdmin(ADMIN);
         moduleStore.upsertRegistrationModule(contestD.getJid());
@@ -107,7 +107,7 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
 
         assertThatThrownBy(() -> store.createContest(new ContestCreateData.Builder().slug("contest-a").build()))
                 .isInstanceOf(ServiceException.class)
-                .hasMessageContaining(CONTEST_SLUG_ALREADY_EXISTS.name());
+                .hasMessageContaining(SLUG_ALREADY_EXISTS.name());
 
         store.updateContest(contestA.getJid(), new ContestUpdateData.Builder().name("Contest A").build());
 
@@ -115,7 +115,7 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
                 contestA.getJid(),
                 new ContestUpdateData.Builder().slug("contest-b").build()))
                 .isInstanceOf(ServiceException.class)
-                .hasMessageContaining(CONTEST_SLUG_ALREADY_EXISTS.name());
+                .hasMessageContaining(SLUG_ALREADY_EXISTS.name());
     }
 
     private List<Contest> getContests(String userJid) {

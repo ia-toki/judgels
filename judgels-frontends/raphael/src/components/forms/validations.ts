@@ -12,6 +12,9 @@ export const NonnegativeNumber = value => (+value >= 0 ? undefined : 'Must be a 
 export const Slug = value =>
   /^[a-zA-Z0-9-]{3,20}$/.test(value) ? undefined : 'Must contain between 3 and 20 alphanumeric characters or dashes';
 
+export const Alias = value =>
+  /^[a-zA-Z0-9-]{1,20}$/.test(value) ? undefined : 'Must contain between 1 and 20 alphanumeric characters or dashes';
+
 export const EmailAddress = value =>
   /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(value) ? undefined : 'Invalid email address';
 

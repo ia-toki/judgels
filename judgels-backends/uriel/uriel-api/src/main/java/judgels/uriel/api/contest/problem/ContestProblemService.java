@@ -20,8 +20,7 @@ public interface ContestProblemService {
     @PUT
     @Path("/")
     @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    ContestProblemsSetResponse setProblems(
+    void setProblems(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             List<ContestProblemData> data);

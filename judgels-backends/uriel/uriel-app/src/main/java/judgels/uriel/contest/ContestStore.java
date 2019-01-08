@@ -111,7 +111,7 @@ public class ContestStore {
 
     public Contest createContest(ContestCreateData contestCreateData) {
         if (contestDao.selectBySlug(contestCreateData.getSlug()).isPresent()) {
-            throw ContestErrors.contestSlugAlreadyExists(contestCreateData.getSlug());
+            throw ContestErrors.slugAlreadyExists(contestCreateData.getSlug());
         }
 
         ContestModel model = new ContestModel();
@@ -131,7 +131,7 @@ public class ContestStore {
                 String newSlug = contestUpdateData.getSlug().get();
                 if (model.slug == null || !model.slug.equals(newSlug)) {
                     if (contestDao.selectBySlug(newSlug).isPresent()) {
-                        throw ContestErrors.contestSlugAlreadyExists(newSlug);
+                        throw ContestErrors.slugAlreadyExists(newSlug);
                     }
                 }
             }

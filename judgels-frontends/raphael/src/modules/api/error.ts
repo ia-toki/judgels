@@ -25,11 +25,13 @@ export class UnauthorizedError {
 export class ForbiddenError {
   name = 'ForbiddenError';
   message: string;
+  parameters: any;
   stack?: string;
 
   constructor(message?: SerializableError) {
     const error = new Error(message && message.errorName);
     this.stack = error.stack;
+    this.parameters = (message && message.parameters) || {};
     this.message = error.message;
   }
 }
@@ -60,4 +62,5 @@ export class RemoteError {
 
 export interface SerializableError {
   errorName: string;
+  parameters?: object;
 }

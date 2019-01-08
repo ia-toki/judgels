@@ -16,6 +16,7 @@ import com.palantir.conjure.java.api.errors.ErrorType;
 import java.util.List;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestErrors;
 import org.junit.jupiter.api.Test;
 
 class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
@@ -26,16 +27,13 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
         Contest contest = createContestWithRoles("contest");
 
         // as manager
-
-        ContestProblemsSetResponse setResponse =
-                problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
-                        new ContestProblemData.Builder()
-                            .alias("A")
-                            .slug(PROBLEM_1_SLUG)
-                            .status(OPEN)
-                            .submissionsLimit(0)
-                            .build()));
-        assertThat(setResponse.getSetSlugs()).containsOnly(PROBLEM_1_SLUG);
+        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+                new ContestProblemData.Builder()
+                    .alias("A")
+                    .slug(PROBLEM_1_SLUG)
+                    .status(OPEN)
+                    .submissionsLimit(0)
+                    .build()));
 
         List<ContestProblemData> data = ImmutableList.of(
                 new ContestProblemData.Builder()
@@ -56,8 +54,23 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .status(ContestProblemStatus.CLOSED)
                         .submissionsLimit(0)
                         .build());
-        setResponse = problemService.setProblems(MANAGER_HEADER, contest.getJid(), data);
-        assertThat(setResponse.getSetSlugs()).containsOnly(PROBLEM_1_SLUG, PROBLEM_2_SLUG);
+
+        assertThatRemoteExceptionThrownBy(() -> problemService.setProblems(MANAGER_HEADER, contest.getJid(), data))
+                .isGeneratedFromErrorType(ContestErrors.PROBLEM_SLUGS_NOT_ALLOWED);
+
+        problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
+                new ContestProblemData.Builder()
+                        .alias("A")
+                        .slug(PROBLEM_1_SLUG)
+                        .status(OPEN)
+                        .submissionsLimit(10)
+                        .build(),
+                new ContestProblemData.Builder()
+                        .alias("C")
+                        .slug(PROBLEM_2_SLUG)
+                        .status(ContestProblemStatus.CLOSED)
+                        .submissionsLimit(0)
+                        .build()));
 
         ContestProblemsResponse response = problemService.getProblems(of(MANAGER_HEADER), contest.getJid());
         assertThat(response.getData()).containsOnly(

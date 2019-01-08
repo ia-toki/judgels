@@ -5,8 +5,8 @@ import static judgels.sandalphon.SandalphonUtils.combineLanguageRestrictions;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
@@ -24,13 +24,13 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemConfig;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.api.contest.problem.ContestProblemWorksheet;
 import judgels.uriel.api.contest.problem.ContestProblemsResponse;
-import judgels.uriel.api.contest.problem.ContestProblemsSetResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.submission.ContestSubmissionStore;
@@ -73,7 +73,7 @@ public class ContestProblemResource implements ContestProblemService {
 
     @Override
     @UnitOfWork
-    public ContestProblemsSetResponse setProblems(
+    public void setProblems(
             AuthHeader authHeader,
             String contestJid,
             List<ContestProblemData> data) {
@@ -85,7 +85,7 @@ public class ContestProblemResource implements ContestProblemService {
         Set<String> aliases = data.stream().map(ContestProblemData::getAlias).collect(Collectors.toSet());
         Set<String> slugs = data.stream().map(ContestProblemData::getSlug).collect(Collectors.toSet());
 
-        checkArgument(data.size() <= 100, "Cannot add more than 100 problems.");
+        checkArgument(data.size() <= 100, "Cannot set more than 100 problems.");
         checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
 
@@ -94,22 +94,24 @@ public class ContestProblemResource implements ContestProblemService {
                 actorJid,
                 slugs);
 
-        ImmutableList.Builder<ContestProblem> setData = ImmutableList.builder();
-        for (ContestProblemData problem : data) {
-            if (slugToJidMap.containsKey(problem.getSlug())) {
-                setData.add(new ContestProblem.Builder()
+        Set<String> notAllowedSlugs = data.stream()
+                .map(ContestProblemData::getSlug)
+                .filter(slug -> !slugToJidMap.containsKey(slug))
+                .collect(Collectors.toSet());
+
+        if (!notAllowedSlugs.isEmpty()) {
+            throw ContestErrors.problemSlugsNotAllowed(notAllowedSlugs);
+        }
+
+        List<ContestProblem> setData = Lists.transform(data, problem ->
+                new ContestProblem.Builder()
                         .alias(problem.getAlias())
                         .problemJid(slugToJidMap.get(problem.getSlug()))
                         .status(problem.getStatus())
                         .submissionsLimit(problem.getSubmissionsLimit())
                         .build());
-            }
-        }
 
-        problemStore.setProblems(contestJid, setData.build());
-        return new ContestProblemsSetResponse.Builder()
-                .setSlugs(slugToJidMap.keySet())
-                .build();
+        problemStore.setProblems(contestJid, setData);
     }
 
     @Override
