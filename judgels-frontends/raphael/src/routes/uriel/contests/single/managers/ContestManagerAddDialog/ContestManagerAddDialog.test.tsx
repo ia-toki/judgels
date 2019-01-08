@@ -9,7 +9,7 @@ import { contest, contestJid } from 'fixtures/state';
 
 import { ContestManagerAddDialog, ContestManagerAddDialogProps } from './ContestManagerAddDialog';
 
-describe('AdminAddDialog', () => {
+describe('ContestManagerAddDialog', () => {
   let onUpsertManagers: jest.Mock<any>;
   let wrapper: ReactWrapper<any, any>;
 
