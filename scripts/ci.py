@@ -38,7 +38,9 @@ MODULES = OrderedDict([
     (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
 
     (':gabriel:gabriel-api', set()),
-    (':gabriel', {':gabriel:gabriel-api'}),
+    (':gabriel:gabriel-engine-api', {':gabriel:gabriel-api'}),
+    (':gabriel:gabriel-engines', {':gabriel:gabriel-engine-api'}),
+    (':gabriel', {':gabriel:gabriel-engines', 'gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
 
     (':raphael:package.json', set()),
     (':raphael', {':raphael:package.json'})

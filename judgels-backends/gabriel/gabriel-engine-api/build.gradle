@@ -1,0 +1,7 @@
+dependencies {
+    api project(':gabriel:gabriel-api')
+
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+}

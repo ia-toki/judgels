@@ -1,0 +1,10 @@
+dependencies {
+    implementation project(':gabriel:gabriel-engine-api')
+
+    implementation "com.google.guava:guava:$guavaVersion"
+    implementation "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
+
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+}
