@@ -1,0 +1,83 @@
+@import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement
+@import play.i18n.Messages
+@import com.google.common.base.Joiner
+@import org.iatoki.judgels.gabriel.GradingLanguageRegistry
+@import org.iatoki.judgels.gabriel.OutputOnlyMagic
+@import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig
+@import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyGradingConfig
+
+@(postSubmitUri: String, statement: ProblemStatement, blackBoxGradingConfig: BlackBoxGradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
+
+@if(play.mvc.Controller.flash("submissionError") != null) {
+    <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionError")}</div>
+}
+
+@if(reasonNotAllowedToSubmit != null) {
+    <div class="alert alert-danger" role="alert">@{reasonNotAllowedToSubmit}</div>
+}
+
+<h2 class="text-center">@statement.getTitle</h2>
+
+<p class="text-center">
+    Time limit:
+    @if(blackBoxGradingConfig.getTimeLimitInMilliseconds % 1000 == 0) {
+        @{blackBoxGradingConfig.getTimeLimitInMilliseconds / 1000} s
+    }else {
+        @blackBoxGradingConfig.getTimeLimitInMilliseconds ms
+    }
+</p>
+<p class="text-center">
+    Memory limit:
+    @if(blackBoxGradingConfig.getMemoryLimitInKilobytes % 1024 == 0) {
+        @{blackBoxGradingConfig.getMemoryLimitInKilobytes / 1024} MB
+    }else {
+        @blackBoxGradingConfig.getMemoryLimitInKilobytes KB
+    }
+</p>
+
+<p>&nbsp;</p>
+
+<div class="content-text">
+    @Html(statement.getText)
+</div>
+
+<hr />
+<h4>Submit Solution</h4>
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@if(reasonNotAllowedToSubmit == null) {
+    @b3.form(play.api.mvc.Call("POST", postSubmitUri), 'enctype->"multipart/form-data") {
+
+        @b3.hidden("engine", engine)
+        @b3.hidden("sourceFileFieldKeys", Joiner.on(",").join(blackBoxGradingConfig.getSourceFileFields.keySet))
+
+        @for((k, v) <- blackBoxGradingConfig.getSourceFileFields) {
+            <div class="form-group">
+                <label for="@k" class="col-md-3">@v</label>
+                <div class="col-md-9">
+                    <input type="file" name="@k">
+                </div>
+            </div>
+        }
+
+        @if(blackBoxGradingConfig.isInstanceOf[OutputOnlyGradingConfig]) {
+            <input type="hidden" name="language" value="@OutputOnlyMagic.KEY"/>
+        }else {
+            <div class="form-group">
+                <label for="language" class="col-sm-3 control-label">Language</label>
+                <div class="col-sm-9">
+                    <select name="language">
+                    @for((k, v) <- GradingLanguageRegistry.getInstance().getGradingLanguages) {
+                        @if(allowedGradingLanguageNames.contains(k)) {
+                            <option value="@k">@v</option>
+                        }
+                    }
+                    </select>
+                </div>
+            </div>
+        }
+
+        @b3.submit('class -> "btn btn-primary") { @Messages.get("Submit") }
+    }
+}

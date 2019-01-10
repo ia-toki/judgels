@@ -1,0 +1,534 @@
+@import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.BatchWithSubtasksGradingConfigForm
+@import play.i18n.Messages
+@import play.api.mvc.Call
+@import org.iatoki.judgels.FileInfo
+
+@(batchWithSubtasksGradingConfigForm: Form[BatchWithSubtasksGradingConfigForm], postUpdateGradingConfigCall: Call, testDataFiles: List[FileInfo], helperFiles: List[FileInfo])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+<script type="text/javascript" src="@controllers.routes.Assets.at("lib/jquery/jquery.min.js")"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    var testGroupTemplate = $('#test-group-template');
+    var testCaseTemplate = $('#test-case-template');
+    var testGroupSubtaskTemplate = $('#test-group-subtask-template');
+
+    var testGroups = [];
+    var newTestGroupAddButton = $('#test-group-add');
+
+    var sampleTestCaseTemplate = $('#sample-test-case-template');
+    var sampleTestCaseSubtaskContainerTemplate = $('#sample-test-case-subtask-container-template');
+    var sampleTestCaseSubtaskTemplate = $('#sample-test-case-subtask-template');
+
+    var sampleTestDataContainer = $('#sample-test-data');
+    var sampleTestDataSubtasks = $('#sample-test-data-subtasks');
+
+    var sampleTestData = {
+        container: sampleTestDataContainer,
+        newSampleTestCase: {
+            inSelect: sampleTestDataContainer.find('select').first(),
+            outSelect: sampleTestDataContainer.find('select').last(),
+            addButton: sampleTestDataContainer.find('a').last()
+        },
+        sampleTestCases: []
+    };
+
+    function addNewSampleTestCase(inputVal, outputVal) {
+        if (!inputVal || !outputVal) {
+            alert("You don't have any test data files");
+            return;
+        }
+
+        var container = sampleTestCaseTemplate.clone().removeAttr('id');
+        var inInput = container.find('input').first();
+        var outInput = container.find('input').last();
+        var removeButton = container.find('a').last();
+        var subtaskContainer = sampleTestCaseSubtaskContainerTemplate.clone().removeAttr('id');
+
+        // remove checkbox template
+        subtaskContainer.find('div').last().empty();
+
+        var caseNo = sampleTestData.sampleTestCases.length;
+
+        // Update input values
+        inInput
+            .prop('name', 'sampleTestCaseInputs[' + caseNo + ']')
+            .val(inputVal);
+
+        outInput
+            .prop('name', 'sampleTestCaseOutputs[' + caseNo + ']')
+            .val(outputVal);
+
+        // Update remove test case button
+        removeButton.on('click', function() {
+            removeSampleTestCase(caseNo);
+            return false;
+        });
+
+
+        // Add subtasks
+        var subtaskCheckboxes = [];
+        for (var subtaskNo = 0; subtaskNo < @batchWithSubtasksGradingConfigForm.get.subtaskPoints.size(); subtaskNo++) {
+            var subtaskCheckbox = sampleTestCaseSubtaskTemplate.clone().removeAttr('id');
+            subtaskCheckbox.find('input')
+                .val(subtaskNo + 1)
+                .prop('name', 'sampleTestCaseSubtaskIds[' + caseNo + '][' + subtaskNo + ']')
+                .prop('checked', false);
+
+            subtaskCheckbox.find('span').html(subtaskNo + 1);
+
+            subtaskContainer.find('div').last().append(subtaskCheckbox);
+            subtaskCheckboxes.push(subtaskCheckbox);
+        }
+
+
+        var sampleTestCase = {
+            container: container,
+            inInput: inInput,
+            outInput: outInput,
+            removeButton: removeButton,
+
+            subtask: {
+                container: subtaskContainer,
+                checkboxes: subtaskCheckboxes
+            }
+        };
+
+        sampleTestData.sampleTestCases.push(sampleTestCase);
+
+        // Append this sample test case
+        container.insertBefore(sampleTestData.container.find('tr').last());
+        sampleTestDataSubtasks.append(subtaskContainer);
+
+        // Refresh all subtasks numbering
+        refreshSampleTestData();
+
+        container.show();
+        subtaskContainer.show();
+    }
+
+
+    function removeSampleTestCase(caseNo) {
+        sampleTestData.sampleTestCases[caseNo].container.remove();
+        sampleTestData.sampleTestCases[caseNo].subtask.container.remove();
+        sampleTestData.sampleTestCases.splice(caseNo, 1);
+        refreshSampleTestData();
+    }
+
+    function refreshSampleTestData() {
+        var sampleTestCasesCount = sampleTestData.sampleTestCases.length;
+        for (var caseNo = 0; caseNo < sampleTestCasesCount; caseNo++) {
+            var sampleTestCase = sampleTestData.sampleTestCases[caseNo];
+            sampleTestCase.inInput.prop('name', 'sampleTestCaseInputs[' + caseNo + ']');
+            sampleTestCase.outInput.prop('name', 'sampleTestCaseOutputs[' + caseNo + ']');
+
+            (function(caseNo) {
+                sampleTestCase.removeButton.off('click').on('click', function() {
+                    removeSampleTestCase(caseNo);
+                    return false ;
+                });
+            })(caseNo);
+
+            sampleTestCase.subtask.container.find('p').html('Assign sample test case ' + (caseNo + 1) + ' to subtasks:');
+
+            for (var subtaskNo = 0; subtaskNo < sampleTestCase.subtask.checkboxes.length; subtaskNo++) {
+                var subtaskCheckbox = sampleTestCase.subtask.checkboxes[subtaskNo];
+                subtaskCheckbox.find('input').prop('name', 'sampleTestCaseSubtaskIds[' + caseNo + '][' + subtaskNo + ']');
+            }
+        }
+    }
+
+
+    function addNewTestCase(groupNo, inputVal, outputVal) {
+        if (!inputVal || !outputVal) {
+            alert("You don't have any test data files");
+            return;
+        }
+        var testGroup = testGroups[groupNo];
+
+        var container = testCaseTemplate.clone().removeAttr('id');
+        var inInput = container.find('input').first();
+        var outInput = container.find('input').last();
+        var removeButton = container.find('a').last();
+
+        var caseNo = testGroup.testCases.length;
+
+        // Update input values
+        inInput
+                .prop('name', 'testCaseInputs[' + groupNo + '][' + caseNo + ']')
+                .val(inputVal);
+
+        outInput
+                .prop('name', 'testCaseOutputs[' + groupNo + '][' + caseNo + ']')
+                .val(outputVal);
+
+        // Update remove test case button
+        removeButton.on('click', function() {
+            removeTestCase(groupNo, caseNo);
+            return false;
+        });
+
+        var testCase = {
+            container: container,
+            inInput: inInput,
+            outInput: outInput,
+            removeButton: removeButton
+        };
+
+        testGroup.testCases.push(testCase);
+
+        // Append this test case
+        testCase.container.insertBefore(testGroup.container.find('tr').last());
+    }
+
+    function removeTestCase(groupNo, caseNo) {
+        var testGroup = testGroups[groupNo];
+        testGroup.testCases[caseNo].container.remove();
+        testGroup.testCases.splice(caseNo, 1);
+        refreshTestGroup(testGroup, groupNo);
+    }
+
+    function addNewTestGroup() {
+        var groupNo = testGroups.length;
+
+        var container = testGroupTemplate.clone().removeAttr('id');
+        var newTestCaseInSelect = container.find('select').first();
+        var newTestCaseOutSelect = container.find('select').last();
+        var newTestCaseAddButton = container.find('a').last();
+        var removeButton = container.find('a').first();
+
+        // Remove test case template
+        container.find('tbody tr').first().remove();
+
+        // Remove test group subtask numbers template
+        container.find('div').last().empty();
+
+        // Add subtasks
+        var subtaskCheckboxes = [];
+        for (var subtaskNo = 0; subtaskNo < @batchWithSubtasksGradingConfigForm.get.subtaskPoints.size(); subtaskNo++) {
+            var subtaskCheckbox = testGroupSubtaskTemplate.clone().removeAttr('id');
+            subtaskCheckbox.find('input')
+                .val(subtaskNo + 1)
+                .prop('name', 'testGroupSubtaskIds[' + groupNo + '][' + subtaskNo + ']')
+                .prop('checked', false);
+            subtaskCheckbox.find('span').html(subtaskNo + 1);
+            container.find('div').last().append(subtaskCheckbox);
+            subtaskCheckboxes.push(subtaskCheckbox);
+        }
+
+        var testGroup = {
+            container: container,
+            newTestCase: {
+                inSelect: newTestCaseInSelect,
+                outSelect: newTestCaseOutSelect,
+                addButton: newTestCaseAddButton
+            },
+            testCases: [],
+            subtaskCheckboxes: subtaskCheckboxes,
+            removeButton: removeButton
+        };
+
+        testGroups.push(testGroup);
+
+        // Reset all numbering in this test group
+        refreshTestGroup(testGroup, groupNo);
+
+        // Insert this test group before the add button
+        container.insertBefore(newTestGroupAddButton);
+        container.show();
+    }
+
+    function refreshTestGroup(testGroup, groupNo) {
+        // Update test group title
+        testGroup.container.find('span').first().html('Test Group ' + (groupNo + 1));
+
+        // Update test case input names
+        var testCasesCount = testGroup.testCases.length;
+        for (var caseNo = 0; caseNo < testCasesCount; caseNo++) {
+            var testCase = testGroup.testCases[caseNo];
+            testCase.inInput.prop('name', 'testCaseInputs[' + groupNo + '][' + caseNo + ']');
+            testCase.outInput.prop('name', 'testCaseOutputs[' + groupNo + '][' + caseNo + ']');
+
+            (function(caseNo) {
+                testCase.removeButton.off('click').on('click', function() {
+                    removeTestCase(groupNo, caseNo) ;
+                    return false ;
+                });
+            })(caseNo);
+
+            for (var subtaskNo = 0; subtaskNo < testGroup.subtaskCheckboxes.length; subtaskNo++) {
+                var subtaskCheckbox = testGroup.subtaskCheckboxes[subtaskNo];
+                subtaskCheckbox.find('input').prop('name', 'testGroupSubtaskIds[' + groupNo + '][' + subtaskNo + ']');
+            }
+        }
+
+        // Update add test case button
+        testGroup.newTestCase.addButton.off('click').on('click', function() {
+            addNewTestCase(groupNo, testGroup.newTestCase.inSelect.val(), testGroup.newTestCase.outSelect.val());
+            return false;
+        });
+
+        testGroup.removeButton.off('click').on('click', function() {
+            removeTestGroup(groupNo);
+            return false;
+        });
+    }
+
+    function removeTestGroup(groupNo) {
+        var testGroup = testGroups[groupNo];
+        testGroup.container.remove();
+        testGroups.splice(groupNo, 1);
+
+        for (var i = groupNo; i < testGroups.length; i++) {
+            refreshTestGroup(testGroups[i], i);
+        }
+    }
+
+    function checkTestGroupSubtask(groupNo, subtaskNo) {
+        testGroups[groupNo].subtaskCheckboxes[subtaskNo ].find('input').prop('checked', true);
+    }
+
+    function checkSampleTestCaseSubtask(caseNo, subtaskNo) {
+        sampleTestData.sampleTestCases[caseNo].subtask.checkboxes[subtaskNo].find('input').prop('checked', true);
+    }
+
+    sampleTestData.newSampleTestCase.addButton.on('click', function() {
+        addNewSampleTestCase(sampleTestData.newSampleTestCase.inSelect.val(), sampleTestData.newSampleTestCase.outSelect.val());
+        return false;
+    });
+
+    newTestGroupAddButton.on('click', function() {
+        addNewTestGroup();
+    });
+
+    @for(i <- 0 until batchWithSubtasksGradingConfigForm.get.sampleTestCaseInputs.size) {
+        addNewSampleTestCase('@batchWithSubtasksGradingConfigForm.get.sampleTestCaseInputs.get(i)', '@batchWithSubtasksGradingConfigForm.get.sampleTestCaseOutputs.get(i)');
+        @for(j <- 0 until batchWithSubtasksGradingConfigForm.get.sampleTestCaseSubtaskIds.get(i).size) {
+            @if(batchWithSubtasksGradingConfigForm.get.sampleTestCaseSubtaskIds.get(i).get(j) != null) {
+                checkSampleTestCaseSubtask(@i, @j);
+            }
+        }
+    }
+
+    @for(i <- 0 until batchWithSubtasksGradingConfigForm.get.testCaseInputs.size) {
+        addNewTestGroup();
+        @for(j <- 0 until batchWithSubtasksGradingConfigForm.get.testCaseInputs.get(i).size) {
+            addNewTestCase(@i, '@batchWithSubtasksGradingConfigForm.get.testCaseInputs.get(i).get(j)', '@batchWithSubtasksGradingConfigForm.get.testCaseOutputs.get(i).get(j)');
+        }
+        @for(j <- 0 until batchWithSubtasksGradingConfigForm.get.testGroupSubtaskIds.get(i).size) {
+            @if(batchWithSubtasksGradingConfigForm.get.testGroupSubtaskIds.get(i).get(j) != null) {
+                checkTestGroupSubtask(@i, @j);
+            }
+        }
+    }
+});
+
+</script>
+
+@b3.form(postUpdateGradingConfigCall) {
+    @helper.CSRF.formField
+
+
+    @b3.inputWrapped("timeLimit", batchWithSubtasksGradingConfigForm("timeLimit"), '_label -> "Time Limit") { input =>
+        <div class="input-group">
+            @input
+            <div class="input-group-addon">milliseconds</div>
+        </div>
+    }
+    @b3.inputWrapped("memoryLimit", batchWithSubtasksGradingConfigForm("memoryLimit"), '_label -> "Memory Limit") { input =>
+        <div class="input-group">
+            @input
+            <div class="input-group-addon">kilobytes</div>
+        </div>
+    }
+
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-3">
+            <label class="control-label">Sample Test Data</label>
+        </div>
+
+        <div class="col-md-9">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Sample Input</th>
+                                <th>Sample Output</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="sample-test-data">
+                            <tr id="sample-test-case-template" style="display: none">
+                                <td>
+                                    <input class="form-control input-sm" type="text" readonly="readonly" value="file_0_0.in" />
+                                </td>
+                                <td>
+                                    <input class="form-control input-sm" type="text" readonly="readonly" value="file_0_0.out" />
+                                </td>
+                                <td class="text-center">
+                                    <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+                                </td>
+                            </tr>
+
+                            <tr class="active">
+                                <td>
+                                    <select>
+                                    @for(file <- testDataFiles) {
+                                        <option value="@file.getName">@file.getName</option>
+                                    }
+                                    </select>
+                                </td>
+                                <td>
+                                    <select>
+                                    @for(file <- testDataFiles) {
+                                        <option value="@file.getName">@file.getName</option>
+                                    }
+                                    </select>
+                                </td>
+                                <td class="text-center">
+                                    <a href=""><span class="glyphicon glyphicon-plus"></span></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <hr />
+
+                    <div id="sample-test-data-subtasks">
+
+                        <div id="sample-test-case-subtask-container-template" style="display: none">
+                            <div>&nbsp;</div>
+                            <p>Assign sample test case #0 to subtasks:</p>
+                            <div>
+                                <label id="sample-test-case-subtask-template" class="checkbox-inline">
+                                    <input type="checkbox"> <span>0</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;">
+
+        <div class="col-md-3">
+            <label class="control-label">Test Data</label>
+        </div>
+
+        <div class="col-md-9">
+
+            <button id="test-group-add" class="btn btn-primary btn-xs" type="button">Add Test Group</button>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <label class="control-label">Subtasks</label>
+        </div>
+
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(i <- 0 until batchWithSubtasksGradingConfigForm.get.subtaskPoints.size) {
+                                <tr>
+                                    <td>
+                                    @{i+1}
+                                    </td>
+                                    <td>
+                                        @b3.text(batchWithSubtasksGradingConfigForm("subtaskPoints[" + i + "]"), '_label -> None)(b3.clear.fieldConstructor, implicitly[play.api.i18n.Messages])
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @b3.select(batchWithSubtasksGradingConfigForm("customScorer"), helperFiles.map(f => f.getName -> f.getName).toSeq ++ Seq("(none)" -> "(None)"), '_label -> "Custom Scorer")
+
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}
+
+
+<div id="test-group-template" class="panel panel-default" style="display: none">
+    <div class="panel-heading">
+        <span>Test Group 0</span> <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+    </div>
+    <div class="panel-body">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Input</th>
+                    <th>Output</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="test-case-template">
+                    <td>
+                        <input class="form-control input-sm" type="text" readonly="readonly" value="file_0_0.in" />
+                    </td>
+                    <td>
+                        <input class="form-control input-sm" type="text" readonly="readonly" value="file_0_0.out" />
+                    </td>
+                    <td class="text-center">
+                        <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+                    </td>
+                </tr>
+
+                <tr class="active">
+
+                    <td>
+                        <select>
+                            @for(file <- testDataFiles) {
+                                <option value="@file.getName">@file.getName</option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <select>
+                            @for(file <- testDataFiles) {
+                                <option value="@file.getName">@file.getName</option>
+                            }
+                        </select>
+                    </td>
+                    <td class="text-center">
+                        <a href=""><span class="glyphicon glyphicon-plus"></span></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr />
+
+
+        <p>Assign to subtasks:</p>
+        <div>
+            <label id="test-group-subtask-template" class="checkbox-inline">
+                <input type="checkbox"> <span>0</span>
+            </label>
+        </div>
+    </div>
+</div>

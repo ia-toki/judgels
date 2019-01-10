@@ -1,0 +1,334 @@
+@import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.InteractiveGradingConfigForm
+@import play.i18n.Messages
+@import play.api.mvc.Call
+@import org.iatoki.judgels.FileInfo
+
+@(interactiveGradingConfigForm: Form[InteractiveGradingConfigForm], postUpdateGradingConfigCall: Call, testDataFiles: List[FileInfo], helperFiles: List[FileInfo])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+<script type="text/javascript" src="@controllers.routes.Assets.at("lib/jquery/jquery.min.js")"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    var sampleTestCaseTemplate = $('#sample-test-case-template');
+    var sampleTestDataContainer = $('#sample-test-data');
+
+    var sampleTestData = {
+        container: sampleTestDataContainer,
+        newSampleTestCase: {
+            inSelect: sampleTestDataContainer.find('select').first(),
+            outSelect: sampleTestDataContainer.find('select').last(),
+            addButton: sampleTestDataContainer.find('a').last()
+        },
+        sampleTestCases: []
+    };
+
+    var testCaseTemplate = $('#test-case-template');
+    var testDataContainer = $('#test-data');
+
+    var testData = {
+        container: testDataContainer,
+        newTestCase: {
+            inSelect: testDataContainer.find('select').first(),
+            outSelect: testDataContainer.find('select').last(),
+            addButton: testDataContainer.find('a').last()
+        },
+        testCases: []
+    };
+
+    function addNewSampleTestCase(inputVal, outputVal) {
+        if (!inputVal) {
+            alert("You don't have any test data files");
+            return;
+        }
+
+        var container = sampleTestCaseTemplate.clone().removeAttr('id');
+        var inInput = container.find('input').first();
+        var outInput = container.find('input').last();
+        var removeButton = container.find('a').last();
+
+        var caseNo = sampleTestData.sampleTestCases.length;
+
+        // Update input values
+        inInput
+            .prop('name', 'sampleTestCaseInputs[' + caseNo + ']')
+            .val(inputVal);
+
+        outInput
+            .prop('name', 'sampleTestCaseOutputs[' + caseNo + ']')
+            .val(outputVal);
+
+        // Update remove test case button
+        removeButton.on('click', function() {
+            removeSampleTestCase(caseNo);
+            return false;
+        });
+
+
+        var sampleTestCase = {
+            container: container,
+            inInput: inInput,
+            outInput: outInput,
+            removeButton: removeButton
+        };
+
+        sampleTestData.sampleTestCases.push(sampleTestCase);
+
+        // Append this sample test case
+        container.insertBefore(sampleTestData.container.find('tr').last());
+
+        refreshSampleTestData();
+
+        container.show();
+    }
+
+
+    function removeSampleTestCase(caseNo) {
+        sampleTestData.sampleTestCases[caseNo].container.remove();
+        sampleTestData.sampleTestCases.splice(caseNo, 1);
+        refreshSampleTestData();
+    }
+
+    function refreshSampleTestData() {
+        var sampleTestCasesCount = sampleTestData.sampleTestCases.length;
+        for (var caseNo = 0; caseNo < sampleTestCasesCount; caseNo++) {
+            var sampleTestCase = sampleTestData.sampleTestCases[caseNo];
+            sampleTestCase.inInput.prop('name', 'sampleTestCaseInputs[' + caseNo + ']');
+            sampleTestCase.outInput.prop('name', 'sampleTestCaseOutputs[' + caseNo + ']');
+
+            (function(caseNo) {
+                sampleTestCase.removeButton.off('click').on('click', function() {
+                    removeSampleTestCase(caseNo);
+                    return false ;
+                });
+            })(caseNo);
+        }
+    }
+
+    function addNewTestCase(inputVal, outputVal) {
+        if (!inputVal) {
+            alert("You don't have any test data files");
+            return;
+        }
+
+        var container = testCaseTemplate.clone().removeAttr('id');
+        var inInput = container.find('input').first();
+        var outInput = container.find('input').last();
+        var removeButton = container.find('a').last();
+
+        var caseNo = testData.testCases.length;
+
+        // Update input values
+        inInput
+                .prop('name', 'testCaseInputs[0][' + caseNo + ']')
+                .val(inputVal);
+
+        outInput
+                .prop('name', 'testCaseOutputs[0][' + caseNo + ']')
+                .val(outputVal);
+
+        // Update remove test case button
+        removeButton.on('click', function() {
+            removeTestCase(caseNo);
+            return false;
+        });
+
+        var testCase = {
+            container: container,
+            inInput: inInput,
+            outInput: outInput,
+            removeButton: removeButton
+        };
+
+        testData.testCases.push(testCase);
+
+        // Append this test case
+        container.insertBefore(testData.container.find('tr').last());
+
+        refreshTestData();
+
+        container.show();
+    }
+
+    function removeTestCase(caseNo) {
+        testData.testCases[caseNo].container.remove();
+        testData.testCases.splice(caseNo, 1);
+        refreshTestData();
+    }
+
+    function refreshTestData() {
+        var testCasesCount = testData.testCases.length;
+        for (var caseNo = 0; caseNo < testCasesCount; caseNo++) {
+            var testCase = testData.testCases[caseNo];
+            testCase.inInput.prop('name', 'testCaseInputs[0][' + caseNo + ']');
+            testCase.outInput.prop('name', 'testCaseOutputs[0][' + caseNo + ']');
+
+            (function(caseNo) {
+                testCase.removeButton.off('click').on('click', function() {
+                    removeTestCase(caseNo) ;
+                    return false ;
+                });
+            })(caseNo);
+        }
+    }
+
+    sampleTestData.newSampleTestCase.addButton.on('click', function() {
+        addNewSampleTestCase(sampleTestData.newSampleTestCase.inSelect.val(), sampleTestData.newSampleTestCase.outSelect.val());
+        return false;
+    });
+
+    testData.newTestCase.addButton.on('click', function() {
+        addNewTestCase(testData.newTestCase.inSelect.val(), testData.newTestCase.outSelect.val());
+        return false;
+    });
+
+    @for(i <- 0 until interactiveGradingConfigForm.get.sampleTestCaseInputs.size) {
+        addNewSampleTestCase('@interactiveGradingConfigForm.get.sampleTestCaseInputs.get(i)', '@interactiveGradingConfigForm.get.sampleTestCaseOutputs.get(i)');
+    }
+
+    @for(i <- 0 until interactiveGradingConfigForm.get.testCaseInputs.size) {
+        @for(j <- 0 until interactiveGradingConfigForm.get.testCaseInputs.get(i).size) {
+            addNewTestCase('@interactiveGradingConfigForm.get.testCaseInputs.get(i).get(j)', '@interactiveGradingConfigForm.get.testCaseOutputs.get(i).get(j)');
+        }
+    }
+});
+
+</script>
+
+@b3.form(postUpdateGradingConfigCall) {
+    @helper.CSRF.formField
+
+
+    @b3.inputWrapped("timeLimit", interactiveGradingConfigForm("timeLimit"), '_label -> "Time Limit") { input =>
+        <div class="input-group">
+            @input
+            <div class="input-group-addon">milliseconds</div>
+        </div>
+    }
+    @b3.inputWrapped("memoryLimit", interactiveGradingConfigForm("memoryLimit"), '_label -> "Memory Limit") { input =>
+        <div class="input-group">
+            @input
+            <div class="input-group-addon">kilobytes</div>
+        </div>
+    }
+
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-3">
+            <label class="control-label">Sample Test Data</label>
+        </div>
+
+        <div class="col-md-9">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Sample Input</th>
+                                <th style="display: none">Sample Output</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="sample-test-data">
+                            <tr id="sample-test-case-template" style="display: none">
+                                <td>
+                                    <input class="form-control input-sm" type="text" readonly="readonly" value="file_0_0.in" />
+                                </td>
+                                <td style="display: none">
+                                    <input class="form-control input-sm" type="text" readonly="readonly" value="file_0_0.out" />
+                                </td>
+                                <td class="text-center">
+                                    <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+                                </td>
+                            </tr>
+
+                            <tr class="active">
+                                <td>
+                                    <select>
+                                    @for(file <- testDataFiles) {
+                                        <option value="@file.getName">@file.getName</option>
+                                    }
+                                    </select>
+                                </td>
+                                <td style="display: none">
+                                    <select readonly="readonly">
+                                    </select>
+                                </td>
+                                <td class="text-center">
+                                    <a href=""><span class="glyphicon glyphicon-plus"></span></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-md-3">
+            <label class="control-label">Test Data</label>
+        </div>
+
+        <div class="col-md-9">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Input</th>
+                                <th style="display: none">Output</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="test-data">
+                            <tr id="test-case-template" style="display: none">
+                                <td>
+                                    <input class="form-control input-sm" type="text" readonly="readonly" value="file_0_0.in" />
+                                </td>
+                                <td style="display: none">
+                                    <input class="form-control input-sm" type="text" readonly="readonly" value="file_0_0.out" />
+                                </td>
+                                <td class="text-center">
+                                    <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+                                </td>
+                            </tr>
+
+                            <tr class="active">
+                                <td>
+                                    <select>
+                                    @for(file <- testDataFiles) {
+                                        <option value="@file.getName">@file.getName</option>
+                                    }
+                                    </select>
+                                </td>
+                                <td style="display: none">
+                                    <select>
+                                    </select>
+                                </td>
+                                <td class="text-center">
+                                    <a href=""><span class="glyphicon glyphicon-plus"></span></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @if(helperFiles.isEmpty) {
+        @b3.select(interactiveGradingConfigForm("communicator"), Seq("none" -> "(None yet - please add communicator as a helper file)"), '_label -> "Communicator")
+    }else {
+        @b3.select(interactiveGradingConfigForm("communicator"), helperFiles.map(f => f.getName -> f.getName).toSeq, '_label -> "Communicator")
+    }
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

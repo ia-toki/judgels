@@ -1,0 +1,6 @@
+package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
+
+public abstract class MultipleSourceFilesBlackBoxGradingConfigForm extends AbstractBlackBoxGradingConfigForm {
+
+    public String sourceFileFieldKeys;
+}
