@@ -1,0 +1,11 @@
+@import org.iatoki.judgels.play.InternalLink
+
+@(menus: List[InternalLink])
+
+<nav class="menu clearfix">
+    <ul class="nav nav-stacked">
+    @for(menu <- menus) {
+        <li role="presentation"><a href="@menu.getTarget">@menu.getLabel</a><div class="menu-arrow">&gt;</div></li>
+    }
+    </ul>
+</nav>

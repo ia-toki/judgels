@@ -1,0 +1,9 @@
+@import play.i18n.Messages
+
+@(scripts: List[Html])(content: Html)
+
+@content
+
+@for((script, index) <- scripts.zipWithIndex) {
+    @script
+}

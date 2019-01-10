@@ -1,0 +1,56 @@
+@import org.iatoki.judgels.play.template.InternalLink
+@import org.iatoki.judgels.play.template.base.html.flashMessagesView
+@import org.iatoki.judgels.play.template.base.html.screenControlsView
+@import org.iatoki.judgels.play.template.sidebar.html.menusView
+
+@(menus: List[InternalLink], upperWidgets: List[Html], lowerWidgets: List[Html], isSidebarOnTheLeft: Boolean, isSidebarVisible: Boolean)(content: Html)
+
+<div class="row content">
+    @if(isSidebarOnTheLeft) {
+        @if(isSidebarVisible) {
+            <div class="col-md-3">
+                <div class="sidebar clearfix">
+                    @for(widget <- upperWidgets) {
+                        @widget
+                    }
+                    @menusView(menus)
+                    @for(widget <- lowerWidgets) {
+                        @widget
+                    }
+                </div>
+            </div>
+        }
+        @if(isSidebarVisible) {
+            <div class="col-md-9">
+        } else {
+            <div class="col-md-12">
+        }
+                @screenControlsView()
+                @flashMessagesView()
+                @content
+            </div>
+    } else {
+        @if(isSidebarVisible) {
+            <div class="col-md-9">
+        } else {
+            <div class="col-md-12">
+        }
+                @screenControlsView()
+                @flashMessagesView()
+                @content
+            </div>
+        @if(isSidebarVisible) {
+            <div class="col-md-3 sidebar-wrapper">
+                <div class="sidebar r clearfix">
+                    @for(widget <- upperWidgets) {
+                        @widget
+                    }
+                    @menusView(menus)
+                    @for(widget <- lowerWidgets) {
+                        @widget
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

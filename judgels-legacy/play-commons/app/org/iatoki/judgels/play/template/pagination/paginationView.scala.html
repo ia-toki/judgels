@@ -1,0 +1,42 @@
+@import play.i18n.Messages
+@import play.api.mvc.Call
+@import org.iatoki.judgels.play.template.pagination.html.pageLinkBuilder
+@import org.iatoki.judgels.play.Page
+
+@(page: Page[_], orderBy: String, orderDir: String, filterString: String, listFunc: (scala.Long, String, String, String) =>Call)
+
+@newPageLink(newPageIndex: Long) = @{pageLinkBuilder(newPageIndex, null, orderDir, filterString, orderBy, listFunc)}
+
+<div class="showing">
+    <small>
+        @{Messages.get("commons.showing")} @{page.getCurrentFirstRowIndex + 1} - @{page.getCurrentLastRowIndex + 1} @Messages.get("commons.outOf") @page.getTotalRowsCount data.
+    </small>
+</div>
+
+<ul class="pagination pagination-sm">
+    @if(page.hasPreviousPage) {
+        <li><a href="@newPageLink(0L)">&laquo;</a></li>
+        <li><a href="@newPageLink(page.getPageIndex - 1)">&larr;</a></li>
+    } else {
+        <li class="disabled"><a>&laquo;</a></li>
+        <li class="disabled"><a>&larr;</a></li>
+    }
+
+    @for(i <- math.max(0, page.getPageIndex - 9) to page.getPageIndex - 1) {
+        <li><a href="@newPageLink(i)">@(i + 1)</a></li>
+    }
+
+    <li class="active"><a>@(page.getPageIndex + 1)</a></li>
+
+    @for(i <- page.getPageIndex + 1 to math.min(page.getTotalPagesCount - 1, page.getPageIndex + 9)) {
+        <li><a href="@newPageLink(i)">@(i + 1)</a></li>
+    }
+
+    @if(page.hasNextPage) {
+        <li><a href="@newPageLink(page.getPageIndex + 1)">&rarr;</a></li>
+        <li><a href="@newPageLink(page.getTotalPagesCount - 1)">&raquo;</a></li>
+    } else {
+        <li class="disabled"><a>&rarr;</a></li>
+        <li class="disabled"><a>&raquo;</a></li>
+    }
+</ul>

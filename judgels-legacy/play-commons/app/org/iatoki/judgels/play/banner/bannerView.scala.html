@@ -1,0 +1,15 @@
+@import org.iatoki.judgels.play.banner.BannerConfig
+
+@(bannerConfig: BannerConfig)
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-12">
+            <div class="box clearfix">
+                <div class="col-md-12">
+                    <a href="@bannerConfig.getLink" target="_blank"><img class="banner" src="@bannerConfig.getImageSrc" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

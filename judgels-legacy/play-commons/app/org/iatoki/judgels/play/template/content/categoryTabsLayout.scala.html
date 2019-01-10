@@ -1,0 +1,55 @@
+@import org.iatoki.judgels.play.template.InternalLink
+@import play.i18n.Messages
+
+@(tabs: List[InternalLink])(content: Html)
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+
+        <div class="collapse navbar-collapse" aria-expanded="true">
+            <ul class="nav navbar-nav">
+                @for((tab, index) <- tabs.zipWithIndex) {
+                    @if(tabs.size > 5 && index == 4) {
+                        <li role="presentation" class="visible-lg"><a href="@tab.getTarget">@tab.getLabel</a></li>
+                    } else {
+                        @if(tabs.size > 6 && index == 5) {
+                            <li class="dropdown visible-lg">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">@Messages.get("commons.more") <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="presentation"><a href="@tab.getTarget">@tab.getLabel</a></li>
+                        } else {
+                            <li role="presentation"><a href="@tab.getTarget">@tab.getLabel</a></li>
+                        }
+                        @if(tabs.size > 6 && index == tabs.size-1) {
+                                </ul>
+                            </li>
+                        }
+                    }
+                }
+                @for((tab, index) <- tabs.zipWithIndex) {
+                    @if(tabs.size > 5 && index == 4) {
+                        <li class="dropdown visible-md visible-sm">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">@Messages.get("commons.more") <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li role="presentation"><a href="@tab.getTarget">@tab.getLabel</a></li>
+                    } else {
+                        @if(index > 4) {
+                            <li role="presentation" class="visible-md visible-sm"><a href="@tab.getTarget">@tab.getLabel</a></li>
+                        }
+                    }
+                    @if(tabs.size > 5 && index == tabs.size-1) {
+                            </ul>
+                        </li>
+                    }
+                }
+                @for((tab, index) <- tabs.zipWithIndex) {
+                    @if(tabs.size > 5 && index >= 4) {
+                        <li role="presentation" class="visible-xs"><a href="@tab.getTarget">@tab.getLabel</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+@content

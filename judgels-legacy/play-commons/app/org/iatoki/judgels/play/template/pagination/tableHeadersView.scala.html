@@ -1,0 +1,27 @@
+@import play.api.mvc.Call
+@import org.iatoki.judgels.play.template.pagination.html.pageLinkBuilder
+
+@(pageIndex: Long, orderBy: String, orderDir: String, filterString: String, listFunc: (scala.Long, String, String, String) => Call, withActions: Boolean = true)(headers: scala.Tuple2[String, String]*)
+
+<thead>
+    <tr>
+        @for((header, i) <- headers.zipWithIndex) {
+            <th @if(i == 0) { class="table-col-id" } >
+                <a href="@pageLinkBuilder(pageIndex, orderBy, orderDir, filterString, header._1, listFunc)">
+                    @header._2
+                    @if(orderBy == header._1) {
+                        @if(orderDir == "asc") {
+                            <span class="glyphicon glyphicon-arrow-up"></span>
+                        } else {
+                            <span class="glyphicon glyphicon-arrow-down"></span>
+                        }
+                    }
+                </a>
+            </th>
+        }
+
+        @if(withActions) {
+            <th class="table-col-actions"></th>
+        }
+    </tr>
+</thead>

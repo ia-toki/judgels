@@ -1,0 +1,14 @@
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file           controllers.Assets.at(path="/public", file)
+GET         /vassets/*file          controllers.Assets.versioned(path="/public", file: Asset)
+
+# Home page
+GET        /favicon                 @org.iatoki.judgels.play.JudgelsController.favicon()
+GET        /logo                    @org.iatoki.judgels.play.JudgelsController.logo()
+GET        /coloredLogo             @org.iatoki.judgels.play.JudgelsController.coloredLogo()
+GET        /language/:lang          @org.iatoki.judgels.play.JudgelsController.changeLanguage(lang: String)
+GET        /showSidebar             @org.iatoki.judgels.play.JudgelsController.showSidebar()
+GET        /hideSidebar             @org.iatoki.judgels.play.JudgelsController.hideSidebar()
+GET        /enterFullscreen         @org.iatoki.judgels.play.JudgelsController.enterFullscreen()
+GET        /exitFullscreen          @org.iatoki.judgels.play.JudgelsController.exitFullscreen()
+GET        /checkHealth             @org.iatoki.judgels.play.JudgelsController.checkHealth()

@@ -1,0 +1,19 @@
+@import org.iatoki.judgels.play.InternalLink
+
+@(actions: List[InternalLink], top: Boolean)(content: Html)
+
+@if(!top) {
+    @content
+}
+
+<p></p>
+
+@for(action <- actions) {
+    <a class="btn btn-primary" href="@action.getTarget">@action.getLabel</a>
+}
+
+<p></p>
+
+@if(top) {
+    @content
+}

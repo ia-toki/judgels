@@ -1,0 +1,17 @@
+@import play.i18n.Messages
+
+@(registerUrl: String, loginUrl: String)
+
+<div class="avatar clearfix">
+    <div class="col-md-12 clearfix">
+        <p>@Messages.get("guest.text.hello")</p>
+        <div class="clearfix">
+            <div class="pull-left">
+                <a class="btn btn-default" href="@registerUrl" target="_blank">@Messages.get("guest.button.register")</a>
+            </div>
+            <div class="pull-right">
+                <a class="btn btn-primary" href="@loginUrl">@Messages.get("guest.button.logIn")</a>
+            </div>
+        </div>
+    </div>
+</div>

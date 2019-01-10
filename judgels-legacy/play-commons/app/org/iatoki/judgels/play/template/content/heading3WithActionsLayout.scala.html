@@ -1,0 +1,10 @@
+@import org.iatoki.judgels.play.template.InternalLink
+
+@(heading: String, actions: List[InternalLink])(content: Html)
+
+<div class="inline-headers">
+    <h3>@heading</h3>
+
+    @for(action <- actions){ <a class="btn btn-primary btn-sm" href="@action.getTarget">@action.getLabel</a> }
+</div>
+@content

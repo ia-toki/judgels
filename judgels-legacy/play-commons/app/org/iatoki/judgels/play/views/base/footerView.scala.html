@@ -1,0 +1,24 @@
+@import java.text.SimpleDateFormat
+@import java.util.Date
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.JudgelsPlayProperties
+@import org.apache.commons.lang3.StringUtils;
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-left first">
+                    <div class="copyright">
+                        &#169; @(new SimpleDateFormat("yyyy").format(new Date())) @JudgelsPlayProperties.getInstance.getAppCopyright
+                    </div>
+                </div>
+                <div class="pull-right first">
+                    <div class="copyright">
+                        @Messages.get("commons.poweredBy") <a href="@JudgelsPlayProperties.getInstance.getGithubLink" target="_blank">@Messages.get("commons.judgels") @StringUtils.capitalize(JudgelsPlayProperties.getInstance.getAppName) @JudgelsPlayProperties.getInstance.getAppVersion</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

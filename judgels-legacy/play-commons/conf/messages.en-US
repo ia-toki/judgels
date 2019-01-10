@@ -1,0 +1,153 @@
+commons.header.text.serverTime                  = Server Time
+
+commons.footer.text.poweredBy                   = Powered by
+commons.footer.text.judgels                     = Judgels
+
+commons.profile.text.edit                       = Edit
+commons.profile.text.logOut                     = Log Out
+
+commons.field.id                                = ID
+commons.field.jid                               = JID
+commons.field.secret                            = Secret
+commons.field.info                              = Info
+commons.field.value                             = Value
+commons.field.actions                           = Actions
+
+commons.button.new                              = New
+commons.button.new1                             = New {0}
+commons.button.edit                             = Edit
+commons.button.edit1                            = Edit {0}
+commons.button.view                             = View
+commons.button.save                             = Save Changes
+commons.button.search                           = Search
+commons.button.upload                           = Upload
+commons.button.download                         = Download
+commons.button.remove                           = Remove
+commons.button.delete                           = Delete
+commons.button.filter                           = Filter
+commons.button.add                              = Add
+commons.button.next                             = Next
+commons.button.enter                            = Enter
+commons.button.enable                           = Enable
+commons.button.disable                          = Disable
+commons.button.makeDefault                      = Make Default
+commons.button.backTo1                          = Back to {0}
+
+commons.text.view                               = View
+commons.text.list                               = List
+commons.text.list1                              = List {0}
+commons.text.new                                = New
+commons.text.new1                               = New {0}
+commons.text.edit                               = Edit
+commons.text.edit1                              = Edit {0}
+commons.delete.text.confirmation                = Are you sure you want to delete?
+
+commons.tab.more                                = More
+
+commons.pagination.text.dataCount               = Showing {0} out of {1} data
+
+commons.layout.tooltip.showSidebar              = Show sidebar
+commons.layout.tooltip.hideSidebar              = Hide sidebar
+commons.layout.tooltip.enterFullscreen          = Enter fullscreen
+commons.layout.tooltip.exitFullscreen           = Exit fullscreen
+
+commons.error.heading.pageNotFound              = Page Not Found
+commons.error.heading.entityNotFound            = Entity Not Found
+commons.error.heading.unsupportedOperation      = Unsupported Operation
+commons.error.text                              = Sorry, the page you are looking for doesn''t exist in the system.
+commons.error.text.entityNotFound               = Sorry, the {0} that you are looking for doesn''t exist in the system.
+commons.error.text.UnsupportedOperation         = Your action is not yet supported.
+
+commons.viewpoint.text.noViewpoint              = No viewpoint
+commons.viewpoint.button.viewAs                 = View As
+commons.viewpoint.button.resetViewpoint         = Reset Viewpoint
+
+commons.moment.locale                           = en
+
+guest.text.hello                                = Hello, guest.
+guest.button.register                           = Register
+guest.button.logIn                              = Log In
+
+client.field.name                               = Name
+client.field.secret                             = Secret
+
+client.text.clients                             = Clients
+client.text.list                                = Clients
+client.text.new                                 = New Client
+
+client.button.new                               = New Client
+
+
+
+
+# OLD VALUES
+
+commons.header.serverTime=Server Time
+
+commons.footer.aboutUs=About Us
+commons.footer.news=News
+commons.footer.contact=Contact
+
+commons.profile.edit=Edit
+commons.profile.logout=Log out
+
+commons.id=ID
+commons.jid=JID
+
+commons.create=Create New
+commons.view=View
+commons.update=Update
+commons.search=Search
+commons.upload=Upload
+commons.remove=Remove
+commons.delete=Delete
+
+commons.info=Info
+commons.value=Value
+
+commons.showing=Showing
+commons.outOf=out of
+
+commons.auth.login=Log In
+commons.auth.hello=Hello, guest. You are not logged in.
+commons.auth.loginWithTokiId=Log in with TOKI ID
+
+commons.more=More
+commons.filter=Filter
+commons.add=Add
+commons.next=Next
+commons.enter=Enter
+commons.enable=Enable
+commons.disable=Disable
+commons.makeDefault=Make Default
+
+commons.poweredBy=Powered by
+commons.judgels=Judgels
+
+commons.pageNotFound=Page Not Found
+commons.pageNotFound.message=Sorry, the page you are looking for doesn''t exist in the system.
+commons.entityNotFound=Entity Not Found
+commons.entityNotFound.message=that you are looking for doesn''t exist in the system.
+commons.unsupportedOperation=Unsupported Operation
+commons.unsupportedOperation.message=Your action is not yet supported.
+
+commons.actions=Actions
+commons.menu=Menu
+
+commons.sidebar.show=Show Sidebar
+commons.sidebar.hide=Hide Sidebar
+commons.fullscreen.enter=Enter Fullscreen
+commons.fullscreen.exit=Exit Fullscreen
+commons.viewMenu=Views Menu
+
+commons.noViewpoint=No Viewpoint
+commons.viewAs=View As
+commons.resetViewAs=Reset View
+
+commons.moment.locale=en
+commons.login=Login
+commons.register=Register
+commons.helloGuest=Hello, Guest
+
+commons.currentActiveUsers=Current Active Users
+commons.manage=Manage

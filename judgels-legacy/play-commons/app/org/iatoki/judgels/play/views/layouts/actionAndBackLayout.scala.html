@@ -1,0 +1,12 @@
+@import org.iatoki.judgels.play.InternalLink
+
+@(action: InternalLink, backAction: InternalLink)(content: Html)
+
+<p></p>
+
+<a class="btn btn-danger" href="@backAction.getTarget"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> @backAction.getLabel</a>
+<a class="btn btn-primary" href="@action.getTarget">@action.getLabel</a>
+
+<p></p>
+
+@content

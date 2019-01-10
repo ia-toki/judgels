@@ -1,0 +1,11 @@
+@import org.iatoki.judgels.play.InternalLink
+
+@(action: InternalLink)(content: Html)
+
+<p></p>
+
+<a class="btn btn-primary" href="@action.getTarget">@action.getLabel</a>
+
+<p></p>
+
+@content

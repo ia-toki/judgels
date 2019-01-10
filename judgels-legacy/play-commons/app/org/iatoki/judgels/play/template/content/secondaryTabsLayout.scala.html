@@ -1,0 +1,13 @@
+@import org.iatoki.judgels.play.template.InternalLink
+
+@(tabs: List[InternalLink])(content: Html)
+
+<ul class="nav nav-tabs">
+    @for(tab <- tabs) {
+        <li role="presentation"><a href="@tab.getTarget">@tab.getLabel</a></li>
+    }
+</ul>
+
+<br />
+
+@content

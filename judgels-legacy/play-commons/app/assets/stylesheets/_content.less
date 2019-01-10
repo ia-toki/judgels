@@ -1,0 +1,373 @@
+@import "_function";
+
+body {
+    color: @primary-font-color;
+    font-family: @primary-font;
+    font-size: @primary-font-size;
+    background-color: @background-color;
+}
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+input[type="text"], input[type="password"], textarea {
+    color: @primary-font-color;
+    .RoundBorders(@base-radius);
+}
+
+.lowercase {
+    text-transform: lowercase;
+}
+
+::-webkit-input-placeholder {
+    padding-left: 2px;
+    font-family: @primary-font;
+    font-size: @primary-font-size;
+}
+
+:-moz-placeholder {
+    padding-left: 2px;
+    font-family: @primary-font;
+    font-size: @primary-font-size;
+}
+
+::-moz-placeholder {
+    padding-left: 2px;
+    font-family: @primary-font;
+    font-size: @primary-font-size;
+}
+
+:-ms-input-placeholder {
+    padding-left: 2px;
+    font-family: @primary-font;
+    font-size: @primary-font-size;
+}
+.placeholder {
+    padding-top: 3px;
+    padding-left: 2px;
+    font-family: @primary-font;
+    font-size: @primary-font-size;
+}
+
+.panel-error {
+    display: none;
+}
+
+.panel-show {
+    display: block;
+}
+
+.help-inline {
+    color: red;
+}
+
+.form-horizontal .control-label{
+    text-align:left;
+}
+
+h2 {
+    font-family: @accent-font;
+}
+
+h3 {
+    font-family: @accent-font;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+h4 {
+    font-family: @accent-font;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.content {
+    padding-top: 15px;
+    width: 100%;
+    margin: 0;
+}
+
+.banner {
+    width: 100%;
+}
+
+.avatar {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background-color: @content-color;
+    border: 1px solid @accent-color;
+    .RoundBorders();
+}
+
+.avatar-picture {
+    height: 64px;
+    width: 64px;
+    border: 1px solid lighten(@accent-color, 10%);
+    .RoundBorders();
+}
+
+.avatar-username {
+    font-family: @accent-font;
+    color: @primary-font-color;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+.avatar-real-name {
+    font-family: @primary-font;
+    color: @primary-font-color;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.avatar-menu {
+    font-family: @primary-font;
+    color: @primary-font-color;
+    font-size: 10px;
+}
+
+.box {
+    margin-top: 15px;
+    padding: 10px 0;
+    background-color: @content-color;
+    border: 1px solid @accent-color;
+    .RoundBorders();
+}
+
+.box-alert {
+    margin-top: 15px;
+    .RoundBorders();
+}
+
+.box.no-margin {
+    margin: 0px;
+}
+
+.primary-content {
+    background-color: @content-color;
+    min-height: 624px;
+    border: 1px solid @accent-color;
+    .RoundBorders();
+}
+
+.primary-content:not(:only-child) {
+    margin-top: 15px;
+}
+
+.primary-content-breadcrumb {
+    margin: 15px 15px 0 15px;
+    border: 1px solid @accent-color;
+    background-color: @content-color;
+    .RoundBorders();
+}
+
+.primary-content-breadcrumb ol li a {
+    color: @primary-font-color;
+}
+
+ol.breadcrumb {
+    background-color: @content-color;
+    margin-bottom: 0;
+}
+
+.server-time {
+    margin: 8px 0;
+    color: @primary-font-color;
+    font-size: @primary-font-size;
+}
+
+.menu:not(:only-child) {
+    margin-top: 15px;
+}
+
+.sidebar-wrapper {
+    -webkit-transition: width 0.3s ease;
+    -moz-transition:    width 0.3s ease;
+    -o-transition:    width 0.3s ease;
+    transition:    width 0.3s ease;
+}
+
+.sidebar.r > .menu {
+    text-align: right;
+}
+
+.menu > .nav > li > ul {
+    margin-left: 278px;
+    margin-top: -54px;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+.menu > .nav > li > ul > li {
+    position: relative;
+}
+
+.menu > .nav li a {
+    display: block;
+    background-color: @content-color;
+    color: @primary-font-color;
+    font-size: 16px;
+    margin-bottom: 5px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: 1px solid @accent-color;
+    .RoundBorders();
+}
+
+.menu > .nav li.active {
+    background-color: transparent;
+    background-image: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu > .nav li > a:hover, .menu > .nav li > a:focus {
+    color: @brand-primary;
+    background-color: lighten(@accent-color, 10%);
+    text-decoration: none;
+}
+
+.menu > .nav li.active {
+    text-shadow: none;
+}
+
+.menu > .nav li.active > a {
+    color: @brand-primary;
+}
+
+.menu-arrow {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    line-height: 30px;
+    font-size: 22px;
+    text-align: center;
+    color: @accent-color;
+    background: @content-color center center no-repeat;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border: 1px solid @accent-color;
+    .RoundBorders(50%)
+}
+
+.sidebar.r > .menu > .nav > li > .menu-arrow {
+    left: 15px;
+}
+
+.navbar-header {
+    padding: 0 15px;
+}
+
+.collapse.navbar-collapse {
+    padding: 0;
+}
+
+.collapsing.navbar-collapse, .collapse.navbar-collapse.in {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.menu > .nav > li.active > .menu-arrow {
+    background: @brand-primary center center no-repeat !important;
+}
+
+ol.breadcrumb li {
+    margin-left: 0;
+}
+
+th {
+    font-family: @accent-font;
+    font-weight: bold;
+}
+
+.table-col-id {
+    width: 50px;
+}
+
+.table-col-actions {
+    width: 65px;
+}
+
+.username {
+    font-family: @accent-font;
+    font-weight: bold;
+}
+
+.user-real-name {
+    font-size: smaller;
+}
+
+.navbar.navbar-default:first-child {
+    margin-top: 15px;
+}
+
+.table-cell {
+    display: table-cell;
+}
+
+.inline-headers h2, .inline-headers h3, .inline-headers h4, .inline-headers h5, .inline-headers h6 {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+.inline-headers .btn {
+    margin-bottom: 10px;
+}
+.inline-headers .btn:first-of-type {
+    margin-left: 10px;
+}
+
+/* This is for displaying html body text */
+
+.content-text.scrollable {
+    height: 600px;
+    padding: 15px;
+    overflow-y: scroll;
+}
+
+.content-text table, .content-text th, .content-text td {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+.content-text th, .content-text td {
+    padding: 5px;
+}
+
+.content-text th {
+    font-family: @accent-font;
+    font-weight: bold;
+    background-color: #EEEEEE;
+}
+
+.content-text em {
+    font-style: italic;
+}
+
+.content-text strong {
+    font-family: @accent-font;
+}
+
+.content-text ol li, .content-text ul li {
+    margin-left: 25px;
+}
+
+.content-text ol.breadcrumb li {
+    margin-left: 0;
+}
+
+.content-text html, .content-text body {
+    height: 100%;
+    min-height: 100%;
+}
+
+.content-text blockquote {
+    font-size: @primary-font-size;
+}

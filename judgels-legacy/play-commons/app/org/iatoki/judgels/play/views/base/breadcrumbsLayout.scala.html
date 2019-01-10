@@ -1,0 +1,34 @@
+@import play.mvc.Http.Context
+@import org.iatoki.judgels.play.JudgelsPlayProperties
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.play.InternalLink
+@import org.iatoki.judgels.play.views.html.base.breadcrumbsView
+@import org.iatoki.judgels.play.views.html.bannerView
+
+@(locations: List[InternalLink])(content: Html)
+
+@if(Context.current().args.getOrDefault("breadcrumbs.isBefore", java.lang.Boolean.valueOf(true)) == true) {
+    @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
+        <div class="hidden">
+    }
+    @breadcrumbsView(locations)
+    @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
+        </div>
+    }
+    @if(JudgelsPlayProperties.getInstance().isUsingBanner()) {
+        @bannerView(JudgelsPlayProperties.getInstance().getBannerLink(), JudgelsPlayProperties.getInstance().getBannerImageSrc())
+    }
+    @content
+} else {
+    @if(JudgelsPlayProperties.getInstance().isUsingBanner()) {
+        @bannerView(JudgelsPlayProperties.getInstance().getBannerLink(), JudgelsPlayProperties.getInstance().getBannerImageSrc())
+    }
+    @content
+    @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
+        <div class="hidden">
+    }
+    @breadcrumbsView(locations)
+    @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
+        </div>
+    }
+}

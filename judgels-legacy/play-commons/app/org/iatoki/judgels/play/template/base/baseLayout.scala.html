@@ -1,0 +1,66 @@
+@import org.iatoki.judgels.play.controllers.ControllerUtils
+@import org.iatoki.judgels.play.IdentityUtils
+@import org.iatoki.judgels.play.general.GeneralConfig
+@import org.iatoki.judgels.play.google.analytics.GoogleAnalyticsConfig
+@import org.iatoki.judgels.play.seo.SeoConfig
+@import play.mvc.Http
+
+@(pageTitle: String, generalConfig: GeneralConfig, seoConfig: SeoConfig, googleAnalyticsConfig: GoogleAnalyticsConfig)(content: Html)
+
+<!DOCTYPE html>
+
+<html lang="@Http.Context.current().lang().code()">
+    <head itemscope itemtype="http://schema.org/WebSite">
+        <meta charset="UTF-8">
+        <meta name=viewport content="width=device-width, initial-scale=1">
+        @if(seoConfig != null) {
+            <meta name="keywords" content="@seoConfig.getMetaKeywords">
+            <meta name="description" content="@seoConfig.getMetaDescription">
+        }
+        <meta property="og:site_name" content="@(generalConfig.getCopyright + " " + generalConfig.getTitle)">
+        <meta property="og:title" content="@if(!pageTitle.isEmpty) { @pageTitle } else { @generalConfig.getTitle }">
+        <meta property="og:url" content="@ControllerUtils.getCurrentUrl(Http.Context.current().request())">
+        @if(seoConfig != null) {
+            <meta property="og:description" content="@seoConfig.getMetaDescription">
+        }
+        <meta property="og:locale" content="@Http.Context.current().lang().code()" />
+        <meta property="og:image" content="@(generalConfig.getCanonicalUrl + org.iatoki.judgels.play.routes.JudgelsController.coloredLogo())" />
+        <link rel="canonical" href="@generalConfig.getCanonicalUrl" itemprop="url">
+        <title itemprop='name'>@generalConfig.getTitle @if(!pageTitle.isEmpty) { - @pageTitle }</title>
+        <link rel="shortcut icon" type="image/ico" href='@org.iatoki.judgels.play.routes.JudgelsController.favicon()'>
+        <link rel="stylesheet" media="screen" href='@controllers.routes.Assets.versioned("stylesheets/main.css")'>
+        <script type="text/javascript" src="@controllers.routes.Assets.at("lib/requirejs/require.js")"></script>
+        <script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/playcommons/javascripts/settings.js")"></script>
+        <script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/playcommons/javascripts/form.js")"></script>
+    </head>
+    <body>
+        <div class="container-fluid">
+        @content
+        </div>
+        <script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/playcommons/javascripts/language.js")"></script>
+        <script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/playcommons/javascripts/active.js")"></script>
+        @if(googleAnalyticsConfig != null) {
+            <script>
+                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                    @if(IdentityUtils.getUserJid != null) {
+                    ga('create', '@googleAnalyticsConfig.getId', { 'userId': '@IdentityUtils.getUserJid' });
+                    } else {
+                    ga('create', '@googleAnalyticsConfig.getId', 'auto');
+                    }
+                    ga('send', 'pageview');
+            </script>
+        }
+        <script type="application/ld+json">
+        {
+          "@@context": "http://schema.org",
+          "@@type": "Organization",
+          "url": "@generalConfig.getCanonicalUrl",
+          "logo": "@(generalConfig.getCanonicalUrl + org.iatoki.judgels.play.routes.JudgelsController.coloredLogo())"
+        }
+        </script>
+    </body>
+</html>

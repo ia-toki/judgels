@@ -1,0 +1,22 @@
+@import play.mvc.Http.Context
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@()
+
+<div class="box no-margin clearfix">
+    <div class="col-md-12">
+        @if(JudgelsPlayUtils.isSidebarShown(Context.current().request())) {
+            <a href="@org.iatoki.judgels.play.routes.JudgelsController.hideSidebar()" class="btn btn-default btn-xs" data-toggle="tooltip" title="@Messages.get("commons.sidebar.hide")"><span class="glyphicon glyphicon-arrow-left"></span></a>
+        }
+        @if(!JudgelsPlayUtils.isSidebarShown(Context.current().request())) {
+            <a href="@org.iatoki.judgels.play.routes.JudgelsController.showSidebar()" class="btn btn-default btn-xs" data-toggle="tooltip" title="@Messages.get("commons.sidebar.show")"><span class="glyphicon glyphicon-arrow-right"></span></a>
+        }
+        @if(!JudgelsPlayUtils.isFullscreen(Context.current().request())) {
+            <a href="@org.iatoki.judgels.play.routes.JudgelsController.enterFullscreen()" class="btn btn-default btn-xs" data-toggle="tooltip" title="@Messages.get("commons.fullscreen.enter")"><span class="glyphicon glyphicon-fullscreen"></span></a>
+        }
+        @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
+            <a href="@org.iatoki.judgels.play.routes.JudgelsController.exitFullscreen()" class="btn btn-default btn-xs" data-toggle="tooltip" title="@Messages.get("commons.fullscreen.exit")"><span class="glyphicon glyphicon-resize-small"></span></a>
+        }
+    </div>
+</div>

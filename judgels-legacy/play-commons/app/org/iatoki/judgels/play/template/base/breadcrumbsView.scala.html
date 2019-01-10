@@ -1,0 +1,51 @@
+@import java.util.Date
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.play.template.InternalLink
+
+@(locations: List[InternalLink])
+
+<div class="primary-content-breadcrumb clearfix">
+    <ol class="breadcrumb col-md-8" vocab="http://schema.org/" typeof="BreadcrumbList">
+        <li property="itemListElement" typeof="ListItem">
+            <a href="/" class="glyphicon glyphicon-home" aria-hidden="true" property="item" typeof="WebPage"></a>
+        </li>
+        @for((link, index) <- locations.reverse.zipWithIndex) {
+            @if(locations.size > 4) {
+                @if(index == 0) {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">... <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li property="itemListElement" typeof="ListItem">
+                                <a href="@link.getTarget" class="breadcrumb-link">@link.getLabel</a>
+                                <meta property="position" content="@(index + 1)">
+                            </li>
+                } else { @if(index == locations.size - 4) {
+                    <li><a href="@link.getTarget" class="breadcrumb-link">@link.getLabel</a></li>
+                        </ul>
+                    </li>
+                } else {
+                    <li property="itemListElement" typeof="ListItem">
+                        <a href="@link.getTarget" class="breadcrumb-link">@link.getLabel</a>
+                        <meta property="position" content="@(index + 1)">
+                    </li>
+                }}
+            } else {
+                <li property="itemListElement" typeof="ListItem">
+                    <a href="@link.getTarget" class="breadcrumb-link">@link.getLabel</a>
+                    <meta property="position" content="@(index + 1)">
+                </li>
+            }
+        }
+    </ol>
+    <time class="server-time col-md-4 clearfix">
+        <div class="pull-right">
+            @defining(new Date().getTime) { millis =>
+                @Messages.get("commons.header.text.serverTime"): <time id="server-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(millis)">@JudgelsPlayUtils.formatDetailedDateTime(millis)</time>
+            }
+        </div>
+    </time>
+</div>
+
+<script>var language = "@Messages.get("commons.moment.locale")";</script>
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/playcommons/javascripts/server-time.js")"></script>

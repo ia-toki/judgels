@@ -1,0 +1,16 @@
+@import play.mvc.Http.Context
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(content: Html)
+
+@if(!JudgelsPlayUtils.isFullscreen(Context.current().request())) {
+    @headerView()
+}
+
+<main class="container">
+    @content
+</main>
+
+@if(!JudgelsPlayUtils.isFullscreen(Context.current().request())) {
+    @footerView()
+}
