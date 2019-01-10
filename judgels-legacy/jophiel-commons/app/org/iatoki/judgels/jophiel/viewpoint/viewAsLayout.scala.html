@@ -1,0 +1,41 @@
+@import org.iatoki.judgels.jophiel.viewpoint.ViewpointForm
+@import play.i18n.Messages
+@import play.api.mvc.Call
+@import b3.vertical.fieldConstructor
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.play.IdentityUtils
+
+@(form: Form[ViewpointForm], autoCompleteEndpoint: String, autoCompleteScriptLocation: String, changeTarget: Call, resetTarget: Call)(content: Html)
+
+@content
+
+<div class="box clearfix">
+    <div class="col-md-12 clearfix">
+        @if(JudgelsPlayUtils.hasViewPoint) {
+            @Messages.get("commons.viewAs") @IdentityUtils.getUsername()
+        } else {
+            @Messages.get("commons.noViewpoint")
+        }
+
+        @formErrorView(form)
+
+        @b3.form(changeTarget) {
+            <div class="form-group">
+                <input type="text" class="form-control user_autocomplete" name="username">
+            </div>
+
+            <script type="text/javascript">
+                var jophielAutoCompleteUrl = "@autoCompleteEndpoint";
+            </script>
+            <script type="text/javascript" src="@controllers.routes.Assets.versioned(autoCompleteScriptLocation)"></script>
+
+            <div class="form-group">
+            @if(JudgelsPlayUtils.hasViewPoint) {
+                <a href="@resetTarget" class="btn btn-primary" role="button">@Messages.get("commons.resetViewAs")</a>
+            }
+                <button type="submit" class="btn btn-primary">@Messages.get("commons.viewAs")</button>
+            </div>
+        }
+    </div>
+</div>

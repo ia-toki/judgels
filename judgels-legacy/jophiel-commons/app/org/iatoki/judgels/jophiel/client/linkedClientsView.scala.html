@@ -1,0 +1,16 @@
+@import play.i18n.Messages
+
+@(linkedClientsAPIEndpoint: String)
+
+<div class="box clearfix">
+    <div class="col-md-12 clearfix">
+        <p>@Messages.get("linkedClients.text.otherApps")</p>
+        <div class="linked_clients">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var linkedClientsAPIEndpoint = "@linkedClientsAPIEndpoint";
+</script>
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/jophielcommons/javascripts/linkedClients.js")"></script>

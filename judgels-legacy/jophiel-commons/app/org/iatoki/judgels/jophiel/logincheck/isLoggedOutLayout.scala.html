@@ -1,0 +1,12 @@
+@import org.iatoki.judgels.play.IdentityUtils
+
+@(isLoggedInEndPoint: String, logoutUrl: String, isLoggedOutScriptLocation: String, userJid: String)(content: Html)
+
+<script type="text/javascript">
+    var jophielIsLoggedInUrl = "@isLoggedInEndPoint";
+    var logoutUrl = "@logoutUrl";
+    var userJid = "@userJid";
+</script>
+<script type="text/javascript" src="@controllers.routes.Assets.versioned(isLoggedOutScriptLocation)"></script>
+
+@content

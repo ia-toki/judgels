@@ -1,0 +1,42 @@
+@import org.iatoki.judgels.jophiel.profile.SearchProfileForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+
+@(form: Form[SearchProfileForm], autoCompleteEndpoint: String, autoCompleteScriptLocation: String, searchTarget: String)(content: Html)
+
+@content
+
+<div class="box clearfix">
+    <div class="col-md-12 clearfix">
+        @Messages.get("user.search")
+
+        <br />
+        <br />
+
+        @formErrorView(form)
+
+        <form action="@searchTarget" class="form-horizontal" method="POST">
+            <div class="form-group row clearfix">
+                <label class="control-label col-md-4" for="search_username">
+                    @Messages.get("user.username"):
+                </label>
+                <div class="col-md-8">
+                    <input id="search_username" type="text" class="form-control user_autocomplete" name="username">
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                var jophielAutoCompleteUrl = "@autoCompleteEndpoint";
+            </script>
+            <script type="text/javascript" src="@controllers.routes.Assets.versioned(autoCompleteScriptLocation)"></script>
+
+            <div class="form-group clearfix">
+                <div class="col-md-12">
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-primary">@Messages.get("commons.search")</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+->          /                                playcommons.Routes
+
+GET        /login                            @org.iatoki.judgels.jophiel.JophielClientController.login(returnUri: String)
+GET        /post-login/:authCode/:returnUri  @org.iatoki.judgels.jophiel.JophielClientController.postLogin(authCode: String, returnUri: String)
+GET        /profile                          @org.iatoki.judgels.jophiel.JophielClientController.profile()
+GET        /logout                           @org.iatoki.judgels.jophiel.JophielClientController.logout(returnUri: String ?= "")
