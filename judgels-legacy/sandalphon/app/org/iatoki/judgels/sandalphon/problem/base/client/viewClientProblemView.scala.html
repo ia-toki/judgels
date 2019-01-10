@@ -1,0 +1,19 @@
+@import org.iatoki.judgels.sandalphon.client.problem.ClientProblem
+@import org.iatoki.judgels.sandalphon.problem.base.Problem
+@import play.i18n.Messages
+
+@(problem: Problem, clientProblem: ClientProblem)
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>@Messages.get("problem.client.name")</td><td>@clientProblem.getClientName</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("problem.jid")</td><td>@problem.getJid</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("problem.secret")</td><td>@clientProblem.getSecret</td>
+        </tr>
+    </tbody>
+</table>

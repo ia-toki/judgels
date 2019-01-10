@@ -1,0 +1,16 @@
+@import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerUpsertForm
+@import play.i18n.Messages
+
+@(lessonPartnerUpsertForm: Form[LessonPartnerUpsertForm])(implicit fieldConstructor: b3.B3FieldConstructor)
+
+@b3.checkbox(lessonPartnerUpsertForm("isAllowedToUpdateLesson"), '_label -> Messages.get("lesson.partner.isAllowedToUpdateLesson"))
+@b3.checkbox(lessonPartnerUpsertForm("isAllowedToUpdateStatement"), '_label -> Messages.get("lesson.partner.isAllowedToUpdateStatement"))
+@b3.checkbox(lessonPartnerUpsertForm("isAllowedToUploadStatementResources"), '_label -> Messages.get("lesson.partner.isAllowedToUploadStatementResources"))
+@b3.text(lessonPartnerUpsertForm("allowedStatementLanguagesToView"), '_label -> Messages.get("lesson.partner.allowedStatementLanguagesToView"), '_help -> Messages.get("problem.partner.leaveAllowAll"))
+@b3.text(lessonPartnerUpsertForm("allowedStatementLanguagesToUpdate"), '_label -> Messages.get("lesson.partner.allowedStatementLanguagesToUpdate"), '_help -> Messages.get("problem.partner.leaveAllowAll"))
+@b3.checkbox(lessonPartnerUpsertForm("isAllowedToManageStatementLanguages"), '_label -> Messages.get("lesson.partner.isAllowedToManageStatementLanguages"))
+
+@b3.checkbox(lessonPartnerUpsertForm("isAllowedToViewVersionHistory"), '_label -> Messages.get("lesson.partner.isAllowedToViewVersionHistory"))
+@b3.checkbox(lessonPartnerUpsertForm("isAllowedToRestoreVersionHistory"), '_label -> Messages.get("lesson.partner.isAllowedToRestoreVersionHistory"))
+
+@b3.checkbox(lessonPartnerUpsertForm("isAllowedToManageLessonClients"), '_label -> Messages.get("lesson.partner.isAllowedToManageLessonClients"))

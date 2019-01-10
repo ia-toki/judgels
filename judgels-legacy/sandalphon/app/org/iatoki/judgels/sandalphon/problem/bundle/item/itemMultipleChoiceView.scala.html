@@ -1,0 +1,35 @@
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemMultipleChoiceConf
+
+@(bundleItem: BundleItem, itemMultipleChoiceConf: ItemMultipleChoiceConf)
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="clearfix">
+            <div class="table-cell">
+                @(bundleItem.getNumber).&nbsp;
+            </div>
+            <div class="table-cell">
+                <div class="content-text">
+                    @Html(itemMultipleChoiceConf.statement)
+                </div>
+            </div>
+        </div>
+        <hr />
+        @for(choice <- itemMultipleChoiceConf.choices) {
+            <div class="radio" style="margin-top: -5px">
+                <label>
+                    <div class="pull-left">
+                        <input type="radio" name="@bundleItem.getJid" value="@choice.getAlias">
+                    </div>
+                    <div class="pull-left" style="margin-right: 5px;">
+                        <span class="badge">@choice.getAlias</span>
+                    </div>
+                    <div class="pull-left content-text">
+                        @Html(choice.getContent)
+                    </div>
+                   </label>
+            </div>
+        }
+    </div>
+</div>

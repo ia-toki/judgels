@@ -1,0 +1,19 @@
+@import org.iatoki.judgels.sandalphon.lesson.Lesson
+@import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerUpsertForm
+@import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerUsernameForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.sandalphon.lesson.partner.routes
+
+@(usernameForm: Form[LessonPartnerUsernameForm], problemForm: Form[LessonPartnerUpsertForm], lesson: Lesson, jophielAutoCompleteUrl: String)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-6", "col-md-6") }
+
+@b3.form(routes.LessonPartnerController.postAddPartner(lesson.getId)) {
+    @helper.CSRF.formField
+
+    @usernamePartnerView(usernameForm, jophielAutoCompleteUrl)
+
+    @upsertPartnerView(problemForm)
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.add") }
+}

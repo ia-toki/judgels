@@ -1,0 +1,22 @@
+@import org.iatoki.judgels.sandalphon.lesson.Lesson
+@import org.iatoki.judgels.sandalphon.lesson.LessonEditForm
+@import org.iatoki.judgels.sandalphon.lesson.routes
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+
+@(lessonEditForm: Form[LessonEditForm], lesson: Lesson)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@formErrorView(lessonEditForm)
+
+@b3.form(routes.LessonController.postEditLesson(lesson.getId)) {
+
+    @helper.CSRF.formField
+
+    @b3.text(lessonEditForm("slug"), '_label -> Messages.get("lesson.slug"))
+
+    @b3.textarea(lessonEditForm("additionalNote"), '_label -> Messages.get("lesson.additionalNote"))
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

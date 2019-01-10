@@ -1,0 +1,22 @@
+@import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
+@import org.iatoki.judgels.sandalphon.user.User
+@import play.i18n.Messages
+
+@(user: User)
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>@Messages.get("commons.id")</td><td>@user.getId</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("commons.jid")</td><td>@user.getUserJid</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("user.name")</td><td>@JidCacheServiceImpl.getInstance().getDisplayName(user.getUserJid)</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("user.roles")</td><td>@user.getRoles</td>
+        </tr>
+    </tbody>
+</table>

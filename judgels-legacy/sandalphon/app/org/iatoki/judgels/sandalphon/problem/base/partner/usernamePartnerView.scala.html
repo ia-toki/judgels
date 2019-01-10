@@ -1,0 +1,12 @@
+@import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUsernameForm
+@import play.i18n.Messages
+
+@(problemPartnerUsernameForm: Form[ProblemPartnerUsernameForm], jophielAutoCompleteUrl: String)(implicit fieldConstructor: b3.B3FieldConstructor)
+
+<script type="text/javascript">
+    var jophielAutoCompleteUrl = "@jophielAutoCompleteUrl";
+</script>
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/jophielcommons/javascripts/userAutoComplete.js")"></script>
+
+@b3.text(problemPartnerUsernameForm("username"), '_label -> Messages.get("problem.partner.username"), 'class -> "form-control user_autocomplete")

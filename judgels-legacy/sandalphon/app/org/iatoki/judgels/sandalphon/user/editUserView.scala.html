@@ -1,0 +1,18 @@
+@import org.iatoki.judgels.sandalphon.user.UserEditForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.sandalphon.user.routes
+
+@(userEditForm: Form[UserEditForm], userId: Long)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@formErrorView(userEditForm)
+
+@b3.form(routes.UserController.postEditUser(userId)) {
+    @helper.CSRF.formField
+
+    @b3.text(userEditForm("roles"), '_label -> Messages.get("user.roles"), 'class -> "form-control")
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

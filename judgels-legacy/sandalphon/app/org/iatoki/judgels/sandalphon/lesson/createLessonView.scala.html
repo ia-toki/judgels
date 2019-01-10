@@ -1,0 +1,21 @@
+@import org.iatoki.judgels.sandalphon.lesson.LessonCreateForm
+@import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry
+@import play.i18n.Messages
+@import scala.collection.JavaConverters._
+@import org.iatoki.judgels.sandalphon.lesson.routes
+
+@(lessonCreateForm: Form[LessonCreateForm])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@b3.form(routes.LessonController.postCreateLesson()) {
+    @helper.CSRF.formField
+
+    @b3.text(lessonCreateForm("slug"), '_label -> Messages.get("lesson.slug"))
+    @b3.textarea(lessonCreateForm("additionalNote"), '_label -> Messages.get("lesson.additionalNote"))
+
+
+    @b3.select(lessonCreateForm("initLanguageCode"), WorldLanguageRegistry.getInstance.getLanguages.asScala.toSeq, '_label -> Messages.get("lesson.statement.language.initial"), 'value -> "en-US")
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.next") }
+}

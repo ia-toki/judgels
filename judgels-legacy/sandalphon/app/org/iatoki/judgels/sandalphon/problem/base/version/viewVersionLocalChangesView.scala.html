@@ -1,0 +1,35 @@
+@import org.iatoki.judgels.sandalphon.resource.VersionCommitForm
+@import org.iatoki.judgels.sandalphon.problem.base.Problem
+@import play.i18n.Messages
+@import play.mvc.Controller
+@import org.iatoki.judgels.sandalphon.problem.base.version.routes
+
+@(form: Form[VersionCommitForm], problem: Problem, isClean: Boolean)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+<h3>@Messages.get("problem.version.commit.perform")</h3>
+
+@if(isClean) {
+    @Messages.get("problem.version.local.clean")
+}else {
+    @if(Controller.flash("localChangesError") != null) {
+        <p>@Controller.flash("localChangesError")</p>
+    } else {
+        @b3.form(routes.ProblemVersionController.postCommitVersionLocalChanges(problem.getId())) {
+            @helper.CSRF.formField
+
+            @b3.text(form("title"), '_label -> Messages.get("problem.version.commit.title"))
+            @b3.textarea(form("description"), '_label -> Messages.get("problem.version.commit.description"))
+
+            @b3.submit('class -> "btn btn-primary") {
+                @Messages.get("problem.version.commit")
+            }
+        }
+    }
+
+    <h3>@Messages.get("problem.version.local.modify")</h3>
+
+    <a type="button" href="@routes.ProblemVersionController.editVersionLocalChanges(problem.getId())" class="btn btn-primary">@Messages.get("problem.version.local.update")</a>
+    <a type="button" href="@routes.ProblemVersionController.discardVersionLocalChanges(problem.getId())" class="btn btn-primary">@Messages.get("problem.version.local.discard")</a>
+}

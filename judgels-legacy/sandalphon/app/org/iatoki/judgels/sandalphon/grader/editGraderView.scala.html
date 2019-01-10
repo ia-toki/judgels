@@ -1,0 +1,18 @@
+@import org.iatoki.judgels.sandalphon.grader.GraderUpsertForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.sandalphon.grader.routes
+
+@(graderUpsertForm: Form[GraderUpsertForm], graderId: Long)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(graderUpsertForm)
+
+@b3.form(routes.GraderController.postEditGrader(graderId)) {
+    @helper.CSRF.formField
+
+    @upsertGraderView(graderUpsertForm)
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

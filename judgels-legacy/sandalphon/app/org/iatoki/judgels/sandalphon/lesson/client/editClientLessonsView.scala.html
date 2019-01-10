@@ -1,0 +1,49 @@
+@import play.i18n.Messages
+@import org.iatoki.judgels.sandalphon.client.lesson.ClientLessonUpsertForm
+@import org.iatoki.judgels.sandalphon.client.Client
+@import org.iatoki.judgels.sandalphon.client.lesson.ClientLesson
+@import org.iatoki.judgels.sandalphon.lesson.client.routes
+
+@(clientLessonUpsertForm: Form[ClientLessonUpsertForm], clientLessonId: Long, clients: List[Client], clientLessons: List[ClientLesson])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@b3.form(routes.LessonClientController.postEditClientLessons(clientLessonId)) {
+    @helper.CSRF.formField
+
+    <div class="form-group" id="clientJid_field">
+        <label class="control-label col-md-2" for="clientJid">@Messages.get("lesson.client.client")</label>
+        <div class="col-md-10">
+            <select id="clientJid" name="clientJid" class="form-control">
+                @for(client <- clients) {
+                    <option value="@client.getJid">@client.getName</option>
+                }
+            </select>
+        </div>
+    </div>
+
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.create") }
+}
+
+<table class="table table-bordered table-striped table-condensed">
+    <thead>
+        <tr>
+            <th class="col-md-1">@Messages.get("commons.id")</th>
+            <th>@Messages.get("lesson.client.name")</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    @for(clientLesson <- clientLessons) {
+        <tr>
+            <td>@clientLesson.getId</td>
+            <td>@clientLesson.getClientName</td>
+            <td>
+                <a href="@routes.LessonClientController.viewClientLesson(clientLessonId, clientLesson.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

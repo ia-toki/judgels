@@ -1,0 +1,12 @@
+@import play.i18n.Messages
+@import org.iatoki.judgels.sandalphon.lesson.version.routes
+
+@(lessonId: Long, content: Html)
+
+<div class="alert alert-danger" role="alert">
+    @Messages.get("lesson.version.local.hasUncommitted.youHave")
+    <a href="@routes.LessonVersionController.viewVersionLocalChanges(lessonId)">@Messages.get("lesson.version.local.hasUncommitted.uncommitted")</a>
+    @Messages.get("lesson.version.local.hasUncommitted.forThisLesson")
+</div>
+
+@content

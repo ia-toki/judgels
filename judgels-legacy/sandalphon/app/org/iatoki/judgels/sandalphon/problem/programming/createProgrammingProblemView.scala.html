@@ -1,0 +1,26 @@
+@import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry
+
+@import scala.collection.JavaConverters._
+@import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemCreateForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.sandalphon.problem.programming.routes
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.gabriel.GradingEngineRegistry
+
+@(programmingProblemCreateForm: Form[ProgrammingProblemCreateForm], problemSlug: String, problemAdditionalNote: String, initLanguageCode: String)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@b3.form(routes.ProgrammingProblemController.postCreateProgrammingProblem()) {
+    @helper.CSRF.formField
+
+    @b3.static(Messages.get("problem.slug")) { @problemSlug }
+
+    @b3.static(Messages.get("problem.additionalNote")) { @Html(JudgelsPlayUtils.escapeHtmlString(problemAdditionalNote)) }
+
+    @b3.static(Messages.get("problem.statement.language.initial")) { @WorldLanguageRegistry.getInstance.getDisplayLanguage(initLanguageCode) }
+
+    @b3.select(programmingProblemCreateForm("gradingEngineName"), GradingEngineRegistry.getInstance().getGradingEngines.asScala.toSeq, '_label -> Messages.get("problem.programming.gradingEngine"))
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.create") }
+}

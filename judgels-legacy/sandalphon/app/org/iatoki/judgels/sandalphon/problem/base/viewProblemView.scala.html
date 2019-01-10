@@ -1,0 +1,26 @@
+@import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
+@import org.iatoki.judgels.sandalphon.problem.base.Problem
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(problem: Problem)
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>@Messages.get("commons.id")</td><td>@problem.getId</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("commons.jid")</td><td>@problem.getJid</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("problem.slug")</td><td>@problem.getSlug</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("problem.author")</td><td>@JidCacheServiceImpl.getInstance().getDisplayName(problem.getAuthorJid)</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("problem.additionalNote")</td><td>@Html(JudgelsPlayUtils.escapeHtmlString(problem.getAdditionalNote))</td>
+        </tr>
+    </tbody>
+</table>

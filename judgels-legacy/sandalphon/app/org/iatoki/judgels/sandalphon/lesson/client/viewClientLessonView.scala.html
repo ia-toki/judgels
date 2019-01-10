@@ -1,0 +1,19 @@
+@import org.iatoki.judgels.sandalphon.client.lesson.ClientLesson
+@import org.iatoki.judgels.sandalphon.lesson.Lesson
+@import play.i18n.Messages
+
+@(lesson: Lesson, clientLesson: ClientLesson)
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>@Messages.get("lesson.client.name")</td><td>@clientLesson.getClientName</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("lesson.jid")</td><td>@lesson.getJid</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("lesson.secret")</td><td>@clientLesson.getSecret</td>
+        </tr>
+    </tbody>
+</table>

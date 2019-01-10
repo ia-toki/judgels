@@ -1,0 +1,8 @@
+@import org.iatoki.judgels.sandalphon.grader.GraderUpsertForm
+@import play.i18n.Messages
+
+@(graderUpsertForm: Form[GraderUpsertForm])(implicit fieldConstructor: b3.B3FieldConstructor)
+
+@helper.CSRF.formField
+
+@b3.text(graderUpsertForm("name"), '_label -> Messages.get("grader.name"), 'class -> "form-control")

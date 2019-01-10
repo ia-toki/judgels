@@ -1,0 +1,12 @@
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemStatementConf
+
+@(bundleItem: BundleItem, itemStatementConf: ItemStatementConf)
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="content-text">
+            @Html(itemStatementConf.statement)
+        </div>
+    </div>
+</div>

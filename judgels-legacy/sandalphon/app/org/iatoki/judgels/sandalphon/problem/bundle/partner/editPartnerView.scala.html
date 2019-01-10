@@ -1,0 +1,22 @@
+@import org.iatoki.judgels.sandalphon.problem.base.Problem
+@import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner
+@import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.sandalphon.problem.bundle.partner.BundlePartnerUpsertForm
+@import org.iatoki.judgels.sandalphon.problem.base.partner.html.upsertPartnerView
+@import org.iatoki.judgels.sandalphon.problem.bundle.partner.html.upsertBundlePartnerView
+@import org.iatoki.judgels.sandalphon.problem.bundle.partner.routes
+
+@(problemForm: Form[ProblemPartnerUpsertForm], bundleProblemForm: Form[BundlePartnerUpsertForm], problem: Problem, problemPartner: ProblemPartner)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-6", "col-md-6") }
+
+@b3.form(routes.BundleProblemPartnerController.postEditPartner(problem.getId, problemPartner.getId)) {
+  @helper.CSRF.formField
+
+  @upsertPartnerView(problemForm)
+
+  @upsertBundlePartnerView(bundleProblemForm)
+
+  @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

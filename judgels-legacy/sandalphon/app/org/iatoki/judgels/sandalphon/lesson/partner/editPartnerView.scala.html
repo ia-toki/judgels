@@ -1,0 +1,17 @@
+@import org.iatoki.judgels.sandalphon.lesson.Lesson
+@import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartner
+@import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerUpsertForm
+@import org.iatoki.judgels.sandalphon.lesson.partner.routes
+@import play.i18n.Messages
+
+@(lessonForm: Form[LessonPartnerUpsertForm], lesson: Lesson, lessonPartner: LessonPartner)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-6", "col-md-6") }
+
+@b3.form(routes.LessonPartnerController.postEditPartner(lesson.getId, lessonPartner.getId)) {
+  @helper.CSRF.formField
+
+  @upsertPartnerView(lessonForm)
+
+  @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

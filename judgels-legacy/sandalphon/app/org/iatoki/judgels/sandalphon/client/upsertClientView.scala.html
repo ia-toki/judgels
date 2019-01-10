@@ -1,0 +1,8 @@
+@import org.iatoki.judgels.sandalphon.client.ClientUpsertForm
+@import play.i18n.Messages
+
+@(clientUpsertForm: Form[ClientUpsertForm])(implicit fieldConstructor: b3.B3FieldConstructor)
+
+@helper.CSRF.formField
+
+@b3.text(clientUpsertForm("name"), '_label -> Messages.get("client.name"), 'class -> "form-control")

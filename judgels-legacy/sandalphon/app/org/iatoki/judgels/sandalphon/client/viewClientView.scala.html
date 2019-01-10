@@ -1,0 +1,21 @@
+@import org.iatoki.judgels.sandalphon.client.Client
+@import play.i18n.Messages
+
+@(client: Client)
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>@Messages.get("commons.id")</td><td>@client.getId</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("client.name")</td><td>@client.getName</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("commons.jid")</td><td>@client.getJid</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("client.secret")</td><td>@client.getSecret</td>
+        </tr>
+    </tbody>
+</table>

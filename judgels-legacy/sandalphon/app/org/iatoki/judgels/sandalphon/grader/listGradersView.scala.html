@@ -1,0 +1,37 @@
+@import org.iatoki.judgels.sandalphon.grader.Grader
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersView
+@import org.iatoki.judgels.play.views.html.table.searchView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.sandalphon.grader.routes
+@import org.iatoki.judgels.play.Page
+
+@(pageOfGraders: Page[Grader], orderBy: String, orderDir: String, filterString: String)
+
+@searchView(pageOfGraders.getPageIndex, orderBy, orderDir, filterString, routes.GraderController.listGraders)
+
+<div class="clearfix"></div>
+
+@tableView() {
+    @tableHeadersView(pageOfGraders.getPageIndex, orderBy, orderDir, filterString, routes.GraderController.listGraders)(
+        "id" -> Messages.get("commons.id"),
+        "jid" -> Messages.get("commons.jid"),
+        "name" -> Messages.get("grader.name")
+    )
+    <tbody>
+    @for(grader <- pageOfGraders.getData) {
+        <tr>
+            <td>@grader.getId</td>
+            <td>@grader.getJid</td>
+            <td>@grader.getName</td>
+            <td class="text-center">
+                <a href="@routes.GraderController.viewGrader(grader.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                <a href="@routes.GraderController.editGrader(grader.getId)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+}
+
+@paginationView(pageOfGraders, orderBy, orderDir, filterString, routes.GraderController.listGraders)

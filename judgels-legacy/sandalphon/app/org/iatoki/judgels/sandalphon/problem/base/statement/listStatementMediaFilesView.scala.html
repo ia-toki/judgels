@@ -1,0 +1,60 @@
+@import play.i18n.Messages
+@import org.iatoki.judgels.sandalphon.problem.base.statement.routes
+@import org.iatoki.judgels.FileInfo
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.sandalphon.resource.UploadFileForm
+
+@(uploadFileForm: Form[UploadFileForm], problemId: Long, mediaFiles: List[FileInfo], isAllowedToUploadMediaFiles: Boolean)
+
+@implicitFieldConstructor = @{b3.horizontal.fieldConstructor("col-md-2", "col-md-10")}
+
+@if(isAllowedToUploadMediaFiles) {
+
+    <h3>@Messages.get("problem.file.uploadNew")</h3>
+
+    @b3.form(routes.ProblemStatementController.postUploadStatementMediaFiles(problemId), 'enctype -> "multipart/form-data") {
+        @helper.CSRF.formField
+
+        @b3.file(uploadFileForm("file"), '_label -> Messages.get("problem.file.asSingleFile"))
+
+        @b3.submit('class -> "btn btn-primary") {
+            @Messages.get("commons.upload")
+        }
+    }
+
+    @b3.form(routes.ProblemStatementController.postUploadStatementMediaFiles(problemId), 'enctype -> "multipart/form-data") {
+        @helper.CSRF.formField
+
+        @b3.file(uploadFileForm("fileZipped"), '_label -> Messages.get("problem.file.asZipFile"))
+
+        @b3.submit('class -> "btn btn-primary") {
+            @Messages.get("commons.upload")
+        }
+    }
+
+    <hr />
+}
+
+<h3>@Messages.get("problem.file")</h3>
+
+<table class="table table-striped table-condensed table-bordered">
+    <thead>
+        <tr>
+            <th>@Messages.get("problem.file.filename")</th>
+            <th>@Messages.get("problem.file.lastModified")</th>
+            <th>@Messages.get("problem.file.size")</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    @for(file <- mediaFiles) {
+        <tr>
+            <td>@file.getName</td>
+            <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(file.getLastModifiedTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(file.getLastModifiedTime.getTime)</time></td>
+            <td>@JudgelsPlayUtils.formatBytesCount(file.getSize)</td>
+            <td class="text-center"><a href="@org.iatoki.judgels.sandalphon.controllers.api.internal.routes.InternalProblemStatementAPIController.downloadStatementMediaFile(problemId, file.getName)"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></td>
+        </tr>
+    }
+    </tbody>
+</table>

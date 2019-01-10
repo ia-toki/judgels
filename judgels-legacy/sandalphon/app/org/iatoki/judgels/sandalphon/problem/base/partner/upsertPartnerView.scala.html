@@ -1,0 +1,16 @@
+@import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm
+@import play.i18n.Messages
+
+@(problemPartnerUpsertForm: Form[ProblemPartnerUpsertForm])(implicit fieldConstructor: b3.B3FieldConstructor)
+
+@b3.checkbox(problemPartnerUpsertForm("isAllowedToUpdateProblem"), '_label -> Messages.get("problem.partner.isAllowedToUpdateProblem"))
+@b3.checkbox(problemPartnerUpsertForm("isAllowedToUpdateStatement"), '_label -> Messages.get("problem.partner.isAllowedToUpdateStatement"))
+@b3.checkbox(problemPartnerUpsertForm("isAllowedToUploadStatementResources"), '_label -> Messages.get("problem.partner.isAllowedToUploadStatementResources"))
+@b3.text(problemPartnerUpsertForm("allowedStatementLanguagesToView"), '_label -> Messages.get("problem.partner.allowedStatementLanguagesToView"), '_help -> Messages.get("problem.partner.leaveAllowAll"))
+@b3.text(problemPartnerUpsertForm("allowedStatementLanguagesToUpdate"), '_label -> Messages.get("problem.partner.allowedStatementLanguagesToUpdate"), '_help -> Messages.get("problem.partner.leaveAllowAll"))
+@b3.checkbox(problemPartnerUpsertForm("isAllowedToManageStatementLanguages"), '_label -> Messages.get("problem.partner.isAllowedToManageStatementLanguages"))
+
+@b3.checkbox(problemPartnerUpsertForm("isAllowedToViewVersionHistory"), '_label -> Messages.get("problem.partner.isAllowedToViewVersionHistory"))
+@b3.checkbox(problemPartnerUpsertForm("isAllowedToRestoreVersionHistory"), '_label -> Messages.get("problem.partner.isAllowedToRestoreVersionHistory"))
+
+@b3.checkbox(problemPartnerUpsertForm("isAllowedToManageProblemClients"), '_label -> Messages.get("problem.partner.isAllowedToManageProblemClients"))

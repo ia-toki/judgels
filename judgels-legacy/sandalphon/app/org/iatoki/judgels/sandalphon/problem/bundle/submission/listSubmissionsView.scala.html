@@ -1,0 +1,66 @@
+@import java.text.DecimalFormat
+
+@import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
+@import scala.collection.JavaConversions
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersWithSelectionFormView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.sandalphon.problem.bundle.submission.{BundleSubmission, routes}
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.play.Page
+
+@(pageOfBundleSubmissions: Page[BundleSubmission], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
+
+<script type="text/javascript">
+    require(["jquery"], function( __jquery__ ) {
+        $(document).ready(function() {
+            $('#regradeButton').on('click', function() {
+                if ($('#selectAll').prop('checked')) {
+                    return confirm('Will regrade ALL submissions in ALL pages. Are you sure?');
+                }
+            });
+        });
+    });
+</script>
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.BundleProblemSubmissionController.listSubmissions(problemId, newPageIndex, newOrderBy, newOrderDir)}
+
+<form method="POST" action="@routes.BundleProblemSubmissionController.regradeSubmissions(problemId, pageIndex, orderBy, orderDir)">
+
+<button type="submit" id="regradeButton" class="btn btn-primary btn-xs">Regrade selected</button>
+
+<div class="clearfix"></div>
+
+<br />
+
+@tableView() {
+    @tableHeadersWithSelectionFormView(pageOfBundleSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
+        "id" -> Messages.get("commons.id"),
+        "userCreate" -> Messages.get("problem.bundle.submission.author"),
+        "score" -> Messages.get("problem.bundle.submission.score"),
+        "timeCreate" -> Messages.get("problem.bundle.submission.time")
+    )
+    <tbody>
+
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfBundleSubmissions.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>
+        @for(submission <- pageOfBundleSubmissions.getData) {
+            <tr>
+                <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>
+                <td>@submission.getId</td>
+                <td>@displayNamesMap.get(submission.getAuthorJid)</td>
+                <td>@(new DecimalFormat("#.##").format(submission.getLatestScore))</td>
+                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.getTime)</time></td>
+                <td class="text-center">
+                    <a href="@routes.BundleProblemSubmissionController.viewSubmission(problemId, submission.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                    <a href="@routes.BundleProblemSubmissionController.regradeSubmission(problemId, submission.getId, pageIndex, orderBy, orderDir)" onclick="return confirm('Are you sure you want to regrade?');"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+}
+
+</form>
+
+@paginationView(pageOfBundleSubmissions, orderBy, orderDir, "", listFunc)

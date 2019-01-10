@@ -1,0 +1,155 @@
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemMultipleChoiceConfForm
+@import play.i18n.Messages
+@import play.api.mvc.Call
+@import org.iatoki.judgels.play.views.html.formErrorView
+
+@(itemMultipleChoiceConfForm: Form[ItemMultipleChoiceConfForm], target: Call, submitLabel: String)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(itemMultipleChoiceConfForm)
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>
+
+<script type="text/javascript">
+    require(["jquery"], function( __jquery__ ) {
+        $(document).ready(function() {
+            var choiceTemplate = $('#choice-template');
+            var choices = [];
+            var newChoiceAddButton = $('#choice-add');
+
+            function addNewChoice() {
+                var choiceNo = choices.length;
+
+                var container = choiceTemplate.clone().removeAttr('id');
+                var removeButton = container.find('a').first();
+                var alias = container.find('input[type="text"]').first();
+                alias.prop('name', 'choiceAliases[' + choiceNo + ']');
+                var content = container.find('input[type="text"]').eq(1);
+                content.prop('name', 'choiceContents[' + choiceNo + ']');
+                var checkBox = container.find('input[type="checkbox"]');
+                checkBox.prop('name', 'isCorrects[' + choiceNo + ']');
+
+                var choice =  {
+                    container: container,
+                    alias: alias,
+                    content: content,
+                    checkBox: checkBox,
+                    removeButton: removeButton
+                };
+                choices.push(choice);
+
+                refreshChoice(choice, choiceNo);
+
+                container.insertBefore(newChoiceAddButton.parent().parent());
+                container.show();
+            }
+
+            function refreshChoice(choice, choiceNo) {
+                choice.alias.prop('name', 'choiceAliases[' + choiceNo + ']');
+                choice.content.prop('name', 'choiceContents[' + choiceNo + ']');
+                choice.checkBox.prop('name', 'isCorrects[' + choiceNo + ']');
+
+                choice.removeButton.off('click').on('click', function(e) {
+                    e.preventDefault();
+                    removeChoice(choiceNo);
+                    return false;
+                });
+
+            }
+
+            function removeChoice(choiceNo) {
+                var choice = choices[choiceNo];
+                choice.container.remove();
+                choices.splice(choiceNo, 1);
+
+                for (var i = choiceNo; i < choices.length; i++) {
+                    refreshChoice(choices[i], i);
+                    console.log(i);
+                }
+            }
+
+            newChoiceAddButton.on('click', function(e) {
+                e.preventDefault();
+                addNewChoice();
+            });
+
+            function fillChoice(choiceNo, alias, content, isCorrect) {
+                choices[choiceNo].alias.val(alias);
+                choices[choiceNo].content.val(content);
+                if (isCorrect) {
+                    choices[choiceNo].checkBox.attr("checked", "checked");
+                }
+            }
+
+            @for(i <- itemMultipleChoiceConfForm("choiceAliases").indexes.indices) {
+                addNewChoice();
+                fillChoice(@i, '@itemMultipleChoiceConfForm("choiceAliases[" + i + "]").value', '@Html(itemMultipleChoiceConfForm("choiceContents[" + i + "]").value)', @if(itemMultipleChoiceConfForm("isCorrects[" + i + "]").value != null && itemMultipleChoiceConfForm("isCorrects[" + i + "]").value) { true } else { false } );
+            }
+
+        });
+    });
+</script>
+
+
+@b3.form(target) {
+
+    @helper.CSRF.formField
+
+    @b3.text(itemMultipleChoiceConfForm("meta"), '_label -> Messages.get("problem.bundle.item.meta"))
+    @b3.textarea(itemMultipleChoiceConfForm("statement"), '_label -> Messages.get("problem.bundle.item.multipleChoice.statement"), 'class -> "ckeditor")
+    @b3.text(itemMultipleChoiceConfForm("score"), '_label -> Messages.get("problem.bundle.item.multipleChoice.score"))
+    @b3.text(itemMultipleChoiceConfForm("penalty"), '_label -> Messages.get("problem.bundle.item.multipleChoice.penalty"))
+
+    <div class="row">
+        <div class="col-md-2">
+            <label class="control-label">@Messages.get("problem.bundle.item.multipleChoice.choices")</label>
+        </div>
+
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>@Messages.get("problem.bundle.item.multipleChoice.alias")</th>
+                                <th>@Messages.get("problem.bundle.item.multipleChoice.content")</th>
+                                <th>@Messages.get("problem.bundle.item.multipleChoice.isCorrect")</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="choices-data">
+                            <tr class="active">
+                                <td class="text-center">
+                                    <a id="choice-add" href="#" class="btn btn-primary">@Messages.get("problem.bundle.item.multipleChoice.addChoice")</a>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @b3.submit('class -> "btn btn-primary") { @submitLabel }
+}
+
+<table class="hidden">
+    <tr id="choice-template">
+        <td>
+            <input class="form-control input-sm" type="text" />
+        </td>
+        <td>
+            <input class="form-control input-sm" type="text" />
+        </td>
+        <td>
+            <input class="form-control input-sm" type="checkbox" />
+        </td>
+        <td class="text-center">
+            <a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+        </td>
+    </tr>
+</table>

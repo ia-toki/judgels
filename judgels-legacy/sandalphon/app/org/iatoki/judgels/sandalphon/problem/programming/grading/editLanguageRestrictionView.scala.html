@@ -1,0 +1,40 @@
+@import org.iatoki.judgels.sandalphon.problem.base.Problem
+@import play.i18n.Messages
+@import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionEditForm
+@import org.iatoki.judgels.sandalphon.problem.programming.grading.routes
+@import org.iatoki.judgels.gabriel.GradingLanguageRegistry
+
+@(languageRestrictionEditForm: Form[LanguageRestrictionEditForm], problem: Problem)
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/sandalphoncommons/javascripts/languageRestriction.js")"></script>
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@b3.form(routes.ProgrammingProblemGradingController.postEditLanguageRestriction(problem.getId)) {
+
+      @helper.CSRF.formField
+
+      <div class="form-group">
+
+          <label class="control-label col-md-3">@Messages.get("problem.programming.allowedLanguages")</label>
+
+          <div class="col-md-9">
+
+              <div class="checkbox">
+                  <label>
+                      <input type="checkbox" id="isAllowedAll" name="isAllowedAll" value="true" @if(languageRestrictionEditForm("isAllowedAll").value && languageRestrictionEditForm("isAllowedAll").value.equals("true")){ checked="checked" }> @Messages.get("problem.programming.allowAll")
+                  </label>
+              </div>
+
+              @for((k, v) <- GradingLanguageRegistry.getInstance().getGradingLanguages) {
+                  <div class="checkbox">
+                      <label>
+                          <input type="checkbox" class="allowedLanguageName" name="allowedLanguageNames[@k]" value="@k" @if(languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value && languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value.equals(k)){ checked="checked" }> @v
+                      </label>
+                  </div>
+              }
+          </div>
+      </div>
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

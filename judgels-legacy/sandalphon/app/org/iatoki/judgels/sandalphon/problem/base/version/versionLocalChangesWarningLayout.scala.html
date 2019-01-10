@@ -1,0 +1,12 @@
+@import play.i18n.Messages
+@import org.iatoki.judgels.sandalphon.problem.base.version.routes
+
+@(problemId: Long, content: Html)
+
+<div class="alert alert-danger" role="alert">
+    @Messages.get("problem.version.local.hasUncommitted.youHave")
+    <a href="@routes.ProblemVersionController.viewVersionLocalChanges(problemId)">@Messages.get("problem.version.local.hasUncommitted.uncommitted")</a>
+    @Messages.get("problem.version.local.hasUncommitted.forThisProblem")
+</div>
+
+@content

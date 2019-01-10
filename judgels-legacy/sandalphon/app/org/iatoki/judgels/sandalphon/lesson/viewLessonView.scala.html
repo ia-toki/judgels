@@ -1,0 +1,26 @@
+@import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
+@import org.iatoki.judgels.sandalphon.lesson.Lesson
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(lesson: Lesson)
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>@Messages.get("commons.id")</td><td>@lesson.getId</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("commons.jid")</td><td>@lesson.getJid</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("problem.slug")</td><td>@lesson.getSlug</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("problem.author")</td><td>@JidCacheServiceImpl.getInstance().getDisplayName(lesson.getAuthorJid)</td>
+        </tr>
+        <tr>
+            <td>@Messages.get("problem.additionalNote")</td><td>@Html(JudgelsPlayUtils.escapeHtmlString(lesson.getAdditionalNote))</td>
+        </tr>
+    </tbody>
+</table>

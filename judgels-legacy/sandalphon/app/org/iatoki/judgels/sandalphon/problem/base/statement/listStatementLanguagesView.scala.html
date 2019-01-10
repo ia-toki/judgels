@@ -1,0 +1,52 @@
+@import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry
+@import play.i18n.Messages
+@import org.iatoki.judgels.sandalphon.problem.base.statement.routes
+@import org.iatoki.judgels.sandalphon.StatementLanguageStatus
+
+@(availableLanguages: Map[String, StatementLanguageStatus], defaultLanguage: String, problemId: Long)
+
+<h3>@Messages.get("problem.statement.language.add")</h3>
+
+<form class="form-inline" method="POST" action="@routes.ProblemStatementController.postAddStatementLanguage(problemId)">
+    <label for="langCode"><span class="small">@Messages.get("problem.statement.language.language")</span></label>
+    <div class="form-group">
+        <select name="langCode">
+        @for((code, name) <- WorldLanguageRegistry.getInstance.getLanguages) {
+            <option value="@code">@name</option>
+        }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-xs">@Messages.get("commons.add")</button>
+</form>
+
+<h3>@Messages.get("problem.statement.language.available")</h3>
+
+<table class="table table-striped table-condensed table-bordered">
+    <thead>
+        <tr>
+            <th>@Messages.get("problem.statement.language.language")</th>
+            <th>@Messages.get("problem.statement.language.status")</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    @for((code, status) <- availableLanguages) {
+        <tr>
+            <td>@WorldLanguageRegistry.getInstance.getDisplayLanguage(code)</td>
+            <td>@status @if(code.equals(defaultLanguage)){ (DEFAULT) }</td>
+            @if(status == StatementLanguageStatus.ENABLED) {
+                <td>
+                    @if(!code.equals(defaultLanguage)) {
+                        <a href="@routes.ProblemStatementController.disableStatementLanguage(problemId, code)" type="button" class="btn btn-primary btn-xs">@Messages.get("commons.disable")</a>
+                        <a href="@routes.ProblemStatementController.makeDefaultStatementLanguage(problemId, code)" type="button" class="btn btn-primary btn-xs">@Messages.get("commons.makeDefault")</a>
+                    }
+                </td>
+            }else {
+                <td><a href="@routes.ProblemStatementController.enableStatementLanguage(problemId, code)" type="button" class="btn btn-primary btn-xs">@Messages.get("commons.enable")</a></td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,69 @@
+@import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersWithSelectionFormView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.sandalphon.problem.programming.submission.{ProgrammingSubmission, routes}
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(pageOfProgrammingSubmissions: Page[ProgrammingSubmission], gradingLanguageToNameMap: Map[String, String], problemId: Long, pageIndex: Long, orderBy: String, orderDir: String)
+
+@import scala.collection.JavaConversions
+
+<script type="text/javascript" src="@controllers.routes.Assets.at("lib/jquery/jquery.min.js")"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#regradeButton').on('click', function() {
+            if ($('#selectAll').prop('checked')) {
+                return confirm('Will regrade ALL submissions in ALL pages. Are you sure?');
+            }
+        });
+    });
+</script>
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, newPageIndex, newOrderBy, newOrderDir)}
+
+<form method="POST" action="@routes.ProgrammingProblemSubmissionController.regradeSubmissions(problemId, pageIndex, orderBy, orderDir)">
+
+<button type="submit" id="regradeButton" class="btn btn-primary btn-xs">Regrade selected</button>
+
+<div class="clearfix"></div>
+
+<br />
+
+@tableView() {
+    @tableHeadersWithSelectionFormView(pageOfProgrammingSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
+        "id" -> Messages.get("commons.id"),
+        "userCreate" -> Messages.get("problem.programming.submission.author"),
+        "gradingLanguage" -> Messages.get("problem.programming.submission.gradingLanguage"),
+        "verdictName" -> Messages.get("problem.programming.submission.verdict"),
+        "score" -> Messages.get("problem.programming.submission.score"),
+        "timeCreate" -> Messages.get("problem.programming.submission.time")
+    )
+    <tbody>
+
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfProgrammingSubmissions.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>
+        @for(submission <- pageOfProgrammingSubmissions.getData) {
+            <tr>
+                <td><input type="checkbox" class="checkboxJid" name="selectJids[]" value="@submission.getJid"></td>
+                <td>@submission.getId</td>
+                <td>@displayNamesMap.get(submission.getAuthorJid)</td>
+                <td>@gradingLanguageToNameMap.get(submission.getGradingLanguage)</td>
+                <td>@submission.getLatestVerdict.getName</td>
+                <td>@submission.getLatestScore</td>
+                <td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.getTime)</time></td>
+                <td class="text-center">
+                    <a href="@routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submission.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                    <a href="@routes.ProgrammingProblemSubmissionController.regradeSubmission(problemId, submission.getId, pageIndex, orderBy, orderDir)" onclick="return confirm('Are you sure you want to regrade?');"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+}
+
+</form>
+
+@paginationView(pageOfProgrammingSubmissions, orderBy, orderDir, "", listFunc)

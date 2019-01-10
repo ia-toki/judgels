@@ -1,0 +1,24 @@
+@import org.iatoki.judgels.sandalphon.user.UserAddForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.sandalphon.user.routes
+
+@(userCreateForm: Form[UserAddForm], userAutoCompleteUrl: String)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@formErrorView(userCreateForm)
+
+@b3.form(routes.UserController.postAddUser()) {
+    @helper.CSRF.formField
+
+    @b3.text(userCreateForm("username"), '_label -> Messages.get("user.username"), 'class -> "form-control user_autocomplete")
+    @b3.text(userCreateForm("roles"), '_label -> Messages.get("user.roles"), 'class -> "form-control")
+
+    <script type="text/javascript">
+        var jophielAutoCompleteUrl = "@userAutoCompleteUrl";
+    </script>
+    <script type="text/javascript" src="@controllers.routes.Assets.versioned("lib/jophielcommons/javascripts/userAutoComplete.js")"></script>
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.create") }
+}
