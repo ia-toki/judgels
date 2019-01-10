@@ -1,0 +1,78 @@
+@import java.text.DecimalFormat
+
+@import org.iatoki.judgels.sandalphon.problem.bundle.grading.{BundleAnswer, BundleDetailResult}
+@import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmission
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(bundleSubmission: BundleSubmission, bundleGradingResult: Map[String, BundleDetailResult], bundleAnswer: BundleAnswer, authorName: String, problemAlias: String, problemName: String, contestName: String)
+
+<h3>Submission #@bundleSubmission.getId</h3>
+
+<h4>General Info</h4>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class="col-md-3">Info</th>
+                    <th class="col-md-9">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Author</td><td>@authorName</td>
+                </tr>
+                <tr>
+                    <td>Problem</td><td>@if(problemAlias != null) { @problemAlias - } @problemName</td>
+                </tr>
+                @if(contestName != null) {
+                    <tr>
+                        <td>Contest</td><td>@contestName</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Score</td><td>@(new DecimalFormat("#.##").format(bundleSubmission.getLatestScore))</td>
+                </tr>
+                <tr>
+                    <td>Time</td><td><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(bundleSubmission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(bundleSubmission.getTime.getTime)</time></td>
+                </tr>
+                <tr>
+                    <td>JID</td><td>@bundleSubmission.getJid</td>
+                </tr>
+                <tr>
+                    <td>Grading JID</td><td>@bundleSubmission.getLatestGradingJid</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@if(bundleGradingResult != null && bundleGradingResult.size >= 1) {
+    <h4>Results</h4>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-md-4">Number</th>
+                        <th class="col-md-4">Answer</th>
+                        <th class="col-md-2">Score</th>
+                        <th class="col-md-2"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                @for((jid, detailResult) <- bundleGradingResult) {
+                    <tr>
+                        <td>@detailResult.getNumber</td>
+                        <td>@bundleAnswer.getAnswers.get(jid)</td>
+                        <td>@(new DecimalFormat("#.##").format(detailResult.getScore))</td>
+                        <td></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
