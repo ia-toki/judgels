@@ -1,19 +1,14 @@
 package org.iatoki.judgels.sandalphon;
 
-import org.iatoki.judgels.api.JudgelsAPIClientException;
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
-import org.iatoki.judgels.api.jophiel.JophielUser;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.jophiel.viewpoint.ViewpointForm;
 import org.iatoki.judgels.sandalphon.user.User;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.user.UserService;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
-import play.data.Form;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 
@@ -25,12 +20,10 @@ import java.net.URLEncoder;
 @Singleton
 public final class ApplicationController extends AbstractJudgelsController {
 
-    private final JophielPublicAPI jophielPublicAPI;
     private final UserService userService;
 
     @Inject
-    public ApplicationController(JophielPublicAPI jophielPublicAPI, UserService userService) {
-        this.jophielPublicAPI = jophielPublicAPI;
+    public ApplicationController(UserService userService) {
         this.userService = userService;
     }
 
@@ -88,51 +81,7 @@ public final class ApplicationController extends AbstractJudgelsController {
         }
 
         JudgelsPlayUtils.updateUserJidCache(JidCacheServiceImpl.getInstance());
-
-        if (JudgelsPlayUtils.hasViewPoint()) {
-            try {
-                SandalphonUtils.backupSession();
-                SandalphonUtils.setUserSession(jophielPublicAPI.findUserByJid(JudgelsPlayUtils.getViewPoint()), userService.findUserByJid(JudgelsPlayUtils.getViewPoint()));
-            } catch (JudgelsAPIClientException e) {
-                JudgelsPlayUtils.removeViewPoint();
-                SandalphonUtils.restoreSession();
-            }
-        }
-
         return redirect(returnUri);
-    }
-
-    @Authenticated(value = {LoggedIn.class, HasRole.class})
-    @Transactional
-    public Result postViewAs() {
-        Form<ViewpointForm> viewPointForm = Form.form(ViewpointForm.class).bindFromRequest();
-
-        if (!formHasErrors(viewPointForm) && SandalphonUtils.trullyHasRole("admin")) {
-            ViewpointForm viewpointData = viewPointForm.get();
-            try {
-                JophielUser jophielUser = jophielPublicAPI.findUserByUsername(viewpointData.username);
-                if (jophielUser != null) {
-                    userService.upsertUserFromJophielUser(jophielUser, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-                    if (!JudgelsPlayUtils.hasViewPoint()) {
-                        SandalphonUtils.backupSession();
-                    }
-                    JudgelsPlayUtils.setViewPointInSession(jophielUser.getJid());
-                    SandalphonUtils.setUserSession(jophielUser, userService.findUserByJid(jophielUser.getJid()));
-                }
-            } catch (JudgelsAPIClientException e) {
-                // do nothing
-                e.printStackTrace();
-            }
-        }
-        return redirect(request().getHeader("Referer"));
-    }
-
-    @Authenticated(value = {LoggedIn.class, HasRole.class})
-    public Result resetViewAs() {
-        JudgelsPlayUtils.removeViewPoint();
-        SandalphonUtils.restoreSession();
-
-        return redirect(request().getHeader("Referer"));
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})

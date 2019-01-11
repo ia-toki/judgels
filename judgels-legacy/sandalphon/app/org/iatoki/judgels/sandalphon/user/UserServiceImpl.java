@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.user;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.iatoki.judgels.api.jophiel.JophielUser;
-import org.iatoki.judgels.jophiel.user.UserTokens;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.Page;
@@ -115,17 +114,6 @@ public final class UserServiceImpl implements UserService {
         }
 
         JidCacheServiceImpl.getInstance().putDisplayName(jophielUser.getJid(), JudgelsPlayUtils.getUserDisplayName(jophielUser.getUsername()), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-    }
-
-    @Override
-    public UserTokens getUserTokensByUserJid(String userJid) {
-        UserModel userModel = userDao.findByJid(userJid);
-
-        return createUserTokensFromUserModel(userModel);
-    }
-
-    private static UserTokens createUserTokensFromUserModel(UserModel userModel) {
-        return new UserTokens(userModel.userJid, userModel.accessToken, userModel.refreshToken, userModel.idToken, userModel.expirationTime);
     }
 
     private static User createUserFromUserModel(UserModel userModel) {

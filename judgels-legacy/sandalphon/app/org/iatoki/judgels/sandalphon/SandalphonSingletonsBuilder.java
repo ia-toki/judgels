@@ -25,7 +25,7 @@ public final class SandalphonSingletonsBuilder {
         ActivityLogServiceImpl.buildInstance(activityLogDao);
         UserActivityMessageServiceImpl.buildInstance();
 
-        JophielClientControllerUtils.buildInstance(SandalphonProperties.getInstance().getRaphaelBaseUrl(), SandalphonProperties.getInstance().getJophielBaseUrl());
+        JophielClientControllerUtils.buildInstance(SandalphonProperties.getInstance().getRaphaelBaseUrl());
         SandalphonControllerUtils.buildInstance(jophielClientAPI, jophielPublicAPI);
     }
 }

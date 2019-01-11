@@ -12,19 +12,13 @@ public final class JophielClientControllerUtils {
     private static JophielClientControllerUtils INSTANCE;
 
     private final String raphaelBaseUrl;
-    private final String baseUrl;
 
-    private JophielClientControllerUtils(String raphaelBaseUrl, String baseUrl) {
+    private JophielClientControllerUtils(String raphaelBaseUrl) {
         this.raphaelBaseUrl = raphaelBaseUrl;
-        this.baseUrl = baseUrl;
     }
 
     public String getUserEditProfileUrl() {
         return raphaelBaseUrl + "/account/profile";
-    }
-
-    public String getUserSearchProfileUrl() {
-        return baseUrl + "/profiles/search";
     }
 
     public String getRegisterUrl() {
@@ -46,11 +40,11 @@ public final class JophielClientControllerUtils {
         }
     }
 
-    public static void buildInstance(String raphaelBaseUrl, String baseUrl) {
+    public static void buildInstance(String raphaelBaseUrl) {
         if (INSTANCE != null) {
             throw new UnsupportedOperationException("JophielClientControllerUtils instance has already been built");
         }
-        INSTANCE = new JophielClientControllerUtils(raphaelBaseUrl, baseUrl);
+        INSTANCE = new JophielClientControllerUtils(raphaelBaseUrl);
     }
 
     public static JophielClientControllerUtils getInstance() {

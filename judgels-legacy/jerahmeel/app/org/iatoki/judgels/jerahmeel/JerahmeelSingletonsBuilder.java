@@ -55,7 +55,7 @@ public final class JerahmeelSingletonsBuilder {
         ActivityLogServiceImpl.buildInstance(activityLogDao);
         UserActivityMessageServiceImpl.buildInstance();
 
-        JophielClientControllerUtils.buildInstance(JerahmeelProperties.getInstance().getRaphaelBaseUrl(), JerahmeelProperties.getInstance().getJophielBaseUrl());
+        JophielClientControllerUtils.buildInstance(JerahmeelProperties.getInstance().getRaphaelBaseUrl());
         JerahmeelControllerUtils.buildInstance(jophielClientAPI, jophielPublicAPI, bundleSubmissionService, pointStatisticService, problemScoreStatisticService, problemStatisticService, programmingSubmissionService);
         ChapterProgressCacheUtils.buildInstance(chapterProblemDao, userItemDao);
         ProblemSetScoreCacheUtils.buildInstance(archiveDao, bundleSubmissionDao, bundleGradingDao, containerScoreCacheDao, containerProblemScoreCacheDao, problemSetDao, problemSetProblemDao, programmingSubmissionDao, programmingGradingDao);

@@ -26,7 +26,6 @@ import org.iatoki.judgels.jophiel.logincheck.html.isLoggedInLayout;
 import org.iatoki.judgels.jophiel.logincheck.html.isLoggedOutLayout;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsControllerUtils;
@@ -143,9 +142,6 @@ public final class JerahmeelControllerUtils extends AbstractJudgelsControllerUti
             ActivityLogServiceImpl.getInstance().addActivityLog(activityKey, JerahmeelUtils.getRealUsername(), time, JerahmeelUtils.getRealUserJid(), IdentityUtils.getIpAddress());
             String log = JerahmeelUtils.getRealUsername() + " " + activityKey.toString();
             try {
-                if (JudgelsPlayUtils.hasViewPoint()) {
-                    log += " view as " + IdentityUtils.getUsername();
-                }
                 UserActivityMessageServiceImpl.getInstance().addUserActivityMessage(new UserActivityMessage(System.currentTimeMillis(), JerahmeelUtils.getRealUserJid(), log, IdentityUtils.getIpAddress()));
             } catch (InterruptedException e) {
                 e.printStackTrace();

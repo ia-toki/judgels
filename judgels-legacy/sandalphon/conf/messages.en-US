@@ -301,7 +301,3 @@ user.users=Users
 user.userJid=User JID
 user.name=Name
 user.roles=Roles
-
-user.noViewpoint=No Viewpoint
-user.viewAs=View As
-user.resetViewAs=Reset View
