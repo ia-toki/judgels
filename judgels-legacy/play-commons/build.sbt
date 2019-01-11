@@ -59,6 +59,4 @@ lazy val playcommons = (project in file("."))
         sources in (Compile,doc) := Seq.empty
     )
 
-resolvers += "google-sedis-fix" at "http://pk11-scratch.googlecode.com/svn/trunk"
-
 lazy val commons = RootProject(file("../commons"))
