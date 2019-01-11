@@ -4,12 +4,10 @@ public final class JophielUser {
 
     private String jid;
     private String username;
-    private String avatarUrl;
 
-    public JophielUser(String jid, String username, String avatarUrl) {
+    public JophielUser(String jid, String username) {
         this.jid = jid;
         this.username = username;
-        this.avatarUrl = avatarUrl;
     }
 
     public String getJid() {
@@ -22,9 +20,5 @@ public final class JophielUser {
 
     public String getName() {
         return username;
-    }
-
-    public String getProfilePictureUrl() {
-        return avatarUrl;
     }
 }

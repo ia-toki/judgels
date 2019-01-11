@@ -66,12 +66,7 @@ public final class JophielClientController extends Controller {
         }
 
         session("username", user.getUsername());
-
-        if (user.getProfilePictureUrl() == null) {
-            session("avatar", JophielClientControllerUtils.getInstance().getUserDefaultAvatarUrl());
-        } else {
-            session("avatar", user.getProfilePictureUrl());
-        }
+        session("avatar", JophielClientControllerUtils.getInstance().getUserAvatarUrl(user.getJid()));
     }
 
     private URI getRedirectUri() {

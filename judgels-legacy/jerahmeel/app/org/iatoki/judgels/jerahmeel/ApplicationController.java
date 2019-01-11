@@ -5,9 +5,7 @@ import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
 import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
 import org.iatoki.judgels.jerahmeel.user.UserService;
-import org.iatoki.judgels.jerahmeel.avatar.AvatarCacheServiceImpl;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
-import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
@@ -67,7 +65,6 @@ public final class ApplicationController extends AbstractJudgelsController {
         }
 
         JudgelsPlayUtils.updateUserJidCache(JidCacheServiceImpl.getInstance());
-        JophielClientControllerUtils.updateUserAvatarCache(AvatarCacheServiceImpl.getInstance());
         return redirect(returnUri);
     }
 

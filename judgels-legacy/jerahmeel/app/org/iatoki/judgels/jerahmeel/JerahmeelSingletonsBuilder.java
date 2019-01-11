@@ -23,10 +23,8 @@ import org.iatoki.judgels.jerahmeel.chapter.ChapterScoreCacheUtils;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.UserActivityMessageServiceImpl;
 import org.iatoki.judgels.jerahmeel.activity.ActivityLogDao;
-import org.iatoki.judgels.jerahmeel.avatar.AvatarCacheDao;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheDao;
 import org.iatoki.judgels.jerahmeel.activity.ActivityLogServiceImpl;
-import org.iatoki.judgels.jerahmeel.avatar.AvatarCacheServiceImpl;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
@@ -43,7 +41,7 @@ public final class JerahmeelSingletonsBuilder {
 
     @Inject
     public JerahmeelSingletonsBuilder(
-            JidCacheDao jidCacheDao, AvatarCacheDao avatarCacheDao, ActivityLogDao activityLogDao,
+            JidCacheDao jidCacheDao, ActivityLogDao activityLogDao,
             JophielClientAPI jophielClientAPI, JophielPublicAPI jophielPublicAPI,
             BundleSubmissionService bundleSubmissionService, PointStatisticService pointStatisticService, ProblemScoreStatisticService problemScoreStatisticService, ProblemStatisticService problemStatisticService, ProgrammingSubmissionService programmingSubmissionService,
             ChapterProblemDao chapterProblemDao, UserItemDao userItemDao,
@@ -51,11 +49,10 @@ public final class JerahmeelSingletonsBuilder {
             CourseChapterDao courseChapterDao) {
 
         JidCacheServiceImpl.buildInstance(jidCacheDao);
-        AvatarCacheServiceImpl.buildInstance(avatarCacheDao);
         ActivityLogServiceImpl.buildInstance(activityLogDao);
         UserActivityMessageServiceImpl.buildInstance();
 
-        JophielClientControllerUtils.buildInstance(JerahmeelProperties.getInstance().getRaphaelBaseUrl());
+        JophielClientControllerUtils.buildInstance(JerahmeelProperties.getInstance().getRaphaelBaseUrl(), JerahmeelProperties.getInstance().getJophielBaseUrl());
         JerahmeelControllerUtils.buildInstance(jophielClientAPI, jophielPublicAPI, bundleSubmissionService, pointStatisticService, problemScoreStatisticService, problemStatisticService, programmingSubmissionService);
         ChapterProgressCacheUtils.buildInstance(chapterProblemDao, userItemDao);
         ProblemSetScoreCacheUtils.buildInstance(archiveDao, bundleSubmissionDao, bundleGradingDao, containerScoreCacheDao, containerProblemScoreCacheDao, problemSetDao, problemSetProblemDao, programmingSubmissionDao, programmingGradingDao);
