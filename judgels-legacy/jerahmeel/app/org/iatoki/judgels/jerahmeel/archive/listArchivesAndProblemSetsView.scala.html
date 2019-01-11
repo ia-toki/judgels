@@ -1,0 +1,13 @@
+@import org.iatoki.judgels.jerahmeel.problemset.ProblemSet
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import org.iatoki.judgels.play.Page
+
+@(currentArchive: Archive, childArchives: List[Archive], pageOfProblemSets: Page[ProblemSet], orderBy: String, orderDir: String, filterString: String)
+
+@if(!childArchives.isEmpty) {
+    @listArchivesView(currentArchive, childArchives)
+}
+
+@if(!pageOfProblemSets.getData.isEmpty) {
+    @listProblemSetsView(currentArchive, pageOfProblemSets, orderBy, orderDir, filterString)
+}

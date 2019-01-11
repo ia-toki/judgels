@@ -1,0 +1,10 @@
+@(requestURL: String, requestBody: String)
+
+<div class="lesson_statement">
+
+</div>
+<script type="text/javascript">
+    var sandalphonLessonTOTPURL = "@requestURL";
+    var body = '@Html(requestBody)';
+</script>
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/lessonTOTPStatement.js")"></script>

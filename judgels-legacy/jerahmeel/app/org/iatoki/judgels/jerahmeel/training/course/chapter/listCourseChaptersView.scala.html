@@ -1,0 +1,23 @@
+@import org.iatoki.judgels.jerahmeel.chapter.Chapter
+@import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapter
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.training.course.chapter.routes
+
+@(curriculumId: Long, curriculumCourseId: Long, pageOfCourseChapters: Page[CourseChapter], chaptersMap: Map[String, Chapter], orderBy: String, orderDir: String, filterString: String)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.TrainingChapterController.listChapters(curriculumId, curriculumCourseId, newPageIndex, newOrderBy, newOrderDir)}
+
+@for(courseChapter <- pageOfCourseChapters.getData()) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@org.iatoki.judgels.jerahmeel.training.course.chapter.lesson.routes.TrainingLessonController.viewLessons(curriculumId, curriculumCourseId, courseChapter.getId)" class="panel-title">
+                @{courseChapter.getAlias}. @chaptersMap.get(courseChapter.getChapterJid).getName
+            </a>
+        </div>
+    </div>
+}
+
+@paginationView(pageOfCourseChapters, orderBy, orderDir, filterString, listFunc)

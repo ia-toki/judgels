@@ -1,0 +1,40 @@
+@import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.statistic.point.PointStatistic
+
+@import scala.collection.JavaConversions
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(pointStatistic: PointStatistic)
+
+<div class="box clearfix">
+    <div class="col-md-12">
+        <h4>@Messages.get("widget.point")</h4>
+        @if(pointStatistic != null) {
+            <table class="table table-condensed">
+                <tr>
+                    <th><small>@Messages.get("widget.point.rank")</small></th>
+                    <th><small>@Messages.get("widget.point.user")</small></th>
+                    <th><small>@Messages.get("widget.point.totalPoints")</small></th>
+                    <th><small>@Messages.get("widget.point.totalProblems")</small></th>
+                </tr>
+                @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pointStatistic.getPageOfPointStatisticEntries.getData.map(p => p.getUserJid).toSeq))) { userDisplayNamesMap =>
+                    @for((pointStatisticEntry, i) <- pointStatistic.getPageOfPointStatisticEntries.getData.zipWithIndex) {
+                        @if(i < 5) {
+                            <tr>
+                                <td><small>@(i + 1). </small></td>
+                                <td><small>@userDisplayNamesMap.get(pointStatisticEntry.getUserJid)</small></td>
+                                <td><small>@pointStatisticEntry.getTotalPoints</small></td>
+                                <td><small>@pointStatisticEntry.getTotalProblems</small></td>
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+
+            <small>@Messages.get("widget.point.lastUpdated") <time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(pointStatistic.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(pointStatistic.getTime)</time></small>
+        } else {
+            <small>@Messages.get("widget.point.noStatisticYet")</small>
+        }
+    </div>
+</div>

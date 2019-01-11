@@ -1,0 +1,43 @@
+@import java.lang.Double
+
+@import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemWithScore
+
+@import org.iatoki.judgels.jerahmeel.problemset.ProblemSet
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.table.searchView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.jerahmeel.problemset.problem.routes
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.ProblemScore
+
+@(problemSet: ProblemSet, pageOfProblemSetProblemsWithScore: Page[ProblemSetProblemWithScore], orderBy: String, orderDir: String, filterString: String, problemTitlesMap: Map[String, String])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.ProblemSetProblemController.listVisibleProblemSetProblems(problemSet.getId, newPageIndex, newOrderBy, newOrderDir)}
+
+@searchView(pageOfProblemSetProblemsWithScore.getPageIndex, orderBy, orderDir, filterString, listFunc)
+
+<div class="clearfix"></div>
+
+@for(problemSetProblemWithScore <- pageOfProblemSetProblemsWithScore.getData()) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@routes.ProblemSetProblemController.viewProblemSetProblem(problemSet.getId, problemSetProblemWithScore.getProblemSetProblem.getId)" class="panel-title">@problemSetProblemWithScore.getProblemSetProblem.getAlias. @problemTitlesMap.get(problemSetProblemWithScore.getProblemSetProblem.getProblemJid)</a>
+            <div class="pull-right">
+                @if(Double.compare(ProblemScore.MINIMUM_SCORE, problemSetProblemWithScore.getScore) == 0) {
+                    <span class="alert alert-warning">
+                        @Messages.get("archive.problemSet.problem.notTried")
+                    </span>
+                } else {
+                    <span class="alert alert-warning">
+                        @Messages.get("archive.problemSet.problem.points"):
+                        @problemSetProblemWithScore.getScore
+                    </span>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@paginationView(pageOfProblemSetProblemsWithScore, orderBy, orderDir, filterString, listFunc)

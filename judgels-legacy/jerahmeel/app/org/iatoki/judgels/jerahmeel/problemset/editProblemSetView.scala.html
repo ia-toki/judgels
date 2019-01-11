@@ -1,0 +1,19 @@
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.problemset.ProblemSet
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.problemset.ProblemSetUpsertForm
+@import org.iatoki.judgels.jerahmeel.problemset.routes
+
+@(problemSet: ProblemSet, problemSetUpsertForm: Form[ProblemSetUpsertForm], archives: List[Archive])
+
+@implicitFieldConstructor = @{ b3.vertical.fieldConstructor }
+
+@formErrorView(problemSetUpsertForm)
+
+@b3.form(routes.ProblemSetController.postEditProblemSet(problemSet.getId)) {
+
+    @upsertProblemSetView(problemSetUpsertForm, archives)
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.button.edit") }
+}

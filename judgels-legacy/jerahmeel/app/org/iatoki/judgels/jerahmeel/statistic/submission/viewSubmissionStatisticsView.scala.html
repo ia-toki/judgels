@@ -1,0 +1,86 @@
+@import org.iatoki.judgels.jerahmeel.statistic.submission.SubmissionStatistic
+@import play.i18n.Messages
+
+@(bundleSubmissionStatistic: SubmissionStatistic, programmingSubmissionStatistic: SubmissionStatistic)
+
+<h4>@Messages.get("statistic.submissions.bundle")</h4>
+<p>@Messages.get("statistic.submissions.total"): @bundleSubmissionStatistic.getOverall</p>
+<table class="table table-condensed">
+    <tr>
+        <th>@Messages.get("statistic.submissions.timeUTC")</th>
+        <th>@Messages.get("statistic.submissions.total")</th>
+        <th>@Messages.get("statistic.submissions.time")</th>
+        <th>@Messages.get("statistic.submissions.total")</th>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisHour")</td>
+        <td>@bundleSubmissionStatistic.getThisHour</td>
+        <td>@Messages.get("statistic.submissions.time.lastHour")</td>
+        <td>@bundleSubmissionStatistic.getOverLastHour</td>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisDay")</td>
+        <td>@bundleSubmissionStatistic.getThisDay</td>
+        <td>@Messages.get("statistic.submissions.time.lastDay")</td>
+        <td>@bundleSubmissionStatistic.getOverLastDay</td>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisWeek")</td>
+        <td>@bundleSubmissionStatistic.getThisWeek</td>
+        <td>@Messages.get("statistic.submissions.time.lastWeek")</td>
+        <td>@bundleSubmissionStatistic.getOverLastWeek</td>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisMonth")</td>
+        <td>@bundleSubmissionStatistic.getThisMonth</td>
+        <td>@Messages.get("statistic.submissions.time.lastMonth")</td>
+        <td>@bundleSubmissionStatistic.getOverLastMonth</td>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisYear")</td>
+        <td>@bundleSubmissionStatistic.getThisYear</td>
+        <td>@Messages.get("statistic.submissions.time.lastYear")</td>
+        <td>@bundleSubmissionStatistic.getOverLastYear</td>
+    </tr>
+</table>
+
+<h4>@Messages.get("statistic.submissions.programming")</h4>
+<p>@Messages.get("statistic.submissions.total"): @programmingSubmissionStatistic.getOverall</p>
+<table class="table table-condensed">
+    <tr>
+        <th>@Messages.get("statistic.submissions.timeUTC")</th>
+        <th>@Messages.get("statistic.submissions.total")</th>
+        <th>@Messages.get("statistic.submissions.time")</th>
+        <th>@Messages.get("statistic.submissions.total")</th>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisHour")</td>
+        <td>@programmingSubmissionStatistic.getThisHour</td>
+        <td>@Messages.get("statistic.submissions.time.lastHour")</td>
+        <td>@programmingSubmissionStatistic.getOverLastHour</td>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisDay")</td>
+        <td>@programmingSubmissionStatistic.getThisDay</td>
+        <td>@Messages.get("statistic.submissions.time.lastDay")</td>
+        <td>@programmingSubmissionStatistic.getOverLastDay</td>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisWeek")</td>
+        <td>@programmingSubmissionStatistic.getThisWeek</td>
+        <td>@Messages.get("statistic.submissions.time.lastWeek")</td>
+        <td>@programmingSubmissionStatistic.getOverLastWeek</td>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisMonth")</td>
+        <td>@programmingSubmissionStatistic.getThisMonth</td>
+        <td>@Messages.get("statistic.submissions.time.lastMonth")</td>
+        <td>@programmingSubmissionStatistic.getOverLastMonth</td>
+    </tr>
+    <tr>
+        <td>@Messages.get("statistic.submissions.timeUTC.thisYear")</td>
+        <td>@programmingSubmissionStatistic.getThisYear</td>
+        <td>@Messages.get("statistic.submissions.time.lastYear")</td>
+        <td>@programmingSubmissionStatistic.getOverLastYear</td>
+    </tr>
+</table>

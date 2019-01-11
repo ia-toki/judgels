@@ -1,0 +1,23 @@
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.problemset.ProblemSetUpsertForm
+@import org.iatoki.judgels.jerahmeel.problemset.routes
+
+@(problemSetUpsertForm: Form[ProblemSetUpsertForm], archives: List[Archive])(implicit fieldConstructor: b3.B3FieldConstructor)
+
+@helper.CSRF.formField
+
+<div class="form-group row" id="archiveJid_field">
+    <label class="control-label col-md-2" for="archiveJid">@Messages.get("archive.problemSet.archive")</label>
+    <div class="col-md-10">
+        <select id="archiveJid" name="archiveJid" class="form-control selectpicker">
+            @for(archive <- archives) {
+                <option value="@archive.getJid" @if(archive.getJid.equals(problemSetUpsertForm("archiveJid").value)) { selected="selected" }>@Html(archive.prependSpacesBasedOnLevel(3))</option>
+            }
+        </select>
+    </div>
+</div>
+@b3.text(problemSetUpsertForm("name"), '_label -> Messages.get("archive.problemSet.name"))
+@b3.textarea(problemSetUpsertForm("description"), '_label -> Messages.get("archive.problemSet.description"), 'class -> "ckeditor")
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>

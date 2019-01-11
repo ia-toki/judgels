@@ -1,0 +1,19 @@
+@import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapterEditForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.course.chapter.routes
+
+@(courseChapterEditForm: Form[CourseChapterEditForm], courseId: Long, courseChapterId: Long)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(courseChapterEditForm)
+
+@b3.form(routes.CourseChapterController.postEditChapter(courseId, courseChapterId)) {
+
+    @helper.CSRF.formField
+
+    @b3.text(courseChapterEditForm("alias"), '_label -> Messages.get("chapter.alias"), 'class -> "form-control")
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

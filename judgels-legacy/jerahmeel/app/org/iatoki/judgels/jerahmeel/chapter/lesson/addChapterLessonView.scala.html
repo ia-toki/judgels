@@ -1,0 +1,23 @@
+@import org.iatoki.judgels.jerahmeel.chapter.lesson.ChapterLessonAddForm
+@import org.iatoki.judgels.jerahmeel.chapter.lesson.ChapterLessonStatus
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.chapter.lesson.routes
+
+@(chapterId: Long, chapterLessonAddForm: Form[ChapterLessonAddForm])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@formErrorView(chapterLessonAddForm)
+
+@b3.form(routes.ChapterLessonController.postAddChapterLesson(chapterId)) {
+
+    @helper.CSRF.formField
+
+    @b3.text(chapterLessonAddForm("alias"), '_label -> Messages.get("chapter.lesson.alias"), 'class -> "form-control")
+    @b3.text(chapterLessonAddForm("lessonJid"), '_label -> Messages.get("chapter.lesson.jid"), 'class -> "form-control")
+    @b3.text(chapterLessonAddForm("lessonSecret"), '_label -> Messages.get("chapter.lesson.secret"), 'class -> "form-control")
+    @b3.select(chapterLessonAddForm("status"), ChapterLessonStatus.values.map(e => (e.name() -> e.name())).toSeq, '_label -> Messages.get("chapter.lesson.status"), 'class -> "form-control selectpicker")
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.add") }
+}

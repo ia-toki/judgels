@@ -1,0 +1,14 @@
+@(requestURL: String, requestBody: String)
+
+@if(play.mvc.Controller.flash("submissionError") != null) {
+    <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionError")}</div>
+}
+
+<div class="problem_statement">
+
+</div>
+<script type="text/javascript">
+    var sandalphonTOTPURL = "@requestURL";
+    var body = '@Html(requestBody)';
+</script>
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/problemTOTPStatement.js")"></script>

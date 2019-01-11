@@ -1,0 +1,27 @@
+@import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblem
+
+@import org.iatoki.judgels.jerahmeel.problemset.ProblemSet
+@import org.iatoki.judgels.play.views.html.table.searchView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.jerahmeel.problemset.problem.routes
+@import org.iatoki.judgels.play.Page
+
+@(problemSet: ProblemSet, pageOfProblemSetProblems: Page[ProblemSetProblem], orderBy: String, orderDir: String, filterString: String, problemTitlesMap: Map[String, String])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.ProblemSetProblemController.listVisibleProblemSetProblems(problemSet.getId, newPageIndex, newOrderBy, newOrderDir)}
+
+@searchView(pageOfProblemSetProblems.getPageIndex, orderBy, orderDir, filterString, listFunc)
+
+<div class="clearfix"></div>
+
+@for(problemSetProblem <- pageOfProblemSetProblems.getData()) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@routes.ProblemSetProblemController.viewProblemSetProblem(problemSet.getId, problemSetProblem.getId)" class="panel-title">@problemSetProblem.getAlias. @problemTitlesMap.get(problemSetProblem.getProblemJid)</a>
+        </div>
+    </div>
+}
+
+@paginationView(pageOfProblemSetProblems, orderBy, orderDir, filterString, listFunc)

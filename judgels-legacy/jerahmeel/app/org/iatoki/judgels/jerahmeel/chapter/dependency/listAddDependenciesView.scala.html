@@ -1,0 +1,58 @@
+@import org.iatoki.judgels.jerahmeel.chapter.dependency.ChapterDependencyAddForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersView
+@import org.iatoki.judgels.play.views.html.table.searchView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.chapter.dependency.routes
+
+@import org.iatoki.judgels.jerahmeel.chapter.dependency.ChapterDependency
+@(chapterId: Long, pageOfChapterDependencies: Page[ChapterDependency], orderBy: String, orderDir: String, filterString: String, chapterDependencyAddForm: Form[ChapterDependencyAddForm])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.ChapterDependencyController.listAddDependencies(chapterId, newPageIndex, newOrderBy, newOrderDir)}
+
+@formErrorView(chapterDependencyAddForm)
+
+@b3.form(routes.ChapterDependencyController.postAddDependency(chapterId, pageOfChapterDependencies.getPageIndex, orderBy, orderDir, filterString)) {
+
+    @helper.CSRF.formField
+
+    @b3.text(chapterDependencyAddForm("chapterJid"), '_label -> Messages.get("chapter.jid"), 'class -> "form-control chapter_autocomplete")
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.add") }
+}
+
+<script type="text/javascript">
+    var chapterAutoCompleteUrl = "@org.iatoki.judgels.jerahmeel.controllers.api.internal.routes.InternalChapterAPIController.autocompleteChapter()";
+</script>
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/chapterAutoComplete.js")"></script>
+
+
+@searchView(pageOfChapterDependencies.getPageIndex, orderBy, orderDir, filterString, listFunc)
+
+<div class="clearfix"></div>
+
+@tableView() {
+    @tableHeadersView(pageOfChapterDependencies.getPageIndex, orderBy, orderDir, filterString, listFunc)(
+        "id" -> Messages.get("commons.id"),
+        "" -> Messages.get("chapter.name")
+    )
+
+    <tbody>
+    @for(chapterDependency <- pageOfChapterDependencies.getData()) {
+        <tr>
+            <td>@chapterDependency.getId</td>
+            <td>@chapterDependency.getDependedChapterName</td>
+            <td class="text-center">
+                <a href="@routes.ChapterDependencyController.removeDependency(chapterId, chapterDependency.getId)" onclick="confirmLink ( event, this.href )"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+}
+
+@paginationView(pageOfChapterDependencies, orderBy, orderDir, filterString, listFunc)

@@ -1,0 +1,20 @@
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import org.iatoki.judgels.jerahmeel.archive.ArchiveUpsertForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.archive.routes
+
+@(archiveUpsertForm: Form[ArchiveUpsertForm], archives: List[Archive])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(archiveUpsertForm)
+
+@b3.form(routes.ArchiveController.postCreateArchive()) {
+
+    @helper.CSRF.formField
+
+    @upsertArchiveView(archiveUpsertForm, archives)
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.create") }
+}

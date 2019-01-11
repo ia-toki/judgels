@@ -1,0 +1,35 @@
+@import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.statistic.submission.SubmissionEntry
+
+@import scala.collection.JavaConversions
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(submissionEntries: List[SubmissionEntry], problemTitlesMap: Map[String, String])
+
+<div class="box clearfix">
+    <div class="col-md-12">
+        <h4>@Messages.get("widget.submission")</h4>
+        <table class="table table-condensed">
+            <tr>
+                <th><small>@Messages.get("widget.submission.author")</small></th>
+                <th><small>@Messages.get("widget.submission.problem")</small></th>
+                <th><small>@Messages.get("widget.submission.score")</small></th>
+            </tr>
+            @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(submissionEntries.map(s => s.getAuthorJid).toSeq))) { userDisplayNamesMap =>
+                @for((submissionEntry, i) <- submissionEntries.zipWithIndex) {
+                    @if(i < 5) {
+                        <tr>
+                            <td><small>@userDisplayNamesMap.get(submissionEntry.getAuthorJid)</small></td>
+                            <td><small>@problemTitlesMap.get(submissionEntry.getProblemJid)</small></td>
+                            <td><small>@submissionEntry.getScore</small></td>
+                        </tr>
+                    }
+                }
+            }
+        </table>
+        @if(!submissionEntries.isEmpty) {
+            <small>@Messages.get("widget.submission.lastSubmitted") <time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submissionEntries.get(0).getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submissionEntries.get(0).getTime)</time></small>
+        }
+    </div>
+</div>

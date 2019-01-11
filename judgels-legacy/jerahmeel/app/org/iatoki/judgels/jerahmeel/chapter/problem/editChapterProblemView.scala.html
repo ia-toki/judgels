@@ -1,0 +1,25 @@
+@import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblem
+@import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemStatus
+@import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemEditForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.chapter.problem.routes
+
+@(chapterProblemEditForm: Form[ChapterProblemEditForm], chapterId: Long, chapterProblem: ChapterProblem)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(chapterProblemEditForm)
+
+@b3.form(routes.ChapterProblemController.postEditChapterProblem(chapterId, chapterProblem.getId)) {
+
+    @helper.CSRF.formField
+
+    @b3.static('_label -> Messages.get("chapter.problem.jid")) { @chapterProblem.getProblemJid }
+
+    @b3.text(chapterProblemEditForm("alias"), '_label -> Messages.get("course.alias"), 'class -> "form-control")
+    @b3.select(chapterProblemEditForm("status"), ChapterProblemStatus.values.map(e => (e.name() -> e.name())).toSeq, '_label -> Messages.get("chapter.problem.status"), 'class -> "form-control selectpicker")
+
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

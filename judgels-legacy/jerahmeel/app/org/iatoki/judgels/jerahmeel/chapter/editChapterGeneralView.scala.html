@@ -1,0 +1,19 @@
+@import org.iatoki.judgels.jerahmeel.chapter.ChapterUpsertForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.chapter.routes
+
+@(chapterUpsertForm: Form[ChapterUpsertForm], chapterId: Long)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(chapterUpsertForm)
+
+@b3.form(routes.ChapterController.postEditChapterGeneral(chapterId)) {
+
+    @helper.CSRF.formField
+
+    @upsertChapterView(chapterUpsertForm)
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

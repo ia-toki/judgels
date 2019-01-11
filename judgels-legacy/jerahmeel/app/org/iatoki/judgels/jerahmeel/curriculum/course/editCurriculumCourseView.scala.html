@@ -1,0 +1,19 @@
+@import org.iatoki.judgels.jerahmeel.curriculum.course.CurriculumCourseEditForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.curriculum.course.routes
+
+@(curriculumCourseEditForm: Form[CurriculumCourseEditForm], curriculumId: Long, curriculumCourseId: Long)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(curriculumCourseEditForm)
+
+@b3.form(routes.CurriculumCourseController.postEditCourse(curriculumId, curriculumCourseId)) {
+
+    @helper.CSRF.formField
+
+    @b3.text(curriculumCourseEditForm("alias"), '_label -> Messages.get("course.alias"), 'class -> "form-control")
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}

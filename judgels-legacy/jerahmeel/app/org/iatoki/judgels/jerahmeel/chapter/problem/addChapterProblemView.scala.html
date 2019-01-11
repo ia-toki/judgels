@@ -1,0 +1,25 @@
+@import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemAddForm
+@import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemStatus
+@import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemType
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.chapter.problem.routes
+
+@(chapterId: Long, chapterProblemAddForm: Form[ChapterProblemAddForm])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@formErrorView(chapterProblemAddForm)
+
+@b3.form(routes.ChapterProblemController.postAddChapterProblem(chapterId)) {
+
+    @helper.CSRF.formField
+
+    @b3.text(chapterProblemAddForm("alias"), '_label -> Messages.get("chapter.problem.alias"), 'class -> "form-control")
+    @b3.text(chapterProblemAddForm("problemJid"), '_label -> Messages.get("chapter.problem.jid"), 'class -> "form-control")
+    @b3.text(chapterProblemAddForm("problemSecret"), '_label -> Messages.get("chapter.problem.secret"), 'class -> "form-control")
+    @b3.select(chapterProblemAddForm("type"), ChapterProblemType.values.map(e => (e.name() -> e.name())).toSeq, '_label -> Messages.get("chapter.problem.type"), 'class -> "form-control selectpicker")
+    @b3.select(chapterProblemAddForm("status"), ChapterProblemStatus.values.map(e => (e.name() -> e.name())).toSeq, '_label -> Messages.get("chapter.problem.status"), 'class -> "form-control selectpicker")
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.add") }
+}

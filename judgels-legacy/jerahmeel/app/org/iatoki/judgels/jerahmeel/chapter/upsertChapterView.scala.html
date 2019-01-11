@@ -1,0 +1,9 @@
+@import org.iatoki.judgels.jerahmeel.chapter.ChapterUpsertForm
+@import play.i18n.Messages
+
+@(chapterUpsertForm: Form[ChapterUpsertForm])(implicit fieldConstructor: b3.B3FieldConstructor)
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>
+
+@b3.text(chapterUpsertForm("name"), '_label -> Messages.get("chapter.name"))
+@b3.textarea(chapterUpsertForm("description"), '_label -> Messages.get("chapter.description"), 'class -> "ckeditor form-control")

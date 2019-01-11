@@ -1,7 +1,7 @@
 lazy val judgels = (project in file("."))
     .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
-    .dependsOn(sandalphon)
-    .aggregate(sandalphon)
+    .dependsOn(sandalphon, jerahmeel)
+    .aggregate(sandalphon, jerahmeel)
     .settings(javaUnidocSettings: _*)
     .settings(
         name := "judgels",
@@ -13,3 +13,4 @@ lazy val judgels = (project in file("."))
     )
 
 lazy val sandalphon = RootProject(file("../sandalphon"))
+lazy val jerahmeel = RootProject(file("../jerahmeel"))

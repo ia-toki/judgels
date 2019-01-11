@@ -1,0 +1,26 @@
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import org.iatoki.judgels.jerahmeel.archive.ArchiveWithScore
+@import org.iatoki.judgels.jerahmeel.archive.routes
+
+@(currentArchive: Archive, childArchives: List[ArchiveWithScore])
+
+@for(archive <- childArchives) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@routes.ArchiveController.viewArchives(archive.getArchive.getId)" class="panel-title">@archive.getArchive.getName</a>
+            <div class="pull-right">
+                <span class="alert alert-warning">
+                    @Messages.get("archive.totalPoints"):
+                    @archive.getScore
+                </span>
+            </div>
+            @if(!archive.getArchive.getDescription.isEmpty) {
+                <hr class="training-divider"/>
+                <div class="small">
+                    @Html(archive.getArchive.getDescription)
+                </div>
+            }
+        </div>
+    </div>
+}

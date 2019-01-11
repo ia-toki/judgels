@@ -1,0 +1,9 @@
+@import org.iatoki.judgels.jerahmeel.curriculum.CurriculumUpsertForm
+@import play.i18n.Messages
+
+@(curriculumUpsertForm: Form[CurriculumUpsertForm])(implicit fieldConstructor: b3.B3FieldConstructor)
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>
+
+@b3.text(curriculumUpsertForm("name"), '_label -> Messages.get("curriculum.name"))
+@b3.textarea(curriculumUpsertForm("description"), '_label -> Messages.get("curriculum.description"), 'class -> "ckeditor form-control")

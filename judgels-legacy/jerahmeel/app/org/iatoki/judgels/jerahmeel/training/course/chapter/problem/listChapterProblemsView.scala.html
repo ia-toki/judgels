@@ -1,0 +1,39 @@
+@import org.iatoki.judgels.jerahmeel.curriculum.course.CurriculumCourse
+
+@import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapter
+@import org.iatoki.judgels.jerahmeel.curriculum.Curriculum
+
+@import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblem
+@import org.iatoki.judgels.play.views.html.table.searchView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.jerahmeel.training.course.chapter.problem.routes
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.JerahmeelUtils
+
+@(curriculum: Curriculum, curriculumCourse: CurriculumCourse, courseChapter: CourseChapter, pageOfChapterProblems: Page[ChapterProblem], orderBy: String, orderDir: String, filterString: String, problemTitlesMap: Map[String, String])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.TrainingProblemController.listProblems(curriculum.getId, curriculumCourse.getId, courseChapter.getId, newPageIndex, newOrderBy, newOrderDir)}
+
+@searchView(pageOfChapterProblems.getPageIndex, orderBy, orderDir, filterString, listFunc)
+
+<div class="clearfix"></div>
+
+@for(chapterProblem <- pageOfChapterProblems.getData()) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@routes.TrainingProblemController.viewProblem(curriculum.getId, curriculumCourse.getId, courseChapter.getId, chapterProblem.getId)" class="panel-title">@chapterProblem.getAlias. @problemTitlesMap.get(chapterProblem.getProblemJid)</a>
+        </div>
+    </div>
+}
+
+@paginationView(pageOfChapterProblems, orderBy, orderDir, filterString, listFunc)
+
+<script type="text/javascript">
+    var chapterUpdateViewUrl = "@org.iatoki.judgels.jerahmeel.controllers.api.internal.routes.InternalChapterAPIController.updateChapterViewStatus(courseChapter.getId)";
+    var courseChapterId = @courseChapter.getId;
+</script>
+@if(!JerahmeelUtils.isGuest()) {
+    <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/chapterUpdateView.js")"></script>
+}

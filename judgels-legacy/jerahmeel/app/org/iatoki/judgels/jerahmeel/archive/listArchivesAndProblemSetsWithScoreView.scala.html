@@ -1,0 +1,14 @@
+@import org.iatoki.judgels.jerahmeel.problemset.ProblemSetWithScore
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import org.iatoki.judgels.jerahmeel.archive.ArchiveWithScore
+@import org.iatoki.judgels.play.Page
+
+@(currentArchive: Archive, childArchives: List[ArchiveWithScore], pageOfProblemSets: Page[ProblemSetWithScore], orderBy: String, orderDir: String, filterString: String)
+
+@if(!childArchives.isEmpty) {
+    @listArchivesWithScoreView(currentArchive, childArchives)
+}
+
+@if(!pageOfProblemSets.getData.isEmpty) {
+    @listProblemSetsWithScoreView(currentArchive, pageOfProblemSets, orderBy, orderDir, filterString)
+}

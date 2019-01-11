@@ -1,0 +1,39 @@
+@import org.iatoki.judgels.jerahmeel.statistic.problemscore.ProblemStatistic
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.jerahmeel.statistic.routes
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(problemStatistic: ProblemStatistic, problemTitlesMap: Map[String, String], pageIndex: Long, orderBy: String, orderDir: String)
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.StatisticController.listProblemStatistics(newPageIndex, newOrderBy, newOrderDir)}
+
+<div class="clearfix"></div>
+
+@Messages.get("statistic.problem.lastUpdated") <time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(problemStatistic.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(problemStatistic.getTime)</time>
+
+<br />
+
+@tableView() {
+    @tableHeadersView(problemStatistic.getPageOfProblemStatisticEntries.getPageIndex, orderBy, orderDir, "", listFunc)(
+        "" -> Messages.get("statistic.problem.rank"),
+        "" -> Messages.get("statistic.problem.name"),
+        "totalSubmissions" -> Messages.get("statistic.problem.totalSubmissions")
+    )
+
+    <tbody>
+        @for((problemStatisticEntry, i) <- problemStatistic.getPageOfProblemStatisticEntries.getData.zipWithIndex) {
+            <tr>
+                <td>@(problemStatistic.getPageOfProblemStatisticEntries.getCurrentFirstRowIndex + i + 1).</td>
+                <td>@problemTitlesMap.get(problemStatisticEntry.getProblemJid)</td>
+                <td>@problemStatisticEntry.getTotalSubmissions</td>
+                <td class="text-center">
+                </td>
+            </tr>
+        }
+    </tbody>
+}
+
+@paginationView(problemStatistic.getPageOfProblemStatisticEntries, orderBy, orderDir, "", listFunc)

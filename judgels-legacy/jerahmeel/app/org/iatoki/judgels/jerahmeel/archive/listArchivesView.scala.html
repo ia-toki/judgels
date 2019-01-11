@@ -1,0 +1,18 @@
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import org.iatoki.judgels.jerahmeel.archive.routes
+
+@(currentArchive: Archive, childArchives: List[Archive])
+
+@for(archive <- childArchives) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@routes.ArchiveController.viewArchives(archive.getId)" class="panel-title">@archive.getName</a>
+            @if(!archive.getDescription.isEmpty) {
+                <hr class="training-divider"/>
+                <div class="small">
+                    @Html(archive.getDescription)
+                </div>
+            }
+        </div>
+    </div>
+}

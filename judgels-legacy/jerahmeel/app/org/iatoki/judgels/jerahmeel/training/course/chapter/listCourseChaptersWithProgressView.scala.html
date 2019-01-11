@@ -1,0 +1,51 @@
+@import org.iatoki.judgels.jerahmeel.chapter.Chapter
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapterWithProgress
+@import org.iatoki.judgels.jerahmeel.course.chapter.ChapterProgress
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.training.course.chapter.routes
+
+@(curriculumId: Long, curriculumCourseId: Long, pageOfCourseChaptersWithProgress: Page[CourseChapterWithProgress], chaptersMap: Map[String, Chapter], orderBy: String, orderDir: String, filterString: String)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.TrainingChapterController.listChapters(curriculumId, curriculumCourseId, newPageIndex, newOrderBy, newOrderDir)}
+
+@for(courseChapterWithProgress <- pageOfCourseChaptersWithProgress.getData()) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@org.iatoki.judgels.jerahmeel.training.course.chapter.lesson.routes.TrainingLessonController.viewLessons(curriculumId, curriculumCourseId, courseChapterWithProgress.getCourseChapter.getId)" class="panel-title">
+                @{courseChapterWithProgress.getCourseChapter.getAlias}. @chaptersMap.get(courseChapterWithProgress.getCourseChapter.getChapterJid).getName
+            </a>
+            <div class="pull-right">
+                @if(courseChapterWithProgress.getChapterProgress.equals(ChapterProgress.LOCKED)) {
+                    <span class="alert alert-danger">
+                        @Messages.get("training.chapter.locked") [- / @courseChapterWithProgress.getTotalProblems]
+                    </span>
+                } else {
+                    @if(courseChapterWithProgress.getChapterProgress.equals(ChapterProgress.COMPLETED)) {
+                        <span class="alert alert-success">
+                            @Messages.get("training.chapter.completed")
+                            [@courseChapterWithProgress.getSolvedProblems / @courseChapterWithProgress.getTotalProblems]
+                        </span>
+                    } else {
+                        @if(courseChapterWithProgress.getChapterProgress.equals(ChapterProgress.IN_PROGRESS)) {
+                            <span class="alert alert-info">
+                                @Messages.get("training.chapter.inProgress")
+                                [@courseChapterWithProgress.getSolvedProblems / @courseChapterWithProgress.getTotalProblems]
+                            </span>
+                        } else {
+                            <span class="alert alert-warning">
+                                @Messages.get("training.chapter.available")
+                                [@courseChapterWithProgress.getSolvedProblems / @courseChapterWithProgress.getTotalProblems]
+                            </span>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@paginationView(pageOfCourseChaptersWithProgress, orderBy, orderDir, filterString, listFunc)

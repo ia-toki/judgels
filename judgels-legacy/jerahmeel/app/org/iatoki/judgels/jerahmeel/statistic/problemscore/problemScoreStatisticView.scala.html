@@ -1,0 +1,36 @@
+@import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.statistic.problemscore.ProblemScoreStatistic
+
+@import scala.collection.JavaConversions
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(problemScoreStatistic: ProblemScoreStatistic)
+
+<div class="box clearfix">
+    <div class="col-md-12">
+        <h4>@Messages.get("widget.problemScore")</h4>
+        <table class="table table-condensed">
+            <tr>
+                <th><small>@Messages.get("widget.problemScore.rank")</small></th>
+                <th><small>@Messages.get("widget.problemScore.username")</small></th>
+                <th><small>@Messages.get("widget.problemScore.score")</small></th>
+                <th><small>@Messages.get("widget.problemScore.time")</small></th>
+            </tr>
+            @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(problemScoreStatistic.getPageOfProblemScoreStatisticEntries.getData.map(p => p.getUserJid).toSeq))) { userDisplayNamesMap =>
+                @for((problemScoreStatisticEntry, i) <- problemScoreStatistic.getPageOfProblemScoreStatisticEntries.getData.zipWithIndex) {
+                    @if(i < 5) {
+                        <tr>
+                            <td><small>@(i + 1). </small></td>
+                            <td><small>@userDisplayNamesMap.get(problemScoreStatisticEntry.getUserJid)</small></td>
+                            <td><small>@problemScoreStatisticEntry.getScore</small></td>
+                            <td><small><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(problemScoreStatisticEntry.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(problemScoreStatisticEntry.getTime)</time></small></td>
+                        </tr>
+                    }
+                }
+            }
+        </table>
+
+        <small>@Messages.get("widget.problem.lastUpdated") <time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(problemScoreStatistic.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(problemScoreStatistic.getTime)</time></small>
+    </div>
+</div>

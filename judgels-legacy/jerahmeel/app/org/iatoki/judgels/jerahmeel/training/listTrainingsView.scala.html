@@ -1,0 +1,37 @@
+@import org.iatoki.judgels.jerahmeel.JerahmeelProperties
+@import org.iatoki.judgels.jerahmeel.curriculum.Curriculum
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+
+@(curriculums: List[Curriculum], archives: List[Archive])
+
+<div class="well">
+    @Html(JerahmeelProperties.getInstance.getJerahmeelWelcomeMessage)
+</div>
+
+@for(curriculum <- curriculums) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@org.iatoki.judgels.jerahmeel.training.course.routes.TrainingCourseController.viewCourses(curriculum.getId)" class="panel-title">@curriculum.getName</a>
+            @if(!curriculum.getDescription.isEmpty) {
+                <hr class="training-divider"/>
+                <div class="small">
+                    @Html(curriculum.getDescription)
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@for(archive <- archives) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@org.iatoki.judgels.jerahmeel.archive.routes.ArchiveController.viewArchives(archive.getId)" class="panel-title">@archive.getName</a>
+            @if(!archive.getDescription.isEmpty) {
+                <hr class="training-divider"/>
+                <div class="small">
+                    @Html(archive.getDescription)
+                </div>
+            }
+        </div>
+    </div>
+}

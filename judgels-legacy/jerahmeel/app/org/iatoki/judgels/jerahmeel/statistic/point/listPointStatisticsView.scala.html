@@ -1,0 +1,45 @@
+@import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.statistic.point.PointStatistic
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import scala.collection.JavaConversions
+@import org.iatoki.judgels.jerahmeel.statistic.routes
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(pointStatistic: PointStatistic, pageIndex: Long, orderBy: String, orderDir: String)
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.StatisticController.listPointStatistics(newPageIndex, newOrderBy, newOrderDir)}
+
+<div class="clearfix"></div>
+
+@Messages.get("statistic.point.lastUpdated") <time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(pointStatistic.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(pointStatistic.getTime)</time>
+
+<br />
+
+@tableView() {
+    @tableHeadersView(pointStatistic.getPageOfPointStatisticEntries.getPageIndex, orderBy, orderDir, "", listFunc)(
+        "" -> Messages.get("statistic.point.rank"),
+        "" -> Messages.get("statistic.point.user"),
+        "totalPoints" -> Messages.get("statistic.point.totalPoints"),
+        "totalProblems" -> Messages.get("statistic.point.totalProblems")
+    )
+
+    <tbody>
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pointStatistic.getPageOfPointStatisticEntries.getData.map(e => e.getUserJid).toSeq))) { userDisplayNamesMap =>
+        @for((pointStatisticEntry, i) <- pointStatistic.getPageOfPointStatisticEntries.getData.zipWithIndex) {
+            <tr>
+                <td>@(pointStatistic.getPageOfPointStatisticEntries.getCurrentFirstRowIndex + i + 1).</td>
+                <td>@userDisplayNamesMap.get(pointStatisticEntry.getUserJid)</td>
+                <td>@pointStatisticEntry.getTotalPoints</td>
+                <td>@pointStatisticEntry.getTotalProblems</td>
+                <td class="text-center">
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+}
+
+@paginationView(pointStatistic.getPageOfPointStatisticEntries, orderBy, orderDir, "", listFunc)

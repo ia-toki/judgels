@@ -1,0 +1,21 @@
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import org.iatoki.judgels.jerahmeel.archive.ArchiveUpsertForm
+@import play.i18n.Messages
+
+@(archiveUpsertForm: Form[ArchiveUpsertForm], archives: List[Archive])(implicit fieldConstructor: b3.B3FieldConstructor)
+
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/ckeditor.js")"></script>
+
+<div class="form-group" id="parentJid_field">
+    <label class="control-label col-md-2" for="parentJid">@Messages.get("archive.parent")</label>
+    <div class="col-md-10">
+        <select id="parentJid" name="parentJid" class="form-control selectpicker">
+            <option value="">@Messages.get("archive.parent.none")</option>
+            @for(archive <- archives) {
+                <option value="@archive.getJid" @if(archive.getJid.equals(archiveUpsertForm("parentJid").value)) { selected="selected" }>@Html(archive.prependSpacesBasedOnLevel(3))</option>
+            }
+        </select>
+    </div>
+</div>
+@b3.text(archiveUpsertForm("name"), '_label -> Messages.get("archive.name"))
+@b3.textarea(archiveUpsertForm("description"), '_label -> Messages.get("archive.description"), 'class -> "ckeditor form-control")

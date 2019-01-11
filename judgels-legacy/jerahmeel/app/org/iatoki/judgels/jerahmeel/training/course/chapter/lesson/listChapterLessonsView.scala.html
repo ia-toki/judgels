@@ -1,0 +1,34 @@
+@import org.iatoki.judgels.jerahmeel.chapter.lesson.ChapterLesson
+@import org.iatoki.judgels.play.views.html.table.searchView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.jerahmeel.training.course.chapter.lesson.routes
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.JerahmeelUtils
+
+@(curriculumId: Long, curriculumCourseId: Long, courseChapterId: Long, pageOfChapterLessons: Page[ChapterLesson], orderBy: String, orderDir: String, filterString: String, lessonTitlesMap: Map[String, String])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.TrainingLessonController.listLessons(curriculumId, curriculumCourseId, courseChapterId, newPageIndex, newOrderBy, newOrderDir)}
+
+@searchView(pageOfChapterLessons.getPageIndex, orderBy, orderDir, filterString, listFunc)
+
+<div class="clearfix"></div>
+
+@for(chapterLesson <- pageOfChapterLessons.getData()) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@routes.TrainingLessonController.viewLesson(curriculumId, curriculumCourseId, courseChapterId, chapterLesson.getId)" class="panel-title">@chapterLesson.getAlias. @lessonTitlesMap.get(chapterLesson.getLessonJid)</a>
+        </div>
+    </div>
+}
+
+@paginationView(pageOfChapterLessons, orderBy, orderDir, filterString, listFunc)
+
+<script type="text/javascript">
+    var chapterUpdateViewUrl = "@org.iatoki.judgels.jerahmeel.controllers.api.internal.routes.InternalChapterAPIController.updateChapterViewStatus(courseChapterId)";
+    var courseChapterId = @courseChapterId;
+</script>
+@if(!JerahmeelUtils.isGuest()) {
+    <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/chapterUpdateView.js")"></script>
+}

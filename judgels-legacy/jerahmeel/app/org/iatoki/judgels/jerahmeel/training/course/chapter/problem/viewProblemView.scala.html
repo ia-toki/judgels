@@ -1,0 +1,22 @@
+@import org.iatoki.judgels.jerahmeel.controllers.api.internal.routes
+@import org.iatoki.judgels.jerahmeel.JerahmeelUtils
+
+@(requestURL: String, requestBody: String, chapterProblemId: Long)
+
+@if(play.mvc.Controller.flash("submissionError") != null) {
+    <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionError")}</div>
+}
+
+<div class="problem_statement">
+
+</div>
+<script type="text/javascript">
+    var sandalphonTOTPURL = "@requestURL";
+    var body = '@Html(requestBody)';
+    var problemUpdateViewUrl = "@routes.InternalProblemAPIController.updateProblemViewStatus(chapterProblemId)";
+    var chapterProblemId = @chapterProblemId;
+</script>
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/problemTOTPStatement.js")"></script>
+@if(!JerahmeelUtils.isGuest()) {
+    <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/problemUpdateView.js")"></script>
+}

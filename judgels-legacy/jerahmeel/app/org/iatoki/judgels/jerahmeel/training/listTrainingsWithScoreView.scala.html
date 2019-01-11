@@ -1,0 +1,44 @@
+@import org.iatoki.judgels.jerahmeel.archive.ArchiveWithScore
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.JerahmeelProperties
+@import org.iatoki.judgels.jerahmeel.curriculum.Curriculum
+
+@(curriculums: List[Curriculum], archivesWithScore: List[ArchiveWithScore])
+
+<div class="well">
+    @Html(JerahmeelProperties.getInstance.getJerahmeelWelcomeMessage)
+</div>
+
+@for(curriculum <- curriculums) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@org.iatoki.judgels.jerahmeel.training.course.routes.TrainingCourseController.viewCourses(curriculum.getId)" class="panel-title">@curriculum.getName</a>
+            @if(!curriculum.getDescription.isEmpty) {
+                <hr class="training-divider"/>
+                <div class="small">
+                    @Html(curriculum.getDescription)
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@for(archiveWithScore <- archivesWithScore) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@org.iatoki.judgels.jerahmeel.archive.routes.ArchiveController.viewArchives(archiveWithScore.getArchive.getId)" class="panel-title">@archiveWithScore.getArchive.getName</a>
+            <div class="pull-right">
+                <span class="alert alert-warning">
+                    @Messages.get("archive.totalPoints"):
+                    @archiveWithScore.getScore
+                </span>
+            </div>
+            @if(!archiveWithScore.getArchive.getDescription.isEmpty) {
+                <hr class="training-divider"/>
+                <div class="small">
+                    @Html(archiveWithScore.getArchive.getDescription)
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,27 @@
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import org.iatoki.judgels.jerahmeel.problemset.ProblemSet
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.archive.routes
+
+@(currentArchive: Archive, pageOfProblemSets: Page[ProblemSet], orderBy: String, orderDir: String, filterString: String)
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.ArchiveController.listArchivesProblemSets(currentArchive.getId, newPageIndex, newOrderBy, newOrderDir, newFilterString)}
+
+<div class="clearfix"></div>
+
+@for((problemSet, index) <- pageOfProblemSets.getData.zipWithIndex) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@org.iatoki.judgels.jerahmeel.problemset.routes.ProblemSetController.jumpToProblems(problemSet.getId)" class="panel-title">@problemSet.getName</a>
+            @if(!problemSet.getDescription.isEmpty) {
+                <hr class="training-divider"/>
+                <div class="small">
+                    @Html(problemSet.getDescription)
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@paginationView(pageOfProblemSets, orderBy, orderDir, filterString, listFunc)

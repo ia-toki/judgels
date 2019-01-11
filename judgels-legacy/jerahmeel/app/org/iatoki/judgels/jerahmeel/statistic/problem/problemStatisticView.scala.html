@@ -1,0 +1,33 @@
+@import org.iatoki.judgels.jerahmeel.statistic.problemscore.ProblemStatistic
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+
+@(problemStatistic: ProblemStatistic, problemTitlesMap: Map[String, String])
+
+<div class="box clearfix">
+    <div class="col-md-12">
+        <h4>@Messages.get("widget.problem") (@Messages.get("widget.problem.duration.week"))</h4>
+        @if(problemStatistic != null) {
+            <table class="table table-condensed">
+                <tr>
+                    <th><small>@Messages.get("widget.problem.rank")</small></th>
+                    <th><small>@Messages.get("widget.problem.name")</small></th>
+                    <th><small>@Messages.get("widget.problem.totalSubmissions")</small></th>
+                </tr>
+                @for((problemStatisticEntry, i) <- problemStatistic.getPageOfProblemStatisticEntries.getData.zipWithIndex) {
+                    @if(i < 5) {
+                        <tr>
+                            <td><small>@(i + 1). </small></td>
+                            <td><small>@problemTitlesMap.get(problemStatisticEntry.getProblemJid)</small></td>
+                            <td><small>@problemStatisticEntry.getTotalSubmissions</small></td>
+                        </tr>
+                    }
+                }
+            </table>
+
+            <small>@Messages.get("widget.problem.lastUpdated") <time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(problemStatistic.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(problemStatistic.getTime)</time></small>
+        } else {
+            <small>@Messages.get("widget.problem.noStatisticYet")</small>
+        }
+    </div>
+</div>

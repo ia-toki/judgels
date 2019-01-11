@@ -1,0 +1,18 @@
+@import org.iatoki.judgels.jerahmeel.controllers.api.internal.routes
+@import org.iatoki.judgels.jerahmeel.JerahmeelUtils
+
+@(requestURL: String, requestBody: String, chapterLessonId: Long)
+
+<div class="lesson_statement">
+
+</div>
+<script type="text/javascript">
+    var sandalphonLessonTOTPURL = "@requestURL";
+    var body = '@Html(requestBody)';
+    var lessonUpdateViewUrl = "@routes.InternalLessonAPIController.updateLessonViewStatus(chapterLessonId)";
+    var chapterLessonId = @chapterLessonId;
+</script>
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/lessonTOTPStatement.js")"></script>
+@if(!JerahmeelUtils.isGuest()) {
+    <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/lessonUpdateView.js")"></script>
+}

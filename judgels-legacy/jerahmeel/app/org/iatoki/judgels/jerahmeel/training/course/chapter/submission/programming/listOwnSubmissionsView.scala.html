@@ -1,0 +1,72 @@
+@import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl
+@import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+@import scala.collection.JavaConversions
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.JerahmeelUtils
+@import org.iatoki.judgels.jerahmeel.training.course.chapter.submission.programming.routes
+
+@(curriculumId: Long, curriculumCourseId: Long, courseChapterId: Long, pageOfSubmissions: Page[ProgrammingSubmission], problemJidToAliasMap: Map[String, String], gradingLanguageToNameMap: Map[String, String], pageIndex: Long, orderBy: String, orderDir: String, problemJid: String)
+
+<form class="form-inline pull-right" method="GET" action="@routes.TrainingProgrammingSubmissionController.listOwnSubmissions(curriculumId, curriculumCourseId, courseChapterId, pageIndex, orderBy, orderDir, null)">
+    <div class="form-group">
+        <label for="problemJid">@Messages.get("problem.problem")</label>
+        <select name="problemJid" class="form-control selectpicker col-md-3">
+            <option value="(none)" @if(problemJid == null) {selected="selected"}>&#8211;</option>
+            @for((pJid, pAlias) <- problemJidToAliasMap) {
+                <option value="@pJid" @if(pJid.equals(problemJid)){selected="selected"}>@pAlias</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.TrainingProgrammingSubmissionController.listOwnSubmissions(curriculumId, curriculumCourseId, courseChapterId, newPageIndex, newOrderBy, newOrderDir, problemJid)}
+
+<div class="clearfix"></div>
+
+<br />
+
+@tableView() {
+    @tableHeadersView(pageOfSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
+        "id" -> Messages.get("commons.id"),
+        "" -> Messages.get("submission.prob"),
+        "gradingLanguage" -> Messages.get("submission.lang"),
+        "" -> Messages.get("submission.verdict"),
+        "" -> Messages.get("submission.pts"),
+        "timeCreate" -> Messages.get("submission.time")
+    )
+
+    <tbody>
+    @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfSubmissions.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>
+        @for(submission <- pageOfSubmissions.getData) {
+            <tr>
+                <td><small>@submission.getId</small></td>
+                <td><small>@problemJidToAliasMap.get(submission.getProblemJid)</small></td>
+                <td><small>@gradingLanguageToNameMap.get(submission.getGradingLanguage)</small></td>
+                <td><small>@submission.getLatestVerdict.getName</small></td>
+                <td><small>@submission.getLatestScore</small></td>
+                <td><small><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.getTime)</time></small></td>
+                <td class="text-center">
+                    <a href="@routes.TrainingProgrammingSubmissionController.viewSubmission(curriculumId, curriculumCourseId, courseChapterId, submission.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+}
+
+@paginationView(pageOfSubmissions, orderBy, orderDir, "", listFunc)
+
+<script type="text/javascript">
+    var chapterUpdateViewUrl = "@org.iatoki.judgels.jerahmeel.controllers.api.internal.routes.InternalChapterAPIController.updateChapterViewStatus(courseChapterId)";
+    var courseChapterId = @courseChapterId;
+</script>
+@if(!JerahmeelUtils.isGuest()) {
+    <script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/chapterUpdateView.js")"></script>
+}

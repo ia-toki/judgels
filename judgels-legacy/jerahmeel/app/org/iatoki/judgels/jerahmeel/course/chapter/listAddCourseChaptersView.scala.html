@@ -1,0 +1,63 @@
+@import org.iatoki.judgels.jerahmeel.chapter.Chapter
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.course.chapter.{CourseChapter, CourseChapterAddForm}
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersView
+@import org.iatoki.judgels.play.views.html.table.searchView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.course.chapter.routes
+
+@(courseId: Long, pageOfCourseChapters: Page[CourseChapter], chaptersMap: Map[String, Chapter], orderBy: String, orderDir: String, filterString: String, courseChapterAddForm: Form[CourseChapterAddForm])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-3", "col-md-9") }
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.CourseChapterController.listAddChapters(courseId, newPageIndex, newOrderBy, newOrderDir)}
+
+@formErrorView(courseChapterAddForm)
+
+@b3.form(routes.CourseChapterController.postAddChapter(courseId, pageOfCourseChapters.getPageIndex, orderBy, orderDir, filterString)) {
+
+    @helper.CSRF.formField
+
+    @b3.text(courseChapterAddForm("chapterJid"), '_label -> Messages.get("chapter.jid"), 'class -> "form-control chapter_autocomplete")
+
+    @b3.text(courseChapterAddForm("alias"), '_label -> Messages.get("chapter.alias"), 'class -> "form-control")
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.add") }
+}
+
+<script type="text/javascript">
+    var chapterAutoCompleteUrl = "@org.iatoki.judgels.jerahmeel.controllers.api.internal.routes.InternalChapterAPIController.autocompleteChapter()";
+</script>
+<script type="text/javascript" src="@controllers.routes.Assets.versioned("javascripts/chapterAutoComplete.js")"></script>
+
+
+@searchView(pageOfCourseChapters.getPageIndex, orderBy, orderDir, filterString, listFunc)
+
+<div class="clearfix"></div>
+
+@tableView() {
+    @tableHeadersView(pageOfCourseChapters.getPageIndex, orderBy, orderDir, filterString, listFunc)(
+        "id" -> Messages.get("commons.id"),
+        "" -> Messages.get("chapter.alias"),
+        "" -> Messages.get("chapter.name")
+    )
+
+    <tbody>
+    @for(courseChapter <- pageOfCourseChapters.getData) {
+        <tr>
+            <td>@courseChapter.getId</td>
+            <td>@courseChapter.getAlias</td>
+            <td>@chaptersMap.get(courseChapter.getChapterJid).getName</td>
+            <td class="text-center">
+                <a href="@routes.CourseChapterController.editChapter(courseId, courseChapter.getId)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                <a href="@routes.CourseChapterController.removeChapter(courseId, courseChapter.getId)" onclick="confirmLink ( event, this.href )"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+}
+
+@paginationView(pageOfCourseChapters, orderBy, orderDir, filterString, listFunc)

@@ -1,0 +1,34 @@
+@import play.i18n.Messages
+@import org.iatoki.judgels.jerahmeel.archive.Archive
+@import org.iatoki.judgels.jerahmeel.problemset.ProblemSetWithScore
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.jerahmeel.archive.routes
+@import org.iatoki.judgels.play.Page
+
+@(currentArchive: Archive, pageOfProblemSets: Page[ProblemSetWithScore], orderBy: String, orderDir: String, filterString: String)
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.ArchiveController.listArchivesProblemSets(currentArchive.getId, newPageIndex, newOrderBy, newOrderDir, newFilterString)}
+
+<div class="clearfix"></div>
+
+@for((problemSet, index) <- pageOfProblemSets.getData.zipWithIndex) {
+    <div class="panel panel-default">
+        <div class="panel-body clearfix">
+            <a href="@org.iatoki.judgels.jerahmeel.problemset.routes.ProblemSetController.jumpToProblems(problemSet.getProblemSet.getId)" class="panel-title">@problemSet.getProblemSet.getName</a>
+            <div class="pull-right">
+                <span class="alert alert-warning">
+                    @Messages.get("archive.problemSet.totalPoints"):
+                    @problemSet.getScore
+                </span>
+            </div>
+            @if(!problemSet.getProblemSet.getDescription.isEmpty) {
+                <hr class="training-divider"/>
+                <div class="small">
+                    @Html(problemSet.getProblemSet.getDescription)
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@paginationView(pageOfProblemSets, orderBy, orderDir, filterString, listFunc)

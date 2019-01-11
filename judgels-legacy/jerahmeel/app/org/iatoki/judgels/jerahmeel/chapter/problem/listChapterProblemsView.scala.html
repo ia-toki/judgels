@@ -1,0 +1,43 @@
+@import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblem
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersView
+@import org.iatoki.judgels.play.views.html.table.searchView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.play.Page
+@import org.iatoki.judgels.jerahmeel.chapter.problem.routes
+
+@(chapterId: Long, pageOfChapterProblems: Page[ChapterProblem], orderBy: String, orderDir: String, filterString: String, problemSlugsMap: Map[String, String])
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.ChapterProblemController.listChapterProblems(chapterId, newPageIndex, newOrderBy, newOrderDir)}
+
+@searchView(pageOfChapterProblems.getPageIndex, orderBy, orderDir, filterString, listFunc)
+
+<div class="clearfix"></div>
+
+@tableView() {
+    @tableHeadersView(pageOfChapterProblems.getPageIndex, orderBy, orderDir, filterString, listFunc)(
+        "id" -> Messages.get("commons.id"),
+        "alias" -> Messages.get("chapter.problem.alias"),
+        "" -> Messages.get("chapter.problem.slug"),
+        "status" -> Messages.get("chapter.problem.status")
+    )
+
+    <tbody>
+    @for(chapterProblem <- pageOfChapterProblems.getData()) {
+        <tr>
+            <td>@chapterProblem.getId</td>
+            <td>@chapterProblem.getAlias</td>
+            <td>@problemSlugsMap.get(chapterProblem.getProblemJid)</td>
+            <td>@chapterProblem.getStatus.name()</td>
+            <td class="text-center">
+                <a href="@routes.ChapterProblemController.viewChapterProblem(chapterId, chapterProblem.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                <a href="@routes.ChapterProblemController.editChapterProblem(chapterId, chapterProblem.getId)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                <a href="@routes.ChapterProblemController.removeChapterProblem(chapterId, chapterProblem.getId)" onclick="confirmLink ( event, this.href )"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+}
+
+@paginationView(pageOfChapterProblems, orderBy, orderDir, filterString, listFunc)

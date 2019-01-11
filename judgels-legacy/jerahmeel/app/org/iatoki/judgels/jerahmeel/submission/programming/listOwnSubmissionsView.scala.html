@@ -1,0 +1,47 @@
+@import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.table.tableView
+@import org.iatoki.judgels.play.views.html.table.tableHeadersView
+@import org.iatoki.judgels.play.views.html.table.paginationView
+@import org.iatoki.judgels.jerahmeel.submission.programming.routes
+@import org.iatoki.judgels.play.JudgelsPlayUtils
+@import org.iatoki.judgels.play.Page
+
+@(pageOfProgrammingSubmissions: Page[ProgrammingSubmission], chapterJidToNameMap: Map[String, String], problemTitlesMap: Map[String, String], gradingLanguageToNameMap: Map[String, String], pageIndex: Long, orderBy: String, orderDir: String)
+
+@listFunc(newPageIndex: scala.Long, newOrderBy: String, newOrderDir: String, newFilterString: String) = @{routes.ProgrammingSubmissionController.listOwnSubmissions(newPageIndex, newOrderBy, newOrderDir)}
+
+<div class="clearfix"></div>
+
+<br />
+
+@tableView() {
+    @tableHeadersView(pageOfProgrammingSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
+        "id" -> Messages.get("commons.id"),
+        "" -> Messages.get("submission.chapterOrProblemSet"),
+        "" -> Messages.get("submission.prob"),
+        "gradingLanguage" -> Messages.get("submission.lang"),
+        "" -> Messages.get("submission.verdict"),
+        "" -> Messages.get("submission.pts"),
+        "timeCreate" -> Messages.get("submission.time")
+    )
+
+    <tbody>
+        @for(submission <- pageOfProgrammingSubmissions.getData) {
+            <tr>
+                <td><small>@submission.getId</small></td>
+                <td><small>@chapterJidToNameMap.get(submission.getContainerJid)</small></td>
+                <td><small>@problemTitlesMap.get(submission.getProblemJid)</small></td>
+                <td><small>@gradingLanguageToNameMap.get(submission.getGradingLanguage)</small></td>
+                <td><small>@submission.getLatestVerdict.getName</small></td>
+                <td><small>@submission.getLatestScore</small></td>
+                <td><small><time class="display-time" datetime="@JudgelsPlayUtils.formatISOUTCDateTime(submission.getTime.getTime)">@JudgelsPlayUtils.formatDetailedDateTime(submission.getTime.getTime)</time></small></td>
+                <td class="text-center">
+                    <a href="@routes.ProgrammingSubmissionController.viewOwnSubmission(submission.getId)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+}
+
+@paginationView(pageOfProgrammingSubmissions, orderBy, orderDir, "", listFunc)

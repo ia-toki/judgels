@@ -1,0 +1,19 @@
+@import org.iatoki.judgels.jerahmeel.curriculum.CurriculumUpsertForm
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.curriculum.routes
+
+@(curriculumUpsertForm: Form[CurriculumUpsertForm])
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(curriculumUpsertForm)
+
+@b3.form(routes.CurriculumController.postCreateCurriculum()) {
+
+    @helper.CSRF.formField
+
+    @upsertCurriculumView(curriculumUpsertForm)
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.create") }
+}

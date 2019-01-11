@@ -1,0 +1,25 @@
+@import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemEditForm
+@import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblem
+@import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemStatus
+@import play.i18n.Messages
+@import org.iatoki.judgels.play.views.html.formErrorView
+@import org.iatoki.judgels.jerahmeel.problemset.problem.routes
+
+@(problemSetProblemEditForm: Form[ProblemSetProblemEditForm], problemSetId: Long, problemSetProblem: ProblemSetProblem)
+
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-md-2", "col-md-10") }
+
+@formErrorView(problemSetProblemEditForm)
+
+@b3.form(routes.ProblemSetProblemController.postEditProblemSetProblem(problemSetId, problemSetProblem.getId)) {
+
+    @helper.CSRF.formField
+
+    @b3.static('_label -> Messages.get("problemSet.problem.jid")) { @problemSetProblem.getProblemJid }
+
+    @b3.text(problemSetProblemEditForm("alias"), '_label -> Messages.get("course.alias"), 'class -> "form-control")
+    @b3.select(problemSetProblemEditForm("status"), ProblemSetProblemStatus.values.map(e => (e.name() -> e.name())).toSeq, '_label -> Messages.get("problemSet.problem.status"), 'class -> "form-control selectpicker")
+
+
+    @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.update") }
+}
