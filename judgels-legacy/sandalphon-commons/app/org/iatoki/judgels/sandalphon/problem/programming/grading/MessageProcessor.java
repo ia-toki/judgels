@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
 import com.google.gson.Gson;
-import com.palantir.remoting.api.errors.RemoteException;
+import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.sealtiel.api.message.Message;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;

@@ -1,3 +1,5 @@
+import Versions._
+
 lazy val judgelsServiceApi = (project in file("."))
   .settings(
     name := "judgels-service-api",
@@ -6,10 +8,10 @@ lazy val judgelsServiceApi = (project in file("."))
       "Palantir" at "https://dl.bintray.com/palantir/releases"
     ),
     libraryDependencies ++= Seq(
-      "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.7",
-      "javax.ws.rs" % "javax.ws.rs-api" % "2.1",
-      "com.palantir.conjure.java.api" % "errors" % "2.0.0",
-      "com.palantir.conjure.java.api" % "service-config" % "2.0.0",
-      "org.immutables" % "value" % "2.7.3"
+      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+      "javax.ws.rs" % "javax.ws.rs-api" % jaxRsApiVersion,
+      "com.palantir.conjure.java.api" % "errors" % conjureJavaRuntimeApiVersion,
+      "com.palantir.conjure.java.api" % "service-config" % conjureJavaRuntimeApiVersion,
+      "org.immutables" % "value" % immutablesVersion
     )
   )

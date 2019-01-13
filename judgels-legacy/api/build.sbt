@@ -1,3 +1,5 @@
+import Versions._
+
 val checkstyle = taskKey[Unit]("Execute checkstyle")
 
 checkstyle := {
@@ -19,17 +21,13 @@ lazy val api = (project in file("."))
         name := "api",
         version := IO.read(file("version.properties")).trim,
         scalaVersion := "2.11.7",
-        resolvers ++= Seq(
-            "Palantir" at "http://palantir.bintray.com/releases"
-        ),
         libraryDependencies ++= Seq(
-            "com.palantir.remoting3" % "jaxrs-clients" % "3.15.0",
             "com.puppycrawl.tools" % "checkstyle" % "6.8.1",
             "com.google.code.gson" % "gson" % "2.3.1",
-            "com.google.guava" % "guava" % "27.0.1-jre",
+            "com.google.guava" % "guava" % guavaVersion,
             "commons-io" % "commons-io" % "2.4",
             "org.apache.httpcomponents" % "httpclient" % "4.5",
-            "org.apache.commons" % "commons-lang3" % "3.3.2"
+            "org.apache.commons" % "commons-lang3" % apacheCommonsLang3Version
         )
     )
 

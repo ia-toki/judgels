@@ -1,3 +1,5 @@
+import Versions._
+
 import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 import sbtbuildinfo.Plugin._
@@ -43,11 +45,11 @@ lazy val jerahmeel = (project in file("."))
     )
     .settings(
         dependencyOverrides ++= Set(
-            "com.google.guava" % "guava" % "27.0.1-jre",
-            "com.fasterxml.jackson.core" % "jackson-core" % "2.9.7",
-            "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.7",
-            "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.9.7",
-            "com.fasterxml.jackson.module" % "jackson-module-afterburner" % "2.9.7"
+            "com.google.guava" % "guava" % guavaVersion,
+            "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
+            "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+            "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % jacksonVersion,
+            "com.fasterxml.jackson.module" % "jackson-module-afterburner" % jacksonVersion
         )
     )
 
