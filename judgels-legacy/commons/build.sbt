@@ -17,7 +17,7 @@ lazy val commons = (project in file("."))
         scalaVersion := "2.11.7",
         libraryDependencies ++= Seq(
             "com.google.code.gson" % "gson" % "2.3.1",
-            "com.google.guava" % "guava" % "18.0",
+            "com.google.guava" % "guava" % "27.0.1-jre",
             "com.typesafe" % "config" % "1.3.0",
             "com.puppycrawl.tools" % "checkstyle" % "6.8.1",
             "commons-io" % "commons-io" % "2.4",

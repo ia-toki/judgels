@@ -5,8 +5,8 @@ import sbtbuildinfo.Plugin._
 lazy val jerahmeel = (project in file("."))
     .enablePlugins(PlayJava, SbtWeb)
     .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
-    .dependsOn(playcommons, sandalphoncommons, jophielcommons, sandalphonblackboxadapters)
-    .aggregate(playcommons, sandalphoncommons, jophielcommons, sandalphonblackboxadapters)
+    .dependsOn(sandalphoncommons, jophielcommons, sandalphonblackboxadapters)
+    .aggregate(sandalphoncommons, jophielcommons, sandalphonblackboxadapters)
     .settings(
         name := "jerahmeel",
         version := IO.read(file("version.properties")).trim,
@@ -42,16 +42,18 @@ lazy val jerahmeel = (project in file("."))
         buildInfoPackage := "org.iatoki.judgels.jerahmeel"
     )
     .settings(
-      dependencyOverrides ++= Set(
-        "com.google.guava" % "guava" % "20.0",
-        "com.fasterxml.jackson.core" % "jackson-core" % "2.9.1",
-        "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.1",
-        "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.9.1",
-        "com.fasterxml.jackson.module" % "jackson-module-afterburner" % "2.9.1"
-      )
+        dependencyOverrides ++= Set(
+            "com.google.guava" % "guava" % "27.0.1-jre",
+            "com.fasterxml.jackson.core" % "jackson-core" % "2.9.7",
+            "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.7",
+            "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.9.7",
+            "com.fasterxml.jackson.module" % "jackson-module-afterburner" % "2.9.7"
+        )
     )
 
 lazy val playcommons = RootProject(file("../play-commons"))
 lazy val sandalphoncommons = RootProject(file("../sandalphon-commons"))
 lazy val jophielcommons = RootProject(file("../jophiel-commons"))
 lazy val sandalphonblackboxadapters = RootProject(file("../sandalphon-blackbox-adapters"))
+
+lazy val judgelsServiceCore = RootProject(file("../../judgels-backends/judgels-commons/judgels-service-core"))

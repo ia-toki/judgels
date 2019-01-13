@@ -10,8 +10,6 @@ import org.iatoki.judgels.LocalGitProvider;
 import org.iatoki.judgels.api.jophiel.JophielClientAPI;
 import org.iatoki.judgels.api.jophiel.JophielFactory;
 import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
-import org.iatoki.judgels.api.sealtiel.SealtielClientAPI;
-import org.iatoki.judgels.api.sealtiel.SealtielFactory;
 import org.iatoki.judgels.jophiel.JophielAuthAPI;
 import org.iatoki.judgels.jophiel.user.BaseUserService;
 import org.iatoki.judgels.play.JudgelsPlayProperties;
@@ -57,7 +55,6 @@ public final class SandalphonModule extends AbstractModule {
         bind(JophielAuthAPI.class).toInstance(jophielAuthAPI());
         bind(JophielClientAPI.class).toInstance(jophielClientAPI());
         bind(JophielPublicAPI.class).toInstance(jophielPublicAPI());
-        bind(SealtielClientAPI.class).toInstance(sealtielClientAPI());
         bind(FileSystemProvider.class).annotatedWith(ProblemFileSystemProvider.class).toInstance(problemFileSystemProvider());
         bind(FileSystemProvider.class).annotatedWith(SubmissionFileSystemProvider.class).toInstance(submissionFileSystemProvider());
         bind(FileSystemProvider.class).annotatedWith(LessonFileSystemProvider.class).toInstance(lessonFileSystemProvider());
@@ -81,10 +78,6 @@ public final class SandalphonModule extends AbstractModule {
 
     private JophielPublicAPI jophielPublicAPI() {
         return JophielFactory.createJophiel(sandalphonProperties().getJophielBaseUrl()).connectToPublicAPI();
-    }
-
-    private SealtielClientAPI sealtielClientAPI() {
-        return SealtielFactory.createSealtiel(sandalphonProperties().getSealtielBaseUrl()).connectToClientAPI(sandalphonProperties().getSealtielClientJid(), sandalphonProperties().getSealtielClientSecret());
     }
 
     private LocalFileSystemProvider problemFileSystemProvider() {

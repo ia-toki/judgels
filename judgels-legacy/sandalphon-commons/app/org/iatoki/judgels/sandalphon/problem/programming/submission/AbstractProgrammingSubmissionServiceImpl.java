@@ -4,15 +4,17 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import org.iatoki.judgels.api.JudgelsAPIClientException;
-import org.iatoki.judgels.api.sealtiel.SealtielClientAPI;
+import com.palantir.remoting.api.errors.RemoteException;
+import judgels.sealtiel.api.message.MessageData;
+import judgels.sealtiel.api.message.MessageService;
+import judgels.service.api.client.BasicAuthHeader;
 import org.iatoki.judgels.gabriel.GradingRequest;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.BaseProgrammingGradingDao;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingModel;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingModel_;
+import org.iatoki.judgels.sandalphon.problem.programming.grading.BaseProgrammingGradingDao;
 import play.db.jpa.JPA;
 
 import javax.persistence.metamodel.SingularAttribute;
@@ -24,13 +26,15 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
 
     private final BaseProgrammingSubmissionDao<SM> programmingSubmissionDao;
     private final BaseProgrammingGradingDao<GM> programmingGradingDao;
-    private final SealtielClientAPI sealtielClientAPI;
+    private final BasicAuthHeader sealtielClientAuthHeader;
+    private final MessageService messageService;
     private final String gabrielClientJid;
 
-    protected AbstractProgrammingSubmissionServiceImpl(BaseProgrammingSubmissionDao<SM> programmingSubmissionDao, BaseProgrammingGradingDao<GM> programmingGradingDao, SealtielClientAPI sealtielClientAPI, String gabrielClientJid) {
+    protected AbstractProgrammingSubmissionServiceImpl(BaseProgrammingSubmissionDao<SM> programmingSubmissionDao, BaseProgrammingGradingDao<GM> programmingGradingDao, BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, String gabrielClientJid) {
         this.programmingSubmissionDao = programmingSubmissionDao;
         this.programmingGradingDao = programmingGradingDao;
-        this.sealtielClientAPI = sealtielClientAPI;
+        this.sealtielClientAuthHeader = sealtielClientAuthHeader;
+        this.messageService = messageService;
         this.gabrielClientJid = gabrielClientJid;
     }
 
@@ -158,7 +162,7 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
 
         programmingSubmissionDao.persist(submissionModel, userJid, userIpAddress);
 
-        requestGrading(submissionModel, submissionSource, false, userJid, userIpAddress);
+        requestGrading(submissionModel, submissionSource, userJid, userIpAddress);
 
         return submissionModel.jid;
     }
@@ -167,7 +171,7 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
     public final void regrade(String submissionJid, SubmissionSource submissionSource, String userJid, String userIpAddress) {
         SM submissionModel = programmingSubmissionDao.findByJid(submissionJid);
 
-        requestGrading(submissionModel, submissionSource, true, userJid, userIpAddress);
+        requestGrading(submissionModel, submissionSource, userJid, userIpAddress);
     }
 
     @Override
@@ -195,7 +199,7 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
         return programmingGradingDao.existsByJid(gradingJid);
     }
 
-    private void requestGrading(SM submissionModel, SubmissionSource submissionSource, boolean isRegrading, String userJid, String userIpAddress) {
+    private void requestGrading(SM submissionModel, SubmissionSource submissionSource, String userJid, String userIpAddress) {
         GM gradingModel = programmingGradingDao.createGradingModel();
 
         gradingModel.submissionJid = submissionModel.jid;
@@ -211,12 +215,13 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
         GradingRequest request = new GradingRequest(gradingModel.jid, submissionModel.problemJid, submissionModel.gradingEngine, submissionModel.gradingLanguage, submissionSource);
 
         try {
-            if (isRegrading) {
-                sealtielClientAPI.sendLowPriorityMessage(gabrielClientJid, request.getClass().getSimpleName(), new Gson().toJson(request));
-            } else {
-                sealtielClientAPI.sendMessage(gabrielClientJid, request.getClass().getSimpleName(), new Gson().toJson(request));
-            }
-        } catch (JudgelsAPIClientException e) {
+            MessageData message = new MessageData.Builder()
+                    .targetJid(gabrielClientJid)
+                    .type(request.getClass().getSimpleName())
+                    .content(new Gson().toJson(request))
+                    .build();
+            messageService.sendMessage(sealtielClientAuthHeader, message);
+        } catch (RemoteException e) {
             // log later
         }
     }

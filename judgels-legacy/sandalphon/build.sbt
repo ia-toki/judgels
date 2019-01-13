@@ -42,13 +42,13 @@ lazy val sandalphon = (project in file("."))
         buildInfoPackage := "org.iatoki.judgels.sandalphon"
     )
     .settings(
-      dependencyOverrides ++= Set(
-        "com.google.guava" % "guava" % "20.0",
-        "com.fasterxml.jackson.core" % "jackson-core" % "2.9.1",
-        "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.1",
-        "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.9.1",
-        "com.fasterxml.jackson.module" % "jackson-module-afterburner" % "2.9.1"
-      )
+        dependencyOverrides ++= Set(
+            "com.google.guava" % "guava" % "27.0.1-jre",
+            "com.fasterxml.jackson.core" % "jackson-core" % "2.9.7",
+            "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.7",
+            "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.9.7",
+            "com.fasterxml.jackson.module" % "jackson-module-afterburner" % "2.9.7"
+        )
     )
 
 lazy val sandalphoncommons = RootProject(file("../sandalphon-commons"))

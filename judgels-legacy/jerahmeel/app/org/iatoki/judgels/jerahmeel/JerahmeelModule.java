@@ -14,8 +14,6 @@ import org.iatoki.judgels.api.jophiel.JophielFactory;
 import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonFactory;
-import org.iatoki.judgels.api.sealtiel.SealtielClientAPI;
-import org.iatoki.judgels.api.sealtiel.SealtielFactory;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionLocalFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionRemoteFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionServiceImpl;
@@ -60,7 +58,6 @@ public final class JerahmeelModule extends AbstractModule {
         bind(JophielClientAPI.class).toInstance(jophielClientAPI());
         bind(JophielPublicAPI.class).toInstance(jophielPublicAPI());
         bind(SandalphonClientAPI.class).toInstance(sandalphonClientAPI());
-        bind(SealtielClientAPI.class).toInstance(sealtielClientAPI());
 
         bind(FileSystemProvider.class).annotatedWith(BundleSubmissionLocalFileSystemProvider.class).toInstance(bundleSubmissionLocalFileSystemProvider());
 
@@ -103,10 +100,6 @@ public final class JerahmeelModule extends AbstractModule {
 
     private SandalphonClientAPI sandalphonClientAPI() {
         return SandalphonFactory.createSandalphon(jerahmeelProperties().getSandalphonBaseUrl()).connectToClientAPI(jerahmeelProperties().getSandalphonClientJid(), jerahmeelProperties().getSandalphonClientSecret());
-    }
-
-    private SealtielClientAPI sealtielClientAPI() {
-        return SealtielFactory.createSealtiel(jerahmeelProperties().getSealtielBaseUrl()).connectToClientAPI(jerahmeelProperties().getSealtielClientJid(), jerahmeelProperties().getSealtielClientSecret());
     }
 
     private FileSystemProvider bundleSubmissionRemoteFileSystemProvider() {

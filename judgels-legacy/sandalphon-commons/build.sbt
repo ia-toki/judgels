@@ -4,8 +4,8 @@ import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 lazy val sandalphoncommons = (project in file("."))
     .enablePlugins(PlayJava, SbtWeb)
     .disablePlugins(plugins.JUnitXmlReportPlugin)
-    .dependsOn(playcommons, gabrielcommons, api)
-    .aggregate(playcommons, gabrielcommons, api)
+    .dependsOn(playcommons, gabrielcommons, api, judgelsServiceCore)
+    .aggregate(playcommons, gabrielcommons, api, judgelsServiceCore)
     .settings(
         name := "sandalphoncommons",
         version := IO.read(file("version.properties")).trim,
@@ -36,3 +36,5 @@ lazy val sandalphoncommons = (project in file("."))
 lazy val playcommons = RootProject(file("../play-commons"))
 lazy val gabrielcommons = RootProject(file("../gabriel-commons"))
 lazy val api = RootProject(file("../api"))
+
+lazy val judgelsServiceCore = RootProject(file("../../judgels-backends/judgels-commons/judgels-service-core"))

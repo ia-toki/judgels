@@ -1,9 +1,10 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
 import com.google.gson.Gson;
-import org.iatoki.judgels.api.JudgelsAPIClientException;
-import org.iatoki.judgels.api.sealtiel.SealtielClientAPI;
-import org.iatoki.judgels.api.sealtiel.SealtielMessage;
+import com.palantir.remoting.api.errors.RemoteException;
+import judgels.sealtiel.api.message.Message;
+import judgels.sealtiel.api.message.MessageService;
+import judgels.service.api.client.BasicAuthHeader;
 import org.iatoki.judgels.gabriel.GradingResponse;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 import play.db.jpa.JPA;
@@ -13,12 +14,14 @@ import java.util.concurrent.TimeUnit;
 public final class MessageProcessor implements Runnable {
 
     private final ProgrammingSubmissionService submissionService;
-    private final SealtielClientAPI sealtielClientAPI;
-    private final SealtielMessage message;
+    private final BasicAuthHeader sealtielClientAuthHeader;
+    private final MessageService messageService;
+    private final Message message;
 
-    public MessageProcessor(ProgrammingSubmissionService submissionService, SealtielClientAPI sealtielClientAPI, SealtielMessage message) {
+    public MessageProcessor(ProgrammingSubmissionService submissionService, BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, Message message) {
         this.submissionService = submissionService;
-        this.sealtielClientAPI = sealtielClientAPI;
+        this.sealtielClientAuthHeader = sealtielClientAuthHeader;
+        this.messageService = messageService;
         this.message = message;
     }
 
@@ -26,7 +29,7 @@ public final class MessageProcessor implements Runnable {
     public void run() {
         JPA.withTransaction(() -> {
                 try {
-                    GradingResponse response = new Gson().fromJson(message.getMessage(), GradingResponse.class);
+                    GradingResponse response = new Gson().fromJson(message.getContent(), GradingResponse.class);
 
                     boolean gradingExists = false;
 
@@ -43,12 +46,12 @@ public final class MessageProcessor implements Runnable {
                     }
 
                     if (gradingExists) {
-                        submissionService.grade(response.getGradingJid(), response.getResult(), message.getSourceClientJid(), "localhost");
+                        submissionService.grade(response.getGradingJid(), response.getResult(), message.getSourceJid(), "localhost");
                     } else {
                         System.out.println("Grading JID " + response.getGradingJid() + " not found!");
                     }
-                    sealtielClientAPI.acknowledgeMessage(message.getId());
-                } catch (JudgelsAPIClientException e) {
+                    messageService.confirmMessage(sealtielClientAuthHeader, message.getId());
+                } catch (RemoteException e) {
                     System.out.println("Bad grading response!");
                     e.printStackTrace();
                 }
