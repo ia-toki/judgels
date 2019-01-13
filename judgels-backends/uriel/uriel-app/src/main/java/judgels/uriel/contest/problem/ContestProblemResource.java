@@ -14,7 +14,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.inject.Named;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
@@ -34,8 +36,6 @@ import judgels.uriel.api.contest.problem.ContestProblemsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.submission.ContestSubmissionStore;
-import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
-import judgels.uriel.sandalphon.SandalphonConfiguration;
 
 public class ContestProblemResource implements ContestProblemService {
     private final ActorChecker actorChecker;
@@ -44,7 +44,7 @@ public class ContestProblemResource implements ContestProblemService {
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
     private final ContestSubmissionStore submissionStore;
-    private final SandalphonConfiguration sandalphonConfig;
+    private final SandalphonClientConfiguration sandalphonConfig;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
 
@@ -56,8 +56,8 @@ public class ContestProblemResource implements ContestProblemService {
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
             ContestSubmissionStore submissionStore,
-            SandalphonConfiguration sandalphonConfig,
-            @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
+            SandalphonClientConfiguration sandalphonConfig,
+            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
 
         this.actorChecker = actorChecker;

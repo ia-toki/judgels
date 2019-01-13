@@ -15,16 +15,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.ws.rs.client.WebTarget;
+import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.jophiel.api.JophielClientConfiguration;
+import judgels.sandalphon.api.SandalphonClientConfiguration;
+import judgels.sealtiel.api.SealtielClientConfiguration;
 import judgels.service.jaxrs.JaxRsClients;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielApplication;
 import judgels.uriel.UrielApplicationConfiguration;
 import judgels.uriel.UrielConfiguration;
 import judgels.uriel.file.FileConfiguration;
-import judgels.uriel.gabriel.GabrielConfiguration;
-import judgels.uriel.jophiel.JophielConfiguration;
-import judgels.uriel.sandalphon.SandalphonConfiguration;
-import judgels.uriel.sealtiel.SealtielConfiguration;
 import judgels.uriel.submission.SubmissionConfiguration;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -56,10 +56,10 @@ public abstract class AbstractServiceIntegrationTests extends AbstractIntegratio
                 WebSecurityConfiguration.DEFAULT,
                 new UrielConfiguration.Builder()
                         .baseDataDir(baseDataDir.toString())
-                        .jophielConfig(JophielConfiguration.DEFAULT)
-                        .sandalphonConfig(SandalphonConfiguration.DEFAULT)
-                        .sealtielConfig(SealtielConfiguration.DEFAULT)
-                        .gabrielConfig(GabrielConfiguration.DEFAULT)
+                        .jophielConfig(JophielClientConfiguration.DEFAULT)
+                        .sandalphonConfig(SandalphonClientConfiguration.DEFAULT)
+                        .sealtielConfig(SealtielClientConfiguration.DEFAULT)
+                        .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                         .submissionConfig(SubmissionConfiguration.DEFAULT)
                         .fileConfig(FileConfiguration.DEFAULT)
                         .build());

@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -54,7 +55,6 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 import judgels.uriel.submission.SubmissionDownloader;
 import judgels.uriel.submission.SubmissionSourceBuilder;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -91,7 +91,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
             ProfileService profileService,
-            @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
+            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {
 
         this.actorChecker = actorChecker;

@@ -4,6 +4,7 @@ import com.palantir.conjure.java.api.config.service.UserAgent;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
+import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.UserService;
 import judgels.jophiel.api.user.me.MyUserService;
@@ -13,14 +14,14 @@ import judgels.service.jaxrs.JaxRsClients;
 
 @Module
 public class JophielModule {
-    private final JophielConfiguration config;
+    private final JophielClientConfiguration config;
 
-    public JophielModule(JophielConfiguration config) {
+    public JophielModule(JophielClientConfiguration config) {
         this.config = config;
     }
 
     @Provides
-    JophielConfiguration jophielConfig() {
+    JophielClientConfiguration jophielConfig() {
         return config;
     }
 

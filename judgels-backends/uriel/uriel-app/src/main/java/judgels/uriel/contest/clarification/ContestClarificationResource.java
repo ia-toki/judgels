@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.inject.Inject;
+import javax.inject.Named;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
@@ -30,7 +31,6 @@ import judgels.uriel.api.contest.clarification.ContestClarificationService;
 import judgels.uriel.api.contest.clarification.ContestClarificationsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.sandalphon.SandalphonClientAuthHeader;
 
 public class ContestClarificationResource implements ContestClarificationService {
     private final ActorChecker actorChecker;
@@ -49,7 +49,7 @@ public class ContestClarificationResource implements ContestClarificationService
             ContestClarificationRoleChecker clarificationRoleChecker,
             ContestClarificationStore clarificationStore,
             ContestProblemStore problemStore,
-            @SandalphonClientAuthHeader BasicAuthHeader sandalphonClientAuthHeader,
+            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService,
             ProfileService profileService) {
 

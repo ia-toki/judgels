@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.fs.aws.AwsFsConfiguration;
+import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.jophiel.api.JophielClientConfiguration;
+import judgels.sandalphon.api.SandalphonClientConfiguration;
+import judgels.sealtiel.api.SealtielClientConfiguration;
 import judgels.uriel.file.FileConfiguration;
-import judgels.uriel.gabriel.GabrielConfiguration;
-import judgels.uriel.jophiel.JophielConfiguration;
-import judgels.uriel.sandalphon.SandalphonConfiguration;
-import judgels.uriel.sealtiel.SealtielConfiguration;
 import judgels.uriel.submission.SubmissionConfiguration;
 import org.immutables.value.Value;
 
@@ -19,16 +19,16 @@ public interface UrielConfiguration {
     String getBaseDataDir();
 
     @JsonProperty("jophiel")
-    JophielConfiguration getJophielConfig();
+    JophielClientConfiguration getJophielConfig();
 
     @JsonProperty("sandalphon")
-    SandalphonConfiguration getSandalphonConfig();
+    SandalphonClientConfiguration getSandalphonConfig();
 
     @JsonProperty("sealtiel")
-    SealtielConfiguration getSealtielConfig();
+    SealtielClientConfiguration getSealtielConfig();
 
     @JsonProperty("gabriel")
-    GabrielConfiguration getGabrielConfig();
+    GabrielClientConfiguration getGabrielConfig();
 
     @JsonProperty("aws")
     Optional<AwsConfiguration> getAwsConfig();

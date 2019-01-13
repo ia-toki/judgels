@@ -2,17 +2,19 @@ package judgels.uriel.gabriel;
 
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
+import judgels.gabriel.api.GabrielClientConfiguration;
 
 @Module
 public class GabrielModule {
-    private final GabrielConfiguration config;
+    private final GabrielClientConfiguration config;
 
-    public GabrielModule(GabrielConfiguration config) {
+    public GabrielModule(GabrielClientConfiguration config) {
         this.config = config;
     }
 
     @Provides
-    @GabrielClientJid
+    @Named("gabrielClientJid")
     String gabrielClientJid() {
         return config.getClientJid();
     }

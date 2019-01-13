@@ -1,12 +1,12 @@
-package judgels.uriel.sandalphon;
+package judgels.sandalphon.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableSandalphonConfiguration.class)
-public interface SandalphonConfiguration {
-    SandalphonConfiguration DEFAULT = new Builder()
+@JsonDeserialize(as = ImmutableSandalphonClientConfiguration.class)
+public interface SandalphonClientConfiguration {
+    SandalphonClientConfiguration DEFAULT = new Builder()
             .baseUrl("http://localhost:9002")
             .clientJid("xxx")
             .clientSecret("xxx")
@@ -16,5 +16,5 @@ public interface SandalphonConfiguration {
     String getClientJid();
     String getClientSecret();
 
-    class Builder extends ImmutableSandalphonConfiguration.Builder {}
+    class Builder extends ImmutableSandalphonClientConfiguration.Builder {}
 }
