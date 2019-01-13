@@ -5,8 +5,6 @@ GET         /                                                                   
 GET         /auth                                                                   org.iatoki.judgels.sandalphon.ApplicationController.auth(returnUri ?= "")
 GET         /authRole                                                               org.iatoki.judgels.sandalphon.ApplicationController.authRole(returnUri ?= "")
 GET         /afterLogin                                                             org.iatoki.judgels.sandalphon.ApplicationController.afterLogin(returnUri ?= "")
-POST        /viewAs                                                                 org.iatoki.judgels.sandalphon.ApplicationController.postViewAs()
-GET         /resetViewAs                                                            org.iatoki.judgels.sandalphon.ApplicationController.resetViewAs()
 GET         /localLogout                                                            org.iatoki.judgels.sandalphon.ApplicationController.logout(returnUri ?= "")
 
 GET         /problems                                                               org.iatoki.judgels.sandalphon.problem.base.ProblemController.index()

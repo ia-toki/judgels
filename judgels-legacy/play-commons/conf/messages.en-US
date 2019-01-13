@@ -58,10 +58,6 @@ commons.error.text                              = Sorry, the page you are lookin
 commons.error.text.entityNotFound               = Sorry, the {0} that you are looking for doesn''t exist in the system.
 commons.error.text.UnsupportedOperation         = Your action is not yet supported.
 
-commons.viewpoint.text.noViewpoint              = No viewpoint
-commons.viewpoint.button.viewAs                 = View As
-commons.viewpoint.button.resetViewpoint         = Reset Viewpoint
-
 commons.moment.locale                           = en
 
 guest.text.hello                                = Hello, guest.
@@ -139,10 +135,6 @@ commons.sidebar.hide=Hide Sidebar
 commons.fullscreen.enter=Enter Fullscreen
 commons.fullscreen.exit=Exit Fullscreen
 commons.viewMenu=Views Menu
-
-commons.noViewpoint=No Viewpoint
-commons.viewAs=View As
-commons.resetViewAs=Reset View
 
 commons.moment.locale=en
 commons.login=Login
