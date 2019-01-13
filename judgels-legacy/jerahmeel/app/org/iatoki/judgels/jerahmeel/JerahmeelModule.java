@@ -17,7 +17,6 @@ import org.iatoki.judgels.api.sandalphon.SandalphonFactory;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionLocalFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionRemoteFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionServiceImpl;
-import org.iatoki.judgels.jerahmeel.submission.programming.GabrielClientJid;
 import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionLocalFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionRemoteFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionServiceImpl;
@@ -77,7 +76,6 @@ public final class JerahmeelModule extends AbstractModule {
             bind(FileSystemProvider.class).annotatedWith(ProgrammingSubmissionRemoteFileSystemProvider.class).toProvider(Providers.of(null));
         }
 
-        bindConstant().annotatedWith(GabrielClientJid.class).to(gabrielClientJid());
         bind(BaseUserService.class).to(UserServiceImpl.class);
         bind(BundleProblemGrader.class).to(SandalphonBundleProblemGrader.class);
     }
@@ -138,9 +136,5 @@ public final class JerahmeelModule extends AbstractModule {
 
     private FileSystemProvider submissionLocalFileSystemProvider() {
         return new LocalFileSystemProvider(jerahmeelProperties().getSubmissionLocalDir());
-    }
-
-    private String gabrielClientJid() {
-        return jerahmeelProperties().getSealtielGabrielClientJid();
     }
 }

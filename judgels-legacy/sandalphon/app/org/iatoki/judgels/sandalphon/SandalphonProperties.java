@@ -19,11 +19,6 @@ public final class SandalphonProperties {
     private String jophielClientJid;
     private String jophielClientSecret;
 
-    private String sealtielBaseUrl;
-    private String sealtielClientJid;
-    private String sealtielClientSecret;
-    private String sealtielGabrielClientJid;
-
     private String raphaelBaseUrl;
 
     private SandalphonProperties(Config config) {
@@ -56,22 +51,6 @@ public final class SandalphonProperties {
 
     public String getJophielClientSecret() {
         return jophielClientSecret;
-    }
-
-    public String getSealtielBaseUrl() {
-        return sealtielBaseUrl;
-    }
-
-    public String getSealtielClientJid() {
-        return sealtielClientJid;
-    }
-
-    public String getSealtielClientSecret() {
-        return sealtielClientSecret;
-    }
-
-    public String getSealtielGabrielClientJid() {
-        return sealtielGabrielClientJid;
     }
 
     public String getRaphaelBaseUrl() {
@@ -119,11 +98,6 @@ public final class SandalphonProperties {
         jophielBaseUrl = requireStringValue("jophiel.baseUrl");
         jophielClientJid = requireStringValue("jophiel.clientJid");
         jophielClientSecret = requireStringValue("jophiel.clientSecret");
-
-        sealtielBaseUrl = requireStringValue("sealtiel.baseUrl");
-        sealtielClientJid = requireStringValue("sealtiel.clientJid");
-        sealtielClientSecret = requireStringValue("sealtiel.clientSecret");
-        sealtielGabrielClientJid = requireStringValue("sealtiel.gabrielClientJid");
 
         raphaelBaseUrl = requireStringValue("raphael.baseUrl");
     }

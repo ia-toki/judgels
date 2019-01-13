@@ -10,13 +10,13 @@ import org.iatoki.judgels.jerahmeel.grading.programming.ProgrammingGradingModel;
 import org.iatoki.judgels.jerahmeel.jid.JerahmeelJidUtils;
 import org.iatoki.judgels.jerahmeel.scorecache.ContainerProblemScoreCacheDao;
 import org.iatoki.judgels.jerahmeel.scorecache.ProblemSetScoreCacheUtils;
-import org.iatoki.judgels.jerahmeel.sealtiel.SealtielClientAuthHeader;
 import org.iatoki.judgels.jerahmeel.submission.JerahmeelSubmissionServiceUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.AbstractProgrammingSubmissionServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ public final class ProgrammingSubmissionServiceImpl extends AbstractProgrammingS
     private final ProgrammingGradingDao programmingGradingDao;
 
     @Inject
-    public ProgrammingSubmissionServiceImpl(ContainerProblemScoreCacheDao containerProblemScoreCacheDao, ProgrammingSubmissionDao programmingSubmissionDao, ProgrammingGradingDao programmingGradingDao, @SealtielClientAuthHeader BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, @GabrielClientJid String gabrielClientJid) {
+    public ProgrammingSubmissionServiceImpl(ContainerProblemScoreCacheDao containerProblemScoreCacheDao, ProgrammingSubmissionDao programmingSubmissionDao, ProgrammingGradingDao programmingGradingDao, @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, @Named("gabrielClientJid") String gabrielClientJid) {
         super(programmingSubmissionDao, programmingGradingDao, sealtielClientAuthHeader, messageService, gabrielClientJid);
         this.containerProblemScoreCacheDao = containerProblemScoreCacheDao;
         this.programmingSubmissionDao = programmingSubmissionDao;

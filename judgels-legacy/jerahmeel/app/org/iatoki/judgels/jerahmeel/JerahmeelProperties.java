@@ -28,11 +28,6 @@ public final class JerahmeelProperties {
     private String sandalphonClientJid;
     private String sandalphonClientSecret;
 
-    private String sealtielBaseUrl;
-    private String sealtielClientJid;
-    private String sealtielClientSecret;
-    private String sealtielGabrielClientJid;
-
     private String raphaelBaseUrl;
 
     private Boolean globalAWSUsingKeys;
@@ -101,22 +96,6 @@ public final class JerahmeelProperties {
 
     public String getSandalphonClientSecret() {
         return sandalphonClientSecret;
-    }
-
-    public String getSealtielBaseUrl() {
-        return sealtielBaseUrl;
-    }
-
-    public String getSealtielClientJid() {
-        return sealtielClientJid;
-    }
-
-    public String getSealtielClientSecret() {
-        return sealtielClientSecret;
-    }
-
-    public String getSealtielGabrielClientJid() {
-        return sealtielGabrielClientJid;
     }
 
     public String getRaphaelBaseUrl() {
@@ -216,11 +195,6 @@ public final class JerahmeelProperties {
         sandalphonBaseUrl = requireStringValue("sandalphon.baseUrl");
         sandalphonClientJid = requireStringValue("sandalphon.clientJid");
         sandalphonClientSecret = requireStringValue("sandalphon.clientSecret");
-
-        sealtielBaseUrl = requireStringValue("sealtiel.baseUrl");
-        sealtielClientJid = requireStringValue("sealtiel.clientJid");
-        sealtielClientSecret = requireStringValue("sealtiel.clientSecret");
-        sealtielGabrielClientJid = requireStringValue("sealtiel.gabrielClientJid");
 
         raphaelBaseUrl = requireStringValue("raphael.baseUrl");
 

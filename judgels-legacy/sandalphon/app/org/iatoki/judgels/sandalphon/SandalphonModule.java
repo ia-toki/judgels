@@ -25,7 +25,6 @@ import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemGraderImpl;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleProblemGrader;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionServiceImpl;
-import org.iatoki.judgels.sandalphon.problem.programming.submission.GabrielClientJid;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionServiceImpl;
 import org.iatoki.judgels.sandalphon.user.UserServiceImpl;
@@ -60,7 +59,6 @@ public final class SandalphonModule extends AbstractModule {
         bind(FileSystemProvider.class).annotatedWith(LessonFileSystemProvider.class).toInstance(lessonFileSystemProvider());
         bind(GitProvider.class).annotatedWith(ProblemGitProvider.class).toInstance(problemGitProvider());
         bind(GitProvider.class).annotatedWith(LessonGitProvider.class).toInstance(lessonGitProvider());
-        bindConstant().annotatedWith(GabrielClientJid.class).to(gabrielClientJid());
         bind(BaseUserService.class).to(UserServiceImpl.class);
     }
 
@@ -98,9 +96,5 @@ public final class SandalphonModule extends AbstractModule {
 
     private GitProvider lessonGitProvider() {
         return new LocalGitProvider(lessonFileSystemProvider());
-    }
-
-    private String gabrielClientJid() {
-        return sandalphonProperties().getSealtielGabrielClientJid();
     }
 }

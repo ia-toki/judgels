@@ -4,13 +4,13 @@ import akka.actor.ActorSystem;
 import akka.actor.Scheduler;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
-import org.iatoki.judgels.jerahmeel.sealtiel.SealtielClientAuthHeader;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingResponsePoller;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 import scala.concurrent.ExecutionContextExecutor;
 import scala.concurrent.duration.Duration;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public final class JerahmeelThreadsScheduler {
 
     @Inject
-    public JerahmeelThreadsScheduler(ActorSystem actorSystem, ProgrammingSubmissionService programmingSubmissionService, @SealtielClientAuthHeader BasicAuthHeader sealtielClientAuthHeader, MessageService messageService) {
+    public JerahmeelThreadsScheduler(ActorSystem actorSystem, ProgrammingSubmissionService programmingSubmissionService, @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader, MessageService messageService) {
         Scheduler scheduler = actorSystem.scheduler();
         ExecutionContextExecutor context = actorSystem.dispatcher();
 
