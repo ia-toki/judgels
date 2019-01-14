@@ -2,22 +2,17 @@ package org.iatoki.judgels.jerahmeel;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import org.iatoki.judgels.api.jophiel.JophielClientAPI;
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
 import org.iatoki.judgels.jerahmeel.activity.ActivityLogServiceImpl;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.jerahmeel.statistic.point.PointStatistic;
 import org.iatoki.judgels.jerahmeel.statistic.point.PointStatisticService;
-import org.iatoki.judgels.jerahmeel.statistic.point.html.pointStatisticView;
 import org.iatoki.judgels.jerahmeel.statistic.problem.ProblemStatisticService;
-import org.iatoki.judgels.jerahmeel.statistic.problem.html.problemStatisticView;
 import org.iatoki.judgels.jerahmeel.statistic.problemscore.ProblemScoreStatistic;
 import org.iatoki.judgels.jerahmeel.statistic.problemscore.ProblemScoreStatisticService;
 import org.iatoki.judgels.jerahmeel.statistic.problemscore.ProblemStatistic;
 import org.iatoki.judgels.jerahmeel.statistic.problemscore.html.problemScoreStatisticLayout;
 import org.iatoki.judgels.jerahmeel.statistic.submission.SubmissionEntry;
-import org.iatoki.judgels.jerahmeel.statistic.submission.html.recentSubmissionView;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.ActivityKey;
 import org.iatoki.judgels.jophiel.activity.UserActivityMessage;
@@ -30,12 +25,7 @@ import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsControllerUtils;
 import org.iatoki.judgels.play.controllers.ControllerUtils;
-import org.iatoki.judgels.play.views.html.layouts.contentLayout;
-import org.iatoki.judgels.play.views.html.layouts.guestLoginView;
-import org.iatoki.judgels.play.views.html.layouts.menusLayout;
-import org.iatoki.judgels.play.views.html.layouts.profileView;
-import org.iatoki.judgels.play.views.html.layouts.sidebarLayout;
-import org.iatoki.judgels.play.views.html.layouts.threeWidgetLayout;
+import org.iatoki.judgels.play.views.html.layouts.*;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmission;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
@@ -52,17 +42,13 @@ public final class JerahmeelControllerUtils extends AbstractJudgelsControllerUti
 
     private static JerahmeelControllerUtils instance;
 
-    private final JophielClientAPI jophielClientAPI;
-    private final JophielPublicAPI jophielPublicAPI;
     private final BundleSubmissionService bundleSubmissionService;
     private final PointStatisticService pointStatisticService;
     private final ProblemScoreStatisticService problemScoreStatisticService;
     private final ProblemStatisticService problemStatisticService;
     private final ProgrammingSubmissionService programmingSubmissionService;
 
-    public JerahmeelControllerUtils(JophielClientAPI jophielClientAPI, JophielPublicAPI jophielPublicAPI, BundleSubmissionService bundleSubmissionService, PointStatisticService pointStatisticService, ProblemScoreStatisticService problemScoreStatisticService, ProblemStatisticService problemStatisticService, ProgrammingSubmissionService programmingSubmissionService) {
-        this.jophielClientAPI = jophielClientAPI;
-        this.jophielPublicAPI = jophielPublicAPI;
+    public JerahmeelControllerUtils(BundleSubmissionService bundleSubmissionService, PointStatisticService pointStatisticService, ProblemScoreStatisticService problemScoreStatisticService, ProblemStatisticService problemStatisticService, ProgrammingSubmissionService programmingSubmissionService) {
         this.bundleSubmissionService = bundleSubmissionService;
         this.pointStatisticService = pointStatisticService;
         this.problemScoreStatisticService = problemScoreStatisticService;
@@ -70,11 +56,11 @@ public final class JerahmeelControllerUtils extends AbstractJudgelsControllerUti
         this.programmingSubmissionService = programmingSubmissionService;
     }
 
-    public static synchronized void buildInstance(JophielClientAPI jophielClientAPI, JophielPublicAPI jophielPublicAPI, BundleSubmissionService bundleSubmissionService, PointStatisticService pointStatisticService, ProblemScoreStatisticService problemScoreStatisticService, ProblemStatisticService problemStatisticService, ProgrammingSubmissionService programmingSubmissionService) {
+    public static synchronized void buildInstance(BundleSubmissionService bundleSubmissionService, PointStatisticService pointStatisticService, ProblemScoreStatisticService problemScoreStatisticService, ProblemStatisticService problemStatisticService, ProgrammingSubmissionService programmingSubmissionService) {
         if (instance != null) {
             throw new UnsupportedOperationException("JerahmeelControllerUtils instance has already been built");
         }
-        instance = new JerahmeelControllerUtils(jophielClientAPI, jophielPublicAPI, bundleSubmissionService, pointStatisticService, problemScoreStatisticService, problemStatisticService, programmingSubmissionService);
+        instance = new JerahmeelControllerUtils(bundleSubmissionService, pointStatisticService, problemScoreStatisticService, problemStatisticService, programmingSubmissionService);
     }
 
     public static JerahmeelControllerUtils getInstance() {
@@ -126,9 +112,9 @@ public final class JerahmeelControllerUtils extends AbstractJudgelsControllerUti
         }
 
         if (JerahmeelUtils.isGuest()) {
-            content.appendLayout(c -> isLoggedInLayout.render(jophielClientAPI.getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.auth(ControllerUtils.getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedIn.js", c));
+            content.appendLayout(c -> isLoggedInLayout.render(JophielClientControllerUtils.getInstance().getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.auth(ControllerUtils.getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedIn.js", c));
         } else {
-            content.appendLayout(c -> isLoggedOutLayout.render(jophielClientAPI.getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.logout(ControllerUtils.getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedOut.js", JerahmeelUtils.getRealUserJid(), c));
+            content.appendLayout(c -> isLoggedOutLayout.render(JophielClientControllerUtils.getInstance().getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.logout(ControllerUtils.getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedOut.js", JerahmeelUtils.getRealUserJid(), c));
         }
     }
 

@@ -2,7 +2,6 @@ package org.iatoki.judgels.sandalphon.user;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.iatoki.judgels.api.jophiel.JophielUser;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.Page;
@@ -103,17 +102,12 @@ public final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void upsertUserFromJophielUser(JophielUser jophielUser, String upsertUserJid, String upsertUserIpAddress) {
-        upsertUserFromJophielUser(jophielUser, SandalphonUtils.getDefaultRoles(), upsertUserJid, upsertUserIpAddress);
-    }
-
-    @Override
-    public void upsertUserFromJophielUser(JophielUser jophielUser, List<String> roles, String upsertUserJid, String upsertUserIpAddress) {
-        if (!userDao.existsByJid(jophielUser.getJid())) {
-            createUser(jophielUser.getJid(), roles, upsertUserJid, upsertUserIpAddress);
+    public void upsertUserFromJophielUser(String userJid, String username, List<String> roles, String upsertUserJid, String upsertUserIpAddress) {
+        if (!userDao.existsByJid(userJid)) {
+            createUser(userJid, roles, upsertUserJid, upsertUserIpAddress);
         }
 
-        JidCacheServiceImpl.getInstance().putDisplayName(jophielUser.getJid(), JudgelsPlayUtils.getUserDisplayName(jophielUser.getUsername()), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        JidCacheServiceImpl.getInstance().putDisplayName(userJid, JudgelsPlayUtils.getUserDisplayName(username), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
     }
 
     private static User createUserFromUserModel(UserModel userModel) {

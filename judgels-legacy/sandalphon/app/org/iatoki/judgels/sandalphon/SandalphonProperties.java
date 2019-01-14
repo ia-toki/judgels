@@ -16,8 +16,6 @@ public final class SandalphonProperties {
     private File submissionLocalDir;
 
     private String jophielBaseUrl;
-    private String jophielClientJid;
-    private String jophielClientSecret;
 
     private String raphaelBaseUrl;
 
@@ -43,14 +41,6 @@ public final class SandalphonProperties {
 
     public String getJophielBaseUrl() {
         return jophielBaseUrl;
-    }
-
-    public String getJophielClientJid() {
-        return jophielClientJid;
-    }
-
-    public String getJophielClientSecret() {
-        return jophielClientSecret;
     }
 
     public String getRaphaelBaseUrl() {
@@ -96,8 +86,6 @@ public final class SandalphonProperties {
         }
 
         jophielBaseUrl = requireStringValue("jophiel.baseUrl");
-        jophielClientJid = requireStringValue("jophiel.clientJid");
-        jophielClientSecret = requireStringValue("jophiel.clientSecret");
 
         raphaelBaseUrl = requireStringValue("raphael.baseUrl");
     }

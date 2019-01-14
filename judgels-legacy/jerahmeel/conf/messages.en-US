@@ -102,13 +102,13 @@ submission.score=Score
 
 problem.problem=Problem
 
-user.users=Users
+user.users=Users Roles
 user.user=User
 
-user.list=Users
-user.create=Create User
-user.view=View User
-user.update=Update User
+user.list=User Roles
+user.create=Create User Role
+user.view=View User Role
+user.update=Update User Role
 
 user.create.error.usernameNotFound=Username not found
 user.create.error.userAlreadyExists=User already exists

@@ -1,8 +1,7 @@
 package org.iatoki.judgels.sandalphon;
 
 import com.google.common.collect.ImmutableList;
-import org.iatoki.judgels.api.jophiel.JophielClientAPI;
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
+import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.ActivityKey;
 import org.iatoki.judgels.jophiel.activity.UserActivityMessage;
 import org.iatoki.judgels.jophiel.activity.UserActivityMessageServiceImpl;
@@ -25,14 +24,6 @@ import play.mvc.Http;
 public final class SandalphonControllerUtils extends AbstractJudgelsControllerUtils {
 
     private static SandalphonControllerUtils INSTANCE;
-
-    private final JophielClientAPI jophielClientAPI;
-    private final JophielPublicAPI jophielPublicAPI;
-
-    public SandalphonControllerUtils(JophielClientAPI jophielClientAPI, JophielPublicAPI jophielPublicAPI) {
-        this.jophielClientAPI = jophielClientAPI;
-        this.jophielPublicAPI = jophielPublicAPI;
-    }
 
     @Override
     public void appendSidebarLayout(LazyHtml content) {
@@ -58,9 +49,9 @@ public final class SandalphonControllerUtils extends AbstractJudgelsControllerUt
 
         content.appendLayout(c -> sidebarLayout.render(sidebarContent.render(), c));
         if (IdentityUtils.getUserJid() == null) {
-            content.appendLayout(c -> isLoggedInLayout.render(jophielClientAPI.getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.auth(ControllerUtils.getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedIn.js", c));
+            content.appendLayout(c -> isLoggedInLayout.render(JophielClientControllerUtils.getInstance().getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.auth(ControllerUtils.getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedIn.js", c));
         } else {
-            content.appendLayout(c -> isLoggedOutLayout.render(jophielClientAPI.getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.logout(ControllerUtils.getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedOut.js", SandalphonUtils.getRealUserJid(), c));
+            content.appendLayout(c -> isLoggedOutLayout.render(JophielClientControllerUtils.getInstance().getUserIsLoggedInAPIEndpoint(), routes.ApplicationController.logout(ControllerUtils.getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), "lib/jophielcommons/javascripts/isLoggedOut.js", SandalphonUtils.getRealUserJid(), c));
         }
     }
 
@@ -82,11 +73,11 @@ public final class SandalphonControllerUtils extends AbstractJudgelsControllerUt
         }
     }
 
-    public static synchronized void buildInstance(JophielClientAPI jophielClientAPI, JophielPublicAPI jophielPublicAPI) {
+    public static synchronized void buildInstance() {
         if (INSTANCE != null) {
             throw new UnsupportedOperationException("SandalphonControllerUtils instance has already been built");
         }
-        INSTANCE = new SandalphonControllerUtils(jophielClientAPI, jophielPublicAPI);
+        INSTANCE = new SandalphonControllerUtils();
     }
 
     public static SandalphonControllerUtils getInstance() {

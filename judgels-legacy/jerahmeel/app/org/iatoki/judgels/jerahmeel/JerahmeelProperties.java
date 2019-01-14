@@ -21,8 +21,6 @@ public final class JerahmeelProperties {
     private String jerahmeelWelcomeMessage;
 
     private String jophielBaseUrl;
-    private String jophielClientJid;
-    private String jophielClientSecret;
 
     private String sandalphonBaseUrl;
     private String sandalphonClientJid;
@@ -76,14 +74,6 @@ public final class JerahmeelProperties {
 
     public String getJophielBaseUrl() {
         return jophielBaseUrl;
-    }
-
-    public String getJophielClientJid() {
-        return jophielClientJid;
-    }
-
-    public String getJophielClientSecret() {
-        return jophielClientSecret;
     }
 
     public String getSandalphonBaseUrl() {
@@ -189,8 +179,6 @@ public final class JerahmeelProperties {
         jerahmeelWelcomeMessage = requireStringValue("jerahmeel.welcomeMessage");
 
         jophielBaseUrl = requireStringValue("jophiel.baseUrl");
-        jophielClientJid = requireStringValue("jophiel.clientJid");
-        jophielClientSecret = requireStringValue("jophiel.clientSecret");
 
         sandalphonBaseUrl = requireStringValue("sandalphon.baseUrl");
         sandalphonClientJid = requireStringValue("sandalphon.clientJid");

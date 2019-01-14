@@ -1,7 +1,6 @@
 package org.iatoki.judgels.jerahmeel.user;
 
 import com.google.inject.ImplementedBy;
-import org.iatoki.judgels.api.jophiel.JophielUser;
 import org.iatoki.judgels.jophiel.user.BaseUserService;
 import org.iatoki.judgels.play.Page;
 
@@ -22,7 +21,5 @@ public interface UserService extends BaseUserService {
 
     Page<User> getPageOfUsers(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString);
 
-    void upsertUserFromJophielUser(JophielUser jophielUser, String userJid, String userIpAddress);
-
-    void upsertUserFromJophielUser(JophielUser jophielUser, List<String> roles, String userJid, String userIpAddress);
+    void upsertUserFromJophielUser(String userJid, String username, List<String> roles, String upsertUserJid, String userIpAddress);
 }

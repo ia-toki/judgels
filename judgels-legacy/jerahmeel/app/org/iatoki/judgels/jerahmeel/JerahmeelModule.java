@@ -9,9 +9,6 @@ import com.typesafe.config.ConfigFactory;
 import org.iatoki.judgels.AWSFileSystemProvider;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
-import org.iatoki.judgels.api.jophiel.JophielClientAPI;
-import org.iatoki.judgels.api.jophiel.JophielFactory;
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonFactory;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionLocalFileSystemProvider;
@@ -54,8 +51,6 @@ public final class JerahmeelModule extends AbstractModule {
         bind(ProgrammingSubmissionService.class).to(ProgrammingSubmissionServiceImpl.class);
 
         bind(JophielAuthAPI.class).toInstance(jophielAuthAPI());
-        bind(JophielClientAPI.class).toInstance(jophielClientAPI());
-        bind(JophielPublicAPI.class).toInstance(jophielPublicAPI());
         bind(SandalphonClientAPI.class).toInstance(sandalphonClientAPI());
 
         bind(FileSystemProvider.class).annotatedWith(BundleSubmissionLocalFileSystemProvider.class).toInstance(bundleSubmissionLocalFileSystemProvider());
@@ -85,15 +80,7 @@ public final class JerahmeelModule extends AbstractModule {
     }
 
     private JophielAuthAPI jophielAuthAPI() {
-        return new JophielAuthAPI(jerahmeelProperties().getRaphaelBaseUrl(), jerahmeelProperties().getJophielBaseUrl(), jerahmeelProperties().getJophielClientJid(), jerahmeelProperties().getJophielClientSecret());
-    }
-
-    private JophielClientAPI jophielClientAPI() {
-        return JophielFactory.createJophiel(jerahmeelProperties().getJophielBaseUrl()).connectToClientAPI(jerahmeelProperties().getJophielClientJid(), jerahmeelProperties().getJophielClientSecret());
-    }
-
-    private JophielPublicAPI jophielPublicAPI() {
-        return JophielFactory.createJophiel(jerahmeelProperties().getJophielBaseUrl()).connectToPublicAPI();
+        return new JophielAuthAPI(jerahmeelProperties().getRaphaelBaseUrl(), jerahmeelProperties().getJophielBaseUrl());
     }
 
     private SandalphonClientAPI sandalphonClientAPI() {

@@ -1,9 +1,10 @@
 package org.iatoki.judgels.sandalphon.user;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import judgels.jophiel.api.user.search.UserSearchService;
 import org.apache.commons.lang3.StringUtils;
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
-import org.iatoki.judgels.api.jophiel.JophielUser;
+import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
@@ -12,8 +13,8 @@ import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.views.html.layouts.headingLayout;
 import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
-import org.iatoki.judgels.sandalphon.SandalphonUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
+import org.iatoki.judgels.sandalphon.SandalphonUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authorized;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
@@ -32,6 +33,7 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
@@ -41,12 +43,12 @@ public final class UserController extends AbstractJudgelsController {
     private static final long PAGE_SIZE = 20;
     private static final String USER = "user";
 
-    private final JophielPublicAPI jophielPublicAPI;
+    private final UserSearchService userSearchService;
     private final UserService userService;
 
     @Inject
-    public UserController(JophielPublicAPI jophielPublicAPI, UserService userService) {
-        this.jophielPublicAPI = jophielPublicAPI;
+    public UserController(UserSearchService userSearchService, UserService userService) {
+        this.userSearchService = userSearchService;
         this.userService = userService;
     }
 
@@ -90,21 +92,23 @@ public final class UserController extends AbstractJudgelsController {
         }
 
         UserAddForm userAddData = userAddForm.get();
-        JophielUser jophielUser = jophielPublicAPI.findUserByUsername(userAddData.username);
+        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(userAddData.username));
 
-        if (jophielUser == null) {
+        if (!usernameToJidMap.containsKey(userAddData.username)) {
             userAddForm.reject(Messages.get("user.create.error.usernameNotFound"));
             return showAddUser(userAddForm);
         }
 
-        if (userService.existsByUserJid(jophielUser.getJid())) {
+        String userJid = usernameToJidMap.get(userAddData.username);
+
+        if (userService.existsByUserJid(userJid)) {
             userAddForm.reject(Messages.get("user.create.error.userAlreadyExists"));
             return showAddUser(userAddForm);
         }
 
-        userService.upsertUserFromJophielUser(jophielUser, userAddData.getRolesAsList(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        userService.upsertUserFromJophielUser(userJid, userAddData.username, userAddData.getRolesAsList(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD.construct(USER, jophielUser.getJid(), jophielUser.getUsername()));
+        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD.construct(USER, userJid, userAddData.username));
 
         return redirect(routes.UserController.index());
     }
@@ -165,7 +169,7 @@ public final class UserController extends AbstractJudgelsController {
     }
 
     private Result showAddUser(Form<UserAddForm> userCreateForm) {
-        LazyHtml content = new LazyHtml(addUserView.render(userCreateForm, jophielPublicAPI.getUserAutocompleteAPIEndpoint()));
+        LazyHtml content = new LazyHtml(addUserView.render(userCreateForm, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
         content.appendLayout(c -> headingLayout.render(Messages.get("user.create"), c));
         SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
         SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(

@@ -1,29 +1,26 @@
 package org.iatoki.judgels.sandalphon.lesson.partner;
 
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
-import org.iatoki.judgels.api.jophiel.JophielUser;
+import com.google.common.collect.ImmutableSet;
+import judgels.jophiel.api.user.search.UserSearchService;
+import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
-import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.JudgelsPlayUtils;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.Page;
+import org.iatoki.judgels.play.*;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
 import org.iatoki.judgels.play.views.html.layouts.heading3WithActionLayout;
-import org.iatoki.judgels.sandalphon.lesson.Lesson;
-import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
-import org.iatoki.judgels.sandalphon.resource.PartnerControllerUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
+import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
+import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.addPartnerView;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.editPartnerView;
 import org.iatoki.judgels.sandalphon.lesson.partner.html.listPartnersView;
-import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.sandalphon.resource.PartnerControllerUtils;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
@@ -33,6 +30,7 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
@@ -42,12 +40,12 @@ public class LessonPartnerController extends AbstractJudgelsController {
     private static final String LESSON = "lesson";
     private static final String PARTNER = "partner";
 
-    private final JophielPublicAPI jophielPublicAPI;
+    private final UserSearchService userSearchService;
     private final LessonService lessonService;
 
     @Inject
-    public LessonPartnerController(JophielPublicAPI jophielPublicAPI, LessonService lessonService) {
-        this.jophielPublicAPI = jophielPublicAPI;
+    public LessonPartnerController(UserSearchService userSearchService, LessonService lessonService) {
+        this.userSearchService = userSearchService;
         this.lessonService = lessonService;
     }
 
@@ -112,16 +110,18 @@ public class LessonPartnerController extends AbstractJudgelsController {
         String username = usernameForm.get().username;
         LessonPartnerUpsertForm lessonData = lessonForm.get();
 
-        JophielUser jophielUser = jophielPublicAPI.findUserByUsername(username);
+        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
 
-        if (jophielUser == null) {
+        if (!usernameToJidMap.containsKey(username)) {
             usernameForm.reject("username", Messages.get("lesson.partner.usernameNotFound"));
             return showAddPartner(usernameForm, lessonForm, lesson);
         }
 
-        JidCacheServiceImpl.getInstance().putDisplayName(jophielUser.getJid(), JudgelsPlayUtils.getUserDisplayName(jophielUser.getUsername()), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        String userJid = usernameToJidMap.get(username);
 
-        if (lessonService.isUserPartnerForLesson(lesson.getJid(), jophielUser.getJid())) {
+        JidCacheServiceImpl.getInstance().putDisplayName(userJid, JudgelsPlayUtils.getUserDisplayName(username), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+
+        if (lessonService.isUserPartnerForLesson(lesson.getJid(), userJid)) {
             usernameForm.reject("username", Messages.get("lesson.partner.already"));
             return showAddPartner(usernameForm, lessonForm, lesson);
         }
@@ -138,9 +138,9 @@ public class LessonPartnerController extends AbstractJudgelsController {
               .setIsAllowedToManageLessonClients(lessonData.isAllowedToManageLessonClients)
               .build();
 
-        lessonService.createLessonPartner(lesson.getJid(), jophielUser.getJid(), partnerConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        lessonService.createLessonPartner(lesson.getJid(), userJid, partnerConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(LESSON, lesson.getJid(), lesson.getSlug(), PARTNER, jophielUser.getJid(), jophielUser.getUsername()));
+        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(LESSON, lesson.getJid(), lesson.getSlug(), PARTNER, userJid, username));
 
         return redirect(routes.LessonPartnerController.viewPartners(lesson.getId()));
     }
@@ -222,7 +222,7 @@ public class LessonPartnerController extends AbstractJudgelsController {
     }
 
     private Result showAddPartner(Form<LessonPartnerUsernameForm> usernameForm, Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson) {
-        LazyHtml content = new LazyHtml(addPartnerView.render(usernameForm, lessonForm, lesson, jophielPublicAPI.getUserAutocompleteAPIEndpoint()));
+        LazyHtml content = new LazyHtml(addPartnerView.render(usernameForm, lessonForm, lesson, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
 
         content.appendLayout(c -> heading3Layout.render(Messages.get("lesson.partner.add"), c));
         LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);

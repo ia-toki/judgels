@@ -1,15 +1,15 @@
 package org.iatoki.judgels.jophiel;
 
-import org.iatoki.judgels.api.impls.AbstractJudgelsClientAPIImpl;
+import org.iatoki.judgels.api.impls.AbstractJudgelsPublicAPIImpl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public final class JophielAuthAPI extends AbstractJudgelsClientAPIImpl {
+public final class JophielAuthAPI extends AbstractJudgelsPublicAPIImpl {
     private final String raphaelBaseUrl;
 
-    public JophielAuthAPI(String raphaelBaseUrl, String jophielBaseUrl, String clientJid, String clientSecret) {
-        super(jophielBaseUrl, "/api/legacy", clientJid, clientSecret);
+    public JophielAuthAPI(String raphaelBaseUrl, String jophielBaseUrl) {
+        super(jophielBaseUrl, "/api/legacy");
         this.raphaelBaseUrl = raphaelBaseUrl;
     }
 

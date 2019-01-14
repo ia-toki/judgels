@@ -1,8 +1,10 @@
 package org.iatoki.judgels.jophiel;
 
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
-import org.iatoki.judgels.api.jophiel.JophielUser;
-import org.iatoki.judgels.api.jophiel.JophielUserProfile;
+import judgels.jophiel.api.profile.BasicProfile;
+import judgels.jophiel.api.profile.ProfileService;
+import judgels.jophiel.api.user.User;
+import judgels.jophiel.api.user.me.MyUserService;
+import judgels.service.api.actor.AuthHeader;
 import org.iatoki.judgels.jophiel.user.BaseUserService;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
@@ -17,13 +19,15 @@ import java.net.URISyntaxException;
 public final class JophielClientController extends Controller {
 
     private final JophielAuthAPI jophielAuthAPI;
-    private final JophielPublicAPI jophielPublicAPI;
+    private final MyUserService myUserService;
+    private final ProfileService profileService;
     private final BaseUserService userService;
 
     @Inject
-    public JophielClientController(JophielAuthAPI jophielAuthAPI, JophielPublicAPI jophielPublicAPI, BaseUserService userService) {
+    public JophielClientController(JophielAuthAPI jophielAuthAPI, MyUserService myUserService, ProfileService profileService, BaseUserService userService) {
         this.jophielAuthAPI = jophielAuthAPI;
-        this.jophielPublicAPI = jophielPublicAPI;
+        this.myUserService = myUserService;
+        this.profileService = profileService;
         this.userService = userService;
     }
 
@@ -56,13 +60,11 @@ public final class JophielClientController extends Controller {
     }
 
     private void refreshUserInfo(JophielSession session) {
-        jophielPublicAPI.useOnBehalfOfUser(session.getToken());
+        User user = myUserService.getMyself(AuthHeader.of(session.getToken()));
+        BasicProfile profile = profileService.getBasicProfile(session.getUserJid());
 
-        JophielUser user = jophielPublicAPI.findMyself();
-        JophielUserProfile profile = jophielPublicAPI.findUserProfileByJid(session.getUserJid());
-
-        if (profile.getName() != null) {
-            session("name", profile.getName());
+        if (profile.getName().isPresent()) {
+            session("name", profile.getName().get());
         }
 
         session("username", user.getUsername());

@@ -1,12 +1,11 @@
 package org.iatoki.judgels.jerahmeel.user;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import judgels.jophiel.api.user.search.UserSearchService;
 import org.apache.commons.lang3.StringUtils;
-import org.iatoki.judgels.api.JudgelsAPIClientException;
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
-import org.iatoki.judgels.api.jophiel.JophielUser;
-import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
+import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
 import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
@@ -16,6 +15,7 @@ import org.iatoki.judgels.jerahmeel.user.html.addUserView;
 import org.iatoki.judgels.jerahmeel.user.html.editUserView;
 import org.iatoki.judgels.jerahmeel.user.html.listUsersView;
 import org.iatoki.judgels.jerahmeel.user.html.viewUserView;
+import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
@@ -33,6 +33,7 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
@@ -42,12 +43,12 @@ public final class UserController extends AbstractJudgelsController {
     private static final long PAGE_SIZE = 20;
     private static final String USER = "user";
 
-    private final JophielPublicAPI jophielPublicAPI;
+    private final UserSearchService userSearchService;
     private final UserService userService;
 
     @Inject
-    public UserController(JophielPublicAPI jophielPublicAPI, UserService userService) {
-        this.jophielPublicAPI = jophielPublicAPI;
+    public UserController(UserSearchService userSearchService, UserService userService) {
+        this.userSearchService = userSearchService;
         this.userService = userService;
     }
 
@@ -91,27 +92,24 @@ public final class UserController extends AbstractJudgelsController {
         }
 
         UserAddForm userCreateData = userAddForm.get();
-        JophielUser jophielUser;
-        try {
-            jophielUser = jophielPublicAPI.findUserByUsername(userCreateData.username);
-        } catch (JudgelsAPIClientException e) {
+
+        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(userCreateData.username));
+
+        if (!usernameToJidMap.containsKey(userCreateData.username)) {
             userAddForm.reject(Messages.get("user.create.error.usernameNotFound"));
             return showCreateUser(userAddForm);
         }
 
-        if (jophielUser == null) {
-            userAddForm.reject(Messages.get("user.create.error.usernameNotFound"));
-            return showCreateUser(userAddForm);
-        }
+        String userJid = usernameToJidMap.get(userCreateData.username);
 
-        if (userService.existsByUserJid(jophielUser.getJid())) {
+        if (userService.existsByUserJid(userJid)) {
             userAddForm.reject(Messages.get("user.create.error.userAlreadyExists"));
             return showCreateUser(userAddForm);
         }
 
-        userService.upsertUserFromJophielUser(jophielUser, userCreateData.getRolesAsList(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        userService.upsertUserFromJophielUser(userJid, userCreateData.username, userCreateData.getRolesAsList(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        JerahmeelControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD.construct(USER, jophielUser.getJid(), jophielUser.getUsername()));
+        JerahmeelControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD.construct(USER, userJid, userCreateData.username));
 
         return redirect(routes.UserController.index());
     }
@@ -171,7 +169,7 @@ public final class UserController extends AbstractJudgelsController {
     }
 
     private Result showCreateUser(Form<UserAddForm> userAddForm) {
-        LazyHtml content = new LazyHtml(addUserView.render(userAddForm, jophielPublicAPI.getUserAutocompleteAPIEndpoint()));
+        LazyHtml content = new LazyHtml(addUserView.render(userAddForm, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
         content.appendLayout(c -> headingLayout.render(Messages.get("user.create"), c));
         JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
         JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(

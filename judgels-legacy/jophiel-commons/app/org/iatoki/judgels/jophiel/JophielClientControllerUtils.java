@@ -16,15 +16,23 @@ public final class JophielClientControllerUtils {
     }
 
     public String getUserEditProfileUrl() {
-        return raphaelBaseUrl + "/account/profile";
+        return raphaelBaseUrl + "/account";
     }
 
     public String getRegisterUrl() {
         return raphaelBaseUrl + "/register";
     }
 
+    public String getUserIsLoggedInAPIEndpoint() {
+        return jophielBaseUrl + "/api/legacy/session/is-logged-in";
+    }
+
     public String getUserAvatarUrl(String userJid) {
         return jophielBaseUrl + "/api/v2/users/" + userJid + "/avatar";
+    }
+
+    public String getUserAutocompleteAPIEndpoint() {
+        return jophielBaseUrl + "/api/v2/users/autocomplete";
     }
 
     public String getServiceLogoutUrl(String returnUri) {

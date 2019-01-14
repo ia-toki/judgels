@@ -1,7 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.programming.partner;
 
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
-import org.iatoki.judgels.api.jophiel.JophielUser;
+import com.google.common.collect.ImmutableSet;
+import judgels.jophiel.api.profile.ProfileService;
+import judgels.jophiel.api.user.search.UserSearchService;
+import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
@@ -9,26 +11,20 @@ import org.iatoki.judgels.play.JudgelsPlayUtils;
 import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
-import org.iatoki.judgels.sandalphon.resource.PartnerControllerUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
+import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfig;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfigBuilder;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerControllerUtils;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerNotFoundException;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUpsertForm;
-import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerUsernameForm;
+import org.iatoki.judgels.sandalphon.problem.base.partner.*;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.partner.html.addPartnerView;
 import org.iatoki.judgels.sandalphon.problem.programming.partner.html.editPartnerView;
-import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.sandalphon.resource.PartnerControllerUtils;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
@@ -38,6 +34,7 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
@@ -46,12 +43,14 @@ public final class ProgrammingProblemPartnerController extends AbstractJudgelsCo
     private static final String PROBLEM = "problem";
     private static final String PARTNER = "partner";
 
-    private final JophielPublicAPI jophielPublicAPI;
+    private final UserSearchService userSearchService;
+    private final ProfileService profileService;
     private final ProblemService problemService;
 
     @Inject
-    public ProgrammingProblemPartnerController(JophielPublicAPI jophielPublicAPI, ProblemService problemService) {
-        this.jophielPublicAPI = jophielPublicAPI;
+    public ProgrammingProblemPartnerController(UserSearchService userSearchService, ProfileService profileService, ProblemService problemService) {
+        this.userSearchService = userSearchService;
+        this.profileService = profileService;
         this.problemService = problemService;
     }
 
@@ -92,16 +91,18 @@ public final class ProgrammingProblemPartnerController extends AbstractJudgelsCo
         ProblemPartnerUpsertForm problemData = problemForm.get();
         ProgrammingPartnerUpsertForm programmingData = programmingForm.get();
 
-        JophielUser jophielUser = jophielPublicAPI.findUserByUsername(username);
+        Map<String, String> usernameToJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
 
-        if (jophielUser == null) {
+        if (!usernameToJidMap.containsKey(username)) {
             usernameForm.reject("username", Messages.get("problem.partner.usernameNotFound"));
             return showAddPartner(usernameForm, problemForm, programmingForm, problem);
         }
 
-        JidCacheServiceImpl.getInstance().putDisplayName(jophielUser.getJid(), JudgelsPlayUtils.getUserDisplayName(jophielUser.getUsername()), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        String userJid = usernameToJidMap.get(username);
 
-        if (problemService.isUserPartnerForProblem(problem.getJid(), jophielUser.getJid())) {
+        JidCacheServiceImpl.getInstance().putDisplayName(userJid, JudgelsPlayUtils.getUserDisplayName(username), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+
+        if (problemService.isUserPartnerForProblem(problem.getJid(), userJid)) {
             usernameForm.reject("username", Messages.get("problem.partner.already"));
             return showAddPartner(usernameForm, problemForm, programmingForm, problem);
         }
@@ -123,9 +124,9 @@ public final class ProgrammingProblemPartnerController extends AbstractJudgelsCo
               .setIsAllowedToManageGrading(programmingData.isAllowedToManageGrading)
               .build();
 
-        problemService.createProblemPartner(problem.getJid(), jophielUser.getJid(), problemConfig, programmingConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        problemService.createProblemPartner(problem.getJid(), userJid, problemConfig, programmingConfig, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(PROBLEM, problem.getJid(), problem.getSlug(), PARTNER, jophielUser.getJid(), jophielUser.getUsername()));
+        SandalphonControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(PROBLEM, problem.getJid(), problem.getSlug(), PARTNER, userJid, username));
 
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.viewPartners(problem.getId()));
     }
@@ -215,7 +216,7 @@ public final class ProgrammingProblemPartnerController extends AbstractJudgelsCo
     }
 
     private Result showAddPartner(Form<ProblemPartnerUsernameForm> usernameForm, Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem) {
-        LazyHtml content = new LazyHtml(addPartnerView.render(usernameForm, problemForm, programmingForm, problem, jophielPublicAPI.getUserAutocompleteAPIEndpoint()));
+        LazyHtml content = new LazyHtml(addPartnerView.render(usernameForm, problemForm, programmingForm, problem, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
 
         content.appendLayout(c -> heading3Layout.render(Messages.get("problem.partner.add"), c));
         ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);

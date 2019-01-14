@@ -294,10 +294,13 @@ lesson.client.list=Clients
 lesson.client.client=Client
 lesson.client.name=Name
 
-user.list=Users
-user.update=Update User
+user.list=User Roles
+user.create=Create User Role
+user.view=View User Role
+user.update=Update User Role
 
-user.users=Users
+user.user=User
+user.users=User Roles
 user.userJid=User JID
 user.name=Name
 user.roles=Roles

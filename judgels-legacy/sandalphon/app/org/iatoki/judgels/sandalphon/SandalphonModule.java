@@ -7,9 +7,6 @@ import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
 import org.iatoki.judgels.LocalGitProvider;
-import org.iatoki.judgels.api.jophiel.JophielClientAPI;
-import org.iatoki.judgels.api.jophiel.JophielFactory;
-import org.iatoki.judgels.api.jophiel.JophielPublicAPI;
 import org.iatoki.judgels.jophiel.JophielAuthAPI;
 import org.iatoki.judgels.jophiel.user.BaseUserService;
 import org.iatoki.judgels.play.JudgelsPlayProperties;
@@ -52,8 +49,6 @@ public final class SandalphonModule extends AbstractModule {
         bind(BundleProblemGrader.class).to(BundleProblemGraderImpl.class);
 
         bind(JophielAuthAPI.class).toInstance(jophielAuthAPI());
-        bind(JophielClientAPI.class).toInstance(jophielClientAPI());
-        bind(JophielPublicAPI.class).toInstance(jophielPublicAPI());
         bind(FileSystemProvider.class).annotatedWith(ProblemFileSystemProvider.class).toInstance(problemFileSystemProvider());
         bind(FileSystemProvider.class).annotatedWith(SubmissionFileSystemProvider.class).toInstance(submissionFileSystemProvider());
         bind(FileSystemProvider.class).annotatedWith(LessonFileSystemProvider.class).toInstance(lessonFileSystemProvider());
@@ -67,15 +62,7 @@ public final class SandalphonModule extends AbstractModule {
     }
 
     private JophielAuthAPI jophielAuthAPI() {
-        return new JophielAuthAPI(sandalphonProperties().getRaphaelBaseUrl(), sandalphonProperties().getJophielBaseUrl(), sandalphonProperties().getJophielClientJid(), sandalphonProperties().getJophielClientSecret());
-    }
-
-    private JophielClientAPI jophielClientAPI() {
-        return JophielFactory.createJophiel(sandalphonProperties().getJophielBaseUrl()).connectToClientAPI(sandalphonProperties().getJophielClientJid(), sandalphonProperties().getJophielClientSecret());
-    }
-
-    private JophielPublicAPI jophielPublicAPI() {
-        return JophielFactory.createJophiel(sandalphonProperties().getJophielBaseUrl()).connectToPublicAPI();
+        return new JophielAuthAPI(sandalphonProperties().getRaphaelBaseUrl(), sandalphonProperties().getJophielBaseUrl());
     }
 
     private LocalFileSystemProvider problemFileSystemProvider() {
