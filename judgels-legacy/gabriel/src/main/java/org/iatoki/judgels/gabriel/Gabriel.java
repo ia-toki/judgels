@@ -1,19 +1,18 @@
 package org.iatoki.judgels.gabriel;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonSyntaxException;
-import org.iatoki.judgels.api.JudgelsAPIClientException;
+import com.google.gson.*;
+import com.palantir.conjure.java.api.config.service.UserAgent;
+import com.palantir.conjure.java.api.errors.RemoteException;
+import judgels.sealtiel.api.message.Message;
+import judgels.sealtiel.api.message.MessageService;
+import judgels.service.api.client.BasicAuthHeader;
+import judgels.service.api.client.Client;
+import judgels.service.jaxrs.JaxRsClients;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonFactory;
-import org.iatoki.judgels.api.sealtiel.SealtielClientAPI;
-import org.iatoki.judgels.api.sealtiel.SealtielFactory;
-import org.iatoki.judgels.api.sealtiel.SealtielMessage;
 
 import java.util.Base64;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -21,7 +20,8 @@ public final class Gabriel {
 
     private final int threads;
     private final ThreadPoolExecutor threadPoolExecutor;
-    private final SealtielClientAPI sealtielClientAPI;
+    private final BasicAuthHeader sealtielClientAuthHeader;
+    private final MessageService messageService;
     private final SandalphonClientAPI sandalphonClientAPI;
 
     public Gabriel(int threads) {
@@ -31,8 +31,10 @@ public final class Gabriel {
         String sealtielBaseUrl = GabrielProperties.getInstance().getSealtielBaseUrl();
         String sealtielClientJid = GabrielProperties.getInstance().getSealtielClientJid();
         String sealtielClientSecret = GabrielProperties.getInstance().getSealtielClientSecret();
+        this.sealtielClientAuthHeader = BasicAuthHeader.of(Client.of(sealtielClientJid, sealtielClientSecret));
 
-        this.sealtielClientAPI = SealtielFactory.createSealtiel(sealtielBaseUrl).connectToClientAPI(sealtielClientJid, sealtielClientSecret);
+        UserAgent userAgent = UserAgent.of(UserAgent.Agent.of("gabriel", UserAgent.Agent.DEFAULT_VERSION));
+        this.messageService = JaxRsClients.create(MessageService.class, sealtielBaseUrl, userAgent);
 
         String sandalphonBaseUrl = GabrielProperties.getInstance().getSandalphonBaseUrl();
         String sandalphonClientJid = GabrielProperties.getInstance().getSandalphonClientJid();
@@ -47,18 +49,18 @@ public final class Gabriel {
         while (true) {
             waitUntilAvailable();
 
-            SealtielMessage message = null;
+            Optional<Message> message = null;
 
             try {
-                message = sealtielClientAPI.fetchMessage();
-            } catch (JudgelsAPIClientException e) {
+                message = messageService.receiveMessage(sealtielClientAuthHeader);
+            } catch (RemoteException e) {
                 GabrielLogger.getLogger().error("Bad grading request", e);
                 if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                     GabrielLogger.getLogger().error("Message:", e.getMessage());
                 }
             }
-            if (message != null) {
-                processMessage(message);
+            if (message.isPresent()) {
+                processMessage(message.get());
             }
 
             Thread.sleep(200);
@@ -71,7 +73,7 @@ public final class Gabriel {
         }
     }
 
-    private void processMessage(SealtielMessage message) {
+    private void processMessage(Message message) {
         try {
             GsonBuilder builder = new GsonBuilder();
             builder.registerTypeAdapter(byte[].class, (JsonSerializer<byte[]>) (src, typeOfSrc, context) -> new JsonPrimitive(Base64.getEncoder().encodeToString(src)));
@@ -80,14 +82,14 @@ public final class Gabriel {
 
             GradingRequest request;
             try {
-                request = gson.fromJson(message.getMessage(), GradingRequest.class);
+                request = gson.fromJson(message.getContent(), GradingRequest.class);
             } catch (Exception e) {
-                request = new Gson().fromJson(message.getMessage(), GradingRequest.class);
+                request = new Gson().fromJson(message.getContent(), GradingRequest.class);
             }
 
             GabrielLogger.getLogger().info("New grading request: {}", request.getGradingJid());
 
-            GabrielWorker worker = new GabrielWorker(message.getSourceClientJid(), request, sealtielClientAPI, sandalphonClientAPI, message.getId());
+            GabrielWorker worker = new GabrielWorker(message.getSourceJid(), request, sealtielClientAuthHeader, messageService, sandalphonClientAPI, message.getId());
 
             threadPoolExecutor.submit(worker);
         } catch (JsonSyntaxException e) {

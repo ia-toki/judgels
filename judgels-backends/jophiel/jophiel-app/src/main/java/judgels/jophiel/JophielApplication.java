@@ -17,8 +17,8 @@ import judgels.jophiel.user.avatar.UserAvatarModule;
 import judgels.jophiel.user.registration.web.UserRegistrationWebConfig;
 import judgels.recaptcha.RecaptchaModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.jaxrs.JudgelsObjectMappers;
 import judgels.service.jersey.JudgelsJerseyFeature;
-import judgels.service.jersey.JudgelsObjectMappers;
 
 public class JophielApplication extends Application<JophielApplicationConfiguration> {
     private final HibernateBundle<JophielApplicationConfiguration> hibernateBundle = new JophielHibernateBundle();

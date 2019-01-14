@@ -1,8 +1,8 @@
 import Versions._
 
 lazy val judgelsServiceCore = (project in file("."))
-    .dependsOn(judgelsServiceApi)
-    .aggregate(judgelsServiceApi)
+    .dependsOn(judgelsServiceApi, judgelsServiceJaxrs)
+    .aggregate(judgelsServiceApi, judgelsServiceJaxrs)
     .settings(
         name := "judgels-service-core",
         scalaVersion := "2.11.7",
@@ -14,9 +14,7 @@ lazy val judgelsServiceCore = (project in file("."))
             "com.google.dagger" % "dagger" % daggerVersion,
             "io.dropwizard" % "dropwizard-jersey" % dropwizardVersion,
 
-            "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % jacksonVersion,
             "com.palantir.conjure.java.runtime" % "conjure-java-jackson-serialization" % conjureJavaRuntimeVersion,
-            "com.palantir.conjure.java.runtime" % "conjure-java-jaxrs-client" % conjureJavaRuntimeVersion,
             "com.palantir.conjure.java.runtime" % "conjure-java-jersey-server" % conjureJavaRuntimeVersion,
 
             "com.google.dagger" % "dagger-compiler" % daggerVersion,
@@ -25,3 +23,4 @@ lazy val judgelsServiceCore = (project in file("."))
     )
 
 lazy val judgelsServiceApi = RootProject(file("../../judgels-commons/judgels-service-api"))
+lazy val judgelsServiceJaxrs = RootProject(file("../../judgels-commons/judgels-service-jaxrs"))

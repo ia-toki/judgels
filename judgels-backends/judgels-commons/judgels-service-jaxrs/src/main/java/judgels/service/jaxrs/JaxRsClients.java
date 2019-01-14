@@ -23,7 +23,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
-import judgels.service.jersey.JudgelsObjectMappers;
 
 public class JaxRsClients {
     private static X509TrustManager defaultTrustManager;

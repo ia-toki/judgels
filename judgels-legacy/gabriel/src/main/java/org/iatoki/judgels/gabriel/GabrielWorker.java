@@ -2,11 +2,13 @@ package org.iatoki.judgels.gabriel;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import judgels.sealtiel.api.message.MessageData;
+import judgels.sealtiel.api.message.MessageService;
+import judgels.service.api.client.BasicAuthHeader;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.api.JudgelsAPIClientException;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonProgrammingProblemInfo;
-import org.iatoki.judgels.api.sealtiel.SealtielClientAPI;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.FakeSandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.MoeIsolateSandboxFactory;
@@ -27,7 +29,8 @@ public final class GabrielWorker implements Runnable {
 
     private final String senderChannel;
     private final GradingRequest request;
-    private final SealtielClientAPI sealtielClientAPI;
+    private final BasicAuthHeader sealtielClientAuthHeader;
+    private final MessageService messageService;
     private final SandalphonClientAPI sandalphonClientAPI;
     private final long messageId;
 
@@ -47,10 +50,11 @@ public final class GabrielWorker implements Runnable {
 
     private GradingResult result;
 
-    public GabrielWorker(String senderChannel, GradingRequest request, SealtielClientAPI sealtielClientAPI, SandalphonClientAPI sandalphonClientAPI, long messageId) {
+    public GabrielWorker(String senderChannel, GradingRequest request, BasicAuthHeader sealtielClientAuthHeader, MessageService messageService, SandalphonClientAPI sandalphonClientAPI, long messageId) {
         this.senderChannel = senderChannel;
         this.request = request;
-        this.sealtielClientAPI = sealtielClientAPI;
+        this.sealtielClientAuthHeader = sealtielClientAuthHeader;
+        this.messageService = messageService;
         this.sandalphonClientAPI = sandalphonClientAPI;
         this.messageId = messageId;
     }
@@ -126,8 +130,13 @@ public final class GabrielWorker implements Runnable {
         GradingResponse response = new GradingResponse(request.getGradingJid(), result);
 
         try {
-            sealtielClientAPI.sendMessage(senderChannel, "GradingResponse", new Gson().toJson(response));
-            sealtielClientAPI.acknowledgeMessage(messageId);
+            MessageData message = new MessageData.Builder()
+                    .targetJid(senderChannel)
+                    .type("GradingResponse")
+                    .content(new Gson().toJson(response))
+                    .build();
+            messageService.sendMessage(sealtielClientAuthHeader, message);
+            messageService.confirmMessage(sealtielClientAuthHeader, messageId);
         } catch (JudgelsAPIClientException e) {
             throw new ResponseException(e);
         }

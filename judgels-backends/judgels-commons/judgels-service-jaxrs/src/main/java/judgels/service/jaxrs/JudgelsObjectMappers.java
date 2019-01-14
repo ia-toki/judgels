@@ -1,4 +1,4 @@
-package judgels.service.jersey;
+package judgels.service.jaxrs;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

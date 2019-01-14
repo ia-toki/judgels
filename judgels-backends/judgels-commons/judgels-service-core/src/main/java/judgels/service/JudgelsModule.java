@@ -5,7 +5,7 @@ import com.palantir.conjure.java.serialization.ObjectMappers;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
-import judgels.service.jersey.JudgelsObjectMappers;
+import judgels.service.jaxrs.JudgelsObjectMappers;
 
 @Module
 public class JudgelsModule {

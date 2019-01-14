@@ -5,8 +5,8 @@ import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
 lazy val gabriel = (project in file("."))
     .enablePlugins(JavaAppPackaging)
-    .dependsOn(gabrielcommons, gabrielblackbox, api)
-    .aggregate(gabrielcommons, gabrielblackbox, api)
+    .dependsOn(gabrielcommons, gabrielblackbox, api, judgelsServiceJaxrs, sealtielApi)
+    .aggregate(gabrielcommons, gabrielblackbox, api, judgelsServiceJaxrs, sealtielApi)
     .settings(
         name := "gabriel",
         version := IO.read(file("version.properties")).trim,
@@ -39,3 +39,6 @@ lazy val gabriel = (project in file("."))
 lazy val gabrielcommons = RootProject(file("../gabriel-commons"))
 lazy val gabrielblackbox = RootProject(file("../gabriel-blackbox"))
 lazy val api = RootProject(file("../api"))
+
+lazy val judgelsServiceJaxrs = RootProject(file("../../judgels-backends/judgels-commons/judgels-service-jaxrs"))
+lazy val sealtielApi = RootProject(file("../../judgels-backends/sealtiel/sealtiel-api"))

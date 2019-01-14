@@ -14,7 +14,8 @@ MODULES = OrderedDict([
     (':judgels-commons:judgels-persistence-testing', {':judgels-commons:judgels-persistence-core'}),
     (':judgels-commons:judgels-recaptcha', set()),
     (':judgels-commons:judgels-service-api', set()),
-    (':judgels-commons:judgels-service-core', {':judgels-commons:judgels-service-api'}),
+    (':judgels-commons:judgels-service-core', {':judgels-commons:judgels-service-api', ':judgels-commons:judgels-service-jaxrs'}),
+    (':judgels-commons:judgels-service-jaxrs', set()),
     (':judgels-commons:judgels-service-persistence', {':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-service-core'}),
 
     (':jophiel:jophiel-api', {':judgels-commons:judgels-persistence-api', ':judgels-commons:judgels-service-api'}),
