@@ -1,3 +1,5 @@
+import Versions._
+
 import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
@@ -16,11 +18,11 @@ lazy val gabriel = (project in file("."))
             "com.typesafe" % "config" % "1.2.1"
         ),
         dependencyOverrides ++= Set(
-          "com.google.guava" % "guava" % "20.0",
-          "com.fasterxml.jackson.core" % "jackson-core" % "2.9.1",
-          "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.1",
-          "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.9.1",
-          "com.fasterxml.jackson.module" % "jackson-module-afterburner" % "2.9.1"
+          "com.google.guava" % "guava" % guavaVersion,
+          "com.fasterxml.jackson.core" % "jackson-core" % jacksonVersion,
+          "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+          "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % jacksonVersion,
+          "com.fasterxml.jackson.module" % "jackson-module-afterburner" % jacksonVersion
         )
     )
     .settings(TestNGPlugin.testNGSettings: _*)
