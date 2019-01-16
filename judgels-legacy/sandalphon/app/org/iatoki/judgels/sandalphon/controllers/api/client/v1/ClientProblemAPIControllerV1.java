@@ -4,7 +4,6 @@ import org.iatoki.judgels.play.api.JudgelsAPIForbiddenException;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.client.ClientService;
-import org.iatoki.judgels.sandalphon.client.problem.ClientProblem;
 import org.iatoki.judgels.sandalphon.controllers.api.object.v1.ClientProblemFindRequestV1;
 import org.iatoki.judgels.sandalphon.controllers.api.object.v1.ProblemV1;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
@@ -39,15 +38,6 @@ public final class ClientProblemAPIControllerV1 extends AbstractJudgelsAPIContro
 
         if (!problemService.problemExistsByJid(requestBody.problemJid)) {
             throw new JudgelsAPIForbiddenException("Problem not found");
-        }
-
-        if (!clientService.isClientAuthorizedForProblem(requestBody.problemJid, requestBody.clientJid)) {
-            throw new JudgelsAPIForbiddenException("Client not authorized to use problem");
-        }
-
-        ClientProblem clientProblem = clientService.findClientProblemByClientJidAndProblemJid(requestBody.clientJid, requestBody.problemJid);
-        if (!clientProblem.getSecret().equals(requestBody.problemSecret)) {
-            throw new JudgelsAPIForbiddenException("Wrong client problem credentials");
         }
 
         try {

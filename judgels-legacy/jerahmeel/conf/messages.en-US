@@ -61,8 +61,7 @@ chapter.lessons=Lessons
 chapter.lesson.alias=Alias
 chapter.lesson.name=Name
 chapter.lesson.status=Status
-chapter.lesson.jid=Lesson Jid
-chapter.lesson.secret=Lesson Secret
+chapter.lesson.slug=Lesson Slug
 
 chapter.lesson.create=Create
 
@@ -76,9 +75,8 @@ chapter.problem.alias=Alias
 chapter.problem.name=Name
 chapter.problem.type=Type
 chapter.problem.status=Status
-chapter.problem.slug=Slug
+chapter.problem.slug=Problem Slug
 chapter.problem.jid=Problem Jid
-chapter.problem.secret=Problem Secret
 
 chapter.problem.create=Create
 
@@ -102,7 +100,7 @@ submission.score=Score
 
 problem.problem=Problem
 
-user.users=Users Roles
+user.users=User Roles
 user.user=User
 
 user.list=User Roles
@@ -194,9 +192,7 @@ problemSet.problem.alias=Alias
 problemSet.problem.name=Name
 problemSet.problem.type=Type
 problemSet.problem.status=Status
-problemSet.problem.slug=Slug
-problemSet.problem.jid=Problem Jid
-problemSet.problem.secret=Problem Secret
+problemSet.problem.slug=Problem Slug
 
 error.problemSet.archiveNotExist=Archive doesn''t exist.
 

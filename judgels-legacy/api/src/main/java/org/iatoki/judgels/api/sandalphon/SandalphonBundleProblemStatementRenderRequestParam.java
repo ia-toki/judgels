@@ -2,21 +2,11 @@ package org.iatoki.judgels.api.sandalphon;
 
 public final class SandalphonBundleProblemStatementRenderRequestParam {
 
-    private String problemSecret;
     private long currentMillis;
     private String statementLanguage;
     private String switchStatementLanguageUrl;
     private String postSubmitUrl;
     private String reasonNotAllowedToSubmit;
-
-    public String getProblemSecret() {
-        return problemSecret;
-    }
-
-    public SandalphonBundleProblemStatementRenderRequestParam setProblemSecret(String problemSecret) {
-        this.problemSecret = problemSecret;
-        return this;
-    }
 
     public long getCurrentMillis() {
         return currentMillis;

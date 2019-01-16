@@ -32,6 +32,17 @@ public final class LessonHibernateDao extends AbstractJudgelsHibernateDao<Lesson
     }
 
     @Override
+    public LessonModel findBySlug(String slug) {
+        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+        CriteriaQuery<LessonModel> query = cb.createQuery(LessonModel.class);
+        Root<LessonModel> root = query.from(getModelClass());
+
+        query.where(cb.equal(root.get(LessonModel_.slug), slug));
+
+        return JPA.em().createQuery(query).getSingleResult();
+    }
+
+    @Override
     public boolean existsBySlug(String slug) {
         CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);

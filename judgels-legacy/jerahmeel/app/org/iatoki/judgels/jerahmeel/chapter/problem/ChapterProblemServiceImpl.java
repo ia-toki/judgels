@@ -79,11 +79,10 @@ public final class ChapterProblemServiceImpl implements ChapterProblemService {
     }
 
     @Override
-    public void addChapterProblem(String chapterJid, String problemJid, String problemSecret, String alias, ChapterProblemType type, ChapterProblemStatus status, String userJid, String userIpAddress) {
+    public void addChapterProblem(String chapterJid, String problemJid, String alias, ChapterProblemType type, ChapterProblemStatus status, String userJid, String userIpAddress) {
         ChapterProblemModel chapterProblemModel = new ChapterProblemModel();
         chapterProblemModel.chapterJid = chapterJid;
         chapterProblemModel.problemJid = problemJid;
-        chapterProblemModel.problemSecret = problemSecret;
         chapterProblemModel.alias = alias;
         chapterProblemModel.type = type.name();
         chapterProblemModel.status = status.name();

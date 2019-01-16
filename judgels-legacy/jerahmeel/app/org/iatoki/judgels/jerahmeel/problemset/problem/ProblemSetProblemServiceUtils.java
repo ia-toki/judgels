@@ -7,6 +7,6 @@ final class ProblemSetProblemServiceUtils {
     }
 
     static ProblemSetProblem createFromModel(ProblemSetProblemModel model) {
-        return new ProblemSetProblem(model.id, model.problemSetJid, model.problemJid, model.problemSecret, model.alias, ProblemSetProblemType.valueOf(model.type), ProblemSetProblemStatus.valueOf(model.status));
+        return new ProblemSetProblem(model.id, model.problemSetJid, model.problemJid, model.alias, ProblemSetProblemType.valueOf(model.type), ProblemSetProblemStatus.valueOf(model.status));
     }
 }

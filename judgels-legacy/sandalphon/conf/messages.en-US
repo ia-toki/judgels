@@ -172,11 +172,6 @@ problem.version.local.discard=Discard Local Changes
 problem.version.local.cantCommit=Your working copy has diverged from the master copy. Please update your working copy.
 problem.version.local.cantMerge=Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.
 
-problem.client=Clients
-problem.client.list=Clients
-problem.client.client=Client
-problem.client.name=Name
-
 client.clients=Clients
 client.client=Client
 
@@ -288,11 +283,6 @@ lesson.version.local.update=Update Working Copy with Other Users'' Changes
 lesson.version.local.discard=Discard Local Changes
 lesson.version.local.cantCommit=Your working copy has diverged from the master copy. Please update your working copy.
 lesson.version.local.cantMerge=Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.
-
-lesson.client=Clients
-lesson.client.list=Clients
-lesson.client.client=Client
-lesson.client.name=Name
 
 user.list=User Roles
 user.create=Create User Role

@@ -14,7 +14,7 @@ public interface ChapterLessonService {
 
     Page<ChapterLessonWithProgress> getPageOfChapterLessonsWithProgress(String userJid, String chapterJid, long pageIndex, long pageSize, String orderBy, String orderDir, String filterString);
 
-    void addChapterLesson(String chapterJid, String lessonJid, String lessonSecret, String alias, ChapterLessonStatus status, String userJid, String userIpAddress);
+    void addChapterLesson(String chapterJid, String lessonJid, String alias, ChapterLessonStatus status, String userJid, String userIpAddress);
 
     void updateChapterLesson(long chapterLessonId, String alias, ChapterLessonStatus status, String userJid, String userIpAddress);
 

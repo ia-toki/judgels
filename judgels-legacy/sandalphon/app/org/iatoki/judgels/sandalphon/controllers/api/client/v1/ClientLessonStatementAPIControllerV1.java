@@ -4,11 +4,10 @@ import org.iatoki.judgels.play.api.JudgelsAPIForbiddenException;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
-import org.iatoki.judgels.sandalphon.lesson.Lesson;
+import org.iatoki.judgels.sandalphon.client.Client;
 import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.client.ClientService;
-import org.iatoki.judgels.sandalphon.client.lesson.ClientLesson;
 import org.iatoki.judgels.sandalphon.controllers.api.object.v1.LessonStatementRenderRequestV1;
 import org.iatoki.judgels.sandalphon.controllers.api.util.TOTPUtils;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
@@ -52,19 +51,14 @@ public final class ClientLessonStatementAPIControllerV1 extends AbstractJudgelsA
         if (!clientService.clientExistsByJid(requestBody.clientJid)) {
             throw new JudgelsAPIForbiddenException("Client not exists");
         }
-        if (!clientService.isClientAuthorizedForLesson(requestBody.lessonJid, requestBody.clientJid)) {
-            throw new JudgelsAPIForbiddenException("Client not authorized to view lesson");
-        }
 
-        Lesson lesson = lessonService.findLessonByJid(lessonJid);
-        ClientLesson clientLesson = clientService.findClientLessonByClientJidAndLessonJid(requestBody.clientJid, lessonJid);
-
-        if (!TOTPUtils.match(clientLesson.getSecret(), requestBody.totpCode)) {
+        Client client = clientService.findClientByJid(requestBody.clientJid);
+        if (!TOTPUtils.match(client.getSecret(), requestBody.totpCode)) {
             throw new JudgelsAPIForbiddenException("TOTP code mismatch");
         }
 
         try {
-            Map<String, StatementLanguageStatus> availableStatementLanguages = lessonService.getAvailableLanguages(null, lesson.getJid());
+            Map<String, StatementLanguageStatus> availableStatementLanguages = lessonService.getAvailableLanguages(null, lessonJid);
 
             String statementLanguage = requestBody.statementLanguage;
             if (!availableStatementLanguages.containsKey(statementLanguage) || availableStatementLanguages.get(statementLanguage) == StatementLanguageStatus.DISABLED) {

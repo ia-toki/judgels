@@ -19,8 +19,6 @@ public final class ChapterProblemModel extends AbstractModel {
 
     public String problemJid;
 
-    public String problemSecret;
-
     public String alias;
 
     public String type;

@@ -16,7 +16,7 @@ public interface ProblemSetProblemService {
 
     Page<ProblemSetProblemWithScore> getPageOfProblemSetProblemsWithScore(String userJid, String problemSetJid, long pageIndex, long pageSize, String orderBy, String orderDir, String filterString);
 
-    void addProblemSetProblem(String problemSetJid, String problemJid, String problemSecret, String alias, ProblemSetProblemType type, ProblemSetProblemStatus status, String userJid, String userIpAddress);
+    void addProblemSetProblem(String problemSetJid, String problemJid, String alias, ProblemSetProblemType type, ProblemSetProblemStatus status, String userJid, String userIpAddress);
 
     void updateProblemSetProblem(long problemSetProblemId, String alias, ProblemSetProblemStatus status, String userJid, String userIpAddress);
 

@@ -8,10 +8,7 @@ public final class ChapterLessonAddForm {
     public String alias;
 
     @Constraints.Required
-    public String lessonJid;
-
-    @Constraints.Required
-    public String lessonSecret;
+    public String lessonSlug;
 
     @Constraints.Required
     public String status;

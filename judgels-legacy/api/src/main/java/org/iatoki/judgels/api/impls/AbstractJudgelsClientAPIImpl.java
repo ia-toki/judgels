@@ -15,12 +15,6 @@ public abstract class AbstractJudgelsClientAPIImpl extends AbstractJudgelsAPIImp
         this.clientSecret = clientSecret;
     }
 
-    protected AbstractJudgelsClientAPIImpl(String baseUrl, String apiUrlPrefix, String clientJid, String clientSecret) {
-        super(baseUrl, apiUrlPrefix);
-        this.clientJid = clientJid;
-        this.clientSecret = clientSecret;
-    }
-
     @Override
     protected final void setAuthorization(HttpRequestBase httpRequest) {
         String credentials = clientJid + ":" + clientSecret;

@@ -26,6 +26,7 @@ public final class SealtielModule extends AbstractModule {
                 .clientSecret(config.getString("sealtiel.clientSecret"))
                 .build();
     }
+
     @Provides
     @Named("sealtiel")
     BasicAuthHeader clientAuthHeader(SealtielClientConfiguration config) {

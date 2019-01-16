@@ -14,7 +14,6 @@ import org.iatoki.judgels.sandalphon.controllers.api.object.v2.ProblemSubmission
 import org.iatoki.judgels.sandalphon.controllers.api.object.v2.ProblemWorksheetV2;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestriction;
@@ -183,7 +182,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
                 continue;
             }
             Problem problem = problemService.findProblemBySlug(slug);
-            if (problem.getType() == ProblemType.PROGRAMMING && isPartnerOrAbove(userJid, problem)) {
+            if (isPartnerOrAbove(userJid, problem)) {
                 result.put(slug, problem.getJid());
             }
         }

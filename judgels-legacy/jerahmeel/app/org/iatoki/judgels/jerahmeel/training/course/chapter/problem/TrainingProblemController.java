@@ -154,7 +154,6 @@ public final class TrainingProblemController extends AbstractJudgelsController {
         if (ChapterProblemType.BUNDLE.equals(chapterProblem.getType())) {
             SandalphonBundleProblemStatementRenderRequestParam param = new SandalphonBundleProblemStatementRenderRequestParam();
 
-            param.setProblemSecret(chapterProblem.getProblemSecret());
             param.setCurrentMillis(System.currentTimeMillis());
             param.setStatementLanguage(StatementControllerUtils.getCurrentStatementLanguage());
             param.setSwitchStatementLanguageUrl(routes.TrainingProblemController.switchLanguage().absoluteURL(request(), request().secure()));
@@ -166,7 +165,6 @@ public final class TrainingProblemController extends AbstractJudgelsController {
         } else if (ChapterProblemType.PROGRAMMING.equals(chapterProblem.getType())) {
             SandalphonProgrammingProblemStatementRenderRequestParam param = new SandalphonProgrammingProblemStatementRenderRequestParam();
 
-            param.setProblemSecret(chapterProblem.getProblemSecret());
             param.setCurrentMillis(System.currentTimeMillis());
             param.setStatementLanguage(StatementControllerUtils.getCurrentStatementLanguage());
             param.setSwitchStatementLanguageUrl(routes.TrainingProblemController.switchLanguage().absoluteURL(request(), request().secure()));

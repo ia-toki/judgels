@@ -13,7 +13,6 @@ public abstract class ProblemSetProblemModel_ extends AbstractModel_ {
 	public static volatile SingularAttribute<ProblemSetProblemModel, Long> id;
 	public static volatile SingularAttribute<ProblemSetProblemModel, String> problemSetJid;
 	public static volatile SingularAttribute<ProblemSetProblemModel, String> problemJid;
-	public static volatile SingularAttribute<ProblemSetProblemModel, String> problemSecret;
 	public static volatile SingularAttribute<ProblemSetProblemModel, String> alias;
 	public static volatile SingularAttribute<ProblemSetProblemModel, String> type;
 	public static volatile SingularAttribute<ProblemSetProblemModel, String> status;

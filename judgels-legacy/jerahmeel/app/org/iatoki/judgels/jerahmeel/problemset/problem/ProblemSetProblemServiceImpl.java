@@ -64,11 +64,10 @@ public final class ProblemSetProblemServiceImpl implements ProblemSetProblemServ
     }
 
     @Override
-    public void addProblemSetProblem(String problemSetJid, String problemJid, String problemSecret, String alias, ProblemSetProblemType type, ProblemSetProblemStatus status, String userJid, String userIpAddress) {
+    public void addProblemSetProblem(String problemSetJid, String problemJid, String alias, ProblemSetProblemType type, ProblemSetProblemStatus status, String userJid, String userIpAddress) {
         ProblemSetProblemModel problemSetProblemModel = new ProblemSetProblemModel();
         problemSetProblemModel.problemSetJid = problemSetJid;
         problemSetProblemModel.problemJid = problemJid;
-        problemSetProblemModel.problemSecret = problemSecret;
         problemSetProblemModel.alias = alias;
         problemSetProblemModel.type = type.name();
         problemSetProblemModel.status = status.name();

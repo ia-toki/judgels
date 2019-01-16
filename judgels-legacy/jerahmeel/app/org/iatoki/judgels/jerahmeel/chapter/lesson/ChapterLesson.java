@@ -5,15 +5,13 @@ public final class ChapterLesson {
     private final long id;
     private final String chapterJid;
     private final String lessonJid;
-    private final String lessonSecret;
     private final String alias;
     private final ChapterLessonStatus status;
 
-    public ChapterLesson(long id, String chapterJid, String lessonJid, String lessonSecret, String alias, ChapterLessonStatus status) {
+    public ChapterLesson(long id, String chapterJid, String lessonJid, String alias, ChapterLessonStatus status) {
         this.id = id;
         this.chapterJid = chapterJid;
         this.lessonJid = lessonJid;
-        this.lessonSecret = lessonSecret;
         this.alias = alias;
         this.status = status;
     }
@@ -28,10 +26,6 @@ public final class ChapterLesson {
 
     public String getLessonJid() {
         return lessonJid;
-    }
-
-    public String getLessonSecret() {
-        return lessonSecret;
     }
 
     public String getAlias() {

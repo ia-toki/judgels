@@ -19,8 +19,6 @@ public final class ProblemSetProblemModel extends AbstractModel {
 
     public String problemJid;
 
-    public String problemSecret;
-
     public String alias;
 
     public String type;

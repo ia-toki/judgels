@@ -2,6 +2,8 @@ dependencies {
     api project(':jophiel:jophiel-api')
     api project(':gabriel:gabriel-api')
 
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
     annotationProcessor "org.immutables:value:$immutablesVersion"

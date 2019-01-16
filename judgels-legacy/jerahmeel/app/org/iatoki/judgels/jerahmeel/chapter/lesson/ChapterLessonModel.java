@@ -19,8 +19,6 @@ public final class ChapterLessonModel extends AbstractModel {
 
     public String lessonJid;
 
-    public String lessonSecret;
-
     public String alias;
 
     public String status;

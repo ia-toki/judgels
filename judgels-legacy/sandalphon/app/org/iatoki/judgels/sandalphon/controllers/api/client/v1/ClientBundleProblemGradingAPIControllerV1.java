@@ -44,9 +44,6 @@ public final class ClientBundleProblemGradingAPIControllerV1 extends AbstractJud
         if (!clientService.clientExistsByJid(identity.getClientJid())) {
             throw new JudgelsAPIForbiddenException("Client not exists");
         }
-        if (!clientService.isClientAuthorizedForProblem(problemJid, identity.getClientJid())) {
-            throw new JudgelsAPIForbiddenException("Client not authorized to grade problem");
-        }
 
         Problem problem = problemService.findProblemByJid(problemJid);
 

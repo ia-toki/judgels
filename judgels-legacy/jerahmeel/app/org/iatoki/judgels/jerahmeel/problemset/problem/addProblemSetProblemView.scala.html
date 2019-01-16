@@ -16,8 +16,7 @@
     @helper.CSRF.formField
 
     @b3.text(problemSetProblemAddForm("alias"), '_label -> Messages.get("problemSet.problem.alias"), 'class -> "form-control")
-    @b3.text(problemSetProblemAddForm("problemJid"), '_label -> Messages.get("problemSet.problem.jid"), 'class -> "form-control")
-    @b3.text(problemSetProblemAddForm("problemSecret"), '_label -> Messages.get("problemSet.problem.secret"), 'class -> "form-control")
+    @b3.text(problemSetProblemAddForm("problemSlug"), '_label -> Messages.get("problemSet.problem.slug"), 'class -> "form-control")
     @b3.select(problemSetProblemAddForm("type"), ProblemSetProblemType.values.map(e => (e.name() -> e.name())).toSeq, '_label -> Messages.get("problemSet.problem.type"), 'class -> "form-control selectpicker")
     @b3.select(problemSetProblemAddForm("status"), ProblemSetProblemStatus.values.map(e => (e.name() -> e.name())).toSeq, '_label -> Messages.get("problemSet.problem.status"), 'class -> "form-control selectpicker")
 

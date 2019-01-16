@@ -42,10 +42,6 @@ public final class LessonControllerUtils {
 
         internalLinks.add(new InternalLink(Messages.get("lesson.version"), routes.LessonController.jumpToVersions(lesson.getId())));
 
-        if (LessonControllerUtils.isAllowedToManageClients(lessonService, lesson)) {
-            internalLinks.add(new InternalLink(Messages.get("lesson.client"), routes.LessonController.jumpToClients(lesson.getId())));
-        }
-
         content.appendLayout(c -> tabLayout.render(internalLinks.build(), c));
     }
 
@@ -199,10 +195,6 @@ public final class LessonControllerUtils {
 
     public static boolean isAllowedToRestoreVersionHistory(LessonService lessonService, Lesson lesson) {
         return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).isAllowedToRestoreVersionHistory());
-    }
-
-    public static boolean isAllowedToManageClients(LessonService lessonService, Lesson lesson) {
-        return isAuthorOrAbove(lesson) || (isPartner(lessonService, lesson) && getPartnerConfig(lessonService, lesson).isAllowedToManageLessonClients());
     }
 
     public static LessonPartnerConfig getPartnerConfig(LessonService lessonService, Lesson lesson) {

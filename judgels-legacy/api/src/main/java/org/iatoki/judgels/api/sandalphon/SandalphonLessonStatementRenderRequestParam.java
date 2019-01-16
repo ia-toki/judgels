@@ -2,19 +2,9 @@ package org.iatoki.judgels.api.sandalphon;
 
 public final class SandalphonLessonStatementRenderRequestParam {
 
-    private String lessonSecret;
     private long currentMillis;
     private String statementLanguage;
     private String switchStatementLanguageUrl;
-
-    public String getLessonSecret() {
-        return lessonSecret;
-    }
-
-    public SandalphonLessonStatementRenderRequestParam setLessonSecret(String lessonSecret) {
-        this.lessonSecret = lessonSecret;
-        return this;
-    }
 
     public long getCurrentMillis() {
         return currentMillis;

@@ -7,11 +7,10 @@ import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
+import org.iatoki.judgels.sandalphon.client.Client;
 import org.iatoki.judgels.sandalphon.client.ClientService;
-import org.iatoki.judgels.sandalphon.client.problem.ClientProblem;
 import org.iatoki.judgels.sandalphon.controllers.api.object.v1.BundleProblemStatementRenderRequestV1;
 import org.iatoki.judgels.sandalphon.controllers.api.util.TOTPUtils;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
@@ -56,19 +55,14 @@ public final class ClientBundleProblemStatementAPIControllerV1 extends AbstractJ
         if (!clientService.clientExistsByJid(requestBody.clientJid)) {
             throw new JudgelsAPIForbiddenException("Client not exists");
         }
-        if (!clientService.isClientAuthorizedForProblem(requestBody.problemJid, requestBody.clientJid)) {
-            throw new JudgelsAPIForbiddenException("Client not authorized to view problem");
-        }
 
-        Problem problem = problemService.findProblemByJid(problemJid);
-        ClientProblem clientProblem = clientService.findClientProblemByClientJidAndProblemJid(requestBody.clientJid, problemJid);
-
-        if (!TOTPUtils.match(clientProblem.getSecret(), requestBody.totpCode)) {
+        Client client = clientService.findClientByJid(requestBody.clientJid);
+        if (!TOTPUtils.match(client.getSecret(), requestBody.totpCode)) {
             throw new JudgelsAPIForbiddenException("TOTP code mismatch");
         }
 
         try {
-            Map<String, StatementLanguageStatus> availableStatementLanguages = problemService.getAvailableLanguages(null, problem.getJid());
+            Map<String, StatementLanguageStatus> availableStatementLanguages = problemService.getAvailableLanguages(null, problemJid);
 
             String statementLanguage = requestBody.statementLanguage;
             if (!availableStatementLanguages.containsKey(statementLanguage) || availableStatementLanguages.get(statementLanguage) == StatementLanguageStatus.DISABLED) {
@@ -79,11 +73,11 @@ public final class ClientBundleProblemStatementAPIControllerV1 extends AbstractJ
 
             Set<String> allowedStatementLanguages = availableStatementLanguages.entrySet().stream().filter(e -> e.getValue() == StatementLanguageStatus.ENABLED).map(e -> e.getKey()).collect(Collectors.toSet());
 
-            List<BundleItem> bundleItemList = bundleItemService.getBundleItemsInProblemWithClone(problem.getJid(), IdentityUtils.getUserJid());
+            List<BundleItem> bundleItemList = bundleItemService.getBundleItemsInProblemWithClone(problemJid, IdentityUtils.getUserJid());
             ImmutableList.Builder<Html> htmlBuilder = ImmutableList.builder();
             for (BundleItem bundleItem : bundleItemList) {
                 BundleItemAdapter adapter = BundleItemAdapters.fromItemType(bundleItem.getType());
-                htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problem.getJid(), IdentityUtils.getUserJid(), bundleItem.getJid(), statementLanguage)));
+                htmlBuilder.add(adapter.renderViewHtml(bundleItem, bundleItemService.getItemConfInProblemWithCloneByJid(problemJid, IdentityUtils.getUserJid(), bundleItem.getJid(), statementLanguage)));
             }
 
             Html statementHtml = bundleStatementView.render(requestBody.postSubmitUrl, statement, htmlBuilder.build(), requestBody.reasonNotAllowedToSubmit);

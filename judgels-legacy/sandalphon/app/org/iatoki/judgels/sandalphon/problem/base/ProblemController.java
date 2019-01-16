@@ -113,10 +113,6 @@ public final class ProblemController extends AbstractJudgelsController {
         return redirect(org.iatoki.judgels.sandalphon.problem.base.partner.routes.ProblemPartnerController.viewPartners(problemId));
     }
 
-    public Result jumpToClients(long problemId) {
-        return redirect(org.iatoki.judgels.sandalphon.problem.base.client.routes.ProblemClientController.editClientProblems(problemId));
-    }
-
     @Transactional(readOnly = true)
     public Result viewProblem(long problemId) throws ProblemNotFoundException {
         Problem problem = problemService.findProblemById(problemId);

@@ -5,7 +5,6 @@ import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.client.ClientService;
-import org.iatoki.judgels.sandalphon.client.lesson.ClientLesson;
 import org.iatoki.judgels.sandalphon.controllers.api.object.v1.ClientLessonFindRequestV1;
 import org.iatoki.judgels.sandalphon.controllers.api.object.v1.LessonV1;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
@@ -39,15 +38,6 @@ public final class ClientLessonAPIControllerV1 extends AbstractJudgelsAPIControl
 
         if (!lessonService.lessonExistsByJid(requestBody.lessonJid)) {
             throw new JudgelsAPIForbiddenException("Lesson not found");
-        }
-
-        if (!clientService.isClientAuthorizedForLesson(requestBody.lessonJid, requestBody.clientJid)) {
-            throw new JudgelsAPIForbiddenException("Client not authorized to use lesson");
-        }
-
-        ClientLesson clientLesson = clientService.findClientLessonByClientJidAndLessonJid(requestBody.clientJid, requestBody.lessonJid);
-        if (!clientLesson.getSecret().equals(requestBody.lessonSecret)) {
-            throw new JudgelsAPIForbiddenException("Wrong client lesson credentials");
         }
 
         try {

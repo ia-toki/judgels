@@ -210,10 +210,6 @@ public final class ProblemControllerUtils {
         return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToRestoreVersionHistory());
     }
 
-    public static boolean isAllowedToManageClients(ProblemService problemService, Problem problem) {
-        return isAuthorOrAbove(problem) || (isPartner(problemService, problem) && getPartnerConfig(problemService, problem).isAllowedToManageProblemClients());
-    }
-
     public static ProblemPartnerConfig getPartnerConfig(ProblemService problemService, Problem problem) {
         return problemService.findProblemPartnerByProblemJidAndPartnerJid(problem.getJid(), IdentityUtils.getUserJid()).getBaseConfig();
     }

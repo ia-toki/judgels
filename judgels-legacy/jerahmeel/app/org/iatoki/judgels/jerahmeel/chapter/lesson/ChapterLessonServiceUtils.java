@@ -7,6 +7,6 @@ final class ChapterLessonServiceUtils {
     }
 
     static ChapterLesson createFromModel(ChapterLessonModel model) {
-        return new ChapterLesson(model.id, model.chapterJid, model.lessonJid, model.lessonSecret, model.alias, ChapterLessonStatus.valueOf(model.status));
+        return new ChapterLesson(model.id, model.chapterJid, model.lessonJid, model.alias, ChapterLessonStatus.valueOf(model.status));
     }
 }

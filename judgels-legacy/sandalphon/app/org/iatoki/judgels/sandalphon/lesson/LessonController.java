@@ -126,10 +126,6 @@ public final class LessonController extends AbstractJudgelsController {
         return redirect(org.iatoki.judgels.sandalphon.lesson.partner.routes.LessonPartnerController.viewPartners(lessonId));
     }
 
-    public Result jumpToClients(long lessonId) {
-        return redirect(org.iatoki.judgels.sandalphon.lesson.client.routes.LessonClientController.editClientLessons(lessonId));
-    }
-
     @Transactional(readOnly = true)
     public Result viewLesson(long lessonId) throws LessonNotFoundException {
         Lesson lesson = lessonService.findLessonById(lessonId);

@@ -16,7 +16,7 @@ public interface ChapterProblemService {
 
     Page<ChapterProblemWithProgress> getPageOfChapterProblemsWithProgress(String userJid, String chapterJid, long pageIndex, long pageSize, String orderBy, String orderDir, String filterString);
 
-    void addChapterProblem(String chapterJid, String problemJid, String problemSecret, String alias, ChapterProblemType type, ChapterProblemStatus status, String userJid, String userIpAddress);
+    void addChapterProblem(String chapterJid, String problemJid, String alias, ChapterProblemType type, ChapterProblemStatus status, String userJid, String userIpAddress);
 
     void updateChapterProblem(long chapterProblemId, String alias, ChapterProblemStatus status, String userJid, String userIpAddress);
 

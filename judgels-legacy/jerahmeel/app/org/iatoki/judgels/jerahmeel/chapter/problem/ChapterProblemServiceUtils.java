@@ -7,6 +7,6 @@ final class ChapterProblemServiceUtils {
     }
 
     static ChapterProblem createFromModel(ChapterProblemModel model) {
-        return new ChapterProblem(model.id, model.chapterJid, model.problemJid, model.problemSecret, model.alias, ChapterProblemType.valueOf(model.type), ChapterProblemStatus.valueOf(model.status));
+        return new ChapterProblem(model.id, model.chapterJid, model.problemJid, model.alias, ChapterProblemType.valueOf(model.type), ChapterProblemStatus.valueOf(model.status));
     }
 }

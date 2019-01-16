@@ -8,16 +8,15 @@ import org.iatoki.judgels.play.api.JudgelsAPIForbiddenException;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
+import org.iatoki.judgels.sandalphon.client.Client;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestriction;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.client.ClientService;
-import org.iatoki.judgels.sandalphon.client.problem.ClientProblem;
 import org.iatoki.judgels.sandalphon.controllers.api.object.v1.ProgrammingProblemStatementRenderRequestV1;
 import org.iatoki.judgels.sandalphon.controllers.api.util.TOTPUtils;
-import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
@@ -56,19 +55,14 @@ public final class ClientProgrammingProblemStatementAPIControllerV1 extends Abst
         if (!clientService.clientExistsByJid(requestBody.clientJid)) {
             throw new JudgelsAPIForbiddenException("Client not exists");
         }
-        if (!clientService.isClientAuthorizedForProblem(requestBody.problemJid, requestBody.clientJid)) {
-            throw new JudgelsAPIForbiddenException("Client not authorized to view problem");
-        }
 
-        Problem problem = problemService.findProblemByJid(problemJid);
-        ClientProblem clientProblem = clientService.findClientProblemByClientJidAndProblemJid(requestBody.clientJid, problemJid);
-
-        if (!TOTPUtils.match(clientProblem.getSecret(), requestBody.totpCode)) {
+        Client client = clientService.findClientByJid(requestBody.clientJid);
+        if (!TOTPUtils.match(client.getSecret(), requestBody.totpCode)) {
             throw new JudgelsAPIForbiddenException("TOTP code mismatch");
         }
 
         try {
-            Map<String, StatementLanguageStatus> availableStatementLanguages = problemService.getAvailableLanguages(null, problem.getJid());
+            Map<String, StatementLanguageStatus> availableStatementLanguages = problemService.getAvailableLanguages(null, problemJid);
 
             String statementLanguage = requestBody.statementLanguage;
             if (!availableStatementLanguages.containsKey(statementLanguage) || availableStatementLanguages.get(statementLanguage) == StatementLanguageStatus.DISABLED) {
@@ -88,14 +82,14 @@ public final class ClientProgrammingProblemStatementAPIControllerV1 extends Abst
 
             String gradingEngine;
             try {
-                gradingEngine = programmingProblemService.getGradingEngine(null, problem.getJid());
+                gradingEngine = programmingProblemService.getGradingEngine(null, problemJid);
             } catch (IOException e) {
                 gradingEngine = GradingEngineRegistry.getInstance().getDefaultEngine();
             }
 
             LanguageRestriction problemLanguageRestriction;
             try {
-                problemLanguageRestriction = programmingProblemService.getLanguageRestriction(null, problem.getJid());
+                problemLanguageRestriction = programmingProblemService.getLanguageRestriction(null, problemJid);
             } catch (IOException e) {
                 problemLanguageRestriction = LanguageRestriction.defaultRestriction();
             }
@@ -106,7 +100,7 @@ public final class ClientProgrammingProblemStatementAPIControllerV1 extends Abst
 
             GradingConfig config;
             try {
-                config = programmingProblemService.getGradingConfig(null, problem.getJid());
+                config = programmingProblemService.getGradingConfig(null, problemJid);
             } catch (IOException e) {
                 config = GradingEngineRegistry.getInstance().getEngine(gradingEngine).createDefaultGradingConfig();
             }

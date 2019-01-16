@@ -15,8 +15,7 @@
     @helper.CSRF.formField
 
     @b3.text(chapterLessonAddForm("alias"), '_label -> Messages.get("chapter.lesson.alias"), 'class -> "form-control")
-    @b3.text(chapterLessonAddForm("lessonJid"), '_label -> Messages.get("chapter.lesson.jid"), 'class -> "form-control")
-    @b3.text(chapterLessonAddForm("lessonSecret"), '_label -> Messages.get("chapter.lesson.secret"), 'class -> "form-control")
+    @b3.text(chapterLessonAddForm("lessonSlug"), '_label -> Messages.get("chapter.lesson.slug"), 'class -> "form-control")
     @b3.select(chapterLessonAddForm("status"), ChapterLessonStatus.values.map(e => (e.name() -> e.name())).toSeq, '_label -> Messages.get("chapter.lesson.status"), 'class -> "form-control selectpicker")
 
     @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.add") }

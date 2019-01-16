@@ -65,11 +65,10 @@ public final class ChapterLessonServiceImpl implements ChapterLessonService {
     }
 
     @Override
-    public void addChapterLesson(String chapterJid, String lessonJid, String lessonSecret, String alias, ChapterLessonStatus status, String userJid, String userIpAddress) {
+    public void addChapterLesson(String chapterJid, String lessonJid, String alias, ChapterLessonStatus status, String userJid, String userIpAddress) {
         ChapterLessonModel chapterLessonModel = new ChapterLessonModel();
         chapterLessonModel.chapterJid = chapterJid;
         chapterLessonModel.lessonJid = lessonJid;
-        chapterLessonModel.lessonSecret = lessonSecret;
         chapterLessonModel.alias = alias;
         chapterLessonModel.status = status.name();
 

@@ -141,7 +141,6 @@ public final class TrainingLessonController extends AbstractJudgelsController {
 
         SandalphonLessonStatementRenderRequestParam param = new SandalphonLessonStatementRenderRequestParam();
 
-        param.setLessonSecret(chapterLesson.getLessonSecret());
         param.setCurrentMillis(System.currentTimeMillis());
         param.setStatementLanguage(StatementControllerUtils.getCurrentStatementLanguage());
         param.setSwitchStatementLanguageUrl(org.iatoki.judgels.jerahmeel.chapter.lesson.routes.ChapterLessonController.switchLanguage().absoluteURL(request(), request().secure()));

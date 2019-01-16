@@ -28,6 +28,8 @@ public interface LessonService {
 
     Lesson findLessonByJid(String lessonJid);
 
+    Lesson findLessonBySlug(String lessonJid);
+
     boolean isUserPartnerForLesson(String lessonJid, String userJid);
 
     void createLessonPartner(String lessonJid, String userJid, LessonPartnerConfig config, String createUserJid, String createUserIpAddress);

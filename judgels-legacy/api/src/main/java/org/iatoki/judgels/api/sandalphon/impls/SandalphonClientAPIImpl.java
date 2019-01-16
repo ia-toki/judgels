@@ -29,17 +29,19 @@ public final class SandalphonClientAPIImpl extends AbstractJudgelsClientAPIImpl 
 
     private static final String TOTP_ENCRYPTION_ALGORITHM = "HmacSHA1";
 
+    private final String clientSecret;
+
     public SandalphonClientAPIImpl(String baseUrl, String clientJid, String clientSecret) {
         super(baseUrl, clientJid, clientSecret);
+        this.clientSecret = clientSecret;
     }
 
     @Override
-    public SandalphonProblem findClientProblem(String problemJid, String problemSecret) {
+    public SandalphonProblem findClientProblem(String problemJid) {
         JsonObject body = new JsonObject();
 
         body.addProperty("clientJid", getClientJid());
         body.addProperty("problemJid", problemJid);
-        body.addProperty("problemSecret", problemSecret);
 
         return sendPostRequest("/problems/client", body).asObjectFromJson(SandalphonProblem.class);
     }
@@ -59,7 +61,7 @@ public final class SandalphonClientAPIImpl extends AbstractJudgelsClientAPIImpl 
         List<NameValuePair> params = ImmutableList.of(
                 new BasicNameValuePair("problemJid", problemJid),
                 new BasicNameValuePair("clientJid", getClientJid()),
-                new BasicNameValuePair("totpCode", "" + computeTOTPCode(param.getProblemSecret(), param.getCurrentMillis())),
+                new BasicNameValuePair("totpCode", "" + computeTOTPCode(clientSecret, param.getCurrentMillis())),
                 new BasicNameValuePair("statementLanguage", param.getStatementLanguage()),
                 new BasicNameValuePair("switchStatementLanguageUrl", param.getSwitchStatementLanguageUrl()),
                 new BasicNameValuePair("postSubmitUrl", param.getPostSubmitUrl()),
@@ -75,7 +77,7 @@ public final class SandalphonClientAPIImpl extends AbstractJudgelsClientAPIImpl 
         List<NameValuePair> params = ImmutableList.of(
                 new BasicNameValuePair("problemJid", problemJid),
                 new BasicNameValuePair("clientJid", getClientJid()),
-                new BasicNameValuePair("totpCode", "" + computeTOTPCode(param.getProblemSecret(), param.getCurrentMillis())),
+                new BasicNameValuePair("totpCode", "" + computeTOTPCode(clientSecret, param.getCurrentMillis())),
                 new BasicNameValuePair("statementLanguage", param.getStatementLanguage()),
                 new BasicNameValuePair("switchStatementLanguageUrl", param.getSwitchStatementLanguageUrl()),
                 new BasicNameValuePair("postSubmitUrl", param.getPostSubmitUrl()),
@@ -91,12 +93,11 @@ public final class SandalphonClientAPIImpl extends AbstractJudgelsClientAPIImpl 
     }
 
     @Override
-    public SandalphonLesson findClientLesson(String lessonJid, String lessonSecret) {
+    public SandalphonLesson findClientLesson(String lessonJid) {
         JsonObject body = new JsonObject();
 
         body.addProperty("clientJid", getClientJid());
         body.addProperty("lessonJid", lessonJid);
-        body.addProperty("lessonSecret", lessonSecret);
 
         return sendPostRequest("/lessons/client", body).asObjectFromJson(SandalphonLesson.class);
     }
@@ -115,7 +116,7 @@ public final class SandalphonClientAPIImpl extends AbstractJudgelsClientAPIImpl 
     public String constructLessonStatementRenderAPIRequestBody(String lessonJid, SandalphonLessonStatementRenderRequestParam param) {
         List<NameValuePair> params = ImmutableList.of(
                 new BasicNameValuePair("lessonJid", lessonJid), new BasicNameValuePair("clientJid", getClientJid()),
-                new BasicNameValuePair("totpCode", "" + computeTOTPCode(param.getLessonSecret(), param.getCurrentMillis())),
+                new BasicNameValuePair("totpCode", "" + computeTOTPCode(clientSecret, param.getCurrentMillis())),
                 new BasicNameValuePair("statementLanguage", param.getStatementLanguage()),
                 new BasicNameValuePair("switchStatementLanguageUrl", param.getSwitchStatementLanguageUrl())
         );

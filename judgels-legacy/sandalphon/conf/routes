@@ -24,7 +24,6 @@ GET         /problems/:problemId/enter                                          
 GET         /problems/:problemId/jumpToStatements                                   org.iatoki.judgels.sandalphon.problem.base.ProblemController.jumpToStatement(problemId: Long)
 GET         /problems/:problemId/jumpToVersions                                     org.iatoki.judgels.sandalphon.problem.base.ProblemController.jumpToVersions(problemId: Long)
 GET         /problems/:problemId/jumpToPartners                                     org.iatoki.judgels.sandalphon.problem.base.ProblemController.jumpToPartners(problemId: Long)
-GET         /problems/:problemId/jumpToClients                                      org.iatoki.judgels.sandalphon.problem.base.ProblemController.jumpToClients(problemId: Long)
 
 POST        /problems/:problemId/switchLanguage                                     org.iatoki.judgels.sandalphon.problem.base.ProblemController.switchLanguage(problemId: Long)
 
@@ -50,11 +49,6 @@ GET         /problems/:problemId/versions/local                                 
 POST        /problems/:problemId/versions/local                                     org.iatoki.judgels.sandalphon.problem.base.version.ProblemVersionController.postCommitVersionLocalChanges(problemId: Long)
 GET         /problems/:problemId/versions/local/rebase                              org.iatoki.judgels.sandalphon.problem.base.version.ProblemVersionController.editVersionLocalChanges(problemId: Long)
 GET         /problems/:problemId/versions/local/discard                             org.iatoki.judgels.sandalphon.problem.base.version.ProblemVersionController.discardVersionLocalChanges(problemId: Long)
-
-GET         /problems/:problemId/clients                                            org.iatoki.judgels.sandalphon.problem.base.client.ProblemClientController.editClientProblems(problemId: Long)
-POST        /problems/:problemId/clients                                            org.iatoki.judgels.sandalphon.problem.base.client.ProblemClientController.postEditClientProblems(problemId: Long)
-GET         /problems/:problemId/clients/:clientId                                  org.iatoki.judgels.sandalphon.problem.base.client.ProblemClientController.viewClientProblem(problemId: Long, clientId: Long)
-
 
 GET         /problems/programming/:problemId/jumpToGrading                          org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemController.jumpToGrading(problemId: Long)
 GET         /problems/programming/:problemId/jumpToSubmissions                      org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemController.jumpToSubmissions(problemId: Long)
@@ -128,7 +122,6 @@ GET         /lessons/:lessonId/enter                                            
 GET         /lessons/:lessonId/jumpToStatements                                     org.iatoki.judgels.sandalphon.lesson.LessonController.jumpToStatement(lessonId: Long)
 GET         /lessons/:lessonId/jumpToVersions                                       org.iatoki.judgels.sandalphon.lesson.LessonController.jumpToVersions(lessonId: Long)
 GET         /lessons/:lessonId/jumpToPartners                                       org.iatoki.judgels.sandalphon.lesson.LessonController.jumpToPartners(lessonId: Long)
-GET         /lessons/:lessonId/jumpToClients                                        org.iatoki.judgels.sandalphon.lesson.LessonController.jumpToClients(lessonId: Long)
 
 POST        /lessons/:lessonId/switchLanguage                                       org.iatoki.judgels.sandalphon.lesson.LessonController.switchLanguage(lessonId: Long)
 
@@ -156,11 +149,6 @@ GET         /lessons/:lessonId/versions/local                                   
 POST        /lessons/:lessonId/versions/local                                       org.iatoki.judgels.sandalphon.lesson.version.LessonVersionController.postCommitVersionLocalChanges(lessonId: Long)
 GET         /lessons/:lessonId/versions/local/rebase                                org.iatoki.judgels.sandalphon.lesson.version.LessonVersionController.editVersionLocalChanges(lessonId: Long)
 GET         /lessons/:lessonId/versions/local/discard                               org.iatoki.judgels.sandalphon.lesson.version.LessonVersionController.discardVersionLocalChanges(lessonId: Long)
-
-GET         /lessons/:lessonId/clients                                              org.iatoki.judgels.sandalphon.lesson.client.LessonClientController.editClientLessons(lessonId: Long)
-POST        /lessons/:lessonId/clients                                              org.iatoki.judgels.sandalphon.lesson.client.LessonClientController.postEditClientLessons(lessonId: Long)
-GET         /lessons/:lessonId/clients/:clientId                                    org.iatoki.judgels.sandalphon.lesson.client.LessonClientController.viewClientLesson(lessonId: Long, clientId: Long)
-
 
 GET         /clients                                                                org.iatoki.judgels.sandalphon.client.ClientController.index()
 GET         /clients/                                                               org.iatoki.judgels.sandalphon.client.ClientController.listClients(page: Long ?= 0, orderBy ?= "id", orderDir ?= "asc", filterString ?= "")
@@ -228,6 +216,8 @@ GET         /api/v2/client/problems/:problemJid/submission-config               
 GET         /api/v2/client/problems/:problemJid/worksheet                           org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblemWorksheet(problemJid)
 POST        /api/v2/client/problems/jids                                            org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.findProblemsByJids()
 POST        /api/v2/client/problems/allowed-slug-to-jid                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.translateAllowedSlugToJids()
+
+POST        /api/v2/client/lessons/allowed-slug-to-jid                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.translateAllowedSlugToJids()
 
 # Public API v2
 

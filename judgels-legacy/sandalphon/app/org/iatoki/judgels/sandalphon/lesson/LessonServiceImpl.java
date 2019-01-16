@@ -87,6 +87,13 @@ public final class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    public Lesson findLessonBySlug(String slug) {
+        LessonModel lessonModel = lessonDao.findBySlug(slug);
+
+        return createLessonFromModel(lessonModel);
+    }
+
+    @Override
     public boolean isUserPartnerForLesson(String lessonJid, String userJid) {
         return lessonPartnerDao.existsByLessonJidAndPartnerJid(lessonJid, userJid);
     }

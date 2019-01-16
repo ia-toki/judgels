@@ -8,10 +8,7 @@ public final class ChapterProblemAddForm {
     public String alias;
 
     @Constraints.Required
-    public String problemJid;
-
-    @Constraints.Required
-    public String problemSecret;
+    public String problemSlug;
 
     @Constraints.Required
     public String type;

@@ -1,6 +1,9 @@
 package org.iatoki.judgels.jerahmeel.chapter.lesson;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import judgels.sandalphon.api.client.lesson.ClientLessonService;
+import judgels.service.api.client.BasicAuthHeader;
 import org.iatoki.judgels.api.JudgelsAPIClientException;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonLesson;
@@ -38,6 +41,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
@@ -52,12 +56,16 @@ public final class ChapterLessonController extends AbstractJudgelsController {
     private static final String LESSON = "lesson";
     private static final String CHAPTER = "chapter";
 
+    private final BasicAuthHeader sandalphonClientAuthHeader;
+    private final ClientLessonService clientLessonService;
     private final SandalphonClientAPI sandalphonClientAPI;
     private final ChapterLessonService chapterLessonService;
     private final ChapterService chapterService;
 
     @Inject
-    public ChapterLessonController(SandalphonClientAPI sandalphonClientAPI, ChapterLessonService chapterLessonService, ChapterService chapterService) {
+    public ChapterLessonController(@Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader, ClientLessonService clientLessonService, SandalphonClientAPI sandalphonClientAPI, ChapterLessonService chapterLessonService, ChapterService chapterService) {
+        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
+        this.clientLessonService = clientLessonService;
         this.sandalphonClientAPI = sandalphonClientAPI;
         this.chapterLessonService = chapterLessonService;
         this.chapterService = chapterService;
@@ -90,7 +98,6 @@ public final class ChapterLessonController extends AbstractJudgelsController {
 
         SandalphonLessonStatementRenderRequestParam param = new SandalphonLessonStatementRenderRequestParam();
 
-        param.setLessonSecret(chapterLesson.getLessonSecret());
         param.setCurrentMillis(System.currentTimeMillis());
         param.setStatementLanguage(StatementControllerUtils.getCurrentStatementLanguage());
         param.setSwitchStatementLanguageUrl(routes.ChapterLessonController.switchLanguage().absoluteURL(request(), request().secure()));
@@ -158,9 +165,17 @@ public final class ChapterLessonController extends AbstractJudgelsController {
             return showAddChapterLesson(chapter, chapterLessonCreateForm);
         }
 
+        Map<String, String> lessonSlugToJidMap = clientLessonService.translateAllowedSlugsToJids(sandalphonClientAuthHeader, IdentityUtils.getUserJid(), ImmutableSet.of(chapterLessonCreateData.lessonSlug));
+        if (!lessonSlugToJidMap.containsKey(chapterLessonCreateData.lessonSlug)) {
+            chapterLessonCreateForm.reject(Messages.get("error.lesson.invalid"));
+            return showAddChapterLesson(chapter, chapterLessonCreateForm);
+        }
+
+        String lessonJid = lessonSlugToJidMap.get(chapterLessonCreateData.lessonSlug);
+
         SandalphonLesson sandalphonLesson;
         try {
-            sandalphonLesson = sandalphonClientAPI.findClientLesson(chapterLessonCreateData.lessonJid, chapterLessonCreateData.lessonSecret);
+            sandalphonLesson = sandalphonClientAPI.findClientLesson(lessonJid);
         } catch (JudgelsAPIClientException e) {
             if (e.getStatusCode() >= Http.Status.INTERNAL_SERVER_ERROR) {
                 chapterLessonCreateForm.reject(Messages.get("error.system.sandalphon.connection"));
@@ -170,8 +185,8 @@ public final class ChapterLessonController extends AbstractJudgelsController {
             return showAddChapterLesson(chapter, chapterLessonCreateForm);
         }
 
-        chapterLessonService.addChapterLesson(chapter.getJid(), chapterLessonCreateData.lessonJid, chapterLessonCreateData.lessonSecret, chapterLessonCreateData.alias, ChapterLessonStatus.valueOf(chapterLessonCreateData.status), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-        JidCacheServiceImpl.getInstance().putDisplayName(chapterLessonCreateData.lessonJid, sandalphonLesson.getDisplayName(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        chapterLessonService.addChapterLesson(chapter.getJid(), lessonJid, chapterLessonCreateData.alias, ChapterLessonStatus.valueOf(chapterLessonCreateData.status), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        JidCacheServiceImpl.getInstance().putDisplayName(lessonJid, sandalphonLesson.getDisplayName(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
         JerahmeelControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(CHAPTER, chapter.getJid(), chapter.getName(), LESSON, sandalphonLesson.getJid(), sandalphonLesson.getSlug()));
 

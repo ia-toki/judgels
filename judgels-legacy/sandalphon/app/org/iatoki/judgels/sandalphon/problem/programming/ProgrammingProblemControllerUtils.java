@@ -36,10 +36,6 @@ public final class ProgrammingProblemControllerUtils {
 
         internalLinks.add(new InternalLink(Messages.get("problem.version"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId())));
 
-        if (ProblemControllerUtils.isAllowedToManageClients(problemService, problem)) {
-            internalLinks.add(new InternalLink(Messages.get("problem.client"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToClients(problem.getId())));
-        }
-
         content.appendLayout(c -> tabLayout.render(internalLinks.build(), c));
     }
 
