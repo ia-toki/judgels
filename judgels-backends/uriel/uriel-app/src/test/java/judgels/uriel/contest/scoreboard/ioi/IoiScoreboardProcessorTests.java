@@ -2,18 +2,277 @@ package judgels.uriel.contest.scoreboard.ioi;
 
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.sandalphon.api.submission.Grading;
+import judgels.sandalphon.api.submission.Submission;
+import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
+import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 class IoiScoreboardProcessorTests {
+    @Mock private ObjectMapper mapper;
     private IoiScoreboardProcessor scoreboardProcessor = new IoiScoreboardProcessor();
+
+    @BeforeEach
+    void before() {
+        initMocks(this);
+    }
+
+    @Nested
+    class computeToString {
+        private ScoreboardState state = new ScoreboardState.Builder()
+                .addContestantJids("c1", "c2")
+                .addProblemJids("p1", "p2")
+                .addProblemAliases("A", "B")
+                .build();
+
+        private Contest contest = new Contest.Builder()
+                .beginTime(Instant.ofEpochMilli(5))
+                .duration(Duration.ofMillis(100))
+                .id(1)
+                .jid("JIDC")
+                .name("contest-name")
+                .slug("contest-slug")
+                .style(ContestStyle.IOI)
+                .build();
+
+        private ContestModulesConfig contestModulesConfig = new ContestModulesConfig.Builder()
+                .scoreboard(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(false).build())
+                .ioiStyle(new IoiStyleModuleConfig.Builder().build())
+                .build();
+
+        private Map<String, Optional<Instant>> contestantStartTimesMap = ImmutableMap.of(
+                "c1", Optional.empty(),
+                "c2", Optional.of(Instant.ofEpochMilli(10)),
+                "c3", Optional.empty()
+        );
+
+        @Test
+        void time_calculation() throws JsonProcessingException {
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochMilli(20))
+                            .userJid("c2")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-1")
+                                    .score(78)
+                                    .verdict(Submission.TIME_LIMIT)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-2")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochMilli(20))
+                            .userJid("c1")
+                            .problemJid("p2")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(50)
+                                    .verdict(Submission.OK)
+                                    .build())
+                            .build()
+            );
+
+            when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
+
+            scoreboardProcessor.computeToString(
+                    mapper,
+                    state,
+                    contest,
+                    contestModulesConfig,
+                    contestantStartTimesMap,
+                    submissions);
+
+            verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
+                    .state(state)
+                    .content(new IoiScoreboardContent.Builder()
+                            .addEntries(new IoiScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c2")
+                                    .addScores(
+                                            Optional.of(78),
+                                            Optional.empty()
+                                    )
+                                    .totalScores(78)
+                                    .lastAffectingPenalty(10)
+                                    .build())
+                            .addEntries(new IoiScoreboardEntry.Builder()
+                                    .rank(2)
+                                    .contestantJid("c1")
+                                    .addScores(
+                                            Optional.empty(),
+                                            Optional.of(50)
+                                    )
+                                    .totalScores(50)
+                                    .lastAffectingPenalty(15)
+                                    .build())
+                            .build())
+                    .build());
+        }
+
+        @Nested
+        class LastAffectingPenalty {
+            private List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochMilli(20))
+                            .userJid("c2")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-1")
+                                    .score(50)
+                                    .verdict(Submission.TIME_LIMIT)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-2")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochMilli(20))
+                            .userJid("c1")
+                            .problemJid("p2")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(50)
+                                    .verdict(Submission.OK)
+                                    .build())
+                            .build()
+            );
+
+            @BeforeEach
+            void before() throws JsonProcessingException {
+                when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
+            }
+
+            @Test
+            void sorted_without_last_affecting_penalty() throws JsonProcessingException {
+                contestModulesConfig = new ContestModulesConfig.Builder()
+                        .scoreboard(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(false).build())
+                        .ioiStyle(new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(false).build())
+                        .build();
+
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        contestModulesConfig,
+                        contestantStartTimesMap,
+                        submissions);
+
+                verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
+                        .state(state)
+                        .content(new IoiScoreboardContent.Builder()
+                                .addEntries(new IoiScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c2")
+                                        .addScores(
+                                                Optional.of(50),
+                                                Optional.empty()
+                                        )
+                                        .totalScores(50)
+                                        .lastAffectingPenalty(10)
+                                        .build())
+                                .addEntries(new IoiScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c1")
+                                        .addScores(
+                                                Optional.empty(),
+                                                Optional.of(50)
+                                        )
+                                        .totalScores(50)
+                                        .lastAffectingPenalty(15)
+                                        .build())
+                                .build())
+                        .build());
+            }
+
+            @Test
+            void sorted_with_last_affecting_penalty() throws JsonProcessingException {
+                contestModulesConfig = new ContestModulesConfig.Builder()
+                        .scoreboard(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(false).build())
+                        .ioiStyle(new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(true).build())
+                        .build();
+
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        contestModulesConfig,
+                        contestantStartTimesMap,
+                        submissions);
+
+                verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
+                        .state(state)
+                        .content(new IoiScoreboardContent.Builder()
+                                .addEntries(new IoiScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c2")
+                                        .addScores(
+                                                Optional.of(50),
+                                                Optional.empty()
+                                        )
+                                        .totalScores(50)
+                                        .lastAffectingPenalty(10)
+                                        .build())
+                                .addEntries(new IoiScoreboardEntry.Builder()
+                                        .rank(2)
+                                        .contestantJid("c1")
+                                        .addScores(
+                                                Optional.empty(),
+                                                Optional.of(50)
+                                        )
+                                        .totalScores(50)
+                                        .lastAffectingPenalty(15)
+                                        .build())
+                                .build())
+                        .build());
+            }
+        }
+    }
 
     @Test
     void filter_contestant_jids() {
@@ -55,7 +314,6 @@ class IoiScoreboardProcessorTests {
         assertThat(scoreboardProcessor.filterContestantJids(scoreboard, ImmutableSet.of("c1", "c3")))
                 .isEqualTo(filteredScoreboard);
     }
-
 
     @Test
     void filter_problem_jids() {

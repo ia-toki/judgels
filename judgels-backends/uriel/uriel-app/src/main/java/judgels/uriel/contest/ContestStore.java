@@ -109,6 +109,16 @@ public class ContestStore {
         return Lists.transform(models, ContestStore::fromModel);
     }
 
+    public List<Contest> getRunningContests() {
+        SelectionOptions options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_ALL)
+                .orderBy("beginTime")
+                .orderDir(OrderDir.ASC)
+                .build();
+
+        return Lists.transform(contestDao.selectAllRunning(options), ContestStore::fromModel);
+    }
+
     public Contest createContest(ContestCreateData contestCreateData) {
         if (contestDao.selectBySlug(contestCreateData.getSlug()).isPresent()) {
             throw ContestErrors.slugAlreadyExists(contestCreateData.getSlug());
