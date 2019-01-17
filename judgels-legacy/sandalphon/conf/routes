@@ -195,7 +195,6 @@ GET         /problems/programming/:problemId/grading/helpers/:filename          
 
 # Client API
 
-POST        /api/v1/problems/client                                                 org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientProblemAPIControllerV1.findClientProblem()
 GET         /api/v1/problems/:problemJid/statements/media/:filename                 org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientProblemStatementAPIControllerV1.renderMediaByJid(problemJid, filename)
 
 POST        /api/v1/problems/programming/:problemJid/statements                     org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientProgrammingProblemStatementAPIControllerV1.renderStatement(problemJid)
@@ -205,7 +204,6 @@ GET         /api/v1/problems/programming/:problemJid/grading                    
 POST        /api/v1/problems/bundle/:problemJid/statements                          org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientBundleProblemStatementAPIControllerV1.renderStatement(problemJid)
 POST        /api/v1/problems/bundle/:problemJid/grade                               org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientBundleProblemGradingAPIControllerV1.grade(problemJid)
 
-POST        /api/v1/lessons/client                                                  org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientLessonAPIControllerV1.findClientLesson()
 GET         /api/v1/lessons/:lessonJid/statements/media/:filename                   org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientLessonStatementAPIControllerV1.renderMediaByJid(lessonJid, filename)
 POST        /api/v1/lessons/:lessonJid/statements                                   org.iatoki.judgels.sandalphon.controllers.api.client.v1.ClientLessonStatementAPIControllerV1.renderStatement(lessonJid)
 
