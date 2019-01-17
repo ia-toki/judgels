@@ -2,11 +2,11 @@ package org.iatoki.judgels.jerahmeel.chapter.lesson;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.sandalphon.api.client.lesson.ClientLessonService;
+import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.service.api.client.BasicAuthHeader;
-import org.iatoki.judgels.api.JudgelsAPIClientException;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
-import org.iatoki.judgels.api.sandalphon.SandalphonLesson;
 import org.iatoki.judgels.api.sandalphon.SandalphonLessonStatementRenderRequestParam;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
@@ -31,6 +31,7 @@ import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
+import org.iatoki.judgels.sandalphon.SandalphonResourceDisplayNames;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -173,11 +174,11 @@ public final class ChapterLessonController extends AbstractJudgelsController {
 
         String lessonJid = lessonSlugToJidMap.get(chapterLessonCreateData.lessonSlug);
 
-        SandalphonLesson sandalphonLesson;
+        LessonInfo lesson;
         try {
-            sandalphonLesson = sandalphonClientAPI.findClientLesson(lessonJid);
-        } catch (JudgelsAPIClientException e) {
-            if (e.getStatusCode() >= Http.Status.INTERNAL_SERVER_ERROR) {
+            lesson = clientLessonService.getLesson(sandalphonClientAuthHeader, lessonJid);
+        } catch (RemoteException e) {
+            if (e.getStatus() >= Http.Status.INTERNAL_SERVER_ERROR) {
                 chapterLessonCreateForm.reject(Messages.get("error.system.sandalphon.connection"));
             } else {
                 chapterLessonCreateForm.reject(Messages.get("error.lesson.invalid"));
@@ -186,9 +187,9 @@ public final class ChapterLessonController extends AbstractJudgelsController {
         }
 
         chapterLessonService.addChapterLesson(chapter.getJid(), lessonJid, chapterLessonCreateData.alias, ChapterLessonStatus.valueOf(chapterLessonCreateData.status), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-        JidCacheServiceImpl.getInstance().putDisplayName(lessonJid, sandalphonLesson.getDisplayName(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        JidCacheServiceImpl.getInstance().putDisplayName(lessonJid, SandalphonResourceDisplayNames.getLessonDisplayName(lesson), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        JerahmeelControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(CHAPTER, chapter.getJid(), chapter.getName(), LESSON, sandalphonLesson.getJid(), sandalphonLesson.getSlug()));
+        JerahmeelControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(CHAPTER, chapter.getJid(), chapter.getName(), LESSON, lessonJid, lesson.getSlug()));
 
         return redirect(routes.ChapterLessonController.viewChapterLessons(chapter.getId()));
     }

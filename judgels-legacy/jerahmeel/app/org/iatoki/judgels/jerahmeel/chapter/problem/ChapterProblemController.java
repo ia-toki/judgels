@@ -2,12 +2,12 @@ package org.iatoki.judgels.jerahmeel.chapter.problem;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.service.api.client.BasicAuthHeader;
-import org.iatoki.judgels.api.JudgelsAPIClientException;
 import org.iatoki.judgels.api.sandalphon.SandalphonBundleProblemStatementRenderRequestParam;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
-import org.iatoki.judgels.api.sandalphon.SandalphonProblem;
 import org.iatoki.judgels.api.sandalphon.SandalphonProgrammingProblemStatementRenderRequestParam;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
@@ -32,6 +32,7 @@ import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
+import org.iatoki.judgels.sandalphon.SandalphonResourceDisplayNames;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -193,11 +194,11 @@ public final class ChapterProblemController extends AbstractJudgelsController {
         }
 
         String problemJid = problemSlugToJidMap.get(chapterProblemCreateData.problemSlug);
-        SandalphonProblem sandalphonProblem;
+        ProblemInfo problem;
         try {
-            sandalphonProblem = sandalphonClientAPI.findClientProblem(problemJid);
-        } catch (JudgelsAPIClientException e) {
-            if (e.getStatusCode() >= Http.Status.INTERNAL_SERVER_ERROR) {
+            problem = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
+        } catch (RemoteException e) {
+            if (e.getStatus() >= Http.Status.INTERNAL_SERVER_ERROR) {
                 chapterProblemAddForm.reject(Messages.get("error.system.sandalphon.connection"));
             } else {
                 chapterProblemAddForm.reject(Messages.get("error.problem.invalid"));
@@ -206,9 +207,9 @@ public final class ChapterProblemController extends AbstractJudgelsController {
         }
 
         chapterProblemService.addChapterProblem(chapter.getJid(), problemJid, chapterProblemCreateData.alias, ChapterProblemType.valueOf(chapterProblemCreateData.type), ChapterProblemStatus.valueOf(chapterProblemCreateData.status), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-        JidCacheServiceImpl.getInstance().putDisplayName(problemJid, sandalphonProblem.getDisplayName(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        JidCacheServiceImpl.getInstance().putDisplayName(problemJid, SandalphonResourceDisplayNames.getProblemDisplayName(problem), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        JerahmeelControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(CHAPTER, chapter.getJid(), chapter.getName(), PROBLEM, sandalphonProblem.getJid(), sandalphonProblem.getSlug()));
+        JerahmeelControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(CHAPTER, chapter.getJid(), chapter.getName(), PROBLEM, problemJid, problem.getSlug()));
 
         return redirect(routes.ChapterProblemController.viewChapterProblems(chapter.getId()));
     }

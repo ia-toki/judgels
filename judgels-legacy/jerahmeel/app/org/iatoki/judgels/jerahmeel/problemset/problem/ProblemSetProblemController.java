@@ -2,12 +2,12 @@ package org.iatoki.judgels.jerahmeel.problemset.problem;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.service.api.client.BasicAuthHeader;
-import org.iatoki.judgels.api.JudgelsAPIClientException;
 import org.iatoki.judgels.api.sandalphon.SandalphonBundleProblemStatementRenderRequestParam;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
-import org.iatoki.judgels.api.sandalphon.SandalphonProblem;
 import org.iatoki.judgels.api.sandalphon.SandalphonProgrammingProblemStatementRenderRequestParam;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
@@ -27,6 +27,7 @@ import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.views.html.layouts.heading3WithActionLayout;
+import org.iatoki.judgels.sandalphon.SandalphonResourceDisplayNames;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -244,11 +245,11 @@ public final class ProblemSetProblemController extends AbstractJudgelsController
         }
 
         String problemJid = problemSlugToJidMap.get(problemSetProblemAddData.problemSlug);
-        SandalphonProblem sandalphonProblem;
+        ProblemInfo problem;
         try {
-            sandalphonProblem = sandalphonClientAPI.findClientProblem(problemJid);
-        } catch (JudgelsAPIClientException e) {
-            if (e.getStatusCode() >= Http.Status.INTERNAL_SERVER_ERROR) {
+            problem = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
+        } catch (RemoteException e) {
+            if (e.getStatus() >= Http.Status.INTERNAL_SERVER_ERROR) {
                 problemSetProblemAddForm.reject(Messages.get("error.system.sandalphon.connection"));
             } else {
                 problemSetProblemAddForm.reject(Messages.get("error.problem.invalid"));
@@ -257,9 +258,9 @@ public final class ProblemSetProblemController extends AbstractJudgelsController
         }
 
         problemSetProblemService.addProblemSetProblem(problemSet.getJid(), problemJid, problemSetProblemAddData.alias, ProblemSetProblemType.valueOf(problemSetProblemAddData.type), ProblemSetProblemStatus.valueOf(problemSetProblemAddData.status), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-        JidCacheServiceImpl.getInstance().putDisplayName(problemJid, sandalphonProblem.getDisplayName(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        JidCacheServiceImpl.getInstance().putDisplayName(problemJid, SandalphonResourceDisplayNames.getProblemDisplayName(problem), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
 
-        JerahmeelControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(PROBLEM_SET, problemSet.getJid(), problemSet.getName(), PROBLEM, sandalphonProblem.getJid(), sandalphonProblem.getSlug()));
+        JerahmeelControllerUtils.getInstance().addActivityLog(BasicActivityKeys.ADD_IN.construct(PROBLEM_SET, problemSet.getJid(), problemSet.getName(), PROBLEM, problemJid, problem.getSlug()));
 
         return redirect(routes.ProblemSetProblemController.viewProblemSetProblems(problemSet.getId()));
     }

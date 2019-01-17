@@ -6,8 +6,6 @@ import java.io.InputStream;
 
 public interface SandalphonClientAPI extends JudgelsClientAPI {
 
-    SandalphonProblem findClientProblem(String problemJid);
-
     String getProgrammingProblemStatementRenderAPIEndpoint(String problemJid);
 
     String getBundleProblemStatementRenderAPIEndpoint(String problemJid);
@@ -17,8 +15,6 @@ public interface SandalphonClientAPI extends JudgelsClientAPI {
     String constructBundleProblemStatementRenderAPIRequestBody(String problemJid, SandalphonBundleProblemStatementRenderRequestParam param);
 
     String getProblemStatementMediaRenderAPIEndpoint(String problemJid, String mediaFilename);
-
-    SandalphonLesson findClientLesson(String lessonJid);
 
     String getLessonStatementRenderAPIEndpoint(String lessonJid);
 

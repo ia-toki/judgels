@@ -3,7 +3,6 @@ package org.iatoki.judgels.api.sandalphon.impls;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -12,9 +11,7 @@ import org.iatoki.judgels.api.sandalphon.SandalphonBundleAnswer;
 import org.iatoki.judgels.api.sandalphon.SandalphonBundleGradingResult;
 import org.iatoki.judgels.api.sandalphon.SandalphonBundleProblemStatementRenderRequestParam;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
-import org.iatoki.judgels.api.sandalphon.SandalphonLesson;
 import org.iatoki.judgels.api.sandalphon.SandalphonLessonStatementRenderRequestParam;
-import org.iatoki.judgels.api.sandalphon.SandalphonProblem;
 import org.iatoki.judgels.api.sandalphon.SandalphonProgrammingProblemStatementRenderRequestParam;
 import org.iatoki.judgels.api.sandalphon.SandalphonProgrammingProblemInfo;
 
@@ -34,16 +31,6 @@ public final class SandalphonClientAPIImpl extends AbstractJudgelsClientAPIImpl 
     public SandalphonClientAPIImpl(String baseUrl, String clientJid, String clientSecret) {
         super(baseUrl, clientJid, clientSecret);
         this.clientSecret = clientSecret;
-    }
-
-    @Override
-    public SandalphonProblem findClientProblem(String problemJid) {
-        JsonObject body = new JsonObject();
-
-        body.addProperty("clientJid", getClientJid());
-        body.addProperty("problemJid", problemJid);
-
-        return sendPostRequest("/problems/client", body).asObjectFromJson(SandalphonProblem.class);
     }
 
     @Override
@@ -90,16 +77,6 @@ public final class SandalphonClientAPIImpl extends AbstractJudgelsClientAPIImpl 
     @Override
     public String getProblemStatementMediaRenderAPIEndpoint(String problemJid, String mediaFilename) {
         return getEndpoint(interpolatePath("/problems/:problemJid/statements/media/:mediaFilename", problemJid, mediaFilename));
-    }
-
-    @Override
-    public SandalphonLesson findClientLesson(String lessonJid) {
-        JsonObject body = new JsonObject();
-
-        body.addProperty("clientJid", getClientJid());
-        body.addProperty("lessonJid", lessonJid);
-
-        return sendPostRequest("/lessons/client", body).asObjectFromJson(SandalphonLesson.class);
     }
 
     @Override
