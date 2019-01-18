@@ -1,3 +1,5 @@
+import Versions._
+
 import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
@@ -8,8 +10,7 @@ lazy val jophielcommons = (project in file("."))
     .aggregate(playcommons, api, jophielApi)
     .settings(
         name := "jophielcommons",
-        version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         libraryDependencies ++= Seq(
             "com.nimbusds" % "c2id-server-sdk" % "2.0"
         ),

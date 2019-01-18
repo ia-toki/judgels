@@ -1,3 +1,5 @@
+import Versions._
+
 import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
@@ -8,8 +10,7 @@ lazy val sandalphonblackboxadapters = (project in file("."))
     .aggregate(sandalphoncommons, gabrielblackbox)
     .settings(
         name := "sandalphonblackboxadapters",
-        version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         routesGenerator := InjectedRoutesGenerator
     )
     .settings(TestNGPlugin.testNGSettings: _*)

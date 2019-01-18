@@ -1,14 +1,5 @@
 import Versions._
 
-val checkstyle = taskKey[Unit]("Execute checkstyle")
-
-checkstyle := {
-    val v = ("../judgels/scripts/execute-checkstyle.sh" !)
-    if (v != 0) {
-        sys.error("Failed")
-    }
-}
-
 val workaround = {
   sys.props += "packaging.type" -> "jar"
   ()
@@ -19,8 +10,7 @@ lazy val api = (project in file("."))
     .aggregate(sealtielApi)
     .settings(
         name := "api",
-        version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         libraryDependencies ++= Seq(
             "com.puppycrawl.tools" % "checkstyle" % "6.8.1",
             "com.google.code.gson" % "gson" % "2.3.1",

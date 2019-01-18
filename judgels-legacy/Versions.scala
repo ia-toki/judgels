@@ -2,6 +2,8 @@ import sbt._
 import Keys._
 
 object Versions {
+	val sbtScalaVersion = "2.11.7"
+
 	val apacheCommonsEmailVersion = "1.5"
 	val apacheCommonsLang3Version = "3.8.1"
 	val apacheCommonsRngVersion = "1.0"

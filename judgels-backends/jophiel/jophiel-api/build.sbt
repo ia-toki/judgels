@@ -5,7 +5,7 @@ lazy val jophielApi = (project in file("."))
   .aggregate(judgelsServiceApi, judgelsPersistenceApi)
   .settings(
     name := "sealtiel-api",
-    scalaVersion := "2.11.7",
+    scalaVersion := sbtScalaVersion,
     libraryDependencies ++= Seq(
       "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
       "org.immutables" % "value" % immutablesVersion

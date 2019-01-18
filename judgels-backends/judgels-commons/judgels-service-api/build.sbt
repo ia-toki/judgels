@@ -3,7 +3,7 @@ import Versions._
 lazy val judgelsServiceApi = (project in file("."))
   .settings(
     name := "judgels-service-api",
-    scalaVersion := "2.11.7",
+    scalaVersion := sbtScalaVersion,
     resolvers ++= Seq(
       "Palantir" at "https://dl.bintray.com/palantir/releases"
     ),

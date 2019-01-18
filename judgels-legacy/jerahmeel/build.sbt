@@ -12,7 +12,7 @@ lazy val jerahmeel = (project in file("."))
     .settings(
         name := "jerahmeel",
         version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         routesGenerator := InjectedRoutesGenerator,
         PlayKeys.externalizeResources := false
     )

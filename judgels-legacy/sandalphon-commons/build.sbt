@@ -1,3 +1,5 @@
+import Versions._
+
 import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
@@ -8,8 +10,7 @@ lazy val sandalphoncommons = (project in file("."))
     .aggregate(playcommons, gabrielcommons, api, judgelsServiceCore, sandalphonApi)
     .settings(
         name := "sandalphoncommons",
-        version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         libraryDependencies ++= Seq(
             "com.ibm.icu" % "icu4j" % "55.1",
             "org.webjars" % "prettify" % "4-Mar-2013",

@@ -5,7 +5,7 @@ lazy val judgelsServiceCore = (project in file("."))
     .aggregate(judgelsServiceApi, judgelsServiceJaxrs)
     .settings(
         name := "judgels-service-core",
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         resolvers ++= Seq(
           "Palantir" at "https://dl.bintray.com/palantir/releases"
         ),

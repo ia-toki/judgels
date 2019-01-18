@@ -11,8 +11,7 @@ lazy val sandalphon = (project in file("."))
     .aggregate(sandalphoncommons, jophielcommons, sandalphonblackboxadapters)
     .settings(
         name := "sandalphon",
-        version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         routesGenerator := InjectedRoutesGenerator,
         PlayKeys.externalizeResources := false
     )

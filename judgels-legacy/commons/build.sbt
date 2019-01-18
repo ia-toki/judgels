@@ -3,20 +3,10 @@ import Versions._
 import de.johoop.testngplugin.TestNGPlugin
 import de.johoop.jacoco4sbt.JacocoPlugin.jacoco
 
-val checkstyle = taskKey[Unit]("Execute checkstyle")
-
-checkstyle := {
-    val v = ("../judgels/scripts/execute-checkstyle.sh" !)
-    if (v != 0) {
-        sys.error("Failed")
-    }
-}
-
 lazy val commons = (project in file("."))
     .settings(
         name := "commons",
-        version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         libraryDependencies ++= Seq(
             "com.google.code.gson" % "gson" % "2.3.1",
             "com.google.guava" % "guava" % guavaVersion,

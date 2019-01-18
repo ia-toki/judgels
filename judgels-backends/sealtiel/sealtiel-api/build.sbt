@@ -5,7 +5,7 @@ lazy val sealtielApi = (project in file("."))
     .aggregate(judgelsServiceApi)
     .settings(
         name := "sealtiel-api",
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         libraryDependencies ++= Seq(
             "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
             "org.immutables" % "value" % immutablesVersion

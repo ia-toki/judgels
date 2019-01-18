@@ -1,3 +1,5 @@
+import Versions._
+
 lazy val judgels = (project in file("."))
     .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
     .dependsOn(sandalphon, jerahmeel, gabriel)
@@ -5,8 +7,7 @@ lazy val judgels = (project in file("."))
     .settings(javaUnidocSettings: _*)
     .settings(
         name := "judgels",
-        version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.7"
+        scalaVersion := sbtScalaVersion
     )
     .settings(
         sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(f => (f.getName endsWith ".scala") || (f.getName contains "Routes")) }

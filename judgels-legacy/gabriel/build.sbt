@@ -9,8 +9,7 @@ lazy val gabriel = (project in file("."))
     .aggregate(gabrielcommons, gabrielblackbox, api, judgelsServiceJaxrs, sealtielApi)
     .settings(
         name := "gabriel",
-        version := IO.read(file("version.properties")).trim,
-        scalaVersion := "2.11.7",
+        scalaVersion := sbtScalaVersion,
         autoScalaLibrary := false,
         crossPaths := false,
         mainClass in (Compile, run) := Some("org.iatoki.judgels.gabriel.Main"),
