@@ -12,7 +12,6 @@ lazy val api = (project in file("."))
         name := "api",
         scalaVersion := sbtScalaVersion,
         libraryDependencies ++= Seq(
-            "com.puppycrawl.tools" % "checkstyle" % "6.8.1",
             "com.google.code.gson" % "gson" % "2.3.1",
             "com.google.guava" % "guava" % guavaVersion,
             "commons-io" % "commons-io" % "2.4",

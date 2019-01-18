@@ -1,8 +1,8 @@
 package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
-import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
