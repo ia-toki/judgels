@@ -1,0 +1,15 @@
+apply from: '../gradle/play.gradle'
+
+dependencies {
+    play project(':play-commons')
+    play project(':gabriel-commons')
+    play project(':api')
+
+    play project(':judgels-commons:judgels-service-core')
+    play project(':sandalphon:sandalphon-api')
+    play project(':sealtiel:sealtiel-api')
+
+    play "com.ibm.icu:icu4j:55.1"
+    play "org.webjars:prettify:4-Mar-2013"
+    play "com.warrenstrange:googleauth:0.4.3"
+}

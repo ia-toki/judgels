@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.util.Providers;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import judgels.service.JudgelsVersion;
 import org.iatoki.judgels.AWSFileSystemProvider;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
@@ -33,14 +34,12 @@ public final class JerahmeelModule extends AbstractModule {
 
     @Override
     public void configure() {
-        org.iatoki.judgels.jerahmeel.BuildInfo$ buildInfo = org.iatoki.judgels.jerahmeel.BuildInfo$.MODULE$;
-
-        bindConstant().annotatedWith(GeneralName.class).to(buildInfo.name());
-        bindConstant().annotatedWith(GeneralVersion.class).to(buildInfo.version());
+        bindConstant().annotatedWith(GeneralName.class).to("Jerahmeel");
+        bindConstant().annotatedWith(GeneralVersion.class).to(JudgelsVersion.INSTANCE);
 
         // <DEPRECATED>
         Config config = ConfigFactory.load();
-        JudgelsPlayProperties.buildInstance(buildInfo.name(), buildInfo.version(), config);
+        JudgelsPlayProperties.buildInstance("Jerahmeel", JudgelsVersion.INSTANCE, config);
         JerahmeelProperties.buildInstance(config);
         bind(JerahmeelSingletonsBuilder.class).asEagerSingleton();
         // </DEPRECATED>

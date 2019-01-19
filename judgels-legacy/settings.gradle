@@ -1,0 +1,15 @@
+apply from: '../judgels-backends/settings-legacy.gradle'
+
+rootProject.name = 'judgels-legacy'
+
+include ':api'
+include ':commons'
+include ':gabriel-commons'
+include ':gabriel-blackbox'
+include ':play-commons'
+include ':jophiel-commons'
+include ':sandalphon-commons'
+include ':sandalphon-blackbox-adapters'
+include ':sandalphon'
+include ':jerahmeel'
+include ':gabriel'

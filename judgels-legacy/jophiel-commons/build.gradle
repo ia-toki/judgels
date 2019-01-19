@@ -1,0 +1,8 @@
+apply from: '../gradle/play.gradle'
+
+dependencies {
+    play project(':play-commons')
+    play project(':api')
+
+    play project(':jophiel:jophiel-api')
+}

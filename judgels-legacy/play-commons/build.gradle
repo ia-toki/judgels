@@ -1,0 +1,47 @@
+apply from: '../gradle/play.gradle'
+
+dependencies {
+    play project(':commons')
+
+    play "com.typesafe.play:play-java_${scalaVersion}:${playVersion}"
+
+    play "com.typesafe.play:play-java-jdbc_${scalaVersion}:${playVersion}"
+    play "com.typesafe.play:play-ws_${scalaVersion}:${playVersion}"
+    play ("com.typesafe.play:play-java-jpa_${scalaVersion}:${playVersion}") {
+        exclude group: 'org.hibernate.javax.persistence', module: 'hibernate-jpa-2.0-api'
+    }
+    play "com.typesafe.play:filters-helpers_${scalaVersion}:${playVersion}"
+    play "com.typesafe.play:play-cache_${scalaVersion}:${playVersion}"
+    play "com.typesafe.play:play-jdbc-evolutions_${scalaVersion}:${playVersion}"
+
+    play ("com.adrianhurt:play-bootstrap3_${scalaVersion}:0.4.4-P24") {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    play 'com.googlecode.htmlcompressor:htmlcompressor:1.4'
+    play 'com.google.apis:google-api-services-analytics:v3-rev118-1.20.0'
+    play 'javax.inject:javax.inject:1'
+    play 'joda-time:joda-time:2.3'
+    play 'mysql:mysql-connector-java:5.1.26'
+    play 'org.apache.poi:poi:3.10-FINAL'
+    play "org.hibernate:hibernate-entitymanager:$hibernateVersion"
+    play 'org.jsoup:jsoup:1.8.3'
+    play 'org.seleniumhq.selenium:selenium-java:2.46.0'
+    play 'org.springframework:spring-context:4.1.6.RELEASE'
+    play ('org.webjars:bootstrap:3.3.4') {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    play 'org.webjars:jquery:2.1.4'
+    play ('org.webjars:jquery-ui:1.11.4') {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    play 'org.webjars:less:2.5.0'
+    play 'org.webjars:requirejs:2.1.18'
+    play 'org.webjars:momentjs:2.10.3'
+    play 'org.webjars:ckeditor:4.5.3'
+    play ('org.webjars:select2:4.0.0-2') {
+        exclude group: 'org.webjars', module: 'jquery'
+    }
+    play ('org.webjars:Eonasdan-bootstrap-datetimepicker:4.7.14') {
+        exclude group: 'org.webjars', module: 'bootstrap'
+    }
+}

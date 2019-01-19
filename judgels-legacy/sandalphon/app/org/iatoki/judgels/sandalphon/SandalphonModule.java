@@ -3,6 +3,7 @@ package org.iatoki.judgels.sandalphon;
 import com.google.inject.AbstractModule;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import judgels.service.JudgelsVersion;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
@@ -30,14 +31,12 @@ public final class SandalphonModule extends AbstractModule {
 
     @Override
     public void configure() {
-        org.iatoki.judgels.sandalphon.BuildInfo$ buildInfo = org.iatoki.judgels.sandalphon.BuildInfo$.MODULE$;
-
-        bindConstant().annotatedWith(GeneralName.class).to(buildInfo.name());
-        bindConstant().annotatedWith(GeneralVersion.class).to(buildInfo.version());
+        bindConstant().annotatedWith(GeneralName.class).to("Sandalphon");
+        bindConstant().annotatedWith(GeneralVersion.class).to(JudgelsVersion.INSTANCE);
 
         // <DEPRECATED>
         Config config = ConfigFactory.load();
-        JudgelsPlayProperties.buildInstance(buildInfo.name(), buildInfo.version(), config);
+        JudgelsPlayProperties.buildInstance("Sandalphon", JudgelsVersion.INSTANCE, config);
         SandalphonProperties.buildInstance(config);
         bind(SandalphonSingletonsBuilder.class).asEagerSingleton();
         // </DEPRECATED>

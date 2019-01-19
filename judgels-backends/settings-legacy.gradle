@@ -1,0 +1,8 @@
+apply from: 'settings.gradle'
+
+rootProject.children.each { project ->
+    project.children.each { p ->    
+        String relativeProjectPath = p.projectDir.path.replace(settingsDir.path, "")
+        p.projectDir = new File("../judgels-backends$relativeProjectPath")
+    }
+}

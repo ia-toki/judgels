@@ -14,3 +14,9 @@ data/
 
 *.log
 *.log.gz
+
+*.conf
+!*_default.conf
+
+application-log*
+external-assets/

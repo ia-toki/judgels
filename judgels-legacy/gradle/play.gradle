@@ -1,0 +1,31 @@
+apply plugin: 'play'
+apply plugin: 'idea'
+apply plugin: 'org.iatoki.play-idea'
+
+repositories {
+    maven {
+        name 'lightbend-maven-release'
+        url 'https://repo.lightbend.com/lightbend/maven-releases'
+    }
+    ivy {
+        name 'lightbend-ivy-release'
+        url 'https://repo.lightbend.com/lightbend/ivy-releases'
+        layout 'ivy'
+    }
+}
+
+model {
+    components {
+        play {
+            platform play: '2.4.6', scala: '2.11', java: '1.8'
+            injectedRoutesGenerator = true
+
+            sources {
+                twirlTemplates {
+                    defaultImports = TwirlImports.JAVA
+                }
+            }
+
+        }
+    }
+}
