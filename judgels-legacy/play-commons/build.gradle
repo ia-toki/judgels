@@ -21,7 +21,7 @@ dependencies {
     play 'com.google.apis:google-api-services-analytics:v3-rev118-1.20.0'
     play 'javax.inject:javax.inject:1'
     play 'joda-time:joda-time:2.3'
-    play 'mysql:mysql-connector-java:5.1.26'
+    play 'mysql:mysql-connector-java:5.1.47'
     play 'org.apache.poi:poi:3.10-FINAL'
     play "org.hibernate:hibernate-entitymanager:$hibernateVersion"
     play 'org.jsoup:jsoup:1.8.3'
