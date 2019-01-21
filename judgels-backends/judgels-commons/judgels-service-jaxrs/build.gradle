@@ -1,3 +1,5 @@
+apply from: '../../gradle/java.gradle'
+
 dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation "com.palantir.conjure.java.runtime:conjure-java-jackson-serialization:$conjureJavaRuntimeVersion"

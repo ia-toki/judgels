@@ -1,3 +1,5 @@
+apply from: '../../gradle/java.gradle'
+
 dependencies {
     implementation project(':gabriel:gabriel-engine-api')
 
