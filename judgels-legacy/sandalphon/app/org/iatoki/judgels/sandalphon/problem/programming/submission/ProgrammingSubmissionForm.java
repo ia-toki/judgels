@@ -8,4 +8,12 @@ public final class ProgrammingSubmissionForm {
 
     @Constraints.Required
     public File file;
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
 }

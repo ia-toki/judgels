@@ -9,4 +9,20 @@ public final class ItemStatementConfForm {
 
     @Constraints.Required
     public String statement;
+
+    public String getMeta() {
+        return meta;
+    }
+
+    public void setMeta(String meta) {
+        this.meta = meta;
+    }
+
+    public String getStatement() {
+        return statement;
+    }
+
+    public void setStatement(String statement) {
+        this.statement = statement;
+    }
 }

@@ -1,6 +1,6 @@
-apply from: '../gradle/java.gradle'
+apply from: '../gradle/play.gradle'
 
 dependencies {
-    api project(':sandalphon-commons')
-    api project(':gabriel-blackbox')
+    play project(':sandalphon-commons')
+    play project(':gabriel-blackbox')
 }

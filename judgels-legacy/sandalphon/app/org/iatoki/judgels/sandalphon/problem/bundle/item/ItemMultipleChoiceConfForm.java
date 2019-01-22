@@ -28,4 +28,60 @@ public final class ItemMultipleChoiceConfForm {
         score = 1.0;
         penalty = 0.0;
     }
+
+    public String getMeta() {
+        return meta;
+    }
+
+    public void setMeta(String meta) {
+        this.meta = meta;
+    }
+
+    public String getStatement() {
+        return statement;
+    }
+
+    public void setStatement(String statement) {
+        this.statement = statement;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public Double getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(Double penalty) {
+        this.penalty = penalty;
+    }
+
+    public List<String> getChoiceAliases() {
+        return choiceAliases;
+    }
+
+    public void setChoiceAliases(List<String> choiceAliases) {
+        this.choiceAliases = choiceAliases;
+    }
+
+    public List<String> getChoiceContents() {
+        return choiceContents;
+    }
+
+    public void setChoiceContents(List<String> choiceContents) {
+        this.choiceContents = choiceContents;
+    }
+
+    public List<Boolean> getIsCorrects() {
+        return isCorrects;
+    }
+
+    public void setIsCorrects(List<Boolean> isCorrects) {
+        this.isCorrects = isCorrects;
+    }
 }

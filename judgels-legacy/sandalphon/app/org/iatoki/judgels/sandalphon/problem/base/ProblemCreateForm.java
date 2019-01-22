@@ -15,4 +15,36 @@ public class ProblemCreateForm {
 
     @Constraints.Required
     public String initLanguageCode;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getAdditionalNote() {
+        return additionalNote;
+    }
+
+    public void setAdditionalNote(String additionalNote) {
+        this.additionalNote = additionalNote;
+    }
+
+    public String getInitLanguageCode() {
+        return initLanguageCode;
+    }
+
+    public void setInitLanguageCode(String initLanguageCode) {
+        this.initLanguageCode = initLanguageCode;
+    }
 }

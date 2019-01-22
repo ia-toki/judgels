@@ -9,4 +9,20 @@ public final class CourseChapterAddForm {
 
     @Constraints.Required
     public String alias;
+
+    public String getChapterJid() {
+        return chapterJid;
+    }
+
+    public void setChapterJid(String chapterJid) {
+        this.chapterJid = chapterJid;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 }

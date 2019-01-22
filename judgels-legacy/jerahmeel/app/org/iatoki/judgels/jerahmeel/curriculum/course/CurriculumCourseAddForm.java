@@ -9,4 +9,20 @@ public final class CurriculumCourseAddForm {
 
     @Constraints.Required
     public String alias;
+
+    public String getCourseJid() {
+        return courseJid;
+    }
+
+    public void setCourseJid(String courseJid) {
+        this.courseJid = courseJid;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 }
