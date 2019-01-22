@@ -6,7 +6,7 @@ require(["jquery"], function( __tes__ ) {
             data: {
                 chapterLessonId: chapterLessonId
             },
-            contentType: 'application/x-www-form-urlencoded',
+            contentType: 'application/x-www-form-urlencoded'
         });
     });
 });

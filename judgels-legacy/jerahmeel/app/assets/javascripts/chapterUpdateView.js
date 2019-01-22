@@ -6,7 +6,7 @@ require(["jquery"], function( __tes__ ) {
             data: {
                 courseChapterId: courseChapterId
             },
-            contentType: 'application/x-www-form-urlencoded',
+            contentType: 'application/x-www-form-urlencoded'
         });
     });
 });

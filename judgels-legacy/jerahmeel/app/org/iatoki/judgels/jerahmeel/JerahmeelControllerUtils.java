@@ -108,7 +108,7 @@ public final class JerahmeelControllerUtils extends AbstractJudgelsControllerUti
         content.appendLayout(c -> sidebarLayout.render(sidebarContent.render(), c));
 
         if (isInTrainingMainPage()) {
-            addWidgets(content);
+            // addWidgets(content);
         }
 
         if (JerahmeelUtils.isGuest()) {
