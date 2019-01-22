@@ -16,16 +16,6 @@
                 <div class="pull-right first">
                     <div class="copyright">
                         @Messages.get("commons.poweredBy") <a href="@JudgelsPlayProperties.getInstance.getGithubLink" target="_blank">@Messages.get("commons.judgels") @StringUtils.capitalize(JudgelsPlayProperties.getInstance.getAppName) @JudgelsPlayProperties.getInstance.getAppVersion</a>
-                        @if(JudgelsPlayProperties.getInstance.getSponsors != null) {
-                            Sponsored by
-                            @for((name, index) <- JudgelsPlayProperties.getInstance.getSponsors.keySet.zipWithIndex) {
-                                @if(index != 0) {
-                                    ,&nbsp;
-                                }
-                                <a href="@JudgelsPlayProperties.getInstance.getSponsors.get(name)" target="_blank">@name</a>
-                            }
-                            .
-                        }
                     </div>
                 </div>
             </div>

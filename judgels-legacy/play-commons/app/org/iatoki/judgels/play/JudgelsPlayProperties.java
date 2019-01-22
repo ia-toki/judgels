@@ -23,21 +23,9 @@ public final class JudgelsPlayProperties {
     private String appCopyright;
     private String canonicalUrl;
     private String githubLink;
-    private String metaKeywords;
-    private String metaDescription;
-    private boolean usingGoogleAnalytics;
-    private String googleAnalyticsId;
-    private String googleAnalyticsViewId;
-    private boolean usingGoogleServiceAccount;
-    private String googleServiceAccountClientId;
-    private String googleServiceAccountClientEmail;
-    private String googleServiceAccountPrivateKeyId;
-    private String googleServiceAccountPrivateKey;
     private boolean usingBanner;
     private String bannerLink;
     private String bannerImageSrc;
-
-    private Map<String, String> sponsors;
 
     private JudgelsPlayProperties(String appName, String appVersion, Config config) {
         this.appName = appName;
@@ -80,48 +68,8 @@ public final class JudgelsPlayProperties {
         return canonicalUrl;
     }
 
-    public String getMetaKeywords() {
-        return metaKeywords;
-    }
-
-    public String getMetaDescription() {
-        return metaDescription;
-    }
-
     public String getGithubLink() {
         return githubLink;
-    }
-
-    public boolean isUsingGoogleAnalytics() {
-        return usingGoogleAnalytics;
-    }
-
-    public String getGoogleAnalyticsId() {
-        return googleAnalyticsId;
-    }
-
-    public String getGoogleAnalyticsViewId() {
-        return googleAnalyticsViewId;
-    }
-
-    public boolean isUsingGoogleServiceAccount() {
-        return usingGoogleServiceAccount;
-    }
-
-    public String getGoogleServiceAccountClientId() {
-        return googleServiceAccountClientId;
-    }
-
-    public String getGoogleServiceAccountClientEmail() {
-        return googleServiceAccountClientEmail;
-    }
-
-    public String getGoogleServiceAccountPrivateKeyId() {
-        return googleServiceAccountPrivateKeyId;
-    }
-
-    public String getGoogleServiceAccountPrivateKey() {
-        return googleServiceAccountPrivateKey;
     }
 
     public boolean isUsingBanner() {
@@ -136,29 +84,14 @@ public final class JudgelsPlayProperties {
         return bannerImageSrc;
     }
 
-    public Map<String, String> getSponsors() {
-        return sponsors;
-    }
-
     private void build() {
         this.appTitle = requireStringValue("general.title");
         this.appCopyright = requireStringValue("general.copyright");
         this.canonicalUrl = requireStringValue("general.canonicalUrl");
-        this.metaKeywords = requireStringValue("seo.metaKeywords");
-        this.metaDescription = requireStringValue("seo.metaDescription");
         this.githubLink = requireStringValue("general.githubUrl");
-        this.usingGoogleAnalytics = requireBooleanValue("google.analytics.use");
-        this.googleAnalyticsId = getStringValue("google.analytics.id");
-        this.googleAnalyticsViewId = getStringValue("google.analytics.viewId");
-        this.usingGoogleServiceAccount = requireBooleanValue("google.serviceAccount.use");
-        this.googleServiceAccountClientId = getStringValue("google.serviceAccount.clientId");
-        this.googleServiceAccountClientEmail = getStringValue("google.serviceAccount.clientEmail");
-        this.googleServiceAccountPrivateKeyId = getStringValue("google.serviceAccount.privateKeyId");
-        this.googleServiceAccountPrivateKey = getStringValue("google.serviceAccount.privateKey");
         this.usingBanner = requireBooleanValue("banner.use");
         this.bannerLink = getStringValue("banner.link");
         this.bannerImageSrc = getStringValue("banner.imageSrc");
-        this.sponsors = getMap("sponsors", String.class);
     }
 
     private String getStringValue(String key) {

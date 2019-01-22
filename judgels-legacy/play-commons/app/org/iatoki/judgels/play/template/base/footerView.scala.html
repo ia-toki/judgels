@@ -3,9 +3,8 @@
 @import play.i18n.Messages
 @import org.apache.commons.lang3.StringUtils
 @import org.iatoki.judgels.play.general.GeneralConfig
-@import org.iatoki.judgels.play.sponsor.SponsorConfig
 
-@(generalConfig: GeneralConfig, sponsorConfig: SponsorConfig)
+@(generalConfig: GeneralConfig)
 
 <footer>
     <div class="container">
@@ -19,16 +18,6 @@
                 <div class="pull-right first">
                     <div class="copyright">
                         @Messages.get("commons.poweredBy") <a href="@generalConfig.getGithubUrl" target="_blank">@Messages.get("commons.judgels") @StringUtils.capitalize(generalConfig.getName) @generalConfig.getVersion</a>.
-                        @if(sponsorConfig != null && !sponsorConfig.getSponsors.isEmpty()) {
-                            Sponsored by
-                            @for((name, index) <- sponsorConfig.getSponsors.keySet.zipWithIndex) {
-                                @if(index != 0) {
-                                    ,&nbsp;
-                                }
-                                <a href="@sponsorConfig.getSponsors.get(name)" target="_blank">@name</a>
-                            }
-                            .
-                        }
                     </div>
                 </div>
             </div>

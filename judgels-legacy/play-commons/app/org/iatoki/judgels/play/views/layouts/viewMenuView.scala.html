@@ -2,7 +2,6 @@
 @import play.i18n.Messages
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.play.JudgelsPlayProperties
-@import org.iatoki.judgels.play.GoogleAnalytics
 
 @()
 
@@ -19,11 +18,6 @@
         }
         @if(JudgelsPlayUtils.isFullscreen(Context.current().request())) {
             <a href="@org.iatoki.judgels.play.routes.JudgelsController.exitFullscreen()" class="btn btn-default btn-xs" data-toggle="tooltip" title="@Messages.get("commons.fullscreen.exit")"><span class="glyphicon glyphicon-resize-small"></span></a>
-        }
-        @if(JudgelsPlayProperties.getInstance().isUsingGoogleAnalytics && JudgelsPlayProperties.getInstance().isUsingGoogleServiceAccount) {
-            <div class="pull-right">
-                @Messages.get("commons.currentActiveUsers"): @GoogleAnalytics.getInstance().getRealtimeTotalUsers(JudgelsPlayProperties.getInstance().getGoogleAnalyticsViewId)
-            </div>
         }
     </div>
 </div>
