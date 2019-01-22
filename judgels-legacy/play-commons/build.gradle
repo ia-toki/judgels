@@ -26,6 +26,7 @@ dependencies {
     play 'mysql:mysql-connector-java:5.1.47'
     play 'org.apache.poi:poi:3.10-FINAL'
     play "org.hibernate:hibernate-entitymanager:$hibernateVersion"
+    play "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     play 'org.jsoup:jsoup:1.8.3'
     play 'org.seleniumhq.selenium:selenium-java:2.46.0'
     play 'org.springframework:spring-context:4.1.6.RELEASE'
