@@ -1,8 +1,11 @@
 apply from: '../gradle/play.gradle'
 
+apply plugin: 'org.iatoki.play-less'
+apply plugin: 'org.iatoki.play-webjars'
+
 model {
     tasks.runPlayBinary {
-        httpPort 9002
+        httpPort 9005
     }
 }
 

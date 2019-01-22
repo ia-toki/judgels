@@ -1,5 +1,7 @@
 apply from: '../gradle/play.gradle'
 
+apply plugin: 'org.iatoki.play-webjars'
+
 dependencies {
     play project(':commons')
 
