@@ -3,6 +3,7 @@ package judgels.sandalphon.api.submission;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.gabriel.api.GradingResultDetails;
+import judgels.gabriel.api.Verdict;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -10,7 +11,7 @@ import org.immutables.value.Value;
 public interface Grading {
     long getId();
     String getJid();
-    String getVerdict();
+    Verdict getVerdict();
     int getScore();
     Optional<GradingResultDetails> getDetails();
 

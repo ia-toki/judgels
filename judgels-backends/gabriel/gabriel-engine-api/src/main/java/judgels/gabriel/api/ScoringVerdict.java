@@ -3,37 +3,22 @@ package judgels.gabriel.api;
 public enum ScoringVerdict implements NormalVerdict {
     ACCEPTED {
         @Override
-        public String getCode() {
-            return "AC";
-        }
-
-        @Override
-        public String getName() {
-            return "Accepted";
+        public Verdict getVerdict() {
+            return Verdicts.ACCEPTED;
         }
     },
 
     OK {
         @Override
-        public String getCode() {
-            return "OK";
-        }
-
-        @Override
-        public String getName() {
-            return "OK";
+        public Verdict getVerdict() {
+            return Verdicts.OK;
         }
     },
 
     WRONG_ANSWER {
         @Override
-        public String getCode() {
-            return "WA";
-        }
-
-        @Override
-        public String getName() {
-            return "Wrong Answer";
+        public Verdict getVerdict() {
+            return Verdicts.WRONG_ANSWER;
         }
     }
 }

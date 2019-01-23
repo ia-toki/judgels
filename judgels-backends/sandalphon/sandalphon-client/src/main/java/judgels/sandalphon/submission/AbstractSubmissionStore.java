@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import judgels.gabriel.api.GradingResultDetails;
+import judgels.gabriel.api.Verdict;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
@@ -146,7 +147,7 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         Grading.Builder grading = new Grading.Builder()
                 .id(model.id)
                 .jid(model.jid)
-                .verdict(parseVerdictCode(model.verdictCode, model.verdictName))
+                .verdict(normalizeVerdict(model.verdictCode, model.verdictName))
                 .score(model.score);
 
         if (model.details != null) {
@@ -171,14 +172,15 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         return Optional.of(grading.build());
     }
 
-    // TODO(fushar): this is a workaround to parse the worst subtask verdict in a subtasked problem.
-    // We should refactor this, by updating Gabriel.
-    private static String parseVerdictCode(String code, String name) {
+    // Previously, we had OK verdicts with name e.g. "OK (worst: TLE)".
+    // These verdicts have been confusing, so in the new version, we replace it to just e.g. TLE.
+    // TODO(fushar): Remove this "worst" feature completely, by updating Gabriel grading logic.
+    private static Verdict normalizeVerdict(String code, String name) {
         Pattern pattern = Pattern.compile("^.*\\(worst: (.*)\\)$");
         Matcher matcher = pattern.matcher(name);
         if (matcher.matches()) {
-            return matcher.group(1);
+            return Verdict.of(matcher.group(1), "");
         }
-        return code;
+        return Verdict.of(code, name);
     }
 }

@@ -3,25 +3,15 @@ package judgels.gabriel.api;
 public enum CompilationVerdict implements EngineVerdict {
     OK {
         @Override
-        public String getCode() {
-            return "OK";
-        }
-
-        @Override
-        public String getName() {
-            return "OK";
+        public Verdict getVerdict() {
+            return Verdicts.OK;
         }
     },
 
     COMPILATION_ERROR {
         @Override
-        public String getCode() {
-            return "CE";
-        }
-
-        @Override
-        public String getName() {
-            return "Compilation Error";
+        public Verdict getVerdict() {
+            return Verdicts.COMPILATION_ERROR;
         }
     }
 }

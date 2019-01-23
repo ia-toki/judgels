@@ -44,7 +44,7 @@ export interface GradingResultDetails {
 export interface Grading {
   id: number;
   jid: string;
-  verdict: string;
+  verdict: Verdict;
   score: number;
   details?: GradingResultDetails;
 }

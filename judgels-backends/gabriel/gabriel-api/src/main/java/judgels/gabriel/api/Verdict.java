@@ -9,5 +9,7 @@ public interface Verdict {
     String getCode();
     String getName();
 
-    class Builder extends ImmutableVerdict.Builder {}
+    static Verdict of(String code, String name) {
+        return ImmutableVerdict.builder().code(code).name(name).build();
+    }
 }

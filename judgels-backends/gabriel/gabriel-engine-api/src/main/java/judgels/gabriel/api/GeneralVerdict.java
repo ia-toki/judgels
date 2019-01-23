@@ -3,25 +3,15 @@ package judgels.gabriel.api;
 public enum GeneralVerdict implements EngineVerdict {
     PENDING {
         @Override
-        public String getCode() {
-            return "?";
-        }
-
-        @Override
-        public String getName() {
-            return "Pending";
+        public Verdict getVerdict() {
+            return Verdicts.PENDING;
         }
     },
 
     INTERNAL_ERROR {
         @Override
-        public String getCode() {
-            return "!!!";
-        }
-
-        @Override
-        public String getName() {
-            return "Internal Error";
+        public Verdict getVerdict() {
+            return Verdicts.INTERNAL_ERROR;
         }
     }
 }

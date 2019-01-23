@@ -100,7 +100,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
               </tr>
               <tr>
                 <td>Verdict</td>
-                <td>{grading && <VerdictTag verdictCode={grading.verdict} />}</td>
+                <td>{grading && <VerdictTag verdictCode={grading.verdict.code} />}</td>
               </tr>
               <tr>
                 <td>Score</td>
