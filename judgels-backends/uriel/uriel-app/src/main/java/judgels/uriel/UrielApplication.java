@@ -75,7 +75,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         JudgelsApplicationUtils.scheduleJobWithFixedDelay(
                 component.contestScoreboardUpdaterDispatcher(),
                 env,
-                Duration.ofSeconds(0),
-                Duration.ofSeconds(3));
+                Duration.ofSeconds(5),
+                Duration.ofSeconds(20));
     }
 }
