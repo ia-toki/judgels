@@ -84,7 +84,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
                 });
     }
 
-    public void refreshScoreboard(Optional<AuthHeader> authHeader, String contestJid) {
+    public void refreshScoreboard(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canSupervise(actorJid, contest));
