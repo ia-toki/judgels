@@ -79,7 +79,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 }
 
                 if (!submission.getLatestGrading().isPresent()
-                        || submission.getLatestGrading().get().getVerdict().equals(Submission.PENDING)) {
+                        || submission.getLatestGrading().get().getVerdict().equals(Grading.PENDING)) {
                     continue;
                 }
 

@@ -88,7 +88,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-1")
                                     .score(78)
-                                    .verdict(Submission.TIME_LIMIT)
+                                    .verdict(Grading.TIME_LIMIT)
                                     .build())
                             .build(),
                     new Submission.Builder()
@@ -104,7 +104,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-2")
                                     .score(50)
-                                    .verdict(Submission.OK)
+                                    .verdict(Grading.OK)
                                     .build())
                             .build()
             );
@@ -162,7 +162,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-1")
                                     .score(50)
-                                    .verdict(Submission.TIME_LIMIT)
+                                    .verdict(Grading.TIME_LIMIT)
                                     .build())
                             .build(),
                     new Submission.Builder()
@@ -178,7 +178,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-2")
                                     .score(50)
-                                    .verdict(Submission.OK)
+                                    .verdict(Grading.OK)
                                     .build())
                             .build()
             );

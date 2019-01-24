@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
@@ -63,7 +64,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
         Map<String, String> firstSolveId = new HashMap<>();
         mutableSubmissionList.stream()
                 .filter(s -> s.getLatestGrading().isPresent()
-                        && s.getLatestGrading().get().getVerdict().equals(Submission.ACCEPTED)
+                        && s.getLatestGrading().get().getVerdict().equals(Grading.ACCEPTED)
                         && contestantJids.contains(s.getUserJid()))
                 .forEach(s -> firstSolveId.putIfAbsent(s.getProblemJid(), s.getJid()));
 
@@ -92,7 +93,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                 }
 
                 if (!submission.getLatestGrading().isPresent()
-                        || submission.getLatestGrading().get().getVerdict().equals(Submission.PENDING)) {
+                        || submission.getLatestGrading().get().getVerdict().equals(Grading.PENDING)) {
                     continue;
                 }
 
@@ -104,7 +105,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                         contest.getBeginTime());
                 penaltyMap.put(submission.getProblemJid(), convertPenaltyToMinutes(submissionPenalty));
 
-                if (submission.getLatestGrading().get().getVerdict().equals(Submission.ACCEPTED)) {
+                if (submission.getLatestGrading().get().getVerdict().equals(Grading.ACCEPTED)) {
                     if (firstSolveId.get(submission.getProblemJid()).equals(submission.getJid())) {
                         stateMap.put(
                                 submission.getProblemJid(),

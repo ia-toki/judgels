@@ -111,8 +111,8 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
     public String createGrading(Submission submission) {
         GM model = gradingDao.createGradingModel();
         model.submissionJid = submission.getJid();
-        model.verdictCode = "?";
-        model.verdictName = "Pending";
+        model.verdictCode = Grading.PENDING.getCode();
+        model.verdictName = Grading.PENDING.getName();
         model.score = 0;
 
         return gradingDao.insert(model).jid;
