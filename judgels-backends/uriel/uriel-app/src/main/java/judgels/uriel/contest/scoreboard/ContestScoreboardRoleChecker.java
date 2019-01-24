@@ -1,12 +1,14 @@
 package judgels.uriel.contest.scoreboard;
 
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
+import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.SCOREBOARD;
 
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.ContestRoleDao;
 
 public class ContestScoreboardRoleChecker {
@@ -15,6 +17,7 @@ public class ContestScoreboardRoleChecker {
     private final ContestTimer contestTimer;
     private final ContestScoreboardStore scoreboardStore;
     private final ContestProblemStore problemStore;
+    private final ContestSupervisorStore supervisorStore;
 
     @Inject
     public ContestScoreboardRoleChecker(
@@ -22,13 +25,15 @@ public class ContestScoreboardRoleChecker {
             ContestRoleDao contestRoleDao,
             ContestTimer contestTimer,
             ContestScoreboardStore scoreboardStore,
-            ContestProblemStore problemStore) {
+            ContestProblemStore problemStore,
+            ContestSupervisorStore supervisorStore) {
 
         this.contestRoleChecker = contestRoleChecker;
         this.contestTimer = contestTimer;
         this.contestRoleDao = contestRoleDao;
         this.scoreboardStore = scoreboardStore;
         this.problemStore = problemStore;
+        this.supervisorStore = supervisorStore;
     }
 
     public boolean canViewDefault(String userJid, Contest contest) {
@@ -48,5 +53,11 @@ public class ContestScoreboardRoleChecker {
 
     public boolean canSupervise(String userJid, Contest contest) {
         return contestRoleChecker.canSupervise(userJid, contest);
+    }
+
+    public boolean canManage(String userJid, Contest contest) {
+        return contestRoleChecker.canManage(userJid, contest)
+                || supervisorStore.isSupervisorWithManagementPermission(contest.getJid(), userJid, SCOREBOARD);
+
     }
 }
