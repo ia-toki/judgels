@@ -23,7 +23,7 @@ import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessorRegistry;
 import judgels.uriel.contest.submission.ContestSubmissionStore;
 
-public class ContestScoreboardUpdater implements Runnable, Cloneable {
+public class ContestScoreboardUpdater {
     private final ObjectMapper objectMapper;
     private final ContestScoreboardStore scoreboardStore;
     private final ContestModuleStore moduleStore;
@@ -31,8 +31,6 @@ public class ContestScoreboardUpdater implements Runnable, Cloneable {
     private final ContestProblemStore problemStore;
     private final ContestSubmissionStore submissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
-
-    private Contest contest;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -51,18 +49,8 @@ public class ContestScoreboardUpdater implements Runnable, Cloneable {
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
     }
 
-    public ContestScoreboardUpdater initJob(Contest newContest) throws CloneNotSupportedException {
-        return ((ContestScoreboardUpdater) this.clone()).setContest(newContest);
-    }
-
-    public ContestScoreboardUpdater setContest(Contest contest) {
-        this.contest = contest;
-        return this;
-    }
-
-    @Override
     @UnitOfWork
-    public void run() {
+    public void update(Contest contest) {
         ContestModulesConfig contestModulesConfig = moduleStore.getConfig(contest.getJid(), contest.getStyle());
 
         List<String> problemJids = problemStore.getProblemJids(contest.getJid());
@@ -86,6 +74,7 @@ public class ContestScoreboardUpdater implements Runnable, Cloneable {
                 Optional.empty())
                 .getPage();
         generateAndUpsertScoreboard(
+                contest,
                 scoreboardState,
                 contestModulesConfig,
                 contestantStartTimesMap,
@@ -100,6 +89,7 @@ public class ContestScoreboardUpdater implements Runnable, Cloneable {
                     .filter(s -> s.getTime().isBefore(freezeTime))
                     .collect(Collectors.toList());
             generateAndUpsertScoreboard(
+                    contest,
                     scoreboardState,
                     contestModulesConfig,
                     contestantStartTimesMap,
@@ -109,6 +99,7 @@ public class ContestScoreboardUpdater implements Runnable, Cloneable {
     }
 
     private void generateAndUpsertScoreboard(
+            Contest contest,
             ScoreboardState scoreboardState,
             ContestModulesConfig contestModulesConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,

@@ -40,12 +40,8 @@ public class ContestScoreboardUpdaterDispatcher implements Runnable {
     public synchronized void updateAsync(Contest contest) {
         if (!UPDATER_JIDS.contains(contest.getJid())) {
             UPDATER_JIDS.add(contest.getJid());
-            try {
-                CompletableFuture.runAsync(scoreboardUpdater.initJob(contest), executorService)
-                        .thenRun(() -> removeUpdater(contest));
-            } catch (CloneNotSupportedException c) {
-                throw new RuntimeException(c.getMessage());
-            }
+            CompletableFuture.runAsync(() -> scoreboardUpdater.update(contest), executorService)
+                    .thenRun(() -> removeUpdater(contest));
         }
     }
 
