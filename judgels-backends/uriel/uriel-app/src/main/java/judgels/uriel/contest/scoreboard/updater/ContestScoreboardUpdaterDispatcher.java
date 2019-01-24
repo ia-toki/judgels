@@ -17,15 +17,15 @@ public class ContestScoreboardUpdaterDispatcher implements Runnable {
 
     private final ContestStore contestStore;
     private final ExecutorService executorService;
-    private final ContestScoreboardUpdater contestScoreboardUpdater;
+    private final ContestScoreboardUpdater scoreboardUpdater;
 
     public ContestScoreboardUpdaterDispatcher(
             ContestStore contestStore,
             ExecutorService executorService,
-            ContestScoreboardUpdater contestScoreboardUpdater) {
+            ContestScoreboardUpdater scoreboardUpdater) {
         this.contestStore = contestStore;
         this.executorService = executorService;
-        this.contestScoreboardUpdater = contestScoreboardUpdater;
+        this.scoreboardUpdater = scoreboardUpdater;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ContestScoreboardUpdaterDispatcher implements Runnable {
         if (!UPDATER_JIDS.contains(contest.getJid())) {
             UPDATER_JIDS.add(contest.getJid());
             try {
-                CompletableFuture.runAsync(contestScoreboardUpdater.initJob(contest), executorService)
+                CompletableFuture.runAsync(scoreboardUpdater.initJob(contest), executorService)
                         .thenRun(() -> removeUpdater(contest));
             } catch (CloneNotSupportedException c) {
                 throw new RuntimeException(c.getMessage());

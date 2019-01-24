@@ -25,7 +25,7 @@ public class ContestScoreboardUpdaterModule {
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             LifecycleEnvironment lifecycleEnvironment,
             ContestStore contestStore,
-            ContestScoreboardUpdater contestScoreboardUpdater) {
+            ContestScoreboardUpdater scoreboardUpdater) {
 
         ExecutorService executorService =
                 lifecycleEnvironment.executorService(ContestScoreboardUpdater.class.getName() + "-%d")
@@ -36,18 +36,18 @@ public class ContestScoreboardUpdaterModule {
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardUpdaterDispatcher.class,
                 new Class<?>[] {ContestStore.class, ExecutorService.class, ContestScoreboardUpdater.class},
-                new Object[] {contestStore, executorService, contestScoreboardUpdater});
+                new Object[] {contestStore, executorService, scoreboardUpdater});
     }
 
     @Provides
     static ContestScoreboardUpdater contestScoreboardUpdater(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper objectMapper,
-            ContestScoreboardStore contestScoreboardStore,
-            ContestModuleStore contestModuleStore,
-            ContestContestantStore contestContestantStore,
-            ContestProblemStore contestProblemStore,
-            ContestSubmissionStore contestSubmissionStore,
+            ContestScoreboardStore scoreboardStore,
+            ContestModuleStore moduleStore,
+            ContestContestantStore contestantStore,
+            ContestProblemStore problemStore,
+            ContestSubmissionStore submissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -55,7 +55,7 @@ public class ContestScoreboardUpdaterModule {
                 new Class<?>[] {ObjectMapper.class, ContestScoreboardStore.class, ContestModuleStore.class,
                                 ContestContestantStore.class, ContestProblemStore.class, ContestSubmissionStore.class,
                                 ScoreboardProcessorRegistry.class},
-                new Object[] {objectMapper, contestScoreboardStore, contestModuleStore, contestContestantStore,
-                              contestProblemStore, contestSubmissionStore, scoreboardProcessorRegistry});
+                new Object[] {objectMapper, scoreboardStore, moduleStore, contestantStore,
+                              problemStore, submissionStore, scoreboardProcessorRegistry});
     }
 }

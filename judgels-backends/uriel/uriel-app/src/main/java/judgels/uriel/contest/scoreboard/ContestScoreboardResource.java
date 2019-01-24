@@ -25,7 +25,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private final ContestStore contestStore;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestScoreboardFetcher scoreboardFetcher;
-    private final ContestScoreboardUpdaterDispatcher contestScoreboardUpdaterDispatcher;
+    private final ContestScoreboardUpdaterDispatcher scoreboardUpdaterDispatcher;
     private final ProfileService profileService;
 
     @Inject
@@ -34,14 +34,14 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             ContestStore contestStore,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestScoreboardFetcher scoreboardFetcher,
-            ContestScoreboardUpdaterDispatcher contestScoreboardUpdaterDispatcher,
+            ContestScoreboardUpdaterDispatcher scoreboardUpdaterDispatcher,
             ProfileService profileService) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
         this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.scoreboardFetcher = scoreboardFetcher;
-        this.contestScoreboardUpdaterDispatcher = contestScoreboardUpdaterDispatcher;
+        this.scoreboardUpdaterDispatcher = scoreboardUpdaterDispatcher;
         this.profileService = profileService;
     }
 
@@ -89,6 +89,6 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canSupervise(actorJid, contest));
 
-        contestScoreboardUpdaterDispatcher.updateAsync(contest);
+        scoreboardUpdaterDispatcher.updateAsync(contest);
     }
 }

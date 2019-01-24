@@ -25,29 +25,29 @@ import judgels.uriel.contest.submission.ContestSubmissionStore;
 
 public class ContestScoreboardUpdater implements Runnable, Cloneable {
     private final ObjectMapper objectMapper;
-    private final ContestScoreboardStore contestScoreboardStore;
-    private final ContestModuleStore contestModuleStore;
-    private final ContestContestantStore contestContestantStore;
-    private final ContestProblemStore contestProblemStore;
-    private final ContestSubmissionStore contestSubmissionStore;
+    private final ContestScoreboardStore scoreboardStore;
+    private final ContestModuleStore moduleStore;
+    private final ContestContestantStore contestantStore;
+    private final ContestProblemStore problemStore;
+    private final ContestSubmissionStore submissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
 
     private Contest contest;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
-            ContestScoreboardStore contestScoreboardStore,
-            ContestModuleStore contestModuleStore,
-            ContestContestantStore contestContestantStore,
-            ContestProblemStore contestProblemStore,
-            ContestSubmissionStore contestSubmissionStore,
+            ContestScoreboardStore scoreboardStore,
+            ContestModuleStore moduleStore,
+            ContestContestantStore contestantStore,
+            ContestProblemStore problemStore,
+            ContestSubmissionStore submissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry) {
         this.objectMapper = objectMapper;
-        this.contestScoreboardStore = contestScoreboardStore;
-        this.contestModuleStore = contestModuleStore;
-        this.contestContestantStore = contestContestantStore;
-        this.contestProblemStore = contestProblemStore;
-        this.contestSubmissionStore = contestSubmissionStore;
+        this.scoreboardStore = scoreboardStore;
+        this.moduleStore = moduleStore;
+        this.contestantStore = contestantStore;
+        this.problemStore = problemStore;
+        this.submissionStore = submissionStore;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
     }
 
@@ -63,11 +63,11 @@ public class ContestScoreboardUpdater implements Runnable, Cloneable {
     @Override
     @UnitOfWork
     public void run() {
-        ContestModulesConfig contestModulesConfig = contestModuleStore.getConfig(contest.getJid(), contest.getStyle());
+        ContestModulesConfig contestModulesConfig = moduleStore.getConfig(contest.getJid(), contest.getStyle());
 
-        List<String> problemJids = contestProblemStore.getProblemJids(contest.getJid());
-        Set<String> contestantJids = contestContestantStore.getApprovedContestantJids(contest.getJid());
-        Map<String, String> problemAliasesMap = contestProblemStore.getProblemAliasesByJids(
+        List<String> problemJids = problemStore.getProblemJids(contest.getJid());
+        Set<String> contestantJids = contestantStore.getApprovedContestantJids(contest.getJid());
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(
                 contest.getJid(),
                 new HashSet<>(problemJids));
         ScoreboardState scoreboardState = new ScoreboardState.Builder()
@@ -77,9 +77,9 @@ public class ContestScoreboardUpdater implements Runnable, Cloneable {
                 .build();
 
         Map<String, Optional<Instant>> contestantStartTimesMap =
-                contestContestantStore.getApprovedContestantStartTimes(contest.getJid());
+                contestantStore.getApprovedContestantStartTimes(contest.getJid());
 
-        List<Submission> submissions = contestSubmissionStore.getSubmissions(
+        List<Submission> submissions = submissionStore.getSubmissions(
                 contest.getJid(),
                 Optional.empty(),
                 Optional.empty(),
@@ -123,7 +123,7 @@ public class ContestScoreboardUpdater implements Runnable, Cloneable {
                         contestantStartTimesMap,
                         submissions);
 
-        contestScoreboardStore.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
+        scoreboardStore.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
                 .scoreboard(scoreboard)
                 .type(contestScoreboardType)
                 .build());
