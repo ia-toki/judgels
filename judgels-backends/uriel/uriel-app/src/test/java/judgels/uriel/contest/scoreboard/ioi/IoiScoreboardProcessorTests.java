@@ -23,9 +23,8 @@ import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
-import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
-import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
+import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
@@ -62,10 +61,7 @@ class IoiScoreboardProcessorTests {
                 .style(ContestStyle.IOI)
                 .build();
 
-        private ContestModulesConfig contestModulesConfig = new ContestModulesConfig.Builder()
-                .scoreboard(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(false).build())
-                .ioiStyle(new IoiStyleModuleConfig.Builder().build())
-                .build();
+        private StyleModuleConfig styleModulesConfig = new IoiStyleModuleConfig.Builder().build();
 
         private Map<String, Optional<Instant>> contestantStartTimesMap = ImmutableMap.of(
                 "c1", Optional.empty(),
@@ -119,7 +115,7 @@ class IoiScoreboardProcessorTests {
                     mapper,
                     state,
                     contest,
-                    contestModulesConfig,
+                    styleModulesConfig,
                     contestantStartTimesMap,
                     submissions);
 
@@ -193,7 +189,7 @@ class IoiScoreboardProcessorTests {
                         mapper,
                         state,
                         contest,
-                        contestModulesConfig,
+                        styleModulesConfig,
                         contestantStartTimesMap,
                         submissions);
 
@@ -236,7 +232,7 @@ class IoiScoreboardProcessorTests {
                         mapper,
                         state,
                         contest,
-                        contestModulesConfig,
+                        styleModulesConfig,
                         contestantStartTimesMap,
                         submissions);
 
@@ -307,16 +303,13 @@ class IoiScoreboardProcessorTests {
 
             @Test
             void sorted_without_last_affecting_penalty() throws JsonProcessingException {
-                contestModulesConfig = new ContestModulesConfig.Builder()
-                        .scoreboard(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(false).build())
-                        .ioiStyle(new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(false).build())
-                        .build();
+                styleModulesConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(false).build();
 
                 scoreboardProcessor.computeToString(
                         mapper,
                         state,
                         contest,
-                        contestModulesConfig,
+                        styleModulesConfig,
                         contestantStartTimesMap,
                         submissions);
 
@@ -349,16 +342,13 @@ class IoiScoreboardProcessorTests {
 
             @Test
             void sorted_with_last_affecting_penalty() throws JsonProcessingException {
-                contestModulesConfig = new ContestModulesConfig.Builder()
-                        .scoreboard(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(false).build())
-                        .ioiStyle(new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(true).build())
-                        .build();
+                styleModulesConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(true).build();
 
                 scoreboardProcessor.computeToString(
                         mapper,
                         state,
                         contest,
-                        contestModulesConfig,
+                        styleModulesConfig,
                         contestantStartTimesMap,
                         submissions);
 

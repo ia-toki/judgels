@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.module.ContestModulesConfig;
+import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 
@@ -18,7 +18,7 @@ public interface ScoreboardProcessor {
             ObjectMapper mapper,
             ScoreboardState scoreboardState,
             Contest contest,
-            ContestModulesConfig contestModulesConfig,
+            StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
             List<Submission> submissionList);
     Scoreboard filterContestantJids(Scoreboard scoreboard, Set<String> contestantJids);

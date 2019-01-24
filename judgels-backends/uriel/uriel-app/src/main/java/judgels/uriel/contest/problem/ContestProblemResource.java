@@ -167,7 +167,7 @@ public class ContestProblemResource implements ContestProblemService {
                 clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
 
         LanguageRestriction contestGradingLanguageRestriction =
-                moduleStore.getStyleModuleConfig(contestJid).getGradingLanguageRestriction();
+                moduleStore.getStyleModuleConfig(contestJid, contest.getStyle()).getGradingLanguageRestriction();
         LanguageRestriction problemGradingLanguageRestriction =
                 worksheet.getSubmissionConfig().getGradingLanguageRestriction();
         LanguageRestriction combinedGradingLanguageRestriction =

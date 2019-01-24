@@ -142,9 +142,12 @@ public class ContestModuleStore {
         upsertStyleConfig(contestJid, config);
     }
 
-    public StyleModuleConfig getStyleModuleConfig(String contestJid) {
-        return getStyleConfig(contestJid, StyleModuleConfig.class)
-                .orElse(new StyleModuleConfig.Builder().build());
+    public StyleModuleConfig getStyleModuleConfig(String contestJid, ContestStyle contestStyle) {
+        if (contestStyle == ContestStyle.IOI) {
+            return getIoiStyleModuleConfig(contestJid);
+        } else {
+            return getIcpcStyleModuleConfig(contestJid);
+        }
     }
 
     public IcpcStyleModuleConfig getIcpcStyleModuleConfig(String contestJid) {

@@ -17,8 +17,8 @@ import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
+import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
@@ -41,13 +41,13 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             ObjectMapper mapper,
             ScoreboardState scoreboardState,
             Contest contest,
-            ContestModulesConfig contestModulesConfig,
+            StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
             List<Submission> submissionList) {
-        if (!contestModulesConfig.getIoiStyle().isPresent()) {
-            throw new RuntimeException("IOI-style contest given but IoiStyleConfig not found");
+        if (!(styleModuleConfig instanceof IoiStyleModuleConfig)) {
+            throw new RuntimeException("IOI-style contest given but styleModuleConfig is not IOI");
         }
-        IoiStyleModuleConfig ioiStyleModuleConfig = contestModulesConfig.getIoiStyle().get();
+        IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
         Set<String> problemJidsSet = new HashSet<>(problemJids);

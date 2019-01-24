@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
+import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardEntry;
@@ -41,13 +41,13 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             ObjectMapper mapper,
             ScoreboardState scoreboardState,
             Contest contest,
-            ContestModulesConfig contestModulesConfig,
+            StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
             List<Submission> submissionList) {
-        if (!contestModulesConfig.getIcpcStyle().isPresent()) {
-            throw new RuntimeException("ICPC-style contest given but IcpcStyleConfig not found");
+        if (!(styleModuleConfig instanceof IcpcStyleModuleConfig)) {
+            throw new RuntimeException("ICPC-style contest given but styleModuleConfig is not ICPC");
         }
-        IcpcStyleModuleConfig icpcStyleModuleConfig = contestModulesConfig.getIcpcStyle().get();
+        IcpcStyleModuleConfig icpcStyleModuleConfig = (IcpcStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
         Set<String> problemJidsSet = new HashSet<>(problemJids);

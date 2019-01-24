@@ -21,9 +21,8 @@ import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
-import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
-import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
+import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardEntry;
@@ -61,12 +60,9 @@ class IcpcScoreboardProcessorTests {
                 .style(ContestStyle.ICPC)
                 .build();
 
-        private ContestModulesConfig contestModulesConfig = new ContestModulesConfig.Builder()
-                .scoreboard(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(false).build())
-                .icpcStyle(new IcpcStyleModuleConfig.Builder()
+        private StyleModuleConfig styleModuleConfig = new IcpcStyleModuleConfig.Builder()
                         .wrongSubmissionPenalty(1000)
-                        .build())
-                .build();
+                        .build();
 
         private Map<String, Optional<Instant>> contestantStartTimesMap = ImmutableMap.of(
                 "c1", Optional.empty(),
@@ -84,24 +80,8 @@ class IcpcScoreboardProcessorTests {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
+                            .id(300)
                             .jid("JIDS-1")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochSecond(900))
-                            .userJid("c2")
-                            .problemJid("p1")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-1")
-                                    .score(100)
-                                    .verdict(Verdicts.ACCEPTED)
-                                    .build())
-                            .build(),
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(1)
-                            .jid("JIDS-2")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
                             .time(Instant.ofEpochSecond(300))
@@ -116,7 +96,23 @@ class IcpcScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
+                            .id(360)
+                            .jid("JIDS-2")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(360))
+                            .userJid("c2")
+                            .problemJid("p2")
+                            .latestGrading(new Grading.Builder()
+                                    .id(3)
+                                    .jid("JIDG-4")
+                                    .score(100)
+                                    .verdict(Verdicts.ACCEPTED)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(400)
                             .jid("JIDS-3")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
@@ -132,16 +128,32 @@ class IcpcScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
+                            .id(410)
                             .jid("JIDS-4")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
-                            .time(Instant.ofEpochSecond(360))
-                            .userJid("c2")
+                            .time(Instant.ofEpochSecond(410))
+                            .userJid("c1")
                             .problemJid("p2")
                             .latestGrading(new Grading.Builder()
-                                    .id(3)
-                                    .jid("JIDG-4")
+                                    .id(2)
+                                    .jid("JIDG-3")
+                                    .score(100)
+                                    .verdict(Verdicts.ACCEPTED)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(900)
+                            .jid("JIDS-5")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(900))
+                            .userJid("c2")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-1")
                                     .score(100)
                                     .verdict(Verdicts.ACCEPTED)
                                     .build())
@@ -152,7 +164,7 @@ class IcpcScoreboardProcessorTests {
                     mapper,
                     state,
                     contest,
-                    contestModulesConfig,
+                    styleModuleConfig,
                     contestantStartTimesMap,
                     submissions);
 
@@ -175,14 +187,14 @@ class IcpcScoreboardProcessorTests {
                             .addEntries(new IcpcScoreboardEntry.Builder()
                                     .rank(2)
                                     .contestantJid("c1")
-                                    .totalAccepted(1)
-                                    .totalPenalties(4)
-                                    .lastAcceptedPenalty(240000)
-                                    .addAttemptsList(1, 1)
+                                    .totalAccepted(2)
+                                    .totalPenalties(1010)
+                                    .lastAcceptedPenalty(350000)
+                                    .addAttemptsList(1, 2)
                                     .addPenaltyList(4, 6)
                                     .addProblemStateList(
                                             IcpcScoreboardProblemState.FIRST_ACCEPTED,
-                                            IcpcScoreboardProblemState.NOT_ACCEPTED
+                                            IcpcScoreboardProblemState.ACCEPTED
                                     )
                                     .build())
                             .build())
@@ -232,7 +244,7 @@ class IcpcScoreboardProcessorTests {
                         mapper,
                         state,
                         contest,
-                        contestModulesConfig,
+                        styleModuleConfig,
                         contestantStartTimesMap,
                         submissions);
 
@@ -281,7 +293,7 @@ class IcpcScoreboardProcessorTests {
                         mapper,
                         state,
                         contest,
-                        contestModulesConfig,
+                        styleModuleConfig,
                         contestantStartTimesMap,
                         submissions);
 
@@ -326,23 +338,7 @@ class IcpcScoreboardProcessorTests {
                 List<Submission> submissions = ImmutableList.of(
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(1)
-                                .jid("JIDS-1")
-                                .gradingEngine("ENG")
-                                .gradingLanguage("ASM")
-                                .time(Instant.ofEpochSecond(900))
-                                .userJid("c2")
-                                .problemJid("p1")
-                                .latestGrading(new Grading.Builder()
-                                        .id(1)
-                                        .jid("JIDG-1")
-                                        .score(100)
-                                        .verdict(Verdicts.ACCEPTED)
-                                        .build())
-                                .build(),
-                        new Submission.Builder()
-                                .containerJid("JIDC")
-                                .id(1)
+                                .id(300)
                                 .jid("JIDS-2")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -358,7 +354,7 @@ class IcpcScoreboardProcessorTests {
                                 .build(),
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(1)
+                                .id(360)
                                 .jid("JIDS-4")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -371,6 +367,22 @@ class IcpcScoreboardProcessorTests {
                                         .score(100)
                                         .verdict(Verdicts.ACCEPTED)
                                         .build())
+                                .build(),
+                        new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(900)
+                                .jid("JIDS-1")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(900))
+                                .userJid("c2")
+                                .problemJid("p1")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-1")
+                                        .score(100)
+                                        .verdict(Verdicts.ACCEPTED)
+                                        .build())
                                 .build()
                 );
 
@@ -378,7 +390,7 @@ class IcpcScoreboardProcessorTests {
                         mapper,
                         state,
                         contest,
-                        contestModulesConfig,
+                        styleModuleConfig,
                         contestantStartTimesMap,
                         submissions);
 
@@ -456,7 +468,7 @@ class IcpcScoreboardProcessorTests {
                         mapper,
                         state,
                         contest,
-                        contestModulesConfig,
+                        styleModuleConfig,
                         contestantStartTimesMap,
                         submissions);
 
@@ -504,23 +516,7 @@ class IcpcScoreboardProcessorTests {
                 List<Submission> submissions = ImmutableList.of(
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(1)
-                                .jid("JIDS-1")
-                                .gradingEngine("ENG")
-                                .gradingLanguage("ASM")
-                                .time(Instant.ofEpochSecond(900))
-                                .userJid("c2")
-                                .problemJid("p1")
-                                .latestGrading(new Grading.Builder()
-                                        .id(1)
-                                        .jid("JIDG-1")
-                                        .score(100)
-                                        .verdict(Verdicts.ACCEPTED)
-                                        .build())
-                                .build(),
-                        new Submission.Builder()
-                                .containerJid("JIDC")
-                                .id(1)
+                                .id(660)
                                 .jid("JIDS-2")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -536,7 +532,23 @@ class IcpcScoreboardProcessorTests {
                                 .build(),
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(1)
+                                .id(900)
+                                .jid("JIDS-1")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(900))
+                                .userJid("c2")
+                                .problemJid("p1")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-1")
+                                        .score(100)
+                                        .verdict(Verdicts.ACCEPTED)
+                                        .build())
+                                .build(),
+                        new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(900)
                                 .jid("JIDS-3")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -556,7 +568,7 @@ class IcpcScoreboardProcessorTests {
                         mapper,
                         state,
                         contest,
-                        contestModulesConfig,
+                        styleModuleConfig,
                         contestantStartTimesMap,
                         submissions);
 

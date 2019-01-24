@@ -7,9 +7,10 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableIoiStyleModuleConfig.class)
-public interface IoiStyleModuleConfig {
+public interface IoiStyleModuleConfig extends StyleModuleConfig {
     @JsonProperty("languageRestriction")
     @Value.Default
+    @Override
     default LanguageRestriction getGradingLanguageRestriction() {
         return LanguageRestriction.noRestriction();
     }

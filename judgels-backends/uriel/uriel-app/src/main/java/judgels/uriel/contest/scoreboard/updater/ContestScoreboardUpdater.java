@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
+import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
@@ -56,6 +57,7 @@ public class ContestScoreboardUpdater {
     @UnitOfWork
     public void update(Contest contest) {
         ContestModulesConfig contestModulesConfig = moduleStore.getConfig(contest.getJid(), contest.getStyle());
+        StyleModuleConfig styleModuleConfig = moduleStore.getStyleModuleConfig(contest.getJid(), contest.getStyle());
 
         List<String> problemJids = problemStore.getProblemJids(contest.getJid());
         Set<String> contestantJids = contestantStore.getApprovedContestantJids(contest.getJid());
@@ -80,7 +82,7 @@ public class ContestScoreboardUpdater {
         generateAndUpsertScoreboard(
                 contest,
                 scoreboardState,
-                contestModulesConfig,
+                styleModuleConfig,
                 contestantStartTimesMap,
                 submissions,
                 ContestScoreboardType.OFFICIAL);
@@ -96,7 +98,7 @@ public class ContestScoreboardUpdater {
                 generateAndUpsertScoreboard(
                         contest,
                         scoreboardState,
-                        contestModulesConfig,
+                        styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
                         ContestScoreboardType.FROZEN);
@@ -107,7 +109,7 @@ public class ContestScoreboardUpdater {
     private void generateAndUpsertScoreboard(
             Contest contest,
             ScoreboardState scoreboardState,
-            ContestModulesConfig contestModulesConfig,
+            StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
             List<Submission> submissions,
             ContestScoreboardType contestScoreboardType) {
@@ -116,7 +118,7 @@ public class ContestScoreboardUpdater {
                         objectMapper,
                         scoreboardState,
                         contest,
-                        contestModulesConfig,
+                        styleModuleConfig,
                         contestantStartTimesMap,
                         submissions);
 
