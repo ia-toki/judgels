@@ -145,4 +145,37 @@ class ContestScoreboardRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
         assertThat(checker.canSupervise(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canSupervise(MANAGER, contestC)).isFalse();
     }
+
+    @Test
+    void manage() {
+        assertThat(checker.canManage(ADMIN, contestA)).isTrue();
+        assertThat(checker.canManage(ADMIN, contestAStarted)).isTrue();
+        assertThat(checker.canManage(ADMIN, contestB)).isTrue();
+        assertThat(checker.canManage(ADMIN, contestBStarted)).isTrue();
+        assertThat(checker.canManage(ADMIN, contestC)).isTrue();
+
+        assertThat(checker.canManage(USER, contestA)).isFalse();
+        assertThat(checker.canManage(USER, contestAStarted)).isFalse();
+        assertThat(checker.canManage(USER, contestB)).isFalse();
+        assertThat(checker.canManage(USER, contestBStarted)).isFalse();
+        assertThat(checker.canManage(USER, contestC)).isFalse();
+
+        assertThat(checker.canManage(CONTESTANT, contestA)).isFalse();
+        assertThat(checker.canManage(CONTESTANT, contestAStarted)).isFalse();
+        assertThat(checker.canManage(CONTESTANT, contestB)).isFalse();
+        assertThat(checker.canManage(CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canManage(CONTESTANT, contestC)).isFalse();
+
+        assertThat(checker.canManage(SUPERVISOR, contestA)).isFalse();
+        assertThat(checker.canManage(SUPERVISOR, contestAStarted)).isFalse();
+        assertThat(checker.canManage(SUPERVISOR, contestB)).isFalse();
+        assertThat(checker.canManage(SUPERVISOR, contestBStarted)).isFalse();
+        assertThat(checker.canManage(SUPERVISOR, contestC)).isFalse();
+
+        assertThat(checker.canManage(MANAGER, contestA)).isFalse();
+        assertThat(checker.canManage(MANAGER, contestAStarted)).isFalse();
+        assertThat(checker.canManage(MANAGER, contestB)).isTrue();
+        assertThat(checker.canManage(MANAGER, contestBStarted)).isTrue();
+        assertThat(checker.canManage(MANAGER, contestC)).isFalse();
+    }
 }

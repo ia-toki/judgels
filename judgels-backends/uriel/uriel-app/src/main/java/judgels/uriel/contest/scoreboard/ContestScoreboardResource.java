@@ -18,12 +18,14 @@ import judgels.uriel.api.contest.scoreboard.ContestScoreboardConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.scoreboard.updater.ContestScoreboardUpdaterDispatcher;
 
 public class ContestScoreboardResource implements ContestScoreboardService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestScoreboardFetcher scoreboardFetcher;
+    private final ContestScoreboardUpdaterDispatcher scoreboardUpdaterDispatcher;
     private final ProfileService profileService;
 
     @Inject
@@ -32,12 +34,14 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             ContestStore contestStore,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestScoreboardFetcher scoreboardFetcher,
+            ContestScoreboardUpdaterDispatcher scoreboardUpdaterDispatcher,
             ProfileService profileService) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
         this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.scoreboardFetcher = scoreboardFetcher;
+        this.scoreboardUpdaterDispatcher = scoreboardUpdaterDispatcher;
         this.profileService = profileService;
     }
 
@@ -78,5 +82,13 @@ public class ContestScoreboardResource implements ContestScoreboardService {
                             .config(config)
                             .build();
                 });
+    }
+
+    public void refreshScoreboard(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(scoreboardRoleChecker.canManage(actorJid, contest));
+
+        scoreboardUpdaterDispatcher.updateAsync(contest);
     }
 }

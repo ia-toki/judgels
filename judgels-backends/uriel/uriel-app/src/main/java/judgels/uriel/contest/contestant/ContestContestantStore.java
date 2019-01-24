@@ -8,6 +8,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.Lists;
 import java.time.Clock;
+import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -108,6 +110,14 @@ public class ContestContestantStore {
                 .stream()
                 .map(model -> model.userJid)
                 .collect(Collectors.toSet());
+    }
+
+    public Map<String, Optional<Instant>> getApprovedContestantStartTimes(String contestJid) {
+        return contestantDao.selectAllApprovedByContestJid(contestJid)
+                .stream()
+                .collect(Collectors.toMap(
+                        model -> model.userJid,
+                        model -> Optional.ofNullable(model.contestStartTime)));
     }
 
     private static void toModel(String contestJid, String userJid, ContestContestantModel model) {

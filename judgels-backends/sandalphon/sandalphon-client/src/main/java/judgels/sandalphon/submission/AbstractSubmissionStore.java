@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.Verdict;
+import judgels.gabriel.api.Verdicts;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
@@ -111,8 +112,8 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
     public String createGrading(Submission submission) {
         GM model = gradingDao.createGradingModel();
         model.submissionJid = submission.getJid();
-        model.verdictCode = "?";
-        model.verdictName = "Pending";
+        model.verdictCode = Verdicts.PENDING.getCode();
+        model.verdictName = Verdicts.PENDING.getName();
         model.score = 0;
 
         return gradingDao.insert(model).jid;

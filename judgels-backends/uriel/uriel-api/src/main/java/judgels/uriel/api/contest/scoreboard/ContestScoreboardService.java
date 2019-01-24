@@ -6,6 +6,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.Optional;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -22,4 +23,10 @@ public interface ContestScoreboardService {
             @PathParam("contestJid") String contestJid,
             @QueryParam("frozen") boolean frozen,
             @QueryParam("showClosedProblems") boolean showClosedProblems);
+
+    @POST
+    @Path("/refresh")
+    void refreshScoreboard(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid);
 }

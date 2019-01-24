@@ -227,7 +227,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         long totalSubmissions = submissionStore.getTotalSubmissions(contestJid, actorJid, problemJid);
         checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, totalSubmissions));
 
-        StyleModuleConfig styleConfig = moduleStore.getStyleModuleConfig(contestJid);
+        StyleModuleConfig styleConfig = moduleStore.getStyleModuleConfig(contestJid, contest.getStyle());
         LanguageRestriction contestGradingLanguageRestriction = styleConfig.getGradingLanguageRestriction();
 
         SubmissionData data = new SubmissionData.Builder()

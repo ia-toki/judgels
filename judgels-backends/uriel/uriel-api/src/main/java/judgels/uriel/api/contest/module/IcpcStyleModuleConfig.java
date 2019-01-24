@@ -7,9 +7,10 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableIcpcStyleModuleConfig.class)
-public interface IcpcStyleModuleConfig {
+public interface IcpcStyleModuleConfig extends StyleModuleConfig {
     @JsonProperty("languageRestriction")
     @Value.Default
+    @Override
     default LanguageRestriction getGradingLanguageRestriction() {
         return LanguageRestriction.noRestriction();
     }
