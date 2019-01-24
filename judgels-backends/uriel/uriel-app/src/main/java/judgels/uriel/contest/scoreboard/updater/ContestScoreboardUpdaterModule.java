@@ -5,6 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
+import java.util.concurrent.ExecutorService;
 import javax.inject.Singleton;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
@@ -26,10 +27,16 @@ public class ContestScoreboardUpdaterModule {
             ContestStore contestStore,
             ContestScoreboardUpdater contestScoreboardUpdater) {
 
+        ExecutorService executorService =
+                lifecycleEnvironment.executorService(ContestScoreboardUpdater.class.getName() + "-%d")
+                        .maxThreads(ContestScoreboardUpdaterDispatcher.THREAD_NUMBER)
+                        .minThreads(ContestScoreboardUpdaterDispatcher.THREAD_NUMBER)
+                        .build();
+
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardUpdaterDispatcher.class,
-                new Class<?>[] {LifecycleEnvironment.class, ContestStore.class, ContestScoreboardUpdater.class},
-                new Object[] {lifecycleEnvironment, contestStore, contestScoreboardUpdater});
+                new Class<?>[] {ContestStore.class, ExecutorService.class, ContestScoreboardUpdater.class},
+                new Object[] {contestStore, executorService, contestScoreboardUpdater});
     }
 
     @Provides

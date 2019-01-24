@@ -2,7 +2,6 @@ package judgels.uriel.contest.scoreboard.updater;
 
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
-import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -13,7 +12,7 @@ import judgels.uriel.contest.ContestStore;
 
 @Singleton
 public class ContestScoreboardUpdaterDispatcher implements Runnable {
-    private static final int THREAD_NUMBER = 5;
+    static final int THREAD_NUMBER = 5;
     private static final Set<String> UPDATER_JIDS = Sets.newHashSet();
 
     private final ContestStore contestStore;
@@ -21,14 +20,11 @@ public class ContestScoreboardUpdaterDispatcher implements Runnable {
     private final ContestScoreboardUpdater contestScoreboardUpdater;
 
     public ContestScoreboardUpdaterDispatcher(
-            LifecycleEnvironment lifecycleEnvironment,
             ContestStore contestStore,
+            ExecutorService executorService,
             ContestScoreboardUpdater contestScoreboardUpdater) {
         this.contestStore = contestStore;
-        this.executorService = lifecycleEnvironment.executorService(ContestScoreboardUpdater.class.getName() + "-%d")
-                .maxThreads(THREAD_NUMBER)
-                .minThreads(THREAD_NUMBER)
-                .build();
+        this.executorService = executorService;
         this.contestScoreboardUpdater = contestScoreboardUpdater;
     }
 
