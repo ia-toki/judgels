@@ -1,10 +1,11 @@
 package judgels.uriel.contest.scoreboard.updater;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class ContestScoreboardUpdater {
     private final ContestProblemStore problemStore;
     private final ContestSubmissionStore submissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
+    private final Clock clock;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -39,7 +41,8 @@ public class ContestScoreboardUpdater {
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
             ContestSubmissionStore submissionStore,
-            ScoreboardProcessorRegistry scoreboardProcessorRegistry) {
+            ScoreboardProcessorRegistry scoreboardProcessorRegistry,
+            Clock clock) {
         this.objectMapper = objectMapper;
         this.scoreboardStore = scoreboardStore;
         this.moduleStore = moduleStore;
@@ -47,6 +50,7 @@ public class ContestScoreboardUpdater {
         this.problemStore = problemStore;
         this.submissionStore = submissionStore;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
+        this.clock = clock;
     }
 
     @UnitOfWork
@@ -57,7 +61,7 @@ public class ContestScoreboardUpdater {
         Set<String> contestantJids = contestantStore.getApprovedContestantJids(contest.getJid());
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(
                 contest.getJid(),
-                new HashSet<>(problemJids));
+                ImmutableSet.copyOf(problemJids));
         ScoreboardState scoreboardState = new ScoreboardState.Builder()
                 .problemJids(problemJids)
                 .contestantJids(contestantJids)
@@ -84,17 +88,19 @@ public class ContestScoreboardUpdater {
         if (contestModulesConfig.getFrozenScoreboard().isPresent()) {
             Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get()
                     .getFreezeDurationBeforeEndTime();
-            Instant freezeTime = contest.getBeginTime().plus(contest.getDuration()).minus(freezeDuration);
-            submissions = submissions.stream()
-                    .filter(s -> s.getTime().isBefore(freezeTime))
-                    .collect(Collectors.toList());
-            generateAndUpsertScoreboard(
-                    contest,
-                    scoreboardState,
-                    contestModulesConfig,
-                    contestantStartTimesMap,
-                    submissions,
-                    ContestScoreboardType.FROZEN);
+            Instant freezeTime = contest.getEndTime().minus(freezeDuration);
+            if (clock.instant().isAfter(freezeTime)) {
+                submissions = submissions.stream()
+                        .filter(s -> s.getTime().isBefore(freezeTime))
+                        .collect(Collectors.toList());
+                generateAndUpsertScoreboard(
+                        contest,
+                        scoreboardState,
+                        contestModulesConfig,
+                        contestantStartTimesMap,
+                        submissions,
+                        ContestScoreboardType.FROZEN);
+            }
         }
     }
 
