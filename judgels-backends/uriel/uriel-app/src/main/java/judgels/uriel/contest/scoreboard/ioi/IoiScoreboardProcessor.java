@@ -97,7 +97,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             scoreboardEntryList.add(new IoiScoreboardEntry.Builder()
                     .rank(0)
                     .contestantJid(contestantJid)
-                    .addAllScores(scoresMap.keySet()
+                    .addAllScores(problemJids
                             .stream()
                             .map(scoresMap::get)
                             .collect(Collectors.toList()))

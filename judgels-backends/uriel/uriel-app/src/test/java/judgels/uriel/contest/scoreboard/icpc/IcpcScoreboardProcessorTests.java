@@ -43,7 +43,7 @@ class IcpcScoreboardProcessorTests {
     }
 
     @Nested
-    class computeToString {
+    class ComputeToString {
         private ScoreboardState state = new ScoreboardState.Builder()
                 .addContestantJids("c1", "c2")
                 .addProblemJids("p1", "p2")
@@ -72,6 +72,11 @@ class IcpcScoreboardProcessorTests {
                 "c2", Optional.of(Instant.ofEpochSecond(300)),
                 "c3", Optional.empty()
         );
+
+        @BeforeEach
+        void before() throws JsonProcessingException {
+            when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
+        }
 
         @Test
         void time_calculation() throws JsonProcessingException {
@@ -142,8 +147,6 @@ class IcpcScoreboardProcessorTests {
                             .build()
             );
 
-            when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
-
             scoreboardProcessor.computeToString(
                     mapper,
                     state,
@@ -183,6 +186,136 @@ class IcpcScoreboardProcessorTests {
                                     .build())
                             .build())
                     .build());
+        }
+
+        @Nested
+        class ProblemOrdering {
+            private List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(900))
+                            .userJid("c2")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-1")
+                                    .score(100)
+                                    .verdict(Grading.ACCEPTED)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-2")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(300))
+                            .userJid("c1")
+                            .problemJid("p2")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(100)
+                                    .verdict(Grading.ACCEPTED)
+                                    .build())
+                            .build()
+            );
+
+            @Test
+            void base_case() throws JsonProcessingException {
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        contestModulesConfig,
+                        contestantStartTimesMap,
+                        submissions);
+
+                verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                        .state(state)
+                        .content(new IcpcScoreboardContent.Builder()
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c1")
+                                        .totalAccepted(1)
+                                        .totalPenalties(4)
+                                        .lastAcceptedPenalty(240000)
+                                        .addAttemptsList(0, 1)
+                                        .addPenaltyList(0, 4)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED
+                                        )
+                                        .build())
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(2)
+                                        .contestantJid("c2")
+                                        .totalAccepted(1)
+                                        .totalPenalties(10)
+                                        .lastAcceptedPenalty(600000)
+                                        .addAttemptsList(1, 0)
+                                        .addPenaltyList(10, 0)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED,
+                                                IcpcScoreboardProblemState.NOT_ACCEPTED
+                                        )
+                                        .build())
+                                .build())
+                        .build());
+            }
+
+            @Test
+            void reversed_case() throws JsonProcessingException {
+                state = new ScoreboardState.Builder()
+                        .addContestantJids("c1", "c2")
+                        .addProblemJids("p2", "p1")
+                        .addProblemAliases("B", "A")
+                        .build();
+
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        contestModulesConfig,
+                        contestantStartTimesMap,
+                        submissions);
+
+                verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                        .state(state)
+                        .content(new IcpcScoreboardContent.Builder()
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c1")
+                                        .totalAccepted(1)
+                                        .totalPenalties(4)
+                                        .lastAcceptedPenalty(240000)
+                                        .addAttemptsList(1, 0)
+                                        .addPenaltyList(4, 0)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED,
+                                                IcpcScoreboardProblemState.NOT_ACCEPTED
+                                        )
+                                        .build())
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(2)
+                                        .contestantJid("c2")
+                                        .totalAccepted(1)
+                                        .totalPenalties(10)
+                                        .lastAcceptedPenalty(600000)
+                                        .addAttemptsList(0, 1)
+                                        .addPenaltyList(0, 10)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED
+                                        )
+                                        .build())
+                                .build())
+                        .build());
+            }
         }
 
         @Nested
@@ -239,8 +372,6 @@ class IcpcScoreboardProcessorTests {
                                         .build())
                                 .build()
                 );
-
-                when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
 
                 scoreboardProcessor.computeToString(
                         mapper,
@@ -319,8 +450,6 @@ class IcpcScoreboardProcessorTests {
                                         .build())
                                 .build()
                 );
-
-                when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
 
                 scoreboardProcessor.computeToString(
                         mapper,
@@ -421,8 +550,6 @@ class IcpcScoreboardProcessorTests {
                                         .build())
                                 .build()
                 );
-
-                when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
 
                 scoreboardProcessor.computeToString(
                         mapper,

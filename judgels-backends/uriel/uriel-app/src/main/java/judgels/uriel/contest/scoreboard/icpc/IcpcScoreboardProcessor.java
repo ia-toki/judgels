@@ -134,15 +134,15 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                                     + penaltyMap.get(p).intValue())
                             .sum())
                     .lastAcceptedPenalty((int) lastAcceptedPenalty)
-                    .addAllAttemptsList(attemptsMap.keySet()
+                    .addAllAttemptsList(problemJids
                             .stream()
                             .map(attemptsMap::get)
                             .collect(Collectors.toList()))
-                    .addAllPenaltyList(penaltyMap.keySet()
+                    .addAllPenaltyList(problemJids
                             .stream()
                             .map(penaltyMap::get)
                             .collect(Collectors.toList()))
-                    .addAllProblemStateList(stateMap.keySet()
+                    .addAllProblemStateList(problemJids
                             .stream()
                             .map(stateMap::get)
                             .collect(Collectors.toList()))

@@ -44,7 +44,7 @@ class IoiScoreboardProcessorTests {
     }
 
     @Nested
-    class computeToString {
+    class ComputeToString {
         private ScoreboardState state = new ScoreboardState.Builder()
                 .addContestantJids("c1", "c2")
                 .addProblemJids("p1", "p2")
@@ -71,6 +71,11 @@ class IoiScoreboardProcessorTests {
                 "c2", Optional.of(Instant.ofEpochMilli(10)),
                 "c3", Optional.empty()
         );
+
+        @BeforeEach
+        void before() throws JsonProcessingException {
+            when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
+        }
 
         @Test
         void time_calculation() throws JsonProcessingException {
@@ -109,8 +114,6 @@ class IoiScoreboardProcessorTests {
                             .build()
             );
 
-            when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
-
             scoreboardProcessor.computeToString(
                     mapper,
                     state,
@@ -144,6 +147,124 @@ class IoiScoreboardProcessorTests {
                                     .build())
                             .build())
                     .build());
+        }
+
+        @Nested
+        class ProblemOrdering {
+            private List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochMilli(20))
+                            .userJid("c2")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-1")
+                                    .score(50)
+                                    .verdict(Grading.TIME_LIMIT)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-2")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochMilli(20))
+                            .userJid("c1")
+                            .problemJid("p2")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(50)
+                                    .verdict(Grading.OK)
+                                    .build())
+                            .build()
+            );
+
+            @Test
+            void base_case() throws JsonProcessingException {
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        contestModulesConfig,
+                        contestantStartTimesMap,
+                        submissions);
+
+                verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
+                        .state(state)
+                        .content(new IoiScoreboardContent.Builder()
+                                .addEntries(new IoiScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c2")
+                                        .addScores(
+                                                Optional.of(50),
+                                                Optional.empty()
+                                        )
+                                        .totalScores(50)
+                                        .lastAffectingPenalty(10)
+                                        .build())
+                                .addEntries(new IoiScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c1")
+                                        .addScores(
+                                                Optional.empty(),
+                                                Optional.of(50)
+                                        )
+                                        .totalScores(50)
+                                        .lastAffectingPenalty(15)
+                                        .build())
+                                .build())
+                        .build());
+            }
+
+            @Test
+            void reversed_case() throws JsonProcessingException {
+                state = new ScoreboardState.Builder()
+                        .addContestantJids("c1", "c2")
+                        .addProblemJids("p2", "p1")
+                        .addProblemAliases("B", "A")
+                        .build();
+
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        contestModulesConfig,
+                        contestantStartTimesMap,
+                        submissions);
+
+                verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
+                        .state(state)
+                        .content(new IoiScoreboardContent.Builder()
+                                .addEntries(new IoiScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c2")
+                                        .addScores(
+                                                Optional.empty(),
+                                                Optional.of(50)
+                                        )
+                                        .totalScores(50)
+                                        .lastAffectingPenalty(10)
+                                        .build())
+                                .addEntries(new IoiScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c1")
+                                        .addScores(
+                                                Optional.of(50),
+                                                Optional.empty()
+                                        )
+                                        .totalScores(50)
+                                        .lastAffectingPenalty(15)
+                                        .build())
+                                .build())
+                        .build());
+            }
         }
 
         @Nested
@@ -182,11 +303,6 @@ class IoiScoreboardProcessorTests {
                                     .build())
                             .build()
             );
-
-            @BeforeEach
-            void before() throws JsonProcessingException {
-                when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
-            }
 
             @Test
             void sorted_without_last_affecting_penalty() throws JsonProcessingException {
