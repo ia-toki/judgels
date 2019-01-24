@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
@@ -93,7 +94,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-1")
                                     .score(78)
-                                    .verdict(Grading.TIME_LIMIT)
+                                    .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
                                     .build())
                             .build(),
                     new Submission.Builder()
@@ -109,7 +110,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-2")
                                     .score(50)
-                                    .verdict(Grading.OK)
+                                    .verdict(Verdicts.OK)
                                     .build())
                             .build()
             );
@@ -165,7 +166,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-1")
                                     .score(50)
-                                    .verdict(Grading.TIME_LIMIT)
+                                    .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
                                     .build())
                             .build(),
                     new Submission.Builder()
@@ -181,7 +182,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-2")
                                     .score(50)
-                                    .verdict(Grading.OK)
+                                    .verdict(Verdicts.OK)
                                     .build())
                             .build()
             );
@@ -283,7 +284,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-1")
                                     .score(50)
-                                    .verdict(Grading.TIME_LIMIT)
+                                    .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
                                     .build())
                             .build(),
                     new Submission.Builder()
@@ -299,7 +300,7 @@ class IoiScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-2")
                                     .score(50)
-                                    .verdict(Grading.OK)
+                                    .verdict(Verdicts.OK)
                                     .build())
                             .build()
             );

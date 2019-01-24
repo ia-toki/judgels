@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
@@ -94,7 +95,7 @@ class IcpcScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-1")
                                     .score(100)
-                                    .verdict(Grading.ACCEPTED)
+                                    .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
                     new Submission.Builder()
@@ -110,7 +111,7 @@ class IcpcScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-2")
                                     .score(100)
-                                    .verdict(Grading.ACCEPTED)
+                                    .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
                     new Submission.Builder()
@@ -126,7 +127,7 @@ class IcpcScoreboardProcessorTests {
                                     .id(2)
                                     .jid("JIDG-3")
                                     .score(0)
-                                    .verdict(Grading.TIME_LIMIT)
+                                    .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
                                     .build())
                             .build(),
                     new Submission.Builder()
@@ -142,7 +143,7 @@ class IcpcScoreboardProcessorTests {
                                     .id(3)
                                     .jid("JIDG-4")
                                     .score(100)
-                                    .verdict(Grading.ACCEPTED)
+                                    .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build()
             );
@@ -204,7 +205,7 @@ class IcpcScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-1")
                                     .score(100)
-                                    .verdict(Grading.ACCEPTED)
+                                    .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
                     new Submission.Builder()
@@ -220,7 +221,7 @@ class IcpcScoreboardProcessorTests {
                                     .id(1)
                                     .jid("JIDG-2")
                                     .score(100)
-                                    .verdict(Grading.ACCEPTED)
+                                    .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build()
             );
@@ -336,7 +337,7 @@ class IcpcScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-1")
                                         .score(100)
-                                        .verdict(Grading.ACCEPTED)
+                                        .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
                         new Submission.Builder()
@@ -352,7 +353,7 @@ class IcpcScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-2")
                                         .score(100)
-                                        .verdict(Grading.ACCEPTED)
+                                        .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
                         new Submission.Builder()
@@ -368,7 +369,7 @@ class IcpcScoreboardProcessorTests {
                                         .id(3)
                                         .jid("JIDG-4")
                                         .score(100)
-                                        .verdict(Grading.ACCEPTED)
+                                        .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build()
                 );
@@ -430,7 +431,7 @@ class IcpcScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-1")
                                         .score(100)
-                                        .verdict(Grading.ACCEPTED)
+                                        .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
                         new Submission.Builder()
@@ -446,7 +447,7 @@ class IcpcScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-2")
                                         .score(100)
-                                        .verdict(Grading.ACCEPTED)
+                                        .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build()
                 );
@@ -514,7 +515,7 @@ class IcpcScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-1")
                                         .score(100)
-                                        .verdict(Grading.ACCEPTED)
+                                        .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
                         new Submission.Builder()
@@ -530,7 +531,7 @@ class IcpcScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-2")
                                         .score(100)
-                                        .verdict(Grading.ACCEPTED)
+                                        .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
                         new Submission.Builder()
@@ -546,7 +547,7 @@ class IcpcScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-1")
                                         .score(100)
-                                        .verdict(Grading.ACCEPTED)
+                                        .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build()
                 );

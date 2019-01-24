@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
@@ -78,7 +78,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 }
 
                 if (!submission.getLatestGrading().isPresent()
-                        || submission.getLatestGrading().get().getVerdict().equals(Grading.PENDING)) {
+                        || submission.getLatestGrading().get().getVerdict().equals(Verdicts.PENDING)) {
                     continue;
                 }
 

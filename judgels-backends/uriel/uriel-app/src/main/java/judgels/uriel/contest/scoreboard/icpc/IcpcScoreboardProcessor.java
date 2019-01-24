@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import judgels.sandalphon.api.submission.Grading;
+import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
@@ -63,7 +63,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
         Map<String, String> firstSolveSubmissionJid = new HashMap<>();
         mutableSubmissionList.stream()
                 .filter(s -> s.getLatestGrading().isPresent()
-                        && s.getLatestGrading().get().getVerdict().equals(Grading.ACCEPTED)
+                        && s.getLatestGrading().get().getVerdict().equals(Verdicts.ACCEPTED)
                         && contestantJids.contains(s.getUserJid()))
                 .forEach(s -> firstSolveSubmissionJid.putIfAbsent(s.getProblemJid(), s.getJid()));
 
@@ -92,7 +92,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                 }
 
                 if (!submission.getLatestGrading().isPresent()
-                        || submission.getLatestGrading().get().getVerdict().equals(Grading.PENDING)) {
+                        || submission.getLatestGrading().get().getVerdict().equals(Verdicts.PENDING)) {
                     continue;
                 }
 
@@ -104,7 +104,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                         contest.getBeginTime());
                 penaltyMap.put(submission.getProblemJid(), convertPenaltyToMinutes(submissionPenalty));
 
-                if (submission.getLatestGrading().get().getVerdict().equals(Grading.ACCEPTED)) {
+                if (submission.getLatestGrading().get().getVerdict().equals(Verdicts.ACCEPTED)) {
                     if (firstSolveSubmissionJid.get(submission.getProblemJid()).equals(submission.getJid())) {
                         problemStateMap.put(
                                 submission.getProblemJid(),
