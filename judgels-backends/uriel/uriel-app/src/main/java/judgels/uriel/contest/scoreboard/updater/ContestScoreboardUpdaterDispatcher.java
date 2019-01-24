@@ -9,9 +9,13 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Singleton;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.contest.ContestStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class ContestScoreboardUpdaterDispatcher implements Runnable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContestScoreboardUpdaterDispatcher.class);
+
     static final int THREAD_NUMBER = 5;
     private static final Set<String> UPDATER_JIDS = Sets.newHashSet();
 
@@ -41,6 +45,10 @@ public class ContestScoreboardUpdaterDispatcher implements Runnable {
         if (!UPDATER_JIDS.contains(contest.getJid())) {
             UPDATER_JIDS.add(contest.getJid());
             CompletableFuture.runAsync(() -> scoreboardUpdater.update(contest), executorService)
+                    .exceptionally(e -> {
+                        LOGGER.error(e.getMessage());
+                        return null;
+                    })
                     .thenRun(() -> removeUpdater(contest));
         }
     }

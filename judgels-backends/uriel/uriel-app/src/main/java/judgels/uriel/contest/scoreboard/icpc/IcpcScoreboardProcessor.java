@@ -54,14 +54,13 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
         Set<String> contestantJids = scoreboardState.getContestantJids();
 
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
-        List<Submission> mutableSubmissionList = new ArrayList<>(submissionList);
-        mutableSubmissionList.forEach(s -> {
+        submissionList.forEach(s -> {
             submissionsMap.putIfAbsent(s.getUserJid(), new ArrayList<>());
             submissionsMap.get(s.getUserJid()).add(s);
         });
 
         Map<String, String> firstSolveSubmissionJid = new HashMap<>();
-        mutableSubmissionList.stream()
+        submissionList.stream()
                 .filter(s -> s.getLatestGrading().isPresent()
                         && s.getLatestGrading().get().getVerdict().equals(Verdicts.ACCEPTED)
                         && contestantJids.contains(s.getUserJid()))
