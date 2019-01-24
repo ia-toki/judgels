@@ -245,8 +245,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
     private Long computeLastAffectingPenalty(
             Instant submissionTime,
             Optional<Instant> contestantStartTime,
-            Instant contestStartTime) {
-        return contestantStartTime.map(instant -> submissionTime.toEpochMilli() - instant.toEpochMilli())
-                .orElseGet(() -> submissionTime.toEpochMilli() - contestStartTime.toEpochMilli());
+            Instant contestBeginTime) {
+        return submissionTime.toEpochMilli() - contestantStartTime.orElse(contestBeginTime).toEpochMilli();
     }
 }
