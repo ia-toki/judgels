@@ -56,7 +56,6 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
         contestantJids.forEach(c -> submissionsMap.put(c, new ArrayList<>()));
         List<Submission> mutableSubmissionList = new ArrayList<>(submissionList);
-        mutableSubmissionList.sort(Comparator.comparing(Submission::getTime));
         mutableSubmissionList.forEach(s -> {
             submissionsMap.putIfAbsent(s.getUserJid(), new ArrayList<>());
             submissionsMap.get(s.getUserJid()).add(s);

@@ -55,7 +55,6 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
 
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
         List<Submission> mutableSubmissionList = new ArrayList<>(submissionList);
-        mutableSubmissionList.sort(Comparator.comparing(Submission::getTime));
         mutableSubmissionList.forEach(s -> {
             submissionsMap.putIfAbsent(s.getUserJid(), new ArrayList<>());
             submissionsMap.get(s.getUserJid()).add(s);
