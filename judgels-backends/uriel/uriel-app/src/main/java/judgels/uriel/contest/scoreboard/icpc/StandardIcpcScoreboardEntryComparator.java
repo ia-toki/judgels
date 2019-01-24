@@ -12,6 +12,6 @@ public final class StandardIcpcScoreboardEntryComparator implements
 
     @Override
     public int compareWithTieBreakerForEqualRanks(IcpcScoreboardEntry entry1, IcpcScoreboardEntry entry2) {
-        return Integer.compare(entry1.getLastAcceptedPenalty(), entry2.getLastAcceptedPenalty());
+        return Long.compare(entry1.getLastAcceptedPenalty(), entry2.getLastAcceptedPenalty());
     }
 }

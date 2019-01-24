@@ -27,8 +27,8 @@ public interface IcpcScoreboard extends Scoreboard {
         int getRank();
         String getContestantJid();
         int getTotalAccepted();
-        int getTotalPenalties();
-        int getLastAcceptedPenalty();
+        long getTotalPenalties();
+        long getLastAcceptedPenalty();
         List<Integer> getAttemptsList();
         List<Long> getPenaltyList();
         List<IcpcScoreboardProblemState> getProblemStateList();
