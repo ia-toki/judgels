@@ -29,3 +29,7 @@ model {
         }
     }
 }
+
+configurations {
+    playRun.exclude group: "com.typesafe.play", module: "play-docs_2.11"
+}

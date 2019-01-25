@@ -8,7 +8,7 @@ dependencies {
     api "org.apache.httpcomponents:httpclient:4.5"
     api "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
     api "org.eclipse.jgit:org.eclipse.jgit:3.7.0.201502260915-r"
-    api ("com.amazonaws:aws-java-sdk:1.11.258") {
+    api ("com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version") {
         exclude group: "joda-time", module: "joda-time"
     }
 }

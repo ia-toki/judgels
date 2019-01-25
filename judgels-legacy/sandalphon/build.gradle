@@ -14,7 +14,5 @@ dependencies {
     play project(':jophiel-commons')
     play project(':sandalphon-blackbox-adapters')
 
-    play "com.ibm.icu:icu4j:55.1"
     play "org.webjars:prettify:4-Mar-2013"
-    play "com.warrenstrange:googleauth:0.4.3"
 }

@@ -13,7 +13,6 @@ dependencies {
         exclude group: 'org.hibernate.javax.persistence', module: 'hibernate-jpa-2.0-api'
     }
     play "com.typesafe.play:filters-helpers_${scalaVersion}:${playVersion}"
-    play "com.typesafe.play:play-cache_${scalaVersion}:${playVersion}"
     play "com.typesafe.play:play-jdbc-evolutions_${scalaVersion}:${playVersion}"
 
     play ("com.adrianhurt:play-bootstrap3_${scalaVersion}:0.4.4-P24") {
@@ -27,7 +26,6 @@ dependencies {
     play "org.hibernate:hibernate-entitymanager:$hibernateVersion"
     play "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     play 'org.jsoup:jsoup:1.8.3'
-    play 'org.seleniumhq.selenium:selenium-java:2.46.0'
     play 'org.springframework:spring-context:4.1.6.RELEASE'
     play ('org.webjars:bootstrap:3.3.4') {
         exclude group: 'org.webjars', module: 'jquery'
