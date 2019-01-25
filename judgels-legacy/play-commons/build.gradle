@@ -13,7 +13,6 @@ dependencies {
         exclude group: 'org.hibernate.javax.persistence', module: 'hibernate-jpa-2.0-api'
     }
     play "com.typesafe.play:filters-helpers_${scalaVersion}:${playVersion}"
-    play "com.typesafe.play:play-jdbc-evolutions_${scalaVersion}:${playVersion}"
 
     play ("com.adrianhurt:play-bootstrap3_${scalaVersion}:0.4.4-P24") {
         exclude group: 'org.webjars', module: 'jquery'
