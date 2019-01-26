@@ -35,4 +35,4 @@ deploy:
   provider: script
   script: python3 scripts/ci.py deploy | bash
   on:
-    branch: master
+    branch: deploy-sandalphon
