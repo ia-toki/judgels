@@ -1,0 +1,4 @@
+- hosts: sandalphon
+  gather_facts: false
+  roles:
+    - name: sandalphon-deploy

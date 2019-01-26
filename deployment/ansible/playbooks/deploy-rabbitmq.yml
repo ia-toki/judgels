@@ -1,4 +1,4 @@
-- hosts: messaging
+- hosts: sealtiel
   gather_facts: false
   roles:
     - name: rabbitmq-deploy

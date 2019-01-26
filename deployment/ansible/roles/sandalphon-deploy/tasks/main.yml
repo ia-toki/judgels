@@ -1,0 +1,35 @@
+- block:
+  - name: Create sandalphon container mount volume
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/sandalphon/var
+      - /judgels/sandalphon/var/conf
+      - /judgels/sandalphon/var/data
+
+  - name: Generate sandalphon config
+    template:
+      src: "{{ playbook_dir }}/../../../deployment-repo/conf/sandalphon.conf"
+      dest: /judgels/sandalphon/var/conf/sandalphon.conf
+
+  - name: Pull sandalphon image
+    docker_image:
+      name: judgels/sandalphon
+      tag: "{{ judgels_version | default('latest', true) }}"
+      force: yes
+
+  - name: Run a sandalphon container
+    docker_container:
+      name: sandalphon
+      image: "judgels/sandalphon:{{ judgels_version | default('latest', true) }}"
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/sandalphon/var:/judgels/sandalphon/var"
+      env:
+        PLAY_BINARY_OPTS: "-Dhttp.port=9002 -Dconfig.file=/judgels/sandalphon/var/conf/sandalphon.conf"
+  tags:
+    - sandalphon-deploy
