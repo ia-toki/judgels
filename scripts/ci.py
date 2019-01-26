@@ -63,6 +63,7 @@ PROJECTS = [
 
 SERVICES = [
     ':jophiel',
+    ':sandalphon'
     ':sealtiel',
     ':uriel',
     ':raphael'
@@ -95,6 +96,9 @@ def get_changed_modules(branch_to_compare):
     changed_modules = set()
     for module in MODULES.keys():
         for file in changed_files:
+            if 'judgels-legacy' + module.replace(':', '/') in file:
+                changed_modules.add(module)
+                break
             if 'judgels-backends' + module.replace(':', '/') in file:
                 changed_modules.add(module)
                 break
@@ -121,6 +125,8 @@ def check(branch_to_compare):
                     print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael lint')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
+            elif project == ':sandalphon':
+                print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
             else:
                 print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
 

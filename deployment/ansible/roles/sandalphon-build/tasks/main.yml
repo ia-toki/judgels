@@ -1,0 +1,20 @@
+- block:
+  - name: Build sandalphon image and push it to DockerHub
+    docker_image:
+      path: "{{ playbook_dir }}/../../../judgels-legacy/sandalphon"
+      name: judgels/sandalphon
+      force: yes
+      push: yes
+
+  - name: Tag sandalphon latest version
+    docker_image:
+      name: judgels/sandalphon:latest
+      repository: "judgels/sandalphon:{{ judgels_version }}"
+      force: yes
+      pull: no
+      push: yes
+      state: present
+    when: judgels_version is defined
+
+  tags:
+    - sandalphon-build
