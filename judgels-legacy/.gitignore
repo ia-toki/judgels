@@ -5,7 +5,7 @@ out/
 generated/
 generated_tests/
 
-data/
+var/
 
 .idea/
 *.iml
@@ -17,5 +17,3 @@ data/
 
 *.conf
 !*_default.conf
-
-application-log*
