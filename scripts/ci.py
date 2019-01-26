@@ -29,6 +29,11 @@ MODULES = OrderedDict([
     (':sealtiel:sealtiel-dist', set()),
     (':sealtiel', {':sealtiel:sealtiel-app', ':sealtiel:sealtiel-api', ':sealtiel:sealtiel-dist'}),
 
+    (':gabriel:gabriel-api', set()),
+    (':gabriel:gabriel-engine-api', {':gabriel:gabriel-api'}),
+    (':gabriel:gabriel-engines', {':gabriel:gabriel-engine-api'}),
+    (':gabriel', {':gabriel:gabriel-engines', ':gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
+
     (':sandalphon:sandalphon-api', {':jophiel:jophiel-api', ':gabriel:gabriel-api'}),
     (':sandalphon:sandalphon-client', {':sandalphon:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':sealtiel:sealtiel-api'}),
     (':sandalphon', {':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client'}),
@@ -37,11 +42,6 @@ MODULES = OrderedDict([
     (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':sealtiel:sealtiel-api'}),
     (':uriel:uriel-dist', set()),
     (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
-
-    (':gabriel:gabriel-api', set()),
-    (':gabriel:gabriel-engine-api', {':gabriel:gabriel-api'}),
-    (':gabriel:gabriel-engines', {':gabriel:gabriel-engine-api'}),
-    (':gabriel', {':gabriel:gabriel-engines', 'gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
 
     (':raphael:package.json', set()),
     (':raphael', {':raphael:package.json'})
