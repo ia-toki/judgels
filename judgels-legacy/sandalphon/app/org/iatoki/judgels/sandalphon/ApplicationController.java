@@ -19,7 +19,6 @@ import java.net.URLEncoder;
 
 @Singleton
 public final class ApplicationController extends AbstractJudgelsController {
-
     private final UserService userService;
 
     @Inject
