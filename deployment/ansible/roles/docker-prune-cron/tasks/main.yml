@@ -3,7 +3,7 @@
     cron:
       name: Prune docker system
       weekday: 1
-      job: docker system prune -f
+      job: docker system prune -a -f
       user: root
       cron_file: docker-prune
 
