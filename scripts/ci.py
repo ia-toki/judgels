@@ -80,7 +80,6 @@ SERVICES = [
     ':sandalphon',
     ':sealtiel',
     ':uriel',
-    ':jerahmeel',
     ':raphael'
 ]
 
