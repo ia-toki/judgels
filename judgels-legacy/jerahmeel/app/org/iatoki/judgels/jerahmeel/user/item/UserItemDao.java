@@ -1,12 +1,12 @@
 package org.iatoki.judgels.jerahmeel.user.item;
 
 import com.google.inject.ImplementedBy;
-import org.iatoki.judgels.play.model.Dao;
+import judgels.persistence.Dao;
 
 import java.util.List;
 
 @ImplementedBy(UserItemHibernateDao.class)
-public interface UserItemDao extends Dao<Long, UserItemModel> {
+public interface UserItemDao extends Dao<UserItemModel> {
 
     boolean existsByUserJidAndItemJid(String userJid, String itemJid);
 

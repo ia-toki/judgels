@@ -40,7 +40,7 @@ public final class ProgrammingSubmissionServiceImpl extends AbstractProgrammingS
         ProgrammingGradingModel programmingGradingModel = programmingGradingDao.findByJid(gradingJid);
         ProgrammingSubmissionModel programmingSubmissionModel = programmingSubmissionDao.findByJid(programmingGradingModel.submissionJid);
 
-        String userJid = programmingSubmissionModel.userCreate;
+        String userJid = programmingSubmissionModel.createdBy;
         String containerJid = programmingSubmissionModel.containerJid;
         String problemJid = programmingSubmissionModel.problemJid;
 

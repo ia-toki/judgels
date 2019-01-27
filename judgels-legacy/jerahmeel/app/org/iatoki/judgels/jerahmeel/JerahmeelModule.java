@@ -6,7 +6,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.util.Providers;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import judgels.persistence.ActorProvider;
 import judgels.service.JudgelsVersion;
+import org.hibernate.SessionFactory;
 import org.iatoki.judgels.AWSFileSystemProvider;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
@@ -25,10 +27,14 @@ import org.iatoki.judgels.play.JudgelsPlayProperties;
 import org.iatoki.judgels.play.general.GeneralName;
 import org.iatoki.judgels.play.general.GeneralVersion;
 import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
+import org.iatoki.judgels.play.model.LegacyActorProvider;
+import org.iatoki.judgels.play.model.LegacySessionFactory;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleProblemGrader;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.SandalphonBundleProblemGrader;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
+
+import java.time.Clock;
 
 public final class JerahmeelModule extends AbstractModule {
 
@@ -72,6 +78,10 @@ public final class JerahmeelModule extends AbstractModule {
 
         bind(BaseUserService.class).to(UserServiceImpl.class);
         bind(BundleProblemGrader.class).to(SandalphonBundleProblemGrader.class);
+
+        bind(SessionFactory.class).to(LegacySessionFactory.class);
+        bind(ActorProvider.class).to(LegacyActorProvider.class);
+        bind(Clock.class).toInstance(Clock.systemUTC());
     }
 
     private JerahmeelProperties jerahmeelProperties() {

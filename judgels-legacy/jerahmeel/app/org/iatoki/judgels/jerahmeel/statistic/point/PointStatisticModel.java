@@ -1,15 +1,14 @@
 package org.iatoki.judgels.jerahmeel.statistic.point;
 
-import org.iatoki.judgels.play.jid.JidPrefix;
-import org.iatoki.judgels.play.model.AbstractJudgelsModel;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.time.Instant;
 
-@Entity
-@Table(name = "jerahmeel_point_statistic")
+@Entity(name = "jerahmeel_point_statistic")
 @JidPrefix("POST")
-public class PointStatisticModel extends AbstractJudgelsModel {
+public class PointStatisticModel extends JudgelsModel {
 
-    public long time;
+    public Instant time;
 }

@@ -1,13 +1,18 @@
 package org.iatoki.judgels.jerahmeel.archive;
 
-import org.iatoki.judgels.play.model.AbstractJudgelsHibernateDao;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
+import org.hibernate.SessionFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Clock;
 
 @Singleton
-public final class ArchiveHibernateDao extends AbstractJudgelsHibernateDao<ArchiveModel> implements ArchiveDao {
+public final class ArchiveHibernateDao extends JudgelsHibernateDao<ArchiveModel> implements ArchiveDao {
 
-    public ArchiveHibernateDao() {
-        super(ArchiveModel.class);
+    @Inject
+    public ArchiveHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 }

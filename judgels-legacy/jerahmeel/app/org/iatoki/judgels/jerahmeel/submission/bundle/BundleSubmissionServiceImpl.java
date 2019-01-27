@@ -66,7 +66,7 @@ public final class BundleSubmissionServiceImpl extends AbstractBundleSubmissionS
         BundleGradingModel bundleGradingModel = bundleGradingDao.findByJid(gradingJid);
         BundleSubmissionModel bundleSubmissionModel = bundleSubmissionDao.findByJid(bundleGradingModel.submissionJid);
 
-        String userJid = bundleSubmissionModel.userCreate;
+        String userJid = bundleSubmissionModel.createdBy;
         String containerJid = bundleSubmissionModel.containerJid;
         String problemJid = bundleSubmissionModel.problemJid;
 

@@ -1,20 +1,11 @@
 package org.iatoki.judgels.jerahmeel.course.chapter;
 
-import org.iatoki.judgels.play.model.AbstractModel;
+import judgels.persistence.Model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Entity
-@Table(name = "jerahmeel_course_chapter")
-public final class CourseChapterModel extends AbstractModel {
-
-    @Id
-    @GeneratedValue
-    public long id;
-
+@Entity(name = "jerahmeel_course_chapter")
+public final class CourseChapterModel extends Model {
     public String courseJid;
 
     public String chapterJid;

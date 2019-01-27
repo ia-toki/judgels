@@ -1,16 +1,14 @@
 package org.iatoki.judgels.jerahmeel.course;
 
-import org.iatoki.judgels.play.jid.JidPrefix;
-import org.iatoki.judgels.play.model.AbstractJudgelsModel;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
-@Entity
-@Table(name = "jerahmeel_course")
+@Entity(name = "jerahmeel_course")
 @JidPrefix("COUR")
-public final class CourseModel extends AbstractJudgelsModel {
+public final class CourseModel extends JudgelsModel {
 
     public String name;
 

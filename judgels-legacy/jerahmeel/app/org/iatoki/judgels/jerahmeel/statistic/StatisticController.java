@@ -29,6 +29,7 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -113,8 +114,8 @@ public final class StatisticController extends AbstractJudgelsController {
     @Authorized(value = "admin")
     @Transactional(readOnly = true)
     public Result viewSubmissionStatistics() {
-        List<Long> bundleSubmissionsTime = bundleSubmissionService.getAllBundleSubmissionsSubmitTime();
-        List<Long> programmingSubmissionsTime = programmingSubmissionService.getAllProgrammingSubmissionsSubmitTime();
+        List<Instant> bundleSubmissionsTime = bundleSubmissionService.getAllBundleSubmissionsSubmitTime();
+        List<Instant> programmingSubmissionsTime = programmingSubmissionService.getAllProgrammingSubmissionsSubmitTime();
 
         Collections.sort(bundleSubmissionsTime);
         Collections.reverse(bundleSubmissionsTime);
@@ -178,7 +179,7 @@ public final class StatisticController extends AbstractJudgelsController {
         JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
     }
 
-    private SubmissionStatistic getSubmissionStatistic(List<Long> submissionsTime, long thisHour, long thisDay, long thisWeek, long thisMonth, long thisYear, long lastHour, long lastDay, long lastWeek, long lastMonth, long lastYear) {
+    private SubmissionStatistic getSubmissionStatistic(List<Instant> submissionsTime, long thisHour, long thisDay, long thisWeek, long thisMonth, long thisYear, long lastHour, long lastDay, long lastWeek, long lastMonth, long lastYear) {
         long count = 0;
         long countThisHour = -1;
         long countThisDay = -1;
@@ -190,7 +191,8 @@ public final class StatisticController extends AbstractJudgelsController {
         long countLastWeek = -1;
         long countLastMonth = -1;
         long countLastYear = -1;
-        for (Long submitTime : submissionsTime) {
+        for (Instant submitInstant : submissionsTime) {
+            long submitTime = submitInstant.toEpochMilli();
             if ((countThisHour == -1) && (submitTime < thisHour)) {
                 countThisHour = count;
             }

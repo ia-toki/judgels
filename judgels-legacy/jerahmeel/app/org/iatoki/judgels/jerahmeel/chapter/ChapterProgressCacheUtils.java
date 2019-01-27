@@ -66,7 +66,7 @@ public final class ChapterProgressCacheUtils {
             } else {
                 userItemModel.status = UserItemStatus.VIEWED.name();
             }
-            userItemDao.edit(userItemModel, userJid, userItemModel.ipUpdate);
+            userItemDao.edit(userItemModel, userJid, userItemModel.updatedIp);
         } else {
             UserItemModel userItemModel = new UserItemModel();
             userItemModel.userJid = userJid;
@@ -78,8 +78,6 @@ public final class ChapterProgressCacheUtils {
             }
             userItemDao.persist(userItemModel, userJid, "localhost");
         }
-
-        userItemDao.flush();
 
         boolean chapterCompleted = true;
         List<ChapterProblemModel> chapterProblemModels = chapterProblemDao.getByChapterJid(containerJid);
@@ -97,7 +95,7 @@ public final class ChapterProgressCacheUtils {
             } else {
                 userItemModel.status = UserItemStatus.VIEWED.name();
             }
-            userItemDao.edit(userItemModel, userJid, userItemModel.ipUpdate);
+            userItemDao.edit(userItemModel, userJid, userItemModel.updatedIp);
         } else {
             UserItemModel userItemModel = new UserItemModel();
             userItemModel.userJid = userJid;

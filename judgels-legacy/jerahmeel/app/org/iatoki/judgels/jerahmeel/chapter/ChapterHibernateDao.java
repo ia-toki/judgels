@@ -1,17 +1,22 @@
 package org.iatoki.judgels.jerahmeel.chapter;
 
 import com.google.common.collect.ImmutableList;
-import org.iatoki.judgels.play.model.AbstractJudgelsHibernateDao;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
+import org.hibernate.SessionFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.metamodel.SingularAttribute;
+import java.time.Clock;
 import java.util.List;
 
 @Singleton
-public final class ChapterHibernateDao extends AbstractJudgelsHibernateDao<ChapterModel> implements ChapterDao {
+public final class ChapterHibernateDao extends JudgelsHibernateDao<ChapterModel> implements ChapterDao {
 
-    public ChapterHibernateDao() {
-        super(ChapterModel.class);
+    @Inject
+    public ChapterHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 
     @Override

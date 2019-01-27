@@ -1,12 +1,12 @@
 package org.iatoki.judgels.jerahmeel.chapter.problem;
 
 import com.google.inject.ImplementedBy;
-import org.iatoki.judgels.play.model.Dao;
+import judgels.persistence.Dao;
 
 import java.util.List;
 
 @ImplementedBy(ChapterProblemHibernateDao.class)
-public interface ChapterProblemDao extends Dao<Long, ChapterProblemModel> {
+public interface ChapterProblemDao extends Dao<ChapterProblemModel> {
 
     boolean existsByChapterJidAndAlias(String chapterJid, String alias);
 

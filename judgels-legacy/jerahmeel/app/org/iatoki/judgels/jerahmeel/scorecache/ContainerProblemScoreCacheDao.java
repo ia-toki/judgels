@@ -1,10 +1,10 @@
 package org.iatoki.judgels.jerahmeel.scorecache;
 
 import com.google.inject.ImplementedBy;
-import org.iatoki.judgels.play.model.Dao;
+import judgels.persistence.Dao;
 
 @ImplementedBy(ContainerProblemScoreCacheHibernateDao.class)
-public interface ContainerProblemScoreCacheDao extends Dao<Long, ContainerProblemScoreCacheModel> {
+public interface ContainerProblemScoreCacheDao extends Dao<ContainerProblemScoreCacheModel> {
 
     boolean existsByUserJidContainerJidAndProblemJid(String userJid, String containerJid, String problemJid);
 

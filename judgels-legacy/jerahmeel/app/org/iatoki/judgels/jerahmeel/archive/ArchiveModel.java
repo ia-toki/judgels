@@ -1,16 +1,14 @@
 package org.iatoki.judgels.jerahmeel.archive;
 
-import org.iatoki.judgels.play.jid.JidPrefix;
-import org.iatoki.judgels.play.model.AbstractJudgelsModel;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
-@Entity
-@Table(name = "jerahmeel_archive")
+@Entity(name = "jerahmeel_archive")
 @JidPrefix("ARCH")
-public final class ArchiveModel extends AbstractJudgelsModel {
+public final class ArchiveModel extends JudgelsModel {
 
     public String parentJid;
 

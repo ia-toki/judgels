@@ -1,10 +1,10 @@
 package org.iatoki.judgels.jerahmeel.chapter.lesson;
 
 import com.google.inject.ImplementedBy;
-import org.iatoki.judgels.play.model.Dao;
+import judgels.persistence.Dao;
 
 @ImplementedBy(ChapterLessonHibernateDao.class)
-public interface ChapterLessonDao extends Dao<Long, ChapterLessonModel> {
+public interface ChapterLessonDao extends Dao<ChapterLessonModel> {
 
     boolean existsByChapterJidAndAlias(String chapterJid, String alias);
 }

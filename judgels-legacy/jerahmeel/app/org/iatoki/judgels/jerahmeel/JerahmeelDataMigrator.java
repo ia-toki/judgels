@@ -26,7 +26,7 @@ public final class JerahmeelDataMigrator extends AbstractJudgelsDataMigrator {
 
     @Override
     public long getLatestDataVersion() {
-        return 6;
+        return 7;
     }
 
     @Override
@@ -45,6 +45,97 @@ public final class JerahmeelDataMigrator extends AbstractJudgelsDataMigrator {
         }
         if (currentDataVersion < 6) {
             migrateV5toV6();
+        }
+        if (currentDataVersion < 7) {
+            migrateV6toV7();
+        }
+        if (currentDataVersion < 8) {
+            migrateV7toV8();
+        }
+    }
+
+    private void migrateV7toV8() throws SQLException {
+        SessionImpl session = (SessionImpl) entityManager.unwrap(Session.class);
+        Connection connection = session.getJdbcConnectionAccess().obtainConnection();
+
+        String[] tables = {
+                "point_statistic",
+                "problem_score_statistic",
+                "problem_score_statistic_entry",
+                "problem_statistic",
+        };
+        Statement statement = connection.createStatement();
+
+        for (String table : tables) {
+            statement.execute("ALTER TABLE jerahmeel_" + table + " ADD COLUMN time2 datetime(3);");
+            statement.execute("UPDATE jerahmeel_" + table + " SET time2 = FROM_UNIXTIME(time * 0.001) WHERE time > 0;");
+            statement.execute("ALTER TABLE jerahmeel_" + table + " DROP COLUMN time;");
+            statement.execute("ALTER TABLE jerahmeel_" + table + " CHANGE COLUMN time2 time datetime(3);");
+        }
+    }
+
+    private void migrateV6toV7() throws SQLException {
+        SessionImpl session = (SessionImpl) entityManager.unwrap(Session.class);
+        Connection connection = session.getJdbcConnectionAccess().obtainConnection();
+
+        String[] tables = {
+                "activity_log",
+                "archive",
+                "bundle_submission",
+                "chapter",
+                "chapter_dependency",
+                "chapter_lesson",
+                "chapter_problem",
+                "container_problem_score_cache",
+                "container_score_cache",
+                "course",
+                "course_chapter",
+                "curriculum",
+                "curriculum_course",
+                "point_statistic",
+                "point_statistic_entry",
+                "problem_score_statistic",
+                "problem_score_statistic_entry",
+                "problem_set",
+                "problem_set_problem",
+                "problem_statistic",
+                "problem_statistic_entry",
+                "programming_grading",
+                "programming_submission",
+                "jid_cache",
+                "user",
+        };
+
+        Statement statement = connection.createStatement();
+
+        for (String table : tables) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("ALTER TABLE jerahmeel_").append(table)
+                    .append(" ADD COLUMN createdAt DATETIME(3) NOT NULL DEFAULT NOW(3), ")
+                    .append(" ADD COLUMN updatedAt DATETIME(3) NOT NULL DEFAULT NOW(3), ")
+                    .append(" CHANGE COLUMN ipCreate createdIp VARCHAR(255), ")
+                    .append(" CHANGE COLUMN ipUpdate updatedIp VARCHAR(255), ")
+                    .append(" CHANGE COLUMN userCreate createdBy VARCHAR(255), ")
+                    .append(" CHANGE COLUMN userUpdate updatedBy VARCHAR(255);");
+            statement.execute(sb.toString());
+
+            sb = new StringBuilder();
+            sb.append("UPDATE jerahmeel_").append(table).append(" SET ")
+                    .append("createdAt=FROM_UNIXTIME(timeCreate * 0.001), ")
+                    .append("updatedAt=FROM_UNIXTIME(timeUpdate * 0.001);");
+            statement.execute(sb.toString());
+
+            sb = new StringBuilder();
+            sb.append("ALTER TABLE jerahmeel_").append(table)
+                    .append(" DROP COLUMN timeCreate, ")
+                    .append(" DROP COLUMN timeUpdate;");
+            statement.execute(sb.toString());
+
+            sb = new StringBuilder();
+            sb.append("ALTER TABLE jerahmeel_").append(table)
+                    .append(" MODIFY COLUMN createdAt DATETIME(3) NOT NULL, ")
+                    .append(" MODIFY COLUMN updatedAt DATETIME(3) NOT NULL; ");
+            statement.execute(sb.toString());
         }
     }
 

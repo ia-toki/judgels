@@ -1,13 +1,18 @@
 package org.iatoki.judgels.jerahmeel.statistic.point;
 
-import org.iatoki.judgels.play.model.AbstractHibernateDao;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.HibernateDao;
+import org.hibernate.SessionFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Clock;
 
 @Singleton
-public final class PointStatisticEntryHibernateDao extends AbstractHibernateDao<Long, PointStatisticEntryModel> implements PointStatisticEntryDao {
+public final class PointStatisticEntryHibernateDao extends HibernateDao<PointStatisticEntryModel> implements PointStatisticEntryDao {
 
-    public PointStatisticEntryHibernateDao() {
-        super(PointStatisticEntryModel.class);
+    @Inject
+    public PointStatisticEntryHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 }

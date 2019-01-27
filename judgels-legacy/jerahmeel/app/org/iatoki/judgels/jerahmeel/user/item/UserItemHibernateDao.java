@@ -1,46 +1,50 @@
 package org.iatoki.judgels.jerahmeel.user.item;
 
-import org.iatoki.judgels.play.model.AbstractHibernateDao;
-import play.db.jpa.JPA;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.HibernateDao;
+import org.hibernate.SessionFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.Clock;
 import java.util.List;
 
 @Singleton
-public final class UserItemHibernateDao extends AbstractHibernateDao<Long, UserItemModel> implements UserItemDao {
+public final class UserItemHibernateDao extends HibernateDao<UserItemModel> implements UserItemDao {
 
-    public UserItemHibernateDao() {
-        super(UserItemModel.class);
+    @Inject
+    public UserItemHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 
     @Override
     public boolean existsByUserJidAndItemJid(String userJid, String itemJid) {
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<UserItemModel> root = query.from(UserItemModel.class);
 
         query.select(cb.count(root)).where(cb.and(cb.equal(root.get(UserItemModel_.userJid), userJid), cb.equal(root.get(UserItemModel_.itemJid), itemJid)));
 
-        return JPA.em().createQuery(query).getSingleResult() != 0;
+        return currentSession().createQuery(query).getSingleResult() != 0;
     }
 
     @Override
     public boolean existsByUserJidItemJidAndStatus(String userJid, String itemJid, String status) {
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<UserItemModel> root = query.from(UserItemModel.class);
 
         query.select(cb.count(root)).where(cb.and(cb.equal(root.get(UserItemModel_.userJid), userJid), cb.equal(root.get(UserItemModel_.itemJid), itemJid), cb.equal(root.get(UserItemModel_.status), status)));
 
-        return JPA.em().createQuery(query).getSingleResult() != 0;
+        return currentSession().createQuery(query).getSingleResult() != 0;
     }
 
     @Override
     public UserItemModel findByUserJidAndItemJid(String userJid, String itemJid) {
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<UserItemModel> query = cb.createQuery(UserItemModel.class);
         Root<UserItemModel> root = query.from(UserItemModel.class);
 
@@ -51,34 +55,34 @@ public final class UserItemHibernateDao extends AbstractHibernateDao<Long, UserI
 
     @Override
     public List<UserItemModel> getByUserJid(String userJid) {
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<UserItemModel> query = cb.createQuery(UserItemModel.class);
         Root<UserItemModel> root = query.from(UserItemModel.class);
 
         query.where(cb.equal(root.get(UserItemModel_.userJid), userJid));
 
-        return JPA.em().createQuery(query).getResultList();
+        return currentSession().createQuery(query).getResultList();
     }
 
     @Override
     public List<UserItemModel> getByItemJid(String itemJid) {
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<UserItemModel> query = cb.createQuery(UserItemModel.class);
         Root<UserItemModel> root = query.from(UserItemModel.class);
 
         query.where(cb.equal(root.get(UserItemModel_.itemJid), itemJid));
 
-        return JPA.em().createQuery(query).getResultList();
+        return currentSession().createQuery(query).getResultList();
     }
 
     @Override
     public List<UserItemModel> getByUserJidAndStatus(String userJid, String status) {
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<UserItemModel> query = cb.createQuery(UserItemModel.class);
         Root<UserItemModel> root = query.from(UserItemModel.class);
 
         query.where(cb.and(cb.equal(root.get(UserItemModel_.userJid), userJid), cb.equal(root.get(UserItemModel_.status), status)));
 
-        return JPA.em().createQuery(query).getResultList();
+        return currentSession().createQuery(query).getResultList();
     }
 }

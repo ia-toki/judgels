@@ -5,6 +5,7 @@ import org.iatoki.judgels.play.Page;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,13 +33,13 @@ public final class PointStatisticServiceImpl implements PointStatisticService {
         List<PointStatisticEntryModel> pointStatisticEntryModels = pointStatisticEntryDao.findSortedByFiltersEq(orderBy, orderDir, filterString, ImmutableMap.of(PointStatisticEntryModel_.pointStatisticJid, pointStatisticModel.jid), pageIndex * pageSize, pageSize);
         List<PointStatisticEntry> pointStatisticEntries = pointStatisticEntryModels.stream().map(m -> new PointStatisticEntry(m.userJid, m.totalPoints, m.totalProblems)).collect(Collectors.toList());
 
-        return new PointStatistic(new Page<>(pointStatisticEntries, totalRowCount, pageIndex, pageSize), pointStatisticModel.time);
+        return new PointStatistic(new Page<>(pointStatisticEntries, totalRowCount, pageIndex, pageSize), pointStatisticModel.time.toEpochMilli());
     }
 
     @Override
     public void updatePointStatistic(List<PointStatisticEntry> pointStatisticEntries, long time) {
         PointStatisticModel pointStatisticModel = new PointStatisticModel();
-        pointStatisticModel.time = time;
+        pointStatisticModel.time = Instant.ofEpochMilli(time);
 
         pointStatisticDao.persist(pointStatisticModel, "statisticUpdater", "statisticUpdater");
 

@@ -5,6 +5,7 @@ import org.iatoki.judgels.play.Page;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,16 +31,16 @@ public final class ProblemScoreStatisticServiceImpl implements ProblemScoreStati
         ProblemScoreStatisticModel problemScoreStatisticModel = problemScoreStatisticDao.findSortedByFiltersEq("time", "desc", "", ImmutableMap.of(ProblemScoreStatisticModel_.problemJid, problemJid), 0, 1).get(0);
         long totalRowCount = problemScoreStatisticEntryDao.countByFiltersEq(filterString, ImmutableMap.of(ProblemScoreStatisticEntryModel_.problemScoreStatisticJid, problemScoreStatisticModel.jid));
         List<ProblemScoreStatisticEntryModel> problemStatisticEntryModels = problemScoreStatisticEntryDao.findSortedByFiltersEq(orderBy, orderDir, filterString, ImmutableMap.of(ProblemScoreStatisticEntryModel_.problemScoreStatisticJid, problemScoreStatisticModel.jid), pageIndex, pageSize);
-        List<ProblemScoreStatisticEntry> problemScoreStatisticEntries = problemStatisticEntryModels.stream().map(m -> new ProblemScoreStatisticEntry(m.userJid, m.score, m.time)).collect(Collectors.toList());
+        List<ProblemScoreStatisticEntry> problemScoreStatisticEntries = problemStatisticEntryModels.stream().map(m -> new ProblemScoreStatisticEntry(m.userJid, m.score, m.time.toEpochMilli())).collect(Collectors.toList());
 
-        return new ProblemScoreStatistic(new Page<>(problemScoreStatisticEntries, totalRowCount, pageIndex, pageSize), problemScoreStatisticModel.problemJid, problemScoreStatisticModel.time);
+        return new ProblemScoreStatistic(new Page<>(problemScoreStatisticEntries, totalRowCount, pageIndex, pageSize), problemScoreStatisticModel.problemJid, problemScoreStatisticModel.time.toEpochMilli());
     }
 
     @Override
     public void updateProblemStatistic(List<ProblemScoreStatisticEntry> problemScoreStatisticEntries, String problemJid, long time) {
         ProblemScoreStatisticModel problemScoreStatisticModel = new ProblemScoreStatisticModel();
         problemScoreStatisticModel.problemJid = problemJid;
-        problemScoreStatisticModel.time = time;
+        problemScoreStatisticModel.time = Instant.ofEpochMilli(time);
 
         problemScoreStatisticDao.persist(problemScoreStatisticModel, "statisticUpdater", "statisticUpdater");
 
@@ -48,7 +49,7 @@ public final class ProblemScoreStatisticServiceImpl implements ProblemScoreStati
             problemScoreStatisticEntryModel.problemScoreStatisticJid = problemScoreStatisticModel.jid;
             problemScoreStatisticEntryModel.score = problemScoreStatisticEntry.getScore();
             problemScoreStatisticEntryModel.userJid = problemScoreStatisticEntry.getUserJid();
-            problemScoreStatisticEntryModel.time = problemScoreStatisticEntry.getTime();
+            problemScoreStatisticEntryModel.time = Instant.ofEpochMilli(problemScoreStatisticEntry.getTime());
 
             problemScoreStatisticEntryDao.persist(problemScoreStatisticEntryModel, "statisticUpdater", "statisticUpdater");
         }

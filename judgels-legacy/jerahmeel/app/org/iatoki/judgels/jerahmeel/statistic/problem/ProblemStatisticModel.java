@@ -1,15 +1,14 @@
 package org.iatoki.judgels.jerahmeel.statistic.problem;
 
-import org.iatoki.judgels.play.jid.JidPrefix;
-import org.iatoki.judgels.play.model.AbstractJudgelsModel;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.time.Instant;
 
-@Entity
-@Table(name = "jerahmeel_problem_statistic")
+@Entity(name = "jerahmeel_problem_statistic")
 @JidPrefix("PRST")
-public class ProblemStatisticModel extends AbstractJudgelsModel {
+public class ProblemStatisticModel extends JudgelsModel {
 
-    public long time;
+    public Instant time;
 }

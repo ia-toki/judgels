@@ -1,17 +1,22 @@
 package org.iatoki.judgels.jerahmeel.course;
 
 import com.google.common.collect.ImmutableList;
-import org.iatoki.judgels.play.model.AbstractJudgelsHibernateDao;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
+import org.hibernate.SessionFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.metamodel.SingularAttribute;
+import java.time.Clock;
 import java.util.List;
 
 @Singleton
-public final class CourseHibernateDao extends AbstractJudgelsHibernateDao<CourseModel> implements CourseDao {
+public final class CourseHibernateDao extends JudgelsHibernateDao<CourseModel> implements CourseDao {
 
-    public CourseHibernateDao() {
-        super(CourseModel.class);
+    @Inject
+    public CourseHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.iatoki.judgels.play.Page;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,13 +35,13 @@ public final class ProblemStatisticServiceImpl implements ProblemStatisticServic
         List<ProblemStatisticEntryModel> problemStatisticEntryModels = problemStatisticEntryDao.findSortedByFiltersEq(orderBy, orderDir, filterString, ImmutableMap.of(ProblemStatisticEntryModel_.problemStatisticJid, problemStatisticModel.jid), pageIndex * pageSize, pageSize);
         List<ProblemStatisticEntry> problemStatisticEntries = problemStatisticEntryModels.stream().map(m -> new ProblemStatisticEntry(m.problemJid, m.totalSubmissions)).collect(Collectors.toList());
 
-        return new ProblemStatistic(new Page<>(problemStatisticEntries, totalRowCount, pageIndex, pageSize), problemStatisticModel.time);
+        return new ProblemStatistic(new Page<>(problemStatisticEntries, totalRowCount, pageIndex, pageSize), problemStatisticModel.time.toEpochMilli());
     }
 
     @Override
     public void updateProblemStatistic(List<ProblemStatisticEntry> problemStatisticEntries, long time) {
         ProblemStatisticModel problemStatisticModel = new ProblemStatisticModel();
-        problemStatisticModel.time = time;
+        problemStatisticModel.time = Instant.ofEpochMilli(time);
 
         problemStatisticDao.persist(problemStatisticModel, "statisticUpdater", "statisticUpdater");
 

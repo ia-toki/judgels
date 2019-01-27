@@ -1,13 +1,18 @@
 package org.iatoki.judgels.jerahmeel.statistic.problem;
 
-import org.iatoki.judgels.play.model.AbstractHibernateDao;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.HibernateDao;
+import org.hibernate.SessionFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.Clock;
 
 @Singleton
-public final class ProblemStatisticEntryHibernateDao extends AbstractHibernateDao<Long, ProblemStatisticEntryModel> implements ProblemStatisticEntryDao {
+public final class ProblemStatisticEntryHibernateDao extends HibernateDao<ProblemStatisticEntryModel> implements ProblemStatisticEntryDao {
 
-    public ProblemStatisticEntryHibernateDao() {
-        super(ProblemStatisticEntryModel.class);
+    @Inject
+    public ProblemStatisticEntryHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 }

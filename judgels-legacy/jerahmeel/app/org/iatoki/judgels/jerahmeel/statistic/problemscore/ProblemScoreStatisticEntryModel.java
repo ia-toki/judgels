@@ -1,25 +1,17 @@
 package org.iatoki.judgels.jerahmeel.statistic.problemscore;
 
-import org.iatoki.judgels.play.model.AbstractModel;
+import judgels.persistence.Model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.time.Instant;
 
-@Entity
-@Table(name = "jerahmeel_problem_score_statistic_entry")
-public class ProblemScoreStatisticEntryModel extends AbstractModel {
-
-    @Id
-    @GeneratedValue
-    public long id;
-
+@Entity(name = "jerahmeel_problem_score_statistic_entry")
+public class ProblemScoreStatisticEntryModel extends Model {
     public String problemScoreStatisticJid;
 
     public String userJid;
 
     public double score;
 
-    public long time;
+    public Instant time;
 }
