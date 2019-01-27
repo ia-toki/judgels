@@ -4,24 +4,22 @@ import static judgels.uriel.UrielCacheUtils.getShortDuration;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.AdminRoleModel;
 import judgels.uriel.persistence.AdminRoleModel_;
-import org.hibernate.SessionFactory;
 
 @Singleton
 public class AdminRoleHibernateDao extends UnmodifiableHibernateDao<AdminRoleModel> implements AdminRoleDao {
     private final LoadingCache<String, Boolean> adminCache;
 
     @Inject
-    public AdminRoleHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public AdminRoleHibernateDao(HibernateDaoData data) {
+        super(data);
 
         this.adminCache = Caffeine.newBuilder()
                 .maximumSize(1_000)

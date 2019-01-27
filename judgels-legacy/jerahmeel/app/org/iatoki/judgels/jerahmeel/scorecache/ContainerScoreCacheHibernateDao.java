@@ -1,22 +1,20 @@
 package org.iatoki.judgels.jerahmeel.scorecache;
 
-import judgels.persistence.ActorProvider;
 import judgels.persistence.hibernate.HibernateDao;
-import org.hibernate.SessionFactory;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.time.Clock;
 
 @Singleton
 public final class ContainerScoreCacheHibernateDao extends HibernateDao<ContainerScoreCacheModel> implements ContainerScoreCacheDao {
 
     @Inject
-    public ContainerScoreCacheHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public ContainerScoreCacheHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

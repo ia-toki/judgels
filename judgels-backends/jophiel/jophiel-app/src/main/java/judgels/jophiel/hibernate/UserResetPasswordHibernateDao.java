@@ -10,11 +10,10 @@ import javax.persistence.metamodel.SingularAttribute;
 import judgels.jophiel.persistence.UserResetPasswordDao;
 import judgels.jophiel.persistence.UserResetPasswordModel;
 import judgels.jophiel.persistence.UserResetPasswordModel_;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.Model_;
 import judgels.persistence.hibernate.HibernateDao;
-import org.hibernate.SessionFactory;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 @Singleton
 public class UserResetPasswordHibernateDao extends HibernateDao<UserResetPasswordModel>
@@ -23,9 +22,9 @@ public class UserResetPasswordHibernateDao extends HibernateDao<UserResetPasswor
     private final Clock clock;
 
     @Inject
-    public UserResetPasswordHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
-        this.clock = clock;
+    public UserResetPasswordHibernateDao(HibernateDaoData data) {
+        super(data);
+        this.clock = data.getClock();
     }
 
     @Override

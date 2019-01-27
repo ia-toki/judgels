@@ -7,16 +7,15 @@ import javax.persistence.criteria.CriteriaQuery;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.Dao;
 import judgels.persistence.Model;
-import org.hibernate.SessionFactory;
 
 public abstract class HibernateDao<M extends Model> extends UnmodifiableHibernateDao<M> implements Dao<M> {
     private final Clock clock;
     private final ActorProvider actorProvider;
 
-    public HibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
-        this.clock = clock;
-        this.actorProvider = actorProvider;
+    public HibernateDao(HibernateDaoData data) {
+        super(data);
+        this.clock = data.getClock();
+        this.actorProvider = data.getActorProvider();
     }
 
     @Override

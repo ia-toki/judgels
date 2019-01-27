@@ -1,26 +1,24 @@
 package judgels.uriel.hibernate;
 
-import java.time.Clock;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
 import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestAnnouncementModel;
 import judgels.uriel.persistence.ContestAnnouncementModel_;
-import org.hibernate.SessionFactory;
 
 @Singleton
 public class ContestAnnouncementHibernateDao extends JudgelsHibernateDao<ContestAnnouncementModel> implements
         ContestAnnouncementDao {
 
     @Inject
-    public ContestAnnouncementHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public ContestAnnouncementHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

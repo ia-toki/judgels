@@ -3,21 +3,19 @@ package org.iatoki.judgels.sandalphon.problem.bundle.grading;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
-import org.hibernate.SessionFactory;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractBundleGradingHibernateDao<M extends AbstractBundleGradingModel> extends JudgelsHibernateDao<M> implements BaseBundleGradingDao<M> {
 
-    public AbstractBundleGradingHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public AbstractBundleGradingHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

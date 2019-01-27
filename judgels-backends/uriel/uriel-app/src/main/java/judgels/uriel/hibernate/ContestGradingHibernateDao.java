@@ -1,21 +1,19 @@
 package judgels.uriel.hibernate;
 
-import java.time.Clock;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.sandalphon.hibernate.AbstractGradingHibernateDao;
 import judgels.uriel.persistence.ContestGradingDao;
 import judgels.uriel.persistence.ContestGradingModel;
-import org.hibernate.SessionFactory;
 
 @Singleton
 public class ContestGradingHibernateDao extends AbstractGradingHibernateDao<ContestGradingModel>
         implements ContestGradingDao {
 
     @Inject
-    public ContestGradingHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public ContestGradingHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

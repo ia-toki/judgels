@@ -24,7 +24,6 @@ import judgels.persistence.UnmodifiableModel;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M>
@@ -33,10 +32,10 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     private final Clock clock;
     private final ActorProvider actorProvider;
 
-    public UnmodifiableHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory);
-        this.clock = clock;
-        this.actorProvider = actorProvider;
+    public UnmodifiableHibernateDao(HibernateDaoData data) {
+        super(data.getSessionFactory());
+        this.clock = data.getClock();
+        this.actorProvider = data.getActorProvider();
     }
 
     @Override

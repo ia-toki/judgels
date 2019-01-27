@@ -1,6 +1,5 @@
 package judgels.jophiel.hibernate;
 
-import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -8,16 +7,15 @@ import javax.inject.Singleton;
 import judgels.jophiel.persistence.SessionDao;
 import judgels.jophiel.persistence.SessionModel;
 import judgels.jophiel.persistence.SessionModel_;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
-import org.hibernate.SessionFactory;
 
 @Singleton
 public class SessionHibernateDao extends UnmodifiableHibernateDao<SessionModel> implements SessionDao {
     @Inject
-    public SessionHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public SessionHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

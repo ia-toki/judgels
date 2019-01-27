@@ -1,6 +1,5 @@
 package judgels.sandalphon.hibernate;
 
-import java.time.Clock;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -10,22 +9,21 @@ import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.sandalphon.persistence.AbstractSubmissionModel;
 import judgels.sandalphon.persistence.AbstractSubmissionModel_;
 import judgels.sandalphon.persistence.BaseSubmissionDao;
-import org.hibernate.SessionFactory;
 
 public abstract class AbstractSubmissionHibernateDao<M extends AbstractSubmissionModel> extends JudgelsHibernateDao<M>
         implements BaseSubmissionDao<M> {
 
-    public AbstractSubmissionHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public AbstractSubmissionHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

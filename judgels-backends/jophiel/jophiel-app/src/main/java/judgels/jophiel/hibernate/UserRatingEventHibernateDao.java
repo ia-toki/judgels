@@ -1,6 +1,5 @@
 package judgels.jophiel.hibernate;
 
-import java.time.Clock;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
@@ -10,18 +9,17 @@ import javax.inject.Singleton;
 import judgels.jophiel.persistence.UserRatingEventDao;
 import judgels.jophiel.persistence.UserRatingEventModel;
 import judgels.jophiel.persistence.UserRatingEventModel_;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
-import org.hibernate.SessionFactory;
 
 @Singleton
 public class UserRatingEventHibernateDao extends UnmodifiableHibernateDao<UserRatingEventModel>
         implements UserRatingEventDao {
 
     @Inject
-    public UserRatingEventHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public UserRatingEventHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

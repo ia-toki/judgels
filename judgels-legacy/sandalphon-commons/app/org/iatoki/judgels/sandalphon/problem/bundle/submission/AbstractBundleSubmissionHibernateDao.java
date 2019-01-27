@@ -1,21 +1,19 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
-import judgels.persistence.ActorProvider;
 import judgels.persistence.JudgelsModel_;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
-import org.hibernate.SessionFactory;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
 
 public abstract class AbstractBundleSubmissionHibernateDao<M extends AbstractBundleSubmissionModel> extends JudgelsHibernateDao<M> implements BaseBundleSubmissionDao<M> {
 
-    public AbstractBundleSubmissionHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public AbstractBundleSubmissionHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

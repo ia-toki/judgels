@@ -1,23 +1,21 @@
 package judgels.jophiel.hibernate;
 
-import java.time.Clock;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.jophiel.persistence.UserRegistrationEmailDao;
 import judgels.jophiel.persistence.UserRegistrationEmailModel;
 import judgels.jophiel.persistence.UserRegistrationEmailModel_;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.hibernate.HibernateDao;
-import org.hibernate.SessionFactory;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 @Singleton
 public class UserRegistrationEmailHibernateDao extends HibernateDao<UserRegistrationEmailModel>
         implements UserRegistrationEmailDao {
 
     @Inject
-    public UserRegistrationEmailHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public UserRegistrationEmailHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

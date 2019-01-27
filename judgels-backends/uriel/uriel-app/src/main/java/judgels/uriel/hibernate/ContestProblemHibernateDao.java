@@ -4,25 +4,23 @@ import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
 
 import com.google.common.collect.ImmutableSet;
-import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
 import judgels.uriel.persistence.ContestProblemModel_;
-import org.hibernate.SessionFactory;
 
 @Singleton
 public class ContestProblemHibernateDao extends HibernateDao<ContestProblemModel> implements ContestProblemDao {
     @Inject
-    public ContestProblemHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public ContestProblemHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package judgels.jophiel.hibernate;
 
 import com.google.common.collect.ImmutableMap;
-import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -12,19 +11,18 @@ import javax.inject.Singleton;
 import judgels.jophiel.persistence.UserRatingDao;
 import judgels.jophiel.persistence.UserRatingModel;
 import judgels.jophiel.persistence.UserRatingModel_;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 @Singleton
 public class UserRatingHibernateDao extends UnmodifiableHibernateDao<UserRatingModel> implements UserRatingDao {
     @Inject
-    public UserRatingHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public UserRatingHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

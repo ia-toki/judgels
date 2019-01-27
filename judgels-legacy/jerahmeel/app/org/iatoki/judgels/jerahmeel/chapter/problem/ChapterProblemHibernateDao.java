@@ -1,24 +1,21 @@
 package org.iatoki.judgels.jerahmeel.chapter.problem;
 
-import judgels.persistence.ActorProvider;
 import judgels.persistence.hibernate.HibernateDao;
-import org.hibernate.SessionFactory;
-import play.db.jpa.JPA;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.time.Clock;
 import java.util.List;
 
 @Singleton
 public final class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel> implements ChapterProblemDao {
 
     @Inject
-    public ChapterProblemHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public ChapterProblemHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

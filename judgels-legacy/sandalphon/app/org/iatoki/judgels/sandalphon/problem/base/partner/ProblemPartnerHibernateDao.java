@@ -1,23 +1,21 @@
 package org.iatoki.judgels.sandalphon.problem.base.partner;
 
-import judgels.persistence.ActorProvider;
 import judgels.persistence.hibernate.HibernateDao;
-import org.hibernate.SessionFactory;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.time.Clock;
 import java.util.List;
 
 @Singleton
 public final class ProblemPartnerHibernateDao extends HibernateDao<ProblemPartnerModel> implements ProblemPartnerDao {
 
     @Inject
-    public ProblemPartnerHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public ProblemPartnerHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

@@ -1,9 +1,8 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
 import com.google.common.collect.ImmutableList;
-import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
-import org.hibernate.SessionFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -11,15 +10,14 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
-import java.time.Clock;
 import java.util.List;
 
 @Singleton
 public final class LessonHibernateDao extends JudgelsHibernateDao<LessonModel> implements LessonDao {
 
     @Inject
-    public LessonHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public LessonHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

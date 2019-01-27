@@ -2,7 +2,6 @@ package judgels.sandalphon.hibernate;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,21 +9,20 @@ import java.util.Set;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.Model_;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.sandalphon.persistence.AbstractGradingModel;
 import judgels.sandalphon.persistence.AbstractGradingModel_;
 import judgels.sandalphon.persistence.BaseGradingDao;
-import org.hibernate.SessionFactory;
 
 public abstract class AbstractGradingHibernateDao<M extends AbstractGradingModel> extends JudgelsHibernateDao<M>
         implements BaseGradingDao<M> {
 
-    public AbstractGradingHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public AbstractGradingHibernateDao(HibernateDaoData data) {
+        super(data);
     }
 
     @Override

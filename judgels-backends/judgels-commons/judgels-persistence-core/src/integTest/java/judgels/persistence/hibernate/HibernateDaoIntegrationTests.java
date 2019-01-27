@@ -363,7 +363,7 @@ class HibernateDaoIntegrationTests {
 
     private static class ExampleHibernateDao extends HibernateDao<ExampleModel> {
         ExampleHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-            super(sessionFactory, clock, actorProvider);
+            super(new HibernateDaoData(sessionFactory, clock, actorProvider));
         }
 
         Optional<ExampleModel> selectByUniqueColumn(String value) {

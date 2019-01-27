@@ -11,17 +11,15 @@ import static judgels.uriel.hibernate.ContestSupervisorHibernateDao.hasSuperviso
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import java.time.Clock;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestRoleDao;
-import org.hibernate.SessionFactory;
 
 @Singleton
 public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> implements ContestRoleDao {
@@ -31,8 +29,8 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
     private final Cache<String, Boolean> managerCache;
 
     @Inject
-    public ContestRoleHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public ContestRoleHibernateDao(HibernateDaoData data) {
+        super(data);
 
         this.viewerOrAboveCache = Caffeine.newBuilder()
                 .maximumSize(1_000)

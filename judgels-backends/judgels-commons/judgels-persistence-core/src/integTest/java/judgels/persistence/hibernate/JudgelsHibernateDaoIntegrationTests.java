@@ -105,7 +105,7 @@ class JudgelsHibernateDaoIntegrationTests {
 
     private static class ExampleHibernateDao extends JudgelsHibernateDao<ExampleModel> {
         ExampleHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-            super(sessionFactory, clock, actorProvider);
+            super(new HibernateDaoData(sessionFactory, clock, actorProvider));
         }
     }
 }

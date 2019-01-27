@@ -12,20 +12,18 @@ import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.JidGenerator;
 import judgels.persistence.JudgelsDao;
 import judgels.persistence.JudgelsModel;
 import judgels.persistence.JudgelsModel_;
-import org.hibernate.SessionFactory;
 
 public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends HibernateDao<M> implements JudgelsDao<M> {
     private final Clock clock;
 
-    public JudgelsHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
+    public JudgelsHibernateDao(HibernateDaoData data) {
+        super(data);
 
-        this.clock = clock;
+        this.clock = data.getClock();
     }
 
     @Override

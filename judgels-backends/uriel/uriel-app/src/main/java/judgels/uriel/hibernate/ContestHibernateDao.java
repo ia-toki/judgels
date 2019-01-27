@@ -8,28 +8,27 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.Expression;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.Model_;
 import judgels.persistence.SearchOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModel_;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.hibernate.SessionFactory;
 
 @Singleton
 public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> implements ContestDao {
     private final Clock clock;
 
     @Inject
-    public ContestHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-        super(sessionFactory, clock, actorProvider);
-        this.clock = clock;
+    public ContestHibernateDao(HibernateDaoData data) {
+        super(data);
+        this.clock = data.getClock();
     }
 
     @Override
