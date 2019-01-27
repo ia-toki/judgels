@@ -1,12 +1,12 @@
 package org.iatoki.judgels.sandalphon.lesson.partner;
 
 import com.google.inject.ImplementedBy;
-import org.iatoki.judgels.play.model.Dao;
+import judgels.persistence.Dao;
 
 import java.util.List;
 
 @ImplementedBy(LessonPartnerHibernateDao.class)
-public interface LessonPartnerDao extends Dao<Long, LessonPartnerModel> {
+public interface LessonPartnerDao extends Dao<LessonPartnerModel> {
 
     boolean existsByLessonJidAndPartnerJid(String lessonJid, String partnerJid);
 

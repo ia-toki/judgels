@@ -1,13 +1,13 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
-import org.iatoki.judgels.play.jid.JidPrefix;
-import org.iatoki.judgels.play.model.AbstractJudgelsModel;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @JidPrefix("SUBM")
-public abstract class AbstractBundleSubmissionModel extends AbstractJudgelsModel {
+public abstract class AbstractBundleSubmissionModel extends JudgelsModel {
 
     public String problemJid;
 

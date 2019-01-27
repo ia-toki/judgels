@@ -1,5 +1,6 @@
 package judgels.persistence.hibernate;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.AbstractDAO;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -93,6 +95,13 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
 
     @Override
     public long selectCount(FilterOptions<M> filterOptions) {
+        // MySQL doesn't support empty IN() clause
+        for (Collection<?> collection : filterOptions.getColumnsIn().values()) {
+            if (collection.isEmpty()) {
+                return 0;
+            }
+        }
+
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<M> root = cq.from(getEntityClass());
@@ -149,6 +158,114 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
         currentSession().delete(model);
     }
 
+    @Override
+    public M findById(long id) {
+        return select(id).orElse(null);
+    }
+
+    @Override
+    public List<M> getAll() {
+        return selectAll(SelectionOptions.DEFAULT_ALL);
+    }
+
+    @Override
+    public long countByFilters(String filterString) {
+        return countByFilters(filterString, ImmutableMap.of(), ImmutableMap.of());
+    }
+
+    @Override
+    public long countByFilters(
+            String filterString,
+            Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq,
+            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn) {
+
+        Map<SingularAttribute<? super M, String>, String> filterColumnsLike = filterString.equals("")
+                ? ImmutableMap.of()
+                : getColumnsFilterableByString()
+                .stream()
+                .collect(Collectors.toMap(e -> e, $ -> filterString));
+
+        return selectCount(new FilterOptions.Builder<M>()
+                .columnsEq(filterColumnsEq)
+                .columnsIn(filterColumnsIn)
+                .columnsLike(filterColumnsLike)
+                .build());
+    }
+
+    @Override
+    public long countByFiltersEq(String filterString, Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq) {
+        return countByFilters(filterString, filterColumnsEq, ImmutableMap.of());
+    }
+
+    @Override
+    public long countByFiltersIn(
+            String filterString,
+            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn) {
+
+        return countByFilters(filterString, ImmutableMap.of(), filterColumnsIn);
+    }
+
+    @Override
+    public List<M> findSortedByFilters(String orderBy, String orderDir, String filterStrin, long offset, long limit) {
+        return findSortedByFilters(orderBy, orderDir, filterStrin, ImmutableMap.of(), ImmutableMap.of(), offset, limit);
+    }
+
+    @Override
+    public List<M> findSortedByFilters(
+            String orderBy,
+            String orderDir,
+            String filterString,
+            Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq,
+            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn,
+            long offset,
+            long limit) {
+
+        Map<SingularAttribute<? super M, String>, String> filterColumnsLike = filterString.equals("")
+                ? ImmutableMap.of()
+                : getColumnsFilterableByString()
+                .stream()
+                .collect(Collectors.toMap(e -> e, $ -> filterString));
+
+        SelectionOptions.Builder options = new SelectionOptions.Builder();
+        if (limit != -1) {
+            options.pageSize((int) limit);
+            options.page((int) (offset / limit) + 1);
+        }
+
+        return selectAll(new FilterOptions.Builder<M>()
+                .columnsEq(filterColumnsEq)
+                .columnsIn(filterColumnsIn)
+                .columnsLike(filterColumnsLike)
+                .build(), options.build());
+    }
+
+    @Override
+    public List<M> findSortedByFiltersEq(
+            String orderBy,
+            String orderDir,
+            String filterString,
+            Map<SingularAttribute<? super M, ?>, ?> filterColumnsEq, long offset, long limit) {
+
+        return findSortedByFilters(orderBy, orderDir, filterString, filterColumnsEq, ImmutableMap.of(), offset, limit);
+    }
+
+    @Override
+    public List<M> findSortedByFiltersIn(
+            String orderBy,
+            String orderDir,
+            String filterString,
+            Map<SingularAttribute<? super M, String>, ? extends Collection<String>> filterColumnsIn,
+            long offset,
+            long limit) {
+
+        return findSortedByFilters(orderBy, orderDir, filterString, ImmutableMap.of(), filterColumnsIn, offset, limit);
+    }
+
+    @Deprecated
+    protected List<SingularAttribute<M, String>> getColumnsFilterableByString() {
+        return ImmutableList.of();
+    }
+
     private void applyFilters(CriteriaBuilder cb, CriteriaQuery<?> cq, Root<M> root, FilterOptions<M> options) {
         Predicate filterId = cb.gt(root.get(Model_.id), options.getLastId());
         Predicate filterEq = cb.and(options.getColumnsEq().entrySet()
@@ -159,7 +276,7 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
                 .stream()
                 .map(e -> root.get(e.getKey()).in(e.getValue()))
                 .toArray(Predicate[]::new));
-        Predicate filterLike = cb.and(options.getColumnsLike().entrySet()
+        Predicate filterLike = options.getColumnsLike().isEmpty() ? cb.and() : cb.or(options.getColumnsLike().entrySet()
                 .stream()
                 .map(e -> cb.like(root.get(e.getKey()), contains(e.getValue())))
                 .toArray(Predicate[]::new));

@@ -4,5 +4,6 @@ dependencies {
     play project(':play-commons')
     play project(':api')
 
+    play project(':judgels-commons:judgels-service-persistence')
     play project(':jophiel:jophiel-api')
 }

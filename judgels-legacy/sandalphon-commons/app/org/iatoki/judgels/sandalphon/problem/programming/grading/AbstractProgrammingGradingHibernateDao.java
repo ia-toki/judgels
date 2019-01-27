@@ -3,19 +3,21 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.iatoki.judgels.play.model.AbstractJudgelsHibernateDao;
-import play.db.jpa.JPA;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
+import org.hibernate.SessionFactory;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractProgrammingGradingModel> extends AbstractJudgelsHibernateDao<M> implements BaseProgrammingGradingDao<M> {
+public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractProgrammingGradingModel> extends JudgelsHibernateDao<M> implements BaseProgrammingGradingDao<M> {
 
-    public AbstractProgrammingGradingHibernateDao(Class<M> modelClass) {
-        super(modelClass);
+    public AbstractProgrammingGradingHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 
     @Override
@@ -27,13 +29,13 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
         Map<String, List<M>> result = Maps.newHashMap();
 
         for (List<String> partitionedSubmissionJids : Lists.partition(submissionJids, 1000)) {
-            CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
-            CriteriaQuery<M> query = cb.createQuery(getModelClass());
-            Root<M> root = query.from(getModelClass());
+            CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+            CriteriaQuery<M> query = cb.createQuery(getEntityClass());
+            Root<M> root = query.from(getEntityClass());
 
             query.where(root.get(AbstractProgrammingGradingModel_.submissionJid).in(partitionedSubmissionJids));
 
-            List<M> models = JPA.em().createQuery(query).getResultList();
+            List<M> models = currentSession().createQuery(query).getResultList();
 
             for (M model : models) {
                 if (result.containsKey(model.submissionJid)) {
@@ -59,12 +61,12 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
         Map<String, M> result = Maps.newHashMap();
 
         for (List<String> partitionedSubmissionJids : Lists.partition(submissionJids, 1000)) {
-            CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
-            CriteriaQuery<M> query = cb.createQuery(getModelClass());
-            Root<M> root = query.from(getModelClass());
+            CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+            CriteriaQuery<M> query = cb.createQuery(getEntityClass());
+            Root<M> root = query.from(getEntityClass());
 
             query.select(cb.construct(
-                    getModelClass(),
+                    getEntityClass(),
                     root.get(AbstractProgrammingGradingModel_.submissionJid.getName()),
                     root.get(AbstractProgrammingGradingModel_.verdictCode.getName()),
                     root.get(AbstractProgrammingGradingModel_.verdictName.getName()),
@@ -72,7 +74,7 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
 
             query.where(root.get(AbstractProgrammingGradingModel_.submissionJid).in(partitionedSubmissionJids));
 
-            List<M> models = JPA.em().createQuery(query).getResultList();
+            List<M> models = currentSession().createQuery(query).getResultList();
 
             for (M model : models) {
                 result.put(model.submissionJid, model);

@@ -1,15 +1,13 @@
 package org.iatoki.judgels.sandalphon.client;
 
-import org.iatoki.judgels.play.jid.JidPrefix;
-import org.iatoki.judgels.play.model.AbstractJudgelsModel;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
-@Entity
-@Table(name = "sandalphon_client")
+@Entity(name = "sandalphon_client")
 @JidPrefix("SACL")
-public final class ClientModel extends AbstractJudgelsModel {
+public final class ClientModel extends JudgelsModel {
 
     public String name;
 

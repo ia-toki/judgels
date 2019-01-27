@@ -1,18 +1,11 @@
 package org.iatoki.judgels.play.jid;
 
-import org.iatoki.judgels.play.model.AbstractModel;
+import judgels.persistence.Model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class AbstractJidCacheModel extends AbstractModel {
-
-    @Id
-    @GeneratedValue
-    public long id;
-
+public abstract class AbstractJidCacheModel extends Model {
     public String jid;
 
     public String displayName;

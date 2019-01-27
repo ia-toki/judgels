@@ -2,9 +2,11 @@ package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.palantir.conjure.java.api.errors.RemoteException;
+import judgels.persistence.api.SelectionOptions;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
@@ -15,9 +17,9 @@ import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingModel;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingModel_;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.BaseProgrammingGradingDao;
-import play.db.jpa.JPA;
 
 import javax.persistence.metamodel.SingularAttribute;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,7 +62,7 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
     }
 
     @Override
-    public List<Long> getAllProgrammingSubmissionsSubmitTime() {
+    public List<Instant> getAllProgrammingSubmissionsSubmitTime() {
         return programmingSubmissionDao.getAllSubmissionsSubmitTime();
     }
 
@@ -82,7 +84,7 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
 
     @Override
     public List<ProgrammingSubmission> getProgrammingSubmissionsWithGradingsByContainerJidAndProblemJidAndUserJid(String containerJid, String problemJid, String userJid) {
-        List<SM> submissionModels = programmingSubmissionDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.<SingularAttribute<? super SM, ? extends Object>, String>of(AbstractProgrammingSubmissionModel_.containerJid, containerJid, AbstractProgrammingSubmissionModel_.problemJid, problemJid, AbstractProgrammingSubmissionModel_.userCreate, userJid), 0, -1);
+        List<SM> submissionModels = programmingSubmissionDao.findSortedByFiltersEq("id", "asc", "", ImmutableMap.<SingularAttribute<? super SM, ? extends Object>, String>of(AbstractProgrammingSubmissionModel_.containerJid, containerJid, AbstractProgrammingSubmissionModel_.problemJid, problemJid, AbstractProgrammingSubmissionModel_.createdBy, userJid), 0, -1);
         Map<String, List<GM>> gradingModelsMap = programmingGradingDao.getBySubmissionJids(Lists.transform(submissionModels, m -> m.jid));
 
         return Lists.transform(submissionModels, m -> ProgrammingSubmissionServiceUtils.createSubmissionFromModels(m, gradingModelsMap.get(m.jid)));
@@ -107,7 +109,7 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
     public List<ProgrammingSubmission> getProgrammingSubmissionsByFilters(String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
         ImmutableMap.Builder<SingularAttribute<? super SM, ? extends Object>, String> filterColumnsBuilder = ImmutableMap.builder();
         if (authorJid != null) {
-            filterColumnsBuilder.put(AbstractProgrammingSubmissionModel_.userCreate, authorJid);
+            filterColumnsBuilder.put(AbstractProgrammingSubmissionModel_.createdBy, authorJid);
         }
         if (problemJid != null) {
             filterColumnsBuilder.put(AbstractProgrammingSubmissionModel_.problemJid, problemJid);
@@ -127,7 +129,7 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
     public Page<ProgrammingSubmission> getPageOfProgrammingSubmissions(long pageIndex, long pageSize, String orderBy, String orderDir, String authorJid, String problemJid, String containerJid) {
         ImmutableMap.Builder<SingularAttribute<? super SM, ? extends Object>, String> filterColumnsBuilder = ImmutableMap.builder();
         if (authorJid != null) {
-            filterColumnsBuilder.put(AbstractProgrammingSubmissionModel_.userCreate, authorJid);
+            filterColumnsBuilder.put(AbstractProgrammingSubmissionModel_.createdBy, authorJid);
         }
         if (problemJid != null) {
             filterColumnsBuilder.put(AbstractProgrammingSubmissionModel_.problemJid, problemJid);
@@ -184,7 +186,6 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
         gradingModel.details = result.getDetails();
 
         programmingGradingDao.edit(gradingModel, grader, graderIpAddress);
-        programmingGradingDao.flush();
 
         afterGrade(gradingJid, result);
     }
@@ -208,9 +209,6 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
         gradingModel.score = 0;
 
         programmingGradingDao.persist(gradingModel, userJid, userIpAddress);
-
-        // TODO refactor this into DAO
-        JPA.em().flush();
 
         GradingRequest request = new GradingRequest(gradingModel.jid, submissionModel.problemJid, submissionModel.gradingEngine, submissionModel.gradingLanguage, submissionSource);
 

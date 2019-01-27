@@ -1,21 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.base.partner;
 
-import org.iatoki.judgels.play.model.AbstractModel;
+import judgels.persistence.Model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Entity
-@Table(name = "sandalphon_problem_partner")
-public final class ProblemPartnerModel extends AbstractModel {
-
-    @Id
-    @GeneratedValue
-    public long id;
-
+@Entity(name = "sandalphon_problem_partner")
+public final class ProblemPartnerModel extends Model {
     public String problemJid;
 
     public String userJid;

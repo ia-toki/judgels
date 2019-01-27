@@ -1,14 +1,14 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.grading;
 
-import org.iatoki.judgels.play.jid.JidPrefix;
-import org.iatoki.judgels.play.model.AbstractJudgelsModel;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @JidPrefix("GRAD")
-public abstract class AbstractBundleGradingModel extends AbstractJudgelsModel {
+public abstract class AbstractBundleGradingModel extends JudgelsModel {
 
     public String submissionJid;
 

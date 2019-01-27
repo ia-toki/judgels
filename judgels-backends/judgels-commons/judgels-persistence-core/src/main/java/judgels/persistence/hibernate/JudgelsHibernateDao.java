@@ -1,7 +1,9 @@
 package judgels.persistence.hibernate;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import java.time.Clock;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,8 +20,12 @@ import judgels.persistence.JudgelsModel_;
 import org.hibernate.SessionFactory;
 
 public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends HibernateDao<M> implements JudgelsDao<M> {
+    private final Clock clock;
+
     public JudgelsHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         super(sessionFactory, clock, actorProvider);
+
+        this.clock = clock;
     }
 
     @Override
@@ -57,5 +63,49 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
     public M updateByJid(String jid, M model) {
         model.jid = jid;
         return super.update(model);
+    }
+
+    @Override
+    public void persist(M model, String actor, String ipAddress) {
+        model.jid = JidGenerator.newJid(getEntityClass());
+        model.createdBy = actor;
+        model.createdAt = clock.instant();
+        model.createdIp = ipAddress;
+
+        model.updatedBy = model.createdBy;
+        model.updatedAt = model.createdAt;
+        model.updatedIp = model.createdIp;
+
+        persist(model);
+    }
+
+    @Override
+    public void persist(M model, int childIndex, String actor, String ipAddress) {
+        model.jid = JidGenerator.newChildJid(getEntityClass(), childIndex);
+        model.createdBy = actor;
+        model.createdAt = clock.instant();
+        model.createdIp = ipAddress;
+
+        model.updatedBy = model.createdBy;
+        model.updatedAt = model.createdAt;
+        model.updatedIp = model.createdIp;
+
+        persist(model);
+    }
+
+    @Override
+    public boolean existsByJid(String jid) {
+        return selectByJid(jid).isPresent();
+    }
+
+    @Override
+    public M findByJid(String jid) {
+        return selectByJid(jid).orElse(null);
+    }
+
+    @Override
+    public List<M> getByJids(Collection<String> jids) {
+        Map<String, M> map = selectByJids(ImmutableSet.copyOf(jids));
+        return jids.stream().map(map::get).collect(Collectors.toList());
     }
 }

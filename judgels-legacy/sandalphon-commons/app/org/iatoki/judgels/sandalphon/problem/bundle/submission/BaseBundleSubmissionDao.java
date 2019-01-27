@@ -1,7 +1,8 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
-import org.iatoki.judgels.play.model.JudgelsDao;
+import judgels.persistence.JudgelsDao;
 
+import java.time.Instant;
 import java.util.List;
 
 public interface BaseBundleSubmissionDao<M extends AbstractBundleSubmissionModel> extends JudgelsDao<M> {
@@ -10,5 +11,5 @@ public interface BaseBundleSubmissionDao<M extends AbstractBundleSubmissionModel
 
     List<M> getByContainerJidAndUserJidAndProblemJid(String containerJid, String userJid, String problemJid);
 
-    List<Long> getAllSubmissionsSubmitTime();
+    List<Instant> getAllSubmissionsSubmitTime();
 }

@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
 import com.google.inject.ImplementedBy;
-import org.iatoki.judgels.play.model.JudgelsDao;
+import judgels.persistence.JudgelsDao;
 
 import java.util.List;
 

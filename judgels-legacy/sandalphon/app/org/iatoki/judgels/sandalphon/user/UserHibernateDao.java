@@ -1,26 +1,30 @@
 package org.iatoki.judgels.sandalphon.user;
 
 import com.google.common.collect.ImmutableList;
-import org.iatoki.judgels.play.model.AbstractHibernateDao;
-import play.db.jpa.JPA;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.HibernateDao;
+import org.hibernate.SessionFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
+import java.time.Clock;
 import java.util.List;
 
 @Singleton
-public final class UserHibernateDao extends AbstractHibernateDao<Long, UserModel> implements UserDao {
+public final class UserHibernateDao extends HibernateDao<UserModel> implements UserDao {
 
-    public UserHibernateDao() {
-        super(UserModel.class);
+    @Inject
+    public UserHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 
     @Override
     public boolean existsByJid(String userJid) {
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<UserModel> root = query.from(UserModel.class);
 
@@ -28,18 +32,18 @@ public final class UserHibernateDao extends AbstractHibernateDao<Long, UserModel
             .select(cb.count(root))
             .where(cb.equal(root.get(UserModel_.userJid), userJid));
 
-        return (JPA.em().createQuery(query).getSingleResult() != 0);
+        return (currentSession().createQuery(query).getSingleResult() != 0);
     }
 
     @Override
     public UserModel findByJid(String userJid) {
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<UserModel> query = cb.createQuery(UserModel.class);
         Root<UserModel> root = query.from(UserModel.class);
 
         query.where(cb.equal(root.get(UserModel_.userJid), userJid));
 
-        return JPA.em().createQuery(query).getSingleResult();
+        return currentSession().createQuery(query).getSingleResult();
     }
 
     @Override

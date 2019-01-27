@@ -1,15 +1,13 @@
 package org.iatoki.judgels.sandalphon.grader;
 
-import org.iatoki.judgels.play.jid.JidPrefix;
-import org.iatoki.judgels.play.model.AbstractJudgelsModel;
+import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
-@Entity
-@Table(name = "sandalphon_grader")
+@Entity(name = "sandalphon_grader")
 @JidPrefix("SAGR")
-public final class GraderModel extends AbstractJudgelsModel {
+public final class GraderModel extends JudgelsModel {
 
     public String name;
     public String secret;

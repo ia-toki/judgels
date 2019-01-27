@@ -40,7 +40,7 @@ public final class SandalphonDataMigrator extends AbstractJudgelsDataMigrator {
 
     @Override
     public long getLatestDataVersion() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -53,6 +53,62 @@ public final class SandalphonDataMigrator extends AbstractJudgelsDataMigrator {
         }
         if (currentDataVersion < 4) {
             migrateV3toV4();
+        }
+        if (currentDataVersion < 5) {
+            migrateV4toV5();
+        }
+    }
+
+    private void migrateV4toV5() throws SQLException {
+        SessionImpl session = (SessionImpl) entityManager.unwrap(Session.class);
+        Connection connection = session.getJdbcConnectionAccess().obtainConnection();
+
+        String[] tables = {
+                "activity_log",
+                "bundle_grading",
+                "bundle_submission",
+                "client",
+                "grader",
+                "lesson",
+                "lesson_partner",
+                "problem",
+                "problem_partner",
+                "programming_grading",
+                "programming_submission",
+                "jid_cache",
+                "user",
+        };
+
+        Statement statement = connection.createStatement();
+
+        for (String table : tables) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("ALTER TABLE sandalphon_").append(table)
+                    .append(" ADD COLUMN createdAt DATETIME(3) NOT NULL DEFAULT NOW(3), ")
+                    .append(" ADD COLUMN updatedAt DATETIME(3) NOT NULL DEFAULT NOW(3), ")
+                    .append(" CHANGE COLUMN ipCreate createdIp VARCHAR(255), ")
+                    .append(" CHANGE COLUMN ipUpdate updatedIp VARCHAR(255), ")
+                    .append(" CHANGE COLUMN userCreate createdBy VARCHAR(255), ")
+                    .append(" CHANGE COLUMN userUpdate updatedBy VARCHAR(255);");
+            statement.execute(sb.toString());
+
+            sb = new StringBuilder();
+            sb.append("UPDATE sandalphon_").append(table).append(" SET ")
+                    .append("createdAt=FROM_UNIXTIME(timeCreate * 0.001), ")
+                    .append("updatedAt=FROM_UNIXTIME(timeUpdate * 0.001);");
+            statement.execute(sb.toString());
+
+            sb = new StringBuilder();
+            sb.append("ALTER TABLE sandalphon_").append(table)
+                    .append(" DROP COLUMN timeCreate, ")
+                    .append(" DROP COLUMN timeUpdate;");
+            statement.execute(sb.toString());
+
+            sb = new StringBuilder();
+            sb.append("ALTER TABLE sandalphon_").append(table)
+                    .append(" MODIFY COLUMN createdAt DATETIME(3) NOT NULL, ")
+                    .append(" MODIFY COLUMN updatedAt DATETIME(3) NOT NULL; ");
+            statement.execute(sb.toString());
         }
     }
 

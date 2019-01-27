@@ -1,7 +1,8 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
-import org.iatoki.judgels.play.model.JudgelsDao;
+import judgels.persistence.JudgelsDao;
 
+import java.time.Instant;
 import java.util.List;
 
 public interface BaseProgrammingSubmissionDao<M extends AbstractProgrammingSubmissionModel> extends JudgelsDao<M> {
@@ -14,5 +15,5 @@ public interface BaseProgrammingSubmissionDao<M extends AbstractProgrammingSubmi
 
     long countByContainerJidAndUserJidAndProblemJid(String containerJid, String userJid, String problemJid);
 
-    List<Long> getAllSubmissionsSubmitTime();
+    List<Instant> getAllSubmissionsSubmitTime();
 }

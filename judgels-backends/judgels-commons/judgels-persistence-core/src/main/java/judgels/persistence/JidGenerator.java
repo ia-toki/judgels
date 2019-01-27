@@ -23,7 +23,25 @@ public class JidGenerator {
             throw new IllegalArgumentException(modelClass.getSimpleName() + " must have @JidPrefix annotation");
         }
 
-        String prefix = "JID" + modelClass.getAnnotation(JidPrefix.class).value();
+        return generateJid(modelClass.getAnnotation(JidPrefix.class).value());
+    }
+
+    public static <M extends JudgelsModel> String newChildJid(Class<M> modelClass, int childIndex) {
+        if (!modelClass.isAnnotationPresent(JidChildPrefixes.class)) {
+            throw new IllegalStateException(modelClass.getSimpleName() + " must have JidChildPrefixes annotation");
+        }
+
+        String[] codes = modelClass.getAnnotation(JidChildPrefixes.class).value();
+        if (childIndex >= codes.length) {
+            String message = "The " + childIndex + "-th child of " + modelClass.getSimpleName() + " does not exist";
+            throw new IllegalStateException(message);
+        }
+
+        return generateJid(codes[childIndex]);
+    }
+
+    public static String generateJid(String code) {
+        String prefix = "JID" + code;
         String suffix = GEN.generate(20);
 
         return prefix + suffix;

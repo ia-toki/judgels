@@ -56,19 +56,6 @@ public abstract class AbstractHibernateDao<K, M extends AbstractModel> extends A
     }
 
     @Override
-    public boolean existsById(K id) {
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<M> root = query.from(getModelClass());
-
-        query
-                .select(cb.count(root))
-                .where(cb.equal(root.get("id"), id));
-
-        return JPA.em().createQuery(query).getSingleResult() > 0;
-    }
-
-    @Override
     public M findById(K id) {
         return JPA.em().find(getModelClass(), id);
     }

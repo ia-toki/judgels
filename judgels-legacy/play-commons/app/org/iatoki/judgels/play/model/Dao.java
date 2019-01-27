@@ -15,8 +15,6 @@ public interface Dao<K, M extends AbstractModel> {
 
     void remove(M model);
 
-    boolean existsById(K id);
-
     M findById(K id);
 
     List<M> getAll();

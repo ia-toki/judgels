@@ -3,7 +3,9 @@ package org.iatoki.judgels.sandalphon;
 import com.google.inject.AbstractModule;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import judgels.persistence.ActorProvider;
 import judgels.service.JudgelsVersion;
+import org.hibernate.SessionFactory;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
@@ -14,6 +16,8 @@ import org.iatoki.judgels.play.JudgelsPlayProperties;
 import org.iatoki.judgels.play.general.GeneralName;
 import org.iatoki.judgels.play.general.GeneralVersion;
 import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
+import org.iatoki.judgels.play.model.LegacyActorProvider;
+import org.iatoki.judgels.play.model.LegacySessionFactory;
 import org.iatoki.judgels.sandalphon.lesson.LessonFileSystemProvider;
 import org.iatoki.judgels.sandalphon.lesson.LessonGitProvider;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
@@ -26,6 +30,8 @@ import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionS
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionServiceImpl;
 import org.iatoki.judgels.sandalphon.user.UserServiceImpl;
+
+import java.time.Clock;
 
 public final class SandalphonModule extends AbstractModule {
 
@@ -54,6 +60,10 @@ public final class SandalphonModule extends AbstractModule {
         bind(GitProvider.class).annotatedWith(ProblemGitProvider.class).toInstance(problemGitProvider());
         bind(GitProvider.class).annotatedWith(LessonGitProvider.class).toInstance(lessonGitProvider());
         bind(BaseUserService.class).to(UserServiceImpl.class);
+
+        bind(SessionFactory.class).to(LegacySessionFactory.class);
+        bind(ActorProvider.class).to(LegacyActorProvider.class);
+        bind(Clock.class).toInstance(Clock.systemUTC());
     }
 
     private SandalphonProperties sandalphonProperties() {

@@ -1,10 +1,13 @@
 package org.iatoki.judgels.jophiel.activity;
 
-import org.iatoki.judgels.play.model.AbstractHibernateDao;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.HibernateDao;
+import org.hibernate.SessionFactory;
 
-public abstract class AbstractActivityLogHibernateDao<M extends AbstractActivityLogModel> extends AbstractHibernateDao<Long, M> implements BaseActivityLogDao<M> {
+import java.time.Clock;
 
-    protected AbstractActivityLogHibernateDao(Class<M> modelClass) {
-        super(modelClass);
+public abstract class AbstractActivityLogHibernateDao<M extends AbstractActivityLogModel> extends HibernateDao<M> implements BaseActivityLogDao<M> {
+    public AbstractActivityLogHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 }

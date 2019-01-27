@@ -3,19 +3,21 @@ package org.iatoki.judgels.sandalphon.problem.bundle.grading;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.iatoki.judgels.play.model.AbstractJudgelsHibernateDao;
-import play.db.jpa.JPA;
+import judgels.persistence.ActorProvider;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
+import org.hibernate.SessionFactory;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractBundleGradingHibernateDao<M extends AbstractBundleGradingModel> extends AbstractJudgelsHibernateDao<M> implements BaseBundleGradingDao<M> {
+public abstract class AbstractBundleGradingHibernateDao<M extends AbstractBundleGradingModel> extends JudgelsHibernateDao<M> implements BaseBundleGradingDao<M> {
 
-    public AbstractBundleGradingHibernateDao(Class<M> modelClass) {
-        super(modelClass);
+    public AbstractBundleGradingHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+        super(sessionFactory, clock, actorProvider);
     }
 
     @Override
@@ -24,13 +26,13 @@ public abstract class AbstractBundleGradingHibernateDao<M extends AbstractBundle
             return ImmutableMap.of();
         }
 
-        CriteriaBuilder cb = JPA.em().getCriteriaBuilder();
-        CriteriaQuery<M> query = cb.createQuery(getModelClass());
-        Root<M> root = query.from(getModelClass());
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<M> query = cb.createQuery(getEntityClass());
+        Root<M> root = query.from(getEntityClass());
 
         query.where(root.get(AbstractBundleGradingModel_.submissionJid).in(submissionJids));
 
-        List<M> models = JPA.em().createQuery(query).getResultList();
+        List<M> models = currentSession().createQuery(query).getResultList();
 
         Map<String, List<M>> result = Maps.newHashMap();
 

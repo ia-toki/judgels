@@ -1,8 +1,8 @@
 package org.iatoki.judgels.jophiel.activity;
 
-import org.iatoki.judgels.play.model.Dao;
+import judgels.persistence.Dao;
 
-public interface BaseActivityLogDao<M extends AbstractActivityLogModel> extends Dao<Long, M> {
+public interface BaseActivityLogDao<M extends AbstractActivityLogModel> extends Dao<M> {
 
     M createActivityLogModel();
 }

@@ -471,7 +471,7 @@ public final class LessonServiceImpl implements LessonService {
     }
 
     private static  Lesson createLessonFromModel(LessonModel lessonModel) {
-        return new Lesson(lessonModel.id, lessonModel.jid, lessonModel.slug, lessonModel.userCreate, lessonModel.additionalNote, new Date(lessonModel.timeUpdate));
+        return new Lesson(lessonModel.id, lessonModel.jid, lessonModel.slug, lessonModel.createdBy, lessonModel.additionalNote, new Date(lessonModel.createdAt.toEpochMilli()));
     }
 
     private static  LessonPartner createLessonPartnerFromModel(LessonPartnerModel lessonPartnerModel) {

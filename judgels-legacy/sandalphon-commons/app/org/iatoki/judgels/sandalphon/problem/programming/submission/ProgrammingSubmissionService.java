@@ -1,9 +1,10 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
+import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.gabriel.GradingResult;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public interface ProgrammingSubmissionService {
 
     long countProgrammingSubmissionsByUserJid(String containerJid, String problemJid, String userJid);
 
-    List<Long> getAllProgrammingSubmissionsSubmitTime();
+    List<Instant> getAllProgrammingSubmissionsSubmitTime();
 
     List<ProgrammingSubmission> getAllProgrammingSubmissions();
 

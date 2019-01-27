@@ -5,7 +5,7 @@ dependencies {
     play project(':gabriel-commons')
     play project(':api')
 
-    play project(':judgels-commons:judgels-service-core')
+    play project(':judgels-commons:judgels-service-persistence')
     play project(':sandalphon:sandalphon-api')
     play project(':sealtiel:sealtiel-api')
 

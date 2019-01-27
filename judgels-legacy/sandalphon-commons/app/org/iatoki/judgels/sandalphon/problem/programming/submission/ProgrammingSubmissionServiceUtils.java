@@ -20,7 +20,7 @@ public final class ProgrammingSubmissionServiceUtils {
     }
 
     public static ProgrammingSubmission createSubmissionFromModels(AbstractProgrammingSubmissionModel submissionModel, List<? extends AbstractProgrammingGradingModel> gradingModels) {
-        return new ProgrammingSubmission(submissionModel.id, submissionModel.jid, submissionModel.problemJid, submissionModel.containerJid, submissionModel.userCreate, submissionModel.gradingEngine, submissionModel.gradingLanguage, new Date(submissionModel.timeCreate),
+        return new ProgrammingSubmission(submissionModel.id, submissionModel.jid, submissionModel.problemJid, submissionModel.containerJid, submissionModel.createdBy, submissionModel.gradingEngine, submissionModel.gradingLanguage, new Date(submissionModel.createdAt.toEpochMilli()),
                 Lists.transform(gradingModels, m -> createGradingFromModel(m))
         );
     }

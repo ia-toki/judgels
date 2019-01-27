@@ -6,6 +6,7 @@ import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import play.data.DynamicForm;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 
 public interface BundleSubmissionService {
@@ -14,7 +15,7 @@ public interface BundleSubmissionService {
 
     BundleSubmission findBundleSubmissionByJid(String submissionJid);
 
-    List<Long> getAllBundleSubmissionsSubmitTime();
+    List<Instant> getAllBundleSubmissionsSubmitTime();
 
     List<BundleSubmission> getAllBundleSubmissions();
 

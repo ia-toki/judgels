@@ -2,9 +2,9 @@ package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import judgels.persistence.JidGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.iatoki.judgels.FileSystemProvider;
-import org.iatoki.judgels.play.jid.JidService;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemServiceImplUtils;
@@ -108,7 +108,7 @@ public final class BundleItemServiceImpl implements BundleItemService {
         BundleItemsConfig bundleItemsConfig = new Gson().fromJson(problemFileSystemProvider.readFromFile(itemsConfig), BundleItemsConfig.class);
         List<BundleItem> bundleItems = Lists.newArrayList(bundleItemsConfig.itemList);
 
-        String itemJid = JidService.getInstance().generateNewJid("ITEM");
+        String itemJid = JidGenerator.generateJid("ITEM");
         BundleItem bundleItem = new BundleItem(itemJid, itemType, meta);
         bundleItems.add(bundleItem);
 
