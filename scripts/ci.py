@@ -34,14 +34,27 @@ MODULES = OrderedDict([
     (':gabriel:gabriel-engines', {':gabriel:gabriel-engine-api'}),
     (':gabriel', {':gabriel:gabriel-engines', ':gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
 
+
+    (':commons', set()),
+    (':api', set()),
+    (':play-commons', {':commons', ':judgels-commons:judgels-persistence-core'}),
+    (':jophiel-commons', {':commons', ':judgels-commons:judgels-persistence-core'}),
+    (':gabriel-commons', {':commons'}),
+    (':gabriel-blackbox', {':gabriel-commons'}),
+    (':sandalphon-commons', {':play-commons', ':gabriel-commons', ':api'}),
+    (':sandalphon-blackbox-adapters', {':sandalphon-commons', ':gabriel-blackbox'}),
+
+
     (':sandalphon:sandalphon-api', {':jophiel:jophiel-api', ':gabriel:gabriel-api'}),
     (':sandalphon:sandalphon-client', {':sandalphon:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':sealtiel:sealtiel-api'}),
-    (':sandalphon', {':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client'}),
+    (':sandalphon', {':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client', ':sandalphon-commons', ':jophiel-commons', ':sandalphon-blackbox-adapters'}),
 
     (':uriel:uriel-api', {':sandalphon:sandalphon-api'}),
     (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':sealtiel:sealtiel-api'}),
     (':uriel:uriel-dist', set()),
     (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
+
+    (':jerahmeel', {':sandalphon-commons', ':jophiel-commons', ':sandalphon-blackbox-adapters'}),
 
     (':raphael:package.json', set()),
     (':raphael', {':raphael:package.json'})
@@ -57,6 +70,7 @@ PROJECTS = [
     ':sandalphon',
     ':sealtiel',
     ':uriel',
+    ':jerahmeel',
     ':gabriel',
     ':raphael'
 ]
@@ -66,6 +80,7 @@ SERVICES = [
     ':sandalphon',
     ':sealtiel',
     ':uriel',
+    ':jerahmeel',
     ':raphael'
 ]
 
@@ -125,7 +140,7 @@ def check(branch_to_compare):
                     print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael lint')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
-            elif project == ':sandalphon':
+            elif project == ':sandalphon' or project == ':jerahmeel':
                 print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
             else:
                 print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
