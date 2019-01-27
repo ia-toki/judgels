@@ -63,7 +63,7 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
         <td>{problemAliasesMap[submission.problemJid]}</td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
         <td className="cell-centered">
-          {submission.latestGrading && <VerdictTag verdictCode={submission.latestGrading.verdict} />}
+          {submission.latestGrading && <VerdictTag verdictCode={submission.latestGrading.verdict.code} />}
         </td>
         <td>{submission.latestGrading && submission.latestGrading.score}</td>
         <td>
