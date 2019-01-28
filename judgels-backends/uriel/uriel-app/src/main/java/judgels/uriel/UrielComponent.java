@@ -6,6 +6,7 @@ import judgels.fs.aws.AwsModule;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
+import judgels.service.JudgelsScheduler;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.uriel.admin.AdminResource;
 import judgels.uriel.contest.ContestResource;
@@ -64,5 +65,6 @@ public interface UrielComponent {
     ContestWebResource contestWebResource();
     VersionResource versionResource();
 
+    JudgelsScheduler scheduler();
     ContestScoreboardUpdaterDispatcher contestScoreboardUpdaterDispatcher();
 }

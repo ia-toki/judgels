@@ -9,7 +9,6 @@ import io.dropwizard.setup.Environment;
 import java.time.Duration;
 import judgels.fs.aws.AwsModule;
 import judgels.service.JudgelsApplicationModule;
-import judgels.service.JudgelsApplicationUtils;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jaxrs.JudgelsObjectMappers;
 import judgels.service.jersey.JudgelsJerseyFeature;
@@ -42,11 +41,11 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
     public void run(UrielApplicationConfiguration config, Environment env) {
         UrielConfiguration urielConfig = config.getUrielConfig();
         UrielComponent component = DaggerUrielComponent.builder()
-                .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .awsModule(new AwsModule(urielConfig.getAwsConfig()))
                 .fileModule(new FileModule(urielConfig.getFileConfig()))
                 .gabrielModule(new GabrielModule(urielConfig.getGabrielConfig()))
                 .jophielModule(new JophielModule(urielConfig.getJophielConfig()))
+                .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(urielConfig.getSandalphonConfig()))
                 .sealtielModule(new SealtielModule(urielConfig.getSealtielConfig()))
@@ -72,10 +71,10 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         env.jersey().register(component.contestRatingResource());
         env.jersey().register(component.versionResource());
 
-        JudgelsApplicationUtils.scheduleJobWithFixedDelay(
+        component.scheduler().scheduleWithFixedDelay(
+                "contest-scoreboard-updater-dispatcher",
                 component.contestScoreboardUpdaterDispatcher(),
-                env,
-                Duration.ofSeconds(5),
+                Duration.ofSeconds(2),
                 Duration.ofSeconds(20));
     }
 }
