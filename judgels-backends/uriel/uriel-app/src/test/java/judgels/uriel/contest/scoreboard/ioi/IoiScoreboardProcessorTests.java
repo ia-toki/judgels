@@ -95,7 +95,7 @@ class IoiScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
+                            .id(2)
                             .jid("JIDS-2")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
@@ -167,7 +167,7 @@ class IoiScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
+                            .id(2)
                             .jid("JIDS-2")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
@@ -285,7 +285,7 @@ class IoiScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
+                            .id(2)
                             .jid("JIDS-2")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")

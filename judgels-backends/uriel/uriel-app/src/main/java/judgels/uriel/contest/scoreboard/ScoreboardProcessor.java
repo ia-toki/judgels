@@ -20,6 +20,6 @@ public interface ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissionList);
+            List<Submission> submissions);
     Scoreboard filterContestantJids(Scoreboard scoreboard, Set<String> contestantJids);
 }

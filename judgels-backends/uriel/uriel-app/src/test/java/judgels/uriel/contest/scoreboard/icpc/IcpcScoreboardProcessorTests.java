@@ -222,7 +222,7 @@ class IcpcScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
+                            .id(2)
                             .jid("JIDS-2")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
@@ -448,7 +448,7 @@ class IcpcScoreboardProcessorTests {
                                 .build(),
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(1)
+                                .id(2)
                                 .jid("JIDS-2")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -516,7 +516,7 @@ class IcpcScoreboardProcessorTests {
                 List<Submission> submissions = ImmutableList.of(
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(660)
+                                .id(1)
                                 .jid("JIDS-2")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -532,7 +532,7 @@ class IcpcScoreboardProcessorTests {
                                 .build(),
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(900)
+                                .id(2)
                                 .jid("JIDS-1")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -548,7 +548,7 @@ class IcpcScoreboardProcessorTests {
                                 .build(),
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(900)
+                                .id(3)
                                 .jid("JIDS-3")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")

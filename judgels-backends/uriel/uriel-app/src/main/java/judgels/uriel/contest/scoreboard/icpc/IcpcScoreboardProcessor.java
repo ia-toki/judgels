@@ -1,18 +1,19 @@
 package judgels.uriel.contest.scoreboard.icpc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.uriel.api.contest.Contest;
@@ -43,82 +44,82 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissionList) {
-        if (!(styleModuleConfig instanceof IcpcStyleModuleConfig)) {
-            throw new RuntimeException("ICPC-style contest given but styleModuleConfig is not ICPC");
-        }
+            List<Submission> submissions) {
+
         IcpcStyleModuleConfig icpcStyleModuleConfig = (IcpcStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
-        Set<String> problemJidsSet = new HashSet<>(problemJids);
+        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = scoreboardState.getContestantJids();
 
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
-        submissionList.forEach(s -> {
+        submissions.forEach(s -> {
             submissionsMap.putIfAbsent(s.getUserJid(), new ArrayList<>());
             submissionsMap.get(s.getUserJid()).add(s);
         });
 
         Map<String, String> firstSolveSubmissionJid = new HashMap<>();
-        submissionList.stream()
+        submissions.stream()
                 .filter(s -> s.getLatestGrading().isPresent()
                         && s.getLatestGrading().get().getVerdict().equals(Verdicts.ACCEPTED)
                         && contestantJids.contains(s.getUserJid()))
                 .forEach(s -> firstSolveSubmissionJid.putIfAbsent(s.getProblemJid(), s.getJid()));
 
-        List<IcpcScoreboardEntry> scoreboardEntryList = new ArrayList<>();
+        List<IcpcScoreboardEntry> entries = new ArrayList<>();
         for (String contestantJid : submissionsMap.keySet()) {
-            List<Submission> submissions = submissionsMap.get(contestantJid);
             long lastAcceptedPenalty = 0;
-            Map<String, Integer> attemptsMap = new HashMap<>();
-            problemJids.forEach(p -> attemptsMap.put(p, 0));
-            Map<String, Long> penaltyMap = new HashMap<>();
-            problemJids.forEach(p -> penaltyMap.put(p, 0L));
-            Map<String, IcpcScoreboardProblemState> problemStateMap = new HashMap<>();
-            problemJids.forEach(p -> problemStateMap.put(p, IcpcScoreboardProblemState.NOT_ACCEPTED));
 
-            for (Submission submission : submissions) {
+            Map<String, Integer> attemptsMap = new HashMap<>();
+            Map<String, Long> penaltyMap = new HashMap<>();
+            Map<String, IcpcScoreboardProblemState> problemStateMap = new HashMap<>();
+
+            problemJids.forEach(p -> {
+                attemptsMap.put(p, 0);
+                penaltyMap.put(p, 0L);
+                problemStateMap.put(p, IcpcScoreboardProblemState.NOT_ACCEPTED);
+            });
+
+            for (Submission submission : submissionsMap.get(contestantJid)) {
+                String problemJid = submission.getProblemJid();
+
                 if (!contestantJids.contains(submission.getUserJid())) {
                     continue;
                 }
-
-                if (!problemJidsSet.contains(submission.getProblemJid())) {
+                if (!problemJidsSet.contains(problemJid)) {
+                    continue;
+                }
+                if (!problemStateMap.get(problemJid).equals(IcpcScoreboardProblemState.NOT_ACCEPTED)) {
+                    continue;
+                }
+                if (!submission.getLatestGrading().isPresent()) {
                     continue;
                 }
 
-                if (!problemStateMap.get(submission.getProblemJid()).equals(IcpcScoreboardProblemState.NOT_ACCEPTED)) {
+                Verdict verdict = submission.getLatestGrading().get().getVerdict();
+                if (verdict.equals(Verdicts.PENDING)) {
                     continue;
                 }
 
-                if (!submission.getLatestGrading().isPresent()
-                        || submission.getLatestGrading().get().getVerdict().equals(Verdicts.PENDING)) {
-                    continue;
-                }
+                attemptsMap.put(problemJid, attemptsMap.get(problemJid) + 1);
 
-                attemptsMap.put(submission.getProblemJid(), attemptsMap.get(submission.getProblemJid()) + 1);
-
-                long submissionPenalty = submissionPenaltyInMillisecond(
+                long penalty = computePenalty(
                         submission.getTime(),
                         contestantStartTimesMap.get(contestantJid),
                         contest.getBeginTime());
-                penaltyMap.put(submission.getProblemJid(), convertPenaltyToMinutes(submissionPenalty));
+                penaltyMap.put(problemJid, convertPenaltyToMinutes(penalty));
 
-                if (submission.getLatestGrading().get().getVerdict().equals(Verdicts.ACCEPTED)) {
-                    if (firstSolveSubmissionJid.get(submission.getProblemJid()).equals(submission.getJid())) {
-                        problemStateMap.put(
-                                submission.getProblemJid(),
-                                IcpcScoreboardProblemState.FIRST_ACCEPTED);
+                if (verdict.equals(Verdicts.ACCEPTED)) {
+                    if (firstSolveSubmissionJid.get(problemJid).equals(submission.getJid())) {
+                        problemStateMap.put(problemJid, IcpcScoreboardProblemState.FIRST_ACCEPTED);
                     } else {
-                        problemStateMap.put(
-                                submission.getProblemJid(),
-                                IcpcScoreboardProblemState.ACCEPTED);
+                        problemStateMap.put(problemJid, IcpcScoreboardProblemState.ACCEPTED);
                     }
 
-                    lastAcceptedPenalty = submissionPenalty;
+                    lastAcceptedPenalty = penalty;
                 }
             }
 
-            scoreboardEntryList.add(new IcpcScoreboardEntry.Builder()
+            entries.add(new IcpcScoreboardEntry.Builder()
                     .rank(0)
                     .contestantJid(contestantJid)
                     .totalAccepted((int) problemStateMap.values()
@@ -132,28 +133,28 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                                     + penaltyMap.get(p))
                             .sum())
                     .lastAcceptedPenalty(lastAcceptedPenalty)
-                    .addAllAttemptsList(problemJids
+                    .attemptsList(problemJids
                             .stream()
                             .map(attemptsMap::get)
                             .collect(Collectors.toList()))
-                    .addAllPenaltyList(problemJids
+                    .penaltyList(problemJids
                             .stream()
                             .map(penaltyMap::get)
                             .collect(Collectors.toList()))
-                    .addAllProblemStateList(problemJids
+                    .problemStateList(problemJids
                             .stream()
                             .map(problemStateMap::get)
                             .collect(Collectors.toList()))
                     .build());
         }
 
-        scoreboardEntryList = sortEntriesAndAssignRanks(scoreboardEntryList);
+        entries = sortEntriesAndAssignRanks(entries);
 
         try {
             return mapper.writeValueAsString(new IcpcScoreboard.Builder()
                     .state(scoreboardState)
                     .content(new IcpcScoreboardContent.Builder()
-                            .addAllEntries(scoreboardEntryList)
+                            .entries(entries)
                             .build())
                     .build());
         } catch (IOException e) {
@@ -207,10 +208,11 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
         return result;
     }
 
-    private Long submissionPenaltyInMillisecond(
+    private long computePenalty(
             Instant submissionTime,
             Optional<Instant> contestantStartTime,
             Instant contestBeginTime) {
+
         return submissionTime.toEpochMilli() - contestantStartTime.orElse(contestBeginTime).toEpochMilli();
     }
 

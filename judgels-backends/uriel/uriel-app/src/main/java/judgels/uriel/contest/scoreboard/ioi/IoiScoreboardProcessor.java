@@ -2,17 +2,18 @@ package judgels.uriel.contest.scoreboard.ioi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Grading;
 import judgels.sandalphon.api.submission.Submission;
@@ -43,59 +44,62 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissionList) {
-        if (!(styleModuleConfig instanceof IoiStyleModuleConfig)) {
-            throw new RuntimeException("IOI-style contest given but styleModuleConfig is not IOI");
-        }
+            List<Submission> submissions) {
+
         IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
-        Set<String> problemJidsSet = new HashSet<>(problemJids);
+        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = scoreboardState.getContestantJids();
 
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
         contestantJids.forEach(c -> submissionsMap.put(c, new ArrayList<>()));
-        submissionList.forEach(s -> {
+        submissions.forEach(s -> {
             submissionsMap.putIfAbsent(s.getUserJid(), new ArrayList<>());
             submissionsMap.get(s.getUserJid()).add(s);
         });
 
-        List<IoiScoreboardEntry> scoreboardEntryList = new ArrayList<>();
+        List<IoiScoreboardEntry> entries = new ArrayList<>();
         for (String contestantJid : submissionsMap.keySet()) {
-            List<Submission> submissions = submissionsMap.get(contestantJid);
             long lastAffectingPenalty = 0;
             Map<String, Optional<Integer>> scoresMap = new HashMap<>();
             problemJids.forEach(p -> scoresMap.put(p, Optional.empty()));
 
-            for (Submission submission : submissions) {
+            for (Submission submission : submissionsMap.get(contestantJid)) {
+                String problemJid = submission.getProblemJid();
+
                 if (!contestantJids.contains(submission.getUserJid())) {
                     continue;
                 }
-
-                if (!problemJidsSet.contains(submission.getProblemJid())) {
+                if (!problemJidsSet.contains(problemJid)) {
                     continue;
                 }
-
-                if (!submission.getLatestGrading().isPresent()
-                        || submission.getLatestGrading().get().getVerdict().equals(Verdicts.PENDING)) {
+                if (!submission.getLatestGrading().isPresent()) {
                     continue;
                 }
 
                 Grading grading = submission.getLatestGrading().get();
-                if (!scoresMap.get(submission.getProblemJid()).isPresent()
-                        || scoresMap.get(submission.getProblemJid()).get() < grading.getScore()) {
-                    scoresMap.put(submission.getProblemJid(), Optional.of(grading.getScore()));
-                    lastAffectingPenalty = computeLastAffectingPenalty(
-                            submission.getTime(),
-                            contestantStartTimesMap.get(contestantJid),
-                            contest.getBeginTime());
+                Verdict verdict = grading.getVerdict();
+                if (verdict.equals(Verdicts.PENDING)) {
+                    continue;
                 }
+
+                int score = grading.getScore();
+                if (scoresMap.get(problemJid).isPresent() && score < scoresMap.get(problemJid).get()) {
+                    continue;
+                }
+                scoresMap.put(submission.getProblemJid(), Optional.of(score));
+
+                lastAffectingPenalty = computeLastAffectingPenalty(
+                        submission.getTime(),
+                        contestantStartTimesMap.get(contestantJid),
+                        contest.getBeginTime());
             }
 
-            scoreboardEntryList.add(new IoiScoreboardEntry.Builder()
+            entries.add(new IoiScoreboardEntry.Builder()
                     .rank(0)
                     .contestantJid(contestantJid)
-                    .addAllScores(problemJids
+                    .scores(problemJids
                             .stream()
                             .map(scoresMap::get)
                             .collect(Collectors.toList()))
@@ -111,13 +115,13 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             comparator = new StandardIoiScoreboardEntryComparator();
         }
 
-        scoreboardEntryList = sortEntriesAndAssignRanks(comparator, scoreboardEntryList);
+        entries = sortEntriesAndAssignRanks(comparator, entries);
 
         try {
             return mapper.writeValueAsString(new IoiScoreboard.Builder()
                     .state(scoreboardState)
                     .content(new IoiScoreboardContent.Builder()
-                            .addAllEntries(scoreboardEntryList)
+                            .entries(entries)
                             .build())
                     .build());
         } catch (IOException e) {
@@ -245,6 +249,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             Instant submissionTime,
             Optional<Instant> contestantStartTime,
             Instant contestBeginTime) {
+
         return submissionTime.toEpochMilli() - contestantStartTime.orElse(contestBeginTime).toEpochMilli();
     }
 }
