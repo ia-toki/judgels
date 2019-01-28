@@ -44,6 +44,7 @@ public class ContestScoreboardUpdater {
             ContestSubmissionStore submissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
+
         this.objectMapper = objectMapper;
         this.scoreboardStore = scoreboardStore;
         this.moduleStore = moduleStore;

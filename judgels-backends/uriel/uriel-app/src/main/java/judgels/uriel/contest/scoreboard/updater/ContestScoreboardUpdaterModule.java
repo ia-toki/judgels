@@ -29,9 +29,9 @@ public class ContestScoreboardUpdaterModule {
             ContestScoreboardUpdater scoreboardUpdater) {
 
         ExecutorService executorService =
-                lifecycleEnvironment.executorService(ContestScoreboardUpdater.class.getName() + "-%d")
-                        .maxThreads(ContestScoreboardUpdaterDispatcher.THREAD_NUMBER)
-                        .minThreads(ContestScoreboardUpdaterDispatcher.THREAD_NUMBER)
+                lifecycleEnvironment.executorService("contest-scoreboard-updater-%d")
+                        .maxThreads(5)
+                        .minThreads(5)
                         .build();
 
         return unitOfWorkAwareProxyFactory.create(
@@ -41,6 +41,7 @@ public class ContestScoreboardUpdaterModule {
     }
 
     @Provides
+    @Singleton
     static ContestScoreboardUpdater contestScoreboardUpdater(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper objectMapper,
