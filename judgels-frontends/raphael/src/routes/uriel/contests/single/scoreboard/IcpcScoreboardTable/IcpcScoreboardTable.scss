@@ -27,4 +27,11 @@ table.icpc-scoreboard__content {
     }
     background: #e36262 !important;
   }
+
+  td.frozen {
+    strong, small {
+      color: #fff;
+    }
+    background: #70a2ff !important;
+  }
 }

@@ -41,7 +41,7 @@ describe('IcpcScoreboardTable', () => {
           problemStateList: [
             IcpcScoreboardProblemState.NotAccepted,
             IcpcScoreboardProblemState.Accepted,
-            IcpcScoreboardProblemState.NotAccepted,
+            IcpcScoreboardProblemState.Frozen,
           ],
         },
       ],
@@ -103,13 +103,15 @@ describe('IcpcScoreboardTable', () => {
     const getColor = td =>
       td === undefined
         ? ''
-        : td === 'first-accepted' ? 'D ' : td === 'accepted' ? 'G ' : td === 'not-accepted' ? 'R ' : 'X ';
+        : td === 'first-accepted'
+          ? 'D '
+          : td === 'accepted' ? 'G ' : td === 'not-accepted' ? 'R ' : td === 'frozen' ? 'F ' : 'X ';
     const mapCell = td => getColor(td.prop('className')) + td.find('strong').text() + '/' + td.find('small').text();
     const mapRow = tr => [2, 3, 4, 5].map(x => tr.childAt(x)).map(mapCell);
     const points = wrapper
       .find('tbody')
       .children()
       .map(mapRow);
-    expect(points).toEqual([['3/66', 'G 1/3', 'D 3/14', 'D 1/9'], ['1/17', 'R 1/-', 'G 1/17', 'X -/-']]);
+    expect(points).toEqual([['3/66', 'G 1/3', 'D 3/14', 'D 1/9'], ['1/17', 'R 1/-', 'G 1/17', 'F ?/?']]);
   });
 });

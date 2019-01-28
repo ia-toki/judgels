@@ -29,6 +29,7 @@ export enum IcpcScoreboardProblemState {
   NotAccepted = 0,
   Accepted,
   FirstAccepted,
+  Frozen,
 }
 
 export interface IoiScoreboard {
