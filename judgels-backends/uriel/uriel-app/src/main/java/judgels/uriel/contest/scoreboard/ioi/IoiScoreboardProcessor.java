@@ -90,10 +90,12 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 }
                 scoresMap.put(submission.getProblemJid(), Optional.of(score));
 
-                lastAffectingPenalty = computeLastAffectingPenalty(
-                        submission.getTime(),
-                        contestantStartTimesMap.get(contestantJid),
-                        contest.getBeginTime());
+                if (score > 0) {
+                    lastAffectingPenalty = computeLastAffectingPenalty(
+                            submission.getTime(),
+                            contestantStartTimesMap.get(contestantJid),
+                            contest.getBeginTime());
+                }
             }
 
             entries.add(new IoiScoreboardEntry.Builder()

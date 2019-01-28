@@ -108,6 +108,22 @@ class IoiScoreboardProcessorTests {
                                     .score(50)
                                     .verdict(Verdicts.OK)
                                     .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(3)
+                            .jid("JIDS-3")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochMilli(25))
+                            .userJid("c1")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(0)
+                                    .verdict(Verdicts.WRONG_ANSWER)
+                                    .build())
                             .build()
             );
 
@@ -136,7 +152,7 @@ class IoiScoreboardProcessorTests {
                                     .rank(2)
                                     .contestantJid("c1")
                                     .addScores(
-                                            Optional.empty(),
+                                            Optional.of(0),
                                             Optional.of(50)
                                     )
                                     .totalScores(50)
