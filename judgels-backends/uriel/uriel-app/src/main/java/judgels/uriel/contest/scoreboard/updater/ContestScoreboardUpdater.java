@@ -86,6 +86,7 @@ public class ContestScoreboardUpdater {
                 styleModuleConfig,
                 contestantStartTimesMap,
                 submissions,
+                Optional.empty(),
                 ContestScoreboardType.OFFICIAL);
 
         if (contestModulesConfig.getFrozenScoreboard().isPresent()) {
@@ -93,15 +94,13 @@ public class ContestScoreboardUpdater {
                     .getFreezeDurationBeforeEndTime();
             Instant freezeTime = contest.getEndTime().minus(freezeDuration);
             if (clock.instant().isAfter(freezeTime)) {
-                submissions = submissions.stream()
-                        .filter(s -> s.getTime().isBefore(freezeTime))
-                        .collect(Collectors.toList());
                 generateAndUpsertScoreboard(
                         contest,
                         scoreboardState,
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
+                        Optional.of(freezeTime),
                         ContestScoreboardType.FROZEN);
             }
         }
@@ -113,6 +112,7 @@ public class ContestScoreboardUpdater {
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
             List<Submission> submissions,
+            Optional<Instant> freezeTime,
             ContestScoreboardType contestScoreboardType) {
         String scoreboard = scoreboardProcessorRegistry.get(contest.getStyle())
                 .computeToString(
@@ -121,7 +121,8 @@ public class ContestScoreboardUpdater {
                         contest,
                         styleModuleConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        freezeTime);
 
         scoreboardStore.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
                 .scoreboard(scoreboard)

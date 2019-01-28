@@ -75,6 +75,120 @@ class IoiScoreboardProcessorTests {
         }
 
         @Test
+        void only_count_contestant() throws JsonProcessingException {
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochMilli(20))
+                            .userJid("c3")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-1")
+                                    .score(78)
+                                    .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
+                                    .build())
+                            .build()
+            );
+
+            scoreboardProcessor.computeToString(
+                    mapper,
+                    state,
+                    contest,
+                    styleModulesConfig,
+                    contestantStartTimesMap,
+                    submissions,
+                    Optional.empty());
+
+            verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
+                    .state(state)
+                    .content(new IoiScoreboardContent.Builder()
+                            .addEntries(new IoiScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c1")
+                                    .addScores(
+                                            Optional.empty(),
+                                            Optional.empty()
+                                    )
+                                    .totalScores(0)
+                                    .lastAffectingPenalty(0)
+                                    .build())
+                            .addEntries(new IoiScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c2")
+                                    .addScores(
+                                            Optional.empty(),
+                                            Optional.empty()
+                                    )
+                                    .totalScores(0)
+                                    .lastAffectingPenalty(0)
+                                    .build())
+                            .build())
+                    .build());
+        }
+
+        @Test
+        void ignore_other_problem() throws JsonProcessingException {
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochMilli(20))
+                            .userJid("c1")
+                            .problemJid("p4")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-1")
+                                    .score(78)
+                                    .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
+                                    .build())
+                            .build()
+            );
+
+            scoreboardProcessor.computeToString(
+                    mapper,
+                    state,
+                    contest,
+                    styleModulesConfig,
+                    contestantStartTimesMap,
+                    submissions,
+                    Optional.empty());
+
+            verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
+                    .state(state)
+                    .content(new IoiScoreboardContent.Builder()
+                            .addEntries(new IoiScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c1")
+                                    .addScores(
+                                            Optional.empty(),
+                                            Optional.empty()
+                                    )
+                                    .totalScores(0)
+                                    .lastAffectingPenalty(0)
+                                    .build())
+                            .addEntries(new IoiScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c2")
+                                    .addScores(
+                                            Optional.empty(),
+                                            Optional.empty()
+                                    )
+                                    .totalScores(0)
+                                    .lastAffectingPenalty(0)
+                                    .build())
+                            .build())
+                    .build());
+        }
+
+        @Test
         void time_calculation() throws JsonProcessingException {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
@@ -133,7 +247,8 @@ class IoiScoreboardProcessorTests {
                     contest,
                     styleModulesConfig,
                     contestantStartTimesMap,
-                    submissions);
+                    submissions,
+                    Optional.empty());
 
             verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
                     .state(state)
@@ -207,7 +322,8 @@ class IoiScoreboardProcessorTests {
                         contest,
                         styleModulesConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        Optional.empty());
 
                 verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
                         .state(state)
@@ -250,7 +366,8 @@ class IoiScoreboardProcessorTests {
                         contest,
                         styleModulesConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        Optional.empty());
 
                 verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
                         .state(state)
@@ -327,7 +444,8 @@ class IoiScoreboardProcessorTests {
                         contest,
                         styleModulesConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        Optional.empty());
 
                 verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
                         .state(state)
@@ -366,7 +484,8 @@ class IoiScoreboardProcessorTests {
                         contest,
                         styleModulesConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        Optional.empty());
 
                 verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
                         .state(state)

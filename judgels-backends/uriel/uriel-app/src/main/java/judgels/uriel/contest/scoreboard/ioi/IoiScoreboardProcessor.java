@@ -44,18 +44,22 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissions) {
-
+            List<Submission> submissions,
+            Optional<Instant> freezeTime) {
         IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = scoreboardState.getContestantJids();
 
+        List<Submission> filteredSubmissions = submissions.stream()
+                .filter(s -> contestantJids.contains(s.getUserJid()))
+                .filter(s -> problemJidsSet.contains(s.getProblemJid()))
+                .collect(Collectors.toList());
+
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
         contestantJids.forEach(c -> submissionsMap.put(c, new ArrayList<>()));
-        submissions.forEach(s -> {
-            submissionsMap.putIfAbsent(s.getUserJid(), new ArrayList<>());
+        filteredSubmissions.forEach(s -> {
             submissionsMap.get(s.getUserJid()).add(s);
         });
 
