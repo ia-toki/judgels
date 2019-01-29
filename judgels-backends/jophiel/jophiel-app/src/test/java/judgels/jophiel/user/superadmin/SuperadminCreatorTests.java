@@ -34,6 +34,7 @@ class SuperadminCreatorTests {
                 .thenReturn(Optional.of(new User.Builder()
                         .jid("superadminUserJid")
                         .username("superadmin")
+                        .email("superadmin@jophiel.judgels")
                         .build()));
 
         creator.create();
@@ -47,6 +48,7 @@ class SuperadminCreatorTests {
         when(userStore.createUser(any())).thenReturn(new User.Builder()
                 .jid("superadminUserJid")
                 .username("superadmin")
+                .email("superadmin@jophiel.judgels")
                 .build());
 
         creator.create();

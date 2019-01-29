@@ -111,14 +111,16 @@ public class MockJophiel {
         mockJophiel.stubFor(get("/api/v2/users/me/")
                 .willReturn(okForJson(ImmutableMap.of(
                         "jid", "nonadminJid",
-                        "username", "nonadmin"))));
+                        "username", "nonadmin",
+                        "email", "nonadmin@jophiel.judgels"))));
 
         for (int i = 0; i < TOKENS.length; i++) {
             mockJophiel.stubFor(get("/api/v2/users/me/")
                     .withHeader(HttpHeaders.AUTHORIZATION, containing(TOKENS[i]))
                     .willReturn(okForJson(ImmutableMap.of(
                             "jid", JIDS[i],
-                            "username", USERNAMES[i]))));
+                            "username", USERNAMES[i],
+                            "email", USERNAMES[i] + "@jophiel.judgels"))));
         }
 
         mockJophiel.stubFor(get("/api/v2/users/me/role")

@@ -33,7 +33,7 @@ describe('InfoPanel', () => {
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <InfoPanel info={info} onUpdateInfo={onUpdateInfo} />
+          <InfoPanel email="user@domain.com" info={info} onUpdateInfo={onUpdateInfo} />
         </MemoryRouter>
       </Provider>
     );

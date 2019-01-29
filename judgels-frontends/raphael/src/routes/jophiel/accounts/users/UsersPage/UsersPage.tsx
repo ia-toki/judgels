@@ -13,7 +13,7 @@ import { UserRef } from 'components/UserRef/UserRef';
 import { Page, OrderDir } from 'modules/api/pagination';
 import { User } from 'modules/api/jophiel/user';
 
-import { userActions as injectedUserActions } from '../modules/userActions';
+import { userActions as injectedUserActions } from '../../../modules/userActions';
 
 import './UsersPage.css';
 

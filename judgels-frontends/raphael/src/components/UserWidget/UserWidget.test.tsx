@@ -42,7 +42,7 @@ describe('UserWidget', () => {
 
   describe('when the user is logged in', () => {
     beforeEach(() => {
-      user = { jid: 'jid123', username: 'user' };
+      user = { jid: 'jid123', username: 'user', email: 'user@domain.com' };
       profile = { username: 'user' } as Profile;
       render();
     });

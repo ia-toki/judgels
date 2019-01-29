@@ -6,14 +6,16 @@ import { UserInfo, userInfoGender } from 'modules/api/jophiel/userInfo';
 import { getCountryName } from 'assets/data/countries';
 
 export interface InfoTableProps {
+  email: string;
   info: UserInfo;
 }
 
 export const InfoTable = (props: InfoTableProps) => {
-  const { info } = props;
+  const { email, info } = props;
 
   const infoRows: FormTableRow[] = [
     { key: 'name', title: 'Name', value: info.name },
+    { key: 'email', title: 'Email', value: email },
     {
       key: 'gender',
       title: 'Gender',

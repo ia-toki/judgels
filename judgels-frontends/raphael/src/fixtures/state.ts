@@ -3,7 +3,7 @@ import { User } from 'modules/api/jophiel/user';
 import { Contest, ContestStyle } from 'modules/api/uriel/contest';
 
 export const userJid = 'jid123';
-export const user: User = { jid: userJid, username: 'user' };
+export const user: User = { jid: userJid, username: 'user', email: 'user@domain.com' };
 export const token = 'token123';
 export const sessionState: SessionState = {
   isLoggedIn: true,

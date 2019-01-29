@@ -1,3 +1,5 @@
+import { user } from 'fixtures/state';
+
 import { DelSession, INITIAL_STATE, sessionReducer, SessionState, PutToken, PutUser } from './sessionReducer';
 
 describe('sessionReducer', () => {
@@ -13,10 +15,10 @@ describe('sessionReducer', () => {
 
   test('PUT_USER', () => {
     const state = INITIAL_STATE;
-    const action = PutUser.create({ jid: 'jid123', username: 'user' });
+    const action = PutUser.create(user);
     const nextState: SessionState = {
       isLoggedIn: false,
-      user: { jid: 'jid123', username: 'user' },
+      user: user,
     };
     expect(sessionReducer(state, action)).toEqual(nextState);
   });
@@ -24,7 +26,7 @@ describe('sessionReducer', () => {
   test('DEL', () => {
     const state: SessionState = {
       isLoggedIn: true,
-      user: { jid: 'jid123', username: 'user' },
+      user: user,
       token: 'token123',
     };
     const action = DelSession.create();
@@ -34,7 +36,7 @@ describe('sessionReducer', () => {
   test('other actions', () => {
     const state: SessionState = {
       isLoggedIn: true,
-      user: { jid: 'jid123', username: 'user' },
+      user: user,
       token: 'token123',
     };
     expect(sessionReducer(state, { type: 'other' })).toEqual(state);

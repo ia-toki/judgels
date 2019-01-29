@@ -7,7 +7,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, userJid } from 'fixtures/state';
+import { contest, userJid, user } from 'fixtures/state';
 import { ContestClarification, ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
 import { PutUser, sessionReducer } from 'modules/session/sessionReducer';
 import { PutStatementLanguage, webPrefsReducer } from 'modules/webPrefs/webPrefsReducer';
@@ -43,7 +43,7 @@ describe('ContestClarificationsPage', () => {
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutUser.create({ jid: userJid, username: 'username' }));
+    store.dispatch(PutUser.create(user));
     store.dispatch(PutContest.create(contest));
     store.dispatch(PutStatementLanguage.create('en'));
 

@@ -134,6 +134,7 @@ public class UserStore {
         return new User.Builder()
                 .jid(model.jid)
                 .username(model.username)
+                .email(model.email)
                 .build();
     }
 

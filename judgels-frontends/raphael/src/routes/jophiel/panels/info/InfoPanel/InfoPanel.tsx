@@ -10,6 +10,7 @@ import { InfoTable } from '../InfoTable/InfoTable';
 import './InfoPanel.css';
 
 export interface InfoPanelProps {
+  email: string;
   info: UserInfo;
   onUpdateInfo: (info: UserInfo) => Promise<void>;
 }
@@ -36,12 +37,12 @@ export class InfoPanel extends React.PureComponent<InfoPanelProps, InfoPanelStat
   }
 
   private renderContent = () => {
-    const { info } = this.props;
+    const { email, info } = this.props;
     if (this.state.isEditing) {
       const onCancel = { onCancel: this.toggleEdit };
       return <InfoForm onSubmit={this.onSave} initialValues={info} {...onCancel} />;
     }
-    return <InfoTable info={info} />;
+    return <InfoTable email={email} info={info} />;
   };
 
   private toggleEdit = () => {

@@ -40,6 +40,7 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
         User user = store.getUserByUsername("username").get();
         assertThat(user.getJid()).isNotEmpty();
         assertThat(user.getUsername()).isEqualTo("username");
+        assertThat(user.getEmail()).isEqualTo("email@domain.com");
         assertThat(store.getUserEmailByJid(user.getJid())).contains("email@domain.com");
 
         assertThat(store.getUserAvatarUrl(user.getJid())).isEmpty();

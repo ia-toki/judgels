@@ -7,6 +7,7 @@ import { Page, OrderDir } from 'modules/api/pagination';
 export interface User {
   jid: string;
   username: string;
+  email: string;
 }
 
 export interface UsernamesMap {
@@ -20,6 +21,10 @@ export function baseUserURL(userJid: string) {
 }
 
 export const userAPI = {
+  getUser: (token: string, userJid: string): Promise<User> => {
+    return get(`${baseUsersURL}/${userJid}`, token);
+  },
+
   getUsers: (token: string, page?: number, orderBy?: string, orderDir?: OrderDir): Promise<Page<User>> => {
     const params = stringify({ page, orderBy, orderDir });
     return get(`${baseUsersURL}/?${params}`, token);
