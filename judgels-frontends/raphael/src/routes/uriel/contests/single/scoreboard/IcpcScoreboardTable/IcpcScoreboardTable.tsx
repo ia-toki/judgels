@@ -70,10 +70,7 @@ export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTable
       className = 'frozen';
     }
 
-    const shownAttempts =
-      state === IcpcScoreboardProblemState.NotAccepted
-        ? '-'
-        : state === IcpcScoreboardProblemState.Frozen ? '?' : '' + attempts;
+    const shownAttempts = state === IcpcScoreboardProblemState.Frozen ? '?' : attempts === 0 ? '-' : '' + attempts;
     const shownPenalty =
       state === IcpcScoreboardProblemState.NotAccepted
         ? '-'

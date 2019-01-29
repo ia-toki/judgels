@@ -12,8 +12,8 @@ describe('IcpcScoreboardTable', () => {
 
   const scoreboard: IcpcScoreboard = {
     state: {
-      problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3'],
-      problemAliases: ['A', 'B', 'C'],
+      problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3', 'JIDPROG4'],
+      problemAliases: ['A', 'B', 'C', 'D'],
       contestantJids: ['JIDUSER1', 'JIDUSER2'],
     },
     content: {
@@ -23,12 +23,13 @@ describe('IcpcScoreboardTable', () => {
           contestantJid: 'JIDUSER2',
           totalAccepted: 3,
           totalPenalties: 66,
-          attemptsList: [1, 3, 1],
-          penaltyList: [3, 14, 9],
+          attemptsList: [1, 3, 1, 0],
+          penaltyList: [3, 14, 9, 0],
           problemStateList: [
             IcpcScoreboardProblemState.Accepted,
             IcpcScoreboardProblemState.FirstAccepted,
             IcpcScoreboardProblemState.FirstAccepted,
+            IcpcScoreboardProblemState.NotAccepted,
           ],
         },
         {
@@ -36,12 +37,13 @@ describe('IcpcScoreboardTable', () => {
           contestantJid: 'JIDUSER1',
           totalAccepted: 1,
           totalPenalties: 17,
-          attemptsList: [1, 1, 0],
-          penaltyList: [10, 17, 0],
+          attemptsList: [1, 1, 0, 3],
+          penaltyList: [10, 17, 0, 22],
           problemStateList: [
             IcpcScoreboardProblemState.NotAccepted,
             IcpcScoreboardProblemState.Accepted,
             IcpcScoreboardProblemState.Frozen,
+            IcpcScoreboardProblemState.NotAccepted,
           ],
         },
       ],
@@ -107,11 +109,14 @@ describe('IcpcScoreboardTable', () => {
           ? 'D '
           : td === 'accepted' ? 'G ' : td === 'not-accepted' ? 'R ' : td === 'frozen' ? 'F ' : 'X ';
     const mapCell = td => getColor(td.prop('className')) + td.find('strong').text() + '/' + td.find('small').text();
-    const mapRow = tr => [2, 3, 4, 5].map(x => tr.childAt(x)).map(mapCell);
+    const mapRow = tr => [2, 3, 4, 5, 6].map(x => tr.childAt(x)).map(mapCell);
     const points = wrapper
       .find('tbody')
       .children()
       .map(mapRow);
-    expect(points).toEqual([['3/66', 'G 1/3', 'D 3/14', 'D 1/9'], ['1/17', 'R 1/-', 'G 1/17', 'F ?/?']]);
+    expect(points).toEqual([
+      ['3/66', 'G 1/3', 'D 3/14', 'D 1/9', 'X -/-'],
+      ['1/17', 'R 1/-', 'G 1/17', 'F ?/?', 'R 3/-'],
+    ]);
   });
 });

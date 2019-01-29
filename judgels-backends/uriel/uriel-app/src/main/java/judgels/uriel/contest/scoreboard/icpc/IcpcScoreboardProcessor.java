@@ -53,10 +53,10 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
         Set<String> contestantJids = scoreboardState.getContestantJids();
 
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
-        Map<String, List<Submission>> pendingSubmissionsMap = new HashMap<>();
+        Map<String, List<Submission>> frozenSubmissionsMap = new HashMap<>();
         contestantJids.forEach(c -> {
             submissionsMap.put(c, new ArrayList<>());
-            pendingSubmissionsMap.put(c, new ArrayList<>());
+            frozenSubmissionsMap.put(c, new ArrayList<>());
         });
 
         List<Submission> filteredSubmissions = submissions.stream()
@@ -65,12 +65,13 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                 .collect(Collectors.toList());
 
         filteredSubmissions.stream()
+                .filter(s -> s.getLatestGrading().isPresent())
                 .filter(s -> s.getTime().isBefore(freezeTime.orElse(Instant.MAX)))
                 .forEach(s -> submissionsMap.get(s.getUserJid()).add(s));
 
         filteredSubmissions.stream()
                 .filter(s -> !s.getTime().isBefore(freezeTime.orElse(Instant.MAX)))
-                .forEach(s -> pendingSubmissionsMap.get(s.getUserJid()).add(s));
+                .forEach(s -> frozenSubmissionsMap.get(s.getUserJid()).add(s));
 
         Map<String, String> firstSolveSubmissionJid = new HashMap<>();
         filteredSubmissions.stream()
@@ -96,9 +97,6 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             for (Submission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
 
-                if (!submission.getLatestGrading().isPresent()) {
-                    continue;
-                }
                 if (isAccepted(problemStateMap.get(submission.getProblemJid()))) {
                     continue;
                 }
@@ -127,8 +125,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                 }
             }
 
-            List<Submission> pendingSubmissions = pendingSubmissionsMap.get(contestantJid);
-            for (Submission submission : pendingSubmissions) {
+            for (Submission submission : frozenSubmissionsMap.get(contestantJid)) {
                 if (isAccepted(problemStateMap.get(submission.getProblemJid()))) {
                     continue;
                 }
