@@ -200,6 +200,88 @@ class IcpcScoreboardProcessorTests {
         }
 
         @Test
+        void ignore_submission_with_no_grade() throws JsonProcessingException {
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(300))
+                            .userJid("c1")
+                            .problemJid("p1")
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(2)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(600))
+                            .userJid("c1")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(100)
+                                    .verdict(Verdicts.ACCEPTED)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(3)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(620))
+                            .userJid("c2")
+                            .problemJid("p2")
+                            .build());
+
+            scoreboardProcessor.computeToString(
+                    mapper,
+                    state,
+                    contest,
+                    styleModuleConfig,
+                    contestantStartTimesMap,
+                    submissions,
+                    Optional.empty());
+
+            verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                    .state(state)
+                    .content(new IcpcScoreboardContent.Builder()
+                            .addEntries(new IcpcScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c1")
+                                    .totalAccepted(1)
+                                    .totalPenalties(9)
+                                    .lastAcceptedPenalty(540000)
+                                    .addAttemptsList(1, 0)
+                                    .addPenaltyList(9, 0)
+                                    .addProblemStateList(
+                                            IcpcScoreboardProblemState.FIRST_ACCEPTED,
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED
+                                    )
+                                    .build())
+                            .addEntries(new IcpcScoreboardEntry.Builder()
+                                    .rank(2)
+                                    .contestantJid("c2")
+                                    .totalAccepted(0)
+                                    .totalPenalties(0)
+                                    .lastAcceptedPenalty(0)
+                                    .addAttemptsList(0, 0)
+                                    .addPenaltyList(0, 0)
+                                    .addProblemStateList(
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED
+                                    )
+                                    .build())
+                            .build())
+                    .build());
+        }
+
+        @Test
         void time_calculation() throws JsonProcessingException {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
