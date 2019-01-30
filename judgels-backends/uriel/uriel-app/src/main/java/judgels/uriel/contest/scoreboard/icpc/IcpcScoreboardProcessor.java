@@ -97,7 +97,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             for (Submission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
 
-                if (isAccepted(problemStateMap.get(submission.getProblemJid()))) {
+                if (isAccepted(problemStateMap.get(problemJid))) {
                     continue;
                 }
 
@@ -126,11 +126,12 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             }
 
             for (Submission submission : frozenSubmissionsMap.get(contestantJid)) {
-                if (isAccepted(problemStateMap.get(submission.getProblemJid()))) {
+                String problemJid = submission.getProblemJid();
+                if (isAccepted(problemStateMap.get(problemJid))) {
                     continue;
                 }
 
-                problemStateMap.put(submission.getProblemJid(), IcpcScoreboardProblemState.FROZEN);
+                problemStateMap.put(problemJid, IcpcScoreboardProblemState.FROZEN);
             }
 
             entries.add(new IcpcScoreboardEntry.Builder()
