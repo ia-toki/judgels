@@ -66,10 +66,15 @@ export class IcpcScoreboardTable extends React.PureComponent<IcpcScoreboardTable
       className = 'first-accepted';
     } else if (state === IcpcScoreboardProblemState.NotAccepted && attempts > 0) {
       className = 'not-accepted';
+    } else if (state === IcpcScoreboardProblemState.Frozen) {
+      className = 'frozen';
     }
 
-    const shownAttempts = attempts === 0 ? '-' : '' + attempts;
-    const shownPenalty = state === IcpcScoreboardProblemState.NotAccepted ? '-' : '' + penalty;
+    const shownAttempts = state === IcpcScoreboardProblemState.Frozen ? '?' : attempts === 0 ? '-' : '' + attempts;
+    const shownPenalty =
+      state === IcpcScoreboardProblemState.NotAccepted
+        ? '-'
+        : state === IcpcScoreboardProblemState.Frozen ? '?' : '' + penalty;
 
     return (
       <td key={idx} className={classNames(className)}>

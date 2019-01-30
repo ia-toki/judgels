@@ -61,8 +61,8 @@ class IcpcScoreboardProcessorTests {
                 .build();
 
         private StyleModuleConfig styleModuleConfig = new IcpcStyleModuleConfig.Builder()
-                        .wrongSubmissionPenalty(1000)
-                        .build();
+                .wrongSubmissionPenalty(1000)
+                .build();
 
         private Map<String, Optional<Instant>> contestantStartTimesMap = ImmutableMap.of(
                 "c1", Optional.empty(),
@@ -76,11 +76,217 @@ class IcpcScoreboardProcessorTests {
         }
 
         @Test
+        void show_only_contestant() throws JsonProcessingException {
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(300))
+                            .userJid("c3")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(0)
+                                    .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
+                                    .build())
+                            .build());
+
+            scoreboardProcessor.computeToString(
+                    mapper,
+                    state,
+                    contest,
+                    styleModuleConfig,
+                    contestantStartTimesMap,
+                    submissions,
+                    Optional.empty());
+
+            verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                    .state(state)
+                    .content(new IcpcScoreboardContent.Builder()
+                            .addEntries(new IcpcScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c1")
+                                    .totalAccepted(0)
+                                    .totalPenalties(0)
+                                    .lastAcceptedPenalty(0)
+                                    .addAttemptsList(0, 0)
+                                    .addPenaltyList(0, 0)
+                                    .addProblemStateList(
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED
+                                    )
+                                    .build())
+                            .addEntries(new IcpcScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c2")
+                                    .totalAccepted(0)
+                                    .totalPenalties(0)
+                                    .lastAcceptedPenalty(0)
+                                    .addAttemptsList(0, 0)
+                                    .addPenaltyList(0, 0)
+                                    .addProblemStateList(
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED
+                                    )
+                                    .build())
+                            .build())
+                    .build());
+        }
+
+        @Test
+        void show_only_contest_problem() throws JsonProcessingException {
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(300))
+                            .userJid("c1")
+                            .problemJid("p4")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(0)
+                                    .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
+                                    .build())
+                            .build());
+
+            scoreboardProcessor.computeToString(
+                    mapper,
+                    state,
+                    contest,
+                    styleModuleConfig,
+                    contestantStartTimesMap,
+                    submissions,
+                    Optional.empty());
+
+            verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                    .state(state)
+                    .content(new IcpcScoreboardContent.Builder()
+                            .addEntries(new IcpcScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c1")
+                                    .totalAccepted(0)
+                                    .totalPenalties(0)
+                                    .lastAcceptedPenalty(0)
+                                    .addAttemptsList(0, 0)
+                                    .addPenaltyList(0, 0)
+                                    .addProblemStateList(
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED
+                                    )
+                                    .build())
+                            .addEntries(new IcpcScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c2")
+                                    .totalAccepted(0)
+                                    .totalPenalties(0)
+                                    .lastAcceptedPenalty(0)
+                                    .addAttemptsList(0, 0)
+                                    .addPenaltyList(0, 0)
+                                    .addProblemStateList(
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED
+                                    )
+                                    .build())
+                            .build())
+                    .build());
+        }
+
+        @Test
+        void ignore_submission_with_no_grade() throws JsonProcessingException {
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(300))
+                            .userJid("c1")
+                            .problemJid("p1")
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(2)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(600))
+                            .userJid("c1")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(100)
+                                    .verdict(Verdicts.ACCEPTED)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(3)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(620))
+                            .userJid("c2")
+                            .problemJid("p2")
+                            .build());
+
+            scoreboardProcessor.computeToString(
+                    mapper,
+                    state,
+                    contest,
+                    styleModuleConfig,
+                    contestantStartTimesMap,
+                    submissions,
+                    Optional.empty());
+
+            verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                    .state(state)
+                    .content(new IcpcScoreboardContent.Builder()
+                            .addEntries(new IcpcScoreboardEntry.Builder()
+                                    .rank(1)
+                                    .contestantJid("c1")
+                                    .totalAccepted(1)
+                                    .totalPenalties(9)
+                                    .lastAcceptedPenalty(540000)
+                                    .addAttemptsList(1, 0)
+                                    .addPenaltyList(9, 0)
+                                    .addProblemStateList(
+                                            IcpcScoreboardProblemState.FIRST_ACCEPTED,
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED
+                                    )
+                                    .build())
+                            .addEntries(new IcpcScoreboardEntry.Builder()
+                                    .rank(2)
+                                    .contestantJid("c2")
+                                    .totalAccepted(0)
+                                    .totalPenalties(0)
+                                    .lastAcceptedPenalty(0)
+                                    .addAttemptsList(0, 0)
+                                    .addPenaltyList(0, 0)
+                                    .addProblemStateList(
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                            IcpcScoreboardProblemState.NOT_ACCEPTED
+                                    )
+                                    .build())
+                            .build())
+                    .build());
+        }
+
+        @Test
         void time_calculation() throws JsonProcessingException {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(300)
+                            .id(1)
                             .jid("JIDS-1")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
@@ -96,7 +302,7 @@ class IcpcScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(360)
+                            .id(2)
                             .jid("JIDS-2")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
@@ -112,7 +318,7 @@ class IcpcScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(400)
+                            .id(3)
                             .jid("JIDS-3")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
@@ -128,7 +334,7 @@ class IcpcScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(410)
+                            .id(4)
                             .jid("JIDS-4")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
@@ -144,7 +350,7 @@ class IcpcScoreboardProcessorTests {
                             .build(),
                     new Submission.Builder()
                             .containerJid("JIDC")
-                            .id(900)
+                            .id(5)
                             .jid("JIDS-5")
                             .gradingEngine("ENG")
                             .gradingLanguage("ASM")
@@ -166,7 +372,8 @@ class IcpcScoreboardProcessorTests {
                     contest,
                     styleModuleConfig,
                     contestantStartTimesMap,
-                    submissions);
+                    submissions,
+                    Optional.empty());
 
             verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
                     .state(state)
@@ -246,7 +453,8 @@ class IcpcScoreboardProcessorTests {
                         contest,
                         styleModuleConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
                         .state(state)
@@ -295,7 +503,8 @@ class IcpcScoreboardProcessorTests {
                         contest,
                         styleModuleConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
                         .state(state)
@@ -338,7 +547,7 @@ class IcpcScoreboardProcessorTests {
                 List<Submission> submissions = ImmutableList.of(
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(300)
+                                .id(1)
                                 .jid("JIDS-2")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -354,7 +563,7 @@ class IcpcScoreboardProcessorTests {
                                 .build(),
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(360)
+                                .id(2)
                                 .jid("JIDS-4")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -370,7 +579,7 @@ class IcpcScoreboardProcessorTests {
                                 .build(),
                         new Submission.Builder()
                                 .containerJid("JIDC")
-                                .id(900)
+                                .id(3)
                                 .jid("JIDS-1")
                                 .gradingEngine("ENG")
                                 .gradingLanguage("ASM")
@@ -392,7 +601,8 @@ class IcpcScoreboardProcessorTests {
                         contest,
                         styleModuleConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
                         .state(state)
@@ -470,7 +680,8 @@ class IcpcScoreboardProcessorTests {
                         contest,
                         styleModuleConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
                         .state(state)
@@ -570,7 +781,8 @@ class IcpcScoreboardProcessorTests {
                         contest,
                         styleModuleConfig,
                         contestantStartTimesMap,
-                        submissions);
+                        submissions,
+                        Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
                         .state(state)
@@ -612,6 +824,297 @@ class IcpcScoreboardProcessorTests {
                                         .addProblemStateList(
                                                 IcpcScoreboardProblemState.ACCEPTED,
                                                 IcpcScoreboardProblemState.NOT_ACCEPTED
+                                        )
+                                        .build())
+                                .build())
+                        .build());
+            }
+        }
+
+        @Nested
+        class PendingAfterFreeze {
+            private Optional<Instant> freezeTime = Optional.of(Instant.ofEpochSecond(500));
+
+            private List<Submission> baseSubmissions = ImmutableList.of(
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(1)
+                            .jid("JIDS-1")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(100))
+                            .userJid("c1")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(100)
+                                    .verdict(Verdicts.ACCEPTED)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(2)
+                            .jid("JIDS-2")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(400))
+                            .userJid("c2")
+                            .problemJid("p2")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(100)
+                                    .verdict(Verdicts.ACCEPTED)
+                                    .build())
+                            .build(),
+                    new Submission.Builder()
+                            .containerJid("JIDC")
+                            .id(3)
+                            .jid("JIDS-3")
+                            .gradingEngine("ENG")
+                            .gradingLanguage("ASM")
+                            .time(Instant.ofEpochSecond(450))
+                            .userJid("c2")
+                            .problemJid("p1")
+                            .latestGrading(new Grading.Builder()
+                                    .id(1)
+                                    .jid("JIDG-2")
+                                    .score(100)
+                                    .verdict(Verdicts.ACCEPTED)
+                                    .build())
+                            .build());
+
+            @Test
+            void no_pending() throws JsonProcessingException {
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        styleModuleConfig,
+                        contestantStartTimesMap,
+                        baseSubmissions,
+                        freezeTime);
+
+                verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                        .state(state)
+                        .content(new IcpcScoreboardContent.Builder()
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c2")
+                                        .totalAccepted(2)
+                                        .totalPenalties(5)
+                                        .lastAcceptedPenalty(150000)
+                                        .addAttemptsList(1, 1)
+                                        .addPenaltyList(3, 2)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.ACCEPTED,
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED
+                                        )
+                                        .build())
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(2)
+                                        .contestantJid("c1")
+                                        .totalAccepted(1)
+                                        .totalPenalties(1)
+                                        .lastAcceptedPenalty(40000)
+                                        .addAttemptsList(1, 0)
+                                        .addPenaltyList(1, 0)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED,
+                                                IcpcScoreboardProblemState.NOT_ACCEPTED
+                                        )
+                                        .build())
+                                .build())
+                        .build());
+            }
+
+            @Test
+            void pending_does_not_overwrite_accepted() throws JsonProcessingException {
+                List<Submission> submissions = new ImmutableList.Builder<Submission>()
+                        .addAll(baseSubmissions)
+                        .add(new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(4)
+                                .jid("JIDS-4")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(501))
+                                .userJid("c1")
+                                .problemJid("p1")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-2")
+                                        .score(100)
+                                        .verdict(Verdicts.ACCEPTED)
+                                        .build())
+                                .build())
+                        .build();
+
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        styleModuleConfig,
+                        contestantStartTimesMap,
+                        submissions,
+                        freezeTime);
+
+                verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                        .state(state)
+                        .content(new IcpcScoreboardContent.Builder()
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c2")
+                                        .totalAccepted(2)
+                                        .totalPenalties(5)
+                                        .lastAcceptedPenalty(150000)
+                                        .addAttemptsList(1, 1)
+                                        .addPenaltyList(3, 2)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.ACCEPTED,
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED
+                                        )
+                                        .build())
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(2)
+                                        .contestantJid("c1")
+                                        .totalAccepted(1)
+                                        .totalPenalties(1)
+                                        .lastAcceptedPenalty(40000)
+                                        .addAttemptsList(1, 0)
+                                        .addPenaltyList(1, 0)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED,
+                                                IcpcScoreboardProblemState.NOT_ACCEPTED
+                                        )
+                                        .build())
+                                .build())
+                        .build());
+            }
+
+            @Test
+            void pending_does_overwrite_not_accepted() throws JsonProcessingException {
+                List<Submission> submissions = new ImmutableList.Builder<Submission>()
+                        .addAll(baseSubmissions)
+                        .add(new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(4)
+                                .jid("JIDS-4")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(501))
+                                .userJid("c1")
+                                .problemJid("p2")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-2")
+                                        .score(100)
+                                        .verdict(Verdicts.ACCEPTED)
+                                        .build())
+                                .build())
+                        .build();
+
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        styleModuleConfig,
+                        contestantStartTimesMap,
+                        submissions,
+                        freezeTime);
+
+                verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                        .state(state)
+                        .content(new IcpcScoreboardContent.Builder()
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c2")
+                                        .totalAccepted(2)
+                                        .totalPenalties(5)
+                                        .lastAcceptedPenalty(150000)
+                                        .addAttemptsList(1, 1)
+                                        .addPenaltyList(3, 2)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.ACCEPTED,
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED
+                                        )
+                                        .build())
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(2)
+                                        .contestantJid("c1")
+                                        .totalAccepted(1)
+                                        .totalPenalties(1)
+                                        .lastAcceptedPenalty(40000)
+                                        .addAttemptsList(1, 0)
+                                        .addPenaltyList(1, 0)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED,
+                                                IcpcScoreboardProblemState.FROZEN
+                                        )
+                                        .build())
+                                .build())
+                        .build());
+            }
+
+            @Test
+            void pending_counts_on_freeze_time() throws JsonProcessingException {
+                List<Submission> submissions = new ImmutableList.Builder<Submission>()
+                        .addAll(baseSubmissions)
+                        .add(new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(4)
+                                .jid("JIDS-4")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(500))
+                                .userJid("c1")
+                                .problemJid("p2")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-2")
+                                        .score(100)
+                                        .verdict(Verdicts.ACCEPTED)
+                                        .build())
+                                .build())
+                        .build();
+
+                scoreboardProcessor.computeToString(
+                        mapper,
+                        state,
+                        contest,
+                        styleModuleConfig,
+                        contestantStartTimesMap,
+                        submissions,
+                        freezeTime);
+
+                verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
+                        .state(state)
+                        .content(new IcpcScoreboardContent.Builder()
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(1)
+                                        .contestantJid("c2")
+                                        .totalAccepted(2)
+                                        .totalPenalties(5)
+                                        .lastAcceptedPenalty(150000)
+                                        .addAttemptsList(1, 1)
+                                        .addPenaltyList(3, 2)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.ACCEPTED,
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED
+                                        )
+                                        .build())
+                                .addEntries(new IcpcScoreboardEntry.Builder()
+                                        .rank(2)
+                                        .contestantJid("c1")
+                                        .totalAccepted(1)
+                                        .totalPenalties(1)
+                                        .lastAcceptedPenalty(40000)
+                                        .addAttemptsList(1, 0)
+                                        .addPenaltyList(1, 0)
+                                        .addProblemStateList(
+                                                IcpcScoreboardProblemState.FIRST_ACCEPTED,
+                                                IcpcScoreboardProblemState.FROZEN
                                         )
                                         .build())
                                 .build())

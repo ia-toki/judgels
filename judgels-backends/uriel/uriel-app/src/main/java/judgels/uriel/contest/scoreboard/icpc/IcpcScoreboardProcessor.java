@@ -44,8 +44,8 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissions) {
-
+            List<Submission> submissions,
+            Optional<Instant> freezeTime) {
         IcpcStyleModuleConfig icpcStyleModuleConfig = (IcpcStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
@@ -53,13 +53,28 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
         Set<String> contestantJids = scoreboardState.getContestantJids();
 
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
-        submissions.forEach(s -> {
-            submissionsMap.putIfAbsent(s.getUserJid(), new ArrayList<>());
-            submissionsMap.get(s.getUserJid()).add(s);
+        Map<String, List<Submission>> frozenSubmissionsMap = new HashMap<>();
+        contestantJids.forEach(c -> {
+            submissionsMap.put(c, new ArrayList<>());
+            frozenSubmissionsMap.put(c, new ArrayList<>());
         });
 
+        List<Submission> filteredSubmissions = submissions.stream()
+                .filter(s -> contestantJids.contains(s.getUserJid()))
+                .filter(s -> problemJidsSet.contains(s.getProblemJid()))
+                .collect(Collectors.toList());
+
+        filteredSubmissions.stream()
+                .filter(s -> s.getLatestGrading().isPresent())
+                .filter(s -> s.getTime().isBefore(freezeTime.orElse(Instant.MAX)))
+                .forEach(s -> submissionsMap.get(s.getUserJid()).add(s));
+
+        filteredSubmissions.stream()
+                .filter(s -> !s.getTime().isBefore(freezeTime.orElse(Instant.MAX)))
+                .forEach(s -> frozenSubmissionsMap.get(s.getUserJid()).add(s));
+
         Map<String, String> firstSolveSubmissionJid = new HashMap<>();
-        submissions.stream()
+        filteredSubmissions.stream()
                 .filter(s -> s.getLatestGrading().isPresent()
                         && s.getLatestGrading().get().getVerdict().equals(Verdicts.ACCEPTED)
                         && contestantJids.contains(s.getUserJid()))
@@ -82,16 +97,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             for (Submission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
 
-                if (!contestantJids.contains(submission.getUserJid())) {
-                    continue;
-                }
-                if (!problemJidsSet.contains(problemJid)) {
-                    continue;
-                }
-                if (!problemStateMap.get(problemJid).equals(IcpcScoreboardProblemState.NOT_ACCEPTED)) {
-                    continue;
-                }
-                if (!submission.getLatestGrading().isPresent()) {
+                if (isAccepted(problemStateMap.get(problemJid))) {
                     continue;
                 }
 
@@ -119,15 +125,24 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                 }
             }
 
+            for (Submission submission : frozenSubmissionsMap.get(contestantJid)) {
+                String problemJid = submission.getProblemJid();
+                if (isAccepted(problemStateMap.get(problemJid))) {
+                    continue;
+                }
+
+                problemStateMap.put(problemJid, IcpcScoreboardProblemState.FROZEN);
+            }
+
             entries.add(new IcpcScoreboardEntry.Builder()
                     .rank(0)
                     .contestantJid(contestantJid)
                     .totalAccepted((int) problemStateMap.values()
                             .stream()
-                            .filter(s -> s != IcpcScoreboardProblemState.NOT_ACCEPTED)
+                            .filter(this::isAccepted)
                             .count())
                     .totalPenalties(penaltyMap.keySet().stream()
-                            .filter(p -> problemStateMap.get(p) != IcpcScoreboardProblemState.NOT_ACCEPTED)
+                            .filter(p -> isAccepted(problemStateMap.get(p)))
                             .mapToLong(p -> ((attemptsMap.get(p) - 1)
                                     * icpcStyleModuleConfig.getWrongSubmissionPenalty())
                                     + penaltyMap.get(p))
@@ -223,5 +238,10 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
         }
 
         return penaltyInMinutes;
+    }
+
+    private boolean isAccepted(IcpcScoreboardProblemState problemState) {
+        return problemState.equals(IcpcScoreboardProblemState.FIRST_ACCEPTED)
+                || problemState.equals(IcpcScoreboardProblemState.ACCEPTED);
     }
 }

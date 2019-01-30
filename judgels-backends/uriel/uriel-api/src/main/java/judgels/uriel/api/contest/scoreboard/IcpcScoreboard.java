@@ -39,7 +39,8 @@ public interface IcpcScoreboard extends Scoreboard {
     enum IcpcScoreboardProblemState {
         @JsonProperty NOT_ACCEPTED,
         @JsonProperty ACCEPTED,
-        @JsonProperty FIRST_ACCEPTED;
+        @JsonProperty FIRST_ACCEPTED,
+        @JsonProperty FROZEN;
 
         @JsonValue
         int toValue() {
