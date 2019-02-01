@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +36,16 @@ public class UserStore {
         UserModel model = new UserModel();
         toModel(userData, model);
         return fromModel(userDao.insert(model));
+    }
+
+    public List<User> createUser(List<UserData> userData) {
+        List<UserModel> usersModel = new ArrayList<>();
+        for (UserData user : userData) {
+            UserModel model = new UserModel();
+            toModel(user, model);
+            usersModel.add(model);
+        }
+        return fromModel(userDao.insertAll(usersModel));
     }
 
     public Optional<User> getUserByJid(String userJid) {
@@ -136,6 +147,14 @@ public class UserStore {
                 .username(model.username)
                 .email(model.email)
                 .build();
+    }
+
+    private static List<User> fromModel(List<UserModel> models) {
+        List<User> users = new ArrayList<>();
+        for (UserModel model : models) {
+            users.add(fromModel(model));
+        }
+        return users;
     }
 
     private static void toModel(UserData data, UserModel model) {

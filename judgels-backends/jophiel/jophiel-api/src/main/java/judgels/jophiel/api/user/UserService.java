@@ -3,6 +3,7 @@ package judgels.jophiel.api.user;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -37,4 +38,11 @@ public interface UserService {
             @QueryParam("page") Optional<Integer> page,
             @QueryParam("orderBy") Optional<String> orderBy,
             @QueryParam("orderDir") Optional<OrderDir> orderDir);
+
+    @POST
+    @Path("/batch-create")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    List<User> createUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, List<UserData> data);
+
 }
