@@ -30,6 +30,12 @@ public interface UserService {
     @Produces(APPLICATION_JSON)
     User createUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, UserData data);
 
+    @POST
+    @Path("/batch-create")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    List<User> createUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, List<UserData> data);
+
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
@@ -38,11 +44,5 @@ public interface UserService {
             @QueryParam("page") Optional<Integer> page,
             @QueryParam("orderBy") Optional<String> orderBy,
             @QueryParam("orderDir") Optional<OrderDir> orderDir);
-
-    @POST
-    @Path("/batch-create")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    List<User> createUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, List<UserData> data);
 
 }

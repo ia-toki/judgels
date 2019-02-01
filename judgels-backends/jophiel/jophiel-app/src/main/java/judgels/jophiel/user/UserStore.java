@@ -38,7 +38,7 @@ public class UserStore {
         return fromModel(userDao.insert(model));
     }
 
-    public List<User> createUser(List<UserData> userData) {
+    public List<User> createUsers(List<UserData> userData) {
         List<UserModel> usersModel = new ArrayList<>();
         for (UserData user : userData) {
             UserModel model = new UserModel();

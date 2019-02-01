@@ -4,7 +4,6 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -62,11 +61,11 @@ public class UserResource implements UserService {
 
     @Override
     @UnitOfWork
-    public List<User> createUser(AuthHeader authHeader, List<UserData> data) {
+    public List<User> createUsers(AuthHeader authHeader, List<UserData> data) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        return userStore.createUser(data);
+        return userStore.createUsers(data);
     }
 
 }

@@ -3,6 +3,8 @@ package judgels.jophiel.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
@@ -77,6 +79,34 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
 
         Page<User> users = store.getUsers(Optional.empty(), Optional.empty(), Optional.empty());
         assertThat(users.getPage()).containsExactly(budi, nano, user);
+    }
+
+    @Test
+    void create_bulk() {
+        assertThat(store.getUserByUsername("andi")).isEmpty();
+        assertThat(store.getUserByUsername("budi")).isEmpty();
+        List<UserData> userDataList = new ArrayList<>();
+        UserData andiData = new UserData.Builder()
+                .username("andi")
+                .password("pass")
+                .email("andi@domain.com")
+                .build();
+        UserData budiData = new UserData.Builder()
+                .username("budi")
+                .password("pass")
+                .email("budi@domain.com")
+                .build();
+        userDataList.add(andiData);
+        userDataList.add(budiData);
+        List<User> users = store.createUsers(userDataList);
+
+        assertThat(users.size()).isEqualTo(2);
+
+        User andi = store.getUserByUsername("andi").get();
+        assertThat(andi.getJid()).isNotEmpty();
+
+        User budi = store.getUserByUsername("budi").get();
+        assertThat(budi.getJid()).isNotEmpty();
     }
 
     @Test
