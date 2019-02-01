@@ -6,7 +6,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableProblemStatement.class)
 public interface ProblemStatement {
-    String getName();
+    String getTitle();
     String getText();
 
     class Builder extends ImmutableProblemStatement.Builder {}

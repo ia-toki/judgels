@@ -63,7 +63,7 @@ public final class ProgrammingProblemStatementController extends AbstractJudgels
             statement = problemService.getStatement(IdentityUtils.getUserJid(), problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
         } catch (IOException e) {
             statement = new ProblemStatement.Builder()
-                    .name(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
+                    .title(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
                     .text(ProgrammingProblemStatementUtils.getDefaultText(ProblemControllerUtils.getCurrentStatementLanguage()))
                     .build();
         }

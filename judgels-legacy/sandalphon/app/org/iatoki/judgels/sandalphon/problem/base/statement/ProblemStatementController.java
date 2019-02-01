@@ -87,7 +87,7 @@ public class ProblemStatementController extends AbstractJudgelsController {
         } catch (IOException e) {
             if (ProblemType.PROGRAMMING.equals(problem.getType())) {
                 statement = new ProblemStatement.Builder()
-                        .name(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
+                        .title(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
                         .text(ProgrammingProblemStatementUtils.getDefaultText(ProblemControllerUtils.getCurrentStatementLanguage()))
                         .build();
             } else {
@@ -96,7 +96,7 @@ public class ProblemStatementController extends AbstractJudgelsController {
         }
 
         UpdateStatementForm updateStatementData = new UpdateStatementForm();
-        updateStatementData.title = statement.getName();
+        updateStatementData.title = statement.getTitle();
         updateStatementData.text = statement.getText();
 
         Form<UpdateStatementForm> updateStatementForm = Form.form(UpdateStatementForm.class).fill(updateStatementData);
@@ -140,7 +140,7 @@ public class ProblemStatementController extends AbstractJudgelsController {
         try {
             UpdateStatementForm updateStatementData = updateStatementForm.get();
             ProblemStatement statement = new ProblemStatement.Builder()
-                    .name(updateStatementData.title)
+                    .title(updateStatementData.title)
                     .text(JudgelsPlayUtils.toSafeHtml(updateStatementData.text))
                     .build();
 

@@ -3,19 +3,19 @@ import { LanguageRestriction } from 'modules/api/gabriel/language';
 export interface ProblemInfo {
   slug: string;
   defaultLanguage: string;
-  namesByLanguage: { [language: string]: string };
+  titlesByLanguage: { [language: string]: string };
 }
 
 export function getProblemName(problem: ProblemInfo, language: string) {
-  return problem.namesByLanguage[language] || problem.namesByLanguage[problem.defaultLanguage];
+  return problem.titlesByLanguage[language] || problem.titlesByLanguage[problem.defaultLanguage];
 }
 
-export function constructProblemName(name?: string, alias?: string) {
-  return (alias && alias + '. ') + (name || '');
+export function constructProblemName(title?: string, alias?: string) {
+  return (alias && alias + '. ') + (title || '');
 }
 
 export interface ProblemStatement {
-  name: string;
+  title: string;
   text: string;
 }
 

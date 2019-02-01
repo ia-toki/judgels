@@ -10,7 +10,7 @@ describe('language', () => {
     const mk = (defaultLanguage, languages) =>
       ({
         defaultLanguage,
-        namesByLanguage: Object.assign({}, ...languages.map(lang => ({ [lang]: 'name' }))),
+        titlesByLanguage: Object.assign({}, ...languages.map(lang => ({ [lang]: 'name' }))),
       } as ProblemInfo);
 
     let problemsMap;

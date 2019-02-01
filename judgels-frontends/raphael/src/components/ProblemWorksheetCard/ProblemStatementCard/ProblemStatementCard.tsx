@@ -19,7 +19,7 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
     return (
       <ContentCard>
         <h2 className="problem-statement__name">
-          {alias}. {statement.name}
+          {alias}. {statement.title}
         </h2>
         <HTMLTable condensed className="problem-statement__limits">
           <tbody>

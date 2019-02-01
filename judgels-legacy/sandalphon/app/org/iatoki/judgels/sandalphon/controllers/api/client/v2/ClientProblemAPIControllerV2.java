@@ -203,7 +203,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
             res.slug(problem.getSlug());
             res.defaultLanguage(simplifyLanguageCode(problemService.getDefaultLanguage(null, problemJid)));
-            res.namesByLanguage(problemService.getTitlesByLanguage(null, problemJid).entrySet()
+            res.titlesByLanguage(problemService.getTitlesByLanguage(null, problemJid).entrySet()
                     .stream()
                     .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())));
             return res.build();

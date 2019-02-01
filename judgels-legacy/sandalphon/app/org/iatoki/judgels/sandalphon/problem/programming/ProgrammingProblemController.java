@@ -80,7 +80,7 @@ public final class ProgrammingProblemController extends AbstractJudgelsControlle
         try {
             problem = problemService.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
             ProblemStatement statement = new ProblemStatement.Builder()
-                    .name(ProblemStatementUtils.getDefaultTitle(languageCode))
+                    .title(ProblemStatementUtils.getDefaultTitle(languageCode))
                     .text(ProgrammingProblemStatementUtils.getDefaultText(languageCode))
                     .build();
             problemService.updateStatement(null, problem.getJid(), languageCode, statement);

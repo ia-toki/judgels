@@ -188,7 +188,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         return new ContestProblemWorksheet.Builder()
                 .defaultLanguage(problemInfo.getDefaultLanguage())
-                .languages(problemInfo.getNamesByLanguage().keySet())
+                .languages(problemInfo.getTitlesByLanguage().keySet())
                 .problem(problem)
                 .totalSubmissions(totalSubmissions)
                 .worksheet(finalWorksheet)

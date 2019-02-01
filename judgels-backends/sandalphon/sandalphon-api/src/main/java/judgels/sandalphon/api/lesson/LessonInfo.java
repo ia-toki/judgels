@@ -9,7 +9,7 @@ import org.immutables.value.Value;
 public interface LessonInfo {
     String getSlug();
     String getDefaultLanguage();
-    Map<String, String> getNamesByLanguage();
+    Map<String, String> getTitlesByLanguage();
 
     class Builder extends ImmutableLessonInfo.Builder {}
 }

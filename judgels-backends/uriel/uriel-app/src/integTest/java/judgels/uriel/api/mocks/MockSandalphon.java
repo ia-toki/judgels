@@ -63,7 +63,7 @@ public class MockSandalphon {
                         PROBLEM_1_JID, ImmutableMap.of(
                                 "slug", PROBLEM_1_SLUG,
                                 "defaultLanguage", "en",
-                                "namesByLanguage", ImmutableMap.of("en", "Problem 1"))))));
+                                "titlesByLanguage", ImmutableMap.of("en", "Problem 1"))))));
 
         return mockSandalphon;
     }

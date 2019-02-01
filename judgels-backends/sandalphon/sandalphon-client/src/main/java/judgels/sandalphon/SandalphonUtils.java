@@ -61,9 +61,9 @@ public class SandalphonUtils {
 
     public static String getProblemName(ProblemInfo problem, Optional<String> language) {
         String finalLanguage = problem.getDefaultLanguage();
-        if (language.isPresent() && problem.getNamesByLanguage().containsKey(language.get())) {
+        if (language.isPresent() && problem.getTitlesByLanguage().containsKey(language.get())) {
             finalLanguage = language.get();
         }
-        return problem.getNamesByLanguage().get(finalLanguage);
+        return problem.getTitlesByLanguage().get(finalLanguage);
     }
 }

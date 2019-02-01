@@ -50,7 +50,7 @@ public final class BundleProblemController extends AbstractJudgelsController {
         try {
             problem = problemService.createProblem(ProblemType.BUNDLE, slug, additionalNote, languageCode, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
             ProblemStatement statement = new ProblemStatement.Builder()
-                    .name(ProblemStatementUtils.getDefaultTitle(languageCode))
+                    .title(ProblemStatementUtils.getDefaultTitle(languageCode))
                     .text(BundleProblemStatementUtils.getDefaultStatement(languageCode))
                     .build();
 
