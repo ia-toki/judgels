@@ -1,15 +1,15 @@
 package org.iatoki.judgels.sandalphon.problem.programming.statement;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.api.LanguageRestriction;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
 import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestriction;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
@@ -62,7 +62,10 @@ public final class ProgrammingProblemStatementController extends AbstractJudgels
         try {
             statement = problemService.getStatement(IdentityUtils.getUserJid(), problem.getJid(), ProblemControllerUtils.getCurrentStatementLanguage());
         } catch (IOException e) {
-            statement = new ProblemStatement(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()), ProgrammingProblemStatementUtils.getDefaultText(ProblemControllerUtils.getCurrentStatementLanguage()));
+            statement = new ProblemStatement.Builder()
+                    .name(ProblemStatementUtils.getDefaultTitle(ProblemControllerUtils.getCurrentStatementLanguage()))
+                    .text(ProgrammingProblemStatementUtils.getDefaultText(ProblemControllerUtils.getCurrentStatementLanguage()))
+                    .build();
         }
 
         String engine;
@@ -82,7 +85,7 @@ public final class ProgrammingProblemStatementController extends AbstractJudgels
         try {
             languageRestriction = programmingProblemService.getLanguageRestriction(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            languageRestriction = LanguageRestriction.defaultRestriction();
+            languageRestriction = LanguageRestriction.noRestriction();
         }
         Set<String> allowedLanguageNames = LanguageRestrictionAdapter.getFinalAllowedLanguageNames(ImmutableList.of(languageRestriction));
 

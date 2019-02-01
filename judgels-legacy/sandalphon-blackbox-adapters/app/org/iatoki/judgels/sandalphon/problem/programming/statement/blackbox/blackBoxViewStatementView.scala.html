@@ -1,4 +1,4 @@
-@import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement
+@import judgels.sandalphon.api.problem.ProblemStatement
 @import play.i18n.Messages
 @import com.google.common.base.Joiner
 @import org.iatoki.judgels.gabriel.GradingLanguageRegistry
@@ -16,7 +16,7 @@
     <div class="alert alert-danger" role="alert">@{reasonNotAllowedToSubmit}</div>
 }
 
-<h2 class="text-center">@statement.getTitle</h2>
+<h2 class="text-center">@statement.getName</h2>
 
 <p class="text-center">
     Time limit:

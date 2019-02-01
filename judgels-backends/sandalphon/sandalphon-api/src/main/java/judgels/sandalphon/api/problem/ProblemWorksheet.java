@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableProblemWorksheet.class)
 public interface ProblemWorksheet {
     ProblemStatement getStatement();
+    ProblemLimits getLimits();
     ProblemSubmissionConfig getSubmissionConfig();
     Optional<String> getReasonNotAllowedToSubmit();
 

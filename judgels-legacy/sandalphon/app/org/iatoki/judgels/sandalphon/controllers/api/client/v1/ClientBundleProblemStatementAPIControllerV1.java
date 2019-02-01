@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v1;
 
 import com.google.common.collect.ImmutableList;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.api.JudgelsAPIForbiddenException;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
@@ -12,7 +13,6 @@ import org.iatoki.judgels.sandalphon.client.ClientService;
 import org.iatoki.judgels.sandalphon.controllers.api.object.v1.BundleProblemStatementRenderRequestV1;
 import org.iatoki.judgels.sandalphon.controllers.api.util.TOTPUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapter;

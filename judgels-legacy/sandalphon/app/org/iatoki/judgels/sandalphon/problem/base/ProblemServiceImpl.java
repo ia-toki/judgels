@@ -6,13 +6,13 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.GitProvider;
 import org.iatoki.judgels.play.jid.JidService;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.SandalphonProperties;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartner;
@@ -206,7 +206,7 @@ public final class ProblemServiceImpl implements ProblemService {
         availableLanguages.put(languageCode, StatementLanguageStatus.ENABLED);
 
         ProblemStatement defaultLanguageStatement = getStatement(userJid, problemJid, getDefaultLanguage(userJid, problemJid));
-        problemFileSystemProvider.writeToFile(getStatementTitleFilePath(userJid, problemJid, languageCode), defaultLanguageStatement.getTitle());
+        problemFileSystemProvider.writeToFile(getStatementTitleFilePath(userJid, problemJid, languageCode), defaultLanguageStatement.getName());
         problemFileSystemProvider.writeToFile(getStatementTextFilePath(userJid, problemJid, languageCode), defaultLanguageStatement.getText());
         problemFileSystemProvider.writeToFile(getStatementAvailableLanguagesFilePath(userJid, problemJid), new Gson().toJson(availableLanguages));
     }
@@ -246,7 +246,7 @@ public final class ProblemServiceImpl implements ProblemService {
         String title = problemFileSystemProvider.readFromFile(getStatementTitleFilePath(userJid, problemJid, languageCode));
         String text = problemFileSystemProvider.readFromFile(getStatementTextFilePath(userJid, problemJid, languageCode));
 
-        return new ProblemStatement(title, text);
+        return new ProblemStatement.Builder().name(title).text(text).build();
     }
 
     @Override
@@ -268,7 +268,7 @@ public final class ProblemServiceImpl implements ProblemService {
     @Override
     public void updateStatement(String userJid, String problemJid, String languageCode, ProblemStatement statement) throws IOException {
         ProblemModel problemModel = problemDao.findByJid(problemJid);
-        problemFileSystemProvider.writeToFile(getStatementTitleFilePath(userJid, problemModel.jid, languageCode), statement.getTitle());
+        problemFileSystemProvider.writeToFile(getStatementTitleFilePath(userJid, problemModel.jid, languageCode), statement.getName());
         problemFileSystemProvider.writeToFile(getStatementTextFilePath(userJid, problemModel.jid, languageCode), statement.getText());
     }
 

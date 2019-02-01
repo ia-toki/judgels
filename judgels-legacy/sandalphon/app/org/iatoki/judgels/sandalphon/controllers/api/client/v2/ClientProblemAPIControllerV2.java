@@ -1,6 +1,12 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import judgels.gabriel.api.LanguageRestriction;
+import judgels.sandalphon.api.problem.ProblemInfo;
+import judgels.sandalphon.api.problem.ProblemLimits;
+import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
+import judgels.sandalphon.api.problem.ProblemWorksheet;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
@@ -8,15 +14,9 @@ import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.client.ClientService;
-import org.iatoki.judgels.sandalphon.controllers.api.object.v2.ProblemInfoV2;
-import org.iatoki.judgels.sandalphon.controllers.api.object.v2.ProblemStatementV2;
-import org.iatoki.judgels.sandalphon.controllers.api.object.v2.ProblemSubmissionConfigV2;
-import org.iatoki.judgels.sandalphon.controllers.api.object.v2.ProblemWorksheetV2;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestriction;
 import org.iatoki.judgels.sandalphon.user.UserService;
 import play.data.DynamicForm;
 import play.db.jpa.Transactional;
@@ -63,28 +63,30 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             throw new JudgelsAPINotFoundException();
         }
 
-        ProblemSubmissionConfigV2 result = new ProblemSubmissionConfigV2();
+        ProblemSubmissionConfig.Builder result = new ProblemSubmissionConfig.Builder();
 
+        String gradingEngine;
         try {
-            result.gradingEngine = programmingProblemService.getGradingEngine(null, problemJid);
+            gradingEngine = programmingProblemService.getGradingEngine(null, problemJid);
         } catch (IOException e) {
-            result.gradingEngine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            gradingEngine = GradingEngineRegistry.getInstance().getDefaultEngine();
         }
+        result.gradingEngine(gradingEngine);
 
         try {
-            result.gradingLanguageRestriction = programmingProblemService.getLanguageRestriction(null, problemJid);
+            result.gradingLanguageRestriction(programmingProblemService.getLanguageRestriction(null, problemJid));
         } catch (IOException e) {
-            result.gradingLanguageRestriction = LanguageRestriction.defaultRestriction();
+            result.gradingLanguageRestriction(LanguageRestriction.noRestriction());
         }
 
         BlackBoxGradingConfig config;
         try {
             config = (BlackBoxGradingConfig) programmingProblemService.getGradingConfig(null, problemJid);
         } catch (IOException e) {
-            config = (BlackBoxGradingConfig) GradingEngineRegistry.getInstance().getEngine(result.gradingEngine).createDefaultGradingConfig();
+            config = (BlackBoxGradingConfig) GradingEngineRegistry.getInstance().getEngine(gradingEngine).createDefaultGradingConfig();
         }
 
-        result.sourceKeys = config.getSourceFileFields();
+        result.sourceKeys(config.getSourceFileFields());
 
         return okAsJson(result);
     }
@@ -97,31 +99,33 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             throw new JudgelsAPINotFoundException();
         }
 
-        ProblemSubmissionConfigV2 submissionConfig = new ProblemSubmissionConfigV2();
+        ProblemSubmissionConfig.Builder submissionConfig = new ProblemSubmissionConfig.Builder();
 
+        String gradingEngine;
         try {
-            submissionConfig.gradingEngine = programmingProblemService.getGradingEngine(null, problemJid);
+            gradingEngine = programmingProblemService.getGradingEngine(null, problemJid);
         } catch (IOException e) {
-            submissionConfig.gradingEngine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            gradingEngine = GradingEngineRegistry.getInstance().getDefaultEngine();
         }
+        submissionConfig.gradingEngine(gradingEngine);
 
         try {
-            submissionConfig.gradingLanguageRestriction = programmingProblemService.getLanguageRestriction(null, problemJid);
+            submissionConfig.gradingLanguageRestriction(programmingProblemService.getLanguageRestriction(null, problemJid));
         } catch (IOException e) {
-            submissionConfig.gradingLanguageRestriction = LanguageRestriction.defaultRestriction();
+            submissionConfig.gradingLanguageRestriction(LanguageRestriction.noRestriction());
         }
 
         BlackBoxGradingConfig config;
         try {
             config = (BlackBoxGradingConfig) programmingProblemService.getGradingConfig(null, problemJid);
         } catch (IOException e) {
-            config = (BlackBoxGradingConfig) GradingEngineRegistry.getInstance().getEngine(submissionConfig.gradingEngine).createDefaultGradingConfig();
+            config = (BlackBoxGradingConfig) GradingEngineRegistry.getInstance().getEngine(gradingEngine).createDefaultGradingConfig();
         }
 
-        submissionConfig.sourceKeys = config.getSourceFileFields();
+        submissionConfig.sourceKeys(config.getSourceFileFields());
 
-        ProblemWorksheetV2 result = new ProblemWorksheetV2();
-        result.submissionConfig = submissionConfig;
+        ProblemWorksheet.Builder result = new ProblemWorksheet.Builder();
+        result.submissionConfig(submissionConfig.build());
 
         String language = DynamicForm.form().bindFromRequest().get("language");
 
@@ -136,14 +140,15 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             }
 
             ProblemStatement statement = problemService.getStatement(null, problemJid, simplifiedLanguages.get(language));
+            result.statement(statement);
 
-            result.statement = new ProblemStatementV2();
-            result.statement.name = statement.getTitle();
-            result.statement.timeLimit = config.getTimeLimitInMilliseconds();
-            result.statement.memoryLimit = config.getMemoryLimitInKilobytes();
-            result.statement.text = statement.getText();
+            ProblemLimits limits = new ProblemLimits.Builder()
+                    .timeLimit(config.getTimeLimitInMilliseconds())
+                    .memoryLimit(config.getMemoryLimitInKilobytes())
+                    .build();
+            result.limits(limits);
 
-            return okAsJson(result);
+            return okAsJson(result.build());
         } catch (IOException e) {
 
             throw new JudgelsAPIInternalServerErrorException(e);
@@ -156,7 +161,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
         JsonNode problemJids = request().body().asJson();
 
-        Map<String, ProblemInfoV2> result = new HashMap<>();
+        Map<String, ProblemInfo> result = new HashMap<>();
 
         for (JsonNode problemJidNode : problemJids) {
             String problemJid = problemJidNode.asText();
@@ -190,18 +195,18 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         return okAsJson(result);
     }
 
-    private ProblemInfoV2 getProblemInfo(String problemJid) {
+    private ProblemInfo getProblemInfo(String problemJid) {
         try {
             Problem problem = problemService.findProblemByJid(problemJid);
 
-            ProblemInfoV2 res = new ProblemInfoV2();
+            ProblemInfo.Builder res = new ProblemInfo.Builder();
 
-            res.slug = problem.getSlug();
-            res.defaultLanguage = simplifyLanguageCode(problemService.getDefaultLanguage(null, problemJid));
-            res.namesByLanguage = problemService.getTitlesByLanguage(null, problemJid).entrySet()
+            res.slug(problem.getSlug());
+            res.defaultLanguage(simplifyLanguageCode(problemService.getDefaultLanguage(null, problemJid)));
+            res.namesByLanguage(problemService.getTitlesByLanguage(null, problemJid).entrySet()
                     .stream()
-                    .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue()));
-            return res;
+                    .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())));
+            return res.build();
         } catch (IOException e) {
             throw new JudgelsAPIInternalServerErrorException(e);
         }

@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import judgels.gabriel.api.LanguageRestriction;
 import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
 import org.iatoki.judgels.gabriel.OutputOnlyMagic;
 
@@ -18,9 +18,9 @@ public final class LanguageRestrictionAdapter {
 
     public static LanguageRestriction createLanguageRestrictionFromForm(Map<String, String> allowedLanguageNames, boolean isAllowedAll) {
         if (allowedLanguageNames == null || isAllowedAll) {
-            return new LanguageRestriction(ImmutableSet.of());
+            return LanguageRestriction.noRestriction();
         } else {
-            return new LanguageRestriction(allowedLanguageNames.keySet());
+            return LanguageRestriction.of(allowedLanguageNames.keySet());
         }
     }
 

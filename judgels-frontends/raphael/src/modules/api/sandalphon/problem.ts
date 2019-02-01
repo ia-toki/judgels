@@ -16,9 +16,12 @@ export function constructProblemName(name?: string, alias?: string) {
 
 export interface ProblemStatement {
   name: string;
+  text: string;
+}
+
+export interface ProblemLimits {
   timeLimit: number;
   memoryLimit: number;
-  text: string;
 }
 
 export interface ProblemSubmissionConfig {
@@ -29,6 +32,7 @@ export interface ProblemSubmissionConfig {
 
 export interface ProblemWorksheet {
   statement: ProblemStatement;
+  limits: ProblemLimits;
   submissionConfig: ProblemSubmissionConfig;
   reasonNotAllowedToSubmit?: string;
 }

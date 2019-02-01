@@ -43,20 +43,20 @@ public class SandalphonUtils {
         for (LanguageRestriction restriction : restrictions) {
             finalRestriction = combineLanguageRestrictions(finalRestriction, restriction);
         }
-        Set<String> allowedLanguages = finalRestriction.getAllowedLanguages();
+        Set<String> allowedLanguages = finalRestriction.getAllowedLanguageNames();
         if (!allowedLanguages.isEmpty() && !allowedLanguages.contains(gradingLanguage)) {
             throw new ForbiddenException("Grading language " + gradingLanguage + " is not allowed");
         }
     }
 
     public static LanguageRestriction combineLanguageRestrictions(LanguageRestriction r1, LanguageRestriction r2) {
-        if (r1.getAllowedLanguages().isEmpty()) {
+        if (r1.getAllowedLanguageNames().isEmpty()) {
             return r2;
         }
-        if (r2.getAllowedLanguages().isEmpty()) {
+        if (r2.getAllowedLanguageNames().isEmpty()) {
             return r1;
         }
-        return LanguageRestriction.of(Sets.intersection(r1.getAllowedLanguages(), r2.getAllowedLanguages()));
+        return LanguageRestriction.of(Sets.intersection(r1.getAllowedLanguageNames(), r2.getAllowedLanguageNames()));
     }
 
     public static String getProblemName(ProblemInfo problem, Optional<String> language) {

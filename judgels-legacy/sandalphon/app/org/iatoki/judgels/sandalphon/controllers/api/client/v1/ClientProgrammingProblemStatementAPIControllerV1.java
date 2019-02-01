@@ -2,6 +2,8 @@ package org.iatoki.judgels.sandalphon.controllers.api.client.v1;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import judgels.gabriel.api.LanguageRestriction;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.play.api.JudgelsAPIForbiddenException;
@@ -9,9 +11,7 @@ import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.client.Client;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestriction;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.client.ClientService;
@@ -91,10 +91,10 @@ public final class ClientProgrammingProblemStatementAPIControllerV1 extends Abst
             try {
                 problemLanguageRestriction = programmingProblemService.getLanguageRestriction(null, problemJid);
             } catch (IOException e) {
-                problemLanguageRestriction = LanguageRestriction.defaultRestriction();
+                problemLanguageRestriction = LanguageRestriction.noRestriction();
             }
 
-            LanguageRestriction clientLanguageRestriction = new LanguageRestriction(allowedGradingLanguages);
+            LanguageRestriction clientLanguageRestriction = LanguageRestriction.of(allowedGradingLanguages);
 
             Set<String> finalAllowedGradingLanguages = LanguageRestrictionAdapter.getFinalAllowedLanguageNames(ImmutableList.of(problemLanguageRestriction, clientLanguageRestriction));
 

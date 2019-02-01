@@ -38,9 +38,11 @@ describe('ContestProblemPage', () => {
           worksheet: {
             statement: {
               name: 'Problem',
+              text: 'Lorem ipsum',
+            },
+            limits: {
               timeLimit: 2000,
               memoryLimit: 65536,
-              text: 'Lorem ipsum',
             },
             submissionConfig: {
               sourceKeys: { encoder: 'Encoder', decoder: 'Decoder' },

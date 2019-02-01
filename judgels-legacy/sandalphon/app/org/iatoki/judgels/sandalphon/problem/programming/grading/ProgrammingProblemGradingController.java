@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.api.LanguageRestriction;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
@@ -412,7 +413,7 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
         try {
             languageRestriction = programmingProblemService.getLanguageRestriction(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            languageRestriction = LanguageRestriction.defaultRestriction();
+            languageRestriction = LanguageRestriction.noRestriction();
         }
 
         LanguageRestrictionEditForm languageRestrictionEditData = new LanguageRestrictionEditForm();

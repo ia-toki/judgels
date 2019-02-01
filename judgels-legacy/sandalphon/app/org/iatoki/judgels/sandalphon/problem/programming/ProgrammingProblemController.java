@@ -1,13 +1,13 @@
 package org.iatoki.judgels.sandalphon.problem.programming;
 
 import com.google.common.collect.ImmutableList;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
 import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.views.html.layouts.headingLayout;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
@@ -79,7 +79,11 @@ public final class ProgrammingProblemController extends AbstractJudgelsControlle
         Problem problem;
         try {
             problem = problemService.createProblem(ProblemType.PROGRAMMING, slug, additionalNote, languageCode, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-            problemService.updateStatement(null, problem.getJid(), languageCode, new ProblemStatement(ProblemStatementUtils.getDefaultTitle(languageCode), ProgrammingProblemStatementUtils.getDefaultText(languageCode)));
+            ProblemStatement statement = new ProblemStatement.Builder()
+                    .name(ProblemStatementUtils.getDefaultTitle(languageCode))
+                    .text(ProgrammingProblemStatementUtils.getDefaultText(languageCode))
+                    .build();
+            problemService.updateStatement(null, problem.getJid(), languageCode, statement);
             programmingProblemService.initProgrammingProblem(problem.getJid(), programmingProblemCreateData.gradingEngineName);
         } catch (IOException e) {
             programmingProblemCreateForm.reject("problem.programming.error.cantCreate");

@@ -26,7 +26,8 @@ export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCa
   }
 
   private renderStatement = () => {
-    return <ProblemStatementCard alias={this.props.alias} statement={this.props.worksheet.statement} />;
+    const { alias, worksheet } = this.props;
+    return <ProblemStatementCard alias={alias} statement={worksheet.statement} limits={worksheet.limits} />;
   };
 
   private renderSubmission = () => {

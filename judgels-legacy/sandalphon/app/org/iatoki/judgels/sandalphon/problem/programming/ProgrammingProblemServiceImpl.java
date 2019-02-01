@@ -1,11 +1,12 @@
 package org.iatoki.judgels.sandalphon.problem.programming;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import judgels.gabriel.api.LanguageRestriction;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestriction;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemServiceImplUtils;
 
@@ -37,7 +38,7 @@ public final class ProgrammingProblemServiceImpl implements ProgrammingProblemSe
         problemFileSystemProvider.createFile(ProblemServiceImplUtils.appendPath(getGradingHelpersDirPath(null, problemJid), ".gitkeep"));
 
         problemFileSystemProvider.writeToFile(getGradingEngineFilePath(null, problemJid), gradingEngine);
-        problemFileSystemProvider.writeToFile(getLanguageRestrictionFilePath(null, problemJid), new Gson().toJson(LanguageRestriction.defaultRestriction()));
+        problemFileSystemProvider.writeToFile(getLanguageRestrictionFilePath(null, problemJid), new Gson().toJson(LanguageRestriction.noRestriction()));
 
         GradingConfig config = GradingEngineRegistry.getInstance().getEngine(gradingEngine).createDefaultGradingConfig();
         problemFileSystemProvider.writeToFile(getGradingConfigFilePath(null, problemJid), new Gson().toJson(config));
@@ -81,7 +82,7 @@ public final class ProgrammingProblemServiceImpl implements ProgrammingProblemSe
     @Override
     public LanguageRestriction getLanguageRestriction(String userJid, String problemJid) throws IOException {
         String languageRestriction = problemFileSystemProvider.readFromFile(getLanguageRestrictionFilePath(userJid, problemJid));
-        return new Gson().fromJson(languageRestriction, LanguageRestriction.class);
+        return new ObjectMapper().readValue(languageRestriction, LanguageRestriction.class);
     }
 
     @Override

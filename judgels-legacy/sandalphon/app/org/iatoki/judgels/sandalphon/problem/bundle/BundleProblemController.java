@@ -1,9 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.bundle;
 
+import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatement;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
@@ -49,7 +49,12 @@ public final class BundleProblemController extends AbstractJudgelsController {
         Problem problem;
         try {
             problem = problemService.createProblem(ProblemType.BUNDLE, slug, additionalNote, languageCode, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-            problemService.updateStatement(null, problem.getJid(), languageCode, new ProblemStatement(ProblemStatementUtils.getDefaultTitle(languageCode), BundleProblemStatementUtils.getDefaultStatement(languageCode)));
+            ProblemStatement statement = new ProblemStatement.Builder()
+                    .name(ProblemStatementUtils.getDefaultTitle(languageCode))
+                    .text(BundleProblemStatementUtils.getDefaultStatement(languageCode))
+                    .build();
+
+            problemService.updateStatement(null, problem.getJid(), languageCode, statement);
             bundleProblemService.initBundleProblem(problem.getJid());
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.api.LanguageRestriction;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
@@ -11,7 +12,6 @@ import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestriction;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import org.iatoki.judgels.sandalphon.activity.SandalphonActivityKeys;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
@@ -86,7 +86,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractJudgel
         try {
             languageRestriction = programmingProblemService.getLanguageRestriction(null, problem.getJid());
         } catch (IOException e) {
-            languageRestriction = LanguageRestriction.defaultRestriction();
+            languageRestriction = LanguageRestriction.noRestriction();
         }
         Set<String> allowedLanguageNames = LanguageRestrictionAdapter.getFinalAllowedLanguageNames(ImmutableList.of(languageRestriction));
 

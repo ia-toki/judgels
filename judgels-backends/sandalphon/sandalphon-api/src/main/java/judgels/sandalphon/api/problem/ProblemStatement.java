@@ -7,8 +7,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableProblemStatement.class)
 public interface ProblemStatement {
     String getName();
-    int getTimeLimit();
-    int getMemoryLimit();
     String getText();
 
     class Builder extends ImmutableProblemStatement.Builder {}
