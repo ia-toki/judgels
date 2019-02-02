@@ -37,6 +37,15 @@ public class UserStore {
         return fromModel(userDao.insert(model));
     }
 
+    public List<User> createUsers(List<UserData> data) {
+        List<UserModel> usersModel = Lists.transform(data, userData -> {
+            UserModel model = new UserModel();
+            toModel(userData, model);
+            return model;
+        });
+        return fromModel(userDao.insertAll(usersModel));
+    }
+
     public Optional<User> getUserByJid(String userJid) {
         return userDao.selectByJid(userJid).map(UserStore::fromModel);
     }
@@ -136,6 +145,10 @@ public class UserStore {
                 .username(model.username)
                 .email(model.email)
                 .build();
+    }
+
+    private static List<User> fromModel(List<UserModel> models) {
+        return Lists.transform(models, model -> fromModel(model));
     }
 
     private static void toModel(UserData data, UserModel model) {

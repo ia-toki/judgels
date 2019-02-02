@@ -3,6 +3,8 @@ package judgels.jophiel.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import java.util.Optional;
 import judgels.jophiel.AbstractIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
@@ -77,6 +79,30 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
 
         Page<User> users = store.getUsers(Optional.empty(), Optional.empty(), Optional.empty());
         assertThat(users.getPage()).containsExactly(budi, nano, user);
+    }
+
+    @Test
+    void batch_create() {
+        assertThat(store.getUserByUsername("agus")).isEmpty();
+        assertThat(store.getUserByUsername("badu")).isEmpty();
+        List<UserData> data = ImmutableList.of(
+                new UserData.Builder()
+                        .username("agus")
+                        .password("password")
+                        .email("agus@domain.com")
+                        .build(),
+                new UserData.Builder()
+                        .username("badu")
+                        .password("password")
+                        .email("badu@domain.com")
+                        .build());
+        List<User> users = store.createUsers(data);
+
+        Optional<User> agus = store.getUserByJid(users.get(0).getJid());
+        Optional<User> badu = store.getUserByJid(users.get(1).getJid());
+
+        assertThat(agus).isPresent();
+        assertThat(badu).isPresent();
     }
 
     @Test

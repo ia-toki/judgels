@@ -4,6 +4,7 @@ import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.User;
@@ -57,4 +58,14 @@ public class UserResource implements UserService {
 
         return userStore.createUser(data);
     }
+
+    @Override
+    @UnitOfWork
+    public List<User> createUsers(AuthHeader authHeader, List<UserData> data) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canAdminister(actorJid));
+
+        return userStore.createUsers(data);
+    }
+
 }

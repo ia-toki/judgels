@@ -3,6 +3,7 @@ package judgels.jophiel.api.user;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -28,6 +29,12 @@ public interface UserService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     User createUser(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, UserData data);
+
+    @POST
+    @Path("/batch-create")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    List<User> createUsers(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, List<UserData> data);
 
     @GET
     @Path("/")
