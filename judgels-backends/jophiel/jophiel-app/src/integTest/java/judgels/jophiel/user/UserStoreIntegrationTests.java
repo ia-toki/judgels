@@ -83,28 +83,26 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
 
     @Test
     void batch_create() {
-        assertThat(store.getUserByUsername("andi")).isEmpty();
-        assertThat(store.getUserByUsername("budi")).isEmpty();
+        assertThat(store.getUserByUsername("agus")).isEmpty();
+        assertThat(store.getUserByUsername("badu")).isEmpty();
         List<UserData> data = ImmutableList.of(
                 new UserData.Builder()
-                        .username("andi")
-                        .password("pass")
-                        .email("andi@domain.com")
+                        .username("agus")
+                        .password("password")
+                        .email("agus@domain.com")
                         .build(),
                 new UserData.Builder()
-                        .username("budi")
-                        .password("pass")
-                        .email("budi@domain.com")
+                        .username("badu")
+                        .password("password")
+                        .email("badu@domain.com")
                         .build());
         List<User> users = store.createUsers(data);
 
-        assertThat(users.size()).isEqualTo(2);
+        Optional<User> agus = store.getUserByJid(users.get(0).getJid());
+        Optional<User> badu = store.getUserByJid(users.get(1).getJid());
 
-        // System.out.println(users.get(0).getUsername());
-        // System.out.println(users.get(1).getUsername());
-
-        assertThat(store.getUserByUsername("andi")).isPresent();
-        assertThat(store.getUserByUsername("budi")).isPresent();
+        assertThat(agus).isPresent();
+        assertThat(badu).isPresent();
     }
 
     @Test
