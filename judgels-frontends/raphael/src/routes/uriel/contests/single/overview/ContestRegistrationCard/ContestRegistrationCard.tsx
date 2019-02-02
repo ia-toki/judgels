@@ -10,6 +10,8 @@ import { AppState } from 'modules/store';
 import { selectIsLoggedIn } from 'modules/session/sessionSelectors';
 
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
+import ContestRegistrationConfirmationDialog from '../ContestRegistrationConfirmationDialog/ContestRegistrationConfirmationDialog';
+
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestWebActions as injectedContestWebActions } from '../../modules/contestWebActions';
 import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
@@ -31,6 +33,7 @@ interface ContestRegistrationCardState {
   contestantsCount?: number;
   isActionButtonLoading?: boolean;
   isRegistrantsDialogOpen?: boolean;
+  isRegistrationConfirmationDialogOpen?: boolean;
 }
 
 class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCardProps, ContestRegistrationCardState> {
@@ -76,6 +79,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
         {this.renderActionButton(contestantState)}
         {this.renderViewRegistrantsButton(contestantsCount)}
         {this.renderRegistrantsDialog()}
+        {this.renderRegistrationConfirmationDialog()}
         <div className="clearfix" />
       </>
     );
@@ -102,8 +106,9 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
           className="contest-registration-card__item"
           intent={Intent.PRIMARY}
           text="Register"
-          onClick={this.register}
+          onClick={this.toggleRegistrationConfirmationDialog}
           loading={this.state.isActionButtonLoading}
+          disabled={this.state.isRegistrationConfirmationDialogOpen}
         />
       );
     }
@@ -139,6 +144,18 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     return <ContestRegistrantsDialog onClose={this.toggleRegistrantsDialog} />;
   };
 
+  private renderRegistrationConfirmationDialog = () => {
+    if (!this.state.isRegistrationConfirmationDialogOpen) {
+      return null;
+    }
+    return (
+      <ContestRegistrationConfirmationDialog
+        onClose={this.toggleRegistrationConfirmationDialog}
+        onRegister={this.register}
+      />
+    );
+  };
+
   private register = async () => {
     this.setState({ isActionButtonLoading: true });
     await this.props.onRegisterMyselfAsContestant(this.props.contest.jid);
@@ -156,6 +173,12 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
   private toggleRegistrantsDialog = () => {
     this.setState((prevState: ContestRegistrationCardState) => ({
       isRegistrantsDialogOpen: !prevState.isRegistrantsDialogOpen,
+    }));
+  };
+
+  private toggleRegistrationConfirmationDialog = () => {
+    this.setState((prevState: ContestRegistrationCardState) => ({
+      isRegistrationConfirmationDialogOpen: !prevState.isRegistrationConfirmationDialogOpen,
     }));
   };
 }
