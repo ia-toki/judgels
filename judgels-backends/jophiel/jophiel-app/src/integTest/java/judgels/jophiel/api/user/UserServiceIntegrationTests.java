@@ -3,7 +3,7 @@ package judgels.jophiel.api.user;
 import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.persistence.api.Page;
@@ -30,19 +30,20 @@ class UserServiceIntegrationTests extends AbstractServiceIntegrationTests {
     }
 
     @Test
-    void bulk_user_create() {
-        List<UserData> usersData = new ArrayList<>();
-        usersData.add(new UserData.Builder()
-                .username("dina")
-                .password("pass")
-                .email("dina@domain.com")
-                .build());
-        usersData.add(new UserData.Builder()
-                .username("dino")
-                .password("pass")
-                .email("dino@domain.com")
-                .build());
-        List<User> users = userService.createUsers(adminHeader, usersData);
+    void user_batch_create() {
+        List<UserData> data = ImmutableList.of(
+                new UserData.Builder()
+                        .username("dina")
+                        .password("pass")
+                        .email("dina@domain.com")
+                        .build(),
+                new UserData.Builder()
+                        .username("dino")
+                        .password("pass")
+                        .email("dino@domain.com")
+                        .build()
+        );
+        List<User> users = userService.createUsers(adminHeader, data);
 
         assertThat(users.size()).isEqualTo(2);
 

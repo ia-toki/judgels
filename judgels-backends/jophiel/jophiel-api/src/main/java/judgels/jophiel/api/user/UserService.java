@@ -44,5 +44,4 @@ public interface UserService {
             @QueryParam("page") Optional<Integer> page,
             @QueryParam("orderBy") Optional<String> orderBy,
             @QueryParam("orderDir") Optional<OrderDir> orderDir);
-
 }

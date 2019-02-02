@@ -3,7 +3,7 @@ package judgels.jophiel.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import java.util.ArrayList;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
 import judgels.jophiel.AbstractIntegrationTests;
@@ -82,31 +82,29 @@ class UserStoreIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
-    void create_bulk() {
+    void batch_create() {
         assertThat(store.getUserByUsername("andi")).isEmpty();
         assertThat(store.getUserByUsername("budi")).isEmpty();
-        List<UserData> userDataList = new ArrayList<>();
-        UserData andiData = new UserData.Builder()
-                .username("andi")
-                .password("pass")
-                .email("andi@domain.com")
-                .build();
-        UserData budiData = new UserData.Builder()
-                .username("budi")
-                .password("pass")
-                .email("budi@domain.com")
-                .build();
-        userDataList.add(andiData);
-        userDataList.add(budiData);
-        List<User> users = store.createUsers(userDataList);
+        List<UserData> data = ImmutableList.of(
+                new UserData.Builder()
+                        .username("andi")
+                        .password("pass")
+                        .email("andi@domain.com")
+                        .build(),
+                new UserData.Builder()
+                        .username("budi")
+                        .password("pass")
+                        .email("budi@domain.com")
+                        .build());
+        List<User> users = store.createUsers(data);
 
         assertThat(users.size()).isEqualTo(2);
 
-        User andi = store.getUserByUsername("andi").get();
-        assertThat(andi.getJid()).isNotEmpty();
+        // System.out.println(users.get(0).getUsername());
+        // System.out.println(users.get(1).getUsername());
 
-        User budi = store.getUserByUsername("budi").get();
-        assertThat(budi.getJid()).isNotEmpty();
+        assertThat(store.getUserByUsername("andi")).isPresent();
+        assertThat(store.getUserByUsername("budi")).isPresent();
     }
 
     @Test
