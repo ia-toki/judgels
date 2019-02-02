@@ -148,8 +148,11 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     if (!this.state.isRegistrationConfirmationDialogOpen) {
       return null;
     }
+    const { contest } = this.props;
+
     return (
       <ContestRegistrationConfirmationDialog
+        contest={contest}
         onClose={this.toggleRegistrationConfirmationDialog}
         onRegister={this.register}
       />
