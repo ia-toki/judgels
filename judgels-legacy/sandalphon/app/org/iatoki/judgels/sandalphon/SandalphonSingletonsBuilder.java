@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon;
 
+import judgels.sandalphon.SandalphonConfiguration;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.UserActivityMessageServiceImpl;
 import org.iatoki.judgels.sandalphon.activity.ActivityLogDao;
@@ -18,12 +19,12 @@ import javax.inject.Singleton;
 public final class SandalphonSingletonsBuilder {
 
     @Inject
-    public SandalphonSingletonsBuilder(JidCacheDao jidCacheDao, ActivityLogDao activityLogDao) {
+    public SandalphonSingletonsBuilder(JidCacheDao jidCacheDao, ActivityLogDao activityLogDao, SandalphonConfiguration config) {
         JidCacheServiceImpl.buildInstance(jidCacheDao);
         ActivityLogServiceImpl.buildInstance(activityLogDao);
         UserActivityMessageServiceImpl.buildInstance();
 
-        JophielClientControllerUtils.buildInstance(SandalphonProperties.getInstance().getRaphaelBaseUrl(), SandalphonProperties.getInstance().getJophielBaseUrl());
+        JophielClientControllerUtils.buildInstance(config.getRaphaelBaseUrl(), config.getJophielConfig().getBaseUrl());
         SandalphonControllerUtils.buildInstance();
     }
 }

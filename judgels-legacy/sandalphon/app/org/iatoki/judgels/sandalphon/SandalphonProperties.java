@@ -1,59 +1,38 @@
 package org.iatoki.judgels.sandalphon;
 
 import com.typesafe.config.Config;
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
+import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.jophiel.api.JophielClientConfiguration;
+import judgels.sandalphon.SandalphonConfiguration;
+import judgels.sealtiel.api.SealtielClientConfiguration;
 
 public final class SandalphonProperties {
 
-    private static SandalphonProperties INSTANCE;
+    private static final SandalphonProperties INSTANCE = new SandalphonProperties();
 
-    private final Config config;
-
-    private File sandalphonBaseDataDir;
-    private File submissionLocalDir;
-
-    private String jophielBaseUrl;
-
-    private String raphaelBaseUrl;
-
-    private SandalphonProperties(Config config) {
-        this.config = config;
-    }
-
-    public static synchronized void buildInstance(Config config) {
-        if (INSTANCE != null) {
-            throw new UnsupportedOperationException("SandalphonProperties instance has already been built");
-        }
-
-        INSTANCE = new SandalphonProperties(config);
-        INSTANCE.build();
+    public static SandalphonConfiguration build(Config config) {
+        return new SandalphonConfiguration.Builder()
+                .baseDataDir(config.getString("sandalphon.baseDataDir"))
+                .jophielConfig(new JophielClientConfiguration.Builder()
+                        .baseUrl(config.getString("jophiel.baseUrl"))
+                        .build())
+                .sealtielConfig(new SealtielClientConfiguration.Builder()
+                        .baseUrl(config.getString("sealtiel.baseUrl"))
+                        .clientJid(config.getString("sealtiel.clientJid"))
+                        .clientSecret(config.getString("sealtiel.clientSecret"))
+                        .build())
+                .gabrielConfig(new GabrielClientConfiguration.Builder()
+                        .clientJid(config.getString("gabriel.clientJid"))
+                        .build())
+                .raphaelBaseUrl(config.getString("raphael.baseUrl"))
+                .build();
     }
 
     public static SandalphonProperties getInstance() {
-        if (INSTANCE == null) {
-            throw new UnsupportedOperationException("SandalphonProperties instance has not been built");
-        }
         return INSTANCE;
     }
 
-    public String getJophielBaseUrl() {
-        return jophielBaseUrl;
-    }
-
-    public String getRaphaelBaseUrl() {
-        return raphaelBaseUrl;
-    }
-
-    public File getSubmissionLocalDir() {
-        return submissionLocalDir;
-    }
-
-    public File getProblemLocalDir() {
-        return sandalphonBaseDataDir;
-    }
+    // TODO: put these into separate modules
 
     public String getBaseProblemsDirKey() {
         return "problems";
@@ -63,51 +42,11 @@ public final class SandalphonProperties {
         return "problem-clones";
     }
 
-    public File getLessonLocalDir() {
-        return sandalphonBaseDataDir;
-    }
-
     public String getBaseLessonsDirKey() {
         return "lessons";
     }
 
     public String getBaseLessonClonesDirKey() {
         return "lesson-clones";
-    }
-
-    private void build() {
-        sandalphonBaseDataDir = requireDirectoryValue("sandalphon.baseDataDir");
-
-        try {
-            submissionLocalDir = new File(sandalphonBaseDataDir, "submissions");
-            FileUtils.forceMkdir(submissionLocalDir);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        jophielBaseUrl = requireStringValue("jophiel.baseUrl");
-
-        raphaelBaseUrl = requireStringValue("raphael.baseUrl");
-    }
-
-    private String getStringValue(String key) {
-        if (!config.hasPath(key)) {
-            return null;
-        }
-        return config.getString(key);
-    }
-
-    private String requireStringValue(String key) {
-        return config.getString(key);
-    }
-
-    private File requireDirectoryValue(String key) {
-        String filename = config.getString(key);
-
-        File dir = new File(filename);
-        if (!dir.isDirectory()) {
-            throw new RuntimeException("Directory " + dir.getAbsolutePath() + " does not exist");
-        }
-        return dir;
     }
 }

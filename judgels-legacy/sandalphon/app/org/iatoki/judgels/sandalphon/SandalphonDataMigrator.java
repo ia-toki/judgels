@@ -5,6 +5,8 @@ import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.inject.Singleton;
+import com.typesafe.config.ConfigFactory;
+import judgels.sandalphon.SandalphonConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
@@ -113,13 +115,15 @@ public final class SandalphonDataMigrator extends AbstractJudgelsDataMigrator {
     }
 
     private void migrateV3toV4() throws SQLException {
+        SandalphonConfiguration config = SandalphonProperties.build(ConfigFactory.load());
+
         File[] baseDirs = new File[]{
-                FileUtils.getFile(SandalphonProperties.getInstance().getProblemLocalDir(), SandalphonProperties.getInstance().getBaseProblemsDirKey()),
-                FileUtils.getFile(SandalphonProperties.getInstance().getLessonLocalDir(), SandalphonProperties.getInstance().getBaseLessonsDirKey())
+                FileUtils.getFile(config.getBaseDataDir(), SandalphonProperties.getInstance().getBaseProblemsDirKey()),
+                FileUtils.getFile(config.getBaseDataDir(), SandalphonProperties.getInstance().getBaseLessonsDirKey())
         };
         File[] clonesDirs = new File[]{
-                FileUtils.getFile(SandalphonProperties.getInstance().getProblemLocalDir(), SandalphonProperties.getInstance().getBaseProblemClonesDirKey()),
-                FileUtils.getFile(SandalphonProperties.getInstance().getLessonLocalDir(), SandalphonProperties.getInstance().getBaseLessonClonesDirKey())
+                FileUtils.getFile(config.getBaseDataDir(), SandalphonProperties.getInstance().getBaseProblemClonesDirKey()),
+                FileUtils.getFile(config.getBaseDataDir(), SandalphonProperties.getInstance().getBaseLessonClonesDirKey())
         };
         String[] tableNames = new String[]{"problem", "lesson"};
 

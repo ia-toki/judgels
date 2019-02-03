@@ -3,12 +3,11 @@ package org.iatoki.judgels.sandalphon.jophiel;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.palantir.conjure.java.api.config.service.UserAgent;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.me.MyUserService;
 import judgels.jophiel.api.user.search.UserSearchService;
+import judgels.sandalphon.SandalphonConfiguration;
 import judgels.service.jaxrs.JaxRsClients;
 
 public final class JophielModule extends AbstractModule {
@@ -16,11 +15,8 @@ public final class JophielModule extends AbstractModule {
     protected void configure() {}
 
     @Provides
-    JophielClientConfiguration config() {
-        Config config = ConfigFactory.load();
-        return new JophielClientConfiguration.Builder()
-                .baseUrl(config.getString("jophiel.baseUrl"))
-                .build();
+    JophielClientConfiguration config(SandalphonConfiguration config) {
+        return config.getJophielConfig();
     }
 
     @Provides

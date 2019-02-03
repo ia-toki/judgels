@@ -47,7 +47,7 @@ MODULES = OrderedDict([
 
     (':sandalphon:sandalphon-api', {':jophiel:jophiel-api', ':gabriel:gabriel-api'}),
     (':sandalphon:sandalphon-client', {':sandalphon:sandalphon-api', ':judgels-commons:judgels-fs', ':judgels-commons:judgels-persistence-core', ':judgels-commons:judgels-persistence-testing', ':judgels-commons:judgels-service-persistence', ':sealtiel:sealtiel-api'}),
-    (':sandalphon', {':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client', ':sandalphon-commons', ':jophiel-commons', ':sandalphon-blackbox-adapters'}),
+    (':sandalphon', {':sandalphon:sandalphon-app', ':sandalphon:sandalphon-api', ':sandalphon:sandalphon-client', ':sandalphon-commons', ':jophiel-commons', ':sandalphon-blackbox-adapters'}),
 
     (':uriel:uriel-api', {':sandalphon:sandalphon-api'}),
     (':uriel:uriel-app', {':uriel:uriel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':sealtiel:sealtiel-api'}),

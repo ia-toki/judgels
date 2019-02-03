@@ -14,5 +14,7 @@ dependencies {
     play project(':jophiel-commons')
     play project(':sandalphon-blackbox-adapters')
 
+    play project(':sandalphon:sandalphon-app')
+
     play "org.webjars:prettify:4-Mar-2013"
 }

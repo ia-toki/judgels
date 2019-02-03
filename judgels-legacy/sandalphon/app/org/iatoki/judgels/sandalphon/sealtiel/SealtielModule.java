@@ -3,8 +3,7 @@ package org.iatoki.judgels.sandalphon.sealtiel;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.palantir.conjure.java.api.config.service.UserAgent;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
+import judgels.sandalphon.SandalphonConfiguration;
 import judgels.sealtiel.api.SealtielClientConfiguration;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
@@ -18,13 +17,8 @@ public final class SealtielModule extends AbstractModule {
     protected void configure() {}
 
     @Provides
-    SealtielClientConfiguration config() {
-        Config config = ConfigFactory.load();
-        return new SealtielClientConfiguration.Builder()
-                .baseUrl(config.getString("sealtiel.baseUrl"))
-                .clientJid(config.getString("sealtiel.clientJid"))
-                .clientSecret(config.getString("sealtiel.clientSecret"))
-                .build();
+    SealtielClientConfiguration config(SandalphonConfiguration config) {
+        return config.getSealtielConfig();
     }
 
     @Provides

@@ -15,6 +15,7 @@ include ':jophiel:jophiel-app'
 include ':jophiel:jophiel-client'
 include ':jophiel:jophiel-dist'
 
+include ':sandalphon:sandalphon-app'
 include ':sandalphon:sandalphon-client'
 include ':sandalphon:sandalphon-api'
 

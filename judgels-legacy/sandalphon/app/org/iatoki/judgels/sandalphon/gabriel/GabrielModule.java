@@ -2,9 +2,8 @@ package org.iatoki.judgels.sandalphon.gabriel;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import judgels.gabriel.api.GabrielClientConfiguration;
+import judgels.sandalphon.SandalphonConfiguration;
 
 import javax.inject.Named;
 
@@ -13,11 +12,8 @@ public final class GabrielModule extends AbstractModule {
     protected void configure() {}
 
     @Provides
-    GabrielClientConfiguration config() {
-        Config config = ConfigFactory.load();
-        return new GabrielClientConfiguration.Builder()
-                .clientJid(config.getString("gabriel.clientJid"))
-                .build();
+    GabrielClientConfiguration config(SandalphonConfiguration config) {
+        return config.getGabrielConfig();
     }
 
     @Provides
