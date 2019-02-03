@@ -16,6 +16,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public final class ApplicationController extends AbstractJudgelsController {
@@ -60,14 +62,23 @@ public final class ApplicationController extends AbstractJudgelsController {
         }
 
         String userJid = IdentityUtils.getUserJid();
+
+        List<String> roles = new ArrayList<>();
         if (!userService.existsByUserJid(userJid)) {
-            userService.createUser(userJid, SandalphonUtils.getDefaultRoles(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-            SandalphonUtils.saveRolesInSession(SandalphonUtils.getDefaultRoles());
-            return redirect(returnUri);
+            roles.addAll(SandalphonUtils.getDefaultRoles());
+        } else {
+            User userRole = userService.findUserByJid(userJid);
+            roles.addAll(userRole.getRoles());
         }
 
-        User userRole = userService.findUserByJid(userJid);
-        SandalphonUtils.saveRolesInSession(userRole.getRoles());
+        if (SandalphonUtils.getRealUsername().equals("superadmin")) {
+            if (!roles.contains("admin")) {
+                roles.add("admin");
+            }
+        }
+
+        userService.updateUser(userJid, roles, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        SandalphonUtils.saveRolesInSession(roles);
 
         return redirect(returnUri);
     }

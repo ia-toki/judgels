@@ -14,6 +14,8 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public final class ApplicationController extends AbstractJudgelsController {
@@ -45,15 +47,25 @@ public final class ApplicationController extends AbstractJudgelsController {
             return redirect(returnUri);
         }
 
-        String userRoleJid = IdentityUtils.getUserJid();
-        if (!userService.existsByUserJid(userRoleJid)) {
-            userService.createUser(userRoleJid, JerahmeelUtils.getDefaultRoles(), IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
-            JerahmeelUtils.saveRolesInSession(JerahmeelUtils.getDefaultRoles());
-            return redirect(returnUri);
+        String userJid = IdentityUtils.getUserJid();
+
+        List<String> roles = new ArrayList<>();
+        if (!userService.existsByUserJid(userJid)) {
+            roles.addAll(JerahmeelUtils.getDefaultRoles());
+        } else {
+            User userRole = userService.findUserByJid(userJid);
+            roles.addAll(userRole.getRoles());
         }
 
-        User userRole = userService.findUserByJid(userRoleJid);
-        JerahmeelUtils.saveRolesInSession(userRole.getRoles());
+        if (JerahmeelUtils.getRealUsername().equals("superadmin")) {
+            if (!roles.contains("admin")) {
+                roles.add("admin");
+            }
+        }
+
+        userService.updateUser(userJid, roles, IdentityUtils.getUserJid(), IdentityUtils.getIpAddress());
+        JerahmeelUtils.saveRolesInSession(roles);
+
         return redirect(returnUri);
     }
 
