@@ -5,6 +5,8 @@ apply plugin: 'org.iatoki.play-webjars'
 
 model {
     tasks.runPlayBinary {
+        task run(type: JavaExec, dependsOn: it) {}
+
         httpPort 9005
     }
 }
