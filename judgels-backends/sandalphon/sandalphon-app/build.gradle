@@ -1,8 +1,7 @@
 apply from: '../../gradle/java.gradle'
 
 dependencies {
-    api project(':sandalphon:sandalphon-api')
-    api project(':sealtiel:sealtiel-api')
+    api project(':sandalphon:sandalphon-client')
     api project(':jophiel:jophiel-client')
 
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
