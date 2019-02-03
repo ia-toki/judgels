@@ -6,6 +6,7 @@ import { Contest } from 'modules/api/uriel/contest';
 import { FormattedContent } from 'components/FormattedContent/FormattedContent';
 
 import './ContestRegistrationConfirmationDialog.css';
+import { APP_CONFIG } from 'conf';
 
 export interface ContestRegistrationConfirmationDialogProps {
   contest: Contest;
@@ -24,7 +25,7 @@ export default class ContestRegistrationConfirmationDialog extends React.PureCom
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button text="Accept and Regsiter" intent={Intent.PRIMARY} onClick={this.onRegisterButonClick} />
+            <Button text="Accept and Register" intent={Intent.PRIMARY} onClick={this.onRegisterButonClick} />
           </div>
         </div>
       </Dialog>
@@ -33,16 +34,8 @@ export default class ContestRegistrationConfirmationDialog extends React.PureCom
 
   private renderTermsAndConditions = () => {
     const { contest } = this.props;
-    const content = `<p>By competing in TLX contests, you agree that:</p>
-    <ul>
-      <li> You will not collaborate with any other contestants. </li>
-      <li> You will not use fake or multiple TLX accounts, other than your own account. </li>
-      <li> You will not try to hack or attack the contest system in any way. </li>
-    </ul>
-    <p> Failure to comply with the above rules can result to a disqualification or ban. </p>
-    <p>Enjoy the contest!</p>`;
 
-    return <FormattedContent context={{ contestJid: contest.jid }}>{content}</FormattedContent>;
+    return <FormattedContent context={{ contestJid: contest.jid }}>{APP_CONFIG.termsAndConditions}</FormattedContent>;
   };
 
   private onRegisterButonClick = () => {

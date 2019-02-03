@@ -19,6 +19,7 @@ export interface AppConfig {
   apiUrls: ApiUrlsConfig;
   tempHome: TempHomeConfig;
   welcomeBanner: WelcomeBannerConfig;
+  termsAndConditions: string;
 }
 
 export const APP_CONFIG = (window as any).conf as AppConfig;
