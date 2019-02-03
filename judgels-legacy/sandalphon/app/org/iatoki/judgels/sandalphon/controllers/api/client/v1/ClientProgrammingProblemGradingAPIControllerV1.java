@@ -1,11 +1,11 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v1;
 
+import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
-import org.iatoki.judgels.sandalphon.grader.GraderService;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 
@@ -17,20 +17,20 @@ import java.io.IOException;
 @Singleton
 public final class ClientProgrammingProblemGradingAPIControllerV1 extends AbstractJudgelsAPIController {
 
-    private final GraderService graderService;
+    private final ClientChecker clientChecker;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
-    public ClientProgrammingProblemGradingAPIControllerV1(GraderService graderService, ProblemService problemService, ProgrammingProblemService programmingProblemService) {
-        this.graderService = graderService;
+    public ClientProgrammingProblemGradingAPIControllerV1(ClientChecker clientChecker, ProblemService problemService, ProgrammingProblemService programmingProblemService) {
+        this.clientChecker = clientChecker;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
     }
 
     @Transactional(readOnly = true)
     public Result downloadGradingFiles(String problemJid) {
-        authenticateAsJudgelsAppClient(graderService);
+        authenticateAsJudgelsAppClient(clientChecker);
 
         if (!problemService.problemExistsByJid(problemJid)) {
             throw new JudgelsAPINotFoundException();

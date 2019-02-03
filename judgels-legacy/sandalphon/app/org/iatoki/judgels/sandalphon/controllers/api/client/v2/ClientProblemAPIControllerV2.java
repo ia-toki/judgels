@@ -7,13 +7,13 @@ import judgels.sandalphon.api.problem.ProblemLimits;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.ProblemWorksheet;
+import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.client.ClientService;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
@@ -31,14 +31,14 @@ import java.util.stream.Collectors;
 
 @Singleton
 public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIController {
-    private final ClientService clientService;
+    private final ClientChecker clientChecker;
     private final UserService userService;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
 
     @Inject
-    public ClientProblemAPIControllerV2(ClientService clientService, UserService userService, ProblemService problemService, ProgrammingProblemService programmingProblemService) {
-        this.clientService = clientService;
+    public ClientProblemAPIControllerV2(ClientChecker clientChecker, UserService userService, ProblemService problemService, ProgrammingProblemService programmingProblemService) {
+        this.clientChecker = clientChecker;
         this.userService = userService;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
@@ -46,7 +46,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
     @Transactional(readOnly = true)
     public Result getProblem(String problemJid) {
-        authenticateAsJudgelsAppClient(clientService);
+        authenticateAsJudgelsAppClient(clientChecker);
 
         if (!problemService.problemExistsByJid(problemJid)) {
             throw new JudgelsAPINotFoundException();
@@ -57,7 +57,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
     @Transactional(readOnly = true)
     public Result getProblemSubmissionConfig(String problemJid) {
-        authenticateAsJudgelsAppClient(clientService);
+        authenticateAsJudgelsAppClient(clientChecker);
 
         if (!problemService.problemExistsByJid(problemJid)) {
             throw new JudgelsAPINotFoundException();
@@ -93,7 +93,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
     @Transactional(readOnly = true)
     public Result getProblemWorksheet(String problemJid) {
-        authenticateAsJudgelsAppClient(clientService);
+        authenticateAsJudgelsAppClient(clientChecker);
 
         if (!problemService.problemExistsByJid(problemJid)) {
             throw new JudgelsAPINotFoundException();
@@ -157,7 +157,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
     @Transactional(readOnly = true)
     public Result findProblemsByJids() {
-        authenticateAsJudgelsAppClient(clientService);
+        authenticateAsJudgelsAppClient(clientChecker);
 
         JsonNode problemJids = request().body().asJson();
 
@@ -174,7 +174,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
     @Transactional(readOnly = true)
     public Result translateAllowedSlugToJids() {
-        authenticateAsJudgelsAppClient(clientService);
+        authenticateAsJudgelsAppClient(clientChecker);
 
         String userJid = DynamicForm.form().bindFromRequest().get("userJid");
 

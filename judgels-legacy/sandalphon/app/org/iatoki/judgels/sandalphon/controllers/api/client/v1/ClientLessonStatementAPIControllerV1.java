@@ -1,10 +1,10 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v1;
 
+import judgels.service.api.client.Client;
 import org.iatoki.judgels.play.api.JudgelsAPIForbiddenException;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
-import org.iatoki.judgels.sandalphon.client.Client;
 import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.client.ClientService;

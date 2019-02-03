@@ -1,8 +1,8 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
-import org.iatoki.judgels.sandalphon.client.ClientService;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
 import org.iatoki.judgels.sandalphon.user.UserService;
@@ -17,20 +17,20 @@ import java.util.Map;
 
 @Singleton
 public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIController {
-    private final ClientService clientService;
+    private final ClientChecker clientChecker;
     private final UserService userService;
     private final LessonService lessonService;
 
     @Inject
-    public ClientLessonAPIControllerV2(ClientService clientService, UserService userService, LessonService lessonService) {
-        this.clientService = clientService;
+    public ClientLessonAPIControllerV2(ClientChecker clientChecker, UserService userService, LessonService lessonService) {
+        this.clientChecker = clientChecker;
         this.userService = userService;
         this.lessonService = lessonService;
     }
 
     @Transactional(readOnly = true)
     public Result translateAllowedSlugToJids() {
-        authenticateAsJudgelsAppClient(clientService);
+        authenticateAsJudgelsAppClient(clientChecker);
 
         String userJid = DynamicForm.form().bindFromRequest().get("userJid");
 

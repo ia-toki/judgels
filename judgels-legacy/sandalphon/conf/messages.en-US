@@ -172,28 +172,6 @@ problem.version.local.discard=Discard Local Changes
 problem.version.local.cantCommit=Your working copy has diverged from the master copy. Please update your working copy.
 problem.version.local.cantMerge=Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.
 
-client.clients=Clients
-client.client=Client
-
-client.list=Clients
-client.create=Create Client
-client.view=View Client
-client.update=Update Client
-
-client.name=Name
-client.secret=Secret
-
-grader.graders=Graders
-grader.grader=Grader
-
-grader.list=Graders
-grader.create=Create Grader
-grader.view=View Grader
-grader.update=Update Grader
-
-grader.name=Name
-grader.secret=Secret
-
 lesson.lessons=Lessons
 lesson.list=Lessons
 

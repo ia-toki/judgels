@@ -4,17 +4,15 @@ import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import org.apache.commons.codec.binary.Base64;
+import judgels.service.api.client.BasicAuthHeader;
+import judgels.service.api.client.Client;
+import judgels.service.client.ClientChecker;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.iatoki.judgels.play.api.JudgelsAPIBadRequestException;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.api.JudgelsAPIUnauthorizedException;
-import org.iatoki.judgels.play.api.JudgelsAppClient;
-import org.iatoki.judgels.play.api.JudgelsAppClientAPIIdentity;
-import org.iatoki.judgels.play.api.JudgelsAppClientService;
 import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -36,41 +34,10 @@ import java.util.Date;
 @JudgelsAPIGuard
 public abstract class AbstractJudgelsAPIController extends AbstractJudgelsController {
 
-    protected static JudgelsAppClientAPIIdentity authenticateAsJudgelsAppClient(JudgelsAppClientService clientService) {
-        if (!request().hasHeader("Authorization")) {
-            throw new JudgelsAPIUnauthorizedException("Basic authentication required.");
-        }
-
-        String[] authorization = request().getHeader("Authorization").split(" ");
-
-        if (authorization.length != 2) {
-            throw new JudgelsAPIUnauthorizedException("Basic authentication required.");
-        }
-
-        String method = authorization[0];
-        String credentialsString = authorization[1];
-
-        if (!"Basic".equals(method)) {
-            throw new JudgelsAPIUnauthorizedException("Basic authentication required.");
-        }
-
-        String decodedCredentialsString = new String(Base64.decodeBase64(credentialsString));
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(decodedCredentialsString);
-
-        String clientJid = credentials.getUserName();
-        String clientSecret = credentials.getPassword();
-
-        if (!clientService.clientExistsByJid(clientJid)) {
-            throw new JudgelsAPIUnauthorizedException("Bad credentials.");
-        }
-
-        JudgelsAppClient client = clientService.findClientByJid(clientJid);
-
-        if (!client.getSecret().equals(clientSecret)) {
-            throw new JudgelsAPIUnauthorizedException("Bad credentials.");
-        }
-
-        return new JudgelsAppClientAPIIdentity(client.getJid(), client.getName());
+    protected static Client authenticateAsJudgelsAppClient(ClientChecker clientChecker) {
+        String authHeaderString = request().getHeader("Authorization");
+        BasicAuthHeader authHeader = authHeaderString == null ? null : BasicAuthHeader.valueOf(authHeaderString);
+        return clientChecker.check(authHeader);
     }
 
     protected static <T> T parseRequestBody(Type type) {

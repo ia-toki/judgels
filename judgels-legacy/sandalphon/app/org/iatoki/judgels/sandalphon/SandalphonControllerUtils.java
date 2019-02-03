@@ -34,8 +34,6 @@ public final class SandalphonControllerUtils extends AbstractJudgelsControllerUt
         internalLinkBuilder.add(new InternalLink(Messages.get("problem.problems"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index()));
         internalLinkBuilder.add(new InternalLink(Messages.get("lesson.lessons"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.index()));
         if (isAdmin()) {
-            internalLinkBuilder.add(new InternalLink(Messages.get("client.clients"), org.iatoki.judgels.sandalphon.client.routes.ClientController.index()));
-            internalLinkBuilder.add(new InternalLink(Messages.get("grader.graders"), org.iatoki.judgels.sandalphon.grader.routes.GraderController.index()));
             internalLinkBuilder.add(new InternalLink(Messages.get("user.users"), org.iatoki.judgels.sandalphon.user.routes.UserController.index()));
         }
 

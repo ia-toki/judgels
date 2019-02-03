@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.google.common.collect.ImmutableSet;
 import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotAuthorizedException;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.service.api.client.Client;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,12 @@ class ClientCheckerTests {
     void passes_if_client_exists() {
         assertThat(clientChecker.check(BasicAuthHeader.of(CLIENT_1))).isEqualTo(CLIENT_1);
         assertThat(clientChecker.check(BasicAuthHeader.of(CLIENT_2))).isEqualTo(CLIENT_2);
+    }
+
+    @Test
+    void fails_for_missing_header() {
+        assertThatExceptionOfType(NotAuthorizedException.class)
+                .isThrownBy(() -> clientChecker.check(null));
     }
 
     @Test

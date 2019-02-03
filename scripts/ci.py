@@ -37,7 +37,7 @@ MODULES = OrderedDict([
 
     (':commons', set()),
     (':api', set()),
-    (':play-commons', {':commons', ':judgels-commons:judgels-persistence-core'}),
+    (':play-commons', {':commons', ':judgels-commons:judgels-service-persistence'}),
     (':jophiel-commons', {':commons', ':judgels-commons:judgels-persistence-core'}),
     (':gabriel-commons', {':commons'}),
     (':gabriel-blackbox', {':gabriel-commons'}),

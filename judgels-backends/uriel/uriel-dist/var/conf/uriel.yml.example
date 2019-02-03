@@ -47,16 +47,16 @@ uriel:
 
   sandalphon:
     baseUrl: http://localhost:9002
-    clientJid: xxx
-    clientSecret: xxx
+    clientJid: JIDSACL-uriel-local
+    clientSecret: sandalphon-local
 
   sealtiel:
     baseUrl: http://localhost:9003
-    clientJid: xxx
-    clientSecret: xxx
+    clientJid: JIDSECL-uriel-local
+    clientSecret: sealtiel-local
 
   gabriel:
-    clientJid: xxx
+    clientJid: JIDSECL-gabriel-local
 
   aws:
     accessKey: xxx

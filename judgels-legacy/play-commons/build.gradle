@@ -5,7 +5,7 @@ apply plugin: 'org.iatoki.play-webjars'
 dependencies {
     play project(':commons')
 
-    play project(':judgels-commons:judgels-persistence-core')
+    play project(':judgels-commons:judgels-service-persistence')
 
     play "com.typesafe.play:play-java_${scalaVersion}:${playVersion}"
 

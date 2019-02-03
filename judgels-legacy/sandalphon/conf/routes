@@ -150,23 +150,6 @@ POST        /lessons/:lessonId/versions/local                                   
 GET         /lessons/:lessonId/versions/local/rebase                                org.iatoki.judgels.sandalphon.lesson.version.LessonVersionController.editVersionLocalChanges(lessonId: Long)
 GET         /lessons/:lessonId/versions/local/discard                               org.iatoki.judgels.sandalphon.lesson.version.LessonVersionController.discardVersionLocalChanges(lessonId: Long)
 
-GET         /clients                                                                org.iatoki.judgels.sandalphon.client.ClientController.index()
-GET         /clients/                                                               org.iatoki.judgels.sandalphon.client.ClientController.listClients(page: Long ?= 0, orderBy ?= "id", orderDir ?= "asc", filterString ?= "")
-GET         /clients/new                                                            org.iatoki.judgels.sandalphon.client.ClientController.createClient()
-POST        /clients                                                                org.iatoki.judgels.sandalphon.client.ClientController.postCreateClient()
-GET         /clients/:clientId                                                      org.iatoki.judgels.sandalphon.client.ClientController.viewClient(clientId: Long)
-GET         /clients/:clientId/edit                                                 org.iatoki.judgels.sandalphon.client.ClientController.editClient(clientId: Long)
-POST        /clients/:clientId                                                      org.iatoki.judgels.sandalphon.client.ClientController.postEditClient(clientId: Long)
-
-GET         /graders                                                                org.iatoki.judgels.sandalphon.grader.GraderController.index()
-GET         /graders/                                                               org.iatoki.judgels.sandalphon.grader.GraderController.listGraders(page: Long ?= 0, orderBy ?= "id", orderDir ?= "asc", filterString ?= "")
-GET         /graders/new                                                            org.iatoki.judgels.sandalphon.grader.GraderController.createGrader()
-POST        /graders                                                                org.iatoki.judgels.sandalphon.grader.GraderController.postCreateGrader()
-GET         /graders/:graderId                                                      org.iatoki.judgels.sandalphon.grader.GraderController.viewGrader(graderId: Long)
-GET         /graders/:graderId/edit                                                 org.iatoki.judgels.sandalphon.grader.GraderController.editGrader(graderId: Long)
-POST        /graders/:graderId                                                      org.iatoki.judgels.sandalphon.grader.GraderController.postEditGrader(graderId: Long)
-
-
 GET         /users                                                                  org.iatoki.judgels.sandalphon.user.UserController.index()
 GET         /users/                                                                 org.iatoki.judgels.sandalphon.user.UserController.listUsers(page: Long ?= 0, orderBy ?= "id", orderDir ?= "asc", filterString ?= "")
 GET         /users/add                                                              org.iatoki.judgels.sandalphon.user.UserController.addUser()
