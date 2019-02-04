@@ -1,0 +1,32 @@
+Arguments: 
+  /home/ya_/.nvm/versions/node/v8.11.3/bin/node /home/ya_/.nvm/versions/node/v8.11.3/bin/yarn test
+
+PATH: 
+  /opt/julia-1.0.0/bin:/opt/jdk1.8.0_181/bin:/home/ya_/.phpbrew/php/php-7.1.3/bin:/home/ya_/.phpbrew/bin:/home/ya_/.nvm/versions/node/v8.11.3/bin:/home/ya_/bin:/home/ya_/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/ya_/Android/Sdk/tools:/home/ya_/Android/Sdk/tools/bin:/home/ya_/Android/Sdk/platform-tools:/home/ya_/Android/Sdk/emulator:/home/ya_/Program/chromedriver/
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  8.11.3
+
+Platform: 
+  linux x64
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Couldn't find a package.json file in "/home/ya_/Repo/ia-toki/judgels/judgels-frontends"
+      at new MessageError (/home/ya_/.nvm/versions/node/v8.11.3/lib/node_modules/yarn/lib/cli.js:186:110)
+      at /home/ya_/.nvm/versions/node/v8.11.3/lib/node_modules/yarn/lib/cli.js:40048:15
+      at Generator.next (<anonymous>)
+      at step (/home/ya_/.nvm/versions/node/v8.11.3/lib/node_modules/yarn/lib/cli.js:98:30)
+      at /home/ya_/.nvm/versions/node/v8.11.3/lib/node_modules/yarn/lib/cli.js:109:13
+      at <anonymous>
