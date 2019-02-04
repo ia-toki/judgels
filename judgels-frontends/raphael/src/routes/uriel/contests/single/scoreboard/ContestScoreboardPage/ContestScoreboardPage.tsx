@@ -31,7 +31,7 @@ export interface ContestScoreboardPageProps
     contestJid: string,
     frozen?: boolean,
     showClosedProblems?: boolean,
-    page?: number,
+    page?: number
   ) => Promise<ContestScoreboardResponse | null>;
   onAppendRoute: (queries: any) => any;
 }
@@ -80,9 +80,14 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
   };
 
   private refreshScoreboard = async (frozen?: boolean, showClosedProblems?: boolean) => {
-    const response = await this.props.onGetScoreboard(this.props.contest.jid, frozen, showClosedProblems, this.state.page);
+    const response = await this.props.onGetScoreboard(
+      this.props.contest.jid,
+      frozen,
+      showClosedProblems,
+      this.state.page
+    );
     this.setState({ response: response ? [response] : [], frozen, showClosedProblems, page: this.state.page });
-    return response
+    return response;
   };
 
   private renderScoreboardUpdatedTime = () => {

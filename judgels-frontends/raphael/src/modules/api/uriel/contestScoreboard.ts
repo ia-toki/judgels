@@ -38,7 +38,7 @@ export const contestScoreboardAPI = {
     contestJid: string,
     frozen?: boolean,
     showClosedProblems?: boolean,
-    page?: number,
+    page?: number
   ): Promise<ContestScoreboardResponse | null> => {
     const params = stringify({ frozen, showClosedProblems, page });
     return get(`${baseURL(contestJid)}?${params}`, token);
