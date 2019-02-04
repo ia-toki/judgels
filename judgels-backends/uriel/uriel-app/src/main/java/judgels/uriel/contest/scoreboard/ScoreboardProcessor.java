@@ -22,5 +22,8 @@ public interface ScoreboardProcessor {
             Map<String, Optional<Instant>> contestantStartTimesMap,
             List<Submission> submissions,
             Optional<Instant> freezeTime);
+
+    int getTotalEntries(Scoreboard scoreboard);
+    Scoreboard paginateScoreboard(Scoreboard scoreboard, int page, int pageSize);
     Scoreboard filterContestantJids(Scoreboard scoreboard, Set<String> contestantJids);
 }

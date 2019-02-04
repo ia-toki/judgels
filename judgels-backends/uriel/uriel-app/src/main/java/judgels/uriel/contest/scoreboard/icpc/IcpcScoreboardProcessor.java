@@ -2,6 +2,7 @@ package judgels.uriel.contest.scoreboard.icpc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -35,6 +36,30 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Scoreboard paginateScoreboard(Scoreboard scoreboard, int page, int pageSize) {
+        IcpcScoreboard icpcScoreboard = (IcpcScoreboard) scoreboard;
+        List<List<IcpcScoreboardEntry>> partition = Lists.partition(icpcScoreboard.getContent().getEntries(), pageSize);
+
+        List<IcpcScoreboardEntry> partitionPage;
+        try {
+            partitionPage = partition.get(page - 1);
+        } catch (IndexOutOfBoundsException e) {
+            partitionPage = new ArrayList<IcpcScoreboardEntry>();
+        }
+
+        return new IcpcScoreboard.Builder()
+                .state(icpcScoreboard.getState())
+                .content(new IcpcScoreboardContent.Builder().entries(partitionPage).build())
+                .build();
+    }
+
+    @Override
+    public int getTotalEntries(Scoreboard scoreboard) {
+        IcpcScoreboard icpcScoreboard = (IcpcScoreboard) scoreboard;
+        return icpcScoreboard.getContent().getEntries().size();
     }
 
     @Override

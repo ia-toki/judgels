@@ -2,6 +2,7 @@ package judgels.uriel.contest.scoreboard.icpc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -13,6 +14,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +42,37 @@ class IcpcScoreboardProcessorTests {
     @BeforeEach
     void before() {
         initMocks(this);
+    }
+
+
+    @Test
+    void test_pagination() {
+        ScoreboardState state = new ScoreboardState.Builder()
+                .addContestantJids("c1", "c2")
+                .addProblemJids("p1", "p2")
+                .addProblemAliases("A", "B")
+                .build();
+
+        List<IcpcScoreboard.IcpcScoreboardEntry> fakeEntries = new ArrayList<>(134);
+        for (int i = 0; i < 134; i++) {
+            fakeEntries.add(mock(IcpcScoreboard.IcpcScoreboardEntry.class));
+        }
+
+        IcpcScoreboard icpcScoreboard = new IcpcScoreboard.Builder()
+                .state(state)
+                .content(new IcpcScoreboardContent.Builder()
+                        .entries(fakeEntries)
+                        .build())
+                .build();
+
+        IcpcScoreboard pagedScoreboard = (IcpcScoreboard) scoreboardProcessor.paginateScoreboard(icpcScoreboard, 1, 50);
+        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(0, 50));
+
+        pagedScoreboard = (IcpcScoreboard) scoreboardProcessor.paginateScoreboard(icpcScoreboard, 2, 50);
+        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(50, 100));
+
+        pagedScoreboard = (IcpcScoreboard) scoreboardProcessor.paginateScoreboard(icpcScoreboard, 3, 50);
+        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(100, 134));
     }
 
     @Nested

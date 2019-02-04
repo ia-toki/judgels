@@ -11,12 +11,15 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
+import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
@@ -68,6 +71,26 @@ class ContestScoreboardBuilderTests {
 
         scoreboard = mock(Scoreboard.class);
         when(scoreboardProcessor.parseFromString(mapper, "json")).thenReturn(scoreboard);
+    }
+
+
+    @Test
+    void test_pagination() {
+        List<IcpcScoreboard.IcpcScoreboardEntry> fakeEntries = new ArrayList<>(100);
+        for (int i = 0; i < 100; i++) {
+            fakeEntries.add(mock(IcpcScoreboard.IcpcScoreboardEntry.class));
+        }
+
+        IcpcScoreboard icpcScoreboard = mock(IcpcScoreboard.class);
+        when(icpcScoreboard.getContent()).thenReturn(
+                new IcpcScoreboard.IcpcScoreboardContent.Builder()
+                        .entries(fakeEntries)
+                        .build());
+
+        when(scoreboardProcessor.getTotalEntries(icpcScoreboard)).thenReturn(100);
+        when(scoreboardProcessor.paginateScoreboard(icpcScoreboard, 1, 50)).thenReturn(scoreboard);
+
+        assertThat(scoreboardBuilder.paginateScoreboard(icpcScoreboard, contest, 1, 50)).isEqualTo(scoreboard);
     }
 
     @Test

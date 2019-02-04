@@ -51,11 +51,15 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             Optional<AuthHeader> authHeader,
             String contestJid,
             boolean frozen,
-            boolean showClosedProblems) {
+            boolean showClosedProblems,
+            Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canViewDefault(actorJid, contest));
+
+        int pageSize = 50;
+        int cleanPage = page.orElse(1);
 
         boolean canSupervise = scoreboardRoleChecker.canSupervise(actorJid, contest);
         boolean canViewOfficialAndFrozen = scoreboardRoleChecker.canViewOfficialAndFrozen(actorJid, contest);
@@ -63,13 +67,15 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         ContestScoreboardConfig config = new ContestScoreboardConfig.Builder()
                 .canViewOfficialAndFrozen(canViewOfficialAndFrozen)
                 .canViewClosedProblems(canViewClosedProblems)
+                .pageSize(pageSize)
                 .build();
 
         if (showClosedProblems) {
             checkAllowed(canSupervise);
         }
 
-        return scoreboardFetcher.fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems)
+        return scoreboardFetcher
+                .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, cleanPage, pageSize)
                 .map(scoreboard -> {
                     Set<String> contestantJids = scoreboard.getScoreboard().getState().getContestantJids();
                     Map<String, Profile> profilesMap = contestantJids.isEmpty()

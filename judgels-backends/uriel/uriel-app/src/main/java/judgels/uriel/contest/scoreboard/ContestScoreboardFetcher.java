@@ -31,7 +31,9 @@ public class ContestScoreboardFetcher {
             String userJid,
             boolean canSupervise,
             boolean frozen,
-            boolean showAllProblems) {
+            boolean showAllProblems,
+            int page,
+            int pageSize) {
 
         ContestScoreboardType type = frozen ? FROZEN : typeFetcher.fetchDefaultType(contest, canSupervise);
         Optional<RawContestScoreboard> rawScoreboard = scoreboardStore.getScoreboard(contest.getJid(), type);
@@ -44,8 +46,11 @@ public class ContestScoreboardFetcher {
         return rawScoreboard.map(raw -> {
             Scoreboard scoreboard =
                     scoreboardBuilder.buildScoreboard(raw, contest, userJid, canSupervise, showAllProblems);
+            Scoreboard scoreboardPage = scoreboardBuilder.paginateScoreboard(scoreboard, contest, page, pageSize);
+            int totalEntries = scoreboardBuilder.getTotalEntries(scoreboard, contest);
             return new ContestScoreboard.Builder()
-                    .scoreboard(scoreboard)
+                    .scoreboard(scoreboardPage)
+                    .totalCount(totalEntries)
                     .type(raw.getType())
                     .updatedTime(raw.getUpdatedTime())
                     .build();
