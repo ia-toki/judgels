@@ -7,6 +7,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { LoadingState } from 'components/LoadingState/LoadingState';
+import Pagination from 'components/Pagination/Pagination';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { Contest, ContestStyle } from 'modules/api/uriel/contest';
 import { ContestScoreboardResponse, ContestScoreboardType } from 'modules/api/uriel/contestScoreboard';
@@ -29,7 +30,8 @@ export interface ContestScoreboardPageProps
   onGetScoreboard: (
     contestJid: string,
     frozen?: boolean,
-    showClosedProblems?: boolean
+    showClosedProblems?: boolean,
+    page?: number,
   ) => Promise<ContestScoreboardResponse | null>;
   onAppendRoute: (queries: any) => any;
 }
@@ -38,10 +40,12 @@ interface ContestScoreboardPageState {
   response?: ContestScoreboardResponse[];
   frozen?: boolean;
   showClosedProblems?: boolean;
+  page?: number;
 }
 
 export class ContestScoreboardPage extends React.PureComponent<ContestScoreboardPageProps, ContestScoreboardPageState> {
-  state: ContestScoreboardPageState = {};
+  private static PAGE_SIZE = 50;
+  state: ContestScoreboardPageState = { page: 1 };
 
   async componentDidMount() {
     const queries = parse(this.props.location.search);
@@ -60,13 +64,25 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
         {this.renderFilter()}
         {this.renderFrozenScoreboardNotice()}
         {this.renderScoreboard()}
+        <Pagination currentPage={1} pageSize={ContestScoreboardPage.PAGE_SIZE} onChangePage={this.onChangePage} />
       </ContentCard>
     );
   }
 
+  private onChangePage = async (nextPage: number) => {
+    await this.setState({ page: nextPage });
+    const scoreboard = await this.refreshScoreboard();
+    if (scoreboard) {
+      return scoreboard.data.totalCount;
+    } else {
+      return 0;
+    }
+  };
+
   private refreshScoreboard = async (frozen?: boolean, showClosedProblems?: boolean) => {
-    const response = await this.props.onGetScoreboard(this.props.contest.jid, frozen, showClosedProblems);
-    this.setState({ response: response ? [response] : [], frozen, showClosedProblems });
+    const response = await this.props.onGetScoreboard(this.props.contest.jid, frozen, showClosedProblems, this.state.page);
+    this.setState({ response: response ? [response] : [], frozen, showClosedProblems, page: this.state.page });
+    return response
   };
 
   private renderScoreboardUpdatedTime = () => {

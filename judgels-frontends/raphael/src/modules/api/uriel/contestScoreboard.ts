@@ -9,6 +9,7 @@ import { baseContestURL } from './contest';
 export interface ContestScoreboard {
   type: ContestScoreboardType;
   scoreboard: Scoreboard;
+  totalCount: number;
   updatedTime: number;
 }
 
@@ -20,6 +21,7 @@ export enum ContestScoreboardType {
 export interface ContestScoreboardConfig {
   canViewOfficialAndFrozen: boolean;
   canViewClosedProblems: boolean;
+  pageSize: number;
 }
 
 export interface ContestScoreboardResponse {
@@ -35,9 +37,10 @@ export const contestScoreboardAPI = {
     token: string,
     contestJid: string,
     frozen?: boolean,
-    showClosedProblems?: boolean
+    showClosedProblems?: boolean,
+    page?: number,
   ): Promise<ContestScoreboardResponse | null> => {
-    const params = stringify({ frozen, showClosedProblems });
+    const params = stringify({ frozen, showClosedProblems, page });
     return get(`${baseURL(contestJid)}?${params}`, token);
   },
 };
