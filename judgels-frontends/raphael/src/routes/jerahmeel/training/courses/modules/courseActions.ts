@@ -1,7 +1,12 @@
 export const courseActions = {
-  getCourse: () => {
+  getCourses: () => {
     return async (dispatch, getState, { courseAPI }) => {
-      return await courseAPI.getCourse();
+      return await courseAPI.getCourses();
+    };
+  },
+  getCourseById: (courseId: number) => {
+    return async (dispatch, getState, { courseAPI }) => {
+      return await courseAPI.getCourseById(courseId);
     };
   },
 };

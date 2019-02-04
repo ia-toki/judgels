@@ -8,7 +8,7 @@ import ContentWithSidebar, {
 } from '../../../components/ContentWithSidebar/ContentWithSidebar';
 
 import ProblemsetListPage from './problemsets/list/ProblemsetListPage/ProblemsetListPage';
-import CoursePage from './courses/CoursePage';
+import CourseRoutes from './courses/CourseRoutes';
 
 const MainTrainingRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
@@ -20,11 +20,11 @@ const MainTrainingRoutes = () => {
       component: ProblemsetListPage,
     },
     {
-      id: 'courses',
+      id: 'course',
       titleIcon: 'predictive-analysis',
       title: 'Courses',
       routeComponent: Route,
-      component: CoursePage,
+      component: CourseRoutes,
     },
   ];
 

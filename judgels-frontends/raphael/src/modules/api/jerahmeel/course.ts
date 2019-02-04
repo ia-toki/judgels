@@ -5,20 +5,21 @@ import { get } from 'modules/api/http';
 export interface Course {
   id: number;
   jid: string;
-  slug: string;
   name: string;
 }
 
-export interface CourseResponse {
+export interface CoursesResponse {
   data: Page<Course>;
-  // config: CourseConfig;
 }
 
-export const baseCourseURL = 'TODO';
+export const baseCourseURL = 'http://demo9804495.mockable.io/';
 // export const baseCourseURL = `${APP_CONFIG.apiUrls.jerahmeel}/course`;
 
 export const courseAPI = {
-  getCourse: (): Promise<CourseResponse> => {
-    return get(`${baseCourseURL}`);
+  getCourses: (): Promise<CoursesResponse> => {
+    return get(`${baseCourseURL}courses`);
+  },
+  getCourseById: (courseId: number): Promise<Course> => {
+    return get(`${baseCourseURL}course/${courseId}`);
   },
 };

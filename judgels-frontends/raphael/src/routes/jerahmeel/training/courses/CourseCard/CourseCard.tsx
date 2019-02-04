@@ -3,19 +3,19 @@ import * as React from 'react';
 import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
 import { Course } from 'modules/api/jerahmeel/course';
 
-import './ContestCard.css';
+import './CourseCard.css';
 
 export interface CourseCardProps {
   course: Course;
 }
 
-export class ContestCard extends React.PureComponent<CourseCardProps> {
+export class CourseCard extends React.PureComponent<CourseCardProps> {
   render() {
     const { course } = this.props;
 
     return (
-      <ContentCardLink to={`/contests/${course.slug}`}>
-        <h4 className="contest-card-name">{course.name}</h4>
+      <ContentCardLink to={`/training/course/${course.id}`}>
+        <h4 className="course-card-name">{`${course.id}. ${course.name}`}</h4>
       </ContentCardLink>
     );
   }

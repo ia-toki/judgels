@@ -18,6 +18,7 @@ import { userRegistrationWebAPI } from './api/jophiel/userRegistration';
 import { userSearchAPI } from './api/jophiel/userSearch';
 import { userWebAPI } from './api/jophiel/userWeb';
 import { urielAdminAPI } from './api/uriel/admin';
+import { chapterAPI } from './api/jerahmeel/chapter';
 import { contestAPI } from './api/uriel/contest';
 import { contestWebAPI } from './api/uriel/contestWeb';
 import { contestAnnouncementAPI } from './api/uriel/contestAnnouncement';
@@ -86,6 +87,7 @@ export const store: any = createStore<AppState>(
         userSearchAPI,
         userWebAPI,
         urielAdminAPI,
+        chapterAPI,
         contestAPI,
         contestWebAPI,
         contestAnnouncementAPI,
