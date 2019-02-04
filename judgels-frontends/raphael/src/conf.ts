@@ -13,13 +13,17 @@ export interface WelcomeBannerConfig {
   description: string;
 }
 
+export interface TermsAndConditionsConfig {
+  contest: string;
+}
+
 export interface AppConfig {
   name: string;
   slogan: string;
   apiUrls: ApiUrlsConfig;
   tempHome: TempHomeConfig;
   welcomeBanner: WelcomeBannerConfig;
-  termsAndConditions: string;
+  termsAndConditions: TermsAndConditionsConfig;
 }
 
 export const APP_CONFIG = (window as any).conf as AppConfig;

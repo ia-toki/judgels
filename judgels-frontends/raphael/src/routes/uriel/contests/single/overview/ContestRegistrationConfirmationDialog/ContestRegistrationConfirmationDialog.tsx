@@ -2,11 +2,11 @@ import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import { APP_CONFIG } from 'conf';
 import { Contest } from 'modules/api/uriel/contest';
 import { FormattedContent } from 'components/FormattedContent/FormattedContent';
 
 import './ContestRegistrationConfirmationDialog.css';
-import { APP_CONFIG } from 'conf';
 
 export interface ContestRegistrationConfirmationDialogProps {
   contest: Contest;
@@ -20,12 +20,12 @@ export default class ContestRegistrationConfirmationDialog extends React.PureCom
   render() {
     return (
       <Dialog isOpen onClose={this.props.onClose} title={`Terms & Conditions`} canOutsideClickClose={false}>
-        <div className={classNames(Classes.DIALOG_BODY, 'contest-registrants-dialog__body')}>
+        <div className={classNames(Classes.DIALOG_BODY, 'contest-registration-confirmation-dialog__body')}>
           {this.renderTermsAndConditions()}
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button text="Accept and Register" intent={Intent.PRIMARY} onClick={this.onRegisterButonClick} />
+            <Button text="Accept and register" intent={Intent.PRIMARY} onClick={this.onRegisterButonClick} />
           </div>
         </div>
       </Dialog>
@@ -35,7 +35,9 @@ export default class ContestRegistrationConfirmationDialog extends React.PureCom
   private renderTermsAndConditions = () => {
     const { contest } = this.props;
 
-    return <FormattedContent context={{ contestJid: contest.jid }}>{APP_CONFIG.termsAndConditions}</FormattedContent>;
+    return (
+      <FormattedContent context={{ contestJid: contest.jid }}>{APP_CONFIG.termsAndConditions.contest}</FormattedContent>
+    );
   };
 
   private onRegisterButonClick = () => {
