@@ -3,7 +3,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from 'components/Card/Card';
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { CoursesResponse } from 'modules/api/jerahmeel/course';
 
 import { courseActions as injectedCourseActions } from '../modules/courseActions';
@@ -49,7 +48,7 @@ export function createCoursesPage(courseActions) {
   const mapDispatchToProps = {
     onGetCourses: courseActions.getCourses,
   };
-  return connect(undefined, mapDispatchToProps)(withBreadcrumb('Courses')(CoursesPage));
+  return connect(undefined, mapDispatchToProps)(CoursesPage);
 }
 
 export default createCoursesPage(injectedCourseActions);

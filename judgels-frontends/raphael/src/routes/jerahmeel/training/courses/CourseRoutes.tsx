@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Route, withRouter } from 'react-router';
 
+import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
+
 import CoursesPage from './CoursesPage/CoursesPage';
 import ChaptersPage from './ChaptersPage/ChaptersPage';
 
@@ -11,4 +13,4 @@ const CourseRoutes = () => (
   </div>
 );
 
-export default withRouter<any>(CourseRoutes);
+export default withRouter<any>(withBreadcrumb('Courses')(CourseRoutes));
