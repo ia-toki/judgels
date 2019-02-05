@@ -34,7 +34,7 @@ task dbMigrate(type: JavaExec, dependsOn: jar) {
 
 task dbRollbackOnce(type: JavaExec, dependsOn: jar) {
     group 'Database'
-    description 'Migrates database to the latest version.'
+    description 'Rollbacks the latest change of the database.'
 
     classpath = sourceSets.main.runtimeClasspath
     main = 'judgels.uriel.UrielApplication'
