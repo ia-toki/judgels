@@ -42,7 +42,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
                 // .sandalphonModule(new SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
                 // .sealtielModule(new SealtielModule(jerahmeelConfig.getSealtielConfig()))
                 // .submissionModule(new SubmissionModule(jerahmeelConfig.getSubmissionConfig()))
-                .jerahmeelModule(new JerahmeelModule(jerahmeelConfig))
+                // .jerahmeelModule(new JerahmeelModule(jerahmeelConfig))
                 .build();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
