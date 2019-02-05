@@ -1,0 +1,43 @@
+database:
+  driverClass: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost/judgels_jerahmeel?useSSL=false
+  user: jerahmeel
+  password: jerahmeel
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
+    hibernate.generate_statistics: false
+
+webSecurity:
+  cors:
+    allowedOrigins: "*"
+
+jerahmeel:
+  baseDataDir: var/data
+
+logging:
+  appenders:
+    - type: console
+      threshold: INFO
+    - type: file
+      currentLogFilename: var/log/jerahmeel.log
+      archivedLogFilenamePattern: var/log/jerahmeel-%d.log.gz
+      archivedFileCount: 14
+
+  loggers:
+    org.hibernate.type.BasicTypeRegistry:
+      level: OFF
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 9005
+  adminConnectors:
+    - type: http
+      port: 9015
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/jerahmeel-request.log
+      archivedLogFilenamePattern: var/log/jerahmeel-request-%d.log.gz
+      archivedFileCount: 14

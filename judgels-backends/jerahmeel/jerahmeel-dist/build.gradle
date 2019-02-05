@@ -1,0 +1,42 @@
+plugins {
+    id 'com.palantir.sls-java-service-distribution'
+    id 'com.palantir.launch-config' version '1.1.0'
+}
+
+dependencies {
+    runtime project(':jerahmeel:jerahmeel-app')
+}
+
+distribution {
+    serviceName 'jerahmeel'
+    serviceGroup 'judgels'
+    mainClass 'judgels.jerahmeel.JerahmeelApplication'
+    args 'server', 'var/conf/jerahmeel.yml'
+}
+
+task dbStatus(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Checks database migration status.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.jerahmeel.JerahmeelApplication'
+    args = [ 'db', 'status', 'var/conf/jerahmeel.yml' ]
+}
+
+task dbMigrate(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Migrates database to the latest version.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.jerahmeel.JerahmeelApplication'
+    args = [ 'db', 'migrate', 'var/conf/jerahmeel.yml' ]
+}
+
+task dbDump(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Dumps current database schema.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.jerahmeel.JerhameelApplication'
+    args = [ 'db', 'dump', 'var/conf/jerahmeel.yml' ]
+}
