@@ -20,10 +20,10 @@ configure({ adapter: new Adapter() });
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
   },
   termsAndConditions: {
-    contest: `<p>By competing in TLX contests, you agree that:</p>
+    contest: `<p>By competing in this contests, you agree that:</p>
               <ul>
                 <li> You will not collaborate with any other contestants. </li>
-                <li> You will not use fake or multiple TLX accounts, other than your own account. </li>
+                <li> You will not use fake or multiple accounts, other than your own account. </li>
                 <li> You will not try to hack or attack the contest system in any way. </li>
               </ul>
               <p> Failure to comply with the above rules can result to a disqualification or ban. </p>
