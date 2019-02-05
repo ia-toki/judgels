@@ -1,1 +1,1 @@
-export const JUDGELS_VERSION = '2.24.0';
+export const JUDGELS_VERSION = '2.25.0';
