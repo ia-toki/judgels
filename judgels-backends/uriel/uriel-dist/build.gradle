@@ -32,6 +32,15 @@ task dbMigrate(type: JavaExec, dependsOn: jar) {
     args = [ 'db', 'migrate', 'var/conf/uriel.yml' ]
 }
 
+task dbRollbackOnce(type: JavaExec, dependsOn: jar) {
+    group 'Database'
+    description 'Migrates database to the latest version.'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'judgels.uriel.UrielApplication'
+    args = [ 'db', 'rollback', 'var/conf/uriel.yml', '-c', '1']
+}
+
 task dbDump(type: JavaExec, dependsOn: jar) {
     group 'Database'
     description 'Dumps current database schema.'
