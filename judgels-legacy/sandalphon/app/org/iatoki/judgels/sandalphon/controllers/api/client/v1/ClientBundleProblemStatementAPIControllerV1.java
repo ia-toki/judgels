@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v1;
 
 import com.google.common.collect.ImmutableList;
-import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.programming.ProblemStatement;
 import judgels.service.api.client.Client;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.api.JudgelsAPIForbiddenException;

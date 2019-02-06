@@ -93,9 +93,9 @@ public final class BundleItemServiceImpl implements BundleItemService {
 
         List<BundleItem> bundleItems = bundleItemsConfig.itemList.stream().collect(Collectors.toList());
         long number = 1;
-        for (BundleItem bundleItem : bundleItems) {
-            if (BundleItemAdapters.fromItemType(bundleItem.getType()) instanceof BundleItemHasScore) {
-                bundleItem.setNumber(number++);
+        for (int i = 0; i < bundleItems.size(); i++) {
+            if (BundleItemAdapters.fromItemType(bundleItems.get(i).getType()) instanceof BundleItemHasScore) {
+                bundleItems.get(i).setNumber(number++);
             }
         }
 

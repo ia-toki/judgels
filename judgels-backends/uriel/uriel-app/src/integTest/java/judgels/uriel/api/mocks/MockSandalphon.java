@@ -37,6 +37,10 @@ public class MockSandalphon {
     public static final String PROBLEM_2_SLUG = "problemSlug2";
     private static final String[] PROBLEM_SLUGS = {PROBLEM_1_SLUG, PROBLEM_2_SLUG};
 
+    public static final String PROBLEM_1_TYPE = "PROGRAMMING";
+    public static final String PROBLEM_2_TYPE = "PROGRAMMING";
+    private static final String[] PROBLEM_TYPES = {PROBLEM_1_TYPE, PROBLEM_2_TYPE};
+
     public static final int SANDALPHON_PORT = 9002;
 
     private MockSandalphon() {}
@@ -46,7 +50,7 @@ public class MockSandalphon {
                 .port(SANDALPHON_PORT)
                 .extensions(new TranslateAllowedSlugToJidsTransformer()));
 
-        mockSandalphon.stubFor(get("/api/v2/client/problems/" + PROBLEM_1_JID + "/submission-config")
+        mockSandalphon.stubFor(get("/api/v2/client/problems/" + PROBLEM_1_JID + "/programming/submission-config")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
                 .willReturn(okForJson(ImmutableMap.of(
                         "sourceKeys", ImmutableMap.of("source", "Source"),
@@ -61,6 +65,7 @@ public class MockSandalphon {
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
                 .willReturn(okForJson(ImmutableMap.of(
                         PROBLEM_1_JID, ImmutableMap.of(
+                                "type", PROBLEM_1_TYPE,
                                 "slug", PROBLEM_1_SLUG,
                                 "defaultLanguage", "en",
                                 "titlesByLanguage", ImmutableMap.of("en", "Problem 1"))))));

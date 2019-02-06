@@ -2,17 +2,17 @@ package judgels.uriel.api.contest.problem;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Set;
-import judgels.sandalphon.api.problem.ProblemWorksheet;
+import judgels.sandalphon.api.problem.bundle.BundleProblemWorksheet;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestProblemWorksheet.class)
-public interface ContestProblemWorksheet {
+@JsonDeserialize(as = ImmutableContestBundleProblemWorksheet.class)
+public interface ContestBundleProblemWorksheet {
     String getDefaultLanguage();
     Set<String> getLanguages();
     ContestProblem getProblem();
     long getTotalSubmissions();
-    ProblemWorksheet getWorksheet();
+    BundleProblemWorksheet getWorksheet();
 
-    class Builder extends ImmutableContestProblemWorksheet.Builder{}
+    class Builder extends ImmutableContestBundleProblemWorksheet.Builder{}
 }

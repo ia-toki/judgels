@@ -1,4 +1,4 @@
-package judgels.sandalphon.api.problem;
+package judgels.sandalphon.api.problem.programming;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;

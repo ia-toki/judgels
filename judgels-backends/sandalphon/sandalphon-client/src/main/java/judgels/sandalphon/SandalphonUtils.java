@@ -11,7 +11,7 @@ import javax.ws.rs.ForbiddenException;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.problem.ProblemInfo;
-import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 
 public class SandalphonUtils {
     private SandalphonUtils() {}

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.programming.ProblemStatement;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;

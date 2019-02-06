@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.statement;
 
 import com.google.common.collect.ImmutableList;
-import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.programming.ProblemStatement;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
 import org.iatoki.judgels.play.LazyHtml;

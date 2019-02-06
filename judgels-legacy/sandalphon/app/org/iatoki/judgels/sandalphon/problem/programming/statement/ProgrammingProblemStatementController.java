@@ -2,7 +2,7 @@ package org.iatoki.judgels.sandalphon.problem.programming.statement;
 
 import com.google.common.collect.ImmutableList;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.programming.ProblemStatement;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.play.IdentityUtils;
