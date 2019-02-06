@@ -18,21 +18,24 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
-import judgels.sandalphon.api.problem.ProblemStatement;
-import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
-import judgels.sandalphon.api.problem.ProblemWorksheet;
+import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.problem.bundle.BundleProblemWorksheet;
+import judgels.sandalphon.api.problem.programming.ProblemStatement;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
+import judgels.sandalphon.api.problem.programming.ProgrammingProblemWorksheet;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
+import judgels.uriel.api.contest.problem.ContestBundleProblemWorksheet;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemConfig;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
-import judgels.uriel.api.contest.problem.ContestProblemWorksheet;
 import judgels.uriel.api.contest.problem.ContestProblemsResponse;
+import judgels.uriel.api.contest.problem.ContestProgrammingProblemWorksheet;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.submission.ContestSubmissionStore;
@@ -153,7 +156,7 @@ public class ContestProblemResource implements ContestProblemService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestProblemWorksheet getProblemWorksheet(
+    public ContestProgrammingProblemWorksheet getProgrammingProblemWorksheet(
             Optional<AuthHeader> authHeader,
             String contestJid,
             String problemAlias,
@@ -167,13 +170,17 @@ public class ContestProblemResource implements ContestProblemService {
         String problemJid = problem.getProblemJid();
         ProblemInfo problemInfo = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
 
+        if (problemInfo.getType() != ProblemType.PROGRAMMING) {
+            throw ContestErrors.wrongProblemType(problemInfo.getType());
+        }
+
         long totalSubmissions = submissionStore.getTotalSubmissions(contestJid, actorJid, problemJid);
 
         Optional<String> reasonNotAllowedToSubmit =
                 problemRoleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
-        ProblemWorksheet worksheet =
-                clientProblemService.getProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
+        ProgrammingProblemWorksheet worksheet =
+                clientProblemService.getProgrammingProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
 
         LanguageRestriction contestGradingLanguageRestriction =
                 moduleStore.getStyleModuleConfig(contestJid, contest.getStyle()).getGradingLanguageRestriction();
@@ -182,7 +189,7 @@ public class ContestProblemResource implements ContestProblemService {
         LanguageRestriction combinedGradingLanguageRestriction =
                 combineLanguageRestrictions(contestGradingLanguageRestriction, problemGradingLanguageRestriction);
 
-        ProblemWorksheet finalWorksheet = new ProblemWorksheet.Builder()
+        ProgrammingProblemWorksheet finalWorksheet = new ProgrammingProblemWorksheet.Builder()
                 .from(worksheet)
                 .statement(new ProblemStatement.Builder()
                         .from(worksheet.getStatement())
@@ -195,7 +202,7 @@ public class ContestProblemResource implements ContestProblemService {
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                 .build();
 
-        return new ContestProblemWorksheet.Builder()
+        return new ContestProgrammingProblemWorksheet.Builder()
                 .defaultLanguage(problemInfo.getDefaultLanguage())
                 .languages(problemInfo.getTitlesByLanguage().keySet())
                 .problem(problem)
@@ -203,6 +210,49 @@ public class ContestProblemResource implements ContestProblemService {
                 .worksheet(finalWorksheet)
                 .build();
     }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ContestBundleProblemWorksheet getBundleProblemWorksheet(
+            Optional<AuthHeader> authHeader,
+            String contestJid,
+            String problemAlias,
+            Optional<String> language) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(problemRoleChecker.canView(actorJid, contest));
+
+        ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
+        String problemJid = problem.getProblemJid();
+        ProblemInfo problemInfo = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
+
+        if (problemInfo.getType() != ProblemType.BUNDLE) {
+            throw ContestErrors.wrongProblemType(problemInfo.getType());
+        }
+
+        long totalSubmissions = submissionStore.getTotalSubmissions(contestJid, actorJid, problemJid);
+
+        Optional<String> reasonNotAllowedToSubmit =
+                problemRoleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
+
+        BundleProblemWorksheet worksheet =
+                clientProblemService.getBundleProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
+
+        BundleProblemWorksheet finalWorksheet = new BundleProblemWorksheet.Builder()
+                .from(worksheet)
+                .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
+                .build();
+
+        return new ContestBundleProblemWorksheet.Builder()
+                .defaultLanguage(problemInfo.getDefaultLanguage())
+                .languages(problemInfo.getTitlesByLanguage().keySet())
+                .problem(problem)
+                .totalSubmissions(totalSubmissions)
+                .worksheet(finalWorksheet)
+                .build();
+    }
+
 
     private String replaceRenderUrls(String statementText, String problemJid) {
         String baseUrl = sandalphonConfig.getBaseUrl();

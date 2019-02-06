@@ -193,8 +193,9 @@ POST        /api/v1/lessons/:lessonJid/statements                               
 # Client API v2
 
 GET         /api/v2/client/problems/:problemJid                                     org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblem(problemJid)
-GET         /api/v2/client/problems/:problemJid/submission-config                   org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblemSubmissionConfig(problemJid)
-GET         /api/v2/client/problems/:problemJid/worksheet                           org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblemWorksheet(problemJid)
+GET         /api/v2/client/problems/:problemJid/programming/submission-config       org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProblemSubmissionConfig(problemJid)
+GET         /api/v2/client/problems/:problemJid/programming/worksheet               org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getProgrammingProblemWorksheet(problemJid)
+GET         /api/v2/client/problems/:problemJid/bundle/worksheet                    org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.getBundleProblemWorksheet(problemJid)
 POST        /api/v2/client/problems/jids                                            org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.findProblemsByJids()
 POST        /api/v2/client/problems/allowed-slug-to-jid                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.translateAllowedSlugToJids()
 

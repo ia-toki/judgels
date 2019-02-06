@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import judgels.gabriel.api.GradingRequest;
 import judgels.gabriel.api.SubmissionSource;
-import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.Submission;
 import judgels.sandalphon.api.submission.SubmissionData;
 import judgels.sandalphon.persistence.AbstractGradingModel;
