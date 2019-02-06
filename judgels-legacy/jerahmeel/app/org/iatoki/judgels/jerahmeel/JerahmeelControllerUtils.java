@@ -164,8 +164,8 @@ public final class JerahmeelControllerUtils extends AbstractJudgelsControllerUti
         Map<String, String> problemStatisticsTitleMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(problemStatisticProblemJids), "en-US");
 
         List<SubmissionEntry> submissionEntries = Lists.newArrayList();
-        Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(0, 5, "timeCreate", "desc", null, null, null);
-        Page<ProgrammingSubmission> pageOfProgrammingSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(0, 5, "timeCreate", "desc", null, null, null);
+        Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(0, 5, "createdAt", "desc", null, null, null);
+        Page<ProgrammingSubmission> pageOfProgrammingSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(0, 5, "createdAt", "desc", null, null, null);
         for (BundleSubmission bundleSubmission : pageOfBundleSubmissions.getData()) {
             submissionEntries.add(new SubmissionEntry(bundleSubmission.getAuthorJid(), bundleSubmission.getProblemJid(), bundleSubmission.getLatestScore(), bundleSubmission.getTime().getTime()));
         }

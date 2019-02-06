@@ -21,8 +21,8 @@
         "id" -> Messages.get("commons.id"),
         "slug" -> Messages.get("problem.slug"),
         "type" -> Messages.get("problem.type"),
-        "userCreate" -> Messages.get("problem.author"),
-        "timeUpdate" -> Messages.get("problem.lastUpdateTime")
+        "createdBy" -> Messages.get("problem.author"),
+        "updatedAt" -> Messages.get("problem.lastUpdateTime")
     )
     <tbody>
     @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfProblems.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>

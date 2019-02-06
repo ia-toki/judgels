@@ -230,6 +230,12 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
             options.pageSize((int) limit);
             options.page((int) (offset / limit) + 1);
         }
+        options.orderBy(orderBy);
+        if (orderDir.equals("asc")) {
+            options.orderDir(OrderDir.ASC);
+        } else {
+            options.orderDir(OrderDir.DESC);
+        }
 
         return selectAll(new FilterOptions.Builder<M>()
                 .columnsEq(filterColumnsEq)

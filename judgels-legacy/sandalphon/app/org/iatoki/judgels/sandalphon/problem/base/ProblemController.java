@@ -45,7 +45,7 @@ public final class ProblemController extends AbstractJudgelsController {
 
     @Transactional(readOnly = true)
     public Result index() {
-        return listProblems(0, "timeUpdate", "desc", "");
+        return listProblems(0, "updatedAt", "desc", "");
     }
 
     @Transactional(readOnly = true)

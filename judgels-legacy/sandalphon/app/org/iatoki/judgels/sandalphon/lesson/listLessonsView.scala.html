@@ -20,8 +20,8 @@
     @tableHeadersView(pageOfLessons.getPageIndex, orderBy, orderDir, filterString, routes.LessonController.listLessons)(
         "id" -> Messages.get("commons.id"),
         "slug" -> Messages.get("lesson.slug"),
-        "userCreate" -> Messages.get("problem.author"),
-        "timeUpdate" -> Messages.get("problem.lastUpdateTime")
+        "createdBy" -> Messages.get("problem.author"),
+        "updatedAt" -> Messages.get("problem.lastUpdateTime")
     )
     <tbody>
     @defining(JidCacheServiceImpl.getInstance().getDisplayNames(JavaConversions.seqAsJavaList(pageOfLessons.getData.map(s => s.getAuthorJid).toSeq))) { displayNamesMap =>

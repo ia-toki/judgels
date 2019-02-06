@@ -51,7 +51,7 @@ public final class LessonController extends AbstractJudgelsController {
 
     @Transactional(readOnly = true)
     public Result index() {
-        return listLessons(0, "timeUpdate", "desc", "");
+        return listLessons(0, "updatedAt", "desc", "");
     }
 
     @Transactional(readOnly = true)

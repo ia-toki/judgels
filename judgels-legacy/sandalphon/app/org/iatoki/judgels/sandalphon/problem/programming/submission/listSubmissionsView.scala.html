@@ -36,11 +36,11 @@
 @tableView() {
     @tableHeadersWithSelectionFormView(pageOfProgrammingSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
         "id" -> Messages.get("commons.id"),
-        "userCreate" -> Messages.get("problem.programming.submission.author"),
+        "createdBy" -> Messages.get("problem.programming.submission.author"),
         "gradingLanguage" -> Messages.get("problem.programming.submission.gradingLanguage"),
         "verdictName" -> Messages.get("problem.programming.submission.verdict"),
         "score" -> Messages.get("problem.programming.submission.score"),
-        "timeCreate" -> Messages.get("problem.programming.submission.time")
+        "createdAt" -> Messages.get("problem.programming.submission.time")
     )
     <tbody>
 

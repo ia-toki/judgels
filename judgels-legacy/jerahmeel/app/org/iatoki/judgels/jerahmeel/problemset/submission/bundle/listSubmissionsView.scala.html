@@ -35,10 +35,10 @@
 @tableView() {
     @tableHeadersView(pageOfBundleSubmissions.getPageIndex, orderBy, orderDir, "", listFunc)(
         "id" -> Messages.get("commons.id"),
-        "userCreate" -> Messages.get("user.user"),
+        "createdBy" -> Messages.get("user.user"),
         "" -> Messages.get("submission.prob"),
         "" -> Messages.get("submission.pts"),
-        "timeCreate" -> Messages.get("submission.time")
+        "createdAt" -> Messages.get("submission.time")
     )
 
     <tbody>
