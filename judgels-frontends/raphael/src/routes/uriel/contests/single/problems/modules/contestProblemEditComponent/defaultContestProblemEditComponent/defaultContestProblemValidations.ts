@@ -1,7 +1,7 @@
 import { ContestProblemStatus } from 'modules/api/uriel/contestProblem';
 import { Alias, Slug, NonnegativeNumber } from 'components/forms/validations';
 
-export const ValidProblemsSetData = value => {
+export const DefaultValidProblemsSetData = value => {
   const problems = value
     .split('\n')
     .map(s => s.trim())

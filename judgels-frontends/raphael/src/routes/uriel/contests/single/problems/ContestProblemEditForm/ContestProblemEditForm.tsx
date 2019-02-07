@@ -5,14 +5,13 @@ import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
 import { Required, Max100Lines } from 'components/forms/validations';
 
-import { ValidProblemsSetData } from '../modules/contestProblemValidations';
-
 export interface ContestProblemEditFormData {
   problems: string;
 }
 
 export interface ContestProblemEditFormProps extends InjectedFormProps<ContestProblemEditFormData> {
   renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
+  validation: (value: any) => string | undefined;
 }
 
 const ContestProblemEditForm = (props: ContestProblemEditFormProps) => {
@@ -22,7 +21,7 @@ const ContestProblemEditForm = (props: ContestProblemEditFormProps) => {
     labelHelper: '(one problem per line, max 100 problems)',
     rows: 10,
     isCode: true,
-    validate: [Required, Max100Lines, ValidProblemsSetData],
+    validate: [Required, Max100Lines, props.validation],
     autoFocus: true,
   };
 

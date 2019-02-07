@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 public interface ContestModulesConfig {
     Optional<IcpcStyleModuleConfig> getIcpcStyle();
     Optional<IoiStyleModuleConfig> getIoiStyle();
+    Optional<GcjStyleModuleConfig> getGcjStyle();
 
     ScoreboardModuleConfig getScoreboard();
 

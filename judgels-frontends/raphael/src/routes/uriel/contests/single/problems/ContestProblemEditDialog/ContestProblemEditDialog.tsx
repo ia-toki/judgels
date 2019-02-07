@@ -3,9 +3,12 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestProblemData, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
+import { ContestProblemData } from 'modules/api/uriel/contestProblem';
 
 import ContestProblemEditForm, { ContestProblemEditFormData } from '../ContestProblemEditForm/ContestProblemEditForm';
+import { getContestProblemEditComponent } from '../modules/contestProblemEditComponent/contestProblemEditComponentRegistry';
+import { ContestProblemEditComponent } from '../modules/contestProblemEditComponent/contestProblemEditComponent';
+import defaultContestProblemEditComponent from '../modules/contestProblemEditComponent/defaultContestProblemEditComponent/defaultContestProblemEditComponent';
 
 import './ContestProblemEditDialog.css';
 
@@ -17,13 +20,16 @@ export interface ContestProblemEditDialogProps {
 
 interface ContestProblemEditDialogState {
   isDialogOpen?: boolean;
+  components: ContestProblemEditComponent;
 }
 
 export class ContestProblemEditDialog extends React.Component<
   ContestProblemEditDialogProps,
   ContestProblemEditDialogState
 > {
-  state: ContestProblemEditDialogState = {};
+  state: ContestProblemEditDialogState = {
+    components: defaultContestProblemEditComponent,
+  };
 
   render() {
     return (
@@ -32,6 +38,22 @@ export class ContestProblemEditDialog extends React.Component<
         {this.renderDialog()}
       </div>
     );
+  }
+
+  componentWillMount() {
+    this.updateComponents();
+  }
+
+  componentDidUpdate(prevProps: ContestProblemEditDialogProps) {
+    if (prevProps.contest.style !== this.props.contest.style) {
+      this.updateComponents();
+    }
+  }
+
+  private updateComponents() {
+    this.setState({
+      components: getContestProblemEditComponent(this.props.contest.style),
+    });
   }
 
   private renderButton = () => {
@@ -68,19 +90,10 @@ export class ContestProblemEditDialog extends React.Component<
   };
 
   private renderDialogSetForm = () => {
-    const problems = this.props.problems
-      .map(p => {
-        if (p.submissionsLimit > 0) {
-          return `${p.alias},${p.slug},${p.status},${p.submissionsLimit}`;
-        } else if (p.status !== ContestProblemStatus.Open) {
-          return `${p.alias},${p.slug},${p.status}`;
-        } else {
-          return `${p.alias},${p.slug}`;
-        }
-      })
-      .join('\n');
+    const problems = this.state.components.processor.toString(this.props.problems);
     const props: any = {
       renderFormComponents: this.renderDialogForm,
+      validation: this.state.components.validation,
       onSubmit: this.setProblems,
       initialValues: { problems },
     };
@@ -106,32 +119,18 @@ export class ContestProblemEditDialog extends React.Component<
     return (
       <Callout icon={null}>
         <p>
-          <strong>Format:</strong> <code>alias,slug[,status[,submissionsLimit]]</code>
+          <strong>Format:</strong> {this.state.components.format}
         </p>
         <p>
           <strong>Example:</strong>
         </p>
-        <pre>{'A,hello\nB,tree,CLOSED\nC,flow,OPEN,20'}</pre>
+        {this.state.components.example}
       </Callout>
     );
   };
 
   private setProblems = async (data: ContestProblemEditFormData) => {
-    const problems = data.problems
-      .split('\n')
-      .map(s => s.trim())
-      .filter(s => s.length > 0)
-      .map(s => s.split(','))
-      .map(s => s.map(t => t.trim()))
-      .map(
-        s =>
-          ({
-            alias: s[0],
-            slug: s[1],
-            status: s[2] || ContestProblemStatus.Open,
-            submissionsLimit: +s[3] || 0,
-          } as ContestProblemData)
-      );
+    const problems = this.state.components.processor.toContestProblemData(data.problems);
 
     await this.props.onSetProblems(this.props.contest.jid, problems);
     this.setState({ isDialogOpen: false });
