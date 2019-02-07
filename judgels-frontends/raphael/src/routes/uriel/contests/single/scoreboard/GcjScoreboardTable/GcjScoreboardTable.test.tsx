@@ -7,7 +7,7 @@ import { GcjScoreboardProblemState, GcjScoreboard } from 'modules/api/uriel/scor
 
 import { GcjScoreboardTable, GcjScoreboardTableProps } from './GcjScoreboardTable';
 
-describe('IcpcScoreboardTable', () => {
+describe('GcjScoreboardTable', () => {
   let wrapper: ReactWrapper<GcjScoreboardTableProps>;
 
   const scoreboard: GcjScoreboard = {

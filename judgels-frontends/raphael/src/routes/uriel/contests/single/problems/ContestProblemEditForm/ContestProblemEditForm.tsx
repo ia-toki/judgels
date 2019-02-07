@@ -11,7 +11,7 @@ export interface ContestProblemEditFormData {
 
 export interface ContestProblemEditFormProps extends InjectedFormProps<ContestProblemEditFormData> {
   renderFormComponents: (fields: JSX.Element, submitButton: JSX.Element) => JSX.Element;
-  validation: (value: any) => string | undefined;
+  validator: (value: any) => string | undefined;
 }
 
 const ContestProblemEditForm = (props: ContestProblemEditFormProps) => {
@@ -21,7 +21,7 @@ const ContestProblemEditForm = (props: ContestProblemEditFormProps) => {
     labelHelper: '(one problem per line, max 100 problems)',
     rows: 10,
     isCode: true,
-    validate: [Required, Max100Lines, props.validation],
+    validate: [Required, Max100Lines, props.validator],
     autoFocus: true,
   };
 

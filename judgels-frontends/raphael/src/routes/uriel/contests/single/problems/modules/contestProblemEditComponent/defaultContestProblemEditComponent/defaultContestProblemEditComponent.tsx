@@ -5,7 +5,7 @@ import { DefaultValidProblemsSetData } from './defaultContestProblemValidations'
 import { DefaultContestProblemProcessor } from './defaultContestProblemProcessor';
 
 export default {
-  validation: DefaultValidProblemsSetData,
+  validator: DefaultValidProblemsSetData,
   processor: DefaultContestProblemProcessor,
   format: <code>alias,slug[,status[,submissionsLimit]]</code>,
   example: <pre>{'A,hello\nB,tree,CLOSED\nC,flow,OPEN,20'}</pre>,

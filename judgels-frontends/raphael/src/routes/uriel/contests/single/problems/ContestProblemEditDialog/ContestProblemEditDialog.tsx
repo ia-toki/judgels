@@ -93,7 +93,7 @@ export class ContestProblemEditDialog extends React.Component<
     const problems = this.state.components.processor.toString(this.props.problems);
     const props: any = {
       renderFormComponents: this.renderDialogForm,
-      validation: this.state.components.validation,
+      validator: this.state.components.validator,
       onSubmit: this.setProblems,
       initialValues: { problems },
     };
