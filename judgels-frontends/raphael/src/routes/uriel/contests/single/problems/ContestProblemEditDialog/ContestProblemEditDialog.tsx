@@ -6,9 +6,8 @@ import { Contest } from 'modules/api/uriel/contest';
 import { ContestProblemData } from 'modules/api/uriel/contestProblem';
 
 import ContestProblemEditForm, { ContestProblemEditFormData } from '../ContestProblemEditForm/ContestProblemEditForm';
-import { getContestProblemEditComponent } from '../modules/contestProblemEditComponent/contestProblemEditComponentRegistry';
-import { ContestProblemEditComponent } from '../modules/contestProblemEditComponent/contestProblemEditComponent';
-import defaultContestProblemEditComponent from '../modules/contestProblemEditComponent/defaultContestProblemEditComponent/defaultContestProblemEditComponent';
+import { getContestProblemEditor } from '../modules/editor/contestProblemEditorRegistry';
+import { ContestProblemEditor } from '../modules/editor/contestProblemEditor';
 
 import './ContestProblemEditDialog.css';
 
@@ -20,16 +19,21 @@ export interface ContestProblemEditDialogProps {
 
 interface ContestProblemEditDialogState {
   isDialogOpen?: boolean;
-  components: ContestProblemEditComponent;
+  editor: ContestProblemEditor;
 }
 
 export class ContestProblemEditDialog extends React.Component<
   ContestProblemEditDialogProps,
   ContestProblemEditDialogState
 > {
-  state: ContestProblemEditDialogState = {
-    components: defaultContestProblemEditComponent,
-  };
+  state: ContestProblemEditDialogState;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      editor: getContestProblemEditor(props.contest.style),
+    };
+  }
 
   render() {
     return (
@@ -40,10 +44,6 @@ export class ContestProblemEditDialog extends React.Component<
     );
   }
 
-  componentWillMount() {
-    this.updateComponents();
-  }
-
   componentDidUpdate(prevProps: ContestProblemEditDialogProps) {
     if (prevProps.contest.style !== this.props.contest.style) {
       this.updateComponents();
@@ -52,7 +52,7 @@ export class ContestProblemEditDialog extends React.Component<
 
   private updateComponents() {
     this.setState({
-      components: getContestProblemEditComponent(this.props.contest.style),
+      editor: getContestProblemEditor(this.props.contest.style),
     });
   }
 
@@ -90,10 +90,10 @@ export class ContestProblemEditDialog extends React.Component<
   };
 
   private renderDialogSetForm = () => {
-    const problems = this.state.components.processor.toString(this.props.problems);
+    const problems = this.state.editor.serializer(this.props.problems);
     const props: any = {
       renderFormComponents: this.renderDialogForm,
-      validator: this.state.components.validator,
+      validator: this.state.editor.validator,
       onSubmit: this.setProblems,
       initialValues: { problems },
     };
@@ -119,18 +119,18 @@ export class ContestProblemEditDialog extends React.Component<
     return (
       <Callout icon={null}>
         <p>
-          <strong>Format:</strong> {this.state.components.format}
+          <strong>Format:</strong> {this.state.editor.format}
         </p>
         <p>
           <strong>Example:</strong>
         </p>
-        {this.state.components.example}
+        {this.state.editor.example}
       </Callout>
     );
   };
 
   private setProblems = async (data: ContestProblemEditFormData) => {
-    const problems = this.state.components.processor.toContestProblemData(data.problems);
+    const problems = this.state.editor.deserializer(data.problems);
 
     await this.props.onSetProblems(this.props.contest.jid, problems);
     this.setState({ isDialogOpen: false });
