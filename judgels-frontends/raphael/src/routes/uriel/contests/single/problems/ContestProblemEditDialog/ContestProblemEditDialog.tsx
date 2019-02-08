@@ -50,7 +50,7 @@ export class ContestProblemEditDialog extends React.Component<
     }
   }
 
-  private updateComponents() {
+  private updateEditor() {
     this.setState({
       editor: getContestProblemEditor(this.props.contest.style),
     });
