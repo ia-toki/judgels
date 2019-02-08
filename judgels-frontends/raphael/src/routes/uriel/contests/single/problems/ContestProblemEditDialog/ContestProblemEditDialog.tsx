@@ -46,7 +46,7 @@ export class ContestProblemEditDialog extends React.Component<
 
   componentDidUpdate(prevProps: ContestProblemEditDialogProps) {
     if (prevProps.contest.style !== this.props.contest.style) {
-      this.updateComponents();
+      this.updateEditor();
     }
   }
 
