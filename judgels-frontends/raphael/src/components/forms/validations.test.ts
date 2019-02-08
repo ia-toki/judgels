@@ -1,4 +1,5 @@
 import {
+  Alias,
   CompatibleFilenameExtensionForGradingLanguage,
   ConfirmPassword,
   EmailAddress,
@@ -31,15 +32,15 @@ describe('validations', () => {
   });
 
   test('Alias', () => {
-    expect(Slug('fusharfusharfusharfushar')).toBeTruthy();
-    expect(Slug(' A ')).toBeTruthy();
-    expect(Slug('A.')).toBeTruthy();
-    expect(Slug('A-1')).toBeUndefined();
+    expect(Alias('fusharfusharfusharfushar')).toBeTruthy();
+    expect(Alias(' A ')).toBeTruthy();
+    expect(Alias('A.')).toBeTruthy();
+    expect(Alias('A-1')).toBeUndefined();
   });
 
   test('Slug', () => {
     expect(Slug('fu')).toBeTruthy();
-    expect(Slug('fusharfusharfusharfushar')).toBeTruthy();
+    expect(Slug('fusharfusharfusharfusharfusharfusharfusharfusharfushar')).toBeTruthy();
     expect(Slug(' fushar ')).toBeTruthy();
     expect(Slug('fushar.')).toBeTruthy();
     expect(Slug('fus-4-r')).toBeUndefined();

@@ -10,7 +10,7 @@ export const Username = value =>
 export const NonnegativeNumber = value => (+value >= 0 ? undefined : 'Must be a non-negative number');
 
 export const Slug = value =>
-  /^[a-zA-Z0-9-]{3,20}$/.test(value) ? undefined : 'Must contain between 3 and 20 alphanumeric characters or dashes';
+  /^[a-zA-Z0-9-]{3,50}$/.test(value) ? undefined : 'Must contain between 3 and 50 alphanumeric characters or dashes';
 
 export const Alias = value =>
   /^[a-zA-Z0-9-]{1,20}$/.test(value) ? undefined : 'Must contain between 1 and 20 alphanumeric characters or dashes';
