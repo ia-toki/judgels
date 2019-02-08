@@ -10,13 +10,14 @@ import { LoadingState } from 'components/LoadingState/LoadingState';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { Contest, ContestStyle } from 'modules/api/uriel/contest';
 import { ContestScoreboardResponse, ContestScoreboardType } from 'modules/api/uriel/contestScoreboard';
-import { IcpcScoreboard, IoiScoreboard } from 'modules/api/uriel/scoreboard';
+import { IcpcScoreboard, IoiScoreboard, GcjScoreboard } from 'modules/api/uriel/scoreboard';
 import { AppState } from 'modules/store';
 import { selectMaybeUserJid } from 'modules/session/sessionSelectors';
 
 import { selectContest } from '../../../modules/contestSelectors';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
 import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
+import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
 import { contestScoreboardActions as injectedContestScoreboardActions } from '../modules/contestScoreboardActions';
 
 import './ContestScoreboardPage.css';
@@ -175,11 +176,19 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
           profilesMap={profilesMap!}
         />
       );
-    } else {
+    } else if (this.props.contest.style === ContestStyle.IOI) {
       return (
         <IoiScoreboardTable
           userJid={this.props.userJid}
           scoreboard={scoreboard.scoreboard as IoiScoreboard}
+          profilesMap={profilesMap!}
+        />
+      );
+    } else {
+      return (
+        <GcjScoreboardTable
+          userJid={this.props.userJid}
+          scoreboard={scoreboard.scoreboard as GcjScoreboard}
           profilesMap={profilesMap!}
         />
       );

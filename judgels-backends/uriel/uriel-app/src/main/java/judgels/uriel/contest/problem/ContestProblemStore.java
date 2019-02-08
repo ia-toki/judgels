@@ -38,7 +38,8 @@ public class ContestProblemStore {
                     problem.getAlias(),
                     problem.getProblemJid(),
                     problem.getStatus(),
-                    problem.getSubmissionsLimit()));
+                    problem.getSubmissionsLimit(),
+                    problem.getPoints()));
         }
         return problems.build();
     }
@@ -48,7 +49,8 @@ public class ContestProblemStore {
             String alias,
             String problemJid,
             ContestProblemStatus status,
-            long submissionsLimit) {
+            long submissionsLimit,
+            Optional<Integer> points) {
 
         Optional<ContestProblemModel> maybeModel =
                 problemDao.selectByContestJidAndProblemJid(contestJid, problemJid);
@@ -57,6 +59,7 @@ public class ContestProblemStore {
             model.alias = alias;
             model.status = status.name();
             model.submissionsLimit = submissionsLimit;
+            model.points = points.orElse(0);
             return fromModel(problemDao.update(model));
         } else {
             ContestProblemModel model = new ContestProblemModel();
@@ -65,6 +68,7 @@ public class ContestProblemStore {
             model.alias = alias;
             model.status = status.name();
             model.submissionsLimit = submissionsLimit;
+            model.points = 0;
             return fromModel(problemDao.insert(model));
         }
     }
@@ -108,6 +112,13 @@ public class ContestProblemStore {
                 .collect(Collectors.toMap(jid -> jid, problemAliases::get));
     }
 
+    public Map<String, Integer> getProblemPointsByJids(String contestJid, Set<String> problemJids) {
+        return problemDao.selectAllByContestJid(contestJid, createOptions())
+                .stream()
+                .filter(m -> problemJids.contains(m.problemJid))
+                .collect(Collectors.toMap(m -> m.problemJid, m -> m.points));
+    }
+
     private static SelectionOptions createOptions() {
         return new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
                 .orderBy("alias")
@@ -121,6 +132,7 @@ public class ContestProblemStore {
                 .alias(model.alias)
                 .status(ContestProblemStatus.valueOf(model.status))
                 .submissionsLimit(model.submissionsLimit)
+                .points(model.points)
                 .build();
     }
 }

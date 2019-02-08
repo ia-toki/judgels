@@ -1,6 +1,7 @@
 package judgels.uriel.api.contest.problem;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -10,6 +11,7 @@ public interface ContestProblemData {
     String getSlug();
     ContestProblemStatus getStatus();
     long getSubmissionsLimit();
+    Optional<Integer> getPoints();
 
     class Builder extends ImmutableContestProblemData.Builder {}
 }

@@ -26,4 +26,7 @@ public class ContestProblemModel extends Model {
 
     @Column(nullable = false)
     public long submissionsLimit;
+
+    @Column(nullable = false)
+    public int points;
 }

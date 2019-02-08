@@ -1,9 +1,10 @@
-export type Scoreboard = IcpcScoreboard | IoiScoreboard;
+export type Scoreboard = IcpcScoreboard | IoiScoreboard | GcjScoreboard;
 
 export interface ScoreboardState {
   problemJids: string[];
   problemAliases: string[];
   contestantJids: string[];
+  points?: number[];
 }
 
 export interface IcpcScoreboard {
@@ -47,4 +48,29 @@ export interface IoiScoreboardEntry {
   scores: (number | null)[];
   totalScores: number;
   lastAffectingPenalty: number;
+}
+
+export interface GcjScoreboard {
+  state: ScoreboardState;
+  content: GcjScoreboardContent;
+}
+
+export interface GcjScoreboardContent {
+  entries: GcjScoreboardEntry[];
+}
+
+export interface GcjScoreboardEntry {
+  rank: number;
+  contestantJid: string;
+  totalPoints: number;
+  totalPenalties: number;
+  attemptsList: number[];
+  penaltyList: number[];
+  problemStateList: GcjScoreboardProblemState[];
+}
+
+export enum GcjScoreboardProblemState {
+  NotAccepted = 0,
+  Accepted,
+  Frozen,
 }

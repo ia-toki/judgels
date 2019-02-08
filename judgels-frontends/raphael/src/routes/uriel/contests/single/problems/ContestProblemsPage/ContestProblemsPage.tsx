@@ -99,6 +99,7 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
           slug: response.problemsMap[p.problemJid].slug,
           status: p.status,
           submissionsLimit: p.submissionsLimit,
+          points: p.points,
         } as ContestProblemData)
     );
     return (
@@ -157,15 +158,23 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
   };
 
   private renderFilteredProblems = (problems: ContestProblem[], totalSubmissionsMap) => {
-    return problems.map(problem => (
-      <ContestProblemCard
-        key={problem.problemJid}
-        contest={this.props.contest}
-        problem={problem}
-        problemName={getProblemName(this.state.response!.problemsMap[problem.problemJid], this.state.defaultLanguage!)}
-        totalSubmissions={totalSubmissionsMap[problem.problemJid]}
-      />
-    ));
+    return problems.map(problem => {
+      var props = {
+        contest: this.props.contest,
+        problem,
+        problemName: getProblemName(this.state.response!.problemsMap[problem.problemJid], this.state.defaultLanguage!),
+        totalSubmissions: totalSubmissionsMap[problem.problemJid],
+      } as any;
+
+      if (this.state.response!.pointsMap) {
+        props = {
+          ...props,
+          problemPoints: this.state.response!.pointsMap![problem.problemJid],
+        };
+      }
+
+      return <ContestProblemCard key={problem.problemJid} {...props} />;
+    });
   };
 
   private setProblems = async (contestJid, data) => {

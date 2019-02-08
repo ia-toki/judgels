@@ -20,24 +20,28 @@ describe('ContestProblemEditDialog', () => {
       slug: 'pp1',
       status: ContestProblemStatus.Open,
       submissionsLimit: 0,
+      points: 0,
     },
     {
       alias: 'B',
       slug: 'pp2',
       status: ContestProblemStatus.Open,
       submissionsLimit: 10,
+      points: 0,
     },
     {
       alias: 'C',
       slug: 'pp3',
       status: ContestProblemStatus.Closed,
       submissionsLimit: 0,
+      points: 0,
     },
     {
       alias: 'D',
       slug: 'pp4',
       status: ContestProblemStatus.Closed,
       submissionsLimit: 10,
+      points: 0,
     },
   ];
 
@@ -80,24 +84,28 @@ describe('ContestProblemEditDialog', () => {
         slug: 'qq1',
         status: ContestProblemStatus.Open,
         submissionsLimit: 0,
+        points: 0,
       },
       {
         alias: 'Q',
         slug: 'qq2',
         status: ContestProblemStatus.Open,
         submissionsLimit: 20,
+        points: 0,
       },
       {
         alias: 'R',
         slug: 'qq3',
         status: ContestProblemStatus.Closed,
         submissionsLimit: 0,
+        points: 0,
       },
       {
         alias: 'S',
         slug: 'qq4',
         status: ContestProblemStatus.Closed,
         submissionsLimit: 20,
+        points: 0,
       },
     ]);
   });

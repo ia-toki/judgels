@@ -38,8 +38,12 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
     name: 'style',
     label: 'Style',
     validate: [Required],
-    optionValues: [ContestStyle.ICPC, ContestStyle.IOI],
-    optionNamesMap: { [ContestStyle.ICPC]: ContestStyle.ICPC, [ContestStyle.IOI]: ContestStyle.IOI },
+    optionValues: [ContestStyle.ICPC, ContestStyle.IOI, ContestStyle.GCJ],
+    optionNamesMap: {
+      [ContestStyle.ICPC]: ContestStyle.ICPC,
+      [ContestStyle.IOI]: ContestStyle.IOI,
+      [ContestStyle.GCJ]: ContestStyle.GCJ,
+    },
   };
 
   const beginTimeField: any = {

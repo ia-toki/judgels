@@ -50,6 +50,7 @@ export interface ContestDescription {
 export enum ContestStyle {
   ICPC = 'ICPC',
   IOI = 'IOI',
+  GCJ = 'GCJ',
 }
 
 export interface ContestPage extends Page<Contest> {}

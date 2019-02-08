@@ -22,6 +22,10 @@ export interface ContestEditConfigsFormData {
   ioiAllowedLanguages?: { [key: string]: string };
   ioiUsingLastAffectingPenalty?: boolean;
 
+  gcjAllowAllLanguages?: boolean;
+  gcjAllowedLanguages?: { [key: string]: string };
+  gcjWrongSubmissionPenalty?: string;
+
   scoreboardIsIncognito: boolean;
 
   clarificationTimeLimitDuration?: string;
@@ -49,10 +53,11 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
   constructor(props: ContestEditConfigsFormProps) {
     super(props);
 
-    const { icpcStyle, ioiStyle } = props.config;
+    const { icpcStyle, ioiStyle, gcjStyle } = props.config;
     const allowAllLanguages =
       (!!icpcStyle && allLanguagesAllowed(icpcStyle.languageRestriction)) ||
-      (!!ioiStyle && allLanguagesAllowed(ioiStyle.languageRestriction));
+      (!!ioiStyle && allLanguagesAllowed(ioiStyle.languageRestriction)) ||
+      (!!gcjStyle && allLanguagesAllowed(gcjStyle.languageRestriction));
 
     this.state = { allowAllLanguages };
   }
@@ -63,6 +68,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
       <form className="contest-edit-dialog__content" onSubmit={this.props.handleSubmit}>
         {config.icpcStyle && this.renderIcpcStyleForm()}
         {config.ioiStyle && this.renderIoiStyleForm()}
+        {config.gcjStyle && this.renderGcjStyleForm()}
         {config.clarificationTimeLimit && this.renderClarificationTimeLimitForm()}
         {config.delayedGrading && this.renderDelayedGradingForm()}
         {this.renderScoreboardForm()}
@@ -161,6 +167,49 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
                 allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
             </FormTableInput>
             <Field component={FormTableCheckbox} {...usingLastAffectingPenaltyField} />
+          </tbody>
+        </HTMLTable>
+      </div>
+    );
+  };
+
+  private renderGcjStyleForm = () => {
+    const allowedLanguageField: any = {
+      label: 'Allowed languages',
+      meta: {},
+    };
+    const allowAllLanguagesField: any = {
+      name: 'gcjAllowAllLanguages',
+      label: '(all)',
+      onChange: this.toggleAllowAllLanguagesCheckbox,
+    };
+    const allowedLanguageFields = gradingLanguages.map(
+      lang =>
+        ({
+          name: 'gcjAllowedLanguages.' + lang,
+          label: getGradingLanguageName(lang),
+          small: true,
+        } as any)
+    );
+
+    const wrongSubmissionPenaltyField: any = {
+      name: 'gcjWrongSubmissionPenalty',
+      label: 'Wrong submission penalty',
+      validate: [Required, NonnegativeNumber],
+      keyClassName: 'contest-edit-configs-form__key',
+    };
+
+    return (
+      <div className="contest-edit-configs-form__config">
+        <h4>GCJ style config</h4>
+        <HTMLTable striped>
+          <tbody>
+            <FormTableInput {...allowedLanguageField}>
+              <Field component={FormCheckbox} {...allowAllLanguagesField} />
+              {!this.state.allowAllLanguages &&
+                allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
+            </FormTableInput>
+            <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
           </tbody>
         </HTMLTable>
       </div>

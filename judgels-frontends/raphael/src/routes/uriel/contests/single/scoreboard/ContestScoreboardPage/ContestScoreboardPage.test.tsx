@@ -71,6 +71,7 @@ describe('ContestScoreboardPage', () => {
               contestantJids: [],
               problemJids: [],
               problemAliases: [],
+              points: [],
             },
             content: {
               entries: [],
@@ -105,6 +106,7 @@ describe('ContestScoreboardPage', () => {
               contestantJids: [],
               problemJids: [],
               problemAliases: [],
+              points: [],
             },
             content: {
               entries: [],

@@ -6,6 +6,8 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,21 +67,28 @@ public class ContestScoreboardUpdater {
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(
                 contest.getJid(),
                 ImmutableSet.copyOf(problemJids));
+        Map<String, Integer> problemPoints = problemStore.getProblemPointsByJids(
+                contest.getJid(),
+                ImmutableSet.copyOf(problemJids));
         ScoreboardState scoreboardState = new ScoreboardState.Builder()
                 .problemJids(problemJids)
                 .contestantJids(contestantJids)
+                .problemPoints(styleModuleConfig.hasPointsPerProblem()
+                        ? Optional.of(problemJids.stream().map(problemPoints::get).collect(Collectors.toList()))
+                        : Optional.empty())
                 .problemAliases(problemJids.stream().map(problemAliasesMap::get).collect(Collectors.toList()))
                 .build();
 
         Map<String, Optional<Instant>> contestantStartTimesMap =
                 contestantStore.getApprovedContestantStartTimes(contest.getJid());
 
-        List<Submission> submissions = submissionStore.getSubmissions(
+        List<Submission> submissions = new ArrayList<>(submissionStore.getSubmissions(
                 contest.getJid(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty())
-                .getPage();
+                .getPage());
+        submissions.sort(Comparator.comparingLong(Submission::getId));
         generateAndUpsertScoreboard(
                 contest,
                 scoreboardState,
@@ -93,16 +102,14 @@ public class ContestScoreboardUpdater {
             Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get()
                     .getFreezeDurationBeforeEndTime();
             Instant freezeTime = contest.getEndTime().minus(freezeDuration);
-            if (clock.instant().isAfter(freezeTime)) {
-                generateAndUpsertScoreboard(
-                        contest,
-                        scoreboardState,
-                        styleModuleConfig,
-                        contestantStartTimesMap,
-                        submissions,
-                        Optional.of(freezeTime),
-                        ContestScoreboardType.FROZEN);
-            }
+            generateAndUpsertScoreboard(
+                    contest,
+                    scoreboardState,
+                    styleModuleConfig,
+                    contestantStartTimesMap,
+                    submissions,
+                    Optional.of(freezeTime),
+                    ContestScoreboardType.FROZEN);
         }
     }
 

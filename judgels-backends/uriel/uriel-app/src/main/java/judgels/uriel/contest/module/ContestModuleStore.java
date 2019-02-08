@@ -33,6 +33,7 @@ import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.DelayedGradingModuleConfig;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
+import judgels.uriel.api.contest.module.GcjStyleModuleConfig;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
@@ -115,8 +116,10 @@ public class ContestModuleStore {
 
         if (contestStyle == ContestStyle.IOI) {
             config.ioiStyle(getIoiStyleModuleConfig(contestJid));
-        } else {
+        } else if (contestStyle == ContestStyle.ICPC) {
             config.icpcStyle(getIcpcStyleModuleConfig(contestJid));
+        } else {
+            config.gcjStyle(getGcjStyleModuleConfig(contestJid));
         }
 
         return config.build();
@@ -145,8 +148,10 @@ public class ContestModuleStore {
     public StyleModuleConfig getStyleModuleConfig(String contestJid, ContestStyle contestStyle) {
         if (contestStyle == ContestStyle.IOI) {
             return getIoiStyleModuleConfig(contestJid);
-        } else {
+        } else if (contestStyle == ContestStyle.ICPC) {
             return getIcpcStyleModuleConfig(contestJid);
+        } else {
+            return getGcjStyleModuleConfig(contestJid);
         }
     }
 
@@ -158,6 +163,11 @@ public class ContestModuleStore {
     public IoiStyleModuleConfig getIoiStyleModuleConfig(String contestJid) {
         return getStyleConfig(contestJid, IoiStyleModuleConfig.class)
                 .orElse(new IoiStyleModuleConfig.Builder().build());
+    }
+
+    public GcjStyleModuleConfig getGcjStyleModuleConfig(String contestJid) {
+        return getStyleConfig(contestJid, GcjStyleModuleConfig.class)
+                .orElse(new GcjStyleModuleConfig.Builder().build());
     }
 
     public void upsertClarificationModule(String contestJid) {
