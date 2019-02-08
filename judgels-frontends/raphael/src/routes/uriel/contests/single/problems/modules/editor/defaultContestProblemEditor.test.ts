@@ -1,7 +1,7 @@
 import defaultContestProblemEditor from './defaultContestProblemEditor';
 
 describe('contestProblemValidations', () => {
-  test('ValidProblemsSetData', () => {
+  test('validator', () => {
     expect(defaultContestProblemEditor.validator('A,slug,OPEN,10')).toBeUndefined();
     expect(defaultContestProblemEditor.validator('A,slug,OPEN,10\nB,slug2,CLOSED,20')).toBeUndefined();
     expect(defaultContestProblemEditor.validator('A,slug,CLOSED,10')).toBeUndefined();
