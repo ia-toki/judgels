@@ -136,8 +136,7 @@ def check(branch_to_compare):
     for project in PROJECTS:
         if MODULES[project].intersection(changed_modules):
             if project == ':raphael':
-                if ':raphael:package.json' in changed_modules:
-                    print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
+                print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael lint')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
             elif project == ':sandalphon' or project == ':jerahmeel':
