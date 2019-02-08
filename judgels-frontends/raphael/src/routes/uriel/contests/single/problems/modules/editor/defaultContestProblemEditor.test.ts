@@ -1,6 +1,6 @@
 import defaultContestProblemEditor from './defaultContestProblemEditor';
 
-describe('contestProblemValidations', () => {
+describe('defaultContestProblemEditor', () => {
   test('validator', () => {
     expect(defaultContestProblemEditor.validator('A,slug,OPEN,10')).toBeUndefined();
     expect(defaultContestProblemEditor.validator('A,slug,OPEN,10\nB,slug2,CLOSED,20')).toBeUndefined();
