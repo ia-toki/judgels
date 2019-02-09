@@ -82,7 +82,7 @@ SERVICES = [
     ':uriel',
     ':sealtiel',
     ':sandalphon',
-    'jerahmeel'
+    ':jerahmeel'
 ]
 
 def flatten_dependencies():
