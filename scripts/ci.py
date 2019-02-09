@@ -77,7 +77,7 @@ PROJECTS = [
 ]
 
 SERVICES = [
-    ':raphael'
+    ':raphael',
     ':jophiel',
     ':uriel',
     ':sealtiel',
