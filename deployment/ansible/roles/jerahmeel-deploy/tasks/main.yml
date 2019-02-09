@@ -1,0 +1,35 @@
+- block:
+  - name: Create jerahmeel container mount volume
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/jerahmeel/var
+      - /judgels/jerahmeel/var/conf
+      - /judgels/jerahmeel/var/data
+
+  - name: Generate jerahmeel config
+    template:
+      src: "{{ playbook_dir }}/../../../deployment-repo/conf/jerahmeel.conf"
+      dest: /judgels/jerahmeel/var/conf/jerahmeel.conf
+
+  - name: Pull jerahmeel image
+    docker_image:
+      name: judgels/jerahmeel
+      tag: "{{ judgels_version | default('latest', true) }}"
+      force: yes
+
+  - name: Run a jerahmeel container
+    docker_container:
+      name: jerahmeel
+      image: "judgels/jerahmeel:{{ judgels_version | default('latest', true) }}"
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/jerahmeel/var:/judgels/jerahmeel/var"
+      env:
+        PLAY_BINARY_OPTS: "-Dhttp.port=9006 -Dconfig.file=/judgels/jerahmeel/var/conf/jerahmeel.conf"
+  tags:
+    - jerahmeel-deploy
