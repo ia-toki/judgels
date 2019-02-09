@@ -1,0 +1,4 @@
+- hosts: repository
+  gather_facts: false
+  roles:
+    - name: repository-deploy

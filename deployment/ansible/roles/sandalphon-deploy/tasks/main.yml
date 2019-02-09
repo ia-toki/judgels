@@ -9,7 +9,6 @@
       - /judgels/sandalphon/var
       - /judgels/sandalphon/var/conf
       - /judgels/sandalphon/var/data
-      - /judgels/sandalphon/conf
 
   - name: Generate sandalphon config
     template:
@@ -30,9 +29,7 @@
       network_mode: host
       volumes:
         - "/judgels/sandalphon/var:/judgels/sandalphon/var"
-        - "/judgels/sandalphon/conf:/judgels/sandalphon/conf"
       env:
         PLAY_BINARY_OPTS: "-Dhttp.port=9002 -Dconfig.file=/judgels/sandalphon/var/conf/sandalphon.conf"
-        # PLAY_BINARY_OPTS: "-Dhttp.port=disabled -Dhttps.port=9002 -Dconfig.file=/judgels/sandalphon/var/conf/sandalphon.conf"
   tags:
     - sandalphon-deploy

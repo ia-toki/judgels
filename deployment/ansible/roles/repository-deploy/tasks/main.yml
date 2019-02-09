@@ -1,0 +1,36 @@
+- block:
+  - name: Create repository container mount volume
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+      mode: "0755"
+    with_items:
+      - /judgels/repository/letsencrypt
+      - /judgels/repository/sites
+
+  - name: Generate nginx site
+    template:
+      src: default.conf.j2
+      dest: /judgels/repository/sites/default.conf
+
+  - name: Pull nginx-certbot image
+    docker_image:
+      name: judgels/nginx-certbot
+      force: yes
+
+  - name: Create a nginx-certbot container
+    docker_container:
+      name: nginx-certbot
+      image: judgels/nginx-certbot
+      command: nginx
+      restart: yes
+      network_mode: host
+      volumes:
+        - /judgels/repository/letsencrypt:/etc/letsencrypt
+        - /judgels/repository/sites:/etc/nginx/conf.d
+      env:
+        CERTBOT_EMAIL: "{{ letsencrypt_email }}"
+
+  tags:
+    - repository-deploy
