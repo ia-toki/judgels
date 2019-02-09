@@ -26,7 +26,7 @@ public final class JerahmeelDataMigrator extends AbstractJudgelsDataMigrator {
 
     @Override
     public long getLatestDataVersion() {
-        return 7;
+        return 8;
     }
 
     @Override
@@ -104,6 +104,7 @@ public final class JerahmeelDataMigrator extends AbstractJudgelsDataMigrator {
                 "programming_submission",
                 "jid_cache",
                 "user",
+                "user_item",
         };
 
         Statement statement = connection.createStatement();
