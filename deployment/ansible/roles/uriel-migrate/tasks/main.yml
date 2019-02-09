@@ -1,12 +1,35 @@
 - block:
+  - name: Create uriel container mount volume
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/uriel/var
+      - /judgels/uriel/var/conf
+
+  - name: Generate uriel config
+    template:
+      src: "{{ playbook_dir }}/../../../deployment-repo/conf/uriel.yml"
+      dest: /judgels/uriel/var/conf/uriel.yml
+
+  - name: Pull uriel image
+    docker_image:
+      name: judgels/uriel
+      tag: "{{ judgels_version | default('latest', true) }}"
+      force: yes
+
   - name: Run a uriel container to do db migration
     docker_container:
-      name: uriel
+      name: uriel-migrate
       image: "judgels/uriel:{{ uriel_version | default('latest', true) }}"
       restart: yes
+      auto_remove: yes
       network_mode: host
       volumes:
         - "/judgels/uriel/var:/judgels/uriel/var"
       command: dbMigrate
+
   tags:
     - uriel-migrate
