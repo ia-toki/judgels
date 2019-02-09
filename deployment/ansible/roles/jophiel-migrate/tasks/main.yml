@@ -25,7 +25,6 @@
       name: jophiel-migrate
       image: "judgels/jophiel:{{ jophiel_version | default('latest', true) }}"
       restart: yes
-      auto_remove: yes
       network_mode: host
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
