@@ -153,7 +153,7 @@ def deploy(branch_to_compare):
     print('set -ex')
     for service in SERVICES:
         if MODULES[service].intersection(changed_modules):
-            print('{}./scripts/deploy_{}.sh'.format(tag_env, service.replace(':', '')))
+            print('{}./deployment/scripts/deploy_{}.sh'.format(tag_env, service.replace(':', '')))
 
 
 flatten_dependencies()
