@@ -1,4 +1,4 @@
 - hosts: judgels
   gather_facts: false
   roles:
-    - name: judgels-deploy
+    - name: nginx-certbot-deploy

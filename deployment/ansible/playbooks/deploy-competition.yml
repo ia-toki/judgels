@@ -1,4 +1,0 @@
-- hosts: competition
-  gather_facts: false
-  roles:
-    - name: competition-deploy

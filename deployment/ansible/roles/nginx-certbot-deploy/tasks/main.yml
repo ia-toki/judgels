@@ -1,18 +1,18 @@
 - block:
-  - name: Create competition container mount volume
+  - name: Create nginx-cerbot container mount volume
     file:
       path: "{{ item }}"
       recurse: yes
       state: directory
       mode: "0755"
     with_items:
-      - /judgels/competition/letsencrypt
-      - /judgels/competition/sites
+      - /judgels/letsencrypt
+      - /judgels/sites
 
   - name: Generate nginx site
     template:
       src: default.conf.j2
-      dest: /judgels/competition/sites/default.conf
+      dest: /judgels/sites/default.conf
 
   - name: Pull nginx-certbot image
     docker_image:
@@ -27,10 +27,10 @@
       restart: yes
       network_mode: host
       volumes:
-        - /judgels/competition/letsencrypt:/etc/letsencrypt
-        - /judgels/competition/sites:/etc/nginx/conf.d
+        - /judgels/letsencrypt:/etc/letsencrypt
+        - /judgels/sites:/etc/nginx/conf.d
       env:
         CERTBOT_EMAIL: "{{ letsencrypt_email }}"
 
   tags:
-    - competition-deploy
+    - judgels-deploy
