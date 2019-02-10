@@ -1,0 +1,5 @@
+- hosts: database
+  gather_facts: false
+  roles:
+    - name: mysql-install
+    - name: phpmyadmin-deploy
