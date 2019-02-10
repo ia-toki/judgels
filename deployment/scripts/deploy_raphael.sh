@@ -10,5 +10,5 @@ rm -rf dist/build && mv build dist/
 cd ../../deployment/ansible
 
 ansible --version
-ansible-playbook -e @../../deployment-repo/conf/global.yml -e judgels_version=$JUDGELS_VERSION playbooks/build-raphael.yml
-ansible-playbook -e @../../deployment-repo/conf/global.yml -e judgels_version=$JUDGELS_VERSION playbooks/deploy-raphael.yml
+ansible-playbook -e @../deployment-repo/conf/global.yml -e judgels_version=$JUDGELS_VERSION playbooks/build-raphael.yml
+ansible-playbook -e @../deployment-repo/conf/global.yml -e judgels_version=$JUDGELS_VERSION playbooks/deploy-raphael.yml

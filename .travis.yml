@@ -28,7 +28,7 @@ before_deploy:
   - chmod 600 /tmp/deployment_rsa
   - ssh-add /tmp/deployment_rsa
   - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-  - git clone --depth=1 -q "git@gitlab.com:${deployment_repo}.git" deployment-repo
+  - git clone --depth=1 -q "git@gitlab.com:${deployment_repo}.git" deployment/deployment-repo
 
 deploy:
   skip_cleanup: true

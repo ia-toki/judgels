@@ -12,7 +12,7 @@
 
   - name: Generate jerahmeel config
     template:
-      src: "{{ playbook_dir }}/../../../deployment-repo/conf/jerahmeel.conf"
+      src: "{{ playbook_dir }}/../../deployment-repo/conf/jerahmeel.conf"
       dest: /judgels/jerahmeel/var/conf/jerahmeel.conf
 
   - name: Pull jerahmeel image

@@ -12,7 +12,7 @@
 
   - name: Generate sandalphon config
     template:
-      src: "{{ playbook_dir }}/../../../deployment-repo/conf/sandalphon.conf"
+      src: "{{ playbook_dir }}/../../deployment-repo/conf/sandalphon.conf"
       dest: /judgels/sandalphon/var/conf/sandalphon.conf
 
   - name: Pull sandalphon image
