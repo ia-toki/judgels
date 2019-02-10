@@ -77,12 +77,12 @@ PROJECTS = [
 ]
 
 SERVICES = [
-    ':raphael',
     ':jophiel',
     ':uriel',
     ':sealtiel',
     ':sandalphon',
-    ':jerahmeel'
+    ':jerahmeel',
+    ':raphael'
 ]
 
 def flatten_dependencies():

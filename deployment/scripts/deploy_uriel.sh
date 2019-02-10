@@ -2,7 +2,7 @@
 
 set -ex
 
-cd "$(dirname "$0")"/../judgels-backends/uriel/uriel-dist
+cd "$(dirname "$0")"/../../judgels-backends/uriel/uriel-dist
 
 ../../gradlew clean distTar
 tar -xf build/distributions/uriel-* --strip-components=1 -C build/distributions

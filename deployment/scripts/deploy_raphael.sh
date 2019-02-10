@@ -2,7 +2,7 @@
 
 set -ex
 
-cd "$(dirname "$0")"/../judgels-frontends/raphael
+cd "$(dirname "$0")"/../../judgels-frontends/raphael
 
 GENERATE_SOURCEMAP=false yarn build
 rm -rf dist/build && mv build dist/

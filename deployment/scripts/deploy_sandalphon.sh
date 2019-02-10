@@ -2,7 +2,7 @@
 
 set -ex
 
-cd "$(dirname "$0")"/../judgels-legacy/sandalphon
+cd "$(dirname "$0")"/../../judgels-legacy/sandalphon
 
 ../gradlew stagePlayBinaryDist
 rm -rf build/stage/playBinary/conf
