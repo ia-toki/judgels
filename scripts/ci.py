@@ -125,7 +125,7 @@ def get_changed_modules(branch_to_compare):
 
 
 def get_tag_env():
-    tag = run('git describe --exact-match --tags HEAD').strip()
+    tag = run('git describe --exact-match --tags HEAD 2> /dev/null').strip()
     if not tag:
         return ''
     return 'JUDGELS_VERSION={} '.format(tag)
