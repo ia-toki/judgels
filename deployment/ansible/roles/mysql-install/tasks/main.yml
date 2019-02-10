@@ -18,7 +18,7 @@
 
   - name: Change mysql root password
     shell: > 
-      mysql -u root -Nbe 'ALTER USER "root"@"localhost" IDENTIFIED WITH mysql_native_password BY "{{ mysql_root_password }}";'
+      mysql -u root -Nbe 'ALTER USER "root"@"localhost" IDENTIFIED WITH mysql_native_password BY "{{ db_root_password }}";'
     changed_when: false
 
   - name: Change mysql bind-address to allow connection from phpmyadmin
@@ -36,7 +36,7 @@
   - name: Create judgels user
     mysql_user:
       login_user: root
-      login_password: "{{ mysql_root_password }}"
+      login_password: "{{ db_root_password }}"
       name: "{{ db_username }}"
       password: "{{ db_password }}"
       host: '%'
@@ -46,13 +46,14 @@
   - name: Create judgels databases
     mysql_db:
       login_user: root
-      login_password: "{{ mysql_root_password }}"
+      login_password: "{{ db_root_password }}"
       name: "{{ item }}"
       state: present
     with_items:
       - judgels_jophiel
       - judgels_sandalphon
       - judgels_uriel
+      - judgels_jerahmeel
 
   tags:
     - mysql-install

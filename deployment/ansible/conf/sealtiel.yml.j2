@@ -1,0 +1,44 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9003
+  adminConnectors:
+    - type: http
+      port: 9103
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/sealtiel-request.log
+      archivedLogFilenamePattern: var/log/sealtiel-request-%d.log.gz
+      archivedFileCount: 14
+
+logging:
+  appenders:
+    - type: console
+      threshold: INFO
+    - type: file
+      currentLogFilename: var/log/sealtiel.log
+      archivedLogFilenamePattern: var/log/sealtiel-%d.log.gz
+      archivedFileCount: 14
+
+sealtiel:
+  clients:
+    - jid: JIDSECL-sandalphon
+      secret: {{ sealtiel_sandalphon_secret }}
+
+    - jid: JIDSECL-uriel
+      secret: {{ sealtiel_uriel_secret }}
+
+    - jid: JIDSECL-jerahmeel
+      secret: {{ sealtiel_jerahmeel_secret }}
+
+    - jid: JIDSECL-gabriel
+      secret: {{ sealtiel_gabriel_secret }}
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    managementPort: 15672
+    username: {{ rabbitmq_mgmt_username }}
+    password: {{ rabbitmq_mgmt_password }}
+    virtualHost: "/"

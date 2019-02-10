@@ -11,5 +11,5 @@ rm -rf build/stage/playBinary/lib/org.webjars-*
 cd ../../deployment/ansible
 
 ansible --version
-ansible-playbook -e @../deployment-repo/conf/global.yml -e judgels_version=$JUDGELS_VERSION playbooks/build-sandalphon.yml
-ansible-playbook -e @../deployment-repo/conf/global.yml -e judgels_version=$JUDGELS_VERSION playbooks/deploy-sandalphon.yml
+ansible-playbook -e @dist/env.yml -e judgels_version=$JUDGELS_VERSION playbooks/build-sandalphon.yml
+ansible-playbook -e @dist/env.yml -e judgels_version=$JUDGELS_VERSION playbooks/deploy-sandalphon.yml

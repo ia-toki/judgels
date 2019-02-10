@@ -1,5 +1,5 @@
 server {
-    server_name {{ jophiel_url }};
+    server_name {{ jophiel_url_public }};
 
     access_log off;
 
@@ -26,7 +26,7 @@ server {
 }
 
 server {
-    server_name {{ sandalphon_url }};
+    server_name {{ sandalphon_url_public }};
 
     access_log off;
 
@@ -53,7 +53,7 @@ server {
 }
 
 server {
-    server_name {{ sealtiel_url }};
+    server_name {{ sealtiel_url_public }};
 
     access_log off;
 
@@ -80,7 +80,7 @@ server {
 }
 
 server {
-    server_name {{ uriel_url }};
+    server_name {{ uriel_url_public }};
 
     access_log off;
 
@@ -107,10 +107,9 @@ server {
 }
 
 server {
-    server_name {{ raphael_url }};
+    server_name {{ jerahmeel_url_public }};
 
     access_log off;
-    proxy_buffering off;
 
     location ~ /\. {
         deny all;
@@ -121,7 +120,7 @@ server {
     }
 
     location / {
-        proxy_pass              http://localhost:80;
+        proxy_pass              http://localhost:9006;
         proxy_set_header        Host $host;
         proxy_set_header        X-Real-IP $remote_addr;
         proxy_set_header        X-Forwarded-Proto https;
@@ -135,7 +134,35 @@ server {
 }
 
 server {
-    server_name {{ rabbitmq_mgmt_url }};
+    server_name {{ raphael_url_public }};
+
+    access_log off;
+    proxy_buffering off;
+
+    location ~ /\. {
+        deny all;
+    }
+
+    location ^~ /.well-known/acme-challenge {
+        root /usr/share/nginx/html;
+    }
+
+    location / {
+        proxy_pass              http://localhost:5000;
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-Proto https;
+        proxy_set_header        X-Forwarded-Ssl on;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout   150;
+        proxy_send_timeout      100;
+        proxy_read_timeout      100;
+        client_max_body_size    512M;
+    }
+}
+
+server {
+    server_name {{ rabbitmq_mgmt_url_public }};
 
     access_log off;
 

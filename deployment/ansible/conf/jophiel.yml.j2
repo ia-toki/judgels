@@ -1,0 +1,84 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9001
+  adminConnectors:
+    - type: http
+      port: 9101
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/jophiel-request.log
+      archivedLogFilenamePattern: var/log/jophiel-request-%d.log.gz
+      archivedFileCount: 14
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  url: jdbc:mysql://{{ db_host }}/judgels_jophiel{{ db_options }}
+  user: {{ db_username }}
+  password: {{ db_password }}
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
+    hibernate.generate_statistics: false
+
+logging:
+  appenders:
+    - type: console
+      threshold: INFO
+    - type: file
+      currentLogFilename: var/log/jophiel.log
+      archivedLogFilenamePattern: var/log/jophiel-%d.log.gz
+      archivedFileCount: 14
+
+  loggers:
+    org.hibernate.type.BasicTypeRegistry:
+      level: OFF
+
+webSecurity:
+  cors:
+    allowedOrigins: {{ judgels_scheme }}://{{ raphael_url_public }}
+    allowCredentials: true
+
+jophiel:
+  baseDataDir: /judgels/jophiel/var/data
+
+  mailer:
+    host: {{ jophiel_mailer_host }}
+    port: {{ jophiel_mailer_port }}
+    useSsl: {{ jophiel_mailer_useSsl }}
+    username: {{ jophiel_mailer_username }}
+    password: {{ jophiel_mailer_password }}
+    sender: {{ jophiel_mailer_sender }}
+
+  recaptcha:
+    siteKey: {{ recaptcha_siteKey }}
+    secretKey: {{ recaptcha_secretKey }}
+
+  aws:
+    accessKey: {{ aws_accessKey }}
+    secretKey: {{ aws_secretKey }}
+    s3BucketRegionId: {{ aws_s3BucketRegionId }}
+    cloudFrontBaseUrl: {{ aws_cloudFrontBaseUrl }}
+
+  userAvatar:
+    fs:
+      type: {{ jophiel_userAvatar_fs_type }}
+      {% if jophiel_userAvatar_fs_type == 'aws' %}s3BucketName: {{ jophiel_userAvatar_fs_s3BucketName }}{% endif %}
+
+
+  userRegistration:
+    enabled: {{ jophiel_userRegistration_enabled }}
+    useRecaptcha: {{ jophiel_userRegistration_useRecaptcha }}
+    activationEmailTemplate:
+      subject: {{ jophiel_userRegistration_activationEmailTemplate_subject }}
+      body: {{ jophiel_userRegistration_activationEmailTemplate_body }}
+
+  userResetPassword:
+    enabled: {{ jophiel_userResetPassword_enabled }}
+    requestEmailTemplate:
+      subject: {{ jophiel_userResetPassword_requestEmailTemplate_subject }}
+      body: {{ jophiel_userResetPassword_requestEmailTemplate_body }}
+    resetEmailTemplate:
+      subject: {{ jophiel_userResetPassword_resetEmailTemplate_subject }}
+      body: {{ jophiel_userResetPassword_resetEmailTemplate_body }}

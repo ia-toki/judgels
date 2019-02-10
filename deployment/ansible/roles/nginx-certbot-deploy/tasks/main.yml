@@ -11,7 +11,7 @@
 
   - name: Generate nginx site
     template:
-      src: default.conf.j2
+      src: "{{ playbook_dir }}/../conf/nginx-certbot.conf.j2"
       dest: /judgels/sites/default.conf
 
   - name: Pull nginx-certbot image
