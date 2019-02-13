@@ -8,4 +8,5 @@
 
     <include file="migrations/000.xml"/>
     <include file="migrations/001.xml"/>
+    <include file="migrations/002_add_bundle_submission.xml"/>
 </databaseChangeLog>
