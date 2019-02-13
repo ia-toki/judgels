@@ -2,11 +2,10 @@ package judgels.gabriel.engines.interactive;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import judgels.gabriel.engines.SingleSourceFileWithoutSubtasksGradingConfig;
-import judgels.gabriel.engines.batch.ImmutableBatchGradingConfig;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableBatchGradingConfig.class)
+@JsonDeserialize(as = ImmutableInteractiveGradingConfig.class)
 public interface InteractiveGradingConfig extends SingleSourceFileWithoutSubtasksGradingConfig {
     String getCommunicator();
 

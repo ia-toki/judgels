@@ -1,4 +1,4 @@
-package judgels.uriel.contest.submission;
+package judgels.uriel.contest.submission.programming;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
@@ -37,10 +37,10 @@ import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
-import judgels.sandalphon.api.submission.Submission;
-import judgels.sandalphon.api.submission.SubmissionData;
-import judgels.sandalphon.api.submission.SubmissionWithSource;
-import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
+import judgels.sandalphon.api.submission.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.ProgrammingSubmissionData;
+import judgels.sandalphon.api.submission.ProgrammingSubmissionWithSource;
+import judgels.sandalphon.api.submission.ProgrammingSubmissionWithSourceResponse;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
@@ -48,29 +48,30 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
-import judgels.uriel.api.contest.submission.ContestSubmissionService;
-import judgels.uriel.api.contest.submission.ContestSubmissionsResponse;
+import judgels.uriel.api.contest.submission.programming.ContestProgrammingSubmissionService;
+import judgels.uriel.api.contest.submission.programming.ContestProgrammingSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import judgels.uriel.submission.SubmissionDownloader;
 import judgels.uriel.submission.SubmissionSourceBuilder;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
-public class ContestSubmissionResource implements ContestSubmissionService {
+public class ContestProgrammingSubmissionResource implements ContestProgrammingSubmissionService {
     private static final String LAST_SUBMISSION_ID_HEADER = "Last-Submission-Id";
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
     private final SubmissionDownloader submissionDownloader;
-    private final ContestSubmissionClient submissionClient;
+    private final ContestProgrammingSubmissionClient submissionClient;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestModuleStore moduleStore;
-    private final ContestSubmissionStore submissionStore;
+    private final ContestProgrammingSubmissionStore submissionStore;
     private final ContestContestantStore contestantStore;
     private final ContestProblemStore problemStore;
     private final ProfileService profileService;
@@ -78,16 +79,16 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ClientProblemService clientProblemService;
 
     @Inject
-    public ContestSubmissionResource(
+    public ContestProgrammingSubmissionResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionDownloader submissionDownloader,
-            ContestSubmissionClient submissionClient,
+            ContestProgrammingSubmissionClient submissionClient,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestModuleStore moduleStore,
-            ContestSubmissionStore submissionStore,
+            ContestProgrammingSubmissionStore submissionStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
             ProfileService profileService,
@@ -112,7 +113,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestSubmissionsResponse getSubmissions(
+    public ContestProgrammingSubmissionsResponse getSubmissions(
             AuthHeader authHeader,
             String contestJid,
             Optional<String> userJid,
@@ -126,7 +127,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         Optional<String> actualUserJid = canSupervise ? userJid : Optional.of(actorJid);
 
-        Page<Submission> submissions =
+        Page<ProgrammingSubmission> submissions =
                 submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, page);
 
         List<String> userJidsSortedByUsername;
@@ -135,7 +136,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         List<String> problemJidsSortedByAlias;
         Set<String> problemJids;
 
-        userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
+        userJids = submissions.getPage().stream().map(ProgrammingSubmission::getUserJid).collect(Collectors.toSet());
         if (canSupervise) {
             userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
             userJidsSortedByUsername = Lists.newArrayList(userJids);
@@ -146,7 +147,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             userJidsSortedByUsername = Collections.emptyList();
 
             problemJidsSortedByAlias = Collections.emptyList();
-            problemJids = submissions.getPage().stream().map(Submission::getProblemJid).collect(Collectors.toSet());
+            problemJids = submissions.getPage().stream()
+                    .map(ProgrammingSubmission::getProblemJid)
+                    .collect(Collectors.toSet());
         }
 
         Map<String, Profile> profilesMap = userJids.isEmpty()
@@ -168,7 +171,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
 
-        return new ContestSubmissionsResponse.Builder()
+        return new ContestProgrammingSubmissionsResponse.Builder()
                 .data(submissions)
                 .config(config)
                 .profilesMap(profilesMap)
@@ -178,13 +181,13 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public SubmissionWithSourceResponse getSubmissionWithSourceById(
+    public ProgrammingSubmissionWithSourceResponse getSubmissionWithSourceById(
             AuthHeader authHeader,
             long submissionId,
             Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
-        Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
+        ProgrammingSubmission submission = checkFound(submissionStore.getSubmissionById(submissionId));
         Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
         checkAllowed(submissionRoleChecker.canView(actorJid, contest, submission.getUserJid()));
 
@@ -198,13 +201,13 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 profileService.getProfiles(ImmutableSet.of(userJid), contest.getBeginTime()).get(userJid)));
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
-        SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
-                .submission(submission)
+        ProgrammingSubmissionWithSource programmingSubmissionWithSource = new ProgrammingSubmissionWithSource.Builder()
+                .programmingSubmission(submission)
                 .source(source)
                 .build();
 
-        return new SubmissionWithSourceResponse.Builder()
-                .data(submissionWithSource)
+        return new ProgrammingSubmissionWithSourceResponse.Builder()
+                .data(programmingSubmissionWithSource)
                 .profile(profile)
                 .problemAlias(contestProblem.getAlias())
                 .problemName(SandalphonUtils.getProblemName(problem, language))
@@ -230,7 +233,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         StyleModuleConfig styleConfig = moduleStore.getStyleModuleConfig(contestJid, contest.getStyle());
         LanguageRestriction contestGradingLanguageRestriction = styleConfig.getGradingLanguageRestriction();
 
-        SubmissionData data = new SubmissionData.Builder()
+        ProgrammingSubmissionData data = new ProgrammingSubmissionData.Builder()
                 .problemJid(problemJid)
                 .containerJid(contestJid)
                 .gradingLanguage(gradingLanguage)
@@ -239,7 +242,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
         ProblemSubmissionConfig config =
                 clientProblemService.getProblemSubmissionConfig(sandalphonClientAuthHeader, data.getProblemJid());
-        Submission submission = submissionClient.submit(data, source, config);
+        ProgrammingSubmission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
     }
@@ -260,7 +263,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canSupervise(actorJid, contest));
 
-        List<Submission> submissions = submissionStore
+        List<ProgrammingSubmission> submissions = submissionStore
                 .getSubmissionsForDownload(contestJid, userJid, problemJid, lastSubmissionId, limit)
                 .getPage();
 
@@ -275,7 +278,9 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                         .stream()
                         .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
 
-        Set<String> problemJids = submissions.stream().map(Submission::getProblemJid).collect(Collectors.toSet());
+        Set<String> problemJids = submissions.stream()
+                .map(ProgrammingSubmission::getProblemJid)
+                .collect(Collectors.toSet());
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
 
         StreamingOutput stream =

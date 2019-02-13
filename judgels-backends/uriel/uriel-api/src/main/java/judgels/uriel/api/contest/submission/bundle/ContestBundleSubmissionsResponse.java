@@ -8,12 +8,12 @@ import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestLatestBundleSubmissionsResponse.class)
-public interface ContestLatestBundleSubmissionsResponse {
+@JsonDeserialize(as = ImmutableContestBundleSubmissionsResponse.class)
+public interface ContestBundleSubmissionsResponse {
     Map<String, BundleSubmission> getSubmissionsByItemJid();
     ContestSubmissionConfig getConfig();
     Map<String, Profile> getProfilesMap();
     Map<String, String> getProblemAliasesMap();
 
-    class Builder extends ImmutableContestLatestBundleSubmissionsResponse.Builder {}
+    class Builder extends ImmutableContestBundleSubmissionsResponse.Builder {}
 }
