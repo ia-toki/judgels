@@ -33,10 +33,10 @@ public interface ScoreboardProcessor {
     default Scoreboard paginate(Scoreboard scoreboard, int page, int pageSize) {
         List<? extends List<?>> partition = Lists.partition(getEntries(scoreboard), pageSize);
 
-        List partitionPage;
-        try {
+        List<?> partitionPage;
+        if (page <= partition.size()) {
             partitionPage = partition.get(page - 1);
-        } catch (IndexOutOfBoundsException e) {
+        } else {
             partitionPage = new ArrayList();
         }
 

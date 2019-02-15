@@ -27,7 +27,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private final ContestScoreboardFetcher scoreboardFetcher;
     private final ContestScoreboardUpdaterDispatcher scoreboardUpdaterDispatcher;
     private final ProfileService profileService;
-    private static final int pageSize = 50;
+    private static final int PAGE_SIZE = 50;
 
     @Inject
     public ContestScoreboardResource(
@@ -72,7 +72,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         }
 
         return scoreboardFetcher
-                .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, page.orElse(1), pageSize)
+                .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, page.orElse(1), PAGE_SIZE)
                 .map(scoreboard -> {
                     Set<String> contestantJids = scoreboard.getScoreboard().getState().getContestantJids();
                     Map<String, Profile> profilesMap = contestantJids.isEmpty()
