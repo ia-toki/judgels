@@ -27,6 +27,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private final ContestScoreboardFetcher scoreboardFetcher;
     private final ContestScoreboardUpdaterDispatcher scoreboardUpdaterDispatcher;
     private final ProfileService profileService;
+    private static final int pageSize = 50;
 
     @Inject
     public ContestScoreboardResource(
@@ -58,16 +59,12 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canViewDefault(actorJid, contest));
 
-        int pageSize = 50;
-        int cleanPage = page.orElse(1);
-
         boolean canSupervise = scoreboardRoleChecker.canSupervise(actorJid, contest);
         boolean canViewOfficialAndFrozen = scoreboardRoleChecker.canViewOfficialAndFrozen(actorJid, contest);
         boolean canViewClosedProblems = scoreboardRoleChecker.canViewClosedProblems(actorJid, contest);
         ContestScoreboardConfig config = new ContestScoreboardConfig.Builder()
                 .canViewOfficialAndFrozen(canViewOfficialAndFrozen)
                 .canViewClosedProblems(canViewClosedProblems)
-                .pageSize(pageSize)
                 .build();
 
         if (showClosedProblems) {
@@ -75,7 +72,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         }
 
         return scoreboardFetcher
-                .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, cleanPage, pageSize)
+                .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, page.orElse(1), pageSize)
                 .map(scoreboard -> {
                     Set<String> contestantJids = scoreboard.getScoreboard().getState().getContestantJids();
                     Map<String, Profile> profilesMap = contestantJids.isEmpty()

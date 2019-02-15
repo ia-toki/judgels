@@ -8,7 +8,6 @@ import org.immutables.value.Value;
 public interface ContestScoreboardConfig {
     boolean getCanViewOfficialAndFrozen();
     boolean getCanViewClosedProblems();
-    int getPageSize();
 
     class Builder extends ImmutableContestScoreboardConfig.Builder {}
 }
