@@ -49,6 +49,16 @@ public class ContestScoreboardBuilder {
         return scoreboard;
     }
 
+    public int getTotalEntries(Scoreboard scoreboard, Contest contest) {
+        ScoreboardProcessor processor = processorRegistry.get(contest.getStyle());
+        return processor.getTotalEntries(scoreboard);
+    }
+
+    public Scoreboard paginateScoreboard(Scoreboard scoreboard, Contest contest, int page, int pageSize) {
+        ScoreboardProcessor processor = processorRegistry.get(contest.getStyle());
+        return processor.paginate(scoreboard, page, pageSize);
+    }
+
     private Scoreboard filterContestantJidsIfNecessary(
             Scoreboard scoreboard,
             ScoreboardProcessor processor,

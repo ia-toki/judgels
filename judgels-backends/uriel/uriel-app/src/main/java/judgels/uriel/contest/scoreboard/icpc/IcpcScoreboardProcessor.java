@@ -38,6 +38,27 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
+    public List<IcpcScoreboardEntry> getEntries(Scoreboard scoreboard) {
+        return ((IcpcScoreboard) scoreboard).getContent().getEntries();
+    }
+
+    @Override
+    public Scoreboard replaceEntries(Scoreboard scoreboard, List<?> entries) {
+        IcpcScoreboard icpcScoreboard = (IcpcScoreboard) scoreboard;
+        return new IcpcScoreboard.Builder()
+                .state(icpcScoreboard.getState())
+                .content(new IcpcScoreboardContent.Builder()
+                            .entries((List<? extends IcpcScoreboardEntry>) entries)
+                            .build())
+                .build();
+    }
+
+    @Override
+    public int getTotalEntries(Scoreboard scoreboard) {
+        return ((IcpcScoreboard) scoreboard).getContent().getEntries().size();
+    }
+
+    @Override
     public String computeToString(
             ObjectMapper mapper,
             ScoreboardState scoreboardState,

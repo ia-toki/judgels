@@ -3,6 +3,7 @@ package judgels.uriel.contest.scoreboard.ioi;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -14,6 +15,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,6 +43,36 @@ class IoiScoreboardProcessorTests {
     @BeforeEach
     void before() {
         initMocks(this);
+    }
+
+    @Test
+    void test_pagination() {
+        ScoreboardState state = new ScoreboardState.Builder()
+                .addContestantJids("c1", "c2")
+                .addProblemJids("p1", "p2")
+                .addProblemAliases("A", "B")
+                .build();
+
+        List<IoiScoreboardEntry> fakeEntries = new ArrayList<>(134);
+        for (int i = 0; i < 134; i++) {
+            fakeEntries.add(mock(IoiScoreboardEntry.class));
+        }
+
+        IoiScoreboard ioiScoreboard = new IoiScoreboard.Builder()
+                .state(state)
+                .content(new IoiScoreboardContent.Builder()
+                        .entries(fakeEntries)
+                        .build())
+                .build();
+
+        IoiScoreboard pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginate(ioiScoreboard, 1, 50);
+        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(0, 50));
+
+        pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginate(ioiScoreboard, 2, 50);
+        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(50, 100));
+
+        pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginate(ioiScoreboard, 3, 50);
+        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(100, 134));
     }
 
     @Nested

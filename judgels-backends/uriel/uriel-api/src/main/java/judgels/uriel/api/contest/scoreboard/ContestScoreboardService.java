@@ -22,7 +22,8 @@ public interface ContestScoreboardService {
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
             @QueryParam("frozen") boolean frozen,
-            @QueryParam("showClosedProblems") boolean showClosedProblems);
+            @QueryParam("showClosedProblems") boolean showClosedProblems,
+            @QueryParam("page") Optional<Integer> page);
 
     @POST
     @Path("/refresh")

@@ -8,6 +8,7 @@ generated_tests/
 data/
 
 .idea/
+.ideaDataSources/
 *.iml
 *.ipr
 *.iws

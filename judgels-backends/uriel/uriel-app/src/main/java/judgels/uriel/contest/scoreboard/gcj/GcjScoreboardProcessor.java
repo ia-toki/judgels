@@ -38,6 +38,27 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
+    public int getTotalEntries(Scoreboard scoreboard) {
+        return ((GcjScoreboard) scoreboard).getContent().getEntries().size();
+    }
+
+    @Override
+    public List<?> getEntries(Scoreboard scoreboard) {
+        return ((GcjScoreboard) scoreboard).getContent().getEntries();
+    }
+
+    @Override
+    public Scoreboard replaceEntries(Scoreboard scoreboard, List<?> entries) {
+        GcjScoreboard gcjScoreboard = (GcjScoreboard) scoreboard;
+        return new GcjScoreboard.Builder()
+                .state(gcjScoreboard.getState())
+                .content(new GcjScoreboardContent.Builder()
+                        .entries((List<? extends GcjScoreboardEntry>) entries)
+                        .build())
+                .build();
+    }
+
+    @Override
     public String computeToString(
             ObjectMapper mapper,
             ScoreboardState scoreboardState,
