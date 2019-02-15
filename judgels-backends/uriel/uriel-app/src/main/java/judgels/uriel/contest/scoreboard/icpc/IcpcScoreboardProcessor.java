@@ -55,8 +55,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
 
     @Override
     public int getTotalEntries(Scoreboard scoreboard) {
-        IcpcScoreboard icpcScoreboard = (IcpcScoreboard) scoreboard;
-        return icpcScoreboard.getContent().getEntries().size();
+        return ((IcpcScoreboard) scoreboard).getContent().getEntries().size();
     }
 
     @Override

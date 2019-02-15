@@ -44,9 +44,9 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
 
     @Override
     public Scoreboard replaceEntries(Scoreboard scoreboard, List<?> entries) {
-        IoiScoreboard icpcScoreboard = (IoiScoreboard) scoreboard;
+        IoiScoreboard ioiScoreboard = (IoiScoreboard) scoreboard;
         return new IoiScoreboard.Builder()
-                .state(icpcScoreboard.getState())
+                .state(ioiScoreboard.getState())
                 .content(new IoiScoreboardContent.Builder()
                         .entries((List<? extends IoiScoreboardEntry>) entries)
                         .build())
@@ -55,8 +55,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
 
     @Override
     public int getTotalEntries(Scoreboard scoreboard) {
-        IoiScoreboard ioiScoreboard = (IoiScoreboard) scoreboard;
-        return ioiScoreboard.getContent().getEntries().size();
+        return ((IoiScoreboard) scoreboard).getContent().getEntries().size();
     }
 
     @Override
