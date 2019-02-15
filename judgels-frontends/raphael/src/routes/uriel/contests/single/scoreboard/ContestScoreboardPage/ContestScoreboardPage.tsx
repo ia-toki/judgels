@@ -87,12 +87,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
   };
 
   private refreshScoreboard = async (nextPage?: number, frozen?: boolean, showClosedProblems?: boolean) => {
-    const response = await this.props.onGetScoreboard(
-      this.props.contest.jid,
-      frozen,
-      showClosedProblems,
-      nextPage
-    );
+    const response = await this.props.onGetScoreboard(this.props.contest.jid, frozen, showClosedProblems, nextPage);
     this.setState({ response: response ? [response] : [], frozen, showClosedProblems });
     return response;
   };
