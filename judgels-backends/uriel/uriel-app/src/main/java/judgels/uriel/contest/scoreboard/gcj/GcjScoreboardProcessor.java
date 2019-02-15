@@ -224,11 +224,6 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                 .build();
     }
 
-    @Override
-    public Scoreboard paginate(Scoreboard scoreboard, int page, int pageSize) {
-        return null;
-    }
-
     private List<GcjScoreboardEntry> sortEntriesAndAssignRanks(List<GcjScoreboardEntry> scoreboardEntries) {
         Comparator<GcjScoreboardEntry> comparator = new StandardGcjScoreboardEntryComparator();
         scoreboardEntries.sort(comparator);
