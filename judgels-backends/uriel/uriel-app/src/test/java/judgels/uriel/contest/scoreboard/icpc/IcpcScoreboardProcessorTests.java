@@ -65,13 +65,13 @@ class IcpcScoreboardProcessorTests {
                         .build())
                 .build();
 
-        IcpcScoreboard pagedScoreboard = (IcpcScoreboard) scoreboardProcessor.paginateScoreboard(icpcScoreboard, 1, 50);
+        IcpcScoreboard pagedScoreboard = (IcpcScoreboard) scoreboardProcessor.paginate(icpcScoreboard, 1, 50);
         assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(0, 50));
 
-        pagedScoreboard = (IcpcScoreboard) scoreboardProcessor.paginateScoreboard(icpcScoreboard, 2, 50);
+        pagedScoreboard = (IcpcScoreboard) scoreboardProcessor.paginate(icpcScoreboard, 2, 50);
         assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(50, 100));
 
-        pagedScoreboard = (IcpcScoreboard) scoreboardProcessor.paginateScoreboard(icpcScoreboard, 3, 50);
+        pagedScoreboard = (IcpcScoreboard) scoreboardProcessor.paginate(icpcScoreboard, 3, 50);
         assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(100, 134));
     }
 

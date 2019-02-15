@@ -88,7 +88,7 @@ class ContestScoreboardBuilderTests {
                         .build());
 
         when(scoreboardProcessor.getTotalEntries(icpcScoreboard)).thenReturn(100);
-        when(scoreboardProcessor.paginateScoreboard(icpcScoreboard, 1, 50)).thenReturn(scoreboard);
+        when(scoreboardProcessor.paginate(icpcScoreboard, 1, 50)).thenReturn(scoreboard);
 
         assertThat(scoreboardBuilder.paginateScoreboard(icpcScoreboard, contest, 1, 50)).isEqualTo(scoreboard);
     }

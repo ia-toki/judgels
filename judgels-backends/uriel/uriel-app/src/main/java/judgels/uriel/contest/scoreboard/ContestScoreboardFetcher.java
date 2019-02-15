@@ -50,7 +50,7 @@ public class ContestScoreboardFetcher {
             int totalEntries = scoreboardBuilder.getTotalEntries(scoreboard, contest);
             return new ContestScoreboard.Builder()
                     .scoreboard(scoreboardPage)
-                    .totalCount(totalEntries)
+                    .totalEntries(totalEntries)
                     .type(raw.getType())
                     .updatedTime(raw.getUpdatedTime())
                     .build();

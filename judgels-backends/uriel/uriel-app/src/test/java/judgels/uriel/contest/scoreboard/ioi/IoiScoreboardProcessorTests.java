@@ -65,13 +65,13 @@ class IoiScoreboardProcessorTests {
                         .build())
                 .build();
 
-        IoiScoreboard pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginateScoreboard(ioiScoreboard, 1, 50);
+        IoiScoreboard pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginate(ioiScoreboard, 1, 50);
         assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(0, 50));
 
-        pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginateScoreboard(ioiScoreboard, 2, 50);
+        pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginate(ioiScoreboard, 2, 50);
         assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(50, 100));
 
-        pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginateScoreboard(ioiScoreboard, 3, 50);
+        pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginate(ioiScoreboard, 3, 50);
         assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(100, 134));
     }
 

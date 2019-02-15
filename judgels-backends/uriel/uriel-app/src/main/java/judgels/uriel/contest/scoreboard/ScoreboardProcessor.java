@@ -1,7 +1,9 @@
 package judgels.uriel.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +26,20 @@ public interface ScoreboardProcessor {
             Optional<Instant> freezeTime);
 
     int getTotalEntries(Scoreboard scoreboard);
-    Scoreboard paginateScoreboard(Scoreboard scoreboard, int page, int pageSize);
+    List<?> getEntries(Scoreboard scoreboard);
+    Scoreboard replaceEntries(Scoreboard scoreboard, List<?> entries);
     Scoreboard filterContestantJids(Scoreboard scoreboard, Set<String> contestantJids);
+
+    default Scoreboard paginate(Scoreboard scoreboard, int page, int pageSize) {
+        List<? extends List<?>> partition = Lists.partition(getEntries(scoreboard), pageSize);
+
+        List partitionPage;
+        try {
+            partitionPage = partition.get(page - 1);
+        } catch (IndexOutOfBoundsException e) {
+            partitionPage = new ArrayList();
+        }
+
+        return replaceEntries(scoreboard, partitionPage);
+    }
 }

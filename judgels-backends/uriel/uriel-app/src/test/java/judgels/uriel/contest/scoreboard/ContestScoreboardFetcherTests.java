@@ -62,13 +62,13 @@ class ContestScoreboardFetcherTests {
         officialScoreboard = new ContestScoreboard.Builder()
                 .type(ContestScoreboardType.OFFICIAL)
                 .scoreboard(icpcScoreboard)
-                .totalCount(10)
+                .totalEntries(10)
                 .updatedTime(Instant.ofEpochMilli(42))
                 .build();
         frozenScoreboard = new ContestScoreboard.Builder()
                 .type(ContestScoreboardType.FROZEN)
                 .scoreboard(icpcScoreboard)
-                .totalCount(10)
+                .totalEntries(10)
                 .updatedTime(Instant.ofEpochMilli(42))
                 .build();
     }

@@ -56,7 +56,7 @@ public class ContestScoreboardBuilder {
 
     public Scoreboard paginateScoreboard(Scoreboard scoreboard, Contest contest, int page, int pageSize) {
         ScoreboardProcessor processor = processorRegistry.get(contest.getStyle());
-        return processor.paginateScoreboard(scoreboard, page, pageSize);
+        return processor.paginate(scoreboard, page, pageSize);
     }
 
     private Scoreboard filterContestantJidsIfNecessary(

@@ -38,20 +38,18 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public Scoreboard paginateScoreboard(Scoreboard scoreboard, int page, int pageSize) {
-        IoiScoreboard ioiScoreboard = (IoiScoreboard) scoreboard;
-        List<List<IoiScoreboardEntry>> partition = Lists.partition(ioiScoreboard.getContent().getEntries(), pageSize);
+    public List<IoiScoreboardEntry> getEntries(Scoreboard scoreboard) {
+        return ((IoiScoreboard) scoreboard).getContent().getEntries();
+    }
 
-        List<IoiScoreboardEntry> partitionPage;
-        try {
-            partitionPage = partition.get(page - 1);
-        } catch (IndexOutOfBoundsException e) {
-            partitionPage = new ArrayList<IoiScoreboardEntry>();
-        }
-
+    @Override
+    public Scoreboard replaceEntries(Scoreboard scoreboard, List<?> entries) {
+        IoiScoreboard icpcScoreboard = (IoiScoreboard) scoreboard;
         return new IoiScoreboard.Builder()
-                .state(ioiScoreboard.getState())
-                .content(new IoiScoreboard.IoiScoreboardContent.Builder().entries(partitionPage).build())
+                .state(icpcScoreboard.getState())
+                .content(new IoiScoreboardContent.Builder()
+                        .entries((List<? extends IoiScoreboardEntry>) entries)
+                        .build())
                 .build();
     }
 
