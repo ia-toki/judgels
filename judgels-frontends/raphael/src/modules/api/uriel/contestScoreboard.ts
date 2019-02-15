@@ -9,7 +9,7 @@ import { baseContestURL } from './contest';
 export interface ContestScoreboard {
   type: ContestScoreboardType;
   scoreboard: Scoreboard;
-  totalCount: number;
+  totalEntries: number;
   updatedTime: number;
 }
 
