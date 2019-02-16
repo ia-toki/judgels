@@ -28,21 +28,24 @@ import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
+import judgels.uriel.api.contest.submission.programming.ContestProgrammingSubmissionService;
+import judgels.uriel.api.contest.submission.programming.ContestProgrammingSubmissionsResponse;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.junit.jupiter.api.Test;
 
-class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+class ContestProgrammingSubmissionServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
     private ContestProblemService problemService = createService(ContestProblemService.class);
-    private ContestSubmissionService submissionService = createService(ContestSubmissionService.class);
+    private ContestProgrammingSubmissionService submissionService = createService(
+            ContestProgrammingSubmissionService.class);
     private WebTarget webTarget = createWebTarget();
 
     @Test
@@ -65,7 +68,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
         submit(contest.getJid(), USER_A_BEARER_TOKEN);
         submit(contest.getJid(), USER_B_BEARER_TOKEN);
 
-        ContestSubmissionsResponse response =
+        ContestProgrammingSubmissionsResponse response =
                 submissionService.getSubmissions(USER_A_HEADER, contest.getJid(), empty(), empty(), empty());
 
         ContestSubmissionConfig config = response.getConfig();
@@ -76,10 +79,10 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
         assertThat(response.getProfilesMap()).containsOnlyKeys(USER_A_JID);
         assertThat(response.getProblemAliasesMap()).containsOnly(new AbstractMap.SimpleEntry<>(PROBLEM_1_JID, "A"));
 
-        List<Submission> submissions = response.getData().getPage();
+        List<ProgrammingSubmission> submissions = response.getData().getPage();
         assertThat(submissions.size()).isEqualTo(1);
 
-        Submission submission = submissions.get(0);
+        ProgrammingSubmission submission = submissions.get(0);
         assertThat(submission.getUserJid()).isEqualTo(USER_A_JID);
         assertThat(submission.getProblemJid()).isEqualTo("problemJid1");
         assertThat(submission.getContainerJid()).isEqualTo(contest.getJid());
@@ -123,7 +126,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
                 APPLICATION_OCTET_STREAM_TYPE));
 
         return webTarget
-                .path("/api/v2/contests/submissions")
+                .path("/api/v2/contests/submissions/programming")
                 .request()
                 .header(AUTHORIZATION, "Bearer " + token)
                 .post(Entity.entity(multiPart, multiPart.getMediaType()));

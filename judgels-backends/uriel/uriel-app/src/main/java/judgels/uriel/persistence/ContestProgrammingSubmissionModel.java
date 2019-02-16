@@ -8,4 +8,4 @@ import judgels.sandalphon.persistence.AbstractSubmissionModel;
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "uriel_contest_programming_submission")
 @Table(indexes = {@Index(columnList = "containerJid,createdBy,problemJid")})
-public class ContestSubmissionModel extends AbstractSubmissionModel {}
+public class ContestProgrammingSubmissionModel extends AbstractSubmissionModel {}

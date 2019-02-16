@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestSubmissionRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationTests {
+class ContestProgrammingSubmissionRoleCheckerIntegrationTests extends AbstractRoleCheckerIntegrationTests {
     private ContestSubmissionRoleChecker checker;
 
     @BeforeEach

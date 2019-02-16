@@ -14,7 +14,7 @@ import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessorRegistry;
-import judgels.uriel.contest.submission.ContestSubmissionStore;
+import judgels.uriel.contest.submission.programming.ContestProgrammingSubmissionStore;
 
 @Module
 public class ContestScoreboardUpdaterModule {
@@ -49,14 +49,15 @@ public class ContestScoreboardUpdaterModule {
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
-            ContestSubmissionStore submissionStore,
+            ContestProgrammingSubmissionStore submissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardUpdater.class,
                 new Class<?>[] {ObjectMapper.class, ContestScoreboardStore.class, ContestModuleStore.class,
-                                ContestContestantStore.class, ContestProblemStore.class, ContestSubmissionStore.class,
+                                ContestContestantStore.class, ContestProblemStore.class,
+                                ContestProgrammingSubmissionStore.class,
                                 ScoreboardProcessorRegistry.class, Clock.class},
                 new Object[] {objectMapper, scoreboardStore, moduleStore, contestantStore,
                               problemStore, submissionStore, scoreboardProcessorRegistry, clock});

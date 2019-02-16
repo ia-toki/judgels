@@ -8,25 +8,26 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.sandalphon.api.submission.Submission;
-import judgels.sandalphon.api.submission.SubmissionData;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmissionData;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.submission.programming.ContestProgrammingSubmissionStore;
 import judgels.uriel.persistence.ContestGradingModel;
 import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestSubmissionModel;
+import judgels.uriel.persistence.ContestProgrammingSubmissionModel;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(models = {ContestModel.class, ContestGradingModel.class, ContestSubmissionModel.class})
-class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
+@WithHibernateSession(models = {ContestModel.class, ContestGradingModel.class, ContestProgrammingSubmissionModel.class})
+class ContestProgrammingSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
     private TestActorProvider actorProvider;
     private ContestStore contestStore;
-    private ContestSubmissionStore store;
+    private ContestProgrammingSubmissionStore store;
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
@@ -44,13 +45,13 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
 
         actorProvider.setJid("userJid1");
 
-        Submission submission1 = store.createSubmission(new SubmissionData.Builder()
+        ProgrammingSubmission submission1 = store.createSubmission(new ProgrammingSubmissionData.Builder()
                 .problemJid("problemJid1")
                 .containerJid(contestA.getJid())
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
 
-        Submission submission2 = store.createSubmission(new SubmissionData.Builder()
+        ProgrammingSubmission submission2 = store.createSubmission(new ProgrammingSubmissionData.Builder()
                 .problemJid("problemJid1")
                 .containerJid(contestA.getJid())
                 .gradingLanguage("Cpp11")
@@ -58,20 +59,20 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
 
         actorProvider.setJid("userJid2");
 
-        Submission submission3 = store.createSubmission(new SubmissionData.Builder()
+        ProgrammingSubmission submission3 = store.createSubmission(new ProgrammingSubmissionData.Builder()
                 .problemJid("problemJid1")
                 .containerJid(contestA.getJid())
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
 
-        Submission submission4 = store.createSubmission(new SubmissionData.Builder()
+        ProgrammingSubmission submission4 = store.createSubmission(new ProgrammingSubmissionData.Builder()
                 .problemJid("problemJid2")
                 .containerJid(contestA.getJid())
                 .gradingLanguage("Cpp11")
                 .build(), "Batch");
 
         actorProvider.setJid("userJid1");
-        store.createSubmission(new SubmissionData.Builder()
+        store.createSubmission(new ProgrammingSubmissionData.Builder()
                 .problemJid("problemJid1")
                 .containerJid(contestB.getJid())
                 .gradingLanguage("Cpp11")

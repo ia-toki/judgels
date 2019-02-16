@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Grading;
-import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
@@ -65,7 +65,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissions,
+            List<ProgrammingSubmission> submissions,
             Optional<Instant> freezeTime) {
         IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 
@@ -73,12 +73,12 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = scoreboardState.getContestantJids();
 
-        List<Submission> filteredSubmissions = submissions.stream()
+        List<ProgrammingSubmission> filteredSubmissions = submissions.stream()
                 .filter(s -> contestantJids.contains(s.getUserJid()))
                 .filter(s -> problemJidsSet.contains(s.getProblemJid()))
                 .collect(Collectors.toList());
 
-        Map<String, List<Submission>> submissionsMap = new HashMap<>();
+        Map<String, List<ProgrammingSubmission>> submissionsMap = new HashMap<>();
         contestantJids.forEach(c -> submissionsMap.put(c, new ArrayList<>()));
         filteredSubmissions.forEach(s -> {
             submissionsMap.get(s.getUserJid()).add(s);
@@ -90,7 +90,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             Map<String, Optional<Integer>> scoresMap = new HashMap<>();
             problemJids.forEach(p -> scoresMap.put(p, Optional.empty()));
 
-            for (Submission submission : submissionsMap.get(contestantJid)) {
+            for (ProgrammingSubmission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
 
                 if (!contestantJids.contains(submission.getUserJid())) {

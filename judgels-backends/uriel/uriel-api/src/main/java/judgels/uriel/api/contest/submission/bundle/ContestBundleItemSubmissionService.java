@@ -12,7 +12,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.sandalphon.api.submission.BundleItemSubmission;
+import judgels.sandalphon.api.submission.bundle.BundleItemSubmission;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/submissions/bundle")

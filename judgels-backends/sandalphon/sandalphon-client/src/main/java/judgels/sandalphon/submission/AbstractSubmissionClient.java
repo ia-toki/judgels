@@ -8,8 +8,8 @@ import java.io.IOException;
 import judgels.gabriel.api.GradingRequest;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
-import judgels.sandalphon.api.submission.Submission;
-import judgels.sandalphon.api.submission.SubmissionData;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmissionData;
 import judgels.sandalphon.persistence.AbstractGradingModel;
 import judgels.sandalphon.persistence.AbstractSubmissionModel;
 import judgels.sealtiel.api.message.MessageData;
@@ -37,20 +37,23 @@ public abstract class AbstractSubmissionClient<SM extends AbstractSubmissionMode
         this.mapper = mapper;
     }
 
-    public Submission submit(SubmissionData data, SubmissionSource source, ProblemSubmissionConfig config) {
+    public ProgrammingSubmission submit(
+            ProgrammingSubmissionData data,
+            SubmissionSource source,
+            ProblemSubmissionConfig config) {
         checkAllSourceFilesPresent(source, config);
         checkGradingLanguageAllowed(
                 data.getGradingLanguage(),
                 config.getGradingLanguageRestriction(),
                 data.getAdditionalGradingLanguageRestriction());
 
-        Submission submission = submissionStore.createSubmission(data, config.getGradingEngine());
+        ProgrammingSubmission submission = submissionStore.createSubmission(data, config.getGradingEngine());
         requestGrading(submission, source);
 
         return submission;
     }
 
-    private void requestGrading(Submission submission, SubmissionSource source) {
+    private void requestGrading(ProgrammingSubmission submission, SubmissionSource source) {
         String gradingJid = submissionStore.createGrading(submission);
         GradingRequest gradingRequest = new GradingRequest.Builder()
                 .gradingJid(gradingJid)

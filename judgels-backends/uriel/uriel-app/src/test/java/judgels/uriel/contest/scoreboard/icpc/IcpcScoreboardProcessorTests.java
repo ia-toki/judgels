@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Grading;
-import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
@@ -110,8 +110,8 @@ class IcpcScoreboardProcessorTests {
 
         @Test
         void show_only_contestant() throws JsonProcessingException {
-            List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
+            List<ProgrammingSubmission> submissions = ImmutableList.of(
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -172,8 +172,8 @@ class IcpcScoreboardProcessorTests {
 
         @Test
         void show_only_contest_problem() throws JsonProcessingException {
-            List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
+            List<ProgrammingSubmission> submissions = ImmutableList.of(
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -234,8 +234,8 @@ class IcpcScoreboardProcessorTests {
 
         @Test
         void ignore_submission_with_no_grade() throws JsonProcessingException {
-            List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
+            List<ProgrammingSubmission> submissions = ImmutableList.of(
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -245,7 +245,7 @@ class IcpcScoreboardProcessorTests {
                             .userJid("c1")
                             .problemJid("p1")
                             .build(),
-                    new Submission.Builder()
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(2)
                             .jid("JIDS-1")
@@ -261,7 +261,7 @@ class IcpcScoreboardProcessorTests {
                                     .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
-                    new Submission.Builder()
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(3)
                             .jid("JIDS-1")
@@ -316,8 +316,8 @@ class IcpcScoreboardProcessorTests {
 
         @Test
         void time_calculation() throws JsonProcessingException {
-            List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
+            List<ProgrammingSubmission> submissions = ImmutableList.of(
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -333,7 +333,7 @@ class IcpcScoreboardProcessorTests {
                                     .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
-                    new Submission.Builder()
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(2)
                             .jid("JIDS-2")
@@ -349,7 +349,7 @@ class IcpcScoreboardProcessorTests {
                                     .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
-                    new Submission.Builder()
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(3)
                             .jid("JIDS-3")
@@ -365,7 +365,7 @@ class IcpcScoreboardProcessorTests {
                                     .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
                                     .build())
                             .build(),
-                    new Submission.Builder()
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(4)
                             .jid("JIDS-4")
@@ -381,7 +381,7 @@ class IcpcScoreboardProcessorTests {
                                     .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
-                    new Submission.Builder()
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(5)
                             .jid("JIDS-5")
@@ -443,8 +443,8 @@ class IcpcScoreboardProcessorTests {
 
         @Nested
         class ProblemOrdering {
-            private List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
+            private List<ProgrammingSubmission> submissions = ImmutableList.of(
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -460,7 +460,7 @@ class IcpcScoreboardProcessorTests {
                                     .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
-                    new Submission.Builder()
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(2)
                             .jid("JIDS-2")
@@ -577,8 +577,8 @@ class IcpcScoreboardProcessorTests {
         class Sorting {
             @Test
             void solve_over_penalty() throws JsonProcessingException {
-                List<Submission> submissions = ImmutableList.of(
-                        new Submission.Builder()
+                List<ProgrammingSubmission> submissions = ImmutableList.of(
+                        new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(1)
                                 .jid("JIDS-2")
@@ -594,7 +594,7 @@ class IcpcScoreboardProcessorTests {
                                         .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
-                        new Submission.Builder()
+                        new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(2)
                                 .jid("JIDS-4")
@@ -610,7 +610,7 @@ class IcpcScoreboardProcessorTests {
                                         .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
-                        new Submission.Builder()
+                        new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(3)
                                 .jid("JIDS-1")
@@ -672,8 +672,8 @@ class IcpcScoreboardProcessorTests {
 
             @Test
             void penalty_as_tiebreaker() throws JsonProcessingException {
-                List<Submission> submissions = ImmutableList.of(
-                        new Submission.Builder()
+                List<ProgrammingSubmission> submissions = ImmutableList.of(
+                        new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(1)
                                 .jid("JIDS-1")
@@ -689,7 +689,7 @@ class IcpcScoreboardProcessorTests {
                                         .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
-                        new Submission.Builder()
+                        new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(2)
                                 .jid("JIDS-2")
@@ -757,8 +757,8 @@ class IcpcScoreboardProcessorTests {
                         .addProblemAliases("A", "B")
                         .build();
 
-                List<Submission> submissions = ImmutableList.of(
-                        new Submission.Builder()
+                List<ProgrammingSubmission> submissions = ImmutableList.of(
+                        new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(1)
                                 .jid("JIDS-2")
@@ -774,7 +774,7 @@ class IcpcScoreboardProcessorTests {
                                         .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
-                        new Submission.Builder()
+                        new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(2)
                                 .jid("JIDS-1")
@@ -790,7 +790,7 @@ class IcpcScoreboardProcessorTests {
                                         .verdict(Verdicts.ACCEPTED)
                                         .build())
                                 .build(),
-                        new Submission.Builder()
+                        new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(3)
                                 .jid("JIDS-3")
@@ -868,8 +868,8 @@ class IcpcScoreboardProcessorTests {
         class PendingAfterFreeze {
             private Optional<Instant> freezeTime = Optional.of(Instant.ofEpochSecond(500));
 
-            private List<Submission> baseSubmissions = ImmutableList.of(
-                    new Submission.Builder()
+            private List<ProgrammingSubmission> baseSubmissions = ImmutableList.of(
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -885,7 +885,7 @@ class IcpcScoreboardProcessorTests {
                                     .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
-                    new Submission.Builder()
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(2)
                             .jid("JIDS-2")
@@ -901,7 +901,7 @@ class IcpcScoreboardProcessorTests {
                                     .verdict(Verdicts.ACCEPTED)
                                     .build())
                             .build(),
-                    new Submission.Builder()
+                    new ProgrammingSubmission.Builder()
                             .containerJid("JIDC")
                             .id(3)
                             .jid("JIDS-3")
@@ -964,9 +964,9 @@ class IcpcScoreboardProcessorTests {
 
             @Test
             void pending_does_not_overwrite_accepted() throws JsonProcessingException {
-                List<Submission> submissions = new ImmutableList.Builder<Submission>()
+                List<ProgrammingSubmission> submissions = new ImmutableList.Builder<ProgrammingSubmission>()
                         .addAll(baseSubmissions)
-                        .add(new Submission.Builder()
+                        .add(new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(4)
                                 .jid("JIDS-4")
@@ -1028,9 +1028,9 @@ class IcpcScoreboardProcessorTests {
 
             @Test
             void pending_does_overwrite_not_accepted() throws JsonProcessingException {
-                List<Submission> submissions = new ImmutableList.Builder<Submission>()
+                List<ProgrammingSubmission> submissions = new ImmutableList.Builder<ProgrammingSubmission>()
                         .addAll(baseSubmissions)
-                        .add(new Submission.Builder()
+                        .add(new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(4)
                                 .jid("JIDS-4")
@@ -1092,9 +1092,9 @@ class IcpcScoreboardProcessorTests {
 
             @Test
             void pending_counts_on_freeze_time() throws JsonProcessingException {
-                List<Submission> submissions = new ImmutableList.Builder<Submission>()
+                List<ProgrammingSubmission> submissions = new ImmutableList.Builder<ProgrammingSubmission>()
                         .addAll(baseSubmissions)
-                        .add(new Submission.Builder()
+                        .add(new ProgrammingSubmission.Builder()
                                 .containerJid("JIDC")
                                 .id(4)
                                 .jid("JIDS-4")

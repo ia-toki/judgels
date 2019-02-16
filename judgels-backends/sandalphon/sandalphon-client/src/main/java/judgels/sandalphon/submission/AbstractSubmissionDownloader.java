@@ -10,7 +10,7 @@ import java.util.zip.ZipOutputStream;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.submission.Grading;
-import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 
 public class AbstractSubmissionDownloader {
     private final AbstractSubmissionSourceBuilder sourceBuilder;
@@ -21,12 +21,12 @@ public class AbstractSubmissionDownloader {
 
     public void downloadAsZip(
             OutputStream output,
-            List<Submission> submissions,
+            List<ProgrammingSubmission> submissions,
             Map<String, String> usernamesMap,
             Map<String, String> problemAliasesMap) throws IOException {
 
         try (ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(output))) {
-            for (Submission submission : submissions) {
+            for (ProgrammingSubmission submission : submissions) {
                 String problemAlias = problemAliasesMap.get(submission.getProblemJid());
                 String username = usernamesMap.get(submission.getUserJid());
                 if (problemAlias == null || username == null) {

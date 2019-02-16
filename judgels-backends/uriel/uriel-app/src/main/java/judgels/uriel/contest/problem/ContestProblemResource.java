@@ -39,7 +39,7 @@ import judgels.uriel.api.contest.problem.ContestProblemsResponse;
 import judgels.uriel.api.contest.problem.ContestProgrammingProblemWorksheet;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.module.ContestModuleStore;
-import judgels.uriel.contest.submission.ContestSubmissionStore;
+import judgels.uriel.contest.submission.programming.ContestProgrammingSubmissionStore;
 
 public class ContestProblemResource implements ContestProblemService {
     private final ActorChecker actorChecker;
@@ -47,7 +47,7 @@ public class ContestProblemResource implements ContestProblemService {
     private final ContestModuleStore moduleStore;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
-    private final ContestSubmissionStore submissionStore;
+    private final ContestProgrammingSubmissionStore submissionStore;
     private final SandalphonClientConfiguration sandalphonConfig;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
@@ -59,7 +59,7 @@ public class ContestProblemResource implements ContestProblemService {
             ContestModuleStore moduleStore,
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
-            ContestSubmissionStore submissionStore,
+            ContestProgrammingSubmissionStore submissionStore,
             SandalphonClientConfiguration sandalphonConfig,
             @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {

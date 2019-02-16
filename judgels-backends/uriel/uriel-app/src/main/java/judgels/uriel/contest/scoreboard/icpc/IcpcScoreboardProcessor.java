@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
-import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
@@ -65,7 +65,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissions,
+            List<ProgrammingSubmission> submissions,
             Optional<Instant> freezeTime) {
         IcpcStyleModuleConfig icpcStyleModuleConfig = (IcpcStyleModuleConfig) styleModuleConfig;
 
@@ -73,14 +73,14 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = scoreboardState.getContestantJids();
 
-        Map<String, List<Submission>> submissionsMap = new HashMap<>();
-        Map<String, List<Submission>> frozenSubmissionsMap = new HashMap<>();
+        Map<String, List<ProgrammingSubmission>> submissionsMap = new HashMap<>();
+        Map<String, List<ProgrammingSubmission>> frozenSubmissionsMap = new HashMap<>();
         contestantJids.forEach(c -> {
             submissionsMap.put(c, new ArrayList<>());
             frozenSubmissionsMap.put(c, new ArrayList<>());
         });
 
-        List<Submission> filteredSubmissions = submissions.stream()
+        List<ProgrammingSubmission> filteredSubmissions = submissions.stream()
                 .filter(s -> contestantJids.contains(s.getUserJid()))
                 .filter(s -> problemJidsSet.contains(s.getProblemJid()))
                 .collect(Collectors.toList());
@@ -115,7 +115,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                 problemStateMap.put(p, IcpcScoreboardProblemState.NOT_ACCEPTED);
             });
 
-            for (Submission submission : submissionsMap.get(contestantJid)) {
+            for (ProgrammingSubmission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
 
                 if (isAccepted(problemStateMap.get(problemJid))) {
@@ -146,7 +146,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                 }
             }
 
-            for (Submission submission : frozenSubmissionsMap.get(contestantJid)) {
+            for (ProgrammingSubmission submission : frozenSubmissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
                 if (isAccepted(problemStateMap.get(problemJid))) {
                     continue;

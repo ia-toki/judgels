@@ -1,4 +1,4 @@
-package judgels.uriel.api.contest.submission;
+package judgels.uriel.api.contest.submission.programming;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -10,15 +10,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.sandalphon.api.submission.SubmissionWithSourceResponse;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmissionWithSourceResponse;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/contests/submissions")
-public interface ContestSubmissionService {
+@Path("/api/v2/contests/submissions/programming")
+public interface ContestProgrammingSubmissionService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    ContestSubmissionsResponse getSubmissions(
+    ContestProgrammingSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("userJid") Optional<String> userJid,
@@ -28,7 +28,7 @@ public interface ContestSubmissionService {
     @GET
     @Path("/id/{submissionId}")
     @Produces(APPLICATION_JSON)
-    SubmissionWithSourceResponse getSubmissionWithSourceById(
+    ProgrammingSubmissionWithSourceResponse getSubmissionWithSourceById(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionId") long submissionId,
             @QueryParam("language") Optional<String> language);

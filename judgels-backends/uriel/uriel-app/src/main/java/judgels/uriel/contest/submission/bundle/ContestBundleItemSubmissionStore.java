@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
-import judgels.sandalphon.api.submission.BundleItemSubmission;
+import judgels.sandalphon.api.submission.bundle.BundleItemSubmission;
 import judgels.uriel.api.contest.submission.bundle.ContestBundleItemSubmissionData;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
 import judgels.uriel.persistence.ContestBundleItemSubmissionModel;

@@ -27,7 +27,7 @@ export interface ContestSubmissionRegradeAllData {
   problemJid?: string;
 }
 
-const baseURL = `${baseContestsURL}/submissions`;
+const baseURL = `${baseContestsURL}/submissions/programming`;
 
 export const contestSubmissionAPI = {
   getSubmissions: (

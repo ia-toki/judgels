@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
-import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.GcjStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
@@ -65,7 +65,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissions,
+            List<ProgrammingSubmission> submissions,
             Optional<Instant> freezeTime) {
         GcjStyleModuleConfig gcjStyleModuleConfig = (GcjStyleModuleConfig) styleModuleConfig;
 
@@ -84,14 +84,14 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
             scoreboardState.getProblemJids().forEach(p -> pointsMap.putIfAbsent(p, 0));
         }
 
-        Map<String, List<Submission>> submissionsMap = new HashMap<>();
-        Map<String, List<Submission>> frozenSubmissionsMap = new HashMap<>();
+        Map<String, List<ProgrammingSubmission>> submissionsMap = new HashMap<>();
+        Map<String, List<ProgrammingSubmission>> frozenSubmissionsMap = new HashMap<>();
         contestantJids.forEach(c -> {
             submissionsMap.put(c, new ArrayList<>());
             frozenSubmissionsMap.put(c, new ArrayList<>());
         });
 
-        List<Submission> filteredSubmissions = submissions.stream()
+        List<ProgrammingSubmission> filteredSubmissions = submissions.stream()
                 .filter(s -> contestantJids.contains(s.getUserJid()))
                 .filter(s -> problemJidsSet.contains(s.getProblemJid()))
                 .collect(Collectors.toList());
@@ -117,7 +117,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                 problemStateMap.put(p, GcjScoreboardProblemState.NOT_ACCEPTED);
             });
 
-            for (Submission submission : submissionsMap.get(contestantJid)) {
+            for (ProgrammingSubmission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
 
                 Verdict verdict = submission.getLatestGrading().get().getVerdict();
@@ -139,7 +139,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                 }
             }
 
-            for (Submission submission : frozenSubmissionsMap.get(contestantJid)) {
+            for (ProgrammingSubmission submission : frozenSubmissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
                 if (isAccepted(problemStateMap.get(problemJid))) {
                     continue;
