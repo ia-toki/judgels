@@ -11,30 +11,30 @@ import javax.inject.Singleton;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.BundleItemSubmission;
-import judgels.uriel.api.contest.submission.bundle.ContestBundleSubmissionData;
-import judgels.uriel.persistence.ContestBundleSubmissionDao;
-import judgels.uriel.persistence.ContestBundleSubmissionModel;
+import judgels.uriel.api.contest.submission.bundle.ContestBundleItemSubmissionData;
+import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
+import judgels.uriel.persistence.ContestBundleItemSubmissionModel;
 
 @Singleton
-public class ContestBundleSubmissionStore {
-    private final ContestBundleSubmissionDao submissionDao;
+public class ContestBundleItemSubmissionStore {
+    private final ContestBundleItemSubmissionDao submissionDao;
 
     @Inject
-    public ContestBundleSubmissionStore(ContestBundleSubmissionDao submissionDao) {
+    public ContestBundleItemSubmissionStore(ContestBundleItemSubmissionDao submissionDao) {
         this.submissionDao = submissionDao;
     }
 
-    public BundleItemSubmission upsertSubmission(ContestBundleSubmissionData data, String userJid) {
-        Optional<ContestBundleSubmissionModel> maybeModel = submissionDao
+    public BundleItemSubmission upsertSubmission(ContestBundleItemSubmissionData data, String userJid) {
+        Optional<ContestBundleItemSubmissionModel> maybeModel = submissionDao
                 .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
                         data.getContestJid(), data.getProblemJid(), data.getItemJid(), userJid);
 
         if (maybeModel.isPresent()) {
-            ContestBundleSubmissionModel model = maybeModel.get();
+            ContestBundleItemSubmissionModel model = maybeModel.get();
             model.answer = data.getAnswer();
             return fromModel(submissionDao.update(model));
         } else {
-            ContestBundleSubmissionModel model = new ContestBundleSubmissionModel();
+            ContestBundleItemSubmissionModel model = new ContestBundleItemSubmissionModel();
             model.containerJid = data.getContestJid();
             model.problemJid = data.getProblemJid();
             model.itemJid = data.getItemJid();
@@ -48,10 +48,10 @@ public class ContestBundleSubmissionStore {
             String problemJid,
             String userJid) {
 
-        List<ContestBundleSubmissionModel>
+        List<ContestBundleItemSubmissionModel>
                 models = submissionDao.selectByContainerJidAndProblemJidAndCreatedBy(containerJid, problemJid, userJid);
         return models.stream()
-                .map(ContestBundleSubmissionStore::fromModel)
+                .map(ContestBundleItemSubmissionStore::fromModel)
                 .collect(Collectors.toMap(v -> v.getItemJid(), Function.identity()));
     }
 
@@ -64,12 +64,12 @@ public class ContestBundleSubmissionStore {
         SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(options::page);
 
-        Page<ContestBundleSubmissionModel> submissionModels =
+        Page<ContestBundleItemSubmissionModel> submissionModels =
                 submissionDao.selectPaged(containerJid, createdBy, problemJid, Optional.empty(), options.build());
-        return submissionModels.mapPage(p -> Lists.transform(p, ContestBundleSubmissionStore::fromModel));
+        return submissionModels.mapPage(p -> Lists.transform(p, ContestBundleItemSubmissionStore::fromModel));
     }
 
-    private static BundleItemSubmission fromModel(ContestBundleSubmissionModel model) {
+    private static BundleItemSubmission fromModel(ContestBundleItemSubmissionModel model) {
         return new BundleItemSubmission.Builder()
                 .id(model.id)
                 .jid(model.jid)

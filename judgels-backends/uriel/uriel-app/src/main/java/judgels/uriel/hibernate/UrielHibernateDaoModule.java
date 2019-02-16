@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestAnnouncementDao;
-import judgels.uriel.persistence.ContestBundleSubmissionDao;
+import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
 import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestDao;
@@ -83,7 +83,7 @@ public class UrielHibernateDaoModule {
     }
 
     @Provides
-    static ContestBundleSubmissionDao contestBundleSubmissionDao(ContestBundleSubmissionHibernateDao dao) {
+    static ContestBundleItemSubmissionDao contestBundleSubmissionDao(ContestBundleItemSubmissionHibernateDao dao) {
         return dao;
     }
 

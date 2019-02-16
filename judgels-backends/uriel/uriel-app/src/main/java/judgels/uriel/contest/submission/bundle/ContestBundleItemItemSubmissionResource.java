@@ -22,20 +22,20 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
-import judgels.uriel.api.contest.submission.bundle.ContestBundleSubmissionData;
-import judgels.uriel.api.contest.submission.bundle.ContestBundleSubmissionService;
-import judgels.uriel.api.contest.submission.bundle.ContestBundleSubmissionsResponse;
+import judgels.uriel.api.contest.submission.bundle.ContestBundleItemSubmissionData;
+import judgels.uriel.api.contest.submission.bundle.ContestBundleItemSubmissionService;
+import judgels.uriel.api.contest.submission.bundle.ContestBundleItemSubmissionsResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 
-public class ContestBundleSubmissionResource implements ContestBundleSubmissionService {
+public class ContestBundleItemItemSubmissionResource implements ContestBundleItemSubmissionService {
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
-    private final ContestBundleSubmissionStore submissionStore;
+    private final ContestBundleItemSubmissionStore submissionStore;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestContestantStore contestantStore;
@@ -43,10 +43,10 @@ public class ContestBundleSubmissionResource implements ContestBundleSubmissionS
     private final ProfileService profileService;
 
     @Inject
-    public ContestBundleSubmissionResource(
+    public ContestBundleItemItemSubmissionResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
-            ContestBundleSubmissionStore submissionStore,
+            ContestBundleItemSubmissionStore submissionStore,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestContestantStore contestantStore,
@@ -65,7 +65,7 @@ public class ContestBundleSubmissionResource implements ContestBundleSubmissionS
 
     @Override
     @UnitOfWork
-    public ContestBundleSubmissionsResponse getSubmissions(
+    public ContestBundleItemSubmissionsResponse getSubmissions(
             AuthHeader authHeader,
             String contestJid,
             Optional<String> userJid,
@@ -123,7 +123,7 @@ public class ContestBundleSubmissionResource implements ContestBundleSubmissionS
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
 
-        return new ContestBundleSubmissionsResponse.Builder()
+        return new ContestBundleItemSubmissionsResponse.Builder()
                 .data(submissions)
                 .config(config)
                 .profilesMap(profilesMap)
@@ -133,7 +133,7 @@ public class ContestBundleSubmissionResource implements ContestBundleSubmissionS
 
     @Override
     @UnitOfWork
-    public void createSubmission(AuthHeader authHeader, ContestBundleSubmissionData data) {
+    public void createSubmission(AuthHeader authHeader, ContestBundleItemSubmissionData data) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(data.getContestJid()));
         ContestProblem problem = checkFound(problemStore.getProblem(data.getContestJid(), data.getProblemJid()));

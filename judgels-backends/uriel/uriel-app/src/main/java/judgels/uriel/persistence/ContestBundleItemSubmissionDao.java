@@ -6,19 +6,19 @@ import judgels.persistence.JudgelsDao;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
-public interface ContestBundleSubmissionDao extends JudgelsDao<ContestBundleSubmissionModel> {
-    List<ContestBundleSubmissionModel> selectByContainerJidAndProblemJidAndCreatedBy(
+public interface ContestBundleItemSubmissionDao extends JudgelsDao<ContestBundleItemSubmissionModel> {
+    List<ContestBundleItemSubmissionModel> selectByContainerJidAndProblemJidAndCreatedBy(
             String containerJid,
             String problemJid,
             String createdBy);
 
-    Optional<ContestBundleSubmissionModel> selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
+    Optional<ContestBundleItemSubmissionModel> selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
             String containerJid,
             String problemJid,
             String itemJid,
             String createdBy);
 
-    Page<ContestBundleSubmissionModel> selectPaged(
+    Page<ContestBundleItemSubmissionModel> selectPaged(
             String containerJid,
             Optional<String> createdBy,
             Optional<String> problemJid,

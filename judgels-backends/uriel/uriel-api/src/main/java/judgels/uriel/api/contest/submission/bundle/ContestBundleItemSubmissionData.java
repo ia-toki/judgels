@@ -5,12 +5,12 @@ import org.immutables.value.Value;
 
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestBundleSubmissionData.class)
-public interface ContestBundleSubmissionData {
+@JsonDeserialize(as = ImmutableContestBundleItemSubmissionData.class)
+public interface ContestBundleItemSubmissionData {
     String getContestJid();
     String getProblemJid();
     String getItemJid();
     String getAnswer();
 
-    class Builder extends ImmutableContestBundleSubmissionData.Builder {}
+    class Builder extends ImmutableContestBundleItemSubmissionData.Builder {}
 }

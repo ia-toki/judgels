@@ -16,11 +16,11 @@ import judgels.sandalphon.api.submission.BundleItemSubmission;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/submissions/bundle")
-public interface ContestBundleSubmissionService {
+public interface ContestBundleItemSubmissionService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    ContestBundleSubmissionsResponse getSubmissions(
+    ContestBundleItemSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("userJid") Optional<String> userJid,
@@ -30,7 +30,7 @@ public interface ContestBundleSubmissionService {
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
-    void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestBundleSubmissionData data);
+    void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestBundleItemSubmissionData data);
 
     @GET
     @Path("/latest")

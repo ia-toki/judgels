@@ -11,7 +11,7 @@ import judgels.persistence.JudgelsModel;
 @Entity(name = "uriel_contest_bundle_submission")
 @Table(indexes = {@Index(columnList = "containerJid,createdBy,problemJid,itemJid", unique = true)})
 @JidPrefix("SUBB")
-public class ContestBundleSubmissionModel extends JudgelsModel {
+public class ContestBundleItemSubmissionModel extends JudgelsModel {
     @Column(nullable = false)
     public String containerJid;
 
