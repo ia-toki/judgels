@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming;
 
 import com.google.common.collect.ImmutableList;
-import judgels.sandalphon.api.problem.programming.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;

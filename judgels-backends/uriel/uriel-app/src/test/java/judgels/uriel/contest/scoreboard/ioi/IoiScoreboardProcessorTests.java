@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.Verdicts;
-import judgels.sandalphon.api.submission.Grading;
-import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.programming.Grading;
+import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
@@ -108,8 +108,8 @@ class IoiScoreboardProcessorTests {
 
         @Test
         void only_count_contestant() throws JsonProcessingException {
-            List<ProgrammingSubmission> submissions = ImmutableList.of(
-                    new ProgrammingSubmission.Builder()
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -165,8 +165,8 @@ class IoiScoreboardProcessorTests {
 
         @Test
         void ignore_other_problem() throws JsonProcessingException {
-            List<ProgrammingSubmission> submissions = ImmutableList.of(
-                    new ProgrammingSubmission.Builder()
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -222,8 +222,8 @@ class IoiScoreboardProcessorTests {
 
         @Test
         void time_calculation() throws JsonProcessingException {
-            List<ProgrammingSubmission> submissions = ImmutableList.of(
-                    new ProgrammingSubmission.Builder()
+            List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -239,7 +239,7 @@ class IoiScoreboardProcessorTests {
                                     .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
                                     .build())
                             .build(),
-                    new ProgrammingSubmission.Builder()
+                    new Submission.Builder()
                             .containerJid("JIDC")
                             .id(2)
                             .jid("JIDS-2")
@@ -255,7 +255,7 @@ class IoiScoreboardProcessorTests {
                                     .verdict(Verdicts.OK)
                                     .build())
                             .build(),
-                    new ProgrammingSubmission.Builder()
+                    new Submission.Builder()
                             .containerJid("JIDC")
                             .id(3)
                             .jid("JIDS-3")
@@ -311,8 +311,8 @@ class IoiScoreboardProcessorTests {
 
         @Nested
         class ProblemOrdering {
-            private List<ProgrammingSubmission> submissions = ImmutableList.of(
-                    new ProgrammingSubmission.Builder()
+            private List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -328,7 +328,7 @@ class IoiScoreboardProcessorTests {
                                     .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
                                     .build())
                             .build(),
-                    new ProgrammingSubmission.Builder()
+                    new Submission.Builder()
                             .containerJid("JIDC")
                             .id(2)
                             .jid("JIDS-2")
@@ -431,8 +431,8 @@ class IoiScoreboardProcessorTests {
 
         @Nested
         class LastAffectingPenalty {
-            private List<ProgrammingSubmission> submissions = ImmutableList.of(
-                    new ProgrammingSubmission.Builder()
+            private List<Submission> submissions = ImmutableList.of(
+                    new Submission.Builder()
                             .containerJid("JIDC")
                             .id(1)
                             .jid("JIDS-1")
@@ -448,7 +448,7 @@ class IoiScoreboardProcessorTests {
                                     .verdict(Verdicts.TIME_LIMIT_EXCEEDED)
                                     .build())
                             .build(),
-                    new ProgrammingSubmission.Builder()
+                    new Submission.Builder()
                             .containerJid("JIDC")
                             .id(2)
                             .jid("JIDS-2")

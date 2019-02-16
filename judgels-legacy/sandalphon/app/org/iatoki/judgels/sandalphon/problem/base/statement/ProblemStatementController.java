@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import judgels.sandalphon.api.problem.programming.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemStatement;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton

@@ -53,7 +53,7 @@ public class UrielHibernateDaoModule {
     }
 
     @Provides
-    static ContestGradingDao contestGradingDao(ContestGradingHibernateDao dao) {
+    static ContestGradingDao contestGradingDao(ContestProgrammingGradingHibernateDao dao) {
         return dao;
     }
 
@@ -83,12 +83,14 @@ public class UrielHibernateDaoModule {
     }
 
     @Provides
-    static ContestBundleItemSubmissionDao contestBundleSubmissionDao(ContestBundleItemSubmissionHibernateDao dao) {
+    static ContestBundleItemSubmissionDao contestBundleItemSubmissionDao(ContestBundleItemSubmissionHibernateDao dao) {
         return dao;
     }
 
     @Provides
-    static ContestProgrammingSubmissionDao contestSubmissionDao(ContestProgrammingSubmissionHibernateDao dao) {
+    static ContestProgrammingSubmissionDao contestProgrammingSubmissionDao(
+            ContestProgrammingProgrammingSubmissionHibernateDao dao) {
+
         return dao;
     }
 
