@@ -33,9 +33,18 @@ public interface ContestProblemService {
             @PathParam("contestJid") String contestJid);
 
     @GET
-    @Path("/{problemAlias}/worksheet")
+    @Path("/{problemAlias}/programming/worksheet")
     @Produces(APPLICATION_JSON)
-    ContestProblemWorksheet getProblemWorksheet(
+    ContestProgrammingProblemWorksheet getProgrammingProblemWorksheet(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("problemAlias") String problemAlias,
+            @QueryParam("language") Optional<String> language);
+
+    @GET
+    @Path("/{problemAlias}/bundle/worksheet")
+    @Produces(APPLICATION_JSON)
+    ContestBundleProblemWorksheet getBundleProblemWorksheet(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
             @PathParam("problemAlias") String problemAlias,

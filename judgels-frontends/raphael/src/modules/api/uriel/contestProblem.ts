@@ -64,6 +64,6 @@ export const contestProblemAPI = {
     language?: string
   ): Promise<ContestProblemWorksheet> => {
     const params = stringify({ language });
-    return get(`${baseURL(contestJid)}/${problemAlias}/worksheet?${params}`, token);
+    return get(`${baseURL(contestJid)}/${problemAlias}/programming/worksheet?${params}`, token);
   },
 };
