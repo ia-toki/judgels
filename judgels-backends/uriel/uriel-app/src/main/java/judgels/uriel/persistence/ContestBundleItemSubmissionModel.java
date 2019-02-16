@@ -8,7 +8,7 @@ import judgels.persistence.JidPrefix;
 import judgels.persistence.JudgelsModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
-@Entity(name = "uriel_contest_bundle_submission")
+@Entity(name = "uriel_contest_bundle_item_submission")
 @Table(indexes = {@Index(columnList = "containerJid,createdBy,problemJid,itemJid", unique = true)})
 @JidPrefix("SUBB")
 public class ContestBundleItemSubmissionModel extends JudgelsModel {
