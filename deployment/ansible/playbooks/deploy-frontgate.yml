@@ -1,4 +1,0 @@
-- hosts: frontgate
-  gather_facts: false
-  roles:
-    - name: frontgate-deploy

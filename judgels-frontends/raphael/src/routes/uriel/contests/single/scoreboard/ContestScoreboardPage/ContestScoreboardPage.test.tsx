@@ -71,15 +71,17 @@ describe('ContestScoreboardPage', () => {
               contestantJids: [],
               problemJids: [],
               problemAliases: [],
+              points: [],
             },
             content: {
               entries: [],
             },
           },
+          totalEntries: 0,
           updatedTime: 0,
         },
         profilesMap: {},
-        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false },
+        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, pageSize: 0 },
       };
       contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(response));
 
@@ -105,15 +107,17 @@ describe('ContestScoreboardPage', () => {
               contestantJids: [],
               problemJids: [],
               problemAliases: [],
+              points: [],
             },
             content: {
               entries: [],
             },
           },
+          totalEntries: 0,
           updatedTime: 0,
         },
         profilesMap: {},
-        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false },
+        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, pageSize: 0 },
       };
       contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(response));
 

@@ -58,6 +58,11 @@ export interface IoiStyleModuleConfig {
   usingLastAffectingPenalty: boolean;
 }
 
+export interface GcjStyleModuleConfig {
+  languageRestriction: LanguageRestriction;
+  wrongSubmissionPenalty: number;
+}
+
 export interface ClarificationTimeLimitModuleConfig {
   clarificationDuration: number;
 }
@@ -82,6 +87,7 @@ export interface VirtualModuleConfig {
 export interface ContestModulesConfig {
   icpcStyle?: IcpcStyleModuleConfig;
   ioiStyle?: IoiStyleModuleConfig;
+  gcjStyle?: GcjStyleModuleConfig;
 
   scoreboard: ScoreboardModuleConfig;
 

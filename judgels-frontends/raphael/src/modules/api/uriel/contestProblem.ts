@@ -15,6 +15,7 @@ export interface ContestProblem {
   problemJid: string;
   status: ContestProblemStatus;
   submissionsLimit: number;
+  points?: number;
 }
 
 export interface ContestProblemData {
@@ -22,11 +23,13 @@ export interface ContestProblemData {
   slug: string;
   status: ContestProblemStatus;
   submissionsLimit: number;
+  points?: number;
 }
 
 export interface ContestProblemsResponse {
   data: ContestProblem[];
   problemsMap: { [problemJid: string]: ProblemInfo };
+  pointsMap?: { [problemJid: string]: number };
   totalSubmissionsMap: { [problemJid: string]: number };
   config: ContestProblemConfig;
 }

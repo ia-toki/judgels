@@ -1,0 +1,4 @@
+- hosts: jerahmeel
+  gather_facts: false
+  roles:
+    - name: jerahmeel-deploy

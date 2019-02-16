@@ -10,6 +10,7 @@ import {
   FrozenScoreboardModuleConfig,
   IcpcStyleModuleConfig,
   IoiStyleModuleConfig,
+  GcjStyleModuleConfig,
   ScoreboardModuleConfig,
   VirtualModuleConfig,
 } from 'modules/api/uriel/contestModule';
@@ -28,6 +29,7 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
       <div className="contest-edit-dialog__content">
         {config.icpcStyle && this.renderIcpcStyleConfig(config.icpcStyle)}
         {config.ioiStyle && this.renderIoiStyleConfig(config.ioiStyle)}
+        {config.gcjStyle && this.renderGcjStyleConfig(config.gcjStyle)}
         {config.clarificationTimeLimit && this.renderClarificationTimeLimitConfig(config.clarificationTimeLimit)}
         {config.delayedGrading && this.renderDelayedGradingConfig(config.delayedGrading)}
         {config.scoreboard && this.renderScoreboardConfig(config.scoreboard)}
@@ -71,6 +73,24 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     return (
       <div className="contest-edit-configs-table__config">
         <h4>IOI style config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
+      </div>
+    );
+  };
+
+  private renderGcjStyleConfig = (config: GcjStyleModuleConfig) => {
+    const rows: FormTableRow[] = [
+      {
+        key: 'languageRestriction',
+        title: 'Allowed languages',
+        value: this.formatLanguageRestriction(config.languageRestriction),
+      },
+      { key: 'wrongSubmissionPenalty', title: 'Wrong submission penalty', value: config.wrongSubmissionPenalty },
+    ];
+    return (
+      <div className="contest-edit-configs-table__config">
+        <h4>GCJ style config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
       </div>

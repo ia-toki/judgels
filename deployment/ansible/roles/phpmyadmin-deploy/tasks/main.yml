@@ -1,0 +1,16 @@
+- block:
+  - name: Pull phpymyadmin image
+    docker_image:
+      name: phpmyadmin/phpmyadmin:4.8.5
+
+  - name: Run a phpmyadmin container
+    docker_container:
+      name: phpmyadmin
+      image: phpmyadmin/phpmyadmin:4.8.5
+      restart: yes
+      ports:
+        - '8080:80'
+      env:
+        PMA_HOST: 172.17.0.1
+  tags:
+    - phpmyadmin-deploy

@@ -1,0 +1,76 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9004
+  adminConnectors:
+    - type: http
+      port: 9104
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/uriel-request.log
+      archivedLogFilenamePattern: var/log/uriel-request-%d.log.gz
+      archivedFileCount: 14
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  url: jdbc:mysql://{{ db_host }}/judgels_uriel{{ db_options }}
+  user: {{ db_username }}
+  password: {{ db_password }}
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
+    hibernate.generate_statistics: false
+
+logging:
+  appenders:
+    - type: console
+      threshold: INFO
+    - type: file
+      currentLogFilename: var/log/uriel.log
+      archivedLogFilenamePattern: var/log/uriel-%d.log.gz
+      archivedFileCount: 14
+
+  loggers:
+    org.hibernate.type.BasicTypeRegistry:
+      level: OFF
+
+webSecurity:
+  cors:
+    allowedOrigins: {{ judgels_scheme }}://{{ raphael_url_public }}
+    allowCredentials: true
+
+uriel:
+  baseDataDir: /judgels/uriel/var/data
+
+  jophiel:
+    baseUrl: {{ judgels_scheme }}://{{ jophiel_url_internal }}
+
+  sandalphon:
+    baseUrl: {{ judgels_scheme }}://{{ sandalphon_url_internal }}
+    clientJid: JIDSACL-uriel
+    clientSecret: {{ sandalphon_uriel_secret }}
+
+  sealtiel:
+    baseUrl: {{ judgels_scheme }}://{{ sealtiel_url_internal }}
+    clientJid: JIDSECL-uriel
+    clientSecret: {{ sealtiel_uriel_secret }}
+
+  gabriel:
+    clientJid: JIDSECL-gabriel
+
+  aws:
+    accessKey: {{ aws_accessKey }}
+    secretKey: {{ aws_secretKey }}
+    s3BucketRegionId: {{ aws_s3BucketRegionId }}
+
+  submission:
+    fs:
+      type: {{ uriel_submission_fs_type }}
+      {% if uriel_submission_fs_type == 'aws' %}s3BucketName: {{ uriel_submission_fs_s3BucketName }}{% endif %}
+
+
+  file:
+    fs:
+      type: {{ uriel_file_fs_type }}
+      {% if uriel_file_fs_type == 'aws' %}s3BucketName: {{ uriel_file_fs_s3BucketName }}{% endif %}

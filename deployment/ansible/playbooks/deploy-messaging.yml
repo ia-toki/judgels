@@ -1,4 +1,0 @@
-- hosts: messaging
-  gather_facts: false
-  roles:
-    - name: messaging-deploy

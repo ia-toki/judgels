@@ -1,0 +1,20 @@
+[local]
+localhost
+
+[database]
+1.2.3.4 ansible_user=root
+
+[raphael]
+1.2.3.4 ansible_user=root
+
+[jophiel]
+1.2.3.4 ansible_user=root
+
+[sandalphon]
+1.2.3.4 ansible_user=root
+
+[sealtiel]
+1.2.3.4 ansible_user=root
+
+[uriel]
+1.2.3.4 ansible_user=root

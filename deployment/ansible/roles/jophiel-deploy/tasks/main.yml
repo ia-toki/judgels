@@ -12,7 +12,7 @@
 
   - name: Generate jophiel config
     template:
-      src: "{{ playbook_dir }}/../../../deployment-repo/conf/jophiel.yml"
+      src: "{{ playbook_dir }}/../conf/jophiel.yml.j2"
       dest: /judgels/jophiel/var/conf/jophiel.yml
 
   - name: Pull jophiel image

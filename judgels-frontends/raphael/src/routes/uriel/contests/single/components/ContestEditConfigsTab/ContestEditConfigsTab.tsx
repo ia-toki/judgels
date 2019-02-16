@@ -69,6 +69,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
       const {
         icpcStyle,
         ioiStyle,
+        gcjStyle,
         scoreboard,
         clarificationTimeLimit,
         delayedGrading,
@@ -93,6 +94,14 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
           ioiAllowAllLanguages: allLanguagesAllowed(ioiStyle.languageRestriction),
           ioiAllowedLanguages: this.fromLanguageRestriction(ioiStyle.languageRestriction),
           ioiUsingLastAffectingPenalty: ioiStyle.usingLastAffectingPenalty,
+        };
+      }
+      if (gcjStyle) {
+        initialValues = {
+          ...initialValues,
+          gcjAllowAllLanguages: allLanguagesAllowed(gcjStyle.languageRestriction),
+          gcjAllowedLanguages: this.fromLanguageRestriction(gcjStyle.languageRestriction),
+          gcjWrongSubmissionPenalty: '' + gcjStyle.wrongSubmissionPenalty,
         };
       }
       if (clarificationTimeLimit) {
@@ -128,6 +137,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
     const {
       icpcStyle,
       ioiStyle,
+      gcjStyle,
       clarificationTimeLimit,
       delayedGrading,
       frozenScoreboard,
@@ -156,6 +166,16 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
         ioiStyle: {
           languageRestriction: { allowedLanguageNames },
           usingLastAffectingPenalty: data.ioiUsingLastAffectingPenalty!,
+        },
+      };
+    }
+    if (gcjStyle) {
+      const allowedLanguageNames = data.gcjAllowAllLanguages ? [] : Object.keys(data.gcjAllowedLanguages!);
+      config = {
+        ...config,
+        gcjStyle: {
+          languageRestriction: { allowedLanguageNames },
+          wrongSubmissionPenalty: +data.gcjWrongSubmissionPenalty!,
         },
       };
     }

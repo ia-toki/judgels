@@ -12,7 +12,7 @@
 
   - name: Generate uriel config
     template:
-      src: "{{ playbook_dir }}/../../../deployment-repo/conf/uriel.yml"
+      src: "{{ playbook_dir }}/../conf/uriel.yml.j2"
       dest: /judgels/uriel/var/conf/uriel.yml
 
   - name: Pull uriel image

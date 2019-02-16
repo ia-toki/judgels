@@ -9,7 +9,7 @@ if [[ -z ${COMMAND} ]]; then
 fi
 
 if [[ "$COMMAND" == "dbMigrate" ]]; then
-    exec ./service/bin/jophiel db migrate
+    exec ./service/bin/jophiel db migrate var/conf/jophiel.yml
 else 
     exec ./service/bin/init.sh $COMMAND
 fi

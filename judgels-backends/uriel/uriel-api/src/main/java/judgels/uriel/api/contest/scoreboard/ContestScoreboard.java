@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 public interface ContestScoreboard {
     ContestScoreboardType getType();
     Scoreboard getScoreboard();
+    int getTotalEntries();
     Instant getUpdatedTime();
 
     class Builder extends ImmutableContestScoreboard.Builder {}

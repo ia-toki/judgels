@@ -1,0 +1,75 @@
+pidfile.path = "/dev/null"
+
+general {
+    title = "Repository Gate"
+    copyright = "{{ judgels_slogan }}"
+    canonicalUrl = "{{ judgels_scheme }}://{{ sandalphon_url_public }}"
+    githubUrl = "https://github.com/ia-toki/judgels"
+}
+
+play {
+    crypto.secret = "{{ sandalphon_play_crypto_secret }}"
+
+    http {
+        session {
+            cookieName = "SANDALPHON_SESSION"
+            secure = false
+        }
+        filters = "org.iatoki.judgels.play.JudgelsFilters"
+    }
+
+    modules {
+        enabled += "org.iatoki.judgels.play.JudgelsModule"
+        enabled += "org.iatoki.judgels.sandalphon.SandalphonModule"
+        enabled += "org.iatoki.judgels.sandalphon.jophiel.JophielModule"
+        enabled += "org.iatoki.judgels.sandalphon.sealtiel.SealtielModule"
+        enabled += "org.iatoki.judgels.sandalphon.gabriel.GabrielModule"
+    }
+
+    i18n.langs = ["en-US"]
+}
+
+application.global = "org.iatoki.judgels.sandalphon.SandalphonGlobal"
+
+file.encoding = "UTF-8"
+
+db.default {
+    driver = "com.mysql.jdbc.Driver"
+    url = "jdbc:mysql://{{ db_host }}/judgels_sandalphon{{ db_options }}"
+    username = "{{ db_username }}"
+    password = "{{ db_password }}"
+    jndiName = "DefaultDS"
+}
+jpa.default = "defaultPersistenceUnit"
+
+sandalphon {
+    baseDataDir = "/judgels/sandalphon/var/data"
+
+    clients = [
+        "JIDSACL-uriel:{{ sandalphon_uriel_secret }}"
+        "JIDSACL-jerahmeel:{{ sandalphon_jerahmeel_secret }}"
+        "JIDSACL-gabriel:{{ sandalphon_gabriel_secret }}"
+    ]
+}
+
+jophiel {
+    baseUrl = "{{ judgels_scheme }}://{{ jophiel_url_internal }}"
+}
+
+sealtiel {
+    baseUrl = "{{ judgels_scheme }}://{{ sealtiel_url_internal }}"
+    clientJid = "JIDSECL-sandalphon"
+    clientSecret = "{{ sealtiel_sandalphon_secret }}"
+}
+
+gabriel {
+    clientJid = "JIDSECL-gabriel"
+}
+
+raphael.baseUrl = "{{ judgels_scheme }}://{{ raphael_url_public }}"
+
+banner {
+    use = false
+    link = ""
+    imageSrc = ""
+}
