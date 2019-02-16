@@ -5,6 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
+import java.time.Clock;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Singleton;
 import judgels.uriel.contest.ContestStore;
@@ -35,8 +36,14 @@ public class ContestScoreboardUpdaterModule {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardUpdaterDispatcher.class,
-                new Class<?>[] {ContestStore.class, ExecutorService.class, ContestScoreboardUpdater.class},
-                new Object[] {contestStore, executorService, scoreboardUpdater});
+                new Class<?>[] {
+                        ContestStore.class,
+                        ExecutorService.class,
+                        ContestScoreboardUpdater.class},
+                new Object[] {
+                        contestStore,
+                        executorService,
+                        scoreboardUpdater});
     }
 
     @Provides
@@ -49,15 +56,28 @@ public class ContestScoreboardUpdaterModule {
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
             ContestSubmissionStore submissionStore,
-            ScoreboardProcessorRegistry scoreboardProcessorRegistry) {
+            ScoreboardProcessorRegistry scoreboardProcessorRegistry,
+            Clock clock) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardUpdater.class,
-                new Class<?>[] {ObjectMapper.class, ContestScoreboardStore.class, ContestModuleStore.class,
-                                ContestContestantStore.class, ContestProblemStore.class,
-                                ContestSubmissionStore.class,
-                                ScoreboardProcessorRegistry.class},
-                new Object[] {objectMapper, scoreboardStore, moduleStore, contestantStore,
-                              problemStore, submissionStore, scoreboardProcessorRegistry});
+                new Class<?>[] {
+                        ObjectMapper.class,
+                        ContestScoreboardStore.class,
+                        ContestModuleStore.class,
+                        ContestContestantStore.class,
+                        ContestProblemStore.class,
+                        ContestSubmissionStore.class,
+                        ScoreboardProcessorRegistry.class,
+                        Clock.class},
+                new Object[] {
+                        objectMapper,
+                        scoreboardStore,
+                        moduleStore,
+                        contestantStore,
+                        problemStore,
+                        submissionStore,
+                        scoreboardProcessorRegistry,
+                        clock});
     }
 }

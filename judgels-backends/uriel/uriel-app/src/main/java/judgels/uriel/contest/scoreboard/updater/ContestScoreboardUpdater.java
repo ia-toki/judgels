@@ -3,6 +3,7 @@ package judgels.uriel.contest.scoreboard.updater;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -32,6 +33,7 @@ public class ContestScoreboardUpdater {
     private final ContestProblemStore problemStore;
     private final ContestSubmissionStore submissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
+    private final Clock clock;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -40,7 +42,8 @@ public class ContestScoreboardUpdater {
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
             ContestSubmissionStore submissionStore,
-            ScoreboardProcessorRegistry scoreboardProcessorRegistry) {
+            ScoreboardProcessorRegistry scoreboardProcessorRegistry,
+            Clock clock) {
 
         this.objectMapper = objectMapper;
         this.scoreboardStore = scoreboardStore;
@@ -49,6 +52,7 @@ public class ContestScoreboardUpdater {
         this.problemStore = problemStore;
         this.submissionStore = submissionStore;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
+        this.clock = clock;
     }
 
     @UnitOfWork
@@ -90,14 +94,17 @@ public class ContestScoreboardUpdater {
             Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get()
                     .getFreezeDurationBeforeEndTime();
             Instant freezeTime = contest.getEndTime().minus(freezeDuration);
-            generateAndUpsertScoreboard(
-                    contest,
-                    scoreboardState,
-                    styleModuleConfig,
-                    contestantStartTimesMap,
-                    submissions,
-                    Optional.of(freezeTime),
-                    ContestScoreboardType.FROZEN);
+
+            if (clock.instant().isAfter(freezeTime)) {
+                generateAndUpsertScoreboard(
+                        contest,
+                        scoreboardState,
+                        styleModuleConfig,
+                        contestantStartTimesMap,
+                        submissions,
+                        Optional.of(freezeTime),
+                        ContestScoreboardType.FROZEN);
+            }
         }
     }
 
