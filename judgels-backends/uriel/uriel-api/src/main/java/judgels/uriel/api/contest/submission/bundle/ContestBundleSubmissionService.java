@@ -20,14 +20,24 @@ public interface ContestBundleSubmissionService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    Map<String, BundleSubmission> getCurrentProblemSubmissions(
+    ContestBundleSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
-            @QueryParam("problemJid") String problemJid,
-            @QueryParam("userJid") Optional<String> userJid);
+            @QueryParam("userJid") Optional<String> userJid,
+            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("page") Optional<Integer> page);
 
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
-    void createBundleSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestBundleSubmissionData data);
+    void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestBundleSubmissionData data);
+
+    @GET
+    @Path("/latest")
+    @Produces(APPLICATION_JSON)
+    Map<String, BundleSubmission> getLatestSubmissionsByUserForProblemInContest(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("problemJid") String problemJid,
+            @QueryParam("userJid") Optional<String> userJid);
 }

@@ -5,6 +5,9 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.JudgelsModel_;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.uriel.persistence.ContestBundleSubmissionDao;
@@ -39,5 +42,22 @@ public class ContestBundleSubmissionHibernateDao extends JudgelsHibernateDao<Con
                 .putColumnsEq(ContestBundleSubmissionModel_.itemJid, itemJid)
                 .putColumnsEq(ContestBundleSubmissionModel_.createdBy, createdBy)
                 .build());
+    }
+
+    @Override
+    public final Page<ContestBundleSubmissionModel> selectPaged(
+            String containerJid,
+            Optional<String> createdBy,
+            Optional<String> problemJid,
+            Optional<Long> lastSubmissionId,
+            SelectionOptions options) {
+
+        FilterOptions.Builder<ContestBundleSubmissionModel> filterOptions = new FilterOptions.Builder<>();
+        filterOptions.putColumnsEq(ContestBundleSubmissionModel_.containerJid, containerJid);
+        createdBy.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
+        problemJid.ifPresent(jid -> filterOptions.putColumnsEq(ContestBundleSubmissionModel_.problemJid, jid));
+        lastSubmissionId.ifPresent(filterOptions::lastId);
+
+        return selectPaged(filterOptions.build(), options);
     }
 }
