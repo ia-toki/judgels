@@ -20,7 +20,7 @@
             <column name="itemJid" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="value" type="TEXT"/>
+            <column name="answer" type="TEXT"/>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
@@ -33,11 +33,12 @@
             <column name="updatedIp" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="nathanchrs" id="add-bundle-submission-container-problem-user-index">
+    <changeSet author="nathanchrs" id="add-bundle-submission-container-user-problem-item-index">
         <createIndex catalogName="judgels_uriel" indexName="IDX1mjtvxyxv0ckfsv7upkzm50mj" schemaName="judgels_uriel" tableName="uriel_contest_bundle_submission">
             <column name="containerJid"/>
-            <column name="problemJid"/>
             <column name="createdBy"/>
+            <column name="problemJid"/>
+            <column name="itemJid"/>
         </createIndex>
     </changeSet>
 </databaseChangeLog>

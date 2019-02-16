@@ -12,7 +12,7 @@ public interface BundleItemSubmission {
     String getContainerJid();
     String getProblemJid();
     String getItemJid();
-    String getValue();
+    String getAnswer();
     String getUserJid();
     Instant getTime();
 

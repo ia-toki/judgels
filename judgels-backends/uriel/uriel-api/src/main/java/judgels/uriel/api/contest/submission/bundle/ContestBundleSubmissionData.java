@@ -10,7 +10,7 @@ public interface ContestBundleSubmissionData {
     String getContestJid();
     String getProblemJid();
     String getItemJid();
-    String getValue();
+    String getAnswer();
 
     class Builder extends ImmutableContestBundleSubmissionData.Builder {}
 }

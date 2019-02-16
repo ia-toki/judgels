@@ -9,7 +9,7 @@ import judgels.persistence.JudgelsModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "uriel_contest_bundle_submission")
-@Table(indexes = {@Index(columnList = "containerJid,problemJid,createdBy")})
+@Table(indexes = {@Index(columnList = "containerJid,createdBy,problemJid,itemJid", unique = true)})
 @JidPrefix("SUBB")
 public class ContestBundleSubmissionModel extends JudgelsModel {
     @Column(nullable = false)
@@ -22,5 +22,5 @@ public class ContestBundleSubmissionModel extends JudgelsModel {
     public String itemJid;
 
     @Column(nullable = false)
-    public String value;
+    public String answer;
 }

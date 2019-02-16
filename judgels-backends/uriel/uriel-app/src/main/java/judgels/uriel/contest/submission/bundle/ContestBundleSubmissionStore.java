@@ -31,14 +31,14 @@ public class ContestBundleSubmissionStore {
 
         if (maybeModel.isPresent()) {
             ContestBundleSubmissionModel model = maybeModel.get();
-            model.value = data.getValue();
+            model.answer = data.getAnswer();
             return fromModel(submissionDao.update(model));
         } else {
             ContestBundleSubmissionModel model = new ContestBundleSubmissionModel();
             model.containerJid = data.getContestJid();
             model.problemJid = data.getProblemJid();
             model.itemJid = data.getItemJid();
-            model.value = data.getValue();
+            model.answer = data.getAnswer();
             return fromModel(submissionDao.insert(model));
         }
     }
@@ -76,7 +76,7 @@ public class ContestBundleSubmissionStore {
                 .containerJid(model.containerJid)
                 .problemJid(model.problemJid)
                 .itemJid(model.itemJid)
-                .value(model.value)
+                .answer(model.answer)
                 .userJid(model.updatedBy)
                 .time(model.updatedAt)
                 .build();
