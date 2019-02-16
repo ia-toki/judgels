@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -49,6 +50,14 @@ public abstract class AbstractSubmissionStore<
             Optional<GM> gradingModel = gradingDao.selectLatestBySubmissionJid(model.jid);
             return submissionFromModels(model, gradingModel.orElse(null));
         });
+    }
+
+    public List<Submission> getSubmissionsForScoreboard(String containerJid) {
+        List<SM> submissionModels = submissionDao.selectAllByContainerJid(containerJid);
+        Set<String> submissionJids = submissionModels.stream().map(m -> m.jid).collect(Collectors.toSet());
+        Map<String, GM> gradingModels = gradingDao.selectAllLatestBySubmissionJids(submissionJids);
+
+        return Lists.transform(submissionModels, sm -> submissionFromModels(sm, gradingModels.get(sm.jid)));
     }
 
     public Page<Submission> getSubmissionsForDownload(

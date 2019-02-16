@@ -1,5 +1,6 @@
 package judgels.sandalphon.persistence;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -9,6 +10,7 @@ import judgels.persistence.api.SelectionOptions;
 
 public interface BaseProgrammingSubmissionDao<M extends AbstractProgrammingSubmissionModel> extends JudgelsDao<M> {
     M createSubmissionModel();
+    List<M> selectAllByContainerJid(String containerJid);
     Page<M> selectPaged(
             String containerJid,
             Optional<String> userJid,

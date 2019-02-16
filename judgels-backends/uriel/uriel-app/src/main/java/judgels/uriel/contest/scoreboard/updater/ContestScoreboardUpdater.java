@@ -3,11 +3,8 @@ package judgels.uriel.contest.scoreboard.updater;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,7 +32,6 @@ public class ContestScoreboardUpdater {
     private final ContestProblemStore problemStore;
     private final ContestSubmissionStore submissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
-    private final Clock clock;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -44,8 +40,7 @@ public class ContestScoreboardUpdater {
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
             ContestSubmissionStore submissionStore,
-            ScoreboardProcessorRegistry scoreboardProcessorRegistry,
-            Clock clock) {
+            ScoreboardProcessorRegistry scoreboardProcessorRegistry) {
 
         this.objectMapper = objectMapper;
         this.scoreboardStore = scoreboardStore;
@@ -54,7 +49,6 @@ public class ContestScoreboardUpdater {
         this.problemStore = problemStore;
         this.submissionStore = submissionStore;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
-        this.clock = clock;
     }
 
     @UnitOfWork
@@ -82,13 +76,7 @@ public class ContestScoreboardUpdater {
         Map<String, Optional<Instant>> contestantStartTimesMap =
                 contestantStore.getApprovedContestantStartTimes(contest.getJid());
 
-        List<Submission> submissions = new ArrayList<>(submissionStore.getSubmissions(
-                contest.getJid(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty())
-                .getPage());
-        submissions.sort(Comparator.comparingLong(Submission::getId));
+        List<Submission> submissions = submissionStore.getSubmissionsForScoreboard(contest.getJid());
         generateAndUpsertScoreboard(
                 contest,
                 scoreboardState,

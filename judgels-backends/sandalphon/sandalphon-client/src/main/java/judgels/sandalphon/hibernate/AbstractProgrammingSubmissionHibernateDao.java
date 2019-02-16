@@ -1,6 +1,7 @@
 package judgels.sandalphon.hibernate;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -11,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.JudgelsModel_;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
@@ -25,6 +27,13 @@ public abstract class AbstractProgrammingSubmissionHibernateDao
 
     public AbstractProgrammingSubmissionHibernateDao(HibernateDaoData data) {
         super(data);
+    }
+
+    @Override
+    public List<M> selectAllByContainerJid(String containerJid) {
+        return selectAll(new FilterOptions.Builder<M>()
+                .putColumnsEq(AbstractProgrammingSubmissionModel_.containerJid, containerJid)
+                .build(), new SelectionOptions.Builder().orderDir(OrderDir.ASC).build());
     }
 
     @Override
