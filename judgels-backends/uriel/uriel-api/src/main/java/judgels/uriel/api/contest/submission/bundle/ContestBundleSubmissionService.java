@@ -12,7 +12,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.sandalphon.api.submission.BundleSubmission;
+import judgels.sandalphon.api.submission.BundleItemSubmission;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/submissions/bundle")
@@ -35,7 +35,7 @@ public interface ContestBundleSubmissionService {
     @GET
     @Path("/latest")
     @Produces(APPLICATION_JSON)
-    Map<String, BundleSubmission> getLatestSubmissionsByUserForProblemInContest(
+    Map<String, BundleItemSubmission> getLatestSubmissionsByUserForProblemInContest(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("problemJid") String problemJid,

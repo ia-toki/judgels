@@ -5,8 +5,8 @@ import java.time.Instant;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableBundleSubmission.class)
-public interface BundleSubmission {
+@JsonDeserialize(as = ImmutableBundleItemSubmission.class)
+public interface BundleItemSubmission {
     long getId();
     String getJid();
     String getContainerJid();
@@ -16,5 +16,5 @@ public interface BundleSubmission {
     String getUserJid();
     Instant getTime();
 
-    class Builder extends ImmutableBundleSubmission.Builder {}
+    class Builder extends ImmutableBundleItemSubmission.Builder {}
 }

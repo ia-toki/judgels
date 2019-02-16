@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.submission.BundleSubmission;
+import judgels.sandalphon.api.submission.BundleItemSubmission;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -79,7 +79,7 @@ public class ContestBundleSubmissionResource implements ContestBundleSubmissionS
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         Optional<String> actualUserJid = canSupervise ? userJid : Optional.of(actorJid);
 
-        Page<BundleSubmission> submissions =
+        Page<BundleItemSubmission> submissions =
                 submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, page);
 
         List<String> userJidsSortedByUsername;
@@ -88,7 +88,7 @@ public class ContestBundleSubmissionResource implements ContestBundleSubmissionS
         List<String> problemJidsSortedByAlias;
         Set<String> problemJids;
 
-        userJids = submissions.getPage().stream().map(BundleSubmission::getUserJid).collect(Collectors.toSet());
+        userJids = submissions.getPage().stream().map(BundleItemSubmission::getUserJid).collect(Collectors.toSet());
         if (canSupervise) {
             userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
             userJidsSortedByUsername = Lists.newArrayList(userJids);
@@ -100,7 +100,7 @@ public class ContestBundleSubmissionResource implements ContestBundleSubmissionS
 
             problemJidsSortedByAlias = Collections.emptyList();
             problemJids = submissions.getPage().stream()
-                    .map(BundleSubmission::getProblemJid)
+                    .map(BundleItemSubmission::getProblemJid)
                     .collect(Collectors.toSet());
         }
 
@@ -144,7 +144,7 @@ public class ContestBundleSubmissionResource implements ContestBundleSubmissionS
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, BundleSubmission> getLatestSubmissionsByUserForProblemInContest(
+    public Map<String, BundleItemSubmission> getLatestSubmissionsByUserForProblemInContest(
             AuthHeader authHeader,
             String contestJid,
             String problemJid,
@@ -157,7 +157,7 @@ public class ContestBundleSubmissionResource implements ContestBundleSubmissionS
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         String actualUserJid = canSupervise ? userJid.orElse(actorJid) : actorJid;
 
-        Map<String, BundleSubmission> submissionsByItemJid = submissionStore
+        Map<String, BundleItemSubmission> submissionsByItemJid = submissionStore
                 .getLatestSubmissionsByUserForProblemInContest(contestJid, problemJid, actualUserJid);
         return submissionsByItemJid;
     }

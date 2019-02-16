@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
-import judgels.sandalphon.api.submission.BundleSubmission;
+import judgels.sandalphon.api.submission.BundleItemSubmission;
 import judgels.uriel.api.contest.submission.bundle.ContestBundleSubmissionData;
 import judgels.uriel.persistence.ContestBundleSubmissionDao;
 import judgels.uriel.persistence.ContestBundleSubmissionModel;
@@ -24,7 +24,7 @@ public class ContestBundleSubmissionStore {
         this.submissionDao = submissionDao;
     }
 
-    public BundleSubmission upsertSubmission(ContestBundleSubmissionData data, String userJid) {
+    public BundleItemSubmission upsertSubmission(ContestBundleSubmissionData data, String userJid) {
         Optional<ContestBundleSubmissionModel> maybeModel = submissionDao
                 .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
                         data.getContestJid(), data.getProblemJid(), data.getItemJid(), userJid);
@@ -43,7 +43,7 @@ public class ContestBundleSubmissionStore {
         }
     }
 
-    public Map<String, BundleSubmission> getLatestSubmissionsByUserForProblemInContest(
+    public Map<String, BundleItemSubmission> getLatestSubmissionsByUserForProblemInContest(
             String containerJid,
             String problemJid,
             String userJid) {
@@ -55,7 +55,7 @@ public class ContestBundleSubmissionStore {
                 .collect(Collectors.toMap(v -> v.getItemJid(), Function.identity()));
     }
 
-    public Page<BundleSubmission> getSubmissions(
+    public Page<BundleItemSubmission> getSubmissions(
             String containerJid,
             Optional<String> createdBy,
             Optional<String> problemJid,
@@ -69,8 +69,8 @@ public class ContestBundleSubmissionStore {
         return submissionModels.mapPage(p -> Lists.transform(p, ContestBundleSubmissionStore::fromModel));
     }
 
-    private static BundleSubmission fromModel(ContestBundleSubmissionModel model) {
-        return new BundleSubmission.Builder()
+    private static BundleItemSubmission fromModel(ContestBundleSubmissionModel model) {
+        return new BundleItemSubmission.Builder()
                 .id(model.id)
                 .jid(model.jid)
                 .containerJid(model.containerJid)
