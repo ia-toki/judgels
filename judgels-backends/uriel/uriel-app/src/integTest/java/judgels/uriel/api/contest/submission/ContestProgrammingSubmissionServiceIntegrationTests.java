@@ -126,7 +126,7 @@ class ContestProgrammingSubmissionServiceIntegrationTests extends AbstractContes
                 APPLICATION_OCTET_STREAM_TYPE));
 
         return webTarget
-                .path("/api/v2/contests/submissions")
+                .path("/api/v2/contests/submissions/programming")
                 .request()
                 .header(AUTHORIZATION, "Bearer " + token)
                 .post(Entity.entity(multiPart, multiPart.getMediaType()));

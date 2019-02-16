@@ -37,7 +37,11 @@ public abstract class AbstractSubmissionClient<SM extends AbstractSubmissionMode
         this.mapper = mapper;
     }
 
-    public ProgrammingSubmission submit(ProgrammingSubmissionData data, SubmissionSource source, ProblemSubmissionConfig config) {
+    public ProgrammingSubmission submit(
+            ProgrammingSubmissionData data,
+            SubmissionSource source,
+            ProblemSubmissionConfig config) {
+
         checkAllSourceFilesPresent(source, config);
         checkGradingLanguageAllowed(
                 data.getGradingLanguage(),
