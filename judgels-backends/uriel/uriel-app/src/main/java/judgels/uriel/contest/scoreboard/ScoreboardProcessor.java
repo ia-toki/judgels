@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
@@ -22,7 +22,7 @@ public interface ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<ProgrammingSubmission> submissions,
+            List<Submission> submissions,
             Optional<Instant> freezeTime);
 
     int getTotalEntries(Scoreboard scoreboard);

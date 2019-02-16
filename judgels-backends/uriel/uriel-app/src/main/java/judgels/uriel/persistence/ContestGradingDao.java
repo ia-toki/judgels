@@ -1,5 +1,5 @@
 package judgels.uriel.persistence;
 
-import judgels.sandalphon.persistence.BaseGradingDao;
+import judgels.sandalphon.persistence.BaseProgrammingGradingDao;
 
-public interface ContestGradingDao extends BaseGradingDao<ContestGradingModel> {}
+public interface ContestGradingDao extends BaseProgrammingGradingDao<ContestProgrammingGradingModel> {}

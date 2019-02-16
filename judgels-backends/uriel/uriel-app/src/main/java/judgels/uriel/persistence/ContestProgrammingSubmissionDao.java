@@ -1,5 +1,6 @@
 package judgels.uriel.persistence;
 
-import judgels.sandalphon.persistence.BaseSubmissionDao;
+import judgels.sandalphon.persistence.BaseProgrammingSubmissionDao;
 
-public interface ContestProgrammingSubmissionDao extends BaseSubmissionDao<ContestProgrammingSubmissionModel> {}
+public interface ContestProgrammingSubmissionDao extends
+        BaseProgrammingSubmissionDao<ContestProgrammingSubmissionModel> {}

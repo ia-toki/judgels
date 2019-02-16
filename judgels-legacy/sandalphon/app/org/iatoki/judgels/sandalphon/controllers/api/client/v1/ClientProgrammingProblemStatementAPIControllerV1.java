@@ -3,7 +3,7 @@ package org.iatoki.judgels.sandalphon.controllers.api.client.v1;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.sandalphon.api.problem.programming.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.service.api.client.Client;
 import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;

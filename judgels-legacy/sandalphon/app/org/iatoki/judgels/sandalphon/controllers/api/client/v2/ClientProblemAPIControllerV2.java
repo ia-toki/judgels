@@ -2,15 +2,13 @@ package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.ProblemInfo;
+import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
-import judgels.sandalphon.api.problem.programming.ProblemStatement;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
-import judgels.sandalphon.api.problem.programming.ProgrammingProblemWorksheet;
-import judgels.sandalphon.api.problem.bundle.BundleProblemWorksheet;
-import judgels.sandalphon.api.problem.bundle.ProblemItem;
-import judgels.sandalphon.api.problem.bundle.ProblemItemType;
+import judgels.sandalphon.api.problem.bundle.Item;
+import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
@@ -89,7 +87,8 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             throw new JudgelsAPINotFoundException();
         }
 
-        ProgrammingProblemWorksheet.Builder result = new ProgrammingProblemWorksheet.Builder();
+        judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder result =
+                new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder();
 
         ProblemSubmissionConfig submissionConfig = getSubmissionConfig(problemJid);
         result.submissionConfig(submissionConfig);
@@ -131,13 +130,13 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             String language = sanitizeLanguageCode(problemJid, DynamicForm.form().bindFromRequest().get("language"));
 
             List<BundleItem> items = bundleItemService.getBundleItemsInProblemWithClone(problemJid, null);
-            List<ProblemItem> itemsWithConfig = new ArrayList<>();
+            List<Item> itemsWithConfig = new ArrayList<>();
             for (BundleItem item : items) {
                 String itemConfig = bundleItemService.getItemConfInProblemWithCloneByJid(
                         problemJid, null, item.getJid(), language);
-                ProblemItem itemWithConfig = new ProblemItem.Builder()
+                Item itemWithConfig = new Item.Builder()
                         .jid(item.getJid())
-                        .type(ProblemItemType.valueOf(item.getType().name()))
+                        .type(ItemType.valueOf(item.getType().name()))
                         .meta(item.getMeta())
                         .config(itemConfig)
                         .build();
@@ -145,7 +144,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             }
 
             return okAsJson(
-                    new BundleProblemWorksheet.Builder()
+                    new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                             .items(itemsWithConfig)
                             .build()
             );
