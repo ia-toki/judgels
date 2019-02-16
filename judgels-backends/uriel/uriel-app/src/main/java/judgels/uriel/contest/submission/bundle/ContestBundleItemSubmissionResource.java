@@ -31,7 +31,7 @@ import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 
-public class ContestBundleItemItemSubmissionResource implements ContestBundleItemSubmissionService {
+public class ContestBundleItemSubmissionResource implements ContestBundleItemSubmissionService {
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
@@ -43,7 +43,7 @@ public class ContestBundleItemItemSubmissionResource implements ContestBundleIte
     private final ProfileService profileService;
 
     @Inject
-    public ContestBundleItemItemSubmissionResource(
+    public ContestBundleItemSubmissionResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
             ContestBundleItemSubmissionStore submissionStore,
@@ -147,8 +147,8 @@ public class ContestBundleItemItemSubmissionResource implements ContestBundleIte
     public Map<String, BundleItemSubmission> getLatestSubmissionsByUserForProblemInContest(
             AuthHeader authHeader,
             String contestJid,
-            String problemJid,
-            Optional<String> userJid) {
+            Optional<String> userJid,
+            String problemJid) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));

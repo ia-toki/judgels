@@ -15,8 +15,8 @@ import judgels.uriel.persistence.ContestBundleItemSubmissionModel;
 import judgels.uriel.persistence.ContestBundleItemSubmissionModel_;
 
 @Singleton
-public class ContestBundleItemSubmissionHibernateDao extends JudgelsHibernateDao<ContestBundleItemSubmissionModel> implements
-        ContestBundleItemSubmissionDao {
+public class ContestBundleItemSubmissionHibernateDao extends JudgelsHibernateDao<ContestBundleItemSubmissionModel>
+        implements ContestBundleItemSubmissionDao {
 
     @Inject
     public ContestBundleItemSubmissionHibernateDao(HibernateDaoData data) {

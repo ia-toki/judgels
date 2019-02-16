@@ -38,6 +38,6 @@ public interface ContestBundleItemSubmissionService {
     Map<String, BundleItemSubmission> getLatestSubmissionsByUserForProblemInContest(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
-            @QueryParam("problemJid") String problemJid,
-            @QueryParam("userJid") Optional<String> userJid);
+            @QueryParam("userJid") Optional<String> userJid,
+            @QueryParam("problemJid") String problemJid);
 }
