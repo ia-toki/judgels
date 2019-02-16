@@ -5,13 +5,13 @@ import judgels.jophiel.api.profile.Profile;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableSubmissionWithSourceResponse.class)
-public interface SubmissionWithSourceResponse {
-    SubmissionWithSource getData();
+@JsonDeserialize(as = ImmutableProgrammingSubmissionWithSourceResponse.class)
+public interface ProgrammingSubmissionWithSourceResponse {
+    ProgrammingSubmissionWithSource getData();
     Profile getProfile();
     String getProblemName();
     String getProblemAlias();
     String getContainerName();
 
-    class Builder extends ImmutableSubmissionWithSourceResponse.Builder {}
+    class Builder extends ImmutableProgrammingSubmissionWithSourceResponse.Builder {}
 }

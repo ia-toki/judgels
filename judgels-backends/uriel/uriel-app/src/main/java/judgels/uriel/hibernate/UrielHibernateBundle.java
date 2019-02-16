@@ -13,9 +13,9 @@ import judgels.uriel.persistence.ContestManagerModel;
 import judgels.uriel.persistence.ContestModel;
 import judgels.uriel.persistence.ContestModuleModel;
 import judgels.uriel.persistence.ContestProblemModel;
+import judgels.uriel.persistence.ContestProgrammingSubmissionModel;
 import judgels.uriel.persistence.ContestScoreboardModel;
 import judgels.uriel.persistence.ContestStyleModel;
-import judgels.uriel.persistence.ContestSubmissionModel;
 import judgels.uriel.persistence.ContestSupervisorModel;
 
 public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfiguration> {
@@ -32,7 +32,7 @@ public class UrielHibernateBundle extends HibernateBundle<UrielApplicationConfig
                 ContestProblemModel.class,
                 ContestScoreboardModel.class,
                 ContestStyleModel.class,
-                ContestSubmissionModel.class,
+                ContestProgrammingSubmissionModel.class,
                 ContestBundleItemSubmissionModel.class,
                 ContestSupervisorModel.class
         );

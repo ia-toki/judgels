@@ -9,7 +9,7 @@ import judgels.gabriel.api.SourceFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class SubmissionSourceBuilderTests {
+class ProgrammingSubmissionSourceBuilderTests {
     private static final String SUBMISSION = "submissionJid";
 
     private InMemoryFileSystem submissionFs;

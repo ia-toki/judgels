@@ -22,6 +22,6 @@ public final class ProgrammingSubmissionNotFoundException extends EntityNotFound
 
     @Override
     public String getEntityName() {
-        return "Submission";
+        return "ProgrammingSubmission";
     }
 }

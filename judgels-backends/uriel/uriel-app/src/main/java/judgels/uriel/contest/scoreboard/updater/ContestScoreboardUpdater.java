@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.ProgrammingSubmission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
@@ -25,7 +25,7 @@ import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessorRegistry;
-import judgels.uriel.contest.submission.ContestSubmissionStore;
+import judgels.uriel.contest.submission.programming.ContestProgrammingSubmissionStore;
 
 public class ContestScoreboardUpdater {
     private final ObjectMapper objectMapper;
@@ -33,7 +33,7 @@ public class ContestScoreboardUpdater {
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
     private final ContestProblemStore problemStore;
-    private final ContestSubmissionStore submissionStore;
+    private final ContestProgrammingSubmissionStore submissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final Clock clock;
 
@@ -43,7 +43,7 @@ public class ContestScoreboardUpdater {
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
-            ContestSubmissionStore submissionStore,
+            ContestProgrammingSubmissionStore submissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
 
@@ -82,13 +82,13 @@ public class ContestScoreboardUpdater {
         Map<String, Optional<Instant>> contestantStartTimesMap =
                 contestantStore.getApprovedContestantStartTimes(contest.getJid());
 
-        List<Submission> submissions = new ArrayList<>(submissionStore.getSubmissions(
+        List<ProgrammingSubmission> submissions = new ArrayList<>(submissionStore.getSubmissions(
                 contest.getJid(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty())
                 .getPage());
-        submissions.sort(Comparator.comparingLong(Submission::getId));
+        submissions.sort(Comparator.comparingLong(ProgrammingSubmission::getId));
         generateAndUpsertScoreboard(
                 contest,
                 scoreboardState,
@@ -118,7 +118,7 @@ public class ContestScoreboardUpdater {
             ScoreboardState scoreboardState,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissions,
+            List<ProgrammingSubmission> submissions,
             Optional<Instant> freezeTime,
             ContestScoreboardType contestScoreboardType) {
         String scoreboard = scoreboardProcessorRegistry.get(contest.getStyle())

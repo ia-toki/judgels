@@ -18,8 +18,8 @@ import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.Grading;
-import judgels.sandalphon.api.submission.Submission;
-import judgels.sandalphon.api.submission.SubmissionData;
+import judgels.sandalphon.api.submission.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.ProgrammingSubmissionData;
 import judgels.sandalphon.persistence.AbstractGradingModel;
 import judgels.sandalphon.persistence.AbstractSubmissionModel;
 import judgels.sandalphon.persistence.BaseGradingDao;
@@ -42,14 +42,14 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         this.mapper = mapper;
     }
 
-    public Optional<Submission> getSubmissionById(long submissionId) {
+    public Optional<ProgrammingSubmission> getSubmissionById(long submissionId) {
         return submissionDao.select(submissionId).map(model -> {
             Optional<GM> gradingModel = gradingDao.selectLatestBySubmissionJid(model.jid);
             return submissionFromModels(model, gradingModel.orElse(null));
         });
     }
 
-    public Page<Submission> getSubmissionsForDownload(
+    public Page<ProgrammingSubmission> getSubmissionsForDownload(
             String containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
@@ -65,7 +65,7 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         return getSubmissions(containerJid, userJid, problemJid, lastSubmissionId, options);
     }
 
-    public Page<Submission> getSubmissions(
+    public Page<ProgrammingSubmission> getSubmissions(
             String containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
@@ -77,7 +77,7 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         return getSubmissions(containerJid, userJid, problemJid, Optional.empty(), options.build());
     }
 
-    private Page<Submission> getSubmissions(
+    private Page<ProgrammingSubmission> getSubmissions(
             String containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
@@ -103,13 +103,13 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         return problemJids.stream().collect(Collectors.toMap(jid -> jid, jid -> map.getOrDefault(jid, 0L)));
     }
 
-    public Submission createSubmission(SubmissionData data, String gradingEngine) {
+    public ProgrammingSubmission createSubmission(ProgrammingSubmissionData data, String gradingEngine) {
         SM model = submissionDao.createSubmissionModel();
         toModel(data, gradingEngine, model);
         return submissionFromModels(submissionDao.insert(model), null);
     }
 
-    public String createGrading(Submission submission) {
+    public String createGrading(ProgrammingSubmission submission) {
         GM model = gradingDao.createGradingModel();
         model.submissionJid = submission.getJid();
         model.verdictCode = Verdicts.PENDING.getCode();
@@ -119,8 +119,8 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
         return gradingDao.insert(model).jid;
     }
 
-    private Submission submissionFromModels(SM model, GM gradingModel) {
-        return new Submission.Builder()
+    private ProgrammingSubmission submissionFromModels(SM model, GM gradingModel) {
+        return new ProgrammingSubmission.Builder()
                 .id(model.id)
                 .jid(model.jid)
                 .userJid(model.createdBy)
@@ -133,7 +133,7 @@ public abstract class AbstractSubmissionStore<SM extends AbstractSubmissionModel
                 .build();
     }
 
-    private void toModel(SubmissionData data, String gradingEngine, SM model) {
+    private void toModel(ProgrammingSubmissionData data, String gradingEngine, SM model) {
         model.problemJid = data.getProblemJid();
         model.containerJid = data.getContainerJid();
         model.gradingEngine = gradingEngine;
