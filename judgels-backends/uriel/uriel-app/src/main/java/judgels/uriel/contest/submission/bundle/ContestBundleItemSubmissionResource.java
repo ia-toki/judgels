@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.submission.BundleItemSubmission;
+import judgels.sandalphon.api.submission.bundle.BundleItemSubmission;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;

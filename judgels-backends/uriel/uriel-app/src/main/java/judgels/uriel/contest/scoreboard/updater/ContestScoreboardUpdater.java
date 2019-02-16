@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.sandalphon.api.submission.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;

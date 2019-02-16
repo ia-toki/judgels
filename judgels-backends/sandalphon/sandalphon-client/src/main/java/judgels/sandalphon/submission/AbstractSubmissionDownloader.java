@@ -10,7 +10,7 @@ import java.util.zip.ZipOutputStream;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.submission.Grading;
-import judgels.sandalphon.api.submission.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 
 public class AbstractSubmissionDownloader {
     private final AbstractSubmissionSourceBuilder sourceBuilder;

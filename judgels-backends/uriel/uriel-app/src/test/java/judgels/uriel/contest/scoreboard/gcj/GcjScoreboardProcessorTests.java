@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.Grading;
-import judgels.sandalphon.api.submission.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.module.GcjStyleModuleConfig;

@@ -1,4 +1,4 @@
-package judgels.sandalphon.api.submission;
+package judgels.sandalphon.api.submission.bundle;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Instant;

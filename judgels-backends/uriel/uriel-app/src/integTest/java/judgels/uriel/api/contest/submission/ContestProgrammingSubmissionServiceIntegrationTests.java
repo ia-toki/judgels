@@ -28,7 +28,7 @@ import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import judgels.sandalphon.api.submission.ProgrammingSubmission;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmission;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModuleType;

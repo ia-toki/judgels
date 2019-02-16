@@ -1,8 +1,9 @@
-package judgels.sandalphon.api.submission;
+package judgels.sandalphon.api.submission.programming;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Instant;
 import java.util.Optional;
+import judgels.sandalphon.api.submission.Grading;
 import org.immutables.value.Value;
 
 @Value.Immutable

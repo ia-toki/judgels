@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
 import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.submission.BundleItemSubmission;
+import judgels.sandalphon.api.submission.bundle.BundleItemSubmission;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import org.immutables.value.Value;
 

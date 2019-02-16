@@ -10,7 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.sandalphon.api.submission.ProgrammingSubmissionWithSourceResponse;
+import judgels.sandalphon.api.submission.programming.ProgrammingSubmissionWithSourceResponse;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/submissions/programming")
