@@ -20,6 +20,7 @@ import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.BundleProblemWorksheet;
+import judgels.sandalphon.api.problem.bundle.ProblemItem;
 import judgels.sandalphon.api.problem.programming.ProblemStatement;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.programming.ProgrammingProblemWorksheet;
@@ -241,6 +242,14 @@ public class ContestProblemResource implements ContestProblemService {
 
         BundleProblemWorksheet finalWorksheet = new BundleProblemWorksheet.Builder()
                 .from(worksheet)
+                .items(worksheet.getItems().stream()
+                    .map(item -> new ProblemItem.Builder()
+                        .from(item)
+                        .config(replaceRenderUrls(item.getConfig(), problemJid))
+                        .build()
+                    )
+                    .collect(Collectors.toList())
+                )
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                 .build();
 
