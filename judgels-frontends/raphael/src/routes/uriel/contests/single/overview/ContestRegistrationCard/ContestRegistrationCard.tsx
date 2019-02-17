@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { APP_CONFIG } from 'conf';
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import { ContestContestantState } from 'modules/api/uriel/contestContestant';
 import { Contest } from 'modules/api/uriel/contest';
@@ -106,7 +107,7 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
           className="contest-registration-card__item"
           intent={Intent.PRIMARY}
           text="Register"
-          onClick={this.toggleRegistrationConfirmationDialog}
+          onClick={this.tryRegister}
           loading={this.state.isActionButtonLoading}
           disabled={this.state.isRegistrationConfirmationDialogOpen}
         />
@@ -171,6 +172,15 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
     await this.props.onUnregisterMyselfAsContestant(this.props.contest.jid);
     this.setState({ isActionButtonLoading: false });
     await this.refresh();
+  };
+
+  private tryRegister = () => {
+    console.log(APP_CONFIG);
+    if (APP_CONFIG.termsAndConditions !== undefined && APP_CONFIG.termsAndConditions.contest !== undefined) {
+      this.toggleRegistrationConfirmationDialog();
+    } else {
+      this.register();
+    }
   };
 
   private toggleRegistrantsDialog = () => {
