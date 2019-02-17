@@ -44,7 +44,7 @@ interface ContestScoreboardPageState {
 }
 
 export class ContestScoreboardPage extends React.PureComponent<ContestScoreboardPageProps, ContestScoreboardPageState> {
-  private static PAGE_SIZE = 99999;
+  private static PAGE_SIZE = 100;
   state: ContestScoreboardPageState = {};
 
   constructor(props: ContestScoreboardPageProps) {
@@ -59,7 +59,6 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
   render() {
     const { lastRefreshScoreboardTime } = this.state;
     const key = lastRefreshScoreboardTime || 0;
-
     return (
       <ContentCard className="contest-scoreboard-page">
         <h3>Scoreboard</h3>
@@ -170,7 +169,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     this.setState({ lastRefreshScoreboardTime: new Date().getTime() });
 
     let queries = parse(this.props.location.search);
-    queries = { ...queries, frozen: undefined, showClosedProblems: undefined };
+    queries = { ...queries, page: 1, frozen: undefined, showClosedProblems: undefined };
     if (frozen) {
       queries = { ...queries, frozen };
     }
