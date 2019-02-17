@@ -204,7 +204,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
-                .programmingSubmission(submission)
+                .submission(submission)
                 .source(source)
                 .build();
 

@@ -7,7 +7,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableSubmissionWithSource.class)
 public interface SubmissionWithSource {
-    Submission getProgrammingSubmission();
+    Submission getSubmission();
     SubmissionSource getSource();
 
     class Builder extends ImmutableSubmissionWithSource.Builder {}
