@@ -425,17 +425,17 @@
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="1533460662012-30">
+    <changeSet author="fushar" id="initial-30">
         <createIndex catalogName="judgels_uriel" indexName="IDX8t0ysvra0nsleb55g0afe3gc1" schemaName="judgels_uriel" tableName="uriel_contest_programming_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-30">
+    <changeSet author="fushar" id="initial-31">
         <createIndex catalogName="judgels_uriel" indexName="IDXkrgx965c55gfya3hkrtvodj34" schemaName="judgels_uriel" tableName="uriel_contest_announcement">
             <column name="contestJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-31">
+    <changeSet author="fushar" id="initial-32">
         <createIndex catalogName="judgels_uriel" indexName="IDXrjpnpgk6hq4ri9wqpcfxcsql0" schemaName="judgels_uriel" tableName="uriel_contest_clarification">
             <column name="contestJid"/>
             <column name="createdBy"/>
