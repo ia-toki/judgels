@@ -6,6 +6,7 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.time.Duration;
 import judgels.fs.aws.AwsModule;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
@@ -71,12 +72,16 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         env.jersey().register(component.contestRatingResource());
         env.jersey().register(component.versionResource());
 
-        // Temporarily disabled for now because the dispatcher in the old app is not turned off yet.
-        //
-        // component.scheduler().scheduleWithFixedDelay(
-        //         "contest-scoreboard-poller",
-        //         component.contestScoreboardPoller(),
-        //         Duration.ofSeconds(2),
-        //         Duration.ofSeconds(20));
+        component.scheduler().scheduleWithFixedDelay(
+                "contest-scoreboard-poller",
+                component.contestScoreboardPoller(),
+                Duration.ofSeconds(2),
+                Duration.ofSeconds(10));
+
+        component.scheduler().scheduleWithFixedDelay(
+                "grading-response-poller",
+                component.gradingResponsePoller(),
+                Duration.ofSeconds(2),
+                Duration.ofSeconds(3));
     }
 }
