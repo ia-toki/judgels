@@ -53,7 +53,7 @@ public class SubmissionClient {
     }
 
     public boolean grade(GradingResponse response) {
-         return submissionStore.updateGrading(response.getGradingJid(), response.getResult());
+        return submissionStore.updateGrading(response.getGradingJid(), response.getResult());
     }
 
     private void requestGrading(Submission submission, SubmissionSource source) {
