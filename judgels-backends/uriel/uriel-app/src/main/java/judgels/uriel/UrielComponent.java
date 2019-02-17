@@ -3,6 +3,7 @@ package judgels.uriel;
 import dagger.Component;
 import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
+import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
@@ -31,23 +32,29 @@ import judgels.uriel.jophiel.JophielModule;
 import judgels.uriel.rating.ContestRatingResource;
 import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.sealtiel.SealtielModule;
+import judgels.uriel.submission.programming.GradingResponseProcessorModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
 @Component(modules = {
         AwsModule.class,
-        ContestScoreboardUpdaterModule.class,
         FileModule.class,
+        SubmissionModule.class,
+
         GabrielModule.class,
         JophielModule.class,
+        SandalphonModule.class,
+        SealtielModule.class,
+
         JudgelsModule.class,
         JudgelsApplicationModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
-        SandalphonModule.class,
-        SealtielModule.class,
-        SubmissionModule.class,
+
         UrielModule.class,
-        UrielHibernateDaoModule.class})
+        UrielHibernateDaoModule.class,
+
+        ContestScoreboardUpdaterModule.class,
+        GradingResponseProcessorModule.class})
 @Singleton
 public interface UrielComponent {
     AdminResource adminResource();
@@ -69,4 +76,5 @@ public interface UrielComponent {
 
     JudgelsScheduler scheduler();
     ContestScoreboardUpdaterDispatcher contestScoreboardUpdaterDispatcher();
+    GradingResponsePoller gradingResponsePoller();
 }

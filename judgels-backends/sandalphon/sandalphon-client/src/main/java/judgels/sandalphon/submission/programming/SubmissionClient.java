@@ -6,6 +6,7 @@ import static judgels.sandalphon.SandalphonUtils.checkGradingLanguageAllowed;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import judgels.gabriel.api.GradingRequest;
+import judgels.gabriel.api.GradingResponse;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -49,6 +50,10 @@ public class SubmissionClient {
         requestGrading(submission, source);
 
         return submission;
+    }
+
+    public boolean grade(GradingResponse response) {
+         return submissionStore.updateGrading(response.getGradingJid(), response.getResult());
     }
 
     private void requestGrading(Submission submission, SubmissionSource source) {

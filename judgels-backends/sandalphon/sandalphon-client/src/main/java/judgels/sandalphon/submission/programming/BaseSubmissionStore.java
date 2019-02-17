@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
@@ -47,6 +48,7 @@ public class BaseSubmissionStore<
         this.mapper = mapper;
     }
 
+    @Override
     public Optional<Submission> getSubmissionById(long submissionId) {
         return submissionDao.select(submissionId).map(model -> {
             Optional<GM> gradingModel = gradingDao.selectLatestBySubmissionJid(model.jid);
@@ -54,6 +56,7 @@ public class BaseSubmissionStore<
         });
     }
 
+    @Override
     public List<Submission> getSubmissionsForScoreboard(String containerJid) {
         List<SM> submissionModels = submissionDao.selectAllByContainerJid(containerJid);
         Set<String> submissionJids = submissionModels.stream().map(m -> m.jid).collect(Collectors.toSet());
@@ -62,6 +65,7 @@ public class BaseSubmissionStore<
         return Lists.transform(submissionModels, sm -> submissionFromModels(sm, gradingModels.get(sm.jid)));
     }
 
+    @Override
     public Page<Submission> getSubmissionsForDownload(
             String containerJid,
             Optional<String> userJid,
@@ -78,6 +82,7 @@ public class BaseSubmissionStore<
         return getSubmissions(containerJid, userJid, problemJid, lastSubmissionId, options);
     }
 
+    @Override
     public Page<Submission> getSubmissions(
             String containerJid,
             Optional<String> userJid,
@@ -106,22 +111,26 @@ public class BaseSubmissionStore<
                 Lists.transform(p, sm -> submissionFromModels(sm, gradingModels.get(sm.jid))));
     }
 
+    @Override
     public long getTotalSubmissions(String containerJid, String userJid, String problemJid) {
         Map<String, Long> map = submissionDao.selectCounts(containerJid, userJid, ImmutableSet.of(problemJid));
         return map.getOrDefault(problemJid, 0L);
     }
 
+    @Override
     public Map<String, Long> getTotalSubmissionsMap(String containerJid, String userJid, Set<String> problemJids) {
         Map<String, Long> map = submissionDao.selectCounts(containerJid, userJid, problemJids);
         return problemJids.stream().collect(Collectors.toMap(jid -> jid, jid -> map.getOrDefault(jid, 0L)));
     }
 
+    @Override
     public Submission createSubmission(SubmissionData data, String gradingEngine) {
         SM model = submissionDao.createSubmissionModel();
         toModel(data, gradingEngine, model);
         return submissionFromModels(submissionDao.insert(model), null);
     }
 
+    @Override
     public String createGrading(Submission submission) {
         GM model = gradingDao.createGradingModel();
         model.submissionJid = submission.getJid();
@@ -130,6 +139,23 @@ public class BaseSubmissionStore<
         model.score = 0;
 
         return gradingDao.insert(model).jid;
+    }
+
+    @Override
+    public boolean updateGrading(String gradingJid, GradingResult result) {
+        Optional<GM> maybeModel = gradingDao.selectByJid(gradingJid);
+        if (!maybeModel.isPresent()) {
+            return false;
+        }
+
+        GM model = maybeModel.get();
+        model.verdictCode = result.getVerdict().getCode();
+        model.verdictName = result.getVerdict().getName();
+        model.score = result.getScore();
+        model.details = result.getDetails();
+
+        gradingDao.update(model);
+        return true;
     }
 
     private Submission submissionFromModels(SM model, GM gradingModel) {

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.gabriel.api.GradingResult;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
@@ -28,4 +29,5 @@ public interface SubmissionStore {
 
     Submission createSubmission(SubmissionData data, String gradingEngine);
     String createGrading(Submission submission);
+    boolean updateGrading(String gradingJid, GradingResult result);
 }
