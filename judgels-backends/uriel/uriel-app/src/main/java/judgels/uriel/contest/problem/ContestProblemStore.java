@@ -68,7 +68,7 @@ public class ContestProblemStore {
             model.alias = alias;
             model.status = status.name();
             model.submissionsLimit = submissionsLimit;
-            model.points = 0;
+            model.points = points.orElse(0);
             return fromModel(problemDao.insert(model));
         }
     }
