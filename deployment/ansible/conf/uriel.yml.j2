@@ -37,22 +37,22 @@ logging:
 
 webSecurity:
   cors:
-    allowedOrigins: {{ judgels_scheme }}://{{ raphael_url_public }}
+    allowedOrigins: {{ judgels_scheme }}://{{ raphael_url }}
     allowCredentials: true
 
 uriel:
   baseDataDir: /judgels/uriel/var/data
 
   jophiel:
-    baseUrl: {{ judgels_scheme }}://{{ jophiel_url_internal }}
+    baseUrl: {{ judgels_scheme_internal }}://{{ jophiel_url_internal }}
 
   sandalphon:
-    baseUrl: {{ judgels_scheme }}://{{ sandalphon_url_internal }}
+    baseUrl: {{ judgels_scheme_internal }}://{{ sandalphon_url_internal }}
     clientJid: JIDSACL-uriel
     clientSecret: {{ sandalphon_uriel_secret }}
 
   sealtiel:
-    baseUrl: {{ judgels_scheme }}://{{ sealtiel_url_internal }}
+    baseUrl: {{ judgels_scheme_internal }}://{{ sealtiel_url_internal }}
     clientJid: JIDSECL-uriel
     clientSecret: {{ sealtiel_uriel_secret }}
 

@@ -3,7 +3,7 @@ pidfile.path = "/dev/null"
 general {
     title = "Training Gate"
     copyright = "{{ judgels_slogan }}"
-    canonicalUrl = "{{ judgels_scheme }}://{{ jerahmeel_url_public }}"
+    canonicalUrl = "{{ judgels_scheme }}://{{ jerahmeel_url }}"
     githubUrl = "https://github.com/ia-toki/judgels"
 }
 
@@ -44,23 +44,23 @@ db.default {
 jpa.default = "defaultPersistenceUnit"
 
 jerahmeel {
-    baseUrl = "{{ judgels_scheme }}://{{ jerahmeel_url_public }}"
+    baseUrl = "{{ judgels_scheme }}://{{ jerahmeel_url }}"
     baseDataDir = "var/data"
     welcomeMessage = "<p>Welcome to Training Gate!</p>"
 }
 
 jophiel {
-    baseUrl = "{{ judgels_scheme }}://{{ jophiel_url_internal }}"
+    baseUrl = "{{ judgels_scheme_internal }}://{{ jophiel_url_internal }}"
 }
 
 sandalphon {
-    baseUrl = "{{ judgels_scheme }}://{{ sandalphon_url_internal }}"
+    baseUrl = "{{ judgels_scheme_internal }}://{{ sandalphon_url_internal }}"
     clientJid = "JIDSACL-jerahmeel"
     clientSecret = "{{ sandalphon_jerahmeel_secret }}"
 }
 
 sealtiel {
-    baseUrl = "{{ judgels_scheme }}://{{ sealtiel_url_internal }}"
+    baseUrl = "{{ judgels_scheme_internal }}://{{ sealtiel_url_internal }}"
     clientJid = "JIDSECL-jerahmeel"
     clientSecret = "{{ sealtiel_jerahmeel_secret }}"
 }
@@ -69,7 +69,7 @@ gabriel {
     clientJid = "JIDSECL-gabriel"
 }
 
-raphael.baseUrl = "{{ judgels_scheme }}://{{ raphael_url_public }}"
+raphael.baseUrl = "{{ judgels_scheme }}://{{ raphael_url }}"
 
 aws = {
     global {
