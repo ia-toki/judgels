@@ -17,12 +17,12 @@ import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
-public abstract class AbstractSubmissionSourceBuilder {
+public class SubmissionSourceBuilder {
     private static final String SOURCE_FILES_PART_PREFIX = "sourceFiles.";
 
     private final FileSystem submissionFs;
 
-    public AbstractSubmissionSourceBuilder(FileSystem submissionFs) {
+    public SubmissionSourceBuilder(FileSystem submissionFs) {
         this.submissionFs = submissionFs;
     }
 

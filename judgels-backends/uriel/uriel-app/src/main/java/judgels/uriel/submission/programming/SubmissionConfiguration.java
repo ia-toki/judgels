@@ -1,4 +1,4 @@
-package judgels.uriel.submission;
+package judgels.uriel.submission.programming;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import judgels.fs.FsConfiguration;

@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import java.nio.file.Paths;
 import judgels.fs.InMemoryFileSystem;
 import judgels.gabriel.api.SourceFile;
-import judgels.sandalphon.submission.programming.AbstractSubmissionSourceBuilder;
+import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,12 +15,12 @@ class SubmissionSourceBuilderTests {
 
     private InMemoryFileSystem submissionFs;
 
-    private AbstractSubmissionSourceBuilder sourceBuilder;
+    private SubmissionSourceBuilder sourceBuilder;
 
     @BeforeEach
     void before() {
         submissionFs = new InMemoryFileSystem();
-        sourceBuilder = new AbstractSubmissionSourceBuilder(submissionFs) {};
+        sourceBuilder = new SubmissionSourceBuilder(submissionFs) {};
     }
 
     @Test

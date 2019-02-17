@@ -8,13 +8,13 @@ import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.time.Clock;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Singleton;
+import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessorRegistry;
-import judgels.uriel.contest.submission.programming.ContestSubmissionStore;
 
 @Module
 public class ContestScoreboardUpdaterModule {
@@ -55,7 +55,7 @@ public class ContestScoreboardUpdaterModule {
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
-            ContestSubmissionStore submissionStore,
+            SubmissionStore submissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
 
@@ -67,7 +67,7 @@ public class ContestScoreboardUpdaterModule {
                         ContestModuleStore.class,
                         ContestContestantStore.class,
                         ContestProblemStore.class,
-                        ContestSubmissionStore.class,
+                        SubmissionStore.class,
                         ScoreboardProcessorRegistry.class,
                         Clock.class},
                 new Object[] {

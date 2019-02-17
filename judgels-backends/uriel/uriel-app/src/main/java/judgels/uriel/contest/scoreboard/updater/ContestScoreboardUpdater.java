@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.sandalphon.api.submission.programming.Submission;
+import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
@@ -23,7 +24,6 @@ import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessorRegistry;
-import judgels.uriel.contest.submission.programming.ContestSubmissionStore;
 
 public class ContestScoreboardUpdater {
     private final ObjectMapper objectMapper;
@@ -31,7 +31,7 @@ public class ContestScoreboardUpdater {
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
     private final ContestProblemStore problemStore;
-    private final ContestSubmissionStore submissionStore;
+    private final SubmissionStore submissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final Clock clock;
 
@@ -41,7 +41,7 @@ public class ContestScoreboardUpdater {
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
-            ContestSubmissionStore submissionStore,
+            SubmissionStore submissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
 

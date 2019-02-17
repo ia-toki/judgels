@@ -23,6 +23,7 @@ import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
+import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
@@ -37,7 +38,6 @@ import judgels.uriel.api.contest.problem.ContestProblemsResponse;
 import judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.module.ContestModuleStore;
-import judgels.uriel.contest.submission.programming.ContestSubmissionStore;
 
 public class ContestProblemResource implements ContestProblemService {
     private final ActorChecker actorChecker;
@@ -45,7 +45,7 @@ public class ContestProblemResource implements ContestProblemService {
     private final ContestModuleStore moduleStore;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
-    private final ContestSubmissionStore submissionStore;
+    private final SubmissionStore submissionStore;
     private final SandalphonClientConfiguration sandalphonConfig;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
@@ -57,7 +57,7 @@ public class ContestProblemResource implements ContestProblemService {
             ContestModuleStore moduleStore,
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
-            ContestSubmissionStore submissionStore,
+            SubmissionStore submissionStore,
             SandalphonClientConfiguration sandalphonConfig,
             @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
             ClientProblemService clientProblemService) {

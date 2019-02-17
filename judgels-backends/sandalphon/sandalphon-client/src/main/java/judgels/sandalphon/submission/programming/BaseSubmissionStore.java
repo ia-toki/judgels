@@ -26,8 +26,10 @@ import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel;
 import judgels.sandalphon.persistence.BaseProgrammingGradingDao;
 import judgels.sandalphon.persistence.BaseProgrammingSubmissionDao;
 
-public abstract class AbstractSubmissionStore<
-        SM extends AbstractProgrammingSubmissionModel, GM extends AbstractProgrammingGradingModel> {
+public class BaseSubmissionStore<
+        SM extends AbstractProgrammingSubmissionModel,
+        GM extends AbstractProgrammingGradingModel>
+        implements SubmissionStore {
 
     private static final int MAX_DOWNLOAD_SUBMISSIONS_LIMIT = 100;
 
@@ -35,7 +37,7 @@ public abstract class AbstractSubmissionStore<
     private final BaseProgrammingGradingDao<GM> gradingDao;
     private final ObjectMapper mapper;
 
-    public AbstractSubmissionStore(
+    public BaseSubmissionStore(
             BaseProgrammingSubmissionDao<SM> submissionDao,
             BaseProgrammingGradingDao<GM> gradingDao,
             ObjectMapper mapper) {

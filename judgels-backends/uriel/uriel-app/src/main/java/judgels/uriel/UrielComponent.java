@@ -31,7 +31,7 @@ import judgels.uriel.jophiel.JophielModule;
 import judgels.uriel.rating.ContestRatingResource;
 import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.sealtiel.SealtielModule;
-import judgels.uriel.submission.SubmissionModule;
+import judgels.uriel.submission.programming.SubmissionModule;
 
 @Component(modules = {
         AwsModule.class,

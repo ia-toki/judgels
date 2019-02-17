@@ -10,23 +10,19 @@ import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
-import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
-import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
 
-public abstract class AbstractSubmissionClient<
-        SM extends AbstractProgrammingSubmissionModel, GM extends AbstractProgrammingGradingModel>  {
-
-    private final AbstractSubmissionStore<SM, GM> submissionStore;
+public class SubmissionClient {
+    private final SubmissionStore submissionStore;
     private final BasicAuthHeader sealtielClientAuthHeader;
     private final MessageService messageService;
     private final String gabrielClientJid;
     private final ObjectMapper mapper;
 
-    public AbstractSubmissionClient(
-            AbstractSubmissionStore<SM, GM> submissionStore,
+    public SubmissionClient(
+            SubmissionStore submissionStore,
             BasicAuthHeader sealtielClientAuthHeader,
             MessageService messageService,
             String gabrielClientJid,
