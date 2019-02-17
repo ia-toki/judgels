@@ -26,7 +26,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private final ContestScoreboardFetcher scoreboardFetcher;
     private final ContestScoreboardPoller scoreboardUpdaterDispatcher;
     private final ProfileService profileService;
-    private static final int PAGE_SIZE = 50;
+    private static final int PAGE_SIZE = 99999;
 
     @Inject
     public ContestScoreboardResource(

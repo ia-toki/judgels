@@ -44,14 +44,16 @@ interface ContestScoreboardPageState {
 }
 
 export class ContestScoreboardPage extends React.PureComponent<ContestScoreboardPageProps, ContestScoreboardPageState> {
-  private static PAGE_SIZE = 50;
+  private static PAGE_SIZE = 99999;
   state: ContestScoreboardPageState = {};
 
-  async componentDidMount() {
+  constructor(props: ContestScoreboardPageProps) {
+    super(props);
+
     const queries = parse(this.props.location.search);
     const frozen = !!queries.frozen;
     const showClosedProblems = !!queries.showClosedProblems;
-    await this.refreshScoreboard(1, frozen, showClosedProblems);
+    this.state = { frozen, showClosedProblems };
   }
 
   render() {
