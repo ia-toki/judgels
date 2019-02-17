@@ -74,8 +74,8 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         // Temporarily disabled for now because the dispatcher in the old app is not turned off yet.
         //
         // component.scheduler().scheduleWithFixedDelay(
-        //         "contest-scoreboard-updater-dispatcher",
-        //         component.contestScoreboardUpdaterDispatcher(),
+        //         "contest-scoreboard-poller",
+        //         component.contestScoreboardPoller(),
         //         Duration.ofSeconds(2),
         //         Duration.ofSeconds(20));
     }

@@ -1,4 +1,4 @@
-package judgels.uriel.contest.scoreboard.updater;
+package judgels.uriel.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
@@ -22,8 +22,6 @@ import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
-import judgels.uriel.contest.scoreboard.ScoreboardProcessorRegistry;
 
 public class ContestScoreboardUpdater {
     private final ObjectMapper objectMapper;

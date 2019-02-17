@@ -18,9 +18,9 @@ import judgels.uriel.contest.file.ContestFileResource;
 import judgels.uriel.contest.manager.ContestManagerResource;
 import judgels.uriel.contest.module.ContestModuleResource;
 import judgels.uriel.contest.problem.ContestProblemResource;
+import judgels.uriel.contest.scoreboard.ContestScoreboardPoller;
 import judgels.uriel.contest.scoreboard.ContestScoreboardResource;
-import judgels.uriel.contest.scoreboard.updater.ContestScoreboardUpdaterDispatcher;
-import judgels.uriel.contest.scoreboard.updater.ContestScoreboardUpdaterModule;
+import judgels.uriel.contest.scoreboard.ContestScoreboardUpdaterModule;
 import judgels.uriel.contest.submission.bundle.ContestItemSubmissionResource;
 import judgels.uriel.contest.submission.programming.ContestSubmissionResource;
 import judgels.uriel.contest.supervisor.ContestSupervisorResource;
@@ -75,6 +75,6 @@ public interface UrielComponent {
     VersionResource versionResource();
 
     JudgelsScheduler scheduler();
-    ContestScoreboardUpdaterDispatcher contestScoreboardUpdaterDispatcher();
+    ContestScoreboardPoller contestScoreboardPoller();
     GradingResponsePoller gradingResponsePoller();
 }

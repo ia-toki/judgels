@@ -1,4 +1,4 @@
-package judgels.uriel.contest.scoreboard.updater;
+package judgels.uriel.contest.scoreboard;
 
 import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -10,8 +10,8 @@ import judgels.uriel.contest.ContestStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ContestScoreboardUpdaterDispatcher implements Runnable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ContestScoreboardUpdaterDispatcher.class);
+public class ContestScoreboardPoller implements Runnable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContestScoreboardPoller.class);
 
     private static final Set<String> UPDATER_JIDS = Sets.newHashSet();
 
@@ -19,7 +19,7 @@ public class ContestScoreboardUpdaterDispatcher implements Runnable {
     private final ExecutorService executorService;
     private final ContestScoreboardUpdater scoreboardUpdater;
 
-    public ContestScoreboardUpdaterDispatcher(
+    public ContestScoreboardPoller(
             ContestStore contestStore,
             ExecutorService executorService,
             ContestScoreboardUpdater scoreboardUpdater) {
@@ -43,7 +43,7 @@ public class ContestScoreboardUpdaterDispatcher implements Runnable {
         UPDATER_JIDS.add(contest.getJid());
         CompletableFuture.runAsync(() -> scoreboardUpdater.update(contest), executorService)
                 .exceptionally(e -> {
-                    LOGGER.error("Error while updating scoreboard of contest " + contest.getJid(), e);
+                    LOGGER.error("Failed to process scoreboard of contest " + contest.getJid(), e);
                     return null;
                 })
                 .thenRun(() -> removeUpdater(contest));

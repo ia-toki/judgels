@@ -1,4 +1,4 @@
-package judgels.uriel.contest.scoreboard.updater;
+package judgels.uriel.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
@@ -13,8 +13,6 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
-import judgels.uriel.contest.scoreboard.ScoreboardProcessorRegistry;
 
 @Module
 public class ContestScoreboardUpdaterModule {
@@ -22,7 +20,7 @@ public class ContestScoreboardUpdaterModule {
 
     @Provides
     @Singleton
-    static ContestScoreboardUpdaterDispatcher contestScoreboardUpdaterDispatcher(
+    static ContestScoreboardPoller contestScoreboardPoller(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             LifecycleEnvironment lifecycleEnvironment,
             ContestStore contestStore,
@@ -35,7 +33,7 @@ public class ContestScoreboardUpdaterModule {
                         .build();
 
         return unitOfWorkAwareProxyFactory.create(
-                ContestScoreboardUpdaterDispatcher.class,
+                ContestScoreboardPoller.class,
                 new Class<?>[] {
                         ContestStore.class,
                         ExecutorService.class,
