@@ -15,8 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import judgels.sandalphon.api.problem.ProblemInfo;
-import judgels.sandalphon.api.problem.ProblemSubmissionConfig;
-import judgels.sandalphon.api.problem.ProblemWorksheet;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.service.api.client.BasicAuthHeader;
 
 @Path("/api/v2/client/problems")
@@ -29,16 +28,24 @@ public interface ClientProblemService {
             @PathParam("problemJid") String problemJid);
 
     @GET
-    @Path("/{problemJid}/submission-config")
+    @Path("/{problemJid}/programming/submission-config")
     @Produces(APPLICATION_JSON)
-    ProblemSubmissionConfig getProblemSubmissionConfig(
+    ProblemSubmissionConfig getProgrammingProblemSubmissionConfig(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             @PathParam("problemJid") String problemJid);
 
     @GET
-    @Path("/{problemJid}/worksheet")
+    @Path("/{problemJid}/programming/worksheet")
     @Produces(APPLICATION_JSON)
-    ProblemWorksheet getProblemWorksheet(
+    judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(
+            @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
+            @PathParam("problemJid") String problemJid,
+            @QueryParam("language") Optional<String> language);
+
+    @GET
+    @Path("/{problemJid}/bundle/worksheet")
+    @Produces(APPLICATION_JSON)
+    judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheet(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             @PathParam("problemJid") String problemJid,
             @QueryParam("language") Optional<String> language);

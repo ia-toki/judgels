@@ -25,7 +25,7 @@ import judgels.uriel.UrielApplication;
 import judgels.uriel.UrielApplicationConfiguration;
 import judgels.uriel.UrielConfiguration;
 import judgels.uriel.file.FileConfiguration;
-import judgels.uriel.submission.SubmissionConfiguration;
+import judgels.uriel.submission.programming.SubmissionConfiguration;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.h2.Driver;

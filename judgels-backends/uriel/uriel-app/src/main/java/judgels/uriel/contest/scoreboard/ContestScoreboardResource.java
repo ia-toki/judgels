@@ -18,16 +18,15 @@ import judgels.uriel.api.contest.scoreboard.ContestScoreboardConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.contest.scoreboard.updater.ContestScoreboardUpdaterDispatcher;
 
 public class ContestScoreboardResource implements ContestScoreboardService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestScoreboardFetcher scoreboardFetcher;
-    private final ContestScoreboardUpdaterDispatcher scoreboardUpdaterDispatcher;
+    private final ContestScoreboardPoller scoreboardUpdaterDispatcher;
     private final ProfileService profileService;
-    private static final int PAGE_SIZE = 50;
+    private static final int PAGE_SIZE = 99999;
 
     @Inject
     public ContestScoreboardResource(
@@ -35,7 +34,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             ContestStore contestStore,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestScoreboardFetcher scoreboardFetcher,
-            ContestScoreboardUpdaterDispatcher scoreboardUpdaterDispatcher,
+            ContestScoreboardPoller scoreboardUpdaterDispatcher,
             ProfileService profileService) {
 
         this.actorChecker = actorChecker;

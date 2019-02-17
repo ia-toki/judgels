@@ -8,25 +8,29 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.hibernate.WithHibernateSession;
-import judgels.sandalphon.api.submission.Submission;
-import judgels.sandalphon.api.submission.SubmissionData;
+import judgels.sandalphon.api.submission.programming.Submission;
+import judgels.sandalphon.api.submission.programming.SubmissionData;
+import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.contest.ContestStore;
-import judgels.uriel.persistence.ContestGradingModel;
 import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestSubmissionModel;
+import judgels.uriel.persistence.ContestProgrammingGradingModel;
+import judgels.uriel.persistence.ContestProgrammingSubmissionModel;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(models = {ContestModel.class, ContestGradingModel.class, ContestSubmissionModel.class})
+@WithHibernateSession(models = {
+        ContestModel.class,
+        ContestProgrammingGradingModel.class,
+        ContestProgrammingSubmissionModel.class})
 class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
     private TestActorProvider actorProvider;
     private ContestStore contestStore;
-    private ContestSubmissionStore store;
+    private SubmissionStore store;
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
@@ -34,7 +38,7 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
         UrielIntegrationTestComponent component = createComponent(sessionFactory, actorProvider);
 
         contestStore = component.contestStore();
-        store = component.contestSubmissionStore();
+        store = component.submissionStore();
     }
 
     @Test

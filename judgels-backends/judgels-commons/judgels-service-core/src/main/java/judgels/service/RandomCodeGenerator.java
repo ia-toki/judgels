@@ -1,6 +1,6 @@
 package judgels.service;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
@@ -13,9 +13,9 @@ public class RandomCodeGenerator {
         String uuid = UUID.randomUUID().toString();
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digest = md.digest(uuid.getBytes("UTF-8"));
+            byte[] digest = md.digest(uuid.getBytes(StandardCharsets.UTF_8));
             return DatatypeConverter.printHexBinary(digest).toLowerCase();
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }

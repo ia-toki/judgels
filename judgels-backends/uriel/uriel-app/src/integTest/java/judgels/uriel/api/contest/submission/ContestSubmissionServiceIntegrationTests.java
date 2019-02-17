@@ -28,13 +28,15 @@ import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import judgels.sandalphon.api.submission.Submission;
+import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
+import judgels.uriel.api.contest.submission.programming.ContestSubmissionService;
+import judgels.uriel.api.contest.submission.programming.ContestSubmissionsResponse;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.MultiPart;
@@ -42,7 +44,8 @@ import org.junit.jupiter.api.Test;
 
 class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
     private ContestProblemService problemService = createService(ContestProblemService.class);
-    private ContestSubmissionService submissionService = createService(ContestSubmissionService.class);
+    private ContestSubmissionService submissionService = createService(
+            ContestSubmissionService.class);
     private WebTarget webTarget = createWebTarget();
 
     @Test
@@ -123,7 +126,7 @@ class ContestSubmissionServiceIntegrationTests extends AbstractContestServiceInt
                 APPLICATION_OCTET_STREAM_TYPE));
 
         return webTarget
-                .path("/api/v2/contests/submissions")
+                .path("/api/v2/contests/submissions/programming")
                 .request()
                 .header(AUTHORIZATION, "Bearer " + token)
                 .post(Entity.entity(multiPart, multiPart.getMediaType()));

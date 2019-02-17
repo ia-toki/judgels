@@ -10,7 +10,7 @@ import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sealtiel.api.SealtielClientConfiguration;
 import judgels.uriel.file.FileConfiguration;
-import judgels.uriel.submission.SubmissionConfiguration;
+import judgels.uriel.submission.programming.SubmissionConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable

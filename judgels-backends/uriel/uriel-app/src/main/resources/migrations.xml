@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="migrations/000.xml"/>
-    <include file="migrations/001.xml"/>
+    <include file="migrations/001_add-points-to-contest-problem.xml"/>
+    <include file="migrations/002_add-bundle-item-submission.xml"/>
 </databaseChangeLog>

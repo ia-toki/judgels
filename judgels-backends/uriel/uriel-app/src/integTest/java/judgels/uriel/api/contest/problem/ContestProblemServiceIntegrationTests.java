@@ -41,18 +41,21 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .slug(PROBLEM_1_SLUG)
                         .status(OPEN)
                         .submissionsLimit(10)
+                        .points(11)
                         .build(),
                 new ContestProblemData.Builder()
                         .alias("B")
                         .slug("unknown-slug")
                         .status(OPEN)
                         .submissionsLimit(0)
+                        .points(11)
                         .build(),
                 new ContestProblemData.Builder()
                         .alias("C")
                         .slug(PROBLEM_2_SLUG)
                         .status(ContestProblemStatus.CLOSED)
                         .submissionsLimit(0)
+                        .points(11)
                         .build());
 
         assertThatRemoteExceptionThrownBy(() -> problemService.setProblems(MANAGER_HEADER, contest.getJid(), data))
@@ -64,12 +67,14 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .slug(PROBLEM_1_SLUG)
                         .status(OPEN)
                         .submissionsLimit(10)
+                        .points(11)
                         .build(),
                 new ContestProblemData.Builder()
                         .alias("C")
                         .slug(PROBLEM_2_SLUG)
                         .status(ContestProblemStatus.CLOSED)
                         .submissionsLimit(0)
+                        .points(23)
                         .build()));
 
         ContestProblemsResponse response = problemService.getProblems(of(MANAGER_HEADER), contest.getJid());
@@ -79,14 +84,14 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .problemJid(PROBLEM_1_JID)
                         .status(OPEN)
                         .submissionsLimit(10)
-                        .points(0)
+                        .points(11)
                         .build(),
                 new ContestProblem.Builder()
                         .alias("C")
                         .problemJid(PROBLEM_2_JID)
                         .status(ContestProblemStatus.CLOSED)
                         .submissionsLimit(0)
-                        .points(0)
+                        .points(23)
                         .build());
         assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).isEqualTo(PROBLEM_1_SLUG);
         assertThat(response.getTotalSubmissionsMap()).containsOnlyKeys(PROBLEM_1_JID, PROBLEM_2_JID);

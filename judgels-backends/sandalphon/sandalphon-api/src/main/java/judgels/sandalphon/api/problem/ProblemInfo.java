@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableProblemInfo.class)
 public interface ProblemInfo {
     String getSlug();
+    ProblemType getType();
     String getDefaultLanguage();
     Map<String, String> getTitlesByLanguage();
 

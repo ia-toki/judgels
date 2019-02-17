@@ -33,9 +33,18 @@ public interface ContestProblemService {
             @PathParam("contestJid") String contestJid);
 
     @GET
-    @Path("/{problemAlias}/worksheet")
+    @Path("/{problemAlias}/programming/worksheet")
     @Produces(APPLICATION_JSON)
-    ContestProblemWorksheet getProblemWorksheet(
+    judgels.uriel.api.contest.problem.programming.ContestProblemWorksheet getProgrammingProblemWorksheet(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestJid") String contestJid,
+            @PathParam("problemAlias") String problemAlias,
+            @QueryParam("language") Optional<String> language);
+
+    @GET
+    @Path("/{problemAlias}/bundle/worksheet")
+    @Produces(APPLICATION_JSON)
+    judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet getBundleProblemWorksheet(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("contestJid") String contestJid,
             @PathParam("problemAlias") String problemAlias,
