@@ -175,7 +175,6 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
   };
 
   private tryRegister = () => {
-    console.log(APP_CONFIG);
     if (APP_CONFIG.termsAndConditions !== undefined && APP_CONFIG.termsAndConditions.contest !== undefined) {
       this.toggleRegistrationConfirmationDialog();
     } else {
