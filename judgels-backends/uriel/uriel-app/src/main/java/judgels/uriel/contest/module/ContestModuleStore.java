@@ -128,6 +128,7 @@ public class ContestModuleStore {
     public void upsertConfig(String contestJid, ContestModulesConfig config) {
         config.getIcpcStyle().ifPresent(c -> upsertIcpcStyleModule(contestJid, c));
         config.getIoiStyle().ifPresent(c -> upsertIoiStyleModule(contestJid, c));
+        config.getGcjStyle().ifPresent(c -> upsertGcjStyleModule(contestJid, c));
 
         upsertScoreboardModule(contestJid, config.getScoreboard());
 
@@ -142,6 +143,10 @@ public class ContestModuleStore {
     }
 
     public void upsertIcpcStyleModule(String contestJid, IcpcStyleModuleConfig config) {
+        upsertStyleConfig(contestJid, config);
+    }
+
+    public void upsertGcjStyleModule(String contestJid, GcjStyleModuleConfig config) {
         upsertStyleConfig(contestJid, config);
     }
 
