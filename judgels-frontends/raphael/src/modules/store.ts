@@ -28,7 +28,7 @@ import { contestManagerAPI } from './api/uriel/contestManager';
 import { contestModuleAPI } from './api/uriel/contestModule';
 import { contestProblemAPI } from './api/uriel/contestProblem';
 import { contestScoreboardAPI } from './api/uriel/contestScoreboard';
-import { contestSubmissionAPI } from './api/uriel/contestSubmission';
+import { contestProgrammingSubmissionAPI } from './api/uriel/contestProgrammingSubmission';
 import { contestFileAPI } from './api/uriel/contestFile';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
@@ -92,7 +92,7 @@ export const store = createStore<AppState>(
         contestModuleAPI,
         contestProblemAPI,
         contestScoreboardAPI,
-        contestSubmissionAPI,
+        contestProgrammingSubmissionAPI,
         contestFileAPI,
         toastActions,
       }),

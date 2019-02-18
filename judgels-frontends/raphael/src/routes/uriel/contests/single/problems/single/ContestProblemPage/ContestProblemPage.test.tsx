@@ -19,7 +19,7 @@ import { MemoryHistory } from 'history';
 
 describe('ContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
-  let contestSubmissionActions: jest.Mocked<any>;
+  let contestProgrammingSubmissionActions: jest.Mocked<any>;
   let breadcrumbsActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
   let history: MemoryHistory;
@@ -53,7 +53,7 @@ describe('ContestProblemPage', () => {
         })
       ),
     };
-    contestSubmissionActions = {
+    contestProgrammingSubmissionActions = {
       createSubmission: jest.fn(),
     };
     breadcrumbsActions = {
@@ -73,7 +73,7 @@ describe('ContestProblemPage', () => {
 
     const ContestProblemPage = createContestProblemPage(
       contestProblemActions,
-      contestSubmissionActions,
+      contestProgrammingSubmissionActions,
       breadcrumbsActions
     );
 
@@ -116,12 +116,17 @@ describe('ContestProblemPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith(contestJid, 'contest-a', problemJid, {
-      gradingLanguage: preferredGradingLanguage,
-      sourceFiles: {
-        encoder: { name: 'encoder.cpp', size: 1000 } as File,
-        decoder: { name: 'decoder.cpp', size: 2000 } as File,
-      },
-    });
+    expect(contestProgrammingSubmissionActions.createSubmission).toHaveBeenCalledWith(
+      contestJid,
+      'contest-a',
+      problemJid,
+      {
+        gradingLanguage: preferredGradingLanguage,
+        sourceFiles: {
+          encoder: { name: 'encoder.cpp', size: 1000 } as File,
+          decoder: { name: 'decoder.cpp', size: 2000 } as File,
+        },
+      }
+    );
   });
 });

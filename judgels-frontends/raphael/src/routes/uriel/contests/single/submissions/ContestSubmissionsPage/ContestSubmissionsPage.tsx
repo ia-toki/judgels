@@ -10,12 +10,12 @@ import { ContentCard } from 'components/ContentCard/ContentCard';
 import Pagination from 'components/Pagination/Pagination';
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission';
+import { ContestSubmissionsResponse } from 'modules/api/uriel/contestProgrammingSubmission';
 
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 import { ContestSubmissionFilterWidget } from '../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
 import { selectContest } from '../../../modules/contestSelectors';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
+import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../modules/contestProgrammingSubmissionActions';
 
 import './ContestSubmissionsPage.css';
 
@@ -216,19 +216,19 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 }
 
-export function createContestSubmissionsPage(contestSubmissionActions) {
+export function createContestSubmissionsPage(contestProgrammingSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
   });
 
   const mapDispatchToProps = {
-    onGetSubmissions: contestSubmissionActions.getSubmissions,
-    onRegrade: contestSubmissionActions.regradeSubmissions,
-    onRegradeAll: contestSubmissionActions.regradeAllSubmissions,
+    onGetSubmissions: contestProgrammingSubmissionActions.getSubmissions,
+    onRegrade: contestProgrammingSubmissionActions.regradeSubmissions,
+    onRegradeAll: contestProgrammingSubmissionActions.regradeAllSubmissions,
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
 }
 
-export default createContestSubmissionsPage(injectedContestSubmissionActions);
+export default createContestSubmissionsPage(injectedContestProgrammingSubmissionActions);

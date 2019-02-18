@@ -29,7 +29,7 @@ export interface ContestSubmissionRegradeAllData {
 
 const baseURL = `${baseContestsURL}/submissions/programming`;
 
-export const contestSubmissionAPI = {
+export const contestProgrammingSubmissionAPI = {
   getSubmissions: (
     token: string,
     contestJid?: string,

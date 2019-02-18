@@ -1,25 +1,25 @@
 import { push } from 'react-router-redux';
 
 import { contestJid, problemJid, sessionState, token } from 'fixtures/state';
-import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProblemSubmissionForm/ProblemSubmissionForm';
 import { NotFoundError } from 'modules/api/error';
 import { SubmissionWithSourceResponse } from 'modules/api/sandalphon/submission';
-import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission';
+import { ContestSubmissionsResponse } from 'modules/api/uriel/contestProgrammingSubmission';
 import { AppState } from 'modules/store';
 
-import { contestSubmissionActions } from './contestSubmissionActions';
+import { contestProgrammingSubmissionActions } from './contestProgrammingSubmissionActions';
+import { ProgrammingProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProgrammingProblemWorksheetCard/ProgrammingProblemSubmissionForm/ProgrammingProblemSubmissionForm';
 
-describe('contestSubmissionActions', () => {
+describe('contestProgrammingSubmissionActions', () => {
   let dispatch: jest.Mock<any>;
   const getState = (): Partial<AppState> => ({ session: sessionState });
 
-  let contestSubmissionAPI: jest.Mocked<any>;
+  let contestProgrammingSubmissionAPI: jest.Mocked<any>;
   let toastActions: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
 
-    contestSubmissionAPI = {
+    contestProgrammingSubmissionAPI = {
       getSubmissions: jest.fn(),
       getSubmissionConfig: jest.fn(),
       getSubmissionWithSource: jest.fn(),
@@ -32,39 +32,45 @@ describe('contestSubmissionActions', () => {
   });
 
   describe('getSubmissions()', () => {
-    const { getSubmissions } = contestSubmissionActions;
+    const { getSubmissions } = contestProgrammingSubmissionActions;
     const doGetSubmissions = async () =>
-      getSubmissions(contestJid, 'userJid', 'problemJid', 3)(dispatch, getState, { contestSubmissionAPI });
+      getSubmissions(contestJid, 'userJid', 'problemJid', 3)(dispatch, getState, { contestProgrammingSubmissionAPI });
 
     beforeEach(async () => {
       const submissions = {} as ContestSubmissionsResponse;
-      contestSubmissionAPI.getSubmissions.mockReturnValue(submissions);
+      contestProgrammingSubmissionAPI.getSubmissions.mockReturnValue(submissions);
 
       await doGetSubmissions();
     });
 
     it('calls API to get submissions', () => {
-      expect(contestSubmissionAPI.getSubmissions).toHaveBeenCalledWith(token, contestJid, 'userJid', 'problemJid', 3);
+      expect(contestProgrammingSubmissionAPI.getSubmissions).toHaveBeenCalledWith(
+        token,
+        contestJid,
+        'userJid',
+        'problemJid',
+        3
+      );
     });
   });
 
   describe('getSubmissionWithSource()', () => {
-    const { getSubmissionWithSource } = contestSubmissionActions;
+    const { getSubmissionWithSource } = contestProgrammingSubmissionActions;
     const doGetSubmissionWithSource = async () =>
-      getSubmissionWithSource(contestJid, 3, 'id')(dispatch, getState, { contestSubmissionAPI });
+      getSubmissionWithSource(contestJid, 3, 'id')(dispatch, getState, { contestProgrammingSubmissionAPI });
 
     describe('when the contestJid matches', () => {
       beforeEach(async () => {
         const submissionWithSource = {
           data: { submission: { containerJid: contestJid } },
         } as SubmissionWithSourceResponse;
-        contestSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
+        contestProgrammingSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
 
         await doGetSubmissionWithSource();
       });
 
       it('calls API to get submission with source', () => {
-        expect(contestSubmissionAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3, 'id');
+        expect(contestProgrammingSubmissionAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3, 'id');
       });
     });
 
@@ -73,7 +79,7 @@ describe('contestSubmissionActions', () => {
         const submissionWithSource = {
           data: { submission: { containerJid: 'bogus' } },
         } as SubmissionWithSourceResponse;
-        contestSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
+        contestProgrammingSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
       });
 
       it('throws not found error', async () => {
@@ -83,18 +89,18 @@ describe('contestSubmissionActions', () => {
   });
 
   describe('createSubmission()', () => {
-    const { createSubmission } = contestSubmissionActions;
+    const { createSubmission } = contestProgrammingSubmissionActions;
     const sourceFiles = {
       encoder: {} as File,
       decoder: {} as File,
     };
-    const data: ProblemSubmissionFormData = {
+    const data: ProgrammingProblemSubmissionFormData = {
       gradingLanguage: 'Pascal',
       sourceFiles,
     };
     const doCreateSubmission = async () =>
       createSubmission(contestJid, 'contest-a', problemJid, data)(dispatch, getState, {
-        contestSubmissionAPI,
+        contestProgrammingSubmissionAPI,
         toastActions,
       });
 
@@ -103,10 +109,16 @@ describe('contestSubmissionActions', () => {
     });
 
     it('calls API to create a submission', () => {
-      expect(contestSubmissionAPI.createSubmission).toHaveBeenCalledWith(token, contestJid, problemJid, 'Pascal', {
-        'sourceFiles.encoder': {} as File,
-        'sourceFiles.decoder': {} as File,
-      });
+      expect(contestProgrammingSubmissionAPI.createSubmission).toHaveBeenCalledWith(
+        token,
+        contestJid,
+        problemJid,
+        'Pascal',
+        {
+          'sourceFiles.encoder': {} as File,
+          'sourceFiles.decoder': {} as File,
+        }
+      );
       expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Solution submitted.');
       expect(dispatch).toHaveBeenCalledWith(push(`/contests/contest-a/submissions`));
     });

@@ -13,7 +13,7 @@ import { Profile } from 'modules/api/jophiel/profile';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 
 import { selectContest } from '../../../../modules/contestSelectors';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../../modules/contestSubmissionActions';
+import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../../modules/contestProgrammingSubmissionActions';
 
 export interface ContestSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   contest: Contest;
@@ -91,14 +91,14 @@ export class ContestSubmissionPage extends React.Component<ContestSubmissionPage
   };
 }
 
-function createContestSubmissionPage(contestSubmissionActions, breadcrumbsActions) {
+function createContestSubmissionPage(contestProgrammingSubmissionActions, breadcrumbsActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
     statementLanguage: selectStatementLanguage(state),
   });
 
   const mapDispatchToProps = {
-    onGetSubmissionWithSource: contestSubmissionActions.getSubmissionWithSource,
+    onGetSubmissionWithSource: contestProgrammingSubmissionActions.getSubmissionWithSource,
     onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
@@ -106,4 +106,4 @@ function createContestSubmissionPage(contestSubmissionActions, breadcrumbsAction
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionPage));
 }
 
-export default createContestSubmissionPage(injectedContestSubmissionActions, injectedBreadcrumbsActions);
+export default createContestSubmissionPage(injectedContestProgrammingSubmissionActions, injectedBreadcrumbsActions);

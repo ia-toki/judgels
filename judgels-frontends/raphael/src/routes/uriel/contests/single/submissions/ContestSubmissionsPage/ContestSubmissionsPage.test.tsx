@@ -9,14 +9,14 @@ import thunk from 'redux-thunk';
 
 import { contest, contestJid } from 'fixtures/state';
 import { Submission } from 'modules/api/sandalphon/submission';
-import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmission';
+import { ContestSubmissionsResponse } from 'modules/api/uriel/contestProgrammingSubmission';
 
 import { createContestSubmissionsPage } from './ContestSubmissionsPage';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
 
 describe('ContestSubmissionsPage', () => {
   let wrapper: ReactWrapper<any, any>;
-  let contestSubmissionActions: jest.Mocked<any>;
+  let contestProgrammingSubmissionActions: jest.Mocked<any>;
 
   const response: ContestSubmissionsResponse = {
     data: { page: [], totalCount: 0 },
@@ -43,7 +43,7 @@ describe('ContestSubmissionsPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestSubmissionsPage = createContestSubmissionsPage(contestSubmissionActions);
+    const ContestSubmissionsPage = createContestSubmissionsPage(contestProgrammingSubmissionActions);
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -57,7 +57,7 @@ describe('ContestSubmissionsPage', () => {
   };
 
   beforeEach(() => {
-    contestSubmissionActions = {
+    contestProgrammingSubmissionActions = {
       getSubmissions: jest.fn().mockReturnValue(() => Promise.resolve(response)),
     };
   });
@@ -98,7 +98,7 @@ describe('ContestSubmissionsPage', () => {
           time: 456,
         } as Submission,
       ];
-      contestSubmissionActions.getSubmissions.mockReturnValue(() =>
+      contestProgrammingSubmissionActions.getSubmissions.mockReturnValue(() =>
         Promise.resolve({ ...response, data: { page: submissions, totalCount: 2 } })
       );
 

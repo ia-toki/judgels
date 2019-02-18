@@ -17,7 +17,7 @@ import { ContestProblem, ContestProblemWorksheet } from 'modules/api/uriel/conte
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestProblemActions as injectedContestProblemActions } from '../../modules/contestProblemActions';
 import { ProgrammingProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProgrammingProblemWorksheetCard/ProgrammingProblemSubmissionForm/ProgrammingProblemSubmissionForm';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../submissions/modules/contestSubmissionActions';
+import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../../../submissions/modules/contestProgrammingSubmissionActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 
 import './ContestProblemPage.css';
@@ -143,7 +143,11 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 }
 
-export function createContestProblemPage(contestProblemActions, contestSubmissionActions, breadcrumbsActions) {
+export function createContestProblemPage(
+  contestProblemActions,
+  contestProgrammingSubmissionActions,
+  breadcrumbsActions
+) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
     statementLanguage: selectStatementLanguage(state),
@@ -151,7 +155,7 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
 
   const mapDispatchToProps = {
     onGetProblemWorksheet: contestProblemActions.getProblemWorksheet,
-    onCreateSubmission: contestSubmissionActions.createSubmission,
+    onCreateSubmission: contestProgrammingSubmissionActions.createSubmission,
     onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
@@ -161,6 +165,6 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
 
 export default createContestProblemPage(
   injectedContestProblemActions,
-  injectedContestSubmissionActions,
+  injectedContestProgrammingSubmissionActions,
   injectedBreadcrumbsActions
 );
