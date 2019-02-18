@@ -12,21 +12,21 @@ import {
 import { GradingEngineCode } from 'modules/api/gabriel/engine';
 import { gradingLanguageNamesMap } from 'modules/api/gabriel/language';
 
-import './ProblemSubmissionForm.css';
+import './ProgrammingProblemSubmissionForm.css';
 
-export interface ProblemSubmissionFormData {
+export interface ProgrammingProblemSubmissionFormData {
   gradingLanguage: string;
   sourceFiles: { [key: string]: File };
 }
 
-interface ProblemSubmissionFormProps extends InjectedFormProps<ProblemSubmissionFormData> {
+interface ProgrammingProblemSubmissionFormProps extends InjectedFormProps<ProgrammingProblemSubmissionFormData> {
   sourceKeys: { [key: string]: string };
   gradingEngine: string;
   gradingLanguages: string[];
   submissionWarning?: string;
 }
 
-class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormProps> {
+class ProgrammingProblemSubmissionForm extends React.PureComponent<ProgrammingProblemSubmissionFormProps> {
   render() {
     return (
       <form onSubmit={this.props.handleSubmit}>
@@ -84,7 +84,7 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
   };
 }
 
-export default reduxForm<ProblemSubmissionFormData>({
+export default reduxForm<ProgrammingProblemSubmissionFormData>({
   form: 'problem-submission',
   touchOnBlur: false,
-})(ProblemSubmissionForm);
+})(ProgrammingProblemSubmissionForm);

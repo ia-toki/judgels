@@ -5,15 +5,15 @@ import { HtmlText } from 'components/HtmlText/HtmlText';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { ProblemLimits, ProblemStatement } from 'modules/api/sandalphon/problem';
 
-import './ProblemStatementCard.css';
+import './ProgrammingProblemStatementCard.css';
 
-export interface ProblemStatementCardProps {
+export interface ProgrammingProblemStatementCardProps {
   alias: string;
   statement: ProblemStatement;
   limits: ProblemLimits;
 }
 
-export class ProblemStatementCard extends React.PureComponent<ProblemStatementCardProps> {
+export class ProgrammingProblemStatementCard extends React.PureComponent<ProgrammingProblemStatementCardProps> {
   render() {
     const { alias, statement, limits } = this.props;
     return (

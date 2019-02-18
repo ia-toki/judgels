@@ -7,8 +7,10 @@ import { reducer as formReducer } from 'redux-form';
 
 import { LanguageRestriction } from 'modules/api/gabriel/language';
 import { GradingEngineCode } from 'modules/api/gabriel/engine';
-
-import { ProblemSubmissionCard, ProblemSubmissionCardProps } from './ProblemSubmissionCard';
+import {
+  ProgrammingProblemSubmissionCardProps,
+  ProgrammingProblemSubmissionCard,
+} from './ProgrammingProblemSubmissionCard';
 
 describe('ProblemSubmissionCard', () => {
   let gradingEngine: string;
@@ -20,7 +22,7 @@ describe('ProblemSubmissionCard', () => {
   let wrapper: ReactWrapper<any, any>;
 
   const render = () => {
-    const props: ProblemSubmissionCardProps = {
+    const props: ProgrammingProblemSubmissionCardProps = {
       config: {
         sourceKeys: {
           encoder: 'Encoder',
@@ -39,7 +41,7 @@ describe('ProblemSubmissionCard', () => {
     wrapper = mount(
       <Provider store={store}>
         <MemoryRouter>
-          <ProblemSubmissionCard {...props} />
+          <ProgrammingProblemSubmissionCard {...props} />
         </MemoryRouter>
       </Provider>
     );

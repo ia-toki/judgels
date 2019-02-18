@@ -7,8 +7,7 @@ import { ContentCard } from 'components/ContentCard/ContentCard';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
 } from 'components/StatementLanguageWidget/StatementLanguageWidget';
-import { ProblemWorksheetCard } from 'components/ProblemWorksheetCard/ProblemWorksheetCard';
-import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProblemSubmissionForm/ProblemSubmissionForm';
+import { ProgrammingProblemWorksheetCard } from 'components/ProblemWorksheetCard/ProgrammingProblemWorksheetCard/ProgrammingProblemWorksheetCard';
 import { AppState } from 'modules/store';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { ProblemWorksheet, ProblemType, ProgrammingProblemWorksheet } from 'modules/api/sandalphon/problem';
@@ -17,6 +16,7 @@ import { ContestProblem, ContestProblemWorksheet } from 'modules/api/uriel/conte
 
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestProblemActions as injectedContestProblemActions } from '../../modules/contestProblemActions';
+import { ProgrammingProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProgrammingProblemWorksheetCard/ProgrammingProblemSubmissionForm/ProgrammingProblemSubmissionForm';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../submissions/modules/contestSubmissionActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 
@@ -34,7 +34,7 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     contestJid: string,
     contestSlug: string,
     problemJid: string,
-    data: ProblemSubmissionFormData
+    data: ProgrammingProblemSubmissionFormData
   ) => Promise<void>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
@@ -90,7 +90,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     );
   }
 
-  private onCreateSubmission = async (data: ProblemSubmissionFormData) => {
+  private onCreateSubmission = async (data: ProgrammingProblemSubmissionFormData) => {
     const problem = this.state.problem!;
     return await this.props.onCreateSubmission(
       this.props.contest.jid,
@@ -130,7 +130,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
 
     if (problemType === ProblemType.Programming) {
       return (
-        <ProblemWorksheetCard
+        <ProgrammingProblemWorksheetCard
           alias={problem.alias}
           worksheet={worksheet as ProgrammingProblemWorksheet}
           onSubmit={this.onCreateSubmission}

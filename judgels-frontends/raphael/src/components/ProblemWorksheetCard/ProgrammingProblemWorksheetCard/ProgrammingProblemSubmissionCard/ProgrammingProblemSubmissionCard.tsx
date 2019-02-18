@@ -5,16 +5,18 @@ import { ContentCard } from 'components/ContentCard/ContentCard';
 import { ProblemSubmissionConfig } from 'modules/api/sandalphon/problem';
 import { getAllowedGradingLanguages, preferredGradingLanguage } from 'modules/api/gabriel/language';
 
-import ProblemSubmissionForm, { ProblemSubmissionFormData } from '../ProblemSubmissionForm/ProblemSubmissionForm';
+import ProblemSubmissionForm, {
+  ProgrammingProblemSubmissionFormData,
+} from '../ProgrammingProblemSubmissionForm/ProgrammingProblemSubmissionForm';
 
-export interface ProblemSubmissionCardProps {
+export interface ProgrammingProblemSubmissionCardProps {
   config: ProblemSubmissionConfig;
-  onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
+  onSubmit: (data: ProgrammingProblemSubmissionFormData) => Promise<void>;
   reasonNotAllowedToSubmit?: string;
   submissionWarning?: string;
 }
 
-export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmissionCardProps> {
+export class ProgrammingProblemSubmissionCard extends React.PureComponent<ProgrammingProblemSubmissionCardProps> {
   render() {
     return (
       <ContentCard>
