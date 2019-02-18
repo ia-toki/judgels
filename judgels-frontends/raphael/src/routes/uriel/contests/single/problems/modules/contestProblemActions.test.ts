@@ -3,10 +3,11 @@ import { SubmissionError } from 'redux-form';
 import { contestJid, sessionState, token } from 'fixtures/state';
 import { ForbiddenError } from 'modules/api/error';
 import { ContestErrors } from 'modules/api/uriel/contest';
-import { ContestProblemData, ContestProblemsResponse, ContestProblemWorksheet } from 'modules/api/uriel/contestProblem';
+import { ContestProblemData, ContestProblemsResponse } from 'modules/api/uriel/contestProblem';
 import { AppState } from 'modules/store';
-
 import { contestProblemActions } from './contestProblemActions';
+import { ContestProblemWorksheet as ContestProgrammingProblemWorksheet } from 'modules/api/uriel/contestProblemProgramming';
+import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from 'modules/api/uriel/contestProblemBundle';
 
 describe('contestProblemActions', () => {
   let dispatch: jest.Mock<any>;
@@ -89,13 +90,30 @@ describe('contestProblemActions', () => {
     });
   });
 
-  describe('getProblemWorksheet()', () => {
-    const { getProblemWorksheet } = contestProblemActions;
+  describe('getBundleProblemWorksheet()', () => {
+    const { getBundleProblemWorksheet } = contestProblemActions;
     const doGetProblemWorksheet = async () =>
-      getProblemWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
+      getBundleProblemWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
 
     beforeEach(async () => {
-      const worksheet = {} as ContestProblemWorksheet;
+      const worksheet = {} as ContestBundleProblemWorksheet;
+      contestProblemAPI.getProblemWorksheet.mockReturnValue(worksheet);
+
+      await doGetProblemWorksheet();
+    });
+
+    it('calls API to get problem worksheet', () => {
+      expect(contestProblemAPI.getProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
+    });
+  });
+
+  describe('getProgrammingProblemWorksheet()', () => {
+    const { getProgrammingProblemWorksheet } = contestProblemActions;
+    const doGetProblemWorksheet = async () =>
+      getProgrammingProblemWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
+
+    beforeEach(async () => {
+      const worksheet = {} as ContestProgrammingProblemWorksheet;
       contestProblemAPI.getProblemWorksheet.mockReturnValue(worksheet);
 
       await doGetProblemWorksheet();

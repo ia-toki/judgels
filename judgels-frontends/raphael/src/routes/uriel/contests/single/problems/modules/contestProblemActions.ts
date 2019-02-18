@@ -4,7 +4,6 @@ import { selectToken } from 'modules/session/sessionSelectors';
 import { ForbiddenError, NotFoundError } from 'modules/api/error';
 import { ContestErrors } from 'modules/api/uriel/contest';
 import { ContestProblemData } from 'modules/api/uriel/contestProblem';
-import { ProblemType } from 'modules/api/sandalphon/problem';
 
 export const contestProblemActions = {
   getProblems: (contestJid: string) => {
@@ -32,7 +31,7 @@ export const contestProblemActions = {
     };
   },
 
-  getProblemWorksheet: (contestJid: string, problemAlias: string, language?: string) => {
+  getProblemType: (contestJid: string, problemAlias: string) => {
     return async (dispatch, getState, { contestProblemAPI }) => {
       const token = selectToken(getState());
 
@@ -46,13 +45,22 @@ export const contestProblemActions = {
       if (!problemInfo) {
         throw new NotFoundError();
       }
-      const problemType = problemInfo.type;
 
-      if (problemType === ProblemType.Bundle) {
-        return await contestProblemAPI.getBundleProblemWorksheet(token, contestJid, problemAlias, language);
-      } else {
-        return await contestProblemAPI.getProgrammingProblemWorksheet(token, contestJid, problemAlias, language);
-      }
+      return problemInfo.type;
+    };
+  },
+
+  getBundleProblemWorksheet: (contestJid: string, problemAlias: string, language?: string) => {
+    return async (dispatch, getState, { contestProblemAPI }) => {
+      const token = selectToken(getState());
+      return await contestProblemAPI.getBundleProblemWorksheet(token, contestJid, problemAlias, language);
+    };
+  },
+
+  getProgrammingProblemWorksheet: (contestJid: string, problemAlias: string, language?: string) => {
+    return async (dispatch, getState, { contestProblemAPI }) => {
+      const token = selectToken(getState());
+      return await contestProblemAPI.getProgrammingProblemWorksheet(token, contestJid, problemAlias, language);
     };
   },
 };
