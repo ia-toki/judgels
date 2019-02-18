@@ -11,7 +11,7 @@ import { ProblemWorksheetCard } from 'components/ProblemWorksheetCard/ProblemWor
 import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProblemSubmissionForm/ProblemSubmissionForm';
 import { AppState } from 'modules/store';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { ProblemWorksheet } from 'modules/api/sandalphon/problem';
+import { ProblemWorksheet, ProblemType, ProgrammingProblemWorksheet } from 'modules/api/sandalphon/problem';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestProblem, ContestProblemWorksheet } from 'modules/api/uriel/contestProblem';
 
@@ -46,19 +46,27 @@ interface ContestProblemPageState {
   problem?: ContestProblem;
   totalSubmissions?: number;
   worksheet?: ProblemWorksheet;
+  problemType?: ProblemType;
 }
 
 export class ContestProblemPage extends React.Component<ContestProblemPageProps, ContestProblemPageState> {
   state: ContestProblemPageState = {};
 
   async componentDidMount() {
-    const { defaultLanguage, languages, problem, totalSubmissions, worksheet } = await this.props.onGetProblemWorksheet(
+    const {
+      problemType,
+      defaultLanguage,
+      languages,
+      problem,
+      totalSubmissions,
+      worksheet,
+    } = await this.props.onGetProblemWorksheet(
       this.props.contest.jid,
       this.props.match.params.problemAlias,
       this.props.statementLanguage
     );
     this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + problem.alias);
-    this.setState({ defaultLanguage, languages, problem, totalSubmissions, worksheet });
+    this.setState({ problemType, defaultLanguage, languages, problem, totalSubmissions, worksheet });
   }
 
   async componentDidUpdate(prevProps: ContestProblemPageProps, prevState: ContestProblemPageState) {
@@ -109,7 +117,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 
   private renderStatement = () => {
-    const { problem, totalSubmissions, worksheet } = this.state;
+    const { problemType, problem, totalSubmissions, worksheet } = this.state;
     if (!problem || !worksheet) {
       return <LoadingState />;
     }
@@ -120,14 +128,18 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       submissionWarning = '' + submissionsLeft + ' submissions left.';
     }
 
-    return (
-      <ProblemWorksheetCard
-        alias={problem.alias}
-        worksheet={worksheet}
-        onSubmit={this.onCreateSubmission}
-        submissionWarning={submissionWarning}
-      />
-    );
+    if (problemType === ProblemType.Programming) {
+      return (
+        <ProblemWorksheetCard
+          alias={problem.alias}
+          worksheet={worksheet as ProgrammingProblemWorksheet}
+          onSubmit={this.onCreateSubmission}
+          submissionWarning={submissionWarning}
+        />
+      );
+    } else {
+      return <React.Fragment />;
+    }
   };
 }
 

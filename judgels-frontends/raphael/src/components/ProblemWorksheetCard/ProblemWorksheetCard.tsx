@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ProblemWorksheet } from 'modules/api/sandalphon/problem';
+import { ProgrammingProblemWorksheet } from 'modules/api/sandalphon/problem';
 
 import { ProblemStatementCard } from './ProblemStatementCard/ProblemStatementCard';
 import { ProblemSubmissionCard } from './ProblemSubmissionCard/ProblemSubmissionCard';
@@ -10,7 +10,7 @@ import './ProblemWorksheetCard.css';
 
 export interface ProblemWorksheetCardProps {
   alias: string;
-  worksheet: ProblemWorksheet;
+  worksheet: ProgrammingProblemWorksheet;
   onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
   submissionWarning?: string;
 }
