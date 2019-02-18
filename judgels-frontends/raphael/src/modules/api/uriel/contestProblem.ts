@@ -57,7 +57,7 @@ export const contestProblemAPI = {
     return put(baseURL(contestJid), token, data);
   },
 
-  getProblemWorksheet: (
+  getProgrammingProblemWorksheet: (
     token: string,
     contestJid: string,
     problemAlias: string,
@@ -65,5 +65,15 @@ export const contestProblemAPI = {
   ): Promise<ContestProblemWorksheet> => {
     const params = stringify({ language });
     return get(`${baseURL(contestJid)}/${problemAlias}/programming/worksheet?${params}`, token);
+  },
+
+  getBundleProblemWorksheet: (
+    token: string,
+    contestJid: string,
+    problemAlias: string,
+    language?: string
+  ): Promise<ContestProblemWorksheet> => {
+    const params = stringify({ language });
+    return get(`${baseURL(contestJid)}/${problemAlias}/bundle/worksheet?${params}`, token);
   },
 };

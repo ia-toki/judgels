@@ -1,7 +1,13 @@
 import { LanguageRestriction } from 'modules/api/gabriel/language';
 
+export enum ProblemType {
+  Programming = 'PROGRAMMING',
+  Bundle = 'BUNDLE'
+}
+
 export interface ProblemInfo {
   slug: string;
+  type: ProblemType;
   defaultLanguage: string;
   titlesByLanguage: { [language: string]: string };
 }
@@ -30,9 +36,28 @@ export interface ProblemSubmissionConfig {
   gradingLanguageRestriction: LanguageRestriction;
 }
 
-export interface ProblemWorksheet {
+export interface ProgrammingProblemWorksheet {
   statement: ProblemStatement;
   limits: ProblemLimits;
   submissionConfig: ProblemSubmissionConfig;
   reasonNotAllowedToSubmit?: string;
 }
+
+export enum BundleItemType {
+  Statement = 'STATEMENT',
+  MultipleChoice = 'MULTIPLE_CHOICE'
+}
+
+export interface BundleItem {
+  jid: string;
+  type: BundleItemType;
+  meta: string;
+  config: string;
+}
+
+export interface BundleProblemWorksheet {
+  reasonNotAllowedToSubmit?: string;
+  items: BundleItem[];
+}
+
+export type ProblemWorksheet = ProgrammingProblemWorksheet | BundleProblemWorksheet
