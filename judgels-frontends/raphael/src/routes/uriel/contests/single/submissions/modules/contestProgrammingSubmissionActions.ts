@@ -2,20 +2,20 @@ import { push } from 'react-router-redux';
 
 import { selectToken } from 'modules/session/sessionSelectors';
 import { NotFoundError } from 'modules/api/error';
-import { ProgrammingProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProgrammingProblemWorksheetCard/ProgrammingProblemSubmissionForm/ProgrammingProblemSubmissionForm';
+import { ProblemSubmissionFormData as ProgrammingProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 
 export const contestProgrammingSubmissionActions = {
   getSubmissions: (contestJid: string, userJid?: string, problemJid?: string, page?: number) => {
-    return async (dispatch, getState, { contestProgrammingSubmissionAPI }) => {
+    return async (dispatch, getState, { contestSubmissionProgrammingAPI }) => {
       const token = selectToken(getState());
-      return await contestProgrammingSubmissionAPI.getSubmissions(token, contestJid, userJid, problemJid, page);
+      return await contestSubmissionProgrammingAPI.getSubmissions(token, contestJid, userJid, problemJid, page);
     };
   },
 
   getSubmissionWithSource: (contestJid: string, submissionId: number, language?: string) => {
-    return async (dispatch, getState, { contestProgrammingSubmissionAPI }) => {
+    return async (dispatch, getState, { contestSubmissionProgrammingAPI }) => {
       const token = selectToken(getState());
-      const submissionWithSource = await contestProgrammingSubmissionAPI.getSubmissionWithSource(
+      const submissionWithSource = await contestSubmissionProgrammingAPI.getSubmissionWithSource(
         token,
         submissionId,
         language
@@ -33,14 +33,14 @@ export const contestProgrammingSubmissionActions = {
     problemJid: string,
     data: ProgrammingProblemSubmissionFormData
   ) => {
-    return async (dispatch, getState, { contestProgrammingSubmissionAPI, toastActions }) => {
+    return async (dispatch, getState, { contestSubmissionProgrammingAPI, toastActions }) => {
       const token = selectToken(getState());
       let sourceFiles = {};
       Object.keys(data.sourceFiles).forEach(key => {
         sourceFiles['sourceFiles.' + key] = data.sourceFiles[key];
       });
 
-      await contestProgrammingSubmissionAPI.createSubmission(
+      await contestSubmissionProgrammingAPI.createSubmission(
         token,
         contestJid,
         problemJid,
@@ -56,18 +56,18 @@ export const contestProgrammingSubmissionActions = {
   },
 
   regradeSubmissions: (submissionJids: string[]) => {
-    return async (dispatch, getState, { contestProgrammingSubmissionAPI, toastActions }) => {
+    return async (dispatch, getState, { contestSubmissionProgrammingAPI, toastActions }) => {
       const token = selectToken(getState());
-      await contestProgrammingSubmissionAPI.regradeSubmissions(token, submissionJids);
+      await contestSubmissionProgrammingAPI.regradeSubmissions(token, submissionJids);
 
       toastActions.showSuccessToast('Regrade request submitted.');
     };
   },
 
   regradeAllSubmissions: (contestJid: string, userJid?: string, problemJid?: string) => {
-    return async (dispatch, getState, { contestProgrammingSubmissionAPI, toastActions }) => {
+    return async (dispatch, getState, { contestSubmissionProgrammingAPI, toastActions }) => {
       const token = selectToken(getState());
-      await contestProgrammingSubmissionAPI.regradeAllSubmissions(token, contestJid, userJid, problemJid);
+      await contestSubmissionProgrammingAPI.regradeAllSubmissions(token, contestJid, userJid, problemJid);
 
       toastActions.showSuccessToast('Regrade request submitted.');
     };

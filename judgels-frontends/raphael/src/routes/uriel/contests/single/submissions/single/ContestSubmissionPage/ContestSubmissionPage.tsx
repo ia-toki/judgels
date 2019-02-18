@@ -4,11 +4,11 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import { ContentCard } from 'components/ContentCard/ContentCard';
-import { SubmissionDetails } from 'components/SubmissionDetails/SubmissionDetails';
+import { SubmissionDetails } from 'components/SubmissionDetails/Programming/SubmissionDetails';
 import { AppState } from 'modules/store';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { Contest } from 'modules/api/uriel/contest';
-import { SubmissionWithSource, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submission';
+import { SubmissionWithSource, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submissionProgramming';
 import { Profile } from 'modules/api/jophiel/profile';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 

@@ -13,13 +13,13 @@ describe('contestProgrammingSubmissionActions', () => {
   let dispatch: jest.Mock<any>;
   const getState = (): Partial<AppState> => ({ session: sessionState });
 
-  let contestProgrammingSubmissionAPI: jest.Mocked<any>;
+  let contestSubmissionProgrammingAPI: jest.Mocked<any>;
   let toastActions: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
 
-    contestProgrammingSubmissionAPI = {
+    contestSubmissionProgrammingAPI = {
       getSubmissions: jest.fn(),
       getSubmissionConfig: jest.fn(),
       getSubmissionWithSource: jest.fn(),
@@ -34,17 +34,17 @@ describe('contestProgrammingSubmissionActions', () => {
   describe('getSubmissions()', () => {
     const { getSubmissions } = contestProgrammingSubmissionActions;
     const doGetSubmissions = async () =>
-      getSubmissions(contestJid, 'userJid', 'problemJid', 3)(dispatch, getState, { contestProgrammingSubmissionAPI });
+      getSubmissions(contestJid, 'userJid', 'problemJid', 3)(dispatch, getState, { contestSubmissionProgrammingAPI });
 
     beforeEach(async () => {
       const submissions = {} as ContestSubmissionsResponse;
-      contestProgrammingSubmissionAPI.getSubmissions.mockReturnValue(submissions);
+      contestSubmissionProgrammingAPI.getSubmissions.mockReturnValue(submissions);
 
       await doGetSubmissions();
     });
 
     it('calls API to get submissions', () => {
-      expect(contestProgrammingSubmissionAPI.getSubmissions).toHaveBeenCalledWith(
+      expect(contestSubmissionProgrammingAPI.getSubmissions).toHaveBeenCalledWith(
         token,
         contestJid,
         'userJid',
@@ -57,20 +57,20 @@ describe('contestProgrammingSubmissionActions', () => {
   describe('getSubmissionWithSource()', () => {
     const { getSubmissionWithSource } = contestProgrammingSubmissionActions;
     const doGetSubmissionWithSource = async () =>
-      getSubmissionWithSource(contestJid, 3, 'id')(dispatch, getState, { contestProgrammingSubmissionAPI });
+      getSubmissionWithSource(contestJid, 3, 'id')(dispatch, getState, { contestSubmissionProgrammingAPI });
 
     describe('when the contestJid matches', () => {
       beforeEach(async () => {
         const submissionWithSource = {
           data: { submission: { containerJid: contestJid } },
         } as SubmissionWithSourceResponse;
-        contestProgrammingSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
+        contestSubmissionProgrammingAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
 
         await doGetSubmissionWithSource();
       });
 
       it('calls API to get submission with source', () => {
-        expect(contestProgrammingSubmissionAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3, 'id');
+        expect(contestSubmissionProgrammingAPI.getSubmissionWithSource).toHaveBeenCalledWith(token, 3, 'id');
       });
     });
 
@@ -79,7 +79,7 @@ describe('contestProgrammingSubmissionActions', () => {
         const submissionWithSource = {
           data: { submission: { containerJid: 'bogus' } },
         } as SubmissionWithSourceResponse;
-        contestProgrammingSubmissionAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
+        contestSubmissionProgrammingAPI.getSubmissionWithSource.mockReturnValue(submissionWithSource);
       });
 
       it('throws not found error', async () => {
@@ -100,7 +100,7 @@ describe('contestProgrammingSubmissionActions', () => {
     };
     const doCreateSubmission = async () =>
       createSubmission(contestJid, 'contest-a', problemJid, data)(dispatch, getState, {
-        contestProgrammingSubmissionAPI,
+        contestSubmissionProgrammingAPI,
         toastActions,
       });
 
@@ -109,7 +109,7 @@ describe('contestProgrammingSubmissionActions', () => {
     });
 
     it('calls API to create a submission', () => {
-      expect(contestProgrammingSubmissionAPI.createSubmission).toHaveBeenCalledWith(
+      expect(contestSubmissionProgrammingAPI.createSubmission).toHaveBeenCalledWith(
         token,
         contestJid,
         problemJid,

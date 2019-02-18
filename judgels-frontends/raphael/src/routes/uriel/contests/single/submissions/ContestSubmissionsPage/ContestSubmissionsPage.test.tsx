@@ -8,8 +8,8 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { contest, contestJid } from 'fixtures/state';
-import { Submission } from 'modules/api/sandalphon/submission';
-import { ContestSubmissionsResponse } from 'modules/api/uriel/contestProgrammingSubmission';
+import { Submission } from 'modules/api/sandalphon/submissionProgramming';
+import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionProgramming';
 
 import { createContestSubmissionsPage } from './ContestSubmissionsPage';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';

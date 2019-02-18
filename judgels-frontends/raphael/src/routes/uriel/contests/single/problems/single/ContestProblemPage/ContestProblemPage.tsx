@@ -164,6 +164,7 @@ export function createContestProblemPage(
   });
 
   const mapDispatchToProps = {
+    onGetProblemType: contestProblemActions.getProblemType,
     onGetBundleProblemWorksheet: contestProblemActions.getBundleProblemWorksheet,
     onGetProgrammingProblemWorksheet: contestProblemActions.getProgrammingProblemWorksheet,
     onCreateSubmission: contestProgrammingSubmissionActions.createSubmission,

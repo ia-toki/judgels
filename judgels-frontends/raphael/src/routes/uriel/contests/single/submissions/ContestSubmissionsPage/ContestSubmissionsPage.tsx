@@ -10,7 +10,7 @@ import { ContentCard } from 'components/ContentCard/ContentCard';
 import Pagination from 'components/Pagination/Pagination';
 import { AppState } from 'modules/store';
 import { Contest } from 'modules/api/uriel/contest';
-import { ContestSubmissionsResponse } from 'modules/api/uriel/contestProgrammingSubmission';
+import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionProgramming';
 
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 import { ContestSubmissionFilterWidget } from '../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';

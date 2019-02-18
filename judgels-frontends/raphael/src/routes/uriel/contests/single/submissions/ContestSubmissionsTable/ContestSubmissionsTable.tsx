@@ -6,15 +6,15 @@ import { Link } from 'react-router-dom';
 import { UserRef } from 'components/UserRef/UserRef';
 import { VerdictTag } from 'components/VerdictTag/VerdictTag';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { Submission } from 'modules/api/sandalphon/submission';
 import { getGradingLanguageName } from 'modules/api/gabriel/language';
 import { Contest } from 'modules/api/uriel/contest';
 
 import './ContestSubmissionsTable.css';
+import { Submission as ProgrammingSubmission } from 'modules/api/sandalphon/submissionProgramming';
 
 export interface ContestSubmissionsTableProps {
   contest: Contest;
-  submissions: Submission[];
+  submissions: ProgrammingSubmission[];
   canSupervise: boolean;
   canManage: boolean;
   profilesMap: ProfilesMap;
