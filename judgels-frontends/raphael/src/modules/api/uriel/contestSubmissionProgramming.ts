@@ -3,22 +3,16 @@ import { stringify } from 'query-string';
 import { get, postMultipart, post } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { Submission, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submission';
+import { Submission, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submissionProgramming';
 
 import { baseContestsURL } from './contest';
+import { ContestSubmissionConfig } from './contestSubmission';
 
 export interface ContestSubmissionsResponse {
   data: Page<Submission>;
   config: ContestSubmissionConfig;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
-}
-
-export interface ContestSubmissionConfig {
-  canSupervise: boolean;
-  canManage: boolean;
-  userJids: string[];
-  problemJids: string[];
 }
 
 export interface ContestSubmissionRegradeAllData {
@@ -29,7 +23,7 @@ export interface ContestSubmissionRegradeAllData {
 
 const baseURL = `${baseContestsURL}/submissions/programming`;
 
-export const contestProgrammingSubmissionAPI = {
+export const contestSubmissionProgrammingAPI = {
   getSubmissions: (
     token: string,
     contestJid?: string,

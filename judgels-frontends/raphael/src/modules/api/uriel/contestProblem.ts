@@ -1,9 +1,11 @@
 import { stringify } from 'query-string';
 
 import { get, put } from 'modules/api/http';
-import { ProblemInfo, ProblemWorksheet, ProblemType } from 'modules/api/sandalphon/problem';
+import { ProblemInfo } from 'modules/api/sandalphon/problem';
 
 import { baseContestURL } from './contest';
+import { ContestProblemWorksheet as ContestProgrammingProblemWorksheet } from './contestProblemProgramming';
+import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from './contestProblemBundle';
 
 export enum ContestProblemStatus {
   Open = 'OPEN',
@@ -38,15 +40,6 @@ export interface ContestProblemConfig {
   canManage: boolean;
 }
 
-export interface ContestProblemWorksheet {
-  defaultLanguage: string;
-  problemType: ProblemType;
-  languages: string[];
-  problem: ContestProblem;
-  totalSubmissions: number;
-  worksheet: ProblemWorksheet;
-}
-
 const baseURL = (contestJid: string) => `${baseContestURL(contestJid)}/problems`;
 
 export const contestProblemAPI = {
@@ -58,29 +51,23 @@ export const contestProblemAPI = {
     return put(baseURL(contestJid), token, data);
   },
 
-  getProgrammingProblemWorksheet: async (
+  getProgrammingProblemWorksheet: (
     token: string,
     contestJid: string,
     problemAlias: string,
     language?: string
-  ): Promise<ContestProblemWorksheet> => {
+  ): Promise<ContestProgrammingProblemWorksheet> => {
     const params = stringify({ language });
-    return {
-      problemType: ProblemType.Programming,
-      ...await get(`${baseURL(contestJid)}/${problemAlias}/programming/worksheet?${params}`, token),
-    };
+    return get(`${baseURL(contestJid)}/${problemAlias}/programming/worksheet?${params}`, token);
   },
 
-  getBundleProblemWorksheet: async (
+  getBundleProblemWorksheet: (
     token: string,
     contestJid: string,
     problemAlias: string,
     language?: string
-  ): Promise<ContestProblemWorksheet> => {
+  ): Promise<ContestBundleProblemWorksheet> => {
     const params = stringify({ language });
-    return {
-      problemType: ProblemType.Bundle,
-      ...await get(`${baseURL(contestJid)}/${problemAlias}/bundle/worksheet?${params}`, token),
-    };
+    return get(`${baseURL(contestJid)}/${problemAlias}/bundle/worksheet?${params}`, token);
   },
 };
