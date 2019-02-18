@@ -1,9 +1,10 @@
 import { SubmissionError } from 'redux-form';
 
 import { selectToken } from 'modules/session/sessionSelectors';
-import { ForbiddenError } from 'modules/api/error';
+import { ForbiddenError, NotFoundError } from 'modules/api/error';
 import { ContestErrors } from 'modules/api/uriel/contest';
 import { ContestProblemData } from 'modules/api/uriel/contestProblem';
+import { ProblemType } from 'modules/api/sandalphon/problem';
 
 export const contestProblemActions = {
   getProblems: (contestJid: string) => {
@@ -34,7 +35,24 @@ export const contestProblemActions = {
   getProblemWorksheet: (contestJid: string, problemAlias: string, language?: string) => {
     return async (dispatch, getState, { contestProblemAPI }) => {
       const token = selectToken(getState());
-      return await contestProblemAPI.getProblemWorksheet(token, contestJid, problemAlias, language);
+
+      const problemsResponse = await contestProblemAPI.getProblems(token, contestJid);
+      const currentProblem = problemsResponse.data.filter(prob => prob.alias === problemAlias).pop();
+      if (!currentProblem) {
+        throw new NotFoundError();
+      }
+      const problemJid = currentProblem.problemJid;
+      const problemInfo = problemsResponse.problemsMap[problemJid];
+      if (!problemInfo) {
+        throw new NotFoundError();
+      }
+      const problemType = problemInfo.type;
+
+      if (problemType === ProblemType.Bundle) {
+        return await contestProblemAPI.getBundleProblemWorksheet(token, contestJid, problemAlias, language);
+      } else {
+        return await contestProblemAPI.getProgrammingProblemWorksheet(token, contestJid, problemAlias, language);
+      }
     };
   },
 };
