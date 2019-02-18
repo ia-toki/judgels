@@ -12,26 +12,26 @@ import {
 import { GradingEngineCode } from 'modules/api/gabriel/engine';
 import { gradingLanguageNamesMap } from 'modules/api/gabriel/language';
 
-import './ProgrammingProblemSubmissionForm.css';
+import './ProblemSubmissionForm.css';
 
-export interface ProgrammingProblemSubmissionFormData {
+export interface ProblemSubmissionFormData {
   gradingLanguage: string;
   sourceFiles: { [key: string]: File };
 }
 
-interface ProgrammingProblemSubmissionFormProps extends InjectedFormProps<ProgrammingProblemSubmissionFormData> {
+interface ProblemSubmissionFormProps extends InjectedFormProps<ProblemSubmissionFormData> {
   sourceKeys: { [key: string]: string };
   gradingEngine: string;
   gradingLanguages: string[];
   submissionWarning?: string;
 }
 
-class ProgrammingProblemSubmissionForm extends React.PureComponent<ProgrammingProblemSubmissionFormProps> {
+class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormProps> {
   render() {
     return (
       <form onSubmit={this.props.handleSubmit}>
         {this.renderWarning()}
-        <table className="problem-submission-form__table">
+        <table className="programming-problem-submission-form__table">
           <tbody>
             {this.renderSourceFields()}
             {this.renderGradingLanguageFields()}
@@ -45,7 +45,11 @@ class ProgrammingProblemSubmissionForm extends React.PureComponent<ProgrammingPr
   private renderWarning = () => {
     return (
       this.props.submissionWarning && (
-        <Callout icon="warning-sign" className="problem-submission-form__warning" data-key="submission-warning">
+        <Callout
+          icon="warning-sign"
+          className="programming-problem-submission-form__warning"
+          data-key="submission-warning"
+        >
           {this.props.submissionWarning}
         </Callout>
       )
@@ -84,7 +88,7 @@ class ProgrammingProblemSubmissionForm extends React.PureComponent<ProgrammingPr
   };
 }
 
-export default reduxForm<ProgrammingProblemSubmissionFormData>({
+export default reduxForm<ProblemSubmissionFormData>({
   form: 'problem-submission',
   touchOnBlur: false,
-})(ProgrammingProblemSubmissionForm);
+})(ProblemSubmissionForm);

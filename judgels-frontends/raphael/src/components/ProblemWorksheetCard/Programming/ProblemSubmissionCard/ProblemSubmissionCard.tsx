@@ -2,21 +2,18 @@ import { Callout } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { ContentCard } from 'components/ContentCard/ContentCard';
-import { ProblemSubmissionConfig } from 'modules/api/sandalphon/problem';
 import { getAllowedGradingLanguages, preferredGradingLanguage } from 'modules/api/gabriel/language';
+import { ProblemSubmissionConfig } from 'modules/api/sandalphon/problemProgramming';
+import ProblemSubmissionForm, { ProblemSubmissionFormData } from '../ProblemSubmissionForm/ProblemSubmissionForm';
 
-import ProblemSubmissionForm, {
-  ProgrammingProblemSubmissionFormData,
-} from '../ProgrammingProblemSubmissionForm/ProgrammingProblemSubmissionForm';
-
-export interface ProgrammingProblemSubmissionCardProps {
+export interface ProblemSubmissionCardProps {
   config: ProblemSubmissionConfig;
-  onSubmit: (data: ProgrammingProblemSubmissionFormData) => Promise<void>;
+  onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
   reasonNotAllowedToSubmit?: string;
   submissionWarning?: string;
 }
 
-export class ProgrammingProblemSubmissionCard extends React.PureComponent<ProgrammingProblemSubmissionCardProps> {
+export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmissionCardProps> {
   render() {
     return (
       <ContentCard>

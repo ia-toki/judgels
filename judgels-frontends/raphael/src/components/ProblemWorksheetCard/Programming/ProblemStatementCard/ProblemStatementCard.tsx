@@ -3,25 +3,26 @@ import * as React from 'react';
 
 import { HtmlText } from 'components/HtmlText/HtmlText';
 import { ContentCard } from 'components/ContentCard/ContentCard';
-import { ProblemLimits, ProblemStatement } from 'modules/api/sandalphon/problem';
+import { ProblemStatement } from 'modules/api/sandalphon/problem';
+import { ProblemLimits } from 'modules/api/sandalphon/problemProgramming';
 
-import './ProgrammingProblemStatementCard.css';
+import './ProblemStatementCard.css';
 
-export interface ProgrammingProblemStatementCardProps {
+export interface ProblemStatementCardProps {
   alias: string;
   statement: ProblemStatement;
   limits: ProblemLimits;
 }
 
-export class ProgrammingProblemStatementCard extends React.PureComponent<ProgrammingProblemStatementCardProps> {
+export class ProblemStatementCard extends React.PureComponent<ProblemStatementCardProps> {
   render() {
     const { alias, statement, limits } = this.props;
     return (
       <ContentCard>
-        <h2 className="problem-statement__name">
+        <h2 className="programming-problem-statement__name">
           {alias}. {statement.title}
         </h2>
-        <HTMLTable condensed className="problem-statement__limits">
+        <HTMLTable condensed className="programming-problem-statement__limits">
           <tbody>
             <tr>
               <td>Time limit</td>
@@ -33,7 +34,7 @@ export class ProgrammingProblemStatementCard extends React.PureComponent<Program
             </tr>
           </tbody>
         </HTMLTable>
-        <div className="problem-statement__text">
+        <div className="programming-problem-statement__text">
           <HtmlText>{statement.text}</HtmlText>
         </div>
       </ContentCard>
