@@ -1,7 +1,7 @@
 import { stringify } from 'query-string';
 
 import { get, put } from 'modules/api/http';
-import { ProblemInfo, ProblemWorksheet } from 'modules/api/sandalphon/problem';
+import { ProblemInfo, ProblemWorksheet, ProblemType } from 'modules/api/sandalphon/problem';
 
 import { baseContestURL } from './contest';
 
@@ -40,6 +40,7 @@ export interface ContestProblemConfig {
 
 export interface ContestProblemWorksheet {
   defaultLanguage: string;
+  problemType: ProblemType;
   languages: string[];
   problem: ContestProblem;
   totalSubmissions: number;
@@ -57,23 +58,29 @@ export const contestProblemAPI = {
     return put(baseURL(contestJid), token, data);
   },
 
-  getProgrammingProblemWorksheet: (
+  getProgrammingProblemWorksheet: async (
     token: string,
     contestJid: string,
     problemAlias: string,
     language?: string
   ): Promise<ContestProblemWorksheet> => {
     const params = stringify({ language });
-    return get(`${baseURL(contestJid)}/${problemAlias}/programming/worksheet?${params}`, token);
+    return {
+      problemType: ProblemType.Programming,
+      ...await get(`${baseURL(contestJid)}/${problemAlias}/programming/worksheet?${params}`, token),
+    };
   },
 
-  getBundleProblemWorksheet: (
+  getBundleProblemWorksheet: async (
     token: string,
     contestJid: string,
     problemAlias: string,
     language?: string
   ): Promise<ContestProblemWorksheet> => {
     const params = stringify({ language });
-    return get(`${baseURL(contestJid)}/${problemAlias}/bundle/worksheet?${params}`, token);
+    return {
+      problemType: ProblemType.Bundle,
+      ...await get(`${baseURL(contestJid)}/${problemAlias}/bundle/worksheet?${params}`, token),
+    };
   },
 };
