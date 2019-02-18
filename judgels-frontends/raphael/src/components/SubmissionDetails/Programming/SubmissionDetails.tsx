@@ -9,7 +9,7 @@ import { UserRef } from 'components/UserRef/UserRef';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { VerdictTag } from 'components/VerdictTag/VerdictTag';
 import { constructProblemName } from 'modules/api/sandalphon/problem';
-import { Submission } from 'modules/api/sandalphon/submission';
+import { Submission } from 'modules/api/sandalphon/submissionProgramming';
 import { GradingEngineCode } from 'modules/api/gabriel/engine';
 import { getGradingLanguageName, getGradingLanguageSyntaxHighlighterValue } from 'modules/api/gabriel/language';
 import { TestCaseResult } from 'modules/api/gabriel/grading';
@@ -32,7 +32,7 @@ export interface SubmissionDetailsProps {
 export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProps> {
   render() {
     return (
-      <div className="submission-details">
+      <div className="programming-submission-details">
         {this.renderGeneralInfo()}
         {this.renderDetails()}
         {this.renderSourceFiles()}
@@ -66,7 +66,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <>
         <h4>General Info</h4>
         <ContentCard>
-          <HTMLTable striped className="submission-details">
+          <HTMLTable striped className="programming-submission-details">
             <thead>
               <tr>
                 <th className="col-info">Info</th>
@@ -176,7 +176,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       <>
         <h4>Sample Test Data Results</h4>
         <ContentCard>
-          <HTMLTable striped className="submission-details">
+          <HTMLTable striped className="programming-submission-details">
             <thead>
               <tr>
                 <th className="col-id">ID</th>
@@ -221,7 +221,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         ...groups,
         <ContentCard key={idx}>
           {hasSubtasks && this.renderTestGroupHeading(idx, group.testCaseResults)}
-          <HTMLTable striped className="submission-details">
+          <HTMLTable striped className="programming-submission-details">
             <thead>
               <tr>
                 <th className="col-id">ID</th>
