@@ -71,7 +71,7 @@ export default {
     return problems
       .map(p => {
         const points = p.points || 0;
-        if (p.submissionsLimit > 0) {
+        if (p.submissionsLimit !== undefined) {
           return `${p.alias},${p.slug},${points},${p.status},${p.submissionsLimit}`;
         } else if (p.status !== ContestProblemStatus.Open) {
           return `${p.alias},${p.slug},${points},${p.status}`;
