@@ -4,7 +4,7 @@ export interface ScoreboardState {
   problemJids: string[];
   problemAliases: string[];
   contestantJids: string[];
-  points?: number[];
+  problemPoints?: number[];
 }
 
 export interface IcpcScoreboard {

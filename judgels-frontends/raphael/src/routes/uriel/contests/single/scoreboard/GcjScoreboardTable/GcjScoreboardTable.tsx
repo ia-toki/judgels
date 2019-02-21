@@ -42,9 +42,9 @@ export class GcjScoreboardTable extends React.PureComponent<GcjScoreboardTablePr
         <UserRef profile={this.props.profilesMap[entry.contestantJid]} showFlag />
       </td>,
       <td key="totalAccepted">
-        <strong>{entry.totalPoints}</strong>
+        <strong className="total-points-cell">{entry.totalPoints}</strong>
         <br />
-        <small>{entry.totalPenalties}</small>
+        <small>{this.renderPenalty(entry.totalPenalties, GcjScoreboardProblemState.Accepted)}</small>
       </td>,
     ];
     const problemCells = entry.attemptsList.map((item, i) =>
@@ -68,15 +68,47 @@ export class GcjScoreboardTable extends React.PureComponent<GcjScoreboardTablePr
       className = 'frozen';
     }
 
-    const shownAttempts = attempts > 0 || state === GcjScoreboardProblemState.Accepted ? '' + attempts : '-';
-    const shownPenalty = state !== GcjScoreboardProblemState.Accepted ? '-' : '' + penalty;
-
     return (
       <td key={idx} className={classNames(className)}>
-        <strong>{shownAttempts}</strong>
+        <strong>{this.renderAttempts(attempts, state)}</strong>
         <br />
-        <small>{shownPenalty}</small>
+        <small>{this.renderPenalty(penalty, state)}</small>
       </td>
     );
+  };
+
+  private renderAttempts = (attempts: number, state: GcjScoreboardProblemState) => {
+    if (state !== GcjScoreboardProblemState.Accepted) {
+      return '-';
+    }
+
+    const wrongAttempts = attempts - 1;
+    if (wrongAttempts === 0) {
+      return '+';
+    }
+    return '+' + wrongAttempts;
+  };
+
+  private renderPenalty = (penalty: number, state: GcjScoreboardProblemState) => {
+    if (state !== GcjScoreboardProblemState.Accepted) {
+      return '-';
+    }
+    return `${this.renderPenaltyHours(penalty)}:${this.renderPenaltyMinutes(penalty)}`;
+  };
+
+  private renderPenaltyHours = (penalty: number) => {
+    const hours = Math.floor(penalty / 60);
+    if (hours < 10) {
+      return '0' + hours;
+    }
+    return hours;
+  };
+
+  private renderPenaltyMinutes = (penalty: number) => {
+    const minutes = penalty % 60;
+    if (minutes < 10) {
+      return '0' + minutes;
+    }
+    return minutes;
   };
 }
