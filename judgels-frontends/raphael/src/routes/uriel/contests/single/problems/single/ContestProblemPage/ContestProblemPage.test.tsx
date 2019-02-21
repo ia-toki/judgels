@@ -68,6 +68,7 @@ describe('ContestProblemPage', () => {
     };
     contestBundleSubmissionActions = {
       createItemSubmission: jest.fn(),
+      getLatestSubmission: jest.fn().mockReturnValue(() => Promise.resolve([])),
     };
     breadcrumbsActions = {
       pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
@@ -130,7 +131,7 @@ describe('ContestProblemPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestProgrammingSubmissionActions.createProgrammingSubmission).toHaveBeenCalledWith(
+    expect(contestProgrammingSubmissionActions.createSubmission).toHaveBeenCalledWith(
       contestJid,
       'contest-a',
       problemJid,
