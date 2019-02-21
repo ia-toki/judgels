@@ -10,9 +10,15 @@ export interface ProblemStatementCardProps {
   title: string;
   alias: string;
   items: Item[];
+  onItemAnswered: (itemJid: string, answer?: string) => any;
 }
 
-export class ProblemStatementCard extends React.PureComponent<ProblemStatementCardProps> {
+export class ProblemStatementCard extends React.Component<ProblemStatementCardProps> {
+  generateOnAnswer = (itemJid: string) => {
+    return (choice?: string) => {
+      this.props.onItemAnswered(itemJid, choice);
+    };
+  };
   render() {
     const { title, alias, items } = this.props;
     return (
@@ -26,7 +32,12 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
             return <ProblemItemStatementCard className="bundle-problem-statement-item" key={item.meta} {...item} />;
           } else {
             return (
-              <ProblemItemMultipleChoiceCard className="bundle-problem-statement-item" key={item.meta} {...item} />
+              <ProblemItemMultipleChoiceCard
+                onChoiceChange={this.generateOnAnswer(item.jid)}
+                className="bundle-problem-statement-item"
+                key={item.meta}
+                {...item}
+              />
             );
           }
         })}

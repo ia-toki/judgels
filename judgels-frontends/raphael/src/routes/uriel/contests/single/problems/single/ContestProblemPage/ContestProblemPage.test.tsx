@@ -21,6 +21,7 @@ import { ProblemType } from 'modules/api/sandalphon/problem';
 describe('ContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
   let contestProgrammingSubmissionActions: jest.Mocked<any>;
+  let contestBundleSubmissionActions: jest.Mocked<any>;
   let breadcrumbsActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
   let history: MemoryHistory;
@@ -65,6 +66,9 @@ describe('ContestProblemPage', () => {
     contestProgrammingSubmissionActions = {
       createSubmission: jest.fn(),
     };
+    contestBundleSubmissionActions = {
+      createItemSubmission: jest.fn(),
+    };
     breadcrumbsActions = {
       pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
       popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
@@ -83,6 +87,7 @@ describe('ContestProblemPage', () => {
     const ContestProblemPage = createContestProblemPage(
       contestProblemActions,
       contestProgrammingSubmissionActions,
+      contestBundleSubmissionActions,
       breadcrumbsActions
     );
 

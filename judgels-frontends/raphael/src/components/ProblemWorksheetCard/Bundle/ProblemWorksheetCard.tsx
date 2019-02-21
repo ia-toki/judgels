@@ -11,6 +11,7 @@ export interface ProblemWorksheetCardProps {
   worksheet: ProblemWorksheet;
   problemInfo: ProblemInfo;
   language: string;
+  onItemAnswered: (itemJid: string, answer: string) => any;
 }
 
 export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCardProps> {
@@ -21,6 +22,13 @@ export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCa
   private renderStatement = () => {
     const { alias, worksheet, problemInfo, language } = this.props;
     const title = getProblemName(problemInfo, language);
-    return <ProblemStatementCard title={title} alias={alias} items={worksheet.items} />;
+    return (
+      <ProblemStatementCard
+        onItemAnswered={this.props.onItemAnswered}
+        title={title}
+        alias={alias}
+        items={worksheet.items}
+      />
+    );
   };
 }

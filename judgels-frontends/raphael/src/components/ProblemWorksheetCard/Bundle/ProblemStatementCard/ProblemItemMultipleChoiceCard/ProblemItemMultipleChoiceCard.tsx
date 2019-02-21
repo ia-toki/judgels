@@ -31,11 +31,21 @@ export class ProblemItemMultipleChoiceCard extends React.Component<
     this.state = { value: undefined };
   }
   handleRadioChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const oldValue = this.state.value;
     const newValue = event.currentTarget.value;
-    const value = newValue === this.state.value ? undefined : newValue;
-    this.setState({ value });
-    if (this.props.onChoiceChange) {
-      this.props.onChoiceChange(value);
+    this.setState({ value: newValue });
+    if (this.props.onChoiceChange && oldValue !== newValue) {
+      this.props.onChoiceChange(newValue);
+    }
+  };
+  handleRadioClick = (event: React.FormEvent<HTMLInputElement>) => {
+    const oldValue = this.state.value;
+    const newValue = event.currentTarget.value;
+    if (oldValue === newValue) {
+      this.setState({ value: undefined });
+      if (this.props.onChoiceChange) {
+        this.props.onChoiceChange(undefined);
+      }
     }
   };
   render() {
@@ -52,9 +62,10 @@ export class ProblemItemMultipleChoiceCard extends React.Component<
           >
             {config.choices.map(choice => (
               <Radio
+                key={choice.alias}
                 className="problem-multiple-choice-item-choice"
                 value={choice.alias}
-                onClick={this.handleRadioChange}
+                onClick={this.handleRadioClick}
               >
                 <Tag className="__alias-tag">
                   <HtmlText>{choice.alias}</HtmlText>
