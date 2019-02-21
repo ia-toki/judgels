@@ -15,6 +15,7 @@ export interface ItemMultipleChoiceConfig {
 
 export interface ProblemItemMultipleChoiceCardProps extends Item {
   className?: string;
+  initialAnswer?: string;
   onChoiceChange?: (choice?: string) => any;
 }
 
@@ -28,7 +29,7 @@ export class ProblemItemMultipleChoiceCard extends React.Component<
 > {
   constructor(props: ProblemItemMultipleChoiceCardProps) {
     super(props);
-    this.state = { value: undefined };
+    this.state = { value: props.initialAnswer };
   }
   handleRadioChange = (event: React.FormEvent<HTMLInputElement>) => {
     const oldValue = this.state.value;

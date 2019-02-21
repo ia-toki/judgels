@@ -22,4 +22,11 @@ export const contestBundleSubmissionActions = {
       toastActions.showSuccessToast('Solution submitted.');
     };
   },
+
+  getLatestSubmission: (contestJid: string, problemJid: string) => {
+    return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
+      const token = selectToken(getState());
+      return contestSubmissionBundleAPI.getLatestSubmissionsByUserForProblemInContest(token, contestJid, problemJid);
+    };
+  },
 };

@@ -26,6 +26,7 @@ import { ProblemWorksheetCard as ProgrammingProblemWorksheetCard } from 'compone
 import { ProblemWorksheetCard as BundleProblemWorksheetCard } from 'components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 
 import './ContestProblemPage.css';
+import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
@@ -48,6 +49,7 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     data: ProgrammingProblemSubmissionFormData
   ) => Promise<void>;
   onCreateBundleSubmission: (contestJid: string, problemJid: string, itemJid: string, answer?: string) => Promise<void>;
+  onGetBundleLatestSubmission: (contestJid: string, problemJid: string) => { [id: string]: ItemSubmission };
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
@@ -58,6 +60,7 @@ interface ContestProblemPageState {
   problem?: ContestProblem;
   problemInfo?: ProblemInfo;
   totalSubmissions?: number;
+  bundleLatestSubmission?: { [id: string]: ItemSubmission };
   worksheet?: ProgrammingProblemWorksheet | BundleProblemWorksheet;
   problemType?: ProblemType;
 }
@@ -80,7 +83,20 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
             this.props.match.params.problemAlias,
             this.props.statementLanguage
           );
-    this.setState({ problemInfo, problemType, defaultLanguage, languages, problem, totalSubmissions, worksheet });
+    const bundleLatestSubmission = await this.props.onGetBundleLatestSubmission(
+      this.props.contest.jid,
+      problem.problemJid
+    );
+    this.setState({
+      bundleLatestSubmission,
+      problemInfo,
+      problemType,
+      defaultLanguage,
+      languages,
+      problem,
+      totalSubmissions,
+      worksheet,
+    });
     this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + problem.alias);
   }
 
@@ -137,7 +153,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 
   private renderStatement = () => {
-    const { problemInfo, problemType, problem, totalSubmissions, worksheet } = this.state;
+    const { problemInfo, problemType, problem, totalSubmissions, worksheet, bundleLatestSubmission } = this.state;
     if (!problemInfo || !problem || !worksheet) {
       return <LoadingState />;
     }
@@ -158,11 +174,15 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
         />
       );
     } else {
+      if (!bundleLatestSubmission) {
+        return <LoadingState />;
+      }
       return (
         <BundleProblemWorksheetCard
           language={this.props.statementLanguage}
           problemInfo={problemInfo}
           alias={problem.alias}
+          latestSubmission={bundleLatestSubmission}
           onItemAnswered={this.onCreateBundleSubmission}
           worksheet={worksheet as BundleProblemWorksheet}
         />
@@ -188,6 +208,7 @@ export function createContestProblemPage(
     onGetProgrammingProblemWorksheet: contestProblemActions.getProgrammingProblemWorksheet,
     onCreateProgrammingSubmission: contestProgrammingSubmissionActions.createSubmission,
     onCreateBundleSubmission: contestBundleSubmissionActions.createItemSubmission,
+    onGetBundleLatestSubmission: contestBundleSubmissionActions.getLatestSubmission,
     onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
