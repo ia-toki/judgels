@@ -12,7 +12,7 @@ describe('ScoreboardTable', () => {
     problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3'],
     problemAliases: ['A', 'B', 'C'],
     contestantJids: ['JIDUSER1', 'JIDUSER2'],
-    points: [0, 0, 0],
+    problemPoints: [0, 0, 0],
   };
 
   const className = 'className';
