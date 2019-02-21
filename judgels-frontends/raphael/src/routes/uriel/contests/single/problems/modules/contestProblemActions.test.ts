@@ -22,7 +22,8 @@ describe('contestProblemActions', () => {
     contestProblemAPI = {
       getProblems: jest.fn(),
       setProblems: jest.fn(),
-      getProblemWorksheet: jest.fn(),
+      getBundleProblemWorksheet: jest.fn(),
+      getProgrammingProblemWorksheet: jest.fn(),
     };
     toastActions = {
       showSuccessToast: jest.fn(),
@@ -97,13 +98,13 @@ describe('contestProblemActions', () => {
 
     beforeEach(async () => {
       const worksheet = {} as ContestBundleProblemWorksheet;
-      contestProblemAPI.getProblemWorksheet.mockReturnValue(worksheet);
+      contestProblemAPI.getBundleProblemWorksheet.mockReturnValue(worksheet);
 
       await doGetProblemWorksheet();
     });
 
-    it('calls API to get problem worksheet', () => {
-      expect(contestProblemAPI.getProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
+    it('calls API to get bundle problem worksheet', () => {
+      expect(contestProblemAPI.getBundleProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
     });
   });
 
@@ -114,13 +115,13 @@ describe('contestProblemActions', () => {
 
     beforeEach(async () => {
       const worksheet = {} as ContestProgrammingProblemWorksheet;
-      contestProblemAPI.getProblemWorksheet.mockReturnValue(worksheet);
+      contestProblemAPI.getProgrammingProblemWorksheet.mockReturnValue(worksheet);
 
       await doGetProblemWorksheet();
     });
 
-    it('calls API to get problem worksheet', () => {
-      expect(contestProblemAPI.getProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
+    it('calls API to get programming problem worksheet', () => {
+      expect(contestProblemAPI.getProgrammingProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
     });
   });
 });

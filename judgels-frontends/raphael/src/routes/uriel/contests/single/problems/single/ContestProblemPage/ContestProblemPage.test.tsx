@@ -16,6 +16,7 @@ import { createContestProblemPage } from './ContestProblemPage';
 import { contestReducer, PutContest } from '../../../../modules/contestReducer';
 import createMemoryHistory from 'history/createMemoryHistory';
 import { MemoryHistory } from 'history';
+import { ProblemType } from 'modules/api/sandalphon/problem';
 
 describe('ContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
@@ -26,7 +27,8 @@ describe('ContestProblemPage', () => {
 
   beforeEach(() => {
     contestProblemActions = {
-      getProblemWorksheet: jest.fn().mockReturnValue(() =>
+      getProblemType: jest.fn().mockReturnValue(() => Promise.resolve(ProblemType.Programming)),
+      getProgrammingProblemWorksheet: jest.fn().mockReturnValue(() =>
         Promise.resolve({
           problem: {
             problemJid,
@@ -116,7 +118,7 @@ describe('ContestProblemPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestProgrammingSubmissionActions.createSubmission).toHaveBeenCalledWith(
+    expect(contestProgrammingSubmissionActions.createProgrammingSubmission).toHaveBeenCalledWith(
       contestJid,
       'contest-a',
       problemJid,

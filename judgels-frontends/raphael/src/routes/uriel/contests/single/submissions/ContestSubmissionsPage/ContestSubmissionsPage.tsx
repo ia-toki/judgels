@@ -21,7 +21,7 @@ import './ContestSubmissionsPage.css';
 
 export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
   contest: Contest;
-  onGetSubmissions: (
+  onGetProgrammingSubmissions: (
     contestJid: string,
     userJid?: string,
     problemJid?: string,
@@ -168,7 +168,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
 
   private refreshSubmissions = async (username?: string, problemAlias?: string, page?: number) => {
     const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
-    const response = await this.props.onGetSubmissions(this.props.contest.jid, userJid, problemJid, page);
+    const response = await this.props.onGetProgrammingSubmissions(this.props.contest.jid, userJid, problemJid, page);
     this.setState({ response, isFilterLoading: false });
     return response.data;
   };
@@ -222,7 +222,7 @@ export function createContestSubmissionsPage(contestProgrammingSubmissionActions
   });
 
   const mapDispatchToProps = {
-    onGetSubmissions: contestProgrammingSubmissionActions.getSubmissions,
+    onGetProgrammingSubmissions: contestProgrammingSubmissionActions.getSubmissions,
     onRegrade: contestProgrammingSubmissionActions.regradeSubmissions,
     onRegradeAll: contestProgrammingSubmissionActions.regradeAllSubmissions,
     onAppendRoute: queries => push({ search: stringify(queries) }),

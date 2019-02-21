@@ -39,7 +39,7 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     problemAlias: string,
     language?: string
   ) => Promise<ContestBundleProblemWorksheet>;
-  onCreateSubmission: (
+  onCreateProgrammingSubmission: (
     contestJid: string,
     contestSlug: string,
     problemJid: string,
@@ -100,9 +100,9 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     );
   }
 
-  private onCreateSubmission = async (data: ProgrammingProblemSubmissionFormData) => {
+  private onCreateProgrammingSubmission = async (data: ProgrammingProblemSubmissionFormData) => {
     const problem = this.state.problem!;
-    return await this.props.onCreateSubmission(
+    return await this.props.onCreateProgrammingSubmission(
       this.props.contest.jid,
       this.props.contest.slug,
       problem.problemJid,
@@ -143,11 +143,12 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
         <ProgrammingProblemWorksheetCard
           alias={problem.alias}
           worksheet={worksheet as ProgrammingProblemWorksheet}
-          onSubmit={this.onCreateSubmission}
+          onSubmit={this.onCreateProgrammingSubmission}
           submissionWarning={submissionWarning}
         />
       );
     } else {
+      // TODO: add BundleProblemWorksheetCard
       return <React.Fragment />;
     }
   };
@@ -167,7 +168,7 @@ export function createContestProblemPage(
     onGetProblemType: contestProblemActions.getProblemType,
     onGetBundleProblemWorksheet: contestProblemActions.getBundleProblemWorksheet,
     onGetProgrammingProblemWorksheet: contestProblemActions.getProgrammingProblemWorksheet,
-    onCreateSubmission: contestProgrammingSubmissionActions.createSubmission,
+    onCreateProgrammingSubmission: contestProgrammingSubmissionActions.createSubmission,
     onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
