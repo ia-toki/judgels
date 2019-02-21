@@ -31,7 +31,7 @@ export const contestProblemActions = {
     };
   },
 
-  getProblemType: (contestJid: string, problemAlias: string) => {
+  getProblemInfo: (contestJid: string, problemAlias: string) => {
     return async (dispatch, getState, { contestProblemAPI }) => {
       const token = selectToken(getState());
 
@@ -45,8 +45,7 @@ export const contestProblemActions = {
       if (!problemInfo) {
         throw new NotFoundError();
       }
-
-      return problemInfo.type;
+      return problemInfo;
     };
   },
 

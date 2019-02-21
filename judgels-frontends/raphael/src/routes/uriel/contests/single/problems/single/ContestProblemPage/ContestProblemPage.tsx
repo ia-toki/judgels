@@ -9,7 +9,7 @@ import StatementLanguageWidget, {
 } from 'components/StatementLanguageWidget/StatementLanguageWidget';
 import { AppState } from 'modules/store';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { ProblemType } from 'modules/api/sandalphon/problem';
+import { ProblemType, ProblemInfo } from 'modules/api/sandalphon/problem';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestProblem } from 'modules/api/uriel/contestProblem';
 import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from 'modules/api/uriel/contestProblemBundle';
@@ -22,13 +22,14 @@ import { contestProblemActions as injectedContestProblemActions } from '../../mo
 import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../../../submissions/modules/contestProgrammingSubmissionActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 import { ProblemWorksheetCard as ProgrammingProblemWorksheetCard } from 'components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
+import { ProblemWorksheetCard as BundleProblemWorksheetCard } from 'components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 
 import './ContestProblemPage.css';
 
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
   statementLanguage: string;
-  onGetProblemType: (contestJid: string, problemAlias: string) => Promise<ProblemType>;
+  onGetProblemInfo: (contestJid: string, problemAlias: string) => Promise<ProblemInfo>;
   onGetProgrammingProblemWorksheet: (
     contestJid: string,
     problemAlias: string,
@@ -53,6 +54,7 @@ interface ContestProblemPageState {
   defaultLanguage?: string;
   languages?: string[];
   problem?: ContestProblem;
+  problemInfo?: ProblemInfo;
   totalSubmissions?: number;
   worksheet?: ProgrammingProblemWorksheet | BundleProblemWorksheet;
   problemType?: ProblemType;
@@ -62,7 +64,8 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   state: ContestProblemPageState = {};
 
   async componentDidMount() {
-    const problemType = await this.props.onGetProblemType(this.props.contest.jid, this.props.match.params.problemAlias);
+    const problemInfo = await this.props.onGetProblemInfo(this.props.contest.jid, this.props.match.params.problemAlias);
+    const problemType = problemInfo.type;
     const { defaultLanguage, languages, problem, totalSubmissions, worksheet } =
       problemType === ProblemType.Programming
         ? await this.props.onGetProgrammingProblemWorksheet(
@@ -75,7 +78,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
             this.props.match.params.problemAlias,
             this.props.statementLanguage
           );
-    this.setState({ problemType, defaultLanguage, languages, problem, totalSubmissions, worksheet });
+    this.setState({ problemInfo, problemType, defaultLanguage, languages, problem, totalSubmissions, worksheet });
     this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + problem.alias);
   }
 
@@ -127,8 +130,8 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 
   private renderStatement = () => {
-    const { problemType, problem, totalSubmissions, worksheet } = this.state;
-    if (!problem || !worksheet) {
+    const { problemInfo, problemType, problem, totalSubmissions, worksheet } = this.state;
+    if (!problemInfo || !problem || !worksheet) {
       return <LoadingState />;
     }
 
@@ -148,8 +151,14 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
         />
       );
     } else {
-      // TODO: add BundleProblemWorksheetCard
-      return <React.Fragment />;
+      return (
+        <BundleProblemWorksheetCard
+          language={this.props.statementLanguage}
+          problemInfo={problemInfo}
+          alias={problem.alias}
+          worksheet={worksheet as BundleProblemWorksheet}
+        />
+      );
     }
   };
 }
@@ -165,7 +174,7 @@ export function createContestProblemPage(
   });
 
   const mapDispatchToProps = {
-    onGetProblemType: contestProblemActions.getProblemType,
+    onGetProblemInfo: contestProblemActions.getProblemInfo,
     onGetBundleProblemWorksheet: contestProblemActions.getBundleProblemWorksheet,
     onGetProgrammingProblemWorksheet: contestProblemActions.getProgrammingProblemWorksheet,
     onCreateProgrammingSubmission: contestProgrammingSubmissionActions.createSubmission,

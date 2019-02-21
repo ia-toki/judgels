@@ -27,7 +27,14 @@ describe('ContestProblemPage', () => {
 
   beforeEach(() => {
     contestProblemActions = {
-      getProblemType: jest.fn().mockReturnValue(() => Promise.resolve(ProblemType.Programming)),
+      getProblemInfo: jest.fn().mockReturnValue(() =>
+        Promise.resolve({
+          slug: 'lorem-ipsum',
+          type: ProblemType.Programming,
+          defaultLanguage: 'id',
+          titlesByLanguage: { id: 'Lorem Ipsum' },
+        })
+      ),
       getProgrammingProblemWorksheet: jest.fn().mockReturnValue(() =>
         Promise.resolve({
           problem: {
