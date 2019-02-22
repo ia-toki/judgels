@@ -78,11 +78,17 @@ export class GcjScoreboardTable extends React.PureComponent<GcjScoreboardTablePr
   };
 
   private renderAttempts = (attempts: number, state: GcjScoreboardProblemState) => {
-    if (state !== GcjScoreboardProblemState.Accepted) {
+    if (attempts === 0) {
       return '-';
     }
 
-    const wrongAttempts = attempts - 1;
+    let wrongAttempts: number;
+    if (state === GcjScoreboardProblemState.Accepted) {
+      wrongAttempts = attempts - 1;
+    } else {
+      wrongAttempts = attempts;
+    }
+
     if (wrongAttempts === 0) {
       return '+';
     }
