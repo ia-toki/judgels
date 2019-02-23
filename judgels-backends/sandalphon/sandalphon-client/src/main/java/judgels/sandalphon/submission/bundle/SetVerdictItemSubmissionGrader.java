@@ -7,14 +7,16 @@ import judgels.sandalphon.api.submission.bundle.ItemSubmission.ItemSubmissionGra
 import judgels.sandalphon.api.submission.bundle.Verdict;
 
 public class SetVerdictItemSubmissionGrader implements ItemSubmissionGrader {
-    private Verdict verdict;
+    private final ObjectMapper objectMapper;
+    private final Verdict verdict;
 
-    public SetVerdictItemSubmissionGrader(Verdict verdict) {
+    public SetVerdictItemSubmissionGrader(ObjectMapper objectMapper, Verdict verdict) {
+        this.objectMapper = objectMapper;
         this.verdict = verdict;
     }
 
     @Override
-    public ItemSubmissionGrading grade(ObjectMapper mapper, Item item, String answer) {
+    public ItemSubmissionGrading grade(Item item, String answer) {
         return new ItemSubmissionGrading.Builder()
                 .verdict(verdict)
                 .score(Optional.empty())

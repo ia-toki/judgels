@@ -21,15 +21,16 @@ public class SetVerdictItemSubmissionGraderTests {
                 .jid("item1jid")
                 .meta("1")
                 .type(ItemType.MULTIPLE_CHOICE)
-                .config("choices:[]")
+                .config("")
                 .build();
     }
 
     @Test
     void pending_manual_grading() {
-        SetVerdictItemSubmissionGrader grader = new SetVerdictItemSubmissionGrader(Verdicts.PENDING_MANUAL_GRADING);
+        SetVerdictItemSubmissionGrader grader = new SetVerdictItemSubmissionGrader(
+                mapper, Verdicts.PENDING_MANUAL_GRADING);
 
-        ItemSubmissionGrading grading = grader.grade(mapper, item, "any answer");
+        ItemSubmissionGrading grading = grader.grade(item, "any answer");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.PENDING_MANUAL_GRADING.getCode());
         assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.PENDING_MANUAL_GRADING.getName());
         assertThat(grading.getScore().isPresent()).isFalse();
@@ -37,9 +38,10 @@ public class SetVerdictItemSubmissionGraderTests {
 
     @Test
     void grading_not_needed() {
-        SetVerdictItemSubmissionGrader grader = new SetVerdictItemSubmissionGrader(Verdicts.GRADING_NOT_NEEDED);
+        SetVerdictItemSubmissionGrader grader = new SetVerdictItemSubmissionGrader(
+                mapper, Verdicts.GRADING_NOT_NEEDED);
 
-        ItemSubmissionGrading grading = grader.grade(mapper, item, "any answer");
+        ItemSubmissionGrading grading = grader.grade(item, "any answer");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.GRADING_NOT_NEEDED.getCode());
         assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.GRADING_NOT_NEEDED.getName());
         assertThat(grading.getScore().isPresent()).isFalse();

@@ -3,7 +3,6 @@ package judgels.uriel.contest.submission.bundle;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +41,8 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
     private final ClientProblemService clientProblemService;
+    private final ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
     private final BasicAuthHeader sandalphonClientAuthHeader;
-    private final ObjectMapper objectMapper;
 
     @Inject
     public ContestItemSubmissionResource(
@@ -54,8 +53,8 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
             ClientProblemService clientProblemService,
-            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
-            ObjectMapper objectMapper) {
+            ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
+            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
@@ -64,8 +63,8 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
         this.clientProblemService = clientProblemService;
+        this.itemSubmissionGraderRegistry = itemSubmissionGraderRegistry;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -85,9 +84,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .findAny();
         checkFound(item);
 
-        ItemSubmissionGrading grading = new ItemSubmissionGraderRegistry()
+        ItemSubmissionGrading grading = itemSubmissionGraderRegistry
                 .get(item.get().getType())
-                .grade(objectMapper, item.get(), data.getAnswer());
+                .grade(item.get(), data.getAnswer());
 
         submissionStore.upsertSubmission(data, grading, actorJid);
     }

@@ -9,14 +9,22 @@ import judgels.sandalphon.api.submission.bundle.ItemSubmission.ItemSubmissionGra
 import judgels.sandalphon.api.submission.bundle.Verdicts;
 
 public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader {
+    private final ObjectMapper objectMapper;
+
+    public MultipleChoiceItemSubmissionGrader(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
-    public ItemSubmissionGrading grade(ObjectMapper objectMapper, Item item, String answer) {
+    public ItemSubmissionGrading grade(Item item, String answer) {
         MultipleChoiceItemConfig config;
         try {
             config = objectMapper.readValue(item.getConfig(), MultipleChoiceItemConfig.class);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return new ItemSubmissionGrading.Builder()
+                    .verdict(Verdicts.INTERNAL_ERROR)
+                    .score(Optional.empty())
+                    .build();
         }
 
         Optional<MultipleChoiceItemConfig.Choice> matchingChoice = config.getChoices().stream()

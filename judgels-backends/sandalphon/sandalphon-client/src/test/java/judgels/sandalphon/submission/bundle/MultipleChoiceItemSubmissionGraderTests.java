@@ -13,10 +13,12 @@ import org.junit.jupiter.api.Test;
 public class MultipleChoiceItemSubmissionGraderTests {
     private ObjectMapper mapper;
     private Item testItem1;
+    private Item testItem2;
 
     @BeforeEach
     void before() {
         mapper = new ObjectMapper();
+
         testItem1 = new Item.Builder()
                 .jid("item1jid")
                 .meta("1")
@@ -28,13 +30,20 @@ public class MultipleChoiceItemSubmissionGraderTests {
                         + "{\"alias\":\"d\",\"content\":\"jawaban d\",\"isCorrect\":false},"
                         + "{\"alias\":\"e\",\"content\":\"jawaban e\",\"isCorrect\":false}]}")
                 .build();
+
+        testItem2 = new Item.Builder()
+                .jid("item2jid")
+                .meta("2")
+                .type(ItemType.MULTIPLE_CHOICE)
+                .config("Invalid JSON")
+                .build();
     }
 
     @Test
     void accepted() {
-        MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader();
+        MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader(mapper);
 
-        ItemSubmissionGrading grading = grader.grade(mapper, testItem1, "b");
+        ItemSubmissionGrading grading = grader.grade(testItem1, "b");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.ACCEPTED.getCode());
         assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.ACCEPTED.getName());
         assertThat(grading.getScore().isPresent()).isTrue();
@@ -43,31 +52,41 @@ public class MultipleChoiceItemSubmissionGraderTests {
 
     @Test
     void wrong_answer() {
-        MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader();
+        MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader(mapper);
         ItemSubmissionGrading grading;
 
-        grading = grader.grade(mapper, testItem1, "a");
+        grading = grader.grade(testItem1, "a");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.WRONG_ANSWER.getCode());
         assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.WRONG_ANSWER.getName());
         assertThat(grading.getScore().isPresent()).isTrue();
         assertThat(grading.getScore().get()).isEqualTo(-1);
 
-        grading = grader.grade(mapper, testItem1, "c");
+        grading = grader.grade(testItem1, "c");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.WRONG_ANSWER.getCode());
         assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.WRONG_ANSWER.getName());
         assertThat(grading.getScore().isPresent()).isTrue();
         assertThat(grading.getScore().get()).isEqualTo(-1);
 
-        grading = grader.grade(mapper, testItem1, "an answer which is not included in item choices");
+        grading = grader.grade(testItem1, "an answer which is not included in item choices");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.WRONG_ANSWER.getCode());
         assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.WRONG_ANSWER.getName());
         assertThat(grading.getScore().isPresent()).isTrue();
         assertThat(grading.getScore().get()).isEqualTo(-1);
 
-        grading = grader.grade(mapper, testItem1, "");
+        grading = grader.grade(testItem1, "");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.WRONG_ANSWER.getCode());
         assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.WRONG_ANSWER.getName());
         assertThat(grading.getScore().isPresent()).isTrue();
         assertThat(grading.getScore().get()).isEqualTo(-1);
+    }
+
+    @Test
+    void internal_error() {
+        MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader(mapper);
+
+        ItemSubmissionGrading grading = grader.grade(testItem2, "b");
+        assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.INTERNAL_ERROR.getCode());
+        assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.INTERNAL_ERROR.getName());
+        assertThat(grading.getScore().isPresent()).isFalse();
     }
 }
