@@ -23,4 +23,13 @@ public class ContestBundleItemSubmissionModel extends JudgelsModel {
 
     @Column(nullable = false)
     public String answer;
+
+    @Column(nullable = false)
+    public String verdictCode;
+
+    @Column(nullable = false)
+    public String verdictName;
+
+    @Column(nullable = true)
+    public Integer score;
 }
