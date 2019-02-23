@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
-import judgels.sandalphon.api.submission.bundle.ItemSubmission.ItemSubmissionGrading;
+import judgels.sandalphon.api.submission.bundle.ItemSubmission.Grading;
 import judgels.sandalphon.api.submission.bundle.Verdict;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionData;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
@@ -23,7 +23,7 @@ public class ContestItemSubmissionStore {
 
     public ItemSubmission upsertSubmission(
             ContestItemSubmissionData data,
-            ItemSubmissionGrading grading,
+            Grading grading,
             String userJid) {
 
         Optional<ContestBundleItemSubmissionModel> maybeModel = submissionDao
@@ -80,7 +80,7 @@ public class ContestItemSubmissionStore {
                 .answer(model.answer)
                 .userJid(model.updatedBy)
                 .time(model.updatedAt)
-                .grading(new ItemSubmission.ItemSubmissionGrading.Builder()
+                .grading(new Grading.Builder()
                     .verdict(Verdict.of(model.verdictCode, model.verdictName))
                     .score(Optional.ofNullable(model.score))
                     .build())

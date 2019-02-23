@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
-import judgels.sandalphon.api.submission.bundle.ItemSubmission.ItemSubmissionGrading;
+import judgels.sandalphon.api.submission.bundle.ItemSubmission.Grading;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +43,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
     void accepted() {
         MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader(mapper);
 
-        ItemSubmissionGrading grading = grader.grade(testItem1, "b");
+        Grading grading = grader.grade(testItem1, "b");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.ACCEPTED.getCode());
         assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.ACCEPTED.getName());
         assertThat(grading.getScore().isPresent()).isTrue();
@@ -53,7 +53,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
     @Test
     void wrong_answer() {
         MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader(mapper);
-        ItemSubmissionGrading grading;
+        Grading grading;
 
         grading = grader.grade(testItem1, "a");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.WRONG_ANSWER.getCode());
@@ -84,7 +84,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
     void internal_error() {
         MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader(mapper);
 
-        ItemSubmissionGrading grading = grader.grade(testItem2, "b");
+        Grading grading = grader.grade(testItem2, "b");
         assertThat(grading.getVerdict().getCode()).isEqualTo(Verdicts.INTERNAL_ERROR.getCode());
         assertThat(grading.getVerdict().getName()).isEqualTo(Verdicts.INTERNAL_ERROR.getName());
         assertThat(grading.getScore().isPresent()).isFalse();

@@ -16,19 +16,19 @@ public interface ItemSubmission {
     String getAnswer();
     String getUserJid();
     Instant getTime();
-    Optional<ItemSubmissionGrading> getGrading();
+    Optional<Grading> getGrading();
 
     static ItemSubmission withoutGrading(ItemSubmission submission) {
         return new ItemSubmission.Builder().from(submission).grading(Optional.empty()).build();
     }
 
     @Value.Immutable
-    @JsonDeserialize(as = ImmutableItemSubmissionGrading.class)
-    interface ItemSubmissionGrading {
+    @JsonDeserialize(as = ImmutableGrading.class)
+    interface Grading {
         Verdict getVerdict();
         Optional<Integer> getScore();
 
-        class Builder extends ImmutableItemSubmissionGrading.Builder {}
+        class Builder extends ImmutableGrading.Builder {}
     }
 
     class Builder extends ImmutableItemSubmission.Builder {}

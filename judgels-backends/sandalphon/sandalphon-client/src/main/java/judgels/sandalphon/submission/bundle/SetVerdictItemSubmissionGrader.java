@@ -3,7 +3,7 @@ package judgels.sandalphon.submission.bundle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import judgels.sandalphon.api.problem.bundle.Item;
-import judgels.sandalphon.api.submission.bundle.ItemSubmission.ItemSubmissionGrading;
+import judgels.sandalphon.api.submission.bundle.ItemSubmission.Grading;
 import judgels.sandalphon.api.submission.bundle.Verdict;
 
 public class SetVerdictItemSubmissionGrader implements ItemSubmissionGrader {
@@ -16,8 +16,8 @@ public class SetVerdictItemSubmissionGrader implements ItemSubmissionGrader {
     }
 
     @Override
-    public ItemSubmissionGrading grade(Item item, String answer) {
-        return new ItemSubmissionGrading.Builder()
+    public Grading grade(Item item, String answer) {
+        return new Grading.Builder()
                 .verdict(verdict)
                 .score(Optional.empty())
                 .build();

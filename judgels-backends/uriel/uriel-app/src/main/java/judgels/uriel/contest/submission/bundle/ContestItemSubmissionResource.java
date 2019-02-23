@@ -16,7 +16,7 @@ import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
-import judgels.sandalphon.api.submission.bundle.ItemSubmission.ItemSubmissionGrading;
+import judgels.sandalphon.api.submission.bundle.ItemSubmission.Grading;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -84,7 +84,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .findAny();
         checkFound(item);
 
-        ItemSubmissionGrading grading = itemSubmissionGraderRegistry
+        Grading grading = itemSubmissionGraderRegistry
                 .get(item.get().getType())
                 .grade(item.get(), data.getAnswer());
 
