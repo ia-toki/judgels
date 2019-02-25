@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Optional;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.MultipleChoiceItemConfig;
-import judgels.sandalphon.api.submission.bundle.ItemSubmission.Grading;
+import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.Verdicts;
 
 public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader {

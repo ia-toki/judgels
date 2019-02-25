@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
-import judgels.sandalphon.api.submission.bundle.ItemSubmission.Grading;
+import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.Verdict;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionData;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;

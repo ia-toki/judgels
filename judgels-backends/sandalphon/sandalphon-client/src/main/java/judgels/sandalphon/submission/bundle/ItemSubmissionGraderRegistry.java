@@ -15,7 +15,7 @@ public class ItemSubmissionGraderRegistry {
 
     public ItemSubmissionGrader get(ItemType itemType) {
         if (itemType == ItemType.STATEMENT) {
-            return new SetVerdictItemSubmissionGrader(objectMapper, Verdicts.GRADING_NOT_NEEDED);
+            return new FixedVerdictItemSubmissionGrader(objectMapper, Verdicts.GRADING_NOT_NEEDED);
         } else if (itemType == ItemType.MULTIPLE_CHOICE) {
             return new MultipleChoiceItemSubmissionGrader(objectMapper);
         }

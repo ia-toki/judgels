@@ -22,14 +22,5 @@ public interface ItemSubmission {
         return new ItemSubmission.Builder().from(submission).grading(Optional.empty()).build();
     }
 
-    @Value.Immutable
-    @JsonDeserialize(as = ImmutableGrading.class)
-    interface Grading {
-        Verdict getVerdict();
-        Optional<Integer> getScore();
-
-        class Builder extends ImmutableGrading.Builder {}
-    }
-
     class Builder extends ImmutableItemSubmission.Builder {}
 }

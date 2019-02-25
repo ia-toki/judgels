@@ -16,7 +16,7 @@ import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
-import judgels.sandalphon.api.submission.bundle.ItemSubmission.Grading;
+import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
