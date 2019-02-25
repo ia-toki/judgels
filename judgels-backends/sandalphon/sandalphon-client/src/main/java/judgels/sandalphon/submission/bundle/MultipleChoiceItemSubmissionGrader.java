@@ -6,7 +6,7 @@ import java.util.Optional;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.MultipleChoiceItemConfig;
 import judgels.sandalphon.api.submission.bundle.Grading;
-import judgels.sandalphon.api.submission.bundle.Verdicts;
+import judgels.sandalphon.api.submission.bundle.Verdict;
 
 public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader {
     private final ObjectMapper objectMapper;
@@ -22,7 +22,7 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
             config = objectMapper.readValue(item.getConfig(), MultipleChoiceItemConfig.class);
         } catch (IOException e) {
             return new Grading.Builder()
-                    .verdict(Verdicts.INTERNAL_ERROR)
+                    .verdict(Verdict.INTERNAL_ERROR)
                     .score(Optional.empty())
                     .build();
         }
@@ -33,12 +33,12 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
 
         if (matchingChoice.isPresent() && matchingChoice.get().getIsCorrect()) {
             return new Grading.Builder()
-                    .verdict(Verdicts.ACCEPTED)
+                    .verdict(Verdict.ACCEPTED)
                     .score(Optional.of(config.getScore()))
                     .build();
         } else {
             return new Grading.Builder()
-                    .verdict(Verdicts.WRONG_ANSWER)
+                    .verdict(Verdict.WRONG_ANSWER)
                     .score(Optional.of(-config.getPenalty()))
                     .build();
         }

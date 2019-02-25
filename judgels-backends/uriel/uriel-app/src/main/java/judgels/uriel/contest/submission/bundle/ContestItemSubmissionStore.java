@@ -5,8 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.Grading;
+import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.Verdict;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionData;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
@@ -33,8 +33,7 @@ public class ContestItemSubmissionStore {
         if (maybeModel.isPresent()) {
             ContestBundleItemSubmissionModel model = maybeModel.get();
             model.answer = data.getAnswer();
-            model.verdictCode = grading.getVerdict().getCode();
-            model.verdictName = grading.getVerdict().getName();
+            model.verdict = grading.getVerdict().name();
             model.score = grading.getScore().orElse(null);
             return fromModel(submissionDao.update(model));
         } else {
@@ -43,8 +42,7 @@ public class ContestItemSubmissionStore {
             model.problemJid = data.getProblemJid();
             model.itemJid = data.getItemJid();
             model.answer = data.getAnswer();
-            model.verdictCode = grading.getVerdict().getCode();
-            model.verdictName = grading.getVerdict().getName();
+            model.verdict = grading.getVerdict().name();
             model.score = grading.getScore().orElse(null);
             return fromModel(submissionDao.insert(model));
         }
@@ -81,7 +79,7 @@ public class ContestItemSubmissionStore {
                 .userJid(model.updatedBy)
                 .time(model.updatedAt)
                 .grading(new Grading.Builder()
-                    .verdict(Verdict.of(model.verdictCode, model.verdictName))
+                    .verdict(Verdict.valueOf(model.verdict))
                     .score(Optional.ofNullable(model.score))
                     .build())
                 .build();

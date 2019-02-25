@@ -1,15 +1,12 @@
 package judgels.sandalphon.api.submission.bundle;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.immutables.value.Value;
+public enum Verdict {
+    PENDING,
+    GRADING_NOT_NEEDED,
+    PENDING_MANUAL_GRADING,
+    INTERNAL_ERROR,
 
-@Value.Immutable
-@JsonDeserialize(as = ImmutableVerdict.class)
-public interface Verdict {
-    String getCode();
-    String getName();
-
-    static Verdict of(String code, String name) {
-        return ImmutableVerdict.builder().code(code).name(name).build();
-    }
+    OK,
+    ACCEPTED,
+    WRONG_ANSWER
 }

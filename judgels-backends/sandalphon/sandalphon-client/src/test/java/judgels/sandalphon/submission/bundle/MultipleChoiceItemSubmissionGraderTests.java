@@ -3,10 +3,10 @@ package judgels.sandalphon.submission.bundle;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.submission.bundle.Grading;
+import judgels.sandalphon.api.submission.bundle.Verdict;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +44,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
         MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader(mapper);
 
         Grading grading = grader.grade(testItem1, "b");
-        assertThat(grading.getVerdict()).isEqualTo(Verdicts.ACCEPTED);
+        assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
         assertThat(grading.getScore()).contains(4);
     }
 
@@ -54,19 +54,19 @@ public class MultipleChoiceItemSubmissionGraderTests {
         Grading grading;
 
         grading = grader.grade(testItem1, "a");
-        assertThat(grading.getVerdict()).isEqualTo(Verdicts.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1);
 
         grading = grader.grade(testItem1, "c");
-        assertThat(grading.getVerdict()).isEqualTo(Verdicts.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1);
 
         grading = grader.grade(testItem1, "an answer which is not included in item choices");
-        assertThat(grading.getVerdict()).isEqualTo(Verdicts.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1);
 
         grading = grader.grade(testItem1, "");
-        assertThat(grading.getVerdict()).isEqualTo(Verdicts.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1);
     }
 
@@ -75,7 +75,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
         MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader(mapper);
 
         Grading grading = grader.grade(testItem2, "b");
-        assertThat(grading.getVerdict()).isEqualTo(Verdicts.INTERNAL_ERROR);
+        assertThat(grading.getVerdict()).isEqualTo(Verdict.INTERNAL_ERROR);
         assertThat(grading.getScore()).isEmpty();
     }
 }
