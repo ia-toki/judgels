@@ -39,8 +39,13 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 public class ContestItemSubmissionResource implements ContestItemSubmissionService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContestItemSubmissionResource.class);
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
@@ -176,6 +181,14 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .grade(item.get(), data.getAnswer());
 
         submissionStore.upsertSubmission(data, grading, actorJid);
+
+        Marker itemSubmissionMarker = MarkerFactory.getMarker("ITEM_SUBMISSION");
+        LOGGER.info(
+                itemSubmissionMarker,
+                "{} submitted answer '{}' for item {} in problem {} and contest {}, verdict {}, score {}",
+                actorJid, data.getAnswer(), data.getItemJid(), data.getProblemJid(), data.getContestJid(),
+                grading.getVerdict(), grading.getScore()
+        );
     }
 
     @Override

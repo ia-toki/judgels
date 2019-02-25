@@ -7,8 +7,12 @@ import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.MultipleChoiceItemConfig;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.Verdict;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MultipleChoiceItemSubmissionGrader.class);
+
     private final ObjectMapper objectMapper;
 
     public MultipleChoiceItemSubmissionGrader(ObjectMapper objectMapper) {
@@ -21,6 +25,7 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
         try {
             config = objectMapper.readValue(item.getConfig(), MultipleChoiceItemConfig.class);
         } catch (IOException e) {
+            LOGGER.error("Internal error grading item submission", e);
             return new Grading.Builder()
                     .verdict(Verdict.INTERNAL_ERROR)
                     .score(Optional.empty())
