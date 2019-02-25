@@ -1,10 +1,14 @@
 package judgels.uriel.contest.submission.bundle;
 
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.persistence.api.OrderDir;
+import judgels.persistence.api.Page;
+import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.Verdict;
@@ -19,6 +23,22 @@ public class ContestItemSubmissionStore {
     @Inject
     public ContestItemSubmissionStore(ContestBundleItemSubmissionDao submissionDao) {
         this.submissionDao = submissionDao;
+    }
+
+    public Page<ItemSubmission> getSubmissions(
+            String containerJid,
+            Optional<String> createdBy,
+            Optional<String> problemJid,
+            Optional<Integer> page) {
+
+        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        options.orderBy("updatedAt");
+        options.orderDir(OrderDir.DESC);
+        page.ifPresent(options::page);
+
+        Page<ContestBundleItemSubmissionModel> submissionModels =
+                submissionDao.selectPaged(containerJid, createdBy, problemJid, Optional.empty(), options.build());
+        return submissionModels.mapPage(p -> Lists.transform(p, ContestItemSubmissionStore::fromModel));
     }
 
     public ItemSubmission upsertSubmission(

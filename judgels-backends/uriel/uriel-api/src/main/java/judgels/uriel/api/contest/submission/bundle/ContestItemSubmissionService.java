@@ -20,15 +20,25 @@ public interface ContestItemSubmissionService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    ContestantAnswersResponse getLatestContestantAnswersInContest(
+    ContestItemSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") Optional<String> userJid);
+            @QueryParam("userJid") Optional<String> userJid,
+            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("page") Optional<Integer> page);
 
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
     void createItemSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestItemSubmissionData data);
+
+    @GET
+    @Path("/summary")
+    @Produces(APPLICATION_JSON)
+    ContestantAnswersResponse getLatestContestantAnswersInContest(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") Optional<String> userJid);
 
     @GET
     @Path("/answers")
