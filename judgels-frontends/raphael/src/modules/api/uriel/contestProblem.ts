@@ -29,7 +29,6 @@ export interface ContestProblemData {
 export interface ContestProblemsResponse {
   data: ContestProblem[];
   problemsMap: { [problemJid: string]: ProblemInfo };
-  pointsMap?: { [problemJid: string]: number };
   totalSubmissionsMap: { [problemJid: string]: number };
   config: ContestProblemConfig;
 }
