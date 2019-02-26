@@ -83,7 +83,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
     }
 
     return (
-      <Button className="regrade-button" intent="primary" onClick={this.onRegradeAll}>
+      <Button className="regrade-button" intent="primary" icon="refresh" onClick={this.onRegradeAll}>
         Regrade all pages
       </Button>
     );

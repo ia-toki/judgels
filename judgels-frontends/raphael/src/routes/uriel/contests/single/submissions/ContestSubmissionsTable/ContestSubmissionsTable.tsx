@@ -54,7 +54,19 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
 
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
-        <td>{submission.id}</td>
+        <td>
+          {submission.id}
+          {this.props.canManage && (
+            <>
+              &nbsp;&nbsp;&nbsp;<Icon
+                className="action"
+                icon="refresh"
+                intent="primary"
+                onClick={this.onClickRegrade(submission.jid)}
+              />
+            </>
+          )}
+        </td>
         {canSupervise && (
           <td>
             <UserRef profile={profilesMap[submission.userJid]} />
@@ -73,9 +85,6 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
           <Link className="action" to={`/contests/${contest.slug}/submissions/${submission.id}`}>
             <Icon icon="search" />
           </Link>
-          {this.props.canManage && (
-            <Icon className="action" icon="refresh" intent="primary" onClick={this.onClickRegrade(submission.jid)} />
-          )}
         </td>
       </tr>
     ));
