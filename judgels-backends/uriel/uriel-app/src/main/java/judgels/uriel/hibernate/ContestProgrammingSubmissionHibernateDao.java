@@ -8,12 +8,12 @@ import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionModel;
 
 @Singleton
-public class ContestProgrammingProgrammingSubmissionHibernateDao
+public class ContestProgrammingSubmissionHibernateDao
         extends AbstractProgrammingSubmissionHibernateDao<ContestProgrammingSubmissionModel>
         implements ContestProgrammingSubmissionDao {
 
     @Inject
-    public ContestProgrammingProgrammingSubmissionHibernateDao(HibernateDaoData data) {
+    public ContestProgrammingSubmissionHibernateDao(HibernateDaoData data) {
         super(data);
     }
 

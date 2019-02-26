@@ -11,56 +11,79 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.inject.Named;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.api.problem.bundle.Item;
+import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
+import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
+import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionData;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionService;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionsResponse;
+import judgels.uriel.api.contest.submission.bundle.ContestantAnswersResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 public class ContestItemSubmissionResource implements ContestItemSubmissionService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContestItemSubmissionResource.class);
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
+    private final ContestContestantStore contestContestantStore;
     private final ContestItemSubmissionStore submissionStore;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
-    private final ContestContestantStore contestantStore;
     private final ContestProblemStore problemStore;
+    private final ClientProblemService clientProblemService;
     private final ProfileService profileService;
+    private final ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
+    private final BasicAuthHeader sandalphonClientAuthHeader;
 
     @Inject
     public ContestItemSubmissionResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
+            ContestContestantStore contestContestantStore,
             ContestItemSubmissionStore submissionStore,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
-            ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
-            ProfileService profileService) {
+            ClientProblemService clientProblemService,
+            ProfileService profileService,
+            ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
+            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
+        this.contestContestantStore = contestContestantStore;
         this.submissionStore = submissionStore;
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
-        this.contestantStore = contestantStore;
         this.problemStore = problemStore;
+        this.clientProblemService = clientProblemService;
         this.profileService = profileService;
+        this.itemSubmissionGraderRegistry = itemSubmissionGraderRegistry;
+        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
     }
 
     @Override
@@ -80,7 +103,12 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         Optional<String> actualUserJid = canSupervise ? userJid : Optional.of(actorJid);
 
         Page<ItemSubmission> submissions =
-                submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, page);
+                submissionStore.getSubmissions(contestJid, actualUserJid, problemJid, page);
+
+        boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
+        if (!canManage) {
+            submissions = submissions.mapPage(p -> Lists.transform(p, ItemSubmission::withoutGrading));
+        }
 
         List<String> userJidsSortedByUsername;
         Set<String> userJids;
@@ -90,7 +118,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
 
         userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(Collectors.toSet());
         if (canSupervise) {
-            userJids.addAll(contestantStore.getApprovedContestantJids(contestJid));
+            userJids.addAll(contestContestantStore.getApprovedContestantJids(contestJid));
             userJidsSortedByUsername = Lists.newArrayList(userJids);
 
             problemJidsSortedByAlias = problemStore.getProblemJids(contestJid);
@@ -139,7 +167,28 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         ContestProblem problem = checkFound(problemStore.getProblem(data.getContestJid(), data.getProblemJid()));
         checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, 0));
 
-        submissionStore.upsertSubmission(data, actorJid);
+        ProblemWorksheet worksheet = clientProblemService.getBundleProblemWorksheet(
+                sandalphonClientAuthHeader,
+                data.getProblemJid(),
+                Optional.empty());
+        Optional<Item> item = worksheet.getItems().stream()
+                .filter(i -> data.getItemJid().equals(i.getJid()))
+                .findAny();
+        checkFound(item);
+
+        Grading grading = itemSubmissionGraderRegistry
+                .get(item.get().getType())
+                .grade(item.get(), data.getAnswer());
+
+        submissionStore.upsertSubmission(data, grading, actorJid);
+
+        Marker itemSubmissionMarker = MarkerFactory.getMarker("ITEM_SUBMISSION");
+        LOGGER.info(
+                itemSubmissionMarker,
+                "{} submitted answer '{}' for item {} in problem {} and contest {}, verdict {}, score {}",
+                actorJid, data.getAnswer(), data.getItemJid(), data.getProblemJid(), data.getContestJid(),
+                grading.getVerdict(), grading.getScore()
+        );
     }
 
     @Override
@@ -157,8 +206,51 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         String actualUserJid = canSupervise ? userJid.orElse(actorJid) : actorJid;
 
-        Map<String, ItemSubmission> submissionsByItemJid = submissionStore
+        List<ItemSubmission> submissions = submissionStore
                 .getLatestSubmissionsByUserForProblemInContest(contestJid, problemJid, actualUserJid);
-        return submissionsByItemJid;
+        return submissions.stream()
+                .map(ItemSubmission::withoutGrading)
+                .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ContestantAnswersResponse getLatestContestantAnswersInContest(
+            AuthHeader authHeader,
+            String contestJid,
+            Optional<String> userJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
+
+        boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
+        String viewedUserJid = canSupervise ? userJid.orElse(actorJid) : actorJid;
+
+        List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserInContest(
+                contest.getJid(), viewedUserJid);
+
+        boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
+        if (!canManage) {
+            submissions = submissions.stream().map(ItemSubmission::withoutGrading).collect(Collectors.toList());
+        }
+
+        Set<String> userJids = submissions.stream().map(ItemSubmission::getUserJid).collect(Collectors.toSet());
+        Set<String> problemJids = submissions.stream().map(ItemSubmission::getProblemJid).collect(Collectors.toSet());
+
+        ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
+                .canSupervise(canSupervise)
+                .canManage(canManage)
+                .userJids(userJids)
+                .problemJids(problemJids)
+                .build();
+
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
+
+        return new ContestantAnswersResponse.Builder()
+                .answers(submissions.stream().collect(Collectors.groupingBy(ItemSubmission::getProblemJid)))
+                .config(config)
+                .problemAliasesMap(problemAliasesMap)
+                .build();
     }
 }
