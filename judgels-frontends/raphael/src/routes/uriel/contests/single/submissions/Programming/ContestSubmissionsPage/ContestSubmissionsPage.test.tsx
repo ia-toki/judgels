@@ -12,7 +12,7 @@ import { Submission } from 'modules/api/sandalphon/submissionProgramming';
 import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionProgramming';
 
 import { createContestSubmissionsPage } from './ContestSubmissionsPage';
-import { contestReducer, PutContest } from '../../../modules/contestReducer';
+import { contestReducer, PutContest } from '../../../../modules/contestReducer';
 
 describe('ContestSubmissionsPage', () => {
   let wrapper: ReactWrapper<any, any>;
