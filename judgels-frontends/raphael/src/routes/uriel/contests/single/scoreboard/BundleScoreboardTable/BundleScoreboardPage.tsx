@@ -28,7 +28,7 @@ export class BundleScoreboardTable extends React.PureComponent<BundleScoreboardT
   private renderData = (content: BundleScoreboardContent) => {
     let rows = content.entries.map(this.renderRow);
     return <tbody>{rows}</tbody>;
-  }
+  };
 
   private renderRow = (entry: BundleScoreboardEntry) => {
     const { scoreboard } = this.props;
@@ -45,13 +45,17 @@ export class BundleScoreboardTable extends React.PureComponent<BundleScoreboardT
     const problemCells = entry.answeredItems.map((item, i) => this.renderProblemCell(i, item, problemItems[i]));
     cells = [...cells, ...problemCells];
     return (
-      <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === this.props.userJid})}>
+      <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === this.props.userJid })}>
         {cells}
       </tr>
     );
   };
 
   private renderProblemCell = (idx: number, answered: number, items: number) => {
-    return <td key={idx}>{answered}/{items}</td>;
+    return (
+      <td key={idx}>
+        {answered}/{items}
+      </td>
+    );
   };
 }
