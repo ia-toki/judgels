@@ -1,3 +1,5 @@
+import { ProblemStatement } from './problem';
+
 export enum ItemType {
   Statement = 'STATEMENT',
   MultipleChoice = 'MULTIPLE_CHOICE',
@@ -11,6 +13,7 @@ export interface Item {
 }
 
 export interface ProblemWorksheet {
+  statement: ProblemStatement;
   reasonNotAllowedToSubmit?: string;
   items: Item[];
 }

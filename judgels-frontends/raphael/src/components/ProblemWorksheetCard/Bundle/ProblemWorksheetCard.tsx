@@ -7,6 +7,7 @@ import './ProblemWorksheetCard.css';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 
 export interface ProblemWorksheetCardProps {
+  alias: string;
   worksheet: ProblemWorksheet;
   language: string;
   latestSubmission: { [id: string]: ItemSubmission };
@@ -19,9 +20,11 @@ export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCa
   }
 
   private renderStatement = () => {
-    const { worksheet, latestSubmission } = this.props;
+    const { worksheet, latestSubmission, alias } = this.props;
     return (
       <ProblemStatementCard
+        alias={alias}
+        statement={worksheet.statement}
         onAnswerItem={this.props.onAnswerItem}
         items={worksheet.items}
         latestSubmission={latestSubmission}

@@ -5,9 +5,14 @@ import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleCho
 
 import './ProblemStatementCard.css';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
+import { ProblemStatement } from 'modules/api/sandalphon/problem';
+import { Divider } from '@blueprintjs/core';
+import { HtmlText } from 'components/HtmlText/HtmlText';
 
 export interface ProblemStatementCardProps {
   items: Item[];
+  alias: string;
+  statement: ProblemStatement;
   onAnswerItem: (itemJid: string, answer?: string) => any;
   latestSubmission: { [id: string]: ItemSubmission };
 }
@@ -39,9 +44,16 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
   };
 
   render() {
-    const { items } = this.props;
+    const { alias, items, statement } = this.props;
     return (
       <>
+        <h2 className="bundle-problem-statement__name">
+          {alias}. {statement.title}
+        </h2>
+        <div className="bundle-problem-statement__text">
+          <HtmlText>{statement.text}</HtmlText>
+        </div>
+        <Divider />
         {items.map(item => {
           if (item.type === ItemType.Statement) {
             return this.renderStatement(item);

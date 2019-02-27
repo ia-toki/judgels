@@ -175,6 +175,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       }
       return (
         <BundleProblemWorksheetCard
+          alias={problem.alias}
           language={this.props.statementLanguage}
           latestSubmission={bundleLatestSubmission}
           onAnswerItem={this.onCreateBundleSubmission}
