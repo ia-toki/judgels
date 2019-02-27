@@ -46,6 +46,6 @@ export const contestSubmissionBundleAPI = {
     userJid?: string
   ): Promise<{ [id: string]: ItemSubmission }> => {
     const params = stringify({ contestJid, userJid, problemJid });
-    return get(`${baseURL}/latest?${params}`, token);
+    return get(`${baseURL}/answers?${params}`, token);
   },
 };

@@ -9,7 +9,7 @@ import StatementLanguageWidget, {
 } from 'components/StatementLanguageWidget/StatementLanguageWidget';
 import { AppState } from 'modules/store';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { ProblemType, ProblemInfo } from 'modules/api/sandalphon/problem';
+import { ProblemType } from 'modules/api/sandalphon/problem';
 import { Contest, ContestStyle } from 'modules/api/uriel/contest';
 import { ContestProblem } from 'modules/api/uriel/contestProblem';
 import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from 'modules/api/uriel/contestProblemBundle';
@@ -80,10 +80,10 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
             this.props.match.params.problemAlias,
             this.props.statementLanguage
           );
-    const bundleLatestSubmission = await this.props.onGetBundleLatestSubmission(
-      this.props.contest.jid,
-      problem.problemJid
-    );
+    const bundleLatestSubmission =
+      problemType === ProblemType.Bundle
+        ? await this.props.onGetBundleLatestSubmission(this.props.contest.jid, problem.problemJid)
+        : undefined;
     this.setState({
       bundleLatestSubmission,
       problemType,
