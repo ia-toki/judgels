@@ -7,6 +7,17 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
 public interface ContestBundleItemSubmissionDao extends JudgelsDao<ContestBundleItemSubmissionModel> {
+    Page<ContestBundleItemSubmissionModel> selectPaged(
+            String containerJid,
+            Optional<String> createdBy,
+            Optional<String> problemJid,
+            Optional<Long> lastSubmissionId,
+            SelectionOptions options);
+
+    List<ContestBundleItemSubmissionModel> selectByContainerJidAndCreatedBy(
+            String containerJid,
+            String createdBy);
+
     List<ContestBundleItemSubmissionModel> selectByContainerJidAndProblemJidAndCreatedBy(
             String containerJid,
             String problemJid,
@@ -17,11 +28,4 @@ public interface ContestBundleItemSubmissionDao extends JudgelsDao<ContestBundle
             String problemJid,
             String itemJid,
             String createdBy);
-
-    Page<ContestBundleItemSubmissionModel> selectPaged(
-            String containerJid,
-            Optional<String> createdBy,
-            Optional<String> problemJid,
-            Optional<Long> lastSubmissionId,
-            SelectionOptions options);
 }

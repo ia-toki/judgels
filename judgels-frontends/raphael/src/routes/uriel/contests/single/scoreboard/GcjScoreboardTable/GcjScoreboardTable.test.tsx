@@ -15,7 +15,7 @@ describe('GcjScoreboardTable', () => {
       problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3', 'JIDPROG4'],
       problemAliases: ['A', 'B', 'C', 'D'],
       contestantJids: ['JIDUSER1', 'JIDUSER2'],
-      points: [1, 10, 100, 1000],
+      problemPoints: [1, 10, 100, 1000],
     },
     content: {
       entries: [
@@ -24,8 +24,8 @@ describe('GcjScoreboardTable', () => {
           contestantJid: 'JIDUSER2',
           totalPoints: 111,
           totalPenalties: 66,
-          attemptsList: [1, 3, 0, 0],
-          penaltyList: [3, 14, 9, 0],
+          attemptsList: [2, 4, 1, 0],
+          penaltyList: [3, 14, 69, 0],
           problemStateList: [
             GcjScoreboardProblemState.Accepted,
             GcjScoreboardProblemState.Accepted,
@@ -38,7 +38,7 @@ describe('GcjScoreboardTable', () => {
           contestantJid: 'JIDUSER1',
           totalPoints: 10,
           totalPenalties: 17,
-          attemptsList: [1, 1, 0, 3],
+          attemptsList: [1, 2, 0, 3],
           penaltyList: [10, 17, 0, 22],
           problemStateList: [
             GcjScoreboardProblemState.NotAccepted,
@@ -112,8 +112,8 @@ describe('GcjScoreboardTable', () => {
       .children()
       .map(mapRow);
     expect(points).toEqual([
-      ['111/66', 'G 1/3', 'G 3/14', 'G 0/9', 'X -/-'],
-      ['10/17', 'R 1/-', 'G 1/17', 'F -/-', 'R 3/-'],
+      ['111/01:06', 'G +1/00:03', 'G +3/00:14', 'G +/01:09', 'X -/-'],
+      ['10/00:17', 'R +1/-', 'G +1/00:17', 'F -/-', 'R +3/-'],
     ]);
   });
 });

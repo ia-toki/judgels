@@ -132,7 +132,7 @@ public class ContestProblemStore {
                 .alias(model.alias)
                 .status(ContestProblemStatus.valueOf(model.status))
                 .submissionsLimit(model.submissionsLimit)
-                .points(model.points)
+                .points(model.points == 0 ? Optional.empty() : Optional.of(model.points))
                 .build();
     }
 }

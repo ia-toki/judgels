@@ -33,7 +33,15 @@ public interface ContestItemSubmissionService {
     void createItemSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestItemSubmissionData data);
 
     @GET
-    @Path("/latest")
+    @Path("/summary")
+    @Produces(APPLICATION_JSON)
+    ContestantAnswersResponse getLatestContestantAnswersInContest(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") Optional<String> userJid);
+
+    @GET
+    @Path("/answers")
     @Produces(APPLICATION_JSON)
     Map<String, ItemSubmission> getLatestSubmissionsByUserForProblemInContest(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,

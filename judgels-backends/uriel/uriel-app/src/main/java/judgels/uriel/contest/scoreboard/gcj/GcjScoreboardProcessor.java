@@ -125,7 +125,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                     continue;
                 }
 
-                if (!verdict.equals(Verdicts.ACCEPTED)) {
+                if (!isAccepted(problemStateMap.get(problemJid)) || !verdict.equals(Verdicts.ACCEPTED)) {
                     attemptsMap.put(problemJid, attemptsMap.get(problemJid) + 1);
                 }
 
@@ -162,7 +162,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                             .orElse(0)
                             + penaltyMap.keySet().stream()
                             .filter(p -> isAccepted(problemStateMap.get(p)))
-                            .mapToLong(p -> attemptsMap.get(p)
+                            .mapToLong(p -> (attemptsMap.get(p) - 1)
                                     * gcjStyleModuleConfig.getWrongSubmissionPenalty())
                             .sum()
                     )

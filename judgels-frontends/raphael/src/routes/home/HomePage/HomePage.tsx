@@ -2,7 +2,7 @@ import { Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { APP_CONFIG } from 'conf';
+import { APP_CONFIG, Mode } from 'conf';
 import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
 import { ButtonLink } from 'components/ButtonLink/ButtonLink';
 import { AppState } from 'modules/store';
@@ -49,9 +49,11 @@ class HomePage extends React.Component<HomePageProps> {
             <p className="home-banner__text">{APP_CONFIG.welcomeBanner.description}</p>
           </div>
           <div className="home-banner__buttons">
-            <ButtonLink to="/register" intent={Intent.PRIMARY} className="home-banner__button">
-              Register
-            </ButtonLink>
+            {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
+              <ButtonLink to="/register" intent={Intent.PRIMARY} className="home-banner__button">
+                Register
+              </ButtonLink>
+            )}
             <ButtonLink to="/login" intent={Intent.NONE} className="home-banner__button">
               Log in
             </ButtonLink>
@@ -67,9 +69,11 @@ class HomePage extends React.Component<HomePageProps> {
         <div className="home-widget-row__two-thirds">
           <ActiveContestsWidget />
         </div>
-        <div className="home-widget-row__one-third">
-          <HallOfFameWidget />
-        </div>
+        {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
+          <div className="home-widget-row__one-third">
+            <HallOfFameWidget />
+          </div>
+        )}
         <div className="clearfix" />
       </div>
     );

@@ -12,20 +12,21 @@ export interface ContestProblemCardProps {
   problem: ContestProblem;
   problemName: string;
   totalSubmissions: number;
-  problemPoints?: number;
 }
 
 export class ContestProblemCard extends React.PureComponent<ContestProblemCardProps> {
   render() {
-    const { contest, problem, problemName, problemPoints } = this.props;
+    const { contest, problem, problemName } = this.props;
 
-    const displayedPoints = problemPoints !== undefined ? ' (' + problemPoints + ' points)' : '';
+    const displayedPoints =
+      problem.points === null || problem.points === undefined ? '' : <>&nbsp;[{problem.points}]</>;
 
     return (
       <ContentCardLink to={`/contests/${contest.slug}/problems/${problem.alias}`}>
         <div className="contest-problem-card__name">
           <span data-key="name">
-            {problem.alias}. {problemName + displayedPoints}
+            {problem.alias}
+            {displayedPoints}.&nbsp;&nbsp;{problemName}
           </span>
         </div>
         <div data-key="status" className="contest-problem-card__status secondary-info">
