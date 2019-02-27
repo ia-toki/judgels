@@ -10,7 +10,7 @@ import StatementLanguageWidget, {
 import { AppState } from 'modules/store';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { ProblemType, ProblemInfo } from 'modules/api/sandalphon/problem';
-import { Contest } from 'modules/api/uriel/contest';
+import { Contest, ContestStyle } from 'modules/api/uriel/contest';
 import { ContestProblem } from 'modules/api/uriel/contestProblem';
 import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from 'modules/api/uriel/contestProblemBundle';
 import { ContestProblemWorksheet as ContestProgrammingProblemWorksheet } from 'modules/api/uriel/contestProblemProgramming';
@@ -31,7 +31,6 @@ import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
   statementLanguage: string;
-  onGetProblemInfo: (contestJid: string, problemAlias: string) => Promise<ProblemInfo>;
   onGetProgrammingProblemWorksheet: (
     contestJid: string,
     problemAlias: string,
@@ -48,7 +47,7 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     problemJid: string,
     data: ProgrammingProblemSubmissionFormData
   ) => Promise<void>;
-  onCreateBundleSubmission: (contestJid: string, problemJid: string, itemJid: string, answer?: string) => Promise<void>;
+  onCreateBundleSubmission: (contestJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
   onGetBundleLatestSubmission: (contestJid: string, problemJid: string) => { [id: string]: ItemSubmission };
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
@@ -58,7 +57,6 @@ interface ContestProblemPageState {
   defaultLanguage?: string;
   languages?: string[];
   problem?: ContestProblem;
-  problemInfo?: ProblemInfo;
   totalSubmissions?: number;
   bundleLatestSubmission?: { [id: string]: ItemSubmission };
   worksheet?: ProgrammingProblemWorksheet | BundleProblemWorksheet;
@@ -69,8 +67,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   state: ContestProblemPageState = {};
 
   async componentDidMount() {
-    const problemInfo = await this.props.onGetProblemInfo(this.props.contest.jid, this.props.match.params.problemAlias);
-    const problemType = problemInfo.type;
+    const problemType = this.props.contest.style === ContestStyle.Bundle ? ProblemType.Bundle : ProblemType.Programming;
     const { defaultLanguage, languages, problem, totalSubmissions, worksheet } =
       problemType === ProblemType.Programming
         ? await this.props.onGetProgrammingProblemWorksheet(
@@ -89,7 +86,6 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     );
     this.setState({
       bundleLatestSubmission,
-      problemInfo,
       problemType,
       defaultLanguage,
       languages,
@@ -153,8 +149,8 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 
   private renderStatement = () => {
-    const { problemInfo, problemType, problem, totalSubmissions, worksheet, bundleLatestSubmission } = this.state;
-    if (!problemInfo || !problem || !worksheet) {
+    const { problemType, problem, totalSubmissions, worksheet, bundleLatestSubmission } = this.state;
+    if (!problem || !worksheet) {
       return <LoadingState />;
     }
 
@@ -180,10 +176,8 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       return (
         <BundleProblemWorksheetCard
           language={this.props.statementLanguage}
-          problemInfo={problemInfo}
-          alias={problem.alias}
           latestSubmission={bundleLatestSubmission}
-          onItemAnswered={this.onCreateBundleSubmission}
+          onAnswerItem={this.onCreateBundleSubmission}
           worksheet={worksheet as BundleProblemWorksheet}
         />
       );
@@ -203,7 +197,6 @@ export function createContestProblemPage(
   });
 
   const mapDispatchToProps = {
-    onGetProblemInfo: contestProblemActions.getProblemInfo,
     onGetBundleProblemWorksheet: contestProblemActions.getBundleProblemWorksheet,
     onGetProgrammingProblemWorksheet: contestProblemActions.getProgrammingProblemWorksheet,
     onCreateProgrammingSubmission: contestProgrammingSubmissionActions.createSubmission,

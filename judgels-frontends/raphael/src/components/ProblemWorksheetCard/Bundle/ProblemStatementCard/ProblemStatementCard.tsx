@@ -1,52 +1,55 @@
 import * as React from 'react';
-import { Divider } from '@blueprintjs/core';
 import { Item, ItemType } from 'modules/api/sandalphon/problemBundle';
-import { ProblemItemStatementCard } from './ProblemItemStatementCard/ProblemItemStatementCard';
-import { ProblemItemMultipleChoiceCard } from './ProblemItemMultipleChoiceCard/ProblemItemMultipleChoiceCard';
+import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
+import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleChoiceCard';
 
 import './ProblemStatementCard.css';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 
 export interface ProblemStatementCardProps {
-  title: string;
-  alias: string;
   items: Item[];
-  onItemAnswered: (itemJid: string, answer?: string) => any;
+  onAnswerItem: (itemJid: string, answer?: string) => any;
   latestSubmission: { [id: string]: ItemSubmission };
 }
 
 export class ProblemStatementCard extends React.Component<ProblemStatementCardProps> {
   generateOnAnswer = (itemJid: string) => {
     return (choice?: string) => {
-      this.props.onItemAnswered(itemJid, choice);
+      this.props.onAnswerItem(itemJid, choice);
     };
   };
-  render() {
-    const { title, alias, items, latestSubmission } = this.props;
+
+  renderStatement = (item: Item) => {
+    return <ItemStatementCard className="bundle-problem-statement-item" key={item.meta} {...item} />;
+  };
+
+  renderMultipleChoice = (item: Item) => {
+    const latestSubmission = this.props.latestSubmission;
+    const latestSub = latestSubmission[item.jid];
+    const initialAnswer = latestSub && latestSub.answer;
     return (
-      <React.Fragment>
-        <h2 className="bundle-problem-statement__name">
-          {alias}. {title}
-        </h2>
-        <Divider />
+      <ItemMultipleChoiceCard
+        onChoiceChange={this.generateOnAnswer(item.jid)}
+        className="bundle-problem-statement-item"
+        key={item.meta}
+        {...item}
+        initialAnswer={initialAnswer}
+      />
+    );
+  };
+
+  render() {
+    const { items } = this.props;
+    return (
+      <>
         {items.map(item => {
           if (item.type === ItemType.Statement) {
-            return <ProblemItemStatementCard className="bundle-problem-statement-item" key={item.meta} {...item} />;
+            return this.renderStatement(item);
           } else {
-            const latestSub = latestSubmission[item.jid];
-            const initialAnswer = latestSub && latestSub.answer;
-            return (
-              <ProblemItemMultipleChoiceCard
-                onChoiceChange={this.generateOnAnswer(item.jid)}
-                className="bundle-problem-statement-item"
-                key={item.meta}
-                {...item}
-                initialAnswer={initialAnswer}
-              />
-            );
+            return this.renderMultipleChoice(item);
           }
         })}
-      </React.Fragment>
+      </>
     );
   }
 }

@@ -31,24 +31,6 @@ export const contestProblemActions = {
     };
   },
 
-  getProblemInfo: (contestJid: string, problemAlias: string) => {
-    return async (dispatch, getState, { contestProblemAPI }) => {
-      const token = selectToken(getState());
-
-      const problemsResponse = await contestProblemAPI.getProblems(token, contestJid);
-      const currentProblem = problemsResponse.data.filter(prob => prob.alias === problemAlias).pop();
-      if (!currentProblem) {
-        throw new NotFoundError();
-      }
-      const problemJid = currentProblem.problemJid;
-      const problemInfo = problemsResponse.problemsMap[problemJid];
-      if (!problemInfo) {
-        throw new NotFoundError();
-      }
-      return problemInfo;
-    };
-  },
-
   getBundleProblemWorksheet: (contestJid: string, problemAlias: string, language?: string) => {
     return async (dispatch, getState, { contestProblemAPI }) => {
       const token = selectToken(getState());

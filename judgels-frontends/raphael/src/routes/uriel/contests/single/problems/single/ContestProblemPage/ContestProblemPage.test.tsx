@@ -16,7 +16,6 @@ import { createContestProblemPage } from './ContestProblemPage';
 import { contestReducer, PutContest } from '../../../../modules/contestReducer';
 import createMemoryHistory from 'history/createMemoryHistory';
 import { MemoryHistory } from 'history';
-import { ProblemType } from 'modules/api/sandalphon/problem';
 
 describe('ContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
@@ -28,14 +27,6 @@ describe('ContestProblemPage', () => {
 
   beforeEach(() => {
     contestProblemActions = {
-      getProblemInfo: jest.fn().mockReturnValue(() =>
-        Promise.resolve({
-          slug: 'lorem-ipsum',
-          type: ProblemType.Programming,
-          defaultLanguage: 'id',
-          titlesByLanguage: { id: 'Lorem Ipsum' },
-        })
-      ),
       getProgrammingProblemWorksheet: jest.fn().mockReturnValue(() =>
         Promise.resolve({
           problem: {

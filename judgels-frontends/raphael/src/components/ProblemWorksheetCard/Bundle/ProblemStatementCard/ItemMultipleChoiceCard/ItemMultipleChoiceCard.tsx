@@ -3,7 +3,7 @@ import { Card, Divider, RadioGroup, Radio, Tag } from '@blueprintjs/core';
 import { Item } from 'modules/api/sandalphon/problemBundle';
 import { HtmlText } from 'components/HtmlText/HtmlText';
 
-import './ProblemItemMultipleChoiceCard.css';
+import './ItemMultipleChoiceCard.css';
 
 export interface ItemMultipleChoiceConfig {
   statement: string;
@@ -13,24 +13,22 @@ export interface ItemMultipleChoiceConfig {
   }[];
 }
 
-export interface ProblemItemMultipleChoiceCardProps extends Item {
+export interface ItemMultipleChoiceCardProps extends Item {
   className?: string;
   initialAnswer?: string;
   onChoiceChange?: (choice?: string) => any;
 }
 
-export interface ProblemItemMultipleChoiceCardState {
+export interface ItemMultipleChoiceCardState {
   value?: string;
 }
 
-export class ProblemItemMultipleChoiceCard extends React.Component<
-  ProblemItemMultipleChoiceCardProps,
-  ProblemItemMultipleChoiceCardState
-> {
-  constructor(props: ProblemItemMultipleChoiceCardProps) {
+export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCardProps, ItemMultipleChoiceCardState> {
+  constructor(props: ItemMultipleChoiceCardProps) {
     super(props);
     this.state = { value: props.initialAnswer };
   }
+
   handleRadioChange = (event: React.FormEvent<HTMLInputElement>) => {
     const oldValue = this.state.value;
     const newValue = event.currentTarget.value;
@@ -39,6 +37,7 @@ export class ProblemItemMultipleChoiceCard extends React.Component<
       this.props.onChoiceChange(newValue);
     }
   };
+
   handleRadioClick = (event: React.FormEvent<HTMLInputElement>) => {
     const oldValue = this.state.value;
     const newValue = event.currentTarget.value;
@@ -49,6 +48,7 @@ export class ProblemItemMultipleChoiceCard extends React.Component<
       }
     }
   };
+
   render() {
     try {
       const config: ItemMultipleChoiceConfig = JSON.parse(this.props.config);
