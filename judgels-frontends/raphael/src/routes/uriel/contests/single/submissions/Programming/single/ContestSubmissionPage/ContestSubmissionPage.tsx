@@ -12,7 +12,7 @@ import { SubmissionWithSource, SubmissionWithSourceResponse } from 'modules/api/
 import { Profile } from 'modules/api/jophiel/profile';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 
-import { selectContest } from '../../../../modules/contestSelectors';
+import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
 import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../../modules/contestProgrammingSubmissionActions';
 
 export interface ContestSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {

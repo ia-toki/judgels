@@ -14,7 +14,7 @@ import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionP
 
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 import { ContestSubmissionFilterWidget } from '../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
-import { selectContest } from '../../../modules/contestSelectors';
+import { selectContest } from '../../../../modules/contestSelectors';
 import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../modules/contestProgrammingSubmissionActions';
 
 import './ContestSubmissionsPage.css';
