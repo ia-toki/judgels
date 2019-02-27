@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.module.BundleStyleModuleConfig;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
@@ -118,8 +119,12 @@ public class ContestModuleStore {
             config.ioiStyle(getIoiStyleModuleConfig(contestJid));
         } else if (contestStyle == ContestStyle.ICPC) {
             config.icpcStyle(getIcpcStyleModuleConfig(contestJid));
-        } else {
+        } else if (contestStyle == ContestStyle.GCJ) {
             config.gcjStyle(getGcjStyleModuleConfig(contestJid));
+        } else if (contestStyle == ContestStyle.BUNDLE) {
+            config.bundleStyle(getBundleStyleModuleConfig(contestJid));
+        } else {
+            throw new IllegalArgumentException();
         }
 
         return config.build();
@@ -129,6 +134,7 @@ public class ContestModuleStore {
         config.getIcpcStyle().ifPresent(c -> upsertIcpcStyleModule(contestJid, c));
         config.getIoiStyle().ifPresent(c -> upsertIoiStyleModule(contestJid, c));
         config.getGcjStyle().ifPresent(c -> upsertGcjStyleModule(contestJid, c));
+        config.getBundleStyle().ifPresent(c -> upsertBundleStyleModule(contestJid, c));
 
         upsertScoreboardModule(contestJid, config.getScoreboard());
 
@@ -150,13 +156,21 @@ public class ContestModuleStore {
         upsertStyleConfig(contestJid, config);
     }
 
+    public void upsertBundleStyleModule(String contestJid, BundleStyleModuleConfig config) {
+        upsertStyleConfig(contestJid, config);
+    }
+
     public StyleModuleConfig getStyleModuleConfig(String contestJid, ContestStyle contestStyle) {
         if (contestStyle == ContestStyle.IOI) {
             return getIoiStyleModuleConfig(contestJid);
         } else if (contestStyle == ContestStyle.ICPC) {
             return getIcpcStyleModuleConfig(contestJid);
-        } else {
+        } else if (contestStyle == ContestStyle.GCJ) {
             return getGcjStyleModuleConfig(contestJid);
+        } else if (contestStyle == ContestStyle.BUNDLE) {
+            return getBundleStyleModuleConfig(contestJid);
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 
@@ -173,6 +187,11 @@ public class ContestModuleStore {
     public GcjStyleModuleConfig getGcjStyleModuleConfig(String contestJid) {
         return getStyleConfig(contestJid, GcjStyleModuleConfig.class)
                 .orElse(new GcjStyleModuleConfig.Builder().build());
+    }
+
+    public BundleStyleModuleConfig getBundleStyleModuleConfig(String contestJid) {
+        return getStyleConfig(contestJid, BundleStyleModuleConfig.class)
+                .orElse(new BundleStyleModuleConfig.Builder().build());
     }
 
     public void upsertClarificationModule(String contestJid) {

@@ -134,6 +134,7 @@ class IoiScoreboardProcessorTests {
                     styleModulesConfig,
                     contestantStartTimesMap,
                     submissions,
+                    new ArrayList<>(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
@@ -191,6 +192,7 @@ class IoiScoreboardProcessorTests {
                     styleModulesConfig,
                     contestantStartTimesMap,
                     submissions,
+                    new ArrayList<>(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
@@ -280,6 +282,7 @@ class IoiScoreboardProcessorTests {
                     styleModulesConfig,
                     contestantStartTimesMap,
                     submissions,
+                    new ArrayList<>(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
@@ -355,6 +358,7 @@ class IoiScoreboardProcessorTests {
                         styleModulesConfig,
                         contestantStartTimesMap,
                         submissions,
+                        new ArrayList<>(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
@@ -399,6 +403,7 @@ class IoiScoreboardProcessorTests {
                         styleModulesConfig,
                         contestantStartTimesMap,
                         submissions,
+                        new ArrayList<>(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
@@ -477,6 +482,7 @@ class IoiScoreboardProcessorTests {
                         styleModulesConfig,
                         contestantStartTimesMap,
                         submissions,
+                        new ArrayList<>(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
@@ -517,6 +523,7 @@ class IoiScoreboardProcessorTests {
                         styleModulesConfig,
                         contestantStartTimesMap,
                         submissions,
+                        new ArrayList<>(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new IoiScoreboard.Builder()

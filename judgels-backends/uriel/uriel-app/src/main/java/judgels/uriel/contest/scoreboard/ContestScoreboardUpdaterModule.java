@@ -7,12 +7,16 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.time.Clock;
 import java.util.concurrent.ExecutorService;
+import javax.inject.Named;
 import javax.inject.Singleton;
+import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.submission.programming.SubmissionStore;
+import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.submission.bundle.ContestItemSubmissionStore;
 
 @Module
 public class ContestScoreboardUpdaterModule {
@@ -53,8 +57,11 @@ public class ContestScoreboardUpdaterModule {
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
-            SubmissionStore submissionStore,
+            SubmissionStore programmingSubmissionStore,
+            ContestItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
+            ClientProblemService clientProblemService,
+            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
             Clock clock) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -66,7 +73,10 @@ public class ContestScoreboardUpdaterModule {
                         ContestContestantStore.class,
                         ContestProblemStore.class,
                         SubmissionStore.class,
+                        ContestItemSubmissionStore.class,
                         ScoreboardProcessorRegistry.class,
+                        ClientProblemService.class,
+                        BasicAuthHeader.class,
                         Clock.class},
                 new Object[] {
                         objectMapper,
@@ -74,8 +84,11 @@ public class ContestScoreboardUpdaterModule {
                         moduleStore,
                         contestantStore,
                         problemStore,
-                        submissionStore,
+                        programmingSubmissionStore,
+                        bundleItemSubmissionStore,
                         scoreboardProcessorRegistry,
+                        clientProblemService,
+                        sandalphonClientAuthHeader,
                         clock});
     }
 }

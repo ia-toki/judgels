@@ -14,6 +14,9 @@ public interface ContestBundleItemSubmissionDao extends JudgelsDao<ContestBundle
             Optional<Long> lastSubmissionId,
             SelectionOptions options);
 
+    List<ContestBundleItemSubmissionModel> selectByContainerJid(
+            String createdBy);
+
     List<ContestBundleItemSubmissionModel> selectByContainerJidAndCreatedBy(
             String containerJid,
             String createdBy);
