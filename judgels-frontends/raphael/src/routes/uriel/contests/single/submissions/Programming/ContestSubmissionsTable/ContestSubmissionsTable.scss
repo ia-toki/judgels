@@ -1,0 +1,42 @@
+@import '../../../../../../../styles/table';
+
+.submissions {
+  .col-regrade {
+    width: 7px;
+  }
+  .col-id {
+    width: 90px;
+  }
+
+  .col-prob {
+    width: 80px;
+  }
+
+  .col-lang {
+    width: 90px;
+  }
+
+  .col-verdict {
+    width: 60px;
+  }
+
+  .col-pts {
+    width: 70px;
+  }
+
+  .col-actions {
+    width: 70px;
+  }
+
+  .cell-centered {
+    text-align: center;
+  }
+
+  .action {
+    cursor: pointer;
+  }
+
+  .action + .action {
+    margin-left: 2px;
+  }
+}

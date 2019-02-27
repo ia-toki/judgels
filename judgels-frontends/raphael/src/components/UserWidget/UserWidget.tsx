@@ -3,6 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { APP_CONFIG, Mode } from 'conf';
+
 import { User } from 'modules/api/jophiel/user';
 import { getRatingClass } from 'modules/api/jophiel/userRating';
 import { Profile } from 'modules/api/jophiel/profile';
@@ -63,7 +65,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
         <MenuItem className="widget-user__menu-helper" icon="user" text={profile.username} disabled />
         <MenuDivider className="widget-user__menu-helper" />
         <MenuItemLink text="My profile" to={`/profiles/${profile.username}`} />
-        <MenuItemLink text="My account" to="/account" />
+        {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && <MenuItemLink text="My account" to="/account" />}
         <MenuItemLink text="Log out" to="/logout" />
       </Menu>
     );
@@ -106,11 +108,13 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
             Log in
           </Link>
         </div>
-        <div className="widget-user__link">
-          <Link data-key="register" to="/register">
-            Register
-          </Link>
-        </div>
+        {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
+          <div className="widget-user__link">
+            <Link data-key="register" to="/register">
+              Register
+            </Link>
+          </div>
+        )}
         {this.renderGuestResponsiveMenu()}
       </Navbar.Group>
     );
@@ -120,7 +124,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
     const menu = (
       <Menu className="widget-user__menu">
         <MenuItemLink text="Log in" to="/login" />
-        <MenuItemLink text="Register" to="/register" />
+        {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && <MenuItemLink text="Register" to="/register" />}
       </Menu>
     );
 

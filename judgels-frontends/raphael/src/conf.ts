@@ -1,3 +1,7 @@
+export enum Mode {
+  PRIVATE_CONTESTS = 'PRIVATE_CONTESTS',
+}
+
 export interface ApiUrlsConfig {
   jophiel: string;
   legacyJophiel: string;
@@ -14,6 +18,7 @@ export interface WelcomeBannerConfig {
 }
 
 export interface AppConfig {
+  mode?: Mode;
   name: string;
   slogan: string;
   apiUrls: ApiUrlsConfig;

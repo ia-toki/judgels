@@ -7,28 +7,52 @@ import { ScoreboardTable, ScoreboardTableProps } from './ScoreboardTable';
 
 describe('ScoreboardTable', () => {
   let wrapper: ShallowWrapper<ScoreboardTableProps>;
-
-  const state: ScoreboardState = {
-    problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3'],
-    problemAliases: ['A', 'B', 'C'],
-    contestantJids: ['JIDUSER1', 'JIDUSER2'],
-    problemPoints: [0, 0, 0],
-  };
+  let problemPoints;
 
   const className = 'className';
 
-  beforeEach(() => {
+  const render = () => {
+    const state: ScoreboardState = {
+      problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3'],
+      problemAliases: ['A', 'B', 'C'],
+      contestantJids: ['JIDUSER1', 'JIDUSER2'],
+      problemPoints,
+    };
+
     const props = { className, state };
     wrapper = shallow(<ScoreboardTable {...props} />);
-  });
+  };
 
-  test('header', () => {
-    const header = wrapper
-      .find('thead')
-      .find('tr')
-      .first()
-      .children()
-      .map(th => th.text());
-    expect(header).toEqual(['#', 'Contestant', 'Total', 'A', 'B', 'C']);
+  describe('header', () => {
+    describe('without points', () => {
+      beforeEach(() => render());
+
+      it('does not display the points', () => {
+        const header = wrapper
+          .find('thead')
+          .find('tr')
+          .first()
+          .children()
+          .map(th => th.text());
+        expect(header).toEqual(['#', 'Contestant', 'Total', 'A', 'B', 'C']);
+      });
+    });
+
+    describe('points', () => {
+      beforeEach(() => {
+        problemPoints = [10, 0, 30];
+        render();
+      });
+
+      it('displays the points', () => {
+        const header = wrapper
+          .find('thead')
+          .find('tr')
+          .first()
+          .children()
+          .map(th => th.text());
+        expect(header).toEqual(['#', 'Contestant', 'Total', 'A[10]', 'B[0]', 'C[30]']);
+      });
+    });
   });
 });

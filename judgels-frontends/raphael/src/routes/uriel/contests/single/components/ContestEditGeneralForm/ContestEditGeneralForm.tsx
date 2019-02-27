@@ -38,11 +38,12 @@ const ContestEditGeneralForm = (props: ContestEditGeneralFormProps) => {
     name: 'style',
     label: 'Style',
     validate: [Required],
-    optionValues: [ContestStyle.ICPC, ContestStyle.IOI, ContestStyle.GCJ],
+    optionValues: [ContestStyle.ICPC, ContestStyle.IOI, ContestStyle.GCJ, ContestStyle.Bundle],
     optionNamesMap: {
       [ContestStyle.ICPC]: ContestStyle.ICPC,
       [ContestStyle.IOI]: ContestStyle.IOI,
       [ContestStyle.GCJ]: ContestStyle.GCJ,
+      [ContestStyle.Bundle]: 'Bundle',
     },
   };
 

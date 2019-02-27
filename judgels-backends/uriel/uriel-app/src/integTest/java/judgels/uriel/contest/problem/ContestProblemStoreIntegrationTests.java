@@ -77,7 +77,6 @@ class ContestProblemStoreIntegrationTests extends AbstractIntegrationTests {
                         .problemJid("problemJid2")
                         .status(CLOSED)
                         .submissionsLimit(0)
-                        .points(0)
                         .build());
 
         store.setProblems(contest.getJid(), problems);

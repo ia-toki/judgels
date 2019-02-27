@@ -23,21 +23,33 @@ export class ScoreboardTable extends React.PureComponent<ScoreboardTableProps> {
   }
 
   private renderHeader = (state: ScoreboardState) => {
-    const problems = state.problemAliases.map(alias => (
-      <th key={alias} className="problem-cell">
-        {alias}
-      </th>
-    ));
-
     return (
       <thead>
         <tr>
           <th className="rank-cell">#</th>
           <th className="contestant-cell">Contestant</th>
           <th className="problem-cell">Total</th>
-          {problems}
+          {state.problemAliases.map((alias, idx) => this.renderProblemHeader(state, idx))}
         </tr>
       </thead>
+    );
+  };
+
+  private renderProblemHeader = (state: ScoreboardState, idx: number) => {
+    const alias = state.problemAliases[idx];
+    const points =
+      state.problemPoints === undefined ? (
+        ''
+      ) : (
+        <>
+          <br />[{state.problemPoints![idx]}]
+        </>
+      );
+    return (
+      <th key={alias} className="problem-cell">
+        {alias}
+        {points}
+      </th>
     );
   };
 }

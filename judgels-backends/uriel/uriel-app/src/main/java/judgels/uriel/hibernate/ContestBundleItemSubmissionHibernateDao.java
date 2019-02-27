@@ -24,6 +24,32 @@ public class ContestBundleItemSubmissionHibernateDao extends JudgelsHibernateDao
     }
 
     @Override
+    public final Page<ContestBundleItemSubmissionModel> selectPaged(
+            String containerJid,
+            Optional<String> createdBy,
+            Optional<String> problemJid,
+            Optional<Long> lastSubmissionId,
+            SelectionOptions options) {
+
+        FilterOptions.Builder<ContestBundleItemSubmissionModel> filterOptions = new FilterOptions.Builder<>();
+        filterOptions.putColumnsEq(ContestBundleItemSubmissionModel_.containerJid, containerJid);
+        createdBy.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
+        problemJid.ifPresent(jid -> filterOptions.putColumnsEq(ContestBundleItemSubmissionModel_.problemJid, jid));
+        lastSubmissionId.ifPresent(filterOptions::lastId);
+
+        return selectPaged(filterOptions.build(), options);
+    }
+
+    @Override
+    public List<ContestBundleItemSubmissionModel> selectByContainerJidAndCreatedBy(
+            String containerJid, String createdBy) {
+        return selectAll(new FilterOptions.Builder<ContestBundleItemSubmissionModel>()
+                .putColumnsEq(ContestBundleItemSubmissionModel_.containerJid, containerJid)
+                .putColumnsEq(ContestBundleItemSubmissionModel_.createdBy, createdBy)
+                .build());
+    }
+
+    @Override
     public List<ContestBundleItemSubmissionModel> selectByContainerJidAndProblemJidAndCreatedBy(
             String containerJid, String problemJid, String createdBy) {
         return selectAll(new FilterOptions.Builder<ContestBundleItemSubmissionModel>()
@@ -42,22 +68,5 @@ public class ContestBundleItemSubmissionHibernateDao extends JudgelsHibernateDao
                 .putColumnsEq(ContestBundleItemSubmissionModel_.itemJid, itemJid)
                 .putColumnsEq(ContestBundleItemSubmissionModel_.createdBy, createdBy)
                 .build());
-    }
-
-    @Override
-    public final Page<ContestBundleItemSubmissionModel> selectPaged(
-            String containerJid,
-            Optional<String> createdBy,
-            Optional<String> problemJid,
-            Optional<Long> lastSubmissionId,
-            SelectionOptions options) {
-
-        FilterOptions.Builder<ContestBundleItemSubmissionModel> filterOptions = new FilterOptions.Builder<>();
-        filterOptions.putColumnsEq(ContestBundleItemSubmissionModel_.containerJid, containerJid);
-        createdBy.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
-        problemJid.ifPresent(jid -> filterOptions.putColumnsEq(ContestBundleItemSubmissionModel_.problemJid, jid));
-        lastSubmissionId.ifPresent(filterOptions::lastId);
-
-        return selectPaged(filterOptions.build(), options);
     }
 }

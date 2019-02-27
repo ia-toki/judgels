@@ -26,7 +26,30 @@ describe('ContestProblemCard', () => {
       submissionsLimit: 50,
     });
 
-    expect(wrapper.find('[data-key="name"]').text()).toEqual('A. The Problem');
+    expect(
+      wrapper
+        .find('[data-key="name"]')
+        .text()
+        .replace(/\s/g, '')
+    ).toEqual('A.TheProblem');
+    expect(wrapper.find(ContentCardLink).props().to).toEqual('/contests/contest-a/problems/A');
+  });
+
+  test('problem name with points', () => {
+    render({
+      problemJid: 'jid',
+      alias: 'A',
+      status: ContestProblemStatus.Open,
+      submissionsLimit: 50,
+      points: 30,
+    });
+
+    expect(
+      wrapper
+        .find('[data-key="name"]')
+        .text()
+        .replace(/\s/g, '')
+    ).toEqual('A[30].TheProblem');
     expect(wrapper.find(ContentCardLink).props().to).toEqual('/contests/contest-a/problems/A');
   });
 

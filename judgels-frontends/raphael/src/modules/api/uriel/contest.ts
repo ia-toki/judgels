@@ -51,7 +51,7 @@ export enum ContestStyle {
   ICPC = 'ICPC',
   IOI = 'IOI',
   GCJ = 'GCJ',
-  BUNDLE = 'BUNDLE',
+  Bundle = 'BUNDLE',
 }
 
 export interface ContestPage extends Page<Contest> {}

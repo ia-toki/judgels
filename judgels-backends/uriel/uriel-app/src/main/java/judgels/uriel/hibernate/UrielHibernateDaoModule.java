@@ -94,7 +94,7 @@ public class UrielHibernateDaoModule {
 
     @Provides
     static ContestProgrammingSubmissionDao contestProgrammingSubmissionDao(
-            ContestProgrammingProgrammingSubmissionHibernateDao dao) {
+            ContestProgrammingSubmissionHibernateDao dao) {
 
         return dao;
     }

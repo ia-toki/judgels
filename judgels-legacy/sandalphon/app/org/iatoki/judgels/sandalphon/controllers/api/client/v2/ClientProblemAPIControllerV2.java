@@ -129,6 +129,8 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         try {
             String language = sanitizeLanguageCode(problemJid, DynamicForm.form().bindFromRequest().get("language"));
 
+            ProblemStatement statement = problemService.getStatement(null, problemJid, language);
+
             List<BundleItem> items = bundleItemService.getBundleItemsInProblemWithClone(problemJid, null);
             List<Item> itemsWithConfig = new ArrayList<>();
             for (BundleItem item : items) {
@@ -145,6 +147,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
 
             return okAsJson(
                     new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
+                            .statement(statement)
                             .items(itemsWithConfig)
                             .build()
             );
