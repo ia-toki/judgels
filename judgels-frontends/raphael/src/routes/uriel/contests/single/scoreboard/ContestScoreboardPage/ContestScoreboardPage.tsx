@@ -210,7 +210,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
           profilesMap={profilesMap!}
         />
       );
-    } else {
+    } else if (this.props.contest.style === ContestStyle.GCJ) {
       return (
         <GcjScoreboardTable
           userJid={this.props.userJid}
@@ -218,6 +218,8 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
           profilesMap={profilesMap!}
         />
       );
+    } else {
+      return <React.Fragment />;
     }
   };
 }
