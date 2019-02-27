@@ -74,6 +74,6 @@ export const contestClarificationAPI = {
     clarificationJid: string,
     data: ContestClarificationAnswer
   ): Promise<void> => {
-    return put(`${baseURL(contestJid)}/${clarificationJid}/answer`, token, data);
+    return put(`${baseURL(contestJid)}/${clarificationJid}/answers`, token, data);
   },
 };

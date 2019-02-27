@@ -1,0 +1,18 @@
+.problem-multiple-choice-item-choices {
+    margin-top: 10px;
+    .problem-multiple-choice-item-choice {
+        font-weight: normal;
+        display: flex;
+        align-items: center;
+        margin-top: 7px;
+        .__alias-tag, .__content {
+            margin-bottom: 3px;
+        }
+        .__alias-tag {
+            margin-left: 4px;
+        }
+        .__content {
+            margin-left:7px;
+        }
+    }
+}

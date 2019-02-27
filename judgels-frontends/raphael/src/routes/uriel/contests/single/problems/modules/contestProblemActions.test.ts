@@ -3,10 +3,11 @@ import { SubmissionError } from 'redux-form';
 import { contestJid, sessionState, token } from 'fixtures/state';
 import { ForbiddenError } from 'modules/api/error';
 import { ContestErrors } from 'modules/api/uriel/contest';
-import { ContestProblemData, ContestProblemsResponse, ContestProblemWorksheet } from 'modules/api/uriel/contestProblem';
+import { ContestProblemData, ContestProblemsResponse } from 'modules/api/uriel/contestProblem';
 import { AppState } from 'modules/store';
-
 import { contestProblemActions } from './contestProblemActions';
+import { ContestProblemWorksheet as ContestProgrammingProblemWorksheet } from 'modules/api/uriel/contestProblemProgramming';
+import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from 'modules/api/uriel/contestProblemBundle';
 
 describe('contestProblemActions', () => {
   let dispatch: jest.Mock<any>;
@@ -21,7 +22,8 @@ describe('contestProblemActions', () => {
     contestProblemAPI = {
       getProblems: jest.fn(),
       setProblems: jest.fn(),
-      getProblemWorksheet: jest.fn(),
+      getBundleProblemWorksheet: jest.fn(),
+      getProgrammingProblemWorksheet: jest.fn(),
     };
     toastActions = {
       showSuccessToast: jest.fn(),
@@ -89,20 +91,37 @@ describe('contestProblemActions', () => {
     });
   });
 
-  describe('getProblemWorksheet()', () => {
-    const { getProblemWorksheet } = contestProblemActions;
+  describe('getBundleProblemWorksheet()', () => {
+    const { getBundleProblemWorksheet } = contestProblemActions;
     const doGetProblemWorksheet = async () =>
-      getProblemWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
+      getBundleProblemWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
 
     beforeEach(async () => {
-      const worksheet = {} as ContestProblemWorksheet;
-      contestProblemAPI.getProblemWorksheet.mockReturnValue(worksheet);
+      const worksheet = {} as ContestBundleProblemWorksheet;
+      contestProblemAPI.getBundleProblemWorksheet.mockReturnValue(worksheet);
 
       await doGetProblemWorksheet();
     });
 
-    it('calls API to get problem worksheet', () => {
-      expect(contestProblemAPI.getProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
+    it('calls API to get bundle problem worksheet', () => {
+      expect(contestProblemAPI.getBundleProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
+    });
+  });
+
+  describe('getProgrammingProblemWorksheet()', () => {
+    const { getProgrammingProblemWorksheet } = contestProblemActions;
+    const doGetProblemWorksheet = async () =>
+      getProgrammingProblemWorksheet(contestJid, 'C', 'id')(dispatch, getState, { contestProblemAPI });
+
+    beforeEach(async () => {
+      const worksheet = {} as ContestProgrammingProblemWorksheet;
+      contestProblemAPI.getProgrammingProblemWorksheet.mockReturnValue(worksheet);
+
+      await doGetProblemWorksheet();
+    });
+
+    it('calls API to get programming problem worksheet', () => {
+      expect(contestProblemAPI.getProgrammingProblemWorksheet).toHaveBeenCalledWith(token, contestJid, 'C', 'id');
     });
   });
 });

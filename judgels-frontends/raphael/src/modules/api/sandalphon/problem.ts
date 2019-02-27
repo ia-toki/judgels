@@ -1,7 +1,11 @@
-import { LanguageRestriction } from 'modules/api/gabriel/language';
+export enum ProblemType {
+  Programming = 'PROGRAMMING',
+  Bundle = 'BUNDLE',
+}
 
 export interface ProblemInfo {
   slug: string;
+  type: ProblemType;
   defaultLanguage: string;
   titlesByLanguage: { [language: string]: string };
 }
@@ -17,22 +21,4 @@ export function constructProblemName(title?: string, alias?: string) {
 export interface ProblemStatement {
   title: string;
   text: string;
-}
-
-export interface ProblemLimits {
-  timeLimit: number;
-  memoryLimit: number;
-}
-
-export interface ProblemSubmissionConfig {
-  sourceKeys: { [key: string]: string };
-  gradingEngine: string;
-  gradingLanguageRestriction: LanguageRestriction;
-}
-
-export interface ProblemWorksheet {
-  statement: ProblemStatement;
-  limits: ProblemLimits;
-  submissionConfig: ProblemSubmissionConfig;
-  reasonNotAllowedToSubmit?: string;
 }

@@ -31,10 +31,17 @@ export const contestProblemActions = {
     };
   },
 
-  getProblemWorksheet: (contestJid: string, problemAlias: string, language?: string) => {
+  getBundleProblemWorksheet: (contestJid: string, problemAlias: string, language?: string) => {
     return async (dispatch, getState, { contestProblemAPI }) => {
       const token = selectToken(getState());
-      return await contestProblemAPI.getProblemWorksheet(token, contestJid, problemAlias, language);
+      return await contestProblemAPI.getBundleProblemWorksheet(token, contestJid, problemAlias, language);
+    };
+  },
+
+  getProgrammingProblemWorksheet: (contestJid: string, problemAlias: string, language?: string) => {
+    return async (dispatch, getState, { contestProblemAPI }) => {
+      const token = selectToken(getState());
+      return await contestProblemAPI.getProgrammingProblemWorksheet(token, contestJid, problemAlias, language);
     };
   },
 };
