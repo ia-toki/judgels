@@ -3,8 +3,10 @@ package judgels.uriel.submission.programming;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
+import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
@@ -12,6 +14,8 @@ import javax.inject.Singleton;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
+import judgels.sandalphon.submission.programming.GradingResponsePoller;
+import judgels.sandalphon.submission.programming.GradingResponseProcessor;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
 import judgels.sandalphon.submission.programming.SubmissionRegrader;
@@ -73,5 +77,46 @@ public class SubmissionModule {
                         .build();
 
         return new SubmissionRegrader(submissionStore, executorService, processor);
+    }
+
+    @Provides
+    @Singleton
+    static GradingResponsePoller gradingResponsePoller(
+            LifecycleEnvironment lifecycleEnvironment,
+            Clock clock,
+            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
+            MessageService messageService,
+            GradingResponseProcessor processor) {
+
+        ExecutorService executorService =
+                lifecycleEnvironment.executorService("grading-response-processor-%d")
+                        .maxThreads(10)
+                        .minThreads(10)
+                        .build();
+
+        return new GradingResponsePoller(clock, sealtielClientAuthHeader, messageService, executorService, processor);
+    }
+
+    @Provides
+    @Singleton
+    static GradingResponseProcessor gradingResponseProcessor(
+            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
+            ObjectMapper mapper,
+            SubmissionStore submissionStore,
+            @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
+            MessageService messageService) {
+
+        return unitOfWorkAwareProxyFactory.create(
+                GradingResponseProcessor.class,
+                new Class<?>[] {
+                        ObjectMapper.class,
+                        SubmissionStore.class,
+                        BasicAuthHeader.class,
+                        MessageService.class},
+                new Object[] {
+                        mapper,
+                        submissionStore,
+                        sealtielClientAuthHeader,
+                        messageService});
     }
 }
