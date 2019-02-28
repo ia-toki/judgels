@@ -10,12 +10,11 @@ describe('BundleScoreboardTable', () => {
   const scoreboard: BundleScoreboard = {
     state: {
       problemJids: ['JIDBUND1', 'JIDBUND2'],
-      problemAliases: ['A', 'B'],
+      problemAliases: ['A_20', 'B_05'],
       contestantJids: ['JIDUSER1', 'JIDUSER2'],
       problemPoints: [20, 5],
     },
     content: {
-      problemItems: [20, 5],
       entries: [
         {
           rank: 1,
@@ -58,10 +57,9 @@ describe('BundleScoreboardTable', () => {
   describe('incognito ranks', () => {
     beforeEach(() => {
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
-      const incognitoProblemItems = scoreboard.content.problemItems;
       const incognitoScoreboard = {
         ...scoreboard,
-        content: { problemItems: incognitoProblemItems, entries: incognitoEntries },
+        content: { entries: incognitoEntries },
       };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
       wrapper = mount(
@@ -78,5 +76,15 @@ describe('BundleScoreboardTable', () => {
       .children()
       .map(tr => tr.childAt(1).text());
     expect(ranks).toEqual(['username1', 'username2']);
+  });
+
+  test('display score', () => {
+    const mapCell = td => td.text();
+    const mapRow = tr => [3, 4].map(x => tr.childAt(x)).map(mapCell);
+    const score = wrapper
+      .find('tbody')
+      .children()
+      .map(mapRow);
+    expect(score).toEqual([['12/20', '3/5'], ['10/20', '2/5']]);
   });
 });

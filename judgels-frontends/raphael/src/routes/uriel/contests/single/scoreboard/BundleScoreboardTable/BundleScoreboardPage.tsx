@@ -31,8 +31,12 @@ export class BundleScoreboardTable extends React.PureComponent<BundleScoreboardT
   };
 
   private renderRow = (entry: BundleScoreboardEntry) => {
+    const PROBLEM_ITEMS_STRING_LENGTH = 2;
     const { scoreboard } = this.props;
-    const problemItems = scoreboard.content.problemItems;
+    const problemItems = scoreboard.state.problemAliases.map(alias => {
+      let substr = alias.substr(alias.length - PROBLEM_ITEMS_STRING_LENGTH);
+      return Number(substr);
+    });
     let cells = [
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">

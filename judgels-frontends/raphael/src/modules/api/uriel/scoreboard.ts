@@ -13,7 +13,6 @@ export interface BundleScoreboard {
 }
 
 export interface BundleScoreboardContent {
-  problemItems: number[];
   entries: BundleScoreboardEntry[];
 }
 
