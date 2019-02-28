@@ -11,7 +11,6 @@ import org.immutables.value.Value;
 public interface ScoreboardState {
     List<String> getProblemJids();
     List<String> getProblemAliases();
-    List<Optional<Integer>> getProblemItems();
     Optional<List<Integer>> getProblemPoints();
     Set<String> getContestantJids();
 

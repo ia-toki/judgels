@@ -11,15 +11,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Named;
-import judgels.sandalphon.api.client.problem.ClientProblemService;
-import judgels.sandalphon.api.problem.ProblemInfo;
-import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
@@ -40,8 +34,6 @@ public class ContestScoreboardUpdater {
     private final SubmissionStore programmingSubmissionStore;
     private final ContestItemSubmissionStore bundleItemSubmissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
-    private final ClientProblemService clientProblemService;
-    private final BasicAuthHeader sandalphonClientAuthHeader;
     private final Clock clock;
 
     public ContestScoreboardUpdater(
@@ -53,8 +45,6 @@ public class ContestScoreboardUpdater {
             SubmissionStore programmingSubmissionStore,
             ContestItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
-            ClientProblemService clientProblemService,
-            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
             Clock clock) {
 
         this.objectMapper = objectMapper;
@@ -65,8 +55,6 @@ public class ContestScoreboardUpdater {
         this.programmingSubmissionStore = programmingSubmissionStore;
         this.bundleItemSubmissionStore = bundleItemSubmissionStore;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
-        this.clientProblemService = clientProblemService;
-        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clock = clock;
     }
 
@@ -82,21 +70,6 @@ public class ContestScoreboardUpdater {
                 contest.getJid(),
                 ImmutableSet.copyOf(problemJids));
 
-        List<Optional<Integer>> problemItems = problemJids.stream()
-                .map(problemJid -> {
-                    ProblemInfo problemInfo = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
-                    if (problemInfo.getType() != ProblemType.BUNDLE) {
-                        return null;
-                    }
-                    ProblemWorksheet worksheet = clientProblemService.getBundleProblemWorksheet(
-                            sandalphonClientAuthHeader,
-                            problemJid,
-                            Optional.empty());
-                    return worksheet.getItems().size();
-                })
-                .map(Optional::ofNullable)
-                .collect(Collectors.toList());
-
         Map<String, Integer> problemPoints = problemStore.getProblemPointsByJids(
                 contest.getJid(),
                 ImmutableSet.copyOf(problemJids));
@@ -104,7 +77,6 @@ public class ContestScoreboardUpdater {
         ScoreboardState scoreboardState = new ScoreboardState.Builder()
                 .problemJids(problemJids)
                 .contestantJids(contestantJids)
-                .problemItems(problemItems)
                 .problemPoints(styleModuleConfig.hasPointsPerProblem()
                         ? Optional.of(problemJids.stream().map(problemPoints::get).collect(Collectors.toList()))
                         : Optional.empty())

@@ -7,11 +7,8 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.time.Clock;
 import java.util.concurrent.ExecutorService;
-import javax.inject.Named;
 import javax.inject.Singleton;
-import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -60,8 +57,6 @@ public class ContestScoreboardUpdaterModule {
             SubmissionStore programmingSubmissionStore,
             ContestItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
-            ClientProblemService clientProblemService,
-            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
             Clock clock) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -75,8 +70,6 @@ public class ContestScoreboardUpdaterModule {
                         SubmissionStore.class,
                         ContestItemSubmissionStore.class,
                         ScoreboardProcessorRegistry.class,
-                        ClientProblemService.class,
-                        BasicAuthHeader.class,
                         Clock.class},
                 new Object[] {
                         objectMapper,
@@ -87,8 +80,6 @@ public class ContestScoreboardUpdaterModule {
                         programmingSubmissionStore,
                         bundleItemSubmissionStore,
                         scoreboardProcessorRegistry,
-                        clientProblemService,
-                        sandalphonClientAuthHeader,
                         clock});
     }
 }
