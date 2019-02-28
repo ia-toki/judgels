@@ -211,7 +211,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
           profilesMap={profilesMap!}
         />
       );
-    } else if (this.props.contest.style === ContestStyle.BUNDLE) {
+    } else if (this.props.contest.style === ContestStyle.Bundle) {
       return (
         <BundleScoreboardTable
           userJid={this.props.userJid}
