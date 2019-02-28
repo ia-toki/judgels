@@ -18,15 +18,14 @@ export class ContestProblemCard extends React.PureComponent<ContestProblemCardPr
   render() {
     const { contest, problem, problemName } = this.props;
 
-    const displayedPoints =
-      problem.points === null || problem.points === undefined ? '' : <>&nbsp;[{problem.points}]</>;
+    const problemPoints = problem.points === null || problem.points === undefined ? '' : ` [${problem.points} points]`;
 
     return (
       <ContentCardLink to={`/contests/${contest.slug}/problems/${problem.alias}`}>
         <div className="contest-problem-card__name">
           <span data-key="name">
-            {problem.alias}
-            {displayedPoints}.&nbsp;&nbsp;{problemName}
+            {problem.alias}. {problemName}
+            {problemPoints}
           </span>
         </div>
         <div data-key="status" className="contest-problem-card__status secondary-info">
