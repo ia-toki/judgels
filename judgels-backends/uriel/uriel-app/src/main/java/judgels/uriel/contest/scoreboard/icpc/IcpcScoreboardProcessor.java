@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
+import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
@@ -65,7 +66,8 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissions,
+            List<Submission> programmingSubmissions,
+            List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {
         IcpcStyleModuleConfig icpcStyleModuleConfig = (IcpcStyleModuleConfig) styleModuleConfig;
 
@@ -80,7 +82,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             frozenSubmissionsMap.put(c, new ArrayList<>());
         });
 
-        List<Submission> filteredSubmissions = submissions.stream()
+        List<Submission> filteredSubmissions = programmingSubmissions.stream()
                 .filter(s -> contestantJids.contains(s.getUserJid()))
                 .filter(s -> problemJidsSet.contains(s.getProblemJid()))
                 .collect(Collectors.toList());

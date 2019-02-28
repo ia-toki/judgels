@@ -88,6 +88,14 @@ public class ContestItemSubmissionStore {
                 .collect(Collectors.toList());
     }
 
+    public List<ItemSubmission> getSubmissionsForScoreboard(String containerJid) {
+        List<ContestBundleItemSubmissionModel>
+                models = submissionDao.selectByContainerJid(containerJid);
+        return models.stream()
+                .map(ContestItemSubmissionStore::fromModel)
+                .collect(Collectors.toList());
+    }
+
     private static ItemSubmission fromModel(ContestBundleItemSubmissionModel model) {
         return new ItemSubmission.Builder()
                 .id(model.id)

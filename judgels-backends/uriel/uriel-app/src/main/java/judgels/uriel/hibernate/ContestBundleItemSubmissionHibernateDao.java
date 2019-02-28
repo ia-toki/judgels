@@ -41,6 +41,13 @@ public class ContestBundleItemSubmissionHibernateDao extends JudgelsHibernateDao
     }
 
     @Override
+    public List<ContestBundleItemSubmissionModel> selectByContainerJid(String containerJid) {
+        return selectAll(new FilterOptions.Builder<ContestBundleItemSubmissionModel>()
+                .putColumnsEq(ContestBundleItemSubmissionModel_.containerJid, containerJid)
+                .build());
+    }
+
+    @Override
     public List<ContestBundleItemSubmissionModel> selectByContainerJidAndCreatedBy(
             String containerJid, String createdBy) {
         return selectAll(new FilterOptions.Builder<ContestBundleItemSubmissionModel>()
