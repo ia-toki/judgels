@@ -27,7 +27,7 @@ export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
     problemJid?: string,
     page?: number
   ) => Promise<ContestSubmissionsResponse>;
-  onRegrade: (submissionJids: string[]) => Promise<void>;
+  onRegrade: (submissionJid: string) => Promise<void>;
   onRegradeAll: (contestJid: string, userJid?: string, problemJid?: string) => Promise<void>;
   onAppendRoute: (queries) => any;
 }
@@ -187,14 +187,15 @@ export class ContestSubmissionsPage extends React.PureComponent<
     return { userJid, problemJid };
   };
 
-  private onRegrade = async (submissionJids: string[]) => {
-    if (submissionJids.length > 0) {
-      await this.props.onRegrade(submissionJids);
-    }
+  private onRegrade = async (submissionJid: string) => {
+    await this.props.onRegrade(submissionJid);
+    const { username, problemAlias } = this.state.filter!;
+    const queries = parse(this.props.location.search);
+    await this.refreshSubmissions(username, problemAlias, queries.page);
   };
 
   private onRegradeAll = async () => {
-    if (window.confirm('Are you sure you wish to regrade all submissions in all pages?')) {
+    if (window.confirm('Regrade all submissions in all pages for the current filter?')) {
       const { username, problemAlias } = this.state.filter!;
       const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
       await this.props.onRegradeAll(this.props.contest.jid, userJid, problemJid);
@@ -223,8 +224,8 @@ export function createContestSubmissionsPage(contestProgrammingSubmissionActions
 
   const mapDispatchToProps = {
     onGetProgrammingSubmissions: contestProgrammingSubmissionActions.getSubmissions,
-    onRegrade: contestProgrammingSubmissionActions.regradeSubmissions,
-    onRegradeAll: contestProgrammingSubmissionActions.regradeAllSubmissions,
+    onRegrade: contestProgrammingSubmissionActions.regradeSubmission,
+    onRegradeAll: contestProgrammingSubmissionActions.regradeSubmissions,
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 

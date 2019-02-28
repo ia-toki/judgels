@@ -15,12 +15,6 @@ export interface ContestSubmissionsResponse {
   problemAliasesMap: { [problemJid: string]: string };
 }
 
-export interface ContestSubmissionRegradeAllData {
-  contestJid?: string;
-  userJid?: string;
-  problemJid?: string;
-}
-
 const baseURL = `${baseContestsURL}/submissions/programming`;
 
 export const contestSubmissionProgrammingAPI = {
@@ -55,15 +49,12 @@ export const contestSubmissionProgrammingAPI = {
     return postMultipart(baseURL, token, parts);
   },
 
-  regradeSubmissions: (token: string, submissionJids: string[]): Promise<void> => {
-    return post(`${baseURL}/regrade`, token, submissionJids);
+  regradeSubmission: (token: string, submissionJid: string): Promise<void> => {
+    return post(`${baseURL}/${submissionJid}/regrade`, token);
   },
 
-  regradeAllSubmissions: (token: string, contestJid?: string, userJid?: string, problemJid?: string): Promise<void> => {
-    return post(`${baseURL}/regrade/all`, token, {
-      contestJid,
-      userJid,
-      problemJid,
-    } as ContestSubmissionRegradeAllData);
+  regradeSubmissions: (token: string, contestJid?: string, userJid?: string, problemJid?: string): Promise<void> => {
+    const params = stringify({ contestJid, userJid, problemJid });
+    return post(`${baseURL}/regrade?${params}`, token);
   },
 };

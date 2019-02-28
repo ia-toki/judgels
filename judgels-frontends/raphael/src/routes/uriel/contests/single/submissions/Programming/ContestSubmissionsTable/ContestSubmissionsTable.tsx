@@ -19,7 +19,7 @@ export interface ContestSubmissionsTableProps {
   canManage: boolean;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
-  onRegrade: (submissionJids: string[]) => void;
+  onRegrade: (submissionJid: string) => void;
 }
 
 export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {
@@ -93,6 +93,6 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
   };
 
   private onClickRegrade = (submissionJid: string) => {
-    return () => this.props.onRegrade([submissionJid]);
+    return () => this.props.onRegrade(submissionJid);
   };
 }

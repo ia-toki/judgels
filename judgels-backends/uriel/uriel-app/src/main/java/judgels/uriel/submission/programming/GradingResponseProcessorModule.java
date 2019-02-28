@@ -11,7 +11,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
-import judgels.sandalphon.submission.programming.SubmissionClient;
+import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
 
@@ -42,7 +42,7 @@ public class GradingResponseProcessorModule {
     static GradingResponseProcessor contestScoreboardUpdater(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
-            SubmissionClient submissionClient,
+            SubmissionStore submissionStore,
             @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
             MessageService messageService) {
 
@@ -50,12 +50,12 @@ public class GradingResponseProcessorModule {
                 GradingResponseProcessor.class,
                 new Class<?>[] {
                         ObjectMapper.class,
-                        SubmissionClient.class,
+                        SubmissionStore.class,
                         BasicAuthHeader.class,
                         MessageService.class},
                 new Object[] {
                         mapper,
-                        submissionClient,
+                        submissionStore,
                         sealtielClientAuthHeader,
                         messageService});
     }

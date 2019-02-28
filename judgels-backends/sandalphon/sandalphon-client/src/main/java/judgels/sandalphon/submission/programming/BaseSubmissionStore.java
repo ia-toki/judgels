@@ -57,6 +57,14 @@ public class BaseSubmissionStore<
     }
 
     @Override
+    public Optional<Submission> getSubmissionByJid(String submissionJid) {
+        return submissionDao.selectByJid(submissionJid).map(model -> {
+            Optional<GM> gradingModel = gradingDao.selectLatestBySubmissionJid(model.jid);
+            return submissionFromModels(model, gradingModel.orElse(null));
+        });
+    }
+
+    @Override
     public List<Submission> getSubmissionsForScoreboard(String containerJid) {
         List<SM> submissionModels = submissionDao.selectAllByContainerJid(containerJid);
         Set<String> submissionJids = submissionModels.stream().map(m -> m.jid).collect(Collectors.toSet());

@@ -6,6 +6,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.Optional;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -32,6 +33,22 @@ public interface ContestSubmissionService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionId") long submissionId,
             @QueryParam("language") Optional<String> language);
+
+    @POST
+    @Path("/{submissionJid}/regrade")
+    @Produces(APPLICATION_JSON)
+    void regradeSubmission(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("submissionJid") String submissionJid);
+
+    @POST
+    @Path("/regrade")
+    @Produces(APPLICATION_JSON)
+    void regradeSubmissions(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") Optional<String> userJid,
+            @QueryParam("problemJid") Optional<String> problemJid);
 
 //    These endpoints are not representable as JAX-RS methods
 
