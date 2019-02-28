@@ -1,6 +1,6 @@
 import { selectToken } from 'modules/session/sessionSelectors';
 
-export const contestBundleSubmissionActions = {
+export const contestSubmissionActions = {
   getSubmissions: (contestJid: string, userJid?: string, problemJid?: string, page?: number) => {
     return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
       const token = selectToken(getState());

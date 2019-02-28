@@ -2,9 +2,9 @@ import { push } from 'react-router-redux';
 
 import { selectToken } from 'modules/session/sessionSelectors';
 import { NotFoundError } from 'modules/api/error';
-import { ProblemSubmissionFormData as ProgrammingProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
+import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 
-export const contestProgrammingSubmissionActions = {
+export const contestSubmissionActions = {
   getSubmissions: (contestJid: string, userJid?: string, problemJid?: string, page?: number) => {
     return async (dispatch, getState, { contestSubmissionProgrammingAPI }) => {
       const token = selectToken(getState());
@@ -27,12 +27,7 @@ export const contestProgrammingSubmissionActions = {
     };
   },
 
-  createSubmission: (
-    contestJid: string,
-    contestSlug: string,
-    problemJid: string,
-    data: ProgrammingProblemSubmissionFormData
-  ) => {
+  createSubmission: (contestJid: string, contestSlug: string, problemJid: string, data: ProblemSubmissionFormData) => {
     return async (dispatch, getState, { contestSubmissionProgrammingAPI, toastActions }) => {
       const token = selectToken(getState());
       let sourceFiles = {};

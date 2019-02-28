@@ -6,10 +6,10 @@ import { SubmissionWithSourceResponse } from 'modules/api/sandalphon/submissionP
 import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionProgramming';
 import { AppState } from 'modules/store';
 
-import { contestProgrammingSubmissionActions } from './contestProgrammingSubmissionActions';
-import { ProblemSubmissionFormData as ProgrammingProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
+import { contestSubmissionActions } from './contestSubmissionActions';
+import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 
-describe('contestProgrammingSubmissionActions', () => {
+describe('contestSubmissionActions', () => {
   let dispatch: jest.Mock<any>;
   const getState = (): Partial<AppState> => ({ session: sessionState });
 
@@ -32,7 +32,7 @@ describe('contestProgrammingSubmissionActions', () => {
   });
 
   describe('getSubmissions()', () => {
-    const { getSubmissions } = contestProgrammingSubmissionActions;
+    const { getSubmissions } = contestSubmissionActions;
     const doGetSubmissions = async () =>
       getSubmissions(contestJid, 'userJid', 'problemJid', 3)(dispatch, getState, { contestSubmissionProgrammingAPI });
 
@@ -55,7 +55,7 @@ describe('contestProgrammingSubmissionActions', () => {
   });
 
   describe('getSubmissionWithSource()', () => {
-    const { getSubmissionWithSource } = contestProgrammingSubmissionActions;
+    const { getSubmissionWithSource } = contestSubmissionActions;
     const doGetSubmissionWithSource = async () =>
       getSubmissionWithSource(contestJid, 3, 'id')(dispatch, getState, { contestSubmissionProgrammingAPI });
 
@@ -89,12 +89,12 @@ describe('contestProgrammingSubmissionActions', () => {
   });
 
   describe('createSubmission()', () => {
-    const { createSubmission } = contestProgrammingSubmissionActions;
+    const { createSubmission } = contestSubmissionActions;
     const sourceFiles = {
       encoder: {} as File,
       decoder: {} as File,
     };
-    const data: ProgrammingProblemSubmissionFormData = {
+    const data: ProblemSubmissionFormData = {
       gradingLanguage: 'Pascal',
       sourceFiles,
     };

@@ -15,7 +15,7 @@ import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionP
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 import { ContestSubmissionFilterWidget } from '../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
 import { selectContest } from '../../../../modules/contestSelectors';
-import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../modules/contestProgrammingSubmissionActions';
+import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
 import './ContestSubmissionsPage.css';
 
@@ -216,19 +216,19 @@ export class ContestSubmissionsPage extends React.PureComponent<
   };
 }
 
-export function createContestSubmissionsPage(contestProgrammingSubmissionActions) {
+export function createContestSubmissionsPage(contestSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
   });
 
   const mapDispatchToProps = {
-    onGetProgrammingSubmissions: contestProgrammingSubmissionActions.getSubmissions,
-    onRegrade: contestProgrammingSubmissionActions.regradeSubmissions,
-    onRegradeAll: contestProgrammingSubmissionActions.regradeAllSubmissions,
+    onGetProgrammingSubmissions: contestSubmissionActions.getSubmissions,
+    onRegrade: contestSubmissionActions.regradeSubmissions,
+    onRegradeAll: contestSubmissionActions.regradeAllSubmissions,
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
 }
 
-export default createContestSubmissionsPage(injectedContestProgrammingSubmissionActions);
+export default createContestSubmissionsPage(injectedContestSubmissionActions);
