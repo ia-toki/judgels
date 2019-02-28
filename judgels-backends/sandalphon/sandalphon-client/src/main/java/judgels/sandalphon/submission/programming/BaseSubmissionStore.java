@@ -203,7 +203,7 @@ public class BaseSubmissionStore<
             try {
                 raw = mapper.readValue(model.details, RawGradingResultDetails.class);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                return Optional.empty();
             }
 
             Map<String, byte[]> compilationOutputs = raw.getCompilationOutputs().entrySet()
