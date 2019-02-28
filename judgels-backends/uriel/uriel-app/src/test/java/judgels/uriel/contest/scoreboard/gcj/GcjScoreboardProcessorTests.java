@@ -105,7 +105,7 @@ class GcjScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
-                    new ArrayList<>(),
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -166,7 +166,7 @@ class GcjScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
-                    new ArrayList<>(),
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -247,7 +247,7 @@ class GcjScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
-                    new ArrayList<>(),
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -373,7 +373,7 @@ class GcjScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
-                    new ArrayList<>(),
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -453,7 +453,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -503,7 +503,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -584,7 +584,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -662,7 +662,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -747,7 +747,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -857,7 +857,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         baseSubmissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -920,7 +920,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -983,7 +983,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -1046,7 +1046,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()

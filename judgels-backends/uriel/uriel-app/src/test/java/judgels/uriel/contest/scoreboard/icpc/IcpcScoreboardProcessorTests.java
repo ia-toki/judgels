@@ -135,7 +135,7 @@ class IcpcScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
-                    new ArrayList<>(),
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -198,7 +198,7 @@ class IcpcScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
-                    new ArrayList<>(),
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -281,7 +281,7 @@ class IcpcScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
-                    new ArrayList<>(),
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -409,7 +409,7 @@ class IcpcScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
-                    new ArrayList<>(),
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -491,7 +491,7 @@ class IcpcScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -542,7 +542,7 @@ class IcpcScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -641,7 +641,7 @@ class IcpcScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -721,7 +721,7 @@ class IcpcScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -823,7 +823,7 @@ class IcpcScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -936,7 +936,7 @@ class IcpcScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         baseSubmissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -1001,7 +1001,7 @@ class IcpcScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -1066,7 +1066,7 @@ class IcpcScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
@@ -1131,7 +1131,7 @@ class IcpcScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
-                        new ArrayList<>(),
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new IcpcScoreboard.Builder()
