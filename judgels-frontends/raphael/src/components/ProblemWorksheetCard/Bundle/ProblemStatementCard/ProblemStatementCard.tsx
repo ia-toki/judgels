@@ -13,14 +13,14 @@ export interface ProblemStatementCardProps {
   items: Item[];
   alias: string;
   statement: ProblemStatement;
-  onAnswerItem: (itemJid: string, answer?: string) => any;
+  onAnswerItem: (itemJid: string, answer: string) => any;
   latestSubmission: { [id: string]: ItemSubmission };
 }
 
 export class ProblemStatementCard extends React.Component<ProblemStatementCardProps> {
   generateOnAnswer = (itemJid: string) => {
     return (choice?: string) => {
-      this.props.onAnswerItem(itemJid, choice);
+      this.props.onAnswerItem(itemJid, choice || '');
     };
   };
 
