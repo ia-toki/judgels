@@ -8,6 +8,7 @@ import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 import { BundleScoreboardContent } from 'modules/api/uriel/scoreboard';
 import { BundleScoreboardEntry } from 'modules/api/uriel/scoreboard';
 import { UserRef } from 'components/UserRef/UserRef';
+import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 
 export class BundleScoreboardTableProps {
   userJid?: string;
@@ -19,7 +20,7 @@ export class BundleScoreboardTable extends React.PureComponent<BundleScoreboardT
   render() {
     const { scoreboard } = this.props;
     return (
-      <ScoreboardTable className="bundle-scoreboard__content" state={scoreboard.state}>
+      <ScoreboardTable className="bundle-scoreboard__content" state={scoreboard.state} style={ContestStyle.Bundle}>
         {this.renderData(scoreboard.content)}
       </ScoreboardTable>
     );
