@@ -64,8 +64,7 @@ jophiel:
   userAvatar:
     fs:
       type: {{ jophiel_userAvatar_fs_type }}
-      {% if jophiel_userAvatar_fs_type == 'aws' %}s3BucketName: {{ jophiel_userAvatar_fs_s3BucketName }}{% endif %}
-
+      {% if jophiel_userAvatar_fs_type != 'local' %}s3BucketName: {{ jophiel_userAvatar_fs_s3BucketName }}{% endif %}
 
   userRegistration:
     enabled: {{ jophiel_userRegistration_enabled }}

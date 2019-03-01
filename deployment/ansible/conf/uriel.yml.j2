@@ -67,10 +67,9 @@ uriel:
   submission:
     fs:
       type: {{ uriel_submission_fs_type }}
-      {% if uriel_submission_fs_type == 'aws' %}s3BucketName: {{ uriel_submission_fs_s3BucketName }}{% endif %}
-
+      {% if uriel_submission_fs_type != 'local' %}s3BucketName: {{ uriel_submission_fs_s3BucketName }}{% endif %}
 
   file:
     fs:
       type: {{ uriel_file_fs_type }}
-      {% if uriel_file_fs_type == 'aws' %}s3BucketName: {{ uriel_file_fs_s3BucketName }}{% endif %}
+      {% if uriel_file_fs_type != 'local' %}s3BucketName: {{ uriel_file_fs_s3BucketName }}{% endif %}
