@@ -31,12 +31,6 @@ export class BundleScoreboardTable extends React.PureComponent<BundleScoreboardT
   };
 
   private renderRow = (entry: BundleScoreboardEntry) => {
-    const PROBLEM_ITEMS_STRING_LENGTH = 2;
-    const { scoreboard } = this.props;
-    const problemItems = scoreboard.state.problemAliases.map(alias => {
-      let substr = alias.substr(alias.length - PROBLEM_ITEMS_STRING_LENGTH);
-      return Number(substr);
-    });
     let cells = [
       <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
@@ -46,7 +40,7 @@ export class BundleScoreboardTable extends React.PureComponent<BundleScoreboardT
         <strong>{entry.totalAnsweredItems}</strong>
       </td>,
     ];
-    const problemCells = entry.answeredItems.map((item, i) => this.renderProblemCell(i, item, problemItems[i]));
+    const problemCells = entry.answeredItems.map((item, i) => this.renderProblemCell(i, item));
     cells = [...cells, ...problemCells];
     return (
       <tr key={entry.contestantJid} className={classNames({ 'my-rank': entry.contestantJid === this.props.userJid })}>
@@ -55,11 +49,7 @@ export class BundleScoreboardTable extends React.PureComponent<BundleScoreboardT
     );
   };
 
-  private renderProblemCell = (idx: number, answered: number, items: number) => {
-    return (
-      <td key={idx}>
-        {answered}/{items}
-      </td>
-    );
+  private renderProblemCell = (idx: number, answered: number) => {
+    return <td key={idx}>{answered}</td>;
   };
 }
