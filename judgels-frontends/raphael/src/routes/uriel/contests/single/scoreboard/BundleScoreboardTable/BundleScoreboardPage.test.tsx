@@ -10,9 +10,8 @@ describe('BundleScoreboardTable', () => {
   const scoreboard: BundleScoreboard = {
     state: {
       problemJids: ['JIDBUND1', 'JIDBUND2'],
-      problemAliases: ['A-20', 'B-05'],
+      problemAliases: ['A', 'B'],
       contestantJids: ['JIDUSER1', 'JIDUSER2'],
-      problemPoints: [20, 5],
     },
     content: {
       entries: [
@@ -85,7 +84,7 @@ describe('BundleScoreboardTable', () => {
       .find('tbody')
       .children()
       .map(mapRow);
-    expect(score).toEqual([['12/20', '3/5'], ['10/20', '2/5']]);
+    expect(score).toEqual([['12', '3'], ['10', '2']]);
   });
 
   test('display points', () => {
@@ -95,6 +94,6 @@ describe('BundleScoreboardTable', () => {
       .find('thead')
       .children()
       .map(mapRow);
-    expect(points).toEqual([['A-20[20]', 'B-05[5]']]);
+    expect(points).toEqual([['A', 'B']]);
   });
 });

@@ -5,13 +5,11 @@ import * as React from 'react';
 import { ScoreboardState } from 'modules/api/uriel/scoreboard';
 
 import './ScoreboardTable.css';
-import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 
 export class ScoreboardTableProps {
   className: string;
   state: ScoreboardState;
   children?: any;
-  style?: ContestStyle;
 }
 
 export class ScoreboardTable extends React.PureComponent<ScoreboardTableProps> {
@@ -38,25 +36,15 @@ export class ScoreboardTable extends React.PureComponent<ScoreboardTableProps> {
   };
 
   private renderProblemHeader = (state: ScoreboardState, idx: number) => {
-    const PROBLEM_POINTS_STRING_LENGTH = 2;
     const alias = state.problemAliases[idx];
-    let points;
-    if (this.props.style === ContestStyle.Bundle) {
-      points = (
+    const points =
+      state.problemPoints === undefined || state.problemPoints === null ? (
+        ''
+      ) : (
         <>
-          <br />[{Number(alias.substr(alias.length - PROBLEM_POINTS_STRING_LENGTH))}]
+          <br />[{state.problemPoints![idx]}]
         </>
       );
-    } else {
-      points =
-        state.problemPoints === undefined || state.problemPoints === null ? (
-          ''
-        ) : (
-          <>
-            <br />[{state.problemPoints![idx]}]
-          </>
-        );
-    }
     return (
       <th key={alias} className="problem-cell">
         {alias}
