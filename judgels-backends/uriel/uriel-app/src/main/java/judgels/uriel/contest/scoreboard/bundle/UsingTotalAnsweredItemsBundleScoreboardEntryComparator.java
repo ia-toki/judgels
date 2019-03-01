@@ -18,6 +18,6 @@ public final class UsingTotalAnsweredItemsBundleScoreboardEntryComparator implem
     public int compareWithTieBreakerForEqualRanks(
             BundleScoreboardEntry entry1, BundleScoreboardEntry entry2) {
         return Comparator.nullsLast(Instant::compareTo)
-                .compare(entry1.getLastAnsweredTime().orElse(null), entry2.getLastAnsweredTime().orElse(null));
+                .compare(entry2.getLastAnsweredTime().orElse(null), entry1.getLastAnsweredTime().orElse(null));
     }
 }
