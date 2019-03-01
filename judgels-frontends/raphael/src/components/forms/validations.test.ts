@@ -40,7 +40,7 @@ describe('validations', () => {
 
   test('Slug', () => {
     expect(Slug('fu')).toBeTruthy();
-    expect(Slug('fusharfusharfusharfusharfusharfusharfusharfusharfushar')).toBeTruthy();
+    expect(Slug('fusharfusharfusharfusharfusharfusharfusharfusharfusharfusharfusharfusharfushar')).toBeTruthy();
     expect(Slug(' fushar ')).toBeTruthy();
     expect(Slug('fushar.')).toBeTruthy();
     expect(Slug('fus-4-r')).toBeUndefined();
