@@ -120,9 +120,10 @@ public final class BatchWithSubtasksGradingEngineAdapter extends SingleSourceFil
         for (TokilibFile file : tokilibFiles) {
             String name = file.filename;
             int batchNo = file.batchNo;
+            String batchName = batchNo == 0 ? "sample" : "" + batchNo;
             int tcNo = file.tcNo;
 
-            String filename = name + "_" + batchNo + "_" + tcNo;
+            String filename = name + "_" + batchName + "_" + tcNo;
             Set<Integer> subtaskIds = Sets.newHashSet();
 
             if (batchNo == 0) {
