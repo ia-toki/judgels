@@ -30,7 +30,7 @@ interface UsersPageState {
 }
 
 export class UsersPage extends React.PureComponent<UsersPageProps, UsersPageState> {
-  private static PAGE_SIZE = 20;
+  private static PAGE_SIZE = 250;
   private static HEADER = ['Username'];
   private static DEFAULT_ORDER_BY = 'username';
   private static DEFAULT_ORDER_DIR = OrderDir.ASC;

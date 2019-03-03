@@ -10,6 +10,8 @@ import judgels.uriel.persistence.ContestManagerDao;
 import judgels.uriel.persistence.ContestManagerModel;
 
 public class ContestManagerStore {
+    private static final int PAGE_SIZE = 250;
+
     private final ContestManagerDao managerDao;
 
     @Inject
@@ -39,7 +41,9 @@ public class ContestManagerStore {
     }
 
     public Page<ContestManager> getManagers(String contestJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        SelectionOptions.Builder options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .pageSize(PAGE_SIZE);
         page.ifPresent(options::page);
         return managerDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
                 p -> Lists.transform(p, ContestManagerStore::fromModel));

@@ -45,7 +45,7 @@ interface ContestScoreboardPageState {
 }
 
 export class ContestScoreboardPage extends React.PureComponent<ContestScoreboardPageProps, ContestScoreboardPageState> {
-  private static PAGE_SIZE = 99999;
+  private static PAGE_SIZE = 250;
   state: ContestScoreboardPageState = {};
 
   constructor(props: ContestScoreboardPageProps) {

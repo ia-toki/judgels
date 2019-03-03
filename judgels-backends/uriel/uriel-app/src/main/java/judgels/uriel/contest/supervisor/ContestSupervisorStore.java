@@ -21,6 +21,8 @@ import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
 
 public class ContestSupervisorStore {
+    private static final int PAGE_SIZE = 250;
+
     private final ContestSupervisorDao supervisorDao;
     private final ObjectMapper mapper;
 
@@ -93,7 +95,9 @@ public class ContestSupervisorStore {
     }
 
     public Page<ContestSupervisor> getSupervisors(String contestJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        SelectionOptions.Builder options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .pageSize(PAGE_SIZE);
         page.ifPresent(options::page);
         return supervisorDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
                 p -> Lists.transform(p, this::fromModel));

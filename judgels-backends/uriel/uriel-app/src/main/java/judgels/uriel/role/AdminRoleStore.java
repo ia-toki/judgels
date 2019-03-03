@@ -10,6 +10,8 @@ import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.AdminRoleModel;
 
 public class AdminRoleStore {
+    private static final int PAGE_SIZE = 250;
+
     private final AdminRoleDao adminRoleDao;
 
     @Inject
@@ -18,7 +20,9 @@ public class AdminRoleStore {
     }
 
     public Page<Admin> getAdmins(Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        SelectionOptions.Builder options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .pageSize(PAGE_SIZE);
         page.ifPresent(options::page);
         return adminRoleDao.selectPaged(options.build()).mapPage(
                 p -> Lists.transform(p, AdminRoleStore::fromModel));
