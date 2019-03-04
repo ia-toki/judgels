@@ -13,6 +13,7 @@ import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import './ContestSubmissionsPage.css';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { push } from 'react-router-redux';
+import { GradingTag } from '../GradingTag/GradingTag';
 
 export interface ContestSubmissionsPageProps {
   getSubmissions: (
@@ -61,6 +62,7 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
 
     const { data, profilesMap, problemAliasesMap } = response;
     const { contest, gotoSummary } = this.props;
+    const canManage = response.config.canManage;
 
     return (
       <Card className="contest-bundle-submissions-page">
@@ -68,9 +70,10 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
         <HTMLTable className="submissions-table" bordered striped interactive>
           <thead>
             <tr>
-              <th>Soal</th>
-              <th>Nomor Soal</th>
-              <th>Jawaban</th>
+              <th>Problem</th>
+              <th>Item Number</th>
+              <th>Answer</th>
+              {canManage && <th>Verdict</th>}
               <th>Issuer</th>
               <th>Time</th>
             </tr>
@@ -81,7 +84,12 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
                 <td>{problemAliasesMap[item.problemJid] || '-'}</td>
                 {/* TODO: Add item number, dont know how to do this yet. */}
                 <td>{Math.round(Math.random() * 50 + 1)}</td>
-                <td>{item.answer}</td>
+                <td>{item.answer || '-'}</td>
+                {canManage && (
+                  <td>
+                    <GradingTag grading={item.grading} />
+                  </td>
+                )}
                 <td>{profilesMap[item.userJid] ? profilesMap[item.userJid].username : '-'}</td>
                 <td>
                   <FormattedDate value={item.time} showSeconds />

@@ -4,6 +4,7 @@ import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 
 import './ProblemSubmissionCard.css';
+import { GradingTag } from '../GradingTag/GradingTag';
 
 export interface ProblemSubmissionCardProps {
   alias: string;
@@ -12,13 +13,22 @@ export interface ProblemSubmissionCardProps {
   canManage: boolean;
 }
 
-export const ProblemSubmissionCard: FunctionComponent<ProblemSubmissionCardProps> = ({ alias, submissions }) => {
+export const ProblemSubmissionCard: FunctionComponent<ProblemSubmissionCardProps> = ({
+  alias,
+  submissions,
+  canManage,
+}) => {
   const renderAnswer = (answer?: string) => (answer && answer.length > 0 ? answer : '-');
 
   const renderSingleSubmission = (submission: ItemSubmission, itemNum: number) => (
     <tr key={submission.itemJid}>
       <td>{itemNum + 1}</td>
       <td>{renderAnswer(submission.answer)}</td>
+      {canManage && (
+        <td>
+          <GradingTag grading={submission.grading} />
+        </td>
+      )}
       <td>
         <FormattedDate value={submission.time} />
       </td>
@@ -31,8 +41,9 @@ export const ProblemSubmissionCard: FunctionComponent<ProblemSubmissionCardProps
       <HTMLTable className="submission-table" bordered striped>
         <thead>
           <tr>
-            <th>Nomor Soal</th>
-            <th>Jawaban</th>
+            <th>Item Number</th>
+            <th>Answer</th>
+            {canManage && <th>Verdict</th>}
             <th>Time</th>
           </tr>
         </thead>
