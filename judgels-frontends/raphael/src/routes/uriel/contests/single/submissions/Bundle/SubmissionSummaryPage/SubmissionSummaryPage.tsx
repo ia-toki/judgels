@@ -7,6 +7,10 @@ import { contestSubmissionActions as injectedContestSubmissionActions } from '..
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestAnswerResponse } from 'modules/api/uriel/contestSubmissionBundle';
 import { ProblemSubmissionCard, ProblemSubmissionCardProps } from '../ProblemSubmissionsCard/ProblemSubmissionCard';
+import { push } from 'react-router-redux';
+import { Button, Intent } from '@blueprintjs/core';
+
+import './SubmissionSummaryPage.css';
 
 interface SubmissionSummaryPageRoute {
   userJid: string;
@@ -15,6 +19,7 @@ interface SubmissionSummaryPageRoute {
 export interface SubmissionSummaryPageProps extends RouteComponentProps<SubmissionSummaryPageRoute> {
   contest: Contest;
   getSummary: (contestJid: string, userJid?: string) => Promise<ContestAnswerResponse>;
+  gotoSubmissionsPage: (contest: Contest) => any;
 }
 
 export interface SubmissionSummaryPageState {
@@ -46,8 +51,18 @@ class SubmissionSummaryPage extends Component<SubmissionSummaryPageProps, Submis
   }
 
   render() {
+    const { gotoSubmissionsPage, contest } = this.props;
     return (
-      <div>{this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}</div>
+      <div className="submisions-summary-page">
+        <Button
+          className="goto-submissions-button"
+          intent={Intent.PRIMARY}
+          onClick={gotoSubmissionsPage.bind(this, contest)}
+        >
+          Submissions
+        </Button>
+        {this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}
+      </div>
     );
   }
 }
@@ -59,6 +74,7 @@ export function createSubmissionSummaryPage(contestSubmissionActions) {
 
   const mapDispatchToProps = {
     getSummary: contestSubmissionActions.getSummary,
+    gotoSubmissionsPage: (contest: Contest) => push(`/contests/${contest.slug}/submissions/`),
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));

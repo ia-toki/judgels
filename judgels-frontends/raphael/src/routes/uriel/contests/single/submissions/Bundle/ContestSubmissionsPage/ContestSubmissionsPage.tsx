@@ -21,7 +21,7 @@ export interface ContestSubmissionsPageProps {
     problemJid?: string,
     page?: number
   ) => Promise<ContestItemSubmissionsResponse>;
-  gotoSummary: (item: ItemSubmission) => any;
+  gotoSummary: (contest: Contest, item: ItemSubmission) => any;
   contest: Contest;
 }
 
@@ -60,7 +60,7 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
     }
 
     const { data, profilesMap, problemAliasesMap } = response;
-    const gotoSummary = this.props.gotoSummary;
+    const { contest, gotoSummary } = this.props;
 
     return (
       <Card className="contest-bundle-submissions-page">
@@ -77,7 +77,7 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
           </thead>
           <tbody>
             {data.page.map(item => (
-              <tr key={item.jid} onClick={gotoSummary.bind(this, item)}>
+              <tr key={item.jid} onClick={gotoSummary.bind(this, contest, item)}>
                 <td>{problemAliasesMap[item.problemJid] || '-'}</td>
                 {/* TODO: Add item number, dont know how to do this yet. */}
                 <td>{Math.round(Math.random() * 50 + 1)}</td>
@@ -105,7 +105,8 @@ export function createContestSubmissionsPage(contestSubmissionActions) {
 
   const mapDispatchToProps = {
     getSubmissions: contestSubmissionActions.getSubmissions,
-    gotoSummary: (item: ItemSubmission) => push(`./submissions/users/${item.userJid}`),
+    gotoSummary: (contest: Contest, item: ItemSubmission) =>
+      push(`/contests/${contest.slug}/submissions/users/${item.userJid}`),
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
