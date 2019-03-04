@@ -13,6 +13,7 @@ import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.submission.bundle.ContestItemSubmissionStore;
 
 @Module
 public class ContestScoreboardUpdaterModule {
@@ -53,7 +54,8 @@ public class ContestScoreboardUpdaterModule {
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
-            SubmissionStore submissionStore,
+            SubmissionStore programmingSubmissionStore,
+            ContestItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
 
@@ -66,6 +68,7 @@ public class ContestScoreboardUpdaterModule {
                         ContestContestantStore.class,
                         ContestProblemStore.class,
                         SubmissionStore.class,
+                        ContestItemSubmissionStore.class,
                         ScoreboardProcessorRegistry.class,
                         Clock.class},
                 new Object[] {
@@ -74,7 +77,8 @@ public class ContestScoreboardUpdaterModule {
                         moduleStore,
                         contestantStore,
                         problemStore,
-                        submissionStore,
+                        programmingSubmissionStore,
+                        bundleItemSubmissionStore,
                         scoreboardProcessorRegistry,
                         clock});
     }

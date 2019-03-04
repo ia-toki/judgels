@@ -32,7 +32,6 @@ import judgels.uriel.jophiel.JophielModule;
 import judgels.uriel.rating.ContestRatingResource;
 import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.sealtiel.SealtielModule;
-import judgels.uriel.submission.programming.GradingResponseProcessorModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
 @Component(modules = {
@@ -53,8 +52,7 @@ import judgels.uriel.submission.programming.SubmissionModule;
         UrielModule.class,
         UrielHibernateDaoModule.class,
 
-        ContestScoreboardUpdaterModule.class,
-        GradingResponseProcessorModule.class})
+        ContestScoreboardUpdaterModule.class})
 @Singleton
 public interface UrielComponent {
     AdminResource adminResource();

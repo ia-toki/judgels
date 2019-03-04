@@ -38,7 +38,7 @@ export class ScoreboardTable extends React.PureComponent<ScoreboardTableProps> {
   private renderProblemHeader = (state: ScoreboardState, idx: number) => {
     const alias = state.problemAliases[idx];
     const points =
-      state.problemPoints === undefined ? (
+      state.problemPoints === undefined || state.problemPoints === null ? (
         ''
       ) : (
         <>

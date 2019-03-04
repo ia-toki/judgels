@@ -56,16 +56,15 @@ jophiel:
     secretKey: {{ recaptcha_secretKey }}
 
   aws:
-    accessKey: {{ aws_accessKey }}
-    secretKey: {{ aws_secretKey }}
-    s3BucketRegionId: {{ aws_s3BucketRegionId }}
-    cloudFrontBaseUrl: {{ aws_cloudFrontBaseUrl }}
+    accessKey: {{ jophiel_aws_accessKey }}
+    secretKey: {{ jophiel_aws_secretKey }}
+    s3BucketRegionId: {{ jophiel_aws_s3BucketRegionId }}
+    cloudFrontBaseUrl: {{ jophiel_aws_cloudFrontBaseUrl }}
 
   userAvatar:
     fs:
       type: {{ jophiel_userAvatar_fs_type }}
-      {% if jophiel_userAvatar_fs_type == 'aws' %}s3BucketName: {{ jophiel_userAvatar_fs_s3BucketName }}{% endif %}
-
+      {% if jophiel_userAvatar_fs_type != 'local' %}s3BucketName: {{ jophiel_userAvatar_fs_s3BucketName }}{% endif %}
 
   userRegistration:
     enabled: {{ jophiel_userRegistration_enabled }}

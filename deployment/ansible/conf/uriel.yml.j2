@@ -60,17 +60,16 @@ uriel:
     clientJid: JIDSECL-gabriel
 
   aws:
-    accessKey: {{ aws_accessKey }}
-    secretKey: {{ aws_secretKey }}
-    s3BucketRegionId: {{ aws_s3BucketRegionId }}
+    accessKey: {{ uriel_aws_accessKey }}
+    secretKey: {{ uriel_aws_secretKey }}
+    s3BucketRegionId: {{ uriel_aws_s3BucketRegionId }}
 
   submission:
     fs:
       type: {{ uriel_submission_fs_type }}
-      {% if uriel_submission_fs_type == 'aws' %}s3BucketName: {{ uriel_submission_fs_s3BucketName }}{% endif %}
-
+      {% if uriel_submission_fs_type != 'local' %}s3BucketName: {{ uriel_submission_fs_s3BucketName }}{% endif %}
 
   file:
     fs:
       type: {{ uriel_file_fs_type }}
-      {% if uriel_file_fs_type == 'aws' %}s3BucketName: {{ uriel_file_fs_s3BucketName }}{% endif %}
+      {% if uriel_file_fs_type != 'local' %}s3BucketName: {{ uriel_file_fs_s3BucketName }}{% endif %}

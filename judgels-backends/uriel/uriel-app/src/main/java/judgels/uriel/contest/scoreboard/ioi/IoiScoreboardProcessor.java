@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
+import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
@@ -65,7 +66,8 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             Contest contest,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissions,
+            List<Submission> programmingSubmissions,
+            List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {
         IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 
@@ -73,7 +75,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = scoreboardState.getContestantJids();
 
-        List<Submission> filteredSubmissions = submissions.stream()
+        List<Submission> filteredSubmissions = programmingSubmissions.stream()
                 .filter(s -> contestantJids.contains(s.getUserJid()))
                 .filter(s -> problemJidsSet.contains(s.getProblemJid()))
                 .collect(Collectors.toList());

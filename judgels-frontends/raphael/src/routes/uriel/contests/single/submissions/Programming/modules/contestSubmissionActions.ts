@@ -50,21 +50,21 @@ export const contestSubmissionActions = {
     };
   },
 
-  regradeSubmissions: (submissionJids: string[]) => {
+  regradeSubmission: (submissionJid: string) => {
     return async (dispatch, getState, { contestSubmissionProgrammingAPI, toastActions }) => {
       const token = selectToken(getState());
-      await contestSubmissionProgrammingAPI.regradeSubmissions(token, submissionJids);
+      await contestSubmissionProgrammingAPI.regradeSubmission(token, submissionJid);
 
-      toastActions.showSuccessToast('Regrade request submitted.');
+      toastActions.showSuccessToast('Regrade in progress.');
     };
   },
 
-  regradeAllSubmissions: (contestJid: string, userJid?: string, problemJid?: string) => {
+  regradeSubmissions: (contestJid: string, userJid?: string, problemJid?: string) => {
     return async (dispatch, getState, { contestSubmissionProgrammingAPI, toastActions }) => {
       const token = selectToken(getState());
-      await contestSubmissionProgrammingAPI.regradeAllSubmissions(token, contestJid, userJid, problemJid);
+      await contestSubmissionProgrammingAPI.regradeSubmissions(token, contestJid, userJid, problemJid);
 
-      toastActions.showSuccessToast('Regrade request submitted.');
+      toastActions.showSuccessToast('Regrade in progress.');
     };
   },
 };

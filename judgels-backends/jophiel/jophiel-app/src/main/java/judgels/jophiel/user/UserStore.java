@@ -22,6 +22,8 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
 public class UserStore {
+    private static final int PAGE_SIZE = 250;
+
     private final UserDao userDao;
     private final FileSystem userAvatarFs;
 
@@ -86,7 +88,9 @@ public class UserStore {
     public Page<User> getUsers(Optional<Integer> page, Optional<String> orderBy, Optional<OrderDir> orderDir) {
         SelectionOptions.Builder options = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_PAGED)
-                .orderBy("username").orderDir(OrderDir.ASC);
+                .pageSize(PAGE_SIZE)
+                .orderBy("username")
+                .orderDir(OrderDir.ASC);
         page.ifPresent(options::page);
         orderBy.ifPresent(options::orderBy);
         orderDir.ifPresent(options::orderDir);

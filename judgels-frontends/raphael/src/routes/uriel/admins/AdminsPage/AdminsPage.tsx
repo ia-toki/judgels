@@ -26,7 +26,7 @@ interface AdminsPageState {
 }
 
 class AdminsPage extends React.Component<AdminsPageProps, AdminsPageState> {
-  private static PAGE_SIZE = 100;
+  private static PAGE_SIZE = 250;
 
   state: AdminsPageState = {};
 
