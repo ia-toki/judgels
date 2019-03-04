@@ -3,7 +3,6 @@ import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
 import { AppState } from 'modules/store';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { contestProblemActions as injectedContestProblemActions } from '../../../problems/modules/contestProblemActions';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestAnswerResponse } from 'modules/api/uriel/contestSubmissionBundle';
@@ -49,7 +48,7 @@ class SubmissionSummaryPage extends Component<SubmissionSummaryPageProps, Submis
   }
 }
 
-export function createSubmissionSummaryPage(contestSubmissionActions, contestProblemActions) {
+export function createSubmissionSummaryPage(contestSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
   });
@@ -61,4 +60,4 @@ export function createSubmissionSummaryPage(contestSubmissionActions, contestPro
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));
 }
 
-export default createSubmissionSummaryPage(injectedContestSubmissionActions, injectedContestProblemActions);
+export default createSubmissionSummaryPage(injectedContestSubmissionActions);
