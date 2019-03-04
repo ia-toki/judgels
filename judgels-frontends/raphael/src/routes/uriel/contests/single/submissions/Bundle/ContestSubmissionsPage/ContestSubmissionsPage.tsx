@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Card, HTMLTable, H3 } from '@blueprintjs/core';
 import { withRouter } from 'react-router-dom';
+import Pagination from 'components/Pagination/Pagination';
 import { ContestItemSubmissionsResponse } from 'modules/api/uriel/contestSubmissionBundle';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
@@ -10,6 +11,8 @@ import { Contest } from 'modules/api/uriel/contest';
 import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 
 import './ContestSubmissionsPage.css';
+import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
+import { push } from 'react-router-redux';
 
 export interface ContestSubmissionsPageProps {
   getSubmissions: (
@@ -18,6 +21,7 @@ export interface ContestSubmissionsPageProps {
     problemJid?: string,
     page?: number
   ) => Promise<ContestItemSubmissionsResponse>;
+  gotoSummary: (item: ItemSubmission) => any;
   contest: Contest;
 }
 
@@ -26,16 +30,28 @@ interface ContestSubmissionsPageState {
 }
 
 export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProps, ContestSubmissionsPageState> {
+  private static PAGE_SIZE = 20;
+
   constructor(props: ContestSubmissionsPageProps) {
     super(props);
     this.state = { response: undefined };
   }
 
-  async componentDidMount() {
-    const { contest, getSubmissions } = this.props;
-    const response = await getSubmissions(contest.jid);
-    this.setState({ response });
+  componentDidMount() {
+    this.loadSubmissions();
   }
+
+  loadSubmissions = async (page?: number) => {
+    const { contest, getSubmissions } = this.props;
+    const response = await getSubmissions(contest.jid, undefined, undefined, page);
+    this.setState({ response });
+    return response;
+  };
+
+  onChangePage = async (nextPage: number) => {
+    const response = await this.loadSubmissions(nextPage);
+    return response.data.totalCount;
+  };
 
   render() {
     const response = this.state.response;
@@ -44,11 +60,12 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
     }
 
     const { data, profilesMap, problemAliasesMap } = response;
+    const gotoSummary = this.props.gotoSummary;
 
     return (
       <Card className="contest-bundle-submissions-page">
         <H3>Submissions</H3>
-        <HTMLTable className="submissions-table" bordered striped>
+        <HTMLTable className="submissions-table" bordered striped interactive>
           <thead>
             <tr>
               <th>Soal</th>
@@ -60,7 +77,7 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
           </thead>
           <tbody>
             {data.page.map(item => (
-              <tr>
+              <tr key={item.jid} onClick={gotoSummary.bind(this, item)}>
                 <td>{problemAliasesMap[item.problemJid] || '-'}</td>
                 {/* TODO: Add item number, dont know how to do this yet. */}
                 <td>{Math.round(Math.random() * 50 + 1)}</td>
@@ -73,6 +90,9 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
             ))}
           </tbody>
         </HTMLTable>
+        <div className="submission-pagination">
+          <Pagination currentPage={1} pageSize={ContestSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />
+        </div>
       </Card>
     );
   }
@@ -85,6 +105,7 @@ export function createContestSubmissionsPage(contestSubmissionActions) {
 
   const mapDispatchToProps = {
     getSubmissions: contestSubmissionActions.getSubmissions,
+    gotoSummary: (item: ItemSubmission) => push(`./submissions/users/${item.userJid}`),
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
