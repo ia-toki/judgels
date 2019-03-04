@@ -371,3 +371,28 @@ th {
 .content-text blockquote {
     font-size: @primary-font-size;
 }
+
+.content-text .spoiler {
+    margin-top: 5px;
+    background-color: #f8f8f8;
+    padding: 10px;
+    border: 2px dashed #e7e7e7;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: @accent-font;
+    font-weight: bold;
+}
+
+.content-text .spoiler:hover {
+    background-color: #e7e7e7;
+}
+
+.content-text .spoiler .spoiler-content {
+    display: none;
+    border-top: 1px solid @primary-font-color;
+    margin-top: 5px;
+    padding-top: 15px;
+    font-family: @primary-font;
+    font-style: normal;
+    font-weight: normal;
+}
