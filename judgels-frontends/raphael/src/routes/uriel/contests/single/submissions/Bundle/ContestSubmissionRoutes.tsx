@@ -5,7 +5,7 @@ import SubmissionSummaryPage from './SubmissionSummaryPage/SubmissionSummaryPage
 
 const ContestSubmissionRoutes = () => (
   <div>
-    <Route path="/contests/:contestSlug/submissions/users/:userId" component={SubmissionSummaryPage} />
+    <Route path="/contests/:contestSlug/submissions/users/:userJid" component={SubmissionSummaryPage} />
     <Route exact path="/contests/:contestSlug/submissions" component={ContestSubmissionsPage} />
   </div>
 );

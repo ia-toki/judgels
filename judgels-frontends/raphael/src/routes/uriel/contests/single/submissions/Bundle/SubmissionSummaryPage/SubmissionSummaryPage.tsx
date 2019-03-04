@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
 import { AppState } from 'modules/store';
-import { withRouter } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestAnswerResponse } from 'modules/api/uriel/contestSubmissionBundle';
 import { ProblemSubmissionCard, ProblemSubmissionCardProps } from '../ProblemSubmissionsCard/ProblemSubmissionCard';
 
-export interface SubmissionSummaryPageProps {
+interface SubmissionSummaryPageRoute {
+  userJid: string;
+}
+
+export interface SubmissionSummaryPageProps extends RouteComponentProps<SubmissionSummaryPageRoute> {
   contest: Contest;
   getSummary: (contestJid: string, userJid?: string) => Promise<ContestAnswerResponse>;
 }
@@ -27,7 +31,7 @@ class SubmissionSummaryPage extends Component<SubmissionSummaryPageProps, Submis
 
   async componentDidMount() {
     const { contest, getSummary } = this.props;
-    const response = await getSummary(contest.jid);
+    const response = await getSummary(contest.jid, this.props.match.params.userJid);
 
     const problemSummaries: ProblemSubmissionCardProps[] = [];
     for (const problemJid of Object.keys(response.answers)) {
