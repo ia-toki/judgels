@@ -23,6 +23,13 @@ export const contestSubmissionActions = {
     };
   },
 
+  getSummary: (contestJid: string, userJid?: string) => {
+    return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
+      const token = selectToken(getState());
+      return contestSubmissionBundleAPI.getLatestContestantAnswersInContest(token, contestJid, userJid);
+    };
+  },
+
   getLatestSubmission: (contestJid: string, problemJid: string) => {
     return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
       const token = selectToken(getState());
