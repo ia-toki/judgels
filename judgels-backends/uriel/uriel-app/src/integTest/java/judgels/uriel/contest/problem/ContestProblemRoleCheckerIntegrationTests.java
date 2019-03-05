@@ -228,7 +228,6 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
 
         ContestProblem problemNoLimit = new ContestProblem.Builder()
                 .from(problem)
-                .submissionsLimit(0)
                 .build();
 
         assertThat(checker.canSubmit(CONTESTANT, contestA, problem, 10))

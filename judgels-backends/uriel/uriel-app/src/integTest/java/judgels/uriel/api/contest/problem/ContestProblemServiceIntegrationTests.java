@@ -32,7 +32,6 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                     .alias("A")
                     .slug(PROBLEM_1_SLUG)
                     .status(OPEN)
-                    .submissionsLimit(0)
                     .build()));
 
         List<ContestProblemData> data = ImmutableList.of(
@@ -47,14 +46,12 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .alias("B")
                         .slug("unknown-slug")
                         .status(OPEN)
-                        .submissionsLimit(0)
                         .points(11)
                         .build(),
                 new ContestProblemData.Builder()
                         .alias("C")
                         .slug(PROBLEM_2_SLUG)
                         .status(ContestProblemStatus.CLOSED)
-                        .submissionsLimit(0)
                         .points(11)
                         .build());
 
@@ -73,7 +70,6 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .alias("C")
                         .slug(PROBLEM_2_SLUG)
                         .status(ContestProblemStatus.CLOSED)
-                        .submissionsLimit(0)
                         .points(23)
                         .build()));
 
@@ -90,7 +86,6 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .alias("C")
                         .problemJid(PROBLEM_2_JID)
                         .status(ContestProblemStatus.CLOSED)
-                        .submissionsLimit(0)
                         .points(23)
                         .build());
         assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).isEqualTo(PROBLEM_1_SLUG);
