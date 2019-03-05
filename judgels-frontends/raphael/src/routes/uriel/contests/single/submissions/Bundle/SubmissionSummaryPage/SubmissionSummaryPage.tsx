@@ -7,8 +7,8 @@ import { contestSubmissionActions as injectedContestSubmissionActions } from '..
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestAnswerResponse } from 'modules/api/uriel/contestSubmissionBundle';
 import { ProblemSubmissionCard, ProblemSubmissionCardProps } from '../ProblemSubmissionsCard/ProblemSubmissionCard';
-import { push } from 'react-router-redux';
-import { Button, Intent } from '@blueprintjs/core';
+import { Intent } from '@blueprintjs/core';
+import { ButtonLink } from 'components/ButtonLink/ButtonLink';
 
 import './SubmissionSummaryPage.css';
 
@@ -18,8 +18,7 @@ interface SubmissionSummaryPageRoute {
 
 export interface SubmissionSummaryPageProps extends RouteComponentProps<SubmissionSummaryPageRoute> {
   contest: Contest;
-  getSummary: (contestJid: string, userJid?: string) => Promise<ContestAnswerResponse>;
-  gotoSubmissionsPage: (contest: Contest) => any;
+  onGetSummary: (contestJid: string, userJid?: string) => Promise<ContestAnswerResponse>;
 }
 
 export interface SubmissionSummaryPageState {
@@ -27,16 +26,13 @@ export interface SubmissionSummaryPageState {
 }
 
 class SubmissionSummaryPage extends Component<SubmissionSummaryPageProps, SubmissionSummaryPageState> {
-  constructor(props: SubmissionSummaryPageProps) {
-    super(props);
-    this.state = {
-      problemSummaries: [],
-    };
-  }
+  state: SubmissionSummaryPageState = {
+    problemSummaries: [],
+  };
 
   async componentDidMount() {
-    const { contest, getSummary } = this.props;
-    const response = await getSummary(contest.jid, this.props.match.params.userJid);
+    const { contest, onGetSummary } = this.props;
+    const response = await onGetSummary(contest.jid, this.props.match.params.userJid);
 
     const problemSummaries: ProblemSubmissionCardProps[] = [];
     for (const problemJid of Object.keys(response.answers)) {
@@ -51,16 +47,16 @@ class SubmissionSummaryPage extends Component<SubmissionSummaryPageProps, Submis
   }
 
   render() {
-    const { gotoSubmissionsPage, contest } = this.props;
+    const { contest } = this.props;
     return (
       <div className="submisions-summary-page">
-        <Button
+        <ButtonLink
           className="goto-submissions-button"
           intent={Intent.PRIMARY}
-          onClick={gotoSubmissionsPage.bind(this, contest)}
+          to={`/contests/${contest.slug}/submissions/`}
         >
           Submissions
-        </Button>
+        </ButtonLink>
         {this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}
       </div>
     );
@@ -73,8 +69,7 @@ export function createSubmissionSummaryPage(contestSubmissionActions) {
   });
 
   const mapDispatchToProps = {
-    getSummary: contestSubmissionActions.getSummary,
-    gotoSubmissionsPage: (contest: Contest) => push(`/contests/${contest.slug}/submissions/`),
+    onGetSummary: contestSubmissionActions.getSummary,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));

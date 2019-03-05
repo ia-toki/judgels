@@ -2,9 +2,9 @@ import React, { FunctionComponent } from 'react';
 import { Card, H3, HTMLTable } from '@blueprintjs/core';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { FormattedDate } from 'components/FormattedDate/FormattedDate';
+import { VerdictTag } from '../VerdictTag/VerdictTag';
 
 import './ProblemSubmissionCard.css';
-import { GradingTag } from '../GradingTag/GradingTag';
 
 export interface ProblemSubmissionCardProps {
   alias: string;
@@ -24,11 +24,7 @@ export const ProblemSubmissionCard: FunctionComponent<ProblemSubmissionCardProps
     <tr key={submission.itemJid}>
       <td>{itemNum + 1}</td>
       <td>{renderAnswer(submission.answer)}</td>
-      {canManage && (
-        <td>
-          <GradingTag grading={submission.grading} />
-        </td>
-      )}
+      {canManage && <td>{submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}</td>}
       <td>
         <FormattedDate value={submission.time} />
       </td>

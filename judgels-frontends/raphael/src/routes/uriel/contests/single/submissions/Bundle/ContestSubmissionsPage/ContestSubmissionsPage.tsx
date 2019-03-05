@@ -9,20 +9,20 @@ import { AppState } from 'modules/store';
 import { connect } from 'react-redux';
 import { Contest } from 'modules/api/uriel/contest';
 import { FormattedDate } from 'components/FormattedDate/FormattedDate';
-
-import './ContestSubmissionsPage.css';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { push } from 'react-router-redux';
-import { GradingTag } from '../GradingTag/GradingTag';
+import { VerdictTag } from '../VerdictTag/VerdictTag';
+
+import './ContestSubmissionsPage.css';
 
 export interface ContestSubmissionsPageProps {
-  getSubmissions: (
+  onGetSubmissions: (
     contestJid: string,
     userJid?: string,
     problemJid?: string,
     page?: number
   ) => Promise<ContestItemSubmissionsResponse>;
-  gotoSummary: (contest: Contest, item: ItemSubmission) => any;
+  onGotoSummary: (contest: Contest, item: ItemSubmission) => any;
   contest: Contest;
 }
 
@@ -33,25 +33,17 @@ interface ContestSubmissionsPageState {
 export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProps, ContestSubmissionsPageState> {
   private static PAGE_SIZE = 20;
 
-  constructor(props: ContestSubmissionsPageProps) {
-    super(props);
-    this.state = { response: undefined };
-  }
+  state: ContestSubmissionsPageState = {};
 
   componentDidMount() {
-    this.loadSubmissions();
+    this.refreshSubmissions();
   }
 
-  loadSubmissions = async (page?: number) => {
-    const { contest, getSubmissions } = this.props;
-    const response = await getSubmissions(contest.jid, undefined, undefined, page);
+  refreshSubmissions = async (page?: number) => {
+    const { contest, onGetSubmissions } = this.props;
+    const response = await onGetSubmissions(contest.jid, undefined, undefined, page);
     this.setState({ response });
     return response;
-  };
-
-  onChangePage = async (nextPage: number) => {
-    const response = await this.loadSubmissions(nextPage);
-    return response.data.totalCount;
   };
 
   render() {
@@ -61,7 +53,7 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
     }
 
     const { data, profilesMap, problemAliasesMap } = response;
-    const { contest, gotoSummary } = this.props;
+    const { contest, onGotoSummary } = this.props;
     const canManage = response.config.canManage;
 
     return (
@@ -74,22 +66,18 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
               <th>Item Number</th>
               <th>Answer</th>
               {canManage && <th>Verdict</th>}
-              <th>Issuer</th>
+              <th>User</th>
               <th>Time</th>
             </tr>
           </thead>
           <tbody>
             {data.page.map(item => (
-              <tr key={item.jid} onClick={gotoSummary.bind(this, contest, item)}>
+              <tr key={item.jid} onClick={onGotoSummary.bind(this, contest, item)}>
                 <td>{problemAliasesMap[item.problemJid] || '-'}</td>
                 {/* TODO: Add item number, dont know how to do this yet. */}
                 <td>{Math.round(Math.random() * 50 + 1)}</td>
                 <td>{item.answer || '-'}</td>
-                {canManage && (
-                  <td>
-                    <GradingTag grading={item.grading} />
-                  </td>
-                )}
+                {canManage && <td>{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>}
                 <td>{profilesMap[item.userJid] ? profilesMap[item.userJid].username : '-'}</td>
                 <td>
                   <FormattedDate value={item.time} showSeconds />
@@ -104,6 +92,11 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
       </Card>
     );
   }
+
+  private onChangePage = async (nextPage: number) => {
+    const response = await this.refreshSubmissions(nextPage);
+    return response.data.totalCount;
+  };
 }
 
 export function createContestSubmissionsPage(contestSubmissionActions) {
@@ -112,8 +105,8 @@ export function createContestSubmissionsPage(contestSubmissionActions) {
   });
 
   const mapDispatchToProps = {
-    getSubmissions: contestSubmissionActions.getSubmissions,
-    gotoSummary: (contest: Contest, item: ItemSubmission) =>
+    onGetSubmissions: contestSubmissionActions.getSubmissions,
+    onGotoSummary: (contest: Contest, item: ItemSubmission) =>
       push(`/contests/${contest.slug}/submissions/users/${item.userJid}`),
   };
 
