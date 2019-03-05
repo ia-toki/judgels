@@ -30,6 +30,19 @@ describe('ContestProblemCard', () => {
     expect(wrapper.find(ContentCardLink).props().to).toEqual('/contests/contest-a/problems/A');
   });
 
+  test('problem name with points', () => {
+    render({
+      problemJid: 'jid',
+      alias: 'A',
+      status: ContestProblemStatus.Open,
+      submissionsLimit: 50,
+      points: 30,
+    });
+
+    expect(wrapper.find('[data-key="name"]').text()).toEqual('A. The Problem [30 points]');
+    expect(wrapper.find(ContentCardLink).props().to).toEqual('/contests/contest-a/problems/A');
+  });
+
   test('open problem with submissions limit', () => {
     render({
       problemJid: 'jid',

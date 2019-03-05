@@ -57,6 +57,14 @@ public class BaseSubmissionStore<
     }
 
     @Override
+    public Optional<Submission> getSubmissionByJid(String submissionJid) {
+        return submissionDao.selectByJid(submissionJid).map(model -> {
+            Optional<GM> gradingModel = gradingDao.selectLatestBySubmissionJid(model.jid);
+            return submissionFromModels(model, gradingModel.orElse(null));
+        });
+    }
+
+    @Override
     public List<Submission> getSubmissionsForScoreboard(String containerJid) {
         List<SM> submissionModels = submissionDao.selectAllByContainerJid(containerJid);
         Set<String> submissionJids = submissionModels.stream().map(m -> m.jid).collect(Collectors.toSet());
@@ -195,7 +203,7 @@ public class BaseSubmissionStore<
             try {
                 raw = mapper.readValue(model.details, RawGradingResultDetails.class);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                return Optional.empty();
             }
 
             Map<String, byte[]> compilationOutputs = raw.getCompilationOutputs().entrySet()

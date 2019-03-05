@@ -1,10 +1,26 @@
-export type Scoreboard = IcpcScoreboard | IoiScoreboard | GcjScoreboard;
+export type Scoreboard = IcpcScoreboard | IoiScoreboard | GcjScoreboard | BundleScoreboard;
 
 export interface ScoreboardState {
   problemJids: string[];
   problemAliases: string[];
   contestantJids: string[];
-  points?: number[];
+  problemPoints?: number[];
+}
+
+export interface BundleScoreboard {
+  state: ScoreboardState;
+  content: BundleScoreboardContent;
+}
+
+export interface BundleScoreboardContent {
+  entries: BundleScoreboardEntry[];
+}
+
+export interface BundleScoreboardEntry {
+  rank: number;
+  contestantJid: string;
+  answeredItems: number[];
+  totalAnsweredItems: number;
 }
 
 export interface IcpcScoreboard {

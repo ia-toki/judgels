@@ -10,7 +10,7 @@ import ContentWithSidebar, {
 } from 'components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from 'components/LoadingState/LoadingState';
 import { ContestRoleTag } from 'components/ContestRole/ContestRoleTag';
-import { Contest } from 'modules/api/uriel/contest';
+import { Contest, ContestStyle } from 'modules/api/uriel/contest';
 import { ContestTab, ContestWebConfig } from 'modules/api/uriel/contestWeb';
 import { AppState } from 'modules/store';
 
@@ -28,7 +28,8 @@ import ContestClarificationsPage from './clarifications/ContestClarificationsPag
 import ContestProblemRoutes from './problems/ContestProblemRoutes';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
 import ContestFilesPage from './files/ContestFilesPage/ContestFilesPage';
-import ContestSubmissionRoutes from './submissions/ContestSubmissionRoutes';
+import ProgrammingSubmissionRoutes from './submissions/Programming/ContestSubmissionRoutes';
+import BundleSubmissionRoutes from './submissions/Bundle/ContestSubmissionRoutes';
 import { EditContest } from '../modules/contestReducer';
 import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
@@ -114,7 +115,7 @@ const SingleContestRoutes = (props: SingleContestRoutesProps) => {
       titleIcon: contestIcon[ContestTab.Submissions],
       title: 'Submissions',
       routeComponent: Route,
-      component: ContestSubmissionRoutes,
+      component: contest.style === ContestStyle.Bundle ? BundleSubmissionRoutes : ProgrammingSubmissionRoutes,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Submissions) === -1,
     },
     {

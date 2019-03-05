@@ -43,6 +43,7 @@ import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionDownloader;
+import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
@@ -71,6 +72,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final SubmissionSourceBuilder submissionSourceBuilder;
     private final SubmissionDownloader submissionDownloader;
     private final SubmissionClient submissionClient;
+    private final SubmissionRegrader submissionRegrader;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestModuleStore moduleStore;
@@ -88,6 +90,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionDownloader submissionDownloader,
             SubmissionClient submissionClient,
+            SubmissionRegrader submissionRegrader,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestModuleStore moduleStore,
@@ -103,6 +106,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.submissionSourceBuilder = submissionSourceBuilder;
         this.submissionDownloader = submissionDownloader;
         this.submissionClient = submissionClient;
+        this.submissionRegrader = submissionRegrader;
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.moduleStore = moduleStore;
@@ -247,6 +251,41 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
+    }
+
+    @Override
+    @UnitOfWork
+    public void regradeSubmission(AuthHeader authHeader, String submissionJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
+        Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
+        checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
+
+        submissionRegrader.regradeSubmission(submission);
+    }
+
+    @Override
+    @UnitOfWork
+    public void regradeSubmissions(
+            AuthHeader authHeader,
+            String contestJid,
+            Optional<String> userJid,
+            Optional<String> problemJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
+
+        for (int page = 1;; page++) {
+            List<Submission> submissions = submissionStore
+                    .getSubmissions(contestJid, userJid, problemJid, Optional.of(page))
+                    .getPage();
+
+            if (submissions.isEmpty()) {
+                break;
+            }
+            submissionRegrader.regradeSubmissions(submissions);
+        }
     }
 
     @GET

@@ -111,6 +111,7 @@ public final class UserServiceImpl implements UserService {
     }
 
     private static User createUserFromUserModel(UserModel userModel) {
-        return new User(userModel.id, userModel.userJid, Arrays.asList(userModel.roles.split(",")));
+        String roles = userModel.roles == null ? "" : userModel.roles;
+        return new User(userModel.id, userModel.userJid, Arrays.asList(roles.split(",")));
     }
 }

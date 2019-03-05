@@ -1,3 +1,4 @@
+import { APP_CONFIG, Mode } from 'conf';
 import { JophielRole } from 'modules/api/jophiel/role';
 
 import JophielRoutes from './jophiel/JophielRoutes';
@@ -7,8 +8,11 @@ import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
 import JudgelsRankingRoutes from './ranking/JudgelsRankingRoutes';
 
 function shouldShowRoute(id: string, role: JophielRole) {
-  if (id === 'account' && role !== JophielRole.Superadmin && role !== JophielRole.Admin) {
-    return false;
+  if (id === 'account') {
+    return role === JophielRole.Superadmin || role === JophielRole.Admin;
+  }
+  if (id === 'training' || id === 'ranking') {
+    return APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS;
   }
   return true;
 }

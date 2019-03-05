@@ -18,18 +18,18 @@ public class GradingResponseProcessor {
     private static final Duration DELAY_BETWEEN_RETRIES = Duration.ofSeconds(5);
 
     private final ObjectMapper mapper;
-    private final SubmissionClient submissionClient;
+    private final SubmissionStore submissionStore;
     private final BasicAuthHeader sealtielClientAuthHeader;
     private final MessageService messageService;
 
     public GradingResponseProcessor(
             ObjectMapper mapper,
-            SubmissionClient submissionClient,
+            SubmissionStore submissionStore,
             BasicAuthHeader sealtielClientAuthHeader,
             MessageService messageService) {
 
         this.mapper = mapper;
-        this.submissionClient = submissionClient;
+        this.submissionStore = submissionStore;
         this.sealtielClientAuthHeader = sealtielClientAuthHeader;
         this.messageService = messageService;
     }
@@ -48,7 +48,7 @@ public class GradingResponseProcessor {
 
         // it is possible that the grading model is not immediately found, because it is not flushed yet.
         for (int i = 0; i < MAX_RETRIES; i++) {
-            if (submissionClient.grade(response)) {
+            if (submissionStore.updateGrading(response.getGradingJid(), response.getResult())) {
                 gradingExists = true;
                 messageService.confirmMessage(sealtielClientAuthHeader, message.getId());
                 break;

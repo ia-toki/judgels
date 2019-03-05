@@ -76,10 +76,10 @@ aws = {
         # AWS global configuration (can be overridden by teamAvatar and submission)
         key {
             use = true
-            access = "{{ aws_accessKey }}"
-            secret = "{{ aws_secretKey }}"
+            access = "{{ jerahmeel_aws_accessKey }}"
+            secret = "{{ jerahmeel_aws_secretKey }}"
         }
-        s3.bucket.regionId = "{{ aws_s3BucketRegionId }}"
+        s3.bucket.regionId = "{{ jerahmeel_aws_s3BucketRegionId }}"
     }
 
     submission {

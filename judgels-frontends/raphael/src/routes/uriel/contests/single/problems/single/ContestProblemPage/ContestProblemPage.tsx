@@ -7,35 +7,48 @@ import { ContentCard } from 'components/ContentCard/ContentCard';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
 } from 'components/StatementLanguageWidget/StatementLanguageWidget';
-import { ProblemWorksheetCard } from 'components/ProblemWorksheetCard/ProblemWorksheetCard';
-import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/ProblemSubmissionForm/ProblemSubmissionForm';
 import { AppState } from 'modules/store';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { ProblemWorksheet } from 'modules/api/sandalphon/problem';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestProblem, ContestProblemWorksheet } from 'modules/api/uriel/contestProblem';
-
+import { ProblemType } from 'modules/api/sandalphon/problem';
+import { Contest, ContestStyle } from 'modules/api/uriel/contest';
+import { ContestProblem } from 'modules/api/uriel/contestProblem';
+import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from 'modules/api/uriel/contestProblemBundle';
+import { ContestProblemWorksheet as ContestProgrammingProblemWorksheet } from 'modules/api/uriel/contestProblemProgramming';
+import { ProblemSubmissionFormData as ProgrammingProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
+import { ProblemWorksheet as ProgrammingProblemWorksheet } from 'modules/api/sandalphon/problemProgramming';
+import { ProblemWorksheet as BundleProblemWorksheet } from 'modules/api/sandalphon/problemBundle';
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestProblemActions as injectedContestProblemActions } from '../../modules/contestProblemActions';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../submissions/modules/contestSubmissionActions';
+import { contestSubmissionActions as injectedContestProgrammingSubmissionActions } from '../../../submissions/Programming/modules/contestSubmissionActions';
+import { contestSubmissionActions as injectedContestBundleSubmissionActions } from '../../../submissions/Bundle/modules/contestSubmissionActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
+import { ProblemWorksheetCard as ProgrammingProblemWorksheetCard } from 'components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
+import { ProblemWorksheetCard as BundleProblemWorksheetCard } from 'components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 
 import './ContestProblemPage.css';
+import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
   statementLanguage: string;
-  onGetProblemWorksheet: (
+  onGetProgrammingProblemWorksheet: (
     contestJid: string,
     problemAlias: string,
     language?: string
-  ) => Promise<ContestProblemWorksheet>;
-  onCreateSubmission: (
+  ) => Promise<ContestProgrammingProblemWorksheet>;
+  onGetBundleProblemWorksheet: (
+    contestJid: string,
+    problemAlias: string,
+    language?: string
+  ) => Promise<ContestBundleProblemWorksheet>;
+  onCreateProgrammingSubmission: (
     contestJid: string,
     contestSlug: string,
     problemJid: string,
-    data: ProblemSubmissionFormData
+    data: ProgrammingProblemSubmissionFormData
   ) => Promise<void>;
+  onCreateBundleSubmission: (contestJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
+  onGetBundleLatestSubmission: (contestJid: string, problemJid: string) => { [id: string]: ItemSubmission };
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
@@ -45,20 +58,42 @@ interface ContestProblemPageState {
   languages?: string[];
   problem?: ContestProblem;
   totalSubmissions?: number;
-  worksheet?: ProblemWorksheet;
+  bundleLatestSubmission?: { [id: string]: ItemSubmission };
+  worksheet?: ProgrammingProblemWorksheet | BundleProblemWorksheet;
+  problemType?: ProblemType;
 }
 
 export class ContestProblemPage extends React.Component<ContestProblemPageProps, ContestProblemPageState> {
   state: ContestProblemPageState = {};
 
   async componentDidMount() {
-    const { defaultLanguage, languages, problem, totalSubmissions, worksheet } = await this.props.onGetProblemWorksheet(
-      this.props.contest.jid,
-      this.props.match.params.problemAlias,
-      this.props.statementLanguage
-    );
+    const problemType = this.props.contest.style === ContestStyle.Bundle ? ProblemType.Bundle : ProblemType.Programming;
+    const { defaultLanguage, languages, problem, totalSubmissions, worksheet } =
+      problemType === ProblemType.Programming
+        ? await this.props.onGetProgrammingProblemWorksheet(
+            this.props.contest.jid,
+            this.props.match.params.problemAlias,
+            this.props.statementLanguage
+          )
+        : await this.props.onGetBundleProblemWorksheet(
+            this.props.contest.jid,
+            this.props.match.params.problemAlias,
+            this.props.statementLanguage
+          );
+    const bundleLatestSubmission =
+      problemType === ProblemType.Bundle
+        ? await this.props.onGetBundleLatestSubmission(this.props.contest.jid, problem.problemJid)
+        : undefined;
+    this.setState({
+      bundleLatestSubmission,
+      problemType,
+      defaultLanguage,
+      languages,
+      problem,
+      totalSubmissions,
+      worksheet,
+    });
     this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + problem.alias);
-    this.setState({ defaultLanguage, languages, problem, totalSubmissions, worksheet });
   }
 
   async componentDidUpdate(prevProps: ContestProblemPageProps, prevState: ContestProblemPageState) {
@@ -82,14 +117,19 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     );
   }
 
-  private onCreateSubmission = async (data: ProblemSubmissionFormData) => {
+  private onCreateProgrammingSubmission = async (data: ProgrammingProblemSubmissionFormData) => {
     const problem = this.state.problem!;
-    return await this.props.onCreateSubmission(
+    return await this.props.onCreateProgrammingSubmission(
       this.props.contest.jid,
       this.props.contest.slug,
       problem.problemJid,
       data
     );
+  };
+
+  private onCreateBundleSubmission = async (itemJid: string, answer: string) => {
+    const problem = this.state.problem!;
+    return await this.props.onCreateBundleSubmission(this.props.contest.jid, problem.problemJid, itemJid, answer);
   };
 
   private renderStatementLanguageWidget = () => {
@@ -109,7 +149,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 
   private renderStatement = () => {
-    const { problem, totalSubmissions, worksheet } = this.state;
+    const { problemType, problem, totalSubmissions, worksheet, bundleLatestSubmission } = this.state;
     if (!problem || !worksheet) {
       return <LoadingState />;
     }
@@ -120,26 +160,49 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       submissionWarning = '' + submissionsLeft + ' submissions left.';
     }
 
-    return (
-      <ProblemWorksheetCard
-        alias={problem.alias}
-        worksheet={worksheet}
-        onSubmit={this.onCreateSubmission}
-        submissionWarning={submissionWarning}
-      />
-    );
+    if (problemType === ProblemType.Programming) {
+      return (
+        <ProgrammingProblemWorksheetCard
+          alias={problem.alias}
+          worksheet={worksheet as ProgrammingProblemWorksheet}
+          onSubmit={this.onCreateProgrammingSubmission}
+          submissionWarning={submissionWarning}
+        />
+      );
+    } else {
+      if (!bundleLatestSubmission) {
+        return <LoadingState />;
+      }
+      return (
+        <BundleProblemWorksheetCard
+          alias={problem.alias}
+          language={this.props.statementLanguage}
+          latestSubmission={bundleLatestSubmission}
+          onAnswerItem={this.onCreateBundleSubmission}
+          worksheet={worksheet as BundleProblemWorksheet}
+        />
+      );
+    }
   };
 }
 
-export function createContestProblemPage(contestProblemActions, contestSubmissionActions, breadcrumbsActions) {
+export function createContestProblemPage(
+  contestProblemActions,
+  contestProgrammingSubmissionActions,
+  contestBundleSubmissionActions,
+  breadcrumbsActions
+) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
     statementLanguage: selectStatementLanguage(state),
   });
 
   const mapDispatchToProps = {
-    onGetProblemWorksheet: contestProblemActions.getProblemWorksheet,
-    onCreateSubmission: contestSubmissionActions.createSubmission,
+    onGetBundleProblemWorksheet: contestProblemActions.getBundleProblemWorksheet,
+    onGetProgrammingProblemWorksheet: contestProblemActions.getProgrammingProblemWorksheet,
+    onCreateProgrammingSubmission: contestProgrammingSubmissionActions.createSubmission,
+    onCreateBundleSubmission: contestBundleSubmissionActions.createItemSubmission,
+    onGetBundleLatestSubmission: contestBundleSubmissionActions.getLatestSubmission,
     onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
@@ -149,6 +212,7 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
 
 export default createContestProblemPage(
   injectedContestProblemActions,
-  injectedContestSubmissionActions,
+  injectedContestProgrammingSubmissionActions,
+  injectedContestBundleSubmissionActions,
   injectedBreadcrumbsActions
 );

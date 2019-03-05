@@ -29,7 +29,6 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestErrors;
-import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemConfig;
 import judgels.uriel.api.contest.problem.ContestProblemData;
@@ -132,12 +131,6 @@ public class ContestProblemResource implements ContestProblemService {
                 : clientProblemService.getProblems(sandalphonClientAuthHeader, problemJids);
         Map<String, Long> totalSubmissionsMap =
                 submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
-        StyleModuleConfig styleModuleConfig = moduleStore.getStyleModuleConfig(contestJid, contest.getStyle());
-        Map<String, Integer> pointsMap = null;
-        if (styleModuleConfig.hasPointsPerProblem()) {
-            pointsMap = problems.stream()
-                    .collect(Collectors.toMap(ContestProblem::getProblemJid, p -> p.getPoints().orElse(0)));
-        }
 
         boolean canManage = problemRoleChecker.canManage(actorJid, contest);
         ContestProblemConfig config = new ContestProblemConfig.Builder()
@@ -147,7 +140,6 @@ public class ContestProblemResource implements ContestProblemService {
         return new ContestProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemsMap)
-                .pointsMap(Optional.ofNullable(pointsMap))
                 .totalSubmissionsMap(totalSubmissionsMap)
                 .config(config)
                 .build();

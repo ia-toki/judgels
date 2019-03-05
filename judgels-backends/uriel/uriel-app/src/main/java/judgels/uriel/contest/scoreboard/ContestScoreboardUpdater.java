@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.api.contest.Contest;
@@ -22,6 +23,7 @@ import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.submission.bundle.ContestItemSubmissionStore;
 
 public class ContestScoreboardUpdater {
     private final ObjectMapper objectMapper;
@@ -29,7 +31,8 @@ public class ContestScoreboardUpdater {
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
     private final ContestProblemStore problemStore;
-    private final SubmissionStore submissionStore;
+    private final SubmissionStore programmingSubmissionStore;
+    private final ContestItemSubmissionStore bundleItemSubmissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final Clock clock;
 
@@ -39,7 +42,8 @@ public class ContestScoreboardUpdater {
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
-            SubmissionStore submissionStore,
+            SubmissionStore programmingSubmissionStore,
+            ContestItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
 
@@ -48,7 +52,8 @@ public class ContestScoreboardUpdater {
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
         this.problemStore = problemStore;
-        this.submissionStore = submissionStore;
+        this.programmingSubmissionStore = programmingSubmissionStore;
+        this.bundleItemSubmissionStore = bundleItemSubmissionStore;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
         this.clock = clock;
     }
@@ -60,12 +65,15 @@ public class ContestScoreboardUpdater {
 
         List<String> problemJids = problemStore.getProblemJids(contest.getJid());
         Set<String> contestantJids = contestantStore.getApprovedContestantJids(contest.getJid());
+
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(
                 contest.getJid(),
                 ImmutableSet.copyOf(problemJids));
+
         Map<String, Integer> problemPoints = problemStore.getProblemPointsByJids(
                 contest.getJid(),
                 ImmutableSet.copyOf(problemJids));
+
         ScoreboardState scoreboardState = new ScoreboardState.Builder()
                 .problemJids(problemJids)
                 .contestantJids(contestantJids)
@@ -78,15 +86,19 @@ public class ContestScoreboardUpdater {
         Map<String, Optional<Instant>> contestantStartTimesMap =
                 contestantStore.getApprovedContestantStartTimes(contest.getJid());
 
-        List<Submission> submissions = submissionStore.getSubmissionsForScoreboard(contest.getJid());
+        List<Submission> programmingSubmissions = programmingSubmissionStore
+                .getSubmissionsForScoreboard(contest.getJid());
+        List<ItemSubmission> bundleItemSubmissions = bundleItemSubmissionStore
+                .getSubmissionsForScoreboard(contest.getJid());
+
         generateAndUpsertScoreboard(
                 contest,
                 scoreboardState,
                 styleModuleConfig,
                 contestantStartTimesMap,
-                submissions,
-                Optional.empty(),
-                ContestScoreboardType.OFFICIAL);
+                programmingSubmissions,
+                bundleItemSubmissions,
+                Optional.empty(), ContestScoreboardType.OFFICIAL);
 
         if (contestModulesConfig.getFrozenScoreboard().isPresent()) {
             Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get()
@@ -99,9 +111,9 @@ public class ContestScoreboardUpdater {
                         scoreboardState,
                         styleModuleConfig,
                         contestantStartTimesMap,
-                        submissions,
-                        Optional.of(freezeTime),
-                        ContestScoreboardType.FROZEN);
+                        programmingSubmissions,
+                        bundleItemSubmissions,
+                        Optional.of(freezeTime), ContestScoreboardType.FROZEN);
             }
         }
     }
@@ -111,7 +123,8 @@ public class ContestScoreboardUpdater {
             ScoreboardState scoreboardState,
             StyleModuleConfig styleModuleConfig,
             Map<String, Optional<Instant>> contestantStartTimesMap,
-            List<Submission> submissions,
+            List<Submission> programmingSubmissions,
+            List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime,
             ContestScoreboardType contestScoreboardType) {
         String scoreboard = scoreboardProcessorRegistry.get(contest.getStyle())
@@ -121,7 +134,8 @@ public class ContestScoreboardUpdater {
                         contest,
                         styleModuleConfig,
                         contestantStartTimesMap,
-                        submissions,
+                        programmingSubmissions,
+                        bundleItemSubmissions,
                         freezeTime);
 
         scoreboardStore.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()

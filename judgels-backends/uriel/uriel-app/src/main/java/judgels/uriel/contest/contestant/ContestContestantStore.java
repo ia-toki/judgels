@@ -25,6 +25,8 @@ import judgels.uriel.persistence.ContestRoleDao;
 
 @Singleton
 public class ContestContestantStore {
+    private static final int PAGE_SIZE = 250;
+
     private final ContestContestantDao contestantDao;
     private final ContestRoleDao roleDao;
     private final Clock clock;
@@ -95,7 +97,9 @@ public class ContestContestantStore {
     }
 
     public Page<ContestContestant> getContestants(String contestJid, Optional<Integer> page) {
-        SelectionOptions.Builder options = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        SelectionOptions.Builder options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .pageSize(PAGE_SIZE);
         page.ifPresent(options::page);
         return contestantDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
                 p -> Lists.transform(p, ContestContestantStore::fromModel));

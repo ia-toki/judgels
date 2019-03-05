@@ -10,6 +10,7 @@ public interface ContestModulesConfig {
     Optional<IcpcStyleModuleConfig> getIcpcStyle();
     Optional<IoiStyleModuleConfig> getIoiStyle();
     Optional<GcjStyleModuleConfig> getGcjStyle();
+    Optional<BundleStyleModuleConfig> getBundleStyle();
 
     ScoreboardModuleConfig getScoreboard();
 

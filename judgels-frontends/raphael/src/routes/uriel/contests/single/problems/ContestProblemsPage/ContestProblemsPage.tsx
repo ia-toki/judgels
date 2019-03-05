@@ -20,7 +20,7 @@ import { getProblemName } from 'modules/api/sandalphon/problem';
 import { AppState } from 'modules/store';
 
 import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
-import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
+import { ContestProblemCard, ContestProblemCardProps } from '../ContestProblemCard/ContestProblemCard';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestProblemActions as injectedContestProblemActions } from '../modules/contestProblemActions';
 
@@ -159,20 +159,12 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
 
   private renderFilteredProblems = (problems: ContestProblem[], totalSubmissionsMap) => {
     return problems.map(problem => {
-      var props = {
+      const props: ContestProblemCardProps = {
         contest: this.props.contest,
         problem,
         problemName: getProblemName(this.state.response!.problemsMap[problem.problemJid], this.state.defaultLanguage!),
         totalSubmissions: totalSubmissionsMap[problem.problemJid],
-      } as any;
-
-      if (this.state.response!.pointsMap) {
-        props = {
-          ...props,
-          problemPoints: this.state.response!.pointsMap![problem.problemJid],
-        };
-      }
-
+      };
       return <ContestProblemCard key={problem.problemJid} {...props} />;
     });
   };

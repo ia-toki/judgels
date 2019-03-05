@@ -105,6 +105,7 @@ class GcjScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -165,6 +166,7 @@ class GcjScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -245,6 +247,7 @@ class GcjScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -255,7 +258,7 @@ class GcjScoreboardProcessorTests {
                                     .contestantJid("c1")
                                     .totalPoints(1)
                                     .totalPenalties(9)
-                                    .addAttemptsList(0, 0)
+                                    .addAttemptsList(1, 0)
                                     .addPenaltyList(9, 0)
                                     .addProblemStateList(
                                             GcjScoreboardProblemState.ACCEPTED,
@@ -370,6 +373,7 @@ class GcjScoreboardProcessorTests {
                     styleModuleConfig,
                     contestantStartTimesMap,
                     submissions,
+                    ImmutableList.of(),
                     Optional.empty());
 
             verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -380,7 +384,7 @@ class GcjScoreboardProcessorTests {
                                     .contestantJid("c1")
                                     .totalPoints(11)
                                     .totalPenalties(26)
-                                    .addAttemptsList(1, 1)
+                                    .addAttemptsList(2, 2)
                                     .addPenaltyList(4, 6)
                                     .addProblemStateList(
                                             GcjScoreboardProblemState.ACCEPTED,
@@ -392,7 +396,7 @@ class GcjScoreboardProcessorTests {
                                     .contestantJid("c2")
                                     .totalPoints(1)
                                     .totalPenalties(10)
-                                    .addAttemptsList(0, 0)
+                                    .addAttemptsList(1, 0)
                                     .addPenaltyList(10, 0)
                                     .addProblemStateList(
                                             GcjScoreboardProblemState.ACCEPTED,
@@ -449,6 +453,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -459,7 +464,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c1")
                                         .totalPoints(10)
                                         .totalPenalties(6)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(0, 1)
                                         .addPenaltyList(0, 6)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.NOT_ACCEPTED,
@@ -471,7 +476,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c2")
                                         .totalPoints(1)
                                         .totalPenalties(1)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(1, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -498,6 +503,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -508,7 +514,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c1")
                                         .totalPoints(10)
                                         .totalPenalties(6)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(6, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -520,7 +526,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c2")
                                         .totalPoints(1)
                                         .totalPenalties(1)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(0, 1)
                                         .addPenaltyList(0, 1)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.NOT_ACCEPTED,
@@ -578,6 +584,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -588,7 +595,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c2")
                                         .totalPoints(10)
                                         .totalPenalties(10)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(0, 1)
                                         .addPenaltyList(0, 10)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.NOT_ACCEPTED,
@@ -600,7 +607,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c1")
                                         .totalPoints(1)
                                         .totalPenalties(4)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(4, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -655,6 +662,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -665,7 +673,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c2")
                                         .totalPoints(1)
                                         .totalPenalties(10)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(10, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -677,7 +685,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c1")
                                         .totalPoints(1)
                                         .totalPenalties(14)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(14, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -739,6 +747,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
+                        ImmutableList.of(),
                         Optional.empty());
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -749,7 +758,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c1")
                                         .totalPoints(1)
                                         .totalPenalties(10)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(10, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -761,7 +770,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c2")
                                         .totalPoints(1)
                                         .totalPenalties(10)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(10, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -848,6 +857,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         baseSubmissions,
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -858,7 +868,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c2")
                                         .totalPoints(11)
                                         .totalPenalties(3)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 1)
                                         .addPenaltyList(3, 2)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -870,7 +880,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c1")
                                         .totalPoints(1)
                                         .totalPenalties(1)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(1, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -898,7 +908,7 @@ class GcjScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-2")
                                         .score(100)
-                                        .verdict(Verdicts.ACCEPTED)
+                                        .verdict(Verdicts.PENDING)
                                         .build())
                                 .build())
                         .build();
@@ -910,6 +920,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -920,7 +931,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c2")
                                         .totalPoints(11)
                                         .totalPenalties(3)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 1)
                                         .addPenaltyList(3, 2)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -932,7 +943,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c1")
                                         .totalPoints(1)
                                         .totalPenalties(1)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(1, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -960,7 +971,7 @@ class GcjScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-2")
                                         .score(100)
-                                        .verdict(Verdicts.ACCEPTED)
+                                        .verdict(Verdicts.PENDING)
                                         .build())
                                 .build())
                         .build();
@@ -972,6 +983,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -982,7 +994,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c2")
                                         .totalPoints(11)
                                         .totalPenalties(3)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 1)
                                         .addPenaltyList(3, 2)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -994,7 +1006,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c1")
                                         .totalPoints(1)
                                         .totalPenalties(1)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(1, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -1022,7 +1034,7 @@ class GcjScoreboardProcessorTests {
                                         .id(1)
                                         .jid("JIDG-2")
                                         .score(100)
-                                        .verdict(Verdicts.ACCEPTED)
+                                        .verdict(Verdicts.PENDING)
                                         .build())
                                 .build())
                         .build();
@@ -1034,6 +1046,7 @@ class GcjScoreboardProcessorTests {
                         styleModuleConfig,
                         contestantStartTimesMap,
                         submissions,
+                        ImmutableList.of(),
                         freezeTime);
 
                 verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
@@ -1044,7 +1057,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c2")
                                         .totalPoints(11)
                                         .totalPenalties(3)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 1)
                                         .addPenaltyList(3, 2)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,
@@ -1056,7 +1069,7 @@ class GcjScoreboardProcessorTests {
                                         .contestantJid("c1")
                                         .totalPoints(1)
                                         .totalPenalties(1)
-                                        .addAttemptsList(0, 0)
+                                        .addAttemptsList(1, 0)
                                         .addPenaltyList(1, 0)
                                         .addProblemStateList(
                                                 GcjScoreboardProblemState.ACCEPTED,

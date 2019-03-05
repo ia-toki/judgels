@@ -11,7 +11,7 @@ import Pagination from 'components/Pagination/Pagination';
 import { ContentCard } from 'components/ContentCard/ContentCard';
 import { Contest, ContestStyle } from 'modules/api/uriel/contest';
 import { ContestScoreboardResponse, ContestScoreboardType } from 'modules/api/uriel/contestScoreboard';
-import { IcpcScoreboard, IoiScoreboard, GcjScoreboard } from 'modules/api/uriel/scoreboard';
+import { IcpcScoreboard, IoiScoreboard, GcjScoreboard, BundleScoreboard } from 'modules/api/uriel/scoreboard';
 import { AppState } from 'modules/store';
 import { selectMaybeUserJid } from 'modules/session/sessionSelectors';
 
@@ -19,6 +19,7 @@ import { selectContest } from '../../../modules/contestSelectors';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
 import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
 import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
+import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardPage';
 import { contestScoreboardActions as injectedContestScoreboardActions } from '../modules/contestScoreboardActions';
 
 import './ContestScoreboardPage.css';
@@ -44,7 +45,7 @@ interface ContestScoreboardPageState {
 }
 
 export class ContestScoreboardPage extends React.PureComponent<ContestScoreboardPageProps, ContestScoreboardPageState> {
-  private static PAGE_SIZE = 99999;
+  private static PAGE_SIZE = 250;
   state: ContestScoreboardPageState = {};
 
   constructor(props: ContestScoreboardPageProps) {
@@ -210,7 +211,15 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
           profilesMap={profilesMap!}
         />
       );
-    } else {
+    } else if (this.props.contest.style === ContestStyle.Bundle) {
+      return (
+        <BundleScoreboardTable
+          userJid={this.props.userJid}
+          scoreboard={scoreboard.scoreboard as BundleScoreboard}
+          profilesMap={profilesMap!}
+        />
+      );
+    } else if (this.props.contest.style === ContestStyle.GCJ) {
       return (
         <GcjScoreboardTable
           userJid={this.props.userJid}
@@ -218,6 +227,8 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
           profilesMap={profilesMap!}
         />
       );
+    } else {
+      return <React.Fragment />;
     }
   };
 }

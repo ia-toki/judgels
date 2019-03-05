@@ -11,6 +11,7 @@ import judgels.sandalphon.api.submission.programming.SubmissionData;
 
 public interface SubmissionStore {
     Optional<Submission> getSubmissionById(long submissionId);
+    Optional<Submission> getSubmissionByJid(String submissionJid);
     List<Submission> getSubmissionsForScoreboard(String containerJid);
     Page<Submission> getSubmissionsForDownload(
             String containerJid,

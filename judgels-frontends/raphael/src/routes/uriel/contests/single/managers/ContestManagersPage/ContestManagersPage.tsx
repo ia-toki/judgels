@@ -34,7 +34,7 @@ interface ContestManagersPageState {
 }
 
 class ContestManagersPage extends React.Component<ContestManagersPageProps, ContestManagersPageState> {
-  private static PAGE_SIZE = 100;
+  private static PAGE_SIZE = 250;
 
   state: ContestManagersPageState = {};
 
