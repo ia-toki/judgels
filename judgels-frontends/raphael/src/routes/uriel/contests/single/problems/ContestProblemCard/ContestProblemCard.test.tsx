@@ -61,7 +61,7 @@ describe('ContestProblemCard', () => {
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Open,
-      submissionsLimit: 0,
+      submissionsLimit: null,
       points: null,
     });
 
