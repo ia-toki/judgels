@@ -1,6 +1,6 @@
 import { selectToken } from 'modules/session/sessionSelectors';
 
-export const contestBundleSubmissionActions = {
+export const contestSubmissionActions = {
   getSubmissions: (contestJid: string, userJid?: string, problemJid?: string, page?: number) => {
     return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
       const token = selectToken(getState());
@@ -20,6 +20,13 @@ export const contestBundleSubmissionActions = {
 
       await contestSubmissionBundleAPI.createItemSubmission(token, data);
       toastActions.showSuccessToast('Solution submitted.');
+    };
+  },
+
+  getSummary: (contestJid: string, userJid?: string) => {
+    return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
+      const token = selectToken(getState());
+      return contestSubmissionBundleAPI.getLatestContestantAnswersInContest(token, contestJid, userJid);
     };
   },
 

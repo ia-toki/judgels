@@ -19,8 +19,8 @@ import { ProblemWorksheet as ProgrammingProblemWorksheet } from 'modules/api/san
 import { ProblemWorksheet as BundleProblemWorksheet } from 'modules/api/sandalphon/problemBundle';
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestProblemActions as injectedContestProblemActions } from '../../modules/contestProblemActions';
-import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../../../submissions/Programming/modules/contestProgrammingSubmissionActions';
-import { contestBundleSubmissionActions as injectedContestBundleSubmissionActions } from '../../../submissions/Programming/modules/contestBundleSubmissionActions';
+import { contestSubmissionActions as injectedContestProgrammingSubmissionActions } from '../../../submissions/Programming/modules/contestSubmissionActions';
+import { contestSubmissionActions as injectedContestBundleSubmissionActions } from '../../../submissions/Bundle/modules/contestSubmissionActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 import { ProblemWorksheetCard as ProgrammingProblemWorksheetCard } from 'components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { ProblemWorksheetCard as BundleProblemWorksheetCard } from 'components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
