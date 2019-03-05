@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import * as React from 'react';
 import { Card, H3, HTMLTable } from '@blueprintjs/core';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { FormattedDate } from 'components/FormattedDate/FormattedDate';
@@ -13,7 +13,7 @@ export interface ProblemSubmissionCardProps {
   canManage: boolean;
 }
 
-export const ProblemSubmissionCard: FunctionComponent<ProblemSubmissionCardProps> = ({
+export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCardProps> = ({
   alias,
   submissions,
   canManage,

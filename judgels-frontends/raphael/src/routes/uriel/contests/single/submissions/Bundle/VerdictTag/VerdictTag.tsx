@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import * as React from 'react';
 import { Tag, Intent } from '@blueprintjs/core';
 import { Verdict } from 'modules/api/sandalphon/submissionBundle';
 
@@ -6,7 +6,7 @@ export interface VerdictTagProps {
   verdict: Verdict;
 }
 
-export const VerdictTag: FunctionComponent<VerdictTagProps> = ({ verdict }) => {
+export const VerdictTag: React.FunctionComponent<VerdictTagProps> = ({ verdict }) => {
   let intent: Intent = Intent.NONE;
   let text = 'None';
   if (verdict === Verdict.ACCEPTED) {

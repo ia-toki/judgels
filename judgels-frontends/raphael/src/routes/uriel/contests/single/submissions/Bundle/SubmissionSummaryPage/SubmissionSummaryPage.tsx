@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
 import { AppState } from 'modules/store';
 import { withRouter, RouteComponentProps } from 'react-router';
@@ -25,7 +25,7 @@ export interface SubmissionSummaryPageState {
   problemSummaries: ProblemSubmissionCardProps[];
 }
 
-class SubmissionSummaryPage extends Component<SubmissionSummaryPageProps, SubmissionSummaryPageState> {
+class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, SubmissionSummaryPageState> {
   state: SubmissionSummaryPageState = {
     problemSummaries: [],
   };

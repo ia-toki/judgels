@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { Card, HTMLTable, H3, Icon } from '@blueprintjs/core';
 import { withRouter, Link } from 'react-router-dom';
 import Pagination from 'components/Pagination/Pagination';
@@ -27,7 +27,7 @@ interface ContestSubmissionsPageState {
   response?: ContestItemSubmissionsResponse;
 }
 
-export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProps, ContestSubmissionsPageState> {
+export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPageProps, ContestSubmissionsPageState> {
   private static PAGE_SIZE = 20;
 
   state: ContestSubmissionsPageState = {};
