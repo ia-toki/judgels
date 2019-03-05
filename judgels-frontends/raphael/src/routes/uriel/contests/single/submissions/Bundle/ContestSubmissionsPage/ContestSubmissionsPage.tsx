@@ -62,23 +62,23 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
         <HTMLTable className="submissions-table" bordered striped interactive>
           <thead>
             <tr>
+              <th>User</th>
               <th>Problem</th>
               <th>Item Number</th>
               <th>Answer</th>
               {canManage && <th>Verdict</th>}
-              <th>User</th>
               <th>Time</th>
             </tr>
           </thead>
           <tbody>
             {data.page.map(item => (
               <tr key={item.jid} onClick={onGotoSummary.bind(this, contest, item)}>
+                <td>{profilesMap[item.userJid] ? profilesMap[item.userJid].username : '-'}</td>
                 <td>{problemAliasesMap[item.problemJid] || '-'}</td>
                 {/* TODO: Add item number, dont know how to do this yet. */}
                 <td>{Math.round(Math.random() * 50 + 1)}</td>
                 <td>{item.answer || '-'}</td>
                 {canManage && <td>{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>}
-                <td>{profilesMap[item.userJid] ? profilesMap[item.userJid].username : '-'}</td>
                 <td>
                   <FormattedDate value={item.time} showSeconds />
                 </td>
