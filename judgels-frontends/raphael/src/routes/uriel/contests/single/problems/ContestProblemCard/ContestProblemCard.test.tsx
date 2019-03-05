@@ -24,6 +24,7 @@ describe('ContestProblemCard', () => {
       alias: 'A',
       status: ContestProblemStatus.Open,
       submissionsLimit: 50,
+      points: null,
     });
 
     expect(wrapper.find('[data-key="name"]').text()).toEqual('A. The Problem');
@@ -49,6 +50,7 @@ describe('ContestProblemCard', () => {
       alias: 'A',
       status: ContestProblemStatus.Open,
       submissionsLimit: 50,
+      points: null,
     });
 
     expect(wrapper.find('[data-key="status"]').text()).toEqual('40 submissions left');
@@ -60,6 +62,7 @@ describe('ContestProblemCard', () => {
       alias: 'A',
       status: ContestProblemStatus.Open,
       submissionsLimit: 0,
+      points: null,
     });
 
     expect(wrapper.find('[data-key="status"]').text()).toEqual('');
@@ -71,6 +74,7 @@ describe('ContestProblemCard', () => {
       alias: 'A',
       status: ContestProblemStatus.Closed,
       submissionsLimit: 50,
+      points: null,
     });
 
     expect(

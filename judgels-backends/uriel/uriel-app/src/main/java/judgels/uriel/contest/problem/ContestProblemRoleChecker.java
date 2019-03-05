@@ -59,8 +59,8 @@ public class ContestProblemRoleChecker {
         if (contestTimer.hasFinished(contest, userJid)) {
             return Optional.of("Contest is over.");
         }
-        long submissionsLimit = problem.getSubmissionsLimit().orElse(0L);
-        if (submissionsLimit != 0 && totalSubmissions >= submissionsLimit) {
+        Optional<Long> submissionsLimit = problem.getSubmissionsLimit();
+        if (submissionsLimit.isPresent() && totalSubmissions >= submissionsLimit.get()) {
             return Optional.of("Submissions limit has been reached.");
         }
         if (canSupervise(userJid, contest)) {

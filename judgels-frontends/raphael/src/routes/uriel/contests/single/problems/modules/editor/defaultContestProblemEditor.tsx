@@ -64,7 +64,7 @@ export default {
   serializer: (problems: ContestProblemData[]) => {
     return problems
       .map(p => {
-        if (p.submissionsLimit !== undefined) {
+        if (p.submissionsLimit !== null) {
           return `${p.alias},${p.slug},${p.status},${p.submissionsLimit}`;
         } else if (p.status !== ContestProblemStatus.Open) {
           return `${p.alias},${p.slug},${p.status}`;

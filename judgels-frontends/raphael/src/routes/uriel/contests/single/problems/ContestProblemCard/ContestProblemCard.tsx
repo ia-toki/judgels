@@ -41,7 +41,7 @@ export class ContestProblemCard extends React.PureComponent<ContestProblemCardPr
     if (problem.status === ContestProblemStatus.Closed) {
       return <Tag intent={Intent.DANGER}>CLOSED</Tag>;
     }
-    if (problem.submissionsLimit !== undefined) {
+    if (problem.submissionsLimit !== null) {
       return <span>{problem.submissionsLimit - totalSubmissions} submissions left</span>;
     }
     return <div />;
