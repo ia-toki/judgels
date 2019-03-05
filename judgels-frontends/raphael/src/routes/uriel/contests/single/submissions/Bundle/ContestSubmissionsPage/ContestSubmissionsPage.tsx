@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Card, HTMLTable, H3 } from '@blueprintjs/core';
-import { withRouter } from 'react-router-dom';
+import { Card, HTMLTable, H3, Icon } from '@blueprintjs/core';
+import { withRouter, Link } from 'react-router-dom';
 import Pagination from 'components/Pagination/Pagination';
 import { ContestItemSubmissionsResponse } from 'modules/api/uriel/contestSubmissionBundle';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
@@ -9,8 +9,6 @@ import { AppState } from 'modules/store';
 import { connect } from 'react-redux';
 import { Contest } from 'modules/api/uriel/contest';
 import { FormattedDate } from 'components/FormattedDate/FormattedDate';
-import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
-import { push } from 'react-router-redux';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 
 import './ContestSubmissionsPage.css';
@@ -22,7 +20,6 @@ export interface ContestSubmissionsPageProps {
     problemJid?: string,
     page?: number
   ) => Promise<ContestItemSubmissionsResponse>;
-  onGotoSummary: (contest: Contest, item: ItemSubmission) => any;
   contest: Contest;
 }
 
@@ -53,7 +50,7 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
     }
 
     const { data, profilesMap, problemAliasesMap } = response;
-    const { contest, onGotoSummary } = this.props;
+    const { contest } = this.props;
     const canManage = response.config.canManage;
 
     return (
@@ -68,11 +65,12 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
               <th>Answer</th>
               {canManage && <th>Verdict</th>}
               <th>Time</th>
+              <th />
             </tr>
           </thead>
           <tbody>
             {data.page.map(item => (
-              <tr key={item.jid} onClick={onGotoSummary.bind(this, contest, item)}>
+              <tr key={item.jid}>
                 <td>{profilesMap[item.userJid] ? profilesMap[item.userJid].username : '-'}</td>
                 <td>{problemAliasesMap[item.problemJid] || '-'}</td>
                 {/* TODO: Add item number, dont know how to do this yet. */}
@@ -81,6 +79,11 @@ export class ContestSubmissionsPage extends Component<ContestSubmissionsPageProp
                 {canManage && <td>{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>}
                 <td>
                   <FormattedDate value={item.time} showSeconds />
+                </td>
+                <td>
+                  <Link to={`/contests/${contest.slug}/submissions/users/${item.userJid}`}>
+                    <Icon icon="search" />
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -106,8 +109,6 @@ export function createContestSubmissionsPage(contestSubmissionActions) {
 
   const mapDispatchToProps = {
     onGetSubmissions: contestSubmissionActions.getSubmissions,
-    onGotoSummary: (contest: Contest, item: ItemSubmission) =>
-      push(`/contests/${contest.slug}/submissions/users/${item.userJid}`),
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
