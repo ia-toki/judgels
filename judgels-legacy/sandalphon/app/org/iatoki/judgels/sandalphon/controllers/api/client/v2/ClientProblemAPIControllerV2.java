@@ -1,10 +1,13 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
+import judgels.sandalphon.api.problem.bundle.ItemConfig;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.bundle.Item;
@@ -134,13 +137,18 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             List<BundleItem> items = bundleItemService.getBundleItemsInProblemWithClone(problemJid, null);
             List<Item> itemsWithConfig = new ArrayList<>();
             for (BundleItem item : items) {
-                String itemConfig = bundleItemService.getItemConfInProblemWithCloneByJid(
+                String itemConfigString = bundleItemService.getItemConfInProblemWithCloneByJid(
                         problemJid, null, item.getJid(), language);
+                ItemType type = ItemType.valueOf(item.getType().name());
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.registerModule(new Jdk8Module());
+
                 Item itemWithConfig = new Item.Builder()
                         .jid(item.getJid())
-                        .type(ItemType.valueOf(item.getType().name()))
+                        .type(type)
                         .meta(item.getMeta())
-                        .config(itemConfig)
+                        .config(ItemConfig.fromString(objectMapper, type, itemConfigString))
                         .build();
                 itemsWithConfig.add(itemWithConfig);
             }
