@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
@@ -184,7 +185,10 @@ public class ContestProblemResource implements ContestProblemService {
                 .from(worksheet)
                 .statement(new ProblemStatement.Builder()
                         .from(worksheet.getStatement())
-                        .text(replaceRenderUrls(worksheet.getStatement().getText(), problemJid))
+                        .text(SandalphonUtils.replaceRenderUrls(
+                                worksheet.getStatement().getText(),
+                                sandalphonConfig.getBaseUrl(),
+                                problemJid))
                         .build())
                 .submissionConfig(new ProblemSubmissionConfig.Builder()
                         .from(worksheet.getSubmissionConfig())
@@ -218,6 +222,8 @@ public class ContestProblemResource implements ContestProblemService {
         String problemJid = problem.getProblemJid();
         ProblemInfo problemInfo = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
 
+        boolean canManage = problemRoleChecker.canManage(actorJid, contest);
+
         if (problemInfo.getType() != ProblemType.BUNDLE) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());
         }
@@ -235,12 +241,22 @@ public class ContestProblemResource implements ContestProblemService {
                 .from(worksheet)
                 .statement(new ProblemStatement.Builder()
                         .from(worksheet.getStatement())
-                        .text(replaceRenderUrls(worksheet.getStatement().getText(), problemJid))
+                        .text(SandalphonUtils.replaceRenderUrls(
+                                worksheet.getStatement().getText(),
+                                sandalphonConfig.getBaseUrl(),
+                                problemJid))
                         .build())
                 .items(worksheet.getItems().stream()
-                    .map(item -> new Item.Builder()
+                    .map(item -> canManage ? item : new Item.Builder()
                         .from(item)
+                        .config(item.getConfig().withoutGradingInfo())
                         .build()
+                    )
+                    .map(item -> item.processDisplayText(
+                            text -> SandalphonUtils.replaceRenderUrls(
+                                    text,
+                                    sandalphonConfig.getBaseUrl(),
+                                    problemJid))
                     )
                     .collect(Collectors.toList())
                 )
@@ -254,17 +270,5 @@ public class ContestProblemResource implements ContestProblemService {
                 .totalSubmissions(totalSubmissions)
                 .worksheet(finalWorksheet)
                 .build();
-    }
-
-
-    private String replaceRenderUrls(String statementText, String problemJid) {
-        String baseUrl = sandalphonConfig.getBaseUrl();
-        return statementText
-                .replaceAll(
-                        "src=\"render/",
-                        String.format("src=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid))
-                .replaceAll(
-                        "href=\"render/",
-                        String.format("href=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid));
     }
 }

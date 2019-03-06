@@ -10,7 +10,7 @@ public abstract class StatementItemConfig implements ItemConfig {
 
     @Override
     public ItemConfig processDisplayText(Function<String, String> processor) {
-        return new MultipleChoiceItemConfig.Builder()
+        return new StatementItemConfig.Builder()
                 .from(this)
                 .statement(processor.apply(getStatement()))
                 .build();
