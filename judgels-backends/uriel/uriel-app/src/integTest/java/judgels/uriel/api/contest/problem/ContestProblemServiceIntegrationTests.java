@@ -4,10 +4,10 @@ import static com.palantir.conjure.java.api.testing.Assertions.assertThat;
 import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.of;
 import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_HEADER;
+import static judgels.uriel.api.mocks.MockJophiel.USER_HEADER;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_JID;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_1_SLUG;
 import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_2_JID;
@@ -30,7 +30,6 @@ import judgels.sandalphon.api.problem.bundle.StatementItemConfig;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
-import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestErrors;
@@ -47,11 +46,11 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
         // as manager
         problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
-                    .alias("A")
-                    .slug(PROBLEM_1_SLUG)
-                    .status(OPEN)
-                    .submissionsLimit(0)
-                    .build()));
+                        .alias("A")
+                        .slug(PROBLEM_1_SLUG)
+                        .status(OPEN)
+                        .submissionsLimit(0)
+                        .build()));
 
         List<ContestProblemData> data = ImmutableList.of(
                 new ContestProblemData.Builder()
@@ -99,8 +98,7 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .slug(PROBLEM_3_SLUG)
                         .status(ContestProblemStatus.OPEN)
                         .submissionsLimit(0)
-                        .build()
-                ));
+                        .build()));
 
         ContestProblemsResponse response = problemService.getProblems(of(MANAGER_HEADER), contest.getJid());
         assertThat(response.getData()).containsOnly(
@@ -142,12 +140,14 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
     }
 
     private void test_get_programming_problem_worksheet(Contest contest) {
-        ContestProblemWorksheet pwm = problemService.getProgrammingProblemWorksheet(
-                of(MANAGER_HEADER),
+        // as contestant
+
+        ContestProblemWorksheet worksheet = problemService.getProgrammingProblemWorksheet(
+                of(CONTESTANT_HEADER),
                 contest.getJid(),
                 "A",
                 Optional.empty());
-        assertThat(pwm).isEqualTo(new ContestProblemWorksheet.Builder()
+        assertThat(worksheet).isEqualTo(new ContestProblemWorksheet.Builder()
                 .defaultLanguage("en")
                 .languages(ImmutableSet.of("en"))
                 .problem(new ContestProblem.Builder()
@@ -176,6 +176,15 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .reasonNotAllowedToSubmit(Optional.empty())
                         .build())
                 .build());
+
+        // as non-contestant
+
+        assertThatRemoteExceptionThrownBy(() -> problemService.getProgrammingProblemWorksheet(
+                of(USER_HEADER),
+                contest.getJid(),
+                "A",
+                Optional.empty()))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
     }
 
     private void test_get_bundle_problem_worksheet(Contest contest) {
@@ -257,17 +266,23 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                                 .build())
                         .build();
 
-        judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet bwm;
+        // as contestant
 
-        AuthHeader[] authHeaders = {CONTESTANT_HEADER, SUPERVISOR_HEADER, MANAGER_HEADER, ADMIN_HEADER};
-        for (AuthHeader authHeader : authHeaders) {
-            bwm = problemService.getBundleProblemWorksheet(
-                    of(authHeader),
-                    contest.getJid(),
-                    "D",
-                    Optional.empty());
-            assertThat(bwm).isEqualTo(worksheet);
-        }
+        judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet bw = problemService.getBundleProblemWorksheet(
+                of(CONTESTANT_HEADER),
+                contest.getJid(),
+                "D",
+                Optional.empty());
+        assertThat(bw).isEqualTo(worksheet);
+
+        // as non-contestant
+
+        assertThatRemoteExceptionThrownBy(() -> problemService.getBundleProblemWorksheet(
+                of(USER_HEADER),
+                contest.getJid(),
+                "D",
+                Optional.empty()))
+                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
     }
 
 }
