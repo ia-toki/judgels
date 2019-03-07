@@ -69,8 +69,8 @@ public class ContestItemSubmissionStore {
     }
 
     public List<ItemSubmission> getLatestSubmissionsByUserInContest(String containerJid, String userJid) {
-        List<ContestBundleItemSubmissionModel>
-                models = submissionDao.selectByContainerJidAndCreatedBy(containerJid, userJid);
+        List<ContestBundleItemSubmissionModel> models =
+                submissionDao.selectAllByContainerJidAndCreatedBy(containerJid, userJid);
         return models.stream()
                 .map(ContestItemSubmissionStore::fromModel)
                 .collect(Collectors.toList());
@@ -81,16 +81,16 @@ public class ContestItemSubmissionStore {
             String problemJid,
             String userJid) {
 
-        List<ContestBundleItemSubmissionModel>
-                models = submissionDao.selectByContainerJidAndProblemJidAndCreatedBy(containerJid, problemJid, userJid);
+        List<ContestBundleItemSubmissionModel> models =
+                submissionDao.selectAllByContainerJidAndProblemJidAndCreatedBy(containerJid, problemJid, userJid);
         return models.stream()
                 .map(ContestItemSubmissionStore::fromModel)
                 .collect(Collectors.toList());
     }
 
     public List<ItemSubmission> getSubmissionsForScoreboard(String containerJid) {
-        List<ContestBundleItemSubmissionModel>
-                models = submissionDao.selectByContainerJid(containerJid);
+        List<ContestBundleItemSubmissionModel> models =
+                submissionDao.selectAllByContainerJid(containerJid);
         return models.stream()
                 .map(ContestItemSubmissionStore::fromModel)
                 .collect(Collectors.toList());

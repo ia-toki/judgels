@@ -1,7 +1,9 @@
 package judgels.uriel.contest.scoreboard;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.time.Clock;
 import java.time.Duration;
@@ -15,8 +17,10 @@ import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
+import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
@@ -63,28 +67,24 @@ public class ContestScoreboardUpdater {
         ContestModulesConfig contestModulesConfig = moduleStore.getConfig(contest.getJid(), contest.getStyle());
         StyleModuleConfig styleModuleConfig = moduleStore.getStyleModuleConfig(contest.getJid(), contest.getStyle());
 
-        List<String> problemJids = problemStore.getProblemJids(contest.getJid());
-        Set<String> contestantJids = contestantStore.getApprovedContestantJids(contest.getJid());
+        List<ContestProblem> problems = problemStore.getProblems(contest.getJid());
+        List<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(toList());
+        List<String> problemAliases = problems.stream().map(ContestProblem::getAlias).collect(toList());
+        Optional<List<Integer>> problemPoints = styleModuleConfig.hasPointsPerProblem()
+                ? Optional.of(problems.stream().map(p -> p.getPoints().orElse(0)).collect(toList()))
+                : Optional.empty();
 
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(
-                contest.getJid(),
-                ImmutableSet.copyOf(problemJids));
-
-        Map<String, Integer> problemPoints = problemStore.getProblemPointsByJids(
-                contest.getJid(),
-                ImmutableSet.copyOf(problemJids));
+        Set<ContestContestant> contestants = contestantStore.getApprovedContestants(contest.getJid());
+        Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
+        Map<String, Optional<Instant>> contestantStartTimesMap = contestants.stream().collect(
+                Collectors.toMap(ContestContestant::getUserJid, ContestContestant::getContestStartTime));
 
         ScoreboardState scoreboardState = new ScoreboardState.Builder()
                 .problemJids(problemJids)
                 .contestantJids(contestantJids)
-                .problemPoints(styleModuleConfig.hasPointsPerProblem()
-                        ? Optional.of(problemJids.stream().map(problemPoints::get).collect(Collectors.toList()))
-                        : Optional.empty())
-                .problemAliases(problemJids.stream().map(problemAliasesMap::get).collect(Collectors.toList()))
+                .problemPoints(problemPoints)
+                .problemAliases(problemAliases)
                 .build();
-
-        Map<String, Optional<Instant>> contestantStartTimesMap =
-                contestantStore.getApprovedContestantStartTimes(contest.getJid());
 
         List<Submission> programmingSubmissions = programmingSubmissionStore
                 .getSubmissionsForScoreboard(contest.getJid());
@@ -98,11 +98,11 @@ public class ContestScoreboardUpdater {
                 contestantStartTimesMap,
                 programmingSubmissions,
                 bundleItemSubmissions,
-                Optional.empty(), ContestScoreboardType.OFFICIAL);
+                Optional.empty(),
+                ContestScoreboardType.OFFICIAL);
 
         if (contestModulesConfig.getFrozenScoreboard().isPresent()) {
-            Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get()
-                    .getFreezeDurationBeforeEndTime();
+            Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get().getFreezeDurationBeforeEndTime();
             Instant freezeTime = contest.getEndTime().minus(freezeDuration);
 
             if (clock.instant().isAfter(freezeTime)) {
@@ -113,7 +113,8 @@ public class ContestScoreboardUpdater {
                         contestantStartTimesMap,
                         programmingSubmissions,
                         bundleItemSubmissions,
-                        Optional.of(freezeTime), ContestScoreboardType.FROZEN);
+                        Optional.of(freezeTime),
+                        ContestScoreboardType.FROZEN);
             }
         }
     }
@@ -127,6 +128,7 @@ public class ContestScoreboardUpdater {
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime,
             ContestScoreboardType contestScoreboardType) {
+
         String scoreboard = scoreboardProcessorRegistry.get(contest.getStyle())
                 .computeToString(
                         objectMapper,

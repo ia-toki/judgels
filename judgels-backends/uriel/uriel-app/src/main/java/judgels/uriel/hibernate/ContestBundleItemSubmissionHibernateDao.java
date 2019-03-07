@@ -41,14 +41,14 @@ public class ContestBundleItemSubmissionHibernateDao extends JudgelsHibernateDao
     }
 
     @Override
-    public List<ContestBundleItemSubmissionModel> selectByContainerJid(String containerJid) {
+    public List<ContestBundleItemSubmissionModel> selectAllByContainerJid(String containerJid) {
         return selectAll(new FilterOptions.Builder<ContestBundleItemSubmissionModel>()
                 .putColumnsEq(ContestBundleItemSubmissionModel_.containerJid, containerJid)
                 .build());
     }
 
     @Override
-    public List<ContestBundleItemSubmissionModel> selectByContainerJidAndCreatedBy(
+    public List<ContestBundleItemSubmissionModel> selectAllByContainerJidAndCreatedBy(
             String containerJid, String createdBy) {
         return selectAll(new FilterOptions.Builder<ContestBundleItemSubmissionModel>()
                 .putColumnsEq(ContestBundleItemSubmissionModel_.containerJid, containerJid)
@@ -57,7 +57,7 @@ public class ContestBundleItemSubmissionHibernateDao extends JudgelsHibernateDao
     }
 
     @Override
-    public List<ContestBundleItemSubmissionModel> selectByContainerJidAndProblemJidAndCreatedBy(
+    public List<ContestBundleItemSubmissionModel> selectAllByContainerJidAndProblemJidAndCreatedBy(
             String containerJid, String problemJid, String createdBy) {
         return selectAll(new FilterOptions.Builder<ContestBundleItemSubmissionModel>()
                 .putColumnsEq(ContestBundleItemSubmissionModel_.containerJid, containerJid)
