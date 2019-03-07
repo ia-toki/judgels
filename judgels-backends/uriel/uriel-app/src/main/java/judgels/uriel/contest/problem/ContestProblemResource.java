@@ -21,9 +21,9 @@ import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
+import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -49,6 +49,7 @@ public class ContestProblemResource implements ContestProblemService {
     private final SandalphonClientConfiguration sandalphonConfig;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
+    private final ItemProcessorRegistry itemProcessorRegistry;
 
     @Inject
     public ContestProblemResource(
@@ -60,7 +61,8 @@ public class ContestProblemResource implements ContestProblemService {
             SubmissionStore submissionStore,
             SandalphonClientConfiguration sandalphonConfig,
             @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
-            ClientProblemService clientProblemService) {
+            ClientProblemService clientProblemService,
+            ItemProcessorRegistry itemProcessorRegistry) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
@@ -71,6 +73,7 @@ public class ContestProblemResource implements ContestProblemService {
         this.sandalphonConfig = sandalphonConfig;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
+        this.itemProcessorRegistry = itemProcessorRegistry;
     }
 
     @Override
@@ -222,8 +225,6 @@ public class ContestProblemResource implements ContestProblemService {
         String problemJid = problem.getProblemJid();
         ProblemInfo problemInfo = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
 
-        boolean canManage = problemRoleChecker.canManage(actorJid, contest);
-
         if (problemInfo.getType() != ProblemType.BUNDLE) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());
         }
@@ -247,17 +248,9 @@ public class ContestProblemResource implements ContestProblemService {
                                 problemJid))
                         .build())
                 .items(worksheet.getItems().stream()
-                    .map(item -> canManage ? item : new Item.Builder()
-                        .from(item)
-                        .config(item.getConfig().withoutGradingInfo())
-                        .build()
-                    )
-                    .map(item -> item.processDisplayText(
-                            text -> SandalphonUtils.replaceRenderUrls(
-                                    text,
-                                    sandalphonConfig.getBaseUrl(),
-                                    problemJid))
-                    )
+                    .map(item -> itemProcessorRegistry.get(item.getType()).removeAnswerKey(item))
+                    .map(item -> itemProcessorRegistry.get(item.getType()).replaceRenderUrls(
+                            item, sandalphonConfig.getBaseUrl(), problemJid))
                     .collect(Collectors.toList())
                 )
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)

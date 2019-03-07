@@ -30,6 +30,7 @@ import judgels.sandalphon.api.problem.bundle.StatementItemConfig;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
+import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestErrors;
@@ -137,8 +138,7 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
         assertThat(response.getConfig().getCanManage()).isFalse();
 
         test_get_programming_problem_worksheet(contest);
-        test_get_bundle_problem_worksheet_with_grading_info(contest);
-        test_get_bundle_problem_worksheet_without_grading_info(contest);
+        test_get_bundle_problem_worksheet(contest);
     }
 
     private void test_get_programming_problem_worksheet(Contest contest) {
@@ -178,8 +178,8 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                 .build());
     }
 
-    private void test_get_bundle_problem_worksheet_without_grading_info(Contest contest) {
-        judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet worksheetWithoutGradingInfo =
+    private void test_get_bundle_problem_worksheet(Contest contest) {
+        judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet worksheet =
                 new judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet.Builder()
                         .defaultLanguage("en")
                         .languages(ImmutableSet.of("en"))
@@ -259,115 +259,15 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
 
         judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet bwm;
 
-        bwm = problemService.getBundleProblemWorksheet(
-                of(CONTESTANT_HEADER),
-                contest.getJid(),
-                "D",
-                Optional.empty());
-        assertThat(bwm).isEqualTo(worksheetWithoutGradingInfo);
-
-        bwm = problemService.getBundleProblemWorksheet(
-                of(SUPERVISOR_HEADER),
-                contest.getJid(),
-                "D",
-                Optional.empty());
-        assertThat(bwm).isEqualTo(worksheetWithoutGradingInfo);
+        AuthHeader[] authHeaders = {CONTESTANT_HEADER, SUPERVISOR_HEADER, MANAGER_HEADER, ADMIN_HEADER};
+        for (AuthHeader authHeader : authHeaders) {
+            bwm = problemService.getBundleProblemWorksheet(
+                    of(authHeader),
+                    contest.getJid(),
+                    "D",
+                    Optional.empty());
+            assertThat(bwm).isEqualTo(worksheet);
+        }
     }
 
-    private void test_get_bundle_problem_worksheet_with_grading_info(Contest contest) {
-
-        judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet worksheetWithGradingInfo =
-                new judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet.Builder()
-                        .defaultLanguage("en")
-                        .languages(ImmutableSet.of("en"))
-                        .problem(new ContestProblem.Builder()
-                                .alias("D")
-                                .problemJid(PROBLEM_3_JID)
-                                .status(OPEN)
-                                .submissionsLimit(0)
-                                .build())
-                        .totalSubmissions(0)
-                        .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
-                                .statement(new ProblemStatement.Builder()
-                                        .title("Problem 3")
-                                        .text("<h3>Statement 3</h3> <img src=\"http://localhost:9002/api/v2/problems/"
-                                                + PROBLEM_3_JID + "/render/image\"/>\r\n")
-                                        .build())
-                                .addItems(
-                                        new Item.Builder()
-                                                .jid("JIDITEMwcAjhP4KZurUE2F5LdSb")
-                                                .type(ItemType.STATEMENT)
-                                                .meta("1-2")
-                                                .config(new StatementItemConfig.Builder()
-                                                        .statement("<p>ini statement 1</p><img src=\"http://localhost:9002"
-                                                                + "/api/v2/problems/" + PROBLEM_3_JID + "/render/i\"/>")
-                                                        .build())
-                                                .build(),
-                                        new Item.Builder()
-                                                .jid("JIDITEMPeKuqUA0Q7zvJjTQXXVD")
-                                                .type(ItemType.MULTIPLE_CHOICE)
-                                                .meta("1")
-                                                .config(new MultipleChoiceItemConfig.Builder()
-                                                        .statement("<p>ini soal 1</p>\r\n")
-                                                        .score(1)
-                                                        .penalty(0)
-                                                        .addChoices(
-                                                                new MultipleChoiceItemConfig.Choice.Builder()
-                                                                        .alias("a")
-                                                                        .content("jawaban a <img src=\"http://localhost:9002"
-                                                                                + "/api/v2/problems/" + PROBLEM_3_JID
-                                                                                + "/render/choiceimage\"/>")
-                                                                        .isCorrect(false)
-                                                                        .build(),
-                                                                new MultipleChoiceItemConfig.Choice.Builder()
-                                                                        .alias("b")
-                                                                        .content("jawaban b")
-                                                                        .isCorrect(true)
-                                                                        .build()
-                                                        )
-                                                        .build())
-                                                .build(),
-                                        new Item.Builder()
-                                                .jid("JIDITEMtOoiXuIgPcD1oUsMzvbP")
-                                                .type(ItemType.MULTIPLE_CHOICE)
-                                                .meta("2")
-                                                .config(new MultipleChoiceItemConfig.Builder()
-                                                        .statement("<p>ini soal kedua</p>\r\n")
-                                                        .score(4)
-                                                        .penalty(-1)
-                                                        .addChoices(
-                                                                new MultipleChoiceItemConfig.Choice.Builder()
-                                                                        .alias("a")
-                                                                        .content("pilihan a")
-                                                                        .isCorrect(true)
-                                                                        .build(),
-                                                                new MultipleChoiceItemConfig.Choice.Builder()
-                                                                        .alias("b")
-                                                                        .content("pilihan b")
-                                                                        .isCorrect(false)
-                                                                        .build()
-                                                        )
-                                                        .build())
-                                                .build()
-                                )
-                                .reasonNotAllowedToSubmit(Optional.empty())
-                                .build())
-                        .build();
-
-        judgels.uriel.api.contest.problem.bundle.ContestProblemWorksheet bwm;
-
-        bwm = problemService.getBundleProblemWorksheet(
-                of(MANAGER_HEADER),
-                contest.getJid(),
-                "D",
-                Optional.empty());
-        assertThat(bwm).isEqualTo(worksheetWithGradingInfo);
-
-        bwm = problemService.getBundleProblemWorksheet(
-                of(ADMIN_HEADER),
-                contest.getJid(),
-                "D",
-                Optional.empty());
-        assertThat(bwm).isEqualTo(worksheetWithGradingInfo);
-    }
 }
