@@ -15,14 +15,15 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
+import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -48,6 +49,7 @@ public class ContestProblemResource implements ContestProblemService {
     private final SandalphonClientConfiguration sandalphonConfig;
     private final BasicAuthHeader sandalphonClientAuthHeader;
     private final ClientProblemService clientProblemService;
+    private final ItemProcessorRegistry itemProcessorRegistry;
 
     @Inject
     public ContestProblemResource(
@@ -59,7 +61,8 @@ public class ContestProblemResource implements ContestProblemService {
             SubmissionStore submissionStore,
             SandalphonClientConfiguration sandalphonConfig,
             @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
-            ClientProblemService clientProblemService) {
+            ClientProblemService clientProblemService,
+            ItemProcessorRegistry itemProcessorRegistry) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
@@ -70,6 +73,7 @@ public class ContestProblemResource implements ContestProblemService {
         this.sandalphonConfig = sandalphonConfig;
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
+        this.itemProcessorRegistry = itemProcessorRegistry;
     }
 
     @Override
@@ -184,7 +188,10 @@ public class ContestProblemResource implements ContestProblemService {
                 .from(worksheet)
                 .statement(new ProblemStatement.Builder()
                         .from(worksheet.getStatement())
-                        .text(replaceRenderUrls(worksheet.getStatement().getText(), problemJid))
+                        .text(SandalphonUtils.replaceRenderUrls(
+                                worksheet.getStatement().getText(),
+                                sandalphonConfig.getBaseUrl(),
+                                problemJid))
                         .build())
                 .submissionConfig(new ProblemSubmissionConfig.Builder()
                         .from(worksheet.getSubmissionConfig())
@@ -233,12 +240,17 @@ public class ContestProblemResource implements ContestProblemService {
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet
                 finalWorksheet = new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                 .from(worksheet)
+                .statement(new ProblemStatement.Builder()
+                        .from(worksheet.getStatement())
+                        .text(SandalphonUtils.replaceRenderUrls(
+                                worksheet.getStatement().getText(),
+                                sandalphonConfig.getBaseUrl(),
+                                problemJid))
+                        .build())
                 .items(worksheet.getItems().stream()
-                    .map(item -> new Item.Builder()
-                        .from(item)
-                        .config(replaceRenderUrls(item.getConfig(), problemJid))
-                        .build()
-                    )
+                    .map(item -> itemProcessorRegistry.get(item.getType()).removeAnswerKey(item))
+                    .map(item -> itemProcessorRegistry.get(item.getType()).replaceRenderUrls(
+                            item, sandalphonConfig.getBaseUrl(), problemJid))
                     .collect(Collectors.toList())
                 )
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
@@ -251,17 +263,5 @@ public class ContestProblemResource implements ContestProblemService {
                 .totalSubmissions(totalSubmissions)
                 .worksheet(finalWorksheet)
                 .build();
-    }
-
-
-    private String replaceRenderUrls(String statementText, String problemJid) {
-        String baseUrl = sandalphonConfig.getBaseUrl();
-        return statementText
-                .replaceAll(
-                        "src=\"render/",
-                        String.format("src=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid))
-                .replaceAll(
-                        "href=\"render/",
-                        String.format("href=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid));
     }
 }

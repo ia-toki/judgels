@@ -2,6 +2,7 @@ package judgels.sandalphon.api.problem.bundle;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
+import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -16,7 +17,7 @@ public interface MultipleChoiceItemConfig extends ItemConfig {
     interface Choice {
         String getAlias();
         String getContent();
-        boolean getIsCorrect();
+        Optional<Boolean> getIsCorrect();
 
         class Builder extends ImmutableChoice.Builder {}
     }
