@@ -14,19 +14,16 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.inject.Named;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.bundle.Item;
-import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
+import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
@@ -54,10 +51,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
-    private final ClientProblemService clientProblemService;
     private final ProfileService profileService;
     private final ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
-    private final BasicAuthHeader sandalphonClientAuthHeader;
+    private final ProblemClient problemClient;
 
     @Inject
     public ContestItemSubmissionResource(
@@ -68,10 +64,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
-            ClientProblemService clientProblemService,
             ProfileService profileService,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
-            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader) {
+            ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
@@ -80,10 +75,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
-        this.clientProblemService = clientProblemService;
         this.profileService = profileService;
         this.itemSubmissionGraderRegistry = itemSubmissionGraderRegistry;
-        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
+        this.problemClient = problemClient;
     }
 
     @Override
@@ -167,13 +161,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         ContestProblem problem = checkFound(problemStore.getProblem(data.getContestJid(), data.getProblemJid()));
         checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, 0));
 
-        ProblemWorksheet worksheet = clientProblemService.getBundleProblemWorksheet(
-                sandalphonClientAuthHeader,
-                data.getProblemJid(),
-                Optional.empty());
-        Optional<Item> item = worksheet.getItems().stream()
-                .filter(i -> data.getItemJid().equals(i.getJid()))
-                .findAny();
+        Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
         checkFound(item);
 
         Grading grading = itemSubmissionGraderRegistry
