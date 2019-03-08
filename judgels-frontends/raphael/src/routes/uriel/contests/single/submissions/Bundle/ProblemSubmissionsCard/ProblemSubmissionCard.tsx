@@ -22,10 +22,14 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
 
   const renderSingleSubmission = (submission: ItemSubmission, itemNum: number) => (
     <tr key={submission.itemJid}>
-      <td>{itemNum + 1}</td>
+      <td className="col-item-num">{itemNum + 1}</td>
       <td>{renderAnswer(submission.answer)}</td>
-      {canManage && <td>{submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}</td>}
-      <td>
+      {canManage && (
+        <td className="col-verdict">
+          {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
+        </td>
+      )}
+      <td className="col-time">
         <FormattedRelative value={submission.time} />
       </td>
     </tr>
@@ -37,10 +41,10 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
       <HTMLTable striped className="table-list-condensed submission-table">
         <thead>
           <tr>
-            <th>Item Number</th>
+            <th className="col-item-num">Item Number</th>
             <th>Answer</th>
-            {canManage && <th>Verdict</th>}
-            <th>Time</th>
+            {canManage && <th className="col-verdict">Verdict</th>}
+            <th className="col-time">Time</th>
           </tr>
         </thead>
         <tbody>{submissions.map(renderSingleSubmission)}</tbody>

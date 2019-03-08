@@ -5,7 +5,17 @@
     .submissions-table {
         margin-top: 20px;
         border: solid 1px #a0a0a0;
-        .action {
+        .col-item-num {
+            width: 50px;
+        }
+        .col-prob {
+            width: 80px;
+        }
+        .col-verdict {
+            width: 60px;
+        }
+        .col-action {
+            width: 50px;
             cursor: pointer;
         }
     }

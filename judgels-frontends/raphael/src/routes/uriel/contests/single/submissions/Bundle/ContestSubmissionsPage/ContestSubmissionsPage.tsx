@@ -60,27 +60,29 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
           <thead>
             <tr>
               <th>User</th>
-              <th>Problem</th>
-              <th>Item Number</th>
+              <th className="col-prob">Problem</th>
+              <th className="col-item-num">Item Number</th>
               <th>Answer</th>
-              {canManage && <th>Verdict</th>}
+              {canManage && <th className="col-verdict">Verdict</th>}
               <th>Time</th>
-              <th />
+              <th className="col-action" />
             </tr>
           </thead>
           <tbody>
             {data.page.map(item => (
               <tr key={item.jid}>
                 <td>{profilesMap[item.userJid] ? profilesMap[item.userJid].username : '-'}</td>
-                <td>{problemAliasesMap[item.problemJid] || '-'}</td>
+                <td className="col-prob">{problemAliasesMap[item.problemJid] || '-'}</td>
                 {/* TODO: Add item number, dont know how to do this yet. */}
-                <td>{Math.round(Math.random() * 50 + 1)}</td>
+                <td className="col-item-num">{Math.round(Math.random() * 50 + 1)}</td>
                 <td>{item.answer || '-'}</td>
-                {canManage && <td>{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>}
+                {canManage && (
+                  <td className="col-verdict">{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>
+                )}
                 <td>
                   <FormattedRelative value={item.time} />
                 </td>
-                <td className="actions">
+                <td className="col-action">
                   <Link to={`/contests/${contest.slug}/submissions/users/${item.userJid}`}>
                     <Icon icon="search" />
                   </Link>
