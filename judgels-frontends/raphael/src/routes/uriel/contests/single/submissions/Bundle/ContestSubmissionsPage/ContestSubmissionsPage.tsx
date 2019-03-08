@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, HTMLTable, H3, Icon } from '@blueprintjs/core';
+import { Card, HTMLTable, Icon } from '@blueprintjs/core';
 import { withRouter, Link } from 'react-router-dom';
 import Pagination from 'components/Pagination/Pagination';
 import { ContestItemSubmissionsResponse } from 'modules/api/uriel/contestSubmissionBundle';
@@ -11,6 +11,7 @@ import { Contest } from 'modules/api/uriel/contest';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { FormattedRelative } from 'react-intl';
 import { UserRef } from 'components/UserRef/UserRef';
+import { ContentCard } from 'components/ContentCard/ContentCard';
 
 import './ContestSubmissionsPage.css';
 
@@ -55,14 +56,15 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     const canManage = response.config.canManage;
 
     return (
-      <Card className="contest-bundle-submissions-page">
-        <H3>Submissions</H3>
+      <ContentCard className="contest-bundle-submissions-page">
+        <h3>Submissions</h3>
+        <hr />
         <HTMLTable striped className="table-list-condensed submissions-table">
           <thead>
             <tr>
               <th>User</th>
               <th className="col-prob">Problem</th>
-              <th className="col-item-num">Item Number</th>
+              <th className="col-item-num">No</th>
               <th>Answer</th>
               {canManage && <th className="col-verdict">Verdict</th>}
               <th>Time</th>
@@ -97,7 +99,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
         <div className="submission-pagination">
           <Pagination currentPage={1} pageSize={ContestSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />
         </div>
-      </Card>
+      </ContentCard>
     );
   }
 
