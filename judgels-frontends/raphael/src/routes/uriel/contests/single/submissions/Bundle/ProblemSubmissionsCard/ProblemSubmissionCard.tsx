@@ -34,7 +34,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
   return (
     <Card className="contest-bundle-problem-submission">
       <H3>{alias}</H3>
-      <HTMLTable className="submission-table" bordered striped>
+      <HTMLTable striped className="table-list-condensed submission-table">
         <thead>
           <tr>
             <th>Item Number</th>

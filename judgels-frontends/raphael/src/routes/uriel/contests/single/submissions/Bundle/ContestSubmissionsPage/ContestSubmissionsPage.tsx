@@ -56,7 +56,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     return (
       <Card className="contest-bundle-submissions-page">
         <H3>Submissions</H3>
-        <HTMLTable className="submissions-table" bordered striped interactive>
+        <HTMLTable striped className="table-list-condensed submissions-table">
           <thead>
             <tr>
               <th>User</th>
@@ -80,7 +80,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
                 <td>
                   <FormattedDate value={item.time} showSeconds />
                 </td>
-                <td>
+                <td className="actions">
                   <Link to={`/contests/${contest.slug}/submissions/users/${item.userJid}`}>
                     <Icon icon="search" />
                   </Link>

@@ -1,7 +1,12 @@
+@import '../../../../../../../styles/table';
+
 .contest-bundle-submissions-page {
     margin-top: 15px;
     .submissions-table {
         margin-top: 20px;
         border: solid 1px #a0a0a0;
+        .action {
+            cursor: pointer;
+        }
     }
 }
