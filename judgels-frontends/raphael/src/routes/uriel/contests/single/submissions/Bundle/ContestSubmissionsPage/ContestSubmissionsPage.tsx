@@ -62,7 +62,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
             <tr>
               <th>User</th>
               <th className="col-prob">Problem</th>
-              <th className="col-item-num">Item Number</th>
+              <th className="col-item-num">No</th>
               <th>Answer</th>
               {canManage && <th className="col-verdict">Verdict</th>}
               <th>Time</th>

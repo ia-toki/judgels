@@ -41,7 +41,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
       <HTMLTable striped className="table-list-condensed submission-table">
         <thead>
           <tr>
-            <th className="col-item-num">Item Number</th>
+            <th className="col-item-num">No</th>
             <th>Answer</th>
             {canManage && <th className="col-verdict">Verdict</th>}
             <th className="col-time">Time</th>
