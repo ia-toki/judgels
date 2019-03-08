@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Card, H3, HTMLTable } from '@blueprintjs/core';
+import { HTMLTable } from '@blueprintjs/core';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { FormattedRelative } from 'react-intl';
+import { ContentCard } from 'components/ContentCard/ContentCard';
 
 import './ProblemSubmissionCard.css';
 
@@ -36,8 +37,9 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
   );
 
   return (
-    <Card className="contest-bundle-problem-submission">
-      <H3>{alias}</H3>
+    <ContentCard className="contest-bundle-problem-submission">
+      <h3>{alias}</h3>
+      <hr />
       <HTMLTable striped className="table-list-condensed submission-table">
         <thead>
           <tr>
@@ -49,6 +51,6 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
         </thead>
         <tbody>{submissions.map(renderSingleSubmission)}</tbody>
       </HTMLTable>
-    </Card>
+    </ContentCard>
   );
 };
