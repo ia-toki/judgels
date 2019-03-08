@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { Contest } from 'modules/api/uriel/contest';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { FormattedRelative } from 'react-intl';
+import { UserRef } from 'components/UserRef/UserRef';
 
 import './ContestSubmissionsPage.css';
 
@@ -71,7 +72,9 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
           <tbody>
             {data.page.map(item => (
               <tr key={item.jid}>
-                <td>{profilesMap[item.userJid] ? profilesMap[item.userJid].username : '-'}</td>
+                <td>
+                  <UserRef profile={profilesMap[item.userJid]} />
+                </td>
                 <td className="col-prob">{problemAliasesMap[item.problemJid] || '-'}</td>
                 {/* TODO: Add item number, dont know how to do this yet. */}
                 <td className="col-item-num">{Math.round(Math.random() * 50 + 1)}</td>
