@@ -7,15 +7,10 @@ export type ItemStatementCardProps = Item & { className?: string };
 
 export class ItemStatementCard extends React.PureComponent<ItemStatementCardProps> {
   render() {
-    try {
-      const config: { statement: string } = JSON.parse(this.props.config);
-      return (
-        <Card className={this.props.className}>
-          <HtmlText>{config.statement}</HtmlText>
-        </Card>
-      );
-    } catch (error) {
-      return <React.Fragment />;
-    }
+    return (
+      <Card className={this.props.className}>
+        <HtmlText>{this.props.config.statement}</HtmlText>
+      </Card>
+    );
   }
 }
