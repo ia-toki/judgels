@@ -18,6 +18,7 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.bundle.Item;
+import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.problem.ProblemClient;
@@ -43,6 +44,7 @@ import org.slf4j.MarkerFactory;
 
 public class ContestItemSubmissionResource implements ContestItemSubmissionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContestItemSubmissionResource.class);
+    private static final Marker ITEM_SUBMISSION_MARKER = MarkerFactory.getMarker("ITEM_SUBMISSION");
 
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
@@ -164,19 +166,34 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
         checkFound(item);
 
-        Grading grading = itemSubmissionGraderRegistry
-                .get(item.get().getType())
-                .grade(item.get(), data.getAnswer());
+        if (item.get().getType().equals(ItemType.STATEMENT)) {
+            LOGGER.debug(
+                    "Answer submitted for a STATEMENT item by {} for item {} in problem {} and contest {};"
+                    + " submission will be ignored.",
+                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid()
+            );
+        } else if (data.getAnswer().trim().isEmpty()) {
+            submissionStore.deleteSubmission(data, actorJid);
 
-        submissionStore.upsertSubmission(data, grading, actorJid);
+            LOGGER.info(
+                    ITEM_SUBMISSION_MARKER,
+                    "Empty answer submitted by {} for item {} in problem {} and contest {}",
+                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid()
+            );
+        } else {
+            Grading grading = itemSubmissionGraderRegistry
+                    .get(item.get().getType())
+                    .grade(item.get(), data.getAnswer());
 
-        Marker itemSubmissionMarker = MarkerFactory.getMarker("ITEM_SUBMISSION");
-        LOGGER.info(
-                itemSubmissionMarker,
-                "{} submitted answer '{}' for item {} in problem {} and contest {}, verdict {}, score {}",
-                actorJid, data.getAnswer(), data.getItemJid(), data.getProblemJid(), data.getContestJid(),
-                grading.getVerdict(), grading.getScore()
-        );
+            submissionStore.upsertSubmission(data, grading, actorJid);
+
+            LOGGER.info(
+                    ITEM_SUBMISSION_MARKER,
+                    "Answer '{}' submitted by {} for item {} in problem {} and contest {}, verdict {}, score {}",
+                    data.getAnswer(), actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid(),
+                    grading.getVerdict(), grading.getScore()
+            );
+        }
     }
 
     @Override

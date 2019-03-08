@@ -68,6 +68,15 @@ public class ContestItemSubmissionStore {
         }
     }
 
+    public void deleteSubmission(ContestItemSubmissionData data, String userJid) {
+        Optional<ContestBundleItemSubmissionModel> maybeModel = submissionDao
+                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
+                        data.getContestJid(), data.getProblemJid(), data.getItemJid(), userJid);
+        if (maybeModel.isPresent()) {
+            submissionDao.delete(maybeModel.get());
+        }
+    }
+
     public List<ItemSubmission> getLatestSubmissionsByUserInContest(String containerJid, String userJid) {
         List<ContestBundleItemSubmissionModel> models =
                 submissionDao.selectAllByContainerJidAndCreatedBy(containerJid, userJid);
