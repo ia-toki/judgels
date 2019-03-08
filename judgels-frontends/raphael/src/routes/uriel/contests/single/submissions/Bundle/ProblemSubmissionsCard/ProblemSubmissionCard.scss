@@ -1,8 +1,19 @@
+@import '../../../../../../../styles/table';
+
 .contest-bundle-problem-submission {
     margin-top: 15px;
     text-align: left;
     .submission-table {
         margin-top: 20px;
         border: solid 1px #a0a0a0;
+        .col-item-num {
+            width: 50px;
+        }
+        .col-verdict {
+            width: 60px;
+        }
+        .col-time {
+            width: 200px;
+        }
     }
 }

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Card, H3, HTMLTable } from '@blueprintjs/core';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
-import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
+import { FormattedRelative } from 'react-intl';
 
 import './ProblemSubmissionCard.css';
 
@@ -22,11 +22,15 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
 
   const renderSingleSubmission = (submission: ItemSubmission, itemNum: number) => (
     <tr key={submission.itemJid}>
-      <td>{itemNum + 1}</td>
+      <td className="col-item-num">{itemNum + 1}</td>
       <td>{renderAnswer(submission.answer)}</td>
-      {canManage && <td>{submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}</td>}
-      <td>
-        <FormattedDate value={submission.time} />
+      {canManage && (
+        <td className="col-verdict">
+          {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
+        </td>
+      )}
+      <td className="col-time">
+        <FormattedRelative value={submission.time} />
       </td>
     </tr>
   );
@@ -34,13 +38,13 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
   return (
     <Card className="contest-bundle-problem-submission">
       <H3>{alias}</H3>
-      <HTMLTable className="submission-table" bordered striped>
+      <HTMLTable striped className="table-list-condensed submission-table">
         <thead>
           <tr>
-            <th>Item Number</th>
+            <th className="col-item-num">Item Number</th>
             <th>Answer</th>
-            {canManage && <th>Verdict</th>}
-            <th>Time</th>
+            {canManage && <th className="col-verdict">Verdict</th>}
+            <th className="col-time">Time</th>
           </tr>
         </thead>
         <tbody>{submissions.map(renderSingleSubmission)}</tbody>
