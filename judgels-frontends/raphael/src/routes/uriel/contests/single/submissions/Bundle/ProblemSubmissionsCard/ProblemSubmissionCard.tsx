@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Card, H3, HTMLTable } from '@blueprintjs/core';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
-import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
+import { FormattedRelative } from 'react-intl';
 
 import './ProblemSubmissionCard.css';
 
@@ -26,7 +26,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
       <td>{renderAnswer(submission.answer)}</td>
       {canManage && <td>{submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}</td>}
       <td>
-        <FormattedDate value={submission.time} />
+        <FormattedRelative value={submission.time} />
       </td>
     </tr>
   );

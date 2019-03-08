@@ -8,8 +8,8 @@ import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
 import { AppState } from 'modules/store';
 import { connect } from 'react-redux';
 import { Contest } from 'modules/api/uriel/contest';
-import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
+import { FormattedRelative } from 'react-intl';
 
 import './ContestSubmissionsPage.css';
 
@@ -78,7 +78,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
                 <td>{item.answer || '-'}</td>
                 {canManage && <td>{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>}
                 <td>
-                  <FormattedDate value={item.time} showSeconds />
+                  <FormattedRelative value={item.time} />
                 </td>
                 <td className="actions">
                   <Link to={`/contests/${contest.slug}/submissions/users/${item.userJid}`}>
