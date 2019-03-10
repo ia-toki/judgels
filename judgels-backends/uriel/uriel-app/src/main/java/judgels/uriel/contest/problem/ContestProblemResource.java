@@ -111,7 +111,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         List<ContestProblem> problems = problemStore.getProblems(contestJid);
         Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
-        Map<String, ProblemInfo> problemsMap = problemClient.getProblemInfos(problemJids);
+        Map<String, ProblemInfo> problemsMap = problemClient.getProblemInfoByProblemJid(problemJids);
         Map<String, Long> totalSubmissionsMap =
                 submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
 

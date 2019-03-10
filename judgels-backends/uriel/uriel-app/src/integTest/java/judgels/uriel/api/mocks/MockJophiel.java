@@ -137,6 +137,14 @@ public class MockJophiel {
         mockJophiel.stubFor(post(urlPathEqualTo("/api/v2/profiles/"))
                 .willReturn(aResponse().withStatus(200).withTransformers("get-profiles")));
 
+        mockJophiel.stubFor(get("/api/v2/profiles/" + CONTESTANT_JID + "/basic")
+                .willReturn(okForJson(ImmutableMap.of(
+                        "name", "Contestant",
+                        "username", "contestant",
+                        "country", "Indonesia",
+                        "rating", 1500
+                ))));
+
         return mockJophiel;
     }
 

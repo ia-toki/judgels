@@ -79,7 +79,6 @@ public class BundleScoreboardProcessorTests {
             List<ItemSubmission> submissions = ImmutableList.of(
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
                             .jid("JIDS-1")
                             .itemJid("JIDITEM-1")
                             .answer("d")
@@ -128,7 +127,6 @@ public class BundleScoreboardProcessorTests {
             List<ItemSubmission> submissions = ImmutableList.of(
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
                             .jid("JIDS-1")
                             .itemJid("JIDITEM-1")
                             .answer("d")
@@ -177,7 +175,6 @@ public class BundleScoreboardProcessorTests {
             List<ItemSubmission> submissions = ImmutableList.of(
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
                             .jid("JIDS-1")
                             .itemJid("JIDITEM-1")
                             .answer("d")
@@ -191,7 +188,6 @@ public class BundleScoreboardProcessorTests {
                             .build(),
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(5)
                             .jid("JIDS-5")
                             .itemJid("JIDITEM-1")
                             .answer("b")
@@ -205,7 +201,6 @@ public class BundleScoreboardProcessorTests {
                             .build(),
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(3)
                             .jid("JIDS-3")
                             .itemJid("JIDITEM-2")
                             .answer("x")
@@ -219,7 +214,6 @@ public class BundleScoreboardProcessorTests {
                             .build(),
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(4)
                             .jid("JIDS-4")
                             .itemJid("JIDITEM-2")
                             .answer("a")
@@ -272,7 +266,6 @@ public class BundleScoreboardProcessorTests {
                 List<ItemSubmission> submissions = ImmutableList.of(
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(1)
                                 .jid("JIDS-1")
                                 .itemJid("JIDITEM-1")
                                 .answer("d")
@@ -286,7 +279,6 @@ public class BundleScoreboardProcessorTests {
                                 .build(),
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(5)
                                 .jid("JIDS-5")
                                 .itemJid("JIDITEM-1")
                                 .answer("b")
@@ -300,7 +292,6 @@ public class BundleScoreboardProcessorTests {
                                 .build(),
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(3)
                                 .jid("JIDS-3")
                                 .itemJid("JIDITEM-2")
                                 .answer("x")
@@ -350,7 +341,6 @@ public class BundleScoreboardProcessorTests {
                 List<ItemSubmission> submissions = ImmutableList.of(
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(1)
                                 .jid("JIDS-1")
                                 .itemJid("JIDITEM-1")
                                 .answer("d")
@@ -364,7 +354,6 @@ public class BundleScoreboardProcessorTests {
                                 .build(),
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(5)
                                 .jid("JIDS-5")
                                 .itemJid("JIDITEM-1")
                                 .answer("b")

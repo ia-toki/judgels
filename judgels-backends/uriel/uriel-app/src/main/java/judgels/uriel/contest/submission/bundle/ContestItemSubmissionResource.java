@@ -3,10 +3,15 @@ package judgels.uriel.contest.submission.bundle;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,11 +19,14 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
+import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.problem.ProblemClient;
@@ -31,7 +39,7 @@ import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionData;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionService;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionsResponse;
-import judgels.uriel.api.contest.submission.bundle.ContestantAnswersResponse;
+import judgels.uriel.api.contest.submission.bundle.ContestantAnswerSummaryResponse;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
@@ -220,10 +228,11 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestantAnswersResponse getLatestContestantAnswersInContest(
+    public ContestantAnswerSummaryResponse getAnswerSummaryForContestant(
             AuthHeader authHeader,
             String contestJid,
-            Optional<String> userJid) {
+            Optional<String> userJid,
+            Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -240,22 +249,63 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             submissions = submissions.stream().map(ItemSubmission::withoutGrading).collect(Collectors.toList());
         }
 
-        Set<String> userJids = submissions.stream().map(ItemSubmission::getUserJid).collect(Collectors.toSet());
-        Set<String> problemJids = submissions.stream().map(ItemSubmission::getProblemJid).collect(Collectors.toSet());
+        Map<String, ItemSubmission> submissionsByItemJid = submissions.stream()
+                .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
+
+        List<String> bundleProblemJidsSortedByAlias = problemStore.getProblemJids(contestJid).stream()
+                .filter(problemJid -> problemClient.getProblemInfo(problemJid).getType().equals(ProblemType.BUNDLE))
+                .collect(Collectors.toList());
+        Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
+                contest.getJid(), ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
+
+        Map<String, Integer> itemNumberByItemJid = new HashMap<>();
+        Map<String, List<ItemSubmission>> submissionsByProblemJid = new HashMap<>();
+        for (String problemJid : bundleProblemJidsSortedByAlias) {
+            ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(problemJid, language);
+            List<Item> items = worksheet.getItems().stream()
+                    .filter(item -> !item.getType().equals(ItemType.STATEMENT))
+                    .collect(Collectors.toList());
+            items.sort(Comparator.comparingInt(item -> item.getNumber().orElse(0)));
+
+            List<ItemSubmission> problemSubmissions = new ArrayList<>();
+            for (Item item : items) {
+                problemSubmissions.add(submissionsByItemJid.computeIfAbsent(
+                        item.getJid(),
+                        itemJid -> new ItemSubmission.Builder()
+                                .jid("")
+                                .containerJid(contestJid)
+                                .problemJid(problemJid)
+                                .itemJid(itemJid)
+                                .answer("")
+                                .userJid("")
+                                .time(Instant.EPOCH)
+                                .build()
+                ));
+
+                itemNumberByItemJid.put(item.getJid(), item.getNumber().orElse(0));
+            }
+            submissionsByProblemJid.put(problemJid, problemSubmissions);
+        }
+
+        Map<String, String> problemNamesByProblemJid = problemClient.getProblemNamesByProblemJid(
+                ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
+
+        BasicProfile profile = profileService.getBasicProfile(viewedUserJid);
 
         ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
                 .canSupervise(canSupervise)
                 .canManage(canManage)
-                .userJids(userJids)
-                .problemJids(problemJids)
+                .userJids(ImmutableList.of(viewedUserJid))
+                .problemJids(bundleProblemJidsSortedByAlias)
                 .build();
 
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
-
-        return new ContestantAnswersResponse.Builder()
-                .answers(submissions.stream().collect(Collectors.groupingBy(ItemSubmission::getProblemJid)))
+        return new ContestantAnswerSummaryResponse.Builder()
+                .profile(profile)
                 .config(config)
-                .problemAliasesMap(problemAliasesMap)
+                .submissionsByProblemJid(submissionsByProblemJid)
+                .problemAliasesByProblemJid(problemAliasesByProblemJid)
+                .problemNamesByProblemJid(problemNamesByProblemJid)
+                .itemNumberByItemJid(itemNumberByItemJid)
                 .build();
     }
 }

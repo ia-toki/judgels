@@ -1,4 +1,4 @@
-package judgels.uriel.api.contest.submission;
+package judgels.uriel.api.contest.submission.programming;
 
 import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
 import static java.util.Optional.empty;
@@ -35,8 +35,7 @@ import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.problem.ContestProblemData;
 import judgels.uriel.api.contest.problem.ContestProblemService;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
-import judgels.uriel.api.contest.submission.programming.ContestSubmissionService;
-import judgels.uriel.api.contest.submission.programming.ContestSubmissionsResponse;
+import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.MultiPart;

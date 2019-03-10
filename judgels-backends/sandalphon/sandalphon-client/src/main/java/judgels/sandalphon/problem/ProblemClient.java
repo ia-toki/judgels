@@ -1,6 +1,8 @@
 package judgels.sandalphon.problem;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -47,14 +49,14 @@ public class ProblemClient {
         return clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
     }
 
-    public Map<String, ProblemInfo> getProblemInfos(Set<String> problemJids) {
+    public Map<String, ProblemInfo> getProblemInfoByProblemJid(Set<String> problemJids) {
         return problemJids.isEmpty()
                 ? ImmutableMap.of()
                 : clientProblemService.getProblems(sandalphonClientAuthHeader, problemJids);
     }
 
-    public Map<String, String> getProblemNamesByJids(Set<String> problemJids, Optional<String> language) {
-        return getProblemInfos(problemJids)
+    public Map<String, String> getProblemNamesByProblemJid(Set<String> problemJids, Optional<String> language) {
+        return getProblemInfoByProblemJid(problemJids)
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
@@ -69,6 +71,17 @@ public class ProblemClient {
         return worksheet.getItems().stream()
                 .filter(item -> itemJid.equals(item.getJid()))
                 .findAny();
+    }
+
+    public Map<String, String> getItemMetaByItemJid(Set<String> problemJids) {
+        Map<String, String> metaByItemJid = new HashMap<>();
+        for (String problemJid : problemJids) {
+            List<Item> items = getBundleProblemWorksheet(problemJid, Optional.empty()).getItems();
+            for (Item item : items) {
+                metaByItemJid.put(item.getJid(), item.getMeta());
+            }
+        }
+        return metaByItemJid;
     }
 
     public ProblemSubmissionConfig getProgrammingProblemSubmissionConfig(String problemJid) {

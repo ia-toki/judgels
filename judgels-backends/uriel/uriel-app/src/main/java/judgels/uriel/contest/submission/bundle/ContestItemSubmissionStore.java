@@ -107,7 +107,6 @@ public class ContestItemSubmissionStore {
 
     private static ItemSubmission fromModel(ContestBundleItemSubmissionModel model) {
         return new ItemSubmission.Builder()
-                .id(model.id)
                 .jid(model.jid)
                 .containerJid(model.containerJid)
                 .problemJid(model.problemJid)
