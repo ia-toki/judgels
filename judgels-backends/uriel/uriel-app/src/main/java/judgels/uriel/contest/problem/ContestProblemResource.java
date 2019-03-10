@@ -78,7 +78,7 @@ public class ContestProblemResource implements ContestProblemService {
         checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
 
-        Map<String, String> slugToJidMap = problemClient.translateAllowedSlugsToProblemJids(actorJid, slugs);
+        Map<String, String> slugToJidMap = problemClient.translateAllowedSlugsToJids(actorJid, slugs);
 
         Set<String> notAllowedSlugs = data.stream()
                 .map(ContestProblemData::getSlug)
@@ -111,7 +111,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         List<ContestProblem> problems = problemStore.getProblems(contestJid);
         Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
-        Map<String, ProblemInfo> problemsMap = problemClient.getProblemInfoByProblemJid(problemJids);
+        Map<String, ProblemInfo> problemsMap = problemClient.getProblems(problemJids);
         Map<String, Long> totalSubmissionsMap =
                 submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
 
@@ -142,7 +142,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = problemClient.getProblemInfo(problemJid);
+        ProblemInfo problemInfo = problemClient.getProblem(problemJid);
 
         if (problemInfo.getType() != ProblemType.PROGRAMMING) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());
@@ -194,7 +194,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = problemClient.getProblemInfo(problemJid);
+        ProblemInfo problemInfo = problemClient.getProblem(problemJid);
 
         if (problemInfo.getType() != ProblemType.BUNDLE) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());

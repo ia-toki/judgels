@@ -7,8 +7,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,7 +17,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
@@ -253,44 +250,30 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
 
         List<String> bundleProblemJidsSortedByAlias = problemStore.getProblemJids(contestJid).stream()
-                .filter(problemJid -> problemClient.getProblemInfo(problemJid).getType().equals(ProblemType.BUNDLE))
+                .filter(problemJid -> problemClient.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
                 .collect(Collectors.toList());
         Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
                 contest.getJid(), ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
 
-        Map<String, Integer> itemNumberByItemJid = new HashMap<>();
-        Map<String, List<ItemSubmission>> submissionsByProblemJid = new HashMap<>();
+        Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         for (String problemJid : bundleProblemJidsSortedByAlias) {
             ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(problemJid, language);
             List<Item> items = worksheet.getItems().stream()
                     .filter(item -> !item.getType().equals(ItemType.STATEMENT))
                     .collect(Collectors.toList());
-            items.sort(Comparator.comparingInt(item -> item.getNumber().orElse(0)));
+            items.sort(Comparator.comparingInt(item -> item.getNumber().get()));
 
-            List<ItemSubmission> problemSubmissions = new ArrayList<>();
-            for (Item item : items) {
-                problemSubmissions.add(submissionsByItemJid.computeIfAbsent(
-                        item.getJid(),
-                        itemJid -> new ItemSubmission.Builder()
-                                .jid("")
-                                .containerJid(contestJid)
-                                .problemJid(problemJid)
-                                .itemJid(itemJid)
-                                .answer("")
-                                .userJid("")
-                                .time(Instant.EPOCH)
-                                .build()
-                ));
-
-                itemNumberByItemJid.put(item.getJid(), item.getNumber().orElse(0));
-            }
-            submissionsByProblemJid.put(problemJid, problemSubmissions);
+            itemJidsByProblemJid.put(
+                    problemJid,
+                    items.stream().map(Item::getJid).collect(Collectors.toList())
+            );
         }
 
-        Map<String, String> problemNamesByProblemJid = problemClient.getProblemNamesByProblemJid(
+        Map<String, String> problemNamesByProblemJid = problemClient.getProblemNames(
                 ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
 
-        BasicProfile profile = profileService.getBasicProfile(viewedUserJid);
+        Profile profile = profileService.getProfiles(
+                ImmutableSet.of(viewedUserJid), contest.getBeginTime()).get(viewedUserJid);
 
         ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
                 .canSupervise(canSupervise)
@@ -302,10 +285,10 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         return new ContestantAnswerSummaryResponse.Builder()
                 .profile(profile)
                 .config(config)
-                .submissionsByProblemJid(submissionsByProblemJid)
-                .problemAliasesByProblemJid(problemAliasesByProblemJid)
-                .problemNamesByProblemJid(problemNamesByProblemJid)
-                .itemNumberByItemJid(itemNumberByItemJid)
+                .itemJidsByProblemJid(itemJidsByProblemJid)
+                .submissionsByItemJid(submissionsByItemJid)
+                .problemAliasesMap(problemAliasesByProblemJid)
+                .problemNamesMap(problemNamesByProblemJid)
                 .build();
     }
 }

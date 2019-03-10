@@ -24,7 +24,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
                 .config(new MultipleChoiceItemConfig.Builder()
                         .statement("ini soal 1")
                         .score(4)
-                        .penalty(1)
+                        .penalty(-1)
                         .addChoices(
                                 new MultipleChoiceItemConfig.Choice.Builder()
                                         .alias("a")

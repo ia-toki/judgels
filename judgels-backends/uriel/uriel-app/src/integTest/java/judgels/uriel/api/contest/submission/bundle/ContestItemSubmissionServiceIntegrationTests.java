@@ -10,6 +10,7 @@ import static judgels.uriel.api.mocks.MockSandalphon.PROBLEM_3_SLUG;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -117,33 +118,30 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         assertThat(summaryResult.getProfile().getUsername()).isEqualTo("contestant");
 
-        assertThat(summaryResult.getItemNumberByItemJid()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
-        assertThat(summaryResult.getItemNumberByItemJid().get("JIDITEMtOoiXuIgPcD1oUsMzvbP")).isEqualTo(2);
+        assertThat(summaryResult.getProblemAliasesMap()).containsKey("problemJid3");
+        assertThat(summaryResult.getProblemAliasesMap().get("problemJid3")).isEqualTo("B");
 
-        assertThat(summaryResult.getProblemAliasesByProblemJid()).containsKey("problemJid3");
-        assertThat(summaryResult.getProblemAliasesByProblemJid().get("problemJid3")).isEqualTo("B");
-
-        assertThat(summaryResult.getProblemNamesByProblemJid()).containsKey("problemJid3");
-        assertThat(summaryResult.getProblemNamesByProblemJid().get("problemJid3")).isEqualTo("Problem 3");
+        assertThat(summaryResult.getProblemNamesMap()).containsKey("problemJid3");
+        assertThat(summaryResult.getProblemNamesMap().get("problemJid3")).isEqualTo("Problem 3");
 
         assertThat(summaryResult.getConfig().getCanSupervise()).isFalse();
         assertThat(summaryResult.getConfig().getCanManage()).isFalse();
 
-        assertThat(summaryResult.getSubmissionsByProblemJid()).hasSize(1);
-        assertThat(summaryResult.getSubmissionsByProblemJid()).containsKey("problemJid3");
+        assertThat(summaryResult.getSubmissionsByItemJid()).hasSize(1);
+        assertThat(summaryResult.getSubmissionsByItemJid()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
 
-        problemSubmissions = summaryResult.getSubmissionsByProblemJid().get("problemJid3");
-        assertThat(problemSubmissions).hasSize(2);
+        itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(itemSubmissionResult.getJid()).isNotEmpty();
+        assertThat(itemSubmissionResult.getAnswer()).isEqualTo("b");
+        assertThat(itemSubmissionResult.getGrading()).isEmpty();
 
-        assertThat(problemSubmissions.get(0).getItemJid()).isEqualTo("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
-        assertThat(problemSubmissions.get(0).getJid()).isEmpty();
-        assertThat(problemSubmissions.get(0).getAnswer()).isEmpty();
-        assertThat(problemSubmissions.get(0).getGrading()).isEmpty();
-
-        assertThat(problemSubmissions.get(1).getItemJid()).isEqualTo("JIDITEMtOoiXuIgPcD1oUsMzvbP");
-        assertThat(problemSubmissions.get(1).getJid()).isNotEmpty();
-        assertThat(problemSubmissions.get(1).getAnswer()).isEqualTo("b");
-        assertThat(problemSubmissions.get(1).getGrading()).isEmpty();
+        assertThat(summaryResult.getItemJidsByProblemJid()).hasSize(1);
+        assertThat(summaryResult.getItemJidsByProblemJid()).isEqualTo(
+                ImmutableMap.of(
+                    "problemJid3", ImmutableList.of("JIDITEMPeKuqUA0Q7zvJjTQXXVD", "JIDITEMtOoiXuIgPcD1oUsMzvbP")
+                )
+        );
 
         summaryResult = submissionService.getAnswerSummaryForContestant(
                 MANAGER_HEADER,
@@ -154,33 +152,23 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         assertThat(summaryResult.getProfile().getUsername()).isEqualTo("contestant");
 
-        assertThat(summaryResult.getItemNumberByItemJid()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
-        assertThat(summaryResult.getItemNumberByItemJid().get("JIDITEMtOoiXuIgPcD1oUsMzvbP")).isEqualTo(2);
+        assertThat(summaryResult.getProblemAliasesMap()).containsKey("problemJid3");
+        assertThat(summaryResult.getProblemAliasesMap().get("problemJid3")).isEqualTo("B");
 
-        assertThat(summaryResult.getProblemAliasesByProblemJid()).containsKey("problemJid3");
-        assertThat(summaryResult.getProblemAliasesByProblemJid().get("problemJid3")).isEqualTo("B");
-
-        assertThat(summaryResult.getProblemNamesByProblemJid()).containsKey("problemJid3");
-        assertThat(summaryResult.getProblemNamesByProblemJid().get("problemJid3")).isEqualTo("Problem 3");
+        assertThat(summaryResult.getProblemNamesMap()).containsKey("problemJid3");
+        assertThat(summaryResult.getProblemNamesMap().get("problemJid3")).isEqualTo("Problem 3");
 
         assertThat(summaryResult.getConfig().getCanSupervise()).isTrue();
         assertThat(summaryResult.getConfig().getCanManage()).isTrue();
 
-        assertThat(summaryResult.getSubmissionsByProblemJid()).hasSize(1);
-        assertThat(summaryResult.getSubmissionsByProblemJid()).containsKey("problemJid3");
+        assertThat(summaryResult.getSubmissionsByItemJid()).hasSize(1);
+        assertThat(summaryResult.getSubmissionsByItemJid()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
 
-        problemSubmissions = summaryResult.getSubmissionsByProblemJid().get("problemJid3");
-        assertThat(problemSubmissions).hasSize(2);
-
-        assertThat(problemSubmissions.get(0).getItemJid()).isEqualTo("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
-        assertThat(problemSubmissions.get(0).getJid()).isEmpty();
-        assertThat(problemSubmissions.get(0).getAnswer()).isEmpty();
-        assertThat(problemSubmissions.get(0).getGrading()).isEmpty();
-
-        assertThat(problemSubmissions.get(1).getItemJid()).isEqualTo("JIDITEMtOoiXuIgPcD1oUsMzvbP");
-        assertThat(problemSubmissions.get(1).getJid()).isNotEmpty();
-        assertThat(problemSubmissions.get(1).getAnswer()).isEqualTo("b");
-        assertThat(problemSubmissions.get(1).getGrading().get()).isEqualTo(
+        itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(itemSubmissionResult.getJid()).isNotEmpty();
+        assertThat(itemSubmissionResult.getAnswer()).isEqualTo("b");
+        assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
                 new Grading.Builder().verdict(Verdict.WRONG_ANSWER).score(-1).build());
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
@@ -233,22 +221,22 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
                 Optional.empty()
         );
 
-        assertThat(summaryResult.getSubmissionsByProblemJid()).hasSize(1);
-        assertThat(summaryResult.getSubmissionsByProblemJid()).containsKey("problemJid3");
+        assertThat(summaryResult.getSubmissionsByItemJid()).hasSize(2);
+        assertThat(summaryResult.getSubmissionsByItemJid()).containsKey("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
+        assertThat(summaryResult.getSubmissionsByItemJid()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
 
-        problemSubmissions = summaryResult.getSubmissionsByProblemJid().get("problemJid3");
-        assertThat(problemSubmissions).hasSize(2);
-
-        assertThat(problemSubmissions.get(0).getItemJid()).isEqualTo("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
-        assertThat(problemSubmissions.get(0).getJid()).isNotEmpty();
-        assertThat(problemSubmissions.get(0).getAnswer()).isEqualTo("a");
-        assertThat(problemSubmissions.get(0).getGrading().get()).isEqualTo(
+        itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
+        assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
+        assertThat(itemSubmissionResult.getJid()).isNotEmpty();
+        assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
+        assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
                 new Grading.Builder().verdict(Verdict.WRONG_ANSWER).score(0).build());
 
-        assertThat(problemSubmissions.get(1).getItemJid()).isEqualTo("JIDITEMtOoiXuIgPcD1oUsMzvbP");
-        assertThat(problemSubmissions.get(1).getJid()).isNotEmpty();
-        assertThat(problemSubmissions.get(1).getAnswer()).isEqualTo("a");
-        assertThat(problemSubmissions.get(1).getGrading().get()).isEqualTo(
+        itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(itemSubmissionResult.getJid()).isNotEmpty();
+        assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
+        assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
                 new Grading.Builder().verdict(Verdict.ACCEPTED).score(4).build());
     }
 }

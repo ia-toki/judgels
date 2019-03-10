@@ -194,7 +194,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         ContestProblem contestProblem =
                 checkFound(problemStore.getProblem(contest.getJid(), submission.getProblemJid()));
-        ProblemInfo problem = problemClient.getProblemInfo(contestProblem.getProblemJid());
+        ProblemInfo problem = problemClient.getProblem(contestProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
         Profile profile = checkFound(Optional.ofNullable(

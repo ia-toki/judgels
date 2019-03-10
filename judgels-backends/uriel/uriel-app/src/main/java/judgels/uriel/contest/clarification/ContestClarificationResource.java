@@ -124,7 +124,7 @@ public class ContestClarificationResource implements ContestClarificationService
                 : profileService.getProfiles(userJids, contest.getBeginTime());
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
-        Map<String, String> problemNamesMap = problemClient.getProblemNamesByProblemJid(problemJids, language);
+        Map<String, String> problemNamesMap = problemClient.getProblemNames(problemJids, language);
 
         return new ContestClarificationsResponse.Builder()
                 .data(clarifications)
