@@ -73,6 +73,7 @@ PROJECTS = [
     ':uriel',
     ':jerahmeel',
     ':gabriel',
+    ':gabriel-blackbox',
     ':raphael'
 ]
 
@@ -140,7 +141,10 @@ def check(branch_to_compare):
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael lint')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
-            elif project == ':sandalphon' or project == ':jerahmeel':
+            elif project in [':sandalphon', ':jerahmeel', ':gabriel-blackbox']:
+                print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
+            elif project == ':gabriel':
+                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
                 print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
             else:
                 print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))

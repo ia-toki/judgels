@@ -11,12 +11,12 @@ import org.iatoki.judgels.gabriel.blackbox.TestCase;
 import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.configs.FunctionalWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public final class FunctionalWithSubtasksGradingEngineTest extends BlackBoxGradingEngineTest {
     private final FunctionalWithSubtasksGradingEngine engine;
