@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Item, ItemType } from 'modules/api/sandalphon/problemBundle';
-import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleChoiceCard';
 
 import './ProblemStatementCard.css';
@@ -8,6 +7,7 @@ import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { ProblemStatement } from 'modules/api/sandalphon/problem';
 import { Divider } from '@blueprintjs/core';
 import { HtmlText } from 'components/HtmlText/HtmlText';
+import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
 
 export interface ProblemStatementCardProps {
   items: Item[];
@@ -19,13 +19,24 @@ export interface ProblemStatementCardProps {
 
 export class ProblemStatementCard extends React.Component<ProblemStatementCardProps> {
   generateOnAnswer = (itemJid: string) => {
-    return (choice?: string) => {
-      this.props.onAnswerItem(itemJid, choice || '');
+    return (answer?: string) => {
+      this.props.onAnswerItem(itemJid, answer || '');
     };
   };
 
   renderStatement = (item: Item) => {
-    return <ItemStatementCard className="bundle-problem-statement-item" key={item.meta} {...item} />;
+    const latestSubmission = this.props.latestSubmission;
+    const latestAnswer = latestSubmission[item.jid];
+    const initialAnswer = latestAnswer && latestAnswer.answer;
+    return (
+      <ItemStatementCard
+        onSubmit={this.generateOnAnswer(item.jid)}
+        className="bundle-problem-statement-item"
+        key={item.meta}
+        {...item}
+        initialAnswer={initialAnswer}
+      />
+    );
   };
 
   renderMultipleChoice = (item: Item) => {
