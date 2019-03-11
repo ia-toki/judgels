@@ -49,7 +49,10 @@ public class MockSandalphon {
 
     private MockSandalphon() {}
 
+    // CHECKSTYLE.OFF: MethodLengthCheck
     public static WireMockServer mockSandalphon() {
+    // CHECKSTYLE.ON: MethodLengthCheck
+
         WireMockServer mockSandalphon = new WireMockServer(wireMockConfig()
                 .port(SANDALPHON_PORT)
                 .extensions(new TranslateAllowedSlugToJidsTransformer()));
@@ -192,6 +195,29 @@ public class MockSandalphon {
                         + "                    { \"alias\": \"b\", \"content\": \"pilihan b\", \"isCorrect\": false }"
                         + "                ],"
                         + "                \"statement\": \"<p>ini soal kedua</p>\\r\\n\""
+                        + "            }"
+                        + "        },"
+                        + "        {"
+                        + "            \"jid\": \"JIDITEMcD1oSDFJLadFSsMddfsf\","
+                        + "            \"type\": \"SHORT_ANSWER\","
+                        + "            \"number\": 3,"
+                        + "            \"meta\": \"3\","
+                        + "            \"config\": {"
+                        + "                \"score\": 4,"
+                        + "                \"penalty\": -1,"
+                        + "                \"inputValidationRegex\": \"\\\\d+\","
+                        + "                \"gradingRegex\": \"123\","
+                        + "                \"statement\": \"<p>ini soal short answer</p>\\r\\n\""
+                        + "            }"
+                        + "        },"
+                        + "        {"
+                        + "            \"jid\": \"JIDITEMkhUulUkbUkYGBKYkfLHUh\","
+                        + "            \"type\": \"ESSAY\","
+                        + "            \"number\": 4,"
+                        + "            \"meta\": \"4\","
+                        + "            \"config\": {"
+                        + "                \"score\": 12,"
+                        + "                \"statement\": \"<p>buat program hello world</p>\\r\\n\""
                         + "            }"
                         + "        }"
                         + "    ]"
