@@ -8,8 +8,6 @@ import { selectContest } from '../../../../modules/contestSelectors';
 import ContestProgrammingProblemPage from './Programming/ContestProblemPage';
 import ContestBundleProblemPage from './Bundle/ContestProblemPage';
 
-import './ContestProblemPage.css';
-
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
 }

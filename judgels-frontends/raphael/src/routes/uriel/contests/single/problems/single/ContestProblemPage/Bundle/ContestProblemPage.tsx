@@ -137,7 +137,7 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
   const mapDispatchToProps = {
     onGetProblemWorksheet: contestProblemActions.getBundleProblemWorksheet,
     onCreateSubmission: contestSubmissionActions.createItemSubmission,
-    onGetBundleLatestSubmission: contestSubmissionActions.getLatestSubmission,
+    onGetLatestSubmission: contestSubmissionActions.getLatestSubmission,
     onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };

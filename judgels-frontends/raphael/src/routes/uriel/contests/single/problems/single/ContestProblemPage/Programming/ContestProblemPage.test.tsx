@@ -26,7 +26,7 @@ describe('ContestProblemPage', () => {
 
   beforeEach(() => {
     contestProblemActions = {
-      getProblemWorksheet: jest.fn().mockReturnValue(() =>
+      onGetProblemWorksheet: jest.fn().mockReturnValue(() =>
         Promise.resolve({
           problem: {
             problemJid,
