@@ -54,7 +54,9 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
 
   return (
     <ContentCard className="contest-bundle-problem-submission">
-      <H3>{alias}: {name}</H3>
+      <H3>
+        {alias}: {name}
+      </H3>
       <HTMLTable striped className="table-list-condensed submission-table">
         <thead>
           <tr>

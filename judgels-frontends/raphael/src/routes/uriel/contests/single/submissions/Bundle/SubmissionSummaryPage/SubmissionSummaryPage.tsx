@@ -9,7 +9,6 @@ import { ContestantAnswerSummaryResponse } from 'modules/api/uriel/contestSubmis
 import { ProblemSubmissionCard, ProblemSubmissionCardProps } from '../ProblemSubmissionsCard/ProblemSubmissionCard';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 
-
 import './SubmissionSummaryPage.css';
 
 interface SubmissionSummaryPageRoute {
