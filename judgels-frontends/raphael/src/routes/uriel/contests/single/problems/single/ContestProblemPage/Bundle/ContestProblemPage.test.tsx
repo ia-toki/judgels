@@ -8,59 +8,68 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { webPrefsReducer } from 'modules/webPrefs/webPrefsReducer';
-import { preferredGradingLanguage } from 'modules/api/gabriel/language';
 import { ContestProblemStatus } from 'modules/api/uriel/contestProblem';
 import { contest, contestJid, problemJid } from 'fixtures/state';
 
 import { createContestProblemPage } from './ContestProblemPage';
-import { contestReducer, PutContest } from '../../../../modules/contestReducer';
+import { contestReducer, PutContest } from '../../../../../modules/contestReducer';
 import createMemoryHistory from 'history/createMemoryHistory';
 import { MemoryHistory } from 'history';
+import { ContestStyle } from 'modules/api/uriel/contest';
+import { ItemType } from 'modules/api/sandalphon/problemBundle';
 
-describe('ContestProblemPage', () => {
+describe('BundleContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
-  let contestProgrammingSubmissionActions: jest.Mocked<any>;
-  let contestBundleSubmissionActions: jest.Mocked<any>;
+  let contestSubmissionActions: jest.Mocked<any>;
   let breadcrumbsActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
   let history: MemoryHistory;
 
   beforeEach(() => {
     contestProblemActions = {
-      getProgrammingProblemWorksheet: jest.fn().mockReturnValue(() =>
+      getBundleProblemWorksheet: jest.fn().mockReturnValue(() =>
         Promise.resolve({
+          defaultLanguage: 'fakelang',
+          languages: ['fakelang'],
           problem: {
             problemJid,
             alias: 'C',
             status: ContestProblemStatus.Open,
             submissionsLimit: 0,
           },
-          totalSubmissions: 2,
+          totalSubmissions: 0,
           worksheet: {
             statement: {
-              name: 'Problem',
-              text: 'Lorem ipsum',
+              name: 'Fake Name',
+              text: 'Lorem ipsum dos color sit amet',
             },
-            limits: {
-              timeLimit: 2000,
-              memoryLimit: 65536,
-            },
-            submissionConfig: {
-              sourceKeys: { encoder: 'Encoder', decoder: 'Decoder' },
-              gradingEngine: 'Batch',
-              gradingLanguageRestriction: { allowedLanguageNames: [] },
-            },
+            reasonNotAllowedToSubmit: 'no reason',
+            items: [
+              {
+                jid: 'fakeitemjid',
+                type: ItemType.MultipleChoice,
+                meta: 'somemeta',
+                config: {
+                  statement: 'somestatement',
+                  choices: [
+                    {
+                      alias: 'a',
+                      content: 'answer a',
+                    },
+                  ],
+                },
+              },
+            ],
           },
         })
       ),
     };
-    contestProgrammingSubmissionActions = {
-      createSubmission: jest.fn(),
-    };
-    contestBundleSubmissionActions = {
+
+    contestSubmissionActions = {
       createItemSubmission: jest.fn(),
-      getLatestSubmission: jest.fn().mockReturnValue(() => Promise.resolve([])),
+      getLatestSubmission: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
+
     breadcrumbsActions = {
       pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
       popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
@@ -74,12 +83,11 @@ describe('ContestProblemPage', () => {
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest.create(contest));
+    store.dispatch(PutContest.create({ ...contest, style: ContestStyle.Bundle }));
 
     const ContestProblemPage = createContestProblemPage(
       contestProblemActions,
-      contestProgrammingSubmissionActions,
-      contestBundleSubmissionActions,
+      contestSubmissionActions,
       breadcrumbsActions
     );
 
@@ -98,41 +106,22 @@ describe('ContestProblemPage', () => {
     wrapper.update();
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`, 'Problem C');
 
-    history.push('/contests/ioi/');
+    history.push('/contests/xyz/');
     await new Promise(resolve => setImmediate(resolve));
     expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`);
   });
 
   test('submission form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     wrapper.update();
 
-    const encoder = wrapper.find('input[name="sourceFiles.encoder"]');
-    encoder.simulate('change', { target: { files: [{ name: 'encoder.cpp', size: 1000 }] } });
-
-    const decoder = wrapper.find('input[name="sourceFiles.decoder"]');
-    decoder.simulate('change', { target: { files: [{ name: 'decoder.cpp', size: 2000 }] } });
-
-    // TODO(fushar): make this work
-    // See https://github.com/FezVrasta/popper.js/issues/478
-
-    // const gradingLanguageButton = wrapper.find('button[data-key="gradingLanguage"]');
-    // gradingLanguageButton.simulate('click');
-
-    const form = wrapper.find('form');
-    form.simulate('submit');
-
-    expect(contestProgrammingSubmissionActions.createSubmission).toHaveBeenCalledWith(
+    const inp = wrapper.find('.problem-multiple-choice-item-choice input').first();
+    inp.simulate('change');
+    expect(contestSubmissionActions.createItemSubmission).toHaveBeenCalledWith(
       contestJid,
-      'contest-a',
       problemJid,
-      {
-        gradingLanguage: preferredGradingLanguage,
-        sourceFiles: {
-          encoder: { name: 'encoder.cpp', size: 1000 } as File,
-          decoder: { name: 'decoder.cpp', size: 2000 } as File,
-        },
-      }
+      'fakeitemjid',
+      'a'
     );
   });
 });
