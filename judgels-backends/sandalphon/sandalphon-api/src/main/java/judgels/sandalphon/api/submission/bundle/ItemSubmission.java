@@ -8,7 +8,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableItemSubmission.class)
 public interface ItemSubmission {
-    long getId();
     String getJid();
     String getContainerJid();
     String getProblemJid();

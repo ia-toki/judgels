@@ -62,8 +62,6 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                                     .getOrDefault(contestantJid, Collections.emptyList())
                                     .stream()
                                     .filter(submission -> submission.getProblemJid().equals(problemJid))
-                                    .filter(submission -> !submission.getAnswer().isEmpty())
-                                    .distinct()
                                     .count()
                             )
                             .map(Long::intValue)
@@ -72,7 +70,6 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                     Optional<Instant> lastAnsweredTime = submissionsByUserJid
                             .getOrDefault(contestantJid, Collections.emptyList())
                             .stream()
-                            .filter(submission -> !submission.getAnswer().isEmpty())
                             .map(ItemSubmission::getTime)
                             .max(Instant::compareTo);
 

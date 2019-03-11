@@ -31,13 +31,4 @@ public class FixedVerdictItemSubmissionGraderTests {
         assertThat(grading.getVerdict()).isEqualTo(Verdict.PENDING_MANUAL_GRADING);
         assertThat(grading.getScore()).isEmpty();
     }
-
-    @Test
-    void grading_not_needed() {
-        FixedVerdictItemSubmissionGrader grader = new FixedVerdictItemSubmissionGrader(Verdict.GRADING_NOT_NEEDED);
-
-        Grading grading = grader.grade(item, "any answer");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.GRADING_NOT_NEEDED);
-        assertThat(grading.getScore()).isEmpty();
-    }
 }

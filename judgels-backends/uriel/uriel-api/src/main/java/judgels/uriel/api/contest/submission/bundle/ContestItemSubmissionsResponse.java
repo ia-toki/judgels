@@ -15,6 +15,7 @@ public interface ContestItemSubmissionsResponse {
     ContestSubmissionConfig getConfig();
     Map<String, Profile> getProfilesMap();
     Map<String, String> getProblemAliasesMap();
+    Map<String, Integer> getItemNumbersMap();
 
     class Builder extends ImmutableContestItemSubmissionsResponse.Builder {}
 }

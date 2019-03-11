@@ -8,7 +8,6 @@ import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.Item;
-import judgels.sandalphon.api.problem.bundle.ItemConfig;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
@@ -33,10 +32,7 @@ import play.mvc.Result;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -151,10 +147,14 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
                 String itemConfigString = bundleItemService.getItemConfInProblemWithCloneByJid(
                         problemJid, null, item.getJid(), language);
                 ItemType type = ItemType.valueOf(item.getType().name());
+                Optional<Integer> number = item.getNumber() == null
+                        ? Optional.empty()
+                        : Optional.of(item.getNumber().intValue());
 
                 Item itemWithConfig = new Item.Builder()
                         .jid(item.getJid())
                         .type(type)
+                        .number(number)
                         .meta(item.getMeta())
                         .config(itemProcessorRegistry.get(type).parseItemConfigFromString(MAPPER, itemConfigString))
                         .build();

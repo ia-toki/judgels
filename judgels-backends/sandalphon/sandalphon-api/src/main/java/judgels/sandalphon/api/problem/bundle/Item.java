@@ -3,6 +3,7 @@ package judgels.sandalphon.api.problem.bundle;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -10,6 +11,7 @@ import org.immutables.value.Value;
 public interface Item {
     String getJid();
     ItemType getType();
+    Optional<Integer> getNumber();
     String getMeta();
 
     @JsonTypeInfo(

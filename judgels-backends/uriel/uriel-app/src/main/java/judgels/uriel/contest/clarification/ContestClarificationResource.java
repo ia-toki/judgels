@@ -13,15 +13,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.inject.Inject;
-import javax.inject.Named;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.SandalphonUtils;
-import judgels.sandalphon.api.client.problem.ClientProblemService;
+import judgels.sandalphon.problem.ProblemClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.clarification.ContestClarification;
 import judgels.uriel.api.contest.clarification.ContestClarificationAnswerData;
@@ -38,9 +35,8 @@ public class ContestClarificationResource implements ContestClarificationService
     private final ContestClarificationRoleChecker clarificationRoleChecker;
     private final ContestClarificationStore clarificationStore;
     private final ContestProblemStore problemStore;
-    private final BasicAuthHeader sandalphonClientAuthHeader;
-    private final ClientProblemService clientProblemService;
     private final ProfileService profileService;
+    private final ProblemClient problemClient;
 
     @Inject
     public ContestClarificationResource(
@@ -49,18 +45,16 @@ public class ContestClarificationResource implements ContestClarificationService
             ContestClarificationRoleChecker clarificationRoleChecker,
             ContestClarificationStore clarificationStore,
             ContestProblemStore problemStore,
-            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
-            ClientProblemService clientProblemService,
-            ProfileService profileService) {
+            ProfileService profileService,
+            ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
         this.clarificationRoleChecker = clarificationRoleChecker;
         this.clarificationStore = clarificationStore;
         this.problemStore = problemStore;
-        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
-        this.clientProblemService = clientProblemService;
         this.profileService = profileService;
+        this.problemClient = problemClient;
     }
 
     @Override
@@ -130,16 +124,7 @@ public class ContestClarificationResource implements ContestClarificationService
                 : profileService.getProfiles(userJids, contest.getBeginTime());
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
-
-        Map<String, String> problemNamesMap = problemJids.isEmpty()
-                ? Collections.emptyMap()
-                : clientProblemService.getProblems(
-                        sandalphonClientAuthHeader,
-                        problemJids).entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(
-                                e -> e.getKey(),
-                                e -> SandalphonUtils.getProblemName(e.getValue(), language)));
+        Map<String, String> problemNamesMap = problemClient.getProblemNames(problemJids, language);
 
         return new ContestClarificationsResponse.Builder()
                 .data(clarifications)
