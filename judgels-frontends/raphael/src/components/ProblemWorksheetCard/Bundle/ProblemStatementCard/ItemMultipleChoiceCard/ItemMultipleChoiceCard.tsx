@@ -9,6 +9,7 @@ export interface ItemMultipleChoiceCardProps extends Item {
   className?: string;
   initialAnswer?: string;
   onChoiceChange?: (choice?: string) => any;
+  itemNumber: number;
 }
 
 export interface ItemMultipleChoiceCardState {
@@ -45,7 +46,12 @@ export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCa
     const config: ItemMultipleChoiceConfig = this.props.config as ItemMultipleChoiceConfig;
     return (
       <Card className={this.props.className}>
-        <HtmlText>{config.statement}</HtmlText>
+        <div className="problem-multiple-choice-statement">
+          <div className="__item-num">{this.props.itemNumber}.</div>
+          <div className="__item-statement">
+            <HtmlText>{config.statement}</HtmlText>
+          </div>
+        </div>
         <Divider />
         <RadioGroup
           className="problem-multiple-choice-item-choices"

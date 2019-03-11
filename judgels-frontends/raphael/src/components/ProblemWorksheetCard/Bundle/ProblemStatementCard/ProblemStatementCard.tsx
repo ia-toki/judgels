@@ -28,7 +28,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
     return <ItemStatementCard className="bundle-problem-statement-item" key={item.meta} {...item} />;
   };
 
-  renderMultipleChoice = (item: Item) => {
+  renderMultipleChoice = (item: Item, itemNumber: number) => {
     const latestSubmission = this.props.latestSubmission;
     const latestSub = latestSubmission[item.jid];
     const initialAnswer = latestSub && latestSub.answer;
@@ -38,6 +38,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         className="bundle-problem-statement-item"
         key={item.meta}
         {...item}
+        itemNumber={itemNumber}
         initialAnswer={initialAnswer}
       />
     );
@@ -45,6 +46,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
 
   render() {
     const { alias, items, statement } = this.props;
+    let multipleChoiceItemNum = 0;
     return (
       <>
         <h2 className="bundle-problem-statement__name">
@@ -58,7 +60,8 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
           if (item.type === ItemType.Statement) {
             return this.renderStatement(item);
           } else {
-            return this.renderMultipleChoice(item);
+            multipleChoiceItemNum++;
+            return this.renderMultipleChoice(item, multipleChoiceItemNum);
           }
         })}
       </>
