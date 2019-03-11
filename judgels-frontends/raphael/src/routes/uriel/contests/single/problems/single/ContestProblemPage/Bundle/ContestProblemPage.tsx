@@ -31,7 +31,7 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     language?: string
   ) => Promise<ContestProblemWorksheet>;
   onCreateSubmission: (contestJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
-  onGetLatestSubmission: (contestJid: string, problemJid: string) => { [id: string]: ItemSubmission };
+  onGetLatestSubmission: (contestJid: string, problemJid: string) => Promise<{ [id: string]: ItemSubmission }>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
