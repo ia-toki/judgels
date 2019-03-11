@@ -19,6 +19,7 @@ export interface ContestItemSubmissionsResponse {
   config: ContestSubmissionConfig;
   profilesMap: { [id: string]: Profile };
   problemAliasesMap: { [id: string]: string };
+  itemNumbersMap: { [itemJid: string]: number };
 }
 
 export interface ContestantAnswerSummaryResponse {

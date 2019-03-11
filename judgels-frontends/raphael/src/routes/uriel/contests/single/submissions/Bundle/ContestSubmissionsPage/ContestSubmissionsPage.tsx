@@ -51,7 +51,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
       return <Card className="bp3-skeleton">{'fake'.repeat(100)}</Card>;
     }
 
-    const { data, profilesMap, problemAliasesMap } = response;
+    const { data, profilesMap, problemAliasesMap, itemNumbersMap } = response;
     const { contest } = this.props;
     const canManage = response.config.canManage;
 
@@ -78,8 +78,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
                   <UserRef profile={profilesMap[item.userJid]} />
                 </td>
                 <td className="col-prob">{problemAliasesMap[item.problemJid] || '-'}</td>
-                {/* TODO: Add item number, dont know how to do this yet. */}
-                <td className="col-item-num">{Math.round(Math.random() * 50 + 1)}</td>
+                <td className="col-item-num">{itemNumbersMap[item.itemJid] || '-'}</td>
                 <td>{item.answer || '-'}</td>
                 {canManage && (
                   <td className="col-verdict">{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>
