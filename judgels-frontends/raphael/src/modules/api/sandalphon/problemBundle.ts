@@ -19,6 +19,7 @@ export interface ItemMultipleChoiceConfig extends ItemConfig {
 export interface Item {
   jid: string;
   type: ItemType;
+  number?: number;
   meta: string;
   config: ItemConfig;
 }

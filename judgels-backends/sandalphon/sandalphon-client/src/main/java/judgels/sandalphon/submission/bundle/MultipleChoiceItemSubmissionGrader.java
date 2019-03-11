@@ -36,7 +36,7 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
         } else {
             return new Grading.Builder()
                     .verdict(Verdict.WRONG_ANSWER)
-                    .score(Optional.of(-config.getPenalty()))
+                    .score(Optional.of(config.getPenalty()))
                     .build();
         }
     }

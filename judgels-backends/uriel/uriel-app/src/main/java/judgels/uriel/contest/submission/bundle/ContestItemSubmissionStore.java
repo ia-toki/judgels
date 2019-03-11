@@ -68,6 +68,15 @@ public class ContestItemSubmissionStore {
         }
     }
 
+    public void deleteSubmission(ContestItemSubmissionData data, String userJid) {
+        Optional<ContestBundleItemSubmissionModel> maybeModel = submissionDao
+                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
+                        data.getContestJid(), data.getProblemJid(), data.getItemJid(), userJid);
+        if (maybeModel.isPresent()) {
+            submissionDao.delete(maybeModel.get());
+        }
+    }
+
     public List<ItemSubmission> getLatestSubmissionsByUserInContest(String containerJid, String userJid) {
         List<ContestBundleItemSubmissionModel> models =
                 submissionDao.selectAllByContainerJidAndCreatedBy(containerJid, userJid);
@@ -98,7 +107,6 @@ public class ContestItemSubmissionStore {
 
     private static ItemSubmission fromModel(ContestBundleItemSubmissionModel model) {
         return new ItemSubmission.Builder()
-                .id(model.id)
                 .jid(model.jid)
                 .containerJid(model.containerJid)
                 .problemJid(model.problemJid)

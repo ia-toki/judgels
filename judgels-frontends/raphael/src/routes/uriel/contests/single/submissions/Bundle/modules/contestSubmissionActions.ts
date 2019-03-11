@@ -23,14 +23,14 @@ export const contestSubmissionActions = {
     };
   },
 
-  getSummary: (contestJid: string, userJid?: string) => {
+  getSummary: (contestJid: string, userJid?: string, language?: string) => {
     return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
       const token = selectToken(getState());
-      return contestSubmissionBundleAPI.getLatestContestantAnswersInContest(token, contestJid, userJid);
+      return contestSubmissionBundleAPI.getAnswerSummaryForContestant(token, contestJid, userJid, language);
     };
   },
 
-  getLatestSubmission: (contestJid: string, problemJid: string) => {
+  getLatestSubmissions: (contestJid: string, problemJid: string) => {
     return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
       const token = selectToken(getState());
       return contestSubmissionBundleAPI.getLatestSubmissionsByUserForProblemInContest(token, contestJid, problemJid);

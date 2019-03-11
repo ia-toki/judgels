@@ -18,7 +18,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -34,13 +33,13 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.SandalphonUtils;
-import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.api.submission.programming.SubmissionData;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
+import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionDownloader;
 import judgels.sandalphon.submission.programming.SubmissionRegrader;
@@ -48,7 +47,6 @@ import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
@@ -79,8 +77,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final ContestContestantStore contestantStore;
     private final ContestProblemStore problemStore;
     private final ProfileService profileService;
-    private final BasicAuthHeader sandalphonClientAuthHeader;
-    private final ClientProblemService clientProblemService;
+    private final ProblemClient problemClient;
 
     @Inject
     public ContestSubmissionResource(
@@ -97,8 +94,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
             ProfileService profileService,
-            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
-            ClientProblemService clientProblemService) {
+            ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
@@ -113,8 +109,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.contestantStore = contestantStore;
         this.problemStore = problemStore;
         this.profileService = profileService;
-        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
-        this.clientProblemService = clientProblemService;
+        this.problemClient = problemClient;
     }
 
     @Override
@@ -199,8 +194,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         ContestProblem contestProblem =
                 checkFound(problemStore.getProblem(contest.getJid(), submission.getProblemJid()));
-        ProblemInfo problem =
-                clientProblemService.getProblem(sandalphonClientAuthHeader, contestProblem.getProblemJid());
+        ProblemInfo problem = problemClient.getProblem(contestProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
         Profile profile = checkFound(Optional.ofNullable(
@@ -246,8 +240,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
                 .additionalGradingLanguageRestriction(contestGradingLanguageRestriction)
                 .build();
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
-        ProblemSubmissionConfig config = clientProblemService
-                .getProgrammingProblemSubmissionConfig(sandalphonClientAuthHeader, data.getProblemJid());
+        ProblemSubmissionConfig config = problemClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);

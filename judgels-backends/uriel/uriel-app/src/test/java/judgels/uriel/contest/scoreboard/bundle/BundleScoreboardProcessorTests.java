@@ -79,7 +79,6 @@ public class BundleScoreboardProcessorTests {
             List<ItemSubmission> submissions = ImmutableList.of(
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
                             .jid("JIDS-1")
                             .itemJid("JIDITEM-1")
                             .answer("d")
@@ -128,7 +127,6 @@ public class BundleScoreboardProcessorTests {
             List<ItemSubmission> submissions = ImmutableList.of(
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
                             .jid("JIDS-1")
                             .itemJid("JIDITEM-1")
                             .answer("d")
@@ -173,89 +171,10 @@ public class BundleScoreboardProcessorTests {
         }
 
         @Test
-        void ignore_submission_with_empty_answer() throws JsonProcessingException {
-            List<ItemSubmission> submissions = ImmutableList.of(
-                    new ItemSubmission.Builder()
-                            .containerJid("JIDC")
-                            .id(1)
-                            .jid("JIDS-1")
-                            .itemJid("JIDITEM-1")
-                            .answer("")
-                            .time(Instant.ofEpochSecond(300))
-                            .userJid("c2")
-                            .problemJid("p1")
-                            .grading(new Grading.Builder()
-                                    .verdict(Verdict.WRONG_ANSWER)
-                                    .score(-1)
-                                    .build())
-                            .build(),
-                    new ItemSubmission.Builder()
-                            .containerJid("JIDC")
-                            .id(2)
-                            .jid("JIDS-2")
-                            .itemJid("JIDITEM-1")
-                            .answer("a")
-                            .time(Instant.ofEpochSecond(500))
-                            .userJid("c2")
-                            .problemJid("p2")
-                            .grading(new Grading.Builder()
-                                    .verdict(Verdict.WRONG_ANSWER)
-                                    .score(-1)
-                                    .build())
-                            .build(),
-                    new ItemSubmission.Builder()
-                            .containerJid("JIDC")
-                            .id(3)
-                            .jid("JIDS-3")
-                            .itemJid("JIDITEM-1")
-                            .answer("")
-                            .time(Instant.ofEpochSecond(700))
-                            .userJid("c1")
-                            .problemJid("p1")
-                            .grading(new Grading.Builder()
-                                    .verdict(Verdict.ACCEPTED)
-                                    .score(-1)
-                                    .build())
-                            .build()
-            );
-
-            scoreboardProcessor.computeToString(
-                    mapper,
-                    state,
-                    contest,
-                    styleModuleConfig,
-                    contestantStartTimesMap,
-                    ImmutableList.of(),
-                    submissions,
-                    Optional.empty());
-
-            verify(mapper).writeValueAsString(new BundleScoreboard.Builder()
-                    .state(state)
-                    .content(new BundleScoreboardContent.Builder()
-                            .addEntries(new BundleScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c2")
-                                    .answeredItems(ImmutableList.of(0, 1))
-                                    .totalAnsweredItems(1)
-                                    .lastAnsweredTime(Instant.ofEpochSecond(500))
-                                    .build())
-                            .addEntries(new BundleScoreboardEntry.Builder()
-                                    .rank(2)
-                                    .contestantJid("c1")
-                                    .answeredItems(ImmutableList.of(0, 0))
-                                    .totalAnsweredItems(0)
-                                    .lastAnsweredTime(Optional.empty())
-                                    .build())
-                            .build())
-                    .build());
-        }
-
-        @Test
         void latest_answered_time_calculation() throws JsonProcessingException {
             List<ItemSubmission> submissions = ImmutableList.of(
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(1)
                             .jid("JIDS-1")
                             .itemJid("JIDITEM-1")
                             .answer("d")
@@ -269,7 +188,6 @@ public class BundleScoreboardProcessorTests {
                             .build(),
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(5)
                             .jid("JIDS-5")
                             .itemJid("JIDITEM-1")
                             .answer("b")
@@ -283,7 +201,6 @@ public class BundleScoreboardProcessorTests {
                             .build(),
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(3)
                             .jid("JIDS-3")
                             .itemJid("JIDITEM-2")
                             .answer("x")
@@ -297,7 +214,6 @@ public class BundleScoreboardProcessorTests {
                             .build(),
                     new ItemSubmission.Builder()
                             .containerJid("JIDC")
-                            .id(4)
                             .jid("JIDS-4")
                             .itemJid("JIDITEM-2")
                             .answer("a")
@@ -350,7 +266,6 @@ public class BundleScoreboardProcessorTests {
                 List<ItemSubmission> submissions = ImmutableList.of(
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(1)
                                 .jid("JIDS-1")
                                 .itemJid("JIDITEM-1")
                                 .answer("d")
@@ -364,7 +279,6 @@ public class BundleScoreboardProcessorTests {
                                 .build(),
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(5)
                                 .jid("JIDS-5")
                                 .itemJid("JIDITEM-1")
                                 .answer("b")
@@ -378,7 +292,6 @@ public class BundleScoreboardProcessorTests {
                                 .build(),
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(3)
                                 .jid("JIDS-3")
                                 .itemJid("JIDITEM-2")
                                 .answer("x")
@@ -428,7 +341,6 @@ public class BundleScoreboardProcessorTests {
                 List<ItemSubmission> submissions = ImmutableList.of(
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(1)
                                 .jid("JIDS-1")
                                 .itemJid("JIDITEM-1")
                                 .answer("d")
@@ -442,7 +354,6 @@ public class BundleScoreboardProcessorTests {
                                 .build(),
                         new ItemSubmission.Builder()
                                 .containerJid("JIDC")
-                                .id(5)
                                 .jid("JIDS-5")
                                 .itemJid("JIDITEM-1")
                                 .answer("b")
