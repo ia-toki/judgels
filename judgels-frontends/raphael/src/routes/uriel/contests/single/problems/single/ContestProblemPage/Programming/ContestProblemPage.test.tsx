@@ -13,7 +13,7 @@ import { ContestProblemStatus } from 'modules/api/uriel/contestProblem';
 import { contest, contestJid, problemJid } from 'fixtures/state';
 
 import { createContestProblemPage } from './ContestProblemPage';
-import { contestReducer, PutContest } from '../../../../modules/contestReducer';
+import { contestReducer, PutContest } from '../../../../../modules/contestReducer';
 import createMemoryHistory from 'history/createMemoryHistory';
 import { MemoryHistory } from 'history';
 
@@ -26,7 +26,7 @@ describe('ContestProblemPage', () => {
 
   beforeEach(() => {
     contestProblemActions = {
-      getProgrammingProblemWorksheet: jest.fn().mockReturnValue(() =>
+      getProblemWorksheet: jest.fn().mockReturnValue(() =>
         Promise.resolve({
           problem: {
             problemJid,
@@ -53,12 +53,8 @@ describe('ContestProblemPage', () => {
         })
       ),
     };
-    contestProgrammingSubmissionActions = {
+    contestSubmissionActions = {
       createSubmission: jest.fn(),
-    };
-    contestBundleSubmissionActions = {
-      createItemSubmission: jest.fn(),
-      getLatestSubmission: jest.fn().mockReturnValue(() => Promise.resolve([])),
     };
     breadcrumbsActions = {
       pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
@@ -77,8 +73,7 @@ describe('ContestProblemPage', () => {
 
     const ContestProblemPage = createContestProblemPage(
       contestProblemActions,
-      contestProgrammingSubmissionActions,
-      contestBundleSubmissionActions,
+      contestSubmissionActions,
       breadcrumbsActions
     );
 
@@ -121,17 +116,12 @@ describe('ContestProblemPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(contestProgrammingSubmissionActions.createSubmission).toHaveBeenCalledWith(
-      contestJid,
-      'contest-a',
-      problemJid,
-      {
-        gradingLanguage: preferredGradingLanguage,
-        sourceFiles: {
-          encoder: { name: 'encoder.cpp', size: 1000 } as File,
-          decoder: { name: 'decoder.cpp', size: 2000 } as File,
-        },
-      }
-    );
+    expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith(contestJid, 'contest-a', problemJid, {
+      gradingLanguage: preferredGradingLanguage,
+      sourceFiles: {
+        encoder: { name: 'encoder.cpp', size: 1000 } as File,
+        decoder: { name: 'decoder.cpp', size: 2000 } as File,
+      },
+    });
   });
 });
