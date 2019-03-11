@@ -8,6 +8,7 @@ export enum ItemType {
 export interface Item {
   jid: string;
   type: ItemType;
+  number?: number;
   meta: string;
   config: string;
 }
