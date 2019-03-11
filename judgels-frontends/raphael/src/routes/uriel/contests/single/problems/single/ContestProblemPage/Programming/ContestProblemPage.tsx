@@ -110,7 +110,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       statementLanguages: languages,
     };
     return (
-      <div className="contest-problem-page__widget">
+      <div className="contest-programming-problem-page__widget">
         <StatementLanguageWidget {...props} />
       </div>
     );
