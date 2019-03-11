@@ -1,6 +1,7 @@
 package judgels.sandalphon.problem;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -69,6 +70,18 @@ public class ProblemClient {
         return worksheet.getItems().stream()
                 .filter(item -> itemJid.equals(item.getJid()))
                 .findAny();
+    }
+
+    public Map<String, Item> getItems(Set<String> problemJids, Set<String> itemJids) {
+        Map<String, Item> itemsByItemJid = new HashMap<>();
+        for (String problemJid : problemJids) {
+            judgels.sandalphon.api.problem.bundle.ProblemWorksheet
+                    worksheet = getBundleProblemWorksheet(problemJid, Optional.empty());
+            worksheet.getItems().stream()
+                    .filter(item -> itemJids.contains(item.getJid()))
+                    .forEach(item -> itemsByItemJid.put(item.getJid(), item));
+        }
+        return itemsByItemJid;
     }
 
     public ProblemSubmissionConfig getProgrammingProblemSubmissionConfig(String problemJid) {

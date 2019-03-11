@@ -71,6 +71,10 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(submissionsResponse.getConfig().getCanSupervise()).isFalse();
         assertThat(submissionsResponse.getConfig().getCanManage()).isFalse();
 
+        assertThat(submissionsResponse.getItemNumbersMap()).hasSize(1);
+        assertThat(submissionsResponse.getItemNumbersMap()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(submissionsResponse.getItemNumbersMap().get("JIDITEMtOoiXuIgPcD1oUsMzvbP")).isEqualTo(2);
+
         assertThat(submissionsResponse.getData().getPage()).hasSize(1);
 
         itemSubmissionResult = submissionsResponse.getData().getPage().get(0);

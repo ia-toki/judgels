@@ -152,11 +152,21 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
 
+        Set<String> itemJids = submissions.getPage().stream()
+                .map(ItemSubmission::getItemJid)
+                .collect(Collectors.toSet());
+        Map<String, Integer> itemNumbersMap = problemClient.getItems(problemJids, itemJids).entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().getNumber().orElse(0))
+                );
+
         return new ContestItemSubmissionsResponse.Builder()
                 .data(submissions)
                 .config(config)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
+                .itemNumbersMap(itemNumbersMap)
                 .build();
     }
 
