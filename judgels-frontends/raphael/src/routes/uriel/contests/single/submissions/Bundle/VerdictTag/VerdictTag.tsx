@@ -6,24 +6,28 @@ export interface VerdictTagProps {
   verdict: Verdict;
 }
 
+const verdictIntentMap: { [verdict: string]: Intent } = {
+  [Verdict.ACCEPTED]: Intent.SUCCESS,
+  [Verdict.INTERNAL_ERROR]: Intent.DANGER,
+  [Verdict.OK]: Intent.SUCCESS,
+  [Verdict.PENDING_MANUAL_GRADING]: Intent.NONE,
+  [Verdict.WRONG_ANSWER]: Intent.DANGER,
+};
+
+const verdictDisplayCode: { [verdict: string]: string | React.ReactNode } = {
+  [Verdict.ACCEPTED]: 'AC',
+  [Verdict.INTERNAL_ERROR]: '???',
+  [Verdict.OK]: 'OK',
+  [Verdict.PENDING_MANUAL_GRADING]: 'MANUAL',
+  [Verdict.WRONG_ANSWER]: 'WA',
+};
+
 export const VerdictTag: React.FunctionComponent<VerdictTagProps> = ({ verdict }) => {
-  let intent: Intent = Intent.NONE;
-  let text = 'None';
-  if (verdict === Verdict.ACCEPTED) {
-    intent = Intent.SUCCESS;
-    text = 'AC';
-  } else if (verdict === Verdict.INTERNAL_ERROR) {
-    intent = Intent.DANGER;
-    text = '???';
-  } else if (verdict === Verdict.OK) {
-    intent = Intent.SUCCESS;
-    text = 'OK';
-  } else if (verdict === Verdict.PENDING_MANUAL_GRADING) {
-    intent = Intent.NONE;
-    text = 'Manual';
-  } else if (verdict === Verdict.WRONG_ANSWER) {
-    intent = Intent.DANGER;
-    text = 'WA';
-  }
-  return <Tag intent={intent}>{text}</Tag>;
+  const intent = verdictIntentMap[verdict] || Intent.NONE;
+  const displayCode = verdictDisplayCode[verdict] || verdict;
+  return (
+    <Tag round intent={intent}>
+      {displayCode}
+    </Tag>
+  );
 };

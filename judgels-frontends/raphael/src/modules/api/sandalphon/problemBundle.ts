@@ -5,12 +5,23 @@ export enum ItemType {
   MultipleChoice = 'MULTIPLE_CHOICE',
 }
 
+export interface ItemConfig {
+  statement: string;
+}
+
+export interface ItemMultipleChoiceConfig extends ItemConfig {
+  choices: {
+    alias: string;
+    content: string;
+  }[];
+}
+
 export interface Item {
   jid: string;
   type: ItemType;
   number?: number;
   meta: string;
-  config: string;
+  config: ItemConfig;
 }
 
 export interface ProblemWorksheet {

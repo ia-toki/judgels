@@ -7,9 +7,8 @@ import { contestSubmissionActions as injectedContestSubmissionActions } from '..
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestantAnswerSummaryResponse } from 'modules/api/uriel/contestSubmissionBundle';
 import { ProblemSubmissionCard, ProblemSubmissionCardProps } from '../ProblemSubmissionsCard/ProblemSubmissionCard';
-import { Intent } from '@blueprintjs/core';
-import { ButtonLink } from 'components/ButtonLink/ButtonLink';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
+
 
 import './SubmissionSummaryPage.css';
 
@@ -51,16 +50,8 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
   }
 
   render() {
-    const { contest } = this.props;
     return (
       <div className="submisions-summary-page">
-        <ButtonLink
-          className="goto-submissions-button"
-          intent={Intent.PRIMARY}
-          to={`/contests/${contest.slug}/submissions/`}
-        >
-          Submissions
-        </ButtonLink>
         {this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}
       </div>
     );
