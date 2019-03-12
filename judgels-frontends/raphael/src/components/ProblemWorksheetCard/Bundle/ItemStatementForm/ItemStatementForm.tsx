@@ -9,7 +9,7 @@ import { AnswerState, StatementButtonText } from '../itemStatement';
 export interface ItemStatementFormProps {
   initialAnswer?: string;
   meta: string;
-  onSubmit?: (answer?: string) => any;
+  onSubmit?: (answer?: string) => Promise<any>;
   answerState: AnswerState;
 }
 
@@ -23,18 +23,19 @@ export interface ComponentProps extends ItemStatementFormProps, InjectedProps {}
 
 export interface ComponentState {
   answerState: AnswerState;
+  initialAnswer: string;
 }
 
 class ItemStatementForm extends React.PureComponent<ComponentProps, ComponentState> {
   fill: boolean = true;
   constructor(props: ComponentProps) {
     super(props);
-    this.state = { answerState: props.answerState };
+    this.state = { answerState: props.answerState, initialAnswer: props.initialAnswer! };
   }
 
   renderInput = formProps => {
     return (
-      <input {...formProps.input} disabled={formProps.disabled} className={`text-input ${classNames(Classes.INPUT)}`} />
+      <input {...formProps.input} readOnly={formProps.readOnly} className={`text-input ${classNames(Classes.INPUT)}`} />
     );
   };
 
@@ -83,26 +84,18 @@ class ItemStatementForm extends React.PureComponent<ComponentProps, ComponentSta
   }
 
   renderTextInput() {
-    let disabled = false;
+    let readOnly = false;
     if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
-      disabled = true;
+      readOnly = true;
     }
-    return (
-      <Field
-        name={this.props.meta}
-        value={this.props.initialAnswer ? this.props.initialAnswer : ''}
-        component={this.renderInput}
-        onChange={this.onChange}
-        disabled={disabled}
-      />
-    );
+    return <Field name={this.props.meta} component={this.renderInput} onChange={this.onChange} readOnly={readOnly} />;
   }
 
   onChange = () => {
     this.setState({ answerState: AnswerState.Answering });
   };
 
-  onSubmit = formValue => {
+  onSubmit = async formValue => {
     if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
       this.setState({ answerState: AnswerState.Answering });
     } else {
@@ -110,13 +103,16 @@ class ItemStatementForm extends React.PureComponent<ComponentProps, ComponentSta
       const newValue = formValue[this.props.meta];
       if (this.props.onSubmit && oldValue !== newValue) {
         this.setState({ answerState: AnswerState.SavingAnswer });
-        this.props.onSubmit(newValue);
+        const val = await this.props.onSubmit(newValue);
+        if (val === 1) {
+          this.setState({ answerState: AnswerState.AnswerSaved });
+        }
       }
     }
   };
 
   onCancelButtonClick = () => {
-    this.setState({ answerState: this.props.answerState });
+    this.setState({ answerState: this.props.answerState, initialAnswer: this.props.initialAnswer! });
   };
 
   render() {
@@ -135,4 +131,5 @@ class ItemStatementForm extends React.PureComponent<ComponentProps, ComponentSta
 
 export default reduxForm<ItemStatementFormData, ItemStatementFormProps>({
   form: 'item-statement-form',
+  enableReinitialize: true,
 })(ItemStatementForm);

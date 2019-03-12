@@ -20,6 +20,7 @@ export const contestBundleSubmissionActions = {
 
       await contestSubmissionBundleAPI.createItemSubmission(token, data);
       toastActions.showSuccessToast('Solution submitted.');
+      return 1;
     };
   },
 

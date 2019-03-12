@@ -8,7 +8,7 @@ import { AnswerState } from '../../itemStatement';
 export interface ItemStatementCardProps extends Item {
   className?: string;
   initialAnswer?: string;
-  onSubmit?: () => any;
+  onSubmit?: () => Promise<any>;
 }
 
 export class ItemStatementCard extends React.PureComponent<ItemStatementCardProps> {
@@ -24,6 +24,7 @@ export class ItemStatementCard extends React.PureComponent<ItemStatementCardProp
           <HtmlText>{config.statement}</HtmlText>
           <ItemStatementForm
             initialAnswer={this.props.initialAnswer}
+            initialValues={{ value: this.props.initialAnswer }}
             onSubmit={this.props.onSubmit}
             meta={this.props.meta}
             answerState={this.generateAnswerState()}
