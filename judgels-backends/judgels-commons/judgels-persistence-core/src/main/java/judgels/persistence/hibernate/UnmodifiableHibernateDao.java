@@ -39,6 +39,11 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
+    public void clear() {
+        currentSession().clear();
+    }
+
+    @Override
     public M insert(M model) {
         model.createdBy = actorProvider.getJid().orElse(null);
         model.createdAt = clock.instant();

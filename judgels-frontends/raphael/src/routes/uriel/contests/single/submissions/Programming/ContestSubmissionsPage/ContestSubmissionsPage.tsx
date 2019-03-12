@@ -15,7 +15,7 @@ import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionP
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 import { ContestSubmissionFilterWidget } from '../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
 import { selectContest } from '../../../../modules/contestSelectors';
-import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../modules/contestProgrammingSubmissionActions';
+import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
 import './ContestSubmissionsPage.css';
 
@@ -232,4 +232,4 @@ export function createContestSubmissionsPage(contestProgrammingSubmissionActions
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
 }
 
-export default createContestSubmissionsPage(injectedContestProgrammingSubmissionActions);
+export default createContestSubmissionsPage(injectedContestSubmissionActions);

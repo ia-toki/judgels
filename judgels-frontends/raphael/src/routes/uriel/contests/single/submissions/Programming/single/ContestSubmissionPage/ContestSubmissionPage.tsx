@@ -13,7 +13,7 @@ import { Profile } from 'modules/api/jophiel/profile';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 
 import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
-import { contestProgrammingSubmissionActions as injectedContestProgrammingSubmissionActions } from '../../modules/contestProgrammingSubmissionActions';
+import { contestSubmissionActions as injectedContestSubmissionActions } from '../../modules/contestSubmissionActions';
 
 export interface ContestSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   contest: Contest;
@@ -106,4 +106,4 @@ function createContestSubmissionPage(contestProgrammingSubmissionActions, breadc
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionPage));
 }
 
-export default createContestSubmissionPage(injectedContestProgrammingSubmissionActions, injectedBreadcrumbsActions);
+export default createContestSubmissionPage(injectedContestSubmissionActions, injectedBreadcrumbsActions);

@@ -8,9 +8,9 @@ import { VerdictTag } from 'components/VerdictTag/VerdictTag';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { getGradingLanguageName } from 'modules/api/gabriel/language';
 import { Contest } from 'modules/api/uriel/contest';
+import { Submission as ProgrammingSubmission } from 'modules/api/sandalphon/submissionProgramming';
 
 import './ContestSubmissionsTable.css';
-import { Submission as ProgrammingSubmission } from 'modules/api/sandalphon/submissionProgramming';
 
 export interface ContestSubmissionsTableProps {
   contest: Contest;
@@ -19,7 +19,7 @@ export interface ContestSubmissionsTableProps {
   canManage: boolean;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
-  onRegrade: (submissionJid: string) => void;
+  onRegrade: (submissionJid: string) => any;
 }
 
 export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {

@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.module.BundleStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard.BundleScoreboardContent;
@@ -44,8 +43,6 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {
 
-        BundleStyleModuleConfig bundleStyleModuleConfig = (BundleStyleModuleConfig) styleModuleConfig;
-
         List<String> problemJids = scoreboardState.getProblemJids();
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = scoreboardState.getContestantJids();
@@ -65,8 +62,6 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                                     .getOrDefault(contestantJid, Collections.emptyList())
                                     .stream()
                                     .filter(submission -> submission.getProblemJid().equals(problemJid))
-                                    .filter(submission -> !submission.getAnswer().isEmpty())
-                                    .distinct()
                                     .count()
                             )
                             .map(Long::intValue)
@@ -75,7 +70,6 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                     Optional<Instant> lastAnsweredTime = submissionsByUserJid
                             .getOrDefault(contestantJid, Collections.emptyList())
                             .stream()
-                            .filter(submission -> !submission.getAnswer().isEmpty())
                             .map(ItemSubmission::getTime)
                             .max(Instant::compareTo);
 

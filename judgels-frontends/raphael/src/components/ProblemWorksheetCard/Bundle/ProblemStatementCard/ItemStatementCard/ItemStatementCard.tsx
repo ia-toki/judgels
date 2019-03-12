@@ -17,22 +17,17 @@ export class ItemStatementCard extends React.PureComponent<ItemStatementCardProp
   }
 
   render() {
-    try {
-      const config: { statement: string } = JSON.parse(this.props.config);
-      return (
-        <Card className={this.props.className}>
-          <HtmlText>{config.statement}</HtmlText>
-          <ItemStatementForm
-            initialAnswer={this.props.initialAnswer}
-            initialValues={{ value: this.props.initialAnswer }}
-            onSubmit={this.props.onSubmit}
-            meta={this.props.meta}
-            answerState={this.generateAnswerState()}
-          />
-        </Card>
-      );
-    } catch (error) {
-      return <React.Fragment />;
-    }
+    return (
+      <Card className={this.props.className}>
+        <HtmlText>{this.props.config.statement}</HtmlText>
+        <ItemStatementForm
+          initialAnswer={this.props.initialAnswer}
+          initialValues={{ value: this.props.initialAnswer }}
+          onSubmit={this.props.onSubmit}
+          meta={this.props.meta}
+          answerState={this.generateAnswerState()}
+        />
+      </Card>
+    );
   }
 }

@@ -70,6 +70,8 @@ public class BaseSubmissionStore<
         Set<String> submissionJids = submissionModels.stream().map(m -> m.jid).collect(Collectors.toSet());
         Map<String, GM> gradingModels = gradingDao.selectAllLatestBySubmissionJids(submissionJids);
 
+        gradingDao.clear();
+
         return Lists.transform(submissionModels, sm -> submissionFromModels(sm, gradingModels.get(sm.jid)));
     }
 

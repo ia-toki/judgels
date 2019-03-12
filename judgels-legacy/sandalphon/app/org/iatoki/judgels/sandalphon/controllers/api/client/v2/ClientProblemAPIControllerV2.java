@@ -1,14 +1,17 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.api.problem.programming.ProblemLimits;
-import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
+import judgels.sandalphon.api.problem.programming.ProblemLimits;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
+import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
 import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
@@ -16,10 +19,10 @@ import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
-import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
-import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemService;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
+import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemService;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.user.UserService;
 import play.data.DynamicForm;
@@ -29,27 +32,34 @@ import play.mvc.Result;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.List;
 
 @Singleton
 public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIController {
+    private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new Jdk8Module());
+
     private final ClientChecker clientChecker;
     private final UserService userService;
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
     private final BundleItemService bundleItemService;
+    private final ItemProcessorRegistry itemProcessorRegistry;
 
     @Inject
-    public ClientProblemAPIControllerV2(ClientChecker clientChecker, UserService userService, ProblemService problemService, ProgrammingProblemService programmingProblemService, BundleItemService bundleItemService) {
+    public ClientProblemAPIControllerV2(
+            ClientChecker clientChecker,
+            UserService userService,
+            ProblemService problemService,
+            ProgrammingProblemService programmingProblemService,
+            BundleItemService bundleItemService,
+            ItemProcessorRegistry itemProcessorRegistry) {
         this.clientChecker = clientChecker;
         this.userService = userService;
         this.problemService = problemService;
         this.programmingProblemService = programmingProblemService;
         this.bundleItemService = bundleItemService;
+        this.itemProcessorRegistry = itemProcessorRegistry;
     }
 
     @Transactional(readOnly = true)
@@ -134,13 +144,19 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             List<BundleItem> items = bundleItemService.getBundleItemsInProblemWithClone(problemJid, null);
             List<Item> itemsWithConfig = new ArrayList<>();
             for (BundleItem item : items) {
-                String itemConfig = bundleItemService.getItemConfInProblemWithCloneByJid(
+                String itemConfigString = bundleItemService.getItemConfInProblemWithCloneByJid(
                         problemJid, null, item.getJid(), language);
+                ItemType type = ItemType.valueOf(item.getType().name());
+                Optional<Integer> number = item.getNumber() == null
+                        ? Optional.empty()
+                        : Optional.of(item.getNumber().intValue());
+
                 Item itemWithConfig = new Item.Builder()
                         .jid(item.getJid())
-                        .type(ItemType.valueOf(item.getType().name()))
+                        .type(type)
+                        .number(number)
                         .meta(item.getMeta())
-                        .config(itemConfig)
+                        .config(itemProcessorRegistry.get(type).parseItemConfigFromString(MAPPER, itemConfigString))
                         .build();
                 itemsWithConfig.add(itemWithConfig);
             }

@@ -19,6 +19,16 @@ export interface ContestItemSubmissionsResponse {
   config: ContestSubmissionConfig;
   profilesMap: { [id: string]: Profile };
   problemAliasesMap: { [id: string]: string };
+  itemNumbersMap: { [itemJid: string]: number };
+}
+
+export interface ContestantAnswerSummaryResponse {
+  profile: Profile;
+  config: ContestSubmissionConfig;
+  itemJidsByProblemJid: { [problemJid: string]: string[] };
+  submissionsByItemJid: { [itemJid: string]: ItemSubmission };
+  problemAliasesMap: { [id: string]: string };
+  problemNamesMap: { [id: string]: string };
 }
 
 const baseURL = `${baseContestsURL}/submissions/bundle`;
@@ -37,6 +47,16 @@ export const contestSubmissionBundleAPI = {
 
   createItemSubmission: (token: string, data: ContestItemSubmissionData): Promise<void> => {
     return post(`${baseURL}/`, token, data);
+  },
+
+  getAnswerSummaryForContestant: (
+    token: string,
+    contestJid: string,
+    userJid?: string,
+    language?: string
+  ): Promise<ContestantAnswerSummaryResponse> => {
+    const params = stringify({ contestJid, userJid, language });
+    return get(`${baseURL}/summary?${params}`, token);
   },
 
   getLatestSubmissionsByUserForProblemInContest: (

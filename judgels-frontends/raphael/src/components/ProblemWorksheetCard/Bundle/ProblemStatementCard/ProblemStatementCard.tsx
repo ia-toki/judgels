@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Item, ItemType } from 'modules/api/sandalphon/problemBundle';
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleChoiceCard';
-
-import './ProblemStatementCard.css';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { ProblemStatement } from 'modules/api/sandalphon/problem';
 import { Divider } from '@blueprintjs/core';
 import { HtmlText } from 'components/HtmlText/HtmlText';
 import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
+
+import './ProblemStatementCard.css';
 
 export interface ProblemStatementCardProps {
   items: Item[];
@@ -49,6 +49,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         className="bundle-problem-statement-item"
         key={item.meta}
         {...item}
+        itemNumber={item.number!}
         initialAnswer={initialAnswer}
       />
     );

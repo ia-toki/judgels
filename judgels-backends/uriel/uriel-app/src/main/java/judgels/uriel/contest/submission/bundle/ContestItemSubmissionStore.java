@@ -68,9 +68,18 @@ public class ContestItemSubmissionStore {
         }
     }
 
+    public void deleteSubmission(ContestItemSubmissionData data, String userJid) {
+        Optional<ContestBundleItemSubmissionModel> maybeModel = submissionDao
+                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
+                        data.getContestJid(), data.getProblemJid(), data.getItemJid(), userJid);
+        if (maybeModel.isPresent()) {
+            submissionDao.delete(maybeModel.get());
+        }
+    }
+
     public List<ItemSubmission> getLatestSubmissionsByUserInContest(String containerJid, String userJid) {
-        List<ContestBundleItemSubmissionModel>
-                models = submissionDao.selectByContainerJidAndCreatedBy(containerJid, userJid);
+        List<ContestBundleItemSubmissionModel> models =
+                submissionDao.selectAllByContainerJidAndCreatedBy(containerJid, userJid);
         return models.stream()
                 .map(ContestItemSubmissionStore::fromModel)
                 .collect(Collectors.toList());
@@ -81,16 +90,16 @@ public class ContestItemSubmissionStore {
             String problemJid,
             String userJid) {
 
-        List<ContestBundleItemSubmissionModel>
-                models = submissionDao.selectByContainerJidAndProblemJidAndCreatedBy(containerJid, problemJid, userJid);
+        List<ContestBundleItemSubmissionModel> models =
+                submissionDao.selectAllByContainerJidAndProblemJidAndCreatedBy(containerJid, problemJid, userJid);
         return models.stream()
                 .map(ContestItemSubmissionStore::fromModel)
                 .collect(Collectors.toList());
     }
 
     public List<ItemSubmission> getSubmissionsForScoreboard(String containerJid) {
-        List<ContestBundleItemSubmissionModel>
-                models = submissionDao.selectByContainerJid(containerJid);
+        List<ContestBundleItemSubmissionModel> models =
+                submissionDao.selectAllByContainerJid(containerJid);
         return models.stream()
                 .map(ContestItemSubmissionStore::fromModel)
                 .collect(Collectors.toList());
@@ -98,7 +107,6 @@ public class ContestItemSubmissionStore {
 
     private static ItemSubmission fromModel(ContestBundleItemSubmissionModel model) {
         return new ItemSubmission.Builder()
-                .id(model.id)
                 .jid(model.jid)
                 .containerJid(model.containerJid)
                 .problemJid(model.problemJid)

@@ -9,6 +9,7 @@ import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
 public interface UnmodifiableDao<M extends UnmodifiableModel> {
+    void clear();
     M insert(M model);
     List<M> insertAll(List<M> models);
 

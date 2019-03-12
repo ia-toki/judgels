@@ -35,10 +35,11 @@ public interface ContestItemSubmissionService {
     @GET
     @Path("/summary")
     @Produces(APPLICATION_JSON)
-    ContestantAnswersResponse getLatestContestantAnswersInContest(
+    ContestantAnswerSummaryResponse getAnswerSummaryForContestant(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") Optional<String> userJid);
+            @QueryParam("userJid") Optional<String> userJid,
+            @QueryParam("language") Optional<String> language);
 
     @GET
     @Path("/answers")

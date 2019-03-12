@@ -2,7 +2,6 @@
   - name: Create jophiel container mount volume
     file:
       path: "{{ item }}"
-      recurse: yes
       state: directory
       mode: "0777"
     with_items:

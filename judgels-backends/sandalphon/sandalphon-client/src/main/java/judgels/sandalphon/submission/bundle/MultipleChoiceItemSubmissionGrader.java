@@ -1,7 +1,5 @@
 package judgels.sandalphon.submission.bundle;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.util.Optional;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.MultipleChoiceItemConfig;
@@ -13,18 +11,12 @@ import org.slf4j.LoggerFactory;
 public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader {
     private static final Logger LOGGER = LoggerFactory.getLogger(MultipleChoiceItemSubmissionGrader.class);
 
-    private final ObjectMapper objectMapper;
-
-    public MultipleChoiceItemSubmissionGrader(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
     @Override
     public Grading grade(Item item, String answer) {
         MultipleChoiceItemConfig config;
         try {
-            config = objectMapper.readValue(item.getConfig(), MultipleChoiceItemConfig.class);
-        } catch (IOException e) {
+            config = (MultipleChoiceItemConfig) item.getConfig();
+        } catch (RuntimeException e) {
             LOGGER.error("Internal error grading item submission", e);
             return new Grading.Builder()
                     .verdict(Verdict.INTERNAL_ERROR)
@@ -36,7 +28,7 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
                 .filter(c -> c.getAlias().equals(answer))
                 .findAny();
 
-        if (matchingChoice.isPresent() && matchingChoice.get().getIsCorrect()) {
+        if (matchingChoice.isPresent() && matchingChoice.get().getIsCorrect().get()) {
             return new Grading.Builder()
                     .verdict(Verdict.ACCEPTED)
                     .score(Optional.of(config.getScore()))
@@ -44,7 +36,7 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
         } else {
             return new Grading.Builder()
                     .verdict(Verdict.WRONG_ANSWER)
-                    .score(Optional.of(-config.getPenalty()))
+                    .score(Optional.of(config.getPenalty()))
                     .build();
         }
     }
