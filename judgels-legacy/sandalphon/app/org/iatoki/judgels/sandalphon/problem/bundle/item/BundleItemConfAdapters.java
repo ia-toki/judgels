@@ -16,6 +16,12 @@ public final class BundleItemConfAdapters {
             case MULTIPLE_CHOICE:
                 itemConfAdapter = new ItemMultipleChoiceConfAdapter();
                 break;
+            case SHORT_ANSWER:
+                itemConfAdapter = new ItemShortAnswerConfAdapter();
+                break;
+            case ESSAY:
+                itemConfAdapter = new ItemEssayConfAdapter();
+                break;
             default: break;
         }
 

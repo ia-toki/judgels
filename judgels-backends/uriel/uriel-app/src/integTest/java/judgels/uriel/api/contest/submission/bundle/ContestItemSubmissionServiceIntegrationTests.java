@@ -143,7 +143,12 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(summaryResult.getItemJidsByProblemJid()).hasSize(1);
         assertThat(summaryResult.getItemJidsByProblemJid()).isEqualTo(
                 ImmutableMap.of(
-                    "problemJid3", ImmutableList.of("JIDITEMPeKuqUA0Q7zvJjTQXXVD", "JIDITEMtOoiXuIgPcD1oUsMzvbP")
+                    "problemJid3", ImmutableList.of(
+                                "JIDITEMPeKuqUA0Q7zvJjTQXXVD",
+                                "JIDITEMtOoiXuIgPcD1oUsMzvbP",
+                                "JIDITEMcD1oSDFJLadFSsMddfsf",
+                                "JIDITEMkhUulUkbUkYGBKYkfLHUh"
+                        )
                 )
         );
 
@@ -242,5 +247,62 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
                 new Grading.Builder().verdict(Verdict.ACCEPTED).score(4).build());
+
+        submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
+                .contestJid(contest.getJid())
+                .problemJid(PROBLEM_3_JID)
+                .itemJid("JIDITEMkhUulUkbUkYGBKYkfLHUh")
+                .answer("print('hello world!')")
+                .build()
+        );
+
+        submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
+                .contestJid(contest.getJid())
+                .problemJid(PROBLEM_3_JID)
+                .itemJid("JIDITEMcD1oSDFJLadFSsMddfsf")
+                .answer("123")
+                .build()
+        );
+
+        summaryResult = submissionService.getAnswerSummaryForContestant(
+                MANAGER_HEADER,
+                contest.getJid(),
+                Optional.of(CONTESTANT_JID),
+                Optional.empty()
+        );
+
+        assertThat(summaryResult.getSubmissionsByItemJid()).hasSize(4);
+        assertThat(summaryResult.getSubmissionsByItemJid()).containsKey("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
+        assertThat(summaryResult.getSubmissionsByItemJid()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(summaryResult.getSubmissionsByItemJid()).containsKey("JIDITEMcD1oSDFJLadFSsMddfsf");
+        assertThat(summaryResult.getSubmissionsByItemJid()).containsKey("JIDITEMkhUulUkbUkYGBKYkfLHUh");
+
+        itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
+        assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
+        assertThat(itemSubmissionResult.getJid()).isNotEmpty();
+        assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
+        assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
+                new Grading.Builder().verdict(Verdict.WRONG_ANSWER).score(0.0).build());
+
+        itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(itemSubmissionResult.getJid()).isNotEmpty();
+        assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
+        assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
+                new Grading.Builder().verdict(Verdict.ACCEPTED).score(4.0).build());
+
+        itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMcD1oSDFJLadFSsMddfsf");
+        assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMcD1oSDFJLadFSsMddfsf");
+        assertThat(itemSubmissionResult.getJid()).isNotEmpty();
+        assertThat(itemSubmissionResult.getAnswer()).isEqualTo("123");
+        assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
+                new Grading.Builder().verdict(Verdict.ACCEPTED).score(4.0).build());
+
+        itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMkhUulUkbUkYGBKYkfLHUh");
+        assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMkhUulUkbUkYGBKYkfLHUh");
+        assertThat(itemSubmissionResult.getJid()).isNotEmpty();
+        assertThat(itemSubmissionResult.getAnswer()).isEqualTo("print('hello world!')");
+        assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
+                new Grading.Builder().verdict(Verdict.PENDING_MANUAL_GRADING).build());
     }
 }

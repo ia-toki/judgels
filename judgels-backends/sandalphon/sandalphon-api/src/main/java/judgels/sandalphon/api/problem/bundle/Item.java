@@ -22,7 +22,9 @@ public interface Item {
     )
     @JsonSubTypes({
             @JsonSubTypes.Type(value = ImmutableStatementItemConfig.class, name = "STATEMENT"),
-            @JsonSubTypes.Type(value = ImmutableMultipleChoiceItemConfig.class, name = "MULTIPLE_CHOICE")
+            @JsonSubTypes.Type(value = ImmutableMultipleChoiceItemConfig.class, name = "MULTIPLE_CHOICE"),
+            @JsonSubTypes.Type(value = ImmutableShortAnswerItemConfig.class, name = "SHORT_ANSWER"),
+            @JsonSubTypes.Type(value = ImmutableEssayItemConfig.class, name = "ESSAY")
     })
     ItemConfig getConfig();
 

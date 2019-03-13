@@ -16,6 +16,12 @@ public final class BundleItemAdapters {
             case MULTIPLE_CHOICE:
                 itemAdapter = new ItemMultipleChoiceAdapter();
                 break;
+            case SHORT_ANSWER:
+                itemAdapter = new ItemShortAnswerAdapter();
+                break;
+            case ESSAY:
+                itemAdapter = new ItemEssayAdapter();
+                break;
             default: break;
         }
 

@@ -132,6 +132,15 @@ problem.bundle.item.create=Create Item
 problem.bundle.item.update=Update Item
 problem.bundle.item.multipleChoice.addChoice=Add Choice
 
+problem.bundle.item.shortAnswer.statement=Statement
+problem.bundle.item.shortAnswer.score=Score
+problem.bundle.item.shortAnswer.penalty=Penalty
+problem.bundle.item.shortAnswer.inputValidationRegex=Input Validation Regex
+problem.bundle.item.shortAnswer.gradingRegex=Grading Regex
+
+problem.bundle.item.essay.statement=Statement
+problem.bundle.item.essay.score=Score
+
 problem.bundle.submission=Submissions
 problem.bundle.submission.list=Submissions
 problem.bundle.submission.view=View Submission
@@ -148,6 +157,8 @@ error.problem.slugExists=Slug already exists
 error.problem.bundle.item.undefined=Item undefined.
 error.problem.bundle.item.duplicateMeta=Duplicate meta on item.
 error.problem.bundle.item.multipleChoice.duplicateAlias=Duplicate choice aliases.
+error.problem.bundle.item.shortAnswer.invalidInputValidationRegex=The input validation regex is invalid.
+error.problem.bundle.item.shortAnswer.invalidGradingRegex=The grading regex is invalid.
 
 problem.version=Versions
 problem.version.list=List Versions
