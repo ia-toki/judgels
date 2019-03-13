@@ -3,6 +3,8 @@ import { ProblemStatement } from './problem';
 export enum ItemType {
   Statement = 'STATEMENT',
   MultipleChoice = 'MULTIPLE_CHOICE',
+  ShortAnswer = 'SHORT_ANSWER',
+  Essay = 'ESSAY',
 }
 
 export interface ItemConfig {

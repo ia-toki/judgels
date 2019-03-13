@@ -1,43 +1,31 @@
 import * as React from 'react';
-import { InjectedFormProps, Field, reduxForm } from 'redux-form';
 import { Button, Intent, Classes, ControlGroup } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 
-import './ItemStatementForm.css';
-import { AnswerState, StatementButtonText } from '../itemStatement';
+import './ItemShortAnswerForm.css';
+import { AnswerState, StatementButtonText } from 'components/ProblemWorksheetCard/Bundle/itemStatement';
 
-export interface ItemStatementFormProps {
+export interface ItemShortAnswerFormProps {
   initialAnswer?: string;
   meta: string;
   onSubmit?: (answer?: string) => Promise<any>;
   answerState: AnswerState;
 }
 
-export interface ItemStatementFormData {
-  value?: string;
-}
-
-export interface InjectedProps extends InjectedFormProps<ItemStatementFormData, ItemStatementFormProps> {}
-
-export interface ComponentProps extends ItemStatementFormProps, InjectedProps {}
-
-export interface ComponentState {
+export interface ItemShortAnswerFormState {
   answerState: AnswerState;
-  initialAnswer: string;
+  answer: string;
 }
 
-class ItemStatementForm extends React.PureComponent<ComponentProps, ComponentState> {
+export default class ItemShortAnswerForm extends React.PureComponent<
+  ItemShortAnswerFormProps,
+  ItemShortAnswerFormState
+> {
   fill: boolean = true;
-  constructor(props: ComponentProps) {
+  constructor(props: ItemShortAnswerFormProps) {
     super(props);
-    this.state = { answerState: props.answerState, initialAnswer: props.initialAnswer! };
+    this.state = { answerState: props.answerState, answer: props.initialAnswer ? props.initialAnswer : '' };
   }
-
-  renderInput = formProps => {
-    return (
-      <input {...formProps.input} readOnly={formProps.readOnly} className={`text-input ${classNames(Classes.INPUT)}`} />
-    );
-  };
 
   renderHelpText() {
     switch (this.state.answerState) {
@@ -88,19 +76,27 @@ class ItemStatementForm extends React.PureComponent<ComponentProps, ComponentSta
     if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
       readOnly = true;
     }
-    return <Field name={this.props.meta} component={this.renderInput} onChange={this.onChange} readOnly={readOnly} />;
+    return (
+      <input
+        name={this.props.meta}
+        value={this.state.answer}
+        onChange={this.onTextInputChange}
+        readOnly={readOnly}
+        className={`text-input ${classNames(Classes.INPUT)}`}
+      />
+    );
   }
 
-  onChange = () => {
-    this.setState({ answerState: AnswerState.Answering });
-  };
+  onTextInputChange = event => this.setState({ answer: event.target.value });
 
-  onSubmit = async formValue => {
+  onSubmit = async event => {
+    event.preventDefault();
+    const formValue = this.state.answer;
     if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
       this.setState({ answerState: AnswerState.Answering });
     } else {
       const oldValue = this.props.initialAnswer === undefined ? '' : this.props.initialAnswer;
-      const newValue = formValue[this.props.meta];
+      const newValue = formValue;
       if (this.props.onSubmit && oldValue !== newValue) {
         this.setState({ answerState: AnswerState.SavingAnswer });
         const val = await this.props.onSubmit(newValue);
@@ -112,12 +108,12 @@ class ItemStatementForm extends React.PureComponent<ComponentProps, ComponentSta
   };
 
   onCancelButtonClick = () => {
-    this.setState({ answerState: this.props.answerState, initialAnswer: this.props.initialAnswer! });
+    this.setState({ answerState: this.props.answerState, answer: this.props.initialAnswer! });
   };
 
   render() {
     return (
-      <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
+      <form onSubmit={this.onSubmit}>
         <ControlGroup fill={this.fill} className="item-statement-form">
           {this.renderTextInput()}
           {this.renderSubmitButton()}
@@ -128,8 +124,3 @@ class ItemStatementForm extends React.PureComponent<ComponentProps, ComponentSta
     );
   }
 }
-
-export default reduxForm<ItemStatementFormData, ItemStatementFormProps>({
-  form: 'item-statement-form',
-  enableReinitialize: true,
-})(ItemStatementForm);

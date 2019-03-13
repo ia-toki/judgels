@@ -8,6 +8,7 @@ import { HtmlText } from 'components/HtmlText/HtmlText';
 import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
 
 import './ProblemStatementCard.css';
+import { ItemShortAnswerCard } from './ItemShortAnswerCard/ItemShortAnswerCard';
 
 export interface ProblemStatementCardProps {
   items: Item[];
@@ -25,11 +26,15 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
   };
 
   renderStatement = (item: Item) => {
+    return <ItemStatementCard className="bundle-problem-statement-item" key={item.meta} {...item} />;
+  };
+
+  renderShortAnswer = (item: Item) => {
     const latestSubmission = this.props.latestSubmission;
     const latestAnswer = latestSubmission[item.jid];
     const initialAnswer = latestAnswer && latestAnswer.answer;
     return (
-      <ItemStatementCard
+      <ItemShortAnswerCard
         onSubmit={this.generateOnAnswer(item.jid)}
         className="bundle-problem-statement-item"
         key={item.meta}
@@ -67,10 +72,13 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         </div>
         <Divider />
         {items.map(item => {
-          if (item.type === ItemType.Statement) {
-            return this.renderStatement(item);
-          } else {
-            return this.renderMultipleChoice(item);
+          switch (item.type) {
+            case ItemType.MultipleChoice:
+              return this.renderMultipleChoice(item);
+            case ItemType.ShortAnswer:
+              return this.renderShortAnswer(item);
+            default:
+              return this.renderStatement(item);
           }
         })}
       </>
