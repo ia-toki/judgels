@@ -19,6 +19,9 @@ public final class BundleItemConfAdapters {
             case SHORT_ANSWER:
                 itemConfAdapter = new ItemShortAnswerConfAdapter();
                 break;
+            case ESSAY:
+                itemConfAdapter = new ItemEssayConfAdapter();
+                break;
             default: break;
         }
 

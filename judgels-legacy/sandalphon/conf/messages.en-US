@@ -138,6 +138,9 @@ problem.bundle.item.shortAnswer.penalty=Penalty
 problem.bundle.item.shortAnswer.inputValidationRegex=Input Validation Regex
 problem.bundle.item.shortAnswer.gradingRegex=Grading Regex
 
+problem.bundle.item.essay.statement=Statement
+problem.bundle.item.essay.score=Score
+
 problem.bundle.submission=Submissions
 problem.bundle.submission.list=Submissions
 problem.bundle.submission.view=View Submission

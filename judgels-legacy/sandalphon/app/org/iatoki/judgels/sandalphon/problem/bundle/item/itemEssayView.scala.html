@@ -1,0 +1,36 @@
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemEssayConf
+
+@(bundleItem: BundleItem, itemEssayConf: ItemEssayConf)
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="clearfix">
+            <div class="table-cell">
+                @(bundleItem.getNumber).&nbsp;
+            </div>
+            <div class="table-cell">
+                <div class="content-text">
+                @Html(itemEssayConf.statement)
+                </div>
+            </div>
+        </div>
+        <hr />
+        <textarea
+            rows="16"
+            cols="80"
+            wrap="off"
+            style="font-family: Consolas, Monaco, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;"
+            name="@bundleItem.getJid"
+            onkeydown="
+                // Code to disable tab navigation in the textarea and enter 2 spaces instead
+                if (event.keyCode === 9) {
+                    var v = this.value, s = this.selectionStart, e = this.selectionEnd;
+                    this.value = v.substring(0, s) + '  ' + v.substring(e);
+                    this.selectionStart = this.selectionEnd = s + 2;
+                    return false;
+                }
+            "
+        ></textarea>
+    </div>
+</div>
