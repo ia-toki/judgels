@@ -69,7 +69,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
 
         Grading grading = grader.grade(testItem1, "b");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
-        assertThat(grading.getScore()).contains(4);
+        assertThat(grading.getScore()).contains(4.0);
     }
 
     @Test
@@ -79,19 +79,19 @@ public class MultipleChoiceItemSubmissionGraderTests {
 
         grading = grader.grade(testItem1, "a");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem1, "c");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem1, "an answer which is not included in item choices");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem1, "");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
     }
 
     @Test

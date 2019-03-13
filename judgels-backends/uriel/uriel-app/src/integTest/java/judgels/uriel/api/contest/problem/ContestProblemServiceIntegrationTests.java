@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.Optional;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.sandalphon.api.problem.ProblemStatement;
+import judgels.sandalphon.api.problem.bundle.EssayItemConfig;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.bundle.MultipleChoiceItemConfig;
+import judgels.sandalphon.api.problem.bundle.ShortAnswerItemConfig;
 import judgels.sandalphon.api.problem.bundle.StatementItemConfig;
 import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
@@ -249,8 +251,8 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                                                 .meta("2")
                                                 .config(new MultipleChoiceItemConfig.Builder()
                                                         .statement("<p>ini soal kedua</p>\r\n")
-                                                        .score(4)
-                                                        .penalty(-1)
+                                                        .score(4.0)
+                                                        .penalty(-1.0)
                                                         .addChoices(
                                                                 new MultipleChoiceItemConfig.Choice.Builder()
                                                                         .alias("a")
@@ -261,6 +263,28 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                                                                         .content("pilihan b")
                                                                         .build()
                                                         )
+                                                        .build())
+                                                .build(),
+                                        new Item.Builder()
+                                                .jid("JIDITEMcD1oSDFJLadFSsMddfsf")
+                                                .type(ItemType.SHORT_ANSWER)
+                                                .number(3)
+                                                .meta("3")
+                                                .config(new ShortAnswerItemConfig.Builder()
+                                                        .statement("<p>ini soal short answer</p>\r\n")
+                                                        .score(4.0)
+                                                        .penalty(-1.0)
+                                                        .inputValidationRegex("\\d+")
+                                                        .build())
+                                                .build(),
+                                        new Item.Builder()
+                                                .jid("JIDITEMkhUulUkbUkYGBKYkfLHUh")
+                                                .type(ItemType.ESSAY)
+                                                .number(4)
+                                                .meta("4")
+                                                .config(new EssayItemConfig.Builder()
+                                                        .statement("<p>buat program hello world</p>\r\n")
+                                                        .score(12.0)
                                                         .build())
                                                 .build()
                                 )
