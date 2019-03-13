@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Button, Intent, Classes, ControlGroup } from '@blueprintjs/core';
+import { Button, Intent, Classes, ControlGroup, Callout } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 
 import './ItemShortAnswerForm.css';
 import { AnswerState, StatementButtonText } from 'components/ProblemWorksheetCard/Bundle/itemStatement';
+import { Item, ItemShortAnswerConfig } from 'modules/api/sandalphon/problemBundle';
 
-export interface ItemShortAnswerFormProps {
+export interface ItemShortAnswerFormProps extends Item {
   initialAnswer?: string;
   meta: string;
   onSubmit?: (answer?: string) => Promise<any>;
@@ -15,6 +16,7 @@ export interface ItemShortAnswerFormProps {
 export interface ItemShortAnswerFormState {
   answerState: AnswerState;
   answer: string;
+  wrongFormat: boolean;
 }
 
 export default class ItemShortAnswerForm extends React.PureComponent<
@@ -24,19 +26,35 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   fill: boolean = true;
   constructor(props: ItemShortAnswerFormProps) {
     super(props);
-    this.state = { answerState: props.answerState, answer: props.initialAnswer ? props.initialAnswer : '' };
+    this.state = {
+      answerState: props.answerState,
+      answer: props.initialAnswer ? props.initialAnswer : '',
+      wrongFormat: false,
+    };
   }
 
   renderHelpText() {
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
-        return <p>Belum ada jawaban</p>;
+        return (
+          <Callout intent={Intent.NONE} icon="issue" className="callout">
+            Belum ada jawaban
+          </Callout>
+        );
       case AnswerState.SavingAnswer:
-        return <p>Menyimpan jawaban...</p>;
+        return (
+          <Callout intent={Intent.NONE} icon="ban-circle" className="callout">
+            Menyimpan jawaban...
+          </Callout>
+        );
       case AnswerState.AnswerSaved:
-        return <p>Jawaban Tersimpan!</p>;
+        return (
+          <Callout intent={Intent.SUCCESS} icon="tick-circle" className="callout">
+            Jawaban Tersimpan!
+          </Callout>
+        );
       default:
-        return <p />;
+        return <div />;
     }
   }
 
@@ -71,6 +89,18 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     }
   }
 
+  renderWrongFormatNotice() {
+    if (this.state.wrongFormat) {
+      return (
+        <Callout intent={Intent.DANGER} icon="info-sign" className="callout">
+          <strong>Format jawaban salah</strong>
+        </Callout>
+      );
+    } else {
+      return <div />;
+    }
+  }
+
   renderTextInput() {
     let readOnly = false;
     if (this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved) {
@@ -87,7 +117,14 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     );
   }
 
-  onTextInputChange = event => this.setState({ answer: event.target.value });
+  onTextInputChange = event => {
+    const value = event.target.value as string;
+    const config: ItemShortAnswerConfig = this.props.config as ItemShortAnswerConfig;
+    const formatValid = value.match(config.inputValidationRegex);
+    formatValid
+      ? this.setState({ answer: event.target.value, wrongFormat: false })
+      : this.setState({ answer: event.target.value, wrongFormat: true });
+  };
 
   onSubmit = async event => {
     event.preventDefault();
@@ -108,7 +145,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   };
 
   onCancelButtonClick = () => {
-    this.setState({ answerState: this.props.answerState, answer: this.props.initialAnswer! });
+    this.setState({ answerState: this.props.answerState, answer: this.props.initialAnswer!, wrongFormat: false });
   };
 
   render() {
@@ -119,6 +156,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           {this.renderSubmitButton()}
           {this.renderCancelButton()}
         </ControlGroup>
+        <div>{this.renderWrongFormatNotice()}</div>
         <div>{this.renderHelpText()}</div>
       </form>
     );

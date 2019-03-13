@@ -18,6 +18,13 @@ export interface ItemMultipleChoiceConfig extends ItemConfig {
   }[];
 }
 
+export interface ItemShortAnswerConfig extends ItemConfig {
+  score: number;
+  penalty: number;
+  inputValidationRegex: string;
+  gradingRegex: string;
+}
+
 export interface Item {
   jid: string;
   type: ItemType;

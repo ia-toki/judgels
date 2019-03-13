@@ -24,6 +24,7 @@ export class ItemShortAnswerCard extends React.PureComponent<ItemShortAnswerCard
           initialAnswer={this.props.initialAnswer}
           onSubmit={this.props.onSubmit}
           meta={this.props.meta}
+          {...this.props}
           answerState={this.generateAnswerState()}
         />
       </Card>
