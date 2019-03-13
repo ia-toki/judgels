@@ -10,4 +10,5 @@
     <include file="migrations/001_add-points-to-contest-problem.xml"/>
     <include file="migrations/002_add-bundle-item-submission.xml"/>
     <include file="migrations/003_add-grading-to-bundle-item-submission.xml"/>
+    <include file="migrations/004_change-bundle-item-score-type-to-double.xml"/>
 </databaseChangeLog>

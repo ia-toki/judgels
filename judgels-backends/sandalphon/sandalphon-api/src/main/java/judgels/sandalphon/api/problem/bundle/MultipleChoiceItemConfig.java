@@ -8,8 +8,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableMultipleChoiceItemConfig.class)
 public interface MultipleChoiceItemConfig extends ItemConfig {
-    int getScore();
-    int getPenalty();
+    double getScore();
+    double getPenalty();
     List<Choice> getChoices();
 
     @Value.Immutable

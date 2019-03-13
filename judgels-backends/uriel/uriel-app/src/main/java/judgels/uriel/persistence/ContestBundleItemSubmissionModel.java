@@ -28,5 +28,5 @@ public class ContestBundleItemSubmissionModel extends JudgelsModel {
     public String verdict;
 
     @Column
-    public Integer score;
+    public Double score;
 }

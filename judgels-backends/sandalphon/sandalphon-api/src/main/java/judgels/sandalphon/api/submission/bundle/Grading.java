@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableGrading.class)
 public interface Grading {
     Verdict getVerdict();
-    Optional<Integer> getScore();
+    Optional<Double> getScore();
 
     class Builder extends ImmutableGrading.Builder {}
 }

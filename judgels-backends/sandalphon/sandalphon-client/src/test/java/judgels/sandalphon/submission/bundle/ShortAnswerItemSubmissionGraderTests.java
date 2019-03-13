@@ -75,19 +75,19 @@ public class ShortAnswerItemSubmissionGraderTests {
 
         grading = grader.grade(testItem1, "123");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
-        assertThat(grading.getScore()).contains(1);
+        assertThat(grading.getScore()).contains(1.0);
 
         grading = grader.grade(testItem2, "2,-2");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
-        assertThat(grading.getScore()).contains(4);
+        assertThat(grading.getScore()).contains(4.0);
 
         grading = grader.grade(testItem2, "-2,2");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
-        assertThat(grading.getScore()).contains(4);
+        assertThat(grading.getScore()).contains(4.0);
 
         grading = grader.grade(testItem2, "-2,2,");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
-        assertThat(grading.getScore()).contains(4);
+        assertThat(grading.getScore()).contains(4.0);
     }
 
     @Test
@@ -97,43 +97,43 @@ public class ShortAnswerItemSubmissionGraderTests {
 
         grading = grader.grade(testItem1, "99");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(0);
+        assertThat(grading.getScore()).contains(0.0);
 
         grading = grader.grade(testItem1, "124");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(0);
+        assertThat(grading.getScore()).contains(0.0);
 
         grading = grader.grade(testItem1, "1234");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(0);
+        assertThat(grading.getScore()).contains(0.0);
 
         grading = grader.grade(testItem1, "1123");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(0);
+        assertThat(grading.getScore()).contains(0.0);
 
         grading = grader.grade(testItem2, "2");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "-2");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "2,2");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "2,");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "-2,");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "c");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
-        assertThat(grading.getScore()).contains(-1);
+        assertThat(grading.getScore()).contains(-1.0);
     }
 
     @Test

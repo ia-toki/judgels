@@ -6,7 +6,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableEssayItemConfig.class)
 public interface EssayItemConfig extends ItemConfig {
-    int getScore();
+    double getScore();
 
     class Builder extends ImmutableEssayItemConfig.Builder {}
 }

@@ -7,8 +7,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableShortAnswerItemConfig.class)
 public interface ShortAnswerItemConfig extends ItemConfig {
-    int getScore();
-    int getPenalty();
+    double getScore();
+    double getPenalty();
     String getInputValidationRegex();
     Optional<String> getGradingRegex();
 

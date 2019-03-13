@@ -282,21 +282,21 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.WRONG_ANSWER).score(0).build());
+                new Grading.Builder().verdict(Verdict.WRONG_ANSWER).score(0.0).build());
 
         itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMtOoiXuIgPcD1oUsMzvbP");
         assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMtOoiXuIgPcD1oUsMzvbP");
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.ACCEPTED).score(4).build());
+                new Grading.Builder().verdict(Verdict.ACCEPTED).score(4.0).build());
 
         itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMcD1oSDFJLadFSsMddfsf");
         assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMcD1oSDFJLadFSsMddfsf");
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("123");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.ACCEPTED).score(4).build());
+                new Grading.Builder().verdict(Verdict.ACCEPTED).score(4.0).build());
 
         itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get("JIDITEMkhUulUkbUkYGBKYkfLHUh");
         assertThat(itemSubmissionResult.getItemJid()).isEqualTo("JIDITEMkhUulUkbUkYGBKYkfLHUh");
