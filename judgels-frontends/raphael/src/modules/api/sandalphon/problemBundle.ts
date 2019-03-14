@@ -25,6 +25,10 @@ export interface ItemShortAnswerConfig extends ItemConfig {
   gradingRegex: string;
 }
 
+export interface ItemEssayConfig extends ItemConfig {
+  score: number;
+}
+
 export interface Item {
   jid: string;
   type: ItemType;

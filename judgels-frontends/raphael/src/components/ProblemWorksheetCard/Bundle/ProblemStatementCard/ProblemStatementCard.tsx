@@ -9,6 +9,7 @@ import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
 
 import './ProblemStatementCard.css';
 import { ItemShortAnswerCard } from './ItemShortAnswerCard/ItemShortAnswerCard';
+import { ItemEssayCard } from './ItemEssayCard/ItemEssayCard';
 
 export interface ProblemStatementCardProps {
   items: Item[];
@@ -35,6 +36,21 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
     const initialAnswer = latestAnswer && latestAnswer.answer;
     return (
       <ItemShortAnswerCard
+        onSubmit={this.generateOnAnswer(item.jid)}
+        className="bundle-problem-statement-item"
+        key={item.meta}
+        {...item}
+        initialAnswer={initialAnswer}
+      />
+    );
+  };
+
+  renderEssay = (item: Item) => {
+    const latestSubmission = this.props.latestSubmission;
+    const latestAnswer = latestSubmission[item.jid];
+    const initialAnswer = latestAnswer && latestAnswer.answer;
+    return (
+      <ItemEssayCard
         onSubmit={this.generateOnAnswer(item.jid)}
         className="bundle-problem-statement-item"
         key={item.meta}
@@ -77,6 +93,8 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
               return this.renderMultipleChoice(item);
             case ItemType.ShortAnswer:
               return this.renderShortAnswer(item);
+            case ItemType.Essay:
+              return this.renderEssay(item);
             default:
               return this.renderStatement(item);
           }
