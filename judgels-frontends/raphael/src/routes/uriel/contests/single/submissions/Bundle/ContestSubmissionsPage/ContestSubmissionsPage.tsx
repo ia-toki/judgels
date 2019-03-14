@@ -52,7 +52,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
       return <Card className="bp3-skeleton">{'fake'.repeat(100)}</Card>;
     }
 
-    const { data, profilesMap, problemAliasesMap, itemNumbersMap } = response;
+    const { data, profilesMap, problemAliasesMap, itemNumbersMap, itemTypesMap } = response;
     const { contest } = this.props;
     const canManage = response.config.canManage;
 
@@ -81,7 +81,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
                 <td className="col-prob">{problemAliasesMap[item.problemJid] || '-'}</td>
                 <td className="col-item-num">{itemNumbersMap[item.itemJid] || '-'}</td>
                 <td>
-                  <FormattedAnswer answer={item.answer} />
+                  <FormattedAnswer answer={item.answer} type={itemTypesMap && itemTypesMap[item.jid]} />
                 </td>
                 {canManage && (
                   <td className="col-verdict">{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>
