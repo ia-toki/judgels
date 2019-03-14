@@ -12,10 +12,6 @@ export interface ItemShortAnswerCardProps extends Item {
 }
 
 export class ItemShortAnswerCard extends React.PureComponent<ItemShortAnswerCardProps> {
-  generateAnswerState() {
-    return this.props.initialAnswer ? AnswerState.AnswerSaved : AnswerState.NotAnswered;
-  }
-
   render() {
     return (
       <Card className={this.props.className}>
@@ -25,7 +21,7 @@ export class ItemShortAnswerCard extends React.PureComponent<ItemShortAnswerCard
           onSubmit={this.props.onSubmit}
           meta={this.props.meta}
           {...this.props}
-          answerState={this.generateAnswerState()}
+          answerState={this.props.initialAnswer ? AnswerState.AnswerSaved : AnswerState.NotAnswered}
         />
       </Card>
     );
