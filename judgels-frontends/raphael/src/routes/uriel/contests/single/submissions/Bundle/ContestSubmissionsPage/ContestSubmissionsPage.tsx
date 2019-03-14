@@ -12,6 +12,7 @@ import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { FormattedRelative } from 'react-intl';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ContentCard } from 'components/ContentCard/ContentCard';
+import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
 
 import './ContestSubmissionsPage.css';
 
@@ -79,7 +80,9 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
                 </td>
                 <td className="col-prob">{problemAliasesMap[item.problemJid] || '-'}</td>
                 <td className="col-item-num">{itemNumbersMap[item.itemJid] || '-'}</td>
-                <td>{item.answer || '-'}</td>
+                <td>
+                  <FormattedAnswer answer={item.answer} />
+                </td>
                 {canManage && (
                   <td className="col-verdict">{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>
                 )}
