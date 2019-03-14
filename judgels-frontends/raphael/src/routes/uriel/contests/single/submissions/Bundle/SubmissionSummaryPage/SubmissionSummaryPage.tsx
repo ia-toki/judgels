@@ -12,7 +12,7 @@ import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import './SubmissionSummaryPage.css';
 
 interface SubmissionSummaryPageRoute {
-  userJid: string;
+  userJid?: string;
 }
 
 export interface SubmissionSummaryPageProps extends RouteComponentProps<SubmissionSummaryPageRoute> {
