@@ -19,7 +19,6 @@ export interface ItemEssayFormState {
 }
 
 export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProps, ItemEssayFormState> {
-  trueValue: boolean = true;
   state: ItemEssayFormState = { answerState: this.props.answerState, answer: this.props.initialAnswer || '' };
 
   renderTextAreaInput() {
@@ -87,7 +86,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
           </Callout>
         );
       default:
-        return <div />;
+        return <div className="bp3-callout bp3-callout-icon callout-edit">&nbsp;</div>;
     }
   }
 
@@ -121,14 +120,13 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
   render() {
     return (
       <form onSubmit={this.onSubmit}>
-        <ControlGroup fill={this.trueValue}>
-          {this.renderTextAreaInput()}
-          <ControlGroup vertical={this.trueValue} className="buttons">
-            {this.renderSubmitButton()}
-            {this.renderCancelButton()}
-          </ControlGroup>
+        <ControlGroup fill>{this.renderTextAreaInput()}</ControlGroup>
+        <div className="divider" />
+        <ControlGroup fill>
+          {this.renderHelpText()}
+          {this.renderSubmitButton()}
+          {this.renderCancelButton()}
         </ControlGroup>
-        <div>{this.renderHelpText()}</div>
       </form>
     );
   }
