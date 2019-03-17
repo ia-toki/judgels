@@ -1,5 +1,8 @@
 package judgels.gabriel.engines.outputonly;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -10,20 +13,24 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableOutputOnlyGradingConfig.class)
 public interface OutputOnlyGradingConfig extends SingleSourceFileWithoutSubtasksGradingConfig {
+    @JsonInclude(Include.NON_ABSENT)
     Optional<String> getCustomScorer();
 
+    @JsonIgnore
     @Override
     default Map<String, String> getSourceFileFields() {
         return ImmutableMap.of("source", "Output files (.zip)");
     }
 
+    @Value.Default
     @Override
-    default int getTimeLimitInMilliseconds() {
+    default int getTimeLimit() {
         return 0;
     }
 
+    @Value.Default
     @Override
-    default int getMemoryLimitInKilobytes() {
+    default int getMemoryLimit() {
         return 0;
     }
 

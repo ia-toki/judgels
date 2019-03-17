@@ -2,12 +2,12 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.interactive.InteractiveGradingConfig;
 import org.apache.commons.io.FilenameUtils;
 import org.iatoki.judgels.FileInfo;
-import org.iatoki.judgels.gabriel.GradingConfig;
-import org.iatoki.judgels.gabriel.blackbox.TestCase;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
-import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveGradingConfig;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.ConfigurableWithAutoPopulation;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.interactiveGradingConfigView;
 import play.api.mvc.Call;
@@ -15,6 +15,7 @@ import play.data.Form;
 import play.twirl.api.Html;
 
 import java.util.List;
+import java.util.Optional;
 
 public final class InteractiveGradingEngineAdapter extends SingleSourceFileWithoutSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithAutoPopulation {
     @Override
@@ -23,10 +24,10 @@ public final class InteractiveGradingEngineAdapter extends SingleSourceFileWitho
         InteractiveGradingConfig castConfig = (InteractiveGradingConfig) config;
         fillSingleSourceFileWithoutSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
-        if (castConfig.getCommunicator() == null) {
+        if (!castConfig.getCommunicator().isPresent()) {
             form.communicator = "(none)";
         } else {
-            form.communicator = castConfig.getCommunicator();
+            form.communicator = castConfig.getCommunicator().get();
         }
 
         return Form.form(InteractiveGradingConfigForm.class).fill(form);
@@ -58,7 +59,12 @@ public final class InteractiveGradingEngineAdapter extends SingleSourceFileWitho
             communicator = formData.communicator;
         }
 
-        return new InteractiveGradingConfig(timeLimit, memoryLimit, testData, communicator);
+        return new InteractiveGradingConfig.Builder()
+                .timeLimit(timeLimit)
+                .memoryLimit(memoryLimit)
+                .testData(testData)
+                .communicator(Optional.ofNullable(communicator))
+                .build();
     }
 
     @Override
@@ -70,17 +76,20 @@ public final class InteractiveGradingEngineAdapter extends SingleSourceFileWitho
             String in = testDataFiles.get(i).getName();
             if (isTestCase(in)) {
                 if (in.contains("sample")) {
-                    sampleTestCases.add(new TestCase(in, null, ImmutableSet.of(0)));
+                    sampleTestCases.add(TestCase.of(in, "", ImmutableSet.of(0)));
                 } else {
-                    testCases.add(new TestCase(in, null, ImmutableSet.of(-1)));
+                    testCases.add(TestCase.of(in, "", ImmutableSet.of(-1)));
                 }
             }
         }
 
-        List<TestGroup> testData = ImmutableList.of(new TestGroup(0, sampleTestCases.build()), new TestGroup(-1, testCases.build()));
+        List<TestGroup> testData = ImmutableList.of(TestGroup.of(0, sampleTestCases.build()), TestGroup.of(-1, testCases.build()));
 
         InteractiveGradingConfig castConfig = (InteractiveGradingConfig) config;
-        return new InteractiveGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, castConfig.getCommunicator());
+        return new InteractiveGradingConfig.Builder()
+                .from(castConfig)
+                .testData(testData)
+                .build();
     }
 
     @Override

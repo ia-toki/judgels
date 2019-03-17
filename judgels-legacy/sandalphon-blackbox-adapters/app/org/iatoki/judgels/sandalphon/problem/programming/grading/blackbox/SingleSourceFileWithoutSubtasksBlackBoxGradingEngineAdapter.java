@@ -3,14 +3,14 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import org.iatoki.judgels.gabriel.blackbox.TestCase;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
-import org.iatoki.judgels.gabriel.blackbox.configs.SingleSourceFileWithoutSubtasksBlackBoxGradingConfig;
+import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.SingleSourceFileGradingConfig;
 
 import java.util.List;
 
 public abstract class SingleSourceFileWithoutSubtasksBlackBoxGradingEngineAdapter extends SingleSourceFileBlackBoxGradingEngineAdapter {
-    protected final void fillSingleSourceFileWithoutSubtasksBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileWithoutSubtasksBlackBoxGradingConfigForm form, SingleSourceFileWithoutSubtasksBlackBoxGradingConfig config) {
+    protected final void fillSingleSourceFileWithoutSubtasksBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileWithoutSubtasksBlackBoxGradingConfigForm form, SingleSourceFileGradingConfig config) {
         fillSingleSourceFileBlackBoxGradingConfigFormPartsFromConfig(form, config);
     }
 
@@ -33,12 +33,12 @@ public abstract class SingleSourceFileWithoutSubtasksBlackBoxGradingEngineAdapte
 
                 for (int j = 0; j < testGroup.getTestCases().size(); j++) {
                     TestCase sampleTestCase = testGroup.getTestCases().get(j);
-                    sampleTestCases.add(new TestCase(sampleTestCase.getInput(), sampleTestCase.getOutput(), ImmutableSet.of(0)));
+                    sampleTestCases.add(TestCase.of(sampleTestCase.getInput(), sampleTestCase.getOutput(), ImmutableSet.of(0)));
                 }
 
-                filledTestData.add(new TestGroup(0, sampleTestCases.build()));
+                filledTestData.add(TestGroup.of(0, sampleTestCases.build()));
             } else {
-                filledTestData.add(new TestGroup(-1, Lists.transform(testData.get(i).getTestCases(), tc -> new TestCase(tc.getInput(), tc.getOutput(), ImmutableSet.of(-1)))));
+                filledTestData.add(TestGroup.of(-1, Lists.transform(testData.get(i).getTestCases(), tc -> TestCase.of(tc.getInput(), tc.getOutput(), ImmutableSet.of(-1)))));
             }
         }
 

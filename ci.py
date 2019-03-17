@@ -40,8 +40,8 @@ MODULES = OrderedDict([
     (':play-commons', {':commons', ':judgels-commons:judgels-service-persistence'}),
     (':jophiel-commons', {':commons', ':judgels-commons:judgels-persistence-core'}),
     (':gabriel-commons', {':commons'}),
-    (':gabriel-blackbox', {':gabriel-commons'}),
-    (':sandalphon-commons', {':play-commons', ':gabriel-commons', ':api', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':gabriel:gabriel-api', ':sealtiel:sealtiel-api'}),
+    (':gabriel-blackbox', {':gabriel-commons', ':gabriel:gabriel-engines'}),
+    (':sandalphon-commons', {':play-commons', ':gabriel-commons', ':api', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':gabriel:gabriel-engine-api', ':sealtiel:sealtiel-api'}),
     (':sandalphon-blackbox-adapters', {':sandalphon-commons', ':gabriel-blackbox'}),
 
 

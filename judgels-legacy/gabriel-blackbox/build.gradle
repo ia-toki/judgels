@@ -2,4 +2,9 @@ apply from: '../gradle/java.gradle'
 
 dependencies {
     api project(':gabriel-commons')
+
+    api project(':gabriel:gabriel-engines')
+
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
 }

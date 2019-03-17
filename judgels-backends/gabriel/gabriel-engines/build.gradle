@@ -1,12 +1,16 @@
 apply from: '../../gradle/java.gradle'
 
 dependencies {
-    implementation project(':gabriel:gabriel-engine-api')
+    api project(':gabriel:gabriel-engine-api')
 
     implementation "com.google.guava:guava:$guavaVersion"
     implementation "org.apache.commons:commons-lang3:$apacheCommonsLang3Version"
 
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
+    testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
 
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }

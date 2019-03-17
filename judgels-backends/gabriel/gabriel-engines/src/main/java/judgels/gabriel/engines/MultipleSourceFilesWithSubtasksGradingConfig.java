@@ -1,5 +1,6 @@
 package judgels.gabriel.engines;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import judgels.gabriel.api.Subtask;
@@ -7,6 +8,7 @@ import judgels.gabriel.api.Subtask;
 public interface MultipleSourceFilesWithSubtasksGradingConfig extends MultipleSourceFilesGradingConfig {
     List<Integer> getSubtaskPoints();
 
+    @JsonIgnore
     @Override
     default List<Subtask> getSubtasks() {
         ImmutableList.Builder<Subtask> subtasks = ImmutableList.builder();

@@ -10,5 +10,9 @@ public interface TestGroup {
     int getId();
     List<TestCase> getTestCases();
 
+    static TestGroup of(int id, List<TestCase> testCases) {
+        return new TestGroup.Builder().id(id).testCases(testCases).build();
+    }
+
     class Builder extends ImmutableTestGroup.Builder {}
 }
