@@ -23,7 +23,6 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   ItemShortAnswerFormProps,
   ItemShortAnswerFormState
 > {
-  fill: boolean = true;
   state: ItemShortAnswerFormState = {
     answerState: this.props.answerState,
     answer: this.props.initialAnswer || '',
@@ -144,7 +143,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   render() {
     return (
       <form onSubmit={this.onSubmit}>
-        <ControlGroup fill={this.fill} className="item-statement-form">
+        <ControlGroup fill className="item-statement-form">
           {this.renderTextInput()}
           {this.renderSubmitButton()}
           {this.renderCancelButton()}
