@@ -2,7 +2,7 @@
   width: 60%
 }
 
-.text-input {
+.text-area {
   width: 80%;
   min-height: 100px;
 }
@@ -15,19 +15,15 @@
   resize: none;
 }
 
-.buttons {
-  width: 20%;
-}
-
-.button {
+.essay-button {
   width: 15%;
 }
 
-.callout {
+.essay-callout {
   width: 85%
 }
 
-.callout-edit {
+.essay-callout-edit {
   width: 70%;
   background-color: white;
   color: white;
