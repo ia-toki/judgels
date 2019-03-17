@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.Verdict;
@@ -74,6 +75,11 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(submissionsResponse.getItemNumbersMap()).hasSize(1);
         assertThat(submissionsResponse.getItemNumbersMap()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
         assertThat(submissionsResponse.getItemNumbersMap().get("JIDITEMtOoiXuIgPcD1oUsMzvbP")).isEqualTo(2);
+
+        assertThat(submissionsResponse.getItemTypesMap()).hasSize(1);
+        assertThat(submissionsResponse.getItemTypesMap()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(submissionsResponse.getItemTypesMap().get("JIDITEMtOoiXuIgPcD1oUsMzvbP"))
+                .isEqualTo(ItemType.MULTIPLE_CHOICE);
 
         assertThat(submissionsResponse.getData().getPage()).hasSize(1);
 
@@ -139,6 +145,20 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("b");
         assertThat(itemSubmissionResult.getGrading()).isEmpty();
+
+        assertThat(summaryResult.getItemTypesMap()).hasSize(4);
+        assertThat(summaryResult.getItemTypesMap()).containsKey("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
+        assertThat(summaryResult.getItemTypesMap().get("JIDITEMPeKuqUA0Q7zvJjTQXXVD"))
+                .isEqualTo(ItemType.MULTIPLE_CHOICE);
+        assertThat(summaryResult.getItemTypesMap()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(summaryResult.getItemTypesMap().get("JIDITEMtOoiXuIgPcD1oUsMzvbP"))
+                .isEqualTo(ItemType.MULTIPLE_CHOICE);
+        assertThat(summaryResult.getItemTypesMap()).containsKey("JIDITEMcD1oSDFJLadFSsMddfsf");
+        assertThat(summaryResult.getItemTypesMap().get("JIDITEMcD1oSDFJLadFSsMddfsf"))
+                .isEqualTo(ItemType.SHORT_ANSWER);
+        assertThat(summaryResult.getItemTypesMap()).containsKey("JIDITEMkhUulUkbUkYGBKYkfLHUh");
+        assertThat(summaryResult.getItemTypesMap().get("JIDITEMkhUulUkbUkYGBKYkfLHUh"))
+                .isEqualTo(ItemType.ESSAY);
 
         assertThat(summaryResult.getItemJidsByProblemJid()).hasSize(1);
         assertThat(summaryResult.getItemJidsByProblemJid()).isEqualTo(
@@ -270,6 +290,20 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
                 Optional.of(CONTESTANT_JID),
                 Optional.empty()
         );
+
+        assertThat(summaryResult.getItemTypesMap()).hasSize(4);
+        assertThat(summaryResult.getItemTypesMap()).containsKey("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
+        assertThat(summaryResult.getItemTypesMap().get("JIDITEMPeKuqUA0Q7zvJjTQXXVD"))
+                .isEqualTo(ItemType.MULTIPLE_CHOICE);
+        assertThat(summaryResult.getItemTypesMap()).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
+        assertThat(summaryResult.getItemTypesMap().get("JIDITEMtOoiXuIgPcD1oUsMzvbP"))
+                .isEqualTo(ItemType.MULTIPLE_CHOICE);
+        assertThat(summaryResult.getItemTypesMap()).containsKey("JIDITEMcD1oSDFJLadFSsMddfsf");
+        assertThat(summaryResult.getItemTypesMap().get("JIDITEMcD1oSDFJLadFSsMddfsf"))
+                .isEqualTo(ItemType.SHORT_ANSWER);
+        assertThat(summaryResult.getItemTypesMap()).containsKey("JIDITEMkhUulUkbUkYGBKYkfLHUh");
+        assertThat(summaryResult.getItemTypesMap().get("JIDITEMkhUulUkbUkYGBKYkfLHUh"))
+                .isEqualTo(ItemType.ESSAY);
 
         assertThat(summaryResult.getSubmissionsByItemJid()).hasSize(4);
         assertThat(summaryResult.getSubmissionsByItemJid()).containsKey("JIDITEMPeKuqUA0Q7zvJjTQXXVD");
