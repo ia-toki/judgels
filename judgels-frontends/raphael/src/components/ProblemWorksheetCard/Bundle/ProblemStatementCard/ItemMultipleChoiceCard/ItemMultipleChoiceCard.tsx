@@ -8,7 +8,7 @@ import './ItemMultipleChoiceCard.css';
 export interface ItemMultipleChoiceCardProps extends Item {
   className?: string;
   initialAnswer?: string;
-  onChoiceChange?: (choice?: string) => any;
+  onChoiceChange?: (choice?: string) => Promise<any>;
   itemNumber: number;
 }
 

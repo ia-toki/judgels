@@ -11,7 +11,7 @@ export interface ProblemWorksheetCardProps {
   worksheet: ProblemWorksheet;
   language: string;
   latestSubmission: { [id: string]: ItemSubmission };
-  onAnswerItem: (itemJid: string, answer: string) => any;
+  onAnswerItem: (itemJid: string, answer: string) => Promise<any>;
 }
 
 export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCardProps> {
