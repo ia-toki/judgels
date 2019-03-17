@@ -128,10 +128,8 @@ export default class ItemShortAnswerForm extends React.PureComponent<
       const newValue = formValue;
       if (this.props.onSubmit && oldValue !== newValue) {
         this.setState({ answerState: AnswerState.SavingAnswer });
-        const val = await this.props.onSubmit(newValue);
-        if (val === 1) {
-          this.setState({ answerState: AnswerState.AnswerSaved });
-        }
+        await this.props.onSubmit(newValue);
+        this.setState({ answerState: AnswerState.AnswerSaved });
       }
     }
   };
