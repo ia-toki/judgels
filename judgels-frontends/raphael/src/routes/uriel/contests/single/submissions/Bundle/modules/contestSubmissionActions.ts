@@ -1,19 +1,19 @@
 import { selectToken } from 'modules/session/sessionSelectors';
 
 export const contestSubmissionActions = {
-  getSubmissions: (contestJid: string, userJid?: string, problemJid?: string, page?: number) => {
+  getSubmissions: (contestJid: string, username?: string, problemAlias?: string, page?: number) => {
     return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
       const token = selectToken(getState());
-      return await contestSubmissionBundleAPI.getSubmissions(token, contestJid, userJid, problemJid, page);
+      return await contestSubmissionBundleAPI.getSubmissions(token, contestJid, username, problemAlias, page);
     };
   },
 
-  createItemSubmission: (contestJid: string, problemJid: string, itemJid: string, answer: string) => {
+  createItemSubmission: (contestJid: string, problemAlias: string, itemJid: string, answer: string) => {
     return async (dispatch, getState, { contestSubmissionBundleAPI, toastActions }) => {
       const token = selectToken(getState());
       const data = {
         contestJid,
-        problemJid,
+        problemAlias,
         itemJid,
         answer,
       };
@@ -24,17 +24,17 @@ export const contestSubmissionActions = {
     };
   },
 
-  getSummary: (contestJid: string, userJid?: string, language?: string) => {
+  getSummary: (contestJid: string, username?: string, language?: string) => {
     return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
       const token = selectToken(getState());
-      return contestSubmissionBundleAPI.getAnswerSummaryForContestant(token, contestJid, userJid, language);
+      return contestSubmissionBundleAPI.getAnswerSummaryForContestant(token, contestJid, username, language);
     };
   },
 
-  getLatestSubmissions: (contestJid: string, problemJid: string) => {
+  getLatestSubmissions: (contestJid: string, problemAlias: string) => {
     return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
       const token = selectToken(getState());
-      return contestSubmissionBundleAPI.getLatestSubmissionsByUserForProblemInContest(token, contestJid, problemJid);
+      return contestSubmissionBundleAPI.getLatestSubmissionsByUserForProblemInContest(token, contestJid, problemAlias);
     };
   },
 };

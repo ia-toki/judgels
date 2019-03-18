@@ -30,8 +30,8 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     problemAlias: string,
     language?: string
   ) => Promise<ContestProblemWorksheet>;
-  onCreateSubmission: (contestJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
-  onGetLatestSubmission: (contestJid: string, problemJid: string) => Promise<{ [id: string]: ItemSubmission }>;
+  onCreateSubmission: (contestJid: string, problemAlias: string, itemJid: string, answer: string) => Promise<void>;
+  onGetLatestSubmission: (contestJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
@@ -54,7 +54,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       this.props.statementLanguage
     );
 
-    const latestSubmission = await this.props.onGetLatestSubmission(this.props.contest.jid, problem.problemJid);
+    const latestSubmission = await this.props.onGetLatestSubmission(this.props.contest.jid, problem.alias);
     this.setState({
       latestSubmission,
       defaultLanguage,
@@ -88,7 +88,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
 
   private onCreateSubmission = async (itemJid: string, answer: string) => {
     const problem = this.state.problem!;
-    return await this.props.onCreateSubmission(this.props.contest.jid, problem.problemJid, itemJid, answer);
+    return await this.props.onCreateSubmission(this.props.contest.jid, problem.alias, itemJid, answer);
   };
 
   private renderStatementLanguageWidget = () => {

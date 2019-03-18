@@ -19,8 +19,8 @@ import './ContestSubmissionsPage.css';
 export interface ContestSubmissionsPageProps {
   onGetSubmissions: (
     contestJid: string,
-    userJid?: string,
-    problemJid?: string,
+    username?: string,
+    problemAlias?: string,
     page?: number
   ) => Promise<ContestItemSubmissionsResponse>;
   contest: Contest;
@@ -90,7 +90,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
                   <FormattedRelative value={item.time} />
                 </td>
                 <td className="col-action">
-                  <Link to={`/contests/${contest.slug}/submissions/users/${item.userJid}`}>
+                  <Link to={`/contests/${contest.slug}/submissions/users/${profilesMap[item.userJid].username}`}>
                     <Icon icon="search" />
                   </Link>
                 </td>

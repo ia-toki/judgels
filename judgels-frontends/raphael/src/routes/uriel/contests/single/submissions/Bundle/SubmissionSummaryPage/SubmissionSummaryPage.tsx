@@ -15,13 +15,13 @@ import { UserRef } from 'components/UserRef/UserRef';
 import { Profile } from 'modules/api/jophiel/profile';
 
 interface SubmissionSummaryPageRoute {
-  userJid?: string;
+  username?: string;
 }
 
 export interface SubmissionSummaryPageProps extends RouteComponentProps<SubmissionSummaryPageRoute> {
   contest: Contest;
   language?: string;
-  onGetSummary: (contestJid: string, userJid?: string, language?: string) => Promise<ContestantAnswerSummaryResponse>;
+  onGetSummary: (contestJid: string, username?: string, language?: string) => Promise<ContestantAnswerSummaryResponse>;
 }
 
 export interface SubmissionSummaryPageState {
@@ -37,7 +37,7 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
 
   async componentDidMount() {
     const { contest, onGetSummary } = this.props;
-    const response = await onGetSummary(contest.jid, this.props.match.params.userJid, this.props.language);
+    const response = await onGetSummary(contest.jid, this.props.match.params.username, this.props.language);
 
     const problemSummaries: ProblemSubmissionCardProps[] = [];
     for (const problemJid of Object.keys(response.itemJidsByProblemJid)) {

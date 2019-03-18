@@ -9,7 +9,7 @@ import thunk from 'redux-thunk';
 
 import { webPrefsReducer } from 'modules/webPrefs/webPrefsReducer';
 import { ContestProblemStatus } from 'modules/api/uriel/contestProblem';
-import { contest, contestJid, problemJid } from 'fixtures/state';
+import { contest, contestJid, problemJid, problemAlias } from 'fixtures/state';
 
 import { createContestProblemPage } from './ContestProblemPage';
 import { contestReducer, PutContest } from '../../../../../modules/contestReducer';
@@ -91,7 +91,7 @@ describe('BundleContestProblemPage', () => {
       breadcrumbsActions
     );
 
-    history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/C`] });
+    history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/${problemAlias}`] });
     wrapper = mount(
       <Provider store={store}>
         <ConnectedRouter history={history}>
@@ -104,11 +104,11 @@ describe('BundleContestProblemPage', () => {
   test('navigation', async () => {
     await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
-    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`, 'Problem C');
+    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/${problemAlias}`, 'Problem C');
 
     history.push('/contests/xyz/');
     await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/C`);
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/${problemAlias}`);
   });
 
   test('submission form', async () => {
@@ -119,7 +119,7 @@ describe('BundleContestProblemPage', () => {
     inp.simulate('change');
     expect(contestSubmissionActions.createItemSubmission).toHaveBeenCalledWith(
       contestJid,
-      problemJid,
+      problemAlias,
       'fakeitemjid',
       'a'
     );
