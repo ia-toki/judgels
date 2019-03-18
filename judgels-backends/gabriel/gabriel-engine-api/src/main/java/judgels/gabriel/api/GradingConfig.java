@@ -5,8 +5,8 @@ import java.util.Map;
 
 public interface GradingConfig {
     Map<String, String> getSourceFileFields();
-    int getTimeLimitInMilliseconds();
-    int getMemoryLimitInKilobytes();
+    int getTimeLimit();
+    int getMemoryLimit();
     List<TestGroup> getTestData();
     List<Subtask> getSubtasks();
 }

@@ -1,9 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.programming;
 
 import com.google.inject.ImplementedBy;
+import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import org.iatoki.judgels.FileInfo;
-import org.iatoki.judgels.gabriel.GradingConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

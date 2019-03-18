@@ -1,5 +1,6 @@
 package judgels.gabriel.engines;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 public interface MultipleSourceFilesGradingConfig extends GradingConfig {
     List<String> getSourceFileFieldKeys();
 
+    @JsonIgnore
     @Override
     default Map<String, String> getSourceFileFields() {
         if (getSourceFileFieldKeys().size() == 1) {

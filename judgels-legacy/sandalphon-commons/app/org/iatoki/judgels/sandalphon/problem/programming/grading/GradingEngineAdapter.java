@@ -1,8 +1,8 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
+import judgels.gabriel.api.GradingConfig;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.FileInfo;
-import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 import play.api.mvc.Call;

@@ -1,5 +1,7 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
+import judgels.gabriel.api.Subtask;
+
 import java.util.List;
 
 public interface Reducer {

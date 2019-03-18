@@ -1,27 +1,26 @@
 package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.Gson;
-import org.iatoki.judgels.gabriel.GradingConfig;
+import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.interactive.InteractiveWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
 import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
-import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
-import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.languages.Cpp11GradingLanguage;
+import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingEngine {
@@ -47,16 +46,16 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
     }
 
     @Override
-    protected void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
+    protected void prepareAlgorithms(GradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
         InteractiveWithSubtasksGradingConfig castConfig = (InteractiveWithSubtasksGradingConfig) config;
-        if (castConfig.getCommunicator() == null) {
+        if (!castConfig.getCommunicator().isPresent()) {
             throw new PreparationException("Communicator not specified");
         }
 
         String sourceFieldKey = config.getSourceFileFields().keySet().iterator().next();
 
         File contestantSourceFile = sourceFiles.get(sourceFieldKey);
-        File communicatorSourceFile = helperFiles.get(castConfig.getCommunicator());
+        File communicatorSourceFile = helperFiles.get(castConfig.getCommunicator().get());
 
         compilerSandbox = sandboxFactory.newSandbox();
         compiler = new SingleSourceFileCompiler(compilerSandbox, getCompilationDir(), language, sourceFieldKey, contestantSourceFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());
@@ -64,7 +63,7 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
         evaluatorContestantSandbox = sandboxFactory.newSandbox();
         evaluatorCommunicatorSandbox = sandboxFactory.newSandbox();
 
-        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile,  getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes());
+        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile,  getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), castConfig.getTimeLimit(), castConfig.getMemoryLimit());
         scorer = new IdentityScorer();
         reducer = new SubtaskReducer();
     }
@@ -95,12 +94,16 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new InteractiveWithSubtasksGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), null);
+        return new InteractiveWithSubtasksGradingConfig.Builder()
+                .timeLimit(getDefaultCompilationTimeLimitInMilliseconds())
+                .memoryLimit(getDefaultMemoryLimitInKilobytes())
+                .addTestData(TestGroup.of(0, ImmutableList.of()))
+                .build();
     }
 
     @Override
-    public GradingConfig createGradingConfigFromJson(String json) {
-        return new Gson().fromJson(json, InteractiveWithSubtasksGradingConfig.class);
+    public GradingConfig createGradingConfigFromJson(String json) throws IOException {
+        return MAPPER.readValue(json, InteractiveWithSubtasksGradingConfig.class);
     }
 
     @Override
