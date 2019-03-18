@@ -1,34 +1,36 @@
 .item-essay-form {
-  width: 60%
-}
+  &.form {
+    width: 60%;
+  }
 
-.text-area {
-  width: 80%;
-  min-height: 100px;
-}
+  &.text-area {
+    width: 80%;
+    min-height: 100px;
 
-.live {
-  resize: vertical;
-}
+    &.live {
+      resize: vertical;
+    }
 
-.readonly {
-  resize: none;
-}
+    &.readonly {
+      resize: none;
+    }
+  }
 
-.essay-button {
-  width: 15%;
-}
+  &.essay-button {
+    width: 15%;
+  }
 
-.essay-callout {
-  width: 85%
-}
+  &.essay-callout {
+    width: 85%
+  }
 
-.essay-callout-edit {
-  width: 70%;
-  background-color: white;
-  color: white;
-}
+  &.essay-callout-edit {
+    width: 70%;
+    background-color: white;
+    color: white;
+  }
 
-.divider {
-  margin-top: 3px;
+  &.divider {
+    margin-top: 3px;
+  }
 }
