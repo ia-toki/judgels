@@ -4,6 +4,8 @@ import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { FormattedRelative } from 'react-intl';
 import { ContentCard } from 'components/ContentCard/ContentCard';
+import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
+import { ItemType } from 'modules/api/sandalphon/problemBundle';
 
 import './ProblemSubmissionCard.css';
 
@@ -12,6 +14,7 @@ export interface ProblemSubmissionCardProps {
   alias: string;
   itemJids: string[];
   submissionsByItemJid: { [itemJid: string]: ItemSubmission };
+  itemTypesMap: { [itemJid: string]: ItemType };
   canSupervise: boolean;
   canManage: boolean;
 }
@@ -21,6 +24,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
   alias,
   itemJids,
   submissionsByItemJid,
+  itemTypesMap,
   canManage,
 }) => {
   const renderSingleRow = (itemJid: string, index: number) => {
@@ -29,7 +33,9 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
       return (
         <tr key={itemJid}>
           <td className="col-item-num">{index + 1}</td>
-          <td>{submission.answer}</td>
+          <td>
+            <FormattedAnswer answer={submission.answer} type={itemTypesMap[itemJid]} />
+          </td>
           {canManage && (
             <td className="col-verdict">
               {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
