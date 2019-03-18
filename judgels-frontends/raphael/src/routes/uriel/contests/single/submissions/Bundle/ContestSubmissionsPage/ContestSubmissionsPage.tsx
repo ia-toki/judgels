@@ -81,7 +81,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
                 <td className="col-prob">{problemAliasesMap[item.problemJid] || '-'}</td>
                 <td className="col-item-num">{itemNumbersMap[item.itemJid] || '-'}</td>
                 <td>
-                  <FormattedAnswer answer={item.answer} type={itemTypesMap && itemTypesMap[item.jid]} />
+                  <FormattedAnswer answer={item.answer} type={itemTypesMap[item.itemJid]} />
                 </td>
                 {canManage && (
                   <td className="col-verdict">{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>
