@@ -1,6 +1,7 @@
 package judgels.uriel.api.contest.submission.bundle;
 
-import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
+import static judgels.uriel.api.mocks.MockJophiel.ADMIN;
+import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.CONTESTANT_JID;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_HEADER;
@@ -27,6 +28,7 @@ import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import org.junit.jupiter.api.Test;
 
 class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServiceIntegrationTests {
+    private static final String PROBLEM_3_ALIAS = "B";
     private ContestProblemService problemService = createService(ContestProblemService.class);
     private ContestItemSubmissionService submissionService = createService(ContestItemSubmissionService.class);
 
@@ -38,7 +40,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         problemService.setProblems(MANAGER_HEADER, contest.getJid(), ImmutableList.of(
                 new ContestProblemData.Builder()
-                        .alias("B")
+                        .alias(PROBLEM_3_ALIAS)
                         .slug(PROBLEM_3_SLUG)
                         .status(ContestProblemStatus.OPEN)
                         .submissionsLimit(0)
@@ -46,7 +48,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemJid(PROBLEM_3_JID)
+                .problemAlias(PROBLEM_3_ALIAS)
                 .itemJid("JIDITEMtOoiXuIgPcD1oUsMzvbP")
                 .answer("b")
                 .build()
@@ -59,11 +61,11 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         ContestItemSubmissionsResponse submissionsResponse;
 
         submissionsResponse = submissionService.getSubmissions(
-                CONTESTANT_HEADER, contest.getJid(), Optional.empty(), Optional.of(PROBLEM_3_JID), Optional.of(1));
+                CONTESTANT_HEADER, contest.getJid(), Optional.empty(), Optional.of(PROBLEM_3_ALIAS), Optional.of(1));
 
         assertThat(submissionsResponse.getProblemAliasesMap()).hasSize(1);
         assertThat(submissionsResponse.getProblemAliasesMap()).containsKey("problemJid3");
-        assertThat(submissionsResponse.getProblemAliasesMap().get("problemJid3")).isEqualTo("B");
+        assertThat(submissionsResponse.getProblemAliasesMap().get("problemJid3")).isEqualTo(PROBLEM_3_ALIAS);
 
         assertThat(submissionsResponse.getProfilesMap()).hasSize(1);
         assertThat(submissionsResponse.getProfilesMap()).containsKey(CONTESTANT_JID);
@@ -94,8 +96,8 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         answersMap = submissionService.getLatestSubmissionsByUserForProblemInContest(
                 CONTESTANT_HEADER,
                 contest.getJid(),
-                Optional.of(ADMIN_JID), // Contestant should not be able to see other users' answers
-                PROBLEM_3_JID
+                Optional.of(ADMIN), // Contestant should not be able to see other users' answers
+                PROBLEM_3_ALIAS
         );
 
         assertThat(answersMap).hasSize(1);
@@ -112,8 +114,8 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         answersMap = submissionService.getLatestSubmissionsByUserForProblemInContest(
                 SUPERVISOR_HEADER,
                 contest.getJid(),
-                Optional.of(CONTESTANT_JID),
-                PROBLEM_3_JID
+                Optional.of(CONTESTANT),
+                PROBLEM_3_ALIAS
         );
 
         assertThat(answersMap).hasSize(1);
@@ -122,14 +124,14 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         summaryResult = submissionService.getAnswerSummaryForContestant(
                 CONTESTANT_HEADER,
                 contest.getJid(),
-                Optional.of(ADMIN_JID), // Contestant should not be able to see other users' answers
+                Optional.of(ADMIN), // Contestant should not be able to see other users' answers
                 Optional.empty()
         );
 
         assertThat(summaryResult.getProfile().getUsername()).isEqualTo("contestant");
 
         assertThat(summaryResult.getProblemAliasesMap()).containsKey("problemJid3");
-        assertThat(summaryResult.getProblemAliasesMap().get("problemJid3")).isEqualTo("B");
+        assertThat(summaryResult.getProblemAliasesMap().get("problemJid3")).isEqualTo(PROBLEM_3_ALIAS);
 
         assertThat(summaryResult.getProblemNamesMap()).containsKey("problemJid3");
         assertThat(summaryResult.getProblemNamesMap().get("problemJid3")).isEqualTo("Problem 3");
@@ -175,14 +177,14 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         summaryResult = submissionService.getAnswerSummaryForContestant(
                 MANAGER_HEADER,
                 contest.getJid(),
-                Optional.of(CONTESTANT_JID),
+                Optional.of(CONTESTANT),
                 Optional.empty()
         );
 
         assertThat(summaryResult.getProfile().getUsername()).isEqualTo("contestant");
 
         assertThat(summaryResult.getProblemAliasesMap()).containsKey("problemJid3");
-        assertThat(summaryResult.getProblemAliasesMap().get("problemJid3")).isEqualTo("B");
+        assertThat(summaryResult.getProblemAliasesMap().get("problemJid3")).isEqualTo(PROBLEM_3_ALIAS);
 
         assertThat(summaryResult.getProblemNamesMap()).containsKey("problemJid3");
         assertThat(summaryResult.getProblemNamesMap().get("problemJid3")).isEqualTo("Problem 3");
@@ -202,7 +204,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemJid(PROBLEM_3_JID)
+                .problemAlias(PROBLEM_3_ALIAS)
                 .itemJid("JIDITEMtOoiXuIgPcD1oUsMzvbP")
                 .answer("a")
                 .build()
@@ -210,7 +212,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemJid(PROBLEM_3_JID)
+                .problemAlias(PROBLEM_3_ALIAS)
                 .itemJid("JIDITEMPeKuqUA0Q7zvJjTQXXVD")
                 .answer("a")
                 .build()
@@ -220,7 +222,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
                 CONTESTANT_HEADER,
                 contest.getJid(),
                 Optional.empty(),
-                PROBLEM_3_JID
+                PROBLEM_3_ALIAS
         );
 
         assertThat(answersMap).hasSize(2);
@@ -246,7 +248,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         summaryResult = submissionService.getAnswerSummaryForContestant(
                 MANAGER_HEADER,
                 contest.getJid(),
-                Optional.of(CONTESTANT_JID),
+                Optional.of(CONTESTANT),
                 Optional.empty()
         );
 
@@ -270,7 +272,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemJid(PROBLEM_3_JID)
+                .problemAlias(PROBLEM_3_ALIAS)
                 .itemJid("JIDITEMkhUulUkbUkYGBKYkfLHUh")
                 .answer("print('hello world!')")
                 .build()
@@ -278,7 +280,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemJid(PROBLEM_3_JID)
+                .problemAlias(PROBLEM_3_ALIAS)
                 .itemJid("JIDITEMcD1oSDFJLadFSsMddfsf")
                 .answer("123")
                 .build()
@@ -287,7 +289,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         summaryResult = submissionService.getAnswerSummaryForContestant(
                 MANAGER_HEADER,
                 contest.getJid(),
-                Optional.of(CONTESTANT_JID),
+                Optional.of(CONTESTANT),
                 Optional.empty()
         );
 

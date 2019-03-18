@@ -12,7 +12,6 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.Verdict;
-import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionData;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
 import judgels.uriel.persistence.ContestBundleItemSubmissionModel;
 
@@ -42,36 +41,37 @@ public class ContestItemSubmissionStore {
     }
 
     public ItemSubmission upsertSubmission(
-            ContestItemSubmissionData data,
+            String contestJid,
+            String problemJid,
+            String itemJid,
+            String answer,
             Grading grading,
             String userJid) {
 
         Optional<ContestBundleItemSubmissionModel> maybeModel = submissionDao
-                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
-                        data.getContestJid(), data.getProblemJid(), data.getItemJid(), userJid);
+                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(contestJid, problemJid, itemJid, userJid);
 
         if (maybeModel.isPresent()) {
             ContestBundleItemSubmissionModel model = maybeModel.get();
-            model.answer = data.getAnswer();
+            model.answer = answer;
             model.verdict = grading.getVerdict().name();
             model.score = grading.getScore().orElse(null);
             return fromModel(submissionDao.update(model));
         } else {
             ContestBundleItemSubmissionModel model = new ContestBundleItemSubmissionModel();
-            model.containerJid = data.getContestJid();
-            model.problemJid = data.getProblemJid();
-            model.itemJid = data.getItemJid();
-            model.answer = data.getAnswer();
+            model.containerJid = contestJid;
+            model.problemJid = problemJid;
+            model.itemJid = itemJid;
+            model.answer = answer;
             model.verdict = grading.getVerdict().name();
             model.score = grading.getScore().orElse(null);
             return fromModel(submissionDao.insert(model));
         }
     }
 
-    public void deleteSubmission(ContestItemSubmissionData data, String userJid) {
+    public void deleteSubmission(String contestJid, String problemJid, String itemJid, String userJid) {
         Optional<ContestBundleItemSubmissionModel> maybeModel = submissionDao
-                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
-                        data.getContestJid(), data.getProblemJid(), data.getItemJid(), userJid);
+                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(contestJid, problemJid, itemJid, userJid);
         if (maybeModel.isPresent()) {
             submissionDao.delete(maybeModel.get());
         }

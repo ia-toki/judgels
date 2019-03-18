@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
+import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.Item;
@@ -59,6 +60,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
     private final ProfileService profileService;
+    private final UserSearchService userSearchService;
     private final ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
     private final ProblemClient problemClient;
 
@@ -72,6 +74,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
             ProfileService profileService,
+            UserSearchService userSearchService,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
             ProblemClient problemClient) {
 
@@ -83,6 +86,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
         this.profileService = profileService;
+        this.userSearchService = userSearchService;
         this.itemSubmissionGraderRegistry = itemSubmissionGraderRegistry;
         this.problemClient = problemClient;
     }
@@ -92,8 +96,8 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     public ContestItemSubmissionsResponse getSubmissions(
             AuthHeader authHeader,
             String contestJid,
-            Optional<String> userJid,
-            Optional<String> problemJid,
+            Optional<String> username,
+            Optional<String> problemAlias,
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
@@ -101,10 +105,21 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
 
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
-        Optional<String> actualUserJid = canSupervise ? userJid : Optional.of(actorJid);
+        Optional<String> filterUserJid;
+        if (canSupervise) {
+            filterUserJid = username.map(u -> userSearchService.translateUsernamesToJids(ImmutableSet.of(u)).get(u));
+        } else {
+            filterUserJid = Optional.of(actorJid);
+        }
+
+        Optional<String> problemJid = Optional.empty();
+        if (problemAlias.isPresent()) {
+            ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias.get()));
+            problemJid = Optional.of(problem.getProblemJid());
+        }
 
         Page<ItemSubmission> submissions =
-                submissionStore.getSubmissions(contestJid, actualUserJid, problemJid, page);
+                submissionStore.getSubmissions(contestJid, filterUserJid, problemJid, page);
 
         boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
         if (!canManage) {
@@ -150,7 +165,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .problemJids(problemJidsSortedByAlias)
                 .build();
 
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contest.getJid(), problemJids);
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
 
         Set<String> itemJids = submissions.getPage().stream()
                 .map(ItemSubmission::getItemJid)
@@ -183,37 +198,46 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     public void createItemSubmission(AuthHeader authHeader, ContestItemSubmissionData data) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(data.getContestJid()));
-        ContestProblem problem = checkFound(problemStore.getProblem(data.getContestJid(), data.getProblemJid()));
+        ContestProblem problem = checkFound(problemStore.getProblemByAlias(
+                data.getContestJid(), data.getProblemAlias()));
         checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, 0));
 
-        Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
+        Optional<Item> item = problemClient.getItem(problem.getProblemJid(), data.getItemJid());
         checkFound(item);
 
         if (item.get().getType().equals(ItemType.STATEMENT)) {
             LOGGER.debug(
                     "Answer submitted for a STATEMENT item by {} for item {} in problem {} and contest {};"
                     + " submission will be ignored.",
-                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid()
+                    actorJid, data.getItemJid(), problem.getProblemJid(), data.getContestJid()
             );
         } else if (data.getAnswer().trim().isEmpty()) {
-            submissionStore.deleteSubmission(data, actorJid);
+            submissionStore.deleteSubmission(
+                    data.getContestJid(), problem.getProblemJid(), data.getItemJid(), actorJid);
 
             LOGGER.info(
                     ITEM_SUBMISSION_MARKER,
                     "Empty answer submitted by {} for item {} in problem {} and contest {}",
-                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid()
+                    actorJid, data.getItemJid(), problem.getProblemJid(), data.getContestJid()
             );
         } else {
             Grading grading = itemSubmissionGraderRegistry
                     .get(item.get().getType())
                     .grade(item.get(), data.getAnswer());
 
-            submissionStore.upsertSubmission(data, grading, actorJid);
+            submissionStore.upsertSubmission(
+                    data.getContestJid(),
+                    problem.getProblemJid(),
+                    data.getItemJid(),
+                    data.getAnswer(),
+                    grading,
+                    actorJid
+            );
 
             LOGGER.info(
                     ITEM_SUBMISSION_MARKER,
                     "Answer '{}' submitted by {} for item {} in problem {} and contest {}, verdict {}, score {}",
-                    data.getAnswer(), actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid(),
+                    data.getAnswer(), actorJid, data.getItemJid(), problem.getProblemJid(), data.getContestJid(),
                     grading.getVerdict(), grading.getScore()
             );
         }
@@ -224,18 +248,30 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     public Map<String, ItemSubmission> getLatestSubmissionsByUserForProblemInContest(
             AuthHeader authHeader,
             String contestJid,
-            Optional<String> userJid,
-            String problemJid) {
+            Optional<String> username,
+            String problemAlias) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
 
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
-        String actualUserJid = canSupervise ? userJid.orElse(actorJid) : actorJid;
+        String viewedUserJid;
+        if (canSupervise && username.isPresent()) {
+            viewedUserJid = userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get()))
+                    .get(username.get());
+        } else {
+            viewedUserJid = actorJid;
+        }
 
-        List<ItemSubmission> submissions = submissionStore
-                .getLatestSubmissionsByUserForProblemInContest(contestJid, problemJid, actualUserJid);
+        ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
+
+        List<ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContest(
+                contestJid,
+                problem.getProblemJid(),
+                viewedUserJid
+        );
+
         return submissions.stream()
                 .map(ItemSubmission::withoutGrading)
                 .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
@@ -246,7 +282,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     public ContestantAnswerSummaryResponse getAnswerSummaryForContestant(
             AuthHeader authHeader,
             String contestJid,
-            Optional<String> userJid,
+            Optional<String> username,
             Optional<String> language) {
 
         String actorJid = actorChecker.check(authHeader);
@@ -254,10 +290,16 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
 
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
-        String viewedUserJid = canSupervise ? userJid.orElse(actorJid) : actorJid;
+        String viewedUserJid;
+        if (canSupervise && username.isPresent()) {
+            viewedUserJid = userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get()))
+                    .get(username.get());
+        } else {
+            viewedUserJid = actorJid;
+        }
 
         List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserInContest(
-                contest.getJid(), viewedUserJid);
+                contestJid, viewedUserJid);
 
         boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
         if (!canManage) {
@@ -271,7 +313,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .filter(problemJid -> problemClient.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
                 .collect(Collectors.toList());
         Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
-                contest.getJid(), ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
+                contestJid, ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
 
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
