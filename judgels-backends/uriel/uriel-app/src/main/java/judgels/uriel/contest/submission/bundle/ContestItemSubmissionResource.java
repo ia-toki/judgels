@@ -155,10 +155,17 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         Set<String> itemJids = submissions.getPage().stream()
                 .map(ItemSubmission::getItemJid)
                 .collect(Collectors.toSet());
-        Map<String, Integer> itemNumbersMap = problemClient.getItems(problemJids, itemJids).entrySet().stream()
+
+        Map<String, Item> itemsMap = problemClient.getItems(problemJids, itemJids);
+        Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().getNumber().orElse(0))
+                );
+        Map<String, ItemType> itemTypesMap = itemsMap.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().getType())
                 );
 
         return new ContestItemSubmissionsResponse.Builder()
@@ -167,6 +174,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
                 .itemNumbersMap(itemNumbersMap)
+                .itemTypesMap(itemTypesMap)
                 .build();
     }
 
@@ -266,12 +274,15 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 contest.getJid(), ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
 
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
+        Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
         for (String problemJid : bundleProblemJidsSortedByAlias) {
             ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(problemJid, language);
             List<Item> items = worksheet.getItems().stream()
                     .filter(item -> !item.getType().equals(ItemType.STATEMENT))
                     .collect(Collectors.toList());
             items.sort(Comparator.comparingInt(item -> item.getNumber().get()));
+
+            items.stream().forEach(item -> itemTypesByItemJid.put(item.getJid(), item.getType()));
 
             itemJidsByProblemJid.put(
                     problemJid,
@@ -297,6 +308,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .config(config)
                 .itemJidsByProblemJid(itemJidsByProblemJid)
                 .submissionsByItemJid(submissionsByItemJid)
+                .itemTypesMap(itemTypesByItemJid)
                 .problemAliasesMap(problemAliasesByProblemJid)
                 .problemNamesMap(problemNamesByProblemJid)
                 .build();

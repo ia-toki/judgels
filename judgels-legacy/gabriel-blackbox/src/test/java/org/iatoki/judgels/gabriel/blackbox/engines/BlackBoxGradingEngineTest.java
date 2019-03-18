@@ -3,13 +3,13 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
+import judgels.gabriel.api.GradingConfig;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.GradingSource;
 import org.iatoki.judgels.gabriel.Verdict;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.FakeSandboxFactory;
@@ -92,7 +92,7 @@ public abstract class BlackBoxGradingEngineTest {
         sourceFiles.put(key, new File(sourceDir, filename));
     }
 
-    protected final GradingResult runEngine(BlackBoxGradingEngine grader, BlackBoxGradingConfig config) throws GradingException {
+    protected final GradingResult runEngine(BlackBoxGradingEngine grader, GradingConfig config) throws GradingException {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
         return grader.grade(graderDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
     }

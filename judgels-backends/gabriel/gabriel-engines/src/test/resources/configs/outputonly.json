@@ -1,0 +1,37 @@
+{
+  "timeLimit":0,
+  "memoryLimit":0,
+  "testData":[
+    {
+      "id":0,
+      "testCases":[
+        {
+          "input":"tc1.in",
+          "output":"tc1.out",
+          "subtaskIds":[
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id":-1,
+      "testCases":[
+        {
+          "input":"tc2.in",
+          "output":"tc2.out",
+          "subtaskIds":[
+            -1
+          ]
+        },
+        {
+          "input":"tc3.in",
+          "output":"tc3.out",
+          "subtaskIds":[
+            -1
+          ]
+        }
+      ]
+    }
+  ]
+}

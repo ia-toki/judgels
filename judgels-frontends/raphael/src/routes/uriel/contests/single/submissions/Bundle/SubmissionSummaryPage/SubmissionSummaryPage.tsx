@@ -10,9 +10,12 @@ import { ProblemSubmissionCard, ProblemSubmissionCardProps } from '../ProblemSub
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 
 import './SubmissionSummaryPage.css';
+import { H5 } from '@blueprintjs/core';
+import { UserRef } from 'components/UserRef/UserRef';
+import { Profile } from 'modules/api/jophiel/profile';
 
 interface SubmissionSummaryPageRoute {
-  userJid: string;
+  userJid?: string;
 }
 
 export interface SubmissionSummaryPageProps extends RouteComponentProps<SubmissionSummaryPageRoute> {
@@ -22,11 +25,13 @@ export interface SubmissionSummaryPageProps extends RouteComponentProps<Submissi
 }
 
 export interface SubmissionSummaryPageState {
+  profile?: Profile;
   problemSummaries: ProblemSubmissionCardProps[];
 }
 
 class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, SubmissionSummaryPageState> {
   state: SubmissionSummaryPageState = {
+    profile: undefined,
     problemSummaries: [],
   };
 
@@ -43,14 +48,20 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
         submissionsByItemJid: response.submissionsByItemJid,
         canSupervise: response.config.canSupervise,
         canManage: response.config.canManage,
+        itemTypesMap: response.itemTypesMap,
       });
     }
-    this.setState({ problemSummaries });
+    this.setState({ profile: response.profile, problemSummaries });
   }
 
   render() {
     return (
       <div className="submisions-summary-page">
+        {this.state.profile && (
+          <H5>
+            Submissions of <UserRef profile={this.state.profile} />
+          </H5>
+        )}
         {this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}
       </div>
     );

@@ -1,12 +1,18 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.Subtask;
+import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestGroup;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GabrielLogger;
-import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.GradingEngine;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingLanguage;
@@ -22,6 +28,8 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class BlackBoxGradingEngine implements GradingEngine {
+    protected static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule());
+
     private File compilationDir;
     private File evaluationDir;
     private File scoringDir;
@@ -30,7 +38,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
     private int compilationMemoryLimit;
 
     private File gradingDir;
-    private BlackBoxGradingConfig config;
+    private GradingConfig config;
     private GradingLanguage language;
     private GradingSource source;
     private SandboxFactory sandboxFactory;
@@ -54,7 +62,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
     @Override
     public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException {
         this.gradingDir = gradingDir;
-        this.config = (BlackBoxGradingConfig) config;
+        this.config = config;
         this.language = language;
         this.source = source;
         this.sandboxFactory = sandboxFactory;
@@ -104,7 +112,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         this.compilationMemoryLimit = compilationMemoryLimit;
     }
 
-    protected abstract void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException;
+    protected abstract void prepareAlgorithms(GradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException;
 
     protected abstract void cleanUp();
 

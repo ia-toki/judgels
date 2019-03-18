@@ -6,6 +6,7 @@ import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { ContestSubmissionConfig } from './contestSubmission';
 import { Profile } from 'modules/api/jophiel/profile';
 import { baseContestsURL } from './contest';
+import { ItemType } from '../sandalphon/problemBundle';
 
 export interface ContestItemSubmissionData {
   contestJid: string;
@@ -20,6 +21,7 @@ export interface ContestItemSubmissionsResponse {
   profilesMap: { [id: string]: Profile };
   problemAliasesMap: { [id: string]: string };
   itemNumbersMap: { [itemJid: string]: number };
+  itemTypesMap: { [itemJid: string]: ItemType };
 }
 
 export interface ContestantAnswerSummaryResponse {
@@ -29,6 +31,7 @@ export interface ContestantAnswerSummaryResponse {
   submissionsByItemJid: { [itemJid: string]: ItemSubmission };
   problemAliasesMap: { [id: string]: string };
   problemNamesMap: { [id: string]: string };
+  itemTypesMap: { [itemJid: string]: ItemType };
 }
 
 const baseURL = `${baseContestsURL}/submissions/bundle`;

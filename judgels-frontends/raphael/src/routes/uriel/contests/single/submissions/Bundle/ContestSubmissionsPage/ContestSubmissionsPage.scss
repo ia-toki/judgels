@@ -2,6 +2,7 @@
 
 .contest-bundle-submissions-page {
     .submissions-table {
+        table-layout: fixed;
         margin-top: 20px;
         border: solid 1px #a0a0a0;
         .col-item-num {
@@ -11,7 +12,7 @@
             width: 80px;
         }
         .col-verdict {
-            width: 60px;
+            width: 70px;
         }
         .col-action {
             width: 50px;

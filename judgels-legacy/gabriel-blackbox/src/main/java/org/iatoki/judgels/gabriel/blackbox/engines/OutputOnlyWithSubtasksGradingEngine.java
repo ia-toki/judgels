@@ -1,27 +1,26 @@
 package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.Gson;
-import org.iatoki.judgels.gabriel.GradingConfig;
+import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.outputonly.OutputOnlyWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
 import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.OutputOnlyEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
-import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyWithSubtasksGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.languages.Cpp11GradingLanguage;
 import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 public final class OutputOnlyWithSubtasksGradingEngine extends BlackBoxGradingEngine {
@@ -49,24 +48,26 @@ public final class OutputOnlyWithSubtasksGradingEngine extends BlackBoxGradingEn
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new OutputOnlyWithSubtasksGradingConfig(ImmutableList.of(new TestGroup(0, ImmutableList.of())), ImmutableList.of(), null);
+        return new OutputOnlyWithSubtasksGradingConfig.Builder()
+                .addTestData(TestGroup.of(0, ImmutableList.of()))
+                .build();
     }
 
     @Override
-    public GradingConfig createGradingConfigFromJson(String json) {
-        return new Gson().fromJson(json, OutputOnlyWithSubtasksGradingConfig.class);
+    public GradingConfig createGradingConfigFromJson(String json) throws IOException {
+        return MAPPER.readValue(json, OutputOnlyWithSubtasksGradingConfig.class);
     }
 
     @Override
-    protected void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
+    protected void prepareAlgorithms(GradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
         String sourceFieldKey = config.getSourceFileFields().keySet().iterator().next();
         File sourceFile = sourceFiles.get(sourceFieldKey);
         OutputOnlyWithSubtasksGradingConfig castConfig = (OutputOnlyWithSubtasksGradingConfig) config;
 
         evaluator = new OutputOnlyEvaluator(getEvaluationDir(), sourceFile);
-        if (castConfig.getCustomScorer() != null) {
+        if (castConfig.getCustomScorer().isPresent()) {
             scorerSandbox = sandboxFactory.newSandbox();
-            File scorerFile = helperFiles.get(castConfig.getCustomScorer());
+            File scorerFile = helperFiles.get(castConfig.getCustomScorer().get());
             scorer = new CustomScorer(scorerSandbox, getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
         } else {
             scorer = new DiffScorer();

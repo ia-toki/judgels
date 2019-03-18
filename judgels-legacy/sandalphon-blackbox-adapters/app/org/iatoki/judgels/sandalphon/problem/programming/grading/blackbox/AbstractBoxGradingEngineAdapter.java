@@ -3,15 +3,14 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
+import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestGroup;
 import judgels.sandalphon.api.problem.ProblemStatement;
-import org.iatoki.judgels.gabriel.GradingConfig;
 import org.iatoki.judgels.gabriel.SubmissionSource;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
-import org.iatoki.judgels.gabriel.blackbox.TestCase;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
-import org.iatoki.judgels.gabriel.blackbox.configs.AbstractBlackBoxGradingConfig;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapter;
 import org.iatoki.judgels.sandalphon.problem.programming.statement.blackbox.html.blackBoxViewStatementView;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
@@ -31,8 +30,7 @@ public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAd
 
     @Override
     public Html renderViewStatement(String postSubmitUri, ProblemStatement statement, GradingConfig config, String engine, Set<String> allowedGradingLanguageNames, String reasonNotAllowedToSubmit) {
-        BlackBoxGradingConfig blackBoxConfig = (BlackBoxGradingConfig) config;
-        return blackBoxViewStatementView.render(postSubmitUri, statement, blackBoxConfig, engine, allowedGradingLanguageNames, reasonNotAllowedToSubmit);
+        return blackBoxViewStatementView.render(postSubmitUri, statement, config, engine, allowedGradingLanguageNames, reasonNotAllowedToSubmit);
     }
 
     @Override
@@ -50,9 +48,9 @@ public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAd
         return blackBoxViewSubmissionView.render(submission, errorMessage, details, submissionSource.getSubmissionFiles(), authorName, problemAlias, problemName, gradingLanguageName, contestName);
     }
 
-    protected final void fillAbstractBlackBoxGradingFormPartsFromConfig(AbstractBlackBoxGradingConfigForm form, AbstractBlackBoxGradingConfig config) {
-        form.timeLimit = config.getTimeLimitInMilliseconds();
-        form.memoryLimit = config.getMemoryLimitInKilobytes();
+    protected final void fillAbstractBlackBoxGradingFormPartsFromConfig(AbstractBlackBoxGradingConfigForm form, GradingConfig config) {
+        form.timeLimit = config.getTimeLimit();
+        form.memoryLimit = config.getMemoryLimit();
 
         ImmutableList.Builder<List<String>> testCasesInputs = ImmutableList.builder();
         ImmutableList.Builder<List<String>> testCaseOutputs = ImmutableList.builder();
@@ -83,11 +81,11 @@ public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAd
         }
 
         for (int i = 0; i < sampleTestCasesCount; i++) {
-            sampleTestCases.add(new TestCase(form.sampleTestCaseInputs.get(i), form.sampleTestCaseOutputs.get(i), null /* placeholder */));
+            sampleTestCases.add(TestCase.of(form.sampleTestCaseInputs.get(i), form.sampleTestCaseOutputs.get(i), Sets.newHashSet() /* placeholder */));
         }
 
         ImmutableList.Builder<TestGroup> testData = ImmutableList.builder();
-        testData.add(new TestGroup(0, sampleTestCases.build()));
+        testData.add(TestGroup.of(0, sampleTestCases.build()));
 
         int testDataGroupsCount = 0;
         if (form.testCaseInputs != null) {
@@ -103,11 +101,11 @@ public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAd
             }
 
             for (int j = 0; j < testCasesCount; j++) {
-                testCases.add(new TestCase(form.testCaseInputs.get(i).get(j), form.testCaseOutputs.get(i).get(j), null /* placeholder */));
+                testCases.add(TestCase.of(form.testCaseInputs.get(i).get(j), form.testCaseOutputs.get(i).get(j), ImmutableSet.of() /* placeholder */));
             }
 
 
-            testData.add(new TestGroup(-1 /* placeholder */, testCases.build()));
+            testData.add(TestGroup.of(-1 /* placeholder */, testCases.build()));
         }
 
         return ImmutableList.of(timeLimit, memoryLimit, testData.build());

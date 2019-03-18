@@ -2,12 +2,12 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.Subtask;
+import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.outputonly.OutputOnlyWithSubtasksGradingConfig;
 import org.iatoki.judgels.FileInfo;
-import org.iatoki.judgels.gabriel.GradingConfig;
-import org.iatoki.judgels.gabriel.blackbox.Subtask;
-import org.iatoki.judgels.gabriel.blackbox.TestCase;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
-import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyWithSubtasksGradingConfig;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.ConfigurableWithTokilibFormat;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.TokilibFile;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.outputOnlyWithSubtasksGradingConfigView;
@@ -17,6 +17,7 @@ import play.twirl.api.Html;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithTokilibFormat {
@@ -27,10 +28,10 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
         OutputOnlyWithSubtasksGradingConfig castConfig = (OutputOnlyWithSubtasksGradingConfig) config;
         fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
-        if (castConfig.getCustomScorer() == null) {
+        if (!castConfig.getCustomScorer().isPresent()) {
             form.customScorer = "(none)";
         } else {
-            form.customScorer = castConfig.getCustomScorer();
+            form.customScorer = castConfig.getCustomScorer().get();
         }
 
         return Form.form(OutputOnlyWithSubtasksGradingConfigForm.class).fill(form);
@@ -57,7 +58,11 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
             customScorer = formData.customScorer;
         }
 
-        return new OutputOnlyWithSubtasksGradingConfig(testData, subtaskPoints, customScorer);
+        return new OutputOnlyWithSubtasksGradingConfig.Builder()
+                .testData(testData)
+                .subtaskPoints(subtaskPoints)
+                .customScorer(Optional.ofNullable(customScorer))
+                .build();
     }
 
     @Override
@@ -109,9 +114,9 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
             maxBatchNo = Math.max(maxBatchNo, file.batchNo);
         }
 
-        List<TestGroup> testData = Lists.newArrayList();
+        List<List<TestCase>> testGroups = Lists.newArrayList();
         for (int i = 0; i <= maxBatchNo; i++) {
-            testData.add(new TestGroup(i, Lists.newArrayList()));
+            testGroups.add(Lists.newArrayList());
         }
 
         for (TokilibFile file : tokilibFiles) {
@@ -131,9 +136,14 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
                 }
             }
 
-            TestCase testCase = new TestCase(filename + ".in", filename + ".out", subtaskIds);
+            TestCase testCase = TestCase.of(filename + ".in", filename + ".out", subtaskIds);
 
-            testData.get(file.batchNo).getTestCases().add(testCase);
+            testGroups.get(file.batchNo).add(testCase);
+        }
+
+        List<TestGroup> testData = Lists.newArrayList();
+        for (int i = 0; i <= maxBatchNo; i++) {
+            testData.add(TestGroup.of(i, testGroups.get(i)));
         }
 
         OutputOnlyWithSubtasksGradingConfig castConfig = (OutputOnlyWithSubtasksGradingConfig) config;
@@ -147,7 +157,11 @@ public final class OutputOnlyWithSubtasksGradingEngineAdapter extends SingleSour
             }
         }
 
-        return new OutputOnlyWithSubtasksGradingConfig(testData, subtaskPoints, castConfig.getCustomScorer());
+        return new OutputOnlyWithSubtasksGradingConfig.Builder()
+                .from(castConfig)
+                .testData(testData)
+                .subtaskPoints(subtaskPoints)
+                .build();
     }
 
     @Override
