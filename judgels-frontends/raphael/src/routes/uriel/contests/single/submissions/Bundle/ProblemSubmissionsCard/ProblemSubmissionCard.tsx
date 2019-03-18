@@ -14,7 +14,7 @@ export interface ProblemSubmissionCardProps {
   alias: string;
   itemJids: string[];
   submissionsByItemJid: { [itemJid: string]: ItemSubmission };
-  itemTypesMap?: { [itemJid: string]: ItemType };
+  itemTypesMap: { [itemJid: string]: ItemType };
   canSupervise: boolean;
   canManage: boolean;
 }
@@ -34,7 +34,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
         <tr key={itemJid}>
           <td className="col-item-num">{index + 1}</td>
           <td>
-            <FormattedAnswer answer={submission.answer} type={itemTypesMap && itemTypesMap[itemJid]} />
+            <FormattedAnswer answer={submission.answer} type={itemTypesMap[itemJid]} />
           </td>
           {canManage && (
             <td className="col-verdict">
