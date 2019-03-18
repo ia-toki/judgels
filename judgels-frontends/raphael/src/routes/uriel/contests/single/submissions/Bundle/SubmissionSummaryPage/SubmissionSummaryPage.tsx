@@ -48,6 +48,7 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
         submissionsByItemJid: response.submissionsByItemJid,
         canSupervise: response.config.canSupervise,
         canManage: response.config.canManage,
+        itemTypesMap: response.itemTypesMap,
       });
     }
     this.setState({ profile: response.profile, problemSummaries });
