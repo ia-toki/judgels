@@ -140,8 +140,8 @@ export default class ItemShortAnswerForm extends React.PureComponent<
 
   render() {
     return (
-      <form onSubmit={this.onSubmit}>
-        <ControlGroup fill className="item-statement-form">
+      <form onSubmit={this.onSubmit} className="item-short-answer-form">
+        <ControlGroup fill className="answer-form">
           {this.renderTextInput()}
           {this.renderSubmitButton()}
           {this.renderCancelButton()}

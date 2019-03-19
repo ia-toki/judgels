@@ -1,0 +1,32 @@
+.item-essay-form {
+  .text-area {
+    width: 80%;
+    min-height: 100px;
+
+    &.live {
+      resize: vertical;
+    }
+
+    &.readonly {
+      resize: none;
+    }
+  }
+
+  .essay-button {
+    width: 15%;
+  }
+
+  .essay-callout {
+    width: 85%
+  }
+
+  .essay-callout-edit {
+    width: 70%;
+    background-color: white;
+    color: white;
+  }
+
+  .divider {
+    margin-top: 3px;
+  }
+}
