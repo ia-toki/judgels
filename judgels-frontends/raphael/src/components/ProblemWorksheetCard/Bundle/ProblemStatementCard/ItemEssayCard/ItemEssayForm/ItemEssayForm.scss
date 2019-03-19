@@ -1,9 +1,5 @@
 .item-essay-form {
-  &.form {
-    width: 60%;
-  }
-
-  &.text-area {
+  .text-area {
     width: 80%;
     min-height: 100px;
 
@@ -16,21 +12,21 @@
     }
   }
 
-  &.essay-button {
+  .essay-button {
     width: 15%;
   }
 
-  &.essay-callout {
+  .essay-callout {
     width: 85%
   }
 
-  &.essay-callout-edit {
+  .essay-callout-edit {
     width: 70%;
     background-color: white;
     color: white;
   }
 
-  &.divider {
+  .divider {
     margin-top: 3px;
   }
 }

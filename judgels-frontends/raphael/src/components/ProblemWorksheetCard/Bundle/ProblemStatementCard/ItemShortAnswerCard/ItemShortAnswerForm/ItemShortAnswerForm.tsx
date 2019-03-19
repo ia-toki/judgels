@@ -33,19 +33,19 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         return (
-          <Callout intent={Intent.NONE} icon="issue" className="item-short-answer-form callout">
+          <Callout intent={Intent.NONE} icon="issue" className="callout">
             Not answered yet.
           </Callout>
         );
       case AnswerState.SavingAnswer:
         return (
-          <Callout intent={Intent.NONE} icon="ban-circle" className="item-short-answer-form callout">
+          <Callout intent={Intent.NONE} icon="ban-circle" className="callout">
             Saving answer...
           </Callout>
         );
       case AnswerState.AnswerSaved:
         return (
-          <Callout intent={Intent.SUCCESS} icon="tick-circle" className="item-short-answer-form callout">
+          <Callout intent={Intent.SUCCESS} icon="tick-circle" className="callout">
             Answer saved!
           </Callout>
         );
@@ -66,7 +66,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
       default:
         buttonText = StatementButtonText.Submit;
     }
-    return <Button type="submit" text={buttonText} intent={Intent.PRIMARY} className="item-short-answer-form button" />;
+    return <Button type="submit" text={buttonText} intent={Intent.PRIMARY} className="button" />;
   }
 
   renderCancelButton() {
@@ -77,20 +77,20 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           text={StatementButtonText.Cancel}
           intent={Intent.DANGER}
           onClick={this.onCancelButtonClick}
-          className="item-short-answer-form button"
+          className="button"
         />
       )
     );
   }
 
   renderEmptyDiv() {
-    return this.state.answerState !== AnswerState.Answering && <div className="item-short-answer-form button" />;
+    return this.state.answerState !== AnswerState.Answering && <div className="button" />;
   }
 
   renderWrongFormatNotice() {
     return (
       this.state.wrongFormat && (
-        <Callout intent={Intent.DANGER} icon="info-sign" className="item-short-answer-form callout">
+        <Callout intent={Intent.DANGER} icon="info-sign" className="callout">
           <strong>Wrong answer format!</strong>
         </Callout>
       )
@@ -106,7 +106,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
         value={this.state.answer}
         onChange={this.onTextInputChange}
         readOnly={readOnly}
-        className={`item-short-answer-form text-input ${classNames(Classes.INPUT)}`}
+        className={`text-input ${classNames(Classes.INPUT)}`}
       />
     );
   }
@@ -140,8 +140,8 @@ export default class ItemShortAnswerForm extends React.PureComponent<
 
   render() {
     return (
-      <form onSubmit={this.onSubmit}>
-        <ControlGroup fill className="item-short-answer-form answer-form">
+      <form onSubmit={this.onSubmit} className="item-short-answer-form">
+        <ControlGroup fill className="answer-form">
           {this.renderTextInput()}
           {this.renderSubmitButton()}
           {this.renderCancelButton()}

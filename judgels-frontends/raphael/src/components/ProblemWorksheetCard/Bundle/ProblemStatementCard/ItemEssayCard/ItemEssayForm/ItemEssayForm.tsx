@@ -31,7 +31,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
         value={this.state.answer}
         onChange={this.onTextAreaInputChange}
         readOnly={readOnly}
-        className={`item-essay-form text-area ${readOnlyClass} ${classNames(Classes.INPUT)}`}
+        className={`text-area ${readOnlyClass} ${classNames(Classes.INPUT)}`}
       />
     );
   }
@@ -48,7 +48,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
       default:
         buttonText = StatementButtonText.Submit;
     }
-    return <Button type="submit" text={buttonText} intent={Intent.PRIMARY} className="item-essay-form essay-button" />;
+    return <Button type="submit" text={buttonText} intent={Intent.PRIMARY} className="essay-button" />;
   }
 
   renderCancelButton() {
@@ -59,7 +59,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
           text={StatementButtonText.Cancel}
           intent={Intent.DANGER}
           onClick={this.onCancelButtonClick}
-          className="item-essay-form essay-button"
+          className="essay-button"
         />
       )
     );
@@ -69,24 +69,24 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         return (
-          <Callout intent={Intent.NONE} icon="issue" className="item-essay-form essay-callout">
+          <Callout intent={Intent.NONE} icon="issue" className="essay-callout">
             Not answered yet.
           </Callout>
         );
       case AnswerState.SavingAnswer:
         return (
-          <Callout intent={Intent.NONE} icon="ban-circle" className="item-essay-form essay-callout">
+          <Callout intent={Intent.NONE} icon="ban-circle" className="essay-callout">
             Saving answer...
           </Callout>
         );
       case AnswerState.AnswerSaved:
         return (
-          <Callout intent={Intent.SUCCESS} icon="tick-circle" className="item-essay-form essay-callout">
+          <Callout intent={Intent.SUCCESS} icon="tick-circle" className="essay-callout">
             Answer saved!
           </Callout>
         );
       default:
-        return <div className="bp3-callout bp3-callout-icon item-essay-form essay-callout-edit">&nbsp;</div>;
+        return <div className="bp3-callout bp3-callout-icon essay-callout-edit">&nbsp;</div>;
     }
   }
 
@@ -117,9 +117,9 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
 
   render() {
     return (
-      <form onSubmit={this.onSubmit}>
+      <form onSubmit={this.onSubmit} className="item-essay-form">
         <ControlGroup fill>{this.renderTextAreaInput()}</ControlGroup>
-        <div className="item-essay-form divider" />
+        <div className="divider" />
         <ControlGroup fill>
           {this.renderHelpText()}
           {this.renderSubmitButton()}
