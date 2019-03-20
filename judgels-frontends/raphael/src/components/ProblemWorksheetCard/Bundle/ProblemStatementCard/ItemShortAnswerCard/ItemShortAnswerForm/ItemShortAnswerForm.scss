@@ -4,7 +4,12 @@
   }
 
   .text-input {
-    width: 70%
+    width: 70%;
+
+    &.readonly {
+      background-color: rgba(206,217,224,.5);
+      cursor: not-allowed;
+    }
   }
 
   .button {
