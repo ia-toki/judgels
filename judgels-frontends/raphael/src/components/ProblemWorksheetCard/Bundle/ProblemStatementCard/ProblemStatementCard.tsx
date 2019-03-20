@@ -46,8 +46,8 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
   };
 
   renderEssay = (item: Item) => {
-    const latestSubmission = this.props.latestSubmission;
-    const latestAnswer = latestSubmission[item.jid];
+    const latestSubmissions = this.props.latestSubmissions;
+    const latestAnswer = latestSubmissions[item.jid];
     const initialAnswer = latestAnswer && latestAnswer.answer;
     return (
       <ItemEssayCard
@@ -61,8 +61,8 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
   };
 
   renderMultipleChoice = (item: Item) => {
-    const latestSubmission = this.props.latestSubmissions;
-    const latestSub = latestSubmission[item.jid];
+    const latestSubmissions = this.props.latestSubmissions;
+    const latestSub = latestSubmissions[item.jid];
     const initialAnswer = latestSub && latestSub.answer;
     return (
       <ItemMultipleChoiceCard
