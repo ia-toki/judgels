@@ -30,8 +30,8 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
     problemAlias: string,
     language?: string
   ) => Promise<ContestProblemWorksheet>;
-  onCreateSubmission: (contestJid: string, problemAlias: string, itemJid: string, answer: string) => Promise<void>;
-  onGetLatestSubmission: (contestJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
+  onCreateSubmission: (contestJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
+  onGetLatestSubmissions: (contestJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
@@ -40,7 +40,7 @@ interface ContestProblemPageState {
   defaultLanguage?: string;
   languages?: string[];
   problem?: ContestProblem;
-  latestSubmission?: { [id: string]: ItemSubmission };
+  latestSubmissions?: { [id: string]: ItemSubmission };
   worksheet?: BundleProblemWorksheet;
 }
 
@@ -54,9 +54,9 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       this.props.statementLanguage
     );
 
-    const latestSubmission = await this.props.onGetLatestSubmission(this.props.contest.jid, problem.alias);
+    const latestSubmissions = await this.props.onGetLatestSubmissions(this.props.contest.jid, problem.alias);
     this.setState({
-      latestSubmission,
+      latestSubmissions,
       defaultLanguage,
       languages,
       problem,
@@ -88,7 +88,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
 
   private onCreateSubmission = async (itemJid: string, answer: string) => {
     const problem = this.state.problem!;
-    return await this.props.onCreateSubmission(this.props.contest.jid, problem.alias, itemJid, answer);
+    return await this.props.onCreateSubmission(this.props.contest.jid, problem.problemJid, itemJid, answer);
   };
 
   private renderStatementLanguageWidget = () => {
@@ -108,19 +108,19 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   };
 
   private renderStatement = () => {
-    const { problem, worksheet, latestSubmission } = this.state;
+    const { problem, worksheet, latestSubmissions } = this.state;
     if (!problem || !worksheet) {
       return <LoadingState />;
     }
 
-    if (!latestSubmission) {
+    if (!latestSubmissions) {
       return <LoadingState />;
     }
     return (
       <BundleProblemWorksheetCard
         alias={problem.alias}
         language={this.props.statementLanguage}
-        latestSubmission={latestSubmission}
+        latestSubmissions={latestSubmissions}
         onAnswerItem={this.onCreateSubmission}
         worksheet={worksheet as BundleProblemWorksheet}
       />
@@ -137,7 +137,7 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
   const mapDispatchToProps = {
     onGetProblemWorksheet: contestProblemActions.getBundleProblemWorksheet,
     onCreateSubmission: contestSubmissionActions.createItemSubmission,
-    onGetLatestSubmission: contestSubmissionActions.getLatestSubmissions,
+    onGetLatestSubmissions: contestSubmissionActions.getLatestSubmissions,
     onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };

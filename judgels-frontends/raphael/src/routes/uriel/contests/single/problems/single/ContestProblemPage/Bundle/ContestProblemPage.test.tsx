@@ -67,7 +67,7 @@ describe('BundleContestProblemPage', () => {
 
     contestSubmissionActions = {
       createItemSubmission: jest.fn(),
-      getLatestSubmission: jest.fn().mockReturnValue(() => Promise.resolve({})),
+      getLatestSubmissions: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
 
     breadcrumbsActions = {
@@ -104,7 +104,10 @@ describe('BundleContestProblemPage', () => {
   test('navigation', async () => {
     await new Promise(resolve => setImmediate(resolve));
     wrapper.update();
-    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/${contestJid}/problems/${problemAlias}`, 'Problem C');
+    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(
+      `/contests/${contestJid}/problems/${problemAlias}`,
+      'Problem C'
+    );
 
     history.push('/contests/xyz/');
     await new Promise(resolve => setImmediate(resolve));
@@ -119,7 +122,7 @@ describe('BundleContestProblemPage', () => {
     inp.simulate('change');
     expect(contestSubmissionActions.createItemSubmission).toHaveBeenCalledWith(
       contestJid,
-      problemAlias,
+      problemJid,
       'fakeitemjid',
       'a'
     );

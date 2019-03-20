@@ -15,7 +15,7 @@ export interface ProblemStatementCardProps {
   alias: string;
   statement: ProblemStatement;
   onAnswerItem: (itemJid: string, answer: string) => Promise<any>;
-  latestSubmission: { [id: string]: ItemSubmission };
+  latestSubmissions: { [id: string]: ItemSubmission };
 }
 
 export class ProblemStatementCard extends React.Component<ProblemStatementCardProps> {
@@ -30,8 +30,8 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
   };
 
   renderShortAnswer = (item: Item) => {
-    const latestSubmission = this.props.latestSubmission;
-    const latestAnswer = latestSubmission[item.jid];
+    const latestSubmissions = this.props.latestSubmissions;
+    const latestAnswer = latestSubmissions[item.jid];
     const initialAnswer = latestAnswer && latestAnswer.answer;
     return (
       <ItemShortAnswerCard
@@ -45,7 +45,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
   };
 
   renderMultipleChoice = (item: Item) => {
-    const latestSubmission = this.props.latestSubmission;
+    const latestSubmission = this.props.latestSubmissions;
     const latestSub = latestSubmission[item.jid];
     const initialAnswer = latestSub && latestSub.answer;
     return (

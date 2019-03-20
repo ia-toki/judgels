@@ -198,27 +198,26 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     public void createItemSubmission(AuthHeader authHeader, ContestItemSubmissionData data) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(data.getContestJid()));
-        ContestProblem problem = checkFound(problemStore.getProblemByAlias(
-                data.getContestJid(), data.getProblemAlias()));
+        ContestProblem problem = checkFound(problemStore.getProblem(data.getContestJid(), data.getProblemJid()));
         checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, 0));
 
-        Optional<Item> item = problemClient.getItem(problem.getProblemJid(), data.getItemJid());
+        Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
         checkFound(item);
 
         if (item.get().getType().equals(ItemType.STATEMENT)) {
             LOGGER.debug(
                     "Answer submitted for a STATEMENT item by {} for item {} in problem {} and contest {};"
                     + " submission will be ignored.",
-                    actorJid, data.getItemJid(), problem.getProblemJid(), data.getContestJid()
+                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid()
             );
         } else if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
-                    data.getContestJid(), problem.getProblemJid(), data.getItemJid(), actorJid);
+                    data.getContestJid(), data.getProblemJid(), data.getItemJid(), actorJid);
 
             LOGGER.info(
                     ITEM_SUBMISSION_MARKER,
                     "Empty answer submitted by {} for item {} in problem {} and contest {}",
-                    actorJid, data.getItemJid(), problem.getProblemJid(), data.getContestJid()
+                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid()
             );
         } else {
             Grading grading = itemSubmissionGraderRegistry
@@ -227,7 +226,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
 
             submissionStore.upsertSubmission(
                     data.getContestJid(),
-                    problem.getProblemJid(),
+                    data.getProblemJid(),
                     data.getItemJid(),
                     data.getAnswer(),
                     grading,
@@ -237,7 +236,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             LOGGER.info(
                     ITEM_SUBMISSION_MARKER,
                     "Answer '{}' submitted by {} for item {} in problem {} and contest {}, verdict {}, score {}",
-                    data.getAnswer(), actorJid, data.getItemJid(), problem.getProblemJid(), data.getContestJid(),
+                    data.getAnswer(), actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid(),
                     grading.getVerdict(), grading.getScore()
             );
         }

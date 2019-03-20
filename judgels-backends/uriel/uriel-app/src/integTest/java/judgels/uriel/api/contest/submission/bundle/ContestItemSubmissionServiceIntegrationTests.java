@@ -48,7 +48,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemAlias(PROBLEM_3_ALIAS)
+                .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMtOoiXuIgPcD1oUsMzvbP")
                 .answer("b")
                 .build()
@@ -204,7 +204,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemAlias(PROBLEM_3_ALIAS)
+                .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMtOoiXuIgPcD1oUsMzvbP")
                 .answer("a")
                 .build()
@@ -212,7 +212,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemAlias(PROBLEM_3_ALIAS)
+                .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMPeKuqUA0Q7zvJjTQXXVD")
                 .answer("a")
                 .build()
@@ -272,7 +272,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemAlias(PROBLEM_3_ALIAS)
+                .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMkhUulUkbUkYGBKYkfLHUh")
                 .answer("print('hello world!')")
                 .build()
@@ -280,7 +280,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
                 .contestJid(contest.getJid())
-                .problemAlias(PROBLEM_3_ALIAS)
+                .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMcD1oSDFJLadFSsMddfsf")
                 .answer("123")
                 .build()

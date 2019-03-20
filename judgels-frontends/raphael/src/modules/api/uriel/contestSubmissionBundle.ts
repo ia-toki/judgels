@@ -10,7 +10,7 @@ import { ItemType } from '../sandalphon/problemBundle';
 
 export interface ContestItemSubmissionData {
   contestJid: string;
-  problemAlias: string;
+  problemJid: string;
   itemJid: string;
   answer: string;
 }
