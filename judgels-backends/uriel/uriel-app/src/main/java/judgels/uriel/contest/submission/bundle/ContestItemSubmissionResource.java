@@ -258,8 +258,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         String viewedUserJid;
         if (canSupervise && username.isPresent()) {
-            viewedUserJid = userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get()))
-                    .get(username.get());
+            Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
+                    ImmutableSet.of(username.get()));
+            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.getOrDefault(username.get(), null)));
         } else {
             viewedUserJid = actorJid;
         }
@@ -292,8 +293,9 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         String viewedUserJid;
         if (canSupervise && username.isPresent()) {
-            viewedUserJid = userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get()))
-                    .get(username.get());
+            Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
+                    ImmutableSet.of(username.get()));
+            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.getOrDefault(username.get(), null)));
         } else {
             viewedUserJid = actorJid;
         }
