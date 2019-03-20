@@ -260,7 +260,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         if (canSupervise && username.isPresent()) {
             Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
                     ImmutableSet.of(username.get()));
-            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.getOrDefault(username.get(), null)));
+            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
         } else {
             viewedUserJid = actorJid;
         }
@@ -295,7 +295,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         if (canSupervise && username.isPresent()) {
             Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
                     ImmutableSet.of(username.get()));
-            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.getOrDefault(username.get(), null)));
+            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
         } else {
             viewedUserJid = actorJid;
         }
