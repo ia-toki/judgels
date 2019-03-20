@@ -107,15 +107,16 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
         Optional<String> filterUserJid;
         if (canSupervise) {
-            filterUserJid = username.map(u -> userSearchService.translateUsernamesToJids(ImmutableSet.of(u)).get(u));
+            filterUserJid = username.map(u -> userSearchService.translateUsernamesToJids(
+                    ImmutableSet.of(u)).getOrDefault(u, ""));
         } else {
             filterUserJid = Optional.of(actorJid);
         }
 
         Optional<String> problemJid = Optional.empty();
         if (problemAlias.isPresent()) {
-            ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias.get()));
-            problemJid = Optional.of(problem.getProblemJid());
+            Optional<ContestProblem> problem = problemStore.getProblemByAlias(contestJid, problemAlias.get());
+            problemJid = Optional.of(problem.isPresent() ? problem.get().getProblemJid() : "");
         }
 
         Page<ItemSubmission> submissions =

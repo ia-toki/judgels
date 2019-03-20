@@ -61,6 +61,20 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         ContestItemSubmissionsResponse submissionsResponse;
 
         submissionsResponse = submissionService.getSubmissions(
+                SUPERVISOR_HEADER, contest.getJid(), Optional.empty(), Optional.of("invalid-alias"), Optional.of(1));
+
+        assertThat(submissionsResponse.getConfig().getCanSupervise()).isTrue();
+        assertThat(submissionsResponse.getConfig().getCanManage()).isFalse();
+        assertThat(submissionsResponse.getData().getPage()).hasSize(0);
+
+        submissionsResponse = submissionService.getSubmissions(
+                SUPERVISOR_HEADER, contest.getJid(), Optional.of("invalid-username"), Optional.empty(), Optional.of(1));
+
+        assertThat(submissionsResponse.getConfig().getCanSupervise()).isTrue();
+        assertThat(submissionsResponse.getConfig().getCanManage()).isFalse();
+        assertThat(submissionsResponse.getData().getPage()).hasSize(0);
+
+        submissionsResponse = submissionService.getSubmissions(
                 CONTESTANT_HEADER, contest.getJid(), Optional.empty(), Optional.of(PROBLEM_3_ALIAS), Optional.of(1));
 
         assertThat(submissionsResponse.getProblemAliasesMap()).hasSize(1);
