@@ -29,4 +29,5 @@ export const contest: Contest = {
 };
 
 export const problemJid = 'problemJid123';
+export const problemAlias = 'C';
 export const announcementJid = 'announcementJid123';

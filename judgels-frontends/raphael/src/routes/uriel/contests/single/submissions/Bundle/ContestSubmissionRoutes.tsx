@@ -19,7 +19,7 @@ const ContestSubmissionRoutes: React.FunctionComponent<ContestSubmissionRoutesPr
   }
   return (
     <div>
-      <Route path="/contests/:contestSlug/submissions/users/:userJid" component={SubmissionSummaryPage} />
+      <Route path="/contests/:contestSlug/submissions/users/:username" component={SubmissionSummaryPage} />
       <Route exact path="/contests/:contestSlug/submissions" component={ContestSubmissionsPage} />
     </div>
   );

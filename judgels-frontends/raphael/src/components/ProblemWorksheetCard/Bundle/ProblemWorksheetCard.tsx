@@ -10,7 +10,7 @@ export interface ProblemWorksheetCardProps {
   alias: string;
   worksheet: ProblemWorksheet;
   language: string;
-  latestSubmission: { [id: string]: ItemSubmission };
+  latestSubmissions: { [id: string]: ItemSubmission };
   onAnswerItem: (itemJid: string, answer: string) => Promise<any>;
 }
 
@@ -20,14 +20,14 @@ export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCa
   }
 
   private renderStatement = () => {
-    const { worksheet, latestSubmission, alias } = this.props;
+    const { worksheet, latestSubmissions, alias } = this.props;
     return (
       <ProblemStatementCard
         alias={alias}
         statement={worksheet.statement}
         onAnswerItem={this.props.onAnswerItem}
         items={worksheet.items}
-        latestSubmission={latestSubmission}
+        latestSubmissions={latestSubmissions}
       />
     );
   };
