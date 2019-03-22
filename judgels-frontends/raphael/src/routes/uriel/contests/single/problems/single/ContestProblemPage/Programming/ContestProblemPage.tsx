@@ -123,7 +123,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     }
 
     let submissionWarning;
-    if (problem.submissionsLimit !== 0) {
+    if (!!problem.submissionsLimit) {
       const submissionsLeft = problem.submissionsLimit - totalSubmissions!;
       submissionWarning = '' + submissionsLeft + ' submissions left.';
     }

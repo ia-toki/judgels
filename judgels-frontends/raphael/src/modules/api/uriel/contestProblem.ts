@@ -16,8 +16,8 @@ export interface ContestProblem {
   alias: string;
   problemJid: string;
   status: ContestProblemStatus;
-  submissionsLimit: number | null;
-  points: number | null;
+  submissionsLimit?: number;
+  points?: number;
 }
 
 export interface ContestProblemData {
