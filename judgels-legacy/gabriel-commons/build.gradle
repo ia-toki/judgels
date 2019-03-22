@@ -3,6 +3,8 @@ apply from: '../gradle/java.gradle'
 dependencies {
     api project(':commons')
 
+    api project(':gabriel:gabriel-engine-api')
+
     api "org.slf4j:slf4j-api:1.7.10"
     api "ch.qos.logback:logback-classic:1.1.1"
     api "ch.qos.logback:logback-core:1.1.1"

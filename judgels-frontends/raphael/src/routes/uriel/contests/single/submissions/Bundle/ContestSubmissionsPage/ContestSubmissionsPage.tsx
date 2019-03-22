@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, HTMLTable, H3, Icon } from '@blueprintjs/core';
+import { Card, HTMLTable, Icon } from '@blueprintjs/core';
 import { withRouter, Link } from 'react-router-dom';
 import Pagination from 'components/Pagination/Pagination';
 import { ContestItemSubmissionsResponse } from 'modules/api/uriel/contestSubmissionBundle';
@@ -8,16 +8,19 @@ import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
 import { AppState } from 'modules/store';
 import { connect } from 'react-redux';
 import { Contest } from 'modules/api/uriel/contest';
-import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
+import { FormattedRelative } from 'react-intl';
+import { UserRef } from 'components/UserRef/UserRef';
+import { ContentCard } from 'components/ContentCard/ContentCard';
+import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
 
 import './ContestSubmissionsPage.css';
 
 export interface ContestSubmissionsPageProps {
   onGetSubmissions: (
     contestJid: string,
-    userJid?: string,
-    problemJid?: string,
+    username?: string,
+    problemAlias?: string,
     page?: number
   ) => Promise<ContestItemSubmissionsResponse>;
   contest: Contest;
@@ -49,39 +52,45 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
       return <Card className="bp3-skeleton">{'fake'.repeat(100)}</Card>;
     }
 
-    const { data, profilesMap, problemAliasesMap } = response;
+    const { data, profilesMap, problemAliasesMap, itemNumbersMap, itemTypesMap } = response;
     const { contest } = this.props;
     const canManage = response.config.canManage;
 
     return (
-      <Card className="contest-bundle-submissions-page">
-        <H3>Submissions</H3>
-        <HTMLTable className="submissions-table" bordered striped interactive>
+      <ContentCard className="contest-bundle-submissions-page">
+        <h3>Submissions</h3>
+        <hr />
+        <HTMLTable striped className="table-list-condensed submissions-table">
           <thead>
             <tr>
               <th>User</th>
-              <th>Problem</th>
-              <th>Item Number</th>
+              <th className="col-prob">Problem</th>
+              <th className="col-item-num">No</th>
               <th>Answer</th>
-              {canManage && <th>Verdict</th>}
+              {canManage && <th className="col-verdict">Verdict</th>}
               <th>Time</th>
-              <th />
+              <th className="col-action" />
             </tr>
           </thead>
           <tbody>
             {data.page.map(item => (
               <tr key={item.jid}>
-                <td>{profilesMap[item.userJid] ? profilesMap[item.userJid].username : '-'}</td>
-                <td>{problemAliasesMap[item.problemJid] || '-'}</td>
-                {/* TODO: Add item number, dont know how to do this yet. */}
-                <td>{Math.round(Math.random() * 50 + 1)}</td>
-                <td>{item.answer || '-'}</td>
-                {canManage && <td>{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>}
                 <td>
-                  <FormattedDate value={item.time} showSeconds />
+                  <UserRef profile={profilesMap[item.userJid]} />
                 </td>
+                <td className="col-prob">{problemAliasesMap[item.problemJid] || '-'}</td>
+                <td className="col-item-num">{itemNumbersMap[item.itemJid] || '-'}</td>
                 <td>
-                  <Link to={`/contests/${contest.slug}/submissions/users/${item.userJid}`}>
+                  <FormattedAnswer answer={item.answer} type={itemTypesMap[item.itemJid]} />
+                </td>
+                {canManage && (
+                  <td className="col-verdict">{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>
+                )}
+                <td>
+                  <FormattedRelative value={item.time} />
+                </td>
+                <td className="col-action">
+                  <Link to={`/contests/${contest.slug}/submissions/users/${profilesMap[item.userJid].username}`}>
                     <Icon icon="search" />
                   </Link>
                 </td>
@@ -92,7 +101,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
         <div className="submission-pagination">
           <Pagination currentPage={1} pageSize={ContestSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />
         </div>
-      </Card>
+      </ContentCard>
     );
   }
 

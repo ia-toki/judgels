@@ -5,7 +5,6 @@ import static judgels.sandalphon.SandalphonUtils.combineLanguageRestrictions;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
-import com.google.common.collect.ImmutableMap;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Map;
@@ -13,20 +12,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.inject.Named;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.sandalphon.api.SandalphonClientConfiguration;
-import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.sandalphon.api.problem.ProblemInfo;
-import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.problem.programming.ProblemWorksheet;
+import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.service.api.client.BasicAuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.problem.ContestProblem;
@@ -45,9 +39,7 @@ public class ContestProblemResource implements ContestProblemService {
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
     private final SubmissionStore submissionStore;
-    private final SandalphonClientConfiguration sandalphonConfig;
-    private final BasicAuthHeader sandalphonClientAuthHeader;
-    private final ClientProblemService clientProblemService;
+    private final ProblemClient problemClient;
 
     @Inject
     public ContestProblemResource(
@@ -57,9 +49,7 @@ public class ContestProblemResource implements ContestProblemService {
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
             SubmissionStore submissionStore,
-            SandalphonClientConfiguration sandalphonConfig,
-            @Named("sandalphon") BasicAuthHeader sandalphonClientAuthHeader,
-            ClientProblemService clientProblemService) {
+            ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
@@ -67,9 +57,7 @@ public class ContestProblemResource implements ContestProblemService {
         this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
         this.submissionStore = submissionStore;
-        this.sandalphonConfig = sandalphonConfig;
-        this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
-        this.clientProblemService = clientProblemService;
+        this.problemClient = problemClient;
     }
 
     @Override
@@ -90,10 +78,7 @@ public class ContestProblemResource implements ContestProblemService {
         checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
 
-        Map<String, String> slugToJidMap = clientProblemService.translateAllowedSlugsToJids(
-                sandalphonClientAuthHeader,
-                actorJid,
-                slugs);
+        Map<String, String> slugToJidMap = problemClient.translateAllowedSlugsToJids(actorJid, slugs);
 
         Set<String> notAllowedSlugs = data.stream()
                 .map(ContestProblemData::getSlug)
@@ -126,9 +111,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         List<ContestProblem> problems = problemStore.getProblems(contestJid);
         Set<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
-        Map<String, ProblemInfo> problemsMap = problemJids.isEmpty()
-                ? ImmutableMap.of()
-                : clientProblemService.getProblems(sandalphonClientAuthHeader, problemJids);
+        Map<String, ProblemInfo> problemsMap = problemClient.getProblems(problemJids);
         Map<String, Long> totalSubmissionsMap =
                 submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
 
@@ -159,7 +142,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
+        ProblemInfo problemInfo = problemClient.getProblem(problemJid);
 
         if (problemInfo.getType() != ProblemType.PROGRAMMING) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());
@@ -170,8 +153,7 @@ public class ContestProblemResource implements ContestProblemService {
         Optional<String> reasonNotAllowedToSubmit =
                 problemRoleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
-        ProblemWorksheet worksheet =
-                clientProblemService.getProgrammingProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
+        ProblemWorksheet worksheet = problemClient.getProgrammingProblemWorksheet(problemJid, language);
 
         LanguageRestriction contestGradingLanguageRestriction =
                 moduleStore.getStyleModuleConfig(contestJid, contest.getStyle()).getGradingLanguageRestriction();
@@ -182,10 +164,6 @@ public class ContestProblemResource implements ContestProblemService {
 
         ProblemWorksheet finalWorksheet = new ProblemWorksheet.Builder()
                 .from(worksheet)
-                .statement(new ProblemStatement.Builder()
-                        .from(worksheet.getStatement())
-                        .text(replaceRenderUrls(worksheet.getStatement().getText(), problemJid))
-                        .build())
                 .submissionConfig(new ProblemSubmissionConfig.Builder()
                         .from(worksheet.getSubmissionConfig())
                         .gradingLanguageRestriction(combinedGradingLanguageRestriction)
@@ -216,7 +194,7 @@ public class ContestProblemResource implements ContestProblemService {
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
+        ProblemInfo problemInfo = problemClient.getProblem(problemJid);
 
         if (problemInfo.getType() != ProblemType.BUNDLE) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());
@@ -228,19 +206,11 @@ public class ContestProblemResource implements ContestProblemService {
                 problemRoleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet =
-                clientProblemService.getBundleProblemWorksheet(sandalphonClientAuthHeader, problemJid, language);
+                problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language);
 
         judgels.sandalphon.api.problem.bundle.ProblemWorksheet
                 finalWorksheet = new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
                 .from(worksheet)
-                .items(worksheet.getItems().stream()
-                    .map(item -> new Item.Builder()
-                        .from(item)
-                        .config(replaceRenderUrls(item.getConfig(), problemJid))
-                        .build()
-                    )
-                    .collect(Collectors.toList())
-                )
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                 .build();
 
@@ -251,17 +221,5 @@ public class ContestProblemResource implements ContestProblemService {
                 .totalSubmissions(totalSubmissions)
                 .worksheet(finalWorksheet)
                 .build();
-    }
-
-
-    private String replaceRenderUrls(String statementText, String problemJid) {
-        String baseUrl = sandalphonConfig.getBaseUrl();
-        return statementText
-                .replaceAll(
-                        "src=\"render/",
-                        String.format("src=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid))
-                .replaceAll(
-                        "href=\"render/",
-                        String.format("href=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid));
     }
 }

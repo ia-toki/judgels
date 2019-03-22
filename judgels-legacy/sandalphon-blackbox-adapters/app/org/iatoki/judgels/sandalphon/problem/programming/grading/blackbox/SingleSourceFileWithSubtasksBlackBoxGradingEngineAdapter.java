@@ -2,10 +2,10 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import org.iatoki.judgels.gabriel.blackbox.Subtask;
-import org.iatoki.judgels.gabriel.blackbox.TestCase;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
-import org.iatoki.judgels.gabriel.blackbox.configs.SingleSourceFileWithSubtasksBlackBoxGradingConfig;
+import judgels.gabriel.api.Subtask;
+import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.SingleSourceFileWithSubtasksGradingConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter extends SingleSourceFileBlackBoxGradingEngineAdapter {
-    protected final void fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileWithSubtasksBlackBoxGradingConfigForm form, SingleSourceFileWithSubtasksBlackBoxGradingConfig config) {
+    protected final void fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(SingleSourceFileWithSubtasksBlackBoxGradingConfigForm form, SingleSourceFileWithSubtasksGradingConfig config) {
         fillSingleSourceFileBlackBoxGradingConfigFormPartsFromConfig(form, config);
 
         int subtasksCount = Math.max(10, config.getSubtasks().size());
@@ -85,14 +85,14 @@ public abstract class SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter e
 
                     subtaskIds.add(0);
 
-                    sampleTestCases.add(new TestCase(sampleTestCase.getInput(), sampleTestCase.getOutput(), subtaskIds));
+                    sampleTestCases.add(TestCase.of(sampleTestCase.getInput(), sampleTestCase.getOutput(), subtaskIds));
 
                     if (!subtaskIds.isEmpty()) {
                         subtasksCount = Math.max(subtasksCount, Collections.max(subtaskIds));
                     }
                 }
 
-                filledTestData.add(new TestGroup(0, sampleTestCases.build()));
+                filledTestData.add(TestGroup.of(0, sampleTestCases.build()));
             } else {
                 List<Integer> formSubtaskIds;
 
@@ -106,7 +106,7 @@ public abstract class SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter e
                         .filter(s -> s != null)
                         .collect(Collectors.toSet());
 
-                filledTestData.add(new TestGroup(i, Lists.transform(testData.get(i).getTestCases(), tc -> new TestCase(tc.getInput(), tc.getOutput(), subtaskIds))));
+                filledTestData.add(TestGroup.of(i, Lists.transform(testData.get(i).getTestCases(), tc -> TestCase.of(tc.getInput(), tc.getOutput(), subtaskIds))));
 
                 if (!subtaskIds.isEmpty()) {
                     subtasksCount = Math.max(subtasksCount, Collections.max(subtaskIds));

@@ -2,12 +2,12 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.outputonly.OutputOnlyGradingConfig;
 import org.apache.commons.io.FilenameUtils;
 import org.iatoki.judgels.FileInfo;
-import org.iatoki.judgels.gabriel.GradingConfig;
-import org.iatoki.judgels.gabriel.blackbox.TestCase;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
-import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyGradingConfig;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.ConfigurableWithAutoPopulation;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.outputOnlyGradingConfigView;
 import play.api.mvc.Call;
@@ -15,6 +15,7 @@ import play.data.Form;
 import play.twirl.api.Html;
 
 import java.util.List;
+import java.util.Optional;
 
 public final class OutputOnlyGradingEngineAdapter extends SingleSourceFileWithoutSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithAutoPopulation {
 
@@ -24,10 +25,10 @@ public final class OutputOnlyGradingEngineAdapter extends SingleSourceFileWithou
         OutputOnlyGradingConfig castConfig = (OutputOnlyGradingConfig) config;
         fillSingleSourceFileWithoutSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
-        if (castConfig.getCustomScorer() == null) {
+        if (!castConfig.getCustomScorer().isPresent()) {
             form.customScorer = "(none)";
         } else {
-            form.customScorer = castConfig.getCustomScorer();
+            form.customScorer = castConfig.getCustomScorer().get();
         }
 
         return Form.form(OutputOnlyGradingConfigForm.class).fill(form);
@@ -56,7 +57,10 @@ public final class OutputOnlyGradingEngineAdapter extends SingleSourceFileWithou
             customScorer = formData.customScorer;
         }
 
-        return new OutputOnlyGradingConfig(testData, customScorer);
+        return new OutputOnlyGradingConfig.Builder()
+                .testData(testData)
+                .customScorer(Optional.ofNullable(customScorer))
+                .build();
     }
 
     @Override
@@ -69,18 +73,21 @@ public final class OutputOnlyGradingEngineAdapter extends SingleSourceFileWithou
             String out = testDataFiles.get(i + 1).getName();
             if (isTestCasePair(in, out)) {
                 if (in.contains("sample")) {
-                    sampleTestCases.add(new TestCase(in, out, ImmutableSet.of(0)));
+                    sampleTestCases.add(TestCase.of(in, out, ImmutableSet.of(0)));
                 } else {
-                    testCases.add(new TestCase(in, out, ImmutableSet.of(-1)));
+                    testCases.add(TestCase.of(in, out, ImmutableSet.of(-1)));
                 }
                 i++;
             }
         }
 
-        List<TestGroup> testData = ImmutableList.of(new TestGroup(0, sampleTestCases.build()), new TestGroup(-1, testCases.build()));
+        List<TestGroup> testData = ImmutableList.of(TestGroup.of(0, sampleTestCases.build()), TestGroup.of(-1, testCases.build()));
 
         OutputOnlyGradingConfig castConfig = (OutputOnlyGradingConfig) config;
-        return new OutputOnlyGradingConfig(testData, castConfig.getCustomScorer());
+        return new OutputOnlyGradingConfig.Builder()
+                .from(castConfig)
+                .testData(testData)
+                .build();
     }
 
     @Override

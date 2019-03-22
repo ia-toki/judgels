@@ -23,8 +23,8 @@ public interface ContestItemSubmissionService {
     ContestItemSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") Optional<String> userJid,
-            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") Optional<String> problemAlias,
             @QueryParam("page") Optional<Integer> page);
 
     @POST
@@ -35,10 +35,11 @@ public interface ContestItemSubmissionService {
     @GET
     @Path("/summary")
     @Produces(APPLICATION_JSON)
-    ContestantAnswersResponse getLatestContestantAnswersInContest(
+    ContestantAnswerSummaryResponse getAnswerSummaryForContestant(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") Optional<String> userJid);
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("language") Optional<String> language);
 
     @GET
     @Path("/answers")
@@ -46,6 +47,6 @@ public interface ContestItemSubmissionService {
     Map<String, ItemSubmission> getLatestSubmissionsByUserForProblemInContest(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") Optional<String> userJid,
-            @QueryParam("problemJid") String problemJid);
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") String problemAlias);
 }

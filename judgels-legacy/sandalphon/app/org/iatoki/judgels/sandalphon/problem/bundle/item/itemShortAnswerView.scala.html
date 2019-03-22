@@ -1,0 +1,21 @@
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem
+@import org.iatoki.judgels.sandalphon.problem.bundle.item.ItemShortAnswerConf
+
+@(bundleItem: BundleItem, itemShortAnswerConf: ItemShortAnswerConf)
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="clearfix">
+            <div class="table-cell">
+                @(bundleItem.getNumber).&nbsp;
+            </div>
+            <div class="table-cell">
+                <div class="content-text">
+                @Html(itemShortAnswerConf.statement)
+                </div>
+            </div>
+        </div>
+        <hr />
+        <input type="text" name="@bundleItem.getJid">
+    </div>
+</div>

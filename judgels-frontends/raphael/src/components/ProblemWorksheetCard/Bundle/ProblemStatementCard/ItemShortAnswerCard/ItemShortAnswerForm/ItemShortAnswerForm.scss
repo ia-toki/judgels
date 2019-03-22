@@ -1,0 +1,22 @@
+.item-short-answer-form {
+  .answer-form {
+    width: 60%;
+  }
+
+  .text-input {
+    width: 70%;
+
+    &.readonly {
+      background-color: rgba(206,217,224,.5);
+      cursor: not-allowed;
+    }
+  }
+
+  .button {
+    width: 15%;
+  }
+
+  .callout {
+    width: 51%
+  }
+}

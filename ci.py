@@ -40,8 +40,8 @@ MODULES = OrderedDict([
     (':play-commons', {':commons', ':judgels-commons:judgels-service-persistence'}),
     (':jophiel-commons', {':commons', ':judgels-commons:judgels-persistence-core'}),
     (':gabriel-commons', {':commons'}),
-    (':gabriel-blackbox', {':gabriel-commons'}),
-    (':sandalphon-commons', {':play-commons', ':gabriel-commons', ':api', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':gabriel:gabriel-api', ':sealtiel:sealtiel-api'}),
+    (':gabriel-blackbox', {':gabriel-commons', ':gabriel:gabriel-engines'}),
+    (':sandalphon-commons', {':play-commons', ':gabriel-commons', ':api', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':gabriel:gabriel-engine-api', ':sealtiel:sealtiel-api'}),
     (':sandalphon-blackbox-adapters', {':sandalphon-commons', ':gabriel-blackbox'}),
 
 
@@ -73,6 +73,7 @@ PROJECTS = [
     ':uriel',
     ':jerahmeel',
     ':gabriel',
+    ':gabriel-blackbox',
     ':raphael'
 ]
 
@@ -140,7 +141,10 @@ def check(branch_to_compare):
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael lint')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
-            elif project == ':sandalphon' or project == ':jerahmeel':
+            elif project in [':sandalphon', ':jerahmeel', ':gabriel-blackbox']:
+                print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
+            elif project == ':gabriel':
+                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
                 print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
             else:
                 print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))

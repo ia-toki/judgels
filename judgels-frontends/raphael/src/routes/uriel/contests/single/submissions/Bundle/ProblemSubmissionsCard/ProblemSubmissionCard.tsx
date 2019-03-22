@@ -1,50 +1,79 @@
 import * as React from 'react';
-import { Card, H3, HTMLTable } from '@blueprintjs/core';
+import { H3, HTMLTable } from '@blueprintjs/core';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
-import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
+import { FormattedRelative } from 'react-intl';
+import { ContentCard } from 'components/ContentCard/ContentCard';
+import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
+import { ItemType } from 'modules/api/sandalphon/problemBundle';
 
 import './ProblemSubmissionCard.css';
 
 export interface ProblemSubmissionCardProps {
+  name: string;
   alias: string;
-  submissions: ItemSubmission[];
+  itemJids: string[];
+  submissionsByItemJid: { [itemJid: string]: ItemSubmission };
+  itemTypesMap: { [itemJid: string]: ItemType };
   canSupervise: boolean;
   canManage: boolean;
 }
 
 export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCardProps> = ({
+  name,
   alias,
-  submissions,
+  itemJids,
+  submissionsByItemJid,
+  itemTypesMap,
   canManage,
 }) => {
-  const renderAnswer = (answer?: string) => (answer && answer.length > 0 ? answer : '-');
-
-  const renderSingleSubmission = (submission: ItemSubmission, itemNum: number) => (
-    <tr key={submission.itemJid}>
-      <td>{itemNum + 1}</td>
-      <td>{renderAnswer(submission.answer)}</td>
-      {canManage && <td>{submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}</td>}
-      <td>
-        <FormattedDate value={submission.time} />
-      </td>
-    </tr>
-  );
+  const renderSingleRow = (itemJid: string, index: number) => {
+    const submission = submissionsByItemJid[itemJid];
+    if (submission) {
+      return (
+        <tr key={itemJid}>
+          <td className="col-item-num">{index + 1}</td>
+          <td>
+            <FormattedAnswer answer={submission.answer} type={itemTypesMap[itemJid]} />
+          </td>
+          {canManage && (
+            <td className="col-verdict">
+              {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
+            </td>
+          )}
+          <td className="col-time">
+            <FormattedRelative value={submission.time} />
+          </td>
+        </tr>
+      );
+    } else {
+      return (
+        <tr key={itemJid}>
+          <td className="col-item-num">{index + 1}</td>
+          <td>-</td>
+          {canManage && <td className="col-verdict">-</td>}
+          <td className="col-time">-</td>
+        </tr>
+      );
+    }
+  };
 
   return (
-    <Card className="contest-bundle-problem-submission">
-      <H3>{alias}</H3>
-      <HTMLTable className="submission-table" bordered striped>
+    <ContentCard className="contest-bundle-problem-submission">
+      <H3>
+        {alias}: {name}
+      </H3>
+      <HTMLTable striped className="table-list-condensed submission-table">
         <thead>
           <tr>
-            <th>Item Number</th>
+            <th className="col-item-num">No.</th>
             <th>Answer</th>
-            {canManage && <th>Verdict</th>}
-            <th>Time</th>
+            {canManage && <th className="col-verdict">Verdict</th>}
+            <th className="col-time">Time</th>
           </tr>
         </thead>
-        <tbody>{submissions.map(renderSingleSubmission)}</tbody>
+        <tbody>{itemJids.map(renderSingleRow)}</tbody>
       </HTMLTable>
-    </Card>
+    </ContentCard>
   );
 };

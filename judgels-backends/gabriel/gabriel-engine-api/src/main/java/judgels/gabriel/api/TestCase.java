@@ -9,7 +9,15 @@ import org.immutables.value.Value;
 public interface TestCase {
     String getInput();
     String getOutput();
-    Set<String> getSubtaskIds();
+    Set<Integer> getSubtaskIds();
+
+    static TestCase of(String input, String output, Set<Integer> subtaskIds) {
+        return new TestCase.Builder()
+                .input(input)
+                .output(output)
+                .subtaskIds(subtaskIds)
+                .build();
+    }
 
     class Builder extends ImmutableTestCase.Builder {}
 }

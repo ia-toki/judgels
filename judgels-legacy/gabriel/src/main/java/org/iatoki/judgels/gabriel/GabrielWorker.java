@@ -3,6 +3,7 @@ package org.iatoki.judgels.gabriel;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.palantir.conjure.java.api.errors.RemoteException;
+import judgels.gabriel.api.GradingConfig;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;

@@ -1,22 +1,15 @@
 import * as React from 'react';
 import { Card, Divider, RadioGroup, Radio, Tag } from '@blueprintjs/core';
-import { Item } from 'modules/api/sandalphon/problemBundle';
+import { Item, ItemMultipleChoiceConfig } from 'modules/api/sandalphon/problemBundle';
 import { HtmlText } from 'components/HtmlText/HtmlText';
 
 import './ItemMultipleChoiceCard.css';
 
-export interface ItemMultipleChoiceConfig {
-  statement: string;
-  choices: {
-    alias: string;
-    content: string;
-  }[];
-}
-
 export interface ItemMultipleChoiceCardProps extends Item {
   className?: string;
   initialAnswer?: string;
-  onChoiceChange?: (choice?: string) => any;
+  onChoiceChange?: (choice?: string) => Promise<any>;
+  itemNumber: number;
 }
 
 export interface ItemMultipleChoiceCardState {
@@ -50,37 +43,38 @@ export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCa
   };
 
   render() {
-    try {
-      const config: ItemMultipleChoiceConfig = JSON.parse(this.props.config);
-      return (
-        <Card className={this.props.className}>
-          <HtmlText>{config.statement}</HtmlText>
-          <Divider />
-          <RadioGroup
-            className="problem-multiple-choice-item-choices"
-            onChange={this.handleRadioChange}
-            selectedValue={this.state.value}
-          >
-            {config.choices.map(choice => (
-              <Radio
-                key={choice.alias}
-                className="problem-multiple-choice-item-choice"
-                value={choice.alias}
-                onClick={this.handleRadioClick}
-              >
-                <Tag className="__alias-tag">
-                  <HtmlText>{choice.alias}</HtmlText>
-                </Tag>
-                <div className="__content">
-                  <HtmlText>{choice.content}</HtmlText>
-                </div>
-              </Radio>
-            ))}
-          </RadioGroup>
-        </Card>
-      );
-    } catch (error) {
-      return <React.Fragment />;
-    }
+    const config: ItemMultipleChoiceConfig = this.props.config as ItemMultipleChoiceConfig;
+    return (
+      <Card className={this.props.className}>
+        <div className="problem-multiple-choice-statement">
+          <div className="__item-num">{this.props.itemNumber}.</div>
+          <div className="__item-statement">
+            <HtmlText>{config.statement}</HtmlText>
+          </div>
+        </div>
+        <Divider />
+        <RadioGroup
+          className="problem-multiple-choice-item-choices"
+          onChange={this.handleRadioChange}
+          selectedValue={this.state.value}
+        >
+          {config.choices.map(choice => (
+            <Radio
+              key={choice.alias}
+              className="problem-multiple-choice-item-choice"
+              value={choice.alias}
+              onClick={this.handleRadioClick}
+            >
+              <Tag className="__alias-tag">
+                <HtmlText>{choice.alias}</HtmlText>
+              </Tag>
+              <div className="__content">
+                <HtmlText>{choice.content}</HtmlText>
+              </div>
+            </Radio>
+          ))}
+        </RadioGroup>
+      </Card>
+    );
   }
 }

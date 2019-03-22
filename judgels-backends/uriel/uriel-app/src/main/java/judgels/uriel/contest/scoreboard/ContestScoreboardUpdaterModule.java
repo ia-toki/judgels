@@ -29,8 +29,8 @@ public class ContestScoreboardUpdaterModule {
 
         ExecutorService executorService =
                 lifecycleEnvironment.executorService("contest-scoreboard-updater-%d")
-                        .maxThreads(5)
-                        .minThreads(5)
+                        .maxThreads(2)
+                        .minThreads(2)
                         .build();
 
         return unitOfWorkAwareProxyFactory.create(

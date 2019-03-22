@@ -1,12 +1,12 @@
+@import judgels.gabriel.api.GradingConfig
+@import judgels.gabriel.engines.outputonly.OutputOnlyGradingConfig
 @import judgels.sandalphon.api.problem.ProblemStatement
 @import play.i18n.Messages
 @import com.google.common.base.Joiner
 @import org.iatoki.judgels.gabriel.GradingLanguageRegistry
 @import org.iatoki.judgels.gabriel.OutputOnlyMagic
-@import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig
-@import org.iatoki.judgels.gabriel.blackbox.configs.OutputOnlyGradingConfig
 
-@(postSubmitUri: String, statement: ProblemStatement, blackBoxGradingConfig: BlackBoxGradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
+@(postSubmitUri: String, statement: ProblemStatement, blackBoxGradingConfig: GradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
 
 @if(play.mvc.Controller.flash("submissionError") != null) {
     <div class="alert alert-danger" role="alert">@{play.mvc.Controller.flash("submissionError")}</div>
@@ -20,18 +20,18 @@
 
 <p class="text-center">
     Time limit:
-    @if(blackBoxGradingConfig.getTimeLimitInMilliseconds % 1000 == 0) {
-        @{blackBoxGradingConfig.getTimeLimitInMilliseconds / 1000} s
+    @if(blackBoxGradingConfig.getTimeLimit % 1000 == 0) {
+        @{blackBoxGradingConfig.getTimeLimit / 1000} s
     }else {
-        @blackBoxGradingConfig.getTimeLimitInMilliseconds ms
+        @blackBoxGradingConfig.getTimeLimit ms
     }
 </p>
 <p class="text-center">
     Memory limit:
-    @if(blackBoxGradingConfig.getMemoryLimitInKilobytes % 1024 == 0) {
-        @{blackBoxGradingConfig.getMemoryLimitInKilobytes / 1024} MB
+    @if(blackBoxGradingConfig.getMemoryLimit % 1024 == 0) {
+        @{blackBoxGradingConfig.getMemoryLimit / 1024} MB
     }else {
-        @blackBoxGradingConfig.getMemoryLimitInKilobytes KB
+        @blackBoxGradingConfig.getMemoryLimit KB
     }
 </p>
 

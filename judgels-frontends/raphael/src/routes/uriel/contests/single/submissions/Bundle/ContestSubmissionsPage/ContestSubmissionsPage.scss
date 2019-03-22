@@ -1,7 +1,22 @@
+@import '../../../../../../../styles/table';
+
 .contest-bundle-submissions-page {
-    margin-top: 15px;
     .submissions-table {
+        table-layout: fixed;
         margin-top: 20px;
         border: solid 1px #a0a0a0;
+        .col-item-num {
+            width: 50px;
+        }
+        .col-prob {
+            width: 80px;
+        }
+        .col-verdict {
+            width: 70px;
+        }
+        .col-action {
+            width: 50px;
+            cursor: pointer;
+        }
     }
 }

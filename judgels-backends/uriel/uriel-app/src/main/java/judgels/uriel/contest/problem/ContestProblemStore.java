@@ -112,13 +112,6 @@ public class ContestProblemStore {
                 .collect(Collectors.toMap(jid -> jid, problemAliases::get));
     }
 
-    public Map<String, Integer> getProblemPointsByJids(String contestJid, Set<String> problemJids) {
-        return problemDao.selectAllByContestJid(contestJid, createOptions())
-                .stream()
-                .filter(m -> problemJids.contains(m.problemJid))
-                .collect(Collectors.toMap(m -> m.problemJid, m -> m.points));
-    }
-
     private static SelectionOptions createOptions() {
         return new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_ALL)
                 .orderBy("alias")

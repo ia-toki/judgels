@@ -2,10 +2,10 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import judgels.gabriel.api.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.NormalVerdict;
 import org.iatoki.judgels.gabriel.blackbox.ReductionException;
 import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
-import org.iatoki.judgels.gabriel.blackbox.Subtask;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskResult;
 import org.iatoki.judgels.gabriel.blackbox.TestCaseResult;
 

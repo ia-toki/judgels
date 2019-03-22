@@ -7,7 +7,7 @@ dependencies {
 
     play project(':judgels-commons:judgels-service-persistence')
     play project(':sandalphon:sandalphon-api')
-    play project(':gabriel:gabriel-api')
+    play project(':gabriel:gabriel-engine-api')
     play project(':sealtiel:sealtiel-api')
 
     play "org.webjars:prettify:4-Mar-2013"

@@ -2,11 +2,11 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.interactive.InteractiveWithSubtasksGradingConfig;
 import org.iatoki.judgels.FileInfo;
-import org.iatoki.judgels.gabriel.GradingConfig;
-import org.iatoki.judgels.gabriel.blackbox.TestCase;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
-import org.iatoki.judgels.gabriel.blackbox.configs.InteractiveWithSubtasksGradingConfig;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.ConfigurableWithTokilibFormat;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.TokilibFile;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox.html.interactiveWithSubtasksGradingConfigView;
@@ -16,6 +16,7 @@ import play.twirl.api.Html;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public final class InteractiveWithSubtasksGradingEngineAdapter extends SingleSourceFileWithSubtasksBlackBoxGradingEngineAdapter implements ConfigurableWithTokilibFormat {
@@ -26,10 +27,10 @@ public final class InteractiveWithSubtasksGradingEngineAdapter extends SingleSou
         InteractiveWithSubtasksGradingConfig castConfig = (InteractiveWithSubtasksGradingConfig) config;
         fillSingleSourceFileWithSubtasksBlackBoxGradingConfigFormPartsFromConfig(form, castConfig);
 
-        if (castConfig.getCommunicator() == null) {
+        if (!castConfig.getCommunicator().isPresent()) {
             form.communicator = "(none)";
         } else {
-            form.communicator = castConfig.getCommunicator();
+            form.communicator = castConfig.getCommunicator().get();
         }
 
         return Form.form(InteractiveWithSubtasksGradingConfigForm.class).fill(form);
@@ -59,7 +60,13 @@ public final class InteractiveWithSubtasksGradingEngineAdapter extends SingleSou
             communicator = formData.communicator;
         }
 
-        return new InteractiveWithSubtasksGradingConfig(timeLimit, memoryLimit, testData, subtaskPoints, communicator);
+        return new InteractiveWithSubtasksGradingConfig.Builder()
+                .timeLimit(timeLimit)
+                .memoryLimit(memoryLimit)
+                .testData(testData)
+                .subtaskPoints(subtaskPoints)
+                .communicator(Optional.ofNullable(communicator))
+                .build();
     }
 
     @Override
@@ -111,9 +118,9 @@ public final class InteractiveWithSubtasksGradingEngineAdapter extends SingleSou
             maxBatchNo = Math.max(maxBatchNo, file.batchNo);
         }
 
-        List<TestGroup> testData = Lists.newArrayList();
+        List<List<TestCase>> testGroups = Lists.newArrayList();
         for (int i = 0; i <= maxBatchNo; i++) {
-            testData.add(new TestGroup(i, Lists.newArrayList()));
+            testGroups.add(Lists.newArrayList());
         }
 
         for (TokilibFile file : tokilibFiles) {
@@ -133,9 +140,14 @@ public final class InteractiveWithSubtasksGradingEngineAdapter extends SingleSou
                 }
             }
 
-            TestCase testCase = new TestCase(filename + ".in", null, subtaskIds);
+            TestCase testCase = TestCase.of(filename + ".in", "", subtaskIds);
 
-            testData.get(file.batchNo).getTestCases().add(testCase);
+            testGroups.get(file.batchNo).add(testCase);
+        }
+
+        List<TestGroup> testData = Lists.newArrayList();
+        for (int i = 0; i <= maxBatchNo; i++) {
+            testData.add(TestGroup.of(i, testGroups.get(i)));
         }
 
         List<Integer> subtaskPoints = Lists.newArrayList();
@@ -145,7 +157,13 @@ public final class InteractiveWithSubtasksGradingEngineAdapter extends SingleSou
 
         InteractiveWithSubtasksGradingConfig castConfig = (InteractiveWithSubtasksGradingConfig) config;
 
-        return new InteractiveWithSubtasksGradingConfig(castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes(), testData, subtaskPoints, castConfig.getCommunicator());
+        return new InteractiveWithSubtasksGradingConfig.Builder()
+                .timeLimit(castConfig.getTimeLimit())
+                .memoryLimit(castConfig.getMemoryLimit())
+                .testData(testData)
+                .subtaskPoints(subtaskPoints)
+                .communicator(castConfig.getCommunicator())
+                .build();
     }
 
     @Override

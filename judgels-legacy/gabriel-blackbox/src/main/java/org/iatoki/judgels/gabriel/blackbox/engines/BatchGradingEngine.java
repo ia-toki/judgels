@@ -1,28 +1,27 @@
 package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.Gson;
-import org.iatoki.judgels.gabriel.GradingConfig;
+import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.engines.batch.BatchGradingConfig;
 import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
 import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Reducer;
-import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
-import org.iatoki.judgels.gabriel.blackbox.TestGroup;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.BatchEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SimpleReducer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
-import org.iatoki.judgels.gabriel.blackbox.configs.BatchGradingConfig;
 import org.iatoki.judgels.gabriel.blackbox.languages.Cpp11GradingLanguage;
+import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 public final class BatchGradingEngine extends BlackBoxGradingEngine {
@@ -47,7 +46,7 @@ public final class BatchGradingEngine extends BlackBoxGradingEngine {
     }
 
     @Override
-    protected void prepareAlgorithms(BlackBoxGradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
+    protected void prepareAlgorithms(GradingConfig config, GradingLanguage language, Map<String, File> sourceFiles, Map<String, File> helperFiles, SandboxFactory sandboxFactory) throws PreparationException {
         String sourceFieldKey = config.getSourceFileFields().keySet().iterator().next();
         File sourceFile = sourceFiles.get(sourceFieldKey);
         BatchGradingConfig castConfig = (BatchGradingConfig) config;
@@ -56,11 +55,11 @@ public final class BatchGradingEngine extends BlackBoxGradingEngine {
         compiler = new SingleSourceFileCompiler(compilerSandbox, getCompilationDir(), language, sourceFieldKey, sourceFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());
 
         evaluatorSandbox = sandboxFactory.newSandbox();
-        evaluator = new BatchEvaluator(evaluatorSandbox, getCompilationDir(), getEvaluationDir(), language, sourceFile, castConfig.getTimeLimitInMilliseconds(), castConfig.getMemoryLimitInKilobytes());
+        evaluator = new BatchEvaluator(evaluatorSandbox, getCompilationDir(), getEvaluationDir(), language, sourceFile, castConfig.getTimeLimit(), castConfig.getMemoryLimit());
 
-        if (castConfig.getCustomScorer() != null) {
+        if (castConfig.getCustomScorer().isPresent()) {
             scorerSandbox = sandboxFactory.newSandbox();
-            File scorerFile = helperFiles.get(castConfig.getCustomScorer());
+            File scorerFile = helperFiles.get(castConfig.getCustomScorer().get());
             scorer = new CustomScorer(scorerSandbox, getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
         } else {
             scorer = new DiffScorer();
@@ -82,7 +81,7 @@ public final class BatchGradingEngine extends BlackBoxGradingEngine {
     }
 
     @Override
-    protected org.iatoki.judgels.gabriel.blackbox.Compiler getCompiler() {
+    protected Compiler getCompiler() {
         return compiler;
     }
 
@@ -108,12 +107,17 @@ public final class BatchGradingEngine extends BlackBoxGradingEngine {
 
     @Override
     public GradingConfig createDefaultGradingConfig() {
-        return new BatchGradingConfig(getDefaultCompilationTimeLimitInMilliseconds(), getDefaultMemoryLimitInKilobytes(), ImmutableList.of(new TestGroup(0, ImmutableList.of()), new TestGroup(-1, ImmutableList.of())), null);
+        return new BatchGradingConfig.Builder()
+                .timeLimit(getDefaultCompilationTimeLimitInMilliseconds())
+                .memoryLimit(getDefaultMemoryLimitInKilobytes())
+                .addTestData(TestGroup.of(0, ImmutableList.of()))
+                .addTestData(TestGroup.of(-1, ImmutableList.of()))
+                .build();
     }
 
     @Override
-    public GradingConfig createGradingConfigFromJson(String json) {
-        return new Gson().fromJson(json, BatchGradingConfig.class);
+    public GradingConfig createGradingConfigFromJson(String json) throws IOException {
+        return MAPPER.readValue(json, BatchGradingConfig.class);
     }
 
     @Override

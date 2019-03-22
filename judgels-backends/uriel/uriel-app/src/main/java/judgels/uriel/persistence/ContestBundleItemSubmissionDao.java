@@ -14,14 +14,14 @@ public interface ContestBundleItemSubmissionDao extends JudgelsDao<ContestBundle
             Optional<Long> lastSubmissionId,
             SelectionOptions options);
 
-    List<ContestBundleItemSubmissionModel> selectByContainerJid(
+    List<ContestBundleItemSubmissionModel> selectAllByContainerJid(
             String createdBy);
 
-    List<ContestBundleItemSubmissionModel> selectByContainerJidAndCreatedBy(
+    List<ContestBundleItemSubmissionModel> selectAllByContainerJidAndCreatedBy(
             String containerJid,
             String createdBy);
 
-    List<ContestBundleItemSubmissionModel> selectByContainerJidAndProblemJidAndCreatedBy(
+    List<ContestBundleItemSubmissionModel> selectAllByContainerJidAndProblemJidAndCreatedBy(
             String containerJid,
             String problemJid,
             String createdBy);
