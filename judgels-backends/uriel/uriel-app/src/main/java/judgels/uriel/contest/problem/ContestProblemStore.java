@@ -49,7 +49,7 @@ public class ContestProblemStore {
             String alias,
             String problemJid,
             ContestProblemStatus status,
-            long submissionsLimit,
+            Optional<Long> submissionsLimit,
             Optional<Integer> points) {
 
         Optional<ContestProblemModel> maybeModel =
@@ -58,7 +58,7 @@ public class ContestProblemStore {
             ContestProblemModel model = maybeModel.get();
             model.alias = alias;
             model.status = status.name();
-            model.submissionsLimit = submissionsLimit;
+            model.submissionsLimit = submissionsLimit.orElse(0L);
             model.points = points.orElse(0);
             return fromModel(problemDao.update(model));
         } else {
@@ -67,7 +67,7 @@ public class ContestProblemStore {
             model.problemJid = problemJid;
             model.alias = alias;
             model.status = status.name();
-            model.submissionsLimit = submissionsLimit;
+            model.submissionsLimit = submissionsLimit.orElse(0L);
             model.points = points.orElse(0);
             return fromModel(problemDao.insert(model));
         }
@@ -124,7 +124,7 @@ public class ContestProblemStore {
                 .problemJid(model.problemJid)
                 .alias(model.alias)
                 .status(ContestProblemStatus.valueOf(model.status))
-                .submissionsLimit(model.submissionsLimit)
+                .submissionsLimit(model.submissionsLimit == 0 ? Optional.empty() : Optional.of(model.submissionsLimit))
                 .points(model.points == 0 ? Optional.empty() : Optional.of(model.points))
                 .build();
     }

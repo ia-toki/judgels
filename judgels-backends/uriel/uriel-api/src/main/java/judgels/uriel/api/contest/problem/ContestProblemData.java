@@ -10,7 +10,7 @@ public interface ContestProblemData {
     String getAlias();
     String getSlug();
     ContestProblemStatus getStatus();
-    long getSubmissionsLimit();
+    Optional<Long> getSubmissionsLimit();
     Optional<Integer> getPoints();
 
     class Builder extends ImmutableContestProblemData.Builder {}

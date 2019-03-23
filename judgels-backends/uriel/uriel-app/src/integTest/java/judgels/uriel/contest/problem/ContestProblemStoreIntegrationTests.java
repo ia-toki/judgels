@@ -51,7 +51,6 @@ class ContestProblemStoreIntegrationTests extends AbstractIntegrationTests {
                         .alias("A")
                         .problemJid("problemJid1")
                         .status(OPEN)
-                        .submissionsLimit(0)
                         .points(23)
                         .build()));
 
@@ -69,14 +68,12 @@ class ContestProblemStoreIntegrationTests extends AbstractIntegrationTests {
                         .alias("A")
                         .problemJid("problemJid1")
                         .status(OPEN)
-                        .submissionsLimit(0)
                         .points(23)
                         .build(),
                 new ContestProblem.Builder()
                         .alias("B")
                         .problemJid("problemJid2")
                         .status(CLOSED)
-                        .submissionsLimit(0)
                         .build());
 
         store.setProblems(contest.getJid(), problems);

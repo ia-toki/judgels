@@ -51,7 +51,6 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
                         .status(OPEN)
-                        .submissionsLimit(0)
                         .build()));
 
         List<ContestProblemData> data = ImmutableList.of(
@@ -66,14 +65,12 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .alias("B")
                         .slug("unknown-slug")
                         .status(OPEN)
-                        .submissionsLimit(0)
                         .points(11)
                         .build(),
                 new ContestProblemData.Builder()
                         .alias("C")
                         .slug(PROBLEM_2_SLUG)
                         .status(ContestProblemStatus.CLOSED)
-                        .submissionsLimit(0)
                         .points(11)
                         .build());
 
@@ -92,14 +89,12 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .alias("C")
                         .slug(PROBLEM_2_SLUG)
                         .status(ContestProblemStatus.CLOSED)
-                        .submissionsLimit(0)
                         .points(23)
                         .build(),
                 new ContestProblemData.Builder()
                         .alias("D")
                         .slug(PROBLEM_3_SLUG)
                         .status(ContestProblemStatus.OPEN)
-                        .submissionsLimit(0)
                         .build()));
 
         ContestProblemsResponse response = problemService.getProblems(of(MANAGER_HEADER), contest.getJid());
@@ -115,14 +110,12 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                         .alias("C")
                         .problemJid(PROBLEM_2_JID)
                         .status(ContestProblemStatus.CLOSED)
-                        .submissionsLimit(0)
                         .points(23)
                         .build(),
                 new ContestProblem.Builder()
                         .alias("D")
                         .problemJid(PROBLEM_3_JID)
                         .status(ContestProblemStatus.OPEN)
-                        .submissionsLimit(0)
                         .build());
         assertThat(response.getProblemsMap().get(PROBLEM_1_JID).getSlug()).isEqualTo(PROBLEM_1_SLUG);
         assertThat(response.getTotalSubmissionsMap()).containsOnlyKeys(PROBLEM_1_JID, PROBLEM_2_JID, PROBLEM_3_JID);
@@ -198,7 +191,6 @@ class ContestProblemServiceIntegrationTests extends AbstractContestServiceIntegr
                                 .alias("D")
                                 .problemJid(PROBLEM_3_JID)
                                 .status(OPEN)
-                                .submissionsLimit(0)
                                 .build())
                         .totalSubmissions(0)
                         .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()

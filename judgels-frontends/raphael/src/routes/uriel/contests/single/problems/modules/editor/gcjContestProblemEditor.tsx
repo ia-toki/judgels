@@ -71,7 +71,7 @@ export default {
     return problems
       .map(p => {
         const points = p.points || 0;
-        if (p.submissionsLimit > 0) {
+        if (p.submissionsLimit !== undefined) {
           return `${p.alias},${p.slug},${points},${p.status},${p.submissionsLimit}`;
         } else if (p.status !== ContestProblemStatus.Open) {
           return `${p.alias},${p.slug},${points},${p.status}`;
@@ -95,7 +95,7 @@ export default {
             slug: s[1],
             points: +s[2],
             status: s[3] || ContestProblemStatus.Open,
-            submissionsLimit: +s[4] || 0,
+            submissionsLimit: s[4] && +s[4],
           } as ContestProblemData)
       );
   },

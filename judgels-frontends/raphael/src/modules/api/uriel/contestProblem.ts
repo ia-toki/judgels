@@ -16,7 +16,7 @@ export interface ContestProblem {
   alias: string;
   problemJid: string;
   status: ContestProblemStatus;
-  submissionsLimit: number;
+  submissionsLimit?: number;
   points?: number;
 }
 
@@ -24,7 +24,7 @@ export interface ContestProblemData {
   alias: string;
   slug: string;
   status: ContestProblemStatus;
-  submissionsLimit: number;
+  submissionsLimit?: number;
   points?: number;
 }
 
