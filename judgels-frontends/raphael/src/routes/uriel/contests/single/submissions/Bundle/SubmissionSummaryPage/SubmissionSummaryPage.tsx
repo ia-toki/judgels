@@ -1,18 +1,20 @@
-import * as React from 'react';
-import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
 import { AppState } from 'modules/store';
-import { withRouter, RouteComponentProps } from 'react-router';
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestantAnswerSummaryResponse } from 'modules/api/uriel/contestSubmissionBundle';
-import { ProblemSubmissionCard, ProblemSubmissionCardProps } from '../ProblemSubmissionsCard/ProblemSubmissionCard';
-import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
+import { withRouter, RouteComponentProps } from 'react-router';
 
-import './SubmissionSummaryPage.css';
-import { H5 } from '@blueprintjs/core';
+import { ContentCard } from 'components/ContentCard/ContentCard';
 import { UserRef } from 'components/UserRef/UserRef';
 import { Profile } from 'modules/api/jophiel/profile';
+import { Contest } from 'modules/api/uriel/contest';
+import { ContestantAnswerSummaryResponse } from 'modules/api/uriel/contestSubmissionBundle';
+import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
+import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
+
+import { ProblemSubmissionCard, ProblemSubmissionCardProps } from '../ProblemSubmissionsCard/ProblemSubmissionCard';
+import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
+
+import './SubmissionSummaryPage.css';
 
 interface SubmissionSummaryPageRoute {
   username?: string;
@@ -55,15 +57,18 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
   }
 
   render() {
+    if (!this.state.profile) {
+      return null;
+    }
     return (
-      <div className="submisions-summary-page">
-        {this.state.profile && (
-          <H5>
-            Submissions of <UserRef profile={this.state.profile} />
-          </H5>
-        )}
+      <ContentCard className="submisions-summary-page">
+        <h3>Submissions</h3>
+        <hr />
+        <ContentCard>
+          Summary for <UserRef profile={this.state.profile!} />
+        </ContentCard>
         {this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}
-      </div>
+      </ContentCard>
     );
   }
 }
