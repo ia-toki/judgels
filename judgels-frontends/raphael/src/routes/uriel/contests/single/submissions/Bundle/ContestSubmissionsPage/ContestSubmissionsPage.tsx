@@ -1,18 +1,20 @@
-import * as React from 'react';
 import { Card, HTMLTable, Icon } from '@blueprintjs/core';
+import * as React from 'react';
+import { FormattedRelative } from 'react-intl';
+import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
+
+import { ContentCard } from 'components/ContentCard/ContentCard';
+import { UserRef } from 'components/UserRef/UserRef';
 import Pagination from 'components/Pagination/Pagination';
 import { ContestItemSubmissionsResponse } from 'modules/api/uriel/contestSubmissionBundle';
-import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
-import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
 import { AppState } from 'modules/store';
-import { connect } from 'react-redux';
 import { Contest } from 'modules/api/uriel/contest';
+import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
+
 import { VerdictTag } from '../VerdictTag/VerdictTag';
-import { FormattedRelative } from 'react-intl';
-import { UserRef } from 'components/UserRef/UserRef';
-import { ContentCard } from 'components/ContentCard/ContentCard';
 import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
+import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
 import './ContestSubmissionsPage.css';
 
@@ -64,7 +66,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
           <thead>
             <tr>
               <th>User</th>
-              <th className="col-prob">Problem</th>
+              <th className="col-prob">Prob</th>
               <th className="col-item-num">No</th>
               <th>Answer</th>
               {canManage && <th className="col-verdict">Verdict</th>}

@@ -1,5 +1,6 @@
+import { Tag, Intent, Icon } from '@blueprintjs/core';
 import * as React from 'react';
-import { Tag, Intent } from '@blueprintjs/core';
+
 import { Verdict } from 'modules/api/sandalphon/submissionBundle';
 
 export interface VerdictTagProps {
@@ -24,7 +25,8 @@ const verdictDisplayCode: { [verdict: string]: string | React.ReactNode } = {
 
 export const VerdictTag: React.FunctionComponent<VerdictTagProps> = ({ verdict }) => {
   const intent = verdictIntentMap[verdict] || Intent.NONE;
-  const displayCode = verdictDisplayCode[verdict] || verdict;
+  const displayCode =
+    verdict === Verdict.PENDING_MANUAL_GRADING ? <Icon icon="pause" /> : verdictDisplayCode[verdict] || verdict;
   return (
     <Tag round intent={intent}>
       {displayCode}
