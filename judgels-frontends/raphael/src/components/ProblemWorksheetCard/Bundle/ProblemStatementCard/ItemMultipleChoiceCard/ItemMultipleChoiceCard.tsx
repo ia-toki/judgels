@@ -1,7 +1,8 @@
-import * as React from 'react';
 import { Card, Divider, RadioGroup, Radio, Tag } from '@blueprintjs/core';
-import { Item, ItemMultipleChoiceConfig } from 'modules/api/sandalphon/problemBundle';
+import * as React from 'react';
+
 import { HtmlText } from 'components/HtmlText/HtmlText';
+import { Item, ItemMultipleChoiceConfig } from 'modules/api/sandalphon/problemBundle';
 
 import './ItemMultipleChoiceCard.css';
 
@@ -46,7 +47,7 @@ export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCa
     const config: ItemMultipleChoiceConfig = this.props.config as ItemMultipleChoiceConfig;
     return (
       <Card className={this.props.className}>
-        <div className="problem-multiple-choice-statement">
+        <div className="bundle-problem-statement-item__statement">
           <div className="__item-num">{this.props.itemNumber}.</div>
           <div className="__item-statement">
             <HtmlText>{config.statement}</HtmlText>

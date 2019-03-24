@@ -1,15 +1,3 @@
-.problem-multiple-choice-statement {
-    display: flex;
-    align-items: baseline;
-    .__item-num {
-        flex-grow: 0;
-        min-width: 20px;
-        margin-right: 5px;
-    }
-    .__item-statement {
-        flex-grow: 1;
-    }
-}
 .problem-multiple-choice-item-choices {
     margin-top: 10px;
     .problem-multiple-choice-item-choice {

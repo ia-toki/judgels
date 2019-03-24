@@ -43,6 +43,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         className="bundle-problem-statement-item"
         key={item.meta}
         {...item}
+        itemNumber={item.number!}
         initialAnswer={initialAnswer}
       />
     );
@@ -58,6 +59,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         className="bundle-problem-statement-item"
         key={item.meta}
         {...item}
+        itemNumber={item.number!}
         initialAnswer={initialAnswer}
       />
     );
