@@ -9,7 +9,7 @@ export const contestSubmissionActions = {
   },
 
   createItemSubmission: (contestJid: string, problemJid: string, itemJid: string, answer: string) => {
-    return async (dispatch, getState, { contestSubmissionBundleAPI, toastActions }) => {
+    return async (dispatch, getState, { contestSubmissionBundleAPI }) => {
       const token = selectToken(getState());
       const data = {
         contestJid,
@@ -19,7 +19,6 @@ export const contestSubmissionActions = {
       };
 
       await contestSubmissionBundleAPI.createItemSubmission(token, data);
-      toastActions.showSuccessToast('Solution submitted.');
     };
   },
 
