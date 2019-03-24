@@ -1,10 +1,11 @@
-import * as React from 'react';
-
-import './ItemEssayForm.css';
-import { AnswerState, StatementButtonText } from 'components/ProblemWorksheetCard/Bundle/itemStatement';
-import { Item } from 'modules/api/sandalphon/problemBundle';
 import { ControlGroup, TextArea, Classes, Button, Intent, Callout } from '@blueprintjs/core';
 import * as classNames from 'classnames';
+import * as React from 'react';
+
+import { AnswerState, StatementButtonText } from 'components/ProblemWorksheetCard/Bundle/itemStatement';
+import { Item } from 'modules/api/sandalphon/problemBundle';
+
+import './ItemEssayForm.css';
 
 export interface ItemEssayFormProps extends Item {
   initialAnswer?: string;
@@ -31,24 +32,26 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
         value={this.state.answer}
         onChange={this.onTextAreaInputChange}
         readOnly={readOnly}
-        className={`text-area ${readOnlyClass} ${classNames(Classes.INPUT)}`}
+        className={`form-textarea--code text-area ${readOnlyClass} ${classNames(Classes.INPUT)}`}
       />
     );
   }
 
   renderSubmitButton() {
     let buttonText;
+    let intent: Intent = Intent.PRIMARY;
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         buttonText = StatementButtonText.Answer;
         break;
       case AnswerState.AnswerSaved:
         buttonText = StatementButtonText.Change;
+        intent = Intent.NONE;
         break;
       default:
         buttonText = StatementButtonText.Submit;
     }
-    return <Button type="submit" text={buttonText} intent={Intent.PRIMARY} className="essay-button" />;
+    return <Button type="submit" text={buttonText} intent={intent} className="essay-button" />;
   }
 
   renderCancelButton() {
@@ -69,20 +72,20 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         return (
-          <Callout intent={Intent.NONE} icon="issue" className="essay-callout">
-            Not answered yet.
+          <Callout intent={Intent.NONE} icon="circle" className="essay-callout">
+            Not answered.
           </Callout>
         );
       case AnswerState.SavingAnswer:
         return (
           <Callout intent={Intent.NONE} icon="ban-circle" className="essay-callout">
-            Saving answer...
+            Saving...
           </Callout>
         );
       case AnswerState.AnswerSaved:
         return (
-          <Callout intent={Intent.SUCCESS} icon="tick-circle" className="essay-callout">
-            Answer saved!
+          <Callout intent={Intent.PRIMARY} icon="confirm" className="essay-callout">
+            Answered.
           </Callout>
         );
       default:

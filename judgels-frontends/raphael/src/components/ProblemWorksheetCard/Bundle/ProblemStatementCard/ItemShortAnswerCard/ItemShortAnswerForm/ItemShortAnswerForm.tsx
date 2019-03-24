@@ -1,10 +1,11 @@
-import * as React from 'react';
 import { Button, Intent, Classes, ControlGroup, Callout } from '@blueprintjs/core';
 import * as classNames from 'classnames';
+import * as React from 'react';
 
-import './ItemShortAnswerForm.css';
 import { AnswerState, StatementButtonText } from 'components/ProblemWorksheetCard/Bundle/itemStatement';
 import { Item, ItemShortAnswerConfig } from 'modules/api/sandalphon/problemBundle';
+
+import './ItemShortAnswerForm.css';
 
 export interface ItemShortAnswerFormProps extends Item {
   initialAnswer?: string;
@@ -33,20 +34,20 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         return (
-          <Callout intent={Intent.NONE} icon="issue" className="callout">
-            Not answered yet.
+          <Callout intent={Intent.NONE} icon="circle" className="callout">
+            Not answered.
           </Callout>
         );
       case AnswerState.SavingAnswer:
         return (
           <Callout intent={Intent.NONE} icon="ban-circle" className="callout">
-            Saving answer...
+            Saving...
           </Callout>
         );
       case AnswerState.AnswerSaved:
         return (
-          <Callout intent={Intent.SUCCESS} icon="tick-circle" className="callout">
-            Answer saved!
+          <Callout intent={Intent.PRIMARY} icon="confirm" className="callout">
+            Answered.
           </Callout>
         );
       default:
@@ -56,17 +57,21 @@ export default class ItemShortAnswerForm extends React.PureComponent<
 
   renderSubmitButton() {
     let buttonText;
+    let intent: Intent = Intent.PRIMARY;
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         buttonText = StatementButtonText.Answer;
         break;
       case AnswerState.AnswerSaved:
         buttonText = StatementButtonText.Change;
+        intent = Intent.NONE;
         break;
       default:
         buttonText = StatementButtonText.Submit;
     }
-    return <Button type="submit" text={buttonText} intent={Intent.PRIMARY} className="button" />;
+    return (
+      <Button type="submit" text={buttonText} intent={intent} disabled={this.state.wrongFormat} className="button" />
+    );
   }
 
   renderCancelButton() {
@@ -90,7 +95,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   renderWrongFormatNotice() {
     return (
       this.state.wrongFormat && (
-        <Callout intent={Intent.DANGER} icon="info-sign" className="callout">
+        <Callout intent={Intent.DANGER} icon="remove" className="callout">
           <strong>Wrong answer format!</strong>
         </Callout>
       )
@@ -146,10 +151,10 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           {this.renderTextInput()}
           {this.renderSubmitButton()}
           {this.renderCancelButton()}
-          {this.renderEmptyDiv()}
         </ControlGroup>
         <div>{this.renderWrongFormatNotice()}</div>
         <div>{this.renderHelpText()}</div>
+        <div className="clearfix" />
       </form>
     );
   }
