@@ -1,15 +1,18 @@
+import { Divider } from '@blueprintjs/core';
 import * as React from 'react';
+
+import { ContentCard } from 'components/ContentCard/ContentCard';
+import { HtmlText } from 'components/HtmlText/HtmlText';
 import { Item, ItemType } from 'modules/api/sandalphon/problemBundle';
-import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleChoiceCard';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { ProblemStatement } from 'modules/api/sandalphon/problem';
-import { Divider } from '@blueprintjs/core';
-import { HtmlText } from 'components/HtmlText/HtmlText';
-import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
 
-import './ProblemStatementCard.css';
+import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
+import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleChoiceCard';
 import { ItemShortAnswerCard } from './ItemShortAnswerCard/ItemShortAnswerCard';
 import { ItemEssayCard } from './ItemEssayCard/ItemEssayCard';
+
+import './ProblemStatementCard.css';
 
 export interface ProblemStatementCardProps {
   items: Item[];
@@ -79,7 +82,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
   render() {
     const { alias, items, statement } = this.props;
     return (
-      <>
+      <ContentCard>
         <h2 className="bundle-problem-statement__name">
           {alias}. {statement.title}
         </h2>
@@ -99,7 +102,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
               return this.renderStatement(item);
           }
         })}
-      </>
+      </ContentCard>
     );
   }
 }
