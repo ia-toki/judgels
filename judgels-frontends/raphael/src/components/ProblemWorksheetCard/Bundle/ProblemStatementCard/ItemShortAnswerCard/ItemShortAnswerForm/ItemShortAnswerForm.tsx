@@ -1,4 +1,4 @@
-import { Button, Intent, Classes, ControlGroup, Callout } from '@blueprintjs/core';
+import { Button, Intent, Classes, ControlGroup, Callout, Dialog, Icon } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -18,6 +18,7 @@ export interface ItemShortAnswerFormState {
   answerState: AnswerState;
   answer: string;
   wrongFormat: boolean;
+  isClearAnswerDialogOpen: boolean;
 }
 
 export default class ItemShortAnswerForm extends React.PureComponent<
@@ -28,6 +29,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     answerState: this.props.answerState,
     answer: this.props.initialAnswer || '',
     wrongFormat: false,
+    isClearAnswerDialogOpen: false,
   };
 
   renderHelpText() {
@@ -88,6 +90,63 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     );
   }
 
+  renderClearAnswerButton() {
+    return (
+      (this.state.answerState === AnswerState.AnswerSaved || this.state.answerState === AnswerState.ClearingAnswer) && (
+        <Button
+          type="button"
+          text={StatementButtonText.ClearAnswer}
+          intent={Intent.DANGER}
+          onClick={this.onClearAnswerButtonClick}
+          className="button"
+        />
+      )
+    );
+  }
+
+  renderClearAnswerDialog() {
+    return (
+      <Dialog icon="info-sign" isOpen={this.state.isClearAnswerDialogOpen} onClose={this.onClearAnswerDialogClose}>
+        <div className={Classes.DIALOG_HEADER}>
+          <h4 className="bp3-heading">
+            <Icon icon="info-sign" iconSize={Icon.SIZE_LARGE} />Clear Answer
+          </h4>
+        </div>
+        <div className={Classes.DIALOG_BODY}>
+          <p>Are you sure to clear your answer?</p>
+        </div>
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button type="button" className="button" onClick={this.onClearAnswerDialogClose}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="button"
+              intent={Intent.DANGER}
+              onClick={this.onClearAnswerDialogButtonClick}
+            >
+              Yes
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+    );
+  }
+
+  onClearAnswerDialogClose = () => this.setState({ isClearAnswerDialogOpen: false });
+
+  onClearAnswerButtonClick = () => this.setState({ isClearAnswerDialogOpen: true });
+
+  onClearAnswerDialogButtonClick = async () => {
+    const formValue = '';
+    if (this.props.onSubmit) {
+      this.setState({ answerState: AnswerState.ClearingAnswer, isClearAnswerDialogOpen: false });
+      await this.props.onSubmit(formValue);
+      this.setState({ answerState: AnswerState.NotAnswered, answer: formValue });
+    }
+  };
+
   renderEmptyDiv() {
     return this.state.answerState !== AnswerState.Answering && <div className="button" />;
   }
@@ -141,7 +200,11 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   };
 
   onCancelButtonClick = () => {
-    this.setState({ answerState: this.props.answerState, answer: this.props.initialAnswer!, wrongFormat: false });
+    this.setState({
+      answerState: this.props.answerState,
+      answer: this.props.initialAnswer!,
+      wrongFormat: false,
+    });
   };
 
   render() {
@@ -151,9 +214,11 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           {this.renderTextInput()}
           {this.renderSubmitButton()}
           {this.renderCancelButton()}
+          {this.renderClearAnswerButton()}
         </ControlGroup>
         <div>{this.renderWrongFormatNotice()}</div>
         <div>{this.renderHelpText()}</div>
+        {this.renderClearAnswerDialog()}
         <div className="clearfix" />
       </form>
     );

@@ -1,4 +1,4 @@
-import { ControlGroup, TextArea, Classes, Button, Intent, Callout } from '@blueprintjs/core';
+import { ControlGroup, TextArea, Classes, Button, Intent, Callout, Dialog, Icon } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -17,10 +17,15 @@ export interface ItemEssayFormProps extends Item {
 export interface ItemEssayFormState {
   answerState: AnswerState;
   answer: string;
+  isClearAnswerDialogOpen: boolean;
 }
 
 export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProps, ItemEssayFormState> {
-  state: ItemEssayFormState = { answerState: this.props.answerState, answer: this.props.initialAnswer || '' };
+  state: ItemEssayFormState = {
+    answerState: this.props.answerState,
+    answer: this.props.initialAnswer || '',
+    isClearAnswerDialogOpen: false,
+  };
 
   renderTextAreaInput() {
     const readOnly =
@@ -45,6 +50,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
         buttonText = StatementButtonText.Answer;
         break;
       case AnswerState.AnswerSaved:
+      case AnswerState.ClearingAnswer:
         buttonText = StatementButtonText.Change;
         intent = Intent.NONE;
         break;
@@ -88,10 +94,73 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
             Answered.
           </Callout>
         );
+      case AnswerState.ClearingAnswer:
+        return (
+          <Callout intent={Intent.NONE} icon="ban-circle" className="essay-callout">
+            Clearing answer...
+          </Callout>
+        );
       default:
         return <div className="bp3-callout bp3-callout-icon essay-callout-edit">&nbsp;</div>;
     }
   }
+
+  renderClearAnswerButton() {
+    return (
+      (this.state.answerState === AnswerState.AnswerSaved || this.state.answerState === AnswerState.ClearingAnswer) && (
+        <Button
+          type="button"
+          text={StatementButtonText.ClearAnswer}
+          intent={Intent.DANGER}
+          onClick={this.onClearAnswerButtonClick}
+          className="essay-button"
+        />
+      )
+    );
+  }
+
+  renderClearAnswerDialog() {
+    return (
+      <Dialog icon="info-sign" isOpen={this.state.isClearAnswerDialogOpen} onClose={this.onClearAnswerDialogClose}>
+        <div className={Classes.DIALOG_HEADER}>
+          <h4 className="bp3-heading">
+            <Icon icon="info-sign" iconSize={Icon.SIZE_LARGE} />Clear Answer
+          </h4>
+        </div>
+        <div className={Classes.DIALOG_BODY}>
+          <p>Are you sure to clear your answer?</p>
+        </div>
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button type="button" className="essay-button" onClick={this.onClearAnswerDialogClose}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="essay-button"
+              intent={Intent.DANGER}
+              onClick={this.onClearAnswerDialogButtonClick}
+            >
+              Yes
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+    );
+  }
+
+  onClearAnswerDialogClose = () => this.setState({ isClearAnswerDialogOpen: false });
+
+  onClearAnswerButtonClick = () => this.setState({ isClearAnswerDialogOpen: true });
+
+  onClearAnswerDialogButtonClick = async () => {
+    const formValue = '';
+    if (this.props.onSubmit) {
+      this.setState({ answerState: AnswerState.ClearingAnswer, isClearAnswerDialogOpen: false });
+      await this.props.onSubmit(formValue);
+      this.setState({ answerState: AnswerState.NotAnswered, answer: formValue });
+    }
+  };
 
   onSubmit = async event => {
     event.preventDefault();
@@ -127,7 +196,9 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
           {this.renderHelpText()}
           {this.renderSubmitButton()}
           {this.renderCancelButton()}
+          {this.renderClearAnswerButton()}
         </ControlGroup>
+        {this.renderClearAnswerDialog()}
       </form>
     );
   }
