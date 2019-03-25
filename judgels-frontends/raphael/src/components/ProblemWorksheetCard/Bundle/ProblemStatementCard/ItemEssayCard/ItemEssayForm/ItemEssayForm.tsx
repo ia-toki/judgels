@@ -19,7 +19,6 @@ export interface ItemEssayFormState {
   answer: string;
   initialAnswer: string;
   cancelButtonState: AnswerState.NotAnswered | AnswerState.AnswerSaved;
-  isAnswerEmpty: boolean;
 }
 
 export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProps, ItemEssayFormState> {
@@ -29,7 +28,6 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
     initialAnswer: this.props.initialAnswer || '',
     cancelButtonState:
       this.props.answerState === AnswerState.NotAnswered ? AnswerState.NotAnswered : AnswerState.AnswerSaved,
-    isAnswerEmpty: true,
   };
 
   renderTextAreaInput() {
@@ -162,10 +160,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
     }
   };
 
-  onTextAreaInputChange = event => {
-    const value = event.target.value;
-    this.setState({ answer: value, isAnswerEmpty: value === '' });
-  };
+  onTextAreaInputChange = event => this.setState({ answer: event.target.value });
 
   onCancelButtonClick = () => {
     this.setState({
