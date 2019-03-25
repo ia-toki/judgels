@@ -5,7 +5,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableScoreboardModuleConfig.class)
-public interface ScoreboardModuleConfig {
+public interface ScoreboardModuleConfig extends ModuleConfig {
     ScoreboardModuleConfig DEFAULT = new Builder()
             .isIncognitoScoreboard(false)
             .build();

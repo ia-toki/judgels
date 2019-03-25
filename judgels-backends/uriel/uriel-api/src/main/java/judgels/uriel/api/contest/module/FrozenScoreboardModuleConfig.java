@@ -7,7 +7,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableFrozenScoreboardModuleConfig.class)
-public interface FrozenScoreboardModuleConfig {
+public interface FrozenScoreboardModuleConfig extends ModuleConfig {
     FrozenScoreboardModuleConfig DEFAULT = new Builder()
             .isOfficialScoreboardAllowed(false)
             .freezeDurationBeforeEndTime(Duration.ofHours(1))

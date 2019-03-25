@@ -6,7 +6,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableVirtualModuleConfig.class)
-public interface VirtualModuleConfig {
+public interface VirtualModuleConfig extends ModuleConfig {
     VirtualModuleConfig DEFAULT = new Builder()
             .virtualDuration(Duration.ofHours(5))
             .build();

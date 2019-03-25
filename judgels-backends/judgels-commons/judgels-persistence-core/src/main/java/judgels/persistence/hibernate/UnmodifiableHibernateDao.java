@@ -53,6 +53,11 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
+    public M persist(M model) {
+        return persist(model);
+    }
+
+    @Override
     public List<M> insertAll(List<M> models) {
         return Lists.transform(models, this::insert);
     }

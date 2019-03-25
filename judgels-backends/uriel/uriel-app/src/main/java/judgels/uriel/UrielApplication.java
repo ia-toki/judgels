@@ -70,6 +70,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
         env.jersey().register(component.contestBundleSubmissionResource());
         env.jersey().register(component.contestSupervisorResource());
         env.jersey().register(component.contestRatingResource());
+        env.jersey().register(component.dumpResource());
         env.jersey().register(component.versionResource());
 
         component.scheduler().scheduleWithFixedDelay(

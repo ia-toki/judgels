@@ -25,6 +25,7 @@ import judgels.uriel.contest.submission.bundle.ContestItemSubmissionResource;
 import judgels.uriel.contest.submission.programming.ContestSubmissionResource;
 import judgels.uriel.contest.supervisor.ContestSupervisorResource;
 import judgels.uriel.contest.web.ContestWebResource;
+import judgels.uriel.dump.DumpResource;
 import judgels.uriel.file.FileModule;
 import judgels.uriel.gabriel.GabrielModule;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
@@ -70,6 +71,7 @@ public interface UrielComponent {
     ContestSubmissionResource contestProgrammingSubmissionResource();
     ContestSupervisorResource contestSupervisorResource();
     ContestWebResource contestWebResource();
+    DumpResource dumpResource();
     VersionResource versionResource();
 
     JudgelsScheduler scheduler();

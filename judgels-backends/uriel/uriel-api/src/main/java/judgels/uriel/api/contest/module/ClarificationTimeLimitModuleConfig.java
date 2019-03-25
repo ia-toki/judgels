@@ -6,7 +6,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableClarificationTimeLimitModuleConfig.class)
-public interface ClarificationTimeLimitModuleConfig {
+public interface ClarificationTimeLimitModuleConfig extends ModuleConfig {
     ClarificationTimeLimitModuleConfig DEFAULT = new Builder()
             .clarificationDuration(Duration.ofHours(2))
             .build();

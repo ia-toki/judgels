@@ -11,6 +11,7 @@ import judgels.persistence.api.SelectionOptions;
 public interface UnmodifiableDao<M extends UnmodifiableModel> {
     void clear();
     M insert(M model);
+    M persist(M model);
     List<M> insertAll(List<M> models);
 
     Optional<M> select(long id);
