@@ -1,4 +1,4 @@
-import { ControlGroup, TextArea, Classes, Button, Intent, Callout, Dialog, Icon } from '@blueprintjs/core';
+import { ControlGroup, TextArea, Classes, Button, Intent, Callout } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -17,14 +17,19 @@ export interface ItemEssayFormProps extends Item {
 export interface ItemEssayFormState {
   answerState: AnswerState;
   answer: string;
-  isClearAnswerDialogOpen: boolean;
+  initialAnswer: string;
+  cancelButtonState: AnswerState.NotAnswered | AnswerState.AnswerSaved;
+  isAnswerEmpty: boolean;
 }
 
 export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProps, ItemEssayFormState> {
   state: ItemEssayFormState = {
     answerState: this.props.answerState,
     answer: this.props.initialAnswer || '',
-    isClearAnswerDialogOpen: false,
+    initialAnswer: this.props.initialAnswer || '',
+    cancelButtonState:
+      this.props.answerState === AnswerState.NotAnswered ? AnswerState.NotAnswered : AnswerState.AnswerSaved,
+    isAnswerEmpty: true,
   };
 
   renderTextAreaInput() {
@@ -45,6 +50,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
   renderSubmitButton() {
     let buttonText;
     let intent: Intent = Intent.PRIMARY;
+    let disabled = false;
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         buttonText = StatementButtonText.Answer;
@@ -56,8 +62,9 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
         break;
       default:
         buttonText = StatementButtonText.Submit;
+        disabled = this.state.answer === '';
     }
-    return <Button type="submit" text={buttonText} intent={intent} className="essay-button" />;
+    return <Button type="submit" text={buttonText} intent={intent} disabled={disabled} className="essay-button" />;
   }
 
   renderCancelButton() {
@@ -119,46 +126,19 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
     );
   }
 
-  renderClearAnswerDialog() {
-    return (
-      <Dialog icon="info-sign" isOpen={this.state.isClearAnswerDialogOpen} onClose={this.onClearAnswerDialogClose}>
-        <div className={Classes.DIALOG_HEADER}>
-          <h4 className="bp3-heading">
-            <Icon icon="info-sign" iconSize={Icon.SIZE_LARGE} />Clear Answer
-          </h4>
-        </div>
-        <div className={Classes.DIALOG_BODY}>
-          <p>Are you sure to clear your answer?</p>
-        </div>
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button type="button" className="essay-button" onClick={this.onClearAnswerDialogClose}>
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              className="essay-button"
-              intent={Intent.DANGER}
-              onClick={this.onClearAnswerDialogButtonClick}
-            >
-              Yes
-            </Button>
-          </div>
-        </div>
-      </Dialog>
-    );
-  }
-
-  onClearAnswerDialogClose = () => this.setState({ isClearAnswerDialogOpen: false });
-
-  onClearAnswerButtonClick = () => this.setState({ isClearAnswerDialogOpen: true });
-
-  onClearAnswerDialogButtonClick = async () => {
+  onClearAnswerButtonClick = async () => {
     const formValue = '';
-    if (this.props.onSubmit) {
-      this.setState({ answerState: AnswerState.ClearingAnswer, isClearAnswerDialogOpen: false });
-      await this.props.onSubmit(formValue);
-      this.setState({ answerState: AnswerState.NotAnswered, answer: formValue });
+    if (window.confirm('Are you sure to clear your answer?')) {
+      if (this.props.onSubmit) {
+        this.setState({ answerState: AnswerState.ClearingAnswer });
+        await this.props.onSubmit(formValue);
+        this.setState({
+          answerState: AnswerState.NotAnswered,
+          answer: formValue,
+          initialAnswer: '',
+          cancelButtonState: AnswerState.NotAnswered,
+        });
+      }
     }
   };
 
@@ -173,17 +153,24 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
       if (this.props.onSubmit && oldValue !== newValue) {
         this.setState({ answerState: AnswerState.SavingAnswer });
         await this.props.onSubmit(newValue);
-        this.setState({ answerState: AnswerState.AnswerSaved });
+        this.setState({
+          answerState: AnswerState.AnswerSaved,
+          cancelButtonState: AnswerState.AnswerSaved,
+          initialAnswer: newValue,
+        });
       }
     }
   };
 
-  onTextAreaInputChange = event => this.setState({ answer: event.target.value });
+  onTextAreaInputChange = event => {
+    const value = event.target.value;
+    this.setState({ answer: value, isAnswerEmpty: value === '' });
+  };
 
   onCancelButtonClick = () => {
     this.setState({
-      answerState: this.props.answerState,
-      answer: this.props.initialAnswer || '',
+      answerState: this.state.cancelButtonState,
+      answer: this.state.initialAnswer,
     });
   };
 
@@ -198,7 +185,6 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
           {this.renderCancelButton()}
           {this.renderClearAnswerButton()}
         </ControlGroup>
-        {this.renderClearAnswerDialog()}
       </form>
     );
   }
