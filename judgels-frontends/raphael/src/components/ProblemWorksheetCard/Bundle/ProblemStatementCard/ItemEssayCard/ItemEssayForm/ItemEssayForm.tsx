@@ -17,10 +17,18 @@ export interface ItemEssayFormProps extends Item {
 export interface ItemEssayFormState {
   answerState: AnswerState;
   answer: string;
+  initialAnswer: string;
+  cancelButtonState: AnswerState.NotAnswered | AnswerState.AnswerSaved;
 }
 
 export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProps, ItemEssayFormState> {
-  state: ItemEssayFormState = { answerState: this.props.answerState, answer: this.props.initialAnswer || '' };
+  state: ItemEssayFormState = {
+    answerState: this.props.answerState,
+    answer: this.props.initialAnswer || '',
+    initialAnswer: this.props.initialAnswer || '',
+    cancelButtonState:
+      this.props.answerState === AnswerState.NotAnswered ? AnswerState.NotAnswered : AnswerState.AnswerSaved,
+  };
 
   renderTextAreaInput() {
     const readOnly =
@@ -40,18 +48,21 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
   renderSubmitButton() {
     let buttonText;
     let intent: Intent = Intent.PRIMARY;
+    let disabled = false;
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         buttonText = StatementButtonText.Answer;
         break;
       case AnswerState.AnswerSaved:
+      case AnswerState.ClearingAnswer:
         buttonText = StatementButtonText.Change;
         intent = Intent.NONE;
         break;
       default:
         buttonText = StatementButtonText.Submit;
+        disabled = this.state.answer === '';
     }
-    return <Button type="submit" text={buttonText} intent={intent} className="essay-button" />;
+    return <Button type="submit" text={buttonText} intent={intent} disabled={disabled} className="essay-button" />;
   }
 
   renderCancelButton() {
@@ -88,10 +99,46 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
             Answered.
           </Callout>
         );
+      case AnswerState.ClearingAnswer:
+        return (
+          <Callout intent={Intent.NONE} icon="ban-circle" className="essay-callout">
+            Clearing answer...
+          </Callout>
+        );
       default:
         return <div className="bp3-callout bp3-callout-icon essay-callout-edit">&nbsp;</div>;
     }
   }
+
+  renderClearAnswerButton() {
+    return (
+      (this.state.answerState === AnswerState.AnswerSaved || this.state.answerState === AnswerState.ClearingAnswer) && (
+        <Button
+          type="button"
+          text={StatementButtonText.ClearAnswer}
+          intent={Intent.DANGER}
+          onClick={this.onClearAnswerButtonClick}
+          className="essay-button"
+        />
+      )
+    );
+  }
+
+  onClearAnswerButtonClick = async () => {
+    const formValue = '';
+    if (window.confirm('Are you sure to clear your answer?')) {
+      if (this.props.onSubmit) {
+        this.setState({ answerState: AnswerState.ClearingAnswer });
+        await this.props.onSubmit(formValue);
+        this.setState({
+          answerState: AnswerState.NotAnswered,
+          answer: formValue,
+          initialAnswer: '',
+          cancelButtonState: AnswerState.NotAnswered,
+        });
+      }
+    }
+  };
 
   onSubmit = async event => {
     event.preventDefault();
@@ -104,7 +151,11 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
       if (this.props.onSubmit && oldValue !== newValue) {
         this.setState({ answerState: AnswerState.SavingAnswer });
         await this.props.onSubmit(newValue);
-        this.setState({ answerState: AnswerState.AnswerSaved });
+        this.setState({
+          answerState: AnswerState.AnswerSaved,
+          cancelButtonState: AnswerState.AnswerSaved,
+          initialAnswer: newValue,
+        });
       }
     }
   };
@@ -113,8 +164,8 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
 
   onCancelButtonClick = () => {
     this.setState({
-      answerState: this.props.answerState,
-      answer: this.props.initialAnswer || '',
+      answerState: this.state.cancelButtonState,
+      answer: this.state.initialAnswer,
     });
   };
 
@@ -127,6 +178,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
           {this.renderHelpText()}
           {this.renderSubmitButton()}
           {this.renderCancelButton()}
+          {this.renderClearAnswerButton()}
         </ControlGroup>
       </form>
     );

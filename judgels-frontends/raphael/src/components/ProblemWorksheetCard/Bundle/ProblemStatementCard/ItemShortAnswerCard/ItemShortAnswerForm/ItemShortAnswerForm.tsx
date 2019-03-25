@@ -16,6 +16,8 @@ export interface ItemShortAnswerFormProps extends Item {
 
 export interface ItemShortAnswerFormState {
   answerState: AnswerState;
+  initialAnswer: string;
+  cancelButtonState: AnswerState.NotAnswered | AnswerState.AnswerSaved;
   answer: string;
   wrongFormat: boolean;
 }
@@ -27,7 +29,10 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   state: ItemShortAnswerFormState = {
     answerState: this.props.answerState,
     answer: this.props.initialAnswer || '',
-    wrongFormat: false,
+    initialAnswer: this.props.initialAnswer || '',
+    cancelButtonState:
+      this.props.answerState === AnswerState.NotAnswered ? AnswerState.NotAnswered : AnswerState.AnswerSaved,
+    wrongFormat: true,
   };
 
   renderHelpText() {
@@ -50,6 +55,12 @@ export default class ItemShortAnswerForm extends React.PureComponent<
             Answered.
           </Callout>
         );
+      case AnswerState.ClearingAnswer:
+        return (
+          <Callout intent={Intent.NONE} icon="ban-circle" className="callout">
+            Clearing Answer...
+          </Callout>
+        );
       default:
         return <div />;
     }
@@ -58,6 +69,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   renderSubmitButton() {
     let buttonText;
     let intent: Intent = Intent.PRIMARY;
+    const disabledState = this.state.wrongFormat && this.state.answerState === AnswerState.Answering;
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         buttonText = StatementButtonText.Answer;
@@ -69,9 +81,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
       default:
         buttonText = StatementButtonText.Submit;
     }
-    return (
-      <Button type="submit" text={buttonText} intent={intent} disabled={this.state.wrongFormat} className="button" />
-    );
+    return <Button type="submit" text={buttonText} intent={intent} disabled={disabledState} className="button" />;
   }
 
   renderCancelButton() {
@@ -88,13 +98,45 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     );
   }
 
+  renderClearAnswerButton() {
+    return (
+      (this.state.answerState === AnswerState.AnswerSaved || this.state.answerState === AnswerState.ClearingAnswer) && (
+        <Button
+          type="button"
+          text={StatementButtonText.ClearAnswer}
+          intent={Intent.DANGER}
+          onClick={this.onClearAnswerButtonClick}
+          className="button"
+        />
+      )
+    );
+  }
+
+  onClearAnswerButtonClick = async () => {
+    const formValue = '';
+    if (window.confirm('Are you sure to clear your answer?')) {
+      if (this.props.onSubmit) {
+        this.setState({ answerState: AnswerState.ClearingAnswer });
+        await this.props.onSubmit(formValue);
+        this.setState({
+          answerState: AnswerState.NotAnswered,
+          cancelButtonState: AnswerState.NotAnswered,
+          answer: formValue,
+          initialAnswer: '',
+          wrongFormat: true,
+        });
+      }
+    }
+  };
+
   renderEmptyDiv() {
     return this.state.answerState !== AnswerState.Answering && <div className="button" />;
   }
 
   renderWrongFormatNotice() {
     return (
-      this.state.wrongFormat && (
+      this.state.wrongFormat &&
+      this.state.answerState === AnswerState.Answering && (
         <Callout intent={Intent.DANGER} icon="remove" className="callout">
           <strong>Wrong answer format!</strong>
         </Callout>
@@ -135,13 +177,21 @@ export default class ItemShortAnswerForm extends React.PureComponent<
       if (this.props.onSubmit && oldValue !== newValue) {
         this.setState({ answerState: AnswerState.SavingAnswer });
         await this.props.onSubmit(newValue);
-        this.setState({ answerState: AnswerState.AnswerSaved });
+        this.setState({
+          answerState: AnswerState.AnswerSaved,
+          cancelButtonState: AnswerState.AnswerSaved,
+          initialAnswer: newValue,
+        });
       }
     }
   };
 
   onCancelButtonClick = () => {
-    this.setState({ answerState: this.props.answerState, answer: this.props.initialAnswer!, wrongFormat: false });
+    this.setState({
+      answerState: this.state.cancelButtonState,
+      answer: this.state.initialAnswer,
+      wrongFormat: true,
+    });
   };
 
   render() {
@@ -151,6 +201,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           {this.renderTextInput()}
           {this.renderSubmitButton()}
           {this.renderCancelButton()}
+          {this.renderClearAnswerButton()}
         </ControlGroup>
         <div>{this.renderWrongFormatNotice()}</div>
         <div>{this.renderHelpText()}</div>

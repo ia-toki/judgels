@@ -3,6 +3,7 @@ export enum AnswerState {
   Answering,
   SavingAnswer,
   AnswerSaved,
+  ClearingAnswer,
 }
 
 export enum StatementButtonText {
@@ -10,4 +11,5 @@ export enum StatementButtonText {
   Change = 'Change',
   Submit = 'Submit',
   Cancel = 'Cancel',
+  ClearAnswer = 'Clear',
 }
