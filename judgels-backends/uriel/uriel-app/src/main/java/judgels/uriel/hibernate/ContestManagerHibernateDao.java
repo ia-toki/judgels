@@ -1,6 +1,8 @@
 package judgels.uriel.hibernate;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.Root;
@@ -37,6 +39,13 @@ public class ContestManagerHibernateDao extends HibernateDao<ContestManagerModel
         return selectPaged(new FilterOptions.Builder<ContestManagerModel>()
                 .putColumnsEq(ContestManagerModel_.contestJid, contestJid)
                 .build(), options);
+    }
+
+    @Override
+    public Set<ContestManagerModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestManagerModel>()
+                .putColumnsEq(ContestManagerModel_.contestJid, contestJid)
+                .build(), options));
     }
 
     static CustomPredicateFilter<ContestModel> hasManager(String userJid) {

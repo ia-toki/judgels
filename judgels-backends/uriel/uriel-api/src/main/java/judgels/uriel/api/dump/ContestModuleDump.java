@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.NoClass;
+import java.util.Optional;
 import judgels.persistence.api.dump.Dump;
 import judgels.uriel.api.contest.manager.ContestManager;
+import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.ImmutableClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ImmutableFrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.ImmutableScoreboardModuleConfig;
@@ -16,7 +18,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContestModuleDump.class)
 public interface ContestModuleDump extends ContestManager, Dump {
-    String getName();
+    ContestModuleType getName();
     boolean getEnabled();
 
     @JsonTypeInfo(
@@ -33,7 +35,7 @@ public interface ContestModuleDump extends ContestManager, Dump {
             @JsonSubTypes.Type(value = ImmutableFrozenScoreboardModuleConfig.class, name = "FROZEN_SCOREBOARD"),
             @JsonSubTypes.Type(value = ImmutableVirtualModuleConfig.class, name = "VIRTUAL")
     })
-    ModuleConfig getConfig();
+    Optional<ModuleConfig> getConfig();
 
     class Builder extends ImmutableContestModuleDump.Builder {}
 }

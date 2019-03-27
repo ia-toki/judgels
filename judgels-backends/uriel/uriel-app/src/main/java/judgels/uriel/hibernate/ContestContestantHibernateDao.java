@@ -55,6 +55,13 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
     }
 
     @Override
+    public Set<ContestContestantModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
+                .putColumnsEq(ContestContestantModel_.contestJid, contestJid)
+                .build(), options));
+    }
+
+    @Override
     public Set<ContestContestantModel> selectAllApprovedByContestJid(String contestJid) {
         return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
                 .putColumnsEq(ContestContestantModel_.contestJid, contestJid)

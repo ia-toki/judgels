@@ -1,6 +1,8 @@
 package judgels.uriel.hibernate;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.Root;
@@ -39,6 +41,13 @@ public class ContestSupervisorHibernateDao extends HibernateDao<ContestSuperviso
         return selectPaged(new FilterOptions.Builder<ContestSupervisorModel>()
                 .putColumnsEq(ContestSupervisorModel_.contestJid, contestJid)
                 .build(), options);
+    }
+
+    @Override
+    public Set<ContestSupervisorModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestSupervisorModel>()
+                .putColumnsEq(ContestSupervisorModel_.contestJid, contestJid)
+                .build(), options));
     }
 
     static CustomPredicateFilter<ContestModel> hasSupervisor(String userJid) {

@@ -159,15 +159,15 @@ public class UrielDumpImporter {
     public void importModuleDump(String contestJid, ContestModuleDump contestModuleDump) {
         String configString;
         try {
-            ModuleConfig config = contestModuleDump.getConfig();
-            configString = objectMapper.writeValueAsString(config == null ? ImmutableMap.of() : config);
+            Optional<ModuleConfig> config = contestModuleDump.getConfig();
+            configString = objectMapper.writeValueAsString(config.isPresent() ? config.get() : ImmutableMap.of());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
         ContestModuleModel contestModuleModel = new ContestModuleModel();
         contestModuleModel.contestJid = contestJid;
-        contestModuleModel.name = contestModuleDump.getName();
+        contestModuleModel.name = contestModuleDump.getName().name();
         contestModuleModel.enabled = contestModuleDump.getEnabled();
         contestModuleModel.config = configString;
         setCreationAndModificationMetadata(contestModuleModel, contestModuleDump);
