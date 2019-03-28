@@ -1,11 +1,18 @@
 package judgels.sandalphon.problem;
 
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import judgels.sandalphon.SandalphonUtils;
@@ -25,6 +32,8 @@ public class ProblemClient {
     private final ClientProblemService clientProblemService;
     private final ItemProcessorRegistry itemProcessorRegistry;
 
+    private final LoadingCache<String, ProblemInfo> problemCache;
+
     @Inject
     public ProblemClient(
             SandalphonClientConfiguration sandalphonConfig,
@@ -36,6 +45,11 @@ public class ProblemClient {
         this.sandalphonClientAuthHeader = sandalphonClientAuthHeader;
         this.clientProblemService = clientProblemService;
         this.itemProcessorRegistry = itemProcessorRegistry;
+
+        this.problemCache = Caffeine.newBuilder()
+                .maximumSize(1_000)
+                .expireAfterWrite(Duration.ofSeconds(10))
+                .build(new ProblemCacheLoader());
     }
 
     public Map<String, String> translateAllowedSlugsToJids(String actorJid, Set<String> slugs) {
@@ -45,13 +59,11 @@ public class ProblemClient {
     }
 
     public ProblemInfo getProblem(String problemJid) {
-        return clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
+        return problemCache.get(problemJid);
     }
 
     public Map<String, ProblemInfo> getProblems(Set<String> problemJids) {
-        return problemJids.isEmpty()
-                ? ImmutableMap.of()
-                : clientProblemService.getProblems(sandalphonClientAuthHeader, problemJids);
+        return problemCache.getAll(problemJids);
     }
 
     public Map<String, String> getProblemNames(Set<String> problemJids, Optional<String> language) {
@@ -143,5 +155,19 @@ public class ProblemClient {
                         .collect(Collectors.toList())
                 )
                 .build();
+    }
+
+    private class ProblemCacheLoader implements CacheLoader<String, ProblemInfo> {
+        @Nullable
+        @Override
+        public ProblemInfo load(@Nonnull String problemJid) {
+            return clientProblemService.getProblem(sandalphonClientAuthHeader, problemJid);
+        }
+
+        @Nonnull
+        @Override
+        public Map<String, ProblemInfo> loadAll(@Nonnull Iterable<? extends String> problemJids) {
+            return clientProblemService.getProblems(sandalphonClientAuthHeader, ImmutableSet.copyOf(problemJids));
+        }
     }
 }
