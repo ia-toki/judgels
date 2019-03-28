@@ -13,7 +13,7 @@ import { Contest } from 'modules/api/uriel/contest';
 import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionProgramming';
 
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
-import { ContestSubmissionFilterWidget } from '../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
+import { ContestSubmissionFilterWidget } from '../../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
