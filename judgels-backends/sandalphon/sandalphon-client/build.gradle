@@ -10,6 +10,8 @@ dependencies {
     api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     api "io.dropwizard:dropwizard-forms:$dropwizardVersion"
 
+    implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+
     compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
