@@ -102,10 +102,11 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     }
 
     const scoreboard = response[0].data;
+    const contestEndTime = this.props.contest.beginTime + this.props.contest.duration;
     return (
       <p className="contest-scoreboard-page__info">
         <small>
-          last updated <FormattedRelative value={scoreboard.updatedTime} />
+          last updated <FormattedRelative value={Math.min(contestEndTime, scoreboard.updatedTime)} />
         </small>
       </p>
     );

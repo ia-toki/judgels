@@ -3,6 +3,7 @@ package judgels.uriel.hibernate;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasViewerOrAbove;
 
 import java.time.Clock;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -100,13 +101,17 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     static CustomPredicateFilter<ContestModel> isRunning(Clock clock) {
         return (cb, cq, root) -> {
             long currentInstantEpoch = clock.instant().toEpochMilli();
+
+            // This is so that the scoreboard updater can update submissions near end time.
+            long beforeCurrentInstantEpoch = clock.instant().minus(Duration.ofSeconds(30)).toEpochMilli();
+
             Expression<Long> beginTime = cb.prod(
                     cb.function("unix_timestamp", Double.class, root.get(ContestModel_.beginTime)),
                     cb.literal(1000.0)).as(Long.class);
             Expression<Long> endTime = cb.sum(beginTime, root.get(ContestModel_.duration));
 
             return cb.and(
-                    cb.greaterThanOrEqualTo(endTime, cb.literal(currentInstantEpoch)),
+                    cb.greaterThanOrEqualTo(endTime, cb.literal(beforeCurrentInstantEpoch)),
                     cb.lessThanOrEqualTo(beginTime, cb.literal(currentInstantEpoch)));
         };
     }
