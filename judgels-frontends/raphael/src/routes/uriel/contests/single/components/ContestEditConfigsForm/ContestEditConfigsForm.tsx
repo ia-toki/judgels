@@ -30,8 +30,6 @@ export interface ContestEditConfigsFormData {
 
   clarificationTimeLimitDuration?: string;
 
-  delayedGradingDuration?: string;
-
   frozenScoreboardFreezeTime?: string;
   frozenScoreboardIsOfficialAllowed?: boolean;
 
@@ -70,7 +68,6 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
         {config.ioiStyle && this.renderIoiStyleForm()}
         {config.gcjStyle && this.renderGcjStyleForm()}
         {config.clarificationTimeLimit && this.renderClarificationTimeLimitForm()}
-        {config.delayedGrading && this.renderDelayedGradingForm()}
         {this.renderScoreboardForm()}
         {config.frozenScoreboard && this.renderFrozenScoreboardForm()}
         {config.virtual && this.renderVirtualForm()}
@@ -231,27 +228,6 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
         <HTMLTable striped>
           <tbody>
             <Field component={FormTableTextInput} {...clarificationTimeLimitDurationField} />
-          </tbody>
-        </HTMLTable>
-      </div>
-    );
-  };
-
-  private renderDelayedGradingForm = () => {
-    const delayedGradingDurationField: any = {
-      name: 'delayedGradingDuration',
-      label: 'Delay duration',
-      inputHelper: 'Example: 2h 30m',
-      validate: [Required],
-      keyClassName: 'contest-edit-configs-form__key',
-    };
-
-    return (
-      <div className="contest-edit-configs-form__config">
-        <h4>Delayed grading config</h4>
-        <HTMLTable striped>
-          <tbody>
-            <Field component={FormTableTextInput} {...delayedGradingDurationField} />
           </tbody>
         </HTMLTable>
       </div>

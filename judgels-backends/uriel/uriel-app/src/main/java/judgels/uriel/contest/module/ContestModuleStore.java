@@ -4,7 +4,6 @@ import static judgels.uriel.UrielCacheUtils.SEPARATOR;
 import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
-import static judgels.uriel.api.contest.module.ContestModuleType.DELAYED_GRADING;
 import static judgels.uriel.api.contest.module.ContestModuleType.FILE;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.PAUSE;
@@ -32,7 +31,6 @@ import judgels.uriel.api.contest.module.BundleStyleModuleConfig;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
-import judgels.uriel.api.contest.module.DelayedGradingModuleConfig;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.GcjStyleModuleConfig;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
@@ -50,7 +48,6 @@ public class ContestModuleStore {
     private static final Map<ContestModuleType, Object> DEFAULT_CONFIGS = Maps.immutableEnumMap(
             new ImmutableMap.Builder<ContestModuleType, Object>()
                     .put(CLARIFICATION_TIME_LIMIT, ClarificationTimeLimitModuleConfig.DEFAULT)
-                    .put(DELAYED_GRADING, DelayedGradingModuleConfig.DEFAULT)
                     .put(FROZEN_SCOREBOARD, FrozenScoreboardModuleConfig.DEFAULT)
                     .put(SCOREBOARD, ScoreboardModuleConfig.DEFAULT)
                     .put(VIRTUAL, VirtualModuleConfig.DEFAULT)
@@ -111,7 +108,6 @@ public class ContestModuleStore {
         ContestModulesConfig.Builder config = new ContestModulesConfig.Builder()
                 .scoreboard(getScoreboardModuleConfig(contestJid))
                 .clarificationTimeLimit(getClarificationTimeLimitModuleConfig(contestJid))
-                .delayedGrading(getDelayedGradingModuleConfig(contestJid))
                 .frozenScoreboard(getFrozenScoreboardModuleConfig(contestJid))
                 .virtual(getVirtualModuleConfig(contestJid));
 
@@ -139,7 +135,6 @@ public class ContestModuleStore {
         upsertScoreboardModule(contestJid, config.getScoreboard());
 
         config.getClarificationTimeLimit().ifPresent(c -> upsertClarificationTimeLimitModule(contestJid, c));
-        config.getDelayedGrading().ifPresent(c -> upsertDelayedGradingModule(contestJid, c));
         config.getFrozenScoreboard().ifPresent(c -> upsertFrozenScoreboardModule(contestJid, c));
         config.getVirtual().ifPresent(c -> upsertVirtualModule(contestJid, c));
     }
@@ -202,10 +197,6 @@ public class ContestModuleStore {
         upsertModule(contestJid, CLARIFICATION_TIME_LIMIT, config);
     }
 
-    public void upsertDelayedGradingModule(String contestJid, DelayedGradingModuleConfig config) {
-        upsertModule(contestJid, DELAYED_GRADING, config);
-    }
-
     public void upsertFileModule(String contestJid) {
         upsertModule(contestJid, FILE, Collections.emptyMap());
     }
@@ -240,10 +231,6 @@ public class ContestModuleStore {
 
     public Optional<ClarificationTimeLimitModuleConfig> getClarificationTimeLimitModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, CLARIFICATION_TIME_LIMIT, ClarificationTimeLimitModuleConfig.class);
-    }
-
-    public Optional<DelayedGradingModuleConfig> getDelayedGradingModuleConfig(String contestJid) {
-        return getModuleConfig(contestJid, DELAYED_GRADING, DelayedGradingModuleConfig.class);
     }
 
     public boolean hasFileModule(String contestJid) {

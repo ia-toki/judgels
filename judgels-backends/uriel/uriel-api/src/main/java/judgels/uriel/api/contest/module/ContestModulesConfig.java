@@ -15,7 +15,6 @@ public interface ContestModulesConfig {
     ScoreboardModuleConfig getScoreboard();
 
     Optional<ClarificationTimeLimitModuleConfig> getClarificationTimeLimit();
-    Optional<DelayedGradingModuleConfig> getDelayedGrading();
     Optional<FrozenScoreboardModuleConfig> getFrozenScoreboard();
     Optional<VirtualModuleConfig> getVirtual();
 

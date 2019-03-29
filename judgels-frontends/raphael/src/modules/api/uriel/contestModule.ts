@@ -6,7 +6,6 @@ import { baseContestURL } from './contest';
 export enum ContestModuleType {
   Clarification = 'CLARIFICATION',
   ClarificationTimeLimit = 'CLARIFICATION_TIME_LIMIT',
-  DelayedGrading = 'DELAYED_GRADING',
   File = 'FILE',
   FrozenScoreboard = 'FROZEN_SCOREBOARD',
   Paused = 'PAUSE',
@@ -21,7 +20,6 @@ export const moduleTitlesMap = {
   [ContestModuleType.ClarificationTimeLimit]: 'Clarification time limit',
   [ContestModuleType.FrozenScoreboard]: 'Freezable scoreboard',
   [ContestModuleType.Virtual]: 'Virtual contest',
-  [ContestModuleType.DelayedGrading]: 'Delayed grading',
   [ContestModuleType.File]: 'File',
   [ContestModuleType.Paused]: 'Paused',
 };
@@ -32,7 +30,6 @@ export const moduleDescriptionsMap = {
   [ContestModuleType.ClarificationTimeLimit]: 'Limits how long contestants can make clarifications.',
   [ContestModuleType.FrozenScoreboard]: 'Allows the scoreboard to be frozen.',
   [ContestModuleType.Virtual]: 'Allows contestants to start the contest at their preferred time.',
-  [ContestModuleType.DelayedGrading]: 'Delay grading of submissions until a specified duration.',
   [ContestModuleType.File]: 'Allows public files to be uploaded to the contest.',
   [ContestModuleType.Paused]: 'Pauses the contest; contestants cannot submit or make clarifications.',
 };
@@ -41,7 +38,6 @@ export const allModules: ContestModuleType[] = [
   ContestModuleType.Registration,
   ContestModuleType.Clarification,
   ContestModuleType.ClarificationTimeLimit,
-  ContestModuleType.DelayedGrading,
   ContestModuleType.FrozenScoreboard,
   ContestModuleType.Virtual,
   ContestModuleType.File,
@@ -67,10 +63,6 @@ export interface ClarificationTimeLimitModuleConfig {
   clarificationDuration: number;
 }
 
-export interface DelayedGradingModuleConfig {
-  delayDuration: number;
-}
-
 export interface FrozenScoreboardModuleConfig {
   isOfficialScoreboardAllowed: boolean;
   scoreboardFreezeTime: number; // freezeDurationBeforeEndTime
@@ -92,7 +84,6 @@ export interface ContestModulesConfig {
   scoreboard: ScoreboardModuleConfig;
 
   clarificationTimeLimit?: ClarificationTimeLimitModuleConfig;
-  delayedGrading?: DelayedGradingModuleConfig;
   frozenScoreboard?: FrozenScoreboardModuleConfig;
   virtual?: VirtualModuleConfig;
 }

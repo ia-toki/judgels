@@ -66,16 +66,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
       return <LoadingState />;
     }
     if (isEditing) {
-      const {
-        icpcStyle,
-        ioiStyle,
-        gcjStyle,
-        scoreboard,
-        clarificationTimeLimit,
-        delayedGrading,
-        frozenScoreboard,
-        virtual,
-      } = config;
+      const { icpcStyle, ioiStyle, gcjStyle, scoreboard, clarificationTimeLimit, frozenScoreboard, virtual } = config;
 
       let initialValues: ContestEditConfigsFormData = {
         scoreboardIsIncognito: scoreboard.isIncognitoScoreboard,
@@ -110,9 +101,6 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
           clarificationTimeLimitDuration: formatDuration(clarificationTimeLimit.clarificationDuration),
         };
       }
-      if (delayedGrading) {
-        initialValues = { ...initialValues, delayedGradingDuration: formatDuration(delayedGrading.delayDuration) };
-      }
       if (frozenScoreboard) {
         initialValues = {
           ...initialValues,
@@ -134,15 +122,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
   };
 
   private upsertConfig = async (data: ContestEditConfigsFormData) => {
-    const {
-      icpcStyle,
-      ioiStyle,
-      gcjStyle,
-      clarificationTimeLimit,
-      delayedGrading,
-      frozenScoreboard,
-      virtual,
-    } = this.state.config!;
+    const { icpcStyle, ioiStyle, gcjStyle, clarificationTimeLimit, frozenScoreboard, virtual } = this.state.config!;
 
     let config: ContestModulesConfig = {
       scoreboard: {
@@ -184,9 +164,6 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
         ...config,
         clarificationTimeLimit: { clarificationDuration: parseDuration(data.clarificationTimeLimitDuration!) },
       };
-    }
-    if (delayedGrading) {
-      config = { ...config, delayedGrading: { delayDuration: parseDuration(data.delayedGradingDuration!) } };
     }
     if (frozenScoreboard) {
       config = {
