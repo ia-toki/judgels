@@ -41,6 +41,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
         onChange={this.onTextAreaInputChange}
         readOnly={readOnly}
         className={`form-textarea--code text-area ${readOnlyClass} ${classNames(Classes.INPUT)}`}
+        rows={20}
       />
     );
   }
