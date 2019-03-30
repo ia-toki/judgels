@@ -16,7 +16,7 @@ import judgels.persistence.JidGenerator;
 import judgels.persistence.JudgelsDao;
 import judgels.persistence.JudgelsModel;
 import judgels.persistence.JudgelsModel_;
-import judgels.persistence.api.dump.DumpImportBehavior;
+import judgels.persistence.api.dump.DumpImportMode;
 import judgels.persistence.api.dump.JudgelsDump;
 
 public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends HibernateDao<M> implements JudgelsDao<M> {
@@ -113,15 +113,15 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
     public void setModelMetadataFromDump(M model, JudgelsDump dump) {
         super.setModelMetadataFromDump(model, dump);
 
-        if (dump.getImportBehavior() == DumpImportBehavior.RESTORE) {
+        if (dump.getMode() == DumpImportMode.RESTORE) {
             model.jid = dump.getJid().orElseThrow(
-                    () -> new IllegalArgumentException("jid must be set if using RESTORE importBehavior")
+                    () -> new IllegalArgumentException("jid must be set if using RESTORE mode")
             );
-        } else if (dump.getImportBehavior() == DumpImportBehavior.CREATE) {
+        } else if (dump.getMode() == DumpImportMode.CREATE) {
             model.jid = JidGenerator.newJid(getEntityClass());
         } else {
             throw new IllegalArgumentException(
-                    String.format("Unknown import behavior: %s", dump.getImportBehavior())
+                    String.format("Unknown mode: %s", dump.getMode())
             );
         }
     }

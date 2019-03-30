@@ -16,6 +16,7 @@ dependencies {
     testImplementation "org.assertj:assertj-core:$assertJVersion"
 
     integTestAnnotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    integTestAnnotationProcessor "org.immutables:value:$immutablesVersion"
 
     annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"

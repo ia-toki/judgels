@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.SelectionOptions;
-import judgels.persistence.api.dump.DumpImportBehavior;
+import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
 import judgels.uriel.api.contest.contestant.ContestContestantStatus;
@@ -100,7 +100,7 @@ public class UrielDumpExporter {
     public Set<AdminRoleDump> exportAdminRoleDumps() {
         return adminRoleDao.selectAll(SelectionOptions.DEFAULT_ALL).stream()
                 .map(adminRoleModel -> new AdminRoleDump.Builder()
-                        .importBehavior(DumpImportBehavior.RESTORE)
+                        .mode(DumpImportMode.RESTORE)
                         .userJid(adminRoleModel.userJid)
                         .createdAt(adminRoleModel.createdAt)
                         .createdBy(Optional.ofNullable(adminRoleModel.createdBy))
@@ -112,7 +112,7 @@ public class UrielDumpExporter {
     public Set<ContestDump> exportContestDumps() {
         return contestDao.selectAll(SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestModel -> new ContestDump.Builder()
-                        .importBehavior(DumpImportBehavior.RESTORE)
+                        .mode(DumpImportMode.RESTORE)
                         .slug(contestModel.slug)
                         .name(contestModel.name)
                         .beginTime(contestModel.beginTime)
@@ -154,7 +154,7 @@ public class UrielDumpExporter {
         ContestStyleModel contestStyleModel = contestStyleDao.selectByContestJid(contestJid).get();
         try {
             return new ContestStyleDump.Builder()
-                    .importBehavior(DumpImportBehavior.RESTORE)
+                    .mode(DumpImportMode.RESTORE)
                     .name(contestStyle)
                     .config(objectMapper.readValue(contestStyleModel.config, styleModuleConfigClass))
                     .createdAt(contestStyleModel.createdAt)
@@ -210,7 +210,7 @@ public class UrielDumpExporter {
                     }
 
                     return new ContestModuleDump.Builder()
-                            .importBehavior(DumpImportBehavior.RESTORE)
+                            .mode(DumpImportMode.RESTORE)
                             .name(ContestModuleType.valueOf(contestModuleModel.name))
                             .enabled(contestModuleModel.enabled)
                             .config(moduleConfig)
@@ -228,7 +228,7 @@ public class UrielDumpExporter {
     public Set<ContestProblemDump> exportContestProblemDumps(String contestJid) {
         return contestProblemDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestProblemModel -> new ContestProblemDump.Builder()
-                        .importBehavior(DumpImportBehavior.RESTORE)
+                        .mode(DumpImportMode.RESTORE)
                         .alias(contestProblemModel.alias)
                         .problemJid(contestProblemModel.problemJid)
                         .status(ContestProblemStatus.valueOf(contestProblemModel.status))
@@ -247,7 +247,7 @@ public class UrielDumpExporter {
     public Set<ContestContestantDump> exportContestContestantDumps(String contestJid) {
         return contestContestantDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestContestantModel -> new ContestContestantDump.Builder()
-                        .importBehavior(DumpImportBehavior.RESTORE)
+                        .mode(DumpImportMode.RESTORE)
                         .userJid(contestContestantModel.userJid)
                         .status(ContestContestantStatus.valueOf(contestContestantModel.status))
                         .contestStartTime(contestContestantModel.contestStartTime)
@@ -281,7 +281,7 @@ public class UrielDumpExporter {
                     }
 
                     return new ContestSupervisorDump.Builder()
-                            .importBehavior(DumpImportBehavior.RESTORE)
+                            .mode(DumpImportMode.RESTORE)
                             .userJid(contestSupervisorModel.userJid)
                             .managementPermissions(permissions)
                             .createdAt(contestSupervisorModel.createdAt)
@@ -298,7 +298,7 @@ public class UrielDumpExporter {
     public Set<ContestManagerDump> exportContestManagerDumps(String contestJid) {
         return contestManagerDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestManagerModel -> new ContestManagerDump.Builder()
-                        .importBehavior(DumpImportBehavior.RESTORE)
+                        .mode(DumpImportMode.RESTORE)
                         .userJid(contestManagerModel.userJid)
                         .createdAt(contestManagerModel.createdAt)
                         .createdBy(Optional.ofNullable(contestManagerModel.createdBy))
@@ -313,7 +313,7 @@ public class UrielDumpExporter {
     public Set<ContestAnnouncementDump> exportContestAnnouncementDumps(String contestJid) {
         return contestAnnouncementDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestAnnouncementModel -> new ContestAnnouncementDump.Builder()
-                        .importBehavior(DumpImportBehavior.RESTORE)
+                        .mode(DumpImportMode.RESTORE)
                         .title(contestAnnouncementModel.title)
                         .content(contestAnnouncementModel.content)
                         .status(ContestAnnouncementStatus.valueOf(contestAnnouncementModel.status))
@@ -331,7 +331,7 @@ public class UrielDumpExporter {
     public Set<ContestClarificationDump> exportContestClarificationDumps(String contestJid) {
         return contestClarificationDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestClarificationModel -> new ContestClarificationDump.Builder()
-                        .importBehavior(DumpImportBehavior.RESTORE)
+                        .mode(DumpImportMode.RESTORE)
                         .topicJid(contestClarificationModel.topicJid)
                         .title(contestClarificationModel.title)
                         .question(contestClarificationModel.question)
