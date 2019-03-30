@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportBehavior;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
 import judgels.uriel.api.contest.contestant.ContestContestantStatus;
@@ -99,10 +100,11 @@ public class UrielDumpExporter {
     public Set<AdminRoleDump> exportAdminRoleDumps() {
         return adminRoleDao.selectAll(SelectionOptions.DEFAULT_ALL).stream()
                 .map(adminRoleModel -> new AdminRoleDump.Builder()
+                        .importBehavior(DumpImportBehavior.RESTORE)
                         .userJid(adminRoleModel.userJid)
                         .createdAt(adminRoleModel.createdAt)
-                        .createdBy(adminRoleModel.createdBy)
-                        .createdIp(adminRoleModel.createdIp)
+                        .createdBy(Optional.ofNullable(adminRoleModel.createdBy))
+                        .createdIp(Optional.ofNullable(adminRoleModel.createdIp))
                         .build())
                 .collect(Collectors.toSet());
     }
@@ -110,6 +112,7 @@ public class UrielDumpExporter {
     public Set<ContestDump> exportContestDumps() {
         return contestDao.selectAll(SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestModel -> new ContestDump.Builder()
+                        .importBehavior(DumpImportBehavior.RESTORE)
                         .slug(contestModel.slug)
                         .name(contestModel.name)
                         .beginTime(contestModel.beginTime)
@@ -125,11 +128,11 @@ public class UrielDumpExporter {
                         .clarifications(exportContestClarificationDumps(contestModel.jid))
                         .jid(contestModel.jid)
                         .createdAt(contestModel.createdAt)
-                        .createdBy(contestModel.createdBy)
-                        .createdIp(contestModel.createdIp)
+                        .createdBy(Optional.ofNullable(contestModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestModel.createdIp))
                         .updatedAt(contestModel.updatedAt)
-                        .updatedBy(contestModel.updatedBy)
-                        .updatedIp(contestModel.updatedIp)
+                        .updatedBy(Optional.ofNullable(contestModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestModel.updatedIp))
                         .build())
                 .collect(Collectors.toSet());
     }
@@ -151,14 +154,15 @@ public class UrielDumpExporter {
         ContestStyleModel contestStyleModel = contestStyleDao.selectByContestJid(contestJid).get();
         try {
             return new ContestStyleDump.Builder()
+                    .importBehavior(DumpImportBehavior.RESTORE)
                     .name(contestStyle)
                     .config(objectMapper.readValue(contestStyleModel.config, styleModuleConfigClass))
                     .createdAt(contestStyleModel.createdAt)
-                    .createdBy(contestStyleModel.createdBy)
-                    .createdIp(contestStyleModel.createdIp)
+                    .createdBy(Optional.ofNullable(contestStyleModel.createdBy))
+                    .createdIp(Optional.ofNullable(contestStyleModel.createdIp))
                     .updatedAt(contestStyleModel.updatedAt)
-                    .updatedBy(contestStyleModel.updatedBy)
-                    .updatedIp(contestStyleModel.updatedIp)
+                    .updatedBy(Optional.ofNullable(contestStyleModel.updatedBy))
+                    .updatedIp(Optional.ofNullable(contestStyleModel.updatedIp))
                     .build();
         } catch (IOException e) {
             throw new RuntimeException(
@@ -206,15 +210,16 @@ public class UrielDumpExporter {
                     }
 
                     return new ContestModuleDump.Builder()
+                            .importBehavior(DumpImportBehavior.RESTORE)
                             .name(ContestModuleType.valueOf(contestModuleModel.name))
                             .enabled(contestModuleModel.enabled)
                             .config(moduleConfig)
                             .createdAt(contestModuleModel.createdAt)
-                            .createdBy(contestModuleModel.createdBy)
-                            .createdIp(contestModuleModel.createdIp)
+                            .createdBy(Optional.ofNullable(contestModuleModel.createdBy))
+                            .createdIp(Optional.ofNullable(contestModuleModel.createdIp))
                             .updatedAt(contestModuleModel.updatedAt)
-                            .updatedBy(contestModuleModel.updatedBy)
-                            .updatedIp(contestModuleModel.updatedIp)
+                            .updatedBy(Optional.ofNullable(contestModuleModel.updatedBy))
+                            .updatedIp(Optional.ofNullable(contestModuleModel.updatedIp))
                             .build();
                 })
                 .collect(Collectors.toSet());
@@ -223,17 +228,18 @@ public class UrielDumpExporter {
     public Set<ContestProblemDump> exportContestProblemDumps(String contestJid) {
         return contestProblemDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestProblemModel -> new ContestProblemDump.Builder()
+                        .importBehavior(DumpImportBehavior.RESTORE)
                         .alias(contestProblemModel.alias)
                         .problemJid(contestProblemModel.problemJid)
                         .status(ContestProblemStatus.valueOf(contestProblemModel.status))
                         .submissionsLimit(contestProblemModel.submissionsLimit)
                         .points(contestProblemModel.points)
                         .createdAt(contestProblemModel.createdAt)
-                        .createdBy(contestProblemModel.createdBy)
-                        .createdIp(contestProblemModel.createdIp)
+                        .createdBy(Optional.ofNullable(contestProblemModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestProblemModel.createdIp))
                         .updatedAt(contestProblemModel.updatedAt)
-                        .updatedBy(contestProblemModel.updatedBy)
-                        .updatedIp(contestProblemModel.updatedIp)
+                        .updatedBy(Optional.ofNullable(contestProblemModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestProblemModel.updatedIp))
                         .build())
                 .collect(Collectors.toSet());
     }
@@ -241,15 +247,16 @@ public class UrielDumpExporter {
     public Set<ContestContestantDump> exportContestContestantDumps(String contestJid) {
         return contestContestantDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestContestantModel -> new ContestContestantDump.Builder()
+                        .importBehavior(DumpImportBehavior.RESTORE)
                         .userJid(contestContestantModel.userJid)
                         .status(ContestContestantStatus.valueOf(contestContestantModel.status))
                         .contestStartTime(contestContestantModel.contestStartTime)
                         .createdAt(contestContestantModel.createdAt)
-                        .createdBy(contestContestantModel.createdBy)
-                        .createdIp(contestContestantModel.createdIp)
+                        .createdBy(Optional.ofNullable(contestContestantModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestContestantModel.createdIp))
                         .updatedAt(contestContestantModel.updatedAt)
-                        .updatedBy(contestContestantModel.updatedBy)
-                        .updatedIp(contestContestantModel.updatedIp)
+                        .updatedBy(Optional.ofNullable(contestContestantModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestContestantModel.updatedIp))
                         .build())
                 .collect(Collectors.toSet());
     }
@@ -274,14 +281,15 @@ public class UrielDumpExporter {
                     }
 
                     return new ContestSupervisorDump.Builder()
+                            .importBehavior(DumpImportBehavior.RESTORE)
                             .userJid(contestSupervisorModel.userJid)
                             .managementPermissions(permissions)
                             .createdAt(contestSupervisorModel.createdAt)
-                            .createdBy(contestSupervisorModel.createdBy)
-                            .createdIp(contestSupervisorModel.createdIp)
+                            .createdBy(Optional.ofNullable(contestSupervisorModel.createdBy))
+                            .createdIp(Optional.ofNullable(contestSupervisorModel.createdIp))
                             .updatedAt(contestSupervisorModel.updatedAt)
-                            .updatedBy(contestSupervisorModel.updatedBy)
-                            .updatedIp(contestSupervisorModel.updatedIp)
+                            .updatedBy(Optional.ofNullable(contestSupervisorModel.updatedBy))
+                            .updatedIp(Optional.ofNullable(contestSupervisorModel.updatedIp))
                             .build();
                 })
                 .collect(Collectors.toSet());
@@ -290,13 +298,14 @@ public class UrielDumpExporter {
     public Set<ContestManagerDump> exportContestManagerDumps(String contestJid) {
         return contestManagerDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestManagerModel -> new ContestManagerDump.Builder()
+                        .importBehavior(DumpImportBehavior.RESTORE)
                         .userJid(contestManagerModel.userJid)
                         .createdAt(contestManagerModel.createdAt)
-                        .createdBy(contestManagerModel.createdBy)
-                        .createdIp(contestManagerModel.createdIp)
+                        .createdBy(Optional.ofNullable(contestManagerModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestManagerModel.createdIp))
                         .updatedAt(contestManagerModel.updatedAt)
-                        .updatedBy(contestManagerModel.updatedBy)
-                        .updatedIp(contestManagerModel.updatedIp)
+                        .updatedBy(Optional.ofNullable(contestManagerModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestManagerModel.updatedIp))
                         .build())
                 .collect(Collectors.toSet());
     }
@@ -304,16 +313,17 @@ public class UrielDumpExporter {
     public Set<ContestAnnouncementDump> exportContestAnnouncementDumps(String contestJid) {
         return contestAnnouncementDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestAnnouncementModel -> new ContestAnnouncementDump.Builder()
+                        .importBehavior(DumpImportBehavior.RESTORE)
                         .title(contestAnnouncementModel.title)
                         .content(contestAnnouncementModel.content)
                         .status(ContestAnnouncementStatus.valueOf(contestAnnouncementModel.status))
                         .jid(contestAnnouncementModel.jid)
                         .createdAt(contestAnnouncementModel.createdAt)
-                        .createdBy(contestAnnouncementModel.createdBy)
-                        .createdIp(contestAnnouncementModel.createdIp)
+                        .createdBy(Optional.ofNullable(contestAnnouncementModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestAnnouncementModel.createdIp))
                         .updatedAt(contestAnnouncementModel.updatedAt)
-                        .updatedBy(contestAnnouncementModel.updatedBy)
-                        .updatedIp(contestAnnouncementModel.updatedIp)
+                        .updatedBy(Optional.ofNullable(contestAnnouncementModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestAnnouncementModel.updatedIp))
                         .build())
                 .collect(Collectors.toSet());
     }
@@ -321,6 +331,7 @@ public class UrielDumpExporter {
     public Set<ContestClarificationDump> exportContestClarificationDumps(String contestJid) {
         return contestClarificationDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestClarificationModel -> new ContestClarificationDump.Builder()
+                        .importBehavior(DumpImportBehavior.RESTORE)
                         .topicJid(contestClarificationModel.topicJid)
                         .title(contestClarificationModel.title)
                         .question(contestClarificationModel.question)
@@ -328,11 +339,11 @@ public class UrielDumpExporter {
                         .title(contestClarificationModel.title)
                         .jid(contestClarificationModel.jid)
                         .createdAt(contestClarificationModel.createdAt)
-                        .createdBy(contestClarificationModel.createdBy)
-                        .createdIp(contestClarificationModel.createdIp)
+                        .createdBy(Optional.ofNullable(contestClarificationModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestClarificationModel.createdIp))
                         .updatedAt(contestClarificationModel.updatedAt)
-                        .updatedBy(contestClarificationModel.updatedBy)
-                        .updatedIp(contestClarificationModel.updatedIp)
+                        .updatedBy(Optional.ofNullable(contestClarificationModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestClarificationModel.updatedIp))
                         .build())
                 .collect(Collectors.toSet());
     }

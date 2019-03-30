@@ -3,17 +3,9 @@ package judgels.uriel.dump;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import java.time.Clock;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
-import judgels.persistence.ActorProvider;
-import judgels.persistence.JudgelsModel;
-import judgels.persistence.Model;
-import judgels.persistence.UnmodifiableModel;
-import judgels.persistence.api.dump.Dump;
-import judgels.persistence.api.dump.JudgelsDump;
-import judgels.persistence.api.dump.UnmodifiableDump;
 import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
 import judgels.uriel.api.contest.contestant.ContestContestantStatus;
@@ -54,8 +46,6 @@ import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
 
 public class UrielDumpImporter {
-    private final ActorProvider actorProvider;
-    private final Clock clock;
     private final ObjectMapper objectMapper;
     private final AdminRoleDao adminRoleDao;
     private final ContestDao contestDao;
@@ -70,8 +60,6 @@ public class UrielDumpImporter {
 
     @Inject
     public UrielDumpImporter(
-            ActorProvider actorProvider,
-            Clock clock,
             ObjectMapper objectMapper,
             AdminRoleDao adminRoleDao,
             ContestDao contestDao,
@@ -84,8 +72,6 @@ public class UrielDumpImporter {
             ContestAnnouncementDao contestAnnouncementDao,
             ContestClarificationDao contestClarificationDao) {
 
-        this.actorProvider = actorProvider;
-        this.clock = clock;
         this.objectMapper = objectMapper;
         this.adminRoleDao = adminRoleDao;
         this.contestDao = contestDao;
@@ -107,13 +93,13 @@ public class UrielDumpImporter {
     public void importAdminRoleDump(AdminRoleDump adminRoleDump) {
         AdminRoleModel adminRoleModel = new AdminRoleModel();
         adminRoleModel.userJid = adminRoleDump.getUserJid();
-        setCreationMetadata(adminRoleModel, adminRoleDump);
+        adminRoleDao.setModelMetadataFromDump(adminRoleModel, adminRoleDump);
         adminRoleDao.persist(adminRoleModel);
     }
 
     public void importContestDump(ContestDump contestDump) {
-        if (contestDao.selectByJid(contestDump.getJid()).isPresent()) {
-            throw ContestErrors.jidAlreadyExists(contestDump.getJid());
+        if (contestDump.getJid().isPresent() && contestDao.selectByJid(contestDump.getJid().get()).isPresent()) {
+            throw ContestErrors.jidAlreadyExists(contestDump.getJid().get());
         }
         if (contestDao.selectBySlug(contestDump.getSlug()).isPresent()) {
             throw ContestErrors.slugAlreadyExists(contestDump.getSlug());
@@ -126,18 +112,19 @@ public class UrielDumpImporter {
         contestModel.beginTime = contestDump.getBeginTime();
         contestModel.duration = contestDump.getDuration().toMillis();
         contestModel.description = contestDump.getDescription();
-        setJudgelsMetadata(contestModel, contestDump);
-        contestDao.persist(contestModel);
+        contestDao.setModelMetadataFromDump(contestModel, contestDump);
+        contestModel = contestDao.persist(contestModel);
 
-        importStyleDump(contestDump.getJid(), contestDump.getStyle());
+        String contestJid = contestModel.jid;
+        importStyleDump(contestJid, contestDump.getStyle());
 
-        contestDump.getModules().forEach(dump -> importModuleDump(contestDump.getJid(), dump));
-        contestDump.getProblems().forEach(dump -> importProblemDump(contestDump.getJid(), dump));
-        contestDump.getContestants().forEach(dump -> importContestantDump(contestDump.getJid(), dump));
-        contestDump.getSupervisors().forEach(dump -> importSupervisorDump(contestDump.getJid(), dump));
-        contestDump.getManagers().forEach(dump -> importManagerDump(contestDump.getJid(), dump));
-        contestDump.getAnnouncements().forEach(dump -> importAnnouncementDump(contestDump.getJid(), dump));
-        contestDump.getClarifications().forEach(dump -> importClarificationDump(contestDump.getJid(), dump));
+        contestDump.getModules().forEach(dump -> importModuleDump(contestJid, dump));
+        contestDump.getProblems().forEach(dump -> importProblemDump(contestJid, dump));
+        contestDump.getContestants().forEach(dump -> importContestantDump(contestJid, dump));
+        contestDump.getSupervisors().forEach(dump -> importSupervisorDump(contestJid, dump));
+        contestDump.getManagers().forEach(dump -> importManagerDump(contestJid, dump));
+        contestDump.getAnnouncements().forEach(dump -> importAnnouncementDump(contestJid, dump));
+        contestDump.getClarifications().forEach(dump -> importClarificationDump(contestJid, dump));
     }
 
     public void importStyleDump(String contestJid, ContestStyleDump contestStyleDump) {
@@ -152,7 +139,7 @@ public class UrielDumpImporter {
         ContestStyleModel contestStyleModel = new ContestStyleModel();
         contestStyleModel.contestJid = contestJid;
         contestStyleModel.config = configString;
-        setCreationAndModificationMetadata(contestStyleModel, contestStyleDump);
+        contestStyleDao.setModelMetadataFromDump(contestStyleModel, contestStyleDump);
         contestStyleDao.persist(contestStyleModel);
     }
 
@@ -170,7 +157,7 @@ public class UrielDumpImporter {
         contestModuleModel.name = contestModuleDump.getName().name();
         contestModuleModel.enabled = contestModuleDump.getEnabled();
         contestModuleModel.config = configString;
-        setCreationAndModificationMetadata(contestModuleModel, contestModuleDump);
+        contestModuleDao.setModelMetadataFromDump(contestModuleModel, contestModuleDump);
         contestModuleDao.persist(contestModuleModel);
     }
 
@@ -182,7 +169,7 @@ public class UrielDumpImporter {
         contestProblemModel.status = contestProblemDump.getStatus().name();
         contestProblemModel.submissionsLimit = contestProblemDump.getSubmissionsLimit();
         contestProblemModel.points = contestProblemDump.getPoints().orElse(0);
-        setCreationAndModificationMetadata(contestProblemModel, contestProblemDump);
+        contestProblemDao.setModelMetadataFromDump(contestProblemModel, contestProblemDump);
         contestProblemDao.persist(contestProblemModel);
     }
 
@@ -194,7 +181,7 @@ public class UrielDumpImporter {
         contestContestantModel.userJid = contestContestantDump.getUserJid();
         contestContestantModel.status = status;
         contestContestantModel.contestStartTime = contestContestantDump.getContestStartTime().orElse(null);
-        setCreationAndModificationMetadata(contestContestantModel, contestContestantDump);
+        contestContestantDao.setModelMetadataFromDump(contestContestantModel, contestContestantDump);
         contestContestantDao.persist(contestContestantModel);
     }
 
@@ -215,7 +202,7 @@ public class UrielDumpImporter {
         contestSupervisorModel.contestJid = contestJid;
         contestSupervisorModel.userJid = contestSupervisorDump.getUserJid();
         contestSupervisorModel.permission = permissionsString;
-        setCreationAndModificationMetadata(contestSupervisorModel, contestSupervisorDump);
+        contestSupervisorDao.setModelMetadataFromDump(contestSupervisorModel, contestSupervisorDump);
         contestSupervisorDao.persist(contestSupervisorModel);
     }
 
@@ -223,13 +210,14 @@ public class UrielDumpImporter {
         ContestManagerModel contestManagerModel = new ContestManagerModel();
         contestManagerModel.contestJid = contestJid;
         contestManagerModel.userJid = contestManagerDump.getUserJid();
-        setCreationAndModificationMetadata(contestManagerModel, contestManagerDump);
+        contestManagerDao.setModelMetadataFromDump(contestManagerModel, contestManagerDump);
         contestManagerDao.persist(contestManagerModel);
     }
 
     public void importAnnouncementDump(String contestJid, ContestAnnouncementDump contestAnnouncementDump) {
-        if (contestAnnouncementDao.selectByJid(contestAnnouncementDump.getJid()).isPresent()) {
-            throw ContestErrors.jidAlreadyExists(contestAnnouncementDump.getJid());
+        if (contestAnnouncementDump.getJid().isPresent()
+                && contestAnnouncementDao.selectByJid(contestAnnouncementDump.getJid().get()).isPresent()) {
+            throw ContestErrors.jidAlreadyExists(contestAnnouncementDump.getJid().get());
         }
 
         ContestAnnouncementModel contestAnnouncementModel = new ContestAnnouncementModel();
@@ -237,13 +225,14 @@ public class UrielDumpImporter {
         contestAnnouncementModel.title = contestAnnouncementDump.getTitle();
         contestAnnouncementModel.content = contestAnnouncementDump.getContent();
         contestAnnouncementModel.status = contestAnnouncementDump.getStatus().name();
-        setJudgelsMetadata(contestAnnouncementModel, contestAnnouncementDump);
+        contestAnnouncementDao.setModelMetadataFromDump(contestAnnouncementModel, contestAnnouncementDump);
         contestAnnouncementDao.persist(contestAnnouncementModel);
     }
 
     public void importClarificationDump(String contestJid, ContestClarificationDump contestClarificationDump) {
-        if (contestClarificationDao.selectByJid(contestClarificationDump.getJid()).isPresent()) {
-            throw ContestErrors.jidAlreadyExists(contestClarificationDump.getJid());
+        if (contestClarificationDump.getJid().isPresent()
+                && contestClarificationDao.selectByJid(contestClarificationDump.getJid().get()).isPresent()) {
+            throw ContestErrors.jidAlreadyExists(contestClarificationDump.getJid().get());
         }
 
         Optional<String> answer = contestClarificationDump.getAnswer();
@@ -258,25 +247,7 @@ public class UrielDumpImporter {
         contestClarificationModel.question = contestClarificationDump.getQuestion();
         contestClarificationModel.answer = answer.orElse(null);
         contestClarificationModel.status = status;
-        setJudgelsMetadata(contestClarificationModel, contestClarificationDump);
+        contestClarificationDao.setModelMetadataFromDump(contestClarificationModel, contestClarificationDump);
         contestClarificationDao.persist(contestClarificationModel);
-    }
-
-    private void setCreationMetadata(UnmodifiableModel model, UnmodifiableDump dump) {
-        model.createdAt = dump.getCreatedAt();
-        model.createdBy = dump.getCreatedBy();
-        model.createdIp = dump.getCreatedIp();
-    }
-
-    private void setCreationAndModificationMetadata(Model model, Dump dump) {
-        setCreationMetadata(model, dump);
-        model.updatedAt = dump.getUpdatedAt();
-        model.updatedBy = dump.getUpdatedBy();
-        model.updatedIp = dump.getUpdatedIp();
-    }
-
-    private void setJudgelsMetadata(JudgelsModel model, JudgelsDump dump) {
-        setCreationAndModificationMetadata(model, dump);
-        model.jid = dump.getJid();
     }
 }

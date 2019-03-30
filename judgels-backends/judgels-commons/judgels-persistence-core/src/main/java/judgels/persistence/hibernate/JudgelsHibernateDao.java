@@ -16,6 +16,8 @@ import judgels.persistence.JidGenerator;
 import judgels.persistence.JudgelsDao;
 import judgels.persistence.JudgelsModel;
 import judgels.persistence.JudgelsModel_;
+import judgels.persistence.api.dump.DumpImportBehavior;
+import judgels.persistence.api.dump.JudgelsDump;
 
 public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends HibernateDao<M> implements JudgelsDao<M> {
     private final Clock clock;
@@ -105,5 +107,22 @@ public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends Hibern
     public List<M> getByJids(Collection<String> jids) {
         Map<String, M> map = selectByJids(ImmutableSet.copyOf(jids));
         return jids.stream().map(map::get).collect(Collectors.toList());
+    }
+
+    @Override
+    public void setModelMetadataFromDump(M model, JudgelsDump dump) {
+        super.setModelMetadataFromDump(model, dump);
+
+        if (dump.getImportBehavior() == DumpImportBehavior.RESTORE) {
+            model.jid = dump.getJid().orElseThrow(
+                    () -> new IllegalArgumentException("jid must be set if using RESTORE importBehavior")
+            );
+        } else if (dump.getImportBehavior() == DumpImportBehavior.CREATE) {
+            model.jid = JidGenerator.newJid(getEntityClass());
+        } else {
+            throw new IllegalArgumentException(
+                    String.format("Unknown import behavior: %s", dump.getImportBehavior())
+            );
+        }
     }
 }
