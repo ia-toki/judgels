@@ -18,7 +18,7 @@ public final class SealtielModule extends AbstractModule {
 
     @Provides
     SealtielClientConfiguration config(SandalphonConfiguration config) {
-        return config.getSealtielConfig();
+        return config.getSealtielConfig().orElse(SealtielClientConfiguration.DEFAULT);
     }
 
     @Provides

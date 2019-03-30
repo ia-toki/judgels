@@ -13,7 +13,7 @@ public final class GabrielModule extends AbstractModule {
 
     @Provides
     GabrielClientConfiguration config(SandalphonConfiguration config) {
-        return config.getGabrielConfig();
+        return config.getGabrielConfig().orElse(GabrielClientConfiguration.DEFAULT);
     }
 
     @Provides

@@ -25,10 +25,10 @@ public interface UrielConfiguration {
     SandalphonClientConfiguration getSandalphonConfig();
 
     @JsonProperty("sealtiel")
-    SealtielClientConfiguration getSealtielConfig();
+    Optional<SealtielClientConfiguration> getSealtielConfig();
 
     @JsonProperty("gabriel")
-    GabrielClientConfiguration getGabrielConfig();
+    Optional<GabrielClientConfiguration> getGabrielConfig();
 
     @JsonProperty("aws")
     Optional<AwsConfiguration> getAwsConfig();

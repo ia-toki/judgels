@@ -78,10 +78,12 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
                 Duration.ofSeconds(2),
                 Duration.ofSeconds(10));
 
-        component.scheduler().scheduleWithFixedDelay(
-                "grading-response-poller",
-                component.gradingResponsePoller(),
-                Duration.ofSeconds(2),
-                Duration.ofSeconds(3));
+        if (urielConfig.getSealtielConfig().isPresent()) {
+            component.scheduler().scheduleWithFixedDelay(
+                    "grading-response-poller",
+                    component.gradingResponsePoller(),
+                    Duration.ofSeconds(2),
+                    Duration.ofSeconds(3));
+        }
     }
 }

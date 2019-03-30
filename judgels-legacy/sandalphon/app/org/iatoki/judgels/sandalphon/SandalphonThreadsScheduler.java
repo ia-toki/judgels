@@ -2,6 +2,7 @@ package org.iatoki.judgels.sandalphon;
 
 import akka.actor.ActorSystem;
 import akka.actor.Scheduler;
+import judgels.sandalphon.SandalphonConfiguration;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingResponsePoller;
@@ -22,12 +23,14 @@ import java.util.concurrent.TimeUnit;
 public final class SandalphonThreadsScheduler {
 
     @Inject
-    public SandalphonThreadsScheduler(ActorSystem actorSystem, ProgrammingSubmissionService programmingSubmissionService, @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader, MessageService messageService) {
+    public SandalphonThreadsScheduler(ActorSystem actorSystem, SandalphonConfiguration config, ProgrammingSubmissionService programmingSubmissionService, @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader, MessageService messageService) {
         Scheduler scheduler = actorSystem.scheduler();
         ExecutionContextExecutor context = actorSystem.dispatcher();
 
         GradingResponsePoller poller = new GradingResponsePoller(scheduler, context, programmingSubmissionService, sealtielClientAuthHeader, messageService, TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS));
 
-        scheduler.schedule(Duration.create(1, TimeUnit.SECONDS), Duration.create(3, TimeUnit.SECONDS), poller, context);
+        if (config.getSealtielConfig().isPresent()) {
+            scheduler.schedule(Duration.create(1, TimeUnit.SECONDS), Duration.create(3, TimeUnit.SECONDS), poller, context);
+        }
     }
 }

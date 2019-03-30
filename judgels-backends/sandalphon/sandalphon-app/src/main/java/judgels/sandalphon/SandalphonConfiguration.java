@@ -2,6 +2,7 @@ package judgels.sandalphon;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Optional;
 import java.util.Set;
 import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
@@ -20,10 +21,10 @@ public interface SandalphonConfiguration {
     JophielClientConfiguration getJophielConfig();
 
     @JsonProperty("sealtiel")
-    SealtielClientConfiguration getSealtielConfig();
+    Optional<SealtielClientConfiguration> getSealtielConfig();
 
     @JsonProperty("gabriel")
-    GabrielClientConfiguration getGabrielConfig();
+    Optional<GabrielClientConfiguration> getGabrielConfig();
 
     String getRaphaelBaseUrl();
 

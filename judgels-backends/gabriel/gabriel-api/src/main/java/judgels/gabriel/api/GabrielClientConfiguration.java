@@ -7,7 +7,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableGabrielClientConfiguration.class)
 public interface GabrielClientConfiguration {
     GabrielClientConfiguration DEFAULT = new Builder()
-            .clientJid("xxx")
+            .clientJid("JIDSECL-gabriel")
             .build();
 
     String getClientJid();

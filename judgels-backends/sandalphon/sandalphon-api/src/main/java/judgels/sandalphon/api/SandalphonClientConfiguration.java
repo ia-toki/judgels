@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 public interface SandalphonClientConfiguration {
     SandalphonClientConfiguration DEFAULT = new Builder()
             .baseUrl("http://localhost:9002")
-            .clientJid("xxx")
+            .clientJid("JIDSACL-xxx")
             .clientSecret("xxx")
             .build();
 

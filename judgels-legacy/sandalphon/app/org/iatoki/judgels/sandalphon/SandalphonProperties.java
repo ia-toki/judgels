@@ -24,22 +24,33 @@ public final class SandalphonProperties {
             }
         }
 
-        return new SandalphonConfiguration.Builder()
+        SandalphonConfiguration.Builder sandalphonConfig = new SandalphonConfiguration.Builder()
                 .baseDataDir(config.getString("sandalphon.baseDataDir"))
                 .clients(clients)
+                .raphaelBaseUrl(config.getString("raphael.baseUrl"))
                 .jophielConfig(new JophielClientConfiguration.Builder()
                         .baseUrl(config.getString("jophiel.baseUrl"))
-                        .build())
-                .sealtielConfig(new SealtielClientConfiguration.Builder()
-                        .baseUrl(config.getString("sealtiel.baseUrl"))
-                        .clientJid(config.getString("sealtiel.clientJid"))
-                        .clientSecret(config.getString("sealtiel.clientSecret"))
-                        .build())
-                .gabrielConfig(new GabrielClientConfiguration.Builder()
-                        .clientJid(config.getString("gabriel.clientJid"))
-                        .build())
-                .raphaelBaseUrl(config.getString("raphael.baseUrl"))
-                .build();
+                        .build());
+
+        if (config.hasPath("sealtiel.baseUrl")) {
+            sandalphonConfig.sealtielConfig(new SealtielClientConfiguration.Builder()
+                    .baseUrl(config.getString("sealtiel.baseUrl"))
+                    .clientJid(config.getString("sealtiel.clientJid"))
+                    .clientSecret(config.getString("sealtiel.clientSecret"))
+                    .build());
+        } else {
+            sandalphonConfig.sealtielConfig(SealtielClientConfiguration.DEFAULT);
+        }
+
+        if (config.hasPath("gabriel.clientJid")) {
+            sandalphonConfig.gabrielConfig(new GabrielClientConfiguration.Builder()
+                    .clientJid(config.getString("gabriel.clientJid"))
+                    .build());
+        } else {
+            sandalphonConfig.gabrielConfig(GabrielClientConfiguration.DEFAULT);
+        }
+
+        return sandalphonConfig.build();
     }
 
     public static SandalphonProperties getInstance() {

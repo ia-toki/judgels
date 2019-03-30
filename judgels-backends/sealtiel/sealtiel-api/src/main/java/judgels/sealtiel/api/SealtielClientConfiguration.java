@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 public interface SealtielClientConfiguration {
     SealtielClientConfiguration DEFAULT = new Builder()
             .baseUrl("http://localhost:9003")
-            .clientJid("xxx")
+            .clientJid("JIDSECL-xxx")
             .clientSecret("xxx")
             .build();
 
