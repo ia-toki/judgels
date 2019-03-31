@@ -134,9 +134,11 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   }
 
   renderWrongFormatNotice() {
+    const { answer, answerState, wrongFormat } = this.state;
     return (
-      this.state.wrongFormat &&
-      this.state.answerState === AnswerState.Answering && (
+      answer !== '' &&
+      wrongFormat &&
+      answerState === AnswerState.Answering && (
         <Callout intent={Intent.DANGER} icon="remove" className="callout">
           <strong>Wrong answer format!</strong>
         </Callout>
