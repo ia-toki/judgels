@@ -52,8 +52,8 @@ describe('changePasswordActions', () => {
         expect(toastActions.showSuccessToast).toHaveBeenCalledWith('Password updated.');
       });
 
-      it('redirects to /profile', () => {
-        expect(dispatch).toHaveBeenCalledWith(push('/account/profile'));
+      it('redirects to /info', () => {
+        expect(dispatch).toHaveBeenCalledWith(push('/account/info'));
       });
     });
 

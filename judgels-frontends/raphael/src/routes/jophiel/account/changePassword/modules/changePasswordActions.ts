@@ -19,7 +19,7 @@ export const changePasswordActions = {
       }
 
       toastActions.showSuccessToast('Password updated.');
-      dispatch(push('/account/profile'));
+      dispatch(push('/account/info'));
     };
   },
 };
