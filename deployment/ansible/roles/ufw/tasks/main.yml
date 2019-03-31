@@ -22,8 +22,6 @@
       to_port: 80
       proto: tcp
       comment: Judgels Raphael/Nginx HTTP
-    tags:
-      - firewall
 
   - name: Allow raphael/Nginx HTTPS traffic through the firewall
     ufw:
@@ -31,8 +29,6 @@
       to_port: 443
       proto: tcp
       comment: Judgels Raphael/Nginx HTTPS
-    tags:
-      - firewall
 
   - name: Allow phpMyAdmin traffic through the firewall
     ufw:
@@ -40,8 +36,6 @@
       to_port: 8080
       proto: tcp
       comment: phpMyAdmin
-    tags:
-      - firewall
 
   - name: Allow jophiel traffic through the firewall
     ufw:
@@ -49,8 +43,6 @@
       to_port: 9001
       proto: tcp
       comment: Judgels Jophiel
-    tags:
-      - firewall
 
   - name: Allow sandalphon traffic through the firewall
     ufw:
@@ -58,8 +50,6 @@
       to_port: 9002
       proto: tcp
       comment: Judgels Sandalphon
-    tags:
-      - firewall
 
   - name: Allow uriel traffic through the firewall
     ufw:
@@ -67,8 +57,6 @@
       to_port: 9004
       proto: tcp
       comment: Judgels Uriel
-    tags:
-      - firewall
 
   tags:
     - firewall
