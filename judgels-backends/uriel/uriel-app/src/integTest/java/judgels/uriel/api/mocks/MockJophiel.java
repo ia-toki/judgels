@@ -131,6 +131,10 @@ public class MockJophiel {
                 .withHeader(HttpHeaders.AUTHORIZATION, containing(ADMIN_BEARER_TOKEN))
                 .willReturn(okForJson("ADMIN")));
 
+        mockJophiel.stubFor(get("/api/v2/users/me/role")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing(USER_BEARER_TOKEN))
+                .willReturn(okForJson("USER")));
+
         mockJophiel.stubFor(post("/api/v2/user-search/username-to-jid")
                 .willReturn(aResponse().withStatus(200).withTransformers("username-to-jid")));
 

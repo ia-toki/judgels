@@ -176,6 +176,11 @@ public class ContestStore {
         });
     }
 
+    public void invalidateCache(String jid, String slug) {
+        contestByJidCache.invalidate(jid);
+        contestBySlugCache.invalidate(slug);
+    }
+
     private static Contest fromModel(ContestModel model) {
         return new Contest.Builder()
                 .id(model.id)

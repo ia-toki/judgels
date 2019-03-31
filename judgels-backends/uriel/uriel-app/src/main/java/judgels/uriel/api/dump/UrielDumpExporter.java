@@ -1,4 +1,4 @@
-package judgels.uriel.dump;
+package judgels.uriel.api.dump;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -26,17 +26,6 @@ import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.uriel.api.dump.AdminRoleDump;
-import judgels.uriel.api.dump.ContestAnnouncementDump;
-import judgels.uriel.api.dump.ContestClarificationDump;
-import judgels.uriel.api.dump.ContestContestantDump;
-import judgels.uriel.api.dump.ContestDump;
-import judgels.uriel.api.dump.ContestManagerDump;
-import judgels.uriel.api.dump.ContestModuleDump;
-import judgels.uriel.api.dump.ContestProblemDump;
-import judgels.uriel.api.dump.ContestStyleDump;
-import judgels.uriel.api.dump.ContestSupervisorDump;
-import judgels.uriel.api.dump.UrielDump;
 import judgels.uriel.contest.supervisor.SupervisorManagementPermissions;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestAnnouncementDao;
@@ -178,26 +167,26 @@ public class UrielDumpExporter {
         return contestModuleDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestModuleModel -> {
                     ContestModuleType moduleType = ContestModuleType.valueOf(contestModuleModel.name);
-                    Optional<ModuleConfig> moduleConfig;
+                    ModuleConfig moduleConfig;
                     Class<? extends ModuleConfig> moduleConfigClass;
                     try {
                         if (moduleType == ContestModuleType.SCOREBOARD) {
-                            moduleConfig = Optional.of(objectMapper.readValue(
-                                    contestModuleModel.config, ScoreboardModuleConfig.class));
+                            moduleConfig = objectMapper.readValue(
+                                    contestModuleModel.config, ScoreboardModuleConfig.class);
                         } else if (moduleType == ContestModuleType.CLARIFICATION_TIME_LIMIT) {
-                            moduleConfig = Optional.of(objectMapper.readValue(
-                                    contestModuleModel.config, ClarificationTimeLimitModuleConfig.class));
+                            moduleConfig = objectMapper.readValue(
+                                    contestModuleModel.config, ClarificationTimeLimitModuleConfig.class);
                         } else if (moduleType == ContestModuleType.DELAYED_GRADING) {
-                            moduleConfig = Optional.of(objectMapper.readValue(
-                                    contestModuleModel.config, DelayedGradingModuleConfig.class));
+                            moduleConfig = objectMapper.readValue(
+                                    contestModuleModel.config, DelayedGradingModuleConfig.class);
                         } else if (moduleType == ContestModuleType.FROZEN_SCOREBOARD) {
-                            moduleConfig = Optional.of(objectMapper.readValue(
-                                    contestModuleModel.config, FrozenScoreboardModuleConfig.class));
+                            moduleConfig = objectMapper.readValue(
+                                    contestModuleModel.config, FrozenScoreboardModuleConfig.class);
                         } else if (moduleType == ContestModuleType.VIRTUAL) {
-                            moduleConfig = Optional.of(objectMapper.readValue(
-                                    contestModuleModel.config, VirtualModuleConfig.class));
+                            moduleConfig = objectMapper.readValue(
+                                    contestModuleModel.config, VirtualModuleConfig.class);
                         } else {
-                            moduleConfig = Optional.empty();
+                            moduleConfig = null;
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(

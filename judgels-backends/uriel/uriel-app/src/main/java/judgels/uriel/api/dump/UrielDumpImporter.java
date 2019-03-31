@@ -1,4 +1,4 @@
-package judgels.uriel.dump;
+package judgels.uriel.api.dump;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,17 +12,14 @@ import judgels.uriel.api.contest.contestant.ContestContestantStatus;
 import judgels.uriel.api.contest.module.ModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.uriel.api.dump.AdminRoleDump;
-import judgels.uriel.api.dump.ContestAnnouncementDump;
-import judgels.uriel.api.dump.ContestClarificationDump;
-import judgels.uriel.api.dump.ContestContestantDump;
-import judgels.uriel.api.dump.ContestDump;
-import judgels.uriel.api.dump.ContestManagerDump;
-import judgels.uriel.api.dump.ContestModuleDump;
-import judgels.uriel.api.dump.ContestProblemDump;
-import judgels.uriel.api.dump.ContestStyleDump;
-import judgels.uriel.api.dump.ContestSupervisorDump;
-import judgels.uriel.api.dump.UrielDump;
+import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.announcement.ContestAnnouncementStore;
+import judgels.uriel.contest.clarification.ContestClarificationStore;
+import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.contest.manager.ContestManagerStore;
+import judgels.uriel.contest.module.ContestModuleStore;
+import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.contest.supervisor.SupervisorManagementPermissions;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.AdminRoleModel;
@@ -44,6 +41,7 @@ import judgels.uriel.persistence.ContestStyleDao;
 import judgels.uriel.persistence.ContestStyleModel;
 import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
+import judgels.uriel.role.AdminRoleStore;
 
 public class UrielDumpImporter {
     private final ObjectMapper objectMapper;
@@ -57,6 +55,15 @@ public class UrielDumpImporter {
     private final ContestManagerDao contestManagerDao;
     private final ContestAnnouncementDao contestAnnouncementDao;
     private final ContestClarificationDao contestClarificationDao;
+    private final AdminRoleStore adminRoleStore;
+    private final ContestStore contestStore;
+    private final ContestModuleStore contestModuleStore;
+    private final ContestProblemStore contestProblemStore;
+    private final ContestContestantStore contestContestantStore;
+    private final ContestSupervisorStore contestSupervisorStore;
+    private final ContestManagerStore contestManagerStore;
+    private final ContestAnnouncementStore contestAnnouncementStore;
+    private final ContestClarificationStore contestClarificationStore;
 
     @Inject
     public UrielDumpImporter(
@@ -70,7 +77,16 @@ public class UrielDumpImporter {
             ContestSupervisorDao contestSupervisorDao,
             ContestManagerDao contestManagerDao,
             ContestAnnouncementDao contestAnnouncementDao,
-            ContestClarificationDao contestClarificationDao) {
+            ContestClarificationDao contestClarificationDao,
+            AdminRoleStore adminRoleStore,
+            ContestStore contestStore,
+            ContestModuleStore contestModuleStore,
+            ContestProblemStore contestProblemStore,
+            ContestContestantStore contestContestantStore,
+            ContestSupervisorStore contestSupervisorStore,
+            ContestManagerStore contestManagerStore,
+            ContestAnnouncementStore contestAnnouncementStore,
+            ContestClarificationStore contestClarificationStore) {
 
         this.objectMapper = objectMapper;
         this.adminRoleDao = adminRoleDao;
@@ -83,6 +99,15 @@ public class UrielDumpImporter {
         this.contestManagerDao = contestManagerDao;
         this.contestAnnouncementDao = contestAnnouncementDao;
         this.contestClarificationDao = contestClarificationDao;
+        this.adminRoleStore = adminRoleStore;
+        this.contestStore = contestStore;
+        this.contestModuleStore = contestModuleStore;
+        this.contestProblemStore = contestProblemStore;
+        this.contestContestantStore = contestContestantStore;
+        this.contestSupervisorStore = contestSupervisorStore;
+        this.contestManagerStore = contestManagerStore;
+        this.contestAnnouncementStore = contestAnnouncementStore;
+        this.contestClarificationStore = contestClarificationStore;
     }
 
     public void importDump(UrielDump urielDump) {
@@ -95,6 +120,7 @@ public class UrielDumpImporter {
         adminRoleModel.userJid = adminRoleDump.getUserJid();
         adminRoleDao.setModelMetadataFromDump(adminRoleModel, adminRoleDump);
         adminRoleDao.persist(adminRoleModel);
+        adminRoleStore.invalidateCache(adminRoleModel.userJid);
     }
 
     public void importContestDump(ContestDump contestDump) {
@@ -114,6 +140,7 @@ public class UrielDumpImporter {
         contestModel.description = contestDump.getDescription();
         contestDao.setModelMetadataFromDump(contestModel, contestDump);
         contestModel = contestDao.persist(contestModel);
+        contestStore.invalidateCache(contestModel.jid, contestModel.slug);
 
         String contestJid = contestModel.jid;
         importStyleDump(contestJid, contestDump.getStyle());
@@ -146,8 +173,8 @@ public class UrielDumpImporter {
     public void importModuleDump(String contestJid, ContestModuleDump contestModuleDump) {
         String configString;
         try {
-            Optional<ModuleConfig> config = contestModuleDump.getConfig();
-            configString = objectMapper.writeValueAsString(config.isPresent() ? config.get() : ImmutableMap.of());
+            ModuleConfig config = contestModuleDump.getConfig();
+            configString = objectMapper.writeValueAsString(config == null ? ImmutableMap.of() : config);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

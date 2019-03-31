@@ -51,6 +51,10 @@ public class AdminRoleStore {
         return true;
     }
 
+    public void invalidateCache(String userJid) {
+        adminRoleDao.invalidateCache(userJid);
+    }
+
     private static Admin fromModel(AdminRoleModel model) {
         return new Admin.Builder()
                 .userJid(model.userJid)
