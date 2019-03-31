@@ -2,10 +2,14 @@ package judgels.uriel.role;
 
 import com.google.common.collect.Lists;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.admin.Admin;
+import judgels.uriel.api.dump.AdminRoleDump;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.AdminRoleModel;
 
@@ -51,13 +55,29 @@ public class AdminRoleStore {
         return true;
     }
 
-    public void invalidateCache(String userJid) {
-        adminRoleDao.invalidateCache(userJid);
-    }
-
     private static Admin fromModel(AdminRoleModel model) {
         return new Admin.Builder()
                 .userJid(model.userJid)
                 .build();
+    }
+
+    public void importDump(AdminRoleDump adminRoleDump) {
+        AdminRoleModel adminRoleModel = new AdminRoleModel();
+        adminRoleModel.userJid = adminRoleDump.getUserJid();
+        adminRoleDao.setModelMetadataFromDump(adminRoleModel, adminRoleDump);
+        adminRoleDao.persist(adminRoleModel);
+        adminRoleDao.invalidateCache(adminRoleModel.userJid);
+    }
+
+    public Set<AdminRoleDump> exportDumps() {
+        return adminRoleDao.selectAll(SelectionOptions.DEFAULT_ALL).stream()
+                .map(adminRoleModel -> new AdminRoleDump.Builder()
+                        .mode(DumpImportMode.RESTORE)
+                        .userJid(adminRoleModel.userJid)
+                        .createdAt(adminRoleModel.createdAt)
+                        .createdBy(Optional.ofNullable(adminRoleModel.createdBy))
+                        .createdIp(Optional.ofNullable(adminRoleModel.createdIp))
+                        .build())
+                .collect(Collectors.toSet());
     }
 }

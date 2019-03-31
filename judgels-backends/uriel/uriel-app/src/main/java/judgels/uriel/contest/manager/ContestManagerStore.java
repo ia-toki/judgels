@@ -2,10 +2,14 @@ package judgels.uriel.contest.manager;
 
 import com.google.common.collect.Lists;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.manager.ContestManager;
+import judgels.uriel.api.dump.ContestManagerDump;
 import judgels.uriel.persistence.ContestManagerDao;
 import judgels.uriel.persistence.ContestManagerModel;
 
@@ -47,6 +51,29 @@ public class ContestManagerStore {
         page.ifPresent(options::page);
         return managerDao.selectPagedByContestJid(contestJid, options.build()).mapPage(
                 p -> Lists.transform(p, ContestManagerStore::fromModel));
+    }
+
+    public void importDump(String contestJid, ContestManagerDump contestManagerDump) {
+        ContestManagerModel contestManagerModel = new ContestManagerModel();
+        contestManagerModel.contestJid = contestJid;
+        contestManagerModel.userJid = contestManagerDump.getUserJid();
+        managerDao.setModelMetadataFromDump(contestManagerModel, contestManagerDump);
+        managerDao.persist(contestManagerModel);
+    }
+
+    public Set<ContestManagerDump> exportDumps(String contestJid) {
+        return managerDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
+                .map(contestManagerModel -> new ContestManagerDump.Builder()
+                        .mode(DumpImportMode.RESTORE)
+                        .userJid(contestManagerModel.userJid)
+                        .createdAt(contestManagerModel.createdAt)
+                        .createdBy(Optional.ofNullable(contestManagerModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestManagerModel.createdIp))
+                        .updatedAt(contestManagerModel.updatedAt)
+                        .updatedBy(Optional.ofNullable(contestManagerModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestManagerModel.updatedIp))
+                        .build())
+                .collect(Collectors.toSet());
     }
 
     private static ContestManager fromModel(ContestManagerModel model) {

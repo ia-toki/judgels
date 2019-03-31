@@ -15,8 +15,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantStatus;
+import judgels.uriel.api.dump.ContestContestantDump;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestRoleDao;
@@ -118,6 +120,37 @@ public class ContestContestantStore {
         return contestantDao.selectAllApprovedByContestJid(contestJid)
                 .stream()
                 .map(ContestContestantStore::fromModel)
+                .collect(Collectors.toSet());
+    }
+
+    public void importDump(String contestJid, ContestContestantDump contestContestantDump) {
+        String status = contestContestantDump.getStatus().orElse(ContestContestantStatus.APPROVED).name();
+
+        ContestContestantModel contestContestantModel = new ContestContestantModel();
+        contestContestantModel.contestJid = contestJid;
+        contestContestantModel.userJid = contestContestantDump.getUserJid();
+        contestContestantModel.status = status;
+        contestContestantModel.contestStartTime = contestContestantDump.getContestStartTime().orElse(null);
+        contestantDao.setModelMetadataFromDump(contestContestantModel, contestContestantDump);
+        contestantDao.persist(contestContestantModel);
+        contestantCache.invalidate(contestJid + SEPARATOR + contestContestantModel.userJid);
+        roleDao.invalidateCaches(contestContestantModel.userJid, contestJid);
+    }
+
+    public Set<ContestContestantDump> exportDumps(String contestJid) {
+        return contestantDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
+                .map(contestContestantModel -> new ContestContestantDump.Builder()
+                        .mode(DumpImportMode.RESTORE)
+                        .userJid(contestContestantModel.userJid)
+                        .status(ContestContestantStatus.valueOf(contestContestantModel.status))
+                        .contestStartTime(contestContestantModel.contestStartTime)
+                        .createdAt(contestContestantModel.createdAt)
+                        .createdBy(Optional.ofNullable(contestContestantModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestContestantModel.createdIp))
+                        .updatedAt(contestContestantModel.updatedAt)
+                        .updatedBy(Optional.ofNullable(contestContestantModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestContestantModel.updatedIp))
+                        .build())
                 .collect(Collectors.toSet());
     }
 

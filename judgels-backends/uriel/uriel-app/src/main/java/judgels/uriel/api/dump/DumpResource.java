@@ -8,25 +8,27 @@ import judgels.jophiel.api.role.Role;
 import judgels.jophiel.api.user.me.MyUserService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.uriel.contest.ContestStore;
 import judgels.uriel.persistence.AdminRoleDao;
+import judgels.uriel.role.AdminRoleStore;
 
 public class DumpResource implements DumpService {
-    private final UrielDumpImporter urielDumpImporter;
-    private final UrielDumpExporter urielDumpExporter;
+    private final AdminRoleStore adminRoleStore;
+    private final ContestStore contestStore;
     private final ActorChecker actorChecker;
     private final AdminRoleDao adminRoleDao;
     private final MyUserService myUserService;
 
     @Inject
     public DumpResource(
-            UrielDumpImporter urielDumpImporter,
-            UrielDumpExporter urielDumpExporter,
+            AdminRoleStore adminRoleStore,
+            ContestStore contestStore,
             ActorChecker actorChecker,
             AdminRoleDao adminRoleDao,
             MyUserService myUserService) {
 
-        this.urielDumpImporter = urielDumpImporter;
-        this.urielDumpExporter = urielDumpExporter;
+        this.adminRoleStore = adminRoleStore;
+        this.contestStore = contestStore;
         this.actorChecker = actorChecker;
         this.adminRoleDao = adminRoleDao;
         this.myUserService = myUserService;
@@ -39,7 +41,10 @@ public class DumpResource implements DumpService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(role == Role.SUPERADMIN || adminRoleDao.isAdmin(actorJid));
 
-        return urielDumpExporter.exportDump();
+        return new UrielDump.Builder()
+                .admins(adminRoleStore.exportDumps())
+                .contests(contestStore.exportDumps())
+                .build();
     }
 
     @Override
@@ -49,6 +54,7 @@ public class DumpResource implements DumpService {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(role == Role.SUPERADMIN || adminRoleDao.isAdmin(actorJid));
 
-        urielDumpImporter.importDump(urielDump);
+        urielDump.getAdmins().forEach(dump -> adminRoleStore.importDump(dump));
+        urielDump.getContests().forEach(dump -> contestStore.importDump(dump));
     }
 }

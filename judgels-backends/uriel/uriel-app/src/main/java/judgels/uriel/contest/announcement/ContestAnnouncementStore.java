@@ -2,12 +2,17 @@ package judgels.uriel.contest.announcement;
 
 import com.google.common.collect.Lists;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
+import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementData;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
+import judgels.uriel.api.dump.ContestAnnouncementDump;
 import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestAnnouncementModel;
 
@@ -48,6 +53,39 @@ public class ContestAnnouncementStore {
         ContestAnnouncementModel model = announcementDao.selectByJid(announcementJid).get();
         toModel(contestJid, data, model);
         return fromModel(announcementDao.update(model));
+    }
+
+    public void importDump(String contestJid, ContestAnnouncementDump contestAnnouncementDump) {
+        if (contestAnnouncementDump.getJid().isPresent()
+                && announcementDao.selectByJid(contestAnnouncementDump.getJid().get()).isPresent()) {
+            throw ContestErrors.jidAlreadyExists(contestAnnouncementDump.getJid().get());
+        }
+
+        ContestAnnouncementModel contestAnnouncementModel = new ContestAnnouncementModel();
+        contestAnnouncementModel.contestJid = contestJid;
+        contestAnnouncementModel.title = contestAnnouncementDump.getTitle();
+        contestAnnouncementModel.content = contestAnnouncementDump.getContent();
+        contestAnnouncementModel.status = contestAnnouncementDump.getStatus().name();
+        announcementDao.setModelMetadataFromDump(contestAnnouncementModel, contestAnnouncementDump);
+        announcementDao.persist(contestAnnouncementModel);
+    }
+
+    public Set<ContestAnnouncementDump> exportDumps(String contestJid) {
+        return announcementDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
+                .map(contestAnnouncementModel -> new ContestAnnouncementDump.Builder()
+                        .mode(DumpImportMode.RESTORE)
+                        .title(contestAnnouncementModel.title)
+                        .content(contestAnnouncementModel.content)
+                        .status(ContestAnnouncementStatus.valueOf(contestAnnouncementModel.status))
+                        .jid(contestAnnouncementModel.jid)
+                        .createdAt(contestAnnouncementModel.createdAt)
+                        .createdBy(Optional.ofNullable(contestAnnouncementModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestAnnouncementModel.createdIp))
+                        .updatedAt(contestAnnouncementModel.updatedAt)
+                        .updatedBy(Optional.ofNullable(contestAnnouncementModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestAnnouncementModel.updatedIp))
+                        .build())
+                .collect(Collectors.toSet());
     }
 
     private static ContestAnnouncement fromModel(ContestAnnouncementModel model) {

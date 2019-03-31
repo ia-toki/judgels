@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
+import judgels.uriel.api.dump.ContestProblemDump;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
 
@@ -110,6 +112,37 @@ public class ContestProblemStore {
         return problemJids
                 .stream()
                 .collect(Collectors.toMap(jid -> jid, problemAliases::get));
+    }
+
+    public void importDump(String contestJid, ContestProblemDump contestProblemDump) {
+        ContestProblemModel contestProblemModel = new ContestProblemModel();
+        contestProblemModel.contestJid = contestJid;
+        contestProblemModel.alias = contestProblemDump.getAlias();
+        contestProblemModel.problemJid = contestProblemDump.getProblemJid();
+        contestProblemModel.status = contestProblemDump.getStatus().name();
+        contestProblemModel.submissionsLimit = contestProblemDump.getSubmissionsLimit();
+        contestProblemModel.points = contestProblemDump.getPoints().orElse(0);
+        problemDao.setModelMetadataFromDump(contestProblemModel, contestProblemDump);
+        problemDao.persist(contestProblemModel);
+    }
+
+    public Set<ContestProblemDump> exportDumps(String contestJid) {
+        return problemDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
+                .map(contestProblemModel -> new ContestProblemDump.Builder()
+                        .mode(DumpImportMode.RESTORE)
+                        .alias(contestProblemModel.alias)
+                        .problemJid(contestProblemModel.problemJid)
+                        .status(ContestProblemStatus.valueOf(contestProblemModel.status))
+                        .submissionsLimit(contestProblemModel.submissionsLimit)
+                        .points(contestProblemModel.points)
+                        .createdAt(contestProblemModel.createdAt)
+                        .createdBy(Optional.ofNullable(contestProblemModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestProblemModel.createdIp))
+                        .updatedAt(contestProblemModel.updatedAt)
+                        .updatedBy(Optional.ofNullable(contestProblemModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestProblemModel.updatedIp))
+                        .build())
+                .collect(Collectors.toSet());
     }
 
     private static SelectionOptions createOptions() {

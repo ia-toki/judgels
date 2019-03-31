@@ -26,6 +26,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.module.BundleStyleModuleConfig;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
@@ -35,9 +37,12 @@ import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.GcjStyleModuleConfig;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
+import judgels.uriel.api.contest.module.ModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
+import judgels.uriel.api.dump.ContestModuleDump;
+import judgels.uriel.api.dump.ContestStyleDump;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
 import judgels.uriel.persistence.ContestStyleDao;
@@ -256,6 +261,126 @@ public class ContestModuleStore {
 
     public Optional<VirtualModuleConfig> getVirtualModuleConfig(String contestJid) {
         return getModuleConfig(contestJid, VIRTUAL, VirtualModuleConfig.class);
+    }
+
+    public void importStyleDump(String contestJid, ContestStyleDump contestStyleDump) {
+        String configString;
+        try {
+            StyleModuleConfig config = contestStyleDump.getConfig();
+            configString = mapper.writeValueAsString(config);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        ContestStyleModel contestStyleModel = new ContestStyleModel();
+        contestStyleModel.contestJid = contestJid;
+        contestStyleModel.config = configString;
+        styleDao.setModelMetadataFromDump(contestStyleModel, contestStyleDump);
+        styleDao.persist(contestStyleModel);
+    }
+
+    public void importModuleDump(String contestJid, ContestModuleDump contestModuleDump) {
+        String configString;
+        try {
+            ModuleConfig config = contestModuleDump.getConfig();
+            configString = mapper.writeValueAsString(config == null ? ImmutableMap.of() : config);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        ContestModuleModel contestModuleModel = new ContestModuleModel();
+        contestModuleModel.contestJid = contestJid;
+        contestModuleModel.name = contestModuleDump.getName().name();
+        contestModuleModel.enabled = contestModuleDump.getEnabled();
+        contestModuleModel.config = configString;
+        moduleDao.setModelMetadataFromDump(contestModuleModel, contestModuleDump);
+        moduleDao.persist(contestModuleModel);
+        moduleCache.invalidate(contestJid + SEPARATOR + contestModuleDump.getName().name());
+    }
+
+    public ContestStyleDump exportStyleDump(String contestJid, ContestStyle contestStyle) {
+        Class<? extends StyleModuleConfig> styleModuleConfigClass;
+        if (contestStyle == ContestStyle.IOI) {
+            styleModuleConfigClass = IoiStyleModuleConfig.class;
+        } else if (contestStyle == ContestStyle.ICPC) {
+            styleModuleConfigClass = IcpcStyleModuleConfig.class;
+        } else if (contestStyle == ContestStyle.GCJ) {
+            styleModuleConfigClass = GcjStyleModuleConfig.class;
+        } else if (contestStyle == ContestStyle.BUNDLE) {
+            styleModuleConfigClass = BundleStyleModuleConfig.class;
+        } else {
+            throw new IllegalArgumentException();
+        }
+
+        ContestStyleModel contestStyleModel = styleDao.selectByContestJid(contestJid).get();
+        try {
+            return new ContestStyleDump.Builder()
+                    .mode(DumpImportMode.RESTORE)
+                    .name(contestStyle)
+                    .config(mapper.readValue(contestStyleModel.config, styleModuleConfigClass))
+                    .createdAt(contestStyleModel.createdAt)
+                    .createdBy(Optional.ofNullable(contestStyleModel.createdBy))
+                    .createdIp(Optional.ofNullable(contestStyleModel.createdIp))
+                    .updatedAt(contestStyleModel.updatedAt)
+                    .updatedBy(Optional.ofNullable(contestStyleModel.updatedBy))
+                    .updatedIp(Optional.ofNullable(contestStyleModel.updatedIp))
+                    .build();
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    String.format(
+                            "Failed to parse style config JSON in contest %s:\n%s", contestJid, contestStyleModel.config
+                    ),
+                    e
+            );
+        }
+    }
+
+    public Set<ContestModuleDump> exportModuleDumps(String contestJid) {
+        return moduleDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
+                .map(contestModuleModel -> {
+                    ContestModuleType moduleType = ContestModuleType.valueOf(contestModuleModel.name);
+                    ModuleConfig moduleConfig;
+                    Class<? extends ModuleConfig> moduleConfigClass;
+                    try {
+                        if (moduleType == ContestModuleType.SCOREBOARD) {
+                            moduleConfig = mapper.readValue(
+                                    contestModuleModel.config, ScoreboardModuleConfig.class);
+                        } else if (moduleType == ContestModuleType.CLARIFICATION_TIME_LIMIT) {
+                            moduleConfig = mapper.readValue(
+                                    contestModuleModel.config, ClarificationTimeLimitModuleConfig.class);
+                        } else if (moduleType == ContestModuleType.FROZEN_SCOREBOARD) {
+                            moduleConfig = mapper.readValue(
+                                    contestModuleModel.config, FrozenScoreboardModuleConfig.class);
+                        } else if (moduleType == ContestModuleType.VIRTUAL) {
+                            moduleConfig = mapper.readValue(
+                                    contestModuleModel.config, VirtualModuleConfig.class);
+                        } else {
+                            moduleConfig = null;
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(
+                                String.format(
+                                        "Failed to parse module config JSON in contest %s:\n%s",
+                                        contestJid, contestModuleModel.config
+                                ),
+                                e
+                        );
+                    }
+
+                    return new ContestModuleDump.Builder()
+                            .mode(DumpImportMode.RESTORE)
+                            .name(ContestModuleType.valueOf(contestModuleModel.name))
+                            .enabled(contestModuleModel.enabled)
+                            .config(moduleConfig)
+                            .createdAt(contestModuleModel.createdAt)
+                            .createdBy(Optional.ofNullable(contestModuleModel.createdBy))
+                            .createdIp(Optional.ofNullable(contestModuleModel.createdIp))
+                            .updatedAt(contestModuleModel.updatedAt)
+                            .updatedBy(Optional.ofNullable(contestModuleModel.updatedBy))
+                            .updatedIp(Optional.ofNullable(contestModuleModel.updatedIp))
+                            .build();
+                })
+                .collect(Collectors.toSet());
     }
 
     private void upsertModule(String contestJid, ContestModuleType type, Object config) {

@@ -19,6 +19,7 @@ import judgels.persistence.SearchOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestDescription;
@@ -26,6 +27,14 @@ import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.ContestUpdateData;
+import judgels.uriel.api.dump.ContestDump;
+import judgels.uriel.contest.announcement.ContestAnnouncementStore;
+import judgels.uriel.contest.clarification.ContestClarificationStore;
+import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.contest.manager.ContestManagerStore;
+import judgels.uriel.contest.module.ContestModuleStore;
+import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
@@ -35,13 +44,38 @@ public class ContestStore {
     private final AdminRoleDao adminRoleDao;
     private final ContestDao contestDao;
 
+    private final ContestModuleStore contestModuleStore;
+    private final ContestProblemStore contestProblemStore;
+    private final ContestContestantStore contestContestantStore;
+    private final ContestSupervisorStore contestSupervisorStore;
+    private final ContestManagerStore contestManagerStore;
+    private final ContestAnnouncementStore contestAnnouncementStore;
+    private final ContestClarificationStore contestClarificationStore;
+
     private final LoadingCache<String, Contest> contestByJidCache;
     private final LoadingCache<String, Contest> contestBySlugCache;
 
     @Inject
-    public ContestStore(AdminRoleDao adminRoleDao, ContestDao contestDao) {
+    public ContestStore(
+            AdminRoleDao adminRoleDao,
+            ContestDao contestDao,
+            ContestModuleStore contestModuleStore,
+            ContestProblemStore contestProblemStore,
+            ContestContestantStore contestContestantStore,
+            ContestSupervisorStore contestSupervisorStore,
+            ContestManagerStore contestManagerStore,
+            ContestAnnouncementStore contestAnnouncementStore,
+            ContestClarificationStore contestClarificationStore) {
+
         this.adminRoleDao = adminRoleDao;
         this.contestDao = contestDao;
+        this.contestModuleStore = contestModuleStore;
+        this.contestProblemStore = contestProblemStore;
+        this.contestContestantStore = contestContestantStore;
+        this.contestSupervisorStore = contestSupervisorStore;
+        this.contestManagerStore = contestManagerStore;
+        this.contestAnnouncementStore = contestAnnouncementStore;
+        this.contestClarificationStore = contestClarificationStore;
 
         this.contestByJidCache = Caffeine.newBuilder()
                 .maximumSize(100)
@@ -176,9 +210,65 @@ public class ContestStore {
         });
     }
 
-    public void invalidateCache(String jid, String slug) {
-        contestByJidCache.invalidate(jid);
-        contestBySlugCache.invalidate(slug);
+    public void importDump(ContestDump contestDump) {
+        if (contestDump.getJid().isPresent() && contestDao.selectByJid(contestDump.getJid().get()).isPresent()) {
+            throw ContestErrors.jidAlreadyExists(contestDump.getJid().get());
+        }
+        if (contestDao.selectBySlug(contestDump.getSlug()).isPresent()) {
+            throw ContestErrors.slugAlreadyExists(contestDump.getSlug());
+        }
+
+        ContestModel contestModel = new ContestModel();
+        contestModel.slug = contestDump.getSlug();
+        contestModel.name = contestDump.getName();
+        contestModel.style = contestDump.getStyle().getName().name();
+        contestModel.beginTime = contestDump.getBeginTime();
+        contestModel.duration = contestDump.getDuration().toMillis();
+        contestModel.description = contestDump.getDescription();
+        contestDao.setModelMetadataFromDump(contestModel, contestDump);
+        contestModel = contestDao.persist(contestModel);
+        contestByJidCache.invalidate(contestModel.jid);
+        contestBySlugCache.invalidate(contestModel.slug);
+
+        String contestJid = contestModel.jid;
+        contestModuleStore.importStyleDump(contestJid, contestDump.getStyle());
+
+        contestDump.getModules().forEach(dump -> contestModuleStore.importModuleDump(contestJid, dump));
+        contestDump.getProblems().forEach(dump -> contestProblemStore.importDump(contestJid, dump));
+        contestDump.getContestants().forEach(dump -> contestContestantStore.importDump(contestJid, dump));
+        contestDump.getSupervisors().forEach(dump -> contestSupervisorStore.importDump(contestJid, dump));
+        contestDump.getManagers().forEach(dump -> contestManagerStore.importDump(contestJid, dump));
+        contestDump.getAnnouncements().forEach(dump -> contestAnnouncementStore.importDump(contestJid, dump));
+        contestDump.getClarifications().forEach(dump -> contestClarificationStore.importDump(contestJid, dump));
+    }
+
+    public Set<ContestDump> exportDumps() {
+        return contestDao.selectAll(SelectionOptions.DEFAULT_ALL).stream()
+                .map(contestModel -> new ContestDump.Builder()
+                        .mode(DumpImportMode.RESTORE)
+                        .slug(contestModel.slug)
+                        .name(contestModel.name)
+                        .beginTime(contestModel.beginTime)
+                        .duration(Duration.ofMillis(contestModel.duration))
+                        .description(contestModel.description)
+                        .style(contestModuleStore.exportStyleDump(
+                                contestModel.jid, ContestStyle.valueOf(contestModel.style)))
+                        .modules(contestModuleStore.exportModuleDumps(contestModel.jid))
+                        .problems(contestProblemStore.exportDumps(contestModel.jid))
+                        .contestants(contestContestantStore.exportDumps(contestModel.jid))
+                        .supervisors(contestSupervisorStore.exportDumps(contestModel.jid))
+                        .managers(contestManagerStore.exportDumps(contestModel.jid))
+                        .announcements(contestAnnouncementStore.exportDumps(contestModel.jid))
+                        .clarifications(contestClarificationStore.exportDumps(contestModel.jid))
+                        .jid(contestModel.jid)
+                        .createdAt(contestModel.createdAt)
+                        .createdBy(Optional.ofNullable(contestModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestModel.createdIp))
+                        .updatedAt(contestModel.updatedAt)
+                        .updatedBy(Optional.ofNullable(contestModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestModel.updatedIp))
+                        .build())
+                .collect(Collectors.toSet());
     }
 
     private static Contest fromModel(ContestModel model) {
