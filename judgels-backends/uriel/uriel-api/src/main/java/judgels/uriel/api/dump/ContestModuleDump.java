@@ -30,11 +30,10 @@ public abstract class ContestModuleDump implements Dump {
             defaultImpl = NoClass.class
     )
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = ImmutableScoreboardModuleConfig.class, name = "SCOREBOARD"),
-            @JsonSubTypes.Type(value = ImmutableClarificationTimeLimitModuleConfig.class,
-                    name = "CLARIFICATION_TIME_LIMIT"),
-            @JsonSubTypes.Type(value = ImmutableFrozenScoreboardModuleConfig.class, name = "FROZEN_SCOREBOARD"),
-            @JsonSubTypes.Type(value = ImmutableVirtualModuleConfig.class, name = "VIRTUAL")
+            @JsonSubTypes.Type(value = ImmutableScoreboardModuleConfig.class),
+            @JsonSubTypes.Type(value = ImmutableClarificationTimeLimitModuleConfig.class),
+            @JsonSubTypes.Type(value = ImmutableFrozenScoreboardModuleConfig.class),
+            @JsonSubTypes.Type(value = ImmutableVirtualModuleConfig.class)
     })
     public ModuleConfig getConfig() {
         return null;

@@ -21,10 +21,10 @@ public interface Item {
             visible = true
     )
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = ImmutableStatementItemConfig.class, name = "STATEMENT"),
-            @JsonSubTypes.Type(value = ImmutableMultipleChoiceItemConfig.class, name = "MULTIPLE_CHOICE"),
-            @JsonSubTypes.Type(value = ImmutableShortAnswerItemConfig.class, name = "SHORT_ANSWER"),
-            @JsonSubTypes.Type(value = ImmutableEssayItemConfig.class, name = "ESSAY")
+            @JsonSubTypes.Type(value = ImmutableStatementItemConfig.class),
+            @JsonSubTypes.Type(value = ImmutableMultipleChoiceItemConfig.class),
+            @JsonSubTypes.Type(value = ImmutableShortAnswerItemConfig.class),
+            @JsonSubTypes.Type(value = ImmutableEssayItemConfig.class)
     })
     ItemConfig getConfig();
 

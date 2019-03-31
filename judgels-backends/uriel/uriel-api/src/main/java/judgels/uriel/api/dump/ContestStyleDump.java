@@ -24,10 +24,10 @@ public interface ContestStyleDump extends Dump {
             visible = true
     )
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = ImmutableIoiStyleModuleConfig.class, name = "IOI"),
-            @JsonSubTypes.Type(value = ImmutableIcpcStyleModuleConfig.class, name = "ICPC"),
-            @JsonSubTypes.Type(value = ImmutableGcjStyleModuleConfig.class, name = "GCJ"),
-            @JsonSubTypes.Type(value = ImmutableBundleStyleModuleConfig.class, name = "BUNDLE")
+            @JsonSubTypes.Type(value = ImmutableIoiStyleModuleConfig.class),
+            @JsonSubTypes.Type(value = ImmutableIcpcStyleModuleConfig.class),
+            @JsonSubTypes.Type(value = ImmutableGcjStyleModuleConfig.class),
+            @JsonSubTypes.Type(value = ImmutableBundleStyleModuleConfig.class)
     })
     StyleModuleConfig getConfig();
 
