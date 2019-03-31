@@ -23,17 +23,25 @@ logging:
 
 sealtiel:
   clients:
+{% if sealtiel_sandalphon_secret is defined %}
     - jid: JIDSECL-sandalphon
       secret: {{ sealtiel_sandalphon_secret }}
+{% endif %}
 
+{% if sealtiel_uriel_secret is defined %}
     - jid: JIDSECL-uriel
       secret: {{ sealtiel_uriel_secret }}
+{% endif %}
 
+{% if sealtiel_jerahmeel_secret is defined %}
     - jid: JIDSECL-jerahmeel
       secret: {{ sealtiel_jerahmeel_secret }}
+{% endif %}
 
+{% if sealtiel_gabriel_secret is defined %}
     - jid: JIDSECL-gabriel
       secret: {{ sealtiel_gabriel_secret }}
+{% endif %}
 
   rabbitmq:
     host: localhost

@@ -46,9 +46,15 @@ sandalphon {
     baseDataDir = "/judgels/sandalphon/var/data"
 
     clients = [
+{% if sandalphon_uriel_secret is defined %}
         "JIDSACL-uriel:{{ sandalphon_uriel_secret }}"
+{% endif %}
+{% if sandalphon_jerahmeel_secret is defined %}
         "JIDSACL-jerahmeel:{{ sandalphon_jerahmeel_secret }}"
+{% endif %}
+{% if sandalphon_gabriel_secret is defined %}
         "JIDSACL-gabriel:{{ sandalphon_gabriel_secret }}"
+{% endif %}
     ]
 }
 
@@ -56,11 +62,13 @@ jophiel {
     baseUrl = "{{ judgels_scheme }}://{{ jophiel_url }}"
 }
 
+{% if sealtiel_url_internal is defined %}
 sealtiel {
     baseUrl = "{{ judgels_scheme_internal }}://{{ sealtiel_url_internal }}"
     clientJid = "JIDSECL-sandalphon"
     clientSecret = "{{ sealtiel_sandalphon_secret }}"
 }
+{% endif %}
 
 gabriel {
     clientJid = "JIDSECL-gabriel"
