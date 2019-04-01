@@ -1,4 +1,4 @@
-package judgels.uriel.api.dump;
+package judgels.uriel.api.contest.dump;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import judgels.persistence.api.dump.JudgelsDump;

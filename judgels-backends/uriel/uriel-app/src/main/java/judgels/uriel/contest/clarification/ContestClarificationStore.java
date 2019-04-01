@@ -12,7 +12,7 @@ import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.clarification.ContestClarification;
 import judgels.uriel.api.contest.clarification.ContestClarificationData;
 import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
-import judgels.uriel.api.dump.ContestClarificationDump;
+import judgels.uriel.api.contest.dump.ContestClarificationDump;
 import judgels.uriel.persistence.ContestClarificationDao;
 import judgels.uriel.persistence.ContestClarificationModel;
 
@@ -80,23 +80,30 @@ public class ContestClarificationStore {
         clarificationDao.persist(contestClarificationModel);
     }
 
-    public Set<ContestClarificationDump> exportDumps(String contestJid) {
+    public Set<ContestClarificationDump> exportDumps(String contestJid, DumpImportMode mode) {
         return clarificationDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestClarificationModel -> new ContestClarificationDump.Builder()
-                        .mode(DumpImportMode.RESTORE)
-                        .topicJid(contestClarificationModel.topicJid)
-                        .title(contestClarificationModel.title)
-                        .question(contestClarificationModel.question)
-                        .answer(Optional.ofNullable(contestClarificationModel.answer))
-                        .title(contestClarificationModel.title)
-                        .jid(contestClarificationModel.jid)
-                        .createdAt(contestClarificationModel.createdAt)
-                        .createdBy(Optional.ofNullable(contestClarificationModel.createdBy))
-                        .createdIp(Optional.ofNullable(contestClarificationModel.createdIp))
-                        .updatedAt(contestClarificationModel.updatedAt)
-                        .updatedBy(Optional.ofNullable(contestClarificationModel.updatedBy))
-                        .updatedIp(Optional.ofNullable(contestClarificationModel.updatedIp))
-                        .build())
+                .map(contestClarificationModel -> {
+                    ContestClarificationDump.Builder builder = new ContestClarificationDump.Builder()
+                            .mode(mode)
+                            .topicJid(contestClarificationModel.topicJid)
+                            .title(contestClarificationModel.title)
+                            .question(contestClarificationModel.question)
+                            .answer(Optional.ofNullable(contestClarificationModel.answer))
+                            .title(contestClarificationModel.title);
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder = builder
+                                .jid(contestClarificationModel.jid)
+                                .createdAt(contestClarificationModel.createdAt)
+                                .createdBy(Optional.ofNullable(contestClarificationModel.createdBy))
+                                .createdIp(Optional.ofNullable(contestClarificationModel.createdIp))
+                                .updatedAt(contestClarificationModel.updatedAt)
+                                .updatedBy(Optional.ofNullable(contestClarificationModel.updatedBy))
+                                .updatedIp(Optional.ofNullable(contestClarificationModel.updatedIp));
+                    }
+
+                    return builder.build();
+                })
                 .collect(Collectors.toSet());
     }
 

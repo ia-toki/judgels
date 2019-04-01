@@ -29,6 +29,8 @@ import javax.inject.Singleton;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.dump.ContestModuleDump;
+import judgels.uriel.api.contest.dump.ContestStyleDump;
 import judgels.uriel.api.contest.module.BundleStyleModuleConfig;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.uriel.api.contest.module.ContestModuleType;
@@ -41,8 +43,6 @@ import judgels.uriel.api.contest.module.ModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
-import judgels.uriel.api.dump.ContestModuleDump;
-import judgels.uriel.api.dump.ContestStyleDump;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
 import judgels.uriel.persistence.ContestStyleDao;
@@ -298,7 +298,7 @@ public class ContestModuleStore {
         moduleCache.invalidate(contestJid + SEPARATOR + contestModuleDump.getName().name());
     }
 
-    public ContestStyleDump exportStyleDump(String contestJid, ContestStyle contestStyle) {
+    public ContestStyleDump exportStyleDump(String contestJid, DumpImportMode mode, ContestStyle contestStyle) {
         Class<? extends StyleModuleConfig> styleModuleConfigClass;
         if (contestStyle == ContestStyle.IOI) {
             styleModuleConfigClass = IoiStyleModuleConfig.class;
@@ -314,17 +314,22 @@ public class ContestModuleStore {
 
         ContestStyleModel contestStyleModel = styleDao.selectByContestJid(contestJid).get();
         try {
-            return new ContestStyleDump.Builder()
-                    .mode(DumpImportMode.RESTORE)
+            ContestStyleDump.Builder builder = new ContestStyleDump.Builder()
+                    .mode(mode)
                     .name(contestStyle)
-                    .config(mapper.readValue(contestStyleModel.config, styleModuleConfigClass))
-                    .createdAt(contestStyleModel.createdAt)
-                    .createdBy(Optional.ofNullable(contestStyleModel.createdBy))
-                    .createdIp(Optional.ofNullable(contestStyleModel.createdIp))
-                    .updatedAt(contestStyleModel.updatedAt)
-                    .updatedBy(Optional.ofNullable(contestStyleModel.updatedBy))
-                    .updatedIp(Optional.ofNullable(contestStyleModel.updatedIp))
-                    .build();
+                    .config(mapper.readValue(contestStyleModel.config, styleModuleConfigClass));
+
+            if (mode == DumpImportMode.RESTORE) {
+                builder = builder
+                        .createdAt(contestStyleModel.createdAt)
+                        .createdBy(Optional.ofNullable(contestStyleModel.createdBy))
+                        .createdIp(Optional.ofNullable(contestStyleModel.createdIp))
+                        .updatedAt(contestStyleModel.updatedAt)
+                        .updatedBy(Optional.ofNullable(contestStyleModel.updatedBy))
+                        .updatedIp(Optional.ofNullable(contestStyleModel.updatedIp));
+            }
+
+            return builder.build();
         } catch (IOException e) {
             throw new RuntimeException(
                     String.format(
@@ -335,7 +340,7 @@ public class ContestModuleStore {
         }
     }
 
-    public Set<ContestModuleDump> exportModuleDumps(String contestJid) {
+    public Set<ContestModuleDump> exportModuleDumps(String contestJid, DumpImportMode mode) {
         return moduleDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestModuleModel -> {
                     ContestModuleType moduleType = ContestModuleType.valueOf(contestModuleModel.name);
@@ -367,18 +372,23 @@ public class ContestModuleStore {
                         );
                     }
 
-                    return new ContestModuleDump.Builder()
-                            .mode(DumpImportMode.RESTORE)
+                    ContestModuleDump.Builder builder = new ContestModuleDump.Builder()
+                            .mode(mode)
                             .name(ContestModuleType.valueOf(contestModuleModel.name))
                             .enabled(contestModuleModel.enabled)
-                            .config(moduleConfig)
-                            .createdAt(contestModuleModel.createdAt)
-                            .createdBy(Optional.ofNullable(contestModuleModel.createdBy))
-                            .createdIp(Optional.ofNullable(contestModuleModel.createdIp))
-                            .updatedAt(contestModuleModel.updatedAt)
-                            .updatedBy(Optional.ofNullable(contestModuleModel.updatedBy))
-                            .updatedIp(Optional.ofNullable(contestModuleModel.updatedIp))
-                            .build();
+                            .config(moduleConfig);
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder = builder
+                                .createdAt(contestModuleModel.createdAt)
+                                .createdBy(Optional.ofNullable(contestModuleModel.createdBy))
+                                .createdIp(Optional.ofNullable(contestModuleModel.createdIp))
+                                .updatedAt(contestModuleModel.updatedAt)
+                                .updatedBy(Optional.ofNullable(contestModuleModel.updatedBy))
+                                .updatedIp(Optional.ofNullable(contestModuleModel.updatedIp));
+                    }
+
+                    return builder.build();
                 })
                 .collect(Collectors.toSet());
     }

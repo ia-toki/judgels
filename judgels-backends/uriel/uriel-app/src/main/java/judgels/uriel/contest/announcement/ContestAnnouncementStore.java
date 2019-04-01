@@ -12,7 +12,7 @@ import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementData;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
-import judgels.uriel.api.dump.ContestAnnouncementDump;
+import judgels.uriel.api.contest.dump.ContestAnnouncementDump;
 import judgels.uriel.persistence.ContestAnnouncementDao;
 import judgels.uriel.persistence.ContestAnnouncementModel;
 
@@ -70,21 +70,28 @@ public class ContestAnnouncementStore {
         announcementDao.persist(contestAnnouncementModel);
     }
 
-    public Set<ContestAnnouncementDump> exportDumps(String contestJid) {
+    public Set<ContestAnnouncementDump> exportDumps(String contestJid, DumpImportMode mode) {
         return announcementDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestAnnouncementModel -> new ContestAnnouncementDump.Builder()
-                        .mode(DumpImportMode.RESTORE)
-                        .title(contestAnnouncementModel.title)
-                        .content(contestAnnouncementModel.content)
-                        .status(ContestAnnouncementStatus.valueOf(contestAnnouncementModel.status))
-                        .jid(contestAnnouncementModel.jid)
-                        .createdAt(contestAnnouncementModel.createdAt)
-                        .createdBy(Optional.ofNullable(contestAnnouncementModel.createdBy))
-                        .createdIp(Optional.ofNullable(contestAnnouncementModel.createdIp))
-                        .updatedAt(contestAnnouncementModel.updatedAt)
-                        .updatedBy(Optional.ofNullable(contestAnnouncementModel.updatedBy))
-                        .updatedIp(Optional.ofNullable(contestAnnouncementModel.updatedIp))
-                        .build())
+                .map(contestAnnouncementModel -> {
+                    ContestAnnouncementDump.Builder builder = new ContestAnnouncementDump.Builder()
+                            .mode(mode)
+                            .title(contestAnnouncementModel.title)
+                            .content(contestAnnouncementModel.content)
+                            .status(ContestAnnouncementStatus.valueOf(contestAnnouncementModel.status));
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder = builder
+                                .jid(contestAnnouncementModel.jid)
+                                .createdAt(contestAnnouncementModel.createdAt)
+                                .createdBy(Optional.ofNullable(contestAnnouncementModel.createdBy))
+                                .createdIp(Optional.ofNullable(contestAnnouncementModel.createdIp))
+                                .updatedAt(contestAnnouncementModel.updatedAt)
+                                .updatedBy(Optional.ofNullable(contestAnnouncementModel.updatedBy))
+                                .updatedIp(Optional.ofNullable(contestAnnouncementModel.updatedIp));
+                    }
+
+                    return builder.build();
+                })
                 .collect(Collectors.toSet());
     }
 

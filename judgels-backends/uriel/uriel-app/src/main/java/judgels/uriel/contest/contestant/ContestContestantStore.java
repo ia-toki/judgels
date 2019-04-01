@@ -18,7 +18,7 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantStatus;
-import judgels.uriel.api.dump.ContestContestantDump;
+import judgels.uriel.api.contest.dump.ContestContestantDump;
 import judgels.uriel.persistence.ContestContestantDao;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestRoleDao;
@@ -137,20 +137,27 @@ public class ContestContestantStore {
         roleDao.invalidateCaches(contestContestantModel.userJid, contestJid);
     }
 
-    public Set<ContestContestantDump> exportDumps(String contestJid) {
+    public Set<ContestContestantDump> exportDumps(String contestJid, DumpImportMode mode) {
         return contestantDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestContestantModel -> new ContestContestantDump.Builder()
-                        .mode(DumpImportMode.RESTORE)
-                        .userJid(contestContestantModel.userJid)
-                        .status(ContestContestantStatus.valueOf(contestContestantModel.status))
-                        .contestStartTime(contestContestantModel.contestStartTime)
-                        .createdAt(contestContestantModel.createdAt)
-                        .createdBy(Optional.ofNullable(contestContestantModel.createdBy))
-                        .createdIp(Optional.ofNullable(contestContestantModel.createdIp))
-                        .updatedAt(contestContestantModel.updatedAt)
-                        .updatedBy(Optional.ofNullable(contestContestantModel.updatedBy))
-                        .updatedIp(Optional.ofNullable(contestContestantModel.updatedIp))
-                        .build())
+                .map(contestContestantModel -> {
+                    ContestContestantDump.Builder builder =  new ContestContestantDump.Builder()
+                            .mode(mode)
+                            .userJid(contestContestantModel.userJid)
+                            .status(ContestContestantStatus.valueOf(contestContestantModel.status))
+                            .contestStartTime(Optional.ofNullable(contestContestantModel.contestStartTime));
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder = builder
+                                .createdAt(contestContestantModel.createdAt)
+                                .createdBy(Optional.ofNullable(contestContestantModel.createdBy))
+                                .createdIp(Optional.ofNullable(contestContestantModel.createdIp))
+                                .updatedAt(contestContestantModel.updatedAt)
+                                .updatedBy(Optional.ofNullable(contestContestantModel.updatedBy))
+                                .updatedIp(Optional.ofNullable(contestContestantModel.updatedIp));
+                    }
+
+                    return builder.build();
+                })
                 .collect(Collectors.toSet());
     }
 

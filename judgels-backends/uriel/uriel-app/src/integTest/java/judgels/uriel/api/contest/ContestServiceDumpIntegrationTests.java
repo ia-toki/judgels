@@ -1,10 +1,11 @@
-package judgels.uriel.api.dump;
+package judgels.uriel.api.contest;
 
 import static com.palantir.conjure.java.api.testing.Assertions.assertThatRemoteExceptionThrownBy;
+import static judgels.uriel.api.mocks.MockJophiel.ADMIN;
+import static judgels.uriel.api.mocks.MockJophiel.ADMIN_HEADER;
 import static judgels.uriel.api.mocks.MockJophiel.ADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.MANAGER_JID;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERADMIN_HEADER;
-import static judgels.uriel.api.mocks.MockJophiel.SUPERADMIN_JID;
 import static judgels.uriel.api.mocks.MockJophiel.SUPERVISOR_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_A_JID;
 import static judgels.uriel.api.mocks.MockJophiel.USER_B_JID;
@@ -24,11 +25,7 @@ import java.time.Instant;
 import java.util.Optional;
 import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.AbstractServiceIntegrationTests;
-import judgels.uriel.api.admin.Admin;
 import judgels.uriel.api.admin.AdminService;
-import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestService;
-import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.announcement.ContestAnnouncement;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementService;
 import judgels.uriel.api.contest.announcement.ContestAnnouncementStatus;
@@ -38,6 +35,18 @@ import judgels.uriel.api.contest.clarification.ContestClarificationStatus;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.contestant.ContestContestantService;
 import judgels.uriel.api.contest.contestant.ContestContestantStatus;
+import judgels.uriel.api.contest.dump.ContestAnnouncementDump;
+import judgels.uriel.api.contest.dump.ContestClarificationDump;
+import judgels.uriel.api.contest.dump.ContestContestantDump;
+import judgels.uriel.api.contest.dump.ContestDump;
+import judgels.uriel.api.contest.dump.ContestDumpComponent;
+import judgels.uriel.api.contest.dump.ContestManagerDump;
+import judgels.uriel.api.contest.dump.ContestModuleDump;
+import judgels.uriel.api.contest.dump.ContestProblemDump;
+import judgels.uriel.api.contest.dump.ContestStyleDump;
+import judgels.uriel.api.contest.dump.ContestSupervisorDump;
+import judgels.uriel.api.contest.dump.ContestsDump;
+import judgels.uriel.api.contest.dump.ExportContestsDumpData;
 import judgels.uriel.api.contest.manager.ContestManager;
 import judgels.uriel.api.contest.manager.ContestManagerService;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
@@ -54,13 +63,13 @@ import judgels.uriel.api.contest.supervisor.ContestSupervisorService;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests  {
+public class ContestServiceDumpIntegrationTests extends AbstractServiceIntegrationTests  {
     private static WireMockServer mockJophiel;
     private static WireMockServer mockSandalphon;
 
-    private DumpService dumpService = createService(DumpService.class);
     private AdminService adminService = createService(AdminService.class);
     private ContestService contestService = createService(ContestService.class);
     private ContestModuleService contestModuleService = createService(ContestModuleService.class);
@@ -71,16 +80,7 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
     private ContestAnnouncementService contestAnnouncementService = createService(ContestAnnouncementService.class);
     private ContestClarificationService contestClarificationService = createService(ContestClarificationService.class);
 
-    private UrielDump testDump = new UrielDump.Builder()
-            .addAdmins(new AdminRoleDump.Builder()
-                    .mode(DumpImportMode.RESTORE)
-                    .userJid(SUPERADMIN_JID) // Also add our JID as Uriel admin to enable many Uriel admin features
-                    .createdAt(Instant.ofEpochSecond(42))
-                    .build())
-            .addAdmins(new AdminRoleDump.Builder()
-                    .mode(DumpImportMode.CREATE)
-                    .userJid("admin2Jid")
-                    .build())
+    private ContestsDump testImportDump = new ContestsDump.Builder()
             .addContests(new ContestDump.Builder()
                     .mode(DumpImportMode.RESTORE)
                     .slug("test-ioi")
@@ -89,11 +89,11 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                     .duration(Duration.ofHours(5))
                     .description("This is a test IOI contest")
                     .jid("JIDCONTtest-ioi")
-                    .createdBy(SUPERADMIN_JID)
-                    .createdIp("superadminIp")
+                    .createdBy(ADMIN_JID)
+                    .createdIp("ADMINIp")
                     .createdAt(Instant.ofEpochSecond(55))
-                    .updatedBy(SUPERADMIN_JID)
-                    .updatedIp("superadminIp")
+                    .updatedBy(ADMIN_JID)
+                    .updatedIp("ADMINIp")
                     .updatedAt(Instant.ofEpochSecond(77))
                     .style(new ContestStyleDump.Builder()
                             .mode(DumpImportMode.RESTORE)
@@ -101,19 +101,19 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                             .config(new IoiStyleModuleConfig.Builder()
                                     .usingLastAffectingPenalty(true)
                                     .build())
-                            .createdBy(SUPERADMIN_JID)
-                            .createdIp("superadminIp")
+                            .createdBy(ADMIN_JID)
+                            .createdIp("ADMINIp")
                             .createdAt(Instant.ofEpochSecond(55))
-                            .updatedBy(SUPERADMIN_JID)
-                            .updatedIp("superadminIp")
+                            .updatedBy(ADMIN_JID)
+                            .updatedIp("ADMINIp")
                             .updatedAt(Instant.ofEpochSecond(77))
                             .build())
                     .addModules(new ContestModuleDump.Builder()
                             .mode(DumpImportMode.RESTORE)
                             .name(ContestModuleType.REGISTRATION)
                             .enabled(false)
-                            .createdBy(SUPERADMIN_JID)
-                            .createdIp("superadminIp")
+                            .createdBy(ADMIN_JID)
+                            .createdIp("ADMINIp")
                             .createdAt(Instant.ofEpochSecond(56))
                             .updatedBy(MANAGER_JID)
                             .updatedIp("managerIp")
@@ -145,8 +145,8 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                             .status(ContestProblemStatus.OPEN)
                             .submissionsLimit(20)
                             .points(40)
-                            .createdBy(SUPERADMIN_JID)
-                            .createdIp("superadminIp")
+                            .createdBy(ADMIN_JID)
+                            .createdIp("ADMINIp")
                             .createdAt(Instant.ofEpochSecond(56))
                             .updatedBy(MANAGER_JID)
                             .updatedIp("managerIp")
@@ -165,8 +165,8 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                             .userJid(USER_A_JID)
                             .status(ContestContestantStatus.APPROVED)
                             .contestStartTime(Optional.empty())
-                            .createdBy(SUPERADMIN_JID)
-                            .createdIp("superadminIp")
+                            .createdBy(ADMIN_JID)
+                            .createdIp("ADMINIp")
                             .createdAt(Instant.ofEpochSecond(57))
                             .updatedBy(MANAGER_JID)
                             .updatedIp("managerIp")
@@ -189,8 +189,8 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                             .managementPermissions(ImmutableSet.of(
                                     SupervisorManagementPermission.CLARIFICATION,
                                     SupervisorManagementPermission.SCOREBOARD))
-                            .createdBy(SUPERADMIN_JID)
-                            .createdIp("superadminIp")
+                            .createdBy(ADMIN_JID)
+                            .createdIp("ADMINIp")
                             .createdAt(Instant.ofEpochSecond(56))
                             .updatedBy(MANAGER_JID)
                             .updatedIp("managerIp")
@@ -203,8 +203,8 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                     .addManagers(new ContestManagerDump.Builder()
                             .mode(DumpImportMode.RESTORE)
                             .userJid(ADMIN_JID)
-                            .createdBy(SUPERADMIN_JID)
-                            .createdIp("superadminIp")
+                            .createdBy(ADMIN_JID)
+                            .createdIp("ADMINIp")
                             .createdAt(Instant.ofEpochSecond(56))
                             .updatedBy(MANAGER_JID)
                             .updatedIp("managerIp")
@@ -223,7 +223,7 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                             .content("Test announcement 2 content")
                             .status(ContestAnnouncementStatus.PUBLISHED)
                             .createdBy(SUPERVISOR_JID)
-                            .createdIp("superadminIp")
+                            .createdIp("ADMINIp")
                             .createdAt(Instant.ofEpochSecond(56))
                             .updatedBy(MANAGER_JID)
                             .updatedIp("managerIp")
@@ -252,6 +252,142 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                     .build())
             .build();
 
+    private ExportContestsDumpData testExportDumpDataWithMismatchingContestJid = new ExportContestsDumpData.Builder()
+            .putContests("unknown-contest-jid", new ExportContestsDumpData.ContestDumpEntry.Builder()
+                    .mode(DumpImportMode.RESTORE)
+                    .addAllComponents(ImmutableSet.of(ContestDumpComponent.PROBLEMS, ContestDumpComponent.CONTESTANTS))
+                    .build())
+            .build();
+
+    private ExportContestsDumpData testExportDumpDataWithCreateMode = new ExportContestsDumpData.Builder()
+            .putContests("JIDCONTtest-ioi", new ExportContestsDumpData.ContestDumpEntry.Builder()
+                    .mode(DumpImportMode.CREATE)
+                    .addAllComponents(ImmutableSet.of(
+                            ContestDumpComponent.PROBLEMS,
+                            ContestDumpComponent.CONTESTANTS,
+                            ContestDumpComponent.SUPERVISORS,
+                            ContestDumpComponent.MANAGERS,
+                            ContestDumpComponent.ANNOUNCEMENTS,
+                            ContestDumpComponent.CLARIFICATIONS
+                    ))
+                    .build())
+            .build();
+
+    private ContestsDump testExportDumpWithCreateModeResult = new ContestsDump.Builder()
+            .addContests(new ContestDump.Builder()
+                    .mode(DumpImportMode.CREATE)
+                    .slug("test-ioi")
+                    .name("Test IOI Contest")
+                    .beginTime(Instant.ofEpochMilli(1553040000000L))
+                    .duration(Duration.ofHours(5))
+                    .description("This is a test IOI contest")
+                    .style(new ContestStyleDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .name(ContestStyle.IOI)
+                            .config(new IoiStyleModuleConfig.Builder()
+                                    .usingLastAffectingPenalty(true)
+                                    .build())
+                            .build())
+                    .addModules(new ContestModuleDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .name(ContestModuleType.REGISTRATION)
+                            .enabled(false)
+                            .build())
+                    .addModules(new ContestModuleDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .name(ContestModuleType.SCOREBOARD)
+                            .enabled(true)
+                            .config(ScoreboardModuleConfig.DEFAULT)
+                            .build())
+                    .addModules(new ContestModuleDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .name(ContestModuleType.CLARIFICATION_TIME_LIMIT)
+                            .enabled(true)
+                            .config(new ClarificationTimeLimitModuleConfig.Builder()
+                                    .clarificationDuration(Duration.ofHours(2))
+                                    .build())
+                            .build())
+                    .addModules(new ContestModuleDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .name(ContestModuleType.CLARIFICATION)
+                            .enabled(true)
+                            .build())
+                    .addProblems(new ContestProblemDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .alias("A")
+                            .problemJid(PROBLEM_1_JID)
+                            .status(ContestProblemStatus.OPEN)
+                            .submissionsLimit(20)
+                            .points(40)
+                            .build())
+                    .addProblems(new ContestProblemDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .alias("B")
+                            .problemJid(PROBLEM_2_JID)
+                            .status(ContestProblemStatus.CLOSED)
+                            .submissionsLimit(30)
+                            .points(60)
+                            .build())
+                    .addContestants(new ContestContestantDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .userJid(USER_A_JID)
+                            .status(ContestContestantStatus.APPROVED)
+                            .contestStartTime(Optional.empty())
+                            .build())
+                    .addContestants(new ContestContestantDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .userJid(USER_B_JID)
+                            .status(ContestContestantStatus.APPROVED)
+                            .contestStartTime(Instant.ofEpochSecond(1553040000600L))
+                            .build())
+                    .addSupervisors(new ContestSupervisorDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .userJid(SUPERVISOR_JID)
+                            .managementPermissions(ImmutableSet.of(SupervisorManagementPermission.ALL))
+                            .build())
+                    .addSupervisors(new ContestSupervisorDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .userJid(USER_JID)
+                            .managementPermissions(ImmutableSet.of(
+                                    SupervisorManagementPermission.CLARIFICATION,
+                                    SupervisorManagementPermission.SCOREBOARD))
+                            .build())
+                    .addManagers(new ContestManagerDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .userJid(MANAGER_JID)
+                            .build())
+                    .addManagers(new ContestManagerDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .userJid(ADMIN_JID)
+                            .build())
+                    .addAnnouncements(new ContestAnnouncementDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .title("Ann Title 1")
+                            .content("Test announcement 1 content")
+                            .status(ContestAnnouncementStatus.DRAFT)
+                            .build())
+                    .addAnnouncements(new ContestAnnouncementDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .title("Ann Title 2")
+                            .content("Test announcement 2 content")
+                            .status(ContestAnnouncementStatus.PUBLISHED)
+                            .build())
+                    .addClarifications(new ContestClarificationDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .topicJid(PROBLEM_1_JID)
+                            .title("Clarification Title 1")
+                            .question("Clarification question 1")
+                            .build())
+                    .addClarifications(new ContestClarificationDump.Builder()
+                            .mode(DumpImportMode.CREATE)
+                            .topicJid(PROBLEM_2_JID)
+                            .title("Clarification Title 2")
+                            .question("Clarification question 2")
+                            .answer("Answer 2")
+                            .build())
+                    .build())
+            .build();
+
     @BeforeAll
     static void setUpMocks() {
         mockJophiel = mockJophiel();
@@ -266,31 +402,33 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
         mockSandalphon.shutdown();
     }
 
+    @BeforeEach
+    void setUpAdmin() {
+        adminService.upsertAdmins(SUPERADMIN_HEADER, ImmutableSet.of(ADMIN));
+    }
+
     @Test
     void end_to_end_flow() {
         testUnauthorizedImportsAndExports();
         testImport();
+        testExportWithMismatchingContestJid();
+        testExportWithCreateMode();
     }
 
     void testUnauthorizedImportsAndExports() {
         assertThatRemoteExceptionThrownBy(
-                () -> dumpService.importDump(USER_HEADER, testDump))
+                () -> contestService.importDump(USER_HEADER, testImportDump))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
 
         assertThatRemoteExceptionThrownBy(
-                () -> dumpService.exportDump(USER_HEADER))
+                () -> contestService.exportDump(USER_HEADER, testExportDumpDataWithMismatchingContestJid))
                 .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
     }
 
     void testImport() {
-        dumpService.importDump(SUPERADMIN_HEADER, testDump);
+        contestService.importDump(ADMIN_HEADER, testImportDump);
 
-        assertThat(adminService.getAdmins(SUPERADMIN_HEADER, Optional.empty()).getData().getPage())
-                .hasSize(2)
-                .containsOnlyOnce(new Admin.Builder().userJid(SUPERADMIN_JID).build())
-                .containsOnlyOnce(new Admin.Builder().userJid("admin2Jid").build());
-
-        assertThat(contestService.getContests(Optional.of(SUPERADMIN_HEADER), Optional.empty(), Optional.empty())
+        assertThat(contestService.getContests(Optional.of(ADMIN_HEADER), Optional.empty(), Optional.empty())
                 .getData().getPage())
                 .hasSize(1)
                 .usingElementComparatorIgnoringFields("id")
@@ -304,16 +442,16 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                         .style(ContestStyle.IOI)
                         .build());
 
-        assertThat(contestService.getContestDescription(Optional.of(SUPERADMIN_HEADER), "JIDCONTtest-ioi")
+        assertThat(contestService.getContestDescription(Optional.of(ADMIN_HEADER), "JIDCONTtest-ioi")
                 .getDescription())
                 .isEqualTo("This is a test IOI contest");
 
-        assertThat(contestModuleService.getModules(SUPERADMIN_HEADER, "JIDCONTtest-ioi"))
+        assertThat(contestModuleService.getModules(ADMIN_HEADER, "JIDCONTtest-ioi"))
                 .hasSize(2) // only shows enabled modules except SCOREBOARD
                 .containsOnlyOnce(ContestModuleType.CLARIFICATION_TIME_LIMIT)
                 .containsOnlyOnce(ContestModuleType.CLARIFICATION);
 
-        assertThat(contestModuleService.getConfig(SUPERADMIN_HEADER, "JIDCONTtest-ioi"))
+        assertThat(contestModuleService.getConfig(ADMIN_HEADER, "JIDCONTtest-ioi"))
                 .isEqualTo(new ContestModulesConfig.Builder()
                         .ioiStyle(new IoiStyleModuleConfig.Builder()
                                 .usingLastAffectingPenalty(true)
@@ -324,7 +462,7 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                                 .build())
                         .build());
 
-        assertThat(contestProblemService.getProblems(Optional.of(SUPERADMIN_HEADER), "JIDCONTtest-ioi")
+        assertThat(contestProblemService.getProblems(Optional.of(ADMIN_HEADER), "JIDCONTtest-ioi")
                 .getData())
                 .hasSize(2)
                 .containsOnlyOnce(new ContestProblem.Builder()
@@ -342,7 +480,7 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                         .points(60)
                         .build());
 
-        assertThat(contestContestantService.getContestants(SUPERADMIN_HEADER, "JIDCONTtest-ioi", Optional.empty())
+        assertThat(contestContestantService.getContestants(ADMIN_HEADER, "JIDCONTtest-ioi", Optional.empty())
                 .getData().getPage())
                 .hasSize(2)
                 .containsOnlyOnce(new ContestContestant.Builder()
@@ -356,7 +494,7 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                         .contestStartTime(Instant.ofEpochSecond(1553040000600L))
                         .build());
 
-        assertThat(contestSupervisorService.getSupervisors(SUPERADMIN_HEADER, "JIDCONTtest-ioi", Optional.empty())
+        assertThat(contestSupervisorService.getSupervisors(ADMIN_HEADER, "JIDCONTtest-ioi", Optional.empty())
                 .getData().getPage())
                 .hasSize(2)
                 .containsOnlyOnce(new ContestSupervisor.Builder()
@@ -370,13 +508,13 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                                 SupervisorManagementPermission.SCOREBOARD))
                         .build());
 
-        assertThat(contestManagerService.getManagers(SUPERADMIN_HEADER, "JIDCONTtest-ioi", Optional.empty())
+        assertThat(contestManagerService.getManagers(ADMIN_HEADER, "JIDCONTtest-ioi", Optional.empty())
                 .getData().getPage())
                 .hasSize(2)
                 .containsOnlyOnce(new ContestManager.Builder().userJid(MANAGER_JID).build())
                 .containsOnlyOnce(new ContestManager.Builder().userJid(ADMIN_JID).build());
 
-        assertThat(contestAnnouncementService.getAnnouncements(Optional.of(SUPERADMIN_HEADER), "JIDCONTtest-ioi",
+        assertThat(contestAnnouncementService.getAnnouncements(Optional.of(ADMIN_HEADER), "JIDCONTtest-ioi",
                 Optional.empty()).getData().getPage())
                 .hasSize(2)
                 .usingElementComparatorIgnoringFields("id")
@@ -394,13 +532,13 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                         .title("Ann Title 1")
                         .content("Test announcement 1 content")
                         .status(ContestAnnouncementStatus.DRAFT)
-                        .userJid(SUPERADMIN_JID)
+                        .userJid(ADMIN_JID)
                         .id(0) // ignored
                         .jid("JIDANN") // ignored
                         .updatedTime(Instant.ofEpochSecond(0)) // ignored
                         .build());
 
-        assertThat(contestClarificationService.getClarifications(SUPERADMIN_HEADER, "JIDCONTtest-ioi",
+        assertThat(contestClarificationService.getClarifications(ADMIN_HEADER, "JIDCONTtest-ioi",
                 Optional.empty(), Optional.empty()).getData().getPage())
                 .hasSize(2)
                 .usingElementComparatorIgnoringFields("id")
@@ -425,8 +563,18 @@ public class DumpServiceIntegrationTests extends AbstractServiceIntegrationTests
                         .topicJid(PROBLEM_1_JID)
                         .title("Clarification Title 1")
                         .question("Clarification question 1")
-                        .userJid(SUPERADMIN_JID)
+                        .userJid(ADMIN_JID)
                         .status(ContestClarificationStatus.ASKED)
                         .build());
+    }
+
+    void testExportWithMismatchingContestJid() {
+        ContestsDump dump = contestService.exportDump(ADMIN_HEADER, testExportDumpDataWithMismatchingContestJid);
+        assertThat(dump).isEqualTo(new ContestsDump.Builder().build());
+    }
+
+    void testExportWithCreateMode() {
+        ContestsDump dump = contestService.exportDump(ADMIN_HEADER, testExportDumpDataWithCreateMode);
+        assertThat(dump).isEqualTo(testExportDumpWithCreateModeResult);
     }
 }

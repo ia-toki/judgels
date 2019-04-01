@@ -27,7 +27,9 @@ import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.ContestUpdateData;
-import judgels.uriel.api.dump.ContestDump;
+import judgels.uriel.api.contest.dump.ContestDump;
+import judgels.uriel.api.contest.dump.ContestDumpComponent;
+import judgels.uriel.api.contest.dump.ExportContestsDumpData;
 import judgels.uriel.contest.announcement.ContestAnnouncementStore;
 import judgels.uriel.contest.clarification.ContestClarificationStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
@@ -210,7 +212,7 @@ public class ContestStore {
         });
     }
 
-    public void importDump(ContestDump contestDump) {
+    public String importDump(ContestDump contestDump) {
         if (contestDump.getJid().isPresent() && contestDao.selectByJid(contestDump.getJid().get()).isPresent()) {
             throw ContestErrors.jidAlreadyExists(contestDump.getJid().get());
         }
@@ -240,34 +242,61 @@ public class ContestStore {
         contestDump.getManagers().forEach(dump -> contestManagerStore.importDump(contestJid, dump));
         contestDump.getAnnouncements().forEach(dump -> contestAnnouncementStore.importDump(contestJid, dump));
         contestDump.getClarifications().forEach(dump -> contestClarificationStore.importDump(contestJid, dump));
+
+        return contestJid;
     }
 
-    public Set<ContestDump> exportDumps() {
-        return contestDao.selectAll(SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestModel -> new ContestDump.Builder()
-                        .mode(DumpImportMode.RESTORE)
-                        .slug(contestModel.slug)
-                        .name(contestModel.name)
-                        .beginTime(contestModel.beginTime)
-                        .duration(Duration.ofMillis(contestModel.duration))
-                        .description(contestModel.description)
-                        .style(contestModuleStore.exportStyleDump(
-                                contestModel.jid, ContestStyle.valueOf(contestModel.style)))
-                        .modules(contestModuleStore.exportModuleDumps(contestModel.jid))
-                        .problems(contestProblemStore.exportDumps(contestModel.jid))
-                        .contestants(contestContestantStore.exportDumps(contestModel.jid))
-                        .supervisors(contestSupervisorStore.exportDumps(contestModel.jid))
-                        .managers(contestManagerStore.exportDumps(contestModel.jid))
-                        .announcements(contestAnnouncementStore.exportDumps(contestModel.jid))
-                        .clarifications(contestClarificationStore.exportDumps(contestModel.jid))
-                        .jid(contestModel.jid)
-                        .createdAt(contestModel.createdAt)
-                        .createdBy(Optional.ofNullable(contestModel.createdBy))
-                        .createdIp(Optional.ofNullable(contestModel.createdIp))
-                        .updatedAt(contestModel.updatedAt)
-                        .updatedBy(Optional.ofNullable(contestModel.updatedBy))
-                        .updatedIp(Optional.ofNullable(contestModel.updatedIp))
-                        .build())
+    public Set<ContestDump> exportDumps(Map<String, ExportContestsDumpData.ContestDumpEntry> contestsToExport) {
+        Set<String> contestJidsToExport = contestsToExport.keySet();
+
+        return contestDao.selectByJids(contestJidsToExport).values().stream()
+                .map(contestModel -> {
+                    DumpImportMode mode = contestsToExport.get(contestModel.jid).getMode();
+                    Set<ContestDumpComponent> components = contestsToExport.get(contestModel.jid).getComponents();
+
+                    ContestDump.Builder builder = new ContestDump.Builder()
+                            .mode(mode)
+                            .slug(contestModel.slug)
+                            .name(contestModel.name)
+                            .beginTime(contestModel.beginTime)
+                            .duration(Duration.ofMillis(contestModel.duration))
+                            .description(contestModel.description)
+                            .style(contestModuleStore.exportStyleDump(
+                                    contestModel.jid, mode, ContestStyle.valueOf(contestModel.style)))
+                            .modules(contestModuleStore.exportModuleDumps(contestModel.jid, mode));
+
+                    if (components.contains(ContestDumpComponent.PROBLEMS)) {
+                        builder = builder.problems(contestProblemStore.exportDumps(contestModel.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.CONTESTANTS)) {
+                        builder = builder.contestants(contestContestantStore.exportDumps(contestModel.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.SUPERVISORS)) {
+                        builder = builder.supervisors(contestSupervisorStore.exportDumps(contestModel.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.MANAGERS)) {
+                        builder = builder.managers(contestManagerStore.exportDumps(contestModel.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.ANNOUNCEMENTS)) {
+                        builder = builder.announcements(contestAnnouncementStore.exportDumps(contestModel.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.CLARIFICATIONS)) {
+                        builder = builder.clarifications(contestClarificationStore.exportDumps(contestModel.jid, mode));
+                    }
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder = builder
+                                .jid(contestModel.jid)
+                                .createdAt(contestModel.createdAt)
+                                .createdBy(Optional.ofNullable(contestModel.createdBy))
+                                .createdIp(Optional.ofNullable(contestModel.createdIp))
+                                .updatedAt(contestModel.updatedAt)
+                                .updatedBy(Optional.ofNullable(contestModel.updatedBy))
+                                .updatedIp(Optional.ofNullable(contestModel.updatedIp));
+                    }
+
+                    return builder.build();
+                })
                 .collect(Collectors.toSet());
     }
 

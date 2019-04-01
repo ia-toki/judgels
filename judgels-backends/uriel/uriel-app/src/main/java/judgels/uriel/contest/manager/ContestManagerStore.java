@@ -8,8 +8,8 @@ import javax.inject.Inject;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
+import judgels.uriel.api.contest.dump.ContestManagerDump;
 import judgels.uriel.api.contest.manager.ContestManager;
-import judgels.uriel.api.dump.ContestManagerDump;
 import judgels.uriel.persistence.ContestManagerDao;
 import judgels.uriel.persistence.ContestManagerModel;
 
@@ -61,18 +61,25 @@ public class ContestManagerStore {
         managerDao.persist(contestManagerModel);
     }
 
-    public Set<ContestManagerDump> exportDumps(String contestJid) {
+    public Set<ContestManagerDump> exportDumps(String contestJid, DumpImportMode mode) {
         return managerDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestManagerModel -> new ContestManagerDump.Builder()
-                        .mode(DumpImportMode.RESTORE)
-                        .userJid(contestManagerModel.userJid)
-                        .createdAt(contestManagerModel.createdAt)
-                        .createdBy(Optional.ofNullable(contestManagerModel.createdBy))
-                        .createdIp(Optional.ofNullable(contestManagerModel.createdIp))
-                        .updatedAt(contestManagerModel.updatedAt)
-                        .updatedBy(Optional.ofNullable(contestManagerModel.updatedBy))
-                        .updatedIp(Optional.ofNullable(contestManagerModel.updatedIp))
-                        .build())
+                .map(contestManagerModel -> {
+                    ContestManagerDump.Builder builder = new ContestManagerDump.Builder()
+                            .mode(mode)
+                            .userJid(contestManagerModel.userJid);
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder = builder
+                                .createdAt(contestManagerModel.createdAt)
+                                .createdBy(Optional.ofNullable(contestManagerModel.createdBy))
+                                .createdIp(Optional.ofNullable(contestManagerModel.createdIp))
+                                .updatedAt(contestManagerModel.updatedAt)
+                                .updatedBy(Optional.ofNullable(contestManagerModel.updatedBy))
+                                .updatedIp(Optional.ofNullable(contestManagerModel.updatedIp));
+                    }
+
+                    return builder.build();
+                })
                 .collect(Collectors.toSet());
     }
 

@@ -17,9 +17,9 @@ import javax.inject.Inject;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
+import judgels.uriel.api.contest.dump.ContestSupervisorDump;
 import judgels.uriel.api.contest.supervisor.ContestSupervisor;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.uriel.api.dump.ContestSupervisorDump;
 import judgels.uriel.persistence.ContestSupervisorDao;
 import judgels.uriel.persistence.ContestSupervisorModel;
 
@@ -128,15 +128,18 @@ public class ContestSupervisorStore {
         supervisorCache.invalidate(contestJid + SEPARATOR + contestSupervisorModel.userJid);
     }
 
-    public Set<ContestSupervisorDump> exportDumps(String contestJid) {
+    public Set<ContestSupervisorDump> exportDumps(String contestJid, DumpImportMode mode) {
         return supervisorDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
                 .map(contestSupervisorModel -> {
                     Set<SupervisorManagementPermission> permissions;
                     try {
-                        permissions = mapper.readValue(
+                        SupervisorManagementPermissions permissionsWrapper = mapper.readValue(
                                 contestSupervisorModel.permission,
                                 SupervisorManagementPermissions.class
-                        ).getAllowedPermissions();
+                        );
+                        permissions = permissionsWrapper.getIsAllowedAll()
+                                ? ImmutableSet.of(SupervisorManagementPermission.ALL)
+                                : permissionsWrapper.getAllowedPermissions();
                     } catch (IOException e) {
                         throw new RuntimeException(
                                 String.format(
@@ -147,17 +150,22 @@ public class ContestSupervisorStore {
                         );
                     }
 
-                    return new ContestSupervisorDump.Builder()
-                            .mode(DumpImportMode.RESTORE)
+                    ContestSupervisorDump.Builder builder = new ContestSupervisorDump.Builder()
+                            .mode(mode)
                             .userJid(contestSupervisorModel.userJid)
-                            .managementPermissions(permissions)
-                            .createdAt(contestSupervisorModel.createdAt)
-                            .createdBy(Optional.ofNullable(contestSupervisorModel.createdBy))
-                            .createdIp(Optional.ofNullable(contestSupervisorModel.createdIp))
-                            .updatedAt(contestSupervisorModel.updatedAt)
-                            .updatedBy(Optional.ofNullable(contestSupervisorModel.updatedBy))
-                            .updatedIp(Optional.ofNullable(contestSupervisorModel.updatedIp))
-                            .build();
+                            .managementPermissions(permissions);
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder = builder
+                                .createdAt(contestSupervisorModel.createdAt)
+                                .createdBy(Optional.ofNullable(contestSupervisorModel.createdBy))
+                                .createdIp(Optional.ofNullable(contestSupervisorModel.createdIp))
+                                .updatedAt(contestSupervisorModel.updatedAt)
+                                .updatedBy(Optional.ofNullable(contestSupervisorModel.updatedBy))
+                                .updatedIp(Optional.ofNullable(contestSupervisorModel.updatedIp));
+                    }
+
+                    return builder.build();
                 })
                 .collect(Collectors.toSet());
     }

@@ -11,9 +11,9 @@ import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.DumpImportMode;
+import judgels.uriel.api.contest.dump.ContestProblemDump;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
-import judgels.uriel.api.dump.ContestProblemDump;
 import judgels.uriel.persistence.ContestProblemDao;
 import judgels.uriel.persistence.ContestProblemModel;
 
@@ -126,22 +126,29 @@ public class ContestProblemStore {
         problemDao.persist(contestProblemModel);
     }
 
-    public Set<ContestProblemDump> exportDumps(String contestJid) {
+    public Set<ContestProblemDump> exportDumps(String contestJid, DumpImportMode mode) {
         return problemDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestProblemModel -> new ContestProblemDump.Builder()
-                        .mode(DumpImportMode.RESTORE)
-                        .alias(contestProblemModel.alias)
-                        .problemJid(contestProblemModel.problemJid)
-                        .status(ContestProblemStatus.valueOf(contestProblemModel.status))
-                        .submissionsLimit(contestProblemModel.submissionsLimit)
-                        .points(contestProblemModel.points)
-                        .createdAt(contestProblemModel.createdAt)
-                        .createdBy(Optional.ofNullable(contestProblemModel.createdBy))
-                        .createdIp(Optional.ofNullable(contestProblemModel.createdIp))
-                        .updatedAt(contestProblemModel.updatedAt)
-                        .updatedBy(Optional.ofNullable(contestProblemModel.updatedBy))
-                        .updatedIp(Optional.ofNullable(contestProblemModel.updatedIp))
-                        .build())
+                .map(contestProblemModel -> {
+                    ContestProblemDump.Builder builder = new ContestProblemDump.Builder()
+                            .mode(mode)
+                            .alias(contestProblemModel.alias)
+                            .problemJid(contestProblemModel.problemJid)
+                            .status(ContestProblemStatus.valueOf(contestProblemModel.status))
+                            .submissionsLimit(contestProblemModel.submissionsLimit)
+                            .points(contestProblemModel.points);
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder = builder
+                                .createdAt(contestProblemModel.createdAt)
+                                .createdBy(Optional.ofNullable(contestProblemModel.createdBy))
+                                .createdIp(Optional.ofNullable(contestProblemModel.createdIp))
+                                .updatedAt(contestProblemModel.updatedAt)
+                                .updatedBy(Optional.ofNullable(contestProblemModel.updatedBy))
+                                .updatedIp(Optional.ofNullable(contestProblemModel.updatedIp));
+                    }
+
+                    return builder.build();
+                })
                 .collect(Collectors.toSet());
     }
 
