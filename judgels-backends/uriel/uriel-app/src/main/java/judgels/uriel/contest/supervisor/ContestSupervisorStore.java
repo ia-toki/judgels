@@ -106,8 +106,8 @@ public class ContestSupervisorStore {
                 p -> Lists.transform(p, this::fromModel));
     }
 
-    public void importDump(String contestJid, ContestSupervisorDump contestSupervisorDump) {
-        Set<SupervisorManagementPermission> managementPermissions = contestSupervisorDump.getManagementPermissions();
+    public void importDump(String contestJid, ContestSupervisorDump dump) {
+        Set<SupervisorManagementPermission> managementPermissions = dump.getManagementPermissions();
         SupervisorManagementPermissions permissions = managementPermissions.contains(SupervisorManagementPermission.ALL)
                 ? SupervisorManagementPermissions.all()
                 : SupervisorManagementPermissions.of(managementPermissions);
@@ -119,22 +119,21 @@ public class ContestSupervisorStore {
             throw new RuntimeException(e);
         }
 
-        ContestSupervisorModel contestSupervisorModel = new ContestSupervisorModel();
-        contestSupervisorModel.contestJid = contestJid;
-        contestSupervisorModel.userJid = contestSupervisorDump.getUserJid();
-        contestSupervisorModel.permission = permissionsString;
-        supervisorDao.setModelMetadataFromDump(contestSupervisorModel, contestSupervisorDump);
-        supervisorDao.persist(contestSupervisorModel);
-        supervisorCache.invalidate(contestJid + SEPARATOR + contestSupervisorModel.userJid);
+        ContestSupervisorModel model = new ContestSupervisorModel();
+        model.contestJid = contestJid;
+        model.userJid = dump.getUserJid();
+        model.permission = permissionsString;
+        supervisorDao.setModelMetadataFromDump(model, dump);
+        supervisorDao.persist(model);
     }
 
     public Set<ContestSupervisorDump> exportDumps(String contestJid, DumpImportMode mode) {
         return supervisorDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestSupervisorModel -> {
+                .map(model -> {
                     Set<SupervisorManagementPermission> permissions;
                     try {
                         SupervisorManagementPermissions permissionsWrapper = mapper.readValue(
-                                contestSupervisorModel.permission,
+                                model.permission,
                                 SupervisorManagementPermissions.class
                         );
                         permissions = permissionsWrapper.getIsAllowedAll()
@@ -144,7 +143,7 @@ public class ContestSupervisorStore {
                         throw new RuntimeException(
                                 String.format(
                                         "Failed to parse supervisor permissions JSON in contest %s:\n%s",
-                                        contestJid, contestSupervisorModel.permission
+                                        contestJid, model.permission
                                 ),
                                 e
                         );
@@ -152,17 +151,17 @@ public class ContestSupervisorStore {
 
                     ContestSupervisorDump.Builder builder = new ContestSupervisorDump.Builder()
                             .mode(mode)
-                            .userJid(contestSupervisorModel.userJid)
+                            .userJid(model.userJid)
                             .managementPermissions(permissions);
 
                     if (mode == DumpImportMode.RESTORE) {
-                        builder = builder
-                                .createdAt(contestSupervisorModel.createdAt)
-                                .createdBy(Optional.ofNullable(contestSupervisorModel.createdBy))
-                                .createdIp(Optional.ofNullable(contestSupervisorModel.createdIp))
-                                .updatedAt(contestSupervisorModel.updatedAt)
-                                .updatedBy(Optional.ofNullable(contestSupervisorModel.updatedBy))
-                                .updatedIp(Optional.ofNullable(contestSupervisorModel.updatedIp));
+                        builder
+                                .createdAt(model.createdAt)
+                                .createdBy(Optional.ofNullable(model.createdBy))
+                                .createdIp(Optional.ofNullable(model.createdIp))
+                                .updatedAt(model.updatedAt)
+                                .updatedBy(Optional.ofNullable(model.updatedBy))
+                                .updatedIp(Optional.ofNullable(model.updatedIp));
                     }
 
                     return builder.build();

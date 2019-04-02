@@ -58,48 +58,48 @@ public class ContestClarificationStore {
                 p -> Lists.transform(p, ContestClarificationStore::fromModel));
     }
 
-    public void importDump(String contestJid, ContestClarificationDump contestClarificationDump) {
-        if (contestClarificationDump.getJid().isPresent()
-                && clarificationDao.selectByJid(contestClarificationDump.getJid().get()).isPresent()) {
-            throw ContestErrors.jidAlreadyExists(contestClarificationDump.getJid().get());
+    public void importDump(String contestJid, ContestClarificationDump dump) {
+        if (dump.getJid().isPresent()
+                && clarificationDao.selectByJid(dump.getJid().get()).isPresent()) {
+            throw ContestErrors.jidAlreadyExists(dump.getJid().get());
         }
 
-        Optional<String> answer = contestClarificationDump.getAnswer();
+        Optional<String> answer = dump.getAnswer();
         String status = answer.isPresent() && !answer.get().isEmpty()
                 ? ContestClarificationStatus.ANSWERED.name()
                 : ContestClarificationStatus.ASKED.name();
 
-        ContestClarificationModel contestClarificationModel = new ContestClarificationModel();
-        contestClarificationModel.contestJid = contestJid;
-        contestClarificationModel.topicJid = contestClarificationDump.getTopicJid();
-        contestClarificationModel.title = contestClarificationDump.getTitle();
-        contestClarificationModel.question = contestClarificationDump.getQuestion();
-        contestClarificationModel.answer = answer.orElse(null);
-        contestClarificationModel.status = status;
-        clarificationDao.setModelMetadataFromDump(contestClarificationModel, contestClarificationDump);
-        clarificationDao.persist(contestClarificationModel);
+        ContestClarificationModel model = new ContestClarificationModel();
+        model.contestJid = contestJid;
+        model.topicJid = dump.getTopicJid();
+        model.title = dump.getTitle();
+        model.question = dump.getQuestion();
+        model.answer = answer.orElse(null);
+        model.status = status;
+        clarificationDao.setModelMetadataFromDump(model, dump);
+        clarificationDao.persist(model);
     }
 
     public Set<ContestClarificationDump> exportDumps(String contestJid, DumpImportMode mode) {
         return clarificationDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestClarificationModel -> {
+                .map(model -> {
                     ContestClarificationDump.Builder builder = new ContestClarificationDump.Builder()
                             .mode(mode)
-                            .topicJid(contestClarificationModel.topicJid)
-                            .title(contestClarificationModel.title)
-                            .question(contestClarificationModel.question)
-                            .answer(Optional.ofNullable(contestClarificationModel.answer))
-                            .title(contestClarificationModel.title);
+                            .topicJid(model.topicJid)
+                            .title(model.title)
+                            .question(model.question)
+                            .answer(Optional.ofNullable(model.answer))
+                            .title(model.title);
 
                     if (mode == DumpImportMode.RESTORE) {
-                        builder = builder
-                                .jid(contestClarificationModel.jid)
-                                .createdAt(contestClarificationModel.createdAt)
-                                .createdBy(Optional.ofNullable(contestClarificationModel.createdBy))
-                                .createdIp(Optional.ofNullable(contestClarificationModel.createdIp))
-                                .updatedAt(contestClarificationModel.updatedAt)
-                                .updatedBy(Optional.ofNullable(contestClarificationModel.updatedBy))
-                                .updatedIp(Optional.ofNullable(contestClarificationModel.updatedIp));
+                        builder
+                                .jid(model.jid)
+                                .createdAt(model.createdAt)
+                                .createdBy(Optional.ofNullable(model.createdBy))
+                                .createdIp(Optional.ofNullable(model.createdIp))
+                                .updatedAt(model.updatedAt)
+                                .updatedBy(Optional.ofNullable(model.updatedBy))
+                                .updatedIp(Optional.ofNullable(model.updatedIp));
                     }
 
                     return builder.build();

@@ -53,29 +53,29 @@ public class ContestManagerStore {
                 p -> Lists.transform(p, ContestManagerStore::fromModel));
     }
 
-    public void importDump(String contestJid, ContestManagerDump contestManagerDump) {
-        ContestManagerModel contestManagerModel = new ContestManagerModel();
-        contestManagerModel.contestJid = contestJid;
-        contestManagerModel.userJid = contestManagerDump.getUserJid();
-        managerDao.setModelMetadataFromDump(contestManagerModel, contestManagerDump);
-        managerDao.persist(contestManagerModel);
+    public void importDump(String contestJid, ContestManagerDump dump) {
+        ContestManagerModel model = new ContestManagerModel();
+        model.contestJid = contestJid;
+        model.userJid = dump.getUserJid();
+        managerDao.setModelMetadataFromDump(model, dump);
+        managerDao.persist(model);
     }
 
     public Set<ContestManagerDump> exportDumps(String contestJid, DumpImportMode mode) {
         return managerDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestManagerModel -> {
+                .map(model -> {
                     ContestManagerDump.Builder builder = new ContestManagerDump.Builder()
                             .mode(mode)
-                            .userJid(contestManagerModel.userJid);
+                            .userJid(model.userJid);
 
                     if (mode == DumpImportMode.RESTORE) {
-                        builder = builder
-                                .createdAt(contestManagerModel.createdAt)
-                                .createdBy(Optional.ofNullable(contestManagerModel.createdBy))
-                                .createdIp(Optional.ofNullable(contestManagerModel.createdIp))
-                                .updatedAt(contestManagerModel.updatedAt)
-                                .updatedBy(Optional.ofNullable(contestManagerModel.updatedBy))
-                                .updatedIp(Optional.ofNullable(contestManagerModel.updatedIp));
+                        builder
+                                .createdAt(model.createdAt)
+                                .createdBy(Optional.ofNullable(model.createdBy))
+                                .createdIp(Optional.ofNullable(model.createdIp))
+                                .updatedAt(model.updatedAt)
+                                .updatedBy(Optional.ofNullable(model.updatedBy))
+                                .updatedIp(Optional.ofNullable(model.updatedIp));
                     }
 
                     return builder.build();

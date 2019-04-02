@@ -114,37 +114,37 @@ public class ContestProblemStore {
                 .collect(Collectors.toMap(jid -> jid, problemAliases::get));
     }
 
-    public void importDump(String contestJid, ContestProblemDump contestProblemDump) {
-        ContestProblemModel contestProblemModel = new ContestProblemModel();
-        contestProblemModel.contestJid = contestJid;
-        contestProblemModel.alias = contestProblemDump.getAlias();
-        contestProblemModel.problemJid = contestProblemDump.getProblemJid();
-        contestProblemModel.status = contestProblemDump.getStatus().name();
-        contestProblemModel.submissionsLimit = contestProblemDump.getSubmissionsLimit();
-        contestProblemModel.points = contestProblemDump.getPoints().orElse(0);
-        problemDao.setModelMetadataFromDump(contestProblemModel, contestProblemDump);
-        problemDao.persist(contestProblemModel);
+    public void importDump(String contestJid, ContestProblemDump dump) {
+        ContestProblemModel model = new ContestProblemModel();
+        model.contestJid = contestJid;
+        model.alias = dump.getAlias();
+        model.problemJid = dump.getProblemJid();
+        model.status = dump.getStatus().name();
+        model.submissionsLimit = dump.getSubmissionsLimit();
+        model.points = dump.getPoints().orElse(0);
+        problemDao.setModelMetadataFromDump(model, dump);
+        problemDao.persist(model);
     }
 
     public Set<ContestProblemDump> exportDumps(String contestJid, DumpImportMode mode) {
         return problemDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestProblemModel -> {
+                .map(model -> {
                     ContestProblemDump.Builder builder = new ContestProblemDump.Builder()
                             .mode(mode)
-                            .alias(contestProblemModel.alias)
-                            .problemJid(contestProblemModel.problemJid)
-                            .status(ContestProblemStatus.valueOf(contestProblemModel.status))
-                            .submissionsLimit(contestProblemModel.submissionsLimit)
-                            .points(contestProblemModel.points);
+                            .alias(model.alias)
+                            .problemJid(model.problemJid)
+                            .status(ContestProblemStatus.valueOf(model.status))
+                            .submissionsLimit(model.submissionsLimit)
+                            .points(model.points);
 
                     if (mode == DumpImportMode.RESTORE) {
-                        builder = builder
-                                .createdAt(contestProblemModel.createdAt)
-                                .createdBy(Optional.ofNullable(contestProblemModel.createdBy))
-                                .createdIp(Optional.ofNullable(contestProblemModel.createdIp))
-                                .updatedAt(contestProblemModel.updatedAt)
-                                .updatedBy(Optional.ofNullable(contestProblemModel.updatedBy))
-                                .updatedIp(Optional.ofNullable(contestProblemModel.updatedIp));
+                        builder
+                                .createdAt(model.createdAt)
+                                .createdBy(Optional.ofNullable(model.createdBy))
+                                .createdIp(Optional.ofNullable(model.createdIp))
+                                .updatedAt(model.updatedAt)
+                                .updatedBy(Optional.ofNullable(model.updatedBy))
+                                .updatedIp(Optional.ofNullable(model.updatedIp));
                     }
 
                     return builder.build();

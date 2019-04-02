@@ -123,37 +123,36 @@ public class ContestContestantStore {
                 .collect(Collectors.toSet());
     }
 
-    public void importDump(String contestJid, ContestContestantDump contestContestantDump) {
-        String status = contestContestantDump.getStatus().orElse(ContestContestantStatus.APPROVED).name();
+    public void importDump(String contestJid, ContestContestantDump dump) {
+        String status = dump.getStatus().orElse(ContestContestantStatus.APPROVED).name();
 
-        ContestContestantModel contestContestantModel = new ContestContestantModel();
-        contestContestantModel.contestJid = contestJid;
-        contestContestantModel.userJid = contestContestantDump.getUserJid();
-        contestContestantModel.status = status;
-        contestContestantModel.contestStartTime = contestContestantDump.getContestStartTime().orElse(null);
-        contestantDao.setModelMetadataFromDump(contestContestantModel, contestContestantDump);
-        contestantDao.persist(contestContestantModel);
-        contestantCache.invalidate(contestJid + SEPARATOR + contestContestantModel.userJid);
-        roleDao.invalidateCaches(contestContestantModel.userJid, contestJid);
+        ContestContestantModel model = new ContestContestantModel();
+        model.contestJid = contestJid;
+        model.userJid = dump.getUserJid();
+        model.status = status;
+        model.contestStartTime = dump.getContestStartTime().orElse(null);
+        contestantDao.setModelMetadataFromDump(model, dump);
+        contestantDao.persist(model);
+        contestantCache.invalidate(contestJid + SEPARATOR + model.userJid);
     }
 
     public Set<ContestContestantDump> exportDumps(String contestJid, DumpImportMode mode) {
         return contestantDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestContestantModel -> {
+                .map(model -> {
                     ContestContestantDump.Builder builder =  new ContestContestantDump.Builder()
                             .mode(mode)
-                            .userJid(contestContestantModel.userJid)
-                            .status(ContestContestantStatus.valueOf(contestContestantModel.status))
-                            .contestStartTime(Optional.ofNullable(contestContestantModel.contestStartTime));
+                            .userJid(model.userJid)
+                            .status(ContestContestantStatus.valueOf(model.status))
+                            .contestStartTime(Optional.ofNullable(model.contestStartTime));
 
                     if (mode == DumpImportMode.RESTORE) {
-                        builder = builder
-                                .createdAt(contestContestantModel.createdAt)
-                                .createdBy(Optional.ofNullable(contestContestantModel.createdBy))
-                                .createdIp(Optional.ofNullable(contestContestantModel.createdIp))
-                                .updatedAt(contestContestantModel.updatedAt)
-                                .updatedBy(Optional.ofNullable(contestContestantModel.updatedBy))
-                                .updatedIp(Optional.ofNullable(contestContestantModel.updatedIp));
+                        builder
+                                .createdAt(model.createdAt)
+                                .createdBy(Optional.ofNullable(model.createdBy))
+                                .createdIp(Optional.ofNullable(model.createdIp))
+                                .updatedAt(model.updatedAt)
+                                .updatedBy(Optional.ofNullable(model.updatedBy))
+                                .updatedIp(Optional.ofNullable(model.updatedIp));
                     }
 
                     return builder.build();

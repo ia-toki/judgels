@@ -55,39 +55,39 @@ public class ContestAnnouncementStore {
         return fromModel(announcementDao.update(model));
     }
 
-    public void importDump(String contestJid, ContestAnnouncementDump contestAnnouncementDump) {
-        if (contestAnnouncementDump.getJid().isPresent()
-                && announcementDao.selectByJid(contestAnnouncementDump.getJid().get()).isPresent()) {
-            throw ContestErrors.jidAlreadyExists(contestAnnouncementDump.getJid().get());
+    public void importDump(String contestJid, ContestAnnouncementDump dump) {
+        if (dump.getJid().isPresent()
+                && announcementDao.selectByJid(dump.getJid().get()).isPresent()) {
+            throw ContestErrors.jidAlreadyExists(dump.getJid().get());
         }
 
-        ContestAnnouncementModel contestAnnouncementModel = new ContestAnnouncementModel();
-        contestAnnouncementModel.contestJid = contestJid;
-        contestAnnouncementModel.title = contestAnnouncementDump.getTitle();
-        contestAnnouncementModel.content = contestAnnouncementDump.getContent();
-        contestAnnouncementModel.status = contestAnnouncementDump.getStatus().name();
-        announcementDao.setModelMetadataFromDump(contestAnnouncementModel, contestAnnouncementDump);
-        announcementDao.persist(contestAnnouncementModel);
+        ContestAnnouncementModel model = new ContestAnnouncementModel();
+        model.contestJid = contestJid;
+        model.title = dump.getTitle();
+        model.content = dump.getContent();
+        model.status = dump.getStatus().name();
+        announcementDao.setModelMetadataFromDump(model, dump);
+        announcementDao.persist(model);
     }
 
     public Set<ContestAnnouncementDump> exportDumps(String contestJid, DumpImportMode mode) {
         return announcementDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestAnnouncementModel -> {
+                .map(model -> {
                     ContestAnnouncementDump.Builder builder = new ContestAnnouncementDump.Builder()
                             .mode(mode)
-                            .title(contestAnnouncementModel.title)
-                            .content(contestAnnouncementModel.content)
-                            .status(ContestAnnouncementStatus.valueOf(contestAnnouncementModel.status));
+                            .title(model.title)
+                            .content(model.content)
+                            .status(ContestAnnouncementStatus.valueOf(model.status));
 
                     if (mode == DumpImportMode.RESTORE) {
-                        builder = builder
-                                .jid(contestAnnouncementModel.jid)
-                                .createdAt(contestAnnouncementModel.createdAt)
-                                .createdBy(Optional.ofNullable(contestAnnouncementModel.createdBy))
-                                .createdIp(Optional.ofNullable(contestAnnouncementModel.createdIp))
-                                .updatedAt(contestAnnouncementModel.updatedAt)
-                                .updatedBy(Optional.ofNullable(contestAnnouncementModel.updatedBy))
-                                .updatedIp(Optional.ofNullable(contestAnnouncementModel.updatedIp));
+                        builder
+                                .jid(model.jid)
+                                .createdAt(model.createdAt)
+                                .createdBy(Optional.ofNullable(model.createdBy))
+                                .createdIp(Optional.ofNullable(model.createdIp))
+                                .updatedAt(model.updatedAt)
+                                .updatedBy(Optional.ofNullable(model.updatedBy))
+                                .updatedIp(Optional.ofNullable(model.updatedIp));
                     }
 
                     return builder.build();

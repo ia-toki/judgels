@@ -263,39 +263,38 @@ public class ContestModuleStore {
         return getModuleConfig(contestJid, VIRTUAL, VirtualModuleConfig.class);
     }
 
-    public void importStyleDump(String contestJid, ContestStyleDump contestStyleDump) {
+    public void importStyleDump(String contestJid, ContestStyleDump dump) {
         String configString;
         try {
-            StyleModuleConfig config = contestStyleDump.getConfig();
+            StyleModuleConfig config = dump.getConfig();
             configString = mapper.writeValueAsString(config);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
-        ContestStyleModel contestStyleModel = new ContestStyleModel();
-        contestStyleModel.contestJid = contestJid;
-        contestStyleModel.config = configString;
-        styleDao.setModelMetadataFromDump(contestStyleModel, contestStyleDump);
-        styleDao.persist(contestStyleModel);
+        ContestStyleModel model = new ContestStyleModel();
+        model.contestJid = contestJid;
+        model.config = configString;
+        styleDao.setModelMetadataFromDump(model, dump);
+        styleDao.persist(model);
     }
 
-    public void importModuleDump(String contestJid, ContestModuleDump contestModuleDump) {
+    public void importModuleDump(String contestJid, ContestModuleDump dump) {
         String configString;
         try {
-            ModuleConfig config = contestModuleDump.getConfig();
+            ModuleConfig config = dump.getConfig();
             configString = mapper.writeValueAsString(config == null ? ImmutableMap.of() : config);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
-        ContestModuleModel contestModuleModel = new ContestModuleModel();
-        contestModuleModel.contestJid = contestJid;
-        contestModuleModel.name = contestModuleDump.getName().name();
-        contestModuleModel.enabled = contestModuleDump.getEnabled();
-        contestModuleModel.config = configString;
-        moduleDao.setModelMetadataFromDump(contestModuleModel, contestModuleDump);
-        moduleDao.persist(contestModuleModel);
-        moduleCache.invalidate(contestJid + SEPARATOR + contestModuleDump.getName().name());
+        ContestModuleModel model = new ContestModuleModel();
+        model.contestJid = contestJid;
+        model.name = dump.getName().name();
+        model.enabled = dump.getEnabled();
+        model.config = configString;
+        moduleDao.setModelMetadataFromDump(model, dump);
+        moduleDao.persist(model);
     }
 
     public ContestStyleDump exportStyleDump(String contestJid, DumpImportMode mode, ContestStyle contestStyle) {
@@ -312,28 +311,28 @@ public class ContestModuleStore {
             throw new IllegalArgumentException();
         }
 
-        ContestStyleModel contestStyleModel = styleDao.selectByContestJid(contestJid).get();
+        ContestStyleModel model = styleDao.selectByContestJid(contestJid).get();
         try {
             ContestStyleDump.Builder builder = new ContestStyleDump.Builder()
                     .mode(mode)
                     .name(contestStyle)
-                    .config(mapper.readValue(contestStyleModel.config, styleModuleConfigClass));
+                    .config(mapper.readValue(model.config, styleModuleConfigClass));
 
             if (mode == DumpImportMode.RESTORE) {
-                builder = builder
-                        .createdAt(contestStyleModel.createdAt)
-                        .createdBy(Optional.ofNullable(contestStyleModel.createdBy))
-                        .createdIp(Optional.ofNullable(contestStyleModel.createdIp))
-                        .updatedAt(contestStyleModel.updatedAt)
-                        .updatedBy(Optional.ofNullable(contestStyleModel.updatedBy))
-                        .updatedIp(Optional.ofNullable(contestStyleModel.updatedIp));
+                builder
+                        .createdAt(model.createdAt)
+                        .createdBy(Optional.ofNullable(model.createdBy))
+                        .createdIp(Optional.ofNullable(model.createdIp))
+                        .updatedAt(model.updatedAt)
+                        .updatedBy(Optional.ofNullable(model.updatedBy))
+                        .updatedIp(Optional.ofNullable(model.updatedIp));
             }
 
             return builder.build();
         } catch (IOException e) {
             throw new RuntimeException(
                     String.format(
-                            "Failed to parse style config JSON in contest %s:\n%s", contestJid, contestStyleModel.config
+                            "Failed to parse style config JSON in contest %s:\n%s", contestJid, model.config
                     ),
                     e
             );
@@ -342,23 +341,23 @@ public class ContestModuleStore {
 
     public Set<ContestModuleDump> exportModuleDumps(String contestJid, DumpImportMode mode) {
         return moduleDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(contestModuleModel -> {
-                    ContestModuleType moduleType = ContestModuleType.valueOf(contestModuleModel.name);
+                .map(model -> {
+                    ContestModuleType moduleType = ContestModuleType.valueOf(model.name);
                     ModuleConfig moduleConfig;
                     Class<? extends ModuleConfig> moduleConfigClass;
                     try {
                         if (moduleType == ContestModuleType.SCOREBOARD) {
                             moduleConfig = mapper.readValue(
-                                    contestModuleModel.config, ScoreboardModuleConfig.class);
+                                    model.config, ScoreboardModuleConfig.class);
                         } else if (moduleType == ContestModuleType.CLARIFICATION_TIME_LIMIT) {
                             moduleConfig = mapper.readValue(
-                                    contestModuleModel.config, ClarificationTimeLimitModuleConfig.class);
+                                    model.config, ClarificationTimeLimitModuleConfig.class);
                         } else if (moduleType == ContestModuleType.FROZEN_SCOREBOARD) {
                             moduleConfig = mapper.readValue(
-                                    contestModuleModel.config, FrozenScoreboardModuleConfig.class);
+                                    model.config, FrozenScoreboardModuleConfig.class);
                         } else if (moduleType == ContestModuleType.VIRTUAL) {
                             moduleConfig = mapper.readValue(
-                                    contestModuleModel.config, VirtualModuleConfig.class);
+                                    model.config, VirtualModuleConfig.class);
                         } else {
                             moduleConfig = null;
                         }
@@ -366,7 +365,7 @@ public class ContestModuleStore {
                         throw new RuntimeException(
                                 String.format(
                                         "Failed to parse module config JSON in contest %s:\n%s",
-                                        contestJid, contestModuleModel.config
+                                        contestJid, model.config
                                 ),
                                 e
                         );
@@ -374,18 +373,18 @@ public class ContestModuleStore {
 
                     ContestModuleDump.Builder builder = new ContestModuleDump.Builder()
                             .mode(mode)
-                            .name(ContestModuleType.valueOf(contestModuleModel.name))
-                            .enabled(contestModuleModel.enabled)
+                            .name(ContestModuleType.valueOf(model.name))
+                            .enabled(model.enabled)
                             .config(moduleConfig);
 
                     if (mode == DumpImportMode.RESTORE) {
-                        builder = builder
-                                .createdAt(contestModuleModel.createdAt)
-                                .createdBy(Optional.ofNullable(contestModuleModel.createdBy))
-                                .createdIp(Optional.ofNullable(contestModuleModel.createdIp))
-                                .updatedAt(contestModuleModel.updatedAt)
-                                .updatedBy(Optional.ofNullable(contestModuleModel.updatedBy))
-                                .updatedIp(Optional.ofNullable(contestModuleModel.updatedIp));
+                        builder
+                                .createdAt(model.createdAt)
+                                .createdBy(Optional.ofNullable(model.createdBy))
+                                .createdIp(Optional.ofNullable(model.createdIp))
+                                .updatedAt(model.updatedAt)
+                                .updatedBy(Optional.ofNullable(model.updatedBy))
+                                .updatedIp(Optional.ofNullable(model.updatedIp));
                     }
 
                     return builder.build();
