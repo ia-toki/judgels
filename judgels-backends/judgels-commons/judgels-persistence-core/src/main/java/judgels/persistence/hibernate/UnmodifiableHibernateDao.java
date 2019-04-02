@@ -24,6 +24,8 @@ import judgels.persistence.UnmodifiableModel;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
+import judgels.persistence.api.dump.UnmodifiableDump;
 import org.hibernate.query.Query;
 
 public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M>
@@ -49,7 +51,12 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
         model.createdAt = clock.instant();
         model.createdIp = actorProvider.getIpAddress().orElse(null);
 
-        return persist(model);
+        return super.persist(model);
+    }
+
+    @Override
+    public M persist(M model) {
+        return super.persist(model);
     }
 
     @Override
@@ -160,6 +167,25 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     @Override
     public void delete(M model) {
         currentSession().delete(model);
+    }
+
+    @Override
+    public void setModelMetadataFromDump(M model, UnmodifiableDump dump) {
+        if (dump.getMode() == DumpImportMode.RESTORE) {
+            model.createdBy = dump.getCreatedBy().orElse(null);
+            model.createdIp = dump.getCreatedIp().orElse(null);
+            model.createdAt = dump.getCreatedAt().orElseThrow(
+                    () -> new IllegalArgumentException("createdAt must be set if using RESTORE mode")
+            );
+        } else if (dump.getMode() == DumpImportMode.CREATE) {
+            model.createdBy = actorProvider.getJid().orElse(null);
+            model.createdIp = actorProvider.getIpAddress().orElse(null);
+            model.createdAt = clock.instant();
+        } else {
+            throw new IllegalArgumentException(
+                    String.format("Unknown mode: %s", dump.getMode())
+            );
+        }
     }
 
     @Override

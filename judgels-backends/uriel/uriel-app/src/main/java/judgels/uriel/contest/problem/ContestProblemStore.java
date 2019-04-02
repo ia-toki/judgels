@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
+import judgels.uriel.api.contest.dump.ContestProblemDump;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.problem.ContestProblemStatus;
 import judgels.uriel.persistence.ContestProblemDao;
@@ -110,6 +112,44 @@ public class ContestProblemStore {
         return problemJids
                 .stream()
                 .collect(Collectors.toMap(jid -> jid, problemAliases::get));
+    }
+
+    public void importDump(String contestJid, ContestProblemDump dump) {
+        ContestProblemModel model = new ContestProblemModel();
+        model.contestJid = contestJid;
+        model.alias = dump.getAlias();
+        model.problemJid = dump.getProblemJid();
+        model.status = dump.getStatus().name();
+        model.submissionsLimit = dump.getSubmissionsLimit();
+        model.points = dump.getPoints().orElse(0);
+        problemDao.setModelMetadataFromDump(model, dump);
+        problemDao.persist(model);
+    }
+
+    public Set<ContestProblemDump> exportDumps(String contestJid, DumpImportMode mode) {
+        return problemDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
+                .map(model -> {
+                    ContestProblemDump.Builder builder = new ContestProblemDump.Builder()
+                            .mode(mode)
+                            .alias(model.alias)
+                            .problemJid(model.problemJid)
+                            .status(ContestProblemStatus.valueOf(model.status))
+                            .submissionsLimit(model.submissionsLimit)
+                            .points(model.points);
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder
+                                .createdAt(model.createdAt)
+                                .createdBy(Optional.ofNullable(model.createdBy))
+                                .createdIp(Optional.ofNullable(model.createdIp))
+                                .updatedAt(model.updatedAt)
+                                .updatedBy(Optional.ofNullable(model.updatedBy))
+                                .updatedIp(Optional.ofNullable(model.updatedIp));
+                    }
+
+                    return builder.build();
+                })
+                .collect(Collectors.toSet());
     }
 
     private static SelectionOptions createOptions() {

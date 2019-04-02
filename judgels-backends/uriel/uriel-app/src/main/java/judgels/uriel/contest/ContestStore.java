@@ -19,6 +19,7 @@ import judgels.persistence.SearchOptions;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.DumpImportMode;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestDescription;
@@ -26,6 +27,16 @@ import judgels.uriel.api.contest.ContestErrors;
 import judgels.uriel.api.contest.ContestInfo;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.ContestUpdateData;
+import judgels.uriel.api.contest.dump.ContestDump;
+import judgels.uriel.api.contest.dump.ContestDumpComponent;
+import judgels.uriel.api.contest.dump.ExportContestsDumpData;
+import judgels.uriel.contest.announcement.ContestAnnouncementStore;
+import judgels.uriel.contest.clarification.ContestClarificationStore;
+import judgels.uriel.contest.contestant.ContestContestantStore;
+import judgels.uriel.contest.manager.ContestManagerStore;
+import judgels.uriel.contest.module.ContestModuleStore;
+import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.supervisor.ContestSupervisorStore;
 import judgels.uriel.persistence.AdminRoleDao;
 import judgels.uriel.persistence.ContestDao;
 import judgels.uriel.persistence.ContestModel;
@@ -35,13 +46,38 @@ public class ContestStore {
     private final AdminRoleDao adminRoleDao;
     private final ContestDao contestDao;
 
+    private final ContestModuleStore moduleStore;
+    private final ContestProblemStore problemStore;
+    private final ContestContestantStore contestantStore;
+    private final ContestSupervisorStore supervisorStore;
+    private final ContestManagerStore managerStore;
+    private final ContestAnnouncementStore announcementStore;
+    private final ContestClarificationStore clarificationStore;
+
     private final LoadingCache<String, Contest> contestByJidCache;
     private final LoadingCache<String, Contest> contestBySlugCache;
 
     @Inject
-    public ContestStore(AdminRoleDao adminRoleDao, ContestDao contestDao) {
+    public ContestStore(
+            AdminRoleDao adminRoleDao,
+            ContestDao contestDao,
+            ContestModuleStore moduleStore,
+            ContestProblemStore problemStore,
+            ContestContestantStore contestantStore,
+            ContestSupervisorStore supervisorStore,
+            ContestManagerStore managerStore,
+            ContestAnnouncementStore announcementStore,
+            ContestClarificationStore clarificationStore) {
+
         this.adminRoleDao = adminRoleDao;
         this.contestDao = contestDao;
+        this.moduleStore = moduleStore;
+        this.problemStore = problemStore;
+        this.contestantStore = contestantStore;
+        this.supervisorStore = supervisorStore;
+        this.managerStore = managerStore;
+        this.announcementStore = announcementStore;
+        this.clarificationStore = clarificationStore;
 
         this.contestByJidCache = Caffeine.newBuilder()
                 .maximumSize(100)
@@ -174,6 +210,95 @@ public class ContestStore {
             contestDao.update(model);
             return description;
         });
+    }
+
+    public String importDump(ContestDump dump) {
+        if (dump.getJid().isPresent() && contestDao.selectByJid(dump.getJid().get()).isPresent()) {
+            throw ContestErrors.jidAlreadyExists(dump.getJid().get());
+        }
+        if (contestDao.selectBySlug(dump.getSlug()).isPresent()) {
+            throw ContestErrors.slugAlreadyExists(dump.getSlug());
+        }
+
+        ContestModel model = new ContestModel();
+        model.slug = dump.getSlug();
+        model.name = dump.getName();
+        model.style = dump.getStyle().getName().name();
+        model.beginTime = dump.getBeginTime();
+        model.duration = dump.getDuration().toMillis();
+        model.description = dump.getDescription();
+        contestDao.setModelMetadataFromDump(model, dump);
+        model = contestDao.persist(model);
+        contestByJidCache.invalidate(model.jid);
+        contestBySlugCache.invalidate(model.slug);
+
+        String contestJid = model.jid;
+        moduleStore.importStyleDump(contestJid, dump.getStyle());
+
+        dump.getModules().forEach(moduleDump -> moduleStore.importModuleDump(contestJid, moduleDump));
+        dump.getProblems().forEach(problemDump -> problemStore.importDump(contestJid, problemDump));
+        dump.getContestants().forEach(contestantDump -> contestantStore.importDump(contestJid, contestantDump));
+        dump.getSupervisors().forEach(supervisorDump -> supervisorStore.importDump(contestJid, supervisorDump));
+        dump.getManagers().forEach(managerDump -> managerStore.importDump(contestJid, managerDump));
+        dump.getAnnouncements().forEach(announcementDump -> announcementStore.importDump(contestJid, announcementDump));
+        dump.getClarifications().forEach(
+                clarificationDump -> clarificationStore.importDump(contestJid, clarificationDump));
+
+        return contestJid;
+    }
+
+    public Set<ContestDump> exportDumps(Map<String, ExportContestsDumpData.ContestDumpEntry> contestsToExport) {
+        Set<String> contestJidsToExport = contestsToExport.keySet();
+
+        return contestDao.selectByJids(contestJidsToExport).values().stream()
+                .map(model -> {
+                    DumpImportMode mode = contestsToExport.get(model.jid).getMode();
+                    Set<ContestDumpComponent> components = contestsToExport.get(model.jid).getComponents();
+
+                    ContestDump.Builder builder = new ContestDump.Builder()
+                            .mode(mode)
+                            .slug(model.slug)
+                            .name(model.name)
+                            .beginTime(model.beginTime)
+                            .duration(Duration.ofMillis(model.duration))
+                            .description(model.description)
+                            .style(moduleStore.exportStyleDump(
+                                    model.jid, mode, ContestStyle.valueOf(model.style)))
+                            .modules(moduleStore.exportModuleDumps(model.jid, mode));
+
+                    if (components.contains(ContestDumpComponent.PROBLEMS)) {
+                        builder.problems(problemStore.exportDumps(model.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.CONTESTANTS)) {
+                        builder.contestants(contestantStore.exportDumps(model.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.SUPERVISORS)) {
+                        builder.supervisors(supervisorStore.exportDumps(model.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.MANAGERS)) {
+                        builder.managers(managerStore.exportDumps(model.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.ANNOUNCEMENTS)) {
+                        builder.announcements(announcementStore.exportDumps(model.jid, mode));
+                    }
+                    if (components.contains(ContestDumpComponent.CLARIFICATIONS)) {
+                        builder.clarifications(clarificationStore.exportDumps(model.jid, mode));
+                    }
+
+                    if (mode == DumpImportMode.RESTORE) {
+                        builder
+                                .jid(model.jid)
+                                .createdAt(model.createdAt)
+                                .createdBy(Optional.ofNullable(model.createdBy))
+                                .createdIp(Optional.ofNullable(model.createdIp))
+                                .updatedAt(model.updatedAt)
+                                .updatedBy(Optional.ofNullable(model.updatedBy))
+                                .updatedIp(Optional.ofNullable(model.updatedIp));
+                    }
+
+                    return builder.build();
+                })
+                .collect(Collectors.toSet());
     }
 
     private static Contest fromModel(ContestModel model) {

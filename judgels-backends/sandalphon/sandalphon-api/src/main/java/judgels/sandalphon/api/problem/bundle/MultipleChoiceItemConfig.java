@@ -1,10 +1,13 @@
 package judgels.sandalphon.api.problem.bundle;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Optional;
 import org.immutables.value.Value;
 
+@JsonTypeName("MULTIPLE_CHOICE")
+@Value.Style(passAnnotations = JsonTypeName.class)
 @Value.Immutable
 @JsonDeserialize(as = ImmutableMultipleChoiceItemConfig.class)
 public interface MultipleChoiceItemConfig extends ItemConfig {

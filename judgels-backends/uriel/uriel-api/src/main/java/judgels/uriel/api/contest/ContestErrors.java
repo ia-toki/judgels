@@ -10,6 +10,9 @@ import judgels.sandalphon.api.problem.ProblemType;
 public class ContestErrors {
     private ContestErrors() {}
 
+    public static final ErrorType JID_ALREADY_EXISTS =
+            ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Uriel:ContestJidAlreadyExists");
+
     public static final ErrorType SLUG_ALREADY_EXISTS =
             ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Uriel:ContestSlugAlreadyExists");
 
@@ -18,6 +21,10 @@ public class ContestErrors {
 
     public static final ErrorType WRONG_PROBLEM_TYPE =
             ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Uriel:WrongProblemType");
+
+    public static ServiceException jidAlreadyExists(String jid) {
+        return new ServiceException(JID_ALREADY_EXISTS, SafeArg.of("jid", jid));
+    }
 
     public static ServiceException slugAlreadyExists(String slug) {
         return new ServiceException(SLUG_ALREADY_EXISTS, SafeArg.of("slug", slug));

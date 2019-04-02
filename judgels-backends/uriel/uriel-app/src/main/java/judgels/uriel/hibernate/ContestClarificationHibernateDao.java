@@ -1,6 +1,8 @@
 package judgels.uriel.hibernate;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import judgels.persistence.FilterOptions;
@@ -39,6 +41,13 @@ public class ContestClarificationHibernateDao extends JudgelsHibernateDao<Contes
         return selectPaged(new FilterOptions.Builder<ContestClarificationModel>()
                 .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
                 .build(), options);
+    }
+
+    @Override
+    public Set<ContestClarificationModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestClarificationModel>()
+                .putColumnsEq(ContestClarificationModel_.contestJid, contestJid)
+                .build(), options));
     }
 
     @Override

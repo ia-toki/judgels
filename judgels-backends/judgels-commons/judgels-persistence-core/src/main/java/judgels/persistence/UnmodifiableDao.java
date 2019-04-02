@@ -7,10 +7,12 @@ import java.util.Optional;
 import javax.persistence.metamodel.SingularAttribute;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
+import judgels.persistence.api.dump.UnmodifiableDump;
 
 public interface UnmodifiableDao<M extends UnmodifiableModel> {
     void clear();
     M insert(M model);
+    M persist(M model);
     List<M> insertAll(List<M> models);
 
     Optional<M> select(long id);
@@ -41,6 +43,8 @@ public interface UnmodifiableDao<M extends UnmodifiableModel> {
     }
 
     void delete(M model);
+
+    void setModelMetadataFromDump(M model, UnmodifiableDump dump);
 
     @Deprecated M findById(long id);
     @Deprecated List<M> getAll();

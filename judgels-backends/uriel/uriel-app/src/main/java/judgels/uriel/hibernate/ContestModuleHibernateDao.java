@@ -9,6 +9,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import judgels.persistence.CustomPredicateFilter;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.uriel.api.contest.module.ContestModuleType;
@@ -40,6 +41,13 @@ public class ContestModuleHibernateDao extends HibernateDao<ContestModuleModel> 
                 .putColumnsEq(ContestModuleModel_.name, type.name())
                 .putColumnsEq(ContestModuleModel_.enabled, true)
                 .build());
+    }
+
+    @Override
+    public Set<ContestModuleModel> selectAllByContestJid(String contestJid, SelectionOptions options) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestModuleModel>()
+                .putColumnsEq(ContestModuleModel_.contestJid, contestJid)
+                .build(), options));
     }
 
     @Override
