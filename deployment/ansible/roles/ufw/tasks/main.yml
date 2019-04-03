@@ -1,0 +1,62 @@
+- block:
+  - name: Ensure UFW firewall is installed
+    apt:
+      name:
+        - ufw
+      state: present
+
+  - name: Allow SSH traffic through firewall
+    ufw:
+      rule: allow
+      name: OpenSSH
+
+  - name: Block all incoming traffic by default
+    ufw:
+      state: enabled
+      direction: incoming
+      policy: deny
+
+  - name: Allow raphael/Nginx HTTP traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 80
+      proto: tcp
+      comment: Judgels Raphael/Nginx HTTP
+
+  - name: Allow raphael/Nginx HTTPS traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 443
+      proto: tcp
+      comment: Judgels Raphael/Nginx HTTPS
+
+  - name: Allow phpMyAdmin traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 8080
+      proto: tcp
+      comment: phpMyAdmin
+
+  - name: Allow jophiel traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 9001
+      proto: tcp
+      comment: Judgels Jophiel
+
+  - name: Allow sandalphon traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 9002
+      proto: tcp
+      comment: Judgels Sandalphon
+
+  - name: Allow uriel traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 9004
+      proto: tcp
+      comment: Judgels Uriel
+
+  tags:
+    - firewall
