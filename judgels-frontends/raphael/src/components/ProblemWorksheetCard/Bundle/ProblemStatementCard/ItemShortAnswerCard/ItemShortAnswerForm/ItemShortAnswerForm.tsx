@@ -152,6 +152,9 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     const readOnlyClass = readOnly ? 'readonly' : '';
     return (
       <input
+        placeholder={
+          this.state.answerState === AnswerState.NotAnswered ? '(click Answer button to input answer)' : undefined
+        }
         name={this.props.meta}
         value={this.state.answer}
         onChange={this.onTextInputChange}

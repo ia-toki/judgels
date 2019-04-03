@@ -36,6 +36,9 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
     const readOnlyClass = readOnly ? 'readonly' : 'live';
     return (
       <TextArea
+        placeholder={
+          this.state.answerState === AnswerState.NotAnswered ? '(click Answer button to input answer)' : undefined
+        }
         name={this.props.meta}
         value={this.state.answer}
         onChange={this.onTextAreaInputChange}
