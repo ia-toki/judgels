@@ -44,6 +44,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
         onChange={this.onTextAreaInputChange}
         readOnly={readOnly}
         className={`form-textarea--code text-area ${readOnlyClass} ${classNames(Classes.INPUT)}`}
+        onKeyDown={this.onKeyDown}
         rows={20}
       />
     );
@@ -165,6 +166,14 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
   };
 
   onTextAreaInputChange = event => this.setState({ answer: event.target.value });
+
+  onKeyDown = event => {
+    const TAB_KEYCODE = 9;
+    if (event.keyCode === TAB_KEYCODE) {
+      event.preventDefault();
+      this.setState({ answer: event.target.value + '\t' });
+    }
+  };
 
   onCancelButtonClick = () => {
     this.setState({

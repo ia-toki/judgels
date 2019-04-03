@@ -26,6 +26,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   ItemShortAnswerFormProps,
   ItemShortAnswerFormState
 > {
+  _input: HTMLInputElement | null | undefined;
   state: ItemShortAnswerFormState = {
     answerState: this.props.answerState,
     answer: this.props.initialAnswer || '',
@@ -34,6 +35,10 @@ export default class ItemShortAnswerForm extends React.PureComponent<
       this.props.answerState === AnswerState.NotAnswered ? AnswerState.NotAnswered : AnswerState.AnswerSaved,
     wrongFormat: true,
   };
+
+  componentDidUpdate() {
+    this._input!.focus();
+  }
 
   renderHelpText() {
     switch (this.state.answerState) {
@@ -159,6 +164,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
         value={this.state.answer}
         onChange={this.onTextInputChange}
         readOnly={readOnly}
+        ref={input => (this._input = input)}
         className={`text-input ${readOnlyClass} ${classNames(Classes.INPUT)}`}
       />
     );
@@ -195,7 +201,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     this.setState({
       answerState: this.state.cancelButtonState,
       answer: this.state.initialAnswer,
-      wrongFormat: true,
+      wrongFormat: this.state.initialAnswer !== undefined || this.state.initialAnswer !== '',
     });
   };
 
