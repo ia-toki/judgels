@@ -20,6 +20,7 @@ export interface ItemShortAnswerFormState {
   cancelButtonState: AnswerState.NotAnswered | AnswerState.AnswerSaved;
   answer: string;
   wrongFormat: boolean;
+  previousWrongFormat: boolean;
 }
 
 export default class ItemShortAnswerForm extends React.PureComponent<
@@ -33,7 +34,8 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     initialAnswer: this.props.initialAnswer || '',
     cancelButtonState:
       this.props.answerState === AnswerState.NotAnswered ? AnswerState.NotAnswered : AnswerState.AnswerSaved,
-    wrongFormat: true,
+    previousWrongFormat: this.props.answerState === AnswerState.NotAnswered,
+    wrongFormat: this.props.answerState === AnswerState.NotAnswered,
   };
 
   componentDidUpdate() {
@@ -129,6 +131,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           answer: formValue,
           initialAnswer: '',
           wrongFormat: true,
+          previousWrongFormat: true,
         });
       }
     }
@@ -174,7 +177,10 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     const value = event.target.value as string;
     const config: ItemShortAnswerConfig = this.props.config as ItemShortAnswerConfig;
     const formatValid = value.match(config.inputValidationRegex);
-    this.setState({ answer: event.target.value, wrongFormat: !formatValid });
+    this.setState({
+      answer: event.target.value,
+      wrongFormat: !formatValid,
+    });
   };
 
   onSubmit = async event => {
@@ -192,6 +198,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           answerState: AnswerState.AnswerSaved,
           cancelButtonState: AnswerState.AnswerSaved,
           initialAnswer: newValue,
+          previousWrongFormat: this.state.wrongFormat,
         });
       }
     }
@@ -201,7 +208,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
     this.setState({
       answerState: this.state.cancelButtonState,
       answer: this.state.initialAnswer,
-      wrongFormat: this.state.initialAnswer !== undefined || this.state.initialAnswer !== '',
+      wrongFormat: this.state.previousWrongFormat,
     });
   };
 
