@@ -16,6 +16,12 @@
       direction: incoming
       policy: deny
 
+  - name: Allow all outgoing traffic by default
+    ufw:
+      state: enabled
+      direction: outgoing
+      policy: allow
+
   - name: Allow raphael/Nginx HTTP traffic through the firewall
     ufw:
       rule: allow
@@ -30,33 +36,13 @@
       proto: tcp
       comment: Judgels Raphael/Nginx HTTPS
 
-  - name: Allow phpMyAdmin traffic through the firewall
+  - name: Allow phpMyAdmin login traffic through the firewall
     ufw:
       rule: allow
-      to_port: 8080
+      to_port: 3306
+      src: 172.17.0.0/24
       proto: tcp
-      comment: phpMyAdmin
-
-  - name: Allow jophiel traffic through the firewall
-    ufw:
-      rule: allow
-      to_port: 9001
-      proto: tcp
-      comment: Judgels Jophiel
-
-  - name: Allow sandalphon traffic through the firewall
-    ufw:
-      rule: allow
-      to_port: 9002
-      proto: tcp
-      comment: Judgels Sandalphon
-
-  - name: Allow uriel traffic through the firewall
-    ufw:
-      rule: allow
-      to_port: 9004
-      proto: tcp
-      comment: Judgels Uriel
+      comment: phpMyAdmin login
 
   tags:
     - firewall
