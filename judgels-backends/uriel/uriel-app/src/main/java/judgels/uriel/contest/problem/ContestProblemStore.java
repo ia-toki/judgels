@@ -26,9 +26,10 @@ public class ContestProblemStore {
     }
 
     public Set<ContestProblem> setProblems(String contestJid, List<ContestProblem> data) {
-        Set<String> problemJids = data.stream().map(ContestProblem::getProblemJid).collect(Collectors.toSet());
+        Map<String, String> setProblems = data.stream().collect(
+                Collectors.toMap(ContestProblem::getProblemJid, ContestProblem::getAlias));
         for (ContestProblemModel model : problemDao.selectAllByContestJid(contestJid, createOptions())) {
-            if (!problemJids.contains(model.problemJid)) {
+            if (!setProblems.containsKey(model.problemJid) || !setProblems.get(model.problemJid).equals(model.alias)) {
                 problemDao.delete(model);
             }
         }
@@ -111,6 +112,7 @@ public class ContestProblemStore {
                 .collect(Collectors.toMap(m -> m.problemJid, m -> m.alias));
         return problemJids
                 .stream()
+                .filter(problemAliases::containsKey)
                 .collect(Collectors.toMap(jid -> jid, problemAliases::get));
     }
 

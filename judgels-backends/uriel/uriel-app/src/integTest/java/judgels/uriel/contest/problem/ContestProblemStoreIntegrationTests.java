@@ -58,14 +58,14 @@ class ContestProblemStoreIntegrationTests extends AbstractIntegrationTests {
 
         List<ContestProblem> problems = ImmutableList.of(
                 new ContestProblem.Builder()
-                        .alias("C")
+                        .alias("A")
                         .problemJid("problemJid3")
                         .status(OPEN)
                         .submissionsLimit(50)
                         .points(11)
                         .build(),
                 new ContestProblem.Builder()
-                        .alias("A")
+                        .alias("C")
                         .problemJid("problemJid1")
                         .status(OPEN)
                         .points(23)
@@ -83,9 +83,9 @@ class ContestProblemStoreIntegrationTests extends AbstractIntegrationTests {
         assertThat(store.getProblemJids(contest.getJid())).containsOnly("problemJid1", "problemJid2", "problemJid3");
         assertThat(store.getOpenProblemJids(contest.getJid())).containsOnly("problemJid1", "problemJid3");
         assertThat(store.getProblemAliasesByJids(contest.getJid(), ImmutableSet.of("problemJid1", "problemJid2")))
-                .isEqualTo(ImmutableMap.of("problemJid1", "A", "problemJid2", "B"));
+                .isEqualTo(ImmutableMap.of("problemJid1", "C", "problemJid2", "B"));
 
         assertThat(store.getProblems(contest.getJid()))
-                .containsExactly(problems.get(1), problems.get(2), problems.get(0));
+                .containsExactly(problems.get(0), problems.get(2), problems.get(1));
     }
 }
