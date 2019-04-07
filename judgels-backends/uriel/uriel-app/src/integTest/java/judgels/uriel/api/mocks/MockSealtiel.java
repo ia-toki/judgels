@@ -1,6 +1,7 @@
 package judgels.uriel.api.mocks;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.noContent;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 
@@ -18,6 +19,10 @@ public class MockSealtiel {
         mockSealtiel.stubFor(post("/api/v2/messages/send")
                 .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
                 .willReturn(ok()));
+
+        mockSealtiel.stubFor(post("/api/v2/messages/receive")
+                .withHeader(HttpHeaders.AUTHORIZATION, containing("Basic"))
+                .willReturn(noContent()));
 
         return mockSealtiel;
     }
