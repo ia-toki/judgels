@@ -5,28 +5,28 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface EvaluationResult {
-    EvaluationVerdict getVerdict();
+    Verdict getVerdict();
     Optional<SandboxExecutionResult> getExecutionResult();
 
     static EvaluationResult plainResult(String result) {
         return new Builder()
-                .verdict(EvaluationVerdict.OK)
+                .verdict(Verdict.OK)
                 .executionResult(SandboxExecutionResult.plainMessage(result))
                 .build();
     }
 
     static EvaluationResult executedResult(SandboxExecutionResult result) {
-        EvaluationVerdict verdict;
+        Verdict verdict;
         switch (result.getStatus()) {
             case ZERO_EXIT_CODE:
-                verdict = EvaluationVerdict.OK;
+                verdict = Verdict.OK;
                 break;
             case NONZERO_EXIT_CODE:
             case KILLED_ON_SIGNAL:
-                verdict = EvaluationVerdict.RUNTIME_ERROR;
+                verdict = Verdict.RUNTIME_ERROR;
                 break;
             case TIMED_OUT:
-                verdict = EvaluationVerdict.TIME_LIMIT_EXCEEDED;
+                verdict = Verdict.TIME_LIMIT_EXCEEDED;
                 break;
             default:
                 throw new IllegalStateException();
@@ -38,7 +38,7 @@ public interface EvaluationResult {
     }
 
     static EvaluationResult skippedResult() {
-        return new Builder().verdict(EvaluationVerdict.SKIPPED).build();
+        return new Builder().verdict(Verdict.SKIPPED).build();
     }
 
     class Builder extends ImmutableEvaluationResult.Builder {}

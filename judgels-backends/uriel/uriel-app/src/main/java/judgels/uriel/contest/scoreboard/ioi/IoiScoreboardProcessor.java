@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.gabriel.api.Verdict;
-import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -107,7 +106,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
 
                 Grading grading = submission.getLatestGrading().get();
                 Verdict verdict = grading.getVerdict();
-                if (verdict.equals(Verdicts.PENDING)) {
+                if (verdict.equals(Verdict.PENDING)) {
                     continue;
                 }
 

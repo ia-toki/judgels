@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import judgels.gabriel.api.Verdict;
-import judgels.gabriel.api.Verdicts;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
@@ -123,15 +122,15 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                 String problemJid = submission.getProblemJid();
 
                 Verdict verdict = submission.getLatestGrading().get().getVerdict();
-                if (verdict.equals(Verdicts.PENDING)) {
+                if (verdict.equals(Verdict.PENDING)) {
                     continue;
                 }
 
-                if (!isAccepted(problemStateMap.get(problemJid)) || !verdict.equals(Verdicts.ACCEPTED)) {
+                if (!isAccepted(problemStateMap.get(problemJid)) || !verdict.equals(Verdict.ACCEPTED)) {
                     attemptsMap.put(problemJid, attemptsMap.get(problemJid) + 1);
                 }
 
-                if (!isAccepted(problemStateMap.get(problemJid)) && verdict.equals(Verdicts.ACCEPTED)) {
+                if (!isAccepted(problemStateMap.get(problemJid)) && verdict.equals(Verdict.ACCEPTED)) {
                     long penalty = computePenalty(
                             submission.getTime(),
                             contestantStartTimesMap.get(contestantJid),

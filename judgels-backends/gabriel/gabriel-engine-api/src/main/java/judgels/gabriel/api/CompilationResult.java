@@ -5,7 +5,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface CompilationResult {
-    CompilationVerdict getVerdict();
+    Verdict getVerdict();
     Map<String, String> getOutputs();
 
     class Builder extends ImmutableCompilationResult.Builder {}

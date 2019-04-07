@@ -4,7 +4,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface TestCaseRawResult {
-    NormalVerdict getVerdict();
+    Verdict getVerdict();
     String getScore();
 
     class Builder extends ImmutableTestCaseRawResult.Builder {}

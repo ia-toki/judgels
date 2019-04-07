@@ -144,8 +144,8 @@ public class BaseSubmissionStore<
     public String createGrading(Submission submission) {
         GM model = gradingDao.createGradingModel();
         model.submissionJid = submission.getJid();
-        model.verdictCode = Verdicts.PENDING.getCode();
-        model.verdictName = Verdicts.PENDING.getName();
+        model.verdictCode = Verdict.PENDING.getCode();
+        model.verdictName = "";
         model.score = 0;
 
         return gradingDao.insert(model).jid;
@@ -159,8 +159,8 @@ public class BaseSubmissionStore<
         }
 
         GM model = maybeModel.get();
-        model.verdictCode = result.getVerdict().getCode();
-        model.verdictName = result.getVerdict().getName();
+        model.verdictCode = result.getVerdict().name();
+        model.verdictName = "";
         model.score = result.getScore();
         model.details = result.getDetails();
 
@@ -229,8 +229,8 @@ public class BaseSubmissionStore<
         Pattern pattern = Pattern.compile("^.*\\(worst: (.*)\\)$");
         Matcher matcher = pattern.matcher(name);
         if (matcher.matches()) {
-            return Verdict.of(matcher.group(1), "");
+            return Verdicts.fromCode(matcher.group(1));
         }
-        return Verdict.of(code, name);
+        return Verdicts.fromCode(code);
     }
 }
