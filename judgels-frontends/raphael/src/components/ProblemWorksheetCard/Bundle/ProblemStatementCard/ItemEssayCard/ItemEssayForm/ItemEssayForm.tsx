@@ -1,4 +1,4 @@
-import { ControlGroup, TextArea, Classes, Button, Intent, Callout } from '@blueprintjs/core';
+import { ControlGroup, Classes, Button, Intent, Callout } from '@blueprintjs/core';
 import * as classNames from 'classnames';
 import * as React from 'react';
 
@@ -22,6 +22,7 @@ export interface ItemEssayFormState {
 }
 
 export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProps, ItemEssayFormState> {
+  _input: HTMLTextAreaElement | null | undefined;
   state: ItemEssayFormState = {
     answerState: this.props.answerState,
     answer: this.props.initialAnswer || '',
@@ -35,7 +36,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
       this.state.answerState === AnswerState.NotAnswered || this.state.answerState === AnswerState.AnswerSaved;
     const readOnlyClass = readOnly ? 'readonly' : 'live';
     return (
-      <TextArea
+      <textarea
         placeholder={
           this.state.answerState === AnswerState.NotAnswered ? '(click Answer button to input answer)' : undefined
         }
@@ -46,6 +47,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
         className={`form-textarea--code text-area ${readOnlyClass} ${classNames(Classes.INPUT)}`}
         onKeyDown={this.onKeyDown}
         rows={20}
+        ref={(input: HTMLTextAreaElement) => (this._input = input)}
       />
     );
   }
@@ -167,11 +169,16 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
 
   onTextAreaInputChange = event => this.setState({ answer: event.target.value });
 
-  onKeyDown = event => {
+  onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const TAB_KEYCODE = 9;
     if (event.keyCode === TAB_KEYCODE) {
       event.preventDefault();
-      this.setState({ answer: event.target.value + '\t' });
+      const value = event.currentTarget.value;
+      const start = event.currentTarget.selectionStart;
+      const end = event.currentTarget.selectionEnd;
+      this.setState({ answer: value.substring(0, start) + '\t' + value.substring(end) }, () => {
+        this._input!.selectionStart = this._input!.selectionEnd = start + 1;
+      });
     }
   };
 
