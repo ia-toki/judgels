@@ -128,45 +128,42 @@ public class ContestSupervisorStore {
     }
 
     public Set<ContestSupervisorDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return supervisorDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(model -> {
-                    Set<SupervisorManagementPermission> permissions;
-                    try {
-                        SupervisorManagementPermissions permissionsWrapper = mapper.readValue(
-                                model.permission,
-                                SupervisorManagementPermissions.class
-                        );
-                        permissions = permissionsWrapper.getIsAllowedAll()
-                                ? ImmutableSet.of(SupervisorManagementPermission.ALL)
-                                : permissionsWrapper.getAllowedPermissions();
-                    } catch (IOException e) {
-                        throw new RuntimeException(
-                                String.format(
-                                        "Failed to parse supervisor permissions JSON in contest %s:\n%s",
-                                        contestJid, model.permission
-                                ),
-                                e
-                        );
-                    }
+        return supervisorDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+            Set<SupervisorManagementPermission> permissions;
+            try {
+                SupervisorManagementPermissions permissionsWrapper = mapper.readValue(
+                        model.permission,
+                        SupervisorManagementPermissions.class);
+                permissions = permissionsWrapper.getIsAllowedAll()
+                        ? ImmutableSet.of(SupervisorManagementPermission.ALL)
+                        : permissionsWrapper.getAllowedPermissions();
+            } catch (IOException e) {
+                throw new RuntimeException(
+                        String.format(
+                                "Failed to parse supervisor permissions JSON in contest %s:\n%s",
+                                contestJid, model.permission
+                        ),
+                        e
+                );
+            }
 
-                    ContestSupervisorDump.Builder builder = new ContestSupervisorDump.Builder()
-                            .mode(mode)
-                            .userJid(model.userJid)
-                            .managementPermissions(permissions);
+            ContestSupervisorDump.Builder builder = new ContestSupervisorDump.Builder()
+                    .mode(mode)
+                    .userJid(model.userJid)
+                    .managementPermissions(permissions);
 
-                    if (mode == DumpImportMode.RESTORE) {
-                        builder
-                                .createdAt(model.createdAt)
-                                .createdBy(Optional.ofNullable(model.createdBy))
-                                .createdIp(Optional.ofNullable(model.createdIp))
-                                .updatedAt(model.updatedAt)
-                                .updatedBy(Optional.ofNullable(model.updatedBy))
-                                .updatedIp(Optional.ofNullable(model.updatedIp));
-                    }
+            if (mode == DumpImportMode.RESTORE) {
+                builder
+                        .createdAt(model.createdAt)
+                        .createdBy(Optional.ofNullable(model.createdBy))
+                        .createdIp(Optional.ofNullable(model.createdIp))
+                        .updatedAt(model.updatedAt)
+                        .updatedBy(Optional.ofNullable(model.updatedBy))
+                        .updatedIp(Optional.ofNullable(model.updatedIp));
+            }
 
-                    return builder.build();
-                })
-                .collect(Collectors.toSet());
+            return builder.build();
+        }).collect(Collectors.toSet());
     }
 
     private ContestSupervisor fromModel(ContestSupervisorModel model) {

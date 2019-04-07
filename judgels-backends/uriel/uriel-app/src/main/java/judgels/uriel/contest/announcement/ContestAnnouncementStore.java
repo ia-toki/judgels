@@ -56,8 +56,7 @@ public class ContestAnnouncementStore {
     }
 
     public void importDump(String contestJid, ContestAnnouncementDump dump) {
-        if (dump.getJid().isPresent()
-                && announcementDao.selectByJid(dump.getJid().get()).isPresent()) {
+        if (dump.getJid().isPresent() && announcementDao.existsByJid(dump.getJid().get())) {
             throw ContestErrors.jidAlreadyExists(dump.getJid().get());
         }
 
@@ -71,28 +70,26 @@ public class ContestAnnouncementStore {
     }
 
     public Set<ContestAnnouncementDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return announcementDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(model -> {
-                    ContestAnnouncementDump.Builder builder = new ContestAnnouncementDump.Builder()
-                            .mode(mode)
-                            .title(model.title)
-                            .content(model.content)
-                            .status(ContestAnnouncementStatus.valueOf(model.status));
+        return announcementDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+            ContestAnnouncementDump.Builder builder = new ContestAnnouncementDump.Builder()
+                    .mode(mode)
+                    .title(model.title)
+                    .content(model.content)
+                    .status(ContestAnnouncementStatus.valueOf(model.status));
 
-                    if (mode == DumpImportMode.RESTORE) {
-                        builder
-                                .jid(model.jid)
-                                .createdAt(model.createdAt)
-                                .createdBy(Optional.ofNullable(model.createdBy))
-                                .createdIp(Optional.ofNullable(model.createdIp))
-                                .updatedAt(model.updatedAt)
-                                .updatedBy(Optional.ofNullable(model.updatedBy))
-                                .updatedIp(Optional.ofNullable(model.updatedIp));
-                    }
+            if (mode == DumpImportMode.RESTORE) {
+                builder
+                        .jid(model.jid)
+                        .createdAt(model.createdAt)
+                        .createdBy(Optional.ofNullable(model.createdBy))
+                        .createdIp(Optional.ofNullable(model.createdIp))
+                        .updatedAt(model.updatedAt)
+                        .updatedBy(Optional.ofNullable(model.updatedBy))
+                        .updatedIp(Optional.ofNullable(model.updatedIp));
+            }
 
-                    return builder.build();
-                })
-                .collect(Collectors.toSet());
+            return builder.build();
+        }).collect(Collectors.toSet());
     }
 
     private static ContestAnnouncement fromModel(ContestAnnouncementModel model) {

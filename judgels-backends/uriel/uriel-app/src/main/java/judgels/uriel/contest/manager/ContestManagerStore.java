@@ -62,25 +62,23 @@ public class ContestManagerStore {
     }
 
     public Set<ContestManagerDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return managerDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(model -> {
-                    ContestManagerDump.Builder builder = new ContestManagerDump.Builder()
-                            .mode(mode)
-                            .userJid(model.userJid);
+        return managerDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+            ContestManagerDump.Builder builder = new ContestManagerDump.Builder()
+                    .mode(mode)
+                    .userJid(model.userJid);
 
-                    if (mode == DumpImportMode.RESTORE) {
-                        builder
-                                .createdAt(model.createdAt)
-                                .createdBy(Optional.ofNullable(model.createdBy))
-                                .createdIp(Optional.ofNullable(model.createdIp))
-                                .updatedAt(model.updatedAt)
-                                .updatedBy(Optional.ofNullable(model.updatedBy))
-                                .updatedIp(Optional.ofNullable(model.updatedIp));
-                    }
+            if (mode == DumpImportMode.RESTORE) {
+                builder
+                        .createdAt(model.createdAt)
+                        .createdBy(Optional.ofNullable(model.createdBy))
+                        .createdIp(Optional.ofNullable(model.createdIp))
+                        .updatedAt(model.updatedAt)
+                        .updatedBy(Optional.ofNullable(model.updatedBy))
+                        .updatedIp(Optional.ofNullable(model.updatedIp));
+            }
 
-                    return builder.build();
-                })
-                .collect(Collectors.toSet());
+            return builder.build();
+        }).collect(Collectors.toSet());
     }
 
     private static ContestManager fromModel(ContestManagerModel model) {

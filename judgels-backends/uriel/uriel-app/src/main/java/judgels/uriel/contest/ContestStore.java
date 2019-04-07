@@ -213,7 +213,7 @@ public class ContestStore {
     }
 
     public String importDump(ContestDump dump) {
-        if (dump.getJid().isPresent() && contestDao.selectByJid(dump.getJid().get()).isPresent()) {
+        if (dump.getJid().isPresent() && contestDao.existsByJid(dump.getJid().get())) {
             throw ContestErrors.jidAlreadyExists(dump.getJid().get());
         }
         if (contestDao.selectBySlug(dump.getSlug()).isPresent()) {
@@ -235,70 +235,64 @@ public class ContestStore {
         String contestJid = model.jid;
         moduleStore.importStyleDump(contestJid, dump.getStyle());
 
-        dump.getModules().forEach(moduleDump -> moduleStore.importModuleDump(contestJid, moduleDump));
-        dump.getProblems().forEach(problemDump -> problemStore.importDump(contestJid, problemDump));
-        dump.getContestants().forEach(contestantDump -> contestantStore.importDump(contestJid, contestantDump));
-        dump.getSupervisors().forEach(supervisorDump -> supervisorStore.importDump(contestJid, supervisorDump));
-        dump.getManagers().forEach(managerDump -> managerStore.importDump(contestJid, managerDump));
-        dump.getAnnouncements().forEach(announcementDump -> announcementStore.importDump(contestJid, announcementDump));
-        dump.getClarifications().forEach(
-                clarificationDump -> clarificationStore.importDump(contestJid, clarificationDump));
+        dump.getModules().forEach(d -> moduleStore.importModuleDump(contestJid, d));
+        dump.getProblems().forEach(d -> problemStore.importDump(contestJid, d));
+        dump.getContestants().forEach(d -> contestantStore.importDump(contestJid, d));
+        dump.getSupervisors().forEach(d -> supervisorStore.importDump(contestJid, d));
+        dump.getManagers().forEach(d -> managerStore.importDump(contestJid, d));
+        dump.getAnnouncements().forEach(d -> announcementStore.importDump(contestJid, d));
+        dump.getClarifications().forEach(d -> clarificationStore.importDump(contestJid, d));
 
         return contestJid;
     }
 
     public Set<ContestDump> exportDumps(Map<String, ExportContestsDumpData.ContestDumpEntry> contestsToExport) {
-        Set<String> contestJidsToExport = contestsToExport.keySet();
+        return contestDao.selectByJids(contestsToExport.keySet()).values().stream().map(model -> {
+            DumpImportMode mode = contestsToExport.get(model.jid).getMode();
+            Set<ContestDumpComponent> components = contestsToExport.get(model.jid).getComponents();
 
-        return contestDao.selectByJids(contestJidsToExport).values().stream()
-                .map(model -> {
-                    DumpImportMode mode = contestsToExport.get(model.jid).getMode();
-                    Set<ContestDumpComponent> components = contestsToExport.get(model.jid).getComponents();
+            ContestDump.Builder builder = new ContestDump.Builder()
+                    .mode(mode)
+                    .slug(model.slug)
+                    .name(model.name)
+                    .beginTime(model.beginTime)
+                    .duration(Duration.ofMillis(model.duration))
+                    .description(model.description)
+                    .style(moduleStore.exportStyleDump(model.jid, mode, ContestStyle.valueOf(model.style)))
+                    .modules(moduleStore.exportModuleDumps(model.jid, mode));
 
-                    ContestDump.Builder builder = new ContestDump.Builder()
-                            .mode(mode)
-                            .slug(model.slug)
-                            .name(model.name)
-                            .beginTime(model.beginTime)
-                            .duration(Duration.ofMillis(model.duration))
-                            .description(model.description)
-                            .style(moduleStore.exportStyleDump(
-                                    model.jid, mode, ContestStyle.valueOf(model.style)))
-                            .modules(moduleStore.exportModuleDumps(model.jid, mode));
+            if (components.contains(ContestDumpComponent.PROBLEMS)) {
+                builder.problems(problemStore.exportDumps(model.jid, mode));
+            }
+            if (components.contains(ContestDumpComponent.CONTESTANTS)) {
+                builder.contestants(contestantStore.exportDumps(model.jid, mode));
+            }
+            if (components.contains(ContestDumpComponent.SUPERVISORS)) {
+                builder.supervisors(supervisorStore.exportDumps(model.jid, mode));
+            }
+            if (components.contains(ContestDumpComponent.MANAGERS)) {
+                builder.managers(managerStore.exportDumps(model.jid, mode));
+            }
+            if (components.contains(ContestDumpComponent.ANNOUNCEMENTS)) {
+                builder.announcements(announcementStore.exportDumps(model.jid, mode));
+            }
+            if (components.contains(ContestDumpComponent.CLARIFICATIONS)) {
+                builder.clarifications(clarificationStore.exportDumps(model.jid, mode));
+            }
 
-                    if (components.contains(ContestDumpComponent.PROBLEMS)) {
-                        builder.problems(problemStore.exportDumps(model.jid, mode));
-                    }
-                    if (components.contains(ContestDumpComponent.CONTESTANTS)) {
-                        builder.contestants(contestantStore.exportDumps(model.jid, mode));
-                    }
-                    if (components.contains(ContestDumpComponent.SUPERVISORS)) {
-                        builder.supervisors(supervisorStore.exportDumps(model.jid, mode));
-                    }
-                    if (components.contains(ContestDumpComponent.MANAGERS)) {
-                        builder.managers(managerStore.exportDumps(model.jid, mode));
-                    }
-                    if (components.contains(ContestDumpComponent.ANNOUNCEMENTS)) {
-                        builder.announcements(announcementStore.exportDumps(model.jid, mode));
-                    }
-                    if (components.contains(ContestDumpComponent.CLARIFICATIONS)) {
-                        builder.clarifications(clarificationStore.exportDumps(model.jid, mode));
-                    }
+            if (mode == DumpImportMode.RESTORE) {
+                builder
+                        .jid(model.jid)
+                        .createdAt(model.createdAt)
+                        .createdBy(Optional.ofNullable(model.createdBy))
+                        .createdIp(Optional.ofNullable(model.createdIp))
+                        .updatedAt(model.updatedAt)
+                        .updatedBy(Optional.ofNullable(model.updatedBy))
+                        .updatedIp(Optional.ofNullable(model.updatedIp));
+            }
 
-                    if (mode == DumpImportMode.RESTORE) {
-                        builder
-                                .jid(model.jid)
-                                .createdAt(model.createdAt)
-                                .createdBy(Optional.ofNullable(model.createdBy))
-                                .createdIp(Optional.ofNullable(model.createdIp))
-                                .updatedAt(model.updatedAt)
-                                .updatedBy(Optional.ofNullable(model.updatedBy))
-                                .updatedIp(Optional.ofNullable(model.updatedIp));
-                    }
-
-                    return builder.build();
-                })
-                .collect(Collectors.toSet());
+            return builder.build();
+        }).collect(Collectors.toSet());
     }
 
     private static Contest fromModel(ContestModel model) {

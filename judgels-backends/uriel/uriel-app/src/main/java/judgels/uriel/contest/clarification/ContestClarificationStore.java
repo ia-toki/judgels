@@ -59,8 +59,7 @@ public class ContestClarificationStore {
     }
 
     public void importDump(String contestJid, ContestClarificationDump dump) {
-        if (dump.getJid().isPresent()
-                && clarificationDao.selectByJid(dump.getJid().get()).isPresent()) {
+        if (dump.getJid().isPresent() && clarificationDao.existsByJid(dump.getJid().get())) {
             throw ContestErrors.jidAlreadyExists(dump.getJid().get());
         }
 
@@ -81,30 +80,28 @@ public class ContestClarificationStore {
     }
 
     public Set<ContestClarificationDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return clarificationDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(model -> {
-                    ContestClarificationDump.Builder builder = new ContestClarificationDump.Builder()
-                            .mode(mode)
-                            .topicJid(model.topicJid)
-                            .title(model.title)
-                            .question(model.question)
-                            .answer(Optional.ofNullable(model.answer))
-                            .title(model.title);
+        return clarificationDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+            ContestClarificationDump.Builder builder = new ContestClarificationDump.Builder()
+                    .mode(mode)
+                    .topicJid(model.topicJid)
+                    .title(model.title)
+                    .question(model.question)
+                    .answer(Optional.ofNullable(model.answer))
+                    .title(model.title);
 
-                    if (mode == DumpImportMode.RESTORE) {
-                        builder
-                                .jid(model.jid)
-                                .createdAt(model.createdAt)
-                                .createdBy(Optional.ofNullable(model.createdBy))
-                                .createdIp(Optional.ofNullable(model.createdIp))
-                                .updatedAt(model.updatedAt)
-                                .updatedBy(Optional.ofNullable(model.updatedBy))
-                                .updatedIp(Optional.ofNullable(model.updatedIp));
-                    }
+            if (mode == DumpImportMode.RESTORE) {
+                builder
+                        .jid(model.jid)
+                        .createdAt(model.createdAt)
+                        .createdBy(Optional.ofNullable(model.createdBy))
+                        .createdIp(Optional.ofNullable(model.createdIp))
+                        .updatedAt(model.updatedAt)
+                        .updatedBy(Optional.ofNullable(model.updatedBy))
+                        .updatedIp(Optional.ofNullable(model.updatedIp));
+            }
 
-                    return builder.build();
-                })
-                .collect(Collectors.toSet());
+            return builder.build();
+        }).collect(Collectors.toSet());
     }
 
     private static ContestClarification fromModel(ContestClarificationModel model) {

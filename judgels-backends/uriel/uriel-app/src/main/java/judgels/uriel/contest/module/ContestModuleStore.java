@@ -340,56 +340,47 @@ public class ContestModuleStore {
     }
 
     public Set<ContestModuleDump> exportModuleDumps(String contestJid, DumpImportMode mode) {
-        return moduleDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(model -> {
-                    ContestModuleType moduleType = ContestModuleType.valueOf(model.name);
-                    ModuleConfig moduleConfig;
-                    Class<? extends ModuleConfig> moduleConfigClass;
-                    try {
-                        if (moduleType == ContestModuleType.SCOREBOARD) {
-                            moduleConfig = mapper.readValue(
-                                    model.config, ScoreboardModuleConfig.class);
-                        } else if (moduleType == ContestModuleType.CLARIFICATION_TIME_LIMIT) {
-                            moduleConfig = mapper.readValue(
-                                    model.config, ClarificationTimeLimitModuleConfig.class);
-                        } else if (moduleType == ContestModuleType.FROZEN_SCOREBOARD) {
-                            moduleConfig = mapper.readValue(
-                                    model.config, FrozenScoreboardModuleConfig.class);
-                        } else if (moduleType == ContestModuleType.VIRTUAL) {
-                            moduleConfig = mapper.readValue(
-                                    model.config, VirtualModuleConfig.class);
-                        } else {
-                            moduleConfig = null;
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(
-                                String.format(
-                                        "Failed to parse module config JSON in contest %s:\n%s",
-                                        contestJid, model.config
-                                ),
-                                e
-                        );
-                    }
+        return moduleDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+            ContestModuleType moduleType = ContestModuleType.valueOf(model.name);
+            ModuleConfig moduleConfig = null;
+            try {
+                if (moduleType == ContestModuleType.SCOREBOARD) {
+                    moduleConfig = mapper.readValue(model.config, ScoreboardModuleConfig.class);
+                } else if (moduleType == ContestModuleType.CLARIFICATION_TIME_LIMIT) {
+                    moduleConfig = mapper.readValue(model.config, ClarificationTimeLimitModuleConfig.class);
+                } else if (moduleType == ContestModuleType.FROZEN_SCOREBOARD) {
+                    moduleConfig = mapper.readValue(model.config, FrozenScoreboardModuleConfig.class);
+                } else if (moduleType == ContestModuleType.VIRTUAL) {
+                    moduleConfig = mapper.readValue(model.config, VirtualModuleConfig.class);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(
+                        String.format(
+                                "Failed to parse module config JSON in contest %s:\n%s",
+                                contestJid, model.config
+                        ),
+                        e
+                );
+            }
 
-                    ContestModuleDump.Builder builder = new ContestModuleDump.Builder()
-                            .mode(mode)
-                            .name(ContestModuleType.valueOf(model.name))
-                            .enabled(model.enabled)
-                            .config(moduleConfig);
+            ContestModuleDump.Builder builder = new ContestModuleDump.Builder()
+                    .mode(mode)
+                    .name(ContestModuleType.valueOf(model.name))
+                    .enabled(model.enabled)
+                    .config(moduleConfig);
 
-                    if (mode == DumpImportMode.RESTORE) {
-                        builder
-                                .createdAt(model.createdAt)
-                                .createdBy(Optional.ofNullable(model.createdBy))
-                                .createdIp(Optional.ofNullable(model.createdIp))
-                                .updatedAt(model.updatedAt)
-                                .updatedBy(Optional.ofNullable(model.updatedBy))
-                                .updatedIp(Optional.ofNullable(model.updatedIp));
-                    }
+            if (mode == DumpImportMode.RESTORE) {
+                builder
+                        .createdAt(model.createdAt)
+                        .createdBy(Optional.ofNullable(model.createdBy))
+                        .createdIp(Optional.ofNullable(model.createdIp))
+                        .updatedAt(model.updatedAt)
+                        .updatedBy(Optional.ofNullable(model.updatedBy))
+                        .updatedIp(Optional.ofNullable(model.updatedIp));
+            }
 
-                    return builder.build();
-                })
-                .collect(Collectors.toSet());
+            return builder.build();
+        }).collect(Collectors.toSet());
     }
 
     private void upsertModule(String contestJid, ContestModuleType type, Object config) {

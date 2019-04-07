@@ -129,29 +129,27 @@ public class ContestProblemStore {
     }
 
     public Set<ContestProblemDump> exportDumps(String contestJid, DumpImportMode mode) {
-        return problemDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream()
-                .map(model -> {
-                    ContestProblemDump.Builder builder = new ContestProblemDump.Builder()
-                            .mode(mode)
-                            .alias(model.alias)
-                            .problemJid(model.problemJid)
-                            .status(ContestProblemStatus.valueOf(model.status))
-                            .submissionsLimit(model.submissionsLimit)
-                            .points(model.points);
+        return problemDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).stream().map(model -> {
+            ContestProblemDump.Builder builder = new ContestProblemDump.Builder()
+                    .mode(mode)
+                    .alias(model.alias)
+                    .problemJid(model.problemJid)
+                    .status(ContestProblemStatus.valueOf(model.status))
+                    .submissionsLimit(model.submissionsLimit)
+                    .points(model.points);
 
-                    if (mode == DumpImportMode.RESTORE) {
-                        builder
-                                .createdAt(model.createdAt)
-                                .createdBy(Optional.ofNullable(model.createdBy))
-                                .createdIp(Optional.ofNullable(model.createdIp))
-                                .updatedAt(model.updatedAt)
-                                .updatedBy(Optional.ofNullable(model.updatedBy))
-                                .updatedIp(Optional.ofNullable(model.updatedIp));
-                    }
+            if (mode == DumpImportMode.RESTORE) {
+                builder
+                        .createdAt(model.createdAt)
+                        .createdBy(Optional.ofNullable(model.createdBy))
+                        .createdIp(Optional.ofNullable(model.createdIp))
+                        .updatedAt(model.updatedAt)
+                        .updatedBy(Optional.ofNullable(model.updatedBy))
+                        .updatedIp(Optional.ofNullable(model.updatedIp));
+            }
 
-                    return builder.build();
-                })
-                .collect(Collectors.toSet());
+            return builder.build();
+        }).collect(Collectors.toSet());
     }
 
     private static SelectionOptions createOptions() {
