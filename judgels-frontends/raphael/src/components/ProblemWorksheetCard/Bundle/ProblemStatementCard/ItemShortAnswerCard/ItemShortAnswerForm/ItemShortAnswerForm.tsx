@@ -76,7 +76,9 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   renderSubmitButton() {
     let buttonText;
     let intent: Intent = Intent.PRIMARY;
-    const disabledState = this.state.wrongFormat && this.state.answerState === AnswerState.Answering;
+    const disabledState =
+      this.props.reasonNotAllowedToSubmit != null ||
+      (this.state.wrongFormat && this.state.answerState === AnswerState.Answering);
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         buttonText = StatementButtonText.Answer;
@@ -92,6 +94,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   }
 
   renderCancelButton() {
+    const disabled = this.props.reasonNotAllowedToSubmit != null;
     return (
       this.state.answerState === AnswerState.Answering && (
         <Button
@@ -100,12 +103,14 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           intent={Intent.DANGER}
           onClick={this.onCancelButtonClick}
           className="button"
+          disabled={disabled}
         />
       )
     );
   }
 
   renderClearAnswerButton() {
+    const disabled = this.props.reasonNotAllowedToSubmit != null;
     return (
       (this.state.answerState === AnswerState.AnswerSaved || this.state.answerState === AnswerState.ClearingAnswer) && (
         <Button
@@ -114,6 +119,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           intent={Intent.DANGER}
           onClick={this.onClearAnswerButtonClick}
           className="button"
+          disabled={disabled}
         />
       )
     );

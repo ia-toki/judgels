@@ -45,6 +45,7 @@ export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCa
 
   render() {
     const config: ItemMultipleChoiceConfig = this.props.config as ItemMultipleChoiceConfig;
+    const disabled = this.props.reasonNotAllowedToSubmit != null;
     return (
       <Card className={this.props.className}>
         <div className="bundle-problem-statement-item__statement">
@@ -65,6 +66,7 @@ export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCa
               className="problem-multiple-choice-item-choice"
               value={choice.alias}
               onClick={this.handleRadioClick}
+              disabled={disabled}
             >
               <Tag className="__alias-tag">
                 <HtmlText>{choice.alias}</HtmlText>

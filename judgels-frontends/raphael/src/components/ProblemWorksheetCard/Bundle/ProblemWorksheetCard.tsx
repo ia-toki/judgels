@@ -28,6 +28,7 @@ export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCa
         onAnswerItem={this.props.onAnswerItem}
         items={worksheet.items}
         latestSubmissions={latestSubmissions}
+        reasonNotAllowedToSubmit={this.props.worksheet.reasonNotAllowedToSubmit}
       />
     );
   };

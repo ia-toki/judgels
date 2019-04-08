@@ -20,6 +20,7 @@ export interface ProblemStatementCardProps {
   statement: ProblemStatement;
   onAnswerItem: (itemJid: string, answer: string) => Promise<any>;
   latestSubmissions: { [id: string]: ItemSubmission };
+  reasonNotAllowedToSubmit?: string;
 }
 
 export class ProblemStatementCard extends React.Component<ProblemStatementCardProps> {
@@ -45,6 +46,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         {...item}
         itemNumber={item.number!}
         initialAnswer={initialAnswer}
+        reasonNotAllowedToSubmit={this.props.reasonNotAllowedToSubmit}
       />
     );
   };
@@ -61,6 +63,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         {...item}
         itemNumber={item.number!}
         initialAnswer={initialAnswer}
+        reasonNotAllowedToSubmit={this.props.reasonNotAllowedToSubmit}
       />
     );
   };
@@ -77,6 +80,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         {...item}
         itemNumber={item.number!}
         initialAnswer={initialAnswer}
+        reasonNotAllowedToSubmit={this.props.reasonNotAllowedToSubmit}
       />
     );
   };
