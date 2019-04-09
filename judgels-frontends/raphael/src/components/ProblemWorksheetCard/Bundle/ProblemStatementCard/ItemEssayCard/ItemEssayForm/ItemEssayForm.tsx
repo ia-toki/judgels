@@ -55,7 +55,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
   renderSubmitButton() {
     let buttonText;
     let intent: Intent = Intent.PRIMARY;
-    let disabled = this.props.reasonNotAllowedToSubmit != null;
+    let disabled = this.props.disabled;
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         buttonText = StatementButtonText.Answer;
@@ -73,7 +73,6 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
   }
 
   renderCancelButton() {
-    const disabled = this.props.reasonNotAllowedToSubmit != null;
     return (
       this.state.answerState === AnswerState.Answering && (
         <Button
@@ -82,7 +81,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
           intent={Intent.DANGER}
           onClick={this.onCancelButtonClick}
           className="essay-button"
-          disabled={disabled}
+          disabled={this.props.disabled}
         />
       )
     );
@@ -120,7 +119,6 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
   }
 
   renderClearAnswerButton() {
-    const disabled = this.props.reasonNotAllowedToSubmit != null;
     return (
       (this.state.answerState === AnswerState.AnswerSaved || this.state.answerState === AnswerState.ClearingAnswer) && (
         <Button
@@ -129,7 +127,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
           intent={Intent.DANGER}
           onClick={this.onClearAnswerButtonClick}
           className="essay-button"
-          disabled={disabled}
+          disabled={this.props.disabled}
         />
       )
     );

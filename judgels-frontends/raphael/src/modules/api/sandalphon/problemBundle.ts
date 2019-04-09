@@ -35,7 +35,7 @@ export interface Item {
   number?: number;
   meta: string;
   config: ItemConfig;
-  reasonNotAllowedToSubmit?: string;
+  disabled: boolean;
 }
 
 export interface ProblemWorksheet {

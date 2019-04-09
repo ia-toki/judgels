@@ -46,7 +46,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         {...item}
         itemNumber={item.number!}
         initialAnswer={initialAnswer}
-        reasonNotAllowedToSubmit={this.props.reasonNotAllowedToSubmit}
+        disabled={!!this.props.reasonNotAllowedToSubmit}
       />
     );
   };
@@ -63,7 +63,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         {...item}
         itemNumber={item.number!}
         initialAnswer={initialAnswer}
-        reasonNotAllowedToSubmit={this.props.reasonNotAllowedToSubmit}
+        disabled={!!this.props.reasonNotAllowedToSubmit}
       />
     );
   };
@@ -80,7 +80,7 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
         {...item}
         itemNumber={item.number!}
         initialAnswer={initialAnswer}
-        reasonNotAllowedToSubmit={this.props.reasonNotAllowedToSubmit}
+        disabled={!!this.props.reasonNotAllowedToSubmit}
       />
     );
   };
