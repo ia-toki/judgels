@@ -48,7 +48,7 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
 
         assertThat(checker.canView(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canView(SUPERVISOR, contestAStarted)).isTrue();
-        assertThat(checker.canView(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestB)).isFalse();
         assertThat(checker.canView(SUPERVISOR, contestBStarted)).isTrue();
         assertThat(checker.canView(SUPERVISOR, contestC)).isFalse();
 
@@ -113,7 +113,7 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
         assertThat(checker.canView(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canView(SUPERVISOR, contestAStarted)).isFalse();
         assertThat(checker.canView(SUPERVISOR, contestAFinished)).isTrue();
-        assertThat(checker.canView(SUPERVISOR, contestB)).isTrue();
+        assertThat(checker.canView(SUPERVISOR, contestB)).isFalse();
         assertThat(checker.canView(SUPERVISOR, contestBStarted)).isTrue();
         assertThat(checker.canView(SUPERVISOR, contestBFinished)).isTrue();
 
