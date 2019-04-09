@@ -18,7 +18,6 @@ public final class ItemShortAnswerConfForm {
     @Constraints.Required
     public String inputValidationRegex;
 
-    @Constraints.Required
     public String gradingRegex;
 
     public ItemShortAnswerConfForm() {

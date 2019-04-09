@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 public class MultipleChoiceItemSubmissionGraderTests {
     private Item testItem1;
     private Item testItem2;
+    private Item testItem3;
 
     @BeforeEach
     void before() {
@@ -61,6 +62,44 @@ public class MultipleChoiceItemSubmissionGraderTests {
                 .type(ItemType.MULTIPLE_CHOICE)
                 .config(new StatementItemConfig.Builder().statement("test statement").build())
                 .build();
+
+        testItem3 = new Item.Builder()
+                .jid("item3jid")
+                .meta("3")
+                .type(ItemType.MULTIPLE_CHOICE)
+                .config(new MultipleChoiceItemConfig.Builder()
+                        .statement("item without correct answer, will be graded manually")
+                        .score(4)
+                        .penalty(-1)
+                        .addChoices(
+                                new MultipleChoiceItemConfig.Choice.Builder()
+                                        .alias("a")
+                                        .content("jawaban a")
+                                        .isCorrect(false)
+                                        .build(),
+                                new MultipleChoiceItemConfig.Choice.Builder()
+                                        .alias("b")
+                                        .content("jawaban b")
+                                        .isCorrect(false)
+                                        .build(),
+                                new MultipleChoiceItemConfig.Choice.Builder()
+                                        .alias("c")
+                                        .content("jawaban c")
+                                        .isCorrect(false)
+                                        .build(),
+                                new MultipleChoiceItemConfig.Choice.Builder()
+                                        .alias("d")
+                                        .content("jawaban d")
+                                        .isCorrect(false)
+                                        .build(),
+                                new MultipleChoiceItemConfig.Choice.Builder()
+                                        .alias("e")
+                                        .content("jawaban e")
+                                        .isCorrect(false)
+                                        .build()
+                        )
+                        .build())
+                .build();
     }
 
     @Test
@@ -100,6 +139,15 @@ public class MultipleChoiceItemSubmissionGraderTests {
 
         Grading grading = grader.grade(testItem2, "b");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.INTERNAL_ERROR);
+        assertThat(grading.getScore()).isEmpty();
+    }
+
+    @Test
+    void pending_manual_grading() {
+        MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader();
+
+        Grading grading = grader.grade(testItem3, "b");
+        assertThat(grading.getVerdict()).isEqualTo(Verdict.PENDING_MANUAL_GRADING);
         assertThat(grading.getScore()).isEmpty();
     }
 }

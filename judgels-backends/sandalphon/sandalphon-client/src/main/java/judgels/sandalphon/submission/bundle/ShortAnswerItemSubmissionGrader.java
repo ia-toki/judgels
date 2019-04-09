@@ -14,27 +14,33 @@ public class ShortAnswerItemSubmissionGrader implements ItemSubmissionGrader {
     @Override
     public Grading grade(Item item, String answer) {
         ShortAnswerItemConfig config;
-        String gradingRegex;
         try {
             config = (ShortAnswerItemConfig) item.getConfig();
-            gradingRegex = config.getGradingRegex().get();
+            String gradingRegex = config.getGradingRegex().orElse("");
+
+            if (gradingRegex.isEmpty()) {
+                return new Grading.Builder()
+                        .verdict(Verdict.PENDING_MANUAL_GRADING)
+                        .score(Optional.empty())
+                        .build();
+            }
+
+            if (answer.matches(gradingRegex)) {
+                return new Grading.Builder()
+                        .verdict(Verdict.ACCEPTED)
+                        .score(Optional.of(config.getScore()))
+                        .build();
+            } else {
+                return new Grading.Builder()
+                        .verdict(Verdict.WRONG_ANSWER)
+                        .score(Optional.of(config.getPenalty()))
+                        .build();
+            }
         } catch (RuntimeException e) {
             LOGGER.error("Internal error grading item submission", e);
             return new Grading.Builder()
                     .verdict(Verdict.INTERNAL_ERROR)
                     .score(Optional.empty())
-                    .build();
-        }
-
-        if (answer.matches(gradingRegex)) {
-            return new Grading.Builder()
-                    .verdict(Verdict.ACCEPTED)
-                    .score(Optional.of(config.getScore()))
-                    .build();
-        } else {
-            return new Grading.Builder()
-                    .verdict(Verdict.WRONG_ANSWER)
-                    .score(Optional.of(config.getPenalty()))
                     .build();
         }
     }
