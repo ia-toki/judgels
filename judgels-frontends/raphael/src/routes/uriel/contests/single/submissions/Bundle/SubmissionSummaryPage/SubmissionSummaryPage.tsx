@@ -41,18 +41,16 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
     const { contest, onGetSummary } = this.props;
     const response = await onGetSummary(contest.jid, this.props.match.params.username, this.props.language);
 
-    const problemSummaries: ProblemSubmissionCardProps[] = [];
-    for (const problemJid of Object.keys(response.itemJidsByProblemJid)) {
-      problemSummaries.push({
-        name: response.problemNamesMap[problemJid] || '-',
-        alias: response.problemAliasesMap[problemJid] || '-',
-        itemJids: response.itemJidsByProblemJid[problemJid],
-        submissionsByItemJid: response.submissionsByItemJid,
-        canSupervise: response.config.canSupervise,
-        canManage: response.config.canManage,
-        itemTypesMap: response.itemTypesMap,
-      });
-    }
+    const problemSummaries: ProblemSubmissionCardProps[] = response.config.problemJids.map(problemJid => ({
+      name: response.problemNamesMap[problemJid] || '-',
+      alias: response.problemAliasesMap[problemJid] || '-',
+      itemJids: response.itemJidsByProblemJid[problemJid],
+      submissionsByItemJid: response.submissionsByItemJid,
+      canSupervise: response.config.canSupervise,
+      canManage: response.config.canManage,
+      itemTypesMap: response.itemTypesMap,
+    }));
+
     this.setState({ profile: response.profile, problemSummaries });
   }
 
