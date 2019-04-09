@@ -14,10 +14,9 @@ public class ShortAnswerItemSubmissionGrader implements ItemSubmissionGrader {
     @Override
     public Grading grade(Item item, String answer) {
         ShortAnswerItemConfig config;
-        String gradingRegex;
         try {
             config = (ShortAnswerItemConfig) item.getConfig();
-            gradingRegex = config.getGradingRegex().orElse("");
+            String gradingRegex = config.getGradingRegex().orElse("");
 
             if (gradingRegex.isEmpty()) {
                 return new Grading.Builder()
@@ -37,7 +36,6 @@ public class ShortAnswerItemSubmissionGrader implements ItemSubmissionGrader {
                         .score(Optional.of(config.getPenalty()))
                         .build();
             }
-
         } catch (RuntimeException e) {
             LOGGER.error("Internal error grading item submission", e);
             return new Grading.Builder()
