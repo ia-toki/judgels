@@ -1,5 +1,7 @@
 package judgels.uriel.hibernate;
 
+import static judgels.persistence.CustomPredicateFilter.and;
+import static judgels.persistence.CustomPredicateFilter.not;
 import static judgels.persistence.CustomPredicateFilter.or;
 import static judgels.uriel.UrielCacheUtils.SEPARATOR;
 import static judgels.uriel.UrielCacheUtils.getShortDuration;
@@ -60,7 +62,7 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
     private boolean isViewerOrAboveUncached(String userJid, String contestJid) {
         return selectByFilter(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasContestJid(contestJid))
-                .addCustomPredicates(hasViewerOrAbove(userJid))
+                .addCustomPredicates(isVisible(userJid))
                 .build()).isPresent();
     }
 
@@ -74,7 +76,7 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
     private boolean isContestantUncached(String userJid, String contestJid) {
         return selectByFilter(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasContestJid(contestJid))
-                .addCustomPredicates(hasContestant(userJid))
+                .addCustomPredicates(isVisibleAsContestant(userJid))
                 .build()).isPresent();
     }
 
@@ -88,7 +90,7 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
     private boolean isSupervisorOrAboveUncached(String userJid, String contestJid) {
         return selectByFilter(new FilterOptions.Builder<ContestModel>()
                 .addCustomPredicates(hasContestJid(contestJid))
-                .addCustomPredicates(hasSupervisorOrAbove(userJid))
+                .addCustomPredicates(isVisibleAsSupervisorOrAbove(userJid))
                 .build()).isPresent();
     }
 
@@ -114,17 +116,28 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
         managerCache.invalidate(userJid + SEPARATOR + contestJid);
     }
 
-    static CustomPredicateFilter<ContestModel> hasViewerOrAbove(String userJid) {
+    static CustomPredicateFilter<ContestModel> isVisible(String userJid) {
         return or(
-                hasModule(ContestModuleType.REGISTRATION),
-                hasContestant(userJid),
-                hasSupervisor(userJid),
-                hasManager(userJid));
+                isVisibleAsViewer(),
+                isVisibleAsContestant(userJid),
+                isVisibleAsSupervisorOrAbove(userJid));
     }
 
-    static CustomPredicateFilter<ContestModel> hasSupervisorOrAbove(String userJid) {
+    static CustomPredicateFilter<ContestModel> isVisibleAsViewer() {
+        return and(hasModule(ContestModuleType.REGISTRATION), not(hasModule(ContestModuleType.HIDDEN)));
+    }
+
+    static CustomPredicateFilter<ContestModel> isVisibleAsContestant(String userJid) {
+        return and(hasContestant(userJid), not(hasModule(ContestModuleType.HIDDEN)));
+    }
+
+    static CustomPredicateFilter<ContestModel> isVisibleAsSupervisor(String userJid) {
+        return and(hasSupervisor(userJid), not(hasModule(ContestModuleType.HIDDEN)));
+    }
+
+    static CustomPredicateFilter<ContestModel> isVisibleAsSupervisorOrAbove(String userJid) {
         return or(
-                hasSupervisor(userJid),
+                isVisibleAsSupervisor(userJid),
                 hasManager(userJid));
     }
 }

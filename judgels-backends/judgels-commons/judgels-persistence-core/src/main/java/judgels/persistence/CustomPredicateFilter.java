@@ -19,6 +19,17 @@ public interface CustomPredicateFilter<M> {
         };
     }
 
+    @SafeVarargs
+    static <M> CustomPredicateFilter<M> and(CustomPredicateFilter<M>... predicateFilters) {
+        return (cb, cq, root) -> {
+            Predicate[] predicates = new Predicate[predicateFilters.length];
+            for (int i = 0; i < predicateFilters.length; i++) {
+                predicates[i] = predicateFilters[i].apply(cb, cq, root);
+            }
+            return cb.and(predicates);
+        };
+    }
+
     static <M> CustomPredicateFilter<M> not(CustomPredicateFilter<M> predicateFilter) {
         return (cb, cq, root) -> cb.not(predicateFilter.apply(cb, cq, root));
     }

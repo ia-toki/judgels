@@ -5,6 +5,7 @@ public enum ContestModuleType {
     CLARIFICATION_TIME_LIMIT,
     FILE,
     FROZEN_SCOREBOARD,
+    HIDDEN,
     PAUSE,
     REGISTRATION,
     SCOREBOARD,

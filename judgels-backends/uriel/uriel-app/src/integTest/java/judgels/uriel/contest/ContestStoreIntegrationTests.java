@@ -82,22 +82,31 @@ class ContestStoreIntegrationTests extends AbstractIntegrationTests {
         contestD = store.updateContest(contestD.getJid(), new ContestUpdateData.Builder()
                 .beginTime(Instant.ofEpochSecond(4)).build()).get();
 
+        Contest contestE = store.createContest(new ContestCreateData.Builder().slug("contest-e").build());
+        contestE = store.updateContest(contestE.getJid(), new ContestUpdateData.Builder()
+                .beginTime(Instant.ofEpochSecond(5)).build()).get();
+
         assertThatThrownBy(() -> store.createContest(new ContestCreateData.Builder().slug("contest-d").build()))
                 .isInstanceOf(ServiceException.class)
                 .hasMessageContaining(SLUG_ALREADY_EXISTS.name());
 
         adminRoleStore.upsertAdmin(ADMIN);
         moduleStore.upsertRegistrationModule(contestD.getJid());
+        moduleStore.upsertRegistrationModule(contestE.getJid());
+        moduleStore.upsertHiddenModule(contestE.getJid());
         contestantStore.upsertContestant(contestA.getJid(), USER_1);
+        contestantStore.upsertContestant(contestE.getJid(), USER_1);
         contestantStore.upsertContestant(contestA.getJid(), USER_2);
         contestantStore.upsertContestant(contestA.getJid(), USER_3);
         supervisorStore.upsertSupervisor(contestB.getJid(), USER_2, ImmutableSet.of(ALL));
+        supervisorStore.upsertSupervisor(contestE.getJid(), USER_2, ImmutableSet.of(ALL));
         managerStore.upsertManager(contestC.getJid(), USER_3);
+        managerStore.upsertManager(contestE.getJid(), USER_3);
 
-        assertThat(getContests(ADMIN)).containsExactly(contestD, contestC, contestA, contestB);
+        assertThat(getContests(ADMIN)).containsExactly(contestE, contestD, contestC, contestA, contestB);
         assertThat(getContests(USER_1)).containsExactly(contestD, contestA);
         assertThat(getContests(USER_2)).containsExactly(contestD, contestA, contestB);
-        assertThat(getContests(USER_3)).containsExactly(contestD, contestC, contestA);
+        assertThat(getContests(USER_3)).containsExactly(contestE, contestD, contestC, contestA);
     }
 
     @Test

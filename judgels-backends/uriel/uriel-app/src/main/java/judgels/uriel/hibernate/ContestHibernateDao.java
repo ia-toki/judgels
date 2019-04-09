@@ -1,6 +1,6 @@
 package judgels.uriel.hibernate;
 
-import static judgels.uriel.hibernate.ContestRoleHibernateDao.hasViewerOrAbove;
+import static judgels.uriel.hibernate.ContestRoleHibernateDao.isVisible;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -68,14 +68,14 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
             SelectionOptions options) {
 
         return selectPaged(createFilterOptions(searchOptions)
-                .addCustomPredicates(hasViewerOrAbove(userJid))
+                .addCustomPredicates(isVisible(userJid))
                 .build(), options);
     }
 
     @Override
     public List<ContestModel> selectAllActiveByUserJid(String userJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(hasViewerOrAbove(userJid))
+                .addCustomPredicates(isVisible(userJid))
                 .addCustomPredicates(isActive(clock))
                 .build(), options);
     }
