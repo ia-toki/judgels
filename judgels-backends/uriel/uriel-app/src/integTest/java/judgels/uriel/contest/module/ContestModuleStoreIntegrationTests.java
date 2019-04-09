@@ -2,6 +2,7 @@ package judgels.uriel.contest.module;
 
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
+import static judgels.uriel.api.contest.module.ContestModuleType.HIDDEN;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
@@ -69,7 +70,9 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
                 .clarificationDuration(Duration.ofHours(1))
                 .build();
         store.upsertClarificationTimeLimitModule(contest.getJid(), config3);
+        store.upsertHiddenModule(contest.getJid());
 
-        assertThat(store.getEnabledModules(contest.getJid())).containsOnly(FROZEN_SCOREBOARD, CLARIFICATION_TIME_LIMIT);
+        assertThat(store.getEnabledModules(contest.getJid()))
+                .containsOnly(FROZEN_SCOREBOARD, CLARIFICATION_TIME_LIMIT, HIDDEN);
     }
 }

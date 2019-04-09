@@ -8,6 +8,7 @@ export enum ContestModuleType {
   ClarificationTimeLimit = 'CLARIFICATION_TIME_LIMIT',
   File = 'FILE',
   FrozenScoreboard = 'FROZEN_SCOREBOARD',
+  Hidden = 'HIDDEN',
   Paused = 'PAUSE',
   Registration = 'REGISTRATION',
   Scoreboard = 'SCOREBOARD',
@@ -22,6 +23,7 @@ export const moduleTitlesMap = {
   [ContestModuleType.Virtual]: 'Virtual contest',
   [ContestModuleType.File]: 'File',
   [ContestModuleType.Paused]: 'Paused',
+  [ContestModuleType.Hidden]: 'Hidden',
 };
 
 export const moduleDescriptionsMap = {
@@ -32,6 +34,7 @@ export const moduleDescriptionsMap = {
   [ContestModuleType.Virtual]: 'Allows contestants to start the contest at their preferred time.',
   [ContestModuleType.File]: 'Allows public files to be uploaded to the contest.',
   [ContestModuleType.Paused]: 'Pauses the contest; contestants cannot submit or make clarifications.',
+  [ContestModuleType.Hidden]: 'Hides the contest from contestants and supervisors.',
 };
 
 export const allModules: ContestModuleType[] = [
@@ -42,6 +45,7 @@ export const allModules: ContestModuleType[] = [
   ContestModuleType.Virtual,
   ContestModuleType.File,
   ContestModuleType.Paused,
+  ContestModuleType.Hidden,
 ];
 
 export interface IcpcStyleModuleConfig {
