@@ -65,6 +65,7 @@ export class ItemMultipleChoiceCard extends React.Component<ItemMultipleChoiceCa
               className="problem-multiple-choice-item-choice"
               value={choice.alias}
               onClick={this.handleRadioClick}
+              disabled={this.props.disabled}
             >
               <Tag className="__alias-tag">
                 <HtmlText>{choice.alias}</HtmlText>

@@ -35,6 +35,7 @@ export interface Item {
   number?: number;
   meta: string;
   config: ItemConfig;
+  disabled: boolean;
 }
 
 export interface ProblemWorksheet {

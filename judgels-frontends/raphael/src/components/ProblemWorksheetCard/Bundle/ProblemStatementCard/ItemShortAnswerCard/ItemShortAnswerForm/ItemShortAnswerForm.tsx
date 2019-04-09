@@ -76,7 +76,8 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   renderSubmitButton() {
     let buttonText;
     let intent: Intent = Intent.PRIMARY;
-    const disabledState = this.state.wrongFormat && this.state.answerState === AnswerState.Answering;
+    const disabledState =
+      this.props.disabled || (this.state.wrongFormat && this.state.answerState === AnswerState.Answering);
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         buttonText = StatementButtonText.Answer;
@@ -100,6 +101,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           intent={Intent.DANGER}
           onClick={this.onCancelButtonClick}
           className="button"
+          disabled={this.props.disabled}
         />
       )
     );
@@ -114,6 +116,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
           intent={Intent.DANGER}
           onClick={this.onClearAnswerButtonClick}
           className="button"
+          disabled={this.props.disabled}
         />
       )
     );

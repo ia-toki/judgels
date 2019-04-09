@@ -55,7 +55,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
   renderSubmitButton() {
     let buttonText;
     let intent: Intent = Intent.PRIMARY;
-    let disabled = false;
+    let disabled = this.props.disabled;
     switch (this.state.answerState) {
       case AnswerState.NotAnswered:
         buttonText = StatementButtonText.Answer;
@@ -67,7 +67,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
         break;
       default:
         buttonText = StatementButtonText.Submit;
-        disabled = this.state.answer === '';
+        disabled = disabled || this.state.answer === '';
     }
     return <Button type="submit" text={buttonText} intent={intent} disabled={disabled} className="essay-button" />;
   }
@@ -81,6 +81,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
           intent={Intent.DANGER}
           onClick={this.onCancelButtonClick}
           className="essay-button"
+          disabled={this.props.disabled}
         />
       )
     );
@@ -126,6 +127,7 @@ export default class ItemEssayForm extends React.PureComponent<ItemEssayFormProp
           intent={Intent.DANGER}
           onClick={this.onClearAnswerButtonClick}
           className="essay-button"
+          disabled={this.props.disabled}
         />
       )
     );
