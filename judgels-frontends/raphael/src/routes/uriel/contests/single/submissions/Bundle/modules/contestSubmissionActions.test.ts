@@ -7,6 +7,7 @@ describe('bundle contestSubmissionActions', () => {
   const getState = (): Partial<AppState> => ({ session: sessionState });
 
   let contestSubmissionBundleAPI: jest.Mocked<any>;
+  let toastActions: jest.Mocked<any>;
 
   beforeEach(() => {
     dispatch = jest.fn();
@@ -16,6 +17,10 @@ describe('bundle contestSubmissionActions', () => {
       createItemSubmission: jest.fn(),
       getAnswerSummaryForContestant: jest.fn(),
       getLatestSubmissionsByUserForProblemInContest: jest.fn(),
+    };
+
+    toastActions = {
+      showToast: jest.fn(),
     };
   });
 
@@ -34,13 +39,14 @@ describe('bundle contestSubmissionActions', () => {
     it('calls API to create submission', async () => {
       const action = createItemSubmission('testcontestjid', 'testprobjid', 'testitemjid', 'testans');
       contestSubmissionBundleAPI.createItemSubmission.mockResolvedValue({});
-      await action(dispatch, getState, { contestSubmissionBundleAPI });
+      await action(dispatch, getState, { contestSubmissionBundleAPI, toastActions });
       expect(contestSubmissionBundleAPI.createItemSubmission).toHaveBeenCalledWith(token, {
         contestJid: 'testcontestjid',
         problemJid: 'testprobjid',
         itemJid: 'testitemjid',
         answer: 'testans',
       });
+      expect(toastActions.showToast).toHaveBeenCalledWith('Answer saved.');
     });
   });
 
