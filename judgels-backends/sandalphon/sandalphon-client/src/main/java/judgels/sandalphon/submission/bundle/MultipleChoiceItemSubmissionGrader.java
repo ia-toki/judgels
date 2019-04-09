@@ -24,6 +24,14 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
                     .build();
         }
 
+        boolean hasCorrectChoice = config.getChoices().stream().anyMatch(c -> c.getIsCorrect().get());
+        if (!hasCorrectChoice) {
+            return new Grading.Builder()
+                    .verdict(Verdict.PENDING_MANUAL_GRADING)
+                    .score(Optional.empty())
+                    .build();
+        }
+
         Optional<MultipleChoiceItemConfig.Choice> matchingChoice = config.getChoices().stream()
                 .filter(c -> c.getAlias().equals(answer))
                 .findAny();

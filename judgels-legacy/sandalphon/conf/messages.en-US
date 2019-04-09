@@ -120,7 +120,7 @@ problem.bundle.item.meta=Meta
 problem.bundle.item.statement.statement=Statement
 
 problem.bundle.item.multipleChoice.statement=Statement
-problem.bundle.item.multipleChoice.choices=Choices
+problem.bundle.item.multipleChoice.choices=Choices (no correct choice -> manual grading)
 problem.bundle.item.multipleChoice.alias=Alias
 problem.bundle.item.multipleChoice.content=Content
 problem.bundle.item.multipleChoice.isCorrect=Correct?
@@ -135,8 +135,8 @@ problem.bundle.item.multipleChoice.addChoice=Add Choice
 problem.bundle.item.shortAnswer.statement=Statement
 problem.bundle.item.shortAnswer.score=Score
 problem.bundle.item.shortAnswer.penalty=Penalty
-problem.bundle.item.shortAnswer.inputValidationRegex=Input Validation Regex
-problem.bundle.item.shortAnswer.gradingRegex=Grading Regex
+problem.bundle.item.shortAnswer.inputValidationRegex=Input Validation Regex (matches on whole string)
+problem.bundle.item.shortAnswer.gradingRegex=Grading Regex (matches on whole string; empty regex -> manual grading)
 
 problem.bundle.item.essay.statement=Statement
 problem.bundle.item.essay.score=Score

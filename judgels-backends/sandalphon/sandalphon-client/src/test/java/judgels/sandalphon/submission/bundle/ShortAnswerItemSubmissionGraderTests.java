@@ -16,6 +16,7 @@ public class ShortAnswerItemSubmissionGraderTests {
     private Item testItem2;
     private Item testItem3;
     private Item testItem4;
+    private Item testItem5;
 
     @BeforeEach
     void before() {
@@ -64,6 +65,21 @@ public class ShortAnswerItemSubmissionGraderTests {
                         .score(1)
                         .penalty(-1)
                         .inputValidationRegex("\\d+")
+                        .gradingRegex("(")
+                        .build())
+                .build();
+
+        testItem5 = new Item.Builder()
+                .jid("item5jid")
+                .meta("5")
+                .number(5)
+                .type(ItemType.SHORT_ANSWER)
+                .config(new ShortAnswerItemConfig.Builder()
+                        .statement("test statement")
+                        .score(1)
+                        .penalty(-1)
+                        .inputValidationRegex("\\d+")
+                        .gradingRegex("")
                         .build())
                 .build();
     }
@@ -147,6 +163,16 @@ public class ShortAnswerItemSubmissionGraderTests {
 
         grading = grader.grade(testItem4, "b");
         assertThat(grading.getVerdict()).isEqualTo(Verdict.INTERNAL_ERROR);
+        assertThat(grading.getScore()).isEmpty();
+    }
+
+    @Test
+    void pending_manual_grading() {
+        ShortAnswerItemSubmissionGrader grader = new ShortAnswerItemSubmissionGrader();
+        Grading grading;
+
+        grading = grader.grade(testItem5, "b");
+        assertThat(grading.getVerdict()).isEqualTo(Verdict.PENDING_MANUAL_GRADING);
         assertThat(grading.getScore()).isEmpty();
     }
 }

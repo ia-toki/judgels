@@ -48,7 +48,7 @@ public final class ItemShortAnswerConfAdapter implements BundleItemConfAdapter {
             if (!isRegexValid(confForm.inputValidationRegex)) {
                 form.reject(Messages.get("error.problem.bundle.item.shortAnswer.invalidInputValidationRegex"));
             }
-            if (!isRegexValid(confForm.gradingRegex)) {
+            if (!confForm.gradingRegex.isEmpty() && !isRegexValid(confForm.gradingRegex)) {
                 form.reject(Messages.get("error.problem.bundle.item.shortAnswer.invalidGradingRegex"));
             }
         }
