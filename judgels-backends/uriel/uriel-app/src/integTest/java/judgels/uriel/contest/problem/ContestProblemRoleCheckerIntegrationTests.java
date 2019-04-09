@@ -205,7 +205,7 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
 
         assertThat(checker.canSubmit(SUPERVISOR, contestA, problem, 10)).isPresent();
         assertThat(checker.canSubmit(SUPERVISOR, contestAStarted, problem, 10)).isPresent();
-        assertThat(checker.canSubmit(SUPERVISOR, contestB, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(SUPERVISOR, contestB, problem, 10)).isPresent();
         assertThat(checker.canSubmit(SUPERVISOR, contestBStarted, problem, 10)).isEmpty();
         assertThat(checker.canSubmit(SUPERVISOR, contestBFinished, problem, 10)).isPresent();
         assertThat(checker.canSubmit(SUPERVISOR, contestC, problem, 10)).isPresent();

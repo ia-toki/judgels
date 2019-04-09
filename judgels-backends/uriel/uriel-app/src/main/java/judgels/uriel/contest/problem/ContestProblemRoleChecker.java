@@ -63,7 +63,10 @@ public class ContestProblemRoleChecker {
         if (submissionsLimit.isPresent() && totalSubmissions >= submissionsLimit.get()) {
             return Optional.of("Submissions limit has been reached.");
         }
-        if (canSupervise(userJid, contest)) {
+        if (canManage(userJid, contest)) {
+            return Optional.empty();
+        }
+        if (canSupervise(userJid, contest) && contestTimer.hasStarted(contest, userJid)) {
             return Optional.empty();
         }
         if (!contestRoleDao.isContestant(userJid, contest.getJid())) {
