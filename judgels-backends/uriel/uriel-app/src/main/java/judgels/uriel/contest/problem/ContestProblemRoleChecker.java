@@ -36,11 +36,11 @@ public class ContestProblemRoleChecker {
     }
 
     public boolean canView(String userJid, Contest contest) {
-        if (canSupervise(userJid, contest)) {
+        if (canManage(userJid, contest)) {
             return true;
         }
 
-        if (moduleStore.getVirtualModuleConfig(contest.getJid()).isPresent()) {
+        if (moduleStore.getVirtualModuleConfig(contest.getJid()).isPresent() && !canSupervise(userJid, contest)) {
             boolean asContestant = contestRoleDao.isContestant(userJid, contest.getJid())
                     && contestTimer.hasStarted(contest, userJid);
             boolean asViewerOrAbove = contestRoleDao.isViewerOrAbove(userJid, contest.getJid())
