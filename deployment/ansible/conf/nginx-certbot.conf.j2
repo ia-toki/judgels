@@ -13,6 +13,9 @@ add_header X-Content-Type-Options "nosniff" always;
 # Only allow referrer headers to be sent over HTTPS, and also only the domain name (without path)
 add_header Referrer-Policy "strict-origin" always;
 
+# Configuration for Sandalphon cache
+proxy_cache_path /tmp/sandalphon_cache levels=1:2 keys_zone=sandalphon_cache:10m max_size=2g inactive=15m use_temp_path=off;
+
 {% if jophiel_url is defined %}
 server {
     server_name {{ jophiel_url }};
@@ -57,6 +60,18 @@ server {
     }
 
     location / {
+        # Use cache for Sandalphon
+        # (Sandalphon is prone to high CPU usage if serving many asset files concurrently)
+        proxy_cache sandalphon_cache;
+
+        # On cache miss, block incoming connections while waiting for a response from Sandalphon
+        # (otherwise all incoming requests are directed to Sandalphon until Sandalphon responds,
+        # which causes a short high CPU initial burst)
+        proxy_cache_lock on;
+
+        # Try to serve Sandalphon responses from cache if Sandalphon is down
+        proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
+
         proxy_pass              http://localhost:9002;
         proxy_set_header        Host $host;
         proxy_set_header        X-Real-IP $remote_addr;
