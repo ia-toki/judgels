@@ -2,7 +2,7 @@
   - name: Add or modify nofile hard limit for the user root
     pam_limits:
       domain: root
-      limit_type: soft
+      limit_type: hard
       limit_item: nofile
       value: 1048576
 

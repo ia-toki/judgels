@@ -13,9 +13,6 @@ add_header X-Content-Type-Options "nosniff" always;
 # Only allow referrer headers to be sent over HTTPS, and also only the domain name (without path)
 add_header Referrer-Policy "strict-origin" always;
 
-# Configuration for Sandalphon cache
-proxy_cache_path /tmp/sandalphon_cache levels=1:2 keys_zone=sandalphon_cache:10m max_size=2g inactive=15m use_temp_path=off;
-
 {% if jophiel_url is defined %}
 server {
     server_name {{ jophiel_url }};
@@ -46,6 +43,10 @@ server {
 {% endif %}
 
 {% if sandalphon_url is defined %}
+
+# Configuration for Sandalphon cache
+proxy_cache_path /tmp/sandalphon_cache levels=1:2 keys_zone=sandalphon_cache:10m max_size=2g inactive=15m use_temp_path=off;
+
 server {
     server_name {{ sandalphon_url }};
 
