@@ -179,7 +179,7 @@ export default class ItemShortAnswerForm extends React.PureComponent<
   onTextInputChange = event => {
     const value = event.target.value as string;
     const config: ItemShortAnswerConfig = this.props.config as ItemShortAnswerConfig;
-    const formatValid = value.match(`^${config.inputValidationRegex}$`);
+    const formatValid = value.match(`^(${config.inputValidationRegex})$`);
     this.setState({
       answer: event.target.value,
       wrongFormat: !formatValid,
