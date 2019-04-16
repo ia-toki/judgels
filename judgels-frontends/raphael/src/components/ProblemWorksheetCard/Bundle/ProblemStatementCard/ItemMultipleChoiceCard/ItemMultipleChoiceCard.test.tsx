@@ -8,7 +8,7 @@ import { ItemType, ItemMultipleChoiceConfig } from 'modules/api/sandalphon/probl
 import * as React from 'react';
 
 describe('ItemMultipleChoiceCard', () => {
-  let wrapper: ReactWrapper<ItemMultipleChoiceCardProps>;
+  let wrapper: ReactWrapper<ItemMultipleChoiceCardProps, ItemMultipleChoiceCardState>;
   const itemConfig: ItemMultipleChoiceConfig = {
     statement: 'Statement',
     choices: [
@@ -42,13 +42,15 @@ describe('ItemMultipleChoiceCard', () => {
   });
 
   it('Answer the question by clicking a radio button', () => {
+    const prevState = wrapper.state();
     const radioButton = wrapper
       .find('label')
       .children()
       .find('input')
       .first();
     radioButton.simulate('change');
-    const state: ItemMultipleChoiceCardState = wrapper.state();
+    const state = wrapper.state();
+    expect(prevState.value).toBeUndefined();
     expect(state.value).toEqual('A');
   });
 
@@ -59,14 +61,14 @@ describe('ItemMultipleChoiceCard', () => {
       .find('input')
       .first();
     prevAnswer.simulate('change');
-    const prevState = (wrapper.state() as ItemMultipleChoiceCardState).value;
+    const prevState = wrapper.state().value;
     const currentAnswer = wrapper
       .find('label')
       .children()
       .find('input')
       .last();
     currentAnswer.simulate('change');
-    const currentState = (wrapper.state() as ItemMultipleChoiceCardState).value;
+    const currentState = wrapper.state().value;
     const state = [prevState, currentState];
     expect(state).toEqual(['A', 'C']);
   });
