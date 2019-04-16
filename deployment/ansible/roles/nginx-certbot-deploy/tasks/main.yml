@@ -4,14 +4,14 @@
       domain: root
       limit_type: hard
       limit_item: nofile
-      value: 1048576
+      value: 8192
 
   - name: Add or modify nofile soft limit for the user root
     pam_limits:
       domain: root
       limit_type: soft
       limit_item: nofile
-      value: 1048576
+      value: 8192
 
   - name: Create nginx-cerbot container mount volume
     file:
