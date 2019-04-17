@@ -47,7 +47,7 @@ public class ContestScoreboardFetcher {
             Scoreboard scoreboard =
                     scoreboardBuilder.buildScoreboard(raw, contest, userJid, canSupervise, showAllProblems);
             Scoreboard scoreboardPage = scoreboardBuilder.paginateScoreboard(scoreboard, contest, page, pageSize);
-            int totalEntries = scoreboardBuilder.getTotalEntries(scoreboard, contest);
+            int totalEntries = scoreboard.getContent().getEntries().size();
             return new ContestScoreboard.Builder()
                     .scoreboard(scoreboardPage)
                     .totalEntries(totalEntries)

@@ -1,53 +1,34 @@
 package judgels.uriel.contest.scoreboard.gcj;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import judgels.gabriel.api.Verdict;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.GcjStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
-import judgels.uriel.api.contest.scoreboard.GcjScoreboard;
-import judgels.uriel.api.contest.scoreboard.GcjScoreboard.GcjScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.GcjScoreboard.GcjScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.GcjScoreboard.GcjScoreboardProblemState;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 class GcjScoreboardProcessorTests {
-    @Mock private ObjectMapper mapper;
     private GcjScoreboardProcessor scoreboardProcessor = new GcjScoreboardProcessor();
 
-    @BeforeEach
-    void before() {
-        initMocks(this);
-    }
-
     @Nested
-    class ComputeToString {
+    class ComputeEntries {
         private ScoreboardState state = new ScoreboardState.Builder()
-                .addContestantJids("c1", "c2")
                 .addProblemJids("p1", "p2")
                 .addProblemAliases("A", "B")
                 .problemPoints(ImmutableList.of(1, 10))
@@ -67,19 +48,12 @@ class GcjScoreboardProcessorTests {
                 .wrongSubmissionPenalty(10)
                 .build();
 
-        private Map<String, Optional<Instant>> contestantStartTimesMap = ImmutableMap.of(
-                "c1", Optional.empty(),
-                "c2", Optional.of(Instant.ofEpochSecond(300)),
-                "c3", Optional.empty()
-        );
-
-        @BeforeEach
-        void before() throws JsonProcessingException {
-            when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
-        }
+        private Set<ContestContestant> contestants = ImmutableSet.of(
+                new ContestContestant.Builder().userJid("c1").build(),
+                new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochSecond(300)).build());
 
         @Test
-        void show_only_contestant() throws JsonProcessingException {
+        void show_only_contestant() {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
                             .containerJid("JIDC")
@@ -98,49 +72,44 @@ class GcjScoreboardProcessorTests {
                                     .build())
                             .build());
 
-            scoreboardProcessor.computeToString(
-                    mapper,
+            List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                     state,
                     contest,
                     styleModuleConfig,
-                    contestantStartTimesMap,
+                    contestants,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
 
-            verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                    .state(state)
-                    .content(new GcjScoreboardContent.Builder()
-                            .addEntries(new GcjScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c1")
-                                    .totalPoints(0)
-                                    .totalPenalties(0)
-                                    .addAttemptsList(0, 0)
-                                    .addPenaltyList(0, 0)
-                                    .addProblemStateList(
-                                            GcjScoreboardProblemState.NOT_ACCEPTED,
-                                            GcjScoreboardProblemState.NOT_ACCEPTED
-                                    )
-                                    .build())
-                            .addEntries(new GcjScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c2")
-                                    .totalPoints(0)
-                                    .totalPenalties(0)
-                                    .addAttemptsList(0, 0)
-                                    .addPenaltyList(0, 0)
-                                    .addProblemStateList(
-                                            GcjScoreboardProblemState.NOT_ACCEPTED,
-                                            GcjScoreboardProblemState.NOT_ACCEPTED
-                                    )
-                                    .build())
-                            .build())
-                    .build());
+            assertThat(entries).containsExactly(
+                    new GcjScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c1")
+                            .totalPoints(0)
+                            .totalPenalties(0)
+                            .addAttemptsList(0, 0)
+                            .addPenaltyList(0, 0)
+                            .addProblemStateList(
+                                    GcjScoreboardProblemState.NOT_ACCEPTED,
+                                    GcjScoreboardProblemState.NOT_ACCEPTED
+                            )
+                            .build(),
+                    new GcjScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c2")
+                            .totalPoints(0)
+                            .totalPenalties(0)
+                            .addAttemptsList(0, 0)
+                            .addPenaltyList(0, 0)
+                            .addProblemStateList(
+                                    GcjScoreboardProblemState.NOT_ACCEPTED,
+                                    GcjScoreboardProblemState.NOT_ACCEPTED
+                            )
+                            .build());
         }
 
         @Test
-        void show_only_contest_problem() throws JsonProcessingException {
+        void show_only_contest_problem() {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
                             .containerJid("JIDC")
@@ -159,49 +128,44 @@ class GcjScoreboardProcessorTests {
                                     .build())
                             .build());
 
-            scoreboardProcessor.computeToString(
-                    mapper,
+            List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                     state,
                     contest,
                     styleModuleConfig,
-                    contestantStartTimesMap,
+                    contestants,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
 
-            verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                    .state(state)
-                    .content(new GcjScoreboardContent.Builder()
-                            .addEntries(new GcjScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c1")
-                                    .totalPoints(0)
-                                    .totalPenalties(0)
-                                    .addAttemptsList(0, 0)
-                                    .addPenaltyList(0, 0)
-                                    .addProblemStateList(
-                                            GcjScoreboardProblemState.NOT_ACCEPTED,
-                                            GcjScoreboardProblemState.NOT_ACCEPTED
-                                    )
-                                    .build())
-                            .addEntries(new GcjScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c2")
-                                    .totalPoints(0)
-                                    .totalPenalties(0)
-                                    .addAttemptsList(0, 0)
-                                    .addPenaltyList(0, 0)
-                                    .addProblemStateList(
-                                            GcjScoreboardProblemState.NOT_ACCEPTED,
-                                            GcjScoreboardProblemState.NOT_ACCEPTED
-                                    )
-                                    .build())
-                            .build())
-                    .build());
+            assertThat(entries).containsExactly(
+                    new GcjScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c1")
+                            .totalPoints(0)
+                            .totalPenalties(0)
+                            .addAttemptsList(0, 0)
+                            .addPenaltyList(0, 0)
+                            .addProblemStateList(
+                                    GcjScoreboardProblemState.NOT_ACCEPTED,
+                                    GcjScoreboardProblemState.NOT_ACCEPTED
+                            )
+                            .build(),
+                    new GcjScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c2")
+                            .totalPoints(0)
+                            .totalPenalties(0)
+                            .addAttemptsList(0, 0)
+                            .addPenaltyList(0, 0)
+                            .addProblemStateList(
+                                    GcjScoreboardProblemState.NOT_ACCEPTED,
+                                    GcjScoreboardProblemState.NOT_ACCEPTED
+                            )
+                            .build());
         }
 
         @Test
-        void ignore_submission_with_no_grade() throws JsonProcessingException {
+        void ignore_submission_with_no_grade() {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
                             .containerJid("JIDC")
@@ -240,49 +204,44 @@ class GcjScoreboardProcessorTests {
                             .problemJid("p2")
                             .build());
 
-            scoreboardProcessor.computeToString(
-                    mapper,
+            List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                     state,
                     contest,
                     styleModuleConfig,
-                    contestantStartTimesMap,
+                    contestants,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
 
-            verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                    .state(state)
-                    .content(new GcjScoreboardContent.Builder()
-                            .addEntries(new GcjScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c1")
-                                    .totalPoints(1)
-                                    .totalPenalties(9)
-                                    .addAttemptsList(1, 0)
-                                    .addPenaltyList(9, 0)
-                                    .addProblemStateList(
-                                            GcjScoreboardProblemState.ACCEPTED,
-                                            GcjScoreboardProblemState.NOT_ACCEPTED
-                                    )
-                                    .build())
-                            .addEntries(new GcjScoreboardEntry.Builder()
-                                    .rank(2)
-                                    .contestantJid("c2")
-                                    .totalPoints(0)
-                                    .totalPenalties(0)
-                                    .addAttemptsList(0, 0)
-                                    .addPenaltyList(0, 0)
-                                    .addProblemStateList(
-                                            GcjScoreboardProblemState.NOT_ACCEPTED,
-                                            GcjScoreboardProblemState.NOT_ACCEPTED
-                                    )
-                                    .build())
-                            .build())
-                    .build());
+            assertThat(entries).containsExactly(
+                    new GcjScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c1")
+                            .totalPoints(1)
+                            .totalPenalties(9)
+                            .addAttemptsList(1, 0)
+                            .addPenaltyList(9, 0)
+                            .addProblemStateList(
+                                    GcjScoreboardProblemState.ACCEPTED,
+                                    GcjScoreboardProblemState.NOT_ACCEPTED
+                            )
+                            .build(),
+                    new GcjScoreboardEntry.Builder()
+                            .rank(2)
+                            .contestantJid("c2")
+                            .totalPoints(0)
+                            .totalPenalties(0)
+                            .addAttemptsList(0, 0)
+                            .addPenaltyList(0, 0)
+                            .addProblemStateList(
+                                    GcjScoreboardProblemState.NOT_ACCEPTED,
+                                    GcjScoreboardProblemState.NOT_ACCEPTED
+                            )
+                            .build());
         }
 
         @Test
-        void time_calculation() throws JsonProcessingException {
+        void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
                             .containerJid("JIDC")
@@ -366,45 +325,40 @@ class GcjScoreboardProcessorTests {
                             .build()
             );
 
-            scoreboardProcessor.computeToString(
-                    mapper,
+            List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                     state,
                     contest,
                     styleModuleConfig,
-                    contestantStartTimesMap,
+                    contestants,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
 
-            verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                    .state(state)
-                    .content(new GcjScoreboardContent.Builder()
-                            .addEntries(new GcjScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c1")
-                                    .totalPoints(11)
-                                    .totalPenalties(26)
-                                    .addAttemptsList(2, 2)
-                                    .addPenaltyList(4, 6)
-                                    .addProblemStateList(
-                                            GcjScoreboardProblemState.ACCEPTED,
-                                            GcjScoreboardProblemState.ACCEPTED
-                                    )
-                                    .build())
-                            .addEntries(new GcjScoreboardEntry.Builder()
-                                    .rank(2)
-                                    .contestantJid("c2")
-                                    .totalPoints(1)
-                                    .totalPenalties(10)
-                                    .addAttemptsList(1, 0)
-                                    .addPenaltyList(10, 0)
-                                    .addProblemStateList(
-                                            GcjScoreboardProblemState.ACCEPTED,
-                                            GcjScoreboardProblemState.NOT_ACCEPTED
-                                    )
-                                    .build())
-                            .build())
-                    .build());
+            assertThat(entries).containsExactly(
+                    new GcjScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c1")
+                            .totalPoints(11)
+                            .totalPenalties(26)
+                            .addAttemptsList(2, 2)
+                            .addPenaltyList(4, 6)
+                            .addProblemStateList(
+                                    GcjScoreboardProblemState.ACCEPTED,
+                                    GcjScoreboardProblemState.ACCEPTED
+                            )
+                            .build(),
+                    new GcjScoreboardEntry.Builder()
+                            .rank(2)
+                            .contestantJid("c2")
+                            .totalPoints(1)
+                            .totalPenalties(10)
+                            .addAttemptsList(1, 0)
+                            .addPenaltyList(10, 0)
+                            .addProblemStateList(
+                                    GcjScoreboardProblemState.ACCEPTED,
+                                    GcjScoreboardProblemState.NOT_ACCEPTED
+                            )
+                            .build());
         }
 
         @Nested
@@ -445,103 +399,92 @@ class GcjScoreboardProcessorTests {
             );
 
             @Test
-            void base_case() throws JsonProcessingException {
-                scoreboardProcessor.computeToString(
-                        mapper,
+            void base_case() {
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                        .state(state)
-                        .content(new GcjScoreboardContent.Builder()
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c1")
-                                        .totalPoints(10)
-                                        .totalPenalties(6)
-                                        .addAttemptsList(0, 1)
-                                        .addPenaltyList(0, 6)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.NOT_ACCEPTED,
-                                                GcjScoreboardProblemState.ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(2)
-                                        .contestantJid("c2")
-                                        .totalPoints(1)
-                                        .totalPenalties(1)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(1, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c1")
+                                .totalPoints(10)
+                                .totalPenalties(6)
+                                .addAttemptsList(0, 1)
+                                .addPenaltyList(0, 6)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.NOT_ACCEPTED,
+                                        GcjScoreboardProblemState.ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("c2")
+                                .totalPoints(1)
+                                .totalPenalties(1)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(1, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build());
             }
 
             @Test
-            void reversed_case() throws JsonProcessingException {
+            void reversed_case() {
                 state = new ScoreboardState.Builder()
-                        .addContestantJids("c1", "c2")
                         .addProblemJids("p2", "p1")
                         .addProblemAliases("B", "A")
                         .problemPoints(ImmutableList.of(10, 1))
                         .build();
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                        .state(state)
-                        .content(new GcjScoreboardContent.Builder()
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c1")
-                                        .totalPoints(10)
-                                        .totalPenalties(6)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(6, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(2)
-                                        .contestantJid("c2")
-                                        .totalPoints(1)
-                                        .totalPenalties(1)
-                                        .addAttemptsList(0, 1)
-                                        .addPenaltyList(0, 1)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.NOT_ACCEPTED,
-                                                GcjScoreboardProblemState.ACCEPTED
-                                        )
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c1")
+                                .totalPoints(10)
+                                .totalPenalties(6)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(6, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("c2")
+                                .totalPoints(1)
+                                .totalPenalties(1)
+                                .addAttemptsList(0, 1)
+                                .addPenaltyList(0, 1)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.NOT_ACCEPTED,
+                                        GcjScoreboardProblemState.ACCEPTED
+                                )
+                                .build());
             }
         }
 
         @Nested
         class Sorting {
             @Test
-            void points_over_penalty() throws JsonProcessingException {
+            void points_over_penalty() {
                 List<Submission> submissions = ImmutableList.of(
                         new Submission.Builder()
                                 .containerJid("JIDC")
@@ -577,49 +520,44 @@ class GcjScoreboardProcessorTests {
                                 .build()
                 );
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                        .state(state)
-                        .content(new GcjScoreboardContent.Builder()
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .totalPoints(10)
-                                        .totalPenalties(10)
-                                        .addAttemptsList(0, 1)
-                                        .addPenaltyList(0, 10)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.NOT_ACCEPTED,
-                                                GcjScoreboardProblemState.ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(2)
-                                        .contestantJid("c1")
-                                        .totalPoints(1)
-                                        .totalPenalties(4)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(4, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .totalPoints(10)
+                                .totalPenalties(10)
+                                .addAttemptsList(0, 1)
+                                .addPenaltyList(0, 10)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.NOT_ACCEPTED,
+                                        GcjScoreboardProblemState.ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("c1")
+                                .totalPoints(1)
+                                .totalPenalties(4)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(4, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build());
             }
 
             @Test
-            void penalty_as_tiebreaker() throws JsonProcessingException {
+            void penalty_as_tiebreaker() {
                 List<Submission> submissions = ImmutableList.of(
                         new Submission.Builder()
                                 .containerJid("JIDC")
@@ -655,55 +593,57 @@ class GcjScoreboardProcessorTests {
                                 .build()
                 );
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                        .state(state)
-                        .content(new GcjScoreboardContent.Builder()
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .totalPoints(1)
-                                        .totalPenalties(10)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(10, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(2)
-                                        .contestantJid("c1")
-                                        .totalPoints(1)
-                                        .totalPenalties(14)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(14, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .totalPoints(1)
+                                .totalPenalties(10)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(10, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("c1")
+                                .totalPoints(1)
+                                .totalPenalties(14)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(14, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build());
             }
 
             @Test
-            void same_rank_if_equal() throws JsonProcessingException {
+            void same_rank_if_equal() {
                 state = new ScoreboardState.Builder()
-                        .addContestantJids("c1", "c2", "c3")
                         .addProblemJids("p1", "p2")
                         .addProblemAliases("A", "B")
                         .problemPoints(ImmutableList.of(1, 10))
                         .build();
+
+                contestants = ImmutableSet.of(
+                        new ContestContestant.Builder().userJid("c1").build(),
+                        new ContestContestant.Builder()
+                                .userJid("c2")
+                                .contestStartTime(Instant.ofEpochSecond(300))
+                                .build(),
+                        new ContestContestant.Builder().userJid("c3").build());
 
                 List<Submission> submissions = ImmutableList.of(
                         new Submission.Builder()
@@ -740,57 +680,52 @@ class GcjScoreboardProcessorTests {
                                 .build()
                 );
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                        .state(state)
-                        .content(new GcjScoreboardContent.Builder()
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c1")
-                                        .totalPoints(1)
-                                        .totalPenalties(10)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(10, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .totalPoints(1)
-                                        .totalPenalties(10)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(10, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(3)
-                                        .contestantJid("c3")
-                                        .totalPoints(0)
-                                        .totalPenalties(0)
-                                        .addAttemptsList(0, 0)
-                                        .addPenaltyList(0, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.NOT_ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c1")
+                                .totalPoints(1)
+                                .totalPenalties(10)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(10, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .totalPoints(1)
+                                .totalPenalties(10)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(10, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(3)
+                                .contestantJid("c3")
+                                .totalPoints(0)
+                                .totalPenalties(0)
+                                .addAttemptsList(0, 0)
+                                .addPenaltyList(0, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.NOT_ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build());
             }
         }
 
@@ -849,50 +784,45 @@ class GcjScoreboardProcessorTests {
                             .build());
 
             @Test
-            void no_pending() throws JsonProcessingException {
-                scoreboardProcessor.computeToString(
-                        mapper,
+            void no_pending() {
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         baseSubmissions,
                         ImmutableList.of(),
                         freezeTime);
 
-                verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                        .state(state)
-                        .content(new GcjScoreboardContent.Builder()
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .totalPoints(11)
-                                        .totalPenalties(3)
-                                        .addAttemptsList(1, 1)
-                                        .addPenaltyList(3, 2)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(2)
-                                        .contestantJid("c1")
-                                        .totalPoints(1)
-                                        .totalPenalties(1)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(1, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .totalPoints(11)
+                                .totalPenalties(3)
+                                .addAttemptsList(1, 1)
+                                .addPenaltyList(3, 2)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("c1")
+                                .totalPoints(1)
+                                .totalPenalties(1)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(1, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build());
             }
 
             @Test
-            void pending_does_not_overwrite_accepted() throws JsonProcessingException {
+            void pending_does_not_overwrite_accepted() {
                 List<Submission> submissions = new ImmutableList.Builder<Submission>()
                         .addAll(baseSubmissions)
                         .add(new Submission.Builder()
@@ -913,49 +843,44 @@ class GcjScoreboardProcessorTests {
                                 .build())
                         .build();
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         freezeTime);
 
-                verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                        .state(state)
-                        .content(new GcjScoreboardContent.Builder()
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .totalPoints(11)
-                                        .totalPenalties(3)
-                                        .addAttemptsList(1, 1)
-                                        .addPenaltyList(3, 2)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(2)
-                                        .contestantJid("c1")
-                                        .totalPoints(1)
-                                        .totalPenalties(1)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(1, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.NOT_ACCEPTED
-                                        )
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .totalPoints(11)
+                                .totalPenalties(3)
+                                .addAttemptsList(1, 1)
+                                .addPenaltyList(3, 2)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("c1")
+                                .totalPoints(1)
+                                .totalPenalties(1)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(1, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build());
             }
 
             @Test
-            void pending_does_overwrite_not_accepted() throws JsonProcessingException {
+            void pending_does_overwrite_not_accepted() {
                 List<Submission> submissions = new ImmutableList.Builder<Submission>()
                         .addAll(baseSubmissions)
                         .add(new Submission.Builder()
@@ -976,49 +901,44 @@ class GcjScoreboardProcessorTests {
                                 .build())
                         .build();
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         freezeTime);
 
-                verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                        .state(state)
-                        .content(new GcjScoreboardContent.Builder()
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .totalPoints(11)
-                                        .totalPenalties(3)
-                                        .addAttemptsList(1, 1)
-                                        .addPenaltyList(3, 2)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(2)
-                                        .contestantJid("c1")
-                                        .totalPoints(1)
-                                        .totalPenalties(1)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(1, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.FROZEN
-                                        )
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .totalPoints(11)
+                                .totalPenalties(3)
+                                .addAttemptsList(1, 1)
+                                .addPenaltyList(3, 2)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("c1")
+                                .totalPoints(1)
+                                .totalPenalties(1)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(1, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.FROZEN
+                                )
+                                .build());
             }
 
             @Test
-            void pending_counts_on_freeze_time() throws JsonProcessingException {
+            void pending_counts_on_freeze_time() {
                 List<Submission> submissions = new ImmutableList.Builder<Submission>()
                         .addAll(baseSubmissions)
                         .add(new Submission.Builder()
@@ -1039,118 +959,41 @@ class GcjScoreboardProcessorTests {
                                 .build())
                         .build();
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         freezeTime);
 
-                verify(mapper).writeValueAsString(new GcjScoreboard.Builder()
-                        .state(state)
-                        .content(new GcjScoreboardContent.Builder()
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .totalPoints(11)
-                                        .totalPenalties(3)
-                                        .addAttemptsList(1, 1)
-                                        .addPenaltyList(3, 2)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.ACCEPTED
-                                        )
-                                        .build())
-                                .addEntries(new GcjScoreboardEntry.Builder()
-                                        .rank(2)
-                                        .contestantJid("c1")
-                                        .totalPoints(1)
-                                        .totalPenalties(1)
-                                        .addAttemptsList(1, 0)
-                                        .addPenaltyList(1, 0)
-                                        .addProblemStateList(
-                                                GcjScoreboardProblemState.ACCEPTED,
-                                                GcjScoreboardProblemState.FROZEN
-                                        )
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .totalPoints(11)
+                                .totalPenalties(3)
+                                .addAttemptsList(1, 1)
+                                .addPenaltyList(3, 2)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("c1")
+                                .totalPoints(1)
+                                .totalPenalties(1)
+                                .addAttemptsList(1, 0)
+                                .addPenaltyList(1, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.ACCEPTED,
+                                        GcjScoreboardProblemState.FROZEN
+                                )
+                                .build());
             }
         }
-    }
-
-    @Test
-    void filter_contestant_jids() {
-        GcjScoreboardEntry entry = new GcjScoreboardEntry.Builder()
-                .rank(0)
-                .contestantJid("123")
-                .totalPoints(20)
-                .totalPenalties(12)
-                .build();
-
-        GcjScoreboard scoreboard = new GcjScoreboard.Builder()
-                .state(new ScoreboardState.Builder()
-                        .addContestantJids("c1", "c2", "c3", "c4")
-                        .addProblemJids("p1", "p2")
-                        .addProblemAliases("A", "B")
-                        .build())
-                .content(new GcjScoreboardContent.Builder()
-                        .addEntries(
-                                new GcjScoreboardEntry.Builder().from(entry).rank(1).contestantJid("c1").build(),
-                                new GcjScoreboardEntry.Builder().from(entry).rank(2).contestantJid("c2").build(),
-                                new GcjScoreboardEntry.Builder().from(entry).rank(3).contestantJid("c3").build(),
-                                new GcjScoreboardEntry.Builder().from(entry).rank(4).contestantJid("c4").build())
-                        .build())
-                .build();
-
-        GcjScoreboard filteredScoreboard = new GcjScoreboard.Builder()
-                .state(new ScoreboardState.Builder()
-                        .addContestantJids("c1", "c3")
-                        .addProblemJids("p1", "p2")
-                        .addProblemAliases("A", "B")
-                        .build())
-                .content(new GcjScoreboardContent.Builder()
-                        .addEntries(
-                                new GcjScoreboardEntry.Builder().from(entry).rank(-1).contestantJid("c1").build(),
-                                new GcjScoreboardEntry.Builder().from(entry).rank(-1).contestantJid("c3").build())
-                        .build())
-                .build();
-
-        assertThat(scoreboardProcessor.filterContestantJids(scoreboard, ImmutableSet.of("c1", "c3")))
-                .isEqualTo(filteredScoreboard);
-    }
-
-    @Test
-    void test_pagination() {
-        ScoreboardState state = new ScoreboardState.Builder()
-                .addContestantJids("c1", "c2")
-                .addProblemJids("p1", "p2")
-                .addProblemAliases("A", "B")
-                .build();
-
-        List<GcjScoreboardEntry> fakeEntries = new ArrayList<>(134);
-        for (int i = 0; i < 134; i++) {
-            fakeEntries.add(mock(GcjScoreboardEntry.class));
-        }
-
-        GcjScoreboard gcjScoreboard = new GcjScoreboard.Builder()
-                .state(state)
-                .content(new GcjScoreboardContent.Builder()
-                        .entries(fakeEntries)
-                        .build())
-                .build();
-
-        GcjScoreboard pagedScoreboard = (GcjScoreboard) scoreboardProcessor.paginate(gcjScoreboard, 1, 50);
-        System.out.println(pagedScoreboard);
-        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(0, 50));
-
-        pagedScoreboard = (GcjScoreboard) scoreboardProcessor.paginate(gcjScoreboard, 2, 50);
-        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(50, 100));
-
-        pagedScoreboard = (GcjScoreboard) scoreboardProcessor.paginate(gcjScoreboard, 3, 50);
-        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(100, 134));
     }
 }

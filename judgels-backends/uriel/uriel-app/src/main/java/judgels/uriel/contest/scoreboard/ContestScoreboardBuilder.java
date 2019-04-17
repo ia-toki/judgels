@@ -1,8 +1,12 @@
 package judgels.uriel.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
@@ -10,6 +14,7 @@ import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.scoreboard.ioi.IoiScoreboardProcessor;
@@ -42,21 +47,27 @@ public class ContestScoreboardBuilder {
 
         ScoreboardProcessor processor = processorRegistry.get(contest.getStyle());
 
-        Scoreboard scoreboard = processor.parseFromString(mapper, raw.getScoreboard());
+        Scoreboard scoreboard = processor.parse(mapper, raw.getScoreboard());
         scoreboard = filterContestantJidsIfNecessary(scoreboard, processor, contest, userJid, canSupervise);
         scoreboard = filterProblemJidsIfNecessary(scoreboard, processor, contest, showAllProblems);
 
         return scoreboard;
     }
 
-    public int getTotalEntries(Scoreboard scoreboard, Contest contest) {
-        ScoreboardProcessor processor = processorRegistry.get(contest.getStyle());
-        return processor.getTotalEntries(scoreboard);
-    }
-
     public Scoreboard paginateScoreboard(Scoreboard scoreboard, Contest contest, int page, int pageSize) {
         ScoreboardProcessor processor = processorRegistry.get(contest.getStyle());
-        return processor.paginate(scoreboard, page, pageSize);
+
+        List<? extends List<? extends ScoreboardEntry>> partition =
+                Lists.partition(scoreboard.getContent().getEntries(), pageSize);
+
+        List<? extends ScoreboardEntry> partitionPage;
+        if (page <= partition.size()) {
+            partitionPage = partition.get(page - 1);
+        } else {
+            partitionPage = ImmutableList.of();
+        }
+
+        return processor.create(scoreboard.getState(), partitionPage);
     }
 
     private Scoreboard filterContestantJidsIfNecessary(
@@ -71,11 +82,17 @@ public class ContestScoreboardBuilder {
         }
 
         ScoreboardModuleConfig scoreboardModuleConfig = moduleStore.getScoreboardModuleConfig(contest.getJid());
-        if (scoreboardModuleConfig.getIsIncognitoScoreboard()) {
-            return processor.filterContestantJids(scoreboard, ImmutableSet.of(userJid));
+        if (!scoreboardModuleConfig.getIsIncognitoScoreboard()) {
+            return scoreboard;
         }
 
-        return scoreboard;
+        List<? extends ScoreboardEntry> filteredEntries = scoreboard.getContent().getEntries()
+                .stream()
+                .filter(e -> e.getContestantJid().equals(userJid))
+                .map(processor::clearEntryRank)
+                .collect(Collectors.toList());
+
+        return processor.create(scoreboard.getState(), filteredEntries);
     }
 
     private Scoreboard filterProblemJidsIfNecessary(

@@ -2,83 +2,36 @@ package judgels.uriel.contest.scoreboard.ioi;
 
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.Verdict;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
+import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 class IoiScoreboardProcessorTests {
-    @Mock private ObjectMapper mapper;
     private IoiScoreboardProcessor scoreboardProcessor = new IoiScoreboardProcessor();
 
-    @BeforeEach
-    void before() {
-        initMocks(this);
-    }
-
-    @Test
-    void test_pagination() {
-        ScoreboardState state = new ScoreboardState.Builder()
-                .addContestantJids("c1", "c2")
-                .addProblemJids("p1", "p2")
-                .addProblemAliases("A", "B")
-                .build();
-
-        List<IoiScoreboardEntry> fakeEntries = new ArrayList<>(134);
-        for (int i = 0; i < 134; i++) {
-            fakeEntries.add(mock(IoiScoreboardEntry.class));
-        }
-
-        IoiScoreboard ioiScoreboard = new IoiScoreboard.Builder()
-                .state(state)
-                .content(new IoiScoreboardContent.Builder()
-                        .entries(fakeEntries)
-                        .build())
-                .build();
-
-        IoiScoreboard pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginate(ioiScoreboard, 1, 50);
-        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(0, 50));
-
-        pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginate(ioiScoreboard, 2, 50);
-        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(50, 100));
-
-        pagedScoreboard = (IoiScoreboard) scoreboardProcessor.paginate(ioiScoreboard, 3, 50);
-        assertThat(pagedScoreboard.getContent().getEntries()).isEqualTo(fakeEntries.subList(100, 134));
-    }
-
     @Nested
-    class ComputeToString {
+    class ComputeEntries {
         private ScoreboardState state = new ScoreboardState.Builder()
-                .addContestantJids("c1", "c2")
                 .addProblemJids("p1", "p2")
                 .addProblemAliases("A", "B")
                 .build();
@@ -95,19 +48,12 @@ class IoiScoreboardProcessorTests {
 
         private StyleModuleConfig styleModulesConfig = new IoiStyleModuleConfig.Builder().build();
 
-        private Map<String, Optional<Instant>> contestantStartTimesMap = ImmutableMap.of(
-                "c1", Optional.empty(),
-                "c2", Optional.of(Instant.ofEpochMilli(10)),
-                "c3", Optional.empty()
-        );
-
-        @BeforeEach
-        void before() throws JsonProcessingException {
-            when(mapper.writeValueAsString(any())).thenReturn("scoreboard-string");
-        }
+        private Set<ContestContestant> contestants = ImmutableSet.of(
+                new ContestContestant.Builder().userJid("c1").build(),
+                new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochMilli(10)).build());
 
         @Test
-        void only_count_contestant() throws JsonProcessingException {
+        void only_count_contestant() {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
                             .containerJid("JIDC")
@@ -127,45 +73,40 @@ class IoiScoreboardProcessorTests {
                             .build()
             );
 
-            scoreboardProcessor.computeToString(
-                    mapper,
+            List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                     state,
                     contest,
                     styleModulesConfig,
-                    contestantStartTimesMap,
+                    contestants,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
 
-            verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
-                    .state(state)
-                    .content(new IoiScoreboardContent.Builder()
-                            .addEntries(new IoiScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c1")
-                                    .addScores(
-                                            Optional.empty(),
-                                            Optional.empty()
-                                    )
-                                    .totalScores(0)
-                                    .lastAffectingPenalty(0)
-                                    .build())
-                            .addEntries(new IoiScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c2")
-                                    .addScores(
-                                            Optional.empty(),
-                                            Optional.empty()
-                                    )
-                                    .totalScores(0)
-                                    .lastAffectingPenalty(0)
-                                    .build())
-                            .build())
-                    .build());
+            assertThat(entries).containsExactly(
+                    new IoiScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c1")
+                            .addScores(
+                                    Optional.empty(),
+                                    Optional.empty()
+                            )
+                            .totalScores(0)
+                            .lastAffectingPenalty(0)
+                            .build(),
+                    new IoiScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c2")
+                            .addScores(
+                                    Optional.empty(),
+                                    Optional.empty()
+                            )
+                            .totalScores(0)
+                            .lastAffectingPenalty(0)
+                            .build());
         }
 
         @Test
-        void ignore_other_problem() throws JsonProcessingException {
+        void ignore_other_problem() {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
                             .containerJid("JIDC")
@@ -185,45 +126,40 @@ class IoiScoreboardProcessorTests {
                             .build()
             );
 
-            scoreboardProcessor.computeToString(
-                    mapper,
+            List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                     state,
                     contest,
                     styleModulesConfig,
-                    contestantStartTimesMap,
+                    contestants,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
 
-            verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
-                    .state(state)
-                    .content(new IoiScoreboardContent.Builder()
-                            .addEntries(new IoiScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c1")
-                                    .addScores(
-                                            Optional.empty(),
-                                            Optional.empty()
-                                    )
-                                    .totalScores(0)
-                                    .lastAffectingPenalty(0)
-                                    .build())
-                            .addEntries(new IoiScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c2")
-                                    .addScores(
-                                            Optional.empty(),
-                                            Optional.empty()
-                                    )
-                                    .totalScores(0)
-                                    .lastAffectingPenalty(0)
-                                    .build())
-                            .build())
-                    .build());
+            assertThat(entries).containsExactly(
+                    new IoiScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c1")
+                            .addScores(
+                                    Optional.empty(),
+                                    Optional.empty()
+                            )
+                            .totalScores(0)
+                            .lastAffectingPenalty(0)
+                            .build(),
+                    new IoiScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c2")
+                            .addScores(
+                                    Optional.empty(),
+                                    Optional.empty()
+                            )
+                            .totalScores(0)
+                            .lastAffectingPenalty(0)
+                            .build());
         }
 
         @Test
-        void time_calculation() throws JsonProcessingException {
+        void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
                     new Submission.Builder()
                             .containerJid("JIDC")
@@ -275,41 +211,36 @@ class IoiScoreboardProcessorTests {
                             .build()
             );
 
-            scoreboardProcessor.computeToString(
-                    mapper,
+            List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                     state,
                     contest,
                     styleModulesConfig,
-                    contestantStartTimesMap,
+                    contestants,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
 
-            verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
-                    .state(state)
-                    .content(new IoiScoreboardContent.Builder()
-                            .addEntries(new IoiScoreboardEntry.Builder()
-                                    .rank(1)
-                                    .contestantJid("c2")
-                                    .addScores(
-                                            Optional.of(78),
-                                            Optional.empty()
-                                    )
-                                    .totalScores(78)
-                                    .lastAffectingPenalty(10)
-                                    .build())
-                            .addEntries(new IoiScoreboardEntry.Builder()
-                                    .rank(2)
-                                    .contestantJid("c1")
-                                    .addScores(
-                                            Optional.of(0),
-                                            Optional.of(50)
-                                    )
-                                    .totalScores(50)
-                                    .lastAffectingPenalty(15)
-                                    .build())
-                            .build())
-                    .build());
+            assertThat(entries).containsExactly(
+                    new IoiScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c2")
+                            .addScores(
+                                    Optional.of(78),
+                                    Optional.empty()
+                            )
+                            .totalScores(78)
+                            .lastAffectingPenalty(10)
+                            .build(),
+                    new IoiScoreboardEntry.Builder()
+                            .rank(2)
+                            .contestantJid("c1")
+                            .addScores(
+                                    Optional.of(0),
+                                    Optional.of(50)
+                            )
+                            .totalScores(50)
+                            .lastAffectingPenalty(15)
+                            .build());
         }
 
         @Nested
@@ -350,87 +281,76 @@ class IoiScoreboardProcessorTests {
             );
 
             @Test
-            void base_case() throws JsonProcessingException {
-                scoreboardProcessor.computeToString(
-                        mapper,
+            void base_case() {
+                List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModulesConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
-                        .state(state)
-                        .content(new IoiScoreboardContent.Builder()
-                                .addEntries(new IoiScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .addScores(
-                                                Optional.of(50),
-                                                Optional.empty()
-                                        )
-                                        .totalScores(50)
-                                        .lastAffectingPenalty(10)
-                                        .build())
-                                .addEntries(new IoiScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c1")
-                                        .addScores(
-                                                Optional.empty(),
-                                                Optional.of(50)
-                                        )
-                                        .totalScores(50)
-                                        .lastAffectingPenalty(15)
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new IoiScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .addScores(
+                                        Optional.of(50),
+                                        Optional.empty()
+                                )
+                                .totalScores(50)
+                                .lastAffectingPenalty(10)
+                                .build(),
+                        new IoiScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c1")
+                                .addScores(
+                                        Optional.empty(),
+                                        Optional.of(50)
+                                )
+                                .totalScores(50)
+                                .lastAffectingPenalty(15)
+                                .build());
             }
 
             @Test
-            void reversed_case() throws JsonProcessingException {
+            void reversed_case() {
                 state = new ScoreboardState.Builder()
-                        .addContestantJids("c1", "c2")
                         .addProblemJids("p2", "p1")
                         .addProblemAliases("B", "A")
                         .build();
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModulesConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
-                        .state(state)
-                        .content(new IoiScoreboardContent.Builder()
-                                .addEntries(new IoiScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .addScores(
-                                                Optional.empty(),
-                                                Optional.of(50)
-                                        )
-                                        .totalScores(50)
-                                        .lastAffectingPenalty(10)
-                                        .build())
-                                .addEntries(new IoiScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c1")
-                                        .addScores(
-                                                Optional.of(50),
-                                                Optional.empty()
-                                        )
-                                        .totalScores(50)
-                                        .lastAffectingPenalty(15)
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new IoiScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .addScores(
+                                        Optional.empty(),
+                                        Optional.of(50)
+                                )
+                                .totalScores(50)
+                                .lastAffectingPenalty(10)
+                                .build(),
+                        new IoiScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c1")
+                                .addScores(
+                                        Optional.of(50),
+                                        Optional.empty()
+                                )
+                                .totalScores(50)
+                                .lastAffectingPenalty(15)
+                                .build());
             }
         }
 
@@ -472,128 +392,77 @@ class IoiScoreboardProcessorTests {
             );
 
             @Test
-            void sorted_without_last_affecting_penalty() throws JsonProcessingException {
+            void sorted_without_last_affecting_penalty() {
                 styleModulesConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(false).build();
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModulesConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
-                        .state(state)
-                        .content(new IoiScoreboardContent.Builder()
-                                .addEntries(new IoiScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .addScores(
-                                                Optional.of(50),
-                                                Optional.empty()
-                                        )
-                                        .totalScores(50)
-                                        .lastAffectingPenalty(10)
-                                        .build())
-                                .addEntries(new IoiScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c1")
-                                        .addScores(
-                                                Optional.empty(),
-                                                Optional.of(50)
-                                        )
-                                        .totalScores(50)
-                                        .lastAffectingPenalty(15)
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new IoiScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .addScores(
+                                        Optional.of(50),
+                                        Optional.empty()
+                                )
+                                .totalScores(50)
+                                .lastAffectingPenalty(10)
+                                .build(),
+                        new IoiScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c1")
+                                .addScores(
+                                        Optional.empty(),
+                                        Optional.of(50)
+                                )
+                                .totalScores(50)
+                                .lastAffectingPenalty(15)
+                                .build());
             }
 
             @Test
-            void sorted_with_last_affecting_penalty() throws JsonProcessingException {
+            void sorted_with_last_affecting_penalty() {
                 styleModulesConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(true).build();
 
-                scoreboardProcessor.computeToString(
-                        mapper,
+                List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
                         state,
                         contest,
                         styleModulesConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                verify(mapper).writeValueAsString(new IoiScoreboard.Builder()
-                        .state(state)
-                        .content(new IoiScoreboardContent.Builder()
-                                .addEntries(new IoiScoreboardEntry.Builder()
-                                        .rank(1)
-                                        .contestantJid("c2")
-                                        .addScores(
-                                                Optional.of(50),
-                                                Optional.empty()
-                                        )
-                                        .totalScores(50)
-                                        .lastAffectingPenalty(10)
-                                        .build())
-                                .addEntries(new IoiScoreboardEntry.Builder()
-                                        .rank(2)
-                                        .contestantJid("c1")
-                                        .addScores(
-                                                Optional.empty(),
-                                                Optional.of(50)
-                                        )
-                                        .totalScores(50)
-                                        .lastAffectingPenalty(15)
-                                        .build())
-                                .build())
-                        .build());
+                assertThat(entries).containsExactly(
+                        new IoiScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .addScores(
+                                        Optional.of(50),
+                                        Optional.empty()
+                                )
+                                .totalScores(50)
+                                .lastAffectingPenalty(10)
+                                .build(),
+                        new IoiScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("c1")
+                                .addScores(
+                                        Optional.empty(),
+                                        Optional.of(50)
+                                )
+                                .totalScores(50)
+                                .lastAffectingPenalty(15)
+                                .build());
             }
         }
-    }
-
-    @Test
-    void filter_contestant_jids() {
-        IoiScoreboardEntry entry = new IoiScoreboardEntry.Builder()
-                .rank(0)
-                .contestantJid("123")
-                .totalScores(100)
-                .lastAffectingPenalty(12)
-                .build();
-
-        IoiScoreboard scoreboard = new IoiScoreboard.Builder()
-                .state(new ScoreboardState.Builder()
-                        .addContestantJids("c1", "c2", "c3", "c4")
-                        .addProblemJids("p1", "p2")
-                        .addProblemAliases("A", "B")
-                        .build())
-                .content(new IoiScoreboardContent.Builder()
-                        .addEntries(
-                                new IoiScoreboardEntry.Builder().from(entry).rank(1).contestantJid("c1").build(),
-                                new IoiScoreboardEntry.Builder().from(entry).rank(2).contestantJid("c2").build(),
-                                new IoiScoreboardEntry.Builder().from(entry).rank(3).contestantJid("c3").build(),
-                                new IoiScoreboardEntry.Builder().from(entry).rank(4).contestantJid("c4").build())
-                        .build())
-                .build();
-
-        IoiScoreboard filteredScoreboard = new IoiScoreboard.Builder()
-                .state(new ScoreboardState.Builder()
-                        .addContestantJids("c1", "c3")
-                        .addProblemJids("p1", "p2")
-                        .addProblemAliases("A", "B")
-                        .build())
-                .content(new IoiScoreboardContent.Builder()
-                        .addEntries(
-                                new IoiScoreboardEntry.Builder().from(entry).rank(-1).contestantJid("c1").build(),
-                                new IoiScoreboardEntry.Builder().from(entry).rank(-1).contestantJid("c3").build())
-                        .build())
-                .build();
-
-        assertThat(scoreboardProcessor.filterContestantJids(scoreboard, ImmutableSet.of("c1", "c3")))
-                .isEqualTo(filteredScoreboard);
     }
 
     @Test
@@ -607,7 +476,6 @@ class IoiScoreboardProcessorTests {
 
         IoiScoreboard scoreboard = new IoiScoreboard.Builder()
                 .state(new ScoreboardState.Builder()
-                        .addContestantJids("c1", "c2", "c3")
                         .addProblemJids("p1", "p2", "p3", "p4")
                         .addProblemAliases("A", "B", "C", "D")
                         .build())
@@ -639,7 +507,6 @@ class IoiScoreboardProcessorTests {
 
         IoiScoreboard filteredScoreboard = new IoiScoreboard.Builder()
                 .state(new ScoreboardState.Builder()
-                        .addContestantJids("c1", "c2", "c3")
                         .addProblemJids("p1", "p3")
                         .addProblemAliases("A", "C")
                         .build())

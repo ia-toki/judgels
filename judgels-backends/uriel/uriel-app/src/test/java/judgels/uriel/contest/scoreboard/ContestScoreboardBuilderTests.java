@@ -1,8 +1,7 @@
 package judgels.uriel.contest.scoreboard;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -10,22 +9,25 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
-import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
+import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
+import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.scoreboard.ioi.IoiScoreboardProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -34,8 +36,7 @@ class ContestScoreboardBuilderTests {
     private static final String CONTEST_JID = "contestJid";
     private static final String USER_JID = "userJid";
 
-    @Mock private ScoreboardProcessorRegistry processorRegistry;
-    @Mock private ScoreboardProcessor scoreboardProcessor;
+    private ScoreboardProcessorRegistry processorRegistry;
     @Mock private ContestModuleStore moduleStore;
     @Mock private ContestProblemStore problemStore;
     @Mock private ObjectMapper mapper;
@@ -44,19 +45,24 @@ class ContestScoreboardBuilderTests {
 
     private Contest contest;
     private RawContestScoreboard raw;
-    private Scoreboard scoreboard;
 
     @BeforeEach
     void before() {
         initMocks(this);
 
+        processorRegistry = new ScoreboardProcessorRegistry();
+
         scoreboardBuilder = new ContestScoreboardBuilder(processorRegistry, moduleStore, problemStore, mapper);
 
-        when(processorRegistry.get(any())).thenReturn(scoreboardProcessor);
-
-        contest = mock(Contest.class);
-        when(contest.getJid()).thenReturn(CONTEST_JID);
-        when(contest.getStyle()).thenReturn(ContestStyle.ICPC);
+        contest = new Contest.Builder()
+                .id(1)
+                .jid(CONTEST_JID)
+                .slug("slug")
+                .style(ContestStyle.IOI)
+                .name("name")
+                .beginTime(Instant.MIN)
+                .duration(Duration.ZERO)
+                .build();
 
         when(moduleStore.getScoreboardModuleConfig(CONTEST_JID)).thenReturn(
                 new ScoreboardModuleConfig.Builder()
@@ -68,86 +74,139 @@ class ContestScoreboardBuilderTests {
                 .type(ContestScoreboardType.OFFICIAL)
                 .updatedTime(Instant.ofEpochMilli(42))
                 .build();
-
-        scoreboard = mock(Scoreboard.class);
-        when(scoreboardProcessor.parseFromString(mapper, "json")).thenReturn(scoreboard);
     }
 
 
     @Test
-    void test_pagination() {
-        List<IcpcScoreboard.IcpcScoreboardEntry> fakeEntries = new ArrayList<>(100);
-        for (int i = 0; i < 100; i++) {
-            fakeEntries.add(mock(IcpcScoreboard.IcpcScoreboardEntry.class));
+    void paginate_scoreboard() {
+        List<IoiScoreboardEntry> entries = new ArrayList<>(100);
+        for (int i = 0; i < 5; i++) {
+            IoiScoreboardEntry entry = mock(IoiScoreboardEntry.class);
+            when(entry.getRank()).thenReturn(i);
+            entries.add(entry);
         }
 
-        IcpcScoreboard icpcScoreboard = mock(IcpcScoreboard.class);
-        when(icpcScoreboard.getContent()).thenReturn(
-                new IcpcScoreboard.IcpcScoreboardContent.Builder()
-                        .entries(fakeEntries)
-                        .build());
+        IoiScoreboard scoreboard = new IoiScoreboard.Builder()
+                .state(new ScoreboardState.Builder().build())
+                .content(new IoiScoreboardContent.Builder().entries(entries).build())
+                .build();
 
-        when(scoreboardProcessor.getTotalEntries(icpcScoreboard)).thenReturn(100);
-        when(scoreboardProcessor.paginate(icpcScoreboard, 1, 50)).thenReturn(scoreboard);
+        Scoreboard page1 = scoreboardBuilder.paginateScoreboard(scoreboard, contest, 1, 3);
+        assertThat(page1.getContent().getEntries().size()).isEqualTo(3);
+        assertThat(page1.getContent().getEntries().get(0).getRank()).isEqualTo(0);
+        assertThat(page1.getContent().getEntries().get(1).getRank()).isEqualTo(1);
+        assertThat(page1.getContent().getEntries().get(2).getRank()).isEqualTo(2);
 
-        assertThat(scoreboardBuilder.paginateScoreboard(icpcScoreboard, contest, 1, 50)).isEqualTo(scoreboard);
+        Scoreboard page2 = scoreboardBuilder.paginateScoreboard(scoreboard, contest, 2, 3);
+        assertThat(page2.getContent().getEntries().size()).isEqualTo(2);
+        assertThat(page2.getContent().getEntries().get(0).getRank()).isEqualTo(3);
+        assertThat(page2.getContent().getEntries().get(1).getRank()).isEqualTo(4);
     }
 
     @Test
-    void when_incognito() {
-        Scoreboard incognitoScoreboard = mock(Scoreboard.class);
-        when(incognitoScoreboard.getState())
-                .thenReturn(new ScoreboardState.Builder()
-                        .addContestantJids("userJid1")
-                        .build());
+    void build_scoreboard_when_incognito() throws IOException {
+        IoiScoreboardEntry entry1 = mock(IoiScoreboardEntry.class);
+        when(entry1.getRank()).thenReturn(1);
+        when(entry1.getContestantJid()).thenReturn("random-jid");
+        IoiScoreboardEntry entry2 = mock(IoiScoreboardEntry.class);
+        when(entry2.getRank()).thenReturn(2);
+        when(entry2.getContestantJid()).thenReturn(USER_JID);
+        List<IoiScoreboardEntry> entries = ImmutableList.of(entry1, entry2);
+
+        IoiScoreboard scoreboard = new IoiScoreboard.Builder()
+                .state(new ScoreboardState.Builder().build())
+                .content(new IoiScoreboardContent.Builder().entries(entries).build())
+                .build();
+        when(mapper.readValue(anyString(), eq(IoiScoreboard.class))).thenReturn(scoreboard);
 
         when(moduleStore.getScoreboardModuleConfig(CONTEST_JID)).thenReturn(
                 new ScoreboardModuleConfig.Builder()
                         .isIncognitoScoreboard(true)
                         .build());
 
-        when(scoreboardProcessor.filterContestantJids(eq(scoreboard), anySet())).thenReturn(incognitoScoreboard);
+        Scoreboard incognitoScoreboard = scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, false, true);
+        assertThat(incognitoScoreboard.getContent().getEntries().size()).isEqualTo(1);
+        assertThat(incognitoScoreboard.getContent().getEntries().get(0).getRank()).isEqualTo(-1);
+        assertThat(incognitoScoreboard.getContent().getEntries().get(0).getContestantJid()).isEqualTo(USER_JID);
 
-        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, false, true))
-                .isEqualTo(incognitoScoreboard);
-        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, true, true))
-                .isEqualTo(scoreboard);
+        incognitoScoreboard = scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, true, true);
+        assertThat(incognitoScoreboard.getContent().getEntries().size()).isEqualTo(2);
     }
 
     @Test
-    void when_not_incognito() {
-        assertThat(scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, false, true))
-                .isEqualTo(scoreboard);
+    void build_scoreboard_when_not_incognito() throws IOException {
+        IoiScoreboardEntry entry1 = mock(IoiScoreboardEntry.class);
+        when(entry1.getRank()).thenReturn(1);
+        when(entry1.getContestantJid()).thenReturn("random-jid");
+        IoiScoreboardEntry entry2 = mock(IoiScoreboardEntry.class);
+        when(entry2.getRank()).thenReturn(2);
+        when(entry2.getContestantJid()).thenReturn(USER_JID);
+        List<IoiScoreboardEntry> entries = ImmutableList.of(entry1, entry2);
+
+        IoiScoreboard scoreboard = new IoiScoreboard.Builder()
+                .state(new ScoreboardState.Builder().build())
+                .content(new IoiScoreboardContent.Builder().entries(entries).build())
+                .build();
+        when(mapper.readValue(anyString(), eq(IoiScoreboard.class))).thenReturn(scoreboard);
+
+        Scoreboard incognitoScoreboard = scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, false, true);
+        assertThat(incognitoScoreboard.getContent().getEntries().size()).isEqualTo(2);
+
     }
 
     @Test
-    void when_problems_are_filtered() {
-        when(contest.getStyle()).thenReturn(ContestStyle.IOI);
-
-        IoiScoreboardProcessor ioiScoreboardProcessor = mock(IoiScoreboardProcessor.class);
-        when(processorRegistry.get(ContestStyle.IOI)).thenReturn(ioiScoreboardProcessor);
-
+    void build_scoreboard_when_problems_are_filtered() throws IOException {
         IoiStyleModuleConfig config = new IoiStyleModuleConfig.Builder()
                 .gradingLanguageRestriction(LanguageRestriction.noRestriction())
                 .build();
         when(moduleStore.getIoiStyleModuleConfig(CONTEST_JID)).thenReturn(config);
 
-        IoiScoreboard ioiScoreboard = mock(IoiScoreboard.class);
-        when(ioiScoreboard.getState()).thenReturn(new ScoreboardState.Builder()
-                .addProblemJids("p1", "p2", "p3")
-                .addProblemAliases("A", "B", "C")
-                .build());
-
-        when(ioiScoreboardProcessor.parseFromString(mapper, "json")).thenReturn(ioiScoreboard);
+        IoiScoreboard scoreboard = new IoiScoreboard.Builder()
+                .state(new ScoreboardState.Builder()
+                        .addProblemJids("p1", "p2", "p3")
+                        .addProblemAliases("A", "B", "C")
+                        .build())
+                .content(new IoiScoreboardContent.Builder().addEntries(
+                        new IoiScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("jid1")
+                                .addScores(Optional.of(6), Optional.of(8), Optional.empty())
+                                .totalScores(14)
+                                .lastAffectingPenalty(0)
+                                .build(),
+                        new IoiScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("jid2")
+                                .addScores(Optional.of(1), Optional.of(2), Optional.of(7))
+                                .totalScores(10)
+                                .lastAffectingPenalty(0)
+                                .build()).build())
+                .build();
+        when(mapper.readValue(anyString(), eq(IoiScoreboard.class))).thenReturn(scoreboard);
 
         when(problemStore.getOpenProblemJids(CONTEST_JID)).thenReturn(ImmutableList.of("p1", "p3"));
 
-        IoiScoreboard filteredScoreboard = mock(IoiScoreboard.class);
-        when(ioiScoreboardProcessor.filterProblemJids(eq(ioiScoreboard), anySet(), any()))
-                .thenReturn(filteredScoreboard);
-
-        assertThat(scoreboardBuilder
-                .buildScoreboard(raw, contest, USER_JID, false, false))
-                .isEqualTo(filteredScoreboard);
+        Scoreboard filteredScoreboard = scoreboardBuilder.buildScoreboard(raw, contest, USER_JID, false, false);
+        assertThat(filteredScoreboard).isEqualTo(new IoiScoreboard.Builder()
+                .state(new ScoreboardState.Builder()
+                        .addProblemJids("p1", "p3")
+                        .addProblemAliases("A", "C")
+                        .build())
+                .content(new IoiScoreboardContent.Builder().addEntries(
+                        new IoiScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("jid2")
+                                .addScores(Optional.of(1), Optional.of(7))
+                                .totalScores(8)
+                                .lastAffectingPenalty(0)
+                                .build(),
+                        new IoiScoreboardEntry.Builder()
+                                .rank(2)
+                                .contestantJid("jid1")
+                                .addScores(Optional.of(6), Optional.empty())
+                                .totalScores(6)
+                                .lastAffectingPenalty(0)
+                                .build()).build())
+                .build());
     }
 }

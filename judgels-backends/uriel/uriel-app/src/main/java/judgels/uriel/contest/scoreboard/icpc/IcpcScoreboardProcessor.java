@@ -1,7 +1,11 @@
 package judgels.uriel.contest.scoreboard.icpc;
 
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,19 +21,20 @@ import judgels.gabriel.api.Verdict;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardProblemState;
-import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessor;
 
 public class IcpcScoreboardProcessor implements ScoreboardProcessor {
     @Override
-    public Scoreboard parseFromString(ObjectMapper mapper, String json) {
+    public IcpcScoreboard parse(ObjectMapper mapper, String json) {
         try {
             return mapper.readValue(json, IcpcScoreboard.class);
         } catch (IOException e) {
@@ -38,41 +43,32 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public List<IcpcScoreboardEntry> getEntries(Scoreboard scoreboard) {
-        return ((IcpcScoreboard) scoreboard).getContent().getEntries();
-    }
-
-    @Override
-    public Scoreboard replaceEntries(Scoreboard scoreboard, List<?> entries) {
-        IcpcScoreboard icpcScoreboard = (IcpcScoreboard) scoreboard;
+    public IcpcScoreboard create(ScoreboardState state, List<? extends ScoreboardEntry> entries) {
         return new IcpcScoreboard.Builder()
-                .state(icpcScoreboard.getState())
+                .state(state)
                 .content(new IcpcScoreboardContent.Builder()
-                            .entries((List<? extends IcpcScoreboardEntry>) entries)
-                            .build())
+                        .entries(Lists.transform(entries, e -> (IcpcScoreboardEntry) e))
+                        .build())
                 .build();
     }
 
     @Override
-    public int getTotalEntries(Scoreboard scoreboard) {
-        return ((IcpcScoreboard) scoreboard).getContent().getEntries().size();
-    }
-
-    @Override
-    public String computeToString(
-            ObjectMapper mapper,
+    public List<IcpcScoreboardEntry> computeEntries(
             ScoreboardState scoreboardState,
             Contest contest,
             StyleModuleConfig styleModuleConfig,
-            Map<String, Optional<Instant>> contestantStartTimesMap,
+            Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {
+
         IcpcStyleModuleConfig icpcStyleModuleConfig = (IcpcStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
-        Set<String> contestantJids = scoreboardState.getContestantJids();
+        Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
+        Map<String, Optional<Instant>> contestantStartTimesMap = contestants.stream()
+                .collect(toMap(ContestContestant::getUserJid, ContestContestant::getContestStartTime));
 
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
         Map<String, List<Submission>> frozenSubmissionsMap = new HashMap<>();
@@ -185,46 +181,15 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                     .build());
         }
 
-        entries = sortEntriesAndAssignRanks(entries);
-
-        try {
-            return mapper.writeValueAsString(new IcpcScoreboard.Builder()
-                    .state(scoreboardState)
-                    .content(new IcpcScoreboardContent.Builder()
-                            .entries(entries)
-                            .build())
-                    .build());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return sortEntriesAndAssignRanks(entries);
     }
 
+
     @Override
-    public Scoreboard filterContestantJids(Scoreboard scoreboard, Set<String> contestantJids) {
-        IcpcScoreboard icpcScoreboard = (IcpcScoreboard) scoreboard;
-
-        Set<String> filteredContestantJids = icpcScoreboard.getState().getContestantJids()
-                .stream()
-                .filter(contestantJids::contains)
-                .collect(Collectors.toSet());
-
-        ScoreboardState filteredState = new ScoreboardState.Builder()
-                .from(icpcScoreboard.getState())
-                .contestantJids(filteredContestantJids)
-                .build();
-
-        List<IcpcScoreboardEntry> filteredEntries = icpcScoreboard.getContent().getEntries()
-                .stream()
-                .filter(entry -> contestantJids.contains(entry.getContestantJid()))
-                .map(entry -> new IcpcScoreboardEntry.Builder()
-                        .from(entry)
-                        .rank(-1)
-                        .build())
-                .collect(Collectors.toList());
-
-        return new IcpcScoreboard.Builder()
-                .state(filteredState)
-                .content(new IcpcScoreboardContent.Builder().entries(filteredEntries).build())
+    public IcpcScoreboardEntry clearEntryRank(ScoreboardEntry entry) {
+        return new IcpcScoreboardEntry.Builder()
+                .from((IcpcScoreboardEntry) entry)
+                .rank(-1)
                 .build();
     }
 

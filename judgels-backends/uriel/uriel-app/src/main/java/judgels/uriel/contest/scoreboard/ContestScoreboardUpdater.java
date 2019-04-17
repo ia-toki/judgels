@@ -1,18 +1,16 @@
 package judgels.uriel.contest.scoreboard;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.io.IOException;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionStore;
@@ -23,6 +21,8 @@ import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
+import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -75,13 +75,9 @@ public class ContestScoreboardUpdater {
                 : Optional.empty();
 
         Set<ContestContestant> contestants = contestantStore.getApprovedContestants(contest.getJid());
-        Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
-        Map<String, Optional<Instant>> contestantStartTimesMap = contestants.stream().collect(
-                Collectors.toMap(ContestContestant::getUserJid, ContestContestant::getContestStartTime));
 
-        ScoreboardState scoreboardState = new ScoreboardState.Builder()
+        ScoreboardState state = new ScoreboardState.Builder()
                 .problemJids(problemJids)
-                .contestantJids(contestantJids)
                 .problemPoints(problemPoints)
                 .problemAliases(problemAliases)
                 .build();
@@ -93,9 +89,9 @@ public class ContestScoreboardUpdater {
 
         generateAndUpsertScoreboard(
                 contest,
-                scoreboardState,
+                state,
                 styleModuleConfig,
-                contestantStartTimesMap,
+                contestants,
                 programmingSubmissions,
                 bundleItemSubmissions,
                 Optional.empty(),
@@ -108,9 +104,9 @@ public class ContestScoreboardUpdater {
             if (clock.instant().isAfter(freezeTime)) {
                 generateAndUpsertScoreboard(
                         contest,
-                        scoreboardState,
+                        state,
                         styleModuleConfig,
-                        contestantStartTimesMap,
+                        contestants,
                         programmingSubmissions,
                         bundleItemSubmissions,
                         Optional.of(freezeTime),
@@ -121,27 +117,35 @@ public class ContestScoreboardUpdater {
 
     private void generateAndUpsertScoreboard(
             Contest contest,
-            ScoreboardState scoreboardState,
+            ScoreboardState state,
             StyleModuleConfig styleModuleConfig,
-            Map<String, Optional<Instant>> contestantStartTimesMap,
+            Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime,
             ContestScoreboardType contestScoreboardType) {
 
-        String scoreboard = scoreboardProcessorRegistry.get(contest.getStyle())
-                .computeToString(
-                        objectMapper,
-                        scoreboardState,
-                        contest,
-                        styleModuleConfig,
-                        contestantStartTimesMap,
-                        programmingSubmissions,
-                        bundleItemSubmissions,
-                        freezeTime);
+        ScoreboardProcessor processor = scoreboardProcessorRegistry.get(contest.getStyle());
+
+        List<? extends ScoreboardEntry> entries = processor.computeEntries(
+                state,
+                contest,
+                styleModuleConfig,
+                contestants,
+                programmingSubmissions,
+                bundleItemSubmissions,
+                freezeTime);
+        Scoreboard scoreboard = processor.create(state, entries);
+
+        String scoreboardJson;
+        try {
+            scoreboardJson = objectMapper.writeValueAsString(scoreboard);
+        }  catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         scoreboardStore.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
-                .scoreboard(scoreboard)
+                .scoreboard(scoreboardJson)
                 .type(contestScoreboardType)
                 .build());
     }

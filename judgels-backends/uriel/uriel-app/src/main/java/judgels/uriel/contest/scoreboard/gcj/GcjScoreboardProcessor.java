@@ -1,7 +1,11 @@
 package judgels.uriel.contest.scoreboard.gcj;
 
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,19 +21,20 @@ import judgels.gabriel.api.Verdict;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.GcjStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.GcjScoreboard;
 import judgels.uriel.api.contest.scoreboard.GcjScoreboard.GcjScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.GcjScoreboard.GcjScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.GcjScoreboard.GcjScoreboardProblemState;
-import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessor;
 
 public class GcjScoreboardProcessor implements ScoreboardProcessor {
     @Override
-    public Scoreboard parseFromString(ObjectMapper mapper, String json) {
+    public GcjScoreboard parse(ObjectMapper mapper, String json) {
         try {
             return mapper.readValue(json, GcjScoreboard.class);
         } catch (IOException e) {
@@ -38,41 +43,32 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public int getTotalEntries(Scoreboard scoreboard) {
-        return ((GcjScoreboard) scoreboard).getContent().getEntries().size();
-    }
-
-    @Override
-    public List<?> getEntries(Scoreboard scoreboard) {
-        return ((GcjScoreboard) scoreboard).getContent().getEntries();
-    }
-
-    @Override
-    public Scoreboard replaceEntries(Scoreboard scoreboard, List<?> entries) {
-        GcjScoreboard gcjScoreboard = (GcjScoreboard) scoreboard;
+    public GcjScoreboard create(ScoreboardState state, List<? extends ScoreboardEntry> entries) {
         return new GcjScoreboard.Builder()
-                .state(gcjScoreboard.getState())
+                .state(state)
                 .content(new GcjScoreboardContent.Builder()
-                        .entries((List<? extends GcjScoreboardEntry>) entries)
+                        .entries(Lists.transform(entries, e -> (GcjScoreboardEntry) e))
                         .build())
                 .build();
     }
 
     @Override
-    public String computeToString(
-            ObjectMapper mapper,
+    public List<GcjScoreboardEntry> computeEntries(
             ScoreboardState scoreboardState,
             Contest contest,
             StyleModuleConfig styleModuleConfig,
-            Map<String, Optional<Instant>> contestantStartTimesMap,
+            Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {
+
         GcjStyleModuleConfig gcjStyleModuleConfig = (GcjStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
-        Set<String> contestantJids = scoreboardState.getContestantJids();
+        Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
+        Map<String, Optional<Instant>> contestantStartTimesMap = contestants.stream()
+                .collect(toMap(ContestContestant::getUserJid, ContestContestant::getContestStartTime));
 
         Map<String, Integer> pointsMap = new HashMap<>();
         if (scoreboardState.getProblemPoints().isPresent()) {
@@ -182,46 +178,14 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                     .build());
         }
 
-        entries = sortEntriesAndAssignRanks(entries);
-
-        try {
-            return mapper.writeValueAsString(new GcjScoreboard.Builder()
-                    .state(scoreboardState)
-                    .content(new GcjScoreboardContent.Builder()
-                            .entries(entries)
-                            .build())
-                    .build());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return sortEntriesAndAssignRanks(entries);
     }
 
     @Override
-    public Scoreboard filterContestantJids(Scoreboard scoreboard, Set<String> contestantJids) {
-        GcjScoreboard gcjScoreboard = (GcjScoreboard) scoreboard;
-
-        Set<String> filteredContestantJids = gcjScoreboard.getState().getContestantJids()
-                .stream()
-                .filter(contestantJids::contains)
-                .collect(Collectors.toSet());
-
-        ScoreboardState filteredState = new ScoreboardState.Builder()
-                .from(gcjScoreboard.getState())
-                .contestantJids(filteredContestantJids)
-                .build();
-
-        List<GcjScoreboardEntry> filteredEntries = gcjScoreboard.getContent().getEntries()
-                .stream()
-                .filter(entry -> contestantJids.contains(entry.getContestantJid()))
-                .map(entry -> new GcjScoreboardEntry.Builder()
-                        .from(entry)
-                        .rank(-1)
-                        .build())
-                .collect(Collectors.toList());
-
-        return new GcjScoreboard.Builder()
-                .state(filteredState)
-                .content(new GcjScoreboardContent.Builder().entries(filteredEntries).build())
+    public GcjScoreboardEntry clearEntryRank(ScoreboardEntry entry) {
+        return new GcjScoreboardEntry.Builder()
+                .from((GcjScoreboardEntry) entry)
+                .rank(-1)
                 .build();
     }
 

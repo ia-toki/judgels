@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 import judgels.uriel.api.contest.Contest;
@@ -14,7 +15,10 @@ import judgels.uriel.api.contest.ContestStyle;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboard;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard;
+import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardContent;
+import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -27,8 +31,7 @@ class ContestScoreboardFetcherTests {
     @Mock private ContestScoreboardStore scoreboardStore;
     @Mock private ContestScoreboardBuilder scoreboardBuilder;
 
-    @Mock private Scoreboard icpcScoreboard;
-
+    private Scoreboard icpcScoreboard;
     private ContestScoreboardFetcher scoreboardFetcher;
     private Contest contest;
     private RawContestScoreboard officialRaw;
@@ -42,9 +45,15 @@ class ContestScoreboardFetcherTests {
 
         scoreboardFetcher = new ContestScoreboardFetcher(typeFetcher, scoreboardStore, scoreboardBuilder);
 
-        contest = mock(Contest.class);
-        when(contest.getJid()).thenReturn(CONTEST_JID);
-        when(contest.getStyle()).thenReturn(ContestStyle.ICPC);
+        contest = new Contest.Builder()
+                .id(1)
+                .jid(CONTEST_JID)
+                .slug("slug")
+                .style(ContestStyle.ICPC)
+                .name("name")
+                .beginTime(Instant.MIN)
+                .duration(Duration.ZERO)
+                .build();
 
         officialRaw = new RawContestScoreboard.Builder()
                 .scoreboard("json")
@@ -57,18 +66,22 @@ class ContestScoreboardFetcherTests {
                 .updatedTime(Instant.ofEpochMilli(42))
                 .build();
 
-        icpcScoreboard = mock(IcpcScoreboard.class);
+        icpcScoreboard = new IcpcScoreboard.Builder()
+                .state(new ScoreboardState.Builder().build())
+                .content(new IcpcScoreboardContent.Builder()
+                        .addEntries(mock(IcpcScoreboardEntry.class), mock(IcpcScoreboardEntry.class)).build())
+                .build();
 
         officialScoreboard = new ContestScoreboard.Builder()
                 .type(ContestScoreboardType.OFFICIAL)
                 .scoreboard(icpcScoreboard)
-                .totalEntries(10)
+                .totalEntries(2)
                 .updatedTime(Instant.ofEpochMilli(42))
                 .build();
         frozenScoreboard = new ContestScoreboard.Builder()
                 .type(ContestScoreboardType.FROZEN)
                 .scoreboard(icpcScoreboard)
-                .totalEntries(10)
+                .totalEntries(2)
                 .updatedTime(Instant.ofEpochMilli(42))
                 .build();
     }
@@ -86,9 +99,6 @@ class ContestScoreboardFetcherTests {
 
         when(scoreboardBuilder.paginateScoreboard(icpcScoreboard, contest, 1, 50))
                 .thenReturn(icpcScoreboard);
-
-        when(scoreboardBuilder.getTotalEntries(icpcScoreboard, contest))
-                .thenReturn(10);
 
         assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, false, false, false, 1, 50))
                 .contains(officialScoreboard);
@@ -108,9 +118,6 @@ class ContestScoreboardFetcherTests {
         when(scoreboardBuilder.paginateScoreboard(icpcScoreboard, contest, 1, 50))
                 .thenReturn(icpcScoreboard);
 
-        when(scoreboardBuilder.getTotalEntries(icpcScoreboard, contest))
-                .thenReturn(10);
-
         assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, false, false, false, 1, 50))
                 .contains(frozenScoreboard);
     }
@@ -128,9 +135,6 @@ class ContestScoreboardFetcherTests {
 
         when(scoreboardBuilder.paginateScoreboard(icpcScoreboard, contest, 1, 50))
                 .thenReturn(icpcScoreboard);
-
-        when(scoreboardBuilder.getTotalEntries(icpcScoreboard, contest))
-                .thenReturn(10);
 
         assertThat(scoreboardFetcher.fetchScoreboard(contest, USER_JID, false, false, false, 1, 50))
                 .contains(officialScoreboard);

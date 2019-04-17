@@ -1,5 +1,8 @@
 package judgels.uriel.contest.scoreboard.ioi;
 
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -18,18 +21,19 @@ import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
-import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessor;
 
 public class IoiScoreboardProcessor implements ScoreboardProcessor {
     @Override
-    public Scoreboard parseFromString(ObjectMapper mapper, String json) {
+    public IoiScoreboard parse(ObjectMapper mapper, String json) {
         try {
             return mapper.readValue(json, IoiScoreboard.class);
         } catch (IOException e) {
@@ -38,41 +42,32 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public List<IoiScoreboardEntry> getEntries(Scoreboard scoreboard) {
-        return ((IoiScoreboard) scoreboard).getContent().getEntries();
-    }
-
-    @Override
-    public Scoreboard replaceEntries(Scoreboard scoreboard, List<?> entries) {
-        IoiScoreboard ioiScoreboard = (IoiScoreboard) scoreboard;
+    public IoiScoreboard create(ScoreboardState state, List<? extends ScoreboardEntry> entries) {
         return new IoiScoreboard.Builder()
-                .state(ioiScoreboard.getState())
+                .state(state)
                 .content(new IoiScoreboardContent.Builder()
-                        .entries((List<? extends IoiScoreboardEntry>) entries)
+                        .entries(Lists.transform(entries, e -> (IoiScoreboardEntry) e))
                         .build())
                 .build();
     }
 
     @Override
-    public int getTotalEntries(Scoreboard scoreboard) {
-        return ((IoiScoreboard) scoreboard).getContent().getEntries().size();
-    }
-
-    @Override
-    public String computeToString(
-            ObjectMapper mapper,
+    public List<IoiScoreboardEntry> computeEntries(
             ScoreboardState scoreboardState,
             Contest contest,
             StyleModuleConfig styleModuleConfig,
-            Map<String, Optional<Instant>> contestantStartTimesMap,
+            Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {
+
         IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
-        Set<String> contestantJids = scoreboardState.getContestantJids();
+        Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
+        Map<String, Optional<Instant>> contestantStartTimesMap = contestants.stream()
+                .collect(toMap(ContestContestant::getUserJid, ContestContestant::getContestStartTime));
 
         List<Submission> filteredSubmissions = programmingSubmissions.stream()
                 .filter(s -> contestantJids.contains(s.getUserJid()))
@@ -143,50 +138,18 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             comparator = new StandardIoiScoreboardEntryComparator();
         }
 
-        entries = sortEntriesAndAssignRanks(comparator, entries);
-
-        try {
-            return mapper.writeValueAsString(new IoiScoreboard.Builder()
-                    .state(scoreboardState)
-                    .content(new IoiScoreboardContent.Builder()
-                            .entries(entries)
-                            .build())
-                    .build());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return sortEntriesAndAssignRanks(comparator, entries);
     }
 
     @Override
-    public Scoreboard filterContestantJids(Scoreboard scoreboard, Set<String> contestantJids) {
-        IoiScoreboard ioiScoreboard = (IoiScoreboard) scoreboard;
-
-        Set<String> filteredContestantJids = ioiScoreboard.getState().getContestantJids()
-                .stream()
-                .filter(contestantJids::contains)
-                .collect(Collectors.toSet());
-
-        ScoreboardState filteredState = new ScoreboardState.Builder()
-                .from(ioiScoreboard.getState())
-                .contestantJids(filteredContestantJids)
-                .build();
-
-        List<IoiScoreboardEntry> filteredEntries = ioiScoreboard.getContent().getEntries()
-                .stream()
-                .filter(entry -> contestantJids.contains(entry.getContestantJid()))
-                .map(entry -> new IoiScoreboardEntry.Builder()
-                        .from(entry)
-                        .rank(-1)
-                        .build())
-                .collect(Collectors.toList());
-
-        return new IoiScoreboard.Builder()
-                .state(filteredState)
-                .content(new IoiScoreboardContent.Builder().entries(filteredEntries).build())
+    public IoiScoreboardEntry clearEntryRank(ScoreboardEntry entry) {
+        return new IoiScoreboardEntry.Builder()
+                .from((IoiScoreboardEntry) entry)
+                .rank(-1)
                 .build();
     }
 
-    public Scoreboard filterProblemJids(
+    public IoiScoreboard filterProblemJids(
             IoiScoreboard scoreboard,
             Set<String> problemJids,
             IoiStyleModuleConfig config) {

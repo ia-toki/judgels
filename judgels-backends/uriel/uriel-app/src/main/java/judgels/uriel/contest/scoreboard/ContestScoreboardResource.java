@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
@@ -17,6 +18,7 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardResponse;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardService;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.contest.ContestStore;
 
 public class ContestScoreboardResource implements ContestScoreboardService {
@@ -73,7 +75,8 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         return scoreboardFetcher
                 .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, page.orElse(1), PAGE_SIZE)
                 .map(scoreboard -> {
-                    Set<String> contestantJids = scoreboard.getScoreboard().getState().getContestantJids();
+                    Set<String> contestantJids = scoreboard.getScoreboard().getContent().getEntries().stream()
+                            .map(ScoreboardEntry::getContestantJid).collect(Collectors.toSet());
                     Map<String, Profile> profilesMap = contestantJids.isEmpty()
                             ? Collections.emptyMap()
                             : profileService.getProfiles(contestantJids, scoreboard.getUpdatedTime());

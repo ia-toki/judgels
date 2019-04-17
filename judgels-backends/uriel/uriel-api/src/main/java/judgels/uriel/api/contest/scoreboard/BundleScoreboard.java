@@ -8,14 +8,17 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableBundleScoreboard.class)
+@SuppressWarnings("immutables:from")
 public interface BundleScoreboard extends Scoreboard {
+    @Override
     BundleScoreboardContent getContent();
 
     class Builder extends ImmutableBundleScoreboard.Builder {}
 
     @Value.Immutable
     @JsonDeserialize(as = ImmutableBundleScoreboardContent.class)
-    interface BundleScoreboardContent {
+    interface BundleScoreboardContent extends ScoreboardContent {
+        @Override
         List<BundleScoreboardEntry> getEntries();
 
         class Builder extends ImmutableBundleScoreboardContent.Builder {}
@@ -23,9 +26,7 @@ public interface BundleScoreboard extends Scoreboard {
 
     @Value.Immutable
     @JsonDeserialize(as = ImmutableBundleScoreboardEntry.class)
-    interface BundleScoreboardEntry {
-        int getRank();
-        String getContestantJid();
+    interface BundleScoreboardEntry extends ScoreboardEntry {
         List<Integer> getAnsweredItems();
         int getTotalAnsweredItems();
         Optional<Instant> getLastAnsweredTime();

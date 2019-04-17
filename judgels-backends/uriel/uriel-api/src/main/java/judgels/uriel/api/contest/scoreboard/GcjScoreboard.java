@@ -8,12 +8,15 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableGcjScoreboard.class)
+@SuppressWarnings("immutables:from")
 public interface GcjScoreboard extends Scoreboard {
+    @Override
     GcjScoreboardContent getContent();
 
     @Value.Immutable
     @JsonDeserialize(as = ImmutableGcjScoreboardContent.class)
-    interface GcjScoreboardContent {
+    interface GcjScoreboardContent extends ScoreboardContent {
+        @Override
         List<GcjScoreboardEntry> getEntries();
 
         class Builder extends ImmutableGcjScoreboardContent.Builder {}
@@ -21,9 +24,7 @@ public interface GcjScoreboard extends Scoreboard {
 
     @Value.Immutable
     @JsonDeserialize(as = ImmutableGcjScoreboardEntry.class)
-    interface GcjScoreboardEntry {
-        int getRank();
-        String getContestantJid();
+    interface GcjScoreboardEntry extends ScoreboardEntry {
         int getTotalPoints();
         long getTotalPenalties();
         List<Integer> getAttemptsList();

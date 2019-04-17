@@ -1,8 +1,11 @@
 package judgels.uriel.contest.scoreboard.bundle;
 
+import static java.util.stream.Collectors.toSet;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
@@ -14,17 +17,18 @@ import java.util.stream.Collectors;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard.BundleScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard.BundleScoreboardEntry;
-import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessor;
 
 public class BundleScoreboardProcessor implements ScoreboardProcessor {
     @Override
-    public Scoreboard parseFromString(ObjectMapper mapper, String json) {
+    public BundleScoreboard parse(ObjectMapper mapper, String json) {
         try {
             return mapper.readValue(json, BundleScoreboard.class);
         } catch (IOException e) {
@@ -33,19 +37,28 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public String computeToString(
-            ObjectMapper mapper,
+    public BundleScoreboard create(ScoreboardState state, List<? extends ScoreboardEntry> entries) {
+        return new BundleScoreboard.Builder()
+                .state(state)
+                .content(new BundleScoreboardContent.Builder()
+                        .entries(Lists.transform(entries, e -> (BundleScoreboardEntry) e))
+                        .build())
+                .build();
+    }
+
+    @Override
+    public List<BundleScoreboardEntry> computeEntries(
             ScoreboardState scoreboardState,
             Contest contest,
             StyleModuleConfig styleModuleConfig,
-            Map<String, Optional<Instant>> contestantStartTimesMap,
+            Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime) {
 
         List<String> problemJids = scoreboardState.getProblemJids();
         Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
-        Set<String> contestantJids = scoreboardState.getContestantJids();
+        Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
 
         List<ItemSubmission> filteredSubmissions = bundleItemSubmissions.stream()
                 .filter(s -> contestantJids.contains(s.getUserJid()))
@@ -83,69 +96,14 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                 })
                 .collect(Collectors.toList());
 
-        entries = sortEntriesAndAssignRanks(
-                new UsingTotalAnsweredItemsBundleScoreboardEntryComparator(),
-                entries);
-
-        try {
-            return mapper.writeValueAsString(new BundleScoreboard.Builder()
-                    .state(scoreboardState)
-                    .content(new BundleScoreboardContent.Builder()
-                        .entries(entries)
-                        .build())
-                    .build());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return sortEntriesAndAssignRanks(new UsingTotalAnsweredItemsBundleScoreboardEntryComparator(), entries);
     }
 
     @Override
-    public int getTotalEntries(Scoreboard scoreboard) {
-        return ((BundleScoreboard) scoreboard).getContent().getEntries().size();
-    }
-
-    @Override
-    public List<BundleScoreboardEntry> getEntries(Scoreboard scoreboard) {
-        return ((BundleScoreboard) scoreboard).getContent().getEntries();
-    }
-
-    @Override
-    public Scoreboard replaceEntries(Scoreboard scoreboard, List<?> entries) {
-        BundleScoreboard bundleScoreboard = (BundleScoreboard) scoreboard;
-        return new BundleScoreboard.Builder()
-                .state(bundleScoreboard.getState())
-                .content(new BundleScoreboardContent.Builder()
-                        .entries((List<? extends BundleScoreboardEntry>) entries)
-                        .build())
-                .build();
-    }
-
-    @Override
-    public Scoreboard filterContestantJids(Scoreboard scoreboard, Set<String> contestantJids) {
-        BundleScoreboard bundleScoreboard = (BundleScoreboard) scoreboard;
-
-        Set<String> filteredContestantJids = bundleScoreboard.getState().getContestantJids()
-                .stream()
-                .filter(contestantJids::contains)
-                .collect(Collectors.toSet());
-
-        ScoreboardState filteredState = new ScoreboardState.Builder()
-                .from(bundleScoreboard.getState())
-                .contestantJids(filteredContestantJids)
-                .build();
-
-        List<BundleScoreboardEntry> filteredEntries = bundleScoreboard.getContent().getEntries()
-                .stream()
-                .filter(entry -> contestantJids.contains(entry.getContestantJid()))
-                .map(entry -> new BundleScoreboardEntry.Builder()
-                        .from(entry)
-                        .rank(-1)
-                        .build())
-                .collect(Collectors.toList());
-
-        return new BundleScoreboard.Builder()
-                .state(filteredState)
-                .content(new BundleScoreboardContent.Builder().entries(filteredEntries).build())
+    public BundleScoreboardEntry clearEntryRank(ScoreboardEntry entry) {
+        return new BundleScoreboardEntry.Builder()
+                .from((BundleScoreboardEntry) entry)
+                .rank(-1)
                 .build();
     }
 
