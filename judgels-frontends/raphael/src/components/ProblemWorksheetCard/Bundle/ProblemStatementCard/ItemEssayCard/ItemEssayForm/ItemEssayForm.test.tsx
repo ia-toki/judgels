@@ -51,14 +51,10 @@ describe('ItemEssayForm', () => {
       it('only answer button', () => {
         const button = wrapper.find('button');
         expect(button.length).toEqual(1);
+        expect(button.text()).toEqual('Answer');
       });
 
-      it('button text', () => {
-        const buttonText = wrapper.find('button').text();
-        expect(buttonText).toEqual('Answer');
-      });
-
-      it('no helptext', () => {
+      it('helptext', () => {
         const helpText = wrapper
           .find('div')
           .last()
@@ -144,11 +140,8 @@ describe('ItemEssayForm', () => {
 
       it('not only answer button', () => {
         const button = wrapper.find('button');
+        const buttonTexts = button.map(bt => bt.text());
         expect(button.length).toBeGreaterThan(1);
-      });
-
-      it('button text', () => {
-        const buttonTexts = wrapper.find('button').map(button => button.text());
         expect(buttonTexts).toEqual(['Change', 'Clear']);
       });
 
@@ -214,6 +207,30 @@ describe('ItemEssayForm', () => {
       };
       expect(window.confirm).toBeCalled();
       expect(state).toEqual(expectedState);
+    });
+  });
+
+  describe('disabled', () => {
+    const props: ItemEssayFormProps = {
+      jid: 'jid',
+      type: ItemType.Essay,
+      meta: 'meta',
+      config: itemConfig,
+      disabled: true,
+      initialAnswer: 'initial',
+      onSubmit: jest.fn().mockReturnValue(undefined),
+      answerState: AnswerState.AnswerSaved,
+    };
+
+    beforeEach(() => {
+      wrapper = mount(<ItemEssayForm {...props} />);
+    });
+
+    it('buttons disabled', () => {
+      const button = wrapper.find('button');
+      const buttonsDisabled = button.map(bt => bt.props().disabled);
+      expect(button.length).toBeGreaterThan(1);
+      expect(buttonsDisabled).toEqual([true, true]);
     });
   });
 });
