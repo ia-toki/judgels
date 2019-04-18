@@ -48,6 +48,13 @@ class ContestProblemStoreIntegrationTests extends AbstractIntegrationTests {
                         .points(11)
                         .build(),
                 new ContestProblem.Builder()
+                        .alias("D")
+                        .problemJid("problemJid4")
+                        .status(OPEN)
+                        .submissionsLimit(50)
+                        .points(7)
+                        .build(),
+                new ContestProblem.Builder()
                         .alias("A")
                         .problemJid("problemJid1")
                         .status(OPEN)
@@ -74,18 +81,27 @@ class ContestProblemStoreIntegrationTests extends AbstractIntegrationTests {
                         .alias("B")
                         .problemJid("problemJid2")
                         .status(CLOSED)
+                        .build(),
+                new ContestProblem.Builder()
+                        .alias("D")
+                        .problemJid("problemJid4")
+                        .status(OPEN)
+                        .submissionsLimit(50)
+                        .points(31)
                         .build());
 
         store.setProblems(contest.getJid(), problems);
 
         assertThat(store.hasClosedProblems(contest.getJid())).isTrue();
 
-        assertThat(store.getProblemJids(contest.getJid())).containsOnly("problemJid1", "problemJid2", "problemJid3");
-        assertThat(store.getOpenProblemJids(contest.getJid())).containsOnly("problemJid1", "problemJid3");
+        assertThat(store.getProblemJids(contest.getJid()))
+                .containsOnly("problemJid1", "problemJid2", "problemJid3", "problemJid4");
+        assertThat(store.getOpenProblemJids(contest.getJid()))
+                .containsOnly("problemJid1", "problemJid3", "problemJid4");
         assertThat(store.getProblemAliasesByJids(contest.getJid(), ImmutableSet.of("problemJid1", "problemJid2")))
                 .isEqualTo(ImmutableMap.of("problemJid1", "C", "problemJid2", "B"));
 
         assertThat(store.getProblems(contest.getJid()))
-                .containsExactly(problems.get(0), problems.get(2), problems.get(1));
+                .containsExactly(problems.get(0), problems.get(2), problems.get(1), problems.get(3));
     }
 }

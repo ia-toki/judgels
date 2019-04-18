@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.persistence.api.OrderDir;
@@ -26,10 +27,14 @@ public class ContestProblemStore {
     }
 
     public Set<ContestProblem> setProblems(String contestJid, List<ContestProblem> data) {
-        Map<String, String> setProblems = data.stream().collect(
-                Collectors.toMap(ContestProblem::getProblemJid, ContestProblem::getAlias));
+        Map<String, ContestProblem> setProblems = data.stream().collect(
+                Collectors.toMap(ContestProblem::getProblemJid, Function.identity()));
         for (ContestProblemModel model : problemDao.selectAllByContestJid(contestJid, createOptions())) {
-            if (!setProblems.containsKey(model.problemJid) || !setProblems.get(model.problemJid).equals(model.alias)) {
+            ContestProblem existingProblem = setProblems.get(model.problemJid);
+            if (existingProblem == null
+                    || !existingProblem.getAlias().equals(model.alias)
+                    || !existingProblem.getPoints().orElse(0).equals(model.points)) {
+
                 problemDao.delete(model);
             }
         }
