@@ -1,8 +1,7 @@
 package judgels.uriel.contest.scoreboard;
 
-import static java.util.stream.Collectors.toList;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.time.Clock;
@@ -68,10 +67,10 @@ public class ContestScoreboardUpdater {
         StyleModuleConfig styleModuleConfig = moduleStore.getStyleModuleConfig(contest.getJid(), contest.getStyle());
 
         List<ContestProblem> problems = problemStore.getProblems(contest.getJid());
-        List<String> problemJids = problems.stream().map(ContestProblem::getProblemJid).collect(toList());
-        List<String> problemAliases = problems.stream().map(ContestProblem::getAlias).collect(toList());
-        Optional<List<Integer>> problemPoints = styleModuleConfig.hasPointsPerProblem()
-                ? Optional.of(problems.stream().map(p -> p.getPoints().orElse(0)).collect(toList()))
+        List<String> problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
+        List<String> problemAliases = Lists.transform(problems, ContestProblem::getAlias);
+        Optional<List<Integer>> problemPoints = problems.stream().anyMatch(p -> p.getPoints().isPresent())
+                ? Optional.of(Lists.transform(problems, p -> p.getPoints().orElse(0)))
                 : Optional.empty();
 
         Set<ContestContestant> contestants = contestantStore.getApprovedContestants(contest.getJid());

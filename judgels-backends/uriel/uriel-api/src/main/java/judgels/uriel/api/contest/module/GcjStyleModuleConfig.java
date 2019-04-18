@@ -23,11 +23,5 @@ public interface GcjStyleModuleConfig extends StyleModuleConfig {
         return 4;
     }
 
-    @Value.Default
-    @Override
-    default boolean hasPointsPerProblem() {
-        return true;
-    }
-
     class Builder extends ImmutableGcjStyleModuleConfig.Builder {}
 }
