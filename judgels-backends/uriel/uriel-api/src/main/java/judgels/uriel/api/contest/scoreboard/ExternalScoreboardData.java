@@ -13,8 +13,7 @@ public interface ExternalScoreboardData {
     String getContestJid();
     ContestStyle getContestStyle();
     Instant getUpdatedTime();
-    ScoreboardState getScoreboardState();
-    Map<ContestScoreboardType, ScoreboardContent> getScoreboardContents();
+    Map<ContestScoreboardType, Scoreboard> getScoreboards();
 
     class Builder extends ImmutableExternalScoreboardData.Builder {}
 }
