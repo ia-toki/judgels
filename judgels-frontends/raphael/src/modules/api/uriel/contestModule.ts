@@ -7,6 +7,7 @@ export enum ContestModuleType {
   Clarification = 'CLARIFICATION',
   ClarificationTimeLimit = 'CLARIFICATION_TIME_LIMIT',
   File = 'FILE',
+  ExternalScoreboard = 'EXTERNAL_SCOREBOARD',
   FrozenScoreboard = 'FROZEN_SCOREBOARD',
   Hidden = 'HIDDEN',
   Paused = 'PAUSE',
@@ -20,6 +21,7 @@ export const moduleTitlesMap = {
   [ContestModuleType.Clarification]: 'Clarification',
   [ContestModuleType.ClarificationTimeLimit]: 'Clarification time limit',
   [ContestModuleType.FrozenScoreboard]: 'Freezable scoreboard',
+  [ContestModuleType.ExternalScoreboard]: 'External scoreboard',
   [ContestModuleType.Virtual]: 'Virtual contest',
   [ContestModuleType.File]: 'File',
   [ContestModuleType.Paused]: 'Paused',
@@ -31,6 +33,7 @@ export const moduleDescriptionsMap = {
   [ContestModuleType.Clarification]: 'Enables clarifications in the contest.',
   [ContestModuleType.ClarificationTimeLimit]: 'Limits how long contestants can make clarifications.',
   [ContestModuleType.FrozenScoreboard]: 'Allows the scoreboard to be frozen.',
+  [ContestModuleType.ExternalScoreboard]: 'Sends scoreboard updates to an external endpoint.',
   [ContestModuleType.Virtual]: 'Allows contestants to start the contest at their preferred time.',
   [ContestModuleType.File]: 'Allows public files to be uploaded to the contest.',
   [ContestModuleType.Paused]: 'Pauses the contest; contestants cannot submit or make clarifications.',
@@ -42,6 +45,7 @@ export const allModules: ContestModuleType[] = [
   ContestModuleType.Clarification,
   ContestModuleType.ClarificationTimeLimit,
   ContestModuleType.FrozenScoreboard,
+  ContestModuleType.ExternalScoreboard,
   ContestModuleType.Virtual,
   ContestModuleType.File,
   ContestModuleType.Paused,
@@ -67,6 +71,11 @@ export interface ClarificationTimeLimitModuleConfig {
   clarificationDuration: number;
 }
 
+export interface ExternalScoreboardModuleConfig {
+  receiverUrl: string;
+  receiverSecret: string;
+}
+
 export interface FrozenScoreboardModuleConfig {
   isOfficialScoreboardAllowed: boolean;
   scoreboardFreezeTime: number; // freezeDurationBeforeEndTime
@@ -88,6 +97,7 @@ export interface ContestModulesConfig {
   scoreboard: ScoreboardModuleConfig;
 
   clarificationTimeLimit?: ClarificationTimeLimitModuleConfig;
+  externalScoreboard?: ExternalScoreboardModuleConfig;
   frozenScoreboard?: FrozenScoreboardModuleConfig;
   virtual?: VirtualModuleConfig;
 }

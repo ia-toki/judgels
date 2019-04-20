@@ -7,9 +7,13 @@ import java.io.IOException;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionStore;
@@ -18,15 +22,17 @@ import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
+import judgels.uriel.api.contest.scoreboard.ExternalScoreboardData;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.submission.bundle.ContestItemSubmissionStore;
+import org.glassfish.jersey.client.JerseyClientBuilder;
 
 public class ContestScoreboardUpdater {
     private final ObjectMapper objectMapper;
@@ -63,6 +69,8 @@ public class ContestScoreboardUpdater {
 
     @UnitOfWork
     public void update(Contest contest) {
+        Instant now = clock.instant();
+
         ContestModulesConfig contestModulesConfig = moduleStore.getConfig(contest.getJid(), contest.getStyle());
         StyleModuleConfig styleModuleConfig = moduleStore.getStyleModuleConfig(contest.getJid(), contest.getStyle());
 
@@ -86,7 +94,9 @@ public class ContestScoreboardUpdater {
         List<ItemSubmission> bundleItemSubmissions = bundleItemSubmissionStore
                 .getSubmissionsForScoreboard(contest.getJid());
 
-        generateAndUpsertScoreboard(
+        Map<ContestScoreboardType, ScoreboardContent> contents = new HashMap<>();
+
+        contents.put(ContestScoreboardType.OFFICIAL, updateScoreboard(
                 contest,
                 state,
                 styleModuleConfig,
@@ -94,14 +104,14 @@ public class ContestScoreboardUpdater {
                 programmingSubmissions,
                 bundleItemSubmissions,
                 Optional.empty(),
-                ContestScoreboardType.OFFICIAL);
+                ContestScoreboardType.OFFICIAL));
 
         if (contestModulesConfig.getFrozenScoreboard().isPresent()) {
             Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get().getFreezeDurationBeforeEndTime();
             Instant freezeTime = contest.getEndTime().minus(freezeDuration);
 
-            if (clock.instant().isAfter(freezeTime)) {
-                generateAndUpsertScoreboard(
+            if (now.isAfter(freezeTime)) {
+                contents.put(ContestScoreboardType.FROZEN, updateScoreboard(
                         contest,
                         state,
                         styleModuleConfig,
@@ -109,12 +119,28 @@ public class ContestScoreboardUpdater {
                         programmingSubmissions,
                         bundleItemSubmissions,
                         Optional.of(freezeTime),
-                        ContestScoreboardType.FROZEN);
+                        ContestScoreboardType.FROZEN));
             }
+        }
+
+        if (contestModulesConfig.getExternalScoreboard().isPresent()) {
+            ExternalScoreboardData data = new ExternalScoreboardData.Builder()
+                    .receiverSecret(contestModulesConfig.getExternalScoreboard().get().getReceiverSecret())
+                    .contestJid(contest.getJid())
+                    .contestStyle(contest.getStyle())
+                    .scoreboardState(state)
+                    .scoreboardContents(contents)
+                    .updatedTime(now)
+                    .build();
+
+            JerseyClientBuilder.createClient()
+                    .target(contestModulesConfig.getExternalScoreboard().get().getReceiverUrl())
+                    .request()
+                    .post(Entity.entity(data, MediaType.APPLICATION_JSON));
         }
     }
 
-    private void generateAndUpsertScoreboard(
+    private ScoreboardContent updateScoreboard(
             Contest contest,
             ScoreboardState state,
             StyleModuleConfig styleModuleConfig,
@@ -147,5 +173,7 @@ public class ContestScoreboardUpdater {
                 .scoreboard(scoreboardJson)
                 .type(contestScoreboardType)
                 .build());
+
+        return scoreboard.getContent();
     }
 }

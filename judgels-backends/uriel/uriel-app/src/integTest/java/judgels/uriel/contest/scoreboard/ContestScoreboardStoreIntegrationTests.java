@@ -9,7 +9,6 @@ import judgels.uriel.AbstractIntegrationTests;
 import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.persistence.ContestModel;

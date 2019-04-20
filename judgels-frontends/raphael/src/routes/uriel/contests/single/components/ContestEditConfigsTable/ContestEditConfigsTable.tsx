@@ -7,6 +7,7 @@ import {
   ClarificationTimeLimitModuleConfig,
   ContestModulesConfig,
   FrozenScoreboardModuleConfig,
+  ExternalScoreboardModuleConfig,
   IcpcStyleModuleConfig,
   IoiStyleModuleConfig,
   GcjStyleModuleConfig,
@@ -32,6 +33,7 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
         {config.clarificationTimeLimit && this.renderClarificationTimeLimitConfig(config.clarificationTimeLimit)}
         {config.scoreboard && this.renderScoreboardConfig(config.scoreboard)}
         {config.frozenScoreboard && this.renderFrozenScoreboardConfig(config.frozenScoreboard)}
+        {config.externalScoreboard && this.renderExternalScoreboardConfig(config.externalScoreboard)}
         {config.virtual && this.renderVirtualConfig(config.virtual)}
       </div>
     );
@@ -154,6 +156,28 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     return (
       <div className="contest-edit-configs-table__config">
         <h4>Freezable scoreboard config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
+      </div>
+    );
+  };
+
+  private renderExternalScoreboardConfig = (config: ExternalScoreboardModuleConfig) => {
+    const rows: FormTableRow[] = [
+      {
+        key: 'receiverUrl',
+        title: 'Receiver URL',
+        value: config.receiverUrl,
+      },
+      {
+        key: 'receiverSecret',
+        title: 'Receiver secret',
+        value: config.receiverSecret,
+      },
+    ];
+    return (
+      <div className="contest-edit-configs-table__config">
+        <h4>External scoreboard config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
       </div>

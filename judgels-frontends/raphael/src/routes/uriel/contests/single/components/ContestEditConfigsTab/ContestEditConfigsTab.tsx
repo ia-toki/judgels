@@ -66,7 +66,16 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
       return <LoadingState />;
     }
     if (isEditing) {
-      const { icpcStyle, ioiStyle, gcjStyle, scoreboard, clarificationTimeLimit, frozenScoreboard, virtual } = config;
+      const {
+        icpcStyle,
+        ioiStyle,
+        gcjStyle,
+        scoreboard,
+        clarificationTimeLimit,
+        frozenScoreboard,
+        externalScoreboard,
+        virtual,
+      } = config;
 
       let initialValues: ContestEditConfigsFormData = {
         scoreboardIsIncognito: scoreboard.isIncognitoScoreboard,
@@ -108,6 +117,13 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
           frozenScoreboardIsOfficialAllowed: frozenScoreboard.isOfficialScoreboardAllowed,
         };
       }
+      if (externalScoreboard) {
+        initialValues = {
+          ...initialValues,
+          externalScoreboardReceiverUrl: externalScoreboard.receiverUrl,
+          externalScoreboardReceiverSecret: externalScoreboard.receiverSecret,
+        };
+      }
       if (virtual) {
         initialValues = { ...initialValues, virtualDuration: formatDuration(virtual.virtualDuration) };
       }
@@ -122,7 +138,15 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
   };
 
   private upsertConfig = async (data: ContestEditConfigsFormData) => {
-    const { icpcStyle, ioiStyle, gcjStyle, clarificationTimeLimit, frozenScoreboard, virtual } = this.state.config!;
+    const {
+      icpcStyle,
+      ioiStyle,
+      gcjStyle,
+      clarificationTimeLimit,
+      frozenScoreboard,
+      externalScoreboard,
+      virtual,
+    } = this.state.config!;
 
     let config: ContestModulesConfig = {
       scoreboard: {
@@ -171,6 +195,15 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
         frozenScoreboard: {
           scoreboardFreezeTime: parseDuration(data.frozenScoreboardFreezeTime!),
           isOfficialScoreboardAllowed: data.frozenScoreboardIsOfficialAllowed!,
+        },
+      };
+    }
+    if (externalScoreboard) {
+      config = {
+        ...config,
+        externalScoreboard: {
+          receiverUrl: data.externalScoreboardReceiverUrl!,
+          receiverSecret: data.externalScoreboardReceiverSecret!,
         },
       };
     }

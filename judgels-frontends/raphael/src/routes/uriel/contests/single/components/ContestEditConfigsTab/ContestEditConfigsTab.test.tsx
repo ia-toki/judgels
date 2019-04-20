@@ -62,6 +62,10 @@ describe('ContestEditConfigsTab', () => {
             scoreboardFreezeTime: parseDuration('1h'),
             isOfficialScoreboardAllowed: false,
           },
+          externalScoreboard: {
+            receiverUrl: 'http://external.scoreboard',
+            receiverSecret: 'the_secret',
+          },
           virtual: {
             virtualDuration: parseDuration('5h'),
           },
@@ -90,6 +94,12 @@ describe('ContestEditConfigsTab', () => {
         const frozenScoreboardIsOfficialAllowed = wrapper.find('input[name="frozenScoreboardIsOfficialAllowed"]');
         frozenScoreboardIsOfficialAllowed.simulate('change', { target: { checked: true } });
 
+        const externalScoreboardReceiverUrl = wrapper.find('input[name="externalScoreboardReceiverUrl"]');
+        externalScoreboardReceiverUrl.simulate('change', { target: { value: 'http://new.external.scoreboard' } });
+
+        const externalScoreboardReceiverSecret = wrapper.find('input[name="externalScoreboardReceiverSecret"]');
+        externalScoreboardReceiverSecret.simulate('change', { target: { value: 'the_new_secret' } });
+
         const virtualDuration = wrapper.find('input[name="virtualDuration"]');
         virtualDuration.simulate('change', { target: { value: '5h 5m' } });
 
@@ -110,6 +120,10 @@ describe('ContestEditConfigsTab', () => {
           frozenScoreboard: {
             isOfficialScoreboardAllowed: true,
             scoreboardFreezeTime: 3900000,
+          },
+          externalScoreboard: {
+            receiverUrl: 'http://new.external.scoreboard',
+            receiverSecret: 'the_new_secret',
           },
           virtual: {
             virtualDuration: 18300000,

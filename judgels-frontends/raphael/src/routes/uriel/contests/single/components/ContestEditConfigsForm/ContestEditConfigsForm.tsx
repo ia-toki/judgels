@@ -30,6 +30,9 @@ export interface ContestEditConfigsFormData {
 
   clarificationTimeLimitDuration?: string;
 
+  externalScoreboardReceiverUrl?: string;
+  externalScoreboardReceiverSecret?: string;
+
   frozenScoreboardFreezeTime?: string;
   frozenScoreboardIsOfficialAllowed?: boolean;
 
@@ -70,6 +73,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
         {config.clarificationTimeLimit && this.renderClarificationTimeLimitForm()}
         {this.renderScoreboardForm()}
         {config.frozenScoreboard && this.renderFrozenScoreboardForm()}
+        {config.externalScoreboard && this.renderExternalScoreboardForm()}
         {config.virtual && this.renderVirtualForm()}
 
         <hr />
@@ -275,6 +279,33 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
           <tbody>
             <Field component={FormTableTextInput} {...frozenScoreboardFreezeTimeField} />
             <Field component={FormTableCheckbox} {...frozenScoreboardIsOfficialAllowedField} />
+          </tbody>
+        </HTMLTable>
+      </div>
+    );
+  };
+
+  private renderExternalScoreboardForm = () => {
+    const externalScoreboardReceiverUrlField: any = {
+      name: 'externalScoreboardReceiverUrl',
+      label: 'Receiver URL',
+      validate: [Required],
+      keyClassName: 'contest-edit-configs-form__key',
+    };
+
+    const externalScoreboardReceiverSecretField: any = {
+      name: 'externalScoreboardReceiverSecret',
+      label: 'Receiver secret',
+      keyClassName: 'contest-edit-configs-form__key',
+    };
+
+    return (
+      <div className="contest-edit-configs-form__config">
+        <h4>External scoreboard config</h4>
+        <HTMLTable striped>
+          <tbody>
+            <Field component={FormTableTextInput} {...externalScoreboardReceiverUrlField} />
+            <Field component={FormTableTextInput} {...externalScoreboardReceiverSecretField} />
           </tbody>
         </HTMLTable>
       </div>

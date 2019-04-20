@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import judgels.uriel.api.contest.problem.ContestProblem;
-import judgels.uriel.api.contest.scoreboard.ContestScoreboardData;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.problem.ContestProblemStore;
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
