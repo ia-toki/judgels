@@ -15,7 +15,7 @@ describe('ItemEssayCard', () => {
     meta: 'meta',
     config: itemConfig,
     disabled: false,
-    onSubmit: jest.fn().mockReturnValue(undefined),
+    onSubmit: jest.fn(),
     itemNumber: 1,
   };
 
@@ -23,19 +23,8 @@ describe('ItemEssayCard', () => {
     wrapper = mount(<ItemEssayCard {...props} />);
   });
 
-  it('item statement', () => {
-    const statement = wrapper
-      .find('div')
-      .find('.__item-statement')
-      .text();
-    expect(statement).toEqual(props.config.statement);
-  });
-
-  it('item number', () => {
-    const itemNumber = wrapper
-      .find('div')
-      .find('.__item-num')
-      .text();
-    expect(itemNumber).toEqual('1.');
+  it('should render item statement', () => {
+    const text = wrapper.find('div').map(div => div.text());
+    expect(text).toContain('1.statement');
   });
 });

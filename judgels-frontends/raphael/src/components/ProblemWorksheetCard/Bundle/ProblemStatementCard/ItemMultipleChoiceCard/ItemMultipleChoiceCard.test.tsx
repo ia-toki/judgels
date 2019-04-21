@@ -9,6 +9,7 @@ import * as React from 'react';
 
 describe('ItemMultipleChoiceCard', () => {
   let wrapper: ReactWrapper<ItemMultipleChoiceCardProps, ItemMultipleChoiceCardState>;
+  const onChoiceChangeFn: jest.Mocked<any> = jest.fn();
   const itemConfig: ItemMultipleChoiceConfig = {
     statement: 'Statement',
     choices: [
@@ -32,7 +33,7 @@ describe('ItemMultipleChoiceCard', () => {
     meta: 'meta',
     config: itemConfig,
     disabled: false,
-    onChoiceChange: jest.fn(),
+    onChoiceChange: onChoiceChangeFn,
     itemNumber: 1,
   };
 
@@ -41,35 +42,29 @@ describe('ItemMultipleChoiceCard', () => {
     wrapper = mount(<ItemMultipleChoiceCard {...props} />);
   });
 
-  it('Answer the question by clicking a radio button', () => {
-    const prevState = wrapper.state();
+  test('Answer the question by clicking a radio button', () => {
     const radioButton = wrapper
       .find('label')
       .children()
       .find('input')
       .first();
-    radioButton.simulate('change');
-    const state = wrapper.state();
-    expect(prevState.value).toBeUndefined();
-    expect(state.value).toEqual('A');
+    radioButton.simulate('change', { target: { checked: true } });
+    expect(onChoiceChangeFn).toBeCalled();
   });
 
-  it('Answer the question and change the answer', () => {
+  test('Answer the question and change the answer', () => {
     const prevAnswer = wrapper
       .find('label')
       .children()
       .find('input')
       .first();
-    prevAnswer.simulate('change');
-    const prevState = wrapper.state().value;
+    prevAnswer.simulate('click', { target: { checked: true } });
     const currentAnswer = wrapper
       .find('label')
       .children()
       .find('input')
       .last();
-    currentAnswer.simulate('change');
-    const currentState = wrapper.state().value;
-    const state = [prevState, currentState];
-    expect(state).toEqual(['A', 'C']);
+    currentAnswer.simulate('change', { target: { checked: true } });
+    expect(onChoiceChangeFn).toHaveBeenCalledTimes(2);
   });
 });

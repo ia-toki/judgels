@@ -7,6 +7,7 @@ import * as React from 'react';
 
 describe('ItemEssayForm', () => {
   let wrapper: ReactWrapper<ItemEssayFormProps, ItemEssayFormState>;
+  const onSubmitFn: jest.Mocked<any> = jest.fn(() => Promise.resolve(true));
   const itemConfig: ItemEssayConfig = {
     statement: 'statement',
     score: 100,
@@ -23,7 +24,7 @@ describe('ItemEssayForm', () => {
       meta: 'meta',
       config: itemConfig,
       disabled: false,
-      onSubmit: jest.fn().mockReturnValue(undefined),
+      onSubmit: onSubmitFn,
       answerState: AnswerState.NotAnswered,
     };
 
@@ -32,34 +33,14 @@ describe('ItemEssayForm', () => {
     });
 
     describe('initial condition', () => {
-      it('initial state', () => {
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: props.answerState,
-          answer: '',
-          initialAnswer: '',
-          cancelButtonState: AnswerState.NotAnswered,
-        };
-        expect(state).toEqual(expectedState);
-      });
-
-      it('textarea', () => {
+      it('should render textarea with empty value', () => {
         const textareaValue = wrapper.find('textarea').props().value;
         expect(textareaValue).toEqual('');
       });
 
-      it('only answer button', () => {
+      it('should be only 1 button', () => {
         const button = wrapper.find('button');
         expect(button.length).toEqual(1);
-        expect(button.text()).toEqual('Answer');
-      });
-
-      it('helptext', () => {
-        const helpText = wrapper
-          .find('div')
-          .last()
-          .text();
-        expect(helpText).toContain('Not answered.');
       });
     });
 
@@ -67,40 +48,30 @@ describe('ItemEssayForm', () => {
       beforeEach(async () => {
         const answerButton = wrapper.find('button').first();
         await answerButton.simulate('submit');
-        const textarea = wrapper.find('textarea').first();
+        const textarea = wrapper.find('textarea');
         textarea.simulate('change', { target: { value: 'answer' } });
       });
 
-      it('fill the answer', () => {
-        const state = wrapper.state();
-        expect(state.answer).toEqual('answer');
-        expect(state.answerState).toEqual(AnswerState.Answering);
+      test("textarea value should be 'answer'", () => {
+        const value = wrapper.find('textarea').props().value;
+        expect(value).toEqual('answer');
       });
 
-      it('cancel answer', async () => {
+      test('cancel filling the answer should render 1 button', async () => {
         const cancelButton = wrapper.find('button').last();
         await cancelButton.simulate('click');
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: AnswerState.NotAnswered,
-          answer: '',
-          initialAnswer: '',
-          cancelButtonState: AnswerState.NotAnswered,
-        };
-        expect(state).toEqual(expectedState);
+        const button = wrapper.find('button');
+        expect(button.length).toEqual(1);
+        expect(onSubmitFn).not.toBeCalled();
       });
 
-      it('submit the answer', async () => {
+      test('submit the answer', async () => {
+        const prevHelpText = wrapper.find('div').last();
         const submitButton = wrapper.find('button').first();
         await submitButton.simulate('submit');
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: AnswerState.AnswerSaved,
-          answer: 'answer',
-          initialAnswer: 'answer',
-          cancelButtonState: AnswerState.AnswerSaved,
-        };
-        expect(state).toEqual(expectedState);
+        const helpText = wrapper.find('div').last();
+        expect(helpText).not.toEqual(prevHelpText);
+        expect(onSubmitFn).toBeCalled();
       });
     });
   });
@@ -113,7 +84,7 @@ describe('ItemEssayForm', () => {
       config: itemConfig,
       disabled: false,
       initialAnswer: 'initial',
-      onSubmit: jest.fn().mockReturnValue(undefined),
+      onSubmit: onSubmitFn,
       answerState: AnswerState.AnswerSaved,
     };
 
@@ -122,35 +93,14 @@ describe('ItemEssayForm', () => {
     });
 
     describe('initial condition', () => {
-      it('initial state', () => {
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: props.answerState,
-          answer: props.initialAnswer,
-          initialAnswer: props.initialAnswer,
-          cancelButtonState: AnswerState.AnswerSaved,
-        };
-        expect(state).toEqual(expectedState);
-      });
-
-      it('textarea', () => {
+      it('should render textarea with initial answer', () => {
         const textareaValue = wrapper.find('textarea').props().value;
         expect(textareaValue).toEqual(props.initialAnswer);
       });
 
-      it('not only answer button', () => {
+      it('should render two buttons', () => {
         const button = wrapper.find('button');
-        const buttonTexts = button.map(bt => bt.text());
-        expect(button.length).toBeGreaterThan(1);
-        expect(buttonTexts).toEqual(['Change', 'Clear']);
-      });
-
-      it('helptext', () => {
-        const helpText = wrapper
-          .find('div')
-          .last()
-          .text();
-        expect(helpText).toContain('Answered.');
+        expect(button.length).toEqual(2);
       });
     });
 
@@ -162,51 +112,35 @@ describe('ItemEssayForm', () => {
         textarea.simulate('change', { target: { value: 'answer' } });
       });
 
-      it('fill the answer', () => {
-        const state = wrapper.state();
-        expect(state.answer).toEqual('answer');
-        expect(state.answerState).toEqual(AnswerState.Answering);
+      test("textarea value should be 'answer'", () => {
+        const value = wrapper.find('textarea').props().value;
+        expect(value).toEqual('answer');
       });
 
-      it('cancel answer', async () => {
+      test('cancel filling the answer should render 2 buttons', async () => {
         const cancelButton = wrapper.find('button').last();
         await cancelButton.simulate('click');
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: props.answerState,
-          answer: props.initialAnswer,
-          initialAnswer: props.initialAnswer,
-          cancelButtonState: AnswerState.AnswerSaved,
-        };
-        expect(state).toEqual(expectedState);
+        const button = wrapper.find('button');
+        expect(button.length).toEqual(2);
       });
 
-      it('submit the answer', async () => {
+      test('submit the answer', async () => {
+        const prevHelpText = wrapper.find('div').last();
         const submitButton = wrapper.find('button').first();
         await submitButton.simulate('submit');
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: AnswerState.AnswerSaved,
-          answer: 'answer',
-          initialAnswer: 'answer',
-          cancelButtonState: AnswerState.AnswerSaved,
-        };
-        expect(state).toEqual(expectedState);
+        const helpText = wrapper.find('div').last();
+        expect(helpText).not.toEqual(prevHelpText);
+        expect(onSubmitFn).toBeCalled();
       });
     });
 
-    it('clear the answer', async () => {
+    test('clear the answer', async () => {
+      const prevHelpText = wrapper.find('div').last();
       const clearButton = wrapper.find('button').last();
       await clearButton.simulate('click');
-      const state = wrapper.state();
-      const expectedState = {
-        answerState: AnswerState.NotAnswered,
-        answer: '',
-        initialAnswer: '',
-        cancelButtonState: AnswerState.NotAnswered,
-      };
+      const helpText = wrapper.find('div').last();
+      expect(helpText).not.toEqual(prevHelpText);
       expect(window.confirm).toBeCalled();
-      expect(state).toEqual(expectedState);
     });
   });
 

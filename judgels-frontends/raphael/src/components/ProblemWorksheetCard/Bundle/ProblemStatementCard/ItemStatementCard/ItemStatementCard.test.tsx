@@ -20,11 +20,8 @@ describe('ItemStatementCard', () => {
     wrapper = mount(<ItemStatementCard {...props} />);
   });
 
-  it('statement', () => {
-    const statement = wrapper
-      .find('div')
-      .first()
-      .text();
-    expect(statement).toEqual(props.config.statement);
+  it('should render item statement', () => {
+    const statement = wrapper.find('div').map(div => div.text());
+    expect(statement).toContain(props.config.statement);
   });
 });

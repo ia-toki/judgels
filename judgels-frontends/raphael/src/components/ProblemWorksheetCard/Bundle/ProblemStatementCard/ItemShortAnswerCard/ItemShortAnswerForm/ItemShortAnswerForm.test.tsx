@@ -5,6 +5,7 @@ import { AnswerState } from 'components/ProblemWorksheetCard/Bundle/itemStatemen
 import * as React from 'react';
 describe('ItemShortAnswerForm', () => {
   let wrapper: ReactWrapper<ItemShortAnswerFormProps, ItemShortAnswerFormState>;
+  const onSubmitFn: jest.Mocked<any> = jest.fn();
   const itemConfig: ItemShortAnswerConfig = {
     statement: 'statement',
     score: 4,
@@ -17,14 +18,14 @@ describe('ItemShortAnswerForm', () => {
     window.confirm = jest.fn(() => true);
   });
 
-  describe('not answered yet', () => {
+  describe('not answered yet condition', () => {
     const props: ItemShortAnswerFormProps = {
       jid: 'jid',
       type: ItemType.ShortAnswer,
       meta: 'meta',
       config: itemConfig,
       disabled: false,
-      onSubmit: jest.fn().mockReturnValue(undefined),
+      onSubmit: onSubmitFn,
       answerState: AnswerState.NotAnswered,
     };
 
@@ -32,91 +33,46 @@ describe('ItemShortAnswerForm', () => {
       wrapper = mount(<ItemShortAnswerForm {...props} />);
     });
 
-    describe('initial condition', () => {
-      it('initial state', () => {
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: props.answerState,
-          initialAnswer: '',
-          answer: '',
-          cancelButtonState: AnswerState.NotAnswered,
-          previousWrongFormat: true,
-          wrongFormat: true,
-        };
-        expect(state).toEqual(expectedState);
+    test('text input should has empty value', () => {
+      const textInputValue = wrapper.find('input').props().value;
+      expect(textInputValue).toEqual('');
+    });
+
+    it('should render 1 button', () => {
+      const button = wrapper.find('button');
+      expect(button.length).toEqual(1);
+    });
+
+    describe('fill and submit the answer', () => {
+      beforeEach(async () => {
+        const answerButton = wrapper.find('button');
+        await answerButton.simulate('submit');
+        const textInput = wrapper.find('input');
+        textInput.simulate('change', { target: { value: '1' } });
       });
 
-      it('text input', () => {
-        const textInputValue = wrapper.find('input').props().value;
-        expect(textInputValue).toEqual('');
+      test('fill the answer with wrong format will render the new help text', () => {
+        const prevHelpText = wrapper.find('div').at(1);
+        const textInput = wrapper.find('input');
+        textInput.simulate('change', { target: { value: 'answer' } });
+        const helpText = wrapper.find('div').at(1);
+        expect(helpText).not.toEqual(prevHelpText);
       });
 
-      it('only answer button', () => {
+      test('cancel answer should render 1 button', async () => {
+        const cancelButton = wrapper.find('button').last();
+        await cancelButton.simulate('click');
         const button = wrapper.find('button');
         expect(button.length).toEqual(1);
-        expect(button.text()).toEqual('Answer');
       });
 
-      it('helptext', () => {
-        const div = wrapper.find('div');
-        const helpText = div.at(div.length - 2).text();
-        expect(helpText).toContain('Not answered.');
-      });
-
-      describe('fill and submit the answer', () => {
-        beforeEach(async () => {
-          const answerButton = wrapper.find('button');
-          await answerButton.simulate('submit');
-          const textInput = wrapper.find('input');
-          textInput.simulate('change', { target: { value: '1' } });
-        });
-
-        it('fill the answer with right format', () => {
-          const state = wrapper.state();
-          expect(state.answer).toEqual('1');
-          expect(state.answerState).toEqual(AnswerState.Answering);
-        });
-
-        it('fill the answer with wrong format', () => {
-          const textInput = wrapper.find('input');
-          textInput.simulate('change', { target: { value: 'answer' } });
-          const state = wrapper.state();
-          const div = wrapper.find('div');
-          const helpText = div.at(1).text();
-          expect(helpText).toContain('Wrong answer format!');
-          expect(state.answer).toEqual('answer');
-          expect(state.wrongFormat).toEqual(true);
-        });
-
-        it('cancel answer', async () => {
-          const cancelButton = wrapper.find('button').last();
-          await cancelButton.simulate('click');
-          const state = wrapper.state();
-          const expectedState = {
-            answerState: props.answerState,
-            initialAnswer: '',
-            answer: '',
-            cancelButtonState: AnswerState.NotAnswered,
-            previousWrongFormat: true,
-            wrongFormat: true,
-          };
-          expect(state).toEqual(expectedState);
-        });
-
-        it('submit the answer', async () => {
-          const submitButton = wrapper.find('button').first();
-          await submitButton.simulate('submit');
-          const state = wrapper.state();
-          const expectedState = {
-            answerState: AnswerState.AnswerSaved,
-            initialAnswer: '1',
-            answer: '1',
-            cancelButtonState: AnswerState.AnswerSaved,
-            previousWrongFormat: true,
-            wrongFormat: true,
-          };
-          expect(state).toEqual(expectedState);
-        });
+      test('submit the answer', async () => {
+        const prevHelpText = wrapper.find('div').at(1);
+        const submitButton = wrapper.find('button').first();
+        await submitButton.simulate('submit');
+        const helpText = wrapper.find('div').at(1);
+        expect(helpText).not.toEqual(prevHelpText);
+        expect(onSubmitFn).toBeCalled();
       });
     });
   });
@@ -129,7 +85,7 @@ describe('ItemShortAnswerForm', () => {
       config: itemConfig,
       disabled: false,
       initialAnswer: '1',
-      onSubmit: jest.fn().mockReturnValue(undefined),
+      onSubmit: onSubmitFn,
       answerState: AnswerState.AnswerSaved,
     };
 
@@ -137,37 +93,14 @@ describe('ItemShortAnswerForm', () => {
       wrapper = mount(<ItemShortAnswerForm {...props} />);
     });
 
-    describe('initial condition', () => {
-      it('initial state', () => {
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: props.answerState,
-          initialAnswer: props.initialAnswer,
-          answer: props.initialAnswer,
-          cancelButtonState: AnswerState.AnswerSaved,
-          previousWrongFormat: false,
-          wrongFormat: false,
-        };
-        expect(state).toEqual(expectedState);
-      });
+    it('should render text input with initial answer', () => {
+      const textInputValue = wrapper.find('input').props().value;
+      expect(textInputValue).toEqual(props.initialAnswer);
+    });
 
-      it('text input', () => {
-        const textInputValue = wrapper.find('input').props().value;
-        expect(textInputValue).toEqual(props.initialAnswer);
-      });
-
-      it('not only answer button', () => {
-        const button = wrapper.find('button');
-        const buttonTexts = button.map(bt => bt.text());
-        expect(button.length).toBeGreaterThan(1);
-        expect(buttonTexts).toEqual(['Change', 'Clear']);
-      });
-
-      it('helptext', () => {
-        const div = wrapper.find('div');
-        const helpText = div.at(div.length - 2).text();
-        expect(helpText).toContain('Answered.');
-      });
+    it('should render two buttons', () => {
+      const button = wrapper.find('button');
+      expect(button.length).toEqual(2);
     });
 
     describe('change the answer', () => {
@@ -178,67 +111,43 @@ describe('ItemShortAnswerForm', () => {
         textInput.simulate('change', { target: { value: '2' } });
       });
 
-      it('change the answer with right format', () => {
+      test('change the answer with right format', () => {
         const state = wrapper.state();
         expect(state.answer).toEqual('2');
-        expect(state.answerState).toEqual(AnswerState.Answering);
       });
 
-      it('change the answer with wrong format', () => {
+      test('change the answer with wrong format', () => {
+        const prevHelpText = wrapper.find('div').at(1);
         const textInput = wrapper.find('input');
         textInput.simulate('change', { target: { value: 'answer' } });
-        const state = wrapper.state();
-        const div = wrapper.find('div');
-        const helpText = div.at(1).text();
-        expect(helpText).toContain('Wrong answer format!');
-        expect(state.answer).toEqual('answer');
-        expect(state.wrongFormat).toEqual(true);
+        const helpText = wrapper.find('div').at(1);
+        expect(helpText).not.toEqual(prevHelpText);
       });
 
-      it('cancel answer', async () => {
-        const cancelButton = wrapper.find('button').last();
+      test('cancel answer should render new buttons', async () => {
+        const prevButtons = wrapper.find('button');
+        const cancelButton = prevButtons.last();
         await cancelButton.simulate('click');
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: props.answerState,
-          initialAnswer: props.initialAnswer,
-          answer: props.initialAnswer,
-          cancelButtonState: AnswerState.AnswerSaved,
-          previousWrongFormat: false,
-          wrongFormat: false,
-        };
-        expect(state).toEqual(expectedState);
+        const buttons = wrapper.find('button');
+        expect(buttons).not.toEqual(prevButtons);
       });
 
-      it('submit the answer', async () => {
+      test('submit the answer', async () => {
+        const prevHelpText = wrapper.find('div').at(1);
         const submitButton = wrapper.find('button').first();
         await submitButton.simulate('submit');
-        const state = wrapper.state();
-        const expectedState = {
-          answerState: AnswerState.AnswerSaved,
-          initialAnswer: '2',
-          answer: '2',
-          cancelButtonState: AnswerState.AnswerSaved,
-          previousWrongFormat: true,
-          wrongFormat: true,
-        };
-        expect(state).toEqual(expectedState);
+        const helpText = wrapper.find('div').at(1);
+        expect(onSubmitFn).toBeCalled();
+        expect(helpText).not.toEqual(prevHelpText);
       });
     });
 
-    it('clear the answer', async () => {
-      const clearButton = wrapper.find('button').last();
+    test('clear the answer', async () => {
+      const prevButtons = wrapper.find('button');
+      const clearButton = prevButtons.last();
       await clearButton.simulate('click');
-      const state = wrapper.state();
-      const expectedState = {
-        answerState: AnswerState.NotAnswered,
-        initialAnswer: '',
-        answer: '',
-        cancelButtonState: AnswerState.NotAnswered,
-        previousWrongFormat: true,
-        wrongFormat: true,
-      };
-      expect(state).toEqual(expectedState);
+      const button = wrapper.find('button');
+      expect(button).not.toEqual(prevButtons);
     });
   });
 
@@ -250,7 +159,7 @@ describe('ItemShortAnswerForm', () => {
       config: itemConfig,
       disabled: true,
       initialAnswer: '1',
-      onSubmit: jest.fn().mockReturnValue(undefined),
+      onSubmit: onSubmitFn,
       answerState: AnswerState.AnswerSaved,
     };
 
