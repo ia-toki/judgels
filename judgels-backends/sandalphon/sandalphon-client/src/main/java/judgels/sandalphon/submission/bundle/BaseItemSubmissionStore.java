@@ -1,29 +1,26 @@
-package judgels.uriel.contest.submission.bundle;
+package judgels.sandalphon.submission.bundle;
 
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.Verdict;
-import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
-import judgels.uriel.persistence.ContestBundleItemSubmissionModel;
+import judgels.sandalphon.persistence.AbstractBundleItemSubmissionModel;
+import judgels.sandalphon.persistence.BaseBundleItemSubmissionDao;
 
-@Singleton
-public class ContestItemSubmissionStore {
-    private final ContestBundleItemSubmissionDao submissionDao;
+public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel> implements ItemSubmissionStore {
+    private final BaseBundleItemSubmissionDao<M> submissionDao;
 
-    @Inject
-    public ContestItemSubmissionStore(ContestBundleItemSubmissionDao submissionDao) {
+    public BaseItemSubmissionStore(BaseBundleItemSubmissionDao<M> submissionDao) {
         this.submissionDao = submissionDao;
     }
 
+    @Override
     public Page<ItemSubmission> getSubmissions(
             String containerJid,
             Optional<String> createdBy,
@@ -35,31 +32,32 @@ public class ContestItemSubmissionStore {
         options.orderDir(OrderDir.DESC);
         page.ifPresent(options::page);
 
-        Page<ContestBundleItemSubmissionModel> submissionModels =
+        Page<M> submissionModels =
                 submissionDao.selectPaged(containerJid, createdBy, problemJid, Optional.empty(), options.build());
-        return submissionModels.mapPage(p -> Lists.transform(p, ContestItemSubmissionStore::fromModel));
+        return submissionModels.mapPage(p -> Lists.transform(p, this::fromModel));
     }
 
+    @Override
     public ItemSubmission upsertSubmission(
-            String contestJid,
+            String containerJid,
             String problemJid,
             String itemJid,
             String answer,
             Grading grading,
             String userJid) {
 
-        Optional<ContestBundleItemSubmissionModel> maybeModel = submissionDao
-                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(contestJid, problemJid, itemJid, userJid);
+        Optional<M> maybeModel = submissionDao
+                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(containerJid, problemJid, itemJid, userJid);
 
         if (maybeModel.isPresent()) {
-            ContestBundleItemSubmissionModel model = maybeModel.get();
+            M model = maybeModel.get();
             model.answer = answer;
             model.verdict = grading.getVerdict().name();
             model.score = grading.getScore().orElse(null);
             return fromModel(submissionDao.update(model));
         } else {
-            ContestBundleItemSubmissionModel model = new ContestBundleItemSubmissionModel();
-            model.containerJid = contestJid;
+            M model = submissionDao.createSubmissionModel();
+            model.containerJid = containerJid;
             model.problemJid = problemJid;
             model.itemJid = itemJid;
             model.answer = answer;
@@ -69,43 +67,47 @@ public class ContestItemSubmissionStore {
         }
     }
 
-    public void deleteSubmission(String contestJid, String problemJid, String itemJid, String userJid) {
-        Optional<ContestBundleItemSubmissionModel> maybeModel = submissionDao
-                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(contestJid, problemJid, itemJid, userJid);
+    @Override
+    public void deleteSubmission(String containerJid, String problemJid, String itemJid, String userJid) {
+        Optional<M> maybeModel = submissionDao
+                .selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(containerJid, problemJid, itemJid, userJid);
         if (maybeModel.isPresent()) {
             submissionDao.delete(maybeModel.get());
         }
     }
 
-    public List<ItemSubmission> getLatestSubmissionsByUserInContest(String containerJid, String userJid) {
-        List<ContestBundleItemSubmissionModel> models =
+    @Override
+    public List<ItemSubmission> getLatestSubmissionsByUserInContainer(String containerJid, String userJid) {
+        List<M> models =
                 submissionDao.selectAllByContainerJidAndCreatedBy(containerJid, userJid);
         return models.stream()
-                .map(ContestItemSubmissionStore::fromModel)
+                .map(this::fromModel)
                 .collect(Collectors.toList());
     }
 
-    public List<ItemSubmission> getLatestSubmissionsByUserForProblemInContest(
+    @Override
+    public List<ItemSubmission> getLatestSubmissionsByUserForProblemInContainer(
             String containerJid,
             String problemJid,
             String userJid) {
 
-        List<ContestBundleItemSubmissionModel> models =
+        List<M> models =
                 submissionDao.selectAllByContainerJidAndProblemJidAndCreatedBy(containerJid, problemJid, userJid);
         return models.stream()
-                .map(ContestItemSubmissionStore::fromModel)
+                .map(this::fromModel)
                 .collect(Collectors.toList());
     }
 
+    @Override
     public List<ItemSubmission> getSubmissionsForScoreboard(String containerJid) {
-        List<ContestBundleItemSubmissionModel> models =
+        List<M> models =
                 submissionDao.selectAllByContainerJid(containerJid);
         return models.stream()
-                .map(ContestItemSubmissionStore::fromModel)
+                .map(this::fromModel)
                 .collect(Collectors.toList());
     }
 
-    private static ItemSubmission fromModel(ContestBundleItemSubmissionModel model) {
+    private ItemSubmission fromModel(M model) {
         return new ItemSubmission.Builder()
                 .jid(model.jid)
                 .containerJid(model.containerJid)
@@ -115,9 +117,10 @@ public class ContestItemSubmissionStore {
                 .userJid(model.updatedBy)
                 .time(model.updatedAt)
                 .grading(new Grading.Builder()
-                    .verdict(Verdict.valueOf(model.verdict))
-                    .score(Optional.ofNullable(model.score))
-                    .build())
+                        .verdict(Verdict.valueOf(model.verdict))
+                        .score(Optional.ofNullable(model.score))
+                        .build())
                 .build();
     }
 }
+

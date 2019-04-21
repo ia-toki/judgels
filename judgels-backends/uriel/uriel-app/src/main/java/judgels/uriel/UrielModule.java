@@ -8,11 +8,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.inject.Singleton;
 import judgels.jophiel.api.user.me.MyUserService;
+import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
+import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.JudgelsVersion;
 import judgels.service.actor.ActorChecker;
 import judgels.service.actor.CachingActorExtractor;
+import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
 import judgels.uriel.persistence.ContestProgrammingGradingDao;
 import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 
@@ -50,5 +53,11 @@ public class UrielModule {
             ObjectMapper mapper) {
 
         return new BaseSubmissionStore<>(submissionDao, gradingDao, mapper);
+    }
+
+    @Provides
+    @Singleton
+    static ItemSubmissionStore itemSubmissionStore(ContestBundleItemSubmissionDao submissionDao) {
+        return new BaseItemSubmissionStore<>(submissionDao);
     }
 }
