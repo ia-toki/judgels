@@ -14,6 +14,11 @@ import javax.inject.Singleton;
 import judgels.fs.FileSystem;
 import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
+import judgels.sandalphon.problem.ProblemClient;
+import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
+import judgels.sandalphon.submission.bundle.ItemSubmissionRegradeProcessor;
+import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
+import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
 import judgels.sandalphon.submission.programming.SubmissionClient;
@@ -77,6 +82,45 @@ public class SubmissionModule {
                         .build();
 
         return new SubmissionRegrader(submissionStore, executorService, processor);
+    }
+
+    @Provides
+    @Singleton
+    ItemSubmissionRegrader itemSubmissionRegrader(
+            LifecycleEnvironment lifecycleEnvironment,
+            ItemSubmissionStore itemSubmissionStore,
+            ItemSubmissionRegradeProcessor processor) {
+
+        ExecutorService executorService =
+                lifecycleEnvironment.executorService("item-submission-regrade-processor-%d")
+                        .maxThreads(5)
+                        .minThreads(5)
+                        .build();
+
+        return new ItemSubmissionRegrader(itemSubmissionStore, executorService, processor);
+    }
+
+    @Provides
+    @Singleton
+    ItemSubmissionRegradeProcessor itemSubmissionRegradeProcessor(
+            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
+            ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
+            ItemSubmissionStore itemSubmissionStore,
+            ProblemClient problemClient) {
+
+        return unitOfWorkAwareProxyFactory.create(
+                ItemSubmissionRegradeProcessor.class,
+                new Class<?>[] {
+                        ItemSubmissionGraderRegistry.class,
+                        ItemSubmissionStore.class,
+                        ProblemClient.class
+                },
+                new Object[] {
+                        itemSubmissionGraderRegistry,
+                        itemSubmissionStore,
+                        problemClient
+                }
+        );
     }
 
     @Provides

@@ -7,6 +7,8 @@ import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 
 public interface ItemSubmissionStore {
+    Optional<ItemSubmission> getSubmissionByJid(String jid);
+
     Page<ItemSubmission> getSubmissions(
             String containerJid,
             Optional<String> createdBy,
@@ -31,4 +33,11 @@ public interface ItemSubmissionStore {
             String userJid);
 
     List<ItemSubmission> getSubmissionsForScoreboard(String containerJid);
+
+    List<ItemSubmission> markSubmissionsForRegrade(
+            String containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid);
+
+    void saveRegradeResult(String submissionJid, Grading grading);
 }

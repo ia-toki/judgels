@@ -1,8 +1,8 @@
 package judgels.sandalphon.hibernate;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Singleton;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.api.Page;
@@ -13,13 +13,15 @@ import judgels.sandalphon.persistence.AbstractBundleItemSubmissionModel;
 import judgels.sandalphon.persistence.AbstractBundleItemSubmissionModel_;
 import judgels.sandalphon.persistence.BaseBundleItemSubmissionDao;
 
-@Singleton
 public abstract class AbstractBundleItemSubmissionHibernateDao<M extends AbstractBundleItemSubmissionModel>
         extends JudgelsHibernateDao<M>
         implements BaseBundleItemSubmissionDao<M> {
 
+    private final Clock clock;
+
     public AbstractBundleItemSubmissionHibernateDao(HibernateDaoData data) {
         super(data);
+        this.clock = data.getClock();
     }
 
     @Override
@@ -66,6 +68,18 @@ public abstract class AbstractBundleItemSubmissionHibernateDao<M extends Abstrac
     }
 
     @Override
+    public List<M> selectAllByContainerJidAndProblemJidAndCreatedBy(
+            String containerJid, Optional<String> problemJid, Optional<String> createdBy) {
+
+        FilterOptions.Builder<M> filterOptions = new FilterOptions.Builder<>();
+        filterOptions.putColumnsEq(AbstractBundleItemSubmissionModel_.containerJid, containerJid);
+        createdBy.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
+        problemJid.ifPresent(jid -> filterOptions.putColumnsEq(AbstractBundleItemSubmissionModel_.problemJid, jid));
+
+        return selectAll(filterOptions.build());
+    }
+
+    @Override
     public Optional<M> selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
             String containerJid, String problemJid, String itemJid, String createdBy) {
         return selectByFilter(new FilterOptions.Builder<M>()
@@ -74,5 +88,13 @@ public abstract class AbstractBundleItemSubmissionHibernateDao<M extends Abstrac
                 .putColumnsEq(AbstractBundleItemSubmissionModel_.itemJid, itemJid)
                 .putColumnsEq(AbstractBundleItemSubmissionModel_.createdBy, createdBy)
                 .build());
+    }
+
+    @Override
+    public M updateGrading(M model, String verdict, Double score) {
+        model.verdict = verdict;
+        model.score = score;
+        model.updatedAt = clock.instant();
+        return persist(model);
     }
 }

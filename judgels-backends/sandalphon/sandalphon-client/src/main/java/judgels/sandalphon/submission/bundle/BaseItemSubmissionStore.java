@@ -21,6 +21,11 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
     }
 
     @Override
+    public Optional<ItemSubmission> getSubmissionByJid(String submissionJid) {
+        return submissionDao.selectByJid(submissionJid).map(this::fromModel);
+    }
+
+    @Override
     public Page<ItemSubmission> getSubmissions(
             String containerJid,
             Optional<String> createdBy,
@@ -105,6 +110,31 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
         return models.stream()
                 .map(this::fromModel)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ItemSubmission> markSubmissionsForRegrade(
+            String containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid) {
+
+        List<M> submissionModels = submissionDao.selectAllByContainerJidAndProblemJidAndCreatedBy(
+                containerJid, problemJid, userJid);
+        List<ItemSubmission> submissions = submissionModels.stream().map(this::fromModel).collect(Collectors.toList());
+
+        for (M submissionModel : submissionModels) {
+            submissionModel.verdict = Verdict.PENDING_REGRADE.name();
+            submissionModel.score = null;
+            submissionDao.persist(submissionModel);
+        }
+
+        return submissions;
+    }
+
+    @Override
+    public void saveRegradeResult(String submissionJid, Grading grading) {
+        M model = submissionDao.selectByJid(submissionJid).get();
+        submissionDao.updateGrading(model, grading.getVerdict().name(), grading.getScore().orElse(null));
     }
 
     private ItemSubmission fromModel(M model) {

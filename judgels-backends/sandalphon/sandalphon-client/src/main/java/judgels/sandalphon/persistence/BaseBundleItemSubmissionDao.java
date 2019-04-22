@@ -27,10 +27,16 @@ public interface BaseBundleItemSubmissionDao<M extends AbstractBundleItemSubmiss
             String containerJid,
             String problemJid,
             String createdBy);
+    List<M> selectAllByContainerJidAndProblemJidAndCreatedBy(
+            String containerJid,
+            Optional<String> problemJid,
+            Optional<String> createdBy);
 
     Optional<M> selectByContainerJidAndProblemJidAndItemJidAndCreatedBy(
             String containerJid,
             String problemJid,
             String itemJid,
             String createdBy);
+
+    M updateGrading(M model, String verdict, Double score);
 }

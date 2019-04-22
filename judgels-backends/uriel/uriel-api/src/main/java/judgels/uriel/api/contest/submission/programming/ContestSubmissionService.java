@@ -4,6 +4,7 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.Optional;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -36,14 +37,14 @@ public interface ContestSubmissionService {
 
     @POST
     @Path("/{submissionJid}/regrade")
-    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
     void regradeSubmission(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionJid") String submissionJid);
 
     @POST
     @Path("/regrade")
-    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
     void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
