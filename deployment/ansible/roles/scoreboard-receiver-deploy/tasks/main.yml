@@ -1,0 +1,28 @@
+- block:
+  - name: Create scoreboard-receiver container mount volume
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/scoreboard-receiver/var
+      - /judgels/scoreboard-receiver/var/data
+
+  - name: Pull scoreboard-receiver image
+    docker_image:
+      name: judgels/scoreboard-receiver
+      force: yes
+
+  - name: Run a scoreboard-receiver container
+    docker_container:
+      name: scoreboard-receiver
+      image: judgels/scoreboard-receiver
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/scoreboard-receiver/var:/judgels/scoreboard-receiver/var"
+      env:
+        RECEIVER_SECRET: "{{ scoreboard_receiver_secret }}"
+
+  tags:
+    - scoreboard-receiver-deploy
