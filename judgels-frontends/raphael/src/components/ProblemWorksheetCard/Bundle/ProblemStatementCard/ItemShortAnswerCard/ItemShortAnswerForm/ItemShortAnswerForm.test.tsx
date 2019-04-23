@@ -41,6 +41,13 @@ describe('ItemShortAnswerForm', () => {
     it('should render 1 button', () => {
       const button = wrapper.find('button');
       expect(button.length).toEqual(1);
+      expect(button.text()).toEqual('Answer');
+    });
+
+    test("helptext should be 'Not answered.'", () => {
+      const div = wrapper.find('div');
+      const helpText = div.at(div.length - 2).text();
+      expect(helpText).toContain('Not answered.');
     });
 
     describe('fill and submit the answer', () => {
@@ -52,11 +59,13 @@ describe('ItemShortAnswerForm', () => {
       });
 
       test('fill the answer with wrong format will render the new help text', () => {
-        const prevHelpText = wrapper.find('div').at(1);
         const textInput = wrapper.find('input');
         textInput.simulate('change', { target: { value: 'answer' } });
-        const helpText = wrapper.find('div').at(1);
-        expect(helpText).not.toEqual(prevHelpText);
+        const helpText = wrapper
+          .find('div')
+          .at(1)
+          .text();
+        expect(helpText).toContain('Wrong answer format!');
       });
 
       test('cancel answer should render 1 button', async () => {
@@ -64,6 +73,7 @@ describe('ItemShortAnswerForm', () => {
         await cancelButton.simulate('click');
         const button = wrapper.find('button');
         expect(button.length).toEqual(1);
+        expect(button.text()).toEqual('Answer');
       });
 
       test('submit the answer', async () => {
@@ -100,7 +110,9 @@ describe('ItemShortAnswerForm', () => {
 
     it('should render two buttons', () => {
       const button = wrapper.find('button');
+      const buttonTexts = button.map(bt => bt.text());
       expect(button.length).toEqual(2);
+      expect(buttonTexts).toEqual(['Change', 'Clear']);
     });
 
     describe('change the answer', () => {
@@ -117,11 +129,13 @@ describe('ItemShortAnswerForm', () => {
       });
 
       test('change the answer with wrong format', () => {
-        const prevHelpText = wrapper.find('div').at(1);
         const textInput = wrapper.find('input');
         textInput.simulate('change', { target: { value: 'answer' } });
-        const helpText = wrapper.find('div').at(1);
-        expect(helpText).not.toEqual(prevHelpText);
+        const helpText = wrapper
+          .find('div')
+          .at(1)
+          .text();
+        expect(helpText).toContain('Wrong answer format!');
       });
 
       test('cancel answer should render new buttons', async () => {
@@ -129,7 +143,9 @@ describe('ItemShortAnswerForm', () => {
         const cancelButton = prevButtons.last();
         await cancelButton.simulate('click');
         const buttons = wrapper.find('button');
+        const buttonTexts = buttons.map(bt => bt.text());
         expect(buttons).not.toEqual(prevButtons);
+        expect(buttonTexts).toEqual(['Change', 'Clear']);
       });
 
       test('submit the answer', async () => {
