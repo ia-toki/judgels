@@ -1,6 +1,7 @@
 package judgels.sandalphon.submission.bundle;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -39,9 +40,8 @@ public class ItemSubmissionRegrader {
         List<ItemSubmission> itemSubmissions = itemSubmissionStore.markSubmissionsForRegrade(
                 containerJid, userJid, problemJid, Optional.of(BATCH_SIZE));
 
-        for (int i = 0; i < itemSubmissions.size(); i += BATCH_SIZE) {
-            int batchEndIndex = Math.min(i + BATCH_SIZE, itemSubmissions.size());
-            List<ItemSubmission> itemSubmissionsBatch = itemSubmissions.subList(i, batchEndIndex);
+        List<List<ItemSubmission>> itemSubmissionsBatches = Lists.partition(itemSubmissions, BATCH_SIZE);
+        for (List<ItemSubmission> itemSubmissionsBatch : itemSubmissionsBatches) {
             CompletableFuture.runAsync(() -> processor.process(itemSubmissionsBatch), executorService)
                     .exceptionally(e -> {
                         LOGGER.error("Failed to regrade submissions", e);
