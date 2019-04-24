@@ -29,5 +29,5 @@ public interface ContestScoreboardService {
     @Path("/refresh")
     void refreshScoreboard(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("contestJid") String contestJid);
+            @PathParam("contestJid") String contestJid);
 }
