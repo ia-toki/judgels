@@ -38,6 +38,4 @@ public interface BaseBundleItemSubmissionDao<M extends AbstractBundleItemSubmiss
             String problemJid,
             String itemJid,
             String createdBy);
-
-    M updateGrading(M model, String verdict, Double score);
 }
