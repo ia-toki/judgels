@@ -36,14 +36,12 @@ public interface ContestSubmissionService {
 
     @POST
     @Path("/{submissionJid}/regrade")
-    @Produces(APPLICATION_JSON)
     void regradeSubmission(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionJid") String submissionJid);
 
     @POST
     @Path("/regrade")
-    @Produces(APPLICATION_JSON)
     void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,

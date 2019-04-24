@@ -1,4 +1,4 @@
-import { HTMLTable, Icon } from '@blueprintjs/core';
+import { Button, HTMLTable, Intent, ButtonGroup } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
@@ -30,6 +30,8 @@ export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
     problemAlias?: string,
     page?: number
   ) => Promise<ContestItemSubmissionsResponse>;
+  onRegrade: (submissionJid: string) => Promise<void>;
+  onRegradeAll: (contestJid: string, userJid?: string, problemJid?: string) => Promise<void>;
   onAppendRoute: (queries) => any;
 }
 
@@ -66,6 +68,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
       <ContentCard className="contest-bundle-submissions-page">
         <h3>Submissions</h3>
         <hr />
+        {this.renderRegradeAllButton()}
         {this.renderFilterWidget()}
         {this.renderSubmissions()}
         {this.renderPagination()}
@@ -114,9 +117,14 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
                 <FormattedRelative value={item.time} />
               </td>
               <td className="col-action">
-                <Link to={`/contests/${contest.slug}/submissions/users/${profilesMap[item.userJid].username}`}>
-                  <Icon icon="search" />
-                </Link>
+                <ButtonGroup minimal className="action-button-group">
+                  <Link to={`/contests/${contest.slug}/submissions/users/${profilesMap[item.userJid].username}`}>
+                    <Button icon="search" intent={Intent.NONE} small />
+                  </Link>
+                  {canManage && (
+                    <Button icon="refresh" intent={Intent.NONE} small onClick={this.onClickRegrade(item.jid)} />
+                  )}
+                </ButtonGroup>
               </td>
             </tr>
           ))}
@@ -155,6 +163,53 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     const { username, problemAlias } = this.state.filter!;
     const response = await this.refreshSubmissions(username, problemAlias, nextPage);
     return response.data.totalCount;
+  };
+
+  private getFilterJids = (username?: string, problemAlias?: string) => {
+    const { response } = this.state;
+    if (!response) {
+      return {};
+    }
+
+    const { config, profilesMap, problemAliasesMap } = response;
+    const { userJids, problemJids } = config;
+
+    const userJid = userJids.find(jid => profilesMap[jid].username === username);
+    const problemJid = problemJids.find(jid => problemAliasesMap[jid] === problemAlias);
+    return { userJid, problemJid };
+  };
+
+  private onClickRegrade = (submissionJid: string) => {
+    return () => this.onRegrade(submissionJid);
+  };
+
+  private onRegrade = async (submissionJid: string) => {
+    await this.props.onRegrade(submissionJid);
+    const { username, problemAlias } = this.state.filter!;
+    const queries = parse(this.props.location.search);
+    await this.refreshSubmissions(username, problemAlias, queries.page);
+  };
+
+  private onRegradeAll = async () => {
+    if (window.confirm('Regrade all submissions in all pages for the current filter?')) {
+      const { username, problemAlias } = this.state.filter!;
+      const { userJid, problemJid } = this.getFilterJids(username, problemAlias);
+      await this.props.onRegradeAll(this.props.contest.jid, userJid, problemJid);
+      const queries = parse(this.props.location.search);
+      await this.refreshSubmissions(username, problemAlias, queries.page);
+    }
+  };
+
+  private renderRegradeAllButton = () => {
+    if (!this.state.response || !this.state.response.config.canManage) {
+      return null;
+    }
+
+    return (
+      <Button className="regrade-button" intent="primary" icon="refresh" onClick={this.onRegradeAll}>
+        Regrade all pages
+      </Button>
+    );
   };
 
   private renderFilterWidget = () => {
@@ -201,6 +256,8 @@ export function createContestSubmissionsPage(contestSubmissionActions) {
 
   const mapDispatchToProps = {
     onGetSubmissions: contestSubmissionActions.getSubmissions,
+    onRegrade: contestSubmissionActions.regradeSubmission,
+    onRegradeAll: contestSubmissionActions.regradeSubmissions,
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 

@@ -36,4 +36,22 @@ export const contestSubmissionActions = {
       return contestSubmissionBundleAPI.getLatestSubmissionsByUserForProblemInContest(token, contestJid, problemAlias);
     };
   },
+
+  regradeSubmission: (submissionJid: string) => {
+    return async (dispatch, getState, { contestSubmissionBundleAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await contestSubmissionBundleAPI.regradeSubmission(token, submissionJid);
+
+      toastActions.showSuccessToast('Submission regraded.');
+    };
+  },
+
+  regradeSubmissions: (contestJid: string, userJid?: string, problemJid?: string) => {
+    return async (dispatch, getState, { contestSubmissionBundleAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await contestSubmissionBundleAPI.regradeSubmissions(token, contestJid, userJid, problemJid);
+
+      toastActions.showSuccessToast('Regrade in progress.');
+    };
+  },
 };

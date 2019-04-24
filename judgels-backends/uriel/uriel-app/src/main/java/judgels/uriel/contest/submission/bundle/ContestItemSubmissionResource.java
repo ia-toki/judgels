@@ -29,6 +29,8 @@ import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
+import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
+import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
@@ -55,13 +57,14 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
     private final ContestContestantStore contestContestantStore;
-    private final ContestItemSubmissionStore submissionStore;
+    private final ItemSubmissionStore submissionStore;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
     private final ProfileService profileService;
     private final UserSearchService userSearchService;
     private final ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
+    private final ItemSubmissionRegrader itemSubmissionRegrader;
     private final ProblemClient problemClient;
 
     @Inject
@@ -69,13 +72,14 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             ActorChecker actorChecker,
             ContestStore contestStore,
             ContestContestantStore contestContestantStore,
-            ContestItemSubmissionStore submissionStore,
+            ItemSubmissionStore submissionStore,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
             ProfileService profileService,
             UserSearchService userSearchService,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
+            ItemSubmissionRegrader itemSubmissionRegrader,
             ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
@@ -88,6 +92,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         this.profileService = profileService;
         this.userSearchService = userSearchService;
         this.itemSubmissionGraderRegistry = itemSubmissionGraderRegistry;
+        this.itemSubmissionRegrader = itemSubmissionRegrader;
         this.problemClient = problemClient;
     }
 
@@ -205,13 +210,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
         checkFound(item);
 
-        if (item.get().getType().equals(ItemType.STATEMENT)) {
-            LOGGER.debug(
-                    "Answer submitted for a STATEMENT item by {} for item {} in problem {} and contest {};"
-                    + " submission will be ignored.",
-                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid()
-            );
-        } else if (data.getAnswer().trim().isEmpty()) {
+        if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
                     data.getContestJid(), data.getProblemJid(), data.getItemJid(), actorJid);
 
@@ -267,7 +266,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
 
-        List<ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContest(
+        List<ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(
                 contestJid,
                 problem.getProblemJid(),
                 viewedUserJid
@@ -300,7 +299,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             viewedUserJid = actorJid;
         }
 
-        List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserInContest(
+        List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserInContainer(
                 contestJid, viewedUserJid);
 
         boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
@@ -356,5 +355,31 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .problemAliasesMap(problemAliasesByProblemJid)
                 .problemNamesMap(problemNamesByProblemJid)
                 .build();
+    }
+
+    @Override
+    @UnitOfWork
+    public void regradeSubmission(AuthHeader authHeader, String submissionJid) {
+        String actorJid = actorChecker.check(authHeader);
+        ItemSubmission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
+        Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
+        checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
+
+        itemSubmissionRegrader.regradeSubmission(submission);
+    }
+
+    @Override
+    @UnitOfWork
+    public void regradeSubmissions(
+            AuthHeader authHeader,
+            String contestJid,
+            Optional<String> userJid,
+            Optional<String> problemJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
+
+        itemSubmissionRegrader.regradeSubmissions(contestJid, userJid, problemJid);
     }
 }

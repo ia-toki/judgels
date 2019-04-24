@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HTMLTable } from '@blueprintjs/core';
+import { Button, HTMLTable } from '@blueprintjs/core';
 import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 import { FormattedRelative } from 'react-intl';
@@ -17,6 +17,7 @@ export interface ProblemSubmissionCardProps {
   itemTypesMap: { [itemJid: string]: ItemType };
   canSupervise: boolean;
   canManage: boolean;
+  onRegrade: () => Promise<void>;
 }
 
 export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCardProps> = ({
@@ -26,6 +27,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
   submissionsByItemJid,
   itemTypesMap,
   canManage,
+  onRegrade,
 }) => {
   const renderSingleRow = (itemJid: string, index: number) => {
     const submission = submissionsByItemJid[itemJid];
@@ -60,13 +62,20 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
 
   return (
     <ContentCard className="contest-bundle-problem-submission">
-      <h4>
-        {alias}. {name}
-      </h4>
+      <div className="card-header">
+        <h4>
+          {alias}. {name}
+        </h4>
+        {canManage && (
+          <Button intent="primary" icon="refresh" onClick={onRegrade}>
+            Regrade
+          </Button>
+        )}
+      </div>
       <HTMLTable striped className="table-list-condensed submission-table">
         <thead>
           <tr>
-            <th className="col-item-num">No</th>
+            <th className="col-item-num">No.</th>
             <th>Answer</th>
             {canManage && <th className="col-verdict">Verdict</th>}
             <th className="col-time">Time</th>

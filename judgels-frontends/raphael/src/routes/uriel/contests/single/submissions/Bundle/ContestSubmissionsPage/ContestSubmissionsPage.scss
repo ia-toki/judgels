@@ -8,15 +8,23 @@
       width: 50px;
     }
     .col-prob {
-      width: 80px;
+      width: 60px;
     }
     .col-verdict {
       width: 70px;
       text-align: center;
     }
     .col-action {
-      width: 50px;
-      text-align: center;
+      width: 60px;
+
+      .action-button-group {
+        position: absolute;
+        margin: -2px -6px -4px -6px;
+      }
     }
   }
+}
+
+.regrade-button {
+  float: left;
 }

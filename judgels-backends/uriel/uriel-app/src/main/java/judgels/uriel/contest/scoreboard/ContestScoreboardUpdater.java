@@ -16,6 +16,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
+import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
@@ -30,7 +31,6 @@ import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import judgels.uriel.contest.submission.bundle.ContestItemSubmissionStore;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 
 public class ContestScoreboardUpdater {
@@ -40,7 +40,7 @@ public class ContestScoreboardUpdater {
     private final ContestContestantStore contestantStore;
     private final ContestProblemStore problemStore;
     private final SubmissionStore programmingSubmissionStore;
-    private final ContestItemSubmissionStore bundleItemSubmissionStore;
+    private final ItemSubmissionStore bundleItemSubmissionStore;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final Clock clock;
 
@@ -51,7 +51,7 @@ public class ContestScoreboardUpdater {
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
             SubmissionStore programmingSubmissionStore,
-            ContestItemSubmissionStore bundleItemSubmissionStore,
+            ItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
 

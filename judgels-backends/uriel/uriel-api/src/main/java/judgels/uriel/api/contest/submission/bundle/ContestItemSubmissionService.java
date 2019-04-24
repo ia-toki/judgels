@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
@@ -49,4 +50,18 @@ public interface ContestItemSubmissionService {
             @QueryParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemAlias") String problemAlias);
+
+    @POST
+    @Path("/{submissionJid}/regrade")
+    void regradeSubmission(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("submissionJid") String submissionJid);
+
+    @POST
+    @Path("/regrade")
+    void regradeSubmissions(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("userJid") Optional<String> userJid,
+            @QueryParam("problemJid") Optional<String> problemJid);
 }

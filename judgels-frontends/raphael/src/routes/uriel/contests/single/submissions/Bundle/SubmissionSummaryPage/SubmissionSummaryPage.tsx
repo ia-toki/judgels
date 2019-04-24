@@ -8,6 +8,7 @@ import { UserRef } from 'components/UserRef/UserRef';
 import { Profile } from 'modules/api/jophiel/profile';
 import { Contest } from 'modules/api/uriel/contest';
 import { ContestantAnswerSummaryResponse } from 'modules/api/uriel/contestSubmissionBundle';
+import { ContestSubmissionConfig } from 'modules/api/uriel/contestSubmission';
 import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
 
@@ -24,20 +25,23 @@ export interface SubmissionSummaryPageProps extends RouteComponentProps<Submissi
   contest: Contest;
   language?: string;
   onGetSummary: (contestJid: string, username?: string, language?: string) => Promise<ContestantAnswerSummaryResponse>;
+  onRegradeAll: (contestJid: string, userJid?: string, problemJid?: string) => Promise<void>;
 }
 
 export interface SubmissionSummaryPageState {
+  config?: ContestSubmissionConfig;
   profile?: Profile;
   problemSummaries: ProblemSubmissionCardProps[];
 }
 
 class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, SubmissionSummaryPageState> {
   state: SubmissionSummaryPageState = {
+    config: undefined,
     profile: undefined,
     problemSummaries: [],
   };
 
-  async componentDidMount() {
+  async refreshSubmissions() {
     const { contest, onGetSummary } = this.props;
     const response = await onGetSummary(contest.jid, this.props.match.params.username, this.props.language);
 
@@ -49,9 +53,14 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
       canSupervise: response.config.canSupervise,
       canManage: response.config.canManage,
       itemTypesMap: response.itemTypesMap,
+      onRegrade: () => this.onRegrade(problemJid),
     }));
 
-    this.setState({ profile: response.profile, problemSummaries });
+    this.setState({ config: response.config, profile: response.profile, problemSummaries });
+  }
+
+  async componentDidMount() {
+    await this.refreshSubmissions();
   }
 
   render() {
@@ -65,10 +74,20 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
         <ContentCard>
           Summary for <UserRef profile={this.state.profile!} />
         </ContentCard>
-        {this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}
+        {this.state.problemSummaries.map(props => (
+          <ProblemSubmissionCard key={props.alias} onRegrade={this.onRegrade} {...props} />
+        ))}
       </ContentCard>
     );
   }
+
+  private onRegrade = async problemJid => {
+    const { userJids } = this.state.config!;
+    const userJid = userJids[0];
+
+    await this.props.onRegradeAll(this.props.contest.jid, userJid, problemJid);
+    await this.refreshSubmissions();
+  };
 }
 
 export function createSubmissionSummaryPage(contestSubmissionActions) {
@@ -79,6 +98,7 @@ export function createSubmissionSummaryPage(contestSubmissionActions) {
 
   const mapDispatchToProps = {
     onGetSummary: contestSubmissionActions.getSummary,
+    onRegradeAll: contestSubmissionActions.regradeSubmissions,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));
