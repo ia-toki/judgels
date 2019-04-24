@@ -10,6 +10,7 @@ import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.api.dump.UnmodifiableDump;
 
 public interface UnmodifiableDao<M extends UnmodifiableModel> {
+    void flush();
     void clear();
     M insert(M model);
     M persist(M model);

@@ -27,8 +27,9 @@ public interface BaseBundleItemSubmissionDao<M extends AbstractBundleItemSubmiss
             String containerJid,
             String problemJid,
             String createdBy);
-    List<M> selectAllByContainerJidAndProblemJidAndCreatedBy(
-            String containerJid,
+
+    List<M> selectAllForRegrade(
+            Optional<String> containerJid,
             Optional<String> problemJid,
             Optional<String> createdBy);
 

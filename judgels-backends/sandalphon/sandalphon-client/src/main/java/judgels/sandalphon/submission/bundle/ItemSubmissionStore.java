@@ -35,9 +35,10 @@ public interface ItemSubmissionStore {
     List<ItemSubmission> getSubmissionsForScoreboard(String containerJid);
 
     List<ItemSubmission> markSubmissionsForRegrade(
-            String containerJid,
+            Optional<String> containerJid,
             Optional<String> userJid,
-            Optional<String> problemJid);
+            Optional<String> problemJid,
+            Optional<Integer> batchSize);
 
     void updateGrading(String submissionJid, Grading grading);
 }

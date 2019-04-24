@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.JudgelsModel_;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
@@ -68,15 +69,18 @@ public abstract class AbstractBundleItemSubmissionHibernateDao<M extends Abstrac
     }
 
     @Override
-    public List<M> selectAllByContainerJidAndProblemJidAndCreatedBy(
-            String containerJid, Optional<String> problemJid, Optional<String> createdBy) {
+    public List<M> selectAllForRegrade(
+            Optional<String> containerJid, Optional<String> problemJid, Optional<String> createdBy) {
 
         FilterOptions.Builder<M> filterOptions = new FilterOptions.Builder<>();
-        filterOptions.putColumnsEq(AbstractBundleItemSubmissionModel_.containerJid, containerJid);
+        containerJid.ifPresent(jid -> filterOptions.putColumnsEq(AbstractBundleItemSubmissionModel_.containerJid, jid));
         createdBy.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
         problemJid.ifPresent(jid -> filterOptions.putColumnsEq(AbstractBundleItemSubmissionModel_.problemJid, jid));
 
-        return selectAll(filterOptions.build());
+        return selectAll(
+                filterOptions.build(),
+                new SelectionOptions.Builder().orderBy("problemJid").orderDir(OrderDir.ASC).build()
+        );
     }
 
     @Override
