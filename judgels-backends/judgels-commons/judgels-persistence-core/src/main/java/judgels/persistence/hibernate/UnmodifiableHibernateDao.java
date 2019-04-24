@@ -41,6 +41,11 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
     }
 
     @Override
+    public void flush() {
+        currentSession().flush();
+    }
+
+    @Override
     public void clear() {
         currentSession().clear();
     }

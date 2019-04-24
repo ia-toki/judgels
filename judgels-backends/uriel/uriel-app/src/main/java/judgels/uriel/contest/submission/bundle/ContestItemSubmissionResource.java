@@ -40,6 +40,7 @@ import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionData;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionService;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionsResponse;
 import judgels.uriel.api.contest.submission.bundle.ContestantAnswerSummaryResponse;
+import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
@@ -58,6 +59,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     private final ContestStore contestStore;
     private final ContestContestantStore contestContestantStore;
     private final ItemSubmissionStore submissionStore;
+    private final ContestRoleChecker contestRoleChecker;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestProblemStore problemStore;
@@ -73,6 +75,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             ContestStore contestStore,
             ContestContestantStore contestContestantStore,
             ItemSubmissionStore submissionStore,
+            ContestRoleChecker contestRoleChecker,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestProblemStore problemStore,
@@ -86,6 +89,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
         this.contestStore = contestStore;
         this.contestContestantStore = contestContestantStore;
         this.submissionStore = submissionStore;
+        this.contestRoleChecker = contestRoleChecker;
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemRoleChecker = problemRoleChecker;
         this.problemStore = problemStore;
@@ -372,13 +376,17 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
     @UnitOfWork
     public void regradeSubmissions(
             AuthHeader authHeader,
-            String contestJid,
+            Optional<String> contestJid,
             Optional<String> userJid,
             Optional<String> problemJid) {
 
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
+        if (contestJid.isPresent()) {
+            Contest contest = checkFound(contestStore.getContestByJid(contestJid.get()));
+            checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
+        } else {
+            checkAllowed(contestRoleChecker.canAdminister(actorJid));
+        }
 
         itemSubmissionRegrader.regradeSubmissions(contestJid, userJid, problemJid);
     }

@@ -61,7 +61,7 @@ public interface ContestItemSubmissionService {
     @Path("/regrade")
     void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("contestJid") String contestJid,
+            @QueryParam("contestJid") Optional<String> contestJid,
             @QueryParam("userJid") Optional<String> userJid,
             @QueryParam("problemJid") Optional<String> problemJid);
 }
