@@ -42,7 +42,7 @@ export const contestSubmissionActions = {
       const token = selectToken(getState());
       await contestSubmissionBundleAPI.regradeSubmission(token, submissionJid);
 
-      toastActions.showSuccessToast('Regrade in progress.');
+      toastActions.showSuccessToast('Submission regraded.');
     };
   },
 

@@ -29,7 +29,7 @@ export const VerdictTag: React.FunctionComponent<VerdictTagProps> = ({ verdict }
   const intent = verdictIntentMap[verdict] || Intent.NONE;
   let displayCode = verdictDisplayCode[verdict] || verdict;
   if (verdict === Verdict.PENDING_REGRADE) {
-    displayCode = <Icon icon="refresh" />;
+    displayCode = <Icon icon="time" />;
   } else if (verdict === Verdict.PENDING_MANUAL_GRADING) {
     displayCode = <Icon icon="follower" />;
   }

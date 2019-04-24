@@ -39,5 +39,5 @@ public interface ItemSubmissionStore {
             Optional<String> userJid,
             Optional<String> problemJid);
 
-    void saveRegradeResult(String submissionJid, Grading grading);
+    void updateGrading(String submissionJid, Grading grading);
 }

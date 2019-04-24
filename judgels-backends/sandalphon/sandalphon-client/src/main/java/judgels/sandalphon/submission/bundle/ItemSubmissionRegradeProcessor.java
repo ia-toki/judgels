@@ -38,20 +38,14 @@ public class ItemSubmissionRegradeProcessor {
                         .get(item.get().getType())
                         .grade(item.get(), submission.getAnswer());
 
-                itemSubmissionStore.saveRegradeResult(submission.getJid(), grading);
+                itemSubmissionStore.updateGrading(submission.getJid(), grading);
 
-                if (submission.getGrading().isPresent()) {
-                    LOGGER.info(
-                            "Regraded submission {}: verdict {}, score {} (previous verdict {}, previous score {})",
-                            submission.getJid(), grading.getVerdict(), grading.getScore(),
-                            submission.getGrading().get().getVerdict()
-                    );
-                } else {
-                    LOGGER.info(
-                            "Regraded submission {}: verdict {}, score {} (previous grading empty)",
-                            submission.getJid(), grading.getVerdict(), grading.getScore()
-                    );
-                }
+                Grading previousGrading = submission.getGrading().get();
+                LOGGER.info(
+                        "Regraded submission {}: verdict {}, score {} (previous verdict {}, previous score {})",
+                        submission.getJid(), grading.getVerdict(), grading.getScore(),
+                        previousGrading.getVerdict(), previousGrading.getScore()
+                );
             } else {
                 LOGGER.error("Missing problem item info for submission {}, regrade skipped", submission.getItemJid());
             }

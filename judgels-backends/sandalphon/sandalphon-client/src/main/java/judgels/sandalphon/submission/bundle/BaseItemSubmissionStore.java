@@ -132,7 +132,7 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
     }
 
     @Override
-    public void saveRegradeResult(String submissionJid, Grading grading) {
+    public void updateGrading(String submissionJid, Grading grading) {
         M model = submissionDao.selectByJid(submissionJid).get();
         submissionDao.updateGrading(model, grading.getVerdict().name(), grading.getScore().orElse(null));
     }
