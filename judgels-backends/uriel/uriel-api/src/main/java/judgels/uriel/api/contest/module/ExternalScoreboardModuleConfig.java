@@ -10,7 +10,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableExternalScoreboardModuleConfig.class)
 public interface ExternalScoreboardModuleConfig {
     ExternalScoreboardModuleConfig DEFAULT = new Builder()
-            .receiverUrl("http://external.scoreboard")
+            .receiverUrl("http://localhost:9144/receive")
             .receiverSecret("secret")
             .build();
 
