@@ -1,6 +1,5 @@
 package judgels.sandalphon.hibernate;
 
-import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
 import judgels.persistence.FilterOptions;
@@ -18,11 +17,8 @@ public abstract class AbstractBundleItemSubmissionHibernateDao<M extends Abstrac
         extends JudgelsHibernateDao<M>
         implements BaseBundleItemSubmissionDao<M> {
 
-    private final Clock clock;
-
     public AbstractBundleItemSubmissionHibernateDao(HibernateDaoData data) {
         super(data);
-        this.clock = data.getClock();
     }
 
     @Override
@@ -92,13 +88,5 @@ public abstract class AbstractBundleItemSubmissionHibernateDao<M extends Abstrac
                 .putColumnsEq(AbstractBundleItemSubmissionModel_.itemJid, itemJid)
                 .putColumnsEq(AbstractBundleItemSubmissionModel_.createdBy, createdBy)
                 .build());
-    }
-
-    @Override
-    public M updateGrading(M model, String verdict, Double score) {
-        model.verdict = verdict;
-        model.score = score;
-        model.updatedAt = clock.instant();
-        return persist(model);
     }
 }
