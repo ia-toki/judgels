@@ -36,6 +36,7 @@ export interface SubtaskResult {
 }
 
 export interface GradingResultDetails {
+  errorMessage?: string;
   compilationOutputs: { [sourceKey: string]: string };
   testDataResults: TestGroupResult[];
   subtaskResults: SubtaskResult[];

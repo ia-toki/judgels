@@ -47,6 +47,18 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       return null;
     }
 
+    if (grading!.details!.errorMessage) {
+      return (
+        <>
+          <h4>Grading Error</h4>
+          <ContentCard>
+            <h5>Message</h5>
+            <pre>{grading!.details!.errorMessage}</pre>
+          </ContentCard>
+        </>
+      );
+    }
+
     const hasSubtasks = this.hasSubtasks();
 
     return (
@@ -251,7 +263,12 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       return null;
     }
 
-    const details = this.props.submission.latestGrading!.details;
+    const grading = submission.latestGrading;
+    if (!grading) {
+      return null;
+    }
+
+    const details = grading!.details;
 
     const sourceFiles = Object.keys(source.submissionFiles).map(key => (
       <ContentCard key={key}>

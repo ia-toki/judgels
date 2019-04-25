@@ -3,11 +3,13 @@ package judgels.gabriel.api;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableGradingResultDetails.class)
 public interface GradingResultDetails {
+    Optional<String> getErrorMessage();
     Map<String, byte[]> getCompilationOutputs();
     List<TestGroupResult> getTestDataResults();
     List<SubtaskResult> getSubtaskResults();
