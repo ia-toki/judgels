@@ -269,7 +269,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     }
 
     const details = grading!.details;
-    if (!details || details.compilationOutputs) {
+    if (!details || !details.compilationOutputs) {
       return null;
     }
 
