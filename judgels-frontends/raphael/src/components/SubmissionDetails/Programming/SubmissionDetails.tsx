@@ -269,6 +269,9 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
     }
 
     const details = grading!.details;
+    if (!details || details.compilationOutputs) {
+      return null;
+    }
 
     const sourceFiles = Object.keys(source.submissionFiles).map(key => (
       <ContentCard key={key}>
@@ -278,12 +281,10 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         <SourceCode language={getGradingLanguageSyntaxHighlighterValue(submission.gradingLanguage)}>
           {base64.decode(source.submissionFiles[key].content)}
         </SourceCode>
-        {details && (
-          <div className="compilation-output">
-            <h5>Compilation Output</h5>
-            <pre>{base64.decode(details.compilationOutputs[key])}</pre>
-          </div>
-        )}
+        <div className="compilation-output">
+          <h5>Compilation Output</h5>
+          <pre>{base64.decode(details.compilationOutputs[key])}</pre>
+        </div>
       </ContentCard>
     ));
 
