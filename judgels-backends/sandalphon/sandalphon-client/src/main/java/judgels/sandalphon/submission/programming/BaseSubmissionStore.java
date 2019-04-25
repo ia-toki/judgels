@@ -159,7 +159,7 @@ public class BaseSubmissionStore<
         }
 
         GM model = maybeModel.get();
-        model.verdictCode = result.getVerdict().name();
+        model.verdictCode = result.getVerdict().getCode();
         model.verdictName = "";
         model.score = result.getScore();
         model.details = result.getDetails();
