@@ -32,6 +32,8 @@ func main() {
 		panic("RECEIVER_SECRET is not set")
 	}
 
+	log.Println("Started scoreboard receiver")
+
 	http.HandleFunc("/receive", receive)
 	http.HandleFunc("/serve", serve)
 	http.ListenAndServe(":9144", nil)
@@ -94,6 +96,7 @@ func serve(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 	http.ServeFile(w, r, filename)
 }
