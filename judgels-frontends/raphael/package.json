@@ -46,6 +46,7 @@
     "build": "npm-run-all build:css build:ts",
     "lint": "npm-run-all lint:prettier lint:ts",
     "test": "npm-run-all build:css test:ts",
+    "ci": "npm-run-all lint test",
     "start:ts": "react-scripts-ts start",
     "build:ts": "react-scripts-ts build",
     "build:css": "node-sass-chokidar --quiet src/ -o src/",

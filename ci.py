@@ -139,8 +139,7 @@ def check(branch_to_compare):
         if MODULES[project].intersection(changed_modules):
             if project == ':raphael':
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
-                print('yarn --cwd=`pwd`/judgels-frontends/raphael lint')
-                print('yarn --cwd=`pwd`/judgels-frontends/raphael test')
+                print('yarn --cwd=`pwd`/judgels-frontends/raphael ci')
             elif project in [':sandalphon', ':jerahmeel', ':gabriel-blackbox']:
                 print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
             elif project == ':gabriel':
@@ -166,6 +165,8 @@ if len(sys.argv) < 2:
     die('Usage: python3 ci.py <command>')
 
 command, commit_range, commit_message = sys.argv[1], os.environ['TRAVIS_COMMIT_RANGE'], os.environ['TRAVIS_COMMIT_MESSAGE']
+
+print('echo "TRAVIS_COMMIT_RANGE: {}"'.format(commit_range))
 
 branch_to_compare = None
 if FORCE_CI in commit_message or not commit_range:
