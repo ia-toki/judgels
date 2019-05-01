@@ -661,11 +661,6 @@ class IcpcScoreboardProcessorTests {
 
             @Test
             void same_rank_if_equal() {
-                state = new ScoreboardState.Builder()
-                        .addProblemJids("p1", "p2")
-                        .addProblemAliases("A", "B")
-                        .build();
-
                 contestants = ImmutableSet.of(
                         new ContestContestant.Builder().userJid("c1").build(),
                         new ContestContestant.Builder()
@@ -772,6 +767,116 @@ class IcpcScoreboardProcessorTests {
                                 .addPenaltyList(14, 0)
                                 .addProblemStateList(
                                         IcpcScoreboardProblemState.ACCEPTED,
+                                        IcpcScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build());
+            }
+
+            @Test
+            void zero_points_ordering() {
+                contestants = ImmutableSet.of(
+                        new ContestContestant.Builder().userJid("c1").build(),
+                        new ContestContestant.Builder().userJid("c2").build(),
+                        new ContestContestant.Builder().userJid("c3").build());
+
+
+                List<Submission> submissions = ImmutableList.of(
+                        new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(1)
+                                .jid("JIDS-2")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(660))
+                                .userJid("c1")
+                                .problemJid("p1")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-2")
+                                        .score(0)
+                                        .verdict(Verdict.WRONG_ANSWER)
+                                        .build())
+                                .build(),
+                        new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(2)
+                                .jid("JIDS-1")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(900))
+                                .userJid("c1")
+                                .problemJid("p2")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-1")
+                                        .score(0)
+                                        .verdict(Verdict.WRONG_ANSWER)
+                                        .build())
+                                .build(),
+                        new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(3)
+                                .jid("JIDS-3")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(900))
+                                .userJid("c3")
+                                .problemJid("p2")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-1")
+                                        .score(0)
+                                        .verdict(Verdict.WRONG_ANSWER)
+                                        .build())
+                                .build()
+                );
+
+                List<IcpcScoreboardEntry> entries = scoreboardProcessor.computeEntries(
+                        state,
+                        contest,
+                        styleModuleConfig,
+                        contestants,
+                        submissions,
+                        ImmutableList.of(),
+                        Optional.empty());
+
+                assertThat(entries).containsExactly(
+                        new IcpcScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c1")
+                                .totalAccepted(0)
+                                .totalPenalties(0)
+                                .lastAcceptedPenalty(0)
+                                .addAttemptsList(1, 1)
+                                .addPenaltyList(10, 14)
+                                .addProblemStateList(
+                                        IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                        IcpcScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build(),
+                        new IcpcScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c3")
+                                .totalAccepted(0)
+                                .totalPenalties(0)
+                                .lastAcceptedPenalty(0)
+                                .addAttemptsList(0, 1)
+                                .addPenaltyList(0, 14)
+                                .addProblemStateList(
+                                        IcpcScoreboardProblemState.NOT_ACCEPTED,
+                                        IcpcScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build(),
+                        new IcpcScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
+                                .totalAccepted(0)
+                                .totalPenalties(0)
+                                .lastAcceptedPenalty(0)
+                                .addAttemptsList(0, 0)
+                                .addPenaltyList(0, 0)
+                                .addProblemStateList(
+                                        IcpcScoreboardProblemState.NOT_ACCEPTED,
                                         IcpcScoreboardProblemState.NOT_ACCEPTED
                                 )
                                 .build());

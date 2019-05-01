@@ -631,12 +631,6 @@ class GcjScoreboardProcessorTests {
 
             @Test
             void same_rank_if_equal() {
-                state = new ScoreboardState.Builder()
-                        .addProblemJids("p1", "p2")
-                        .addProblemAliases("A", "B")
-                        .problemPoints(ImmutableList.of(1, 10))
-                        .build();
-
                 contestants = ImmutableSet.of(
                         new ContestContestant.Builder().userJid("c1").build(),
                         new ContestContestant.Builder()
@@ -717,6 +711,112 @@ class GcjScoreboardProcessorTests {
                         new GcjScoreboardEntry.Builder()
                                 .rank(3)
                                 .contestantJid("c3")
+                                .totalPoints(0)
+                                .totalPenalties(0)
+                                .addAttemptsList(0, 0)
+                                .addPenaltyList(0, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.NOT_ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build());
+            }
+
+            @Test
+            void zero_points_ordering() {
+                contestants = ImmutableSet.of(
+                        new ContestContestant.Builder().userJid("c1").build(),
+                        new ContestContestant.Builder().userJid("c2").build(),
+                        new ContestContestant.Builder().userJid("c3").build());
+
+                List<Submission> submissions = ImmutableList.of(
+                        new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(1)
+                                .jid("JIDS-1")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(660))
+                                .userJid("c1")
+                                .problemJid("p1")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-1")
+                                        .score(0)
+                                        .verdict(Verdict.WRONG_ANSWER)
+                                        .build())
+                                .build(),
+                        new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(2)
+                                .jid("JIDS-2")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(900))
+                                .userJid("c1")
+                                .problemJid("p2")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-2")
+                                        .score(0)
+                                        .verdict(Verdict.WRONG_ANSWER)
+                                        .build())
+                                .build(),
+                        new Submission.Builder()
+                                .containerJid("JIDC")
+                                .id(3)
+                                .jid("JIDS-3")
+                                .gradingEngine("ENG")
+                                .gradingLanguage("ASM")
+                                .time(Instant.ofEpochSecond(900))
+                                .userJid("c3")
+                                .problemJid("p2")
+                                .latestGrading(new Grading.Builder()
+                                        .id(1)
+                                        .jid("JIDG-2")
+                                        .score(0)
+                                        .verdict(Verdict.WRONG_ANSWER)
+                                        .build())
+                                .build()
+                );
+
+                List<GcjScoreboardEntry> entries = scoreboardProcessor.computeEntries(
+                        state,
+                        contest,
+                        styleModuleConfig,
+                        contestants,
+                        submissions,
+                        ImmutableList.of(),
+                        Optional.empty());
+
+                assertThat(entries).containsExactly(
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c1")
+                                .totalPoints(0)
+                                .totalPenalties(0)
+                                .addAttemptsList(1, 1)
+                                .addPenaltyList(0, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.NOT_ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c3")
+                                .totalPoints(0)
+                                .totalPenalties(0)
+                                .addAttemptsList(0, 1)
+                                .addPenaltyList(0, 0)
+                                .addProblemStateList(
+                                        GcjScoreboardProblemState.NOT_ACCEPTED,
+                                        GcjScoreboardProblemState.NOT_ACCEPTED
+                                )
+                                .build(),
+                        new GcjScoreboardEntry.Builder()
+                                .rank(1)
+                                .contestantJid("c2")
                                 .totalPoints(0)
                                 .totalPenalties(0)
                                 .addAttemptsList(0, 0)

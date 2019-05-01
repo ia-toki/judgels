@@ -9,7 +9,6 @@ import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +29,7 @@ import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.IcpcScoreboard.IcpcScoreboardProblemState;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
+import judgels.uriel.contest.scoreboard.ScoreboardEntryComparator;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessor;
 
 public class IcpcScoreboardProcessor implements ScoreboardProcessor {
@@ -193,18 +193,18 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                 .build();
     }
 
-    private List<IcpcScoreboardEntry> sortEntriesAndAssignRanks(List<IcpcScoreboardEntry> scoreboardEntries) {
-        Comparator<IcpcScoreboardEntry> comparator = new StandardIcpcScoreboardEntryComparator();
-        scoreboardEntries.sort(comparator);
+    private List<IcpcScoreboardEntry> sortEntriesAndAssignRanks(List<IcpcScoreboardEntry> entries) {
+        ScoreboardEntryComparator<IcpcScoreboardEntry> comparator = new StandardIcpcScoreboardEntryComparator();
+        entries.sort(comparator);
 
         List<IcpcScoreboardEntry> result = new ArrayList<>();
 
         int currentRank = 1;
-        for (int i = 0; i < scoreboardEntries.size(); i++) {
-            if (i != 0 && comparator.compare(scoreboardEntries.get(i), scoreboardEntries.get(i - 1)) != 0) {
+        for (int i = 0; i < entries.size(); i++) {
+            if (i != 0 && comparator.compareWithoutTieBreakerForEqualRanks(entries.get(i), entries.get(i - 1)) != 0) {
                 currentRank = i + 1;
             }
-            result.add(new IcpcScoreboardEntry.Builder().from(scoreboardEntries.get(i)).rank(currentRank).build());
+            result.add(new IcpcScoreboardEntry.Builder().from(entries.get(i)).rank(currentRank).build());
         }
 
         return result;
