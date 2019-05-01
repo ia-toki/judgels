@@ -130,7 +130,6 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                         submission.getTime(),
                         contestantStartTimesMap.get(contestantJid),
                         contest.getBeginTime());
-                penaltyMap.put(problemJid, convertPenaltyToMinutes(penalty));
 
                 if (verdict.equals(Verdict.ACCEPTED)) {
                     if (firstSolveSubmissionJid.get(problemJid).equals(submission.getJid())) {
@@ -139,6 +138,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                         problemStateMap.put(problemJid, IcpcScoreboardProblemState.ACCEPTED);
                     }
 
+                    penaltyMap.put(problemJid, convertPenaltyToMinutes(penalty));
                     lastAcceptedPenalty = penalty;
                 }
             }

@@ -848,7 +848,7 @@ class IcpcScoreboardProcessorTests {
                                 .totalPenalties(0)
                                 .lastAcceptedPenalty(0)
                                 .addAttemptsList(1, 1)
-                                .addPenaltyList(10, 14)
+                                .addPenaltyList(0, 0)
                                 .addProblemStateList(
                                         IcpcScoreboardProblemState.NOT_ACCEPTED,
                                         IcpcScoreboardProblemState.NOT_ACCEPTED
@@ -861,7 +861,7 @@ class IcpcScoreboardProcessorTests {
                                 .totalPenalties(0)
                                 .lastAcceptedPenalty(0)
                                 .addAttemptsList(0, 1)
-                                .addPenaltyList(0, 14)
+                                .addPenaltyList(0, 0)
                                 .addProblemStateList(
                                         IcpcScoreboardProblemState.NOT_ACCEPTED,
                                         IcpcScoreboardProblemState.NOT_ACCEPTED
