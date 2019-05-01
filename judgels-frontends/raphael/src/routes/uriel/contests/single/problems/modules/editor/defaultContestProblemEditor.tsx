@@ -34,14 +34,14 @@ export default {
       }
 
       const status = p[2];
-      if (status !== undefined) {
+      if (!!status) {
         if (status !== ContestProblemStatus.Open && status !== ContestProblemStatus.Closed) {
           return `Problem statuses: Must be either ${ContestProblemStatus.Open} or ${ContestProblemStatus.Closed}`;
         }
       }
 
       const submissionsLimit = p[3];
-      if (submissionsLimit !== undefined) {
+      if (!!submissionsLimit) {
         const submissionsLimitValidation = NonnegativeNumber(submissionsLimit);
         if (submissionsLimitValidation) {
           return 'Problem submissions limits: ' + submissionsLimitValidation;
