@@ -20,10 +20,10 @@ public final class BlackBoxGradingResults {
         return new GradingResult(verdict, 0, new Gson().toJson(details));
     }
 
-    public static GradingResult normalResult(ReductionResult result, BlackBoxGradingResultDetails details) {
+    public static GradingResult normalResult(SubtaskResult result, BlackBoxGradingResultDetails details) {
         BlackBoxVerdict blackBoxVerdict = result.getVerdict();
         Verdict verdict = new Verdict(blackBoxVerdict.getCode(), blackBoxVerdict.getDescription());
 
-        return new GradingResult(verdict, result.getScore(), new Gson().toJson(details));
+        return new GradingResult(verdict, (int) result.getScore(), new Gson().toJson(details));
     }
 }

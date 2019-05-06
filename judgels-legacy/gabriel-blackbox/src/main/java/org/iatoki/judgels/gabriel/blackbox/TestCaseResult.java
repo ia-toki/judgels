@@ -9,14 +9,6 @@ public final class TestCaseResult {
         this.score = score;
     }
 
-    public static TestCaseResult fromScoringResult(ScoringResult scoringResult) {
-        return new TestCaseResult(scoringResult.getVerdict(), scoringResult.getScore());
-    }
-
-    public static TestCaseResult fromEvaluationResult(EvaluationResult evaluationResult) {
-        return new TestCaseResult(evaluationResult.getVerdict(), "");
-    }
-
     public NormalVerdict getVerdict() {
         return verdict;
     }

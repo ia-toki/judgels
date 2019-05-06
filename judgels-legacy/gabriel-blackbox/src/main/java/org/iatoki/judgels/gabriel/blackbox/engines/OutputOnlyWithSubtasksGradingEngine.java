@@ -1,6 +1,8 @@
 package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.aggregators.MinAggregator;
+import judgels.gabriel.api.TestCaseAggregator;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.outputonly.OutputOnlyWithSubtasksGradingConfig;
@@ -9,12 +11,10 @@ import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
 import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
-import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.OutputOnlyEvaluator;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
 import org.iatoki.judgels.gabriel.blackbox.languages.Cpp11GradingLanguage;
 import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
@@ -27,7 +27,7 @@ public final class OutputOnlyWithSubtasksGradingEngine extends BlackBoxGradingEn
 
     private Evaluator evaluator;
     private Scorer scorer;
-    private Reducer reducer;
+    private TestCaseAggregator aggregator;
 
     private Sandbox scorerSandbox;
 
@@ -73,7 +73,7 @@ public final class OutputOnlyWithSubtasksGradingEngine extends BlackBoxGradingEn
             scorer = new DiffScorer();
         }
 
-        reducer = new SubtaskReducer();
+        aggregator = new MinAggregator();
     }
 
     public void setScorerLanguage(GradingLanguage scorerLanguage) {
@@ -96,8 +96,8 @@ public final class OutputOnlyWithSubtasksGradingEngine extends BlackBoxGradingEn
     }
 
     @Override
-    protected Reducer getReducer() {
-        return reducer;
+    protected TestCaseAggregator getAggregator() {
+        return aggregator;
     }
 
     @Override

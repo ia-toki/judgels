@@ -4,8 +4,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface ScoringResult {
-    Verdict getVerdict();
-    String getScore();
+    TestCaseVerdict getVerdict();
 
     class Builder extends ImmutableScoringResult.Builder {}
 }

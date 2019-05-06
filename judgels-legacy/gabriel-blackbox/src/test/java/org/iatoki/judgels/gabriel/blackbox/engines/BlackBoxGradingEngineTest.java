@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.ScoringException;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingLanguage;
@@ -27,9 +28,6 @@ public abstract class BlackBoxGradingEngineTest {
 
     protected static final Verdict VERDICT_CE = new Verdict("CE", "Compilation Error");
     protected static final Verdict VERDICT_OK = new Verdict("OK", "OK");
-    protected static final Verdict VERDICT_OK_WORST_WA = new Verdict("OK", "OK (worst: WA)");
-    protected static final Verdict VERDICT_OK_WORST_TLE = new Verdict("OK", "OK (worst: TLE)");
-    protected static final Verdict VERDICT_OK_WORST_RTE = new Verdict("OK", "OK (worst: RTE)");
     protected static final Verdict VERDICT_AC = new Verdict("AC", "Accepted");
     protected static final Verdict VERDICT_WA = new Verdict("WA", "Wrong Answer");
     protected static final Verdict VERDICT_TLE = new Verdict("TLE", "Time Limit Exceeded");
@@ -94,7 +92,11 @@ public abstract class BlackBoxGradingEngineTest {
 
     protected final GradingResult runEngine(BlackBoxGradingEngine grader, GradingConfig config) throws GradingException {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
-        return grader.grade(graderDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
+        try {
+            return grader.grade(graderDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
+        } catch (ScoringException e) {
+            throw new GradingException(e);
+        }
     }
 
     private Map<String, File> listFilesAsMap(File dir) {

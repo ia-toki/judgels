@@ -1,7 +1,7 @@
 package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
+import judgels.gabriel.api.ScoringException;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.blackbox.ScoringException;
 
 import java.io.File;
 import java.io.IOException;

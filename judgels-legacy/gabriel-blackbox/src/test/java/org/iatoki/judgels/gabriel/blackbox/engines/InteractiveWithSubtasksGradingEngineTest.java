@@ -140,7 +140,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
+            assertEquals(result.getVerdict(), VERDICT_WA);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -160,7 +160,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_OK_WORST_RTE);
+            assertEquals(result.getVerdict(), VERDICT_RTE);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);

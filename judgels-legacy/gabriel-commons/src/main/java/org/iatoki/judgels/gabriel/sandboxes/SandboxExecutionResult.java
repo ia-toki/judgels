@@ -21,6 +21,15 @@ public final class SandboxExecutionResult {
         return new SandboxExecutionResult(SandboxExecutionStatus.INTERNAL_ERROR, -1, -1, message);
     }
 
+    public judgels.gabriel.api.SandboxExecutionResult toNewExecutionResult() {
+        return new judgels.gabriel.api.SandboxExecutionResult.Builder()
+                .time(time)
+                .memory(memory)
+                .message(message)
+                .status(judgels.gabriel.api.SandboxExecutionStatus.valueOf(status.name()))
+                .build();
+    }
+
     public SandboxExecutionStatus getStatus() {
         return status;
     }

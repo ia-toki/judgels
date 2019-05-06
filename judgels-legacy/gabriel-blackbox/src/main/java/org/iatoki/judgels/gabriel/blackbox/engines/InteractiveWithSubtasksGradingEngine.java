@@ -1,6 +1,8 @@
 package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.aggregators.MinAggregator;
+import judgels.gabriel.api.TestCaseAggregator;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.interactive.InteractiveWithSubtasksGradingConfig;
@@ -9,12 +11,10 @@ import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
 import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
-import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
 import org.iatoki.judgels.gabriel.blackbox.languages.Cpp11GradingLanguage;
 import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
@@ -28,7 +28,7 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
     private Compiler compiler;
     private Evaluator evaluator;
     private Scorer scorer;
-    private Reducer reducer;
+    private TestCaseAggregator aggregator;
 
     private Sandbox compilerSandbox;
     private Sandbox evaluatorContestantSandbox;
@@ -65,7 +65,7 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
 
         evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile,  getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), castConfig.getTimeLimit(), castConfig.getMemoryLimit());
         scorer = new IdentityScorer();
-        reducer = new SubtaskReducer();
+        aggregator = new MinAggregator();
     }
 
     public void setCommunicatorLanguage(GradingLanguage communicatorLanguage) {
@@ -88,8 +88,8 @@ public final class InteractiveWithSubtasksGradingEngine extends BlackBoxGradingE
     }
 
     @Override
-    protected Reducer getReducer() {
-        return reducer;
+    protected TestCaseAggregator getAggregator() {
+        return aggregator;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.aggregators.MinAggregator;
+import judgels.gabriel.api.TestCaseAggregator;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.batch.BatchWithSubtasksGradingConfig;
@@ -9,13 +11,11 @@ import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
 import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
-import org.iatoki.judgels.gabriel.blackbox.Reducer;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.BatchEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SubtaskReducer;
 import org.iatoki.judgels.gabriel.blackbox.languages.Cpp11GradingLanguage;
 import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
@@ -28,7 +28,7 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
     private Compiler compiler;
     private Evaluator evaluator;
     private Scorer scorer;
-    private Reducer reducer;
+    private TestCaseAggregator aggregator;
 
     private Sandbox compilerSandbox;
     private Sandbox evaluatorSandbox;
@@ -83,7 +83,7 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
             scorer = new DiffScorer();
         }
 
-        reducer = new SubtaskReducer();
+        aggregator = new MinAggregator();
     }
 
     public void setScoringTimeLimitInMilliseconds(int scoringTimeLimit) {
@@ -114,8 +114,8 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
     }
 
     @Override
-    protected Reducer getReducer() {
-        return reducer;
+    protected TestCaseAggregator getAggregator() {
+        return aggregator;
     }
 
     @Override

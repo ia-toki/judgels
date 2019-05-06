@@ -106,7 +106,7 @@ public final class FunctionalWithSubtasksGradingEngineTest extends BlackBoxGradi
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
+            assertEquals(result.getVerdict(), VERDICT_WA);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -126,7 +126,7 @@ public final class FunctionalWithSubtasksGradingEngineTest extends BlackBoxGradi
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_OK_WORST_WA);
+            assertEquals(result.getVerdict(), VERDICT_WA);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);

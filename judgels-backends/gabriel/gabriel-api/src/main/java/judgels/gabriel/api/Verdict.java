@@ -15,10 +15,10 @@ import java.util.Map;
 public enum Verdict {
     @JsonProperty ACCEPTED("AC"),
     @JsonProperty OK("OK"),
+    @JsonProperty SKIPPED("SKP"),
     @JsonProperty WRONG_ANSWER("WA"),
     @JsonProperty TIME_LIMIT_EXCEEDED("TLE"),
     @JsonProperty RUNTIME_ERROR("RTE"),
-    @JsonProperty SKIPPED("SKP"),
     @JsonProperty COMPILATION_ERROR("CE"),
     @JsonProperty INTERNAL_ERROR("!!!"),
     @JsonProperty PENDING("?");

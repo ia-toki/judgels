@@ -7,10 +7,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import judgels.gabriel.aggregators.SubtaskAggregator;
+import judgels.gabriel.api.SubtaskVerdict;
+import judgels.gabriel.api.TestCaseAggregationResult;
+import judgels.gabriel.api.TestCaseAggregator;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.ScoringResult;
 import judgels.gabriel.api.Subtask;
 import judgels.gabriel.api.TestCase;
+import judgels.gabriel.api.TestCaseVerdict;
 import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.api.Verdict;
+import judgels.gabriel.scorers.TestCaseVerdictParser;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GabrielLogger;
 import org.iatoki.judgels.gabriel.GradingEngine;
@@ -43,24 +51,30 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
     private GradingSource source;
     private SandboxFactory sandboxFactory;
 
+    private TestCaseVerdictParser testCaseVerdictParser;
+    private SubtaskAggregator subtaskAggregator;
+
     private CompilationResult compilationResult;
 
     private List<List<TestCaseResult>> testGroupResults;
     private List<List<EvaluationResult>> testGroupEvaluationResults;
 
     private List<SubtaskResult> subtaskResults;
-    private ReductionResult reductionResult;
+    private SubtaskResult gradingResult;
 
-    private List<List<TestCaseResult>> testCaseResultsBySubtaskIds;
+    private List<List<TestCaseVerdict>> testCaseVerdictsBySubtaskIds;
     private List<List<Integer[]>> testCaseIndicesBySubtaskIds;
 
     protected BlackBoxGradingEngine() {
         this.compilationTimeLimit = 10000;
         this.compilationMemoryLimit = 1024 * 1024;
+
+        this.testCaseVerdictParser = new TestCaseVerdictParser();
+        this.subtaskAggregator = new SubtaskAggregator();
     }
 
     @Override
-    public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException {
+    public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException, judgels.gabriel.api.ScoringException {
         this.gradingDir = gradingDir;
         this.config = config;
         this.language = language;
@@ -122,9 +136,9 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     protected abstract Scorer getScorer();
 
-    protected abstract Reducer getReducer();
+    protected abstract TestCaseAggregator getAggregator();
 
-    private GradingResult tryGrading() throws GradingException {
+    private GradingResult tryGrading() throws GradingException, judgels.gabriel.api.ScoringException {
         verify();
         prepare();
         compile();
@@ -134,7 +148,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         }
 
         evaluateAndScore();
-        reduce();
+        aggregate();
 
         return buildResult();
     }
@@ -182,19 +196,19 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         GabrielLogger.getLogger().info("Compilation finished.");
     }
 
-    private void evaluateAndScore() throws EvaluationException, ScoringException {
+    private void evaluateAndScore() throws EvaluationException, judgels.gabriel.api.ScoringException {
         MDC.put("gradingPhase", "EVALUATE-SCORE");
         GabrielLogger.getLogger().info("Evaluation & scoring started.");
 
         testGroupResults = Lists.newArrayList();
         testGroupEvaluationResults = Lists.newArrayList();
 
-        testCaseResultsBySubtaskIds = Lists.newArrayList();
+        testCaseVerdictsBySubtaskIds = Lists.newArrayList();
         testCaseIndicesBySubtaskIds = Lists.newArrayList();
 
         // +2 because: ids are 1-based, and we can have id=-1 (so we need additional +1 offset)
         for (int i = 0; i < config.getSubtasks().size() + 2; i++) {
-            testCaseResultsBySubtaskIds.add(Lists.newArrayList());
+            testCaseVerdictsBySubtaskIds.add(Lists.newArrayList());
             testCaseIndicesBySubtaskIds.add(Lists.newArrayList());
         }
 
@@ -220,25 +234,27 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
                     evaluationResult = getEvaluator().evaluate(testCaseInput);
                 }
 
-                TestCaseResult testCaseResult;
+                TestCaseVerdict testCaseVerdict;
                 if (evaluationResult.getVerdict() == EvaluationVerdict.OK) {
                     ScoringResult scoringResult = getScorer().score(testCaseInput, testCaseOutput, new File(getEvaluationDir(), getEvaluator().getEvaluationResultFilename(testCaseInput)));
-                    testCaseResult = TestCaseResult.fromScoringResult(scoringResult);
+                    testCaseVerdict = scoringResult.getVerdict();
+                } else if (evaluationResult.getExecutionResult() == null) {
+                    testCaseVerdict = new TestCaseVerdict.Builder().verdict(Verdict.SKIPPED).build();
                 } else {
-                    testCaseResult = TestCaseResult.fromEvaluationResult(evaluationResult);
+                    testCaseVerdict = testCaseVerdictParser.parseExecutionResult(evaluationResult.getExecutionResult().toNewExecutionResult()).get();
                 }
 
-                if (testCaseResult.getVerdict() != ScoringVerdict.ACCEPTED && testCaseResult.getVerdict() != ScoringVerdict.OK) {
+                if (testCaseVerdict.getVerdict() != Verdict.ACCEPTED && testCaseVerdict.getVerdict() != Verdict.OK) {
                     alreadyFailedSubtaskIds.addAll(testCase.getSubtaskIds());
                     alreadyFailedSubtaskIds.remove(0);
                     alreadyFailedSubtaskIds.remove(-1);
                 }
 
-                testGroupResults.get(i).add(testCaseResult);
+                testGroupResults.get(i).add(new TestCaseResult(toNormalVerdict(testCaseVerdict.getVerdict()), testCaseVerdict.getScore()));
                 testGroupEvaluationResults.get(i).add(evaluationResult);
 
                 for (int subtaskId : testCase.getSubtaskIds()) {
-                    testCaseResultsBySubtaskIds.get(subtaskId + 1).add(testCaseResult);
+                    testCaseVerdictsBySubtaskIds.get(subtaskId + 1).add(testCaseVerdict);
                     testCaseIndicesBySubtaskIds.get(subtaskId + 1).add(new Integer[]{i, j});
                 }
             }
@@ -246,28 +262,33 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         GabrielLogger.getLogger().info("Evaluation & scoring finished.");
     }
 
-    private void reduce() throws ReductionException {
+    private void aggregate() {
         MDC.put("gradingPhase", "REDUCE");
         GabrielLogger.getLogger().info("Reduction started.");
+        ImmutableList.Builder<SubtaskVerdict> subtaskVerdictBuilder = ImmutableList.builder();
         ImmutableList.Builder<SubtaskResult> subtaskResultsBuilder = ImmutableList.builder();
         for (Subtask subtask : config.getSubtasks()) {
-            List<TestCaseResult> testCaseResults = ImmutableList.copyOf(testCaseResultsBySubtaskIds.get(subtask.getId() + 1));
-            SubtaskResult subtaskResult = getReducer().reduceTestCaseResults(testCaseResults, subtask);
-            subtaskResultsBuilder.add(subtaskResult);
+            List<TestCaseVerdict> testCaseVerdicts = ImmutableList.copyOf(testCaseVerdictsBySubtaskIds.get(subtask.getId() + 1));
+            TestCaseAggregationResult aggregationResult = getAggregator().aggregate(testCaseVerdicts, subtask.getPoints());
+            SubtaskVerdict subtaskVerdict = aggregationResult.getSubtaskVerdict();
+            List<String> testCasePoints = aggregationResult.getTestCasePoints();
 
-            List<TestCaseResult> improvedTestCaseResults = getReducer().improveTestCaseResults(testCaseResults, subtask);
+            subtaskVerdictBuilder.add(subtaskVerdict);
+            subtaskResultsBuilder.add(new SubtaskResult(toNormalVerdict(subtaskVerdict.getVerdict()), subtaskVerdict.getPoints()));
 
-            for (int i = 0; i < testCaseResults.size(); i++) {
+            for (int i = 0; i < testCaseVerdicts.size(); i++) {
                 Integer[] testCaseIndices = testCaseIndicesBySubtaskIds.get(subtask.getId() + 1).get(i);
                 int testGroupIndex = testCaseIndices[0];
                 int testCaseIndex = testCaseIndices[1];
-                testGroupResults.get(testGroupIndex).set(testCaseIndex, improvedTestCaseResults.get(i));
+                TestCaseResult testCaseResult = new TestCaseResult(toNormalVerdict(testCaseVerdicts.get(i).getVerdict()), testCasePoints.get(i));
+                testGroupResults.get(testGroupIndex).set(testCaseIndex, testCaseResult);
             }
         }
 
         subtaskResults = subtaskResultsBuilder.build();
-        reductionResult = getReducer().reduceSubtaskResults(subtaskResults);
-        GabrielLogger.getLogger().info("Reduction finished.");
+        SubtaskVerdict gradingVerdict = subtaskAggregator.aggregate(subtaskVerdictBuilder.build());
+        gradingResult = new SubtaskResult(toNormalVerdict(gradingVerdict.getVerdict()), gradingVerdict.getPoints());
+        GabrielLogger.getLogger().info("Aggregation finished.");
     }
 
     private GradingResult buildResult() {
@@ -298,6 +319,17 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
         BlackBoxGradingResultDetails details = BlackBoxGradingResultDetails.normalDetails(compilationOutput, testGroupFinalResults.build(), subtaskFinalResults.build());
 
-        return BlackBoxGradingResults.normalResult(reductionResult, details);
+        return BlackBoxGradingResults.normalResult(gradingResult, details);
+    }
+
+    private NormalVerdict toNormalVerdict(Verdict verdict) {
+        switch (verdict) {
+            case ACCEPTED: return ScoringVerdict.ACCEPTED;
+            case OK: return ScoringVerdict.OK;
+            case WRONG_ANSWER: return ScoringVerdict.WRONG_ANSWER;
+            case TIME_LIMIT_EXCEEDED: return EvaluationVerdict.TIME_LIMIT_EXCEEDED;
+            case SKIPPED: return EvaluationVerdict.SKIPPED;
+            default: return EvaluationVerdict.RUNTIME_ERROR;
+        }
     }
 }

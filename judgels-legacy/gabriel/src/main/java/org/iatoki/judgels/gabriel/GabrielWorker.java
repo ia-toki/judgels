@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.ScoringException;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
@@ -118,7 +119,7 @@ public final class GabrielWorker implements Runnable {
         GabrielLogger.getLogger().info("Worker initialization finished.");
     }
 
-    private void gradeRequest() throws GradingException {
+    private void gradeRequest() throws GradingException, ScoringException {
         MDC.put("workerPhase", "GRADE");
         result = engine.grade(engineDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
 

@@ -1,9 +1,10 @@
 package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
+import judgels.gabriel.api.ScoringException;
+import judgels.gabriel.api.ScoringResult;
+import judgels.gabriel.api.TestCaseVerdict;
+import judgels.gabriel.api.Verdict;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
-import org.iatoki.judgels.gabriel.blackbox.ScoringException;
-import org.iatoki.judgels.gabriel.blackbox.ScoringResult;
-import org.iatoki.judgels.gabriel.blackbox.ScoringVerdict;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,10 +25,9 @@ public final class DiffScorer implements Scorer {
             throw new ScoringException(e.getMessage());
         }
 
-        if (exitCode == 0) {
-            return new ScoringResult(ScoringVerdict.ACCEPTED, "");
-        } else {
-            return new ScoringResult(ScoringVerdict.WRONG_ANSWER, "");
-        }
+        Verdict verdict = exitCode == 0 ? Verdict.ACCEPTED : Verdict.WRONG_ANSWER;
+        return new ScoringResult.Builder()
+                .verdict(new TestCaseVerdict.Builder().verdict(verdict).build())
+                .build();
     }
 }

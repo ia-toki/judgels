@@ -1,6 +1,7 @@
 package org.iatoki.judgels.gabriel;
 
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.ScoringException;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 
 import java.io.File;
@@ -14,5 +15,5 @@ public interface GradingEngine {
 
     GradingConfig createGradingConfigFromJson(String json) throws IOException;
 
-    GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException;
+    GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException, ScoringException;
 }
