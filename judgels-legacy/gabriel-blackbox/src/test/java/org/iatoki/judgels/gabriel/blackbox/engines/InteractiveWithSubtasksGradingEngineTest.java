@@ -6,13 +6,13 @@ import com.google.gson.Gson;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.interactive.InteractiveWithSubtasksGradingConfig;
+import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.EvaluationException;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
-import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
         this.subtaskPoints = ImmutableList.of(30, 70);
 
         this.engine = new InteractiveWithSubtasksGradingEngine();
-        this.engine.setCommunicatorLanguage(new PlainCppGradingLanguage());
+        this.engine.setCommunicatorLanguage(new CppGradingLanguage());
     }
 
     @Test

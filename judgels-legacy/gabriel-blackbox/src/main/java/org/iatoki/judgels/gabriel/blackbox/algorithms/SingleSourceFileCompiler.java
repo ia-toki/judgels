@@ -2,9 +2,9 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
+import judgels.gabriel.api.GradingLanguage;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;

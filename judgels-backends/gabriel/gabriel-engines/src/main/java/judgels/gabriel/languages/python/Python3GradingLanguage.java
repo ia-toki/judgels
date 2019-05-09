@@ -1,16 +1,15 @@
-package org.iatoki.judgels.gabriel.blackbox.languages;
+package judgels.gabriel.languages.python;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
-
 import java.util.List;
 import java.util.Set;
+import judgels.gabriel.api.GradingLanguage;
 
-public final class Python3GradingLanguage extends AbstractGradingLanguage {
+public class Python3GradingLanguage implements GradingLanguage {
     @Override
     public String getName() {
-        return "Python 3";
+        return "Python3";
     }
 
     @Override
@@ -19,13 +18,13 @@ public final class Python3GradingLanguage extends AbstractGradingLanguage {
     }
 
     @Override
-    public String getExecutableFilename(String sourceFilename) {
-        return sourceFilename;
+    public List<String> getCompilationCommand(String sourceFilename) {
+        return ImmutableList.of("/bin/true");
     }
 
     @Override
-    public List<String> getCompilationCommand(String sourceFilename) {
-        return ImmutableList.of("/bin/true");
+    public String getExecutableFilename(String sourceFilename) {
+        return sourceFilename;
     }
 
     @Override

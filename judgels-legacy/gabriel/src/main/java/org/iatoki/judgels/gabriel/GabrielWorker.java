@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.ScoringException;
+import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
@@ -100,7 +102,7 @@ public final class GabrielWorker implements Runnable {
 
         try {
             engine = GradingEngineRegistry.getInstance().getEngine(request.getGradingEngine());
-            language = GradingLanguageRegistry.getInstance().getLanguage(request.getGradingLanguage());
+            language = GradingLanguageRegistry.getInstance().get(request.getGradingLanguage());
 
             workerDir = getWorkerDir();
             sourceFiles = generateSourceFiles(workerDir);

@@ -7,12 +7,12 @@ import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.batch.BatchWithSubtasksGradingConfig;
+import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
-import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
                 .subtaskPoints(subtaskPoints)
                 .build();
         this.engine = new BatchWithSubtasksGradingEngine();
-        this.engine.setScorerLanguage(new PlainCppGradingLanguage());
+        this.engine.setScorerLanguage(new CppGradingLanguage());
     }
 
     @Test

@@ -1,9 +1,9 @@
 @import judgels.gabriel.api.GradingConfig
 @import judgels.gabriel.engines.outputonly.OutputOnlyGradingConfig
+@import judgels.gabriel.languages.GradingLanguageRegistry
 @import judgels.sandalphon.api.problem.ProblemStatement
 @import play.i18n.Messages
 @import com.google.common.base.Joiner
-@import org.iatoki.judgels.gabriel.GradingLanguageRegistry
 @import org.iatoki.judgels.gabriel.OutputOnlyMagic
 
 @(postSubmitUri: String, statement: ProblemStatement, blackBoxGradingConfig: GradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
@@ -68,7 +68,7 @@
                 <label for="language" class="col-sm-3 control-label">Language</label>
                 <div class="col-sm-9">
                     <select name="language">
-                    @for((k, v) <- GradingLanguageRegistry.getInstance().getGradingLanguages) {
+                    @for((k, v) <- GradingLanguageRegistry.getInstance().getNamesMap) {
                         @if(allowedGradingLanguageNames.contains(k)) {
                             <option value="@k">@v</option>
                         }

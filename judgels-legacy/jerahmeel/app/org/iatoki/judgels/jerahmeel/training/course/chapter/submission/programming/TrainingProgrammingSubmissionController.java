@@ -1,9 +1,9 @@
 package org.iatoki.judgels.jerahmeel.training.course.chapter.submission.programming;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
-import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
 import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.jerahmeel.course.Course;
 import org.iatoki.judgels.jerahmeel.course.CourseNotFoundException;
@@ -164,7 +164,7 @@ public final class TrainingProgrammingSubmissionController extends AbstractJudge
 
         Page<ProgrammingSubmission> pageOfSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, IdentityUtils.getUserJid(), actualProblemJid, chapter.getJid());
         Map<String, String> problemJidToAliasMap = chapterProblemService.getProgrammingProblemJidToAliasMapByChapterJid(chapter.getJid());
-        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getGradingLanguages();
+        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
         LazyHtml content = new LazyHtml(listOwnSubmissionsView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfSubmissions, problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualProblemJid));
         content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
@@ -205,7 +205,7 @@ public final class TrainingProgrammingSubmissionController extends AbstractJudge
 
         Page<ProgrammingSubmission> pageOfSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, actualUserJid, actualProblemJid, chapter.getJid());
         Map<String, String> problemJidToAliasMap = chapterProblemService.getProgrammingProblemJidToAliasMapByChapterJid(chapter.getJid());
-        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getGradingLanguages();
+        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
         LazyHtml content;
         if (JerahmeelControllerUtils.getInstance().isAdmin()) {
@@ -251,7 +251,7 @@ public final class TrainingProgrammingSubmissionController extends AbstractJudge
         ChapterProblem chapterProblem = chapterProblemService.findChapterProblemByChapterJidAndProblemJid(chapter.getJid(), programmingSubmission.getProblemJid());
         String chapterProblemAlias = chapterProblem.getAlias();
         String chapterProblemName = JidCacheServiceImpl.getInstance().getDisplayName(chapterProblem.getProblemJid());
-        String gradingLanguageName = GradingLanguageRegistry.getInstance().getLanguage(programmingSubmission.getGradingLanguage()).getName();
+        String gradingLanguageName = GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName();
 
         LazyHtml content = new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(programmingSubmission.getGradingEngine()).renderViewSubmission(programmingSubmission, submissionSource, authorName, chapterProblemAlias, chapterProblemName, gradingLanguageName, chapter.getName()));
         TrainingChapterControllerUtils.appendSubmissionSubtabLayout(content, curriculum, curriculumCourse, course, courseChapter);

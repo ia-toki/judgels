@@ -2,9 +2,9 @@ package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
 import com.google.common.collect.ImmutableList;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.gabriel.GradingEngineRegistry;
-import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
 import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
@@ -118,7 +118,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractJudgel
         }
 
         Page<ProgrammingSubmission> pageOfProgrammingSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
-        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getGradingLanguages();
+        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
         LazyHtml content = new LazyHtml(listSubmissionsView.render(pageOfProgrammingSubmissions, gradingLanguageToNameMap, problemId, pageIndex, orderBy, orderDir));
         ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
@@ -149,7 +149,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractJudgel
         }
         SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
 
-        LazyHtml content = new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, JidCacheServiceImpl.getInstance().getDisplayName(programmingSubmission.getAuthorJid()), null, problem.getSlug(), GradingLanguageRegistry.getInstance().getLanguage(programmingSubmission.getGradingLanguage()).getName(), null));
+        LazyHtml content = new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, JidCacheServiceImpl.getInstance().getDisplayName(programmingSubmission.getAuthorJid()), null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
 
         ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
         ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);

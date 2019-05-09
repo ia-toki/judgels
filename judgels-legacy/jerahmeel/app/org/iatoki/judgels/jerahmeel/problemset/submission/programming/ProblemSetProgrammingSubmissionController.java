@@ -1,9 +1,9 @@
 package org.iatoki.judgels.jerahmeel.problemset.submission.programming;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
-import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
 import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.jerahmeel.DeprecatedControllerUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
@@ -126,7 +126,7 @@ public final class ProblemSetProgrammingSubmissionController extends AbstractJud
 
         Page<ProgrammingSubmission> pageOfSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, IdentityUtils.getUserJid(), actualProblemJid, problemSet.getJid());
         Map<String, String> problemJidToAliasMap = problemSetProblemService.getProgrammingProblemJidToAliasMapByProblemSetJid(problemSet.getJid());
-        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getGradingLanguages();
+        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
         LazyHtml content = new LazyHtml(listOwnSubmissionsView.render(problemSet.getId(), pageOfSubmissions, problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualProblemJid));
         content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
@@ -156,7 +156,7 @@ public final class ProblemSetProgrammingSubmissionController extends AbstractJud
 
         Page<ProgrammingSubmission> pageOfSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, actualUserJid, actualProblemJid, problemSet.getJid());
         Map<String, String> problemJidToAliasMap = problemSetProblemService.getProgrammingProblemJidToAliasMapByProblemSetJid(problemSet.getJid());
-        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getGradingLanguages();
+        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
         LazyHtml content;
         if (JerahmeelControllerUtils.getInstance().isAdmin()) {
@@ -193,7 +193,7 @@ public final class ProblemSetProgrammingSubmissionController extends AbstractJud
         ProblemSetProblem problemSetProblem = problemSetProblemService.findProblemSetProblemByProblemSetJidAndProblemJid(problemSet.getJid(), submission.getProblemJid());
         String problemSetProblemAlias = problemSetProblem.getAlias();
         String problemSetProblemName = SandalphonResourceDisplayNameUtils.parseTitleByLanguage(JidCacheServiceImpl.getInstance().getDisplayName(problemSetProblem.getProblemJid()), DeprecatedControllerUtils.getHardcodedDefaultLanguage());
-        String gradingLanguageName = GradingLanguageRegistry.getInstance().getLanguage(submission.getGradingLanguage()).getName();
+        String gradingLanguageName = GradingLanguageRegistry.getInstance().get(submission.getGradingLanguage()).getName();
 
         LazyHtml content = new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(submission.getGradingEngine()).renderViewSubmission(submission, submissionSource, authorName, problemSetProblemAlias, problemSetProblemName, gradingLanguageName, problemSet.getName()));
         if (JerahmeelControllerUtils.getInstance().isAdmin()) {

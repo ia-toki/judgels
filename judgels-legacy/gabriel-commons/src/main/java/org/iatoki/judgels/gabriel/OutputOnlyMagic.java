@@ -1,6 +1,7 @@
 package org.iatoki.judgels.gabriel;
 
 import com.google.common.collect.ImmutableSet;
+import judgels.gabriel.api.GradingLanguage;
 
 import java.util.List;
 import java.util.Set;
@@ -18,7 +19,7 @@ public final class OutputOnlyMagic {
     public static final String DISPLAY_NAME = "-";
     public static final GradingLanguage LANGUAGE = new OutputOnlyGradingLanguage();
 
-    public static class OutputOnlyGradingLanguage extends AbstractGradingLanguage {
+    public static class OutputOnlyGradingLanguage implements GradingLanguage {
         @Override
         public String getName() {
             return DISPLAY_NAME;
@@ -40,7 +41,7 @@ public final class OutputOnlyMagic {
         }
 
         @Override
-        protected Set<String> getAllowedExtensions() {
+        public Set<String> getAllowedExtensions() {
             return ImmutableSet.of("zip");
         }
     }

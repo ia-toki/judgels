@@ -2,9 +2,9 @@ package org.iatoki.judgels.jerahmeel.chapter.submission.programming;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
-import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
 import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.StatementControllerUtils;
@@ -122,7 +122,7 @@ public final class ChapterProgrammingSubmissionController extends AbstractJudgel
         Map<String, String> problemJidToAliasMap = chapterProblemService.getProgrammingProblemJidToAliasMapByChapterJid(chapter.getJid());
         List<UserItem> userItems = userItemService.getUserItemsByItemJid(chapter.getJid());
         List<String> userJids = Lists.transform(userItems, u -> u.getUserJid());
-        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getGradingLanguages();
+        Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
         LazyHtml content = new LazyHtml(listSubmissionsView.render(chapter.getId(), pageOfSubmissions, userJids, problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
         content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
@@ -145,7 +145,7 @@ public final class ChapterProgrammingSubmissionController extends AbstractJudgel
         ChapterProblem chapterProblem = chapterProblemService.findChapterProblemByChapterJidAndProblemJid(chapter.getJid(), submission.getProblemJid());
         String chapterProblemAlias = chapterProblem.getAlias();
         String chapterProblemName = SandalphonResourceDisplayNameUtils.parseTitleByLanguage(JidCacheServiceImpl.getInstance().getDisplayName(chapterProblem.getProblemJid()), StatementControllerUtils.getCurrentStatementLanguage());
-        String gradingLanguageName = GradingLanguageRegistry.getInstance().getLanguage(submission.getGradingLanguage()).getName();
+        String gradingLanguageName = GradingLanguageRegistry.getInstance().get(submission.getGradingLanguage()).getName();
 
         LazyHtml content = new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(submission.getGradingEngine()).renderViewSubmission(submission, submissionSource, authorName, chapterProblemAlias, chapterProblemName, gradingLanguageName, chapter.getName()));
         appendSubtabLayout(content, chapter);

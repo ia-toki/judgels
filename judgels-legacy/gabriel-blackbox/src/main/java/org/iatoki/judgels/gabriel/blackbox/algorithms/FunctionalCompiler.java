@@ -3,14 +3,14 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
 import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
-import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
 import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionStatus;
@@ -96,7 +96,7 @@ public class FunctionalCompiler implements Compiler {
             String sourceFilename = entry.getValue().getName();
 
             final List<String> compilationCommand;
-            if (gradingLanguage instanceof PlainCppGradingLanguage) {
+            if (gradingLanguage instanceof CppGradingLanguage) {
                 compilationCommand = ImmutableList.of(
                         "/usr/bin/g++", "-o", executableFilename, "-c", sourceFilename);
             } else {
@@ -135,7 +135,7 @@ public class FunctionalCompiler implements Compiler {
 
     private CompilationVerdict compileGrader() {
         ImmutableList.Builder<String> compilationCommandBuilder = ImmutableList.builder();
-        if (gradingLanguage instanceof PlainCppGradingLanguage) {
+        if (gradingLanguage instanceof CppGradingLanguage) {
             compilationCommandBuilder.add("/usr/bin/g++", "-o", GRADER, GRADER + ".cpp");
         } else {
             compilationCommandBuilder.add("/usr/bin/g++", "-std=c++11", "-o", GRADER, GRADER + ".cpp", "-O2", "-lm");

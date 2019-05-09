@@ -2,7 +2,7 @@
 @import play.i18n.Messages
 @import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionEditForm
 @import org.iatoki.judgels.sandalphon.problem.programming.grading.routes
-@import org.iatoki.judgels.gabriel.GradingLanguageRegistry
+@import judgels.gabriel.languages.GradingLanguageRegistry
 
 @(languageRestrictionEditForm: Form[LanguageRestrictionEditForm], problem: Problem)
 
@@ -26,7 +26,7 @@
                   </label>
               </div>
 
-              @for((k, v) <- GradingLanguageRegistry.getInstance().getGradingLanguages) {
+              @for((k, v) <- GradingLanguageRegistry.getInstance().getNamesMap) {
                   <div class="checkbox">
                       <label>
                           <input type="checkbox" class="allowedLanguageName" name="allowedLanguageNames[@k]" value="@k" @if(languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value && languageRestrictionEditForm("allowedLanguageNames[" + k + "]").value.equals(k)){ checked="checked" }> @v

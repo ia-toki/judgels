@@ -6,11 +6,11 @@ import com.google.gson.Gson;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.outputonly.OutputOnlyWithSubtasksGradingConfig;
+import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
-import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public final class OutputOnlyWithSubtasksGradingEngineTest extends BlackBoxGradi
                 .subtaskPoints(subtaskPoints)
                 .build();
         this.engine = new OutputOnlyWithSubtasksGradingEngine();
-        this.engine.setScorerLanguage(new PlainCppGradingLanguage());
+        this.engine.setScorerLanguage(new CppGradingLanguage());
     }
 
     @Test

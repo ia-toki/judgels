@@ -4,17 +4,17 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.ScoringException;
+import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.GradingLanguage;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.GradingSource;
 import org.iatoki.judgels.gabriel.Verdict;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 import org.iatoki.judgels.gabriel.sandboxes.impls.FakeSandboxFactory;
-import org.iatoki.judgels.gabriel.blackbox.languages.PlainCppGradingLanguage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -57,7 +57,7 @@ public abstract class BlackBoxGradingEngineTest {
         this.testDataFiles = listFilesAsMap(testDataDir);
         this.helperFiles = listFilesAsMap(helperDir);
 
-        this.language = new PlainCppGradingLanguage();
+        this.language = new CppGradingLanguage();
     }
 
     @BeforeEach

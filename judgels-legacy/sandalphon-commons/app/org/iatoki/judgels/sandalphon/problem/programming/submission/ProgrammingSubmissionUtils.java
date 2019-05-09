@@ -1,13 +1,14 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.FileSystemProvider;
-import org.iatoki.judgels.gabriel.GradingLanguage;
-import org.iatoki.judgels.gabriel.GradingLanguageRegistry;
 import org.iatoki.judgels.gabriel.SourceFile;
 import org.iatoki.judgels.gabriel.SubmissionSource;
 import play.mvc.Http;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class ProgrammingSubmissionUtils {
@@ -35,7 +37,7 @@ public final class ProgrammingSubmissionUtils {
             return new SubmissionSource(ImmutableMap.of());
         }
 
-        GradingLanguage language = GradingLanguageRegistry.getInstance().getLanguage(gradingLanguage);
+        GradingLanguage language = GradingLanguageRegistry.getInstance().get(gradingLanguage);
         List<String> sourceFileFieldKeys = Arrays.asList(sourceFileFieldKeysUnparsed.split(","));
 
         List<Http.MultipartFormData.FilePart> fileParts = body.getFiles();
@@ -74,7 +76,7 @@ public final class ProgrammingSubmissionUtils {
             String filename = formFilenames.get(fieldKey);
             byte[] fileContent = formFileContents.get(fieldKey);
 
-            String verification = language.verifyFile(filename, fileContent);
+            String verification = verifyFile(language, filename);
 
             if (verification != null) {
                 throw new ProgrammingSubmissionException(verification);
@@ -136,6 +138,22 @@ public final class ProgrammingSubmissionUtils {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    private static String verifyFile(judgels.gabriel.api.GradingLanguage language, String filename) {
+        Set<String> allowedExtensions = language.getAllowedExtensions();
+
+        int dotPos = filename.lastIndexOf('.');
+        if (dotPos == -1) {
+            return "Filename must have one of this extensions: " + Joiner.on(", ").join(allowedExtensions);
+        }
+
+        String extension = filename.substring(dotPos + 1);
+        if (allowedExtensions.contains(extension)) {
+            return null;
+        } else {
+            return "Filename must have one of this extensions: " + Joiner.on(", ").join(allowedExtensions);
         }
     }
 }

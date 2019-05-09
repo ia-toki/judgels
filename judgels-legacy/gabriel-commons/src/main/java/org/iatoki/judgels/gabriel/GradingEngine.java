@@ -1,6 +1,7 @@
 package org.iatoki.judgels.gabriel;
 
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.ScoringException;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 

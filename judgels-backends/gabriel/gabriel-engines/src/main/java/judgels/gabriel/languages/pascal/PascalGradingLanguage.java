@@ -1,15 +1,13 @@
-package org.iatoki.judgels.gabriel.blackbox.languages;
+package judgels.gabriel.languages.pascal;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.apache.commons.io.FilenameUtils;
-import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
-
 import java.util.List;
 import java.util.Set;
+import judgels.gabriel.api.GradingLanguage;
+import org.apache.commons.io.FilenameUtils;
 
-public final class PascalGradingLanguage extends AbstractGradingLanguage {
-
+public class PascalGradingLanguage implements GradingLanguage {
     @Override
     public String getName() {
         return "Pascal";
@@ -21,13 +19,13 @@ public final class PascalGradingLanguage extends AbstractGradingLanguage {
     }
 
     @Override
-    public String getExecutableFilename(String sourceFilename) {
-        return FilenameUtils.removeExtension(sourceFilename);
+    public List<String> getCompilationCommand(String sourceFilename) {
+        return ImmutableList.of("/usr/bin/fpc", sourceFilename, "-O2", "-XS", "-Sg");
     }
 
     @Override
-    public List<String> getCompilationCommand(String sourceFilename) {
-        return ImmutableList.of("/usr/bin/fpc", sourceFilename, "-O2", "-XS", "-Sg");
+    public String getExecutableFilename(String sourceFilename) {
+        return FilenameUtils.removeExtension(sourceFilename);
     }
 
     @Override

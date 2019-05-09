@@ -1,15 +1,13 @@
-package org.iatoki.judgels.gabriel.blackbox.languages;
+package judgels.gabriel.languages.c;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.apache.commons.io.FilenameUtils;
-import org.iatoki.judgels.gabriel.AbstractGradingLanguage;
-
 import java.util.List;
 import java.util.Set;
+import judgels.gabriel.api.GradingLanguage;
+import org.apache.commons.io.FilenameUtils;
 
-public final class CGradingLanguage extends AbstractGradingLanguage {
-
+public class CGradingLanguage implements GradingLanguage {
     @Override
     public String getName() {
         return "C";
@@ -21,14 +19,14 @@ public final class CGradingLanguage extends AbstractGradingLanguage {
     }
 
     @Override
-    public String getExecutableFilename(String sourceFilename) {
-        return FilenameUtils.removeExtension(sourceFilename);
-    }
-
-    @Override
     public List<String> getCompilationCommand(String sourceFilename) {
         String executableFilename = getExecutableFilename(sourceFilename);
         return ImmutableList.of("/usr/bin/gcc", "-std=gnu99", "-o", executableFilename, sourceFilename, "-O2", "-lm");
+    }
+
+    @Override
+    public String getExecutableFilename(String sourceFilename) {
+        return FilenameUtils.removeExtension(sourceFilename);
     }
 
     @Override
