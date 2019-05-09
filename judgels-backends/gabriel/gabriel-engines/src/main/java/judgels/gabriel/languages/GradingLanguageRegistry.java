@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.languages.c.CGradingLanguage;
 import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
+import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import judgels.gabriel.languages.java.JavaGradingLanguage;
 import judgels.gabriel.languages.pascal.PascalGradingLanguage;
 import judgels.gabriel.languages.python.Python3GradingLanguage;
@@ -18,8 +19,8 @@ public class GradingLanguageRegistry {
 
     private static final Set<GradingLanguage> LANGUAGES = ImmutableSet.of(
             new CGradingLanguage(),
+            new CppGradingLanguage(),
             new Cpp11GradingLanguage(),
-            new CGradingLanguage(),
             new JavaGradingLanguage(),
             new PascalGradingLanguage(),
             new Python3GradingLanguage(),
