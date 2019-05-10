@@ -1,13 +1,13 @@
 package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.api.EvaluationException;
+import judgels.gabriel.api.EvaluationResult;
+import judgels.gabriel.api.Evaluator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.LocalFileSystemProvider;
-import org.iatoki.judgels.gabriel.blackbox.EvaluationException;
-import org.iatoki.judgels.gabriel.blackbox.EvaluationResult;
-import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public final class OutputOnlyEvaluator implements Evaluator {
     public EvaluationResult evaluate(File testCaseInputFile) throws EvaluationException {
         File testCaseOutputFile = new File(evaluationDir, getEvaluationResultFilename(testCaseInputFile));
         if (testCaseOutputFile.exists()) {
-            return EvaluationResult.plainResult(FilenameUtils.getBaseName(testCaseInputFile.getName()));
+            return EvaluationResult.okResult();
         } else {
             return EvaluationResult.skippedResult();
         }

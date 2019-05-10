@@ -8,7 +8,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import judgels.gabriel.aggregators.SubtaskAggregator;
+import judgels.gabriel.api.EvaluationException;
+import judgels.gabriel.api.EvaluationResult;
+import judgels.gabriel.api.Evaluator;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.SandboxFactory;
+import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.api.SubtaskVerdict;
 import judgels.gabriel.api.TestCaseAggregationResult;
 import judgels.gabriel.api.TestCaseAggregator;
@@ -26,7 +31,8 @@ import org.iatoki.judgels.gabriel.GradingEngine;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.GradingSource;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
+import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionStatus;
 import org.slf4j.MDC;
 
 import java.io.File;
@@ -74,7 +80,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
     }
 
     @Override
-    public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException, judgels.gabriel.api.ScoringException {
+    public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException, EvaluationException, ScoringException {
         this.gradingDir = gradingDir;
         this.config = config;
         this.language = language;
@@ -138,7 +144,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     protected abstract TestCaseAggregator getAggregator();
 
-    private GradingResult tryGrading() throws GradingException, judgels.gabriel.api.ScoringException {
+    private GradingResult tryGrading() throws GradingException, EvaluationException, ScoringException {
         verify();
         prepare();
         compile();
@@ -196,7 +202,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         GabrielLogger.getLogger().info("Compilation finished.");
     }
 
-    private void evaluateAndScore() throws EvaluationException, judgels.gabriel.api.ScoringException {
+    private void evaluateAndScore() throws EvaluationException, ScoringException {
         MDC.put("gradingPhase", "EVALUATE-SCORE");
         GabrielLogger.getLogger().info("Evaluation & scoring started.");
 
@@ -235,13 +241,13 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
                 }
 
                 TestCaseVerdict testCaseVerdict;
-                if (evaluationResult.getVerdict() == EvaluationVerdict.OK) {
+                if (evaluationResult.getVerdict() == Verdict.OK) {
                     ScoringResult scoringResult = getScorer().score(testCaseInput, testCaseOutput, new File(getEvaluationDir(), getEvaluator().getEvaluationResultFilename(testCaseInput)));
                     testCaseVerdict = scoringResult.getVerdict();
-                } else if (evaluationResult.getExecutionResult() == null) {
+                } else if (!evaluationResult.getExecutionResult().isPresent()) {
                     testCaseVerdict = new TestCaseVerdict.Builder().verdict(Verdict.SKIPPED).build();
                 } else {
-                    testCaseVerdict = testCaseVerdictParser.parseExecutionResult(evaluationResult.getExecutionResult().toNewExecutionResult()).get();
+                    testCaseVerdict = testCaseVerdictParser.parseExecutionResult(evaluationResult.getExecutionResult().get()).get();
                 }
 
                 if (testCaseVerdict.getVerdict() != Verdict.ACCEPTED && testCaseVerdict.getVerdict() != Verdict.OK) {
@@ -305,7 +311,13 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
             for (int j = 0; j < testGroup.getTestCases().size(); j++) {
                 TestCase testCase = testGroup.getTestCases().get(j);
-                testCaseFinalResults.add(new TestCaseFinalResult(testGroupResults.get(i).get(j), testGroupEvaluationResults.get(i).get(j).getExecutionResult(), testCase.getSubtaskIds()));
+                judgels.gabriel.api.SandboxExecutionResult newResult = testGroupEvaluationResults.get(i).get(j).getExecutionResult().orElse(null);
+                SandboxExecutionResult result = null;
+                if (newResult != null) {
+                    SandboxExecutionStatus status = SandboxExecutionStatus.valueOf(newResult.getStatus().name());
+                    result = new SandboxExecutionResult(status, newResult.getTimeInMilliseconds(), newResult.getMemoryInKilobytes(), newResult.getMessage());
+                }
+                testCaseFinalResults.add(new TestCaseFinalResult(testGroupResults.get(i).get(j), result, testCase.getSubtaskIds()));
             }
             testGroupFinalResults.add(new TestGroupFinalResult(testGroup.getId(), testCaseFinalResults.build()));
         }

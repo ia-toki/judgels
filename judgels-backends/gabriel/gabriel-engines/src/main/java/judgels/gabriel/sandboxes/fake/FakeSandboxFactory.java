@@ -1,12 +1,11 @@
-package org.iatoki.judgels.gabriel.sandboxes.impls;
-
-import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxesInteractor;
+package judgels.gabriel.sandboxes.fake;
 
 import java.io.File;
 import java.io.IOException;
+import judgels.gabriel.api.Sandbox;
+import judgels.gabriel.api.SandboxFactory;
+import judgels.gabriel.api.SandboxInteractor;
+import org.apache.commons.io.FileUtils;
 
 public class FakeSandboxFactory implements SandboxFactory {
 
@@ -33,7 +32,7 @@ public class FakeSandboxFactory implements SandboxFactory {
     }
 
     @Override
-    public SandboxesInteractor newSandboxesInteractor() {
-        return new FakeSandboxesInteractor();
+    public SandboxInteractor newSandboxInteractor() {
+        return new FakeSandboxInteractor();
     }
 }

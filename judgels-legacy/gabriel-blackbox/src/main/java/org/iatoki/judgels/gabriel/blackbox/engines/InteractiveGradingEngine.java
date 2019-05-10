@@ -2,7 +2,10 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
 import judgels.gabriel.aggregators.SumAggregator;
+import judgels.gabriel.api.Evaluator;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.Sandbox;
+import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.TestCaseAggregator;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
@@ -10,14 +13,11 @@ import judgels.gabriel.engines.interactive.InteractiveGradingConfig;
 import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
-import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
-import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
         evaluatorContestantSandbox = sandboxFactory.newSandbox();
         evaluatorCommunicatorSandbox = sandboxFactory.newSandbox();
 
-        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxesInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile,  getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), castConfig.getTimeLimit(), castConfig.getMemoryLimit());
+        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile,  getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), castConfig.getTimeLimit(), castConfig.getMemoryLimit());
         scorer = new IdentityScorer();
         aggregator = new SumAggregator();
     }

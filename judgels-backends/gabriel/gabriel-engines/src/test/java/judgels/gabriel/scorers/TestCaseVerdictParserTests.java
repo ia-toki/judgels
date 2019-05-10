@@ -87,8 +87,8 @@ class TestCaseVerdictParserTests {
         void empty() {
             SandboxExecutionResult executionResult = new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.ZERO_EXIT_CODE)
-                    .time(2000)
-                    .memory(65536)
+                    .timeInMilliseconds(2000)
+                    .memoryInKilobytes(65536)
                     .message("")
                     .build();
             assertThat(parser.parseExecutionResult(executionResult)).isEmpty();
@@ -98,8 +98,8 @@ class TestCaseVerdictParserTests {
         void tle() {
             SandboxExecutionResult executionResult = new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.TIMED_OUT)
-                    .time(3000)
-                    .memory(65536)
+                    .timeInMilliseconds(3000)
+                    .memoryInKilobytes(65536)
                     .message("")
                     .build();
             assertThat(parser.parseExecutionResult(executionResult)).contains(
@@ -110,8 +110,8 @@ class TestCaseVerdictParserTests {
         void rte() {
             SandboxExecutionResult executionResult = new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.NONZERO_EXIT_CODE)
-                    .time(0)
-                    .memory(0)
+                    .timeInMilliseconds(0)
+                    .memoryInKilobytes(0)
                     .message("xxx")
                     .build();
             assertThat(parser.parseExecutionResult(executionResult)).contains(
@@ -122,8 +122,8 @@ class TestCaseVerdictParserTests {
         void internal_error() {
             SandboxExecutionResult executionResult = new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.INTERNAL_ERROR)
-                    .time(-1)
-                    .memory(-1)
+                    .timeInMilliseconds(-1)
+                    .memoryInKilobytes(-1)
                     .message("xxx")
                     .build();
             assertThat(parser.parseExecutionResult(executionResult)).contains(

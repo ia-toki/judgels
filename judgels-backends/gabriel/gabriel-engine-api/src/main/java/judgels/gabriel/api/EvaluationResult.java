@@ -8,13 +8,6 @@ public interface EvaluationResult {
     Verdict getVerdict();
     Optional<SandboxExecutionResult> getExecutionResult();
 
-    static EvaluationResult plainResult(String result) {
-        return new Builder()
-                .verdict(Verdict.OK)
-                .executionResult(SandboxExecutionResult.plainMessage(result))
-                .build();
-    }
-
     static EvaluationResult executedResult(SandboxExecutionResult result) {
         Verdict verdict;
         switch (result.getStatus()) {
@@ -39,6 +32,10 @@ public interface EvaluationResult {
 
     static EvaluationResult skippedResult() {
         return new Builder().verdict(Verdict.SKIPPED).build();
+    }
+
+    static EvaluationResult okResult() {
+        return new Builder().verdict(Verdict.OK).build();
     }
 
     class Builder extends ImmutableEvaluationResult.Builder {}

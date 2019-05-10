@@ -1,8 +1,4 @@
-package org.iatoki.judgels.gabriel.sandboxes.impls;
-
-import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxesInteractor;
+package judgels.gabriel.sandboxes.fake;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,11 +6,18 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import judgels.gabriel.api.Sandbox;
+import judgels.gabriel.api.SandboxException;
+import judgels.gabriel.api.SandboxExecutionResult;
+import judgels.gabriel.api.SandboxInteractor;
 
-public final class FakeSandboxesInteractor implements SandboxesInteractor {
-
+public class FakeSandboxInteractor implements SandboxInteractor {
     @Override
-    public SandboxExecutionResult[] executeInteraction(Sandbox sandbox1, List<String> command1, Sandbox sandbox2, List<String> command2) {
+    public SandboxExecutionResult[] interact(
+            Sandbox sandbox1,
+            List<String> command1,
+            Sandbox sandbox2,
+            List<String> command2) {
 
         ProcessBuilder pb1 = sandbox1.getProcessBuilder(command1);
         ProcessBuilder pb2 = sandbox2.getProcessBuilder(command2);
@@ -43,8 +46,8 @@ public final class FakeSandboxesInteractor implements SandboxesInteractor {
         executor.submit(new UnidirectionalPipe(p1InputStream, p2OutputStream));
         executor.submit(new UnidirectionalPipe(p2InputStream, p1OutputStream));
 
-        int exitCode1 = 0;
-        int exitCode2 = 0;
+        int exitCode1;
+        int exitCode2;
         try {
             exitCode2 = p2.waitFor();
             exitCode1 = p1.waitFor();
@@ -65,7 +68,7 @@ public final class FakeSandboxesInteractor implements SandboxesInteractor {
         private final InputStream in;
         private final OutputStream out;
 
-        public UnidirectionalPipe(InputStream in, OutputStream out) {
+        UnidirectionalPipe(InputStream in, OutputStream out) {
             this.in = in;
             this.out = out;
         }
@@ -88,7 +91,7 @@ public final class FakeSandboxesInteractor implements SandboxesInteractor {
                 out.close();
 
             } catch (IOException e) {
-
+                throw new SandboxException(e);
             }
         }
     }

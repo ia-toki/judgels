@@ -3,13 +3,13 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.Sandbox;
+import judgels.gabriel.api.SandboxExecutionResult;
+import judgels.gabriel.api.SandboxExecutionStatus;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
 import org.iatoki.judgels.gabriel.blackbox.CompilationException;
 import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
 import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionStatus;
 
 import java.io.File;
 import java.io.IOException;

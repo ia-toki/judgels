@@ -1,17 +1,19 @@
-package org.iatoki.judgels.gabriel.sandboxes.impls;
+package judgels.gabriel.sandboxes.fake;
 
 import com.google.common.collect.Sets;
-import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionStatus;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import judgels.gabriel.api.ProcessExecutionResult;
+import judgels.gabriel.api.Sandbox;
+import judgels.gabriel.api.SandboxException;
+import judgels.gabriel.api.SandboxExecutionResult;
+import judgels.gabriel.api.SandboxExecutionStatus;
+import judgels.gabriel.sandboxes.SandboxExecutor;
+import org.apache.commons.io.FileUtils;
 
-public final class FakeSandbox extends Sandbox {
+public class FakeSandbox implements Sandbox {
     private static final int FAKE_TIMED_OUT_EXIT_CODE = 10;
     private static final int FAKE_KILLED_ON_SIGNAL_EXIT_CODE = 20;
 
@@ -33,7 +35,7 @@ public final class FakeSandbox extends Sandbox {
             FileUtils.copyFileToDirectory(file, baseDir);
             filenames.add(file.getName());
         } catch (IOException e) {
-            // should never happen
+            throw new SandboxException(e);
         }
     }
 
@@ -43,34 +45,22 @@ public final class FakeSandbox extends Sandbox {
     }
 
     @Override
-    public void addAllowedDirectory(File directory) {
-        // nothing
-    }
+    public void addAllowedDirectory(File directory) {}
 
     @Override
-    public void setTimeLimitInMilliseconds(int timeLimit) {
-        // nothing
-    }
+    public void setTimeLimitInMilliseconds(int timeLimit) {}
 
     @Override
-    public void setMemoryLimitInKilobytes(int memoryLimit) {
-        // nothing
-    }
+    public void setMemoryLimitInKilobytes(int memoryLimit) {}
 
     @Override
-    public void setStackSizeInKilobytes(int stackSizeInKilobytes) {
-        // nothing
-    }
+    public void setStackSizeInKilobytes(int stackSizeInKilobytes) {}
 
     @Override
-    public void setMaxProcesses(int maxProcesses) {
-        // nothing
-    }
+    public void setMaxProcesses(int maxProcesses) {}
 
     @Override
-    public void setQuota(int blocks, int inodes) {
-        // nothing
-    }
+    public void setQuota(int blocks, int inodes) {}
 
     @Override
     public void resetRedirections() {
@@ -104,7 +94,7 @@ public final class FakeSandbox extends Sandbox {
         try {
             FileUtils.deleteDirectory(baseDir);
         } catch (IOException e) {
-            // should never happen
+            throw new SandboxException(e);
         }
     }
 
@@ -115,12 +105,30 @@ public final class FakeSandbox extends Sandbox {
                 try {
                     FileUtils.forceDelete(new File(baseDir, filename));
                 } catch (IOException e) {
-                    // should never happen
+                    throw new SandboxException(e);
                 }
             }
         }
 
         filenames.removeIf(f -> !filenamesToRetain.contains(f));
+    }
+
+    @Override
+    public SandboxExecutionResult execute(List<String> command) {
+        ProcessBuilder pb = getProcessBuilder(command).redirectErrorStream(true);
+
+        try {
+            ProcessExecutionResult result = SandboxExecutor.executeProcessBuilder(pb);
+            return getResult(result.getExitCode());
+
+        } catch (IOException | InterruptedException e) {
+            return new SandboxExecutionResult.Builder()
+                    .status(SandboxExecutionStatus.INTERNAL_ERROR)
+                    .timeInMilliseconds(-1)
+                    .memoryInKilobytes(-1)
+                    .message(e.getMessage())
+                    .build();
+        }
     }
 
     @Override
@@ -161,6 +169,11 @@ public final class FakeSandbox extends Sandbox {
             default:
                 status = SandboxExecutionStatus.NONZERO_EXIT_CODE;
         }
-        return new SandboxExecutionResult(status, 100, 1000, "OK");
+        return new SandboxExecutionResult.Builder()
+                .timeInMilliseconds(100)
+                .memoryInKilobytes(1000)
+                .status(status)
+                .message("OK")
+                .build();
     }
 }

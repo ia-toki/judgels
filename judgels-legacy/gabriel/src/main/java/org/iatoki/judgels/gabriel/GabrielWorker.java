@@ -3,10 +3,13 @@ package org.iatoki.judgels.gabriel;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.palantir.conjure.java.api.errors.RemoteException;
+import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.languages.GradingLanguageRegistry;
+import judgels.gabriel.sandboxes.moe.MoeSandboxFactory;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
@@ -14,9 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.api.JudgelsAPIClientException;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonProgrammingProblemInfo;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
-import org.iatoki.judgels.gabriel.sandboxes.impls.FakeSandboxFactory;
-import org.iatoki.judgels.gabriel.sandboxes.impls.MoeIsolateSandboxFactory;
+import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
 import org.slf4j.MDC;
 
 import java.io.File;
@@ -121,7 +122,7 @@ public final class GabrielWorker implements Runnable {
         GabrielLogger.getLogger().info("Worker initialization finished.");
     }
 
-    private void gradeRequest() throws GradingException, ScoringException {
+    private void gradeRequest() throws GradingException, EvaluationException, ScoringException {
         MDC.put("workerPhase", "GRADE");
         result = engine.grade(engineDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
 
@@ -171,7 +172,7 @@ public final class GabrielWorker implements Runnable {
 
     private SandboxFactory getSandboxProvider(File workerDir) throws IOException {
         if (GabrielProperties.getInstance().getMoeIsolatePath() != null && GabrielProperties.getInstance().getMoeIwrapperPath() != null) {
-            return new MoeIsolateSandboxFactory(GabrielProperties.getInstance().getMoeIsolatePath(), GabrielProperties.getInstance().getMoeIwrapperPath());
+            return new MoeSandboxFactory(GabrielProperties.getInstance().getMoeIsolatePath(), GabrielProperties.getInstance().getMoeIwrapperPath());
         } else {
             File sandboxesDir = new File(workerDir, "sandbox");
             FileUtils.forceMkdir(sandboxesDir);

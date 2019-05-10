@@ -2,7 +2,10 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
 import judgels.gabriel.aggregators.SumAggregator;
+import judgels.gabriel.api.Evaluator;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.Sandbox;
+import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.TestCaseAggregator;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
@@ -10,15 +13,12 @@ import judgels.gabriel.engines.batch.BatchGradingConfig;
 import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
 import org.iatoki.judgels.gabriel.blackbox.Compiler;
-import org.iatoki.judgels.gabriel.blackbox.Evaluator;
 import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.BatchEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
-import org.iatoki.judgels.gabriel.sandboxes.Sandbox;
-import org.iatoki.judgels.gabriel.sandboxes.SandboxFactory;
 
 import java.io.File;
 import java.io.IOException;
