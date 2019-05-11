@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -234,7 +235,7 @@ public class IsolateSandbox implements Sandbox {
 
         String meta;
         try {
-            meta = FileUtils.readFileToString(new File(boxDir, "_isolate.meta"));
+            meta = FileUtils.readFileToString(new File(boxDir, "_isolate.meta"), StandardCharsets.UTF_8);
         } catch (IOException e) {
             return SandboxExecutionResult.internalError("Isolate did not produce readable meta file!");
         }

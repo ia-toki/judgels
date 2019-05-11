@@ -2,23 +2,23 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
 import judgels.gabriel.aggregators.SumAggregator;
+import judgels.gabriel.api.Compiler;
 import judgels.gabriel.api.Evaluator;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.TestCaseAggregator;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.compilers.SingleSourceFileCompiler;
 import judgels.gabriel.engines.batch.BatchGradingConfig;
 import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
-import org.iatoki.judgels.gabriel.blackbox.Compiler;
-import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.Scorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.BatchEvaluator;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
 import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.SingleSourceFileCompiler;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +40,7 @@ public final class BatchGradingEngine extends BlackBoxGradingEngine {
     private GradingLanguage scorerLanguage;
 
     public BatchGradingEngine() {
+        this.compiler = new SingleSourceFileCompiler();
         this.scoringTimeLimit = 10000;
         this.scoringMemoryLimit = 1024 * 1024;
         this.scorerLanguage = new Cpp11GradingLanguage();
@@ -52,7 +53,7 @@ public final class BatchGradingEngine extends BlackBoxGradingEngine {
         BatchGradingConfig castConfig = (BatchGradingConfig) config;
 
         compilerSandbox = sandboxFactory.newSandbox();
-        compiler = new SingleSourceFileCompiler(compilerSandbox, getCompilationDir(), language, sourceFieldKey, sourceFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());
+        compiler.prepare(compilerSandbox, getCompilationDir(), language, helperFiles, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());
 
         evaluatorSandbox = sandboxFactory.newSandbox();
         evaluator = new BatchEvaluator(evaluatorSandbox, getCompilationDir(), getEvaluationDir(), language, sourceFile, castConfig.getTimeLimit(), castConfig.getMemoryLimit());

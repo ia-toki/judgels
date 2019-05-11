@@ -2,17 +2,20 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import judgels.gabriel.api.CompilationException;
+import judgels.gabriel.api.CompilationResult;
+import judgels.gabriel.api.Compiler;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.SandboxExecutionStatus;
 import judgels.gabriel.api.ScoringException;
+import judgels.gabriel.api.Verdict;
+import judgels.gabriel.compilers.SingleSourceFileCompiler;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.blackbox.CompilationException;
-import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
-import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
-import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,19 +25,22 @@ public final class CustomScorer extends AbstractScorer {
 
     private static final String SCORING_OUTPUT_FILENAME = "_scoring.out";
 
+    private final Compiler scorerCompiler;
     private final Sandbox sandbox;
     private final String scorerExecutableFilename;
     private final List<String> customScorerExecutionCommand;
 
     public CustomScorer(Sandbox sandbox, File scoringDir, GradingLanguage language, File scorerFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int scoringTimeLimitInMilliseconds, int scoringMemoryLimitInKilobytes) throws PreparationException {
+        scorerCompiler = new SingleSourceFileCompiler();
+        scorerCompiler.prepare(sandbox, scoringDir, language, ImmutableMap.of(), compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
         try {
-            SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(sandbox, scoringDir, language, "customScorer", scorerFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
-            CompilationResult result = compiler.compile();
-            if (result.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
-                throw new PreparationException("Compilation of custom scorer resulted in compilation error:\n " + result.getOutputs().get("customScorer"));
+            CompilationResult result = scorerCompiler.compile(ImmutableMap.of("scorer", scorerFile));
+
+            if (result.getVerdict() == Verdict.COMPILATION_ERROR) {
+                throw new PreparationException("Compilation of custom scorer resulted in compilation error:\n " + result.getOutputs().get("scorer"));
             }
         } catch (CompilationException e) {
-            throw new PreparationException(e.getMessage());
+            throw new PreparationException(e);
         }
 
         this.scorerExecutableFilename = language.getExecutableFilename(scorerFile.getName());

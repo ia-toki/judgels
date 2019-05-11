@@ -3,9 +3,11 @@ package org.iatoki.judgels.gabriel;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.palantir.conjure.java.api.errors.RemoteException;
+import judgels.gabriel.api.CompilationException;
 import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.languages.GradingLanguageRegistry;
@@ -122,7 +124,7 @@ public final class GabrielWorker implements Runnable {
         GabrielLogger.getLogger().info("Worker initialization finished.");
     }
 
-    private void gradeRequest() throws GradingException, EvaluationException, ScoringException {
+    private void gradeRequest() throws GradingException, PreparationException, CompilationException, EvaluationException, ScoringException {
         MDC.put("workerPhase", "GRADE");
         result = engine.grade(engineDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
 

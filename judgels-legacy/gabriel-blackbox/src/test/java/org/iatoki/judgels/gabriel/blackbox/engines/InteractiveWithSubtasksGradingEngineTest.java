@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import judgels.gabriel.api.EvaluationException;
+import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.engines.interactive.InteractiveWithSubtasksGradingConfig;
@@ -11,7 +12,6 @@ import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import org.iatoki.judgels.gabriel.GradingException;
 import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
-import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.junit.jupiter.api.Test;
 
@@ -85,7 +85,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
             runEngine(engine, createConfigWithCommunicator("communicator-CE.cpp"));
             fail();
         } catch (GradingException e) {
-            assertTrue(e instanceof PreparationException);
+            assertTrue(e.getCause() instanceof PreparationException);
             assertTrue(e.getMessage().contains("exit"));
         }
     }
@@ -110,7 +110,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
             runEngine(engine, createConfigWithCommunicator(null));
             fail();
         } catch (GradingException e) {
-            assertTrue(e instanceof PreparationException);
+            assertTrue(e.getCause() instanceof PreparationException);
             assertTrue(e.getMessage().contains("Communicator not specified"));
         }
     }

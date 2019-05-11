@@ -3,9 +3,11 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
+import judgels.gabriel.api.CompilationException;
 import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
@@ -95,7 +97,7 @@ public abstract class BlackBoxGradingEngineTest {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
         try {
             return grader.grade(graderDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
-        } catch (EvaluationException | ScoringException e) {
+        } catch (PreparationException | CompilationException | EvaluationException | ScoringException e) {
             throw new GradingException(e);
         }
     }

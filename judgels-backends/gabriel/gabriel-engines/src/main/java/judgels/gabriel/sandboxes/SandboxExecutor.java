@@ -1,6 +1,5 @@
 package judgels.gabriel.sandboxes;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class SandboxExecutor {
 
         Process process;
 
-        LOGGER.info("Running {} ...", Joiner.on(" ").join(pb.command()));
+        LOGGER.info("Running {} ...", String.join(" ", pb.command()));
         process = pb.start();
 
         int exitCode = process.waitFor();

@@ -8,10 +8,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import judgels.gabriel.aggregators.SubtaskAggregator;
+import judgels.gabriel.api.CompilationException;
+import judgels.gabriel.api.CompilationResult;
+import judgels.gabriel.api.Compiler;
 import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.EvaluationResult;
 import judgels.gabriel.api.Evaluator;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.api.SubtaskVerdict;
@@ -80,7 +84,8 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
     }
 
     @Override
-    public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory) throws GradingException, EvaluationException, ScoringException {
+    public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory)
+            throws GradingException, PreparationException, CompilationException, EvaluationException, ScoringException {
         this.gradingDir = gradingDir;
         this.config = config;
         this.language = language;
@@ -144,12 +149,14 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     protected abstract TestCaseAggregator getAggregator();
 
-    private GradingResult tryGrading() throws GradingException, EvaluationException, ScoringException {
+    private GradingResult tryGrading()
+            throws GradingException, PreparationException, CompilationException, EvaluationException, ScoringException {
+
         verify();
         prepare();
         compile();
 
-        if ((getCompiler() != null) && (compilationResult.getVerdict() == CompilationVerdict.COMPILATION_ERROR)) {
+        if ((getCompiler() != null) && (compilationResult.getVerdict() == Verdict.COMPILATION_ERROR)) {
             return BlackBoxGradingResults.compilationErrorResult(compilationResult.getOutputs());
         }
 
@@ -195,7 +202,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
         MDC.put("gradingPhase", "COMPILE");
         GabrielLogger.getLogger().info("Compilation started.");
         if (getCompiler() != null) {
-            compilationResult = getCompiler().compile();
+            compilationResult = getCompiler().compile(source.getSourceFiles());
         } else {
             GabrielLogger.getLogger().info("No compiler is used.");
         }

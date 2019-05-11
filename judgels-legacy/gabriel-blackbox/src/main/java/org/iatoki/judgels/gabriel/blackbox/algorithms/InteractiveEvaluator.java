@@ -2,20 +2,23 @@ package org.iatoki.judgels.gabriel.blackbox.algorithms;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import judgels.gabriel.api.CompilationException;
+import judgels.gabriel.api.CompilationResult;
+import judgels.gabriel.api.Compiler;
 import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.EvaluationResult;
 import judgels.gabriel.api.Evaluator;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.SandboxExecutionStatus;
 import judgels.gabriel.api.SandboxInteractor;
+import judgels.gabriel.api.Verdict;
+import judgels.gabriel.compilers.SingleSourceFileCompiler;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.blackbox.CompilationException;
-import org.iatoki.judgels.gabriel.blackbox.CompilationResult;
-import org.iatoki.judgels.gabriel.blackbox.CompilationVerdict;
-import org.iatoki.judgels.gabriel.blackbox.PreparationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +27,8 @@ import java.util.List;
 public final class InteractiveEvaluator implements Evaluator {
 
     private static final String EVALUATION_OUTPUT_FILENAME = "_evaluation.out";
+
+    private final Compiler communicatorCompiler;
 
     private final Sandbox contestantSandbox;
     private final Sandbox communicatorSandbox;
@@ -40,15 +45,16 @@ public final class InteractiveEvaluator implements Evaluator {
     private final List<String> communicatorExecutionCommand;
 
     public InteractiveEvaluator(Sandbox contestantSandbox, Sandbox communicatorSandbox, SandboxInteractor sandboxesInteractor, File compilationDir, File evaluationDir, GradingLanguage contestantLanguage, GradingLanguage communicatorLanguage, File contestantSourceFile, File communicatorSourceFile, int compilationTimeLimitInMilliseconds, int compilationMemoryLimitInKilobytes, int evaluationTimeLimitInMilliseconds, int evaluationMemoryLimitInMilliseconds) throws PreparationException {
+        communicatorCompiler = new SingleSourceFileCompiler();
+        communicatorCompiler.prepare(communicatorSandbox, evaluationDir, communicatorLanguage, ImmutableMap.of(), compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
         try {
-            SingleSourceFileCompiler compiler = new SingleSourceFileCompiler(communicatorSandbox, evaluationDir, communicatorLanguage, "communicator", communicatorSourceFile, compilationTimeLimitInMilliseconds, compilationMemoryLimitInKilobytes);
-            CompilationResult result = compiler.compile();
+            CompilationResult result = communicatorCompiler.compile(ImmutableMap.of("communicator", communicatorSourceFile));
 
-            if (result.getVerdict() == CompilationVerdict.COMPILATION_ERROR) {
+            if (result.getVerdict() == Verdict.COMPILATION_ERROR) {
                 throw new PreparationException("Compilation of the communicator resulted in compilation error:\n " + result.getOutputs().get("communicator"));
             }
         } catch (CompilationException e) {
-            throw new PreparationException(e.getMessage());
+            throw new PreparationException(e);
         }
 
         this.compilationDir = compilationDir;

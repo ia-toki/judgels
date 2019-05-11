@@ -4,10 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Set;
-import judgels.gabriel.api.GradingLanguage;
 import org.apache.commons.io.FilenameUtils;
 
-public class CppGradingLanguage implements GradingLanguage {
+public class CppGradingLanguage implements CppFamilyGradingLanguage {
     @Override
     public String getName() {
         return "C++";
@@ -22,6 +21,11 @@ public class CppGradingLanguage implements GradingLanguage {
     public List<String> getCompilationCommand(String sourceFilename) {
         String executableFilename = getExecutableFilename(sourceFilename);
         return ImmutableList.of("/usr/bin/g++", "-o", executableFilename, sourceFilename);
+    }
+
+    @Override
+    public List<String> getCompilationOnlyCommand(String sourceFilename, String objectFilename) {
+        return ImmutableList.of("/usr/bin/g++", "-o", objectFilename, "-c", sourceFilename);
     }
 
     @Override
