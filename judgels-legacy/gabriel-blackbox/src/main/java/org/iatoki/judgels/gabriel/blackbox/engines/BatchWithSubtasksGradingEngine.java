@@ -8,40 +8,38 @@ import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxFactory;
+import judgels.gabriel.api.Scorer;
 import judgels.gabriel.api.TestCaseAggregator;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.compilers.SingleSourceFileCompiler;
 import judgels.gabriel.engines.batch.BatchWithSubtasksGradingConfig;
+import judgels.gabriel.evaluators.BatchEvaluator;
+import judgels.gabriel.evaluators.helpers.CustomScorer;
+import judgels.gabriel.evaluators.helpers.DiffScorer;
 import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
+import judgels.gabriel.languages.cpp.CppFamilyGradingLanguage;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
-import org.iatoki.judgels.gabriel.blackbox.Scorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.BatchEvaluator;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.CustomScorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.DiffScorer;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine {
-    private Compiler compiler;
-    private Evaluator evaluator;
-    private Scorer scorer;
-    private TestCaseAggregator aggregator;
+    private final SingleSourceFileCompiler compiler;
+    private final BatchEvaluator evaluator;
+    private final MinAggregator aggregator;
 
     private Sandbox compilerSandbox;
     private Sandbox evaluatorSandbox;
     private Sandbox scorerSandbox;
 
-    private int scoringTimeLimit;
-    private int scoringMemoryLimit;
-    private GradingLanguage scorerLanguage;
+    private CppFamilyGradingLanguage scorerLanguage;
 
     public BatchWithSubtasksGradingEngine() {
         this.compiler = new SingleSourceFileCompiler();
-        this.scoringTimeLimit = 10000;
-        this.scoringMemoryLimit = 1024 * 1024;
+        this.evaluator = new BatchEvaluator();
+        this.aggregator = new MinAggregator();
         this.scorerLanguage = new Cpp11GradingLanguage();
     }
 
@@ -71,31 +69,24 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
         BatchWithSubtasksGradingConfig castConfig = (BatchWithSubtasksGradingConfig) config;
 
         compilerSandbox = sandboxFactory.newSandbox();
-        compiler.prepare(compilerSandbox, getCompilationDir(), language, helperFiles, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());
+        compiler.prepare(compilerSandbox, getCompilationDir(), language);
 
-        evaluatorSandbox = sandboxFactory.newSandbox();
-        evaluator = new BatchEvaluator(evaluatorSandbox, getCompilationDir(), getEvaluationDir(), language, sourceFile, castConfig.getTimeLimit(), castConfig.getMemoryLimit());
-
+        Scorer scorer;
         if (castConfig.getCustomScorer().isPresent()) {
             scorerSandbox = sandboxFactory.newSandbox();
             File scorerFile = helperFiles.get(castConfig.getCustomScorer().get());
-            scorer = new CustomScorer(scorerSandbox, getScoringDir(), scorerLanguage, scorerFile, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), scoringTimeLimit, scoringMemoryLimit);
+            CustomScorer customScorer = new CustomScorer();
+            customScorer.prepare(scorerSandbox, getScoringDir(), scorerLanguage, scorerFile);
+            scorer = customScorer;
         } else {
             scorer = new DiffScorer();
         }
 
-        aggregator = new MinAggregator();
+        evaluatorSandbox = sandboxFactory.newSandbox();
+        evaluator.prepare(evaluatorSandbox, scorer, getCompilationDir(), getEvaluationDir(), language, sourceFile, castConfig.getTimeLimit(), castConfig.getMemoryLimit());
     }
 
-    public void setScoringTimeLimitInMilliseconds(int scoringTimeLimit) {
-        this.scoringTimeLimit = scoringTimeLimit;
-    }
-
-    public void setScoringMemoryLimitInKilobytes(int scoringMemoryLimit) {
-        this.scoringMemoryLimit = scoringMemoryLimit;
-    }
-
-    public void setScorerLanguage(GradingLanguage scorerLanguage) {
+    public void setScorerLanguage(CppFamilyGradingLanguage scorerLanguage) {
         this.scorerLanguage = scorerLanguage;
     }
 
@@ -107,11 +98,6 @@ public final class BatchWithSubtasksGradingEngine extends BlackBoxGradingEngine 
     @Override
     protected Evaluator getEvaluator() {
         return evaluator;
-    }
-
-    @Override
-    protected Scorer getScorer() {
-        return scorer;
     }
 
     @Override

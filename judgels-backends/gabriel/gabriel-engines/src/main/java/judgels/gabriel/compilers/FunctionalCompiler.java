@@ -15,7 +15,6 @@ import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.SandboxExecutionStatus;
-import judgels.gabriel.api.Verdict;
 import judgels.gabriel.languages.cpp.CppFamilyGradingLanguage;
 import org.apache.commons.io.FileUtils;
 
@@ -29,14 +28,8 @@ public class FunctionalCompiler implements Compiler {
     private CppFamilyGradingLanguage language;
     private Map<String, File> helperFiles;
 
-    @Override
-    public void prepare(
-            Sandbox sandbox,
-            File compilationDir,
-            GradingLanguage language,
-            Map<String, File> helperFiles,
-            int timeLimitInMilliseconds,
-            int memoryLimitInKilobytes) throws PreparationException {
+    public void prepare(Sandbox sandbox, File compilationDir, GradingLanguage language, Map<String, File> helperFiles)
+            throws PreparationException {
 
         if (!(language instanceof CppFamilyGradingLanguage)) {
             throw new PreparationException("Grading language must be of C++ family");
@@ -46,9 +39,9 @@ public class FunctionalCompiler implements Compiler {
             throw new PreparationException(GRADER_FILENAME + " is missing");
         }
 
-        sandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
-        sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
-        sandbox.setStackSizeInKilobytes(memoryLimitInKilobytes);
+        sandbox.setTimeLimitInMilliseconds(10 * 1000);
+        sandbox.setMemoryLimitInKilobytes(1024 * 1024);
+        sandbox.setStackSizeInKilobytes(1024 * 1024);
 
         sandbox.resetRedirections();
         sandbox.redirectStandardOutput(COMPILATION_OUTPUT_FILENAME);
@@ -69,10 +62,10 @@ public class FunctionalCompiler implements Compiler {
         }
 
         Map<String, String> outputs = Maps.newLinkedHashMap();
-        Verdict verdict = compileSources(sourceFiles, outputs);
-        if (verdict != Verdict.OK) {
+        boolean isSuccessful = compileSources(sourceFiles, outputs);
+        if (!isSuccessful) {
             return new CompilationResult.Builder()
-                    .verdict(verdict)
+                    .isSuccessful(false)
                     .outputs(outputs)
                     .build();
         }
@@ -84,18 +77,18 @@ public class FunctionalCompiler implements Compiler {
         }
         List<String> command = commandBuilder.build();
         SandboxExecutionResult result = sandbox.execute(command);
-        verdict = checkCompilationResult(verdict, command, result, outputs, GRADER, GRADER);
+        isSuccessful = checkCompilationResult(command, result, outputs, GRADER, GRADER);
 
         return new CompilationResult.Builder()
-                .verdict(verdict)
+                .isSuccessful(isSuccessful)
                 .outputs(outputs)
                 .build();
     }
 
-    private Verdict compileSources(Map<String, File> sourceFiles, Map<String, String> outputs)
+    private boolean compileSources(Map<String, File> sourceFiles, Map<String, String> outputs)
             throws CompilationException {
 
-        Verdict verdict = Verdict.OK;
+        boolean isSuccessful = true;
         for (Map.Entry<String, File> entry : sourceFiles.entrySet()) {
             String objectFilename = entry.getKey() + ".o";
             String sourceFilename = entry.getValue().getName();
@@ -104,10 +97,12 @@ public class FunctionalCompiler implements Compiler {
 
             sandbox.addFile(entry.getValue());
             SandboxExecutionResult result = sandbox.execute(command);
-            verdict = checkCompilationResult(verdict, command, result, outputs, entry.getKey(), objectFilename);
+            if (!checkCompilationResult(command, result, outputs, entry.getKey(), objectFilename)) {
+                isSuccessful = false;
+            }
         }
 
-        return verdict;
+        return isSuccessful;
     }
 
     private boolean startsWithSourceFileFieldKey(String filename, Map<String, File> sourceFiles) {
@@ -119,15 +114,13 @@ public class FunctionalCompiler implements Compiler {
         return false;
     }
 
-    private Verdict checkCompilationResult(
-            Verdict verdict,
+    private boolean checkCompilationResult(
             List<String> command,
             SandboxExecutionResult result,
             Map<String, String> outputs,
             String key,
             String resultFilename) throws CompilationException {
 
-        Verdict newVerdict = verdict;
         if (result.getStatus() == SandboxExecutionStatus.ZERO_EXIT_CODE) {
             File outputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
             try {
@@ -138,20 +131,19 @@ public class FunctionalCompiler implements Compiler {
             } catch (IOException e) {
                 throw new CompilationException(e);
             }
+            return true;
         }  else if (result.getStatus() == SandboxExecutionStatus.NONZERO_EXIT_CODE) {
             File outputFile = sandbox.getFile(COMPILATION_OUTPUT_FILENAME);
             try {
                 String output = FileUtils.readFileToString(outputFile, StandardCharsets.UTF_8);
                 FileUtils.forceDelete(outputFile);
                 outputs.put(key, output);
-                newVerdict = Verdict.COMPILATION_ERROR;
             } catch (IOException e) {
                 throw new CompilationException(e);
             }
+            return false;
         } else {
             throw new CompilationException(String.join(" ", command) + " resulted in " + result);
         }
-
-        return newVerdict;
     }
 }

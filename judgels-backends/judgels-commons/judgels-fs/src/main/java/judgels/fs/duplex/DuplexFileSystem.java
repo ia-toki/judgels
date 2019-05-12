@@ -1,5 +1,6 @@
 package judgels.fs.duplex;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
@@ -37,6 +38,11 @@ public final class DuplexFileSystem implements FileSystem {
     @Override
     public String getPrivateFileUrl(Path filePath) {
         return aws.getPrivateFileUrl(filePath);
+    }
+
+    @Override
+    public void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory) {
+        local.uploadZippedFiles(dirPath, zippedFiles, includeDirectory);
     }
 
     @Override

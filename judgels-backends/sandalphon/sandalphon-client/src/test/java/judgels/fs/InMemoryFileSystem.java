@@ -20,7 +20,7 @@ public class InMemoryFileSystem implements FileSystem {
 
     @Override
     public void uploadPublicFile(Path filePath, InputStream content) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -36,6 +36,11 @@ public class InMemoryFileSystem implements FileSystem {
     @Override
     public String getPrivateFileUrl(Path filePath) {
         return getPublicFileUrl(filePath);
+    }
+
+    @Override
+    public void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

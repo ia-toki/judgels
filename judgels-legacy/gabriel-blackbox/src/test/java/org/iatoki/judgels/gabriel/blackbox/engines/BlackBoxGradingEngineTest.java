@@ -9,7 +9,6 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.SandboxFactory;
-import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GradingException;
@@ -97,7 +96,7 @@ public abstract class BlackBoxGradingEngineTest {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
         try {
             return grader.grade(graderDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
-        } catch (PreparationException | CompilationException | EvaluationException | ScoringException e) {
+        } catch (PreparationException | CompilationException | EvaluationException e) {
             throw new GradingException(e);
         }
     }

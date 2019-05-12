@@ -107,6 +107,11 @@ public final class AwsFileSystem implements FileSystem {
     }
 
     @Override
+    public void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
         String prefix = dirPath.toString();
         if (!prefix.isEmpty()) {

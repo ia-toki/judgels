@@ -12,7 +12,6 @@ import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.Sandbox;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.SandboxExecutionStatus;
-import judgels.gabriel.api.Verdict;
 import org.apache.commons.io.FileUtils;
 
 public class SingleSourceFileCompiler implements Compiler {
@@ -22,18 +21,10 @@ public class SingleSourceFileCompiler implements Compiler {
     private File compilationDir;
     private GradingLanguage language;
 
-    @Override
-    public void prepare(
-            Sandbox sandbox,
-            File compilationDir,
-            GradingLanguage language,
-            Map<String, File> helperFiles,
-            int timeLimitInMilliseconds,
-            int memoryLimitInKilobytes) {
-
-        sandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
-        sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
-        sandbox.setStackSizeInKilobytes(memoryLimitInKilobytes);
+    public void prepare(Sandbox sandbox, File compilationDir, GradingLanguage language) {
+        sandbox.setTimeLimitInMilliseconds(10 * 1000);
+        sandbox.setMemoryLimitInKilobytes(1024 * 1024);
+        sandbox.setStackSizeInKilobytes(1024 * 1024);
 
         sandbox.resetRedirections();
         sandbox.redirectStandardOutput(COMPILATION_OUTPUT_FILENAME);
@@ -63,7 +54,7 @@ public class SingleSourceFileCompiler implements Compiler {
                 FileUtils.copyFileToDirectory(sandbox.getFile(executableFilename), compilationDir);
 
                 return new CompilationResult.Builder()
-                        .verdict(Verdict.OK)
+                        .isSuccessful(true)
                         .putOutputs(sourceKey, compilationOutput)
                         .build();
             } catch (IOException e) {
@@ -77,7 +68,7 @@ public class SingleSourceFileCompiler implements Compiler {
                 FileUtils.forceDelete(outputFile);
 
                 return new CompilationResult.Builder()
-                        .verdict(Verdict.COMPILATION_ERROR)
+                        .isSuccessful(false)
                         .putOutputs(sourceKey, compilationOutput)
                         .build();
             } catch (IOException e) {

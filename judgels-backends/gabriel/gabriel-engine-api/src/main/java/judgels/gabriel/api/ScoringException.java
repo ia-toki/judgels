@@ -1,6 +1,6 @@
 package judgels.gabriel.api;
 
-public class ScoringException extends GradingException {
+public class ScoringException extends EvaluationException {
 
     public ScoringException(String message) {
         super(message);

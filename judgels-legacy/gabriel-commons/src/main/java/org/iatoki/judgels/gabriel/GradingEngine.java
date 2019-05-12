@@ -6,7 +6,6 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.SandboxFactory;
-import judgels.gabriel.api.ScoringException;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,5 +19,5 @@ public interface GradingEngine {
     GradingConfig createGradingConfigFromJson(String json) throws IOException;
 
     GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory)
-            throws GradingException, PreparationException, CompilationException, EvaluationException, ScoringException;
+            throws GradingException, PreparationException, CompilationException, EvaluationException;
 }

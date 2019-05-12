@@ -2,6 +2,7 @@ package judgels.jophiel.user.avatar;
 
 import dagger.Module;
 import dagger.Provides;
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -37,6 +38,9 @@ public class UserAvatarIntegrationTestModule {
         public String getPrivateFileUrl(Path filePath) {
             return "/fake/" + filePath.toString();
         }
+
+        @Override
+        public void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory) {}
 
         @Override
         public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {

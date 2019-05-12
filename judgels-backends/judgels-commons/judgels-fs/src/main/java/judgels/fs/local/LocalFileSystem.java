@@ -8,6 +8,7 @@ import com.google.common.io.MoreFiles;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -19,6 +20,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.fs.NaturalFilenameComparator;
@@ -57,6 +61,48 @@ public final class LocalFileSystem implements FileSystem {
     @Override
     public String getPrivateFileUrl(Path filePath) {
         return getPublicFileUrl(filePath);
+    }
+
+    @Override
+    public void uploadZippedFiles(Path dirPath, File zippedFiles, boolean includeDirectory) {
+        try {
+            File destDir = baseDir.resolve(dirPath).toFile();
+            byte[] buffer = new byte[4096];
+            int entries = 0;
+            long total = 0;
+            try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zippedFiles))) {
+                ZipEntry ze = zis.getNextEntry();
+                while (ze != null) {
+                    String filename = ze.getName();
+                    File file = new File(destDir, filename);
+                    if (includeDirectory && ze.isDirectory()) {
+                        file.mkdirs();
+                    } else if ((includeDirectory && file.getCanonicalPath().startsWith(destDir.getCanonicalPath()))
+                            || destDir.getAbsolutePath().equals(file.getParentFile().getAbsolutePath())) {
+                        try (FileOutputStream fos = new FileOutputStream(file)) {
+                            int len;
+                            while ((len = zis.read(buffer)) > 0) {
+                                fos.write(buffer, 0, len);
+                                total += len;
+                            }
+                            entries++;
+                        }
+                    }
+
+                    zis.closeEntry();
+                    if (entries > 4096) {
+                        throw new IllegalArgumentException("Too many files to unzip.");
+                    }
+                    if (total > 0x40000000) { // 1GB
+                        throw new IllegalArgumentException("File too big to unzip.");
+                    }
+
+                    ze = zis.getNextEntry();
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

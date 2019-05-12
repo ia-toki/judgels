@@ -1,7 +1,6 @@
 package org.iatoki.judgels.gabriel.blackbox.engines;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import judgels.gabriel.aggregators.SumAggregator;
 import judgels.gabriel.api.Compiler;
 import judgels.gabriel.api.Evaluator;
@@ -14,30 +13,31 @@ import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.compilers.SingleSourceFileCompiler;
 import judgels.gabriel.engines.interactive.InteractiveGradingConfig;
+import judgels.gabriel.evaluators.InteractiveEvaluator;
+import judgels.gabriel.evaluators.helpers.Communicator;
 import judgels.gabriel.languages.cpp.Cpp11GradingLanguage;
+import judgels.gabriel.languages.cpp.CppFamilyGradingLanguage;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
-import org.iatoki.judgels.gabriel.blackbox.Scorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.IdentityScorer;
-import org.iatoki.judgels.gabriel.blackbox.algorithms.InteractiveEvaluator;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
-    private Compiler compiler;
-    private Evaluator evaluator;
-    private Scorer scorer;
-    private TestCaseAggregator aggregator;
+    private final SingleSourceFileCompiler compiler;
+    private final InteractiveEvaluator evaluator;
+    private final SumAggregator aggregator;
 
     private Sandbox compilerSandbox;
-    private Sandbox evaluatorContestantSandbox;
-    private Sandbox evaluatorCommunicatorSandbox;
+    private Sandbox solutionSandbox;
+    private Sandbox communicatorSandbox;
 
-    private GradingLanguage communicatorLanguage;
+    private CppFamilyGradingLanguage communicatorLanguage;
 
     public InteractiveGradingEngine() {
         this.compiler = new SingleSourceFileCompiler();
+        this.evaluator = new InteractiveEvaluator();
+        this.aggregator = new SumAggregator();
         this.communicatorLanguage = new Cpp11GradingLanguage();
     }
 
@@ -59,17 +59,18 @@ public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
         File communicatorSourceFile = helperFiles.get(castConfig.getCommunicator().get());
 
         compilerSandbox = sandboxFactory.newSandbox();
-        compiler.prepare(compilerSandbox, getCompilationDir(), language, helperFiles, getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes());
+        compiler.prepare(compilerSandbox, getCompilationDir(), language);
 
-        evaluatorContestantSandbox = sandboxFactory.newSandbox();
-        evaluatorCommunicatorSandbox = sandboxFactory.newSandbox();
+        solutionSandbox = sandboxFactory.newSandbox();
+        communicatorSandbox = sandboxFactory.newSandbox();
 
-        evaluator = new InteractiveEvaluator(evaluatorContestantSandbox, evaluatorCommunicatorSandbox, sandboxFactory.newSandboxInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile,  getCompilationTimeLimitInMilliseconds(), getCompilationMemoryLimitInKilobytes(), castConfig.getTimeLimit(), castConfig.getMemoryLimit());
-        scorer = new IdentityScorer();
-        aggregator = new SumAggregator();
+        Communicator communicator = new Communicator();
+        communicator.prepare(solutionSandbox, communicatorSandbox, sandboxFactory.newSandboxInteractor(), getCompilationDir(), getEvaluationDir(), language, communicatorLanguage, contestantSourceFile, communicatorSourceFile, castConfig.getTimeLimit(), castConfig.getMemoryLimit());
+
+        evaluator.prepare(communicator);
     }
 
-    public void setCommunicatorLanguage(GradingLanguage communicatorLanguage) {
+    public void setCommunicatorLanguage(CppFamilyGradingLanguage communicatorLanguage) {
         this.communicatorLanguage = communicatorLanguage;
     }
 
@@ -81,11 +82,6 @@ public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
     @Override
     protected Evaluator getEvaluator() {
         return evaluator;
-    }
-
-    @Override
-    protected Scorer getScorer() {
-        return scorer;
     }
 
     @Override
@@ -113,11 +109,11 @@ public final class InteractiveGradingEngine extends BlackBoxGradingEngine {
         if (compilerSandbox != null) {
             compilerSandbox.cleanUp();
         }
-        if (evaluatorContestantSandbox != null) {
-            evaluatorContestantSandbox.cleanUp();
+        if (solutionSandbox != null) {
+            solutionSandbox.cleanUp();
         }
-        if (evaluatorCommunicatorSandbox != null) {
-            evaluatorCommunicatorSandbox.cleanUp();
+        if (communicatorSandbox != null) {
+            communicatorSandbox.cleanUp();
         }
     }
 }
