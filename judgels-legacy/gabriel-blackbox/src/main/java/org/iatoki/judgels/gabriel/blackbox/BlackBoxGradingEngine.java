@@ -14,7 +14,10 @@ import judgels.gabriel.api.Compiler;
 import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.EvaluationResult;
 import judgels.gabriel.api.Evaluator;
+import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.GradingResult;
+import judgels.gabriel.api.GradingSource;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.ScoringException;
@@ -27,13 +30,10 @@ import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestCaseVerdict;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.api.Verdict;
-import judgels.gabriel.scorers.TestCaseVerdictParser;
+import judgels.gabriel.api.VerificationException;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.gabriel.GabrielLogger;
 import org.iatoki.judgels.gabriel.GradingEngine;
-import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.GradingResult;
-import org.iatoki.judgels.gabriel.GradingSource;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionResult;
 import org.iatoki.judgels.gabriel.sandboxes.SandboxExecutionStatus;
 import org.slf4j.MDC;
@@ -82,7 +82,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     @Override
     public GradingResult grade(File gradingDir, GradingConfig config, GradingLanguage language, GradingSource source, SandboxFactory sandboxFactory)
-            throws GradingException, PreparationException, CompilationException, EvaluationException {
+            throws GradingException {
         this.gradingDir = gradingDir;
         this.config = config;
         this.language = language;
@@ -136,9 +136,7 @@ public abstract class BlackBoxGradingEngine implements GradingEngine {
 
     protected abstract TestCaseAggregator getAggregator();
 
-    private GradingResult tryGrading()
-            throws GradingException, PreparationException, CompilationException, EvaluationException, ScoringException {
-
+    private GradingResult tryGrading() throws GradingException {
         verify();
         prepare();
         compile();

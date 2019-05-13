@@ -3,12 +3,13 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
+import judgels.gabriel.api.GradingException;
+import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.api.Verdict;
 import judgels.gabriel.engines.batch.BatchGradingConfig;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
-import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.junit.jupiter.api.Test;
@@ -63,7 +64,7 @@ public final class BatchGradingEngineTest extends BlackBoxGradingEngineTest {
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_AC);
+            assertEquals(result.getVerdict(), Verdict.ACCEPTED);
             assertEquals(result.getScore(), 100);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -81,7 +82,7 @@ public final class BatchGradingEngineTest extends BlackBoxGradingEngineTest {
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_AC);
+            assertEquals(result.getVerdict(), Verdict.ACCEPTED);
             assertEquals(result.getScore(), 100);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -99,7 +100,7 @@ public final class BatchGradingEngineTest extends BlackBoxGradingEngineTest {
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_WA);
+            assertEquals(result.getVerdict(), Verdict.WRONG_ANSWER);
             assertEquals(result.getScore(), 80);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -117,7 +118,7 @@ public final class BatchGradingEngineTest extends BlackBoxGradingEngineTest {
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-nonbinary-OK10.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_OK);
+            assertEquals(result.getVerdict(), Verdict.OK);
             assertEquals(result.getScore(), 90);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);

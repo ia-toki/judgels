@@ -4,13 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import judgels.gabriel.api.EvaluationException;
+import judgels.gabriel.api.GradingException;
+import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.api.Verdict;
 import judgels.gabriel.engines.interactive.InteractiveWithSubtasksGradingConfig;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
-import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.junit.jupiter.api.Test;
@@ -67,7 +68,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_CE);
+            assertEquals(result.getVerdict(), Verdict.COMPILATION_ERROR);
             assertEquals(result.getScore(), 0);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -85,7 +86,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
             runEngine(engine, createConfigWithCommunicator("communicator-CE.cpp"));
             fail();
         } catch (GradingException e) {
-            assertTrue(e.getCause() instanceof PreparationException);
+            assertTrue(e instanceof PreparationException);
             assertTrue(e.getMessage().contains("exit"));
         }
     }
@@ -98,7 +99,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
             runEngine(engine, createConfigWithCommunicator("communicator-RTE.cpp"));
             fail();
         } catch (GradingException e) {
-            assertTrue(e.getCause() instanceof EvaluationException);
+            assertTrue(e instanceof EvaluationException);
         }
     }
 
@@ -110,7 +111,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
             runEngine(engine, createConfigWithCommunicator(null));
             fail();
         } catch (GradingException e) {
-            assertTrue(e.getCause() instanceof PreparationException);
+            assertTrue(e instanceof PreparationException);
             assertTrue(e.getMessage().contains("Communicator not specified"));
         }
     }
@@ -121,7 +122,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_AC);
+            assertEquals(result.getVerdict(), Verdict.ACCEPTED);
             assertEquals(result.getScore(), 100);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -140,7 +141,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_WA);
+            assertEquals(result.getVerdict(), Verdict.WRONG_ANSWER);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -160,7 +161,7 @@ public final class InteractiveWithSubtasksGradingEngineTest extends BlackBoxGrad
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCommunicator("communicator-binary.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_RTE);
+            assertEquals(result.getVerdict(), Verdict.RUNTIME_ERROR);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);

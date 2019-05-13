@@ -1,8 +1,8 @@
 package org.iatoki.judgels.jerahmeel.submission.programming;
 
+import judgels.gabriel.api.GradingResult;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
-import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterProgressCacheUtils;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterScoreCacheUtils;
 import org.iatoki.judgels.jerahmeel.grading.programming.ProgrammingGradingDao;

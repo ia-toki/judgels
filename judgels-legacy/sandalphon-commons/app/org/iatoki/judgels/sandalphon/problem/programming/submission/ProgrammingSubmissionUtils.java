@@ -5,12 +5,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import judgels.gabriel.api.GradingLanguage;
+import judgels.gabriel.api.SourceFile;
+import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.apache.commons.io.FileUtils;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.FileSystemProvider;
-import org.iatoki.judgels.gabriel.SourceFile;
-import org.iatoki.judgels.gabriel.SubmissionSource;
 import play.mvc.Http;
 
 import java.io.File;
@@ -34,7 +34,7 @@ public final class ProgrammingSubmissionUtils {
         String sourceFileFieldKeysUnparsed = body.asFormUrlEncoded().get("sourceFileFieldKeys")[0];
 
         if (gradingLanguage == null || sourceFileFieldKeysUnparsed == null) {
-            return new SubmissionSource(ImmutableMap.of());
+            return new SubmissionSource.Builder().build();
         }
 
         GradingLanguage language = GradingLanguageRegistry.getInstance().get(gradingLanguage);
@@ -82,10 +82,10 @@ public final class ProgrammingSubmissionUtils {
                 throw new ProgrammingSubmissionException(verification);
             }
 
-            submissionFiles.put(fieldKey, new SourceFile(filename, fileContent));
+            submissionFiles.put(fieldKey, new SourceFile.Builder().name(filename).content(fileContent).build());
         }
 
-        return new SubmissionSource(submissionFiles.build());
+        return new SubmissionSource.Builder().submissionFiles(submissionFiles.build()).build();
     }
 
     public static SubmissionSource createSubmissionSourceFromPastSubmission(FileSystemProvider localFileSystemProvider, FileSystemProvider remoteFileSystemProvider, String submissionJid) {
@@ -111,13 +111,13 @@ public final class ProgrammingSubmissionUtils {
             try {
                 String name = sourceFile.getName();
                 byte[] content = fileSystemProvider.readByteArrayFromFile(ImmutableList.of(submissionJid, fieldKey.getName(), name));
-                submissionFiles.put(fieldKey.getName(), new SourceFile(name, content));
+                submissionFiles.put(fieldKey.getName(), new SourceFile.Builder().name(name).content(content).build());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        return new SubmissionSource(submissionFiles.build());
+        return new SubmissionSource.Builder().submissionFiles(submissionFiles.build()).build();
     }
 
     public static void storeSubmissionFiles(FileSystemProvider localFileSystemProvider, FileSystemProvider remoteFileSystemProvider, String submissionJid, SubmissionSource submissionSource) {

@@ -1,8 +1,8 @@
 package org.iatoki.judgels.gabriel.blackbox;
 
 import com.google.gson.Gson;
-import org.iatoki.judgels.gabriel.GradingResult;
-import org.iatoki.judgels.gabriel.Verdict;
+import judgels.gabriel.api.GradingResult;
+import judgels.gabriel.api.Verdict;
 
 import java.util.Map;
 
@@ -13,17 +13,32 @@ public final class BlackBoxGradingResults {
     }
 
     public static GradingResult compilationErrorResult(Map<String, String> compilationOutput) {
-        BlackBoxVerdict blackBoxVerdict = CompilationVerdict.COMPILATION_ERROR;
-        Verdict verdict = new Verdict(blackBoxVerdict.getCode(), blackBoxVerdict.getDescription());
+        Verdict verdict = Verdict.COMPILATION_ERROR;
         BlackBoxGradingResultDetails details = BlackBoxGradingResultDetails.compilationErrorDetails(compilationOutput);
 
-        return new GradingResult(verdict, 0, new Gson().toJson(details));
+        return new GradingResult.Builder()
+                .verdict(verdict)
+                .score(0)
+                .details(new Gson().toJson(details))
+                .build();
     }
 
     public static GradingResult normalResult(SubtaskResult result, BlackBoxGradingResultDetails details) {
         BlackBoxVerdict blackBoxVerdict = result.getVerdict();
-        Verdict verdict = new Verdict(blackBoxVerdict.getCode(), blackBoxVerdict.getDescription());
+        Verdict verdict = Verdict.OK;
 
-        return new GradingResult(verdict, (int) result.getScore(), new Gson().toJson(details));
+        switch (blackBoxVerdict.getCode()) {
+            case "AC": verdict = Verdict.ACCEPTED; break;
+            case "WA": verdict = Verdict.WRONG_ANSWER; break;
+            case "TLE": verdict = Verdict.TIME_LIMIT_EXCEEDED; break;
+            case "RTE": verdict = Verdict.RUNTIME_ERROR; break;
+            case "OK": verdict = Verdict.OK; break;
+        }
+
+        return new GradingResult.Builder()
+                .verdict(verdict)
+                .score((int) result.getScore())
+                .details(new Gson().toJson(details))
+                .build();
     }
 }

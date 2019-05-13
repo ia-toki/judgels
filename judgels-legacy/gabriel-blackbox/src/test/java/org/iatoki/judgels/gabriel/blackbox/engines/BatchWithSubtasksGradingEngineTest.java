@@ -3,14 +3,15 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
+import judgels.gabriel.api.GradingException;
+import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.PreparationException;
 import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
+import judgels.gabriel.api.Verdict;
 import judgels.gabriel.engines.batch.BatchWithSubtasksGradingConfig;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
-import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.GradingResult;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.gabriel.blackbox.SubtaskFinalResult;
 import org.junit.jupiter.api.Test;
@@ -73,7 +74,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_CE);
+            assertEquals(result.getVerdict(), Verdict.COMPILATION_ERROR);
             assertEquals(result.getScore(), 0);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -89,7 +90,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_AC);
+            assertEquals(result.getVerdict(), Verdict.ACCEPTED);
             assertEquals(result.getScore(), 100);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -108,7 +109,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_WA);
+            assertEquals(result.getVerdict(), Verdict.WRONG_ANSWER);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -127,7 +128,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_TLE);
+            assertEquals(result.getVerdict(), Verdict.TIME_LIMIT_EXCEEDED);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -146,7 +147,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_WA);
+            assertEquals(result.getVerdict(), Verdict.WRONG_ANSWER);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -166,7 +167,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
         try {
             GradingResult result = runEngine(engine, config);
-            assertEquals(result.getVerdict(), VERDICT_WA);
+            assertEquals(result.getVerdict(), Verdict.WRONG_ANSWER);
             assertEquals(result.getScore(), 0);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -183,7 +184,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
     public void testOKWithMinimumScore() throws GradingException {
         addSourceFile("source", "aplusb-WA-at-2_3.cpp");
         GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-nonbinary-OK10.cpp"));
-        assertEquals(result.getVerdict(), VERDICT_OK);
+        assertEquals(result.getVerdict(), Verdict.OK);
         assertEquals(result.getScore(), 40);
 
         BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -199,7 +200,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_AC);
+            assertEquals(result.getVerdict(), Verdict.ACCEPTED);
             assertEquals(result.getScore(), 100);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -218,7 +219,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
 
         try {
             GradingResult result = runEngine(engine, createConfigWithCustomScorer("scorer-binary.cpp"));
-            assertEquals(result.getVerdict(), VERDICT_WA);
+            assertEquals(result.getVerdict(), Verdict.WRONG_ANSWER);
             assertEquals(result.getScore(), 30);
 
             BlackBoxGradingResultDetails details = new Gson().fromJson(result.getDetails(), BlackBoxGradingResultDetails.class);
@@ -239,7 +240,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
             runEngine(engine, createConfigWithCustomScorer("scorer-CE.cpp"));
             fail();
         } catch (GradingException e) {
-            assertTrue(e.getCause() instanceof PreparationException);
+            assertTrue(e instanceof PreparationException);
             assertTrue(e.getMessage().contains("fabs"));
         }
     }
@@ -252,7 +253,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
             runEngine(engine, createConfigWithCustomScorer("scorer-RTE.cpp"));
             fail();
         } catch (GradingException e) {
-            assertTrue(e.getCause() instanceof ScoringException);
+            assertTrue(e instanceof ScoringException);
         }
     }
 
@@ -264,7 +265,7 @@ public final class BatchWithSubtasksGradingEngineTest extends BlackBoxGradingEng
             runEngine(engine, createConfigWithCustomScorer("scorer-WA.cpp"));
             fail();
         } catch (GradingException e) {
-            assertTrue(e.getCause() instanceof ScoringException);
+            assertTrue(e instanceof ScoringException);
             assertTrue(e.getMessage().contains("Unknown verdict"));
         }
     }

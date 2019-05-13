@@ -1,10 +1,10 @@
 package org.iatoki.judgels.jerahmeel.training.course.chapter.submission.programming;
 
 import com.google.common.collect.ImmutableList;
+import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
-import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.jerahmeel.course.Course;
 import org.iatoki.judgels.jerahmeel.course.CourseNotFoundException;
 import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapter;

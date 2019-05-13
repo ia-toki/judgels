@@ -3,13 +3,17 @@ package org.iatoki.judgels.gabriel;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.palantir.conjure.java.api.errors.RemoteException;
-import judgels.gabriel.api.CompilationException;
-import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.GradingLanguage;
-import judgels.gabriel.api.PreparationException;
+import judgels.gabriel.api.GradingRequest;
+import judgels.gabriel.api.GradingResponse;
+import judgels.gabriel.api.GradingResult;
+import judgels.gabriel.api.GradingSource;
 import judgels.gabriel.api.SandboxFactory;
-import judgels.gabriel.api.ScoringException;
+import judgels.gabriel.api.SourceFile;
+import judgels.gabriel.api.SubmissionSource;
+import judgels.gabriel.api.Verdict;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.gabriel.sandboxes.moe.MoeSandboxFactory;
 import judgels.sealtiel.api.message.MessageData;
@@ -83,7 +87,11 @@ public final class GabrielWorker implements Runnable {
             if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                 GabrielLogger.getLogger().error("Message:", e.getMessage());
             }
-            result = GradingResult.internalErrorResult(e.toString());
+            result = new GradingResult.Builder()
+                    .verdict(Verdict.INTERNAL_ERROR)
+                    .score(0)
+                    .details(e.toString())
+                    .build();
         } finally {
             try {
                 respond();
@@ -124,9 +132,15 @@ public final class GabrielWorker implements Runnable {
         GabrielLogger.getLogger().info("Worker initialization finished.");
     }
 
-    private void gradeRequest() throws GradingException, PreparationException, CompilationException, EvaluationException, ScoringException {
+    private void gradeRequest() throws GradingException {
         MDC.put("workerPhase", "GRADE");
-        result = engine.grade(engineDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
+
+        GradingSource source = new GradingSource.Builder()
+                .sourceFiles(sourceFiles)
+                .testDataFiles(testDataFiles)
+                .helperFiles(helperFiles)
+                .build();
+        result = engine.grade(engineDir, config, language, source, sandboxFactory);
 
         GabrielLogger.getLogger().info("Grading done. Result: {} {}", result.getVerdict().getCode(), result.getScore());
     }
@@ -135,7 +149,7 @@ public final class GabrielWorker implements Runnable {
         MDC.put("workerPhase", "RESPOND");
 
         GabrielLogger.getLogger().info("Grading result ready to send.");
-        GradingResponse response = new GradingResponse(request.getGradingJid(), result);
+        GradingResponse response = new GradingResponse.Builder().gradingJid(request.getGradingJid()).result(result).build();
 
         try {
             MessageData message = new MessageData.Builder()

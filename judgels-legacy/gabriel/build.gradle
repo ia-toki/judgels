@@ -8,5 +8,7 @@ dependencies {
     api project(':judgels-commons:judgels-service-jaxrs')
     api project(':sealtiel:sealtiel-api')
 
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
     implementation 'com.typesafe:config:1.2.1'
 }

@@ -3,20 +3,17 @@ package org.iatoki.judgels.gabriel.blackbox.engines;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
-import judgels.gabriel.api.CompilationException;
-import judgels.gabriel.api.EvaluationException;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.GradingLanguage;
-import judgels.gabriel.api.PreparationException;
+import judgels.gabriel.api.GradingResult;
+import judgels.gabriel.api.GradingSource;
 import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.languages.cpp.CppGradingLanguage;
+import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
 import org.apache.commons.io.FileUtils;
-import org.iatoki.judgels.gabriel.GradingException;
-import org.iatoki.judgels.gabriel.GradingResult;
-import org.iatoki.judgels.gabriel.GradingSource;
 import org.iatoki.judgels.gabriel.Verdict;
 import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingEngine;
-import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -94,11 +91,12 @@ public abstract class BlackBoxGradingEngineTest {
 
     protected final GradingResult runEngine(BlackBoxGradingEngine grader, GradingConfig config) throws GradingException {
         SandboxFactory sandboxFactory = new FakeSandboxFactory(sandboxDir);
-        try {
-            return grader.grade(graderDir, config, language, new GradingSource(sourceFiles, testDataFiles, helperFiles), sandboxFactory);
-        } catch (PreparationException | CompilationException | EvaluationException e) {
-            throw new GradingException(e);
-        }
+        GradingSource source = new GradingSource.Builder()
+                .sourceFiles(sourceFiles)
+                .testDataFiles(testDataFiles)
+                .helperFiles(helperFiles)
+                .build();
+        return grader.grade(graderDir, config, language, source, sandboxFactory);
     }
 
     private Map<String, File> listFilesAsMap(File dir) {

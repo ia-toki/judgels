@@ -2,10 +2,10 @@ package org.iatoki.judgels.jerahmeel.chapter.submission.programming;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
-import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.StatementControllerUtils;
 import org.iatoki.judgels.jerahmeel.activity.JerahmeelActivityKeys;

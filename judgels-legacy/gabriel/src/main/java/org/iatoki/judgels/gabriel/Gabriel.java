@@ -1,8 +1,12 @@
 package org.iatoki.judgels.gabriel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.gson.*;
 import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.palantir.conjure.java.api.errors.RemoteException;
+import judgels.gabriel.api.GradingRequest;
 import judgels.sealtiel.api.message.Message;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
@@ -11,12 +15,14 @@ import judgels.service.jaxrs.JaxRsClients;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonFactory;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public final class Gabriel {
+    private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule());
 
     private final int threads;
     private final ThreadPoolExecutor threadPoolExecutor;
@@ -80,19 +86,14 @@ public final class Gabriel {
             builder.registerTypeAdapter(byte[].class, (JsonDeserializer<byte[]>) (json, typeOfT, context) -> Base64.getDecoder().decode(json.getAsString()));
             Gson gson = builder.create();
 
-            GradingRequest request;
-            try {
-                request = gson.fromJson(message.getContent(), GradingRequest.class);
-            } catch (Exception e) {
-                request = new Gson().fromJson(message.getContent(), GradingRequest.class);
-            }
+            GradingRequest request = MAPPER.readValue(message.getContent(), GradingRequest.class);
 
             GabrielLogger.getLogger().info("New grading request: {}", request.getGradingJid());
 
             GabrielWorker worker = new GabrielWorker(message.getSourceJid(), request, sealtielClientAuthHeader, messageService, sandalphonClientAPI, message.getId());
 
             threadPoolExecutor.submit(worker);
-        } catch (JsonSyntaxException e) {
+        } catch (IOException e) {
             GabrielLogger.getLogger().error("Bad grading request", e);
             if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                 GabrielLogger.getLogger().error("Message:", e.getMessage());

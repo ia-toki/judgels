@@ -1,7 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
-import org.iatoki.judgels.gabriel.GradingResult;
-import org.iatoki.judgels.gabriel.SubmissionSource;
+import judgels.gabriel.api.GradingResult;
+import judgels.gabriel.api.SubmissionSource;
 import org.iatoki.judgels.play.Page;
 
 import java.time.Instant;

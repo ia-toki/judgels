@@ -1,30 +1,32 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import com.palantir.conjure.java.api.errors.RemoteException;
-import judgels.persistence.api.SelectionOptions;
+import judgels.gabriel.api.GradingRequest;
+import judgels.gabriel.api.GradingResult;
+import judgels.gabriel.api.SubmissionSource;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
-import org.iatoki.judgels.gabriel.GradingRequest;
-import org.iatoki.judgels.gabriel.GradingResult;
-import org.iatoki.judgels.gabriel.SubmissionSource;
 import org.iatoki.judgels.play.Page;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingModel;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingModel_;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.BaseProgrammingGradingDao;
 
 import javax.persistence.metamodel.SingularAttribute;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends AbstractProgrammingSubmissionModel, GM extends AbstractProgrammingGradingModel> implements ProgrammingSubmissionService {
+    protected static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule());
 
     private final BaseProgrammingSubmissionDao<SM> programmingSubmissionDao;
     private final BaseProgrammingGradingDao<GM> programmingGradingDao;
@@ -181,7 +183,7 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
         GM gradingModel = programmingGradingDao.findByJid(gradingJid);
 
         gradingModel.verdictCode = result.getVerdict().getCode();
-        gradingModel.verdictName = result.getVerdict().getName();
+        gradingModel.verdictName = "";
         gradingModel.score = result.getScore();
         gradingModel.details = result.getDetails();
 
@@ -210,16 +212,22 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
 
         programmingGradingDao.persist(gradingModel, userJid, userIpAddress);
 
-        GradingRequest request = new GradingRequest(gradingModel.jid, submissionModel.problemJid, submissionModel.gradingEngine, submissionModel.gradingLanguage, submissionSource);
+        GradingRequest request = new GradingRequest.Builder()
+                .gradingJid(gradingModel.jid)
+                .problemJid(submissionModel.problemJid)
+                .gradingEngine(submissionModel.gradingEngine)
+                .gradingLanguage(submissionModel.gradingLanguage)
+                .submissionSource(submissionSource)
+                .build();
 
         try {
             MessageData message = new MessageData.Builder()
                     .targetJid(gabrielClientJid)
                     .type(request.getClass().getSimpleName())
-                    .content(new Gson().toJson(request))
+                    .content(MAPPER.writeValueAsString(request))
                     .build();
             messageService.sendMessage(sealtielClientAuthHeader, message);
-        } catch (RemoteException e) {
+        } catch (RemoteException | IOException e) {
             // log later
         }
     }
