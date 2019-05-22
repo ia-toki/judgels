@@ -13,24 +13,30 @@ import java.util.Map;
 
 @JsonDeserialize(using = Verdict.VerdictDeserializer.class)
 public enum Verdict {
-    @JsonProperty ACCEPTED("AC"),
-    @JsonProperty OK("OK"),
-    @JsonProperty SKIPPED("SKP"),
-    @JsonProperty WRONG_ANSWER("WA"),
-    @JsonProperty TIME_LIMIT_EXCEEDED("TLE"),
-    @JsonProperty RUNTIME_ERROR("RTE"),
-    @JsonProperty COMPILATION_ERROR("CE"),
-    @JsonProperty INTERNAL_ERROR("!!!"),
-    @JsonProperty PENDING("?");
+    @JsonProperty ACCEPTED("AC", "Accepted"),
+    @JsonProperty OK("OK", "OK"),
+    @JsonProperty SKIPPED("SKP", "Skipped"),
+    @JsonProperty WRONG_ANSWER("WA", "Wrong Answer"),
+    @JsonProperty TIME_LIMIT_EXCEEDED("TLE", "Time Limit Exceeded"),
+    @JsonProperty RUNTIME_ERROR("RTE", "Runtime Error"),
+    @JsonProperty COMPILATION_ERROR("CE", "Compilation Error"),
+    @JsonProperty INTERNAL_ERROR("!!!", "Internal Error"),
+    @JsonProperty PENDING("?", "Pending");
 
     private String code;
+    private String name;
 
-    Verdict(String code) {
+    Verdict(String code, String name) {
         this.code = code;
+        this.name = name;
     }
 
     public String getCode() {
         return code;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @JsonValue

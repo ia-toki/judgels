@@ -1,4 +1,5 @@
 apply from: '../../gradle/java.gradle'
+apply from: '../../gradle/integTest.gradle'
 
 dependencies {
     api project(':gabriel:gabriel-engine-api')
@@ -11,8 +12,6 @@ dependencies {
 
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
-    testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jacksonVersion"
-    testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
 
     annotationProcessor "org.immutables:value:$immutablesVersion"

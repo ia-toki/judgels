@@ -283,7 +283,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         </SourceCode>
         <div className="compilation-output">
           <h5>Compilation Output</h5>
-          <pre>{base64.decode(details.compilationOutputs[key])}</pre>
+          <pre>{details.compilationOutputs[key]}</pre>
         </div>
       </ContentCard>
     ));

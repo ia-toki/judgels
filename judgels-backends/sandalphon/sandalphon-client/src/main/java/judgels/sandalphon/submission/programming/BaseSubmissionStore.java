@@ -201,21 +201,10 @@ public class BaseSubmissionStore<
                 .score(model.score);
 
         if (model.details != null) {
-            RawGradingResultDetails raw;
             GradingResultDetails details;
 
             try {
-                raw = mapper.readValue(model.details, RawGradingResultDetails.class);
-
-                Map<String, byte[]> compilationOutputs = raw.getCompilationOutputs().entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getBytes()));
-
-                details = new GradingResultDetails.Builder()
-                        .compilationOutputs(compilationOutputs)
-                        .testDataResults(raw.getTestDataResults())
-                        .subtaskResults(raw.getSubtaskResults())
-                        .build();
+                details = mapper.readValue(model.details, GradingResultDetails.class);
             } catch (IOException e) {
                 details = new GradingResultDetails.Builder()
                         .errorMessage(model.details)

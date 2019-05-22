@@ -9,4 +9,6 @@ public interface SubtaskResult {
     int getId();
     Verdict getVerdict();
     double getScore();
+
+    class Builder extends ImmutableSubtaskResult.Builder {}
 }

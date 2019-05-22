@@ -8,6 +8,7 @@ import judgels.gabriel.api.SandboxExecutionStatus;
 import judgels.gabriel.api.ScoringException;
 import judgels.gabriel.api.TestCaseVerdict;
 import judgels.gabriel.api.Verdict;
+import judgels.gabriel.helpers.TestCaseVerdictParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -87,8 +88,8 @@ class TestCaseVerdictParserTests {
         void empty() {
             SandboxExecutionResult executionResult = new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.ZERO_EXIT_CODE)
-                    .timeInMilliseconds(2000)
-                    .memoryInKilobytes(65536)
+                    .time(2000)
+                    .memory(65536)
                     .message("")
                     .build();
             assertThat(parser.parseExecutionResult(executionResult)).isEmpty();
@@ -98,8 +99,8 @@ class TestCaseVerdictParserTests {
         void tle() {
             SandboxExecutionResult executionResult = new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.TIMED_OUT)
-                    .timeInMilliseconds(3000)
-                    .memoryInKilobytes(65536)
+                    .time(3000)
+                    .memory(65536)
                     .message("")
                     .build();
             assertThat(parser.parseExecutionResult(executionResult)).contains(
@@ -110,8 +111,8 @@ class TestCaseVerdictParserTests {
         void rte() {
             SandboxExecutionResult executionResult = new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.NONZERO_EXIT_CODE)
-                    .timeInMilliseconds(0)
-                    .memoryInKilobytes(0)
+                    .time(0)
+                    .memory(0)
                     .message("xxx")
                     .build();
             assertThat(parser.parseExecutionResult(executionResult)).contains(
@@ -122,8 +123,8 @@ class TestCaseVerdictParserTests {
         void internal_error() {
             SandboxExecutionResult executionResult = new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.INTERNAL_ERROR)
-                    .timeInMilliseconds(-1)
-                    .memoryInKilobytes(-1)
+                    .time(-1)
+                    .memory(-1)
                     .message("xxx")
                     .build();
             assertThat(parser.parseExecutionResult(executionResult)).contains(

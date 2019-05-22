@@ -1,6 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
-import org.iatoki.judgels.gabriel.Verdict;
+import judgels.gabriel.api.Verdict;
 
 public final class Grading {
 

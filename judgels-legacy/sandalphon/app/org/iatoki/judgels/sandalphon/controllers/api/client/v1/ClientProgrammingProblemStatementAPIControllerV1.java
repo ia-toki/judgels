@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.service.api.client.Client;
-import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.play.api.JudgelsAPIForbiddenException;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
@@ -84,7 +84,7 @@ public final class ClientProgrammingProblemStatementAPIControllerV1 extends Abst
             try {
                 gradingEngine = programmingProblemService.getGradingEngine(null, problemJid);
             } catch (IOException e) {
-                gradingEngine = GradingEngineRegistry.getInstance().getDefaultEngine();
+                gradingEngine = GradingEngineRegistry.getInstance().getDefault();
             }
 
             LanguageRestriction problemLanguageRestriction;
@@ -102,7 +102,7 @@ public final class ClientProgrammingProblemStatementAPIControllerV1 extends Abst
             try {
                 config = programmingProblemService.getGradingConfig(null, problemJid);
             } catch (IOException e) {
-                config = GradingEngineRegistry.getInstance().getEngine(gradingEngine).createDefaultGradingConfig();
+                config = GradingEngineRegistry.getInstance().get(gradingEngine).createDefaultConfig();
             }
 
             Html statementHtml = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(gradingEngine).renderViewStatement(requestBody.postSubmitUrl, statement, config, gradingEngine, finalAllowedGradingLanguages, requestBody.reasonNotAllowedToSubmit);

@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import judgels.gabriel.api.AggregationResult;
 import judgels.gabriel.api.SubtaskVerdict;
-import judgels.gabriel.api.TestCaseAggregationResult;
 import judgels.gabriel.api.TestCaseVerdict;
 import judgels.gabriel.api.Verdict;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ class MinAggregatorTests {
                 new TestCaseVerdict.Builder().verdict(Verdict.ACCEPTED).build(),
                 new TestCaseVerdict.Builder().verdict(Verdict.ACCEPTED).build());
 
-        TestCaseAggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
+        AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.ACCEPTED, 70.0));
         assertThat(result.getTestCasePoints()).containsExactly("*", "*");
     }
@@ -37,7 +37,7 @@ class MinAggregatorTests {
                 new TestCaseVerdict.Builder().verdict(Verdict.RUNTIME_ERROR).build(),
                 new TestCaseVerdict.Builder().verdict(Verdict.WRONG_ANSWER).build());
 
-        TestCaseAggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
+        AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.RUNTIME_ERROR, 0.0));
         assertThat(result.getTestCasePoints()).containsExactly("*", "X", "X");
     }
@@ -49,7 +49,7 @@ class MinAggregatorTests {
                 new TestCaseVerdict.Builder().verdict(Verdict.RUNTIME_ERROR).build(),
                 new TestCaseVerdict.Builder().verdict(Verdict.SKIPPED).build());
 
-        TestCaseAggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
+        AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.RUNTIME_ERROR, 0.0));
         assertThat(result.getTestCasePoints()).containsExactly("*", "X", "?");
     }
@@ -61,7 +61,7 @@ class MinAggregatorTests {
                 new TestCaseVerdict.Builder().verdict(Verdict.ACCEPTED).build(),
                 new TestCaseVerdict.Builder().verdict(Verdict.SKIPPED).build());
 
-        TestCaseAggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
+        AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 0.0));
         assertThat(result.getTestCasePoints()).containsExactly("*", "*", "?");
     }
@@ -73,7 +73,7 @@ class MinAggregatorTests {
                 new TestCaseVerdict.Builder().verdict(Verdict.OK).points(20.0).build(),
                 new TestCaseVerdict.Builder().verdict(Verdict.OK).points(30.0).build());
 
-        TestCaseAggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
+        AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.OK, 20.0));
         assertThat(result.getTestCasePoints()).containsExactly("*", "20.0", "30.0");
     }
@@ -82,7 +82,7 @@ class MinAggregatorTests {
     void aggregate_empty() {
         List<TestCaseVerdict> testCaseVerdicts = ImmutableList.of();
 
-        TestCaseAggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
+        AggregationResult result = aggregator.aggregate(testCaseVerdicts, 70.0);
         assertThat(result.getSubtaskVerdict()).isEqualTo(SubtaskVerdict.of(Verdict.ACCEPTED, 70.0));
         assertThat(result.getTestCasePoints()).isEmpty();
     }

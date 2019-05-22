@@ -10,7 +10,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableGradingResultDetails.class)
 public interface GradingResultDetails {
     Optional<String> getErrorMessage();
-    Map<String, byte[]> getCompilationOutputs();
+    Map<String, String> getCompilationOutputs();
     List<TestGroupResult> getTestDataResults();
     List<SubtaskResult> getSubtaskResults();
 

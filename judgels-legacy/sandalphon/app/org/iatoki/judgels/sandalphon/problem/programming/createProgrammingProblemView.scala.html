@@ -5,7 +5,7 @@
 @import play.i18n.Messages
 @import org.iatoki.judgels.sandalphon.problem.programming.routes
 @import org.iatoki.judgels.play.JudgelsPlayUtils
-@import org.iatoki.judgels.gabriel.GradingEngineRegistry
+@import judgels.gabriel.engines.GradingEngineRegistry
 
 @(programmingProblemCreateForm: Form[ProgrammingProblemCreateForm], problemSlug: String, problemAdditionalNote: String, initLanguageCode: String)
 
@@ -20,7 +20,7 @@
 
     @b3.static(Messages.get("problem.statement.language.initial")) { @WorldLanguageRegistry.getInstance.getDisplayLanguage(initLanguageCode) }
 
-    @b3.select(programmingProblemCreateForm("gradingEngineName"), GradingEngineRegistry.getInstance().getGradingEngines.asScala.toSeq, '_label -> Messages.get("problem.programming.gradingEngine"))
+    @b3.select(programmingProblemCreateForm("gradingEngineName"), GradingEngineRegistry.getInstance().getNamesMap.asScala.toSeq, '_label -> Messages.get("problem.programming.gradingEngine"))
 
     @b3.submit('class -> "btn btn-primary") { @Messages.get("commons.create") }
 }

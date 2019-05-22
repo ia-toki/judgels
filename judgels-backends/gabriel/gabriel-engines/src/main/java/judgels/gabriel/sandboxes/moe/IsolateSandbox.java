@@ -166,8 +166,8 @@ public class IsolateSandbox implements Sandbox {
         } catch (IOException | InterruptedException e) {
             return new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.INTERNAL_ERROR)
-                    .timeInMilliseconds(-1)
-                    .memoryInKilobytes(-1)
+                    .time(-1)
+                    .memory(-1)
                     .message(e.getMessage())
                     .build();
         }
@@ -267,8 +267,8 @@ public class IsolateSandbox implements Sandbox {
         }
 
         return new SandboxExecutionResult.Builder()
-                .timeInMilliseconds(time)
-                .memoryInKilobytes(memory)
+                .time(time)
+                .memory(memory)
                 .status(executionStatus)
                 .message(meta)
                 .build();

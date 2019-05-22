@@ -3,14 +3,13 @@ package judgels.gabriel.engines;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import java.io.IOException;
 import java.io.InputStream;
+import judgels.gabriel.api.GabrielObjectMapper;
 import judgels.gabriel.api.GradingConfig;
 
 public abstract class AbstractGradingConfigTests {
-    private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule());
+    private static final ObjectMapper MAPPER = GabrielObjectMapper.getInstance();
 
     protected void assertConfig(
             String filename,

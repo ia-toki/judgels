@@ -1,11 +1,9 @@
 package org.iatoki.judgels.gabriel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.google.gson.*;
 import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.palantir.conjure.java.api.errors.RemoteException;
+import judgels.gabriel.api.GabrielObjectMapper;
 import judgels.gabriel.api.GradingRequest;
 import judgels.sealtiel.api.message.Message;
 import judgels.sealtiel.api.message.MessageService;
@@ -16,13 +14,12 @@ import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonFactory;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public final class Gabriel {
-    private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule());
+    private static final ObjectMapper MAPPER = GabrielObjectMapper.getInstance();
 
     private final int threads;
     private final ThreadPoolExecutor threadPoolExecutor;
@@ -81,11 +78,6 @@ public final class Gabriel {
 
     private void processMessage(Message message) {
         try {
-            GsonBuilder builder = new GsonBuilder();
-            builder.registerTypeAdapter(byte[].class, (JsonSerializer<byte[]>) (src, typeOfSrc, context) -> new JsonPrimitive(Base64.getEncoder().encodeToString(src)));
-            builder.registerTypeAdapter(byte[].class, (JsonDeserializer<byte[]>) (json, typeOfT, context) -> Base64.getDecoder().decode(json.getAsString()));
-            Gson gson = builder.create();
-
             GradingRequest request = MAPPER.readValue(message.getContent(), GradingRequest.class);
 
             GabrielLogger.getLogger().info("New grading request: {}", request.getGradingJid());

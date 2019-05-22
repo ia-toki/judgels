@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.GradingEngine;
 import judgels.gabriel.api.GradingException;
 import judgels.gabriel.api.GradingLanguage;
 import judgels.gabriel.api.GradingRequest;
@@ -14,6 +15,7 @@ import judgels.gabriel.api.SandboxFactory;
 import judgels.gabriel.api.SourceFile;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.Verdict;
+import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.gabriel.sandboxes.moe.MoeSandboxFactory;
 import judgels.sealtiel.api.message.MessageData;
@@ -112,9 +114,8 @@ public final class GabrielWorker implements Runnable {
         source = request.getSubmissionSource();
 
         try {
-            engine = GradingEngineRegistry.getInstance().getEngine(request.getGradingEngine());
+            engine = GradingEngineRegistry.getInstance().get(request.getGradingEngine());
             language = GradingLanguageRegistry.getInstance().get(request.getGradingLanguage());
-
             workerDir = getWorkerDir();
             sourceFiles = generateSourceFiles(workerDir);
             sandboxFactory = getSandboxProvider(workerDir);
@@ -328,7 +329,7 @@ public final class GabrielWorker implements Runnable {
     private GradingConfig parseGradingConfig(File problemGradirDir, GradingEngine engine) throws IOException {
         File gradingConfig = new File(problemGradirDir, "config.json");
         String configAsJson = FileUtils.readFileToString(gradingConfig);
-        return engine.createGradingConfigFromJson(configAsJson);
+        return engine.parseConfig(null, configAsJson);
     }
 
     private Map<String, File> generateSourceFiles(File runnerDir) throws IOException {

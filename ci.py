@@ -40,9 +40,8 @@ MODULES = OrderedDict([
     (':play-commons', {':commons', ':judgels-commons:judgels-service-persistence'}),
     (':jophiel-commons', {':commons', ':judgels-commons:judgels-persistence-core'}),
     (':gabriel-commons', {':commons'}),
-    (':gabriel-blackbox', {':gabriel-commons', ':gabriel:gabriel-engines'}),
     (':sandalphon-commons', {':play-commons', ':gabriel-commons', ':api', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':gabriel:gabriel-engines', ':sealtiel:sealtiel-api'}),
-    (':sandalphon-blackbox-adapters', {':sandalphon-commons', ':gabriel-blackbox'}),
+    (':sandalphon-blackbox-adapters', {':sandalphon-commons'}),
 
 
     (':sandalphon:sandalphon-api', {':jophiel:jophiel-api', ':gabriel:gabriel-api'}),
@@ -73,7 +72,6 @@ PROJECTS = [
     ':uriel',
     ':jerahmeel',
     ':gabriel',
-    ':gabriel-blackbox',
     ':raphael'
 ]
 
@@ -140,7 +138,7 @@ def check(branch_to_compare):
             if project == ':raphael':
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael ci')
-            elif project in [':sandalphon', ':jerahmeel', ':gabriel-blackbox']:
+            elif project in [':sandalphon', ':jerahmeel']:
                 print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
             elif project == ':gabriel':
                 print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))

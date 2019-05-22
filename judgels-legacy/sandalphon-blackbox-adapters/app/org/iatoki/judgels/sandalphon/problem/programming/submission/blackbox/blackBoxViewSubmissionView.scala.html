@@ -1,11 +1,11 @@
+@import judgels.gabriel.api.GradingResultDetails
+@import judgels.gabriel.api.SourceFile
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission
-@import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails
 @import org.iatoki.judgels.gabriel.OutputOnlyMagic
-@import judgels.gabriel.api.SourceFile
 @import org.apache.commons.io.IOUtils
 
-@(programmingSubmission: ProgrammingSubmission, errorMessage: String, details: BlackBoxGradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
+@(programmingSubmission: ProgrammingSubmission, errorMessage: String, details: GradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
 
 <h3>Submission #@programmingSubmission.getId</h3>
 
@@ -123,17 +123,17 @@
                             <td>@testCaseResult.getVerdict.getName</td>
                             <td>@testCaseResult.getScore</td>
                             <td>
-                                @if(testCaseResult.getExecutionResult == null) {
+                                @if(!testCaseResult.getExecutionResult.isPresent) {
                                     ?
                                 }else{
-                                    @testCaseResult.getExecutionResult.getTimeInMilliseconds ms
+                                    @testCaseResult.getExecutionResult.get.getTime ms
                                 }
                             </td>
                             <td>
-                                @if(testCaseResult.getExecutionResult == null) {
+                                @if(!testCaseResult.getExecutionResult.isPresent) {
                                     ?
                                 }else{
-                                    @testCaseResult.getExecutionResult.getMemoryInKilobytes KB
+                                    @testCaseResult.getExecutionResult.get.getMemory KB
                                 }
                             </td>
                             @if(!details.getSubtaskResults.isEmpty && details.getSubtaskResults.get(0).getId != -1) {
@@ -188,17 +188,17 @@
                             <td>@testCaseResult.getVerdict.getName</td>
                             <td>@testCaseResult.getScore</td>
                             <td>
-                                @if(testCaseResult.getExecutionResult == null) {
+                                @if(!testCaseResult.getExecutionResult.isPresent) {
                                     ?
                                 }else{
-                                    @testCaseResult.getExecutionResult.getTimeInMilliseconds ms
+                                    @testCaseResult.getExecutionResult.get.getTime ms
                                 }
                             </td>
                             <td>
-                                @if(testCaseResult.getExecutionResult == null) {
+                                @if(!testCaseResult.getExecutionResult.isPresent) {
                                     ?
                                 }else{
-                                    @testCaseResult.getExecutionResult.getMemoryInKilobytes KB
+                                    @testCaseResult.getExecutionResult.get.getMemory KB
                                 }
                             </td>
                             @if(!details.getSubtaskResults.isEmpty && details.getSubtaskResults.get(0).getId != -1) {

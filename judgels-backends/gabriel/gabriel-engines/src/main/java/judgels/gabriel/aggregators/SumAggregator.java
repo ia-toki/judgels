@@ -2,17 +2,17 @@ package judgels.gabriel.aggregators;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import judgels.gabriel.api.AggregationResult;
+import judgels.gabriel.api.Aggregator;
 import judgels.gabriel.api.SubtaskVerdict;
-import judgels.gabriel.api.TestCaseAggregationResult;
-import judgels.gabriel.api.TestCaseAggregator;
 import judgels.gabriel.api.TestCaseVerdict;
 import judgels.gabriel.api.Verdict;
 
-public final class SumAggregator implements TestCaseAggregator {
+public final class SumAggregator implements Aggregator {
     @Override
-    public TestCaseAggregationResult aggregate(List<TestCaseVerdict> testCaseVerdicts, double subtaskPoints) {
+    public AggregationResult aggregate(List<TestCaseVerdict> testCaseVerdicts, double subtaskPoints) {
         if (testCaseVerdicts.isEmpty()) {
-            return new TestCaseAggregationResult.Builder()
+            return new AggregationResult.Builder()
                     .subtaskVerdict(SubtaskVerdict.of(Verdict.ACCEPTED, subtaskPoints))
                     .build();
         }
@@ -43,7 +43,7 @@ public final class SumAggregator implements TestCaseAggregator {
             aggregatedVerdict = Verdict.OK;
         }
 
-        return new TestCaseAggregationResult.Builder()
+        return new AggregationResult.Builder()
                 .subtaskVerdict(SubtaskVerdict.of(aggregatedVerdict, aggregatedPoints))
                 .testCasePoints(testCasePoints.build())
                 .build();

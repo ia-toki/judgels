@@ -124,8 +124,8 @@ public class FakeSandbox implements Sandbox {
         } catch (IOException | InterruptedException e) {
             return new SandboxExecutionResult.Builder()
                     .status(SandboxExecutionStatus.INTERNAL_ERROR)
-                    .timeInMilliseconds(-1)
-                    .memoryInKilobytes(-1)
+                    .time(-1)
+                    .memory(-1)
                     .message(e.getMessage())
                     .build();
         }
@@ -170,8 +170,8 @@ public class FakeSandbox implements Sandbox {
                 status = SandboxExecutionStatus.NONZERO_EXIT_CODE;
         }
         return new SandboxExecutionResult.Builder()
-                .timeInMilliseconds(100)
-                .memoryInKilobytes(1000)
+                .time(100)
+                .memory(1000)
                 .status(status)
                 .message("OK")
                 .build();

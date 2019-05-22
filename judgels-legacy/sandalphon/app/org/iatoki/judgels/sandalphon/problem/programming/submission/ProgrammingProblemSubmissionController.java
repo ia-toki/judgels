@@ -3,9 +3,9 @@ package org.iatoki.judgels.sandalphon.problem.programming.submission;
 import com.google.common.collect.ImmutableList;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
+import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.iatoki.judgels.FileSystemProvider;
-import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
 import org.iatoki.judgels.play.LazyHtml;
@@ -76,7 +76,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractJudgel
         try {
             engine = programmingProblemService.getGradingEngine(null, problem.getJid());
         } catch (IOException e) {
-            engine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            engine = GradingEngineRegistry.getInstance().getDefault();
         }
         Http.MultipartFormData body = request().body().asMultipartFormData();
 
@@ -145,7 +145,7 @@ public final class ProgrammingProblemSubmissionController extends AbstractJudgel
         try {
             engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            engine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            engine = GradingEngineRegistry.getInstance().getDefault();
         }
         SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
 

@@ -3,8 +3,8 @@ package org.iatoki.judgels.sandalphon.problem.programming.statement;
 import com.google.common.collect.ImmutableList;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.ProblemStatement;
-import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
 import org.iatoki.judgels.play.LazyHtml;
@@ -72,14 +72,14 @@ public final class ProgrammingProblemStatementController extends AbstractJudgels
         try {
             engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            engine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            engine = GradingEngineRegistry.getInstance().getDefault();
         }
 
         GradingConfig config;
         try {
             config = programmingProblemService.getGradingConfig(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            config = GradingEngineRegistry.getInstance().getEngine(engine).createDefaultGradingConfig();
+            config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
         }
         LanguageRestriction languageRestriction;
         try {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import judgels.sandalphon.api.problem.ProblemType;
@@ -14,7 +15,6 @@ import judgels.sandalphon.api.problem.programming.ProblemLimits;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
 import judgels.service.client.ClientChecker;
-import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
@@ -239,7 +239,7 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
         try {
             return programmingProblemService.getGradingEngine(null, problemJid);
         } catch (IOException e) {
-            return GradingEngineRegistry.getInstance().getDefaultEngine();
+            return GradingEngineRegistry.getInstance().getDefault();
         }
     }
 
@@ -256,8 +256,8 @@ public final class ClientProblemAPIControllerV2 extends AbstractJudgelsAPIContro
             return programmingProblemService.getGradingConfig(null, problemJid);
         } catch (IOException e) {
             return GradingEngineRegistry.getInstance()
-                    .getEngine(gradingEngine)
-                    .createDefaultGradingConfig();
+                    .get(gradingEngine)
+                    .createDefaultConfig();
         }
     }
 

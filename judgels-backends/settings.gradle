@@ -28,5 +28,6 @@ include ':uriel:uriel-app'
 include ':uriel:uriel-dist'
 
 include ':gabriel:gabriel-api'
+include ':gabriel:gabriel-app'
 include ':gabriel:gabriel-engine-api'
 include ':gabriel:gabriel-engines'

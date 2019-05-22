@@ -2,7 +2,7 @@ package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import org.iatoki.judgels.gabriel.Verdict;
+import judgels.gabriel.api.Verdicts;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.Grading;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingModel;
 
@@ -26,6 +26,6 @@ public final class ProgrammingSubmissionServiceUtils {
     }
 
     public static Grading createGradingFromModel(AbstractProgrammingGradingModel gradingModel) {
-        return new Grading(gradingModel.id, gradingModel.jid, new Verdict(gradingModel.verdictCode, gradingModel.verdictName), gradingModel.score, gradingModel.details);
+        return new Grading(gradingModel.id, gradingModel.jid, Verdicts.fromCode(gradingModel.verdictCode), gradingModel.score, gradingModel.details);
     }
 }

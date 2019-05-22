@@ -1,12 +1,14 @@
 package org.iatoki.judgels.sandalphon.problem.programming;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.gson.Gson;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.engines.GradingEngineRegistry;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.FileSystemProvider;
-import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemFileSystemProvider;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemServiceImplUtils;
 
@@ -20,6 +22,7 @@ import java.util.List;
 
 @Singleton
 public final class ProgrammingProblemServiceImpl implements ProgrammingProblemService {
+    private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule());
 
     private final FileSystemProvider problemFileSystemProvider;
 
@@ -40,7 +43,7 @@ public final class ProgrammingProblemServiceImpl implements ProgrammingProblemSe
         problemFileSystemProvider.writeToFile(getGradingEngineFilePath(null, problemJid), gradingEngine);
         problemFileSystemProvider.writeToFile(getLanguageRestrictionFilePath(null, problemJid), new Gson().toJson(LanguageRestriction.noRestriction()));
 
-        GradingConfig config = GradingEngineRegistry.getInstance().getEngine(gradingEngine).createDefaultGradingConfig();
+        GradingConfig config = GradingEngineRegistry.getInstance().get(gradingEngine).createDefaultConfig();
         problemFileSystemProvider.writeToFile(getGradingConfigFilePath(null, problemJid), new Gson().toJson(config));
 
         updateGradingLastUpdateTime(null, problemJid);
@@ -57,7 +60,7 @@ public final class ProgrammingProblemServiceImpl implements ProgrammingProblemSe
         String gradingEngine = problemFileSystemProvider.readFromFile(getGradingEngineFilePath(userJid, problemJid));
         String gradingConfig = problemFileSystemProvider.readFromFile(getGradingConfigFilePath(userJid, problemJid));
 
-        return GradingEngineRegistry.getInstance().getEngine(gradingEngine).createGradingConfigFromJson(gradingConfig);
+        return GradingEngineRegistry.getInstance().get(gradingEngine).parseConfig(MAPPER, gradingConfig);
     }
 
     @Override

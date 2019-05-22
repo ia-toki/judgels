@@ -3,8 +3,8 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading;
 import com.google.common.collect.ImmutableList;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.engines.GradingEngineRegistry;
 import org.iatoki.judgels.FileInfo;
-import org.iatoki.judgels.gabriel.GradingEngineRegistry;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.InternalLink;
 import org.iatoki.judgels.play.LazyHtml;
@@ -69,7 +69,7 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
         try  {
             gradingEngineEditData.gradingEngineName = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            gradingEngineEditData.gradingEngineName = GradingEngineRegistry.getInstance().getDefaultEngine();
+            gradingEngineEditData.gradingEngineName = GradingEngineRegistry.getInstance().getDefault();
         }
 
         Form<GradingEngineEditForm> gradingEngineEditForm = Form.form(GradingEngineEditForm.class).fill(gradingEngineEditData);
@@ -99,12 +99,12 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
         try {
             originalGradingEngine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            originalGradingEngine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            originalGradingEngine = GradingEngineRegistry.getInstance().getDefault();
         }
 
         try {
             if (!gradingEngine.equals(originalGradingEngine)) {
-                GradingConfig config = GradingEngineRegistry.getInstance().getEngine(gradingEngine).createDefaultGradingConfig();
+                GradingConfig config = GradingEngineRegistry.getInstance().get(gradingEngine).createDefaultConfig();
                 programmingProblemService.updateGradingConfig(IdentityUtils.getUserJid(), problem.getJid(), config);
             }
 
@@ -130,13 +130,13 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
         try {
             engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            engine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            engine = GradingEngineRegistry.getInstance().getDefault();
         }
         GradingConfig config;
         try {
             config = programmingProblemService.getGradingConfig(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            config = GradingEngineRegistry.getInstance().getEngine(engine).createDefaultGradingConfig();
+            config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
         }
         List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
         List<FileInfo> helperFiles = programmingProblemService.getGradingHelperFiles(IdentityUtils.getUserJid(), problem.getJid());
@@ -158,7 +158,7 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
         try {
             engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            engine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            engine = GradingEngineRegistry.getInstance().getDefault();
         }
         Form<?> gradingEngineConfForm = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).createEmptyForm().bindFromRequest(request());
 
@@ -199,7 +199,7 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
         try {
             engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            engine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            engine = GradingEngineRegistry.getInstance().getDefault();
         }
 
         GradingEngineAdapter adapter = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine);
@@ -213,7 +213,7 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
         try {
             config = programmingProblemService.getGradingConfig(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            config = GradingEngineRegistry.getInstance().getEngine(engine).createDefaultGradingConfig();
+            config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
         }
 
         try {
@@ -240,7 +240,7 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
         try {
             engine = programmingProblemService.getGradingEngine(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            engine = GradingEngineRegistry.getInstance().getDefaultEngine();
+            engine = GradingEngineRegistry.getInstance().getDefault();
         }
         List<FileInfo> testDataFiles = programmingProblemService.getGradingTestDataFiles(IdentityUtils.getUserJid(), problem.getJid());
         GradingEngineAdapter adapter = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine);
@@ -253,7 +253,7 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
         try {
             config = programmingProblemService.getGradingConfig(IdentityUtils.getUserJid(), problem.getJid());
         } catch (IOException e) {
-            config = GradingEngineRegistry.getInstance().getEngine(engine).createDefaultGradingConfig();
+            config = GradingEngineRegistry.getInstance().get(engine).createDefaultConfig();
         }
         GradingConfig newConfig = ((ConfigurableWithAutoPopulation) adapter).updateConfigWithAutoPopulation(config, testDataFiles);
 

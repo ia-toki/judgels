@@ -7,15 +7,15 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableSandboxExecutionResult.class)
 public interface SandboxExecutionResult {
     SandboxExecutionStatus getStatus();
-    int getTimeInMilliseconds();
-    int getMemoryInKilobytes();
+    int getTime();
+    int getMemory();
     String getMessage();
 
     static SandboxExecutionResult internalError(String message) {
         return new Builder()
                 .status(SandboxExecutionStatus.INTERNAL_ERROR)
-                .timeInMilliseconds(-1)
-                .memoryInKilobytes(-1)
+                .time(-1)
+                .memory(-1)
                 .message(message)
                 .build();
     }

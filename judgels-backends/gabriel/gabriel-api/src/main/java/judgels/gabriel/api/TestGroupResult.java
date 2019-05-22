@@ -9,4 +9,6 @@ import org.immutables.value.Value;
 public interface TestGroupResult {
     int getId();
     List<TestCaseResult> getTestCaseResults();
+
+    class Builder extends ImmutableTestGroupResult.Builder {}
 }

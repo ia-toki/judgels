@@ -1,6 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
-import org.iatoki.judgels.gabriel.Verdict;
+import judgels.gabriel.api.Verdict;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.Grading;
 
 import java.util.Date;

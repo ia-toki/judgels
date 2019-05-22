@@ -12,4 +12,6 @@ public interface TestCaseResult {
     String getScore();
     Optional<SandboxExecutionResult> getExecutionResult();
     List<Integer> getSubtaskIds();
+
+    class Builder extends ImmutableTestCaseResult.Builder {}
 }

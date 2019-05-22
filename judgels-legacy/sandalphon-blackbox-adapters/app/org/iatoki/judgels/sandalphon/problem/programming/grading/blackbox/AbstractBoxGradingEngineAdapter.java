@@ -1,26 +1,30 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading.blackbox;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.gson.Gson;
 import judgels.gabriel.api.GradingConfig;
+import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.TestCase;
 import judgels.gabriel.api.TestGroup;
 import judgels.sandalphon.api.problem.ProblemStatement;
-import org.iatoki.judgels.gabriel.blackbox.BlackBoxGradingResultDetails;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapter;
 import org.iatoki.judgels.sandalphon.problem.programming.statement.blackbox.html.blackBoxViewStatementView;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.blackbox.html.blackBoxViewSubmissionView;
 import play.twirl.api.Html;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAdapter {
+    private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module(), new GuavaModule());
 
     @Override
     public Set<String> getSupportedGradingEngineNames() {
@@ -36,13 +40,17 @@ public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAd
     @Override
     public Html renderViewSubmission(ProgrammingSubmission submission, SubmissionSource submissionSource, String authorName, String problemAlias, String problemName, String gradingLanguageName, String contestName) {
         String errorMessage;
-        BlackBoxGradingResultDetails details;
+        GradingResultDetails details;
         if (submission.getLatestVerdict().getCode().equals("!!!")) {
             errorMessage = submission.getLatestDetails();
             details = null;
         } else {
             errorMessage = null;
-            details = new Gson().fromJson(submission.getLatestDetails(), BlackBoxGradingResultDetails.class);
+            try {
+                details = MAPPER.readValue(submission.getLatestDetails(), GradingResultDetails.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         return blackBoxViewSubmissionView.render(submission, errorMessage, details, submissionSource.getSubmissionFiles(), authorName, problemAlias, problemName, gradingLanguageName, contestName);

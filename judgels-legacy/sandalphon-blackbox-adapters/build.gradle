@@ -2,5 +2,4 @@ apply from: '../gradle/play.gradle'
 
 dependencies {
     play project(':sandalphon-commons')
-    play project(':gabriel-blackbox')
 }
