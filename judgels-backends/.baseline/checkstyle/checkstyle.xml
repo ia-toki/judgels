@@ -425,7 +425,6 @@
         <module name="NestedForDepth">
             <property name="max" value="2"/>
         </module>
-        <module name="NestedTryDepth"/> <!-- Java Coding Guide: Try/catch blocks: never nested -->
         <module name="NonEmptyAtclauseDescription"/> <!-- Java Style Guide: At-clauses -->
         <module name="ParameterName"> <!-- Java Style Guide: Parameter names -->
             <property name="format" value="^[a-z][a-zA-Z0-9]+$"/>

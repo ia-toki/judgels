@@ -83,7 +83,7 @@ public class UrielApplication extends Application<UrielApplicationConfiguration>
                     "grading-response-poller",
                     component.gradingResponsePoller(),
                     Duration.ofSeconds(2),
-                    Duration.ofSeconds(3));
+                    Duration.ofSeconds(2));
         }
     }
 }

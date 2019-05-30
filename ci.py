@@ -32,7 +32,9 @@ MODULES = OrderedDict([
     (':gabriel:gabriel-api', set()),
     (':gabriel:gabriel-engine-api', {':gabriel:gabriel-api'}),
     (':gabriel:gabriel-engines', {':gabriel:gabriel-engine-api', ':judgels-commons:judgels-fs'}),
-    (':gabriel', {':gabriel:gabriel-engines', ':gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
+    (':gabriel:gabriel-app', {':gabriel:gabriel-engines', ':sealtiel:sealtiel-api', ':judgels-commons:judgels-service-core'}),
+    (':gabriel:gabriel-dist', set()),
+    (':gabriel', {':gabriel:gabriel-app', ':gabriel:gabriel-dist', ':gabriel:gabriel-engines', ':gabriel:gabriel-engine-api', ':gabriel:gabriel-api'}),
 
 
     (':commons', set()),
