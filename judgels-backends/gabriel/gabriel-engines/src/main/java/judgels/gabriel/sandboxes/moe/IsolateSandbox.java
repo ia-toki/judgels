@@ -43,21 +43,15 @@ public class IsolateSandbox implements Sandbox {
     public IsolateSandbox(String isolatePath, int boxId) {
         this.isolatePath = isolatePath;
         this.boxId = boxId;
-
         this.allowedDirs = Sets.newHashSet();
-
         this.filenames = Sets.newHashSet();
-
+        this.blocksQuota = 100 * 1024;
+        this.inodesQuota = 20;
+        this.maxProcesses = 20;
 
         LOGGER.info("Initialization of Isolate box {} started.", boxId);
         initIsolate();
         LOGGER.info("Initialization of Isolate box {} finished.", boxId);
-
-        this.allowedDirs.add(new File("/etc"));
-        this.allowedDirs.add(this.boxDir);
-
-        setQuota(100 * 1024, 20); // 100 MB, 20 files
-        setMaxProcesses(20);
     }
 
     @Override
@@ -98,17 +92,6 @@ public class IsolateSandbox implements Sandbox {
     @Override
     public void setStackSizeInKilobytes(int stackSizeInKilobytes) {
         this.stackSize = stackSizeInKilobytes;
-    }
-
-    @Override
-    public void setMaxProcesses(int maxProcesses) {
-        this.maxProcesses = maxProcesses;
-    }
-
-    @Override
-    public void setQuota(int blocks, int inodes) {
-        this.blocksQuota = blocks;
-        this.inodesQuota = inodes;
     }
 
     @Override
@@ -183,7 +166,7 @@ public class IsolateSandbox implements Sandbox {
             sandboxedCommand.add("--dir=" + dir.getAbsolutePath() + ":rw");
         }
 
-        sandboxedCommand.add("--full-env");
+        sandboxedCommand.add("-e");
 
         if (maxProcesses > 0) {
             sandboxedCommand.add("--cg").add("--cg-timing").add("-p" + maxProcesses);

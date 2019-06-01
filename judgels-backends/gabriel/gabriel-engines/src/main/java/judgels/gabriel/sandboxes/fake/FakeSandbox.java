@@ -57,12 +57,6 @@ public class FakeSandbox implements Sandbox {
     public void setStackSizeInKilobytes(int stackSizeInKilobytes) {}
 
     @Override
-    public void setMaxProcesses(int maxProcesses) {}
-
-    @Override
-    public void setQuota(int blocks, int inodes) {}
-
-    @Override
     public void resetRedirections() {
         standardInput = null;
         standardOutput = null;

@@ -12,8 +12,6 @@ public interface Sandbox {
     void setTimeLimitInMilliseconds(int timeLimit);
     void setMemoryLimitInKilobytes(int memoryLimit);
     void setStackSizeInKilobytes(int stackSizeInKilobytes);
-    void setMaxProcesses(int maxProcesses);
-    void setQuota(int blocks, int inodes);
     void resetRedirections();
     void redirectStandardInput(String filenameInsideThisSandbox);
     void redirectStandardOutput(String filenameInsideThisSandbox);
