@@ -1,0 +1,6 @@
+- hosts: gabriel
+  gather_facts: false
+  roles:
+    - name: cgroup-install
+    - name: quota-install
+    - name: isolate-provision

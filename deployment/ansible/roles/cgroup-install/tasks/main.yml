@@ -1,0 +1,6 @@
+- block:
+  - name: Install cgroup
+    apt:
+      name: cgroup-bin
+      state: present
+      install_recommends: no

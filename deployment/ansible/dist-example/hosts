@@ -19,5 +19,8 @@ localhost
 [uriel]
 1.2.3.4 ansible_user=root
 
+[gabriel]
+1.2.3.4 ansible_user=root
+
 [scoreboard-receiver]
 1.2.3.4 ansible_user=root
