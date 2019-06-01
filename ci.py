@@ -83,6 +83,7 @@ SERVICES = [
     ':sealtiel',
     ':sandalphon',
     ':jerahmeel',
+    ':gabriel',
     ':raphael'
 ]
 

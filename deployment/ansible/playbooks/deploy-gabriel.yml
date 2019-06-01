@@ -1,0 +1,4 @@
+- hosts: gabriel
+  gather_facts: false
+  roles:
+    - name: gabriel-deploy

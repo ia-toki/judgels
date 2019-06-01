@@ -1,0 +1,34 @@
+- block:
+  - name: Create gabriel container mount volume
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/gabriel/var
+      - /judgels/gabriel/var/conf
+      - /judgels/gabriel/var/data
+
+  - name: Generate gabriel config
+    template:
+      src: "{{ playbook_dir }}/../conf/gabriel.yml.j2"
+      dest: /judgels/gabriel/var/conf/gabriel.yml
+
+  - name: Pull gabriel image
+    docker_image:
+      name: judgels/gabriel
+      tag: "{{ judgels_version | default('latest', true) }}"
+      force: yes
+
+  - name: Run a gabriel container
+    docker_container:
+      name: gabriel
+      image: "judgels/gabriel:{{ judgels_version | default('latest', true) }}"
+      privileged: yes
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/gabriel/var:/judgels/gabriel/var"
+        - "/judgels/sandalphon/var:/judgels/sandalphon/var"
+  tags:
+    - gabriel-deploy
