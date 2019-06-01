@@ -36,8 +36,7 @@ public class IsolateSandbox implements Sandbox {
     private int timeLimit;
     private int memoryLimit;
     private int stackSize;
-    private int blocksQuota;
-    private int inodesQuota;
+    private int fileSizeLimit;
     private int maxProcesses;
 
     public IsolateSandbox(String isolatePath, int boxId) {
@@ -45,8 +44,7 @@ public class IsolateSandbox implements Sandbox {
         this.boxId = boxId;
         this.allowedDirs = Sets.newHashSet();
         this.filenames = Sets.newHashSet();
-        this.blocksQuota = 100 * 1024;
-        this.inodesQuota = 20;
+        this.fileSizeLimit = 100 * 1024;
         this.maxProcesses = 20;
 
         LOGGER.info("Initialization of Isolate box {} started.", boxId);
@@ -186,6 +184,10 @@ public class IsolateSandbox implements Sandbox {
             }
         }
 
+        if (fileSizeLimit > 0) {
+            sandboxedCommand.add("-f" + fileSizeLimit);
+        }
+
         if (stackSize > 0) {
             sandboxedCommand.add("-k" + stackSize);
         }
@@ -261,11 +263,6 @@ public class IsolateSandbox implements Sandbox {
         ImmutableList.Builder<String> command = ImmutableList.builder();
         command.add(isolatePath, "-b" + boxId);
         command.add("--cg");
-
-        if (blocksQuota > 0) {
-            command.add("-q" + blocksQuota + "," + inodesQuota);
-        }
-
         command.add("--init");
 
         ProcessBuilder pb = new ProcessBuilder(command.build()).redirectErrorStream(true);
