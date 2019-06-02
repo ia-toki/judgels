@@ -98,8 +98,6 @@ public class GradingWorker {
         }
 
         MDC.put("gradingJID", request.getGradingJid());
-
-        LOGGER.info("Worker started.");
         try {
             initializeWorker();
             grade();

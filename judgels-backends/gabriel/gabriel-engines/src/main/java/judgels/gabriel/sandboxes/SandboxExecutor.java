@@ -18,7 +18,7 @@ public class SandboxExecutor {
 
         Process process;
 
-        LOGGER.info("Running {} ...", String.join(" ", pb.command()));
+        LOGGER.info("Running: {}", String.join(" ", pb.command()));
         process = pb.start();
 
         int exitCode = process.waitFor();
