@@ -2,11 +2,9 @@ package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.activity.SandalphonActivityKeys;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
@@ -18,6 +16,7 @@ import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.submission.SubmissionFileSystemProvider;
+import org.iatoki.judgels.sandalphon.problem.bundle.AbstractBundleProblemController;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.html.bundleSubmissionView;
@@ -35,7 +34,7 @@ import java.util.List;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class BundleProblemSubmissionController extends AbstractJudgelsController {
+public final class BundleProblemSubmissionController extends AbstractBundleProblemController {
 
     private static final long PAGE_SIZE = 20;
     private static final String SUBMISSION = "submission";
@@ -88,15 +87,12 @@ public final class BundleProblemSubmissionController extends AbstractJudgelsCont
 
         Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
 
-        LazyHtml content = new LazyHtml(listSubmissionsView.render(pageOfBundleSubmissions, problemId, pageIndex, orderBy, orderDir));
-        BundleProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.bundle.submission.list"), org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.viewSubmissions(problemId)));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Submissions");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listSubmissionsView.render(pageOfBundleSubmissions, problemId, pageIndex, orderBy, orderDir));
+        template.markBreadcrumbLocation(Messages.get("problem.bundle.submission.list"), org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.viewSubmissions(problemId));
+        template.setPageTitle("Problem - Submissions");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     @Transactional(readOnly = true)
@@ -115,16 +111,13 @@ public final class BundleProblemSubmissionController extends AbstractJudgelsCont
             throw new RuntimeException(e);
         }
 
-        LazyHtml content = new LazyHtml(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), null, problem.getSlug(), null));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), null, problem.getSlug(), null));
 
-        BundleProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.programming.submission.view"), org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId)));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - View Submission");
+        template.markBreadcrumbLocation(Messages.get("problem.programming.submission.view"), org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
+        template.setPageTitle("Problem - View Submission");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     @Transactional
@@ -184,12 +177,9 @@ public final class BundleProblemSubmissionController extends AbstractJudgelsCont
         return redirect(routes.BundleProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Problem problem, InternalLink lastLink) {
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                ProblemControllerUtils.getProblemBreadcrumbsBuilder(problem)
-                .add(new InternalLink(Messages.get("problem.bundle.submission"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId())))
-                        .add(lastLink)
-                .build()
-        );
+    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+        template.markBreadcrumbLocation(Messages.get("problem.bundle.submission"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
+    
+        return super.renderTemplate(template, problemService, problem);
     }
 }

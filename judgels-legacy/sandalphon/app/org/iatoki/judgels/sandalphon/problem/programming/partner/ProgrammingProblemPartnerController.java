@@ -6,22 +6,19 @@ import judgels.jophiel.api.user.search.UserSearchService;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.base.partner.*;
-import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.partner.html.addPartnerView;
 import org.iatoki.judgels.sandalphon.problem.programming.partner.html.editPartnerView;
 import org.iatoki.judgels.sandalphon.resource.PartnerControllerUtils;
@@ -38,7 +35,7 @@ import java.util.Map;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class ProgrammingProblemPartnerController extends AbstractJudgelsController {
+public final class ProgrammingProblemPartnerController extends AbstractProblemController {
 
     private static final String PROBLEM = "problem";
     private static final String PARTNER = "partner";
@@ -216,30 +213,24 @@ public final class ProgrammingProblemPartnerController extends AbstractJudgelsCo
     }
 
     private Result showAddPartner(Form<ProblemPartnerUsernameForm> usernameForm, Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem) {
-        LazyHtml content = new LazyHtml(addPartnerView.render(usernameForm, problemForm, programmingForm, problem, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(addPartnerView.render(usernameForm, problemForm, programmingForm, problem, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
 
-        content.appendLayout(c -> heading3Layout.render(Messages.get("problem.partner.add"), c));
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        ProblemPartnerControllerUtils.appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.partner.add"), routes.ProgrammingProblemPartnerController.addPartner(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Add Partner");
+        template.setSecondaryTitle(Messages.get("problem.partner.add"));
+        template.markBreadcrumbLocation(Messages.get("problem.partner.add"), routes.ProgrammingProblemPartnerController.addPartner(problem.getId()));
+        template.setPageTitle("Problem - Add Partner");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderPartnerTemplate(template, problemService, problem);
     }
 
     private Result showEditPartner(Form<ProblemPartnerUpsertForm> problemForm, Form<ProgrammingPartnerUpsertForm> programmingForm, Problem problem, ProblemPartner problemPartner) {
-        LazyHtml content = new LazyHtml(editPartnerView.render(problemForm, programmingForm, problem, problemPartner));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editPartnerView.render(problemForm, programmingForm, problem, problemPartner));
 
-        content.appendLayout(c -> heading3Layout.render(Messages.get("problem.partner.update") + ": " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getPartnerJid()), c));
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        ProblemPartnerControllerUtils.appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.partner.update"), routes.ProgrammingProblemPartnerController.editPartner(problem.getId(), problemPartner.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Update Partner");
+        template.setSecondaryTitle(Messages.get("problem.partner.update") + ": " + JidCacheServiceImpl.getInstance().getDisplayName(problemPartner.getPartnerJid()));
+        template.markBreadcrumbLocation(Messages.get("problem.partner.update"), routes.ProgrammingProblemPartnerController.editPartner(problem.getId(), problemPartner.getId()));
+        template.setPageTitle("Problem - Update Partner");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderPartnerTemplate(template, problemService, problem);
     }
 }

@@ -1,14 +1,11 @@
 package org.iatoki.judgels.sandalphon.problem.base.partner;
 
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.heading3WithActionLayout;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
@@ -23,7 +20,7 @@ import javax.inject.Singleton;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public class ProblemPartnerController extends AbstractJudgelsController {
+public class ProblemPartnerController extends AbstractProblemController {
 
     private static final long PAGE_SIZE = 20;
 
@@ -49,16 +46,13 @@ public class ProblemPartnerController extends AbstractJudgelsController {
 
         Page<ProblemPartner> pageOfProblemPartners = problemService.getPageOfProblemPartners(problem.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
 
-        LazyHtml content = new LazyHtml(listPartnersView.render(problem.getId(), pageOfProblemPartners, orderBy, orderDir));
-        content.appendLayout(c -> heading3WithActionLayout.render(Messages.get("problem.partner.list"), new InternalLink(Messages.get("problem.partner.add"), routes.ProblemPartnerController.addPartner(problem.getId())), c));
-        ProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        ProblemPartnerControllerUtils.appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.partner.list"), routes.ProblemPartnerController.viewPartners(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Partners");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listPartnersView.render(problem.getId(), pageOfProblemPartners, orderBy, orderDir));
+        template.setSecondaryTitle(Messages.get("problem.partner.list"));
+        template.addSecondaryButton(Messages.get("problem.partner.add"), routes.ProblemPartnerController.addPartner(problem.getId()));
+        template.setPageTitle("Problem - Partners");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderPartnerTemplate(template, problemService, problem);
     }
 
     @Transactional(readOnly = true)

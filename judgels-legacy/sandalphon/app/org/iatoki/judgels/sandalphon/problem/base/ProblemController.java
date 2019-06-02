@@ -1,15 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.headingLayout;
-import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
-import org.iatoki.judgels.play.views.html.layouts.subtabLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
@@ -31,7 +25,7 @@ import javax.inject.Singleton;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class ProblemController extends AbstractJudgelsController {
+public final class ProblemController extends AbstractBaseProblemController {
 
     private static final long PAGE_SIZE = 20;
     private static final String PROBLEM = "problem";
@@ -52,16 +46,12 @@ public final class ProblemController extends AbstractJudgelsController {
     public Result listProblems(long pageIndex, String sortBy, String orderBy, String filterString) {
         Page<Problem> pageOfProblems = problemService.getPageOfProblems(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), SandalphonControllerUtils.getInstance().isAdmin());
 
-        LazyHtml content = new LazyHtml(listProblemsView.render(pageOfProblems, sortBy, orderBy, filterString));
-        content.appendLayout(c -> headingWithActionLayout.render(Messages.get("problem.list"), new InternalLink(Messages.get("commons.create"), routes.ProblemController.createProblem()), c));
-
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(
-              new InternalLink(Messages.get("problem.problems"), routes.ProblemController.index())
-        ));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problems");
-
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listProblemsView.render(pageOfProblems, sortBy, orderBy, filterString));
+        template.addMainButton(Messages.get("commons.create"), routes.ProblemController.createProblem());
+        template.setMainTitle(Messages.get("problem.list"));
+        template.setPageTitle("Problems");
+        return renderTemplate(template);
     }
 
     @Transactional(readOnly = true)
@@ -120,19 +110,13 @@ public final class ProblemController extends AbstractJudgelsController {
             return notFound();
         }
 
-        LazyHtml content = new LazyHtml(viewProblemView.render(problem));
-        appendSubtabs(content, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        content.appendLayout(c -> headingWithActionLayout.render("#" + problem.getId() + ": " + problem.getSlug(), new InternalLink(Messages.get("problem.enter"), routes.ProblemController.enterProblem(problem.getId())), c));
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                ProblemControllerUtils.getProblemBreadcrumbsBuilder(problem)
-                        .add(new InternalLink(Messages.get("problem.view"), routes.ProblemController.viewProblem(problem.getId())))
-                        .build()
-        );
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - View");
-
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(viewProblemView.render(problem));
+        template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
+        template.addMainButton(Messages.get("problem.enter"), routes.ProblemController.enterProblem(problem.getId()));
+        template.markBreadcrumbLocation(Messages.get("problem.view"), routes.ProblemController.viewProblem(problem.getId()));
+        template.setPageTitle("Problem - Update");
+        return renderProblemTemplate(template, problemService, problem);
     }
 
     @Transactional(readOnly = true)
@@ -191,43 +175,33 @@ public final class ProblemController extends AbstractJudgelsController {
     }
 
     private Result showCreateProblem(Form<ProblemCreateForm> problemCreateForm) {
-        LazyHtml content = new LazyHtml(createProblemView.render(problemCreateForm));
-        content.appendLayout(c -> headingLayout.render(Messages.get("problem.create"), c));
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(
-                new InternalLink(Messages.get("problem.problems"), routes.ProblemController.index()),
-                new InternalLink(Messages.get("problem.create"), routes.ProblemController.createProblem())
-        ));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Create");
-
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(createProblemView.render(problemCreateForm));
+        template.setMainTitle(Messages.get("problem.create"));
+        template.markBreadcrumbLocation(Messages.get("problem.create"), routes.ProblemController.createProblem());
+        template.setPageTitle("Problem - Create");
+        return renderTemplate(template);
     }
 
     private Result showEditProblem(Form<ProblemEditForm> problemEditForm, Problem problem) {
-        LazyHtml content = new LazyHtml(editProblemView.render(problemEditForm, problem));
-        appendSubtabs(content, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        content.appendLayout(c -> headingWithActionLayout.render("#" + problem.getId() + ": " + problem.getSlug(), new InternalLink(Messages.get("problem.enter"), routes.ProblemController.enterProblem(problem.getId())), c));
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                ProblemControllerUtils.getProblemBreadcrumbsBuilder(problem)
-                .add(new InternalLink(Messages.get("problem.update"), routes.ProblemController.editProblem(problem.getId())))
-                .build()
-        );
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Update");
-
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editProblemView.render(problemEditForm, problem));
+        template.setMainTitle("#" + problem.getId() + ": " + problem.getSlug());
+        template.addMainButton(Messages.get("problem.enter"), routes.ProblemController.enterProblem(problem.getId()));
+        template.markBreadcrumbLocation(Messages.get("problem.update"), routes.ProblemController.editProblem(problem.getId()));
+        template.setPageTitle("Problem - Update");
+        return renderProblemTemplate(template, problemService, problem);
     }
 
-    private void appendSubtabs(LazyHtml content, Problem problem) {
-        ImmutableList.Builder<InternalLink> internalLinks = ImmutableList.builder();
+    private Result renderProblemTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+        appendVersionLocalChangesWarning(template, problemService, problem);
+        template.markBreadcrumbLocation(problem.getSlug(), routes.ProblemController.enterProblem(problem.getId()));
 
-        internalLinks.add(new InternalLink(Messages.get("commons.view"), routes.ProblemController.viewProblem(problem.getId())));
-
+        template.addSecondaryTab(Messages.get("commons.view"), routes.ProblemController.viewProblem(problem.getId()));
         if (ProblemControllerUtils.isAllowedToUpdateProblem(problemService, problem)) {
-            internalLinks.add(new InternalLink(Messages.get("commons.update"), routes.ProblemController.editProblem(problem.getId())));
+            template.addSecondaryTab(Messages.get("commons.update"), routes.ProblemController.editProblem(problem.getId()));
         }
 
-        content.appendLayout(c -> subtabLayout.render(internalLinks.build(), c));
+        return renderTemplate(template);
     }
 }

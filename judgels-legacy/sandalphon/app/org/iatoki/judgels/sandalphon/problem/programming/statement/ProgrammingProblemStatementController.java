@@ -6,12 +6,10 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
+import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -19,7 +17,6 @@ import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
@@ -34,7 +31,7 @@ import java.util.Set;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class ProgrammingProblemStatementController extends AbstractJudgelsController {
+public final class ProgrammingProblemStatementController extends AbstractProgrammingProblemController {
 
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
@@ -100,7 +97,8 @@ public final class ProgrammingProblemStatementController extends AbstractJudgels
             reasonNotAllowedToSubmit = Messages.get("problem.programming.cantSubmitNotClean");
         }
 
-        LazyHtml content = new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewStatement(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.postSubmit(problemId).absoluteURL(request(), request().secure()), statement, config, engine, allowedLanguageNames, reasonNotAllowedToSubmit));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewStatement(org.iatoki.judgels.sandalphon.problem.programming.submission.routes.ProgrammingProblemSubmissionController.postSubmit(problemId).absoluteURL(request(), request().secure()), statement, config, engine, allowedLanguageNames, reasonNotAllowedToSubmit));
 
         Set<String> allowedLanguages;
         try {
@@ -109,16 +107,10 @@ public final class ProgrammingProblemStatementController extends AbstractJudgels
             return notFound();
         }
 
-        ProblemControllerUtils.appendStatementLanguageSelectionLayout(content, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
+        appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
+        template.markBreadcrumbLocation(Messages.get("problem.statement.view"), org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));
+        template.setPageTitle("Problem - Update Statement");
 
-        ProblemStatementControllerUtils.appendSubtabsLayout(content, problemService, problem);
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        ProblemStatementControllerUtils.appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.statement.view"), org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId)));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Update Statement");
-
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderStatementTemplate(template, problemService, problem);
     }
 }

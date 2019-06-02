@@ -5,14 +5,13 @@ import judgels.jophiel.api.user.search.UserSearchService;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.*;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
-import org.iatoki.judgels.play.views.html.layouts.heading3WithActionLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonControllerUtils;
 import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
@@ -34,7 +33,7 @@ import java.util.Map;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public class LessonPartnerController extends AbstractJudgelsController {
+public class LessonPartnerController extends AbstractLessonController {
 
     private static final long PAGE_SIZE = 20;
     private static final String LESSON = "lesson";
@@ -64,16 +63,14 @@ public class LessonPartnerController extends AbstractJudgelsController {
 
         Page<LessonPartner> pageOfLessonPartners = lessonService.getPageOfLessonPartners(lesson.getJid(), pageIndex, PAGE_SIZE, orderBy, orderDir);
 
-        LazyHtml content = new LazyHtml(listPartnersView.render(lesson.getId(), pageOfLessonPartners, orderBy, orderDir));
-        content.appendLayout(c -> heading3WithActionLayout.render(Messages.get("lesson.partner.list"), new InternalLink(Messages.get("lesson.partner.add"), routes.LessonPartnerController.addPartner(lesson.getId())), c));
-        LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTitleLayout(content, lessonService, lesson);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, lesson, new InternalLink(Messages.get("lesson.partner.list"), routes.LessonPartnerController.viewPartners(lesson.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Partners");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listPartnersView.render(lesson.getId(), pageOfLessonPartners, orderBy, orderDir));
+        template.setSecondaryTitle(Messages.get("lesson.partner.list"));
+        template.addSecondaryButton(Messages.get("lesson.partner.add"), routes.LessonPartnerController.addPartner(lesson.getId()));
+        template.markBreadcrumbLocation(Messages.get("lesson.partner.list"), routes.LessonPartnerController.viewPartners(lesson.getId()));
+        template.setPageTitle("Lesson - Partners");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, lessonService, lesson);
     }
 
     @Transactional(readOnly = true)
@@ -212,40 +209,31 @@ public class LessonPartnerController extends AbstractJudgelsController {
         return redirect(routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
     }
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Lesson lesson, InternalLink lastLink) {
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                LessonControllerUtils.getLessonBreadcrumbsBuilder(lesson)
-                        .add(new InternalLink(Messages.get("lesson.partner"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToPartners(lesson.getId())))
-                        .add(lastLink)
-                        .build()
-        );
-    }
-
     private Result showAddPartner(Form<LessonPartnerUsernameForm> usernameForm, Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson) {
-        LazyHtml content = new LazyHtml(addPartnerView.render(usernameForm, lessonForm, lesson, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(addPartnerView.render(usernameForm, lessonForm, lesson, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
 
-        content.appendLayout(c -> heading3Layout.render(Messages.get("lesson.partner.add"), c));
-        LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTitleLayout(content, lessonService, lesson);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, lesson, new InternalLink(Messages.get("lesson.partner.add"), routes.LessonPartnerController.addPartner(lesson.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Add Partner");
+        template.setSecondaryTitle(Messages.get("lesson.partner.add"));
+        template.markBreadcrumbLocation(Messages.get("lesson.partner.add"), routes.LessonPartnerController.addPartner(lesson.getId()));
+        template.setPageTitle("Lesson - Add Partner");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, lessonService, lesson);
     }
 
     private Result showEditPartner(Form<LessonPartnerUpsertForm> lessonForm, Lesson lesson, LessonPartner lessonPartner) {
-        LazyHtml content = new LazyHtml(editPartnerView.render(lessonForm, lesson, lessonPartner));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editPartnerView.render(lessonForm, lesson, lessonPartner));
 
-        content.appendLayout(c -> heading3Layout.render(Messages.get("lesson.partner.update") + ": " + JidCacheServiceImpl.getInstance().getDisplayName(lessonPartner.getPartnerJid()), c));
-        LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTitleLayout(content, lessonService, lesson);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, lesson, new InternalLink(Messages.get("lesson.partner.update"), routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Update Partner");
+        template.setSecondaryTitle(Messages.get("lesson.partner.update") + ": " + JidCacheServiceImpl.getInstance().getDisplayName(lessonPartner.getPartnerJid()));
+        template.markBreadcrumbLocation(Messages.get("lesson.partner.update"), routes.LessonPartnerController.editPartner(lesson.getId(), lessonPartner.getId()));
+        template.setPageTitle("Lesson - Update Partner");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, lessonService, lesson);
+    }
+
+    protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
+        template.markBreadcrumbLocation(Messages.get("lesson.partner"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToPartners(lesson.getId()));
+
+        return super.renderTemplate(template, lessonService, lesson);
     }
 }

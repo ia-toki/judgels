@@ -1,12 +1,9 @@
 package org.iatoki.judgels.sandalphon.lesson.version;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.subtabLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.activity.SandalphonActivityKeys;
@@ -33,7 +30,7 @@ import java.util.List;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class LessonVersionController extends AbstractJudgelsController {
+public final class LessonVersionController extends AbstractLessonController {
 
     private static final String LESSON = "lesson";
     private static final String COMMIT = "commit";
@@ -57,16 +54,12 @@ public final class LessonVersionController extends AbstractJudgelsController {
         boolean isClean = !lessonService.userCloneExists(IdentityUtils.getUserJid(), lesson.getJid());
         boolean isAllowedToRestoreVersionHistory = isClean && LessonControllerUtils.isAllowedToRestoreVersionHistory(lessonService, lesson);
 
-        LazyHtml content = new LazyHtml(listVersionsView.render(versions, lesson.getId(), isAllowedToRestoreVersionHistory));
-        appendSubtabsLayout(content, lesson);
-        LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTitleLayout(content, lessonService, lesson);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, lesson, new InternalLink(Messages.get("lesson.version.history"), routes.LessonVersionController.listVersionHistory(lesson.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Versions - History");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listVersionsView.render(versions, lesson.getId(), isAllowedToRestoreVersionHistory));
+        template.markBreadcrumbLocation(Messages.get("lesson.version.history"), routes.LessonVersionController.listVersionHistory(lesson.getId()));
+        template.setPageTitle("Lesson - Versions - History");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, lessonService, lesson);
     }
 
     @Transactional(readOnly = true)
@@ -172,35 +165,23 @@ public final class LessonVersionController extends AbstractJudgelsController {
     }
 
     private Result showViewVersionLocalChanges(Form<VersionCommitForm> versionCommitForm, Lesson lesson, boolean isClean) {
-        LazyHtml content = new LazyHtml(viewVersionLocalChangesView.render(versionCommitForm, lesson, isClean));
-        appendSubtabsLayout(content, lesson);
-        LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTitleLayout(content, lessonService, lesson);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, lesson, new InternalLink(Messages.get("lesson.version.local"), routes.LessonVersionController.viewVersionLocalChanges(lesson.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Versions - Local Changes");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(viewVersionLocalChangesView.render(versionCommitForm, lesson, isClean));
+        template.markBreadcrumbLocation(Messages.get("lesson.version.local"), routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
+        template.setPageTitle("Lesson - Versions - Local Changes");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, lessonService, lesson);
     }
 
-    private void appendSubtabsLayout(LazyHtml content, Lesson lesson) {
-        ImmutableList.Builder<InternalLink> internalLinks = ImmutableList.builder();
-        internalLinks.add(new InternalLink(Messages.get("lesson.version.local"), routes.LessonVersionController.viewVersionLocalChanges(lesson.getId())));
+    protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
+        template.addSecondaryTab(Messages.get("lesson.version.local"), routes.LessonVersionController.viewVersionLocalChanges(lesson.getId()));
 
         if (LessonControllerUtils.isAllowedToViewVersionHistory(lessonService, lesson)) {
-            internalLinks.add(new InternalLink(Messages.get("lesson.version.history"), routes.LessonVersionController.listVersionHistory(lesson.getId())));
+            template.addSecondaryTab(Messages.get("lesson.version.history"), routes.LessonVersionController.listVersionHistory(lesson.getId()));
         }
 
-        content.appendLayout(c -> subtabLayout.render(internalLinks.build(), c));
-    }
+        template.markBreadcrumbLocation(Messages.get("lesson.version"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToVersions(lesson.getId()));
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Lesson lesson, InternalLink lastLink) {
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                LessonControllerUtils.getLessonBreadcrumbsBuilder(lesson)
-                .add(new InternalLink(Messages.get("lesson.version"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToVersions(lesson.getId())))
-                .add(lastLink)
-                .build()
-        );
+        return super.renderTemplate(template, lessonService, lesson);
     }
 }

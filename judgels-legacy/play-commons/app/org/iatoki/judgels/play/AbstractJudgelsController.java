@@ -19,6 +19,7 @@ import org.iatoki.judgels.play.template.content.html.mainTabsLayout;
 import org.iatoki.judgels.play.template.content.html.mainTitleLayout;
 import org.iatoki.judgels.play.template.content.html.scriptsLayout;
 import org.iatoki.judgels.play.template.content.html.secondaryTabsLayout;
+import org.iatoki.judgels.play.template.content.html.secondaryTitleLayout;
 import play.api.mvc.Call;
 import play.data.Form;
 import play.mvc.Controller;
@@ -68,6 +69,10 @@ public abstract class AbstractJudgelsController extends Controller {
         }
     }
 
+    protected static String getCurrentUrl(Http.Request request) {
+        return "http" + (request.secure() ? "s" : "") + "://" + request.host() + request.uri();
+    }
+
     protected static String getCurrentUserIpAddress() {
         return request().remoteAddress();
     }
@@ -82,6 +87,10 @@ public abstract class AbstractJudgelsController extends Controller {
 
     protected Result renderTemplate(HtmlTemplate template) {
         LazyHtml content = template.getContent();
+
+        if (template.hasSecondaryTitle()) {
+            content.appendLayout(c -> secondaryTitleLayout.render(template.getSecondaryTitle(), template.getSecondaryButtons(), c));
+        }
 
         if (template.hasSecondaryTabs()) {
             content.appendLayout(c -> secondaryTabsLayout.render(template.getSecondaryTabs(), c));

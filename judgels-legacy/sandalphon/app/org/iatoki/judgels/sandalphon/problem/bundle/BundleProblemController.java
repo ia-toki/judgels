@@ -3,7 +3,6 @@ package org.iatoki.judgels.sandalphon.problem.bundle;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
@@ -23,7 +22,7 @@ import java.io.IOException;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class BundleProblemController extends AbstractJudgelsController {
+public final class BundleProblemController extends AbstractBundleProblemController {
 
     private static final String PROBLEM = "problem";
 

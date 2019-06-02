@@ -1,17 +1,14 @@
 package org.iatoki.judgels.sandalphon.problem.base.version;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.GitCommit;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.subtabLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.activity.SandalphonActivityKeys;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.resource.VersionCommitForm;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
@@ -33,7 +30,7 @@ import java.util.List;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class ProblemVersionController extends AbstractJudgelsController {
+public final class ProblemVersionController extends AbstractProblemController {
 
     private static final String COMMIT = "commit";
     private static final String PROBLEM = "problem";
@@ -57,16 +54,12 @@ public final class ProblemVersionController extends AbstractJudgelsController {
         boolean isClean = !problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid());
         boolean isAllowedToRestoreVersionHistory = isClean && ProblemControllerUtils.isAllowedToRestoreVersionHistory(problemService, problem);
 
-        LazyHtml content = new LazyHtml(listVersionsView.render(versions, problem.getId(), isAllowedToRestoreVersionHistory));
-        appendSubtabsLayout(content, problem);
-        ProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.version.history"), routes.ProblemVersionController.listVersionHistory(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Versions - History");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listVersionsView.render(versions, problem.getId(), isAllowedToRestoreVersionHistory));
+        template.markBreadcrumbLocation(Messages.get("problem.version.history"), routes.ProblemVersionController.listVersionHistory(problem.getId()));
+        template.setPageTitle("Problem - Versions - History");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     @Transactional(readOnly = true)
@@ -172,35 +165,23 @@ public final class ProblemVersionController extends AbstractJudgelsController {
     }
 
     private Result showViewVersionLocalChanges(Form<VersionCommitForm> versionCommitForm, Problem problem, boolean isClean) {
-        LazyHtml content = new LazyHtml(viewVersionLocalChangesView.render(versionCommitForm, problem, isClean));
-        appendSubtabsLayout(content, problem);
-        ProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.version.local"), routes.ProblemVersionController.viewVersionLocalChanges(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Versions - Local Changes");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(viewVersionLocalChangesView.render(versionCommitForm, problem, isClean));
+        template.markBreadcrumbLocation(Messages.get("problem.version.local"), routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
+        template.setPageTitle("Problem - Versions - Local Changes");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
-    private void appendSubtabsLayout(LazyHtml content, Problem problem) {
-        ImmutableList.Builder<InternalLink> internalLinks = ImmutableList.builder();
-        internalLinks.add(new InternalLink(Messages.get("problem.version.local"), routes.ProblemVersionController.viewVersionLocalChanges(problem.getId())));
+    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+        template.addSecondaryTab(Messages.get("problem.version.local"), routes.ProblemVersionController.viewVersionLocalChanges(problem.getId()));
 
         if (ProblemControllerUtils.isAllowedToViewVersionHistory(problemService, problem)) {
-            internalLinks.add(new InternalLink(Messages.get("problem.version.history"), routes.ProblemVersionController.listVersionHistory(problem.getId())));
+            template.addSecondaryTab(Messages.get("problem.version.history"), routes.ProblemVersionController.listVersionHistory(problem.getId()));
         }
 
-        content.appendLayout(c -> subtabLayout.render(internalLinks.build(), c));
-    }
+        template.markBreadcrumbLocation(Messages.get("problem.version"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Problem problem, InternalLink lastLink) {
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                ProblemControllerUtils.getProblemBreadcrumbsBuilder(problem)
-                .add(new InternalLink(Messages.get("problem.version"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId())))
-                .add(lastLink)
-                .build()
-        );
+        return super.renderTemplate(template, problemService, problem);
     }
 }

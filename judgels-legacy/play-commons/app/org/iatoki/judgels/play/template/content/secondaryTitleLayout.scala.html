@@ -1,0 +1,17 @@
+@import org.iatoki.judgels.play.template.InternalLink
+
+@(title: String, buttons: List[InternalLink])(content: Html)
+
+@if(buttons.isEmpty) {
+    <h3>@title</h3>
+} else {
+    <div class="inline-headers">
+        <h3>@title</h3>
+
+        @for(button <- buttons) {
+            <a class="btn btn-primary btn-sm" href="@button.getTarget">@button.getLabel</a>
+        }
+    </div>
+}
+
+@content

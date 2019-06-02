@@ -1,15 +1,9 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.headingLayout;
-import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
-import org.iatoki.judgels.play.views.html.layouts.subtabLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
 import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatementUtils;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
@@ -37,7 +31,7 @@ import java.io.IOException;
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
 @Named
-public final class LessonController extends AbstractJudgelsController {
+public final class LessonController extends AbstractLessonController {
 
     private static final long PAGE_SIZE = 20;
     private static final String LESSON = "lesson";
@@ -58,16 +52,14 @@ public final class LessonController extends AbstractJudgelsController {
     public Result listLessons(long pageIndex, String sortBy, String orderBy, String filterString) {
         Page<Lesson> pageOfLessons = lessonService.getPageOfLessons(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString, IdentityUtils.getUserJid(), SandalphonControllerUtils.getInstance().isAdmin());
 
-        LazyHtml content = new LazyHtml(listLessonsView.render(pageOfLessons, sortBy, orderBy, filterString));
-        content.appendLayout(c -> headingWithActionLayout.render(Messages.get("lesson.list"), new InternalLink(Messages.get("commons.create"), routes.LessonController.createLesson()), c));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listLessonsView.render(pageOfLessons, sortBy, orderBy, filterString));
+        template.setMainTitle(Messages.get("lesson.list"));
+        template.addMainButton(Messages.get("commons.create"), routes.LessonController.createLesson());
+        template.markBreadcrumbLocation(Messages.get("lesson.lessons"), routes.LessonController.index());
+        template.setPageTitle("Lessons");
 
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(
-                new InternalLink(Messages.get("lesson.lessons"), routes.LessonController.index())
-        ));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lessons");
-
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Transactional(readOnly = true)
@@ -130,19 +122,14 @@ public final class LessonController extends AbstractJudgelsController {
     public Result viewLesson(long lessonId) throws LessonNotFoundException {
         Lesson lesson = lessonService.findLessonById(lessonId);
 
-        LazyHtml content = new LazyHtml(viewLessonView.render(lesson));
-        appendSubtabs(content, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        content.appendLayout(c -> headingWithActionLayout.render("#" + lesson.getId() + ": " + lesson.getSlug(), new InternalLink(Messages.get("lesson.enter"), routes.LessonController.enterLesson(lesson.getId())), c));
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                LessonControllerUtils.getLessonBreadcrumbsBuilder(lesson)
-                        .add(new InternalLink(Messages.get("lesson.view"), routes.LessonController.viewLesson(lesson.getId())))
-                        .build()
-        );
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - View");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(viewLessonView.render(lesson));
+        template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
+        template.addMainButton(Messages.get("lesson.enter"), routes.LessonController.enterLesson(lesson.getId()));
+        template.markBreadcrumbLocation(Messages.get("lesson.view"), routes.LessonController.viewLesson(lesson.getId()));
+        template.setPageTitle("Lesson - View");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderLessonTemplate(template, lessonService, lesson);
     }
 
     @Transactional(readOnly = true)
@@ -201,43 +188,36 @@ public final class LessonController extends AbstractJudgelsController {
     }
 
     private Result showCreateLesson(Form<LessonCreateForm> lessonCreateForm) {
-        LazyHtml content = new LazyHtml(createLessonView.render(lessonCreateForm));
-        content.appendLayout(c -> headingLayout.render(Messages.get("lesson.create"), c));
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(
-                new InternalLink(Messages.get("lesson.lessons"), routes.LessonController.index()),
-                new InternalLink(Messages.get("lesson.create"), routes.LessonController.createLesson())
-        ));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Create");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(createLessonView.render(lessonCreateForm));
+        template.setMainTitle(Messages.get("lesson.create"));
+        template.markBreadcrumbLocation(Messages.get("lesson.create"), routes.LessonController.createLesson());
+        template.setPageTitle("Lesson - Create");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     private Result showEditLesson(Form<LessonEditForm> lessonEditForm, Lesson lesson) {
-        LazyHtml content = new LazyHtml(editLessonView.render(lessonEditForm, lesson));
-        appendSubtabs(content, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        content.appendLayout(c -> headingWithActionLayout.render("#" + lesson.getId() + ": " + lesson.getSlug(), new InternalLink(Messages.get("lesson.enter"), routes.LessonController.enterLesson(lesson.getId())), c));
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                LessonControllerUtils.getLessonBreadcrumbsBuilder(lesson)
-                .add(new InternalLink(Messages.get("lesson.update"), routes.LessonController.editLesson(lesson.getId())))
-                .build()
-        );
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Update");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editLessonView.render(lessonEditForm, lesson));
+        template.setMainTitle("#" + lesson.getId() + ": " + lesson.getSlug());
+        template.addMainButton(Messages.get("lesson.enter"), routes.LessonController.enterLesson(lesson.getId()));
+        template.markBreadcrumbLocation(Messages.get("lesson.update"), routes.LessonController.editLesson(lesson.getId()));
+        template.setPageTitle("Lesson - Update");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderLessonTemplate(template, lessonService, lesson);
     }
 
-    private void appendSubtabs(LazyHtml content, Lesson lesson) {
-        ImmutableList.Builder<InternalLink> internalLinks = ImmutableList.builder();
-
-        internalLinks.add(new InternalLink(Messages.get("commons.view"), routes.LessonController.viewLesson(lesson.getId())));
+    protected Result renderLessonTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
+        appendVersionLocalChangesWarning(template, lessonService, lesson);
+        template.addSecondaryTab(Messages.get("commons.view"), routes.LessonController.viewLesson(lesson.getId()));
 
         if (LessonControllerUtils.isAllowedToUpdateLesson(lessonService, lesson)) {
-            internalLinks.add(new InternalLink(Messages.get("commons.update"), routes.LessonController.editLesson(lesson.getId())));
+            template.addSecondaryTab(Messages.get("commons.update"), routes.LessonController.editLesson(lesson.getId()));
         }
 
-        content.appendLayout(c -> subtabLayout.render(internalLinks.build(), c));
+        template.markBreadcrumbLocation(Messages.get("lesson.lessons"), routes.LessonController.index());
+
+        return super.renderTemplate(template);
     }
 }

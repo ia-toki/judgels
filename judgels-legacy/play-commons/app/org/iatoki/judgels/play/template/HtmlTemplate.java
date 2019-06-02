@@ -12,13 +12,15 @@ public final class HtmlTemplate {
     private LazyHtml content;
     private String pageTitle;
     private String mainTitle;
-    private String description;
+    private String secondaryTitle;
+    private Html description;
     private final List<InternalLink> breadcrumbLocations;
     private final List<InternalLink> sidebarMenus;
     private final List<InternalLink> categoryTabs;
     private final List<InternalLink> mainTabs;
     private final List<InternalLink> secondaryTabs;
     private final List<InternalLink> mainButtons;
+    private final List<InternalLink> secondaryButtons;
     private final List<Html> upperSidebarWidgets;
     private final List<Html> lowerSidebarWidgets;
     private final List<Html> additionalScripts;
@@ -33,6 +35,7 @@ public final class HtmlTemplate {
         this.mainTabs = Lists.newArrayList();
         this.secondaryTabs = Lists.newArrayList();
         this.mainButtons = Lists.newArrayList();
+        this.secondaryButtons = Lists.newArrayList();
         this.upperSidebarWidgets = Lists.newArrayList();
         this.lowerSidebarWidgets = Lists.newArrayList();
         this.additionalScripts = Lists.newArrayList();
@@ -42,6 +45,10 @@ public final class HtmlTemplate {
 
     public void setContent(Html content) {
         this.content = new LazyHtml(content);
+    }
+
+    public void transformContent(HtmlTransformation transformation) {
+        this.content.appendLayout(transformation);
     }
 
     public LazyHtml getContent() {
@@ -81,11 +88,23 @@ public final class HtmlTemplate {
         return mainTitle != null;
     }
 
-    public void setDescription(String description) {
+    public void setSecondaryTitle(String mainTitle) {
+        this.secondaryTitle = mainTitle;
+    }
+
+    public String getSecondaryTitle() {
+        return secondaryTitle;
+    }
+
+    public boolean hasSecondaryTitle() {
+        return secondaryTitle != null;
+    }
+
+    public void setDescription(Html description) {
         this.description = description;
     }
 
-    public String getDescription() {
+    public Html getDescription() {
         return description;
     }
 
@@ -95,14 +114,6 @@ public final class HtmlTemplate {
 
     public void markBreadcrumbLocation(String label, Call target) {
         breadcrumbLocations.add(new InternalLink(label, target));
-    }
-
-    /**
-     * @deprecated Remove this, refactor all breadcrumbs usages
-     */
-    @Deprecated
-    public void reverseBreadcrumbLocations() {
-        this.reverseBreadcrumbs = true;
     }
 
     public List<InternalLink> getBreadcrumbLinks() {
@@ -163,6 +174,14 @@ public final class HtmlTemplate {
 
     public List<InternalLink> getMainButtons() {
         return ImmutableList.copyOf(mainButtons);
+    }
+
+    public void addSecondaryButton(String label, Call target) {
+        secondaryButtons.add(new InternalLink(label, target));
+    }
+
+    public List<InternalLink> getSecondaryButtons() {
+        return ImmutableList.copyOf(secondaryButtons);
     }
 
     public void setMainBackButton(String label, Call target) {

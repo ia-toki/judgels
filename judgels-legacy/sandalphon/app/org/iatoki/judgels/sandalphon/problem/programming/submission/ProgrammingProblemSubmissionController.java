@@ -7,11 +7,10 @@ import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
+import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.LanguageRestrictionAdapter;
 import org.iatoki.judgels.sandalphon.activity.SandalphonActivityKeys;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
@@ -21,7 +20,6 @@ import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
@@ -43,7 +41,7 @@ import java.util.Set;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class ProgrammingProblemSubmissionController extends AbstractJudgelsController {
+public final class ProgrammingProblemSubmissionController extends AbstractProgrammingProblemController {
 
     private static final long PAGE_SIZE = 20;
     private static final String SUBMISSION = "submission";
@@ -120,15 +118,12 @@ public final class ProgrammingProblemSubmissionController extends AbstractJudgel
         Page<ProgrammingSubmission> pageOfProgrammingSubmissions = programmingSubmissionService.getPageOfProgrammingSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, problem.getJid(), null);
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
-        LazyHtml content = new LazyHtml(listSubmissionsView.render(pageOfProgrammingSubmissions, gradingLanguageToNameMap, problemId, pageIndex, orderBy, orderDir));
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.programming.submission.list"), routes.ProgrammingProblemSubmissionController.viewSubmissions(problemId)));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Submissions");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listSubmissionsView.render(pageOfProgrammingSubmissions, gradingLanguageToNameMap, problemId, pageIndex, orderBy, orderDir));
+        template.markBreadcrumbLocation(Messages.get("problem.programming.submission.list"), routes.ProgrammingProblemSubmissionController.viewSubmissions(problemId));
+        template.setPageTitle("Problem - Submissions");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     @Transactional(readOnly = true)
@@ -149,16 +144,13 @@ public final class ProgrammingProblemSubmissionController extends AbstractJudgel
         }
         SubmissionSource submissionSource = ProgrammingSubmissionUtils.createSubmissionSourceFromPastSubmission(programmingSubmissionFileSystemProvider, null, programmingSubmission.getJid());
 
-        LazyHtml content = new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, JidCacheServiceImpl.getInstance().getDisplayName(programmingSubmission.getAuthorJid()), null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(engine).renderViewSubmission(programmingSubmission, submissionSource, JidCacheServiceImpl.getInstance().getDisplayName(programmingSubmission.getAuthorJid()), null, problem.getSlug(), GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName(), null));
 
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.programming.submission.view"), routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId)));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - View Submission");
+        template.markBreadcrumbLocation(Messages.get("problem.programming.submission.view"), routes.ProgrammingProblemSubmissionController.viewSubmission(problemId, submissionId));
+        template.setPageTitle("Problem - View Submission");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     @Transactional
@@ -208,12 +200,9 @@ public final class ProgrammingProblemSubmissionController extends AbstractJudgel
         return redirect(routes.ProgrammingProblemSubmissionController.listSubmissions(problemId, pageIndex, orderBy, orderDir));
     }
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Problem problem, InternalLink lastLink) {
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                ProblemControllerUtils.getProblemBreadcrumbsBuilder(problem)
-                .add(new InternalLink(Messages.get("problem.programming.submission"), org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToSubmissions(problem.getId())))
-                        .add(lastLink)
-                .build()
-        );
+    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+        template.markBreadcrumbLocation(Messages.get("problem.programming.submission"), org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToSubmissions(problem.getId()));
+
+        return super.renderTemplate(template, problemService, problem);
     }
 }

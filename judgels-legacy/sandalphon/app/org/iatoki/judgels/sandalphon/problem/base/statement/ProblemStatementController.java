@@ -2,14 +2,12 @@ package org.iatoki.judgels.sandalphon.problem.base.statement;
 
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
+import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.base.AbstractProblemController;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -45,7 +43,7 @@ import judgels.sandalphon.api.problem.ProblemStatement;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public class ProblemStatementController extends AbstractJudgelsController {
+public class ProblemStatementController extends AbstractProblemController {
 
     private final ProblemService problemService;
 
@@ -242,16 +240,12 @@ public class ProblemStatementController extends AbstractJudgelsController {
             throw new IllegalStateException(e);
         }
 
-        LazyHtml content = new LazyHtml(listStatementLanguagesView.render(availableLanguages, defaultLanguage, problem.getId()));
-        ProblemStatementControllerUtils.appendSubtabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        ProblemStatementControllerUtils.appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.statement.language.list"), routes.ProblemStatementController.listStatementLanguages(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Statement Languages");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, problem.getId()));
+        template.markBreadcrumbLocation(Messages.get("problem.statement.language.list"), routes.ProblemStatementController.listStatementLanguages(problem.getId()));
+        template.setPageTitle("Problem - Statement Languages");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderStatementTemplate(template, problemService, problem);
     }
 
     @Transactional
@@ -358,30 +352,21 @@ public class ProblemStatementController extends AbstractJudgelsController {
     }
 
     private Result showEditStatement(Form<UpdateStatementForm> updateStatementForm, Problem problem, Set<String> allowedLanguages) {
-        LazyHtml content = new LazyHtml(editStatementView.render(updateStatementForm, problem.getId()));
-        ProblemControllerUtils.appendStatementLanguageSelectionLayout(content, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
-        ProblemStatementControllerUtils.appendSubtabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        ProblemStatementControllerUtils.appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.statement.update"), routes.ProblemStatementController.editStatement(problem.getId())));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editStatementView.render(updateStatementForm, problem.getId()));
+        appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
+        template.markBreadcrumbLocation(Messages.get("problem.statement.update"), routes.ProblemStatementController.editStatement(problem.getId()));
+        template.setPageTitle("Problem - Update Statement");
 
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Update Statement");
-
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderStatementTemplate(template, problemService, problem);
     }
 
     private Result showListStatementMediaFiles(Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> mediaFiles, boolean isAllowedToUploadMediaFiles) {
-        LazyHtml content = new LazyHtml(listStatementMediaFilesView.render(uploadFileForm, problem.getId(), mediaFiles, isAllowedToUploadMediaFiles));
-        ProblemStatementControllerUtils.appendSubtabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        ProblemStatementControllerUtils.appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.statement.media.list"), routes.ProblemStatementController.listStatementMediaFiles(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Statement - List Media");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listStatementMediaFilesView.render(uploadFileForm, problem.getId(), mediaFiles, isAllowedToUploadMediaFiles));
+        template.markBreadcrumbLocation(Messages.get("problem.statement.media.list"), routes.ProblemStatementController.listStatementMediaFiles(problem.getId()));
+        template.setPageTitle("Problem - Statement - List Media");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderStatementTemplate(template, problemService, problem);
     }
 }

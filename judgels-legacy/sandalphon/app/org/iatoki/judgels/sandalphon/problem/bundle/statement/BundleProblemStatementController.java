@@ -3,10 +3,7 @@ package org.iatoki.judgels.sandalphon.problem.bundle.statement;
 import com.google.common.collect.ImmutableList;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -14,9 +11,8 @@ import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
-import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.statement.ProblemStatementUtils;
-import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
+import org.iatoki.judgels.sandalphon.problem.bundle.AbstractBundleProblemController;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItem;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapter;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.BundleItemAdapters;
@@ -36,7 +32,7 @@ import java.util.Set;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class BundleProblemStatementController extends AbstractJudgelsController {
+public final class BundleProblemStatementController extends AbstractBundleProblemController {
 
     private final BundleItemService bundleItemService;
     private final ProblemService problemService;
@@ -105,7 +101,8 @@ public final class BundleProblemStatementController extends AbstractJudgelsContr
             }
         }
 
-        LazyHtml content = new LazyHtml(bundleStatementView.render(org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.postSubmit(problemId).absoluteURL(request(), request().secure()), statement, htmlBuilder.build(), reasonNotAllowedToSubmit));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(bundleStatementView.render(org.iatoki.judgels.sandalphon.problem.bundle.submission.routes.BundleProblemSubmissionController.postSubmit(problemId).absoluteURL(request(), request().secure()), statement, htmlBuilder.build(), reasonNotAllowedToSubmit));
 
         Set<String> allowedLanguages;
         try {
@@ -114,16 +111,11 @@ public final class BundleProblemStatementController extends AbstractJudgelsContr
             e.printStackTrace();
             return notFound();
         }
-        ProblemControllerUtils.appendStatementLanguageSelectionLayout(content, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
+        appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
 
-        ProblemStatementControllerUtils.appendSubtabsLayout(content, problemService, problem);
-        BundleProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        ProblemStatementControllerUtils.appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.statement.view"), org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId)));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Update Statement");
+        template.markBreadcrumbLocation(Messages.get("problem.statement.view"), org.iatoki.judgels.sandalphon.problem.base.statement.routes.ProblemStatementController.viewStatement(problemId));
+        template.setPageTitle("Problem - Update Statement");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderStatementTemplate(template, problemService, problem);
     }
 }

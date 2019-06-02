@@ -1,13 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.programming;
 
-import com.google.common.collect.ImmutableList;
 import judgels.sandalphon.api.problem.ProblemStatement;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.headingLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemType;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
@@ -32,7 +28,7 @@ import java.io.IOException;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class ProgrammingProblemController extends AbstractJudgelsController {
+public final class ProgrammingProblemController extends AbstractProgrammingProblemController {
 
     private static final String PROBLEM = "problem";
 
@@ -109,14 +105,12 @@ public final class ProgrammingProblemController extends AbstractJudgelsControlle
     }
 
     private Result showCreateProgrammingProblem(Form<ProgrammingProblemCreateForm> programmingProblemCreateForm) {
-        LazyHtml content = new LazyHtml(createProgrammingProblemView.render(programmingProblemCreateForm, ProblemControllerUtils.getJustCreatedProblemSlug(), ProblemControllerUtils.getJustCreatedProblemAdditionalNote(), ProblemControllerUtils.getJustCreatedProblemInitLanguageCode()));
-        content.appendLayout(c -> headingLayout.render(Messages.get("problem.programming.create"), c));
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(
-                new InternalLink(Messages.get("problem.problems"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index())
-        ));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Programming Problem - Create");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(createProgrammingProblemView.render(programmingProblemCreateForm, ProblemControllerUtils.getJustCreatedProblemSlug(), ProblemControllerUtils.getJustCreatedProblemAdditionalNote(), ProblemControllerUtils.getJustCreatedProblemInitLanguageCode()));
+        template.setMainTitle(Messages.get("problem.programming.create"));
+        template.markBreadcrumbLocation(Messages.get("problem.problems"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.index());
+        template.setPageTitle("Programming Problem - Create");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 }

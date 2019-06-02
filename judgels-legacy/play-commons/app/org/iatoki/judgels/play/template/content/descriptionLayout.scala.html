@@ -1,9 +1,7 @@
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 
-@(description: String)(content: Html)
+@(description: Html)(content: Html)
 
-<div class="well">
-    @Html(description)
-</div>
+@description
 
 @content

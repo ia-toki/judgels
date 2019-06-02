@@ -2,15 +2,14 @@ package org.iatoki.judgels.sandalphon.lesson.statement;
 
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
+import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.lesson.AbstractLessonController;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonNotFoundException;
 import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
+import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
 import org.iatoki.judgels.sandalphon.resource.WorldLanguageRegistry;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -30,6 +29,8 @@ import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.i18n.Messages;
+import play.mvc.Call;
+import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 
@@ -43,7 +44,7 @@ import java.util.Set;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public class LessonStatementController extends AbstractJudgelsController {
+public class LessonStatementController extends AbstractLessonController {
 
     private final LessonService lessonService;
 
@@ -72,7 +73,8 @@ public class LessonStatementController extends AbstractJudgelsController {
             statement = new LessonStatement(ProblemStatementUtils.getDefaultTitle(LessonControllerUtils.getCurrentStatementLanguage()), LessonStatementUtils.getDefaultText(LessonControllerUtils.getCurrentStatementLanguage()));
         }
 
-        LazyHtml content = new LazyHtml(lessonStatementView.render(statement));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(lessonStatementView.render(statement));
 
         Set<String> allowedLanguages;
         try {
@@ -81,17 +83,12 @@ public class LessonStatementController extends AbstractJudgelsController {
             return notFound();
         }
 
-        LessonControllerUtils.appendStatementLanguageSelectionLayout(content, LessonControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
 
-        LessonStatementControllerUtils.appendSubtabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTitleLayout(content, lessonService, lesson);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        LessonStatementControllerUtils.appendBreadcrumbsLayout(content, lesson, new InternalLink(Messages.get("lesson.statement.view"), routes.LessonStatementController.viewStatement(lessonId)));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - View Statement");
+        appendStatementLanguageSelection(template, LessonControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
+        template.markBreadcrumbLocation(Messages.get("lesson.statement.view"), routes.LessonStatementController.viewStatement(lessonId));
+        template.setPageTitle("Lesson - View Statement");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, lessonService, lesson);
     }
 
     @Transactional(readOnly = true)
@@ -255,16 +252,12 @@ public class LessonStatementController extends AbstractJudgelsController {
             throw new IllegalStateException(e);
         }
 
-        LazyHtml content = new LazyHtml(listStatementLanguagesView.render(availableLanguages, defaultLanguage, lesson.getId()));
-        LessonStatementControllerUtils.appendSubtabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTitleLayout(content, lessonService, lesson);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        LessonStatementControllerUtils.appendBreadcrumbsLayout(content, lesson, new InternalLink(Messages.get("lesson.statement.language.list"), routes.LessonStatementController.listStatementLanguages(lesson.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Statement Languages");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listStatementLanguagesView.render(availableLanguages, defaultLanguage, lesson.getId()));
+        template.markBreadcrumbLocation(Messages.get("lesson.statement.language.list"), routes.LessonStatementController.listStatementLanguages(lesson.getId()));
+        template.setPageTitle("Lesson - Statement Languages");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, lessonService, lesson);
     }
 
     @Transactional
@@ -371,30 +364,44 @@ public class LessonStatementController extends AbstractJudgelsController {
     }
 
     private Result showEditStatement(Form<UpdateStatementForm> updateStatementForm, Lesson lesson, Set<String> allowedLanguages) {
-        LazyHtml content = new LazyHtml(editStatementView.render(updateStatementForm, lesson.getId()));
-        LessonControllerUtils.appendStatementLanguageSelectionLayout(content, LessonControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
-        LessonStatementControllerUtils.appendSubtabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTitleLayout(content, lessonService, lesson);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        LessonStatementControllerUtils.appendBreadcrumbsLayout(content, lesson, new InternalLink(Messages.get("lesson.statement.update"), routes.LessonStatementController.editStatement(lesson.getId())));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editStatementView.render(updateStatementForm, lesson.getId()));
+        appendStatementLanguageSelection(template, LessonControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.lesson.routes.LessonController.switchLanguage(lesson.getId()));
+        template.markBreadcrumbLocation(Messages.get("lesson.statement.update"), routes.LessonStatementController.editStatement(lesson.getId()));
 
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Update Statement");
+        template.setPageTitle("Lesson - Update Statement");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, lessonService, lesson);
     }
 
     private Result showListStatementMediaFiles(Form<UploadFileForm> uploadFileForm, Lesson lesson, List<FileInfo> mediaFiles, boolean isAllowedToUploadMediaFiles) {
-        LazyHtml content = new LazyHtml(listStatementMediaFilesView.render(uploadFileForm, lesson.getId(), mediaFiles, isAllowedToUploadMediaFiles));
-        LessonStatementControllerUtils.appendSubtabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTabsLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendVersionLocalChangesWarningLayout(content, lessonService, lesson);
-        LessonControllerUtils.appendTitleLayout(content, lessonService, lesson);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        LessonStatementControllerUtils.appendBreadcrumbsLayout(content, lesson, new InternalLink(Messages.get("lesson.statement.media.list"), routes.LessonStatementController.listStatementMediaFiles(lesson.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Lesson - Statement - List Media");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listStatementMediaFilesView.render(uploadFileForm, lesson.getId(), mediaFiles, isAllowedToUploadMediaFiles));
+        template.markBreadcrumbLocation(Messages.get("lesson.statement.media.list"), routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
+        template.setPageTitle("Lesson - Statement - List Media");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, lessonService, lesson);
+    }
+
+    protected Result renderTemplate(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
+        template.addSecondaryTab(Messages.get("commons.view"), routes.LessonStatementController.viewStatement(lesson.getId()));
+
+        if (LessonControllerUtils.isAllowedToUpdateStatement(lessonService, lesson)) {
+            template.addSecondaryTab(Messages.get("commons.update"), routes.LessonStatementController.editStatement(lesson.getId()));
+        }
+
+        template.addSecondaryTab(Messages.get("lesson.statement.media"), routes.LessonStatementController.listStatementMediaFiles(lesson.getId()));
+
+        if (LessonControllerUtils.isAllowedToManageStatementLanguages(lessonService, lesson)) {
+            template.addSecondaryTab(Messages.get("lesson.statement.language"), routes.LessonStatementController.listStatementLanguages(lesson.getId()));
+        }
+
+        template.markBreadcrumbLocation(Messages.get("lesson.statement"), org.iatoki.judgels.sandalphon.lesson.routes.LessonController.jumpToStatement(lesson.getId()));
+
+        return super.renderTemplate(template, lessonService, lesson);
+    }
+
+    private void appendStatementLanguageSelection(HtmlTemplate template, String currentLanguage, Set<String> allowedLanguages, Call target) {
+        template.transformContent(c -> statementLanguageSelectionLayout.render(target.absoluteURL(Controller.request(), Controller.request().secure()), allowedLanguages, currentLanguage, c));
     }
 }

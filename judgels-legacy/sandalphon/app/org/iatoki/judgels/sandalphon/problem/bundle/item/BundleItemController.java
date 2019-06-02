@@ -1,13 +1,9 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.item;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.EnumUtils;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
@@ -15,6 +11,7 @@ import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.bundle.AbstractBundleProblemController;
 import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.item.html.listCreateItemsView;
 import play.data.Form;
@@ -28,12 +25,11 @@ import play.twirl.api.Html;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class BundleItemController extends AbstractJudgelsController {
+public final class BundleItemController extends AbstractBundleProblemController {
 
     private static final long PAGE_SIZE = 1000;
 
@@ -359,57 +355,36 @@ public final class BundleItemController extends AbstractJudgelsController {
     }
 
     private Result showListCreateItems(Problem problem, Page<BundleItem> pageOfBundleItems, String orderBy, String orderDir, String filterString, Form<ItemCreateForm> itemCreateForm) {
-        LazyHtml content = new LazyHtml(listCreateItemsView.render(pageOfBundleItems, problem.getId(), pageOfBundleItems.getPageIndex(), orderBy, orderDir, filterString, itemCreateForm));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listCreateItemsView.render(pageOfBundleItems, problem.getId(), pageOfBundleItems.getPageIndex(), orderBy, orderDir, filterString, itemCreateForm));
 
-        BundleProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, ImmutableList.of(
-              new InternalLink(Messages.get("problem.bundle.item.list"), routes.BundleItemController.viewItems(problem.getId()))
-        ));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Bundle - Items");
+        template.setPageTitle("Problem - Bundle - Items");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     private Result showCreateItem(Problem problem, String itemType, Html html, long page, String orderBy, String orderDir, String filterString) {
-        LazyHtml content = new LazyHtml(html);
-        BundleProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, ImmutableList.of(
-              new InternalLink(Messages.get("problem.bundle.item.list"), routes.BundleItemController.viewItems(problem.getId())),
-              new InternalLink(Messages.get("problem.bundle.item.create"), routes.BundleItemController.createItem(problem.getId(), itemType, page, orderBy, orderDir, filterString))
-        ));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Bundle - Items - Create");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(html);
+        template.markBreadcrumbLocation(Messages.get("problem.bundle.item.create"), routes.BundleItemController.createItem(problem.getId(), itemType, page, orderBy, orderDir, filterString));
+        template.setPageTitle("Problem - Bundle - Items - Create");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     private Result showEditItem(Problem problem, BundleItem bundleItem, Html html, Set<String> allowedLanguages) {
-        LazyHtml content = new LazyHtml(html);
-        ProblemControllerUtils.appendStatementLanguageSelectionLayout(content, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
-        BundleProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, ImmutableList.of(
-              new InternalLink(Messages.get("problem.bundle.item.list"), routes.BundleItemController.viewItems(problem.getId())),
-              new InternalLink(Messages.get("problem.bundle.item.update"), routes.BundleItemController.editItem(problem.getId(), bundleItem.getJid()))
-        ));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Bundle - Item - Update");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(html);
+        appendStatementLanguageSelection(template, ProblemControllerUtils.getCurrentStatementLanguage(), allowedLanguages, org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.switchLanguage(problem.getId()));
+        template.markBreadcrumbLocation(Messages.get("problem.bundle.item.update"), routes.BundleItemController.editItem(problem.getId(), bundleItem.getJid()));
+        template.setPageTitle("Problem - Bundle - Item - Update");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
-
-    private void appendBreadcrumbsLayout(LazyHtml content, Problem problem, List<InternalLink> lastLinks) {
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-              ProblemControllerUtils.getProblemBreadcrumbsBuilder(problem)
-                    .add(new InternalLink(Messages.get("problem.bundle.item"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId())))
-                    .addAll(lastLinks)
-                    .build()
-        );
+    
+    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+        template.markBreadcrumbLocation(Messages.get("problem.bundle.item"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
+        
+        return super.renderTemplate(template, problemService, problem);
     }
 }

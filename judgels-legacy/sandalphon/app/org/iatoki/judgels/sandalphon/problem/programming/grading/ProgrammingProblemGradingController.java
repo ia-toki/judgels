@@ -1,23 +1,18 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
-import com.google.common.collect.ImmutableList;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import org.iatoki.judgels.FileInfo;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.subtabLayout;
-import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.controllers.securities.Authenticated;
 import org.iatoki.judgels.sandalphon.controllers.securities.HasRole;
 import org.iatoki.judgels.sandalphon.controllers.securities.LoggedIn;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
-import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemNotFoundException;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
+import org.iatoki.judgels.sandalphon.problem.programming.AbstractProgrammingProblemController;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemService;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.html.autoPopulationLayout;
@@ -45,7 +40,7 @@ import java.util.List;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class ProgrammingProblemGradingController extends AbstractJudgelsController {
+public final class ProgrammingProblemGradingController extends AbstractProgrammingProblemController {
 
     private final ProblemService problemService;
     private final ProgrammingProblemService programmingProblemService;
@@ -456,98 +451,70 @@ public final class ProgrammingProblemGradingController extends AbstractJudgelsCo
     }
 
     private Result showEditGradingEngine(Form<GradingEngineEditForm> gradingEngineEditForm, Problem problem) {
-        LazyHtml content = new LazyHtml(editGradingEngineView.render(gradingEngineEditForm, problem));
-        appendSubtabsLayout(content, problem);
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.programming.grading.engine.update"), routes.ProgrammingProblemGradingController.editGradingEngine(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Update Grading Engine");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editGradingEngineView.render(gradingEngineEditForm, problem));
+        template.markBreadcrumbLocation(Messages.get("problem.programming.grading.engine.update"), routes.ProgrammingProblemGradingController.editGradingEngine(problem.getId()));
+        template.setPageTitle("Problem - Update Grading Engine");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     private Result showEditGradingConfig(Form<?> gradingConfForm, Problem problem, String gradingEngine, List<FileInfo> testDataFiles, List<FileInfo> helperFiles) {
         GradingEngineAdapter adapter = GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(gradingEngine);
         Call postUpdateGradingConfigCall = routes.ProgrammingProblemGradingController.postEditGradingConfig(problem.getId());
-        LazyHtml content = new LazyHtml(adapter.renderUpdateGradingConfig(gradingConfForm, postUpdateGradingConfigCall, testDataFiles, helperFiles));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(adapter.renderUpdateGradingConfig(gradingConfForm, postUpdateGradingConfigCall, testDataFiles, helperFiles));
 
         if (adapter instanceof ConfigurableWithTokilibFormat) {
             Call updateGradingConfigCall = routes.ProgrammingProblemGradingController.editGradingConfigByTokilibFormat(problem.getId());
-            content.appendLayout(c -> tokilibLayout.render(updateGradingConfigCall, c));
+            template.transformContent(c -> tokilibLayout.render(updateGradingConfigCall, c));
         } else if (adapter instanceof ConfigurableWithAutoPopulation) {
             Call updateGradingConfigCall = routes.ProgrammingProblemGradingController.editGradingConfigByAutoPopulation(problem.getId());
-            content.appendLayout(c -> autoPopulationLayout.render(updateGradingConfigCall, c));
+            template.transformContent(c -> autoPopulationLayout.render(updateGradingConfigCall, c));
         }
 
-        appendSubtabsLayout(content, problem);
+        template.markBreadcrumbLocation(Messages.get("problem.programming.grading.config.update"), routes.ProgrammingProblemGradingController.editGradingConfig(problem.getId()));
+        template.setPageTitle("Problem - Update Grading Config");
 
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.programming.grading.config.update"), routes.ProgrammingProblemGradingController.editGradingConfig(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Update Grading Config");
-
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     private Result showListGradingTestDataFiles(Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> testDataFiles) {
-        LazyHtml content = new LazyHtml(listGradingTestDataFilesView.render(uploadFileForm, problem.getId(), testDataFiles));
-        appendSubtabsLayout(content, problem);
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.programming.grading.testData.list"), routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - List Grading Test Data Files");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listGradingTestDataFilesView.render(uploadFileForm, problem.getId(), testDataFiles));
+        template.markBreadcrumbLocation(Messages.get("problem.programming.grading.testData.list"), routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
+        template.setPageTitle("Problem - List Grading Test Data Files");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     private Result showListGradingHelperFiles(Form<UploadFileForm> uploadFileForm, Problem problem, List<FileInfo> helperFiles) {
-        LazyHtml content = new LazyHtml(listGradingHelperFilesView.render(uploadFileForm, problem.getId(), helperFiles));
-        appendSubtabsLayout(content, problem);
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.programming.grading.helper.list"), routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - List Grading Helper Files");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listGradingHelperFilesView.render(uploadFileForm, problem.getId(), helperFiles));
+        template.markBreadcrumbLocation(Messages.get("problem.programming.grading.helper.list"), routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));
+        template.setPageTitle("Problem - List Grading Helper Files");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
     private Result showEditLanguageRestriction(Form<LanguageRestrictionEditForm> languageRestrictionEditForm, Problem problem) {
-        LazyHtml content = new LazyHtml(editLanguageRestrictionView.render(languageRestrictionEditForm, problem));
-        appendSubtabsLayout(content, problem);
-        ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        ProblemControllerUtils.appendVersionLocalChangesWarningLayout(content, problemService, problem);
-        ProblemControllerUtils.appendTitleLayout(content, problemService, problem);
-        SandalphonControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problem, new InternalLink(Messages.get("problem.programming.grading.languageRestriction.update"), routes.ProgrammingProblemGradingController.editLanguageRestriction(problem.getId())));
-        SandalphonControllerUtils.getInstance().appendTemplateLayout(content, "Problem - Update Language Restriction");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editLanguageRestrictionView.render(languageRestrictionEditForm, problem));
+        template.markBreadcrumbLocation(Messages.get("problem.programming.grading.languageRestriction.update"), routes.ProgrammingProblemGradingController.editLanguageRestriction(problem.getId()));
+        template.setPageTitle("Problem - Update Language Restriction");
 
-        return SandalphonControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemService, problem);
     }
 
-    private void appendSubtabsLayout(LazyHtml content, Problem problem) {
-        content.appendLayout(c -> subtabLayout.render(ImmutableList.of(
-                new InternalLink(Messages.get("problem.programming.grading.engine"), routes.ProgrammingProblemGradingController.editGradingEngine(problem.getId())),
-                new InternalLink(Messages.get("problem.programming.grading.config"), routes.ProgrammingProblemGradingController.editGradingConfig(problem.getId())),
-                new InternalLink(Messages.get("problem.programming.grading.testData"), routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId())),
-                new InternalLink(Messages.get("problem.programming.grading.helper"), routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId())),
-                new InternalLink(Messages.get("problem.programming.grading.languageRestriction"), routes.ProgrammingProblemGradingController.editLanguageRestriction(problem.getId()))
-        ), c));
-    }
+    protected Result renderTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {
+        template.addSecondaryTab(Messages.get("problem.programming.grading.engine"), routes.ProgrammingProblemGradingController.editGradingEngine(problem.getId()));
+        template.addSecondaryTab(Messages.get("problem.programming.grading.config"), routes.ProgrammingProblemGradingController.editGradingConfig(problem.getId()));
+        template.addSecondaryTab(Messages.get("problem.programming.grading.testData"), routes.ProgrammingProblemGradingController.listGradingTestDataFiles(problem.getId()));
+        template.addSecondaryTab(Messages.get("problem.programming.grading.helper"), routes.ProgrammingProblemGradingController.listGradingHelperFiles(problem.getId()));
+        template.addSecondaryTab(Messages.get("problem.programming.grading.languageRestriction"), routes.ProgrammingProblemGradingController.editLanguageRestriction(problem.getId()));
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Problem problem, InternalLink lastLink) {
-        SandalphonControllerUtils.getInstance().appendBreadcrumbsLayout(content,
-                ProblemControllerUtils.getProblemBreadcrumbsBuilder(problem)
-                .add(new InternalLink(Messages.get("problem.programming.grading"), org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToGrading(problem.getId())))
-                .add(lastLink)
-                .build()
-        );
+        template.markBreadcrumbLocation(Messages.get("problem.programming.grading"), org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToGrading(problem.getId()));
+
+        return super.renderTemplate(template, problemService, problem);
     }
 }
