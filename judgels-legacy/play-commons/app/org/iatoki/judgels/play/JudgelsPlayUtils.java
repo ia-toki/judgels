@@ -137,22 +137,6 @@ public final class JudgelsPlayUtils {
         return ((request.cookie("fullscreen") != null) && (request.cookie("fullscreen").value().equals("true")));
     }
 
-    public static boolean hasViewPoint() {
-        return Http.Context.current().session().containsKey("viewpoint");
-    }
-
-    public static String getViewPoint() {
-        return getFromSession("viewpoint");
-    }
-
-    public static void setViewPointInSession(String userJid) {
-        putInSession("viewpoint", userJid);
-    }
-
-    public static void removeViewPoint() {
-        Http.Context.current().session().remove("viewpoint");
-    }
-
     public static UsernamePasswordCredentials parseBasicAuthFromRequest(Http.Request request) {
         UsernamePasswordCredentials credentials = null;
         if ((request.hasHeader("Authorization")) && (request.getHeader("Authorization").startsWith("Basic "))) {

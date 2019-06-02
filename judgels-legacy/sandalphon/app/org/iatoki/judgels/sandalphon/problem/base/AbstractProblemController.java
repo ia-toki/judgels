@@ -32,46 +32,10 @@ public abstract class AbstractProblemController extends AbstractBaseProblemContr
 
     protected void appendTabs(HtmlTemplate template, ProblemService problemService, Problem problem) {
         if (problem.getType().equals(ProblemType.PROGRAMMING)) {
-            appendProgrammingTabs(template, problemService, problem);
+            ProgrammingProblemControllerUtils.appendTabs(template, problemService, problem);
         } else if (problem.getType().equals(ProblemType.BUNDLE)) {
-            appendBundleTabs(template, problemService, problem);
+            BundleProblemControllerUtils.appendTabs(template, problemService, problem);
         }
-    }
-
-    private void appendProgrammingTabs(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        template.addMainTab(Messages.get("problem.statement"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
-
-        if (ProgrammingProblemControllerUtils.isAllowedToManageGrading(problemService, problem)) {
-            template.addMainTab(Messages.get("problem.programming.grading"), org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToGrading(problem.getId()));
-        }
-
-        if (ProgrammingProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            template.addMainTab(Messages.get("problem.programming.submission"), org.iatoki.judgels.sandalphon.problem.programming.routes.ProgrammingProblemController.jumpToSubmissions(problem.getId()));
-        }
-
-        if (ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            template.addMainTab(Messages.get("problem.partner"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
-        }
-
-        template.addMainTab(Messages.get("problem.version"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
-    }
-
-    private void appendBundleTabs(HtmlTemplate template, ProblemService problemService, Problem problem) {
-        template.addMainTab(Messages.get("problem.statement"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
-
-        if (BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
-            template.addMainTab(Messages.get("problem.bundle.item"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
-        }
-
-        if (BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
-            template.addMainTab(Messages.get("problem.bundle.submission"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
-        }
-
-        if (ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            template.addMainTab(Messages.get("problem.partner"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
-        }
-
-        template.addMainTab(Messages.get("problem.version"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
     }
 
     protected Result renderStatementTemplate(HtmlTemplate template, ProblemService problemService, Problem problem) {

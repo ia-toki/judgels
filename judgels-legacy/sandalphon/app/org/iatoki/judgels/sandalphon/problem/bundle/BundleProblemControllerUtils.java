@@ -1,10 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.bundle;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.views.html.layouts.tabLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.base.Problem;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.base.ProblemService;
@@ -19,26 +16,22 @@ public final class BundleProblemControllerUtils {
         // prevent instantiation
     }
 
-    public static void appendTabsLayout(LazyHtml content, ProblemService problemService, Problem problem) {
-        ImmutableList.Builder<InternalLink> internalLinks = ImmutableList.builder();
+    public static void appendTabs(HtmlTemplate template, ProblemService problemService, Problem problem) {
+        template.addMainTab(Messages.get("problem.statement"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId()));
 
-        internalLinks.add(new InternalLink(Messages.get("problem.statement"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToStatement(problem.getId())));
-
-        if (isAllowedToManageItems(problemService, problem)) {
-            internalLinks.add(new InternalLink(Messages.get("problem.bundle.item"), routes.BundleProblemController.jumpToItems(problem.getId())));
+        if (BundleProblemControllerUtils.isAllowedToManageItems(problemService, problem)) {
+            template.addMainTab(Messages.get("problem.bundle.item"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToItems(problem.getId()));
         }
 
-        if (isAllowedToSubmit(problemService, problem)) {
-            internalLinks.add(new InternalLink(Messages.get("problem.bundle.submission"), routes.BundleProblemController.jumpToSubmissions(problem.getId())));
+        if (BundleProblemControllerUtils.isAllowedToSubmit(problemService, problem)) {
+            template.addMainTab(Messages.get("problem.bundle.submission"), org.iatoki.judgels.sandalphon.problem.bundle.routes.BundleProblemController.jumpToSubmissions(problem.getId()));
         }
 
         if (ProblemControllerUtils.isAuthorOrAbove(problem)) {
-            internalLinks.add(new InternalLink(Messages.get("problem.partner"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId())));
+            template.addMainTab(Messages.get("problem.partner"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToPartners(problem.getId()));
         }
 
-        internalLinks.add(new InternalLink(Messages.get("problem.version"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId())));
-
-        content.appendLayout(c -> tabLayout.render(internalLinks.build(), c));
+        template.addMainTab(Messages.get("problem.version"), org.iatoki.judgels.sandalphon.problem.base.routes.ProblemController.jumpToVersions(problem.getId()));
     }
 
     public static BundleProblemPartnerConfig getPartnerConfig(ProblemService problemService, Problem problem) {

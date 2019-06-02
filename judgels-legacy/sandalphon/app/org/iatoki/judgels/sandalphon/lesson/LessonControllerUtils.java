@@ -1,20 +1,11 @@
 package org.iatoki.judgels.sandalphon.lesson;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
-import org.iatoki.judgels.play.views.html.layouts.tabLayout;
-import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
-import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
-import org.iatoki.judgels.sandalphon.lesson.version.html.versionLocalChangesWarningLayout;
-import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
-import play.i18n.Messages;
-import play.mvc.Call;
+import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
+import org.iatoki.judgels.sandalphon.lesson.partner.LessonPartnerConfig;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -29,38 +20,6 @@ public final class LessonControllerUtils {
 
     private LessonControllerUtils() {
         // prevent instantiation
-    }
-
-    public static void appendTabsLayout(LazyHtml content, LessonService lessonService, Lesson lesson) {
-        ImmutableList.Builder<InternalLink> internalLinks = ImmutableList.builder();
-
-        internalLinks.add(new InternalLink(Messages.get("lesson.statement"), routes.LessonController.jumpToStatement(lesson.getId())));
-
-        if (LessonControllerUtils.isAuthorOrAbove(lesson)) {
-            internalLinks.add(new InternalLink(Messages.get("lesson.partner"), routes.LessonController.jumpToPartners(lesson.getId())));
-        }
-
-        internalLinks.add(new InternalLink(Messages.get("lesson.version"), routes.LessonController.jumpToVersions(lesson.getId())));
-
-        content.appendLayout(c -> tabLayout.render(internalLinks.build(), c));
-    }
-
-    public static void appendTitleLayout(LazyHtml content, LessonService lessonService, Lesson lesson) {
-        if (isAllowedToUpdateLesson(lessonService, lesson)) {
-            content.appendLayout(c -> headingWithActionLayout.render("#" + lesson.getId() + ": " + lesson.getSlug(), new InternalLink(Messages.get("lesson.update"), routes.LessonController.editLesson(lesson.getId())), c));
-        } else {
-            content.appendLayout(c -> headingWithActionLayout.render("#" + lesson.getId() + ": " + lesson.getSlug(), new InternalLink(Messages.get("lesson.view"), routes.LessonController.viewLesson(lesson.getId())), c));
-        }
-    }
-
-    public static void appendStatementLanguageSelectionLayout(LazyHtml content, String currentLanguage, Set<String> allowedLanguages, Call target) {
-        content.appendLayout(c -> statementLanguageSelectionLayout.render(target.absoluteURL(Controller.request(), Controller.request().secure()), allowedLanguages, currentLanguage, c));
-    }
-
-    public static void appendVersionLocalChangesWarningLayout(LazyHtml content, LessonService lessonService, Lesson lesson) {
-        if (lessonService.userCloneExists(IdentityUtils.getUserJid(), lesson.getJid())) {
-            content.appendLayout(c -> versionLocalChangesWarningLayout.render(lesson.getId(), c));
-        }
     }
 
     public static void establishStatementLanguage(LessonService lessonService, Lesson lesson) throws IOException {
@@ -83,15 +42,6 @@ public final class LessonControllerUtils {
 
     public static String getCurrentStatementLanguage() {
         return Controller.session("currentStatementLanguage");
-    }
-
-    public static ImmutableList.Builder<InternalLink> getLessonBreadcrumbsBuilder(Lesson lesson) {
-        ImmutableList.Builder<InternalLink> internalLinks = ImmutableList.builder();
-        internalLinks
-                .add(new InternalLink(Messages.get("lesson.lessons"), routes.LessonController.index()))
-                .add(new InternalLink(lesson.getSlug(), routes.LessonController.enterLesson(lesson.getId())));
-
-        return internalLinks;
     }
 
     public static Result downloadFile(File file) {

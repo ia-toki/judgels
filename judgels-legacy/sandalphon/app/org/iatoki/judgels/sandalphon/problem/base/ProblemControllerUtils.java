@@ -1,21 +1,11 @@
 package org.iatoki.judgels.sandalphon.problem.base;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
-import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.SandalphonControllerUtils;
+import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.problem.base.partner.ProblemPartnerConfig;
-import org.iatoki.judgels.sandalphon.problem.base.statement.html.statementLanguageSelectionLayout;
-import org.iatoki.judgels.sandalphon.problem.base.version.html.versionLocalChangesWarningLayout;
-import org.iatoki.judgels.sandalphon.problem.bundle.BundleProblemControllerUtils;
-import org.iatoki.judgels.sandalphon.problem.programming.ProgrammingProblemControllerUtils;
-import play.i18n.Messages;
-import play.mvc.Call;
 import play.mvc.Controller;
 
 import java.io.IOException;
@@ -27,32 +17,6 @@ public final class ProblemControllerUtils {
 
     private ProblemControllerUtils() {
         // prevent instantiation
-    }
-
-    public static void appendTabsLayout(LazyHtml content, ProblemService problemService, Problem problem) {
-        if (problem.getType().equals(ProblemType.PROGRAMMING)) {
-            ProgrammingProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        } else if (problem.getType().equals(ProblemType.BUNDLE)) {
-            BundleProblemControllerUtils.appendTabsLayout(content, problemService, problem);
-        }
-    }
-
-    public static void appendTitleLayout(LazyHtml content, ProblemService problemService, Problem problem) {
-        if (isAllowedToUpdateProblem(problemService, problem)) {
-            content.appendLayout(c -> headingWithActionLayout.render("#" + problem.getId() + ": " + problem.getSlug(), new InternalLink(Messages.get("problem.update"), routes.ProblemController.editProblem(problem.getId())), c));
-        } else {
-            content.appendLayout(c -> headingWithActionLayout.render("#" + problem.getId() + ": " + problem.getSlug(), new InternalLink(Messages.get("problem.view"), routes.ProblemController.viewProblem(problem.getId())), c));
-        }
-    }
-
-    public static void appendStatementLanguageSelectionLayout(LazyHtml content, String currentLanguage, Set<String> allowedLanguages, Call target) {
-        content.appendLayout(c -> statementLanguageSelectionLayout.render(target.absoluteURL(Controller.request(), Controller.request().secure()), allowedLanguages, currentLanguage, c));
-    }
-
-    public static void appendVersionLocalChangesWarningLayout(LazyHtml content, ProblemService problemService, Problem problem) {
-        if (problemService.userCloneExists(IdentityUtils.getUserJid(), problem.getJid())) {
-            content.appendLayout(c -> versionLocalChangesWarningLayout.render(problem.getId(), c));
-        }
     }
 
     public static void establishStatementLanguage(ProblemService problemService, Problem problem) throws IOException {
@@ -105,15 +69,6 @@ public final class ProblemControllerUtils {
         return getJustCreatedProblemSlug() != null
                 && getJustCreatedProblemAdditionalNote() != null
                 && getJustCreatedProblemInitLanguageCode() != null;
-    }
-
-    public static ImmutableList.Builder<InternalLink> getProblemBreadcrumbsBuilder(Problem problem) {
-        ImmutableList.Builder<InternalLink> internalLinks = ImmutableList.builder();
-        internalLinks
-                .add(new InternalLink(Messages.get("problem.problems"), routes.ProblemController.index()))
-                .add(new InternalLink(problem.getSlug(), routes.ProblemController.enterProblem(problem.getId())));
-
-        return internalLinks;
     }
 
     public static boolean isAuthor(Problem problem) {
