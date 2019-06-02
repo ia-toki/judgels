@@ -2,7 +2,6 @@ package org.iatoki.judgels.play;
 
 import com.google.inject.Inject;
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
-import org.iatoki.judgels.play.banner.BannerConfig;
 import org.iatoki.judgels.play.controllers.EntityNotFoundGuard;
 import org.iatoki.judgels.play.controllers.UnsupportedOperationGuard;
 import org.iatoki.judgels.play.general.GeneralConfig;
@@ -35,9 +34,6 @@ public abstract class AbstractJudgelsController extends Controller {
 
     @Inject
     protected GeneralConfig generalConfig;
-
-    @Inject(optional = true)
-    protected BannerConfig bannerConfig;
 
     protected static void flashInfo(String message) {
         flash("flashInfo", message);
@@ -115,7 +111,7 @@ public abstract class AbstractJudgelsController extends Controller {
             content.appendLayout(c -> twoColumnLayout.render(template.getSidebarMenus(), template.getUpperSidebarWidgets(), template.getLowerSidebarWidgets(), isSidebarOnTheLeft(), isSidebarVisible(), c));
         }
 
-        content.appendLayout(c -> breadcrumbsLayout.render(template.getBreadcrumbLinks(), bannerConfig, c));
+        content.appendLayout(c -> breadcrumbsLayout.render(template.getBreadcrumbLinks(), c));
         content.appendLayout(c -> headerFooterLayout.render(generalConfig, c));
         content.appendLayout(c -> baseLayout.render(template.getPageTitle(), generalConfig, c));
         content.appendLayout(c -> scriptsLayout.render(template.getAdditionalScripts(), c));

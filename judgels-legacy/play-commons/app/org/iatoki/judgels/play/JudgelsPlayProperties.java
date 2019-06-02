@@ -23,9 +23,6 @@ public final class JudgelsPlayProperties {
     private String appCopyright;
     private String canonicalUrl;
     private String githubLink;
-    private boolean usingBanner;
-    private String bannerLink;
-    private String bannerImageSrc;
 
     private JudgelsPlayProperties(String appName, String appVersion, Config config) {
         this.appName = appName;
@@ -72,26 +69,11 @@ public final class JudgelsPlayProperties {
         return githubLink;
     }
 
-    public boolean isUsingBanner() {
-        return usingBanner;
-    }
-
-    public String getBannerLink() {
-        return bannerLink;
-    }
-
-    public String getBannerImageSrc() {
-        return bannerImageSrc;
-    }
-
     private void build() {
         this.appTitle = requireStringValue("general.title");
         this.appCopyright = requireStringValue("general.copyright");
         this.canonicalUrl = requireStringValue("general.canonicalUrl");
         this.githubLink = requireStringValue("general.githubUrl");
-        this.usingBanner = requireBooleanValue("banner.use");
-        this.bannerLink = getStringValue("banner.link");
-        this.bannerImageSrc = getStringValue("banner.imageSrc");
     }
 
     private String getStringValue(String key) {
