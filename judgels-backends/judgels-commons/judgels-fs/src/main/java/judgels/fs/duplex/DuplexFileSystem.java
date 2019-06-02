@@ -47,20 +47,20 @@ public final class DuplexFileSystem implements FileSystem {
 
     @Override
     public List<FileInfo> listDirectoriesInDirectory(Path dirPath) {
-        try {
-            return local.listDirectoriesInDirectory(dirPath);
-        } catch (RuntimeException e) {
-            return aws.listDirectoriesInDirectory(dirPath);
+        List<FileInfo> result = local.listDirectoriesInDirectory(dirPath);
+        if (result.isEmpty()) {
+            result = aws.listDirectoriesInDirectory(dirPath);
         }
+        return result;
     }
 
     @Override
     public List<FileInfo> listFilesInDirectory(Path dirPath) {
-        try {
-            return local.listFilesInDirectory(dirPath);
-        } catch (RuntimeException e) {
-            return aws.listFilesInDirectory(dirPath);
+        List<FileInfo> result = local.listFilesInDirectory(dirPath);
+        if (result.isEmpty()) {
+            result = aws.listFilesInDirectory(dirPath);
         }
+        return result;
     }
 
     @Override
