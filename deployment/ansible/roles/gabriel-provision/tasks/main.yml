@@ -1,7 +1,11 @@
-# Reference: https://github.com/ioi/isolate/blob/master/isolate-check-environment
-
 - block:
-  - name: Run isolate recommendations
+  - name: Install cgroup
+    apt:
+      name: cgroup-bin
+      state: present
+      install_recommends: no
+
+  - name: Run isolate recommendations # https://github.com/ioi/isolate/blob/master/isolate-check-environment
     copy:
       dest: /etc/rc.local
       mode: 0755
