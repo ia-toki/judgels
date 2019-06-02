@@ -2,7 +2,6 @@ apply from: '../gradle/play.gradle'
 
 dependencies {
     play project(':play-commons')
-    play project(':gabriel-commons')
     play project(':api')
 
     play project(':judgels-commons:judgels-service-persistence')

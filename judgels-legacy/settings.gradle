@@ -4,7 +4,6 @@ rootProject.name = 'judgels-legacy'
 
 include ':api'
 include ':commons'
-include ':gabriel-commons'
 include ':play-commons'
 include ':jophiel-commons'
 include ':sandalphon-commons'

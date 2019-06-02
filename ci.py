@@ -41,8 +41,7 @@ MODULES = OrderedDict([
     (':api', set()),
     (':play-commons', {':commons', ':judgels-commons:judgels-service-persistence'}),
     (':jophiel-commons', {':commons', ':judgels-commons:judgels-persistence-core'}),
-    (':gabriel-commons', {':commons'}),
-    (':sandalphon-commons', {':play-commons', ':gabriel-commons', ':api', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':gabriel:gabriel-engines', ':sealtiel:sealtiel-api'}),
+    (':sandalphon-commons', {':play-commons', ':api', ':judgels-commons:judgels-service-persistence', ':sandalphon:sandalphon-api', ':gabriel:gabriel-engines', ':sealtiel:sealtiel-api'}),
     (':sandalphon-blackbox-adapters', {':sandalphon-commons'}),
 
 

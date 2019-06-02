@@ -3,7 +3,7 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading;
 import com.google.common.collect.Sets;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.languages.GradingLanguageRegistry;
-import org.iatoki.judgels.gabriel.OutputOnlyMagic;
+import org.iatoki.judgels.sandalphon.OutputOnlyMagic;
 
 import java.util.List;
 import java.util.Map;
