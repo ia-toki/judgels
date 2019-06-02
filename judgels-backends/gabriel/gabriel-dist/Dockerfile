@@ -15,7 +15,7 @@ RUN git clone --depth 1 git://git.ucw.cz/moe.git; \
 FROM ubuntu:18.04
 
 RUN apt-get update \
-    && apt-get -y install openjdk-8-jre libcap-dev \
+    && apt-get -y install openjdk-8-jre libcap-dev g++ \
     && rm -rf /var/lib/apt/lists/*
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
