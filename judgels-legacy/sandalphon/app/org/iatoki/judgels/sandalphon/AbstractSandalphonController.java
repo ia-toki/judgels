@@ -6,7 +6,7 @@ import org.iatoki.judgels.jophiel.logincheck.html.isLoggedOut;
 import org.iatoki.judgels.play.AbstractJudgelsController;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.template.HtmlTemplate;
-import org.iatoki.judgels.play.views.html.layouts.profileView;
+import org.iatoki.judgels.play.template.sidebar.html.profileView;
 import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -21,6 +21,7 @@ public abstract class AbstractSandalphonController extends AbstractJudgelsContro
         }
 
         template.addUpperSidebarWidget(profileView.render(
+                JophielClientControllerUtils.getInstance().getUserAvatarUrl(IdentityUtils.getUserJid()),
                 IdentityUtils.getUsername(),
                 IdentityUtils.getUserRealName(),
                 org.iatoki.judgels.jophiel.routes.JophielClientController.profile().absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()),

@@ -18,12 +18,10 @@ import org.iatoki.judgels.jophiel.activity.UserActivityMessageServiceImpl;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.ControllerUtils;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmission;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
-import play.mvc.Http;
 
 import java.util.Collections;
 import java.util.List;
@@ -77,10 +75,6 @@ public final class JerahmeelControllerUtils {
                 e.printStackTrace();
             }
         }
-    }
-
-    private boolean isInTrainingMainPage() {
-        return ControllerUtils.getCurrentUrl(Http.Context.current().request()).equals(org.iatoki.judgels.jerahmeel.training.routes.TrainingController.index().absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()));
     }
 
     private void addProblemWidget(LazyHtml content, String problemJid) {
