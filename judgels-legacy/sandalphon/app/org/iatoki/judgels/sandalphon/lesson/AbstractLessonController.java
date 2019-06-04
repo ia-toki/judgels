@@ -20,7 +20,7 @@ public class AbstractLessonController extends AbstractSandalphonController {
 
     protected void appendVersionLocalChangesWarning(HtmlTemplate template, LessonService lessonService, Lesson lesson) {
         if (lessonService.userCloneExists(IdentityUtils.getUserJid(), lesson.getJid())) {
-            template.setDescription(versionLocalChangesWarningLayout.render(lesson.getId(), null));
+            template.setWarning(versionLocalChangesWarningLayout.render(lesson.getId(), null));
         }
     }
     

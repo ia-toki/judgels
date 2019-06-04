@@ -1,22 +1,19 @@
 package org.iatoki.judgels.jerahmeel.chapter.dependency;
 
-import com.google.common.collect.ImmutableList;
-import org.iatoki.judgels.jerahmeel.chapter.ChapterNotFoundException;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
+import org.iatoki.judgels.jerahmeel.chapter.AbstractChapterController;
 import org.iatoki.judgels.jerahmeel.chapter.Chapter;
-import org.iatoki.judgels.jerahmeel.chapter.ChapterControllerUtils;
+import org.iatoki.judgels.jerahmeel.chapter.ChapterNotFoundException;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
+import org.iatoki.judgels.jerahmeel.chapter.dependency.html.listAddDependenciesView;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
 import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
 import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
-import org.iatoki.judgels.jerahmeel.chapter.dependency.html.listAddDependenciesView;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
@@ -30,7 +27,7 @@ import javax.inject.Singleton;
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
 @Singleton
-public final class ChapterDependencyController extends AbstractJudgelsController {
+public final class ChapterDependencyController extends AbstractChapterController {
 
     private static final long PAGE_SIZE = 20;
     private static final String DEPENDENCY = "dependency";
@@ -113,20 +110,18 @@ public final class ChapterDependencyController extends AbstractJudgelsController
     }
 
     private Result showListAddDependencies(Chapter chapter, Form<ChapterDependencyAddForm> chapterDependencyAddForm, Page<ChapterDependency> pageOfChapterDependencies, String orderBy, String orderDir, String filterString) {
-        LazyHtml content = new LazyHtml(listAddDependenciesView.render(chapter.getId(), pageOfChapterDependencies, orderBy, orderDir, filterString, chapterDependencyAddForm));
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Courses");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listAddDependenciesView.render(chapter.getId(), pageOfChapterDependencies, orderBy, orderDir, filterString, chapterDependencyAddForm));
+        template.setPageTitle("Courses");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, chapter);
     }
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Chapter chapter, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = ChapterControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("chapter.dependencies"), routes.ChapterDependencyController.viewDependencies(chapter.getId())));
-        breadcrumbsBuilder.add(lastLinks);
+    private Result renderTemplate(HtmlTemplate template, Chapter chapter) {
+        appendTabs(template, chapter);
+        
+        template.markBreadcrumbLocation(Messages.get("chapter.dependencies"), routes.ChapterDependencyController.viewDependencies(chapter.getId()));
 
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        return super.renderTemplate(template);
     }
 }

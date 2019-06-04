@@ -1,16 +1,16 @@
 package org.iatoki.judgels.jerahmeel.submission;
 
+import org.iatoki.judgels.jerahmeel.AbstractJerahmeelController;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.GuestView;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import play.mvc.Result;
 
 import javax.inject.Singleton;
 
 @Singleton
-public final class SubmissionController extends AbstractJudgelsController {
+public final class SubmissionController extends AbstractJerahmeelController {
 
     @Authenticated(value = GuestView.class)
     public Result jumpToSubmissions() {

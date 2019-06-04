@@ -1,6 +1,5 @@
 package org.iatoki.judgels.jerahmeel.submission.bundle;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
 import org.iatoki.judgels.jerahmeel.DeprecatedControllerUtils;
@@ -22,17 +21,14 @@ import org.iatoki.judgels.jerahmeel.problemset.ProblemSet;
 import org.iatoki.judgels.jerahmeel.problemset.ProblemSetService;
 import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblem;
 import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemService;
-import org.iatoki.judgels.jerahmeel.submission.SubmissionControllerUtils;
+import org.iatoki.judgels.jerahmeel.submission.AbstractSubmissionController;
 import org.iatoki.judgels.jerahmeel.submission.bundle.html.listOwnSubmissionsView;
 import org.iatoki.judgels.jerahmeel.submission.bundle.html.listSubmissionsView;
 import org.iatoki.judgels.jerahmeel.submission.bundle.html.listSubmissionsWithActionsView;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
-import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmission;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionNotFoundException;
@@ -43,6 +39,7 @@ import play.data.Form;
 import play.db.jpa.Transactional;
 import play.i18n.Messages;
 import play.mvc.Result;
+import play.twirl.api.Html;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -53,7 +50,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Singleton
-public final class BundleSubmissionController extends AbstractJudgelsController {
+public final class BundleSubmissionController extends AbstractSubmissionController {
 
     private static final long PAGE_SIZE = 20;
     private static final String SUBMISSION = "submission";
@@ -92,20 +89,18 @@ public final class BundleSubmissionController extends AbstractJudgelsController 
         Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, IdentityUtils.getUserJid(), null, null);
         List<String> problemJids = pageOfBundleSubmissions.getData().stream().map(s -> s.getProblemJid()).collect(Collectors.toList());
         Map<String, String> problemTitlesMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(problemJids), "en-US");
-        Map<String, String> jidToNameMap = SubmissionControllerUtils.getJidToNameMap(chapterService, problemSetService, pageOfBundleSubmissions.getData().stream().map(s -> s.getContainerJid()).collect(Collectors.toList()));
+        Map<String, String> jidToNameMap = getJidToNameMap(chapterService, problemSetService, pageOfBundleSubmissions.getData().stream().map(s -> s.getContainerJid()).collect(Collectors.toList()));
 
-        LazyHtml content = new LazyHtml(listOwnSubmissionsView.render(pageOfBundleSubmissions, jidToNameMap, problemTitlesMap, pageIndex, orderBy, orderDir));
-        SubmissionControllerUtils.appendOwnSubtabLayout(content);
-        SubmissionControllerUtils.appendTabLayout(content);
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("submission.own"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToOwnSubmissions()),
-                new InternalLink(Messages.get("submission.bundle"), routes.BundleSubmissionController.viewOwnSubmissions())
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Submissions - Bundle");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listOwnSubmissionsView.render(pageOfBundleSubmissions, jidToNameMap, problemTitlesMap, pageIndex, orderBy, orderDir));
+        appendOwnSubtabs(template);
+        appendTabs(template);
+        template.setMainTitle(Messages.get("submission.submissions"));
+        template.markBreadcrumbLocation(Messages.get("submission.own"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToOwnSubmissions());
+        template.markBreadcrumbLocation(Messages.get("submission.bundle"), routes.BundleSubmissionController.viewOwnSubmissions());
+        template.setPageTitle("Submissions - Bundle");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -117,19 +112,17 @@ public final class BundleSubmissionController extends AbstractJudgelsController 
             return notFound();
         }
 
-        LazyHtml content = getViewSubmissionContent(bundleSubmission);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(getViewSubmissionContent(bundleSubmission));
 
-        SubmissionControllerUtils.appendOwnSubtabLayout(content);
-        SubmissionControllerUtils.appendTabLayout(content);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("submission.own"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToOwnSubmissions()),
-                new InternalLink(Messages.get("submission.bundle"), routes.BundleSubmissionController.viewOwnSubmissions()),
-                new InternalLink(bundleSubmission.getId() + "", routes.BundleSubmissionController.viewSubmission(bundleSubmission.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Submissions - Bundle - View");
+        appendOwnSubtabs(template);
+        appendTabs(template);
+        template.markBreadcrumbLocation(Messages.get("submission.own"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToOwnSubmissions());
+        template.markBreadcrumbLocation(Messages.get("submission.bundle"), routes.BundleSubmissionController.viewOwnSubmissions());
+        template.markBreadcrumbLocation(bundleSubmission.getId() + "", routes.BundleSubmissionController.viewSubmission(bundleSubmission.getId()));
+        template.setPageTitle("Submissions - Bundle - View");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Authenticated(value = GuestView.class)
@@ -144,27 +137,24 @@ public final class BundleSubmissionController extends AbstractJudgelsController 
         Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, null, null, null);
         List<String> problemJids = pageOfBundleSubmissions.getData().stream().map(s -> s.getProblemJid()).collect(Collectors.toList());
         Map<String, String> problemTitlesMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(problemJids), "en-US");
-        Map<String, String> jidToNameMap = SubmissionControllerUtils.getJidToNameMap(chapterService, problemSetService, pageOfBundleSubmissions.getData().stream().map(s -> s.getContainerJid()).collect(Collectors.toList()));
+        Map<String, String> jidToNameMap = getJidToNameMap(chapterService, problemSetService, pageOfBundleSubmissions.getData().stream().map(s -> s.getContainerJid()).collect(Collectors.toList()));
 
-        LazyHtml content;
+        HtmlTemplate template = getBaseHtmlTemplate();
         if (JerahmeelControllerUtils.getInstance().isAdmin()) {
-            content = new LazyHtml(listSubmissionsWithActionsView.render(pageOfBundleSubmissions, jidToNameMap, problemTitlesMap, pageIndex, orderBy, orderDir));
+            template.setContent(listSubmissionsWithActionsView.render(pageOfBundleSubmissions, jidToNameMap, problemTitlesMap, pageIndex, orderBy, orderDir));
         } else {
-            content = new LazyHtml(listSubmissionsView.render(pageOfBundleSubmissions, jidToNameMap, problemTitlesMap, pageIndex, orderBy, orderDir));
+            template.setContent(listSubmissionsView.render(pageOfBundleSubmissions, jidToNameMap, problemTitlesMap, pageIndex, orderBy, orderDir));
         }
-        SubmissionControllerUtils.appendAllSubtabLayout(content);
+        appendAllSubtabs(template);
         if (!JerahmeelUtils.isGuest()) {
-            SubmissionControllerUtils.appendTabLayout(content);
+            appendTabs(template);
         }
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("submission.all"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToAllSubmissions()),
-                new InternalLink(Messages.get("submission.bundle"), routes.BundleSubmissionController.viewSubmissions())
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Submissions - Bundle");
+        template.setMainTitle(Messages.get("submission.submissions"));
+        template.markBreadcrumbLocation(Messages.get("submission.all"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToAllSubmissions());
+        template.markBreadcrumbLocation(Messages.get("submission.bundle"), routes.BundleSubmissionController.viewSubmissions());
+        template.setPageTitle("Submissions - Bundle");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -176,19 +166,17 @@ public final class BundleSubmissionController extends AbstractJudgelsController 
             return notFound();
         }
 
-        LazyHtml content = getViewSubmissionContent(bundleSubmission);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(getViewSubmissionContent(bundleSubmission));
 
-        SubmissionControllerUtils.appendOwnSubtabLayout(content);
-        SubmissionControllerUtils.appendTabLayout(content);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("submission.all"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToAllSubmissions()),
-                new InternalLink(Messages.get("submission.bundle"), routes.BundleSubmissionController.viewSubmissions()),
-                new InternalLink(bundleSubmission.getId() + "", routes.BundleSubmissionController.viewSubmission(bundleSubmission.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Submissions - Bundle - View");
+        appendOwnSubtabs(template);
+        appendTabs(template);
+        template.markBreadcrumbLocation(Messages.get("submission.all"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToAllSubmissions());
+        template.markBreadcrumbLocation(Messages.get("submission.bundle"), routes.BundleSubmissionController.viewSubmissions());
+        template.markBreadcrumbLocation(bundleSubmission.getId() + "", routes.BundleSubmissionController.viewSubmission(bundleSubmission.getId()));
+        template.setPageTitle("Submissions - Bundle - View");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -256,7 +244,7 @@ public final class BundleSubmissionController extends AbstractJudgelsController 
         return redirect(routes.BundleSubmissionController.listSubmissions(pageIndex, orderBy, orderDir));
     }
 
-    private LazyHtml getViewSubmissionContent(BundleSubmission bundleSubmission) {
+    private Html getViewSubmissionContent(BundleSubmission bundleSubmission) {
         String containerJid;
         String containerName;
         String problemAlias;
@@ -286,13 +274,6 @@ public final class BundleSubmissionController extends AbstractJudgelsController 
             throw new RuntimeException(e);
         }
 
-        return new LazyHtml(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), problemAlias, problemName, containerName));
-    }
-
-    private void appendBreadcrumbsLayout(LazyHtml content, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = SubmissionControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(lastLinks);
-
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        return bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), problemAlias, problemName, containerName);
     }
 }

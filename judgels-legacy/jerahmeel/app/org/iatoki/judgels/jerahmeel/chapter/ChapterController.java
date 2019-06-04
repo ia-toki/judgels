@@ -1,24 +1,19 @@
 package org.iatoki.judgels.jerahmeel.chapter;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
-import org.iatoki.judgels.jerahmeel.user.item.UserItemStatus;
+import org.iatoki.judgels.jerahmeel.chapter.html.createChapterView;
+import org.iatoki.judgels.jerahmeel.chapter.html.editChapterGeneralView;
+import org.iatoki.judgels.jerahmeel.chapter.html.listChaptersView;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
 import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
 import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemService;
-import org.iatoki.judgels.jerahmeel.chapter.html.createChapterView;
-import org.iatoki.judgels.jerahmeel.chapter.html.editChapterGeneralView;
-import org.iatoki.judgels.jerahmeel.chapter.html.listChaptersView;
+import org.iatoki.judgels.jerahmeel.user.item.UserItemStatus;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.headingLayout;
-import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
@@ -32,7 +27,7 @@ import javax.inject.Singleton;
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
 @Singleton
-public final class ChapterController extends AbstractJudgelsController {
+public final class ChapterController extends AbstractChapterController {
 
     private static final long PAGE_SIZE = 20;
     private static final String CHAPTER = "chapter";
@@ -55,13 +50,13 @@ public final class ChapterController extends AbstractJudgelsController {
     public Result listChapters(long page, String orderBy, String orderDir, String filterString) {
         Page<Chapter> pageOfChapters = chapterService.getPageOfChapters(page, PAGE_SIZE, orderBy, orderDir, filterString);
 
-        LazyHtml content = new LazyHtml(listChaptersView.render(pageOfChapters, orderBy, orderDir, filterString));
-        content.appendLayout(c -> headingWithActionLayout.render(Messages.get("chapter.list"), new InternalLink(Messages.get("commons.create"), routes.ChapterController.createChapter()), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content);
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listChaptersView.render(pageOfChapters, orderBy, orderDir, filterString));
+        template.setMainTitle(Messages.get("chapter.list"));
+        template.addMainButton(Messages.get("commons.create"), routes.ChapterController.createChapter());
+        template.setPageTitle("Chapters");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     public Result jumpToLessons(long chapterId) {
@@ -148,31 +143,20 @@ public final class ChapterController extends AbstractJudgelsController {
     }
 
     private Result showCreateChapter(Form<ChapterUpsertForm> chapterUpsertForm) {
-        LazyHtml content = new LazyHtml(createChapterView.render(chapterUpsertForm));
-        content.appendLayout(c -> headingLayout.render(Messages.get("chapter.create"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("chapter.create"), routes.ChapterController.createChapter())
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapter - Create");
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(createChapterView.render(chapterUpsertForm));
+        template.setMainTitle(Messages.get("chapter.create"));
+        template.markBreadcrumbLocation(Messages.get("chapter.create"), routes.ChapterController.createChapter());
+        template.setPageTitle("Chapter - Create");
+        return renderTemplate(template);
     }
 
     private Result showEditChapterGeneral(Form<ChapterUpsertForm> chapterUpsertForm, Chapter chapter) {
-        LazyHtml content = new LazyHtml(editChapterGeneralView.render(chapterUpsertForm, chapter.getId()));
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("chapter.update"), routes.ChapterController.editChapterGeneral(chapter.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapter - Update");
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
-    }
-
-    private void appendBreadcrumbsLayout(LazyHtml content, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = ChapterControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(lastLinks);
-
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editChapterGeneralView.render(chapterUpsertForm, chapter.getId()));
+        appendTabs(template, chapter);
+        template.markBreadcrumbLocation(Messages.get("chapter.update"), routes.ChapterController.editChapterGeneral(chapter.getId()));
+        template.setPageTitle("Chapter - Update");
+        return renderTemplate(template);
     }
 }

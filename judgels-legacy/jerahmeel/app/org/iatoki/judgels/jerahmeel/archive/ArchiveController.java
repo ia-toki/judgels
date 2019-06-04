@@ -1,29 +1,22 @@
 package org.iatoki.judgels.jerahmeel.archive;
 
-import com.google.common.collect.ImmutableList;
-import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
-import org.iatoki.judgels.jerahmeel.problemset.ProblemSet;
-import org.iatoki.judgels.jerahmeel.problemset.ProblemSetWithScore;
+import org.iatoki.judgels.jerahmeel.archive.html.createArchiveView;
+import org.iatoki.judgels.jerahmeel.archive.html.editArchiveView;
+import org.iatoki.judgels.jerahmeel.archive.html.listArchivesAndProblemSetsView;
+import org.iatoki.judgels.jerahmeel.archive.html.listArchivesAndProblemSetsWithScoreView;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
 import org.iatoki.judgels.jerahmeel.controllers.securities.GuestView;
 import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
 import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
+import org.iatoki.judgels.jerahmeel.problemset.ProblemSet;
 import org.iatoki.judgels.jerahmeel.problemset.ProblemSetService;
-import org.iatoki.judgels.jerahmeel.archive.html.createArchiveView;
-import org.iatoki.judgels.jerahmeel.archive.html.editArchiveView;
-import org.iatoki.judgels.jerahmeel.archive.html.listArchivesAndProblemSetsView;
-import org.iatoki.judgels.jerahmeel.archive.html.listArchivesAndProblemSetsWithScoreView;
+import org.iatoki.judgels.jerahmeel.problemset.ProblemSetWithScore;
+import org.iatoki.judgels.jerahmeel.training.AbstractTrainingController;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.descriptionHtmlLayout;
-import org.iatoki.judgels.play.views.html.layouts.headingLayout;
-import org.iatoki.judgels.play.views.html.layouts.headingWithActionsAndBackLayout;
-import org.iatoki.judgels.play.views.html.layouts.headingWithBackLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.api.mvc.Call;
 import play.data.Form;
 import play.db.jpa.Transactional;
@@ -38,7 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Singleton
-public final class ArchiveController extends AbstractJudgelsController {
+public final class ArchiveController extends AbstractTrainingController {
 
     private static final long PAGE_SIZE = 20;
 
@@ -141,21 +134,21 @@ public final class ArchiveController extends AbstractJudgelsController {
         Archive archive = archiveService.findArchiveById(archiveId);
         Archive parentArchive = archive.getParentArchive();
 
-        LazyHtml content;
+        HtmlTemplate template = getBaseHtmlTemplate();
         if (!JerahmeelUtils.isGuest()) {
             List<ArchiveWithScore> childArchivesWithScore =  archiveService.getChildArchivesWithScore(archive.getJid(), IdentityUtils.getUserJid());
             Page<ProblemSetWithScore> pageOfProblemSetsWithScore = problemSetService.getPageOfProblemSetsWithScore(archive, IdentityUtils.getUserJid(), pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
 
-            content = new LazyHtml(listArchivesAndProblemSetsWithScoreView.render(archive, childArchivesWithScore, pageOfProblemSetsWithScore, orderBy, orderDir, filterString));
+            template.setContent(listArchivesAndProblemSetsWithScoreView.render(archive, childArchivesWithScore, pageOfProblemSetsWithScore, orderBy, orderDir, filterString));
         } else {
             List<Archive> childArchives = archiveService.getChildArchives(archive.getJid());
             Page<ProblemSet> pageOfProblemSets = problemSetService.getPageOfProblemSets(archive, pageIndex, PAGE_SIZE, orderBy, orderDir, filterString);
 
-            content = new LazyHtml(listArchivesAndProblemSetsView.render(archive, childArchives, pageOfProblemSets, orderBy, orderDir, filterString));
+            template.setContent(listArchivesAndProblemSetsView.render(archive, childArchives, pageOfProblemSets, orderBy, orderDir, filterString));
         }
 
         if (!archive.getDescription().isEmpty()) {
-            content.appendLayout(c -> descriptionHtmlLayout.render(archive.getDescription(), c));
+            template.setDescription(archive.getDescription());
         }
 
         final String parentArchiveName;
@@ -169,45 +162,44 @@ public final class ArchiveController extends AbstractJudgelsController {
         }
 
         if (JerahmeelUtils.hasRole("admin")) {
-            ImmutableList.Builder<InternalLink> actionsBuilder = ImmutableList.builder();
-            actionsBuilder.add(new InternalLink(Messages.get("commons.button.edit"), routes.ArchiveController.editArchive(archiveId)));
-            actionsBuilder.add(new InternalLink(Messages.get("archive.create"), routes.ArchiveController.createArchive(archiveId)));
-            actionsBuilder.add(new InternalLink(Messages.get("archive.problemSet.create"), org.iatoki.judgels.jerahmeel.problemset.routes.ProblemSetController.createProblemSet(archive.getId())));
+            template.addMainButton(Messages.get("commons.button.edit"), routes.ArchiveController.editArchive(archiveId));
+            template.addMainButton(Messages.get("archive.create"), routes.ArchiveController.createArchive(archiveId));
+            template.addMainButton(Messages.get("archive.problemSet.create"), org.iatoki.judgels.jerahmeel.problemset.routes.ProblemSetController.createProblemSet(archive.getId()));
 
-            content.appendLayout(c -> headingWithActionsAndBackLayout.render(Messages.get("archive.archive") + " " + archive.getName(), actionsBuilder.build(), new InternalLink(Messages.get("archive.backTo") + " " + parentArchiveName, backCall), c));
+            template.setMainTitle(Messages.get("archive.archive") + " " + archive.getName());
         } else {
-            content.appendLayout(c -> headingWithBackLayout.render(archive.getName(), new InternalLink(Messages.get("archive.backTo") + " " + parentArchiveName, backCall), c));
+            template.setMainTitle(archive.getName());
         }
 
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
+        template.setMainBackButton(Messages.get("archive.backTo") + " " + parentArchiveName, backCall);
 
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = ImmutableList.builder();
-        ArchiveControllerUtils.fillBreadcrumbsBuilder(breadcrumbsBuilder, archive);
-        ArchiveControllerUtils.appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Archives");
+        Archive arch = archive;
+        while (arch != null) {
+            template.markBreadcrumbLocation(arch.getName(), routes.ArchiveController.viewArchives(arch.getId()));
+            arch = arch.getParentArchive();
+        }
+        template.setPageTitle("Archives");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     private Result showCreateArchive(long parentArchiveId, Form<ArchiveUpsertForm> archiveUpsertForm) {
-        LazyHtml content = new LazyHtml(createArchiveView.render(archiveUpsertForm, archiveService.getAllArchives()));
-        content.appendLayout(c -> headingLayout.render(Messages.get("archive.create"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        ArchiveControllerUtils.appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("archive.create"), routes.ArchiveController.createArchive(parentArchiveId))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Archive - Create");
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(createArchiveView.render(archiveUpsertForm, archiveService.getAllArchives()));
+        template.setMainTitle(Messages.get("archive.create"));
+        template.markBreadcrumbLocation(Messages.get("archive.create"), routes.ArchiveController.createArchive(parentArchiveId));
+        template.setPageTitle("Archive - Create");
+        return renderTemplate(template);
     }
 
     private Result showEditArchive(Form<ArchiveUpsertForm> archiveUpsertForm, Archive archive) {
-        LazyHtml content = new LazyHtml(editArchiveView.render(archiveUpsertForm, archive.getId(), archiveService.getAllArchives().stream().filter(f -> !f.containsJidInHierarchy(archive.getJid())).collect(Collectors.toList())));
-        ArchiveControllerUtils.appendUpdateLayout(content, archive);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        ArchiveControllerUtils.appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("archive.edit"), routes.ArchiveController.editArchive(archive.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Archive - Edit");
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editArchiveView.render(archiveUpsertForm, archive.getId(), archiveService.getAllArchives().stream().filter(f -> !f.containsJidInHierarchy(archive.getJid())).collect(Collectors.toList())));
+        template.setMainTitle(Messages.get("archive.archive") + "#" + archive.getId() + ": " + archive.getName());
+        template.addMainButton(Messages.get("archive.enter"), routes.ArchiveController.viewArchives(archive.getId()));
+
+        template.markBreadcrumbLocation(Messages.get("archive.edit"), routes.ArchiveController.editArchive(archive.getId()));
+        template.setPageTitle("Archive - Edit");
+        return renderTemplate(template);
     }
 }

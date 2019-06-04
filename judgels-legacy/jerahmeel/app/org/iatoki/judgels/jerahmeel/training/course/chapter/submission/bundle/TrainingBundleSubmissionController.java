@@ -1,6 +1,5 @@
 package org.iatoki.judgels.jerahmeel.training.course.chapter.submission.bundle;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.iatoki.judgels.FileSystemProvider;
@@ -36,19 +35,14 @@ import org.iatoki.judgels.jerahmeel.curriculum.course.CurriculumCourseService;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionLocalFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionRemoteFileSystemProvider;
-import org.iatoki.judgels.jerahmeel.training.TrainingControllerUtils;
-import org.iatoki.judgels.jerahmeel.training.course.chapter.TrainingChapterControllerUtils;
+import org.iatoki.judgels.jerahmeel.training.course.chapter.submission.AbstractTrainingSubmissionController;
 import org.iatoki.judgels.jerahmeel.training.course.chapter.submission.bundle.html.listOwnSubmissionsView;
 import org.iatoki.judgels.jerahmeel.training.course.chapter.submission.bundle.html.listSubmissionsView;
 import org.iatoki.judgels.jerahmeel.training.course.chapter.submission.bundle.html.listSubmissionsWithActionsView;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
-import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
-import org.iatoki.judgels.play.views.html.layouts.subtabLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleDetailResult;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmission;
@@ -69,7 +63,7 @@ import java.util.List;
 import java.util.Map;
 
 @Singleton
-public final class TrainingBundleSubmissionController extends AbstractJudgelsController {
+public final class TrainingBundleSubmissionController extends AbstractTrainingSubmissionController {
 
     private static final long PAGE_SIZE = 20;
     private static final String SUBMISSION = "submission";
@@ -156,18 +150,13 @@ public final class TrainingBundleSubmissionController extends AbstractJudgelsCon
         Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, IdentityUtils.getUserJid(), actualProblemJid, chapter.getJid());
         Map<String, String> problemJidToAliasMap = chapterProblemService.getBundleProblemJidToAliasMapByChapterJid(chapter.getJid());
 
-        LazyHtml content = new LazyHtml(listOwnSubmissionsView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfBundleSubmissions, problemJidToAliasMap, pageIndex, orderBy, orderDir, actualProblemJid));
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        appendSubtabLayout(content, curriculum, curriculumCourse, course, courseChapter);
-        TrainingChapterControllerUtils.appendSubmissionSubtabLayout(content, curriculum, curriculumCourse, course, courseChapter);
-        TrainingChapterControllerUtils.appendTabLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter,
-                new InternalLink(Messages.get("training.submissions.bundle"), routes.TrainingBundleSubmissionController.viewOwnSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Bundle Submissions");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listOwnSubmissionsView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfBundleSubmissions, problemJidToAliasMap, pageIndex, orderBy, orderDir, actualProblemJid));
+        template.setSecondaryTitle(Messages.get("submission.submissions"));
+        template.markBreadcrumbLocation(Messages.get("training.submissions.bundle"), routes.TrainingBundleSubmissionController.viewOwnSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId()));
+        template.setPageTitle("Chapters - Bundle Submissions");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, curriculum, curriculumCourse, course, courseChapter, chapter);
     }
 
     @Authenticated(value = GuestView.class)
@@ -196,23 +185,17 @@ public final class TrainingBundleSubmissionController extends AbstractJudgelsCon
         Page<BundleSubmission> pageOfBundleSubmissions = bundleSubmissionService.getPageOfBundleSubmissions(pageIndex, PAGE_SIZE, orderBy, orderDir, actualUserJid, actualProblemJid, chapter.getJid());
         Map<String, String> problemJidToAliasMap = chapterProblemService.getBundleProblemJidToAliasMapByChapterJid(chapter.getJid());
 
-        LazyHtml content;
+        HtmlTemplate template = getBaseHtmlTemplate();
         if (JerahmeelControllerUtils.getInstance().isAdmin()) {
-            content = new LazyHtml(listSubmissionsWithActionsView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfBundleSubmissions, problemJidToAliasMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
+            template.setContent(listSubmissionsWithActionsView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfBundleSubmissions, problemJidToAliasMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
         } else {
-            content = new LazyHtml(listSubmissionsView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfBundleSubmissions, problemJidToAliasMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
+            template.setContent(listSubmissionsView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfBundleSubmissions, problemJidToAliasMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
         }
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        appendSubtabLayout(content, curriculum, curriculumCourse, course, courseChapter);
-        TrainingChapterControllerUtils.appendSubmissionSubtabLayout(content, curriculum, curriculumCourse, course, courseChapter);
-        TrainingChapterControllerUtils.appendTabLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter,
-                new InternalLink(Messages.get("training.submissions.bundle"), routes.TrainingBundleSubmissionController.viewSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Bundle Submissions");
+        template.setSecondaryTitle(Messages.get("submission.submissions"));
+        template.markBreadcrumbLocation(Messages.get("training.submissions.bundle"), routes.TrainingBundleSubmissionController.viewSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId()));
+        template.setPageTitle("Chapters - Bundle Submissions");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, curriculum, curriculumCourse, course, courseChapter, chapter);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -246,17 +229,12 @@ public final class TrainingBundleSubmissionController extends AbstractJudgelsCon
         String chapterProblemAlias = chapterProblem.getAlias();
         String chapterProblemName = JidCacheServiceImpl.getInstance().getDisplayName(chapterProblem.getProblemJid());
 
-        LazyHtml content = new LazyHtml(bundleSubmissionView.render(bundleSubmission, new Gson().fromJson(bundleSubmission.getLatestDetails(), new TypeToken<Map<String, BundleDetailResult>>() { }.getType()), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), chapterProblemAlias, chapterProblemName, chapter.getName()));
-        TrainingChapterControllerUtils.appendSubmissionSubtabLayout(content, curriculum, curriculumCourse, course, courseChapter);
-        TrainingChapterControllerUtils.appendTabLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter,
-                new InternalLink(Messages.get("training.submissions.bundle"), routes.TrainingBundleSubmissionController.viewOwnSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId())),
-                new InternalLink(bundleSubmission.getId() + "", routes.TrainingBundleSubmissionController.viewSubmission(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), bundleSubmission.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Bundle Submissions - View");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(bundleSubmissionView.render(bundleSubmission, new Gson().fromJson(bundleSubmission.getLatestDetails(), new TypeToken<Map<String, BundleDetailResult>>() { }.getType()), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), chapterProblemAlias, chapterProblemName, chapter.getName()));
+        template.markBreadcrumbLocation(bundleSubmission.getId() + "", routes.TrainingBundleSubmissionController.viewSubmission(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), bundleSubmission.getId()));
+        template.setPageTitle("Chapters - Bundle Submissions - View");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, curriculum, curriculumCourse, course, courseChapter, chapter);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -329,23 +307,14 @@ public final class TrainingBundleSubmissionController extends AbstractJudgelsCon
         return redirect(routes.TrainingBundleSubmissionController.listSubmissions(curriculumId, curriculumCourseId, courseChapterId, pageIndex, orderBy, orderDir, userJid, problemJid));
     }
 
-    private void appendSubtabLayout(LazyHtml content, Curriculum curriculum, CurriculumCourse curriculumCourse, Course course, CourseChapter courseChapter) {
+    protected Result renderTemplate(HtmlTemplate template, Curriculum curriculum, CurriculumCourse curriculumCourse, Course course, CourseChapter courseChapter, Chapter chapter) {
+        template.markBreadcrumbLocation(chapter.getName(), routes.TrainingBundleSubmissionController.viewSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId()));
+
         if (!JerahmeelUtils.isGuest()) {
-            content.appendLayout(c -> subtabLayout.render(ImmutableList.of(
-                            new InternalLink(Messages.get("training.submissions.bundle.own"), routes.TrainingBundleSubmissionController.viewOwnSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId())),
-                            new InternalLink(Messages.get("training.submissions.bundle.all"), routes.TrainingBundleSubmissionController.viewSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId()))
-                    ), c)
-            );
+            template.addTertiaryTab(Messages.get("training.submissions.bundle.own"), routes.TrainingBundleSubmissionController.viewOwnSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId()));
+            template.addTertiaryTab(Messages.get("training.submissions.bundle.all"), routes.TrainingBundleSubmissionController.viewSubmissions(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId()));
         }
-    }
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Curriculum curriculum, CurriculumCourse curriculumCourse, Course course, CourseChapter courseChapter, Chapter chapter, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = TrainingControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(new InternalLink(curriculum.getName(), org.iatoki.judgels.jerahmeel.training.course.routes.TrainingCourseController.viewCourses(curriculum.getId())));
-        breadcrumbsBuilder.add(new InternalLink(course.getName(), org.iatoki.judgels.jerahmeel.training.course.chapter.routes.TrainingChapterController.viewChapters(curriculum.getId(), curriculumCourse.getId())));
-        breadcrumbsBuilder.add(new InternalLink(chapter.getName(), org.iatoki.judgels.jerahmeel.training.course.chapter.lesson.routes.TrainingLessonController.viewLessons(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId())));
-        breadcrumbsBuilder.add(lastLinks);
-
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        return super.renderTemplate(template, curriculum, curriculumCourse, course, courseChapter, chapter);
     }
 }

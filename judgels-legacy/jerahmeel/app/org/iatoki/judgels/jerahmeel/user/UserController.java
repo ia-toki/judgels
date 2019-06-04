@@ -1,9 +1,9 @@
 package org.iatoki.judgels.jerahmeel.user;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import judgels.jophiel.api.user.search.UserSearchService;
 import org.apache.commons.lang3.StringUtils;
+import org.iatoki.judgels.jerahmeel.AbstractJerahmeelController;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
@@ -18,12 +18,8 @@ import org.iatoki.judgels.jerahmeel.user.html.viewUserView;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.headingLayout;
-import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
@@ -38,7 +34,7 @@ import java.util.Map;
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
 @Singleton
-public final class UserController extends AbstractJudgelsController {
+public final class UserController extends AbstractJerahmeelController {
 
     private static final long PAGE_SIZE = 20;
     private static final String USER = "user";
@@ -61,15 +57,13 @@ public final class UserController extends AbstractJudgelsController {
     public Result listUsers(long pageIndex, String sortBy, String orderBy, String filterString) {
         Page<User> pageOfUsers = userService.getPageOfUsers(pageIndex, PAGE_SIZE, sortBy, orderBy, filterString);
 
-        LazyHtml content = new LazyHtml(listUsersView.render(pageOfUsers, sortBy, orderBy, filterString));
-        content.appendLayout(c -> headingWithActionLayout.render(Messages.get("user.list"), new InternalLink(Messages.get("commons.create"), routes.UserController.addUser()), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(
-                new InternalLink(Messages.get("user.users"), routes.UserController.index())
-        ));
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Users - List");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listUsersView.render(pageOfUsers, sortBy, orderBy, filterString));
+        template.setMainTitle(Messages.get("user.list"));
+        template.addMainButton(Messages.get("commons.create"), routes.UserController.addUser());
+        template.setPageTitle("Users - List");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Transactional(readOnly = true)
@@ -117,16 +111,14 @@ public final class UserController extends AbstractJudgelsController {
     @Transactional(readOnly = true)
     public Result viewUser(long userId) throws UserNotFoundException {
         User user = userService.findUserById(userId);
-        LazyHtml content = new LazyHtml(viewUserView.render(user));
-        content.appendLayout(c -> headingWithActionLayout.render(Messages.get("user.user") + " #" + user.getId() + ": " + JidCacheServiceImpl.getInstance().getDisplayName(user.getUserJid()), new InternalLink(Messages.get("commons.update"), routes.UserController.editUser(user.getId())), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(
-                new InternalLink(Messages.get("user.users"), routes.UserController.index()),
-                new InternalLink(Messages.get("user.view"), routes.UserController.viewUser(user.getId()))
-        ));
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "User - View");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(viewUserView.render(user));
+        template.setMainTitle(Messages.get("user.user") + " #" + user.getId() + ": " + JidCacheServiceImpl.getInstance().getDisplayName(user.getUserJid()));
+        template.addMainButton(Messages.get("commons.update"), routes.UserController.editUser(user.getId()));
+        template.markBreadcrumbLocation(Messages.get("user.view"), routes.UserController.viewUser(user.getId()));
+        template.setPageTitle("User - View");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Transactional(readOnly = true)
@@ -169,28 +161,28 @@ public final class UserController extends AbstractJudgelsController {
     }
 
     private Result showCreateUser(Form<UserAddForm> userAddForm) {
-        LazyHtml content = new LazyHtml(addUserView.render(userAddForm, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
-        content.appendLayout(c -> headingLayout.render(Messages.get("user.create"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(
-                new InternalLink(Messages.get("user.users"), routes.UserController.index()),
-                new InternalLink(Messages.get("user.create"), routes.UserController.addUser())
-        ));
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "User - Create");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(addUserView.render(userAddForm, JophielClientControllerUtils.getInstance().getUserAutocompleteAPIEndpoint()));
+        template.setMainTitle(Messages.get("user.create"));
+        template.markBreadcrumbLocation(Messages.get("user.create"), routes.UserController.addUser());
+        template.setPageTitle("User - Create");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     private Result showEditUser(Form<UserEditForm> userEditForm, User user) {
-        LazyHtml content = new LazyHtml(editUserView.render(userEditForm, user.getId()));
-        content.appendLayout(c -> headingLayout.render(Messages.get("user.user") + " #" + user.getId() + ": " + JidCacheServiceImpl.getInstance().getDisplayName(user.getUserJid()), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, ImmutableList.of(
-                new InternalLink(Messages.get("user.users"), routes.UserController.index()),
-                new InternalLink(Messages.get("user.update"), routes.UserController.editUser(user.getId()))
-        ));
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "User - Update");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editUserView.render(userEditForm, user.getId()));
+        template.setMainTitle(Messages.get("user.user") + " #" + user.getId() + ": " + JidCacheServiceImpl.getInstance().getDisplayName(user.getUserJid()));
+        template.markBreadcrumbLocation(Messages.get("user.update"), routes.UserController.editUser(user.getId()));
+        template.setPageTitle("User - Update");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
+    }
+
+    protected Result renderTemplate(HtmlTemplate template) {
+        template.markBreadcrumbLocation(Messages.get("user.users"), routes.UserController.index());
+
+        return super.renderTemplate(template);
     }
 }

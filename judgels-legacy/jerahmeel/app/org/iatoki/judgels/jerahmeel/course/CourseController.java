@@ -1,6 +1,5 @@
 package org.iatoki.judgels.jerahmeel.course;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
@@ -11,12 +10,8 @@ import org.iatoki.judgels.jerahmeel.course.html.editCourseGeneralView;
 import org.iatoki.judgels.jerahmeel.course.html.listCoursesView;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.headingLayout;
-import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
@@ -30,7 +25,7 @@ import javax.inject.Singleton;
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
 @Singleton
-public final class CourseController extends AbstractJudgelsController {
+public final class CourseController extends AbstractCourseController {
 
     private static final long PAGE_SIZE = 20;
     private static final String COURSE = "course";
@@ -51,13 +46,13 @@ public final class CourseController extends AbstractJudgelsController {
     public Result listCourses(long page, String orderBy, String orderDir, String filterString) {
         Page<Course> pageOfCourses = courseService.getPageOfCourses(page, PAGE_SIZE, orderBy, orderDir, filterString);
 
-        LazyHtml content = new LazyHtml(listCoursesView.render(pageOfCourses, orderBy, orderDir, filterString));
-        content.appendLayout(c -> headingWithActionLayout.render(Messages.get("course.list"), new InternalLink(Messages.get("commons.create"), routes.CourseController.createCourse()), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content);
-        appendTemplateLayout(content);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listCoursesView.render(pageOfCourses, orderBy, orderDir, filterString));
+        template.setMainTitle(Messages.get("course.list"));
+        template.addMainButton(Messages.get("commons.create"), routes.CourseController.createCourse());
+        template.setPageTitle("Courses");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     public Result jumpToChapters(long courseId) {
@@ -124,41 +119,20 @@ public final class CourseController extends AbstractJudgelsController {
     }
 
     private Result showCreateCourse(Form<CourseUpsertForm> courseUpsertForm) {
-        LazyHtml content = new LazyHtml(createCourseView.render(courseUpsertForm));
-        content.appendLayout(c -> headingLayout.render(Messages.get("course.create"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("course.create"), routes.CourseController.createCourse())
-        );
-        appendTemplateLayout(content, "Create");
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(createCourseView.render(courseUpsertForm));
+        template.setMainTitle(Messages.get("course.create"));
+        template.markBreadcrumbLocation(Messages.get("course.create"), routes.CourseController.createCourse());
+        template.setPageTitle("Courses - Create");
+        return renderTemplate(template);
     }
 
     private Result showEditCourseGeneral(Form<CourseUpsertForm> courseUpsertForm, Course course) {
-        LazyHtml content = new LazyHtml(editCourseGeneralView.render(courseUpsertForm, course.getId()));
-        CourseControllerUtils.appendTabLayout(content, course);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("course.update"), routes.CourseController.editCourseGeneral(course.getId()))
-        );
-        appendTemplateLayout(content, "Update");
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
-    }
-
-    private void appendBreadcrumbsLayout(LazyHtml content, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = CourseControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(lastLinks);
-
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
-    }
-
-    private void appendTemplateLayout(LazyHtml content, String... lastTitles) {
-        StringBuilder titleBuilder = new StringBuilder("Courses");
-        for (String lastTitle : lastTitles) {
-            titleBuilder.append(" - ");
-            titleBuilder.append(lastTitle);
-        }
-
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, titleBuilder.toString());
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editCourseGeneralView.render(courseUpsertForm, course.getId()));
+        appendTabs(template, course);
+        template.markBreadcrumbLocation(Messages.get("course.update"), routes.CourseController.editCourseGeneral(course.getId()));
+        template.setPageTitle("Courses - Update");
+        return renderTemplate(template);
     }
 }

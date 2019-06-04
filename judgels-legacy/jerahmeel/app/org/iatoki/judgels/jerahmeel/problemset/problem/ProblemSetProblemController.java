@@ -1,6 +1,5 @@
 package org.iatoki.judgels.jerahmeel.problemset.problem;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
@@ -13,20 +12,26 @@ import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
 import org.iatoki.judgels.jerahmeel.StatementControllerUtils;
-import org.iatoki.judgels.jerahmeel.controllers.securities.*;
+import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
+import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
+import org.iatoki.judgels.jerahmeel.controllers.securities.GuestView;
+import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
+import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.jerahmeel.problemset.AbstractProblemSetController;
 import org.iatoki.judgels.jerahmeel.problemset.ProblemSet;
-import org.iatoki.judgels.jerahmeel.problemset.ProblemSetControllerUtils;
 import org.iatoki.judgels.jerahmeel.problemset.ProblemSetNotFoundException;
 import org.iatoki.judgels.jerahmeel.problemset.ProblemSetService;
-import org.iatoki.judgels.jerahmeel.problemset.problem.html.*;
+import org.iatoki.judgels.jerahmeel.problemset.problem.html.addProblemSetProblemView;
+import org.iatoki.judgels.jerahmeel.problemset.problem.html.editProblemSetProblemView;
+import org.iatoki.judgels.jerahmeel.problemset.problem.html.listProblemSetProblemsView;
+import org.iatoki.judgels.jerahmeel.problemset.problem.html.listVisibleProblemSetProblemsView;
+import org.iatoki.judgels.jerahmeel.problemset.problem.html.listVisibleProblemSetProblemsWithScoreView;
+import org.iatoki.judgels.jerahmeel.problemset.problem.html.viewProblemSetProblemView;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.heading3WithActionLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonResourceDisplayNames;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -45,7 +50,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Singleton
-public final class ProblemSetProblemController extends AbstractJudgelsController {
+public final class ProblemSetProblemController extends AbstractProblemSetController {
 
     private static final long PAGE_SIZE = 20;
     private static final String PROBLEM = "problem";
@@ -77,32 +82,28 @@ public final class ProblemSetProblemController extends AbstractJudgelsController
     public Result listVisibleProblemSetProblems(long problemSetId, long page, String orderBy, String orderDir, String filterString) throws ProblemSetNotFoundException {
         ProblemSet problemSet = problemSetService.findProblemSetById(problemSetId);
 
-        LazyHtml content;
+        HtmlTemplate template = getBaseHtmlTemplate();
         if (!JerahmeelUtils.isGuest()) {
             Page<ProblemSetProblemWithScore> pageOfProblemSetProblemsWithScore = problemSetProblemService.getPageOfProblemSetProblemsWithScore(IdentityUtils.getUserJid(), problemSet.getJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
             List<String> problemJids = pageOfProblemSetProblemsWithScore.getData().stream().map(cp -> cp.getProblemSetProblem().getProblemJid()).collect(Collectors.toList());
             Map<String, String> problemTitlesMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(problemJids), StatementControllerUtils.getCurrentStatementLanguage());
 
-            content = new LazyHtml(listVisibleProblemSetProblemsWithScoreView.render(problemSet, pageOfProblemSetProblemsWithScore, orderBy, orderDir, filterString, problemTitlesMap));
+            template.setContent(listVisibleProblemSetProblemsWithScoreView.render(problemSet, pageOfProblemSetProblemsWithScore, orderBy, orderDir, filterString, problemTitlesMap));
         } else {
             Page<ProblemSetProblem> pageOfProblemSetProblems = problemSetProblemService.getPageOfProblemSetProblems(problemSet.getJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
             List<String> problemJids = pageOfProblemSetProblems.getData().stream().map(cp -> cp.getProblemJid()).collect(Collectors.toList());
             Map<String, String> problemTitlesMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(problemJids), StatementControllerUtils.getCurrentStatementLanguage());
 
-            content = new LazyHtml(listVisibleProblemSetProblemsView.render(problemSet, pageOfProblemSetProblems, orderBy, orderDir, filterString, problemTitlesMap));
+            template.setContent(listVisibleProblemSetProblemsView.render(problemSet, pageOfProblemSetProblems, orderBy, orderDir, filterString, problemTitlesMap));
         }
 
         if (JerahmeelUtils.hasRole("admin")) {
-            ProblemSetControllerUtils.appendProblemSubtabLayout(content, problemSet);
+            appendProblemSubtabs(template, problemSet);
         }
-        ProblemSetControllerUtils.appendTabLayout(content, problemSet);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problemSet,
-                new InternalLink(Messages.get("commons.view"), routes.ProblemSetProblemController.viewVisibleProblemSetProblems(problemSet.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Problem Sets - Problems");
+        template.markBreadcrumbLocation(Messages.get("commons.view"), routes.ProblemSetProblemController.viewVisibleProblemSetProblems(problemSet.getId()));
+        template.setPageTitle("Problem Sets - Problems");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemSet);
     }
 
     @Authenticated(value = GuestView.class)
@@ -152,16 +153,13 @@ public final class ProblemSetProblemController extends AbstractJudgelsController
 
         session("problemJid", problemSetProblem.getProblemJid());
 
-        LazyHtml content = new LazyHtml(viewProblemSetProblemView.render(requestUrl, requestBody));
-        ProblemSetControllerUtils.appendTabLayout(content, problemSet);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problemSet,
-                new InternalLink(problemSetProblem.getAlias(), routes.ProblemSetProblemController.viewProblemSetProblem(problemSet.getId(), problemSetProblem.getId()))
-        );
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(viewProblemSetProblemView.render(requestUrl, requestBody));
+        template.markBreadcrumbLocation(problemSetProblem.getAlias(), routes.ProblemSetProblemController.viewProblemSetProblem(problemSet.getId(), problemSetProblem.getId()));
 
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Problem Sets - Problem");
+        template.setPageTitle("Problem Sets - Problem");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemSet);
     }
 
     @Authenticated(value = GuestView.class)
@@ -336,58 +334,50 @@ public final class ProblemSetProblemController extends AbstractJudgelsController
     }
 
     private Result showListProblemSetProblems(ProblemSet problemSet, Page<ProblemSetProblem> pageOfProblemSetProblems, String orderBy, String orderDir, String filterString, Map<String, String> problemSlugsMap) {
-        LazyHtml content = new LazyHtml(listProblemSetProblemsView.render(problemSet.getId(), pageOfProblemSetProblems, orderBy, orderDir, filterString, problemSlugsMap));
-        content.appendLayout(c -> heading3WithActionLayout.render(Messages.get("archive.problemSet.problems"), new InternalLink(Messages.get("commons.add"), routes.ProblemSetProblemController.addProblemSetProblem(problemSet.getId())), c));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listProblemSetProblemsView.render(problemSet.getId(), pageOfProblemSetProblems, orderBy, orderDir, filterString, problemSlugsMap));
+        template.setSecondaryTitle(Messages.get("archive.problemSet.problems"));
+        template.addSecondaryButton(Messages.get("commons.add"), routes.ProblemSetProblemController.addProblemSetProblem(problemSet.getId()));
         if (JerahmeelUtils.hasRole("admin")) {
-            ProblemSetControllerUtils.appendProblemSubtabLayout(content, problemSet);
+            appendProblemSubtabs(template, problemSet);
         }
-        ProblemSetControllerUtils.appendTabLayout(content, problemSet);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problemSet,
-                new InternalLink(Messages.get("commons.manage"), routes.ProblemSetProblemController.viewProblemSetProblems(problemSet.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Problem Sets - Problems");
+        template.markBreadcrumbLocation(Messages.get("commons.manage"), routes.ProblemSetProblemController.viewProblemSetProblems(problemSet.getId()));
+        template.setPageTitle("Problem Sets - Problems");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemSet);
     }
 
     private Result showAddProblemSetProblem(ProblemSet problemSet, Form<ProblemSetProblemAddForm> problemSetProblemAddForm) {
-        LazyHtml content = new LazyHtml(addProblemSetProblemView.render(problemSet.getId(), problemSetProblemAddForm));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(addProblemSetProblemView.render(problemSet.getId(), problemSetProblemAddForm));
         if (JerahmeelUtils.hasRole("admin")) {
-            ProblemSetControllerUtils.appendProblemSubtabLayout(content, problemSet);
+            appendProblemSubtabs(template, problemSet);
         }
-        ProblemSetControllerUtils.appendTabLayout(content, problemSet);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problemSet,
-                new InternalLink(Messages.get("commons.manage"), routes.ProblemSetProblemController.viewProblemSetProblems(problemSet.getId())),
-                new InternalLink(Messages.get("commons.add"), routes.ProblemSetProblemController.addProblemSetProblem(problemSet.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Problem Sets - Problems - Create");
+        template.markBreadcrumbLocation(Messages.get("commons.manage"), routes.ProblemSetProblemController.viewProblemSetProblems(problemSet.getId()));
+        template.markBreadcrumbLocation(Messages.get("commons.add"), routes.ProblemSetProblemController.addProblemSetProblem(problemSet.getId()));
+        template.setPageTitle("Problem Sets - Problems - Create");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemSet);
     }
 
     private Result showEditProblemSetProblem(ProblemSet problemSet, ProblemSetProblem problemSetProblem, Form<ProblemSetProblemEditForm> problemSetProblemEditForm) {
-        LazyHtml content = new LazyHtml(editProblemSetProblemView.render(problemSetProblemEditForm, problemSet.getId(), problemSetProblem));
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editProblemSetProblemView.render(problemSetProblemEditForm, problemSet.getId(), problemSetProblem));
         if (JerahmeelUtils.hasRole("admin")) {
-            ProblemSetControllerUtils.appendProblemSubtabLayout(content, problemSet);
+            appendProblemSubtabs(template, problemSet);
         }
-        ProblemSetControllerUtils.appendTabLayout(content, problemSet);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problemSet,
-                new InternalLink(Messages.get("commons.manage"), routes.ProblemSetProblemController.viewProblemSetProblems(problemSet.getId())),
-                new InternalLink(Messages.get("commons.update"), routes.ProblemSetProblemController.editProblemSetProblem(problemSet.getId(), problemSetProblem.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Problem Sets - Problems - Edit");
+        template.markBreadcrumbLocation(Messages.get("commons.manage"), routes.ProblemSetProblemController.viewProblemSetProblems(problemSet.getId()));
+        template.markBreadcrumbLocation(Messages.get("commons.update"), routes.ProblemSetProblemController.editProblemSetProblem(problemSet.getId(), problemSetProblem.getId()));
+        template.setPageTitle("Problem Sets - Problems - Edit");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemSet);
     }
 
-    private void appendBreadcrumbsLayout(LazyHtml content, ProblemSet problemSet, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = ProblemSetControllerUtils.getBreadcrumbsBuilder(problemSet);
-        breadcrumbsBuilder.add(new InternalLink(problemSet.getName(), org.iatoki.judgels.jerahmeel.problemset.routes.ProblemSetController.jumpToProblems(problemSet.getId())));
-        breadcrumbsBuilder.add(lastLinks);
+    protected Result renderTemplate(HtmlTemplate template, ProblemSet problemSet) {
+        appendTabs(template, problemSet);
 
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        template.markBreadcrumbLocation(problemSet.getName(), org.iatoki.judgels.jerahmeel.problemset.routes.ProblemSetController.jumpToProblems(problemSet.getId()));
+
+        return super.renderTemplate(template, problemSet);
     }
 }

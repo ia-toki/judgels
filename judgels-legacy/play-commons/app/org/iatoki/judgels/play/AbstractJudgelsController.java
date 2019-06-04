@@ -20,6 +20,7 @@ import org.iatoki.judgels.play.template.content.html.mainTitleLayout;
 import org.iatoki.judgels.play.template.content.html.scriptsLayout;
 import org.iatoki.judgels.play.template.content.html.secondaryTabsLayout;
 import org.iatoki.judgels.play.template.content.html.secondaryTitleLayout;
+import org.iatoki.judgels.play.template.content.html.warningLayout;
 import play.api.mvc.Call;
 import play.data.Form;
 import play.mvc.Controller;
@@ -92,6 +93,10 @@ public abstract class AbstractJudgelsController extends Controller {
             content.appendLayout(c -> secondaryTitleLayout.render(template.getSecondaryTitle(), template.getSecondaryButtons(), c));
         }
 
+        if (template.hasTertiaryTabs()) {
+            content.appendLayout(c -> secondaryTabsLayout.render(template.getTertiaryTabs(), c));
+        }
+
         if (template.hasSecondaryTabs()) {
             content.appendLayout(c -> secondaryTabsLayout.render(template.getSecondaryTabs(), c));
         }
@@ -102,6 +107,10 @@ public abstract class AbstractJudgelsController extends Controller {
 
         if (template.hasDescription()) {
             content.appendLayout(c -> descriptionLayout.render(template.getDescription(), c));
+        }
+
+        if (template.hasWarning()) {
+            content.appendLayout(c -> warningLayout.render(template.getWarning(), c));
         }
 
         if (template.hasMainTitle()) {

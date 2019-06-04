@@ -1,47 +1,42 @@
 package org.iatoki.judgels.jerahmeel.training.course.chapter.lesson;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.api.sandalphon.SandalphonClientAPI;
 import org.iatoki.judgels.api.sandalphon.SandalphonLessonStatementRenderRequestParam;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
-import org.iatoki.judgels.jerahmeel.StatementControllerUtils;
-import org.iatoki.judgels.jerahmeel.course.Course;
-import org.iatoki.judgels.jerahmeel.course.CourseNotFoundException;
-import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapter;
-import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapterNotFoundException;
-import org.iatoki.judgels.jerahmeel.curriculum.Curriculum;
-import org.iatoki.judgels.jerahmeel.curriculum.course.CurriculumCourse;
-import org.iatoki.judgels.jerahmeel.curriculum.course.CurriculumCourseNotFoundException;
-import org.iatoki.judgels.jerahmeel.curriculum.CurriculumNotFoundException;
-import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
+import org.iatoki.judgels.jerahmeel.StatementControllerUtils;
 import org.iatoki.judgels.jerahmeel.chapter.Chapter;
+import org.iatoki.judgels.jerahmeel.chapter.ChapterNotFoundException;
+import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
+import org.iatoki.judgels.jerahmeel.chapter.dependency.ChapterDependencyService;
 import org.iatoki.judgels.jerahmeel.chapter.lesson.ChapterLesson;
 import org.iatoki.judgels.jerahmeel.chapter.lesson.ChapterLessonNotFoundException;
+import org.iatoki.judgels.jerahmeel.chapter.lesson.ChapterLessonService;
 import org.iatoki.judgels.jerahmeel.chapter.lesson.ChapterLessonStatus;
 import org.iatoki.judgels.jerahmeel.chapter.lesson.ChapterLessonWithProgress;
-import org.iatoki.judgels.jerahmeel.chapter.ChapterNotFoundException;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.GuestView;
+import org.iatoki.judgels.jerahmeel.course.Course;
+import org.iatoki.judgels.jerahmeel.course.CourseNotFoundException;
 import org.iatoki.judgels.jerahmeel.course.CourseService;
+import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapter;
+import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapterNotFoundException;
 import org.iatoki.judgels.jerahmeel.course.chapter.CourseChapterService;
-import org.iatoki.judgels.jerahmeel.curriculum.course.CurriculumCourseService;
+import org.iatoki.judgels.jerahmeel.curriculum.Curriculum;
+import org.iatoki.judgels.jerahmeel.curriculum.CurriculumNotFoundException;
 import org.iatoki.judgels.jerahmeel.curriculum.CurriculumService;
-import org.iatoki.judgels.jerahmeel.chapter.dependency.ChapterDependencyService;
-import org.iatoki.judgels.jerahmeel.chapter.lesson.ChapterLessonService;
-import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
-import org.iatoki.judgels.jerahmeel.training.TrainingControllerUtils;
-import org.iatoki.judgels.jerahmeel.training.course.chapter.TrainingChapterControllerUtils;
-import org.iatoki.judgels.jerahmeel.user.item.UserItemService;
+import org.iatoki.judgels.jerahmeel.curriculum.course.CurriculumCourse;
+import org.iatoki.judgels.jerahmeel.curriculum.course.CurriculumCourseNotFoundException;
+import org.iatoki.judgels.jerahmeel.curriculum.course.CurriculumCourseService;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.jerahmeel.training.course.chapter.AbstractTrainingChapterController;
 import org.iatoki.judgels.jerahmeel.training.course.chapter.lesson.html.listChapterLessonsView;
 import org.iatoki.judgels.jerahmeel.training.course.chapter.lesson.html.listChapterLessonsWithProgressView;
 import org.iatoki.judgels.jerahmeel.training.course.chapter.lesson.html.viewLessonView;
+import org.iatoki.judgels.jerahmeel.user.item.UserItemService;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 
@@ -52,7 +47,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Singleton
-public final class TrainingLessonController extends AbstractJudgelsController {
+public final class TrainingLessonController extends AbstractTrainingChapterController {
 
     private static final long PAGE_SIZE = 20;
 
@@ -98,28 +93,25 @@ public final class TrainingLessonController extends AbstractJudgelsController {
 
         Course course = courseService.findCourseByJid(curriculumCourse.getCourseJid());
         Chapter chapter = chapterService.findChapterByJid(courseChapter.getChapterJid());
-        LazyHtml content;
+        HtmlTemplate template = getBaseHtmlTemplate();
 
         if (!JerahmeelUtils.isGuest()) {
             Page<ChapterLessonWithProgress> pageOfChapterLessonsWithProgress = chapterLessonService.getPageOfChapterLessonsWithProgress(IdentityUtils.getUserJid(), courseChapter.getChapterJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
             List<String> lessonJids = pageOfChapterLessonsWithProgress.getData().stream().map(cp -> cp.getChapterLesson().getLessonJid()).collect(Collectors.toList());
             Map<String, String> lessonTitlesMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(lessonJids), StatementControllerUtils.getCurrentStatementLanguage());
 
-            content = new LazyHtml(listChapterLessonsWithProgressView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfChapterLessonsWithProgress, orderBy, orderDir, filterString, lessonTitlesMap));
+            template.setContent(listChapterLessonsWithProgressView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfChapterLessonsWithProgress, orderBy, orderDir, filterString, lessonTitlesMap));
         } else {
             Page<ChapterLesson> pageOfChapterLessons = chapterLessonService.getPageOfChapterLessons(courseChapter.getChapterJid(), page, PAGE_SIZE, orderBy, orderDir, filterString);
             List<String> lessonJids = pageOfChapterLessons.getData().stream().map(cp -> cp.getLessonJid()).collect(Collectors.toList());
             Map<String, String> lessonTitlesMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(lessonJids), StatementControllerUtils.getCurrentStatementLanguage());
 
-            content = new LazyHtml(listChapterLessonsView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfChapterLessons, orderBy, orderDir, filterString, lessonTitlesMap));
+            template.setContent(listChapterLessonsView.render(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), pageOfChapterLessons, orderBy, orderDir, filterString, lessonTitlesMap));
         }
 
-        TrainingChapterControllerUtils.appendTabLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter);
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Training");
+        template.setPageTitle("Training");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, curriculum, curriculumCourse, course, courseChapter, chapter);
     }
 
     @Authenticated(value = GuestView.class)
@@ -148,16 +140,13 @@ public final class TrainingLessonController extends AbstractJudgelsController {
         String requestUrl = sandalphonClientAPI.getLessonStatementRenderAPIEndpoint(chapterLesson.getLessonJid());
         String requestBody = sandalphonClientAPI.constructLessonStatementRenderAPIRequestBody(chapterLesson.getLessonJid(), param);
 
-        LazyHtml content = new LazyHtml(viewLessonView.render(requestUrl, requestBody, chapterLesson.getId()));
-        TrainingChapterControllerUtils.appendTabLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, curriculum, curriculumCourse, course, courseChapter, chapter,
-                new InternalLink(chapterLesson.getAlias(), routes.TrainingLessonController.viewLesson(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), chapterLesson.getId()))
-        );
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(viewLessonView.render(requestUrl, requestBody, chapterLesson.getId()));
+        template.markBreadcrumbLocation(chapterLesson.getAlias(), routes.TrainingLessonController.viewLesson(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId(), chapterLesson.getId()));
 
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Training");
+        template.setPageTitle("Training");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, curriculum, curriculumCourse, course, courseChapter, chapter);
     }
 
     @Authenticated(value = GuestView.class)
@@ -180,13 +169,9 @@ public final class TrainingLessonController extends AbstractJudgelsController {
         return redirect(mediaUrl);
     }
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Curriculum curriculum, CurriculumCourse curriculumCourse, Course course, CourseChapter courseChapter, Chapter chapter, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = TrainingControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(new InternalLink(curriculum.getName(), org.iatoki.judgels.jerahmeel.training.course.routes.TrainingCourseController.viewCourses(curriculum.getId())));
-        breadcrumbsBuilder.add(new InternalLink(course.getName(), org.iatoki.judgels.jerahmeel.training.course.chapter.routes.TrainingChapterController.viewChapters(curriculum.getId(), curriculumCourse.getId())));
-        breadcrumbsBuilder.add(new InternalLink(chapter.getName(), routes.TrainingLessonController.viewLessons(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId())));
-        breadcrumbsBuilder.add(lastLinks);
+    protected Result renderTemplate(HtmlTemplate template, Curriculum curriculum, CurriculumCourse curriculumCourse, Course course, CourseChapter courseChapter, Chapter chapter) {
+        template.markBreadcrumbLocation(chapter.getName(), routes.TrainingLessonController.viewLessons(curriculum.getId(), curriculumCourse.getId(), courseChapter.getId()));
 
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        return super.renderTemplate(template, curriculum, curriculumCourse, course, courseChapter, chapter);
     }
 }

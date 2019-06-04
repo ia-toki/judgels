@@ -1,6 +1,5 @@
 package org.iatoki.judgels.jerahmeel.chapter.submission.programming;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.languages.GradingLanguageRegistry;
@@ -10,35 +9,31 @@ import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.StatementControllerUtils;
 import org.iatoki.judgels.jerahmeel.activity.JerahmeelActivityKeys;
 import org.iatoki.judgels.jerahmeel.chapter.Chapter;
-import org.iatoki.judgels.jerahmeel.chapter.ChapterControllerUtils;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterNotFoundException;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
 import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblem;
 import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemService;
+import org.iatoki.judgels.jerahmeel.chapter.submission.AbstractChapterSubmissionController;
 import org.iatoki.judgels.jerahmeel.chapter.submission.programming.html.listSubmissionsView;
-import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionLocalFileSystemProvider;
-import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionRemoteFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
 import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
 import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionLocalFileSystemProvider;
+import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionRemoteFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.user.item.UserItem;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemService;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
-import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
-import org.iatoki.judgels.play.views.html.layouts.subtabLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionException;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionNotFoundException;
-import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionUtils;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
+import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionUtils;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.i18n.Messages;
@@ -54,7 +49,7 @@ import java.util.Map;
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
 @Singleton
-public final class ChapterProgrammingSubmissionController extends AbstractJudgelsController {
+public final class ChapterProgrammingSubmissionController extends AbstractChapterSubmissionController {
 
     private static final long PAGE_SIZE = 20;
     private static final String SUBMISSION = "submission";
@@ -124,15 +119,12 @@ public final class ChapterProgrammingSubmissionController extends AbstractJudgel
         List<String> userJids = Lists.transform(userItems, u -> u.getUserJid());
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
-        LazyHtml content = new LazyHtml(listSubmissionsView.render(chapter.getId(), pageOfSubmissions, userJids, problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        appendSubtabLayout(content, chapter);
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Programming Submissions");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listSubmissionsView.render(chapter.getId(), pageOfSubmissions, userJids, problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
+        template.setSecondaryTitle(Messages.get("submission.submissions"));
+        template.setPageTitle("Chapters - Programming Submissions");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, chapter);
     }
 
     @Transactional(readOnly = true)
@@ -147,16 +139,12 @@ public final class ChapterProgrammingSubmissionController extends AbstractJudgel
         String chapterProblemName = SandalphonResourceDisplayNameUtils.parseTitleByLanguage(JidCacheServiceImpl.getInstance().getDisplayName(chapterProblem.getProblemJid()), StatementControllerUtils.getCurrentStatementLanguage());
         String gradingLanguageName = GradingLanguageRegistry.getInstance().get(submission.getGradingLanguage()).getName();
 
-        LazyHtml content = new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(submission.getGradingEngine()).renderViewSubmission(submission, submissionSource, authorName, chapterProblemAlias, chapterProblemName, gradingLanguageName, chapter.getName()));
-        appendSubtabLayout(content, chapter);
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, chapter,
-                new InternalLink(chapterProblemAlias, routes.ChapterProgrammingSubmissionController.viewSubmission(chapter.getId(), submission.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Programming Submissions - View");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(submission.getGradingEngine()).renderViewSubmission(submission, submissionSource, authorName, chapterProblemAlias, chapterProblemName, gradingLanguageName, chapter.getName()));
+        template.markBreadcrumbLocation(chapterProblemAlias, routes.ChapterProgrammingSubmissionController.viewSubmission(chapter.getId(), submission.getId()));
+        template.setPageTitle("Chapters - Programming Submissions - View");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, chapter);
     }
 
     @Transactional
@@ -198,21 +186,9 @@ public final class ChapterProgrammingSubmissionController extends AbstractJudgel
         return redirect(routes.ChapterProgrammingSubmissionController.listSubmissions(chapterId, pageIndex, orderBy, orderDir, userJid, problemJid));
     }
 
-    private void appendSubtabLayout(LazyHtml content, Chapter chapter) {
-        content.appendLayout(c -> subtabLayout.render(ImmutableList.of(
-                        new InternalLink(Messages.get("chapter.submissions.programming"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToProgrammingSubmissions(chapter.getId())),
-                        new InternalLink(Messages.get("chapter.submissions.bundle"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToBundleSubmissions(chapter.getId()))
-                ), c)
-        );
-    }
+    protected Result renderTemplate(HtmlTemplate template, Chapter chapter) {
+        template.markBreadcrumbLocation(Messages.get("chapter.submissions.programming"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToProgrammingSubmissions(chapter.getId()));
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Chapter chapter, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = ChapterControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("chapter.submissions"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToSubmissions(chapter.getId())));
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("chapter.submissions.programming"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToProgrammingSubmissions(chapter.getId())));
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("commons.view"), routes.ChapterProgrammingSubmissionController.viewSubmissions(chapter.getId())));
-        breadcrumbsBuilder.add(lastLinks);
-
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        return super.renderTemplate(template, chapter);
     }
 }

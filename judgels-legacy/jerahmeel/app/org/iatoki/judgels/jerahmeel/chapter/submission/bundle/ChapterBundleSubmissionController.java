@@ -1,6 +1,5 @@
 package org.iatoki.judgels.jerahmeel.chapter.submission.bundle;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
@@ -8,11 +7,11 @@ import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.StatementControllerUtils;
 import org.iatoki.judgels.jerahmeel.activity.JerahmeelActivityKeys;
 import org.iatoki.judgels.jerahmeel.chapter.Chapter;
-import org.iatoki.judgels.jerahmeel.chapter.ChapterControllerUtils;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterNotFoundException;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
 import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblem;
 import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemService;
+import org.iatoki.judgels.jerahmeel.chapter.submission.AbstractChapterSubmissionController;
 import org.iatoki.judgels.jerahmeel.chapter.submission.bundle.html.listSubmissionsView;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
@@ -24,13 +23,9 @@ import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionRemoteFile
 import org.iatoki.judgels.jerahmeel.user.item.UserItem;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemService;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
-import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
-import org.iatoki.judgels.play.views.html.layouts.subtabLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.bundle.grading.BundleAnswer;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmission;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionNotFoundException;
@@ -53,7 +48,7 @@ import java.util.Map;
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
 @Singleton
-public final class ChapterBundleSubmissionController extends AbstractJudgelsController {
+public final class ChapterBundleSubmissionController extends AbstractChapterSubmissionController {
 
     private static final long PAGE_SIZE = 20;
     private static final String SUBMISSION = "submission";
@@ -111,15 +106,12 @@ public final class ChapterBundleSubmissionController extends AbstractJudgelsCont
         List<UserItem> userItems = userItemService.getUserItemsByItemJid(chapter.getJid());
         List<String> userJids = Lists.transform(userItems, u -> u.getUserJid());
 
-        LazyHtml content = new LazyHtml(listSubmissionsView.render(chapter.getId(), pageOfBundleSubmissions, userJids, problemJidToAliasMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        appendSubtabLayout(content, chapter);
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Programming BundleSubmissions");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listSubmissionsView.render(chapter.getId(), pageOfBundleSubmissions, userJids, problemJidToAliasMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
+        template.setSecondaryTitle(Messages.get("submission.submissions"));
+        template.setPageTitle("Chapters - Programming BundleSubmissions");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, chapter);
     }
 
     @Transactional(readOnly = true)
@@ -137,16 +129,12 @@ public final class ChapterBundleSubmissionController extends AbstractJudgelsCont
         String chapterProblemAlias = chapterProblem.getAlias();
         String chapterProblemName = SandalphonResourceDisplayNameUtils.parseTitleByLanguage(JidCacheServiceImpl.getInstance().getDisplayName(chapterProblem.getProblemJid()), StatementControllerUtils.getCurrentStatementLanguage());
 
-        LazyHtml content = new LazyHtml(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), chapterProblemAlias, chapterProblemName, chapter.getName()));
-        appendSubtabLayout(content, chapter);
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, chapter,
-                new InternalLink(chapterProblemAlias, routes.ChapterBundleSubmissionController.viewSubmission(chapter.getId(), bundleSubmission.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Programming BundleSubmissions - View");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(bundleSubmissionView.render(bundleSubmission, BundleSubmissionUtils.parseGradingResult(bundleSubmission), bundleAnswer, JidCacheServiceImpl.getInstance().getDisplayName(bundleSubmission.getAuthorJid()), chapterProblemAlias, chapterProblemName, chapter.getName()));
+        template.markBreadcrumbLocation(chapterProblemAlias, routes.ChapterBundleSubmissionController.viewSubmission(chapter.getId(), bundleSubmission.getId()));
+        template.setPageTitle("Chapters - Programming BundleSubmissions - View");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, chapter);
     }
 
     @Transactional
@@ -198,21 +186,9 @@ public final class ChapterBundleSubmissionController extends AbstractJudgelsCont
         return redirect(routes.ChapterBundleSubmissionController.listSubmissions(chapterId, pageIndex, orderBy, orderDir, userJid, problemJid));
     }
 
-    private void appendSubtabLayout(LazyHtml content, Chapter chapter) {
-        content.appendLayout(c -> subtabLayout.render(ImmutableList.of(
-                        new InternalLink(Messages.get("chapter.submissions.programming"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToProgrammingSubmissions(chapter.getId())),
-                        new InternalLink(Messages.get("chapter.submissions.bundle"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToBundleSubmissions(chapter.getId()))
-                ), c)
-        );
-    }
+    protected Result renderTemplate(HtmlTemplate template, Chapter chapter) {
+        template.markBreadcrumbLocation(Messages.get("chapter.submissions.bundle"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToBundleSubmissions(chapter.getId()));
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Chapter chapter, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = ChapterControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("chapter.submissions"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToSubmissions(chapter.getId())));
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("chapter.submissions.bundle"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToBundleSubmissions(chapter.getId())));
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("commons.view"), routes.ChapterBundleSubmissionController.viewSubmissions(chapter.getId())));
-        breadcrumbsBuilder.add(lastLinks);
-
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        return super.renderTemplate(template, chapter);
     }
 }

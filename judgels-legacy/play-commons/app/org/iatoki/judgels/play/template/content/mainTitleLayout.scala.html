@@ -2,7 +2,7 @@
 
 @(title: String, buttons: List[InternalLink], backButton: InternalLink)(content: Html)
 
-@if(buttons.isEmpty) {
+@if(buttons.isEmpty && backButton == null) {
     <h2>@title</h2>
 } else {
     <div class="inline-headers">
@@ -11,14 +11,10 @@
         @for(button <- buttons) {
             <a class="btn btn-primary btn-sm" href="@button.getTarget">@button.getLabel</a>
         }
+        @if(backButton != null) {
+            <a class="btn btn-danger btn-sm" href="@backButton.getTarget"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> @backButton.getLabel</a>
+        }
     </div>
-}
-
-
-@if(backButton != null) {
-    <a class="btn btn-danger btn-sm" href="@backButton.getTarget"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> @backButton.getLabel</a>
-
-    <p></p>
 }
 
 @content

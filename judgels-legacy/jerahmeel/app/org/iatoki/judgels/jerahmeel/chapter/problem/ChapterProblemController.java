@@ -1,6 +1,5 @@
 package org.iatoki.judgels.jerahmeel.chapter.problem;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.sandalphon.api.client.problem.ClientProblemService;
@@ -12,8 +11,8 @@ import org.iatoki.judgels.api.sandalphon.SandalphonProgrammingProblemStatementRe
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.StatementControllerUtils;
+import org.iatoki.judgels.jerahmeel.chapter.AbstractChapterController;
 import org.iatoki.judgels.jerahmeel.chapter.Chapter;
-import org.iatoki.judgels.jerahmeel.chapter.ChapterControllerUtils;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterNotFoundException;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
 import org.iatoki.judgels.jerahmeel.chapter.problem.html.addChapterProblemView;
@@ -27,11 +26,8 @@ import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.headingWithActionLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.SandalphonResourceDisplayNames;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -52,7 +48,7 @@ import java.util.stream.Collectors;
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
 @Singleton
-public final class ChapterProblemController extends AbstractJudgelsController {
+public final class ChapterProblemController extends AbstractChapterController {
 
     private static final long PAGE_SIZE = 20;
     private static final String PROBLEM = "problem";
@@ -127,16 +123,13 @@ public final class ChapterProblemController extends AbstractJudgelsController {
             throw new IllegalStateException();
         }
 
-        LazyHtml content = new LazyHtml(viewProblemView.render(requestUrl, requestBody));
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, chapter,
-                new InternalLink(chapterProblem.getAlias(), routes.ChapterProblemController.viewChapterProblem(chapter.getId(), chapterProblem.getId()))
-        );
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(viewProblemView.render(requestUrl, requestBody));
+        template.markBreadcrumbLocation(chapterProblem.getAlias(), routes.ChapterProblemController.viewChapterProblem(chapter.getId(), chapterProblem.getId()));
 
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Problem - View");
+        template.setPageTitle("Chapters - Problem - View");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, chapter);
     }
 
     @Transactional(readOnly = true)
@@ -279,46 +272,38 @@ public final class ChapterProblemController extends AbstractJudgelsController {
     }
 
     private Result showListChapterProblems(Chapter chapter, Page<ChapterProblem> pageOfChapterProblems, String orderBy, String orderDir, String filterString, Map<String, String> problemSlugsMap) {
-        LazyHtml content = new LazyHtml(listChapterProblemsView.render(chapter.getId(), pageOfChapterProblems, orderBy, orderDir, filterString, problemSlugsMap));
-        content.appendLayout(c -> headingWithActionLayout.render(Messages.get("chapter.problems"), new InternalLink(Messages.get("commons.add"), routes.ChapterProblemController.addChapterProblem(chapter.getId())), c));
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Problems");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listChapterProblemsView.render(chapter.getId(), pageOfChapterProblems, orderBy, orderDir, filterString, problemSlugsMap));
+        template.setSecondaryTitle(Messages.get("chapter.problems"));
+        template.addSecondaryButton(Messages.get("commons.add"), routes.ChapterProblemController.addChapterProblem(chapter.getId()));
+        template.setPageTitle("Chapters - Problems");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, chapter);
     }
 
     private Result showAddChapterProblem(Chapter chapter, Form<ChapterProblemAddForm> chapterProblemAddForm) {
-        LazyHtml content = new LazyHtml(addChapterProblemView.render(chapter.getId(), chapterProblemAddForm));
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, chapter,
-                new InternalLink(Messages.get("commons.add"), routes.ChapterProblemController.addChapterProblem(chapter.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Problems - Create");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(addChapterProblemView.render(chapter.getId(), chapterProblemAddForm));
+        template.markBreadcrumbLocation(Messages.get("commons.add"), routes.ChapterProblemController.addChapterProblem(chapter.getId()));
+        template.setPageTitle("Chapters - Problems - Create");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, chapter);
     }
 
     private Result showEditChapterProblem(Chapter chapter, ChapterProblem chapterProblem, Form<ChapterProblemEditForm> chapterProblemEditForm) {
-        LazyHtml content = new LazyHtml(editChapterProblemView.render(chapterProblemEditForm, chapter.getId(), chapterProblem));
-        ChapterControllerUtils.appendTabLayout(content, chapter);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, chapter,
-                new InternalLink(Messages.get("commons.update"), routes.ChapterProblemController.editChapterProblem(chapter.getId(), chapterProblem.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Chapters - Problems - Edit");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editChapterProblemView.render(chapterProblemEditForm, chapter.getId(), chapterProblem));
+        template.markBreadcrumbLocation(Messages.get("commons.update"), routes.ChapterProblemController.editChapterProblem(chapter.getId(), chapterProblem.getId()));
+        template.setPageTitle("Chapters - Problems - Edit");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, chapter);
     }
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Chapter chapter, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = ChapterControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("chapter.problems"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToProblems(chapter.getId())));
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("commons.view"), routes.ChapterProblemController.viewChapterProblems(chapter.getId())));
-        breadcrumbsBuilder.add(lastLinks);
+    private Result renderTemplate(HtmlTemplate template, Chapter chapter) {
+        appendTabs(template, chapter);
 
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        template.markBreadcrumbLocation(Messages.get("chapter.problems"), org.iatoki.judgels.jerahmeel.chapter.routes.ChapterController.jumpToProblems(chapter.getId()));
+
+        return super.renderTemplate(template);
     }
 }

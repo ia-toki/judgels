@@ -1,8 +1,7 @@
 package org.iatoki.judgels.jerahmeel.statistic;
 
-import com.google.common.collect.ImmutableList;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
-import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
+import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
 import org.iatoki.judgels.jerahmeel.controllers.securities.GuestView;
@@ -17,10 +16,8 @@ import org.iatoki.judgels.jerahmeel.statistic.problem.html.listProblemStatistics
 import org.iatoki.judgels.jerahmeel.statistic.problemscore.ProblemStatistic;
 import org.iatoki.judgels.jerahmeel.statistic.submission.SubmissionStatistic;
 import org.iatoki.judgels.jerahmeel.statistic.submission.html.viewSubmissionStatisticsView;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
-import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
+import org.iatoki.judgels.jerahmeel.training.AbstractTrainingController;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionService;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 import play.db.jpa.Transactional;
@@ -38,7 +35,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Singleton
-public final class StatisticController extends AbstractJudgelsController {
+public final class StatisticController extends AbstractTrainingController {
 
     private static final long PAGE_SIZE = 20;
 
@@ -72,16 +69,13 @@ public final class StatisticController extends AbstractJudgelsController {
     public Result listPointStatistics(long pageIndex, String orderBy, String orderDir) {
         PointStatistic pointStatistic = pointStatisticService.getLatestPointStatisticWithPagination(pageIndex, PAGE_SIZE, orderBy, orderDir, "");
 
-        LazyHtml content = new LazyHtml(listPointStatisticsView.render(pointStatistic, pageIndex, orderBy, orderDir));
-        StatisticControllerUtils.appendTabLayout(content);
-        content.appendLayout(c -> heading3Layout.render(Messages.get("statistic.point"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("statistic.point"), routes.StatisticController.viewPointStatistics())
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Statistics - Hall of Fame");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listPointStatisticsView.render(pointStatistic, pageIndex, orderBy, orderDir));
+        template.setSecondaryTitle(Messages.get("statistic.point"));
+        template.markBreadcrumbLocation(Messages.get("statistic.point"), routes.StatisticController.viewPointStatistics());
+        template.setPageTitle("Statistics - Hall of Fame");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Authenticated(value = GuestView.class)
@@ -98,16 +92,13 @@ public final class StatisticController extends AbstractJudgelsController {
         List<String> problemJids = problemStatistic.getPageOfProblemStatisticEntries().getData().stream().map(d -> d.getProblemJid()).collect(Collectors.toList());
         Map<String, String> problemTitlesMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(problemJids), "en-US");
 
-        LazyHtml content = new LazyHtml(listProblemStatisticsView.render(problemStatistic, problemTitlesMap, pageIndex, orderBy, orderDir));
-        StatisticControllerUtils.appendTabLayout(content);
-        content.appendLayout(c -> heading3Layout.render(Messages.get("statistic.problem") + " (" + Messages.get("statistic.problem.duration.week") + ")", c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("statistic.problem"), routes.StatisticController.viewProblemStatistics())
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Statistics - Favorite Problems");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listProblemStatisticsView.render(problemStatistic, problemTitlesMap, pageIndex, orderBy, orderDir));
+        template.setSecondaryTitle(Messages.get("statistic.problem") + " (" + Messages.get("statistic.problem.duration.week") + ")");
+        template.markBreadcrumbLocation(Messages.get("statistic.problem"), routes.StatisticController.viewProblemStatistics());
+        template.setPageTitle("Statistics - Favorite Problems");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -160,23 +151,13 @@ public final class StatisticController extends AbstractJudgelsController {
         SubmissionStatistic bundleSubmissionStatistic = getSubmissionStatistic(bundleSubmissionsTime, thisHour, thisDay, thisWeek, thisMonth, thisYear, lastHour, lastDay, lastWeek, lastMonth, lastYear);
         SubmissionStatistic programmingSubmissionStatistic = getSubmissionStatistic(programmingSubmissionsTime, thisHour, thisDay, thisWeek, thisMonth, thisYear, lastHour, lastDay, lastWeek, lastMonth, lastYear);
 
-        LazyHtml content = new LazyHtml(viewSubmissionStatisticsView.render(bundleSubmissionStatistic, programmingSubmissionStatistic));
-        StatisticControllerUtils.appendTabLayout(content);
-        content.appendLayout(c -> heading3Layout.render(Messages.get("statistic.submission"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("statistic.submission"), routes.StatisticController.viewSubmissionStatistics())
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Statistics - Submissions");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(viewSubmissionStatisticsView.render(bundleSubmissionStatistic, programmingSubmissionStatistic));
+        template.setSecondaryTitle(Messages.get("statistic.submission"));
+        template.markBreadcrumbLocation(Messages.get("statistic.submission"), routes.StatisticController.viewSubmissionStatistics());
+        template.setPageTitle("Statistics - Submissions");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
-    }
-
-    private void appendBreadcrumbsLayout(LazyHtml content, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = StatisticControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(lastLinks);
-
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        return renderTemplate(template);
     }
 
     private SubmissionStatistic getSubmissionStatistic(List<Instant> submissionsTime, long thisHour, long thisDay, long thisWeek, long thisMonth, long thisYear, long lastHour, long lastDay, long lastWeek, long lastMonth, long lastYear) {
@@ -259,4 +240,17 @@ public final class StatisticController extends AbstractJudgelsController {
 
         return new SubmissionStatistic(countThisHour, countThisDay, countThisWeek, countThisMonth, countThisYear, countLastHour, countLastDay, countLastWeek, countLastMonth, countLastYear, count);
     }
+
+    protected Result renderTemplate(HtmlTemplate template) {
+        template.addMainTab(Messages.get("statistic.point"), routes.StatisticController.viewPointStatistics());
+        template.addMainTab(Messages.get("statistic.problem"), routes.StatisticController.viewProblemStatistics());
+        if (JerahmeelUtils.hasRole("admin")) {
+            template.addMainTab(Messages.get("statistic.submission"), routes.StatisticController.viewSubmissionStatistics());
+        }
+
+        template.markBreadcrumbLocation(Messages.get("statistic.statistics"), routes.StatisticController.index());
+
+        return super.renderTemplate(template);
+    }
+
 }

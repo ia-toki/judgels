@@ -1,50 +1,47 @@
 package org.iatoki.judgels.jerahmeel.submission.programming;
 
-import com.google.common.collect.ImmutableList;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import org.iatoki.judgels.FileSystemProvider;
 import org.iatoki.judgels.api.sandalphon.SandalphonResourceDisplayNameUtils;
-import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
-import org.iatoki.judgels.jerahmeel.activity.JerahmeelActivityKeys;
-import org.iatoki.judgels.jerahmeel.jid.JerahmeelJidUtils;
-import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
-import org.iatoki.judgels.jerahmeel.problemset.ProblemSet;
-import org.iatoki.judgels.jerahmeel.problemset.ProblemSetNotFoundException;
-import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblem;
-import org.iatoki.judgels.jerahmeel.chapter.Chapter;
-import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblem;
 import org.iatoki.judgels.jerahmeel.DeprecatedControllerUtils;
+import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
+import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
+import org.iatoki.judgels.jerahmeel.activity.JerahmeelActivityKeys;
+import org.iatoki.judgels.jerahmeel.chapter.Chapter;
+import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
+import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblem;
+import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemService;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
 import org.iatoki.judgels.jerahmeel.controllers.securities.GuestView;
 import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
 import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
-import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemService;
-import org.iatoki.judgels.jerahmeel.problemset.ProblemSetService;
-import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemService;
-import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
+import org.iatoki.judgels.jerahmeel.jid.JerahmeelJidUtils;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
-import org.iatoki.judgels.jerahmeel.submission.SubmissionControllerUtils;
+import org.iatoki.judgels.jerahmeel.problemset.ProblemSet;
+import org.iatoki.judgels.jerahmeel.problemset.ProblemSetNotFoundException;
+import org.iatoki.judgels.jerahmeel.problemset.ProblemSetService;
+import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblem;
+import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemService;
+import org.iatoki.judgels.jerahmeel.submission.AbstractSubmissionController;
 import org.iatoki.judgels.jerahmeel.submission.programming.html.listOwnSubmissionsView;
 import org.iatoki.judgels.jerahmeel.submission.programming.html.listSubmissionsView;
 import org.iatoki.judgels.jerahmeel.submission.programming.html.listSubmissionsWithActionsView;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
-import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionNotFoundException;
-import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionUtils;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
+import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionUtils;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.i18n.Messages;
 import play.mvc.Result;
+import play.twirl.api.Html;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -54,7 +51,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Singleton
-public final class ProgrammingSubmissionController extends AbstractJudgelsController {
+public final class ProgrammingSubmissionController extends AbstractSubmissionController {
 
     private static final String SUBMISSION = "submission";
     private static final String PROBLEM = "problem";
@@ -94,21 +91,19 @@ public final class ProgrammingSubmissionController extends AbstractJudgelsContro
 
         List<String> problemJids = pageOfProgrammingSubmissions.getData().stream().map(s -> s.getProblemJid()).collect(Collectors.toList());
         Map<String, String> problemTitlesMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(problemJids), "en-US");
-        Map<String, String> jidToNameMap = SubmissionControllerUtils.getJidToNameMap(chapterService, problemSetService, pageOfProgrammingSubmissions.getData().stream().map(s -> s.getContainerJid()).collect(Collectors.toList()));
+        Map<String, String> jidToNameMap = getJidToNameMap(chapterService, problemSetService, pageOfProgrammingSubmissions.getData().stream().map(s -> s.getContainerJid()).collect(Collectors.toList()));
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
-        LazyHtml content = new LazyHtml(listOwnSubmissionsView.render(pageOfProgrammingSubmissions, jidToNameMap, problemTitlesMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir));
-        SubmissionControllerUtils.appendOwnSubtabLayout(content);
-        SubmissionControllerUtils.appendTabLayout(content);
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("submission.own"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToOwnSubmissions()),
-                new InternalLink(Messages.get("submission.programming"), routes.ProgrammingSubmissionController.viewOwnSubmissions())
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Submissions - Programming");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listOwnSubmissionsView.render(pageOfProgrammingSubmissions, jidToNameMap, problemTitlesMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir));
+        appendOwnSubtabs(template);
+        appendTabs(template);
+        template.setMainTitle(Messages.get("submission.submissions"));
+        template.markBreadcrumbLocation(Messages.get("submission.own"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToOwnSubmissions());
+        template.markBreadcrumbLocation(Messages.get("submission.programming"), routes.ProgrammingSubmissionController.viewOwnSubmissions());
+        template.setPageTitle("Submissions - Programming");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -120,18 +115,17 @@ public final class ProgrammingSubmissionController extends AbstractJudgelsContro
             return notFound();
         }
 
-        LazyHtml content = getViewSubmissionContent(programmingSubmission);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(getViewSubmissionContent(programmingSubmission));
 
-        SubmissionControllerUtils.appendTabLayout(content);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("submission.own"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToOwnSubmissions()),
-                new InternalLink(Messages.get("submission.programming"), routes.ProgrammingSubmissionController.viewOwnSubmissions()),
-                new InternalLink(programmingSubmission.getId() + "", routes.ProgrammingSubmissionController.viewSubmission(programmingSubmission.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Submissions - Programming - View");
+        appendTabs(template);
+        template.markBreadcrumbLocation(Messages.get("submission.own"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToOwnSubmissions());
+        template.markBreadcrumbLocation(Messages.get("submission.programming"), routes.ProgrammingSubmissionController.viewOwnSubmissions());
+        template.markBreadcrumbLocation(programmingSubmission.getId() + "", routes.ProgrammingSubmissionController.viewSubmission(programmingSubmission.getId()));
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        template.setPageTitle("Submissions - Programming - View");
+
+        return renderTemplate(template);
     }
 
     @Authenticated(value = GuestView.class)
@@ -147,28 +141,25 @@ public final class ProgrammingSubmissionController extends AbstractJudgelsContro
 
         List<String> problemJids = pageOfProgrammingSubmissions.getData().stream().map(s -> s.getProblemJid()).collect(Collectors.toList());
         Map<String, String> problemTitlesMap = SandalphonResourceDisplayNameUtils.buildTitlesMap(JidCacheServiceImpl.getInstance().getDisplayNames(problemJids), "en-US");
-        Map<String, String> jidToNameMap = SubmissionControllerUtils.getJidToNameMap(chapterService, problemSetService, pageOfProgrammingSubmissions.getData().stream().map(s -> s.getContainerJid()).collect(Collectors.toList()));
+        Map<String, String> jidToNameMap = getJidToNameMap(chapterService, problemSetService, pageOfProgrammingSubmissions.getData().stream().map(s -> s.getContainerJid()).collect(Collectors.toList()));
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
-        LazyHtml content;
+        HtmlTemplate template = getBaseHtmlTemplate();
         if (JerahmeelControllerUtils.getInstance().isAdmin()) {
-            content = new LazyHtml(listSubmissionsWithActionsView.render(pageOfProgrammingSubmissions, jidToNameMap, problemTitlesMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir));
+            template.setContent(listSubmissionsWithActionsView.render(pageOfProgrammingSubmissions, jidToNameMap, problemTitlesMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir));
         } else {
-            content = new LazyHtml(listSubmissionsView.render(pageOfProgrammingSubmissions, jidToNameMap, problemTitlesMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir));
+            template.setContent(listSubmissionsView.render(pageOfProgrammingSubmissions, jidToNameMap, problemTitlesMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir));
         }
-        SubmissionControllerUtils.appendAllSubtabLayout(content);
+        appendAllSubtabs(template);
         if (!JerahmeelUtils.isGuest()) {
-            SubmissionControllerUtils.appendTabLayout(content);
+            appendTabs(template);
         }
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("submission.all"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToAllSubmissions()),
-                new InternalLink(Messages.get("submission.programming"), routes.ProgrammingSubmissionController.viewSubmissions())
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Submissions - Programming");
+        template.setMainTitle(Messages.get("submission.submissions"));
+        template.markBreadcrumbLocation(Messages.get("submission.all"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToAllSubmissions());
+        template.markBreadcrumbLocation(Messages.get("submission.programming"), routes.ProgrammingSubmissionController.viewSubmissions());
+        template.setPageTitle("Submissions - Programming");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -180,18 +171,15 @@ public final class ProgrammingSubmissionController extends AbstractJudgelsContro
             return notFound();
         }
 
-        LazyHtml content = getViewSubmissionContent(programmingSubmission);
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(getViewSubmissionContent(programmingSubmission));
 
-        SubmissionControllerUtils.appendTabLayout(content);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content,
-                new InternalLink(Messages.get("submission.all"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToAllSubmissions()),
-                new InternalLink(Messages.get("submission.programming"), routes.ProgrammingSubmissionController.viewSubmissions()),
-                new InternalLink(programmingSubmission.getId() + "", routes.ProgrammingSubmissionController.viewSubmission(programmingSubmission.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Submissions - Programming - View");
+        template.markBreadcrumbLocation(Messages.get("submission.all"), org.iatoki.judgels.jerahmeel.submission.routes.SubmissionController.jumpToAllSubmissions());
+        template.markBreadcrumbLocation(Messages.get("submission.programming"), routes.ProgrammingSubmissionController.viewSubmissions());
+        template.markBreadcrumbLocation(programmingSubmission.getId() + "", routes.ProgrammingSubmissionController.viewSubmission(programmingSubmission.getId()));
+        template.setPageTitle("Submissions - Programming - View");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -249,7 +237,7 @@ public final class ProgrammingSubmissionController extends AbstractJudgelsContro
         return redirect(routes.ProgrammingSubmissionController.listSubmissions(pageIndex, orderBy, orderDir));
     }
 
-    private LazyHtml getViewSubmissionContent(ProgrammingSubmission programmingSubmission) {
+    private Html getViewSubmissionContent(ProgrammingSubmission programmingSubmission) {
         String containerJid;
         String containerName;
         String problemAlias;
@@ -276,13 +264,6 @@ public final class ProgrammingSubmissionController extends AbstractJudgelsContro
         String authorName = JidCacheServiceImpl.getInstance().getDisplayName(programmingSubmission.getAuthorJid());
         String gradingLanguageName = GradingLanguageRegistry.getInstance().get(programmingSubmission.getGradingLanguage()).getName();
 
-        return new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(programmingSubmission.getGradingEngine()).renderViewSubmission(programmingSubmission, submissionSource, authorName, problemAlias, problemName, gradingLanguageName, containerName));
-    }
-
-    private void appendBreadcrumbsLayout(LazyHtml content, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = SubmissionControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(lastLinks);
-
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        return GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(programmingSubmission.getGradingEngine()).renderViewSubmission(programmingSubmission, submissionSource, authorName, problemAlias, problemName, gradingLanguageName, containerName);
     }
 }

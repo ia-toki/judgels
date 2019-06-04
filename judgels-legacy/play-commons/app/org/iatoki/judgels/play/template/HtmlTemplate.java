@@ -13,12 +13,14 @@ public final class HtmlTemplate {
     private String pageTitle;
     private String mainTitle;
     private String secondaryTitle;
-    private Html description;
+    private String description;
+    private Html warning;
     private final List<InternalLink> breadcrumbLocations;
     private final List<InternalLink> sidebarMenus;
     private final List<InternalLink> categoryTabs;
     private final List<InternalLink> mainTabs;
     private final List<InternalLink> secondaryTabs;
+    private final List<InternalLink> tertiaryTabs;
     private final List<InternalLink> mainButtons;
     private final List<InternalLink> secondaryButtons;
     private final List<Html> upperSidebarWidgets;
@@ -34,6 +36,7 @@ public final class HtmlTemplate {
         this.categoryTabs = Lists.newArrayList();
         this.mainTabs = Lists.newArrayList();
         this.secondaryTabs = Lists.newArrayList();
+        this.tertiaryTabs = Lists.newArrayList();
         this.mainButtons = Lists.newArrayList();
         this.secondaryButtons = Lists.newArrayList();
         this.upperSidebarWidgets = Lists.newArrayList();
@@ -100,16 +103,28 @@ public final class HtmlTemplate {
         return secondaryTitle != null;
     }
 
-    public void setDescription(Html description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public Html getDescription() {
+    public String getDescription() {
         return description;
     }
 
     public boolean hasDescription() {
         return description != null;
+    }
+
+    public void setWarning(Html warning) {
+        this.warning = warning;
+    }
+
+    public Html getWarning() {
+        return warning;
+    }
+
+    public boolean hasWarning() {
+        return warning != null;
     }
 
     public void markBreadcrumbLocation(String label, Call target) {
@@ -166,6 +181,18 @@ public final class HtmlTemplate {
 
     public boolean hasSecondaryTabs() {
         return !secondaryTabs.isEmpty();
+    }
+
+    public void addTertiaryTab(String label, Call target) {
+        tertiaryTabs.add(new InternalLink(label, target));
+    }
+
+    public List<InternalLink> getTertiaryTabs() {
+        return ImmutableList.copyOf(tertiaryTabs);
+    }
+
+    public boolean hasTertiaryTabs() {
+        return !tertiaryTabs.isEmpty();
     }
 
     public void addMainButton(String label, Call target) {

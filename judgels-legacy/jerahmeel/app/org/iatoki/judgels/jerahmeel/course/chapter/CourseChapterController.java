@@ -1,25 +1,22 @@
 package org.iatoki.judgels.jerahmeel.course.chapter;
 
-import com.google.common.collect.ImmutableList;
-import org.iatoki.judgels.jerahmeel.course.Course;
-import org.iatoki.judgels.jerahmeel.course.CourseControllerUtils;
-import org.iatoki.judgels.jerahmeel.course.CourseNotFoundException;
-import org.iatoki.judgels.jerahmeel.chapter.Chapter;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
+import org.iatoki.judgels.jerahmeel.chapter.Chapter;
+import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
 import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
 import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
+import org.iatoki.judgels.jerahmeel.course.AbstractCourseController;
+import org.iatoki.judgels.jerahmeel.course.Course;
+import org.iatoki.judgels.jerahmeel.course.CourseNotFoundException;
 import org.iatoki.judgels.jerahmeel.course.CourseService;
-import org.iatoki.judgels.jerahmeel.chapter.ChapterService;
 import org.iatoki.judgels.jerahmeel.course.chapter.html.editCourseChapterView;
 import org.iatoki.judgels.jerahmeel.course.chapter.html.listAddCourseChaptersView;
 import org.iatoki.judgels.jophiel.activity.BasicActivityKeys;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
+import org.iatoki.judgels.play.template.HtmlTemplate;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.filters.csrf.AddCSRFToken;
@@ -36,7 +33,7 @@ import java.util.stream.Collectors;
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Authorized(value = "admin")
 @Singleton
-public final class CourseChapterController extends AbstractJudgelsController {
+public final class CourseChapterController extends AbstractCourseController {
 
     private static final long PAGE_SIZE = 20;
     private static final String CHAPTER = "chapter";
@@ -190,35 +187,28 @@ public final class CourseChapterController extends AbstractJudgelsController {
     }
 
     private Result showListAddChapters(Course course, Form<CourseChapterAddForm> courseChapterAddForm, Page<CourseChapter> pageOfCourseChapters, Map<String, Chapter> chaptersMap, String orderBy, String orderDir, String filterString) {
-        LazyHtml content = new LazyHtml(listAddCourseChaptersView.render(course.getId(), pageOfCourseChapters, chaptersMap, orderBy, orderDir, filterString, courseChapterAddForm));
-        CourseControllerUtils.appendTabLayout(content, course);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, course,
-                new InternalLink(Messages.get("commons.view"), routes.CourseChapterController.viewChapters(course.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Courses");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listAddCourseChaptersView.render(course.getId(), pageOfCourseChapters, chaptersMap, orderBy, orderDir, filterString, courseChapterAddForm));
+        template.markBreadcrumbLocation(Messages.get("commons.view"), routes.CourseChapterController.viewChapters(course.getId()));
+        template.setPageTitle("Courses");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, course);
     }
 
     private Result showEditChapter(Course course, CourseChapter courseChapter, Form<CourseChapterEditForm> courseChapterEditForm) {
-        LazyHtml content = new LazyHtml(editCourseChapterView.render(courseChapterEditForm, course.getId(), courseChapter.getId()));
-        CourseControllerUtils.appendTabLayout(content, course);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, course,
-                new InternalLink(Messages.get("commons.update"), routes.CourseChapterController.editChapter(course.getId(), courseChapter.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Courses");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(editCourseChapterView.render(courseChapterEditForm, course.getId(), courseChapter.getId()));
+        template.markBreadcrumbLocation(Messages.get("commons.update"), routes.CourseChapterController.editChapter(course.getId(), courseChapter.getId()));
+        template.setPageTitle("Courses");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, course);
     }
 
-    private void appendBreadcrumbsLayout(LazyHtml content, Course course, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = CourseControllerUtils.getBreadcrumbsBuilder();
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("course.chapters"), org.iatoki.judgels.jerahmeel.course.routes.CourseController.jumpToChapters(course.getId())));
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("commons.view"), routes.CourseChapterController.viewChapters(course.getId())));
-        breadcrumbsBuilder.add(lastLinks);
+    private Result renderTemplate(HtmlTemplate template, Course course) {
+        appendTabs(template, course);
 
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        template.markBreadcrumbLocation(Messages.get("course.chapters"), org.iatoki.judgels.jerahmeel.course.routes.CourseController.jumpToChapters(course.getId()));
+
+        return super.renderTemplate(template);
     }
 }

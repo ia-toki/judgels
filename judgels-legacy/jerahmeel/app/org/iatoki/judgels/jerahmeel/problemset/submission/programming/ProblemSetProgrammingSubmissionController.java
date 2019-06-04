@@ -9,8 +9,6 @@ import org.iatoki.judgels.jerahmeel.DeprecatedControllerUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelControllerUtils;
 import org.iatoki.judgels.jerahmeel.JerahmeelUtils;
 import org.iatoki.judgels.jerahmeel.activity.JerahmeelActivityKeys;
-import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionLocalFileSystemProvider;
-import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionRemoteFileSystemProvider;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authorized;
 import org.iatoki.judgels.jerahmeel.controllers.securities.GuestView;
@@ -18,29 +16,27 @@ import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
 import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
 import org.iatoki.judgels.jerahmeel.problemset.ProblemSet;
-import org.iatoki.judgels.jerahmeel.problemset.ProblemSetControllerUtils;
 import org.iatoki.judgels.jerahmeel.problemset.ProblemSetNotFoundException;
 import org.iatoki.judgels.jerahmeel.problemset.ProblemSetService;
 import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblem;
 import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemService;
 import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemStatus;
+import org.iatoki.judgels.jerahmeel.problemset.submission.AbstractProblemSetSubmissionController;
 import org.iatoki.judgels.jerahmeel.problemset.submission.programming.html.listOwnSubmissionsView;
 import org.iatoki.judgels.jerahmeel.problemset.submission.programming.html.listSubmissionsView;
 import org.iatoki.judgels.jerahmeel.problemset.submission.programming.html.listSubmissionsWithActionsView;
+import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionLocalFileSystemProvider;
+import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionRemoteFileSystemProvider;
 import org.iatoki.judgels.play.IdentityUtils;
-import org.iatoki.judgels.play.InternalLink;
-import org.iatoki.judgels.play.LazyHtml;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import org.iatoki.judgels.play.forms.ListTableSelectionForm;
-import org.iatoki.judgels.play.views.html.layouts.heading3Layout;
-import org.iatoki.judgels.play.views.html.layouts.subtabLayout;
+import org.iatoki.judgels.play.template.HtmlTemplate;
+import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionException;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionNotFoundException;
-import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionUtils;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.GradingEngineAdapterRegistry;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
+import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionUtils;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.i18n.Messages;
@@ -55,7 +51,7 @@ import java.util.Map;
 
 @Authenticated(value = {LoggedIn.class, HasRole.class})
 @Singleton
-public final class ProblemSetProgrammingSubmissionController extends AbstractJudgelsController {
+public final class ProblemSetProgrammingSubmissionController extends AbstractProblemSetSubmissionController {
 
     private static final long PAGE_SIZE = 20;
     private static final String SUBMISSION = "submission";
@@ -128,16 +124,12 @@ public final class ProblemSetProgrammingSubmissionController extends AbstractJud
         Map<String, String> problemJidToAliasMap = problemSetProblemService.getProgrammingProblemJidToAliasMapByProblemSetJid(problemSet.getJid());
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
-        LazyHtml content = new LazyHtml(listOwnSubmissionsView.render(problemSet.getId(), pageOfSubmissions, problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualProblemJid));
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        appendSubtabLayout(content, problemSet);
-        ProblemSetControllerUtils.appendSubmissionSubtabLayout(content, problemSet);
-        ProblemSetControllerUtils.appendTabLayout(content, problemSet);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problemSet);
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Problem Sets - Programming Submissions");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(listOwnSubmissionsView.render(problemSet.getId(), pageOfSubmissions, problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualProblemJid));
+        template.setSecondaryTitle(Messages.get("submission.submissions"));
+        template.setPageTitle("Problem Sets - Programming Submissions");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemSet);
     }
 
     @Authenticated(value = GuestView.class)
@@ -158,23 +150,17 @@ public final class ProblemSetProgrammingSubmissionController extends AbstractJud
         Map<String, String> problemJidToAliasMap = problemSetProblemService.getProgrammingProblemJidToAliasMapByProblemSetJid(problemSet.getJid());
         Map<String, String> gradingLanguageToNameMap = GradingLanguageRegistry.getInstance().getNamesMap();
 
-        LazyHtml content;
+        HtmlTemplate template = getBaseHtmlTemplate();
         if (JerahmeelControllerUtils.getInstance().isAdmin()) {
-            content = new LazyHtml(listSubmissionsWithActionsView.render(problemSet.getId(), pageOfSubmissions, ImmutableList.of(), problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
+            template.setContent(listSubmissionsWithActionsView.render(problemSet.getId(), pageOfSubmissions, ImmutableList.of(), problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
         } else {
-            content = new LazyHtml(listSubmissionsView.render(problemSet.getId(), pageOfSubmissions, ImmutableList.of(), problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
+            template.setContent(listSubmissionsView.render(problemSet.getId(), pageOfSubmissions, ImmutableList.of(), problemJidToAliasMap, gradingLanguageToNameMap, pageIndex, orderBy, orderDir, actualUserJid, actualProblemJid));
         }
-        content.appendLayout(c -> heading3Layout.render(Messages.get("submission.submissions"), c));
-        appendSubtabLayout(content, problemSet);
-        ProblemSetControllerUtils.appendSubmissionSubtabLayout(content, problemSet);
-        ProblemSetControllerUtils.appendTabLayout(content, problemSet);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problemSet,
-                new InternalLink(Messages.get("archive.problemSet.submissions.programming.all"), routes.ProblemSetProgrammingSubmissionController.viewSubmissions(problemSet.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Problem Sets - Programming Submissions");
+        template.setSecondaryTitle(Messages.get("submission.submissions"));
+        template.markBreadcrumbLocation(Messages.get("archive.problemSet.submissions.programming.all"), routes.ProblemSetProgrammingSubmissionController.viewSubmissions(problemSet.getId()));
+        template.setPageTitle("Problem Sets - Programming Submissions");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemSet);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -195,19 +181,12 @@ public final class ProblemSetProgrammingSubmissionController extends AbstractJud
         String problemSetProblemName = SandalphonResourceDisplayNameUtils.parseTitleByLanguage(JidCacheServiceImpl.getInstance().getDisplayName(problemSetProblem.getProblemJid()), DeprecatedControllerUtils.getHardcodedDefaultLanguage());
         String gradingLanguageName = GradingLanguageRegistry.getInstance().get(submission.getGradingLanguage()).getName();
 
-        LazyHtml content = new LazyHtml(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(submission.getGradingEngine()).renderViewSubmission(submission, submissionSource, authorName, problemSetProblemAlias, problemSetProblemName, gradingLanguageName, problemSet.getName()));
-        if (JerahmeelControllerUtils.getInstance().isAdmin()) {
-            appendSubtabLayout(content, problemSet);
-        }
-        ProblemSetControllerUtils.appendSubmissionSubtabLayout(content, problemSet);
-        ProblemSetControllerUtils.appendTabLayout(content, problemSet);
-        JerahmeelControllerUtils.getInstance().appendSidebarLayout(content);
-        appendBreadcrumbsLayout(content, problemSet,
-                new InternalLink(submission.getId() + "", routes.ProblemSetProgrammingSubmissionController.viewSubmission(problemSet.getId(), submission.getId()))
-        );
-        JerahmeelControllerUtils.getInstance().appendTemplateLayout(content, "Problem Sets - Programming Submissions - View");
+        HtmlTemplate template = getBaseHtmlTemplate();
+        template.setContent(GradingEngineAdapterRegistry.getInstance().getByGradingEngineName(submission.getGradingEngine()).renderViewSubmission(submission, submissionSource, authorName, problemSetProblemAlias, problemSetProblemName, gradingLanguageName, problemSet.getName()));
+        template.markBreadcrumbLocation(submission.getId() + "", routes.ProblemSetProgrammingSubmissionController.viewSubmission(problemSet.getId(), submission.getId()));
+        template.setPageTitle("Problem Sets - Programming Submissions - View");
 
-        return JerahmeelControllerUtils.getInstance().lazyOk(content);
+        return renderTemplate(template, problemSet);
     }
 
     @Authenticated(value = {LoggedIn.class, HasRole.class})
@@ -253,23 +232,15 @@ public final class ProblemSetProgrammingSubmissionController extends AbstractJud
         return redirect(routes.ProblemSetProgrammingSubmissionController.listSubmissions(problemSetId, pageIndex, orderBy, orderDir, userJid, problemJid));
     }
 
-    private void appendSubtabLayout(LazyHtml content, ProblemSet problemSet) {
+    protected Result renderTemplate(HtmlTemplate template, ProblemSet problemSet) {
+        appendTabs(template, problemSet);
+
         if (!JerahmeelUtils.isGuest()) {
-            content.appendLayout(c -> subtabLayout.render(ImmutableList.of(
-                            new InternalLink(Messages.get("archive.problemSet.submissions.programming.own"), routes.ProblemSetProgrammingSubmissionController.viewOwnSubmissions(problemSet.getId())),
-                            new InternalLink(Messages.get("archive.problemSet.submissions.programming.all"), routes.ProblemSetProgrammingSubmissionController.viewSubmissions(problemSet.getId()))
-                    ), c)
-            );
+            template.addTertiaryTab(Messages.get("archive.problemSet.submissions.programming.own"), routes.ProblemSetProgrammingSubmissionController.viewOwnSubmissions(problemSet.getId()));
+            template.addTertiaryTab(Messages.get("archive.problemSet.submissions.programming.all"), routes.ProblemSetProgrammingSubmissionController.viewSubmissions(problemSet.getId()));
         }
-    }
+        template.markBreadcrumbLocation(Messages.get("archive.problemSet.submissions.programming"), routes.ProblemSetProgrammingSubmissionController.viewOwnSubmissions(problemSet.getId()));
 
-    private void appendBreadcrumbsLayout(LazyHtml content, ProblemSet problemSet, InternalLink... lastLinks) {
-        ImmutableList.Builder<InternalLink> breadcrumbsBuilder = ProblemSetControllerUtils.getBreadcrumbsBuilder(problemSet);
-        breadcrumbsBuilder.add(new InternalLink(problemSet.getName(), org.iatoki.judgels.jerahmeel.problemset.routes.ProblemSetController.jumpToProblems(problemSet.getId())));
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("archive.problemSet.submissions"), org.iatoki.judgels.jerahmeel.problemset.routes.ProblemSetController.jumpToSubmissions(problemSet.getId())));
-        breadcrumbsBuilder.add(new InternalLink(Messages.get("archive.problemSet.submissions.programming"), routes.ProblemSetProgrammingSubmissionController.viewOwnSubmissions(problemSet.getId())));
-        breadcrumbsBuilder.add(lastLinks);
-
-        JerahmeelControllerUtils.getInstance().appendBreadcrumbsLayout(content, breadcrumbsBuilder.build());
+        return super.renderTemplate(template, problemSet);
     }
 }
