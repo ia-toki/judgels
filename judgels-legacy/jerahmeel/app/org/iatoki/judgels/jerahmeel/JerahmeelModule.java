@@ -23,7 +23,6 @@ import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmission
 import org.iatoki.judgels.jerahmeel.user.UserServiceImpl;
 import org.iatoki.judgels.jophiel.JophielAuthAPI;
 import org.iatoki.judgels.jophiel.user.BaseUserService;
-import org.iatoki.judgels.play.JudgelsPlayProperties;
 import org.iatoki.judgels.play.general.GeneralName;
 import org.iatoki.judgels.play.general.GeneralVersion;
 import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
@@ -45,7 +44,6 @@ public final class JerahmeelModule extends AbstractModule {
 
         // <DEPRECATED>
         Config config = ConfigFactory.load();
-        JudgelsPlayProperties.buildInstance("Jerahmeel", JudgelsVersion.INSTANCE, config);
         JerahmeelProperties.buildInstance(config);
         bind(JerahmeelSingletonsBuilder.class).asEagerSingleton();
         // </DEPRECATED>

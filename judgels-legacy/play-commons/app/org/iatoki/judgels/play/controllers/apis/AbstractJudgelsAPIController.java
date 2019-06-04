@@ -12,10 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.iatoki.judgels.play.api.JudgelsAPIBadRequestException;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
-import org.iatoki.judgels.play.api.JudgelsAPIUnauthorizedException;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.imageio.ImageIO;
@@ -32,7 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @JudgelsAPIGuard
-public abstract class AbstractJudgelsAPIController extends AbstractJudgelsController {
+public abstract class AbstractJudgelsAPIController extends Controller {
 
     protected static Client authenticateAsJudgelsAppClient(ClientChecker clientChecker) {
         String authHeaderString = request().getHeader("Authorization");

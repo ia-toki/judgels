@@ -1,14 +1,14 @@
 package org.iatoki.judgels.jerahmeel;
 
-import org.iatoki.judgels.jerahmeel.user.User;
 import org.iatoki.judgels.jerahmeel.controllers.securities.Authenticated;
 import org.iatoki.judgels.jerahmeel.controllers.securities.HasRole;
 import org.iatoki.judgels.jerahmeel.controllers.securities.LoggedIn;
-import org.iatoki.judgels.jerahmeel.user.UserService;
 import org.iatoki.judgels.jerahmeel.jid.JidCacheServiceImpl;
+import org.iatoki.judgels.jerahmeel.user.User;
+import org.iatoki.judgels.jerahmeel.user.UserService;
+import org.iatoki.judgels.play.AbstractJudgelsController;
 import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.JudgelsPlayUtils;
-import org.iatoki.judgels.play.controllers.AbstractJudgelsController;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
 

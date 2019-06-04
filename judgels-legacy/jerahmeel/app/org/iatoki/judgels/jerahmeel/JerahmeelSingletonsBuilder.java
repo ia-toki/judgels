@@ -16,16 +16,11 @@ import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemDao;
 import org.iatoki.judgels.jerahmeel.scorecache.ContainerProblemScoreCacheDao;
 import org.iatoki.judgels.jerahmeel.scorecache.ContainerScoreCacheDao;
 import org.iatoki.judgels.jerahmeel.scorecache.ProblemSetScoreCacheUtils;
-import org.iatoki.judgels.jerahmeel.statistic.point.PointStatisticService;
-import org.iatoki.judgels.jerahmeel.statistic.problem.ProblemStatisticService;
-import org.iatoki.judgels.jerahmeel.statistic.problemscore.ProblemScoreStatisticService;
 import org.iatoki.judgels.jerahmeel.submission.bundle.BundleSubmissionDao;
 import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmissionDao;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemDao;
 import org.iatoki.judgels.jophiel.JophielClientControllerUtils;
 import org.iatoki.judgels.jophiel.activity.UserActivityMessageServiceImpl;
-import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmissionService;
-import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmissionService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,7 +35,6 @@ public final class JerahmeelSingletonsBuilder {
     @Inject
     public JerahmeelSingletonsBuilder(
             JidCacheDao jidCacheDao, ActivityLogDao activityLogDao,
-            BundleSubmissionService bundleSubmissionService, PointStatisticService pointStatisticService, ProblemScoreStatisticService problemScoreStatisticService, ProblemStatisticService problemStatisticService, ProgrammingSubmissionService programmingSubmissionService,
             ChapterProblemDao chapterProblemDao, UserItemDao userItemDao,
             ArchiveDao archiveDao, BundleSubmissionDao bundleSubmissionDao, BundleGradingDao bundleGradingDao, ContainerScoreCacheDao containerScoreCacheDao, ContainerProblemScoreCacheDao containerProblemScoreCacheDao, ProblemSetDao problemSetDao, ProblemSetProblemDao problemSetProblemDao, ProgrammingSubmissionDao programmingSubmissionDao, ProgrammingGradingDao programmingGradingDao,
             CourseChapterDao courseChapterDao) {
@@ -50,7 +44,7 @@ public final class JerahmeelSingletonsBuilder {
         UserActivityMessageServiceImpl.buildInstance();
 
         JophielClientControllerUtils.buildInstance(JerahmeelProperties.getInstance().getRaphaelBaseUrl(), JerahmeelProperties.getInstance().getJophielBaseUrl());
-        JerahmeelControllerUtils.buildInstance(bundleSubmissionService, pointStatisticService, problemScoreStatisticService, problemStatisticService, programmingSubmissionService);
+        JerahmeelControllerUtils.buildInstance();
         ChapterProgressCacheUtils.buildInstance(chapterProblemDao, userItemDao);
         ProblemSetScoreCacheUtils.buildInstance(archiveDao, bundleSubmissionDao, bundleGradingDao, containerScoreCacheDao, containerProblemScoreCacheDao, problemSetDao, problemSetProblemDao, programmingSubmissionDao, programmingGradingDao);
         ChapterScoreCacheUtils.buildInstance(bundleSubmissionDao, bundleGradingDao, containerScoreCacheDao, containerProblemScoreCacheDao, courseChapterDao, programmingSubmissionDao, programmingGradingDao, chapterProblemDao);

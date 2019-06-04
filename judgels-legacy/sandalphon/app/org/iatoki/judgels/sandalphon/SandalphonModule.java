@@ -14,7 +14,6 @@ import org.iatoki.judgels.LocalFileSystemProvider;
 import org.iatoki.judgels.LocalGitProvider;
 import org.iatoki.judgels.jophiel.JophielAuthAPI;
 import org.iatoki.judgels.jophiel.user.BaseUserService;
-import org.iatoki.judgels.play.JudgelsPlayProperties;
 import org.iatoki.judgels.play.general.GeneralName;
 import org.iatoki.judgels.play.general.GeneralVersion;
 import org.iatoki.judgels.play.migration.JudgelsDataMigrator;
@@ -48,7 +47,6 @@ public final class SandalphonModule extends AbstractModule {
         // <DEPRECATED>
         Config config = ConfigFactory.load();
         SandalphonConfiguration sandalphonConfig = SandalphonProperties.build(config);
-        JudgelsPlayProperties.buildInstance("Sandalphon", JudgelsVersion.INSTANCE, config);
         bind(SandalphonConfiguration.class).toInstance(sandalphonConfig);
         bind(SandalphonSingletonsBuilder.class).asEagerSingleton();
         // </DEPRECATED>
