@@ -18,7 +18,6 @@ import judgels.gabriel.api.Scorer;
 import judgels.gabriel.api.TestGroup;
 import judgels.gabriel.compilers.NoOpCompiler;
 import judgels.gabriel.engines.BlackboxGradingEngine;
-import judgels.gabriel.engines.batch.BatchGradingConfig;
 import judgels.gabriel.helpers.OutputOnlyEvaluator;
 import judgels.gabriel.helpers.scorer.ScorerRegistry;
 
@@ -49,7 +48,7 @@ public class OutputOnlyWithSubtasksGradingEngine extends BlackboxGradingEngine {
 
     @Override
     public GradingConfig parseConfig(ObjectMapper mapper, String json) throws IOException {
-        return mapper.readValue(json, BatchGradingConfig.class);
+        return mapper.readValue(json, OutputOnlyWithSubtasksGradingConfig.class);
     }
 
     @Override
