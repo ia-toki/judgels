@@ -16,12 +16,13 @@ export class FormRichTextArea extends React.PureComponent<FormRichTextAreaProps>
 
     const LoadableTinyMCETextArea = Loadable({
       loader: () => import('./TinyMCETextArea'),
-      loading: () => <textarea {...input} rows={rows} onChange={input.onChange} />,
+      loading: () => <> </>,
     });
 
     return (
       <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)}>
-        <LoadableTinyMCETextArea {...input} rows={rows} onChange={input.onChange} />
+        <LoadableTinyMCETextArea onChange={input.onChange} />
+        <textarea rows={rows} {...input} className="tinymce" />
         <FormInputValidation meta={meta} />
       </FormGroup>
     );

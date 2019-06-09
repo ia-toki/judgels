@@ -9,13 +9,7 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/paste';
 import 'tinymce/plugins/table';
 
-type textAreaPropsType = React.DetailedHTMLProps<
-  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-  HTMLTextAreaElement
->;
-
-export interface TinyMCETextAreaProps extends textAreaPropsType {
-  rows: number;
+export interface TinyMCETextAreaProps {
   onChange: (content: any) => any;
 }
 
@@ -46,7 +40,7 @@ export class TinyMCETextArea extends React.PureComponent<TinyMCETextAreaProps> {
   }
 
   render() {
-    return <textarea {...this.props} className="tinymce" />;
+    return <> </>
   }
 }
 
