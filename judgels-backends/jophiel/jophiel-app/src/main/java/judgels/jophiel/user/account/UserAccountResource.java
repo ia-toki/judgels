@@ -52,6 +52,13 @@ public class UserAccountResource implements UserAccountService {
 
     @Override
     @UnitOfWork
+    public void resendActivationEmail(String email) {
+        User user = checkFound(userStore.getUserByEmail(email));
+        checkFound(userRegisterer).resendActivationEmail(user);
+    }
+
+    @Override
+    @UnitOfWork
     public void resetPassword(PasswordResetData data) {
         checkFound(userPasswordResetter).reset(data);
     }

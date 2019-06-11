@@ -51,6 +51,38 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
     }
 
     @Test
+    void resend_activation_flow() {
+        Wiser wiser = new Wiser();
+        wiser.setPort(2500);
+        wiser.start();
+
+        assertThatRemoteExceptionThrownBy(() -> accountService.resendActivationEmail("nonexistent"))
+                .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
+
+        accountService.registerUser(new UserRegistrationData.Builder()
+                .username("alfa")
+                .name("Alfa")
+                .password("pass")
+                .email("alfa@domain.com")
+                .build());
+
+        String email = readEmail(wiser, 0);
+
+        String emailCode1 = extractEmailCode(email);
+
+        assertThatCode(() -> accountService.resendActivationEmail("alfa@domain.com"))
+                .doesNotThrowAnyException();
+
+        email = readEmail(wiser, 1);
+
+        String emailCode2 = extractEmailCode(email);
+
+        assertThat(emailCode2).isEqualTo(emailCode1);
+
+        wiser.stop();
+    }
+
+    @Test
     void reset_password_flow() {
         Wiser wiser = new Wiser();
         wiser.setPort(2500);

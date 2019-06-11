@@ -42,4 +42,12 @@ class UserRegistrationEmailStoreIntegrationTests extends AbstractIntegrationTest
 
         assertThat(store.verifyEmailCode(emailCode)).isFalse();
     }
+
+    @Test
+    void get_email_code() {
+        assertThat(store.getEmailCode(USER_JID)).isEmpty();
+
+        String emailCode = store.generateEmailCode(USER_JID);
+        assertThat(store.getEmailCode(USER_JID)).contains(emailCode);
+    }
 }

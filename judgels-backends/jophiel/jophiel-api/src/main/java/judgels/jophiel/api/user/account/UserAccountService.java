@@ -26,6 +26,10 @@ public interface UserAccountService {
     void requestToResetPassword(@PathParam("email") String email);
 
     @POST
+    @Path("/resend-activation-email/{email}")
+    void resendActivationEmail(@PathParam("email") String email);
+
+    @POST
     @Path("/reset-password")
     @Consumes(APPLICATION_JSON)
     void resetPassword(PasswordResetData data);

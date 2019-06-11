@@ -28,6 +28,10 @@ public class UserRegistrationEmailStore {
         return model.emailCode;
     }
 
+    public Optional<String> getEmailCode(String userJid) {
+        return userRegistrationEmailDao.selectByUserJid(userJid).map(model -> model.emailCode);
+    }
+
     public boolean verifyEmailCode(String emailCode) {
         return userRegistrationEmailDao.selectByEmailCode(emailCode).flatMap(model -> {
             if (model.verified) {
