@@ -16,7 +16,7 @@ export class FormRichTextArea extends React.PureComponent<FormRichTextAreaProps>
 
     const LoadableTinyMCETextArea = Loadable({
       loader: () => import('./TinyMCETextArea'),
-      loading: () => <> </>,
+      loading: () => null,
     });
 
     return (

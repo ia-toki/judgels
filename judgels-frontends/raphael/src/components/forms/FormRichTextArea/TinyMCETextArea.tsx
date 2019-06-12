@@ -40,7 +40,7 @@ export class TinyMCETextArea extends React.PureComponent<TinyMCETextAreaProps> {
   }
 
   render() {
-    return <> </>
+    return null;
   }
 }
 
