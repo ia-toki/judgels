@@ -94,7 +94,7 @@ class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageSt
   };
 
   private countDown = () => {
-    let seconds = this.state.timeRemainingResendEmail - 1;
+    const seconds = this.state.timeRemainingResendEmail - 1;
     this.setState({ timeRemainingResendEmail: seconds });
 
     if (seconds === 0 && this.timer) {

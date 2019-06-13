@@ -53,7 +53,8 @@ public class UserAccountResource implements UserAccountService {
     @Override
     @UnitOfWork
     public void resendActivationEmail(String email) {
-        User user = checkFound(userStore.getUserByEmail(email));
+        User user = checkFound(userStore.getUserByEmail(email)
+                .filter(u -> !userRegistrationEmailStore.isUserActivated(u.getJid())));
         checkFound(userRegisterer).resendActivationEmail(user);
     }
 

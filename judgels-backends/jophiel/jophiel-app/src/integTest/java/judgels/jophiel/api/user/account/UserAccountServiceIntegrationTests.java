@@ -79,6 +79,11 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
 
         assertThat(emailCode2).isEqualTo(emailCode1);
 
+        assertThatCode(() -> accountService.activateUser(emailCode2)).doesNotThrowAnyException();
+
+        assertThatRemoteExceptionThrownBy(() -> accountService.resendActivationEmail("alfa@domain.com"))
+                .isGeneratedFromErrorType(ErrorType.NOT_FOUND);
+
         wiser.stop();
     }
 
