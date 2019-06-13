@@ -63,4 +63,10 @@ public class UserRegisterer {
             throw new NotFoundException();
         }
     }
+
+    public void resendActivationEmail(User user) {
+        Optional<String> maybeEmailCode = userRegistrationEmailStore.getEmailCode(user.getJid());
+        String emailCode = maybeEmailCode.orElseGet(() -> userRegistrationEmailStore.generateEmailCode(user.getJid()));
+        userRegistrationEmailMailer.sendActivationEmail(user, user.getEmail(), emailCode);
+    }
 }

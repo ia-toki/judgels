@@ -32,4 +32,8 @@ export const userAccountAPI = {
   resetPassword: (passwordResetData: PasswordResetData): Promise<void> => {
     return post(`${baseURL}/reset-password`, undefined, passwordResetData);
   },
+
+  resendActivationEmail: (email: string): Promise<void> => {
+    return post(`${baseURL}/resend-activation-email/${email}`);
+  },
 };
