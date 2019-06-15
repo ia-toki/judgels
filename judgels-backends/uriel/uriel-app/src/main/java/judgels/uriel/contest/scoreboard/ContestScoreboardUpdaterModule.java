@@ -56,6 +56,7 @@ public class ContestScoreboardUpdaterModule {
             ContestProblemStore problemStore,
             SubmissionStore programmingSubmissionStore,
             ItemSubmissionStore bundleItemSubmissionStore,
+            ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
 
@@ -69,6 +70,7 @@ public class ContestScoreboardUpdaterModule {
                         ContestProblemStore.class,
                         SubmissionStore.class,
                         ItemSubmissionStore.class,
+                        ScoreboardIncrementalMarker.class,
                         ScoreboardProcessorRegistry.class,
                         Clock.class},
                 new Object[] {
@@ -79,6 +81,7 @@ public class ContestScoreboardUpdaterModule {
                         problemStore,
                         programmingSubmissionStore,
                         bundleItemSubmissionStore,
+                        scoreboardIncrementalMarker,
                         scoreboardProcessorRegistry,
                         clock});
     }

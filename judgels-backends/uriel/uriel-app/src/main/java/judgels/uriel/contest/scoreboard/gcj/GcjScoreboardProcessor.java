@@ -1,10 +1,11 @@
 package judgels.uriel.contest.scoreboard.gcj;
 
+import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
@@ -30,6 +31,8 @@ import judgels.uriel.api.contest.scoreboard.GcjScoreboard.GcjScoreboardProblemSt
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.scoreboard.ScoreboardEntryComparator;
+import judgels.uriel.contest.scoreboard.ScoreboardIncrementalContent;
+import judgels.uriel.contest.scoreboard.ScoreboardProcessResult;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessor;
 
 public class GcjScoreboardProcessor implements ScoreboardProcessor {
@@ -53,9 +56,10 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public List<GcjScoreboardEntry> computeEntries(
-            ScoreboardState scoreboardState,
+    public ScoreboardProcessResult process(
             Contest contest,
+            ScoreboardState scoreboardState,
+            Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,
@@ -65,7 +69,6 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
         GcjStyleModuleConfig gcjStyleModuleConfig = (GcjStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
-        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
         Map<String, Optional<Instant>> contestantStartTimesMap = contestants.stream()
                 .collect(toMap(ContestContestant::getUserJid, ContestContestant::getContestStartTime));
@@ -82,67 +85,74 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
         }
 
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
-        Map<String, List<Submission>> frozenSubmissionsMap = new HashMap<>();
-        contestantJids.forEach(c -> {
-            submissionsMap.put(c, new ArrayList<>());
-            frozenSubmissionsMap.put(c, new ArrayList<>());
-        });
+        contestantJids.forEach(c -> submissionsMap.put(c, new ArrayList<>()));
+        programmingSubmissions.forEach(s -> submissionsMap.get(s.getUserJid()).add(s));
 
-        List<Submission> filteredSubmissions = programmingSubmissions.stream()
-                .filter(s -> contestantJids.contains(s.getUserJid()))
-                .filter(s -> problemJidsSet.contains(s.getProblemJid()))
-                .collect(Collectors.toList());
+        Optional<GcjScoreboardIncrementalContent> maybeIncrementalContent =
+                incrementalContent.map(content -> (GcjScoreboardIncrementalContent) content);
 
-        filteredSubmissions.stream()
-                .filter(s -> s.getLatestGrading().isPresent())
-                .filter(s -> s.getTime().isBefore(freezeTime.orElse(Instant.MAX)))
-                .forEach(s -> submissionsMap.get(s.getUserJid()).add(s));
+        Map<String, Map<String, Integer>> attemptsMapsByContestantJid = new HashMap<>(
+                maybeIncrementalContent.map(c -> c.getAttemptsMapsByContestantJid()).orElse(emptyMap()));
+        Map<String, Map<String, Long>> penaltyMapsByContestantJid = new HashMap<>(
+                maybeIncrementalContent.map(c -> c.getPenaltyMapsByContestantJid()).orElse(emptyMap()));
+        Map<String, Map<String, GcjScoreboardProblemState>> problemStateMapsByContestantJid = new HashMap<>(
+                maybeIncrementalContent.map(c -> c.getProblemStateMapsByContestantJid()).orElse(emptyMap()));
 
-        filteredSubmissions.stream()
-                .filter(s -> !s.getTime().isBefore(freezeTime.orElse(Instant.MAX)))
-                .forEach(s -> frozenSubmissionsMap.get(s.getUserJid()).add(s));
+        Optional<Long> nextLastSubmissionId = Optional.empty();
+        for (Submission s : programmingSubmissions) {
+            if (!s.getLatestGrading().isPresent() || s.getLatestGrading().get().getVerdict() == Verdict.PENDING) {
+                break;
+            }
+            nextLastSubmissionId = Optional.of(s.getId());
+        }
 
         List<GcjScoreboardEntry> entries = new ArrayList<>();
         for (String contestantJid : submissionsMap.keySet()) {
-            Map<String, Integer> attemptsMap = new HashMap<>();
-            Map<String, Long> penaltyMap = new HashMap<>();
-            Map<String, GcjScoreboardProblemState> problemStateMap = new HashMap<>();
+            Map<String, Integer> attemptsMap = new HashMap<>(
+                    attemptsMapsByContestantJid.getOrDefault(contestantJid, emptyMap()));
+            Map<String, Long> penaltyMap = new HashMap<>(
+                    penaltyMapsByContestantJid.getOrDefault(contestantJid, emptyMap()));
+            Map<String, GcjScoreboardProblemState> problemStateMap = new HashMap<>(
+                    problemStateMapsByContestantJid.getOrDefault(contestantJid, emptyMap()));
 
             problemJids.forEach(p -> {
-                attemptsMap.put(p, 0);
-                penaltyMap.put(p, 0L);
-                problemStateMap.put(p, GcjScoreboardProblemState.NOT_ACCEPTED);
+                attemptsMap.putIfAbsent(p, 0);
+                penaltyMap.putIfAbsent(p, 0L);
+                problemStateMap.putIfAbsent(p, GcjScoreboardProblemState.NOT_ACCEPTED);
             });
 
             for (Submission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
 
-                Verdict verdict = submission.getLatestGrading().get().getVerdict();
-                if (verdict.equals(Verdict.PENDING)) {
-                    continue;
+                if (submission.getTime().isBefore(freezeTime.orElse(Instant.MAX))) {
+                    Verdict verdict = submission.getLatestGrading().get().getVerdict();
+                    if (verdict.equals(Verdict.PENDING)) {
+                        continue;
+                    }
+
+                    if (!isAccepted(problemStateMap.get(problemJid)) || !verdict.equals(Verdict.ACCEPTED)) {
+                        attemptsMap.put(problemJid, attemptsMap.get(problemJid) + 1);
+                    }
+
+                    if (!isAccepted(problemStateMap.get(problemJid)) && verdict.equals(Verdict.ACCEPTED)) {
+                        long penalty = computePenalty(
+                                submission.getTime(),
+                                contestantStartTimesMap.get(contestantJid),
+                                contest.getBeginTime());
+                        penaltyMap.put(problemJid, convertPenaltyToMinutes(penalty));
+                        problemStateMap.put(problemJid, GcjScoreboardProblemState.ACCEPTED);
+                    }
+                } else {
+                    if (!isAccepted(problemStateMap.get(problemJid))) {
+                        problemStateMap.put(problemJid, GcjScoreboardProblemState.FROZEN);
+                    }
                 }
 
-                if (!isAccepted(problemStateMap.get(problemJid)) || !verdict.equals(Verdict.ACCEPTED)) {
-                    attemptsMap.put(problemJid, attemptsMap.get(problemJid) + 1);
+                if (submission.getId() <= nextLastSubmissionId.orElse(Long.MAX_VALUE)) {
+                    attemptsMapsByContestantJid.put(contestantJid, ImmutableMap.copyOf(attemptsMap));
+                    penaltyMapsByContestantJid.put(contestantJid, ImmutableMap.copyOf(penaltyMap));
+                    problemStateMapsByContestantJid.put(contestantJid, ImmutableMap.copyOf(problemStateMap));
                 }
-
-                if (!isAccepted(problemStateMap.get(problemJid)) && verdict.equals(Verdict.ACCEPTED)) {
-                    long penalty = computePenalty(
-                            submission.getTime(),
-                            contestantStartTimesMap.get(contestantJid),
-                            contest.getBeginTime());
-                    penaltyMap.put(problemJid, convertPenaltyToMinutes(penalty));
-                    problemStateMap.put(problemJid, GcjScoreboardProblemState.ACCEPTED);
-                }
-            }
-
-            for (Submission submission : frozenSubmissionsMap.get(contestantJid)) {
-                String problemJid = submission.getProblemJid();
-                if (isAccepted(problemStateMap.get(problemJid))) {
-                    continue;
-                }
-
-                problemStateMap.put(problemJid, GcjScoreboardProblemState.FROZEN);
             }
 
             entries.add(new GcjScoreboardEntry.Builder()
@@ -178,7 +188,17 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                     .build());
         }
 
-        return sortEntriesAndAssignRanks(entries);
+        entries = sortEntriesAndAssignRanks(entries);
+
+        return new ScoreboardProcessResult.Builder()
+                .entries(entries)
+                .incrementalContent(new GcjScoreboardIncrementalContent.Builder()
+                        .lastSubmissionId(nextLastSubmissionId)
+                        .attemptsMapsByContestantJid(attemptsMapsByContestantJid)
+                        .penaltyMapsByContestantJid(penaltyMapsByContestantJid)
+                        .problemStateMapsByContestantJid(problemStateMapsByContestantJid)
+                        .build())
+                .build();
     }
 
     @Override

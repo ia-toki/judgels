@@ -30,10 +30,11 @@ public abstract class AbstractProgrammingSubmissionHibernateDao
     }
 
     @Override
-    public List<M> selectAllByContainerJid(String containerJid) {
-        return selectAll(new FilterOptions.Builder<M>()
-                .putColumnsEq(AbstractProgrammingSubmissionModel_.containerJid, containerJid)
-                .build(), new SelectionOptions.Builder().orderDir(OrderDir.ASC).build());
+    public List<M> selectAllByContainerJid(String containerJid, Optional<Long> lastSubmissionId) {
+        FilterOptions.Builder<M> filterOptions = new FilterOptions.Builder<>();
+        filterOptions.putColumnsEq(AbstractProgrammingSubmissionModel_.containerJid, containerJid);
+        lastSubmissionId.ifPresent(filterOptions::lastId);
+        return selectAll(filterOptions.build(), new SelectionOptions.Builder().orderDir(OrderDir.ASC).build());
     }
 
     @Override

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -19,6 +20,7 @@ import judgels.uriel.api.contest.module.BundleStyleModuleConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard.BundleScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
+import judgels.uriel.contest.scoreboard.ScoreboardProcessResult;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +28,7 @@ public class BundleScoreboardProcessorTests {
     private BundleScoreboardProcessor scoreboardProcessor = new BundleScoreboardProcessor();
 
     @Nested
-    class ComputeContent {
+    class Process {
         private ScoreboardState state = new ScoreboardState.Builder()
                 .addProblemJids("p1", "p2")
                 .addProblemAliases("A", "B")
@@ -47,92 +49,6 @@ public class BundleScoreboardProcessorTests {
         private Set<ContestContestant> contestants = ImmutableSet.of(
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").build());
-
-        @Test
-        void show_only_contestant() {
-            List<ItemSubmission> submissions = ImmutableList.of(
-                    new ItemSubmission.Builder()
-                            .containerJid("JIDC")
-                            .jid("JIDS-1")
-                            .itemJid("JIDITEM-1")
-                            .answer("d")
-                            .time(Instant.ofEpochSecond(300))
-                            .userJid("c3")
-                            .problemJid("p1")
-                            .grading(new Grading.Builder()
-                                    .verdict(Verdict.WRONG_ANSWER)
-                                    .score(-1)
-                                    .build())
-                            .build());
-
-            List<BundleScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                    state,
-                    contest,
-                    styleModuleConfig,
-                    contestants,
-                    ImmutableList.of(),
-                    submissions,
-                    Optional.empty());
-
-            assertThat(entries).containsExactly(
-                    new BundleScoreboardEntry.Builder()
-                            .rank(1)
-                            .contestantJid("c1")
-                            .answeredItems(ImmutableList.of(0, 0))
-                            .totalAnsweredItems(0)
-                            .lastAnsweredTime(Optional.empty())
-                            .build(),
-                    new BundleScoreboardEntry.Builder()
-                            .rank(1)
-                            .contestantJid("c2")
-                            .answeredItems(ImmutableList.of(0, 0))
-                            .totalAnsweredItems(0)
-                            .lastAnsweredTime(Optional.empty())
-                            .build());
-        }
-
-        @Test
-        void show_only_contest_problem() {
-            List<ItemSubmission> submissions = ImmutableList.of(
-                    new ItemSubmission.Builder()
-                            .containerJid("JIDC")
-                            .jid("JIDS-1")
-                            .itemJid("JIDITEM-1")
-                            .answer("d")
-                            .time(Instant.ofEpochSecond(300))
-                            .userJid("c2")
-                            .problemJid("p4")
-                            .grading(new Grading.Builder()
-                                    .verdict(Verdict.WRONG_ANSWER)
-                                    .score(-1)
-                                    .build())
-                            .build());
-
-            List<BundleScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                    state,
-                    contest,
-                    styleModuleConfig,
-                    contestants,
-                    ImmutableList.of(),
-                    submissions,
-                    Optional.empty());
-
-            assertThat(entries).containsExactly(
-                    new BundleScoreboardEntry.Builder()
-                            .rank(1)
-                            .contestantJid("c1")
-                            .answeredItems(ImmutableList.of(0, 0))
-                            .totalAnsweredItems(0)
-                            .lastAnsweredTime(Optional.empty())
-                            .build(),
-                    new BundleScoreboardEntry.Builder()
-                            .rank(1)
-                            .contestantJid("c2")
-                            .answeredItems(ImmutableList.of(0, 0))
-                            .totalAnsweredItems(0)
-                            .lastAnsweredTime(Optional.empty())
-                            .build());
-        }
 
         @Test
         void latest_answered_time_calculation() {
@@ -191,16 +107,17 @@ public class BundleScoreboardProcessorTests {
                             .build()
             );
 
-            List<BundleScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                    state,
+            ScoreboardProcessResult result = scoreboardProcessor.process(
                     contest,
+                    state,
+                    Optional.empty(),
                     styleModuleConfig,
                     contestants,
                     ImmutableList.of(),
                     submissions,
                     Optional.empty());
 
-            assertThat(entries).containsExactly(
+            assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                     new BundleScoreboardEntry.Builder()
                             .rank(1)
                             .contestantJid("c1")
@@ -262,18 +179,19 @@ public class BundleScoreboardProcessorTests {
                                         .score(4)
                                         .build())
                                 .build()
-                        );
+                );
 
-                List<BundleScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                        state,
+                ScoreboardProcessResult result = scoreboardProcessor.process(
                         contest,
+                        state,
+                        Optional.empty(),
                         styleModuleConfig,
                         contestants,
                         ImmutableList.of(),
                         submissions,
                         Optional.empty());
 
-                assertThat(entries).containsExactly(
+                assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                         new BundleScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c1")
@@ -321,16 +239,17 @@ public class BundleScoreboardProcessorTests {
                                 .build()
                 );
 
-                List<BundleScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                        state,
+                ScoreboardProcessResult result = scoreboardProcessor.process(
                         contest,
+                        state,
+                        Optional.empty(),
                         styleModuleConfig,
                         contestants,
                         ImmutableList.of(),
                         submissions,
                         Optional.empty());
 
-                assertThat(entries).containsExactly(
+                assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                         new BundleScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")

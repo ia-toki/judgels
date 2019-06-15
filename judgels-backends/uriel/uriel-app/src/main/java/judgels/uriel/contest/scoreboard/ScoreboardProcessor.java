@@ -18,9 +18,10 @@ public interface ScoreboardProcessor {
     Scoreboard parse(ObjectMapper mapper, String json);
     Scoreboard create(ScoreboardState state, List<? extends ScoreboardEntry> entries);
 
-    List<? extends ScoreboardEntry> computeEntries(
-            ScoreboardState scoreboardState,
+    ScoreboardProcessResult process(
             Contest contest,
+            ScoreboardState scoreboardState,
+            Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,

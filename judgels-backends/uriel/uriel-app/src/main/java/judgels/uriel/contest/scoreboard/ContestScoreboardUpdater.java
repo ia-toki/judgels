@@ -1,6 +1,12 @@
 package judgels.uriel.contest.scoreboard;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.FROZEN;
+import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
@@ -26,7 +32,6 @@ import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.ExternalScoreboardData;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
-import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -41,6 +46,7 @@ public class ContestScoreboardUpdater {
     private final ContestProblemStore problemStore;
     private final SubmissionStore programmingSubmissionStore;
     private final ItemSubmissionStore bundleItemSubmissionStore;
+    private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final Clock clock;
 
@@ -52,6 +58,7 @@ public class ContestScoreboardUpdater {
             ContestProblemStore problemStore,
             SubmissionStore programmingSubmissionStore,
             ItemSubmissionStore bundleItemSubmissionStore,
+            ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             Clock clock) {
 
@@ -62,6 +69,7 @@ public class ContestScoreboardUpdater {
         this.problemStore = problemStore;
         this.programmingSubmissionStore = programmingSubmissionStore;
         this.bundleItemSubmissionStore = bundleItemSubmissionStore;
+        this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
         this.clock = clock;
     }
@@ -75,12 +83,14 @@ public class ContestScoreboardUpdater {
 
         List<ContestProblem> problems = problemStore.getProblems(contest.getJid());
         List<String> problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
+        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         List<String> problemAliases = Lists.transform(problems, ContestProblem::getAlias);
         Optional<List<Integer>> problemPoints = problems.stream().anyMatch(p -> p.getPoints().isPresent())
                 ? Optional.of(Lists.transform(problems, p -> p.getPoints().orElse(0)))
                 : Optional.empty();
 
         Set<ContestContestant> contestants = contestantStore.getApprovedContestants(contest.getJid());
+        Set<String> contestantJidsSet = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
 
         ScoreboardState state = new ScoreboardState.Builder()
                 .problemJids(problemJids)
@@ -88,39 +98,77 @@ public class ContestScoreboardUpdater {
                 .problemAliases(problemAliases)
                 .build();
 
+        ScoreboardIncrementalMarkKey incrementalMarkKey = new ScoreboardIncrementalMarkKey.Builder()
+                .style(contest.getStyle())
+                .beginTime(contest.getBeginTime())
+                .duration(contest.getDuration())
+                .contestants(contestants)
+                .problemJids(problemJids)
+                .problemPoints(problemPoints)
+                .styleModuleConfig(styleModuleConfig)
+                .frozenScoreboardModuleConfig(contestModulesConfig.getFrozenScoreboard())
+                .build();
+
+        ScoreboardIncrementalMark incrementalMark =
+                scoreboardIncrementalMarker.getMark(contest.getJid(), incrementalMarkKey);
+
+        long lastSubmissionId = incrementalMark.getLastSubmissionId();
         List<Submission> programmingSubmissions = programmingSubmissionStore
-                .getSubmissionsForScoreboard(contest.getJid());
+                .getSubmissionsForScoreboard(contest.getJid(), lastSubmissionId)
+                .stream()
+                .filter(s -> s.getLatestGrading().isPresent())
+                .filter(s -> problemJidsSet.contains(s.getProblemJid()))
+                .filter(s -> contestantJidsSet.contains(s.getUserJid()))
+                .collect(toList());
         List<ItemSubmission> bundleItemSubmissions = bundleItemSubmissionStore
-                .getSubmissionsForScoreboard(contest.getJid());
+                .getSubmissionsForScoreboard(contest.getJid())
+                .stream()
+                .filter(s -> s.getGrading().isPresent())
+                .filter(s -> problemJidsSet.contains(s.getProblemJid()))
+                .filter(s -> contestantJidsSet.contains(s.getUserJid()))
+                .collect(toList());
 
         Map<ContestScoreboardType, Scoreboard> scoreboards = new HashMap<>();
+        Map<ContestScoreboardType, ScoreboardIncrementalContent> incrementalContents = new HashMap<>();
 
-        scoreboards.put(ContestScoreboardType.OFFICIAL, updateScoreboard(
+        updateScoreboard(
                 contest,
                 state,
+                Optional.ofNullable(incrementalMark.getIncrementalContents().get(OFFICIAL)),
                 styleModuleConfig,
                 contestants,
                 programmingSubmissions,
                 bundleItemSubmissions,
                 Optional.empty(),
-                ContestScoreboardType.OFFICIAL));
+                OFFICIAL,
+                scoreboards,
+                incrementalContents);
 
         if (contestModulesConfig.getFrozenScoreboard().isPresent()) {
             Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get().getFreezeDurationBeforeEndTime();
             Instant freezeTime = contest.getEndTime().minus(freezeDuration);
 
             if (now.isAfter(freezeTime)) {
-                scoreboards.put(ContestScoreboardType.FROZEN, updateScoreboard(
+                updateScoreboard(
                         contest,
                         state,
+                        Optional.ofNullable(incrementalMark.getIncrementalContents().get(FROZEN)),
                         styleModuleConfig,
                         contestants,
                         programmingSubmissions,
                         bundleItemSubmissions,
                         Optional.of(freezeTime),
-                        ContestScoreboardType.FROZEN));
+                        FROZEN,
+                        scoreboards,
+                        incrementalContents);
             }
         }
+
+        scoreboardIncrementalMarker.setMark(
+                contest.getJid(),
+                incrementalMarkKey,
+                incrementalMark.getTimestamp(),
+                incrementalContents);
 
         if (contestModulesConfig.getExternalScoreboard().isPresent()) {
             ExternalScoreboardData data = new ExternalScoreboardData.Builder()
@@ -144,27 +192,31 @@ public class ContestScoreboardUpdater {
         }
     }
 
-    private Scoreboard updateScoreboard(
+    private void updateScoreboard(
             Contest contest,
             ScoreboardState state,
+            Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,
             List<ItemSubmission> bundleItemSubmissions,
             Optional<Instant> freezeTime,
-            ContestScoreboardType contestScoreboardType) {
+            ContestScoreboardType type,
+            Map<ContestScoreboardType, Scoreboard> scoreboards,
+            Map<ContestScoreboardType, ScoreboardIncrementalContent> incrementalContents) {
 
         ScoreboardProcessor processor = scoreboardProcessorRegistry.get(contest.getStyle());
 
-        List<? extends ScoreboardEntry> entries = processor.computeEntries(
-                state,
+        ScoreboardProcessResult result = processor.process(
                 contest,
+                state,
+                incrementalContent,
                 styleModuleConfig,
                 contestants,
                 programmingSubmissions,
                 bundleItemSubmissions,
                 freezeTime);
-        Scoreboard scoreboard = processor.create(state, entries);
+        Scoreboard scoreboard = processor.create(state, result.getEntries());
 
         String scoreboardJson;
         try {
@@ -175,9 +227,10 @@ public class ContestScoreboardUpdater {
 
         scoreboardStore.upsertScoreboard(contest.getJid(), new ContestScoreboardData.Builder()
                 .scoreboard(scoreboardJson)
-                .type(contestScoreboardType)
+                .type(type)
                 .build());
 
-        return scoreboard;
+        scoreboards.put(type, scoreboard);
+        incrementalContents.put(type, result.getIncrementalContent());
     }
 }

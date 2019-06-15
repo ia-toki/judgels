@@ -10,7 +10,7 @@ import judgels.persistence.api.SelectionOptions;
 
 public interface BaseProgrammingSubmissionDao<M extends AbstractProgrammingSubmissionModel> extends JudgelsDao<M> {
     M createSubmissionModel();
-    List<M> selectAllByContainerJid(String containerJid);
+    List<M> selectAllByContainerJid(String containerJid, Optional<Long> lastSubmissionId);
     Page<M> selectPaged(
             String containerJid,
             Optional<String> userJid,

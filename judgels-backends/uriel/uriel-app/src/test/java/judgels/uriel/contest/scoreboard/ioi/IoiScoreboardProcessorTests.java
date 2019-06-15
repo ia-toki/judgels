@@ -1,10 +1,13 @@
 package judgels.uriel.contest.scoreboard.ioi;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -12,7 +15,6 @@ import java.util.Optional;
 import java.util.Set;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.Verdict;
-import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestStyle;
@@ -23,14 +25,16 @@ import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
+import judgels.uriel.contest.scoreboard.AbstractProgrammingScoreboardProcessorTests;
+import judgels.uriel.contest.scoreboard.ScoreboardProcessResult;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class IoiScoreboardProcessorTests {
+class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessorTests {
     private IoiScoreboardProcessor scoreboardProcessor = new IoiScoreboardProcessor();
 
     @Nested
-    class ComputeEntries {
+    class Process {
         private ScoreboardState state = new ScoreboardState.Builder()
                 .addProblemJids("p1", "p2")
                 .addProblemAliases("A", "B")
@@ -46,181 +50,30 @@ class IoiScoreboardProcessorTests {
                 .style(ContestStyle.IOI)
                 .build();
 
-        private StyleModuleConfig styleModulesConfig = new IoiStyleModuleConfig.Builder().build();
+        private StyleModuleConfig styleModuleConfig = new IoiStyleModuleConfig.Builder().build();
 
         private Set<ContestContestant> contestants = ImmutableSet.of(
                 new ContestContestant.Builder().userJid("c1").build(),
                 new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochMilli(10)).build());
 
         @Test
-        void only_count_contestant() {
-            List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(1)
-                            .jid("JIDS-1")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochMilli(20))
-                            .userJid("c3")
-                            .problemJid("p1")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-1")
-                                    .score(78)
-                                    .verdict(Verdict.TIME_LIMIT_EXCEEDED)
-                                    .build())
-                            .build()
-            );
-
-            List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                    state,
-                    contest,
-                    styleModulesConfig,
-                    contestants,
-                    submissions,
-                    ImmutableList.of(),
-                    Optional.empty());
-
-            assertThat(entries).containsExactly(
-                    new IoiScoreboardEntry.Builder()
-                            .rank(1)
-                            .contestantJid("c1")
-                            .addScores(
-                                    Optional.empty(),
-                                    Optional.empty()
-                            )
-                            .totalScores(0)
-                            .lastAffectingPenalty(0)
-                            .build(),
-                    new IoiScoreboardEntry.Builder()
-                            .rank(1)
-                            .contestantJid("c2")
-                            .addScores(
-                                    Optional.empty(),
-                                    Optional.empty()
-                            )
-                            .totalScores(0)
-                            .lastAffectingPenalty(0)
-                            .build());
-        }
-
-        @Test
-        void ignore_other_problem() {
-            List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(1)
-                            .jid("JIDS-1")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochMilli(20))
-                            .userJid("c1")
-                            .problemJid("p4")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-1")
-                                    .score(78)
-                                    .verdict(Verdict.TIME_LIMIT_EXCEEDED)
-                                    .build())
-                            .build()
-            );
-
-            List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                    state,
-                    contest,
-                    styleModulesConfig,
-                    contestants,
-                    submissions,
-                    ImmutableList.of(),
-                    Optional.empty());
-
-            assertThat(entries).containsExactly(
-                    new IoiScoreboardEntry.Builder()
-                            .rank(1)
-                            .contestantJid("c1")
-                            .addScores(
-                                    Optional.empty(),
-                                    Optional.empty()
-                            )
-                            .totalScores(0)
-                            .lastAffectingPenalty(0)
-                            .build(),
-                    new IoiScoreboardEntry.Builder()
-                            .rank(1)
-                            .contestantJid("c2")
-                            .addScores(
-                                    Optional.empty(),
-                                    Optional.empty()
-                            )
-                            .totalScores(0)
-                            .lastAffectingPenalty(0)
-                            .build());
-        }
-
-        @Test
         void time_calculation() {
             List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(1)
-                            .jid("JIDS-1")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochMilli(20))
-                            .userJid("c2")
-                            .problemJid("p1")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-1")
-                                    .score(78)
-                                    .verdict(Verdict.TIME_LIMIT_EXCEEDED)
-                                    .build())
-                            .build(),
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(2)
-                            .jid("JIDS-2")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochMilli(20))
-                            .userJid("c1")
-                            .problemJid("p2")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-2")
-                                    .score(50)
-                                    .verdict(Verdict.OK)
-                                    .build())
-                            .build(),
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(3)
-                            .jid("JIDS-3")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochMilli(25))
-                            .userJid("c1")
-                            .problemJid("p1")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-2")
-                                    .score(0)
-                                    .verdict(Verdict.WRONG_ANSWER)
-                                    .build())
-                            .build()
-            );
+                    createMilliSubmission(1, 20, "c2", "p1", 78, Verdict.TIME_LIMIT_EXCEEDED),
+                    createMilliSubmission(2, 20, "c1", "p2", 50, Verdict.OK),
+                    createMilliSubmission(3, 25, "c1", "p1", 0, Verdict.WRONG_ANSWER));
 
-            List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                    state,
+            ScoreboardProcessResult result = scoreboardProcessor.process(
                     contest,
-                    styleModulesConfig,
+                    state,
+                    Optional.empty(),
+                    styleModuleConfig,
                     contestants,
                     submissions,
                     ImmutableList.of(),
                     Optional.empty());
 
-            assertThat(entries).containsExactly(
+            assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                     new IoiScoreboardEntry.Builder()
                             .rank(1)
                             .contestantJid("c2")
@@ -246,52 +99,22 @@ class IoiScoreboardProcessorTests {
         @Nested
         class ProblemOrdering {
             private List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(1)
-                            .jid("JIDS-1")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochMilli(20))
-                            .userJid("c2")
-                            .problemJid("p1")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-1")
-                                    .score(50)
-                                    .verdict(Verdict.TIME_LIMIT_EXCEEDED)
-                                    .build())
-                            .build(),
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(2)
-                            .jid("JIDS-2")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochMilli(20))
-                            .userJid("c1")
-                            .problemJid("p2")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-2")
-                                    .score(50)
-                                    .verdict(Verdict.OK)
-                                    .build())
-                            .build()
-            );
+                    createMilliSubmission(1, 20, "c2", "p1", 50, Verdict.TIME_LIMIT_EXCEEDED),
+                    createMilliSubmission(2, 20, "c1", "p2", 50, Verdict.OK));
 
             @Test
             void base_case() {
-                List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                        state,
+                ScoreboardProcessResult result = scoreboardProcessor.process(
                         contest,
-                        styleModulesConfig,
+                        state,
+                        Optional.empty(),
+                        styleModuleConfig,
                         contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                assertThat(entries).containsExactly(
+                assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
@@ -321,16 +144,17 @@ class IoiScoreboardProcessorTests {
                         .addProblemAliases("B", "A")
                         .build();
 
-                List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                        state,
+                ScoreboardProcessResult result = scoreboardProcessor.process(
                         contest,
-                        styleModulesConfig,
+                        state,
+                        Optional.empty(),
+                        styleModuleConfig,
                         contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                assertThat(entries).containsExactly(
+                assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
@@ -357,54 +181,24 @@ class IoiScoreboardProcessorTests {
         @Nested
         class LastAffectingPenalty {
             private List<Submission> submissions = ImmutableList.of(
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(1)
-                            .jid("JIDS-1")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochMilli(20))
-                            .userJid("c2")
-                            .problemJid("p1")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-1")
-                                    .score(50)
-                                    .verdict(Verdict.TIME_LIMIT_EXCEEDED)
-                                    .build())
-                            .build(),
-                    new Submission.Builder()
-                            .containerJid("JIDC")
-                            .id(2)
-                            .jid("JIDS-2")
-                            .gradingEngine("ENG")
-                            .gradingLanguage("ASM")
-                            .time(Instant.ofEpochMilli(20))
-                            .userJid("c1")
-                            .problemJid("p2")
-                            .latestGrading(new Grading.Builder()
-                                    .id(1)
-                                    .jid("JIDG-2")
-                                    .score(50)
-                                    .verdict(Verdict.OK)
-                                    .build())
-                            .build()
-            );
+                    createMilliSubmission(1, 20, "c2", "p1", 50, Verdict.TIME_LIMIT_EXCEEDED),
+                    createMilliSubmission(2, 20, "c1", "p2", 50, Verdict.OK));
 
             @Test
             void sorted_without_last_affecting_penalty() {
-                styleModulesConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(false).build();
+                styleModuleConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(false).build();
 
-                List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                        state,
+                ScoreboardProcessResult result = scoreboardProcessor.process(
                         contest,
-                        styleModulesConfig,
+                        state,
+                        Optional.empty(),
+                        styleModuleConfig,
                         contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                assertThat(entries).containsExactly(
+                assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
@@ -429,18 +223,19 @@ class IoiScoreboardProcessorTests {
 
             @Test
             void sorted_with_last_affecting_penalty() {
-                styleModulesConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(true).build();
+                styleModuleConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(true).build();
 
-                List<IoiScoreboardEntry> entries = scoreboardProcessor.computeEntries(
-                        state,
+                ScoreboardProcessResult result = scoreboardProcessor.process(
                         contest,
-                        styleModulesConfig,
+                        state,
+                        Optional.empty(),
+                        styleModuleConfig,
                         contestants,
                         submissions,
                         ImmutableList.of(),
                         Optional.empty());
 
-                assertThat(entries).containsExactly(
+                assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
                         new IoiScoreboardEntry.Builder()
                                 .rank(1)
                                 .contestantJid("c2")
@@ -461,6 +256,93 @@ class IoiScoreboardProcessorTests {
                                 .totalScores(50)
                                 .lastAffectingPenalty(15)
                                 .build());
+            }
+        }
+
+        @Nested
+        class IncrementalProcess {
+            List<Submission> submissions = ImmutableList.of(
+                    createMilliSubmission(5, 100, "c1", "p1", 0, Verdict.WRONG_ANSWER),
+                    createMilliSubmission(6, 200, "c2", "p1", 0, Verdict.WRONG_ANSWER),
+                    createMilliSubmission(7, 300, "c1", "p1", 20, Verdict.WRONG_ANSWER),
+                    createMilliSubmission(8, 400, "c1", "p1", 100, Verdict.ACCEPTED),
+                    createMilliSubmission(9, 500, "c2", "p2", 95, Verdict.WRONG_ANSWER),
+                    createMilliSubmission(10, 600, "c2", "p1", 0, Verdict.PENDING),
+                    createMilliSubmission(11, 700, "c1", "p2", 80, Verdict.OK));
+
+            Set<ContestContestant> contestants = ImmutableSet.of(
+                    new ContestContestant.Builder().userJid("c1").build(),
+                    new ContestContestant.Builder().userJid("c2").contestStartTime(Instant.ofEpochMilli(300)).build(),
+                    new ContestContestant.Builder().userJid("c3").build());
+
+            IoiScoreboardIncrementalContent incrementalContent = new IoiScoreboardIncrementalContent.Builder()
+                    .lastSubmissionId(3)
+                    .putLastAffectingPenaltiesByContestantJid("c2", 75L)
+                    .putLastAffectingPenaltiesByContestantJid("c3", 90L)
+                    .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", empty(), "p2", of(90)))
+                    .putScoresMapsByContestantJid("c3", ImmutableMap.of("p1", of(20), "p2", of(30)))
+                    .build();
+
+            @Test
+            void empty_initial_incremental_content() {
+                ScoreboardProcessResult result = scoreboardProcessor.process(
+                        contest,
+                        state,
+                        Optional.empty(),
+                        styleModuleConfig,
+                        contestants,
+                        submissions,
+                        ImmutableList.of(),
+                        Optional.empty());
+
+                assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
+                        .lastSubmissionId(9)
+                        .putLastAffectingPenaltiesByContestantJid("c1", 395L)
+                        .putLastAffectingPenaltiesByContestantJid("c2", 200L)
+                        .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(100), "p2", empty()))
+                        .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
+                        .build());
+            }
+
+            @Test
+            void empty_new_submissions() {
+                ScoreboardProcessResult result = scoreboardProcessor.process(
+                        contest,
+                        state,
+                        Optional.of(incrementalContent),
+                        styleModuleConfig,
+                        contestants,
+                        ImmutableList.of(),
+                        ImmutableList.of(),
+                        Optional.empty());
+
+                assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
+                        .from(incrementalContent)
+                        .lastSubmissionId(Optional.empty())
+                        .build());
+            }
+
+            @Test
+            void existing_incremental_content() {
+                ScoreboardProcessResult result = scoreboardProcessor.process(
+                        contest,
+                        state,
+                        Optional.of(incrementalContent),
+                        styleModuleConfig,
+                        contestants,
+                        submissions,
+                        ImmutableList.of(),
+                        Optional.empty());
+
+                assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
+                        .lastSubmissionId(9)
+                        .putLastAffectingPenaltiesByContestantJid("c1", 395L)
+                        .putLastAffectingPenaltiesByContestantJid("c2", 200L)
+                        .putLastAffectingPenaltiesByContestantJid("c3", 90L)
+                        .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(100), "p2", empty()))
+                        .putScoresMapsByContestantJid("c2", ImmutableMap.of("p1", of(0), "p2", of(95)))
+                        .putScoresMapsByContestantJid("c3", ImmutableMap.of("p1", of(20), "p2", of(30)))
+                        .build());
             }
         }
     }

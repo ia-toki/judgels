@@ -1,11 +1,12 @@
 package judgels.uriel.contest.scoreboard.ioi;
 
+import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
@@ -29,6 +30,8 @@ import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
+import judgels.uriel.contest.scoreboard.ScoreboardIncrementalContent;
+import judgels.uriel.contest.scoreboard.ScoreboardProcessResult;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessor;
 
 public class IoiScoreboardProcessor implements ScoreboardProcessor {
@@ -52,9 +55,10 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public List<IoiScoreboardEntry> computeEntries(
-            ScoreboardState scoreboardState,
+    public ScoreboardProcessResult process(
             Contest contest,
+            ScoreboardState scoreboardState,
+            Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,
@@ -64,40 +68,41 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
         IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 
         List<String> problemJids = scoreboardState.getProblemJids();
-        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
         Map<String, Optional<Instant>> contestantStartTimesMap = contestants.stream()
                 .collect(toMap(ContestContestant::getUserJid, ContestContestant::getContestStartTime));
 
-        List<Submission> filteredSubmissions = programmingSubmissions.stream()
-                .filter(s -> contestantJids.contains(s.getUserJid()))
-                .filter(s -> problemJidsSet.contains(s.getProblemJid()))
-                .collect(Collectors.toList());
-
         Map<String, List<Submission>> submissionsMap = new HashMap<>();
         contestantJids.forEach(c -> submissionsMap.put(c, new ArrayList<>()));
-        filteredSubmissions.forEach(s -> {
-            submissionsMap.get(s.getUserJid()).add(s);
-        });
+        programmingSubmissions.forEach(s -> submissionsMap.get(s.getUserJid()).add(s));
+
+        Optional<IoiScoreboardIncrementalContent> maybeIncrementalContent =
+                incrementalContent.map(content -> (IoiScoreboardIncrementalContent) content);
+
+        Map<String, Long> lastAffectingPenaltiesByContestantJid = new HashMap<>(
+                maybeIncrementalContent.map(c -> c.getLastAffectingPenaltiesByContestantJid()).orElse(emptyMap()));
+        Map<String, Map<String, Optional<Integer>>> scoresMapsByContestantJid = new HashMap<>(
+                maybeIncrementalContent.map(c -> c.getScoresMapsByContestantJid()).orElse(emptyMap()));
+
+        Optional<Long> nextLastSubmissionId = Optional.empty();
+        for (Submission s : programmingSubmissions) {
+            if (!s.getLatestGrading().isPresent() || s.getLatestGrading().get().getVerdict() == Verdict.PENDING) {
+                break;
+            }
+            nextLastSubmissionId = Optional.of(s.getId());
+        }
 
         List<IoiScoreboardEntry> entries = new ArrayList<>();
         for (String contestantJid : submissionsMap.keySet()) {
-            long lastAffectingPenalty = 0;
-            Map<String, Optional<Integer>> scoresMap = new HashMap<>();
-            problemJids.forEach(p -> scoresMap.put(p, Optional.empty()));
+            long lastAffectingPenalty =
+                    lastAffectingPenaltiesByContestantJid.getOrDefault(contestantJid, 0L);
+            Map<String, Optional<Integer>> scoresMap = new HashMap<>(
+                    scoresMapsByContestantJid.getOrDefault(contestantJid, emptyMap()));
+
+            problemJids.forEach(p -> scoresMap.putIfAbsent(p, Optional.empty()));
 
             for (Submission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
-
-                if (!contestantJids.contains(submission.getUserJid())) {
-                    continue;
-                }
-                if (!problemJidsSet.contains(problemJid)) {
-                    continue;
-                }
-                if (!submission.getLatestGrading().isPresent()) {
-                    continue;
-                }
 
                 Grading grading = submission.getLatestGrading().get();
                 Verdict verdict = grading.getVerdict();
@@ -109,13 +114,18 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 if (scoresMap.get(problemJid).isPresent() && score < scoresMap.get(problemJid).get()) {
                     continue;
                 }
-                scoresMap.put(submission.getProblemJid(), Optional.of(score));
+                scoresMap.put(problemJid, Optional.of(score));
 
                 if (score > 0) {
                     lastAffectingPenalty = computeLastAffectingPenalty(
                             submission.getTime(),
                             contestantStartTimesMap.get(contestantJid),
                             contest.getBeginTime());
+                }
+
+                if (submission.getId() <= nextLastSubmissionId.orElse(Long.MAX_VALUE)) {
+                    lastAffectingPenaltiesByContestantJid.put(contestantJid, lastAffectingPenalty);
+                    scoresMapsByContestantJid.put(contestantJid, ImmutableMap.copyOf(scoresMap));
                 }
             }
 
@@ -138,7 +148,16 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             comparator = new StandardIoiScoreboardEntryComparator();
         }
 
-        return sortEntriesAndAssignRanks(comparator, entries);
+        entries = sortEntriesAndAssignRanks(comparator, entries);
+
+        return new ScoreboardProcessResult.Builder()
+               .entries(entries)
+                .incrementalContent(new IoiScoreboardIncrementalContent.Builder()
+                        .lastSubmissionId(nextLastSubmissionId)
+                        .lastAffectingPenaltiesByContestantJid(lastAffectingPenaltiesByContestantJid)
+                        .scoresMapsByContestantJid(scoresMapsByContestantJid)
+                        .build())
+                .build();
     }
 
     @Override

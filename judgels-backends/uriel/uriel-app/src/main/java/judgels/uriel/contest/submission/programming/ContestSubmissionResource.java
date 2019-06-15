@@ -58,6 +58,7 @@ import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemStore;
+import judgels.uriel.contest.scoreboard.ScoreboardIncrementalMarker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
@@ -71,6 +72,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
     private final SubmissionDownloader submissionDownloader;
     private final SubmissionClient submissionClient;
     private final SubmissionRegrader submissionRegrader;
+    private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ContestSubmissionRoleChecker submissionRoleChecker;
     private final ContestProblemRoleChecker problemRoleChecker;
     private final ContestModuleStore moduleStore;
@@ -88,6 +90,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             SubmissionDownloader submissionDownloader,
             SubmissionClient submissionClient,
             SubmissionRegrader submissionRegrader,
+            ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ContestSubmissionRoleChecker submissionRoleChecker,
             ContestProblemRoleChecker problemRoleChecker,
             ContestModuleStore moduleStore,
@@ -104,6 +107,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         this.submissionClient = submissionClient;
         this.submissionRegrader = submissionRegrader;
         this.submissionRoleChecker = submissionRoleChecker;
+        this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.problemRoleChecker = problemRoleChecker;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
@@ -255,6 +259,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
 
         submissionRegrader.regradeSubmission(submission);
+        scoreboardIncrementalMarker.invalidateMark(contest.getJid());
     }
 
     @Override
@@ -279,6 +284,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
             }
             submissionRegrader.regradeSubmissions(submissions);
         }
+        scoreboardIncrementalMarker.invalidateMark(contest.getJid());
     }
 
     @GET

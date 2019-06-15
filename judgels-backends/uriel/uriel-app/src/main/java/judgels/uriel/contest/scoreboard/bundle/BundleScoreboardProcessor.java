@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.time.Instant;
@@ -24,6 +23,8 @@ import judgels.uriel.api.contest.scoreboard.BundleScoreboard.BundleScoreboardCon
 import judgels.uriel.api.contest.scoreboard.BundleScoreboard.BundleScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
+import judgels.uriel.contest.scoreboard.ScoreboardIncrementalContent;
+import judgels.uriel.contest.scoreboard.ScoreboardProcessResult;
 import judgels.uriel.contest.scoreboard.ScoreboardProcessor;
 
 public class BundleScoreboardProcessor implements ScoreboardProcessor {
@@ -47,9 +48,10 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public List<BundleScoreboardEntry> computeEntries(
-            ScoreboardState scoreboardState,
+    public ScoreboardProcessResult process(
             Contest contest,
+            ScoreboardState scoreboardState,
+            Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
             Set<ContestContestant> contestants,
             List<Submission> programmingSubmissions,
@@ -57,15 +59,9 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
             Optional<Instant> freezeTime) {
 
         List<String> problemJids = scoreboardState.getProblemJids();
-        Set<String> problemJidsSet = ImmutableSet.copyOf(problemJids);
         Set<String> contestantJids = contestants.stream().map(ContestContestant::getUserJid).collect(toSet());
 
-        List<ItemSubmission> filteredSubmissions = bundleItemSubmissions.stream()
-                .filter(s -> contestantJids.contains(s.getUserJid()))
-                .filter(s -> problemJidsSet.contains(s.getProblemJid()))
-                .collect(Collectors.toList());
-
-        Map<String, List<ItemSubmission>> submissionsByUserJid = filteredSubmissions.stream()
+        Map<String, List<ItemSubmission>> submissionsByUserJid = bundleItemSubmissions.stream()
                 .collect(Collectors.groupingBy(ItemSubmission::getUserJid));
 
         List<BundleScoreboardEntry> entries = contestantJids.stream()
@@ -96,7 +92,11 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                 })
                 .collect(Collectors.toList());
 
-        return sortEntriesAndAssignRanks(new UsingTotalAnsweredItemsBundleScoreboardEntryComparator(), entries);
+        entries = sortEntriesAndAssignRanks(new UsingTotalAnsweredItemsBundleScoreboardEntryComparator(), entries);
+        return new ScoreboardProcessResult.Builder()
+                .entries(entries)
+                .incrementalContent(new BundleScoreboardIncrementalContent())
+                .build();
     }
 
     @Override
