@@ -1,0 +1,15 @@
+- block:
+  - name: Generate gabriel config
+    template:
+      src: "{{ playbook_dir }}/../conf/gabriel.yml.j2"
+      dest: /judgels/gabriel/var/conf/gabriel.yml
+
+  - name: Generate gabriel launcher config
+    template:
+      src: "{{ playbook_dir }}/../conf/gabriel-launcher.yml.j2"
+      dest: /judgels/gabriel/var/conf/launcher-custom.yml
+
+  - name: Restart gabriel
+    docker_container:
+      name: gabriel
+      restart: yes

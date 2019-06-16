@@ -1,0 +1,4 @@
+- hosts: uriel
+  gather_facts: false
+  roles:
+    - name: uriel-reload

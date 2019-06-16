@@ -1,0 +1,10 @@
+- block:
+  - name: Generate sandalphon config
+    template:
+      src: "{{ playbook_dir }}/../conf/sandalphon.conf.j2"
+      dest: /judgels/sandalphon/var/conf/sandalphon.conf
+
+  - name: Restart sandalphon
+    docker_container:
+      name: sandalphon
+      restart: yes

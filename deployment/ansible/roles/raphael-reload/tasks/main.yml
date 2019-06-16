@@ -1,0 +1,10 @@
+- block:
+  - name: Generate raphael config
+    template:
+      src: "{{ playbook_dir }}/../conf/raphael.js.j2"
+      dest: /judgels/raphael/var/conf/raphael.js
+
+  - name: Restart raphael
+    docker_container:
+      name: raphael
+      restart: yes
