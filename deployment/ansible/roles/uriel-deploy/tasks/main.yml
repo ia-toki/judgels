@@ -14,6 +14,11 @@
       src: "{{ playbook_dir }}/../conf/uriel.yml.j2"
       dest: /judgels/uriel/var/conf/uriel.yml
 
+  - name: Generate uriel launcher config
+    template:
+      src: "{{ playbook_dir }}/../conf/uriel-launcher.yml.j2"
+      dest: /judgels/uriel/var/conf/launcher-custom.yml
+
   - name: Pull uriel image
     docker_image:
       name: judgels/uriel

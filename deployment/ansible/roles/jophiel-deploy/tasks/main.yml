@@ -14,6 +14,11 @@
       src: "{{ playbook_dir }}/../conf/jophiel.yml.j2"
       dest: /judgels/jophiel/var/conf/jophiel.yml
 
+  - name: Generate jophiel launcher config
+    template:
+      src: "{{ playbook_dir }}/../conf/jophiel-launcher.yml.j2"
+      dest: /judgels/jophiel/var/conf/launcher-custom.yml
+
   - name: Pull jophiel image
     docker_image:
       name: judgels/jophiel
