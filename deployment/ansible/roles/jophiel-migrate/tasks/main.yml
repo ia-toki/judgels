@@ -28,6 +28,3 @@
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
       command: dbMigrate
-
-  tags:
-    - jophiel-migrate

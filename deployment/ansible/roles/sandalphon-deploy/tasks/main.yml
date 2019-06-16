@@ -31,5 +31,3 @@
       env:
         JAVA_OPTS: "-Xmx{{ sandalphon_xmx }}"
         PLAY_BINARY_OPTS: "-Dhttp.port=9002 -Dconfig.file=/judgels/sandalphon/var/conf/sandalphon.conf"
-  tags:
-    - sandalphon-deploy

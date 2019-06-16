@@ -31,5 +31,3 @@
       env:
         JAVA_OPTS: "-Xmx{{ jerahmeel_xmx }}"
         PLAY_BINARY_OPTS: "-Dhttp.port=9006 -Dconfig.file=/judgels/jerahmeel/var/conf/jerahmeel.conf"
-  tags:
-    - jerahmeel-deploy

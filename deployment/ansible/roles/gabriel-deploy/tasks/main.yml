@@ -35,5 +35,3 @@
       volumes:
         - "/judgels/gabriel/var:/judgels/gabriel/var"
         - "/judgels/sandalphon/var:/judgels/sandalphon/var"
-  tags:
-    - gabriel-deploy

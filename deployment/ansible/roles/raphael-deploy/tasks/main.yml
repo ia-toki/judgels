@@ -27,5 +27,3 @@
       network_mode: host
       volumes:
         - "/judgels/raphael/var:/judgels/raphael/var"
-  tags:
-    - raphael-deploy

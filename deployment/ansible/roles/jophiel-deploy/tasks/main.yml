@@ -33,5 +33,3 @@
       network_mode: host
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
-  tags:
-    - jophiel-deploy

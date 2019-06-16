@@ -44,6 +44,3 @@
         - /judgels/sites:/etc/nginx/conf.d
       env:
         CERTBOT_EMAIL: "{{ letsencrypt_email }}"
-
-  tags:
-    - judgels-deploy

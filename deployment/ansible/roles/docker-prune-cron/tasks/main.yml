@@ -6,6 +6,3 @@
       job: docker system prune -a -f
       user: root
       cron_file: docker-prune
-
-  tags:
-    - docker-prune-cron

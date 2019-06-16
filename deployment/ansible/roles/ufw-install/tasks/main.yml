@@ -43,6 +43,3 @@
       src: 172.17.0.0/24
       proto: tcp
       comment: phpMyAdmin login
-
-  tags:
-    - firewall

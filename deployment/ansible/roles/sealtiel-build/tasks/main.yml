@@ -15,6 +15,3 @@
       push: yes
       state: present
     when: judgels_version is defined
-
-  tags:
-    - sealtiel-build

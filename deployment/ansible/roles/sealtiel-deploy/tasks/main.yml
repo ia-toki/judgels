@@ -32,5 +32,3 @@
       network_mode: host
       volumes:
         - "/judgels/sealtiel/var:/judgels/sealtiel/var"
-  tags:
-    - sealtiel-deploy

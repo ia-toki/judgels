@@ -12,5 +12,3 @@
       env:
         RABBITMQ_DEFAULT_USER: "{{ rabbitmq_mgmt_username }}"
         RABBITMQ_DEFAULT_PASS: "{{ rabbitmq_mgmt_password }}"
-  tags:
-    - rabbitmq-deploy

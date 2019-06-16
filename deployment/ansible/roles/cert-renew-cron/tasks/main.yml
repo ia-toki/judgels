@@ -6,6 +6,3 @@
       job: docker exec nginx-certbot certbot renew
       user: root
       cron_file: cert-renew
-
-  tags:
-    - cert-renew-cron

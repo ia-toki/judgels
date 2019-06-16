@@ -12,5 +12,3 @@
         - '8080:80'
       env:
         PMA_HOST: 172.17.0.1
-  tags:
-    - phpmyadmin-deploy

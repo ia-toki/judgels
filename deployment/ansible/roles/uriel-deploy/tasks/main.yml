@@ -33,5 +33,3 @@
       network_mode: host
       volumes:
         - "/judgels/uriel/var:/judgels/uriel/var"
-  tags:
-    - uriel-deploy

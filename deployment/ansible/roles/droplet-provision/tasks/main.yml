@@ -7,6 +7,3 @@
     apt:
       name: docker.io
       state: present
-
-  tags:
-    - droplet-provision
