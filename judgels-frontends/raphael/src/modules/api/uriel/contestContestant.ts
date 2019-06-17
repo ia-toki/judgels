@@ -8,6 +8,7 @@ import { baseContestURL } from './contest';
 
 export interface ContestContestant {
   userJid: string;
+  contestStartTime?: number;
 }
 
 export interface ContestContestantConfig {
