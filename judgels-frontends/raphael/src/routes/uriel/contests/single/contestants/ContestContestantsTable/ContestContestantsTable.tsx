@@ -1,6 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
+import { FormattedDate } from 'components/FormattedDate/FormattedDate';
 import { UserRef } from 'components/UserRef/UserRef';
 import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { ContestContestant } from 'modules/api/uriel/contestContestant';
@@ -14,25 +15,28 @@ export interface ContestContestantsTableProps {
 
 export class ContestContestantsTable extends React.PureComponent<ContestContestantsTableProps> {
   render() {
+    const isVirtualContest = this.props.contestants.some(contestant => contestant.contestStartTime !== null);
+
     return (
       <HTMLTable striped className="table-list-condensed contestants-table">
-        {this.renderHeader()}
-        {this.renderRows()}
+        {this.renderHeader(isVirtualContest)}
+        {this.renderRows(isVirtualContest)}
       </HTMLTable>
     );
   }
 
-  private renderHeader = () => {
+  private renderHeader = (isVirtualContest: boolean) => {
     return (
       <thead>
         <tr>
           <th className="col-user">User</th>
+          {isVirtualContest && <th>Virtual Start Time</th>}
         </tr>
       </thead>
     );
   };
 
-  private renderRows = () => {
+  private renderRows = (isVirtualContest: boolean) => {
     const { contestants, profilesMap } = this.props;
 
     const sortedContestants = contestants.slice().sort((c1, c2) => {
@@ -46,6 +50,9 @@ export class ContestContestantsTable extends React.PureComponent<ContestContesta
         <td>
           <UserRef profile={profilesMap[contestant.userJid]} />
         </td>
+        {isVirtualContest && (
+          <td>{contestant.contestStartTime && <FormattedDate value={contestant.contestStartTime} />}</td>
+        )}
       </tr>
     ));
 
