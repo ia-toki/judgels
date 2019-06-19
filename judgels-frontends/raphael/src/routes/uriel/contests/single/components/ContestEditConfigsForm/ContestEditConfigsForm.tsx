@@ -21,6 +21,7 @@ export interface ContestEditConfigsFormData {
   ioiAllowAllLanguages?: boolean;
   ioiAllowedLanguages?: { [key: string]: string };
   ioiUsingLastAffectingPenalty?: boolean;
+  ioiUsingMaxScorePerSubtask?: boolean;
 
   gcjAllowAllLanguages?: boolean;
   gcjAllowedLanguages?: { [key: string]: string };
@@ -157,6 +158,12 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
       keyClassName: 'contest-edit-configs-form__key',
     };
 
+    const usingMaxScorePerSubtaskField: any = {
+      name: 'ioiUsingMaxScorePerSubtask',
+      label: 'Using max score per subtask?',
+      keyClassName: 'contest-edit-configs-form__key',
+    };
+
     return (
       <div className="contest-edit-configs-form__config">
         <h4>IOI style config</h4>
@@ -168,6 +175,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
                 allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
             </FormTableInput>
             <Field component={FormTableCheckbox} {...usingLastAffectingPenaltyField} />
+            <Field component={FormTableCheckbox} {...usingMaxScorePerSubtaskField} />
           </tbody>
         </HTMLTable>
       </div>

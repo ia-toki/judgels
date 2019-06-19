@@ -23,5 +23,10 @@ public interface IoiStyleModuleConfig extends StyleModuleConfig {
         return false;
     }
 
+    @Value.Default
+    default boolean getUsingMaxScorePerSubtask() {
+        return false;
+    }
+
     class Builder extends ImmutableIoiStyleModuleConfig.Builder {}
 }

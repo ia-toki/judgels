@@ -56,6 +56,11 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
+    public boolean requiresGradingDetails(StyleModuleConfig styleModuleConfig) {
+        return false;
+    }
+
+    @Override
     public ScoreboardProcessResult process(
             Contest contest,
             ScoreboardState scoreboardState,

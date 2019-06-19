@@ -60,6 +60,7 @@ export interface IcpcStyleModuleConfig {
 export interface IoiStyleModuleConfig {
   languageRestriction: LanguageRestriction;
   usingLastAffectingPenalty: boolean;
+  usingMaxScorePerSubtask: boolean;
 }
 
 export interface GcjStyleModuleConfig {

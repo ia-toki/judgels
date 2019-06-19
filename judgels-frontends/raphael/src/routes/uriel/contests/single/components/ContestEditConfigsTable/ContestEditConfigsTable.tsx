@@ -69,6 +69,11 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
         title: 'Using last affecting penalty?',
         value: <Icon icon={config.usingLastAffectingPenalty ? 'small-tick' : 'small-cross'} />,
       },
+      {
+        key: 'usingMaxScorePerSubtask',
+        title: 'Using max score per subtask?',
+        value: <Icon icon={config.usingMaxScorePerSubtask ? 'small-tick' : 'small-cross'} />,
+      },
     ];
     return (
       <div className="contest-edit-configs-table__config">

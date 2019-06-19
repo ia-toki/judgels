@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 public interface IoiScoreboardIncrementalContent extends ScoreboardIncrementalContent {
     Map<String, Long> getLastAffectingPenaltiesByContestantJid();
     Map<String, Map<String, Optional<Integer>>> getScoresMapsByContestantJid();
+    Map<String, Map<String, Map<Integer, Double>>> getMaxScorePerSubtaskMapsByContestantJid();
 
     class Builder extends ImmutableIoiScoreboardIncrementalContent.Builder {}
 }

@@ -78,6 +78,8 @@ public class ContestScoreboardUpdater {
     public void update(Contest contest) {
         Instant now = clock.instant();
 
+        ScoreboardProcessor processor = scoreboardProcessorRegistry.get(contest.getStyle());
+
         ContestModulesConfig contestModulesConfig = moduleStore.getConfig(contest.getJid(), contest.getStyle());
         StyleModuleConfig styleModuleConfig = moduleStore.getStyleModuleConfig(contest.getJid(), contest.getStyle());
 
@@ -112,9 +114,10 @@ public class ContestScoreboardUpdater {
         ScoreboardIncrementalMark incrementalMark =
                 scoreboardIncrementalMarker.getMark(contest.getJid(), incrementalMarkKey);
 
+        boolean withGradingDetails = processor.requiresGradingDetails(styleModuleConfig);
         long lastSubmissionId = incrementalMark.getLastSubmissionId();
         List<Submission> programmingSubmissions = programmingSubmissionStore
-                .getSubmissionsForScoreboard(contest.getJid(), lastSubmissionId)
+                .getSubmissionsForScoreboard(contest.getJid(), withGradingDetails, lastSubmissionId)
                 .stream()
                 .filter(s -> s.getLatestGrading().isPresent())
                 .filter(s -> problemJidsSet.contains(s.getProblemJid()))
@@ -133,6 +136,7 @@ public class ContestScoreboardUpdater {
 
         updateScoreboard(
                 contest,
+                processor,
                 state,
                 Optional.ofNullable(incrementalMark.getIncrementalContents().get(OFFICIAL)),
                 styleModuleConfig,
@@ -151,6 +155,7 @@ public class ContestScoreboardUpdater {
             if (now.isAfter(freezeTime)) {
                 updateScoreboard(
                         contest,
+                        processor,
                         state,
                         Optional.ofNullable(incrementalMark.getIncrementalContents().get(FROZEN)),
                         styleModuleConfig,
@@ -194,6 +199,7 @@ public class ContestScoreboardUpdater {
 
     private void updateScoreboard(
             Contest contest,
+            ScoreboardProcessor processor,
             ScoreboardState state,
             Optional<ScoreboardIncrementalContent> incrementalContent,
             StyleModuleConfig styleModuleConfig,
@@ -204,8 +210,6 @@ public class ContestScoreboardUpdater {
             ContestScoreboardType type,
             Map<ContestScoreboardType, Scoreboard> scoreboards,
             Map<ContestScoreboardType, ScoreboardIncrementalContent> incrementalContents) {
-
-        ScoreboardProcessor processor = scoreboardProcessorRegistry.get(contest.getStyle());
 
         ScoreboardProcessResult result = processor.process(
                 contest,

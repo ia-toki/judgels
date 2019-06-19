@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.gabriel.api.SubtaskResult;
 import judgels.gabriel.api.Verdict;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Grading;
@@ -55,6 +57,12 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
+    public boolean requiresGradingDetails(StyleModuleConfig styleModuleConfig) {
+        IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
+        return ioiStyleModuleConfig.getUsingMaxScorePerSubtask();
+    }
+
+    @Override
     public ScoreboardProcessResult process(
             Contest contest,
             ScoreboardState scoreboardState,
@@ -83,6 +91,8 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 maybeIncrementalContent.map(c -> c.getLastAffectingPenaltiesByContestantJid()).orElse(emptyMap()));
         Map<String, Map<String, Optional<Integer>>> scoresMapsByContestantJid = new HashMap<>(
                 maybeIncrementalContent.map(c -> c.getScoresMapsByContestantJid()).orElse(emptyMap()));
+        Map<String, Map<String, Map<Integer, Double>>> maxScorePerSubtaskMapsByContestantJid = new HashMap<>(
+                maybeIncrementalContent.map(c -> c.getMaxScorePerSubtaskMapsByContestantJid()).orElse(emptyMap()));
 
         Optional<Long> nextLastSubmissionId = Optional.empty();
         for (Submission s : programmingSubmissions) {
@@ -98,8 +108,13 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                     lastAffectingPenaltiesByContestantJid.getOrDefault(contestantJid, 0L);
             Map<String, Optional<Integer>> scoresMap = new HashMap<>(
                     scoresMapsByContestantJid.getOrDefault(contestantJid, emptyMap()));
+            Map<String, Map<Integer, Double>> maxScorePerSubtaskMap = new HashMap<>(
+                    maxScorePerSubtaskMapsByContestantJid.getOrDefault(contestantJid, emptyMap()));
 
-            problemJids.forEach(p -> scoresMap.putIfAbsent(p, Optional.empty()));
+            problemJids.forEach(p -> {
+                scoresMap.putIfAbsent(p, Optional.empty());
+                maxScorePerSubtaskMap.putIfAbsent(p, emptyMap());
+            });
 
             for (Submission submission : submissionsMap.get(contestantJid)) {
                 String problemJid = submission.getProblemJid();
@@ -110,10 +125,29 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                     continue;
                 }
 
-                int score = grading.getScore();
-                if (scoresMap.get(problemJid).isPresent() && score < scoresMap.get(problemJid).get()) {
-                    continue;
+                int score;
+
+                if (ioiStyleModuleConfig.getUsingMaxScorePerSubtask()) {
+                    double newScore = 0;
+                    Map<Integer, Double> newMaxScorePerSubtask = Maps.newHashMap();
+
+                    for (SubtaskResult subtask : grading.getDetails().get().getSubtaskResults()) {
+                        double maxScore = Math.max(
+                                subtask.getScore(),
+                                maxScorePerSubtaskMap.get(problemJid).getOrDefault(subtask.getId(), 0.0));
+                        newScore += maxScore;
+                        newMaxScorePerSubtask.put(subtask.getId(), maxScore);
+                    }
+
+                    maxScorePerSubtaskMap.put(problemJid, newMaxScorePerSubtask);
+                    score = (int) newScore;
+                } else {
+                    score = grading.getScore();
+                    if (scoresMap.get(problemJid).isPresent() && score < scoresMap.get(problemJid).get()) {
+                        continue;
+                    }
                 }
+
                 scoresMap.put(problemJid, Optional.of(score));
 
                 if (score > 0) {
@@ -126,6 +160,8 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 if (submission.getId() <= nextLastSubmissionId.orElse(Long.MAX_VALUE)) {
                     lastAffectingPenaltiesByContestantJid.put(contestantJid, lastAffectingPenalty);
                     scoresMapsByContestantJid.put(contestantJid, ImmutableMap.copyOf(scoresMap));
+                    maxScorePerSubtaskMapsByContestantJid
+                            .put(contestantJid, ImmutableMap.copyOf(maxScorePerSubtaskMap));
                 }
             }
 
@@ -156,6 +192,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                         .lastSubmissionId(nextLastSubmissionId)
                         .lastAffectingPenaltiesByContestantJid(lastAffectingPenaltiesByContestantJid)
                         .scoresMapsByContestantJid(scoresMapsByContestantJid)
+                        .maxScorePerSubtaskMapsByContestantJid(maxScorePerSubtaskMapsByContestantJid)
                         .build())
                 .build();
     }

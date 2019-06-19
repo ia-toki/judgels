@@ -94,6 +94,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
           ioiAllowAllLanguages: allLanguagesAllowed(ioiStyle.languageRestriction),
           ioiAllowedLanguages: this.fromLanguageRestriction(ioiStyle.languageRestriction),
           ioiUsingLastAffectingPenalty: ioiStyle.usingLastAffectingPenalty,
+          ioiUsingMaxScorePerSubtask: ioiStyle.usingMaxScorePerSubtask,
         };
       }
       if (gcjStyle) {
@@ -170,6 +171,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
         ioiStyle: {
           languageRestriction: { allowedLanguageNames },
           usingLastAffectingPenalty: data.ioiUsingLastAffectingPenalty!,
+          usingMaxScorePerSubtask: data.ioiUsingMaxScorePerSubtask!,
         },
       };
     }

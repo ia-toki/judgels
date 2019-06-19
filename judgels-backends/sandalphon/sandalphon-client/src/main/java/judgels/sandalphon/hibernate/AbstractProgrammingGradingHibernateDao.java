@@ -67,4 +67,23 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
 
         return ImmutableMap.copyOf(result);
     }
+
+    @Override
+    public Map<String, M> selectAllLatestWithDetailsBySubmissionJids(Set<String> submissionJids) {
+        if (submissionJids.isEmpty()) {
+            return ImmutableMap.of();
+        }
+
+        Map<String, M> result = Maps.newHashMap();
+
+        List<M> models = selectAll(new FilterOptions.Builder<M>()
+                .putColumnsIn(AbstractProgrammingGradingModel_.submissionJid, submissionJids)
+                .build());
+
+        for (M model : models) {
+            result.put(model.submissionJid, model);
+        }
+
+        return ImmutableMap.copyOf(result);
+    }
 }

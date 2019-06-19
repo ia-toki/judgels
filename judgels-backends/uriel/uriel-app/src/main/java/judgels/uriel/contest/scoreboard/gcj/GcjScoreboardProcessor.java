@@ -56,6 +56,11 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
+    public boolean requiresGradingDetails(StyleModuleConfig styleModuleConfig) {
+        return false;
+    }
+
+    @Override
     public ScoreboardProcessResult process(
             Contest contest,
             ScoreboardState scoreboardState,

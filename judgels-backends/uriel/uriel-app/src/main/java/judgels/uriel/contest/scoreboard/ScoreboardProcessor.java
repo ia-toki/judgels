@@ -18,6 +18,8 @@ public interface ScoreboardProcessor {
     Scoreboard parse(ObjectMapper mapper, String json);
     Scoreboard create(ScoreboardState state, List<? extends ScoreboardEntry> entries);
 
+    boolean requiresGradingDetails(StyleModuleConfig styleModuleConfig);
+
     ScoreboardProcessResult process(
             Contest contest,
             ScoreboardState scoreboardState,
