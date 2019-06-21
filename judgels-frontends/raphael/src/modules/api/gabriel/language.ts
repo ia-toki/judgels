@@ -50,7 +50,7 @@ export function getGradingLanguageSyntaxHighlighterValue(code: string): string {
 }
 
 export function getAllowedGradingLanguages(gradingEngine: string, restriction: LanguageRestriction) {
-  if (gradingEngine === GradingEngineCode.OutputOnly) {
+  if (gradingEngine.startsWith(GradingEngineCode.OutputOnly)) {
     return ['OutputOnly'];
   }
   if (restriction.allowedLanguageNames.length === 0) {
