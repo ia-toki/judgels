@@ -12,6 +12,8 @@ import javax.persistence.criteria.Root;
 import judgels.persistence.FilterOptions;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.Model_;
+import judgels.persistence.api.OrderDir;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
@@ -78,7 +80,9 @@ public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractP
 
         List<M> models = selectAll(new FilterOptions.Builder<M>()
                 .putColumnsIn(AbstractProgrammingGradingModel_.submissionJid, submissionJids)
-                .build());
+                .build(), new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_ALL)
+                .orderDir(OrderDir.ASC).build());
 
         for (M model : models) {
             result.put(model.submissionJid, model);
