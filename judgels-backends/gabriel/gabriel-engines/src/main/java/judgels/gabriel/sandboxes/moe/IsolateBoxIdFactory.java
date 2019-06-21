@@ -1,7 +1,7 @@
 package judgels.gabriel.sandboxes.moe;
 
 class IsolateBoxIdFactory {
-    private static int boxId;
+    private static volatile int boxId;
 
     private IsolateBoxIdFactory() {}
 

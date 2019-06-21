@@ -287,6 +287,7 @@ public class IsolateSandbox implements Sandbox {
             if (result.getExitCode() != 0) {
                 throw new SandboxException("Cannot clean up Isolate!");
             }
+            FileUtils.forceDelete(boxDir);
         } catch (IOException | InterruptedException e) {
             throw new SandboxException(e);
         }
