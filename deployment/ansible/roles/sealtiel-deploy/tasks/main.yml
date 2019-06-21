@@ -29,6 +29,7 @@
       name: sealtiel
       image: "judgels/sealtiel:{{ judgels_version | default('latest', true) }}"
       restart: yes
+      restart_policy: always
       network_mode: host
       volumes:
         - "/judgels/sealtiel/var:/judgels/sealtiel/var"

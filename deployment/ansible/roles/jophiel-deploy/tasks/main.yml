@@ -30,6 +30,7 @@
       name: jophiel
       image: "judgels/jophiel:{{ judgels_version | default('latest', true) }}"
       restart: yes
+      restart_policy: always
       network_mode: host
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"

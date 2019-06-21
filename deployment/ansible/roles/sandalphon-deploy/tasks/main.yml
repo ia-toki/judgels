@@ -25,6 +25,7 @@
       name: sandalphon
       image: "judgels/sandalphon:{{ judgels_version | default('latest', true) }}"
       restart: yes
+      restart_policy: always
       network_mode: host
       volumes:
         - "/judgels/sandalphon/var:/judgels/sandalphon/var"

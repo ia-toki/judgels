@@ -8,6 +8,7 @@
       name: rabbitmq
       image: rabbitmq:3.7.8-management-alpine
       restart: yes
+      restart_policy: always
       network_mode: host
       env:
         RABBITMQ_DEFAULT_USER: "{{ rabbitmq_mgmt_username }}"

@@ -30,6 +30,7 @@
       name: uriel
       image: "judgels/uriel:{{ judgels_version | default('latest', true) }}"
       restart: yes
+      restart_policy: always
       network_mode: host
       volumes:
         - "/judgels/uriel/var:/judgels/uriel/var"

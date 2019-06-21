@@ -30,6 +30,7 @@
       image: "{{ gabriel_image }}"
       privileged: yes
       restart: yes
+      restart_policy: always
       network_mode: host
       volumes:
         - "/judgels/gabriel/var:/judgels/gabriel/var"

@@ -24,6 +24,7 @@
       name: raphael
       image: "judgels/raphael:{{ judgels_version | default('latest', true) }}"
       restart: yes
+      restart_policy: always
       network_mode: host
       volumes:
         - "/judgels/raphael/var:/judgels/raphael/var"

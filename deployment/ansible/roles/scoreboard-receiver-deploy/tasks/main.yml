@@ -18,6 +18,7 @@
       name: scoreboard-receiver
       image: judgels/scoreboard-receiver
       restart: yes
+      restart_policy: always
       network_mode: host
       volumes:
         - "/judgels/scoreboard-receiver/var:/judgels/scoreboard-receiver/var"
