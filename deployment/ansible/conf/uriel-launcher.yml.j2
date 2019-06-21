@@ -1,7 +1,9 @@
 configType: java
 configVersion: 1
 jvmOpts:
+{% if uriel_xmx is defined %}
   - -Xmx{{ uriel_xmx }}
+{% endif %}
   - -XX:+HeapDumpOnOutOfMemoryError
   - -XX:HeapDumpPath=/judgels/uriel/var/log
   - -Dcom.sun.management.jmxremote.port=9204

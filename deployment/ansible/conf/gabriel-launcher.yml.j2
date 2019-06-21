@@ -1,7 +1,9 @@
 configType: java
 configVersion: 1
 jvmOpts:
+{% if gabriel_xmx is defined %}
   - -Xmx{{ gabriel_xmx }}
+{% endif %}
   - -XX:+HeapDumpOnOutOfMemoryError
   - -XX:HeapDumpPath=/judgels/gabriel/var/log
   - -Dcom.sun.management.jmxremote.port=9207

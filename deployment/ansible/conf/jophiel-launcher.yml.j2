@@ -1,7 +1,9 @@
 configType: java
 configVersion: 1
 jvmOpts:
+{% if jophiel_xmx is defined %}
   - -Xmx{{ jophiel_xmx }}
+{% endif %}
   - -XX:+HeapDumpOnOutOfMemoryError
   - -XX:HeapDumpPath=/judgels/jophiel/var/log
   - -Dcom.sun.management.jmxremote.port=9201

@@ -1,7 +1,9 @@
 configType: java
 configVersion: 1
 jvmOpts:
+{% if sealtiel_xmx is defined %}
   - -Xmx{{ sealtiel_xmx }}
+{% endif %}
   - -XX:+HeapDumpOnOutOfMemoryError
   - -XX:HeapDumpPath=/judgels/sealtiel/var/log
   - -Dcom.sun.management.jmxremote.port=9203
