@@ -25,7 +25,7 @@ public class AbstractJerahmeelController extends AbstractJudgelsController {
             template.addSidebarMenu(Messages.get("user.users"), org.iatoki.judgels.jerahmeel.user.routes.UserController.index());
         }
         if (JerahmeelUtils.isGuest()) {
-            template.addUpperSidebarWidget(guestView.render(routes.ApplicationController.auth(getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure()), JophielClientControllerUtils.getInstance().getRegisterUrl().toString()));
+            template.addUpperSidebarWidget(guestView.render(JophielClientControllerUtils.getInstance().getRegisterUrl(), routes.ApplicationController.auth(getCurrentUrl(Http.Context.current().request())).absoluteURL(Http.Context.current().request(), Http.Context.current().request().secure())));
         } else {
             template.addUpperSidebarWidget(profileView.render(
                     JophielClientControllerUtils.getInstance().getUserAvatarUrl(IdentityUtils.getUserJid()),
