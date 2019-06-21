@@ -259,7 +259,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
 
   private renderSourceFiles = () => {
     const { submission, source } = this.props;
-    if (submission.gradingEngine === GradingEngineCode.OutputOnly) {
+    if (submission.gradingEngine.startsWith(GradingEngineCode.OutputOnly)) {
       return null;
     }
 

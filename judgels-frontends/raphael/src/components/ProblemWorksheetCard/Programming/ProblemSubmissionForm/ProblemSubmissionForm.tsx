@@ -72,7 +72,7 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
 
   private renderGradingLanguageFields = () => {
     const { gradingEngine, gradingLanguages } = this.props;
-    if (gradingEngine === GradingEngineCode.OutputOnly) {
+    if (gradingEngine.startsWith(GradingEngineCode.OutputOnly)) {
       return null;
     }
 
