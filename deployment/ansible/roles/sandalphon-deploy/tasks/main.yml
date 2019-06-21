@@ -30,7 +30,5 @@
       volumes:
         - "/judgels/sandalphon/var:/judgels/sandalphon/var"
       env:
-{% if sandalphon_xmx is defined %}
         JAVA_OPTS: "-Xmx{{ sandalphon_xmx }}"
-{% endif %}
         PLAY_BINARY_OPTS: "-Dhttp.port=9002 -Dconfig.file=/judgels/sandalphon/var/conf/sandalphon.conf -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/sandalphon/var/log"

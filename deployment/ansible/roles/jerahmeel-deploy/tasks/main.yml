@@ -29,7 +29,5 @@
       volumes:
         - "/judgels/jerahmeel/var:/judgels/jerahmeel/var"
       env:
-{% if jerahmeel_xmx is defined %}
         JAVA_OPTS: "-Xmx{{ jerahmeel_xmx }}"
-{% endif %}
         PLAY_BINARY_OPTS: "-Dhttp.port=9006 -Dconfig.file=/judgels/jerahmeel/var/conf/jerahmeel.conf -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/jerahmeel/var/log"
