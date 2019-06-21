@@ -1,8 +1,13 @@
-FROM openjdk:8u181-jre-alpine3.8
+FROM ubuntu:18.04
 
-RUN addgroup -S judgels && adduser -S -g judgels judgels
-RUN apk add --no-cache bash procps
+RUN apt-get update \
+    && apt-get -y install openjdk-8-jre \
+    && rm -rf /var/lib/apt/lists/*
 
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV PATH $JAVA_HOME/bin:$PATH
+
+RUN useradd -ms /bin/bash judgels
 USER judgels
 
 WORKDIR /judgels/jophiel
