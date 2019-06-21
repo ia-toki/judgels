@@ -20,7 +20,7 @@ public class PascalGradingLanguage implements GradingLanguage {
 
     @Override
     public List<String> getCompilationCommand(String sourceFilename) {
-        return ImmutableList.of("/usr/bin/fpc", sourceFilename, "-O2", "-XS", "-Sg");
+        return ImmutableList.of("/usr/bin/ppcx64", sourceFilename, "-O2", "-XS", "-Sg");
     }
 
     @Override
