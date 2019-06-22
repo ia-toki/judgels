@@ -128,33 +128,37 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 int score;
 
                 if (ioiStyleModuleConfig.getUsingMaxScorePerSubtask()) {
-                    double newScore = 0;
-                    Map<Integer, Double> newMaxScorePerSubtask = Maps.newHashMap();
+                    Map<Integer, Double> newMaxScorePerSubtask = Maps.newHashMap(
+                            maxScorePerSubtaskMap.get(problemJid));
 
                     for (SubtaskResult subtask : grading.getDetails().get().getSubtaskResults()) {
                         double maxScore = Math.max(
                                 subtask.getScore(),
-                                maxScorePerSubtaskMap.get(problemJid).getOrDefault(subtask.getId(), 0.0));
-                        newScore += maxScore;
+                                newMaxScorePerSubtask.getOrDefault(subtask.getId(), 0.0));
+
                         newMaxScorePerSubtask.put(subtask.getId(), maxScore);
+                    }
+
+                    double newScore = 0;
+                    for (double points : newMaxScorePerSubtask.values()) {
+                        newScore += points;
                     }
 
                     maxScorePerSubtaskMap.put(problemJid, newMaxScorePerSubtask);
                     score = (int) newScore;
                 } else {
                     score = grading.getScore();
-                    if (scoresMap.get(problemJid).isPresent() && score < scoresMap.get(problemJid).get()) {
-                        continue;
-                    }
                 }
 
-                scoresMap.put(problemJid, Optional.of(score));
+                if (!scoresMap.get(problemJid).isPresent() || score > scoresMap.get(problemJid).get()) {
+                    scoresMap.put(problemJid, Optional.of(score));
 
-                if (score > 0) {
-                    lastAffectingPenalty = computeLastAffectingPenalty(
-                            submission.getTime(),
-                            contestantStartTimesMap.get(contestantJid),
-                            contest.getBeginTime());
+                    if (score > 0) {
+                        lastAffectingPenalty = computeLastAffectingPenalty(
+                                submission.getTime(),
+                                contestantStartTimesMap.get(contestantJid),
+                                contest.getBeginTime());
+                    }
                 }
 
                 if (submission.getId() <= nextLastSubmissionId.orElse(Long.MAX_VALUE)) {

@@ -106,10 +106,11 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     createMilliSubmission(5, 100, "c1", "p1", 0, Verdict.WRONG_ANSWER),
                     createMilliSubmission(6, 200, "c2", "p1", 0, Verdict.WRONG_ANSWER),
                     createMilliSubmission(7, 300, "c1", "p1", 60, Verdict.WRONG_ANSWER, 35, 25),
-                    createMilliSubmission(8, 400, "c1", "p1", 70, Verdict.WRONG_ANSWER, 30, 40),
-                    createMilliSubmission(9, 500, "c2", "p2", 95, Verdict.WRONG_ANSWER, 80, 15),
-                    createMilliSubmission(10, 600, "c2", "p1", 0, Verdict.PENDING),
-                    createMilliSubmission(11, 700, "c1", "p2", 15, Verdict.OK, 2, 13));
+                    createMilliSubmission(8, 350, "c1", "p1", 0, Verdict.COMPILATION_ERROR),
+                    createMilliSubmission(9, 400, "c1", "p1", 70, Verdict.WRONG_ANSWER, 30, 40),
+                    createMilliSubmission(10, 500, "c2", "p2", 95, Verdict.WRONG_ANSWER, 80, 15),
+                    createMilliSubmission(11, 600, "c2", "p1", 0, Verdict.PENDING),
+                    createMilliSubmission(12, 700, "c1", "p2", 15, Verdict.OK, 2, 13));
 
             IoiScoreboardIncrementalContent incrementalContent = new IoiScoreboardIncrementalContent.Builder()
                     .lastSubmissionId(3)
@@ -155,7 +156,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                 .build());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
-                        .lastSubmissionId(9)
+                        .lastSubmissionId(10)
                         .putLastAffectingPenaltiesByContestantJid("c1", 395)
                         .putLastAffectingPenaltiesByContestantJid("c2", 490)
                         .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(75), "p2", empty()))
@@ -204,7 +205,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                                 .build());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IoiScoreboardIncrementalContent.Builder()
-                        .lastSubmissionId(9)
+                        .lastSubmissionId(10)
                         .putLastAffectingPenaltiesByContestantJid("c1", 395)
                         .putLastAffectingPenaltiesByContestantJid("c2", 490)
                         .putScoresMapsByContestantJid("c1", ImmutableMap.of("p1", of(75), "p2", of(15)))
