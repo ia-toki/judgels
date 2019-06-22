@@ -160,7 +160,7 @@ public class IsolateSandbox implements Sandbox {
 
         sandboxedCommand.add(isolatePath).add("-b" + boxId);
 
-        sandboxedCommand.add("--dir=/etc/alternatives");
+        sandboxedCommand.add("--dir=/etc");
         for (File dir : allowedDirs) {
             sandboxedCommand.add("--dir=" + dir.getAbsolutePath() + ":rw");
         }
