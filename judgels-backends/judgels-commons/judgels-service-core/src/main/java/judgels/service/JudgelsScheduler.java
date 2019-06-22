@@ -19,7 +19,9 @@ public class JudgelsScheduler {
     }
 
     public void scheduleWithFixedDelay(String name, Runnable job, Duration initialDelay, Duration delay) {
-        ScheduledExecutorService executorService = lifecycleEnvironment.scheduledExecutorService(name).build();
+        ScheduledExecutorService executorService = lifecycleEnvironment.scheduledExecutorService(name)
+                .removeOnCancelPolicy(true)
+                .build();
 
         LOGGER.info("Scheduling job {}", name);
         executorService.scheduleWithFixedDelay(
