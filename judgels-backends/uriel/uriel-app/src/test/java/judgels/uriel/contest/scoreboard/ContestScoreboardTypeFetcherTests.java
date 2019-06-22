@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.Optional;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
+import judgels.uriel.api.contest.module.ScoreboardModuleConfig;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.contest.module.ContestModuleStore;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,8 @@ class ContestScoreboardTypeFetcherTests {
         when(contest.getJid()).thenReturn(CONTEST_JID);
         when(contest.getEndTime()).thenReturn(Instant.ofEpochSecond(52));
 
+        when(moduleStore.getScoreboardModuleConfig(CONTEST_JID)).thenReturn(ScoreboardModuleConfig.DEFAULT);
+
         typeFetcher = new ContestScoreboardTypeFetcher(moduleStore, clock);
     }
 
@@ -58,25 +61,58 @@ class ContestScoreboardTypeFetcherTests {
                                 .build()));
             }
 
-            @Test
-            void when_before_freeze_time() {
-                when(clock.instant()).thenReturn(Instant.ofEpochSecond(41));
-                assertThatContestantsSee(OFFICIAL);
-                assertThatSupervisorsSee(OFFICIAL);
+            @Nested
+            class when_incognito {
+                @BeforeEach
+                void before() {
+                    when(moduleStore.getScoreboardModuleConfig(CONTEST_JID))
+                            .thenReturn(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(true).build());
+                }
+
+                @Test
+                void when_before_freeze_time() {
+                    when(clock.instant()).thenReturn(Instant.ofEpochSecond(41));
+                    assertThatContestantsSee(OFFICIAL);
+                    assertThatSupervisorsSee(OFFICIAL);
+                }
+
+                @Test
+                void when_at_freeze_time() {
+                    when(clock.instant()).thenReturn(Instant.ofEpochSecond(42));
+                    assertThatContestantsSee(OFFICIAL);
+                    assertThatSupervisorsSee(OFFICIAL);
+                }
+
+                @Test
+                void when_after_freeze_time() {
+                    when(clock.instant()).thenReturn(Instant.ofEpochSecond(43));
+                    assertThatContestantsSee(OFFICIAL);
+                    assertThatSupervisorsSee(OFFICIAL);
+                }
             }
 
-            @Test
-            void when_at_freeze_time() {
-                when(clock.instant()).thenReturn(Instant.ofEpochSecond(42));
-                assertThatContestantsSee(FROZEN);
-                assertThatSupervisorsSee(OFFICIAL);
-            }
+            @Nested
+            class when_not_incognito {
+                @Test
+                void when_before_freeze_time() {
+                    when(clock.instant()).thenReturn(Instant.ofEpochSecond(41));
+                    assertThatContestantsSee(OFFICIAL);
+                    assertThatSupervisorsSee(OFFICIAL);
+                }
 
-            @Test
-            void when_after_freeze_time() {
-                when(clock.instant()).thenReturn(Instant.ofEpochSecond(43));
-                assertThatContestantsSee(FROZEN);
-                assertThatSupervisorsSee(OFFICIAL);
+                @Test
+                void when_at_freeze_time() {
+                    when(clock.instant()).thenReturn(Instant.ofEpochSecond(42));
+                    assertThatContestantsSee(FROZEN);
+                    assertThatSupervisorsSee(OFFICIAL);
+                }
+
+                @Test
+                void when_after_freeze_time() {
+                    when(clock.instant()).thenReturn(Instant.ofEpochSecond(43));
+                    assertThatContestantsSee(FROZEN);
+                    assertThatSupervisorsSee(OFFICIAL);
+                }
             }
         }
 

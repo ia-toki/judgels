@@ -23,6 +23,10 @@ public class ContestScoreboardTypeFetcher {
     }
 
     public ContestScoreboardType fetchDefaultType(Contest contest, boolean canSupervise) {
+        if (moduleStore.getScoreboardModuleConfig(contest.getJid()).getIsIncognitoScoreboard()) {
+            return OFFICIAL;
+        }
+
         Optional<FrozenScoreboardModuleConfig> frozenScoreboardModuleConfig =
                 moduleStore.getFrozenScoreboardModuleConfig(contest.getJid());
         if (frozenScoreboardModuleConfig.isPresent()) {
