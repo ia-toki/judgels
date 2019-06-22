@@ -32,7 +32,11 @@ public class ContestScoreboardPoller implements Runnable {
     @Override
     @UnitOfWork(readOnly = true)
     public void run() {
-        contestStore.getRunningContests().forEach(this::updateAsync);
+        try {
+            contestStore.getRunningContests().forEach(this::updateAsync);
+        } catch (Throwable e) {
+            LOGGER.error("Failed to run contest scoreboard poller", e);
+        }
     }
 
     public synchronized void updateAsync(Contest contest) {
