@@ -2,7 +2,6 @@ package judgels.gabriel;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
-import java.time.Duration;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.moe.MoeModule;
 import judgels.gabriel.sealtiel.SealtielModule;
@@ -24,10 +23,8 @@ public class GabrielApplication extends Application<GabrielApplicationConfigurat
                 .sealtielModule(new SealtielModule(gabrielConfig.getSealtielConfig()))
                 .build();
 
-        component.scheduler().scheduleWithFixedDelay(
+        component.scheduler().scheduleOnce(
                 "grading-request-poller",
-                component.gradingRequestPoller(),
-                Duration.ofSeconds(2),
-                Duration.ofSeconds(2));
+                component.gradingRequestPoller());
     }
 }

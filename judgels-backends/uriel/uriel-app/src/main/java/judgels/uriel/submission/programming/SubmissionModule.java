@@ -6,7 +6,6 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.nio.file.Path;
-import java.time.Clock;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
@@ -127,7 +126,6 @@ public class SubmissionModule {
     @Singleton
     static GradingResponsePoller gradingResponsePoller(
             LifecycleEnvironment lifecycleEnvironment,
-            Clock clock,
             @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
             MessageService messageService,
             GradingResponseProcessor processor) {
@@ -138,7 +136,7 @@ public class SubmissionModule {
                         .minThreads(10)
                         .build();
 
-        return new GradingResponsePoller(clock, sealtielClientAuthHeader, messageService, executorService, processor);
+        return new GradingResponsePoller(sealtielClientAuthHeader, messageService, executorService, processor);
     }
 
     @Provides

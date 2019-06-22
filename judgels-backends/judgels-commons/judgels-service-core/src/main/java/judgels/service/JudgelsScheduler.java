@@ -2,6 +2,7 @@ package judgels.service;
 
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import java.time.Duration;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -18,7 +19,17 @@ public class JudgelsScheduler {
         this.lifecycleEnvironment = lifecycleEnvironment;
     }
 
-    public void scheduleWithFixedDelay(String name, Runnable job, Duration initialDelay, Duration delay) {
+    public void scheduleOnce(String name, Runnable job) {
+        ExecutorService executorService = lifecycleEnvironment.executorService(name)
+                .minThreads(1)
+                .maxThreads(1)
+                .build();
+
+        LOGGER.info("Scheduling job {}", name);
+        executorService.submit(job);
+    }
+
+    public void scheduleWithFixedDelay(String name, Runnable job, Duration delay) {
         ScheduledExecutorService executorService = lifecycleEnvironment.scheduledExecutorService(name)
                 .removeOnCancelPolicy(true)
                 .build();
@@ -26,7 +37,7 @@ public class JudgelsScheduler {
         LOGGER.info("Scheduling job {}", name);
         executorService.scheduleWithFixedDelay(
                 job,
-                initialDelay.getSeconds(),
+                2,
                 delay.getSeconds(),
                 TimeUnit.SECONDS);
     }

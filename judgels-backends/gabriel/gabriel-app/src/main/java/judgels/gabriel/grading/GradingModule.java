@@ -3,7 +3,6 @@ package judgels.gabriel.grading;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
-import java.time.Clock;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -27,7 +26,6 @@ public class GradingModule {
     @Provides
     @Singleton
     GradingRequestPoller gradingRequestPoller(
-            Clock clock,
             @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
             MessageService messageService,
             Provider<GradingWorker> workerFactory,
@@ -39,7 +37,6 @@ public class GradingModule {
                 .build();
 
         return new GradingRequestPoller(
-                clock,
                 executorService,
                 sealtielClientAuthHeader,
                 messageService,

@@ -2,7 +2,6 @@ package judgels.sandalphon.submission.programming;
 
 import java.time.Clock;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -15,22 +14,19 @@ import org.slf4j.LoggerFactory;
 public class GradingResponsePoller implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(GradingResponsePoller.class);
 
-    private static final Duration POLLING_DURATION = Duration.ofSeconds(2);
+    private static final Duration POLLING_DELAY = Duration.ofSeconds(2);
 
-    private final Clock clock;
     private final BasicAuthHeader sealtielClientAuthHeader;
     private final MessageService messageService;
     private final ExecutorService executorService;
     private final GradingResponseProcessor processor;
 
     public GradingResponsePoller(
-            Clock clock,
             BasicAuthHeader sealtielClientAuthHeader,
             MessageService messageService,
             ExecutorService executorService,
             GradingResponseProcessor processor) {
 
-        this.clock = clock;
         this.sealtielClientAuthHeader = sealtielClientAuthHeader;
         this.messageService = messageService;
         this.executorService = executorService;
@@ -39,20 +35,27 @@ public class GradingResponsePoller implements Runnable {
 
     @Override
     public void run() {
-        Instant checkpoint = clock.instant();
-        do {
-            Optional<Message> maybeMessage = messageService.receiveMessage(sealtielClientAuthHeader);
-            if (!maybeMessage.isPresent()) {
-                break;
+        while (true) {
+            try {
+                Optional<Message> maybeMessage = messageService.receiveMessage(sealtielClientAuthHeader);
+                if (!maybeMessage.isPresent()) {
+                    try {
+                        Thread.sleep(POLLING_DELAY.toMillis());
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    continue;
+                }
+
+                Message message = maybeMessage.get();
+                CompletableFuture.runAsync(() -> processor.process(message), executorService)
+                        .exceptionally(e -> {
+                            LOGGER.error("Failed to process message: " + message, e);
+                            return null;
+                        });
+            } catch (Throwable e) {
+                LOGGER.error("Failed to run grading response poller", e);
             }
-
-            Message message = maybeMessage.get();
-            CompletableFuture.runAsync(() -> processor.process(message), executorService)
-                    .exceptionally(e -> {
-                        LOGGER.error("Failed to process message: " + message, e);
-                        return null;
-                    });
-
-        } while (Duration.between(checkpoint, clock.instant()).compareTo(POLLING_DURATION) < 0);
+        }
     }
 }
