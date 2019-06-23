@@ -16,19 +16,19 @@ import judgels.gabriel.engines.outputonly.OutputOnlyWithSubtasksGradingEngine;
 
 public class GradingEngineRegistry {
     private static final GradingEngineRegistry INSTANCE = new GradingEngineRegistry();
-    private static final String DEFAULT_GRADING_ENGINE = "BatchWithSubtasks";
+    private static final Class<? extends GradingEngine> DEFAULT_GRADING_ENGINE = BatchGradingEngine.class;
 
-    private static final List<GradingEngine> ENGINES = ImmutableList.of(
-            new BatchGradingEngine(),
-            new BatchWithSubtasksGradingEngine(),
-            new InteractiveGradingEngine(),
-            new InteractiveWithSubtasksGradingEngine(),
-            new OutputOnlyGradingEngine(),
-            new OutputOnlyWithSubtasksGradingEngine(),
-            new FunctionalGradingEngine(),
-            new FunctionalWithSubtasksGradingEngine());
+    private static final List<Class<? extends GradingEngine>> ENGINES = ImmutableList.of(
+            BatchGradingEngine.class,
+            BatchWithSubtasksGradingEngine.class,
+            InteractiveGradingEngine.class,
+            InteractiveWithSubtasksGradingEngine.class,
+            OutputOnlyGradingEngine.class,
+            OutputOnlyWithSubtasksGradingEngine.class,
+            FunctionalGradingEngine.class,
+            FunctionalWithSubtasksGradingEngine.class);
 
-    private static final Map<String, GradingEngine> ENGINES_BY_SIMPLE_NAME = ENGINES.stream().collect(
+    private static final Map<String, Class<? extends GradingEngine>> ENGINES_BY_SIMPLE_NAME = ENGINES.stream().collect(
             LinkedHashMap::new,
             (map, engine) -> map.put(getSimpleName(engine), engine),
             Map::putAll);
@@ -45,23 +45,27 @@ public class GradingEngineRegistry {
     }
 
     public GradingEngine get(String simpleName) {
-        GradingEngine engine = ENGINES_BY_SIMPLE_NAME.get(simpleName);
+        Class<? extends GradingEngine> engine = ENGINES_BY_SIMPLE_NAME.get(simpleName);
         if (engine == null) {
             throw new IllegalArgumentException("Grading engine " + simpleName + " not found");
         }
-        return engine;
+        try {
+            return engine.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getDefault() {
-        return DEFAULT_GRADING_ENGINE;
+        return getSimpleName(DEFAULT_GRADING_ENGINE);
     }
 
     public Map<String, String> getNamesMap() {
         return ENGINE_NAMES_BY_SIMPLE_NAME;
     }
 
-    private static String getSimpleName(GradingEngine engine) {
-        String name = engine.getClass().getSimpleName();
+    private static String getSimpleName(Class<? extends GradingEngine> engine) {
+        String name = engine.getSimpleName();
         return name.substring(0, name.length() - "GradingEngine".length());
     }
 }
