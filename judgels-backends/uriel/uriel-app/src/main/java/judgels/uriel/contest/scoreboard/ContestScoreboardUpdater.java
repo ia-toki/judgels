@@ -152,21 +152,19 @@ public class ContestScoreboardUpdater {
             Duration freezeDuration = contestModulesConfig.getFrozenScoreboard().get().getFreezeDurationBeforeEndTime();
             Instant freezeTime = contest.getEndTime().minus(freezeDuration);
 
-            if (now.isAfter(freezeTime)) {
-                updateScoreboard(
-                        contest,
-                        processor,
-                        state,
-                        Optional.ofNullable(incrementalMark.getIncrementalContents().get(FROZEN)),
-                        styleModuleConfig,
-                        contestants,
-                        programmingSubmissions,
-                        bundleItemSubmissions,
-                        Optional.of(freezeTime),
-                        FROZEN,
-                        scoreboards,
-                        incrementalContents);
-            }
+            updateScoreboard(
+                    contest,
+                    processor,
+                    state,
+                    Optional.ofNullable(incrementalMark.getIncrementalContents().get(FROZEN)),
+                    styleModuleConfig,
+                    contestants,
+                    programmingSubmissions,
+                    bundleItemSubmissions,
+                    Optional.of(freezeTime),
+                    FROZEN,
+                    scoreboards,
+                    incrementalContents);
         }
 
         scoreboardIncrementalMarker.setMark(
