@@ -150,14 +150,16 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                     score = grading.getScore();
                 }
 
-                if (!scoresMap.get(problemJid).isPresent() || score > scoresMap.get(problemJid).get()) {
-                    scoresMap.put(problemJid, Optional.of(score));
+                if (submission.getTime().isBefore(freezeTime.orElse(Instant.MAX))) {
+                    if (!scoresMap.get(problemJid).isPresent() || score > scoresMap.get(problemJid).get()) {
+                        scoresMap.put(problemJid, Optional.of(score));
 
-                    if (score > 0) {
-                        lastAffectingPenalty = computeLastAffectingPenalty(
-                                submission.getTime(),
-                                contestantStartTimesMap.get(contestantJid),
-                                contest.getBeginTime());
+                        if (score > 0) {
+                            lastAffectingPenalty = computeLastAffectingPenalty(
+                                    submission.getTime(),
+                                    contestantStartTimesMap.get(contestantJid),
+                                    contest.getBeginTime());
+                        }
                     }
                 }
 

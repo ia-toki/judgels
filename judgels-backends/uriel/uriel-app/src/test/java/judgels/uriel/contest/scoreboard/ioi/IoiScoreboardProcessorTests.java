@@ -96,6 +96,46 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                             .build());
         }
 
+        @Test
+        void frozen() {
+            List<Submission> submissions = ImmutableList.of(
+                    createMilliSubmission(1, 20, "c2", "p1", 78, Verdict.TIME_LIMIT_EXCEEDED),
+                    createMilliSubmission(2, 22, "c1", "p2", 50, Verdict.OK),
+                    createMilliSubmission(3, 25, "c1", "p2", 90, Verdict.WRONG_ANSWER));
+
+            ScoreboardProcessResult result = scoreboardProcessor.process(
+                    contest,
+                    state,
+                    Optional.empty(),
+                    styleModuleConfig,
+                    contestants,
+                    submissions,
+                    ImmutableList.of(),
+                    Optional.of(Instant.ofEpochMilli(23)));
+
+            assertThat(Lists.transform(result.getEntries(), e -> (IoiScoreboardEntry) e)).containsExactly(
+                    new IoiScoreboardEntry.Builder()
+                            .rank(1)
+                            .contestantJid("c2")
+                            .addScores(
+                                    Optional.of(78),
+                                    Optional.empty()
+                            )
+                            .totalScores(78)
+                            .lastAffectingPenalty(10)
+                            .build(),
+                    new IoiScoreboardEntry.Builder()
+                            .rank(2)
+                            .contestantJid("c1")
+                            .addScores(
+                                    Optional.empty(),
+                                    Optional.of(50)
+                            )
+                            .totalScores(50)
+                            .lastAffectingPenalty(17)
+                            .build());
+        }
+
         @Nested
         class UsingMaxScorePerSubtask {
             StyleModuleConfig styleModuleConfig = new IoiStyleModuleConfig.Builder()
