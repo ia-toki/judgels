@@ -14,6 +14,7 @@ import { GradingEngineCode } from 'modules/api/gabriel/engine';
 import { getGradingLanguageName, getGradingLanguageSyntaxHighlighterValue } from 'modules/api/gabriel/language';
 import { TestCaseResult } from 'modules/api/gabriel/grading';
 import { SubmissionSource } from 'modules/api/gabriel/submission';
+import { VerdictCode } from 'modules/api/gabriel/verdict';
 import { Profile } from 'modules/api/jophiel/profile';
 
 import './SubmissionDetails.css';
@@ -177,8 +178,8 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         <td className="col-centered">
           <VerdictTag verdictCode={result.verdict.code} />
         </td>
-        <td>{result.executionResult ? result.executionResult.time + ' ms' : '?'}</td>
-        <td>{result.executionResult ? result.executionResult.memory + ' KB' : '?'}</td>
+        <td>{this.renderExecutionTime(result)}</td>
+        <td>{this.renderExecutionMemory(result)}</td>
         <td>{result.score}</td>
         {hasSubtasks && <td className="col-centered">{this.renderSubtaskTags(result.subtaskIds)}</td>}
       </tr>
@@ -223,8 +224,8 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
           <td className="col-centered">
             <VerdictTag verdictCode={result.verdict.code} />
           </td>
-          <td>{result.executionResult ? result.executionResult.time + ' ms' : '?'}</td>
-          <td>{result.executionResult ? result.executionResult.memory + ' KB' : '?'}</td>
+          <td>{this.renderExecutionTime(result)}</td>
+          <td>{this.renderExecutionMemory(result)}</td>
           <td>{result.score}</td>
         </tr>
       ));
@@ -255,6 +256,23 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         {groups}
       </>
     );
+  };
+
+  private renderExecutionTime = (result: TestCaseResult) => {
+    if (!result.executionResult) {
+      return '?';
+    }
+    if (result.verdict.code === VerdictCode.TLE) {
+      return '> ' + result.executionResult.time + ' ms';
+    }
+    return result.executionResult.time + ' ms';
+  };
+
+  private renderExecutionMemory = (result: TestCaseResult) => {
+    if (!result.executionResult) {
+      return '?';
+    }
+    return result.executionResult.memory + ' KB';
   };
 
   private renderSourceFiles = () => {
