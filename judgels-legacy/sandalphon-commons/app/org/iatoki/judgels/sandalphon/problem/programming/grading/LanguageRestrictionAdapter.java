@@ -35,6 +35,7 @@ public final class LanguageRestrictionAdapter {
     public static Set<String> getFinalAllowedLanguageNames(List<LanguageRestriction> languageRestrictions) {
         Set<String> result = Sets.newHashSet(GradingLanguageRegistry.getInstance().getNamesMap().keySet());
         result.remove(OutputOnlyOverrides.KEY);
+        result.remove("Cpp");
 
         for (LanguageRestriction languageRestriction : languageRestrictions) {
             if (!languageRestriction.isAllowedAll()) {
