@@ -27,6 +27,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestScoreboardFetcher scoreboardFetcher;
     private final ContestScoreboardPoller scoreboardUpdaterDispatcher;
+    private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ProfileService profileService;
     private static final int PAGE_SIZE = 250;
 
@@ -37,6 +38,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
             ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestScoreboardFetcher scoreboardFetcher,
             ContestScoreboardPoller scoreboardUpdaterDispatcher,
+            ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ProfileService profileService) {
 
         this.actorChecker = actorChecker;
@@ -44,6 +46,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.scoreboardFetcher = scoreboardFetcher;
         this.scoreboardUpdaterDispatcher = scoreboardUpdaterDispatcher;
+        this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.profileService = profileService;
     }
 
@@ -96,6 +99,7 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canManage(actorJid, contest));
 
+        scoreboardIncrementalMarker.invalidateMark(contestJid);
         scoreboardUpdaterDispatcher.updateAsync(contest);
     }
 }
