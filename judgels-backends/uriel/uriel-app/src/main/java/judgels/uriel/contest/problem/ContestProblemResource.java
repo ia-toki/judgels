@@ -1,7 +1,6 @@
 package judgels.uriel.contest.problem;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static judgels.sandalphon.SandalphonUtils.combineLanguageRestrictions;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -160,7 +159,7 @@ public class ContestProblemResource implements ContestProblemService {
         LanguageRestriction problemGradingLanguageRestriction =
                 worksheet.getSubmissionConfig().getGradingLanguageRestriction();
         LanguageRestriction combinedGradingLanguageRestriction =
-                combineLanguageRestrictions(contestGradingLanguageRestriction, problemGradingLanguageRestriction);
+                LanguageRestriction.combine(contestGradingLanguageRestriction, problemGradingLanguageRestriction);
 
         ProblemWorksheet finalWorksheet = new ProblemWorksheet.Builder()
                 .from(worksheet)

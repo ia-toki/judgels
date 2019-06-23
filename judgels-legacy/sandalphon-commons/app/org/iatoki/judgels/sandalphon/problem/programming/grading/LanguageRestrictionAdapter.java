@@ -2,8 +2,8 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
 import com.google.common.collect.Sets;
 import judgels.gabriel.api.LanguageRestriction;
+import judgels.gabriel.api.OutputOnlyOverrides;
 import judgels.gabriel.languages.GradingLanguageRegistry;
-import org.iatoki.judgels.sandalphon.OutputOnlyMagic;
 
 import java.util.List;
 import java.util.Map;
@@ -29,19 +29,18 @@ public final class LanguageRestrictionAdapter {
     }
 
     public static Map<String, String> getFormAllowedLanguageNamesFromLanguageRestriction(LanguageRestriction languageRestriction) {
-        return languageRestriction.getAllowedLanguageNames().stream().collect(Collectors.toMap(e -> e, e -> e));
+        return languageRestriction.getAllowedLanguages().stream().collect(Collectors.toMap(e -> e, e -> e));
     }
 
     public static Set<String> getFinalAllowedLanguageNames(List<LanguageRestriction> languageRestrictions) {
         Set<String> result = Sets.newHashSet(GradingLanguageRegistry.getInstance().getNamesMap().keySet());
+        result.remove(OutputOnlyOverrides.KEY);
 
         for (LanguageRestriction languageRestriction : languageRestrictions) {
             if (!languageRestriction.isAllowedAll()) {
-                result.retainAll(languageRestriction.getAllowedLanguageNames());
+                result.retainAll(languageRestriction.getAllowedLanguages());
             }
         }
-
-        result.add(OutputOnlyMagic.KEY);
 
         return result;
     }

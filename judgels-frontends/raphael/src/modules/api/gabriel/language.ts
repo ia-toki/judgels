@@ -1,8 +1,11 @@
-import { GradingEngineCode } from './engine';
-
 export interface LanguageRestriction {
   allowedLanguageNames: string[];
 }
+
+export const OutputOnlyOverrides = {
+  KEY: 'OutputOnly',
+  NAME: '-',
+};
 
 export const gradingLanguageNamesMap = {
   C: 'C',
@@ -34,7 +37,7 @@ export const gradingLanguageSyntaxHighlighterValueMap = {
 export const preferredGradingLanguage = 'Cpp11';
 
 export const gradingLanguages = Object.keys(gradingLanguageNamesMap)
-  .filter(l => l !== 'OutputOnly')
+  .filter(l => l !== OutputOnlyOverrides.KEY)
   .sort();
 
 export function getGradingLanguageName(code: string): string {
@@ -50,8 +53,8 @@ export function getGradingLanguageSyntaxHighlighterValue(code: string): string {
 }
 
 export function getAllowedGradingLanguages(gradingEngine: string, restriction: LanguageRestriction) {
-  if (gradingEngine.startsWith(GradingEngineCode.OutputOnly)) {
-    return ['OutputOnly'];
+  if (gradingEngine.startsWith(OutputOnlyOverrides.KEY)) {
+    return [OutputOnlyOverrides.KEY];
   }
   if (restriction.allowedLanguageNames.length === 0) {
     return gradingLanguages;

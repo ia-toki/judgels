@@ -1,11 +1,12 @@
 package judgels.sandalphon.submission.programming;
 
-import static judgels.sandalphon.SandalphonUtils.checkAllSourceFilesPresent;
-import static judgels.sandalphon.SandalphonUtils.checkGradingLanguageAllowed;
+import static judgels.sandalphon.submission.programming.SubmissionUtils.checkAllSourceFilesPresent;
+import static judgels.sandalphon.submission.programming.SubmissionUtils.checkGradingLanguageAllowed;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import judgels.gabriel.api.GradingRequest;
+import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -39,11 +40,19 @@ public class SubmissionClient {
             SubmissionData data,
             SubmissionSource source,
             ProblemSubmissionConfig config) {
+
+        LanguageRestriction restriction = config.getGradingLanguageRestriction();
+        if (data.getAdditionalGradingLanguageRestriction().isPresent()) {
+            restriction = LanguageRestriction.combine(
+                    restriction,
+                    data.getAdditionalGradingLanguageRestriction().get());
+        }
+
         checkAllSourceFilesPresent(source, config);
         checkGradingLanguageAllowed(
+                config.getGradingEngine(),
                 data.getGradingLanguage(),
-                config.getGradingLanguageRestriction(),
-                data.getAdditionalGradingLanguageRestriction());
+                restriction);
 
         Submission submission = submissionStore.createSubmission(data, config.getGradingEngine());
         String gradingJid = submissionStore.createGrading(submission);

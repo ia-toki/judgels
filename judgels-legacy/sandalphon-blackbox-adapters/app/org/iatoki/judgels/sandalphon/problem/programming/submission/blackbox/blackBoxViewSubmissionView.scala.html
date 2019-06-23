@@ -1,8 +1,8 @@
 @import judgels.gabriel.api.GradingResultDetails
+@import judgels.gabriel.api.OutputOnlyOverrides
 @import judgels.gabriel.api.SourceFile
 @import org.iatoki.judgels.play.JudgelsPlayUtils
 @import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission
-@import org.iatoki.judgels.sandalphon.OutputOnlyMagic
 @import org.apache.commons.io.IOUtils
 
 @(programmingSubmission: ProgrammingSubmission, errorMessage: String, details: GradingResultDetails, sourceFiles: Map[String, SourceFile], authorName: String, problemAlias: String, problemName: String, gradingLanguageName: String, contestName: String)
@@ -219,7 +219,7 @@
     <p>(No info)</p>
 }}
 
-@if(gradingLanguageName != OutputOnlyMagic.DISPLAY_NAME) {
+@if(gradingLanguageName != OutputOnlyOverrides.NAME) {
     <h4>Source Files</h4>
     @for((key, sourceFile) <- sourceFiles) {
         <div class="panel panel-default">

@@ -6,7 +6,6 @@ import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { LanguageRestriction } from 'modules/api/gabriel/language';
-import { GradingEngineCode } from 'modules/api/gabriel/engine';
 import { ProblemSubmissionCardProps, ProblemSubmissionCard } from './ProblemSubmissionCard';
 
 describe('ProblemSubmissionCard', () => {
@@ -106,7 +105,18 @@ describe('ProblemSubmissionCard', () => {
 
   describe('when the grading engine is OutputOnly', () => {
     beforeEach(() => {
-      gradingEngine = GradingEngineCode.OutputOnly;
+      gradingEngine = 'OutputOnly';
+      render();
+    });
+
+    it('does not show the grading language input', () => {
+      expect(wrapper.find('[name="gradingLanguage"]')).toHaveLength(0);
+    });
+  });
+
+  describe('when the grading engine is OutputOnlyWithSubtasks', () => {
+    beforeEach(() => {
+      gradingEngine = 'OutputOnlyWithSubtasks';
       render();
     });
 

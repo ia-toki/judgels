@@ -10,8 +10,11 @@ import { ContentCard } from 'components/ContentCard/ContentCard';
 import { VerdictTag } from 'components/VerdictTag/VerdictTag';
 import { constructProblemName } from 'modules/api/sandalphon/problem';
 import { Submission } from 'modules/api/sandalphon/submissionProgramming';
-import { GradingEngineCode } from 'modules/api/gabriel/engine';
-import { getGradingLanguageName, getGradingLanguageSyntaxHighlighterValue } from 'modules/api/gabriel/language';
+import {
+  OutputOnlyOverrides,
+  getGradingLanguageName,
+  getGradingLanguageSyntaxHighlighterValue,
+} from 'modules/api/gabriel/language';
 import { TestCaseResult } from 'modules/api/gabriel/grading';
 import { SubmissionSource } from 'modules/api/gabriel/submission';
 import { VerdictCode } from 'modules/api/gabriel/verdict';
@@ -277,7 +280,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
 
   private renderSourceFiles = () => {
     const { submission, source } = this.props;
-    if (submission.gradingEngine.startsWith(GradingEngineCode.OutputOnly)) {
+    if (submission.gradingEngine.startsWith(OutputOnlyOverrides.KEY)) {
       return null;
     }
 

@@ -9,8 +9,7 @@ import {
   MaxFileSize300KB,
   Required,
 } from 'components/forms/validations';
-import { GradingEngineCode } from 'modules/api/gabriel/engine';
-import { gradingLanguageNamesMap } from 'modules/api/gabriel/language';
+import { OutputOnlyOverrides, gradingLanguageNamesMap } from 'modules/api/gabriel/language';
 
 import './ProblemSubmissionForm.css';
 
@@ -72,7 +71,7 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
 
   private renderGradingLanguageFields = () => {
     const { gradingEngine, gradingLanguages } = this.props;
-    if (gradingEngine.startsWith(GradingEngineCode.OutputOnly)) {
+    if (gradingEngine.startsWith(OutputOnlyOverrides.KEY)) {
       return null;
     }
 

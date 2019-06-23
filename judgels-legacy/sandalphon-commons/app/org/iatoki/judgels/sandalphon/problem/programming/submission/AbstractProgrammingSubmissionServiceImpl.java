@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.palantir.conjure.java.api.errors.RemoteException;
 import judgels.gabriel.api.GradingRequest;
 import judgels.gabriel.api.GradingResult;
+import judgels.gabriel.api.OutputOnlyOverrides;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
@@ -153,7 +154,7 @@ public abstract class AbstractProgrammingSubmissionServiceImpl<SM extends Abstra
 
     @Override
     public final String submit(String problemJid, String containerJid, String gradingEngine, String gradingLanguage, Set<String> allowedLanguageNames, SubmissionSource submissionSource, String userJid, String userIpAddress) throws ProgrammingSubmissionException {
-        if (allowedLanguageNames != null && !allowedLanguageNames.contains(gradingLanguage)) {
+        if (!gradingLanguage.startsWith(OutputOnlyOverrides.KEY) && allowedLanguageNames != null && !allowedLanguageNames.contains(gradingLanguage)) {
             throw new ProgrammingSubmissionException("Language " + gradingLanguage + " is not allowed ");
         }
 

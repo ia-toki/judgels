@@ -1,10 +1,10 @@
 @import judgels.gabriel.api.GradingConfig
+@import judgels.gabriel.api.OutputOnlyOverrides
 @import judgels.gabriel.engines.outputonly.OutputOnlyGradingConfig
 @import judgels.gabriel.languages.GradingLanguageRegistry
 @import judgels.sandalphon.api.problem.ProblemStatement
 @import play.i18n.Messages
 @import com.google.common.base.Joiner
-@import org.iatoki.judgels.sandalphon.OutputOnlyMagic
 
 @(postSubmitUri: String, statement: ProblemStatement, blackBoxGradingConfig: GradingConfig, engine: String, allowedGradingLanguageNames: Set[String], reasonNotAllowedToSubmit: String)
 
@@ -62,7 +62,7 @@
         }
 
         @if(blackBoxGradingConfig.isInstanceOf[OutputOnlyGradingConfig]) {
-            <input type="hidden" name="language" value="@OutputOnlyMagic.KEY"/>
+            <input type="hidden" name="language" value="@OutputOnlyOverrides.KEY"/>
         }else {
             <div class="form-group">
                 <label for="language" class="col-sm-3 control-label">Language</label>
