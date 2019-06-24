@@ -4,11 +4,7 @@ import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
 import { FormTableFileInput } from 'components/forms/FormTableFileInput/FormTableFileInput';
 import { FormTableSelect2 } from 'components/forms/FormTableSelect2/FormTableSelect2';
-import {
-  CompatibleFilenameExtensionForGradingLanguage,
-  MaxFileSize300KB,
-  Required,
-} from 'components/forms/validations';
+import { CompatibleFilenameExtensionForGradingLanguage, MaxFileSize10MB, Required } from 'components/forms/validations';
 import { OutputOnlyOverrides, gradingLanguageNamesMap } from 'modules/api/gabriel/language';
 
 import './ProblemSubmissionForm.css';
@@ -63,7 +59,7 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
         const field: any = {
           name: 'sourceFiles.' + key,
           label: sourceKeys[key],
-          validate: [Required, MaxFileSize300KB, CompatibleFilenameExtensionForGradingLanguage],
+          validate: [Required, MaxFileSize10MB, CompatibleFilenameExtensionForGradingLanguage],
         };
         return <Field key={key} component={FormTableFileInput} {...field} />;
       });

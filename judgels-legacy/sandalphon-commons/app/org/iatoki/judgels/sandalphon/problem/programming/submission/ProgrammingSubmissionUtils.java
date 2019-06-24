@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public final class ProgrammingSubmissionUtils {
 
-    private static final long MAX_SUBMISSION_FILE_LENGTH = 300 * 1024; // 300 KB
+    private static final long MAX_SUBMISSION_FILE_LENGTH = 10 * 1024 * 1024; // 10 MB
 
     private ProgrammingSubmissionUtils() {
         // prevent instantiation
@@ -51,7 +51,7 @@ public final class ProgrammingSubmissionUtils {
             File file = entry.getValue();
 
             if (file.length() > MAX_SUBMISSION_FILE_LENGTH) {
-                throw new ProgrammingSubmissionException("Source file must not exceed 300KB");
+                throw new ProgrammingSubmissionException("Source file must not exceed 10 MB");
             }
 
             byte[] content;
