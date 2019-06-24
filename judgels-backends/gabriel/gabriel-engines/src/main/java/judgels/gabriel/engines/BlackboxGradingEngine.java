@@ -328,7 +328,7 @@ public abstract class BlackboxGradingEngine implements GradingEngine {
 
         return new GradingResult.Builder()
                 .verdict(gradingVerdict.getVerdict())
-                .score((int) gradingVerdict.getPoints())
+                .score((int) Math.round(gradingVerdict.getPoints()))
                 .details(detailsString)
                 .build();
     }
