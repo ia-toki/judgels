@@ -145,7 +145,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                     }
 
                     maxScorePerSubtaskMap.put(problemJid, newMaxScorePerSubtask);
-                    score = (int) newScore;
+                    score = (int) Math.round(newScore);
                 } else {
                     score = grading.getScore();
                 }
