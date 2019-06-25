@@ -3,6 +3,7 @@ import {
   CompatibleFilenameExtensionForGradingLanguage,
   ConfirmPassword,
   EmailAddress,
+  MaxFileSize300KB,
   MaxFileSize10MB,
   NonnegativeNumber,
   Required,
@@ -57,6 +58,11 @@ describe('validations', () => {
     expect(ConfirmPassword('pass', { password: undefined })).toBeTruthy();
     expect(ConfirmPassword('pass', { password: 'Pass' })).toBeTruthy();
     expect(ConfirmPassword('pass', { password: 'pass' })).toBeUndefined();
+  });
+
+  test('MaxFileSize300KB', () => {
+    expect(MaxFileSize300KB({ size: 500000 } as File)).toBeTruthy();
+    expect(MaxFileSize300KB({ size: 300000 } as File)).toBeUndefined();
   });
 
   test('MaxFileSize10MB', () => {

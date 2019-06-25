@@ -21,6 +21,10 @@ export const EmailAddress = value =>
 export const ConfirmPassword = (value, { password }) =>
   value === password ? undefined : 'Confirmed password does not match';
 
+export const MaxFileSize300KB = (value: File) => {
+  return value && value.size <= 300 * 1024 ? undefined : 'File size must be at most 300 KB';
+};
+
 export const MaxFileSize10MB = (value: File) => {
   return value && value.size <= 10 * 1024 * 1024 ? undefined : 'File size must be at most 10 MB';
 };
