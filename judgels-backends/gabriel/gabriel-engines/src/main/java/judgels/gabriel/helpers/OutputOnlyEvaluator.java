@@ -35,6 +35,9 @@ public class OutputOnlyEvaluator implements Evaluator {
         }
 
         for (File file : FileUtils.listFiles(evaluationDir, null, false)) {
+            if (!FilenameUtils.getExtension(file.getName()).equals("out")) {
+                continue;
+            }
             String evalFilename = FilenameUtils.removeExtension(file.getAbsolutePath()) + EVALUATION_OUTPUT_SUFFIX;
             try {
                 FileUtils.moveFile(file, new File(evalFilename));
