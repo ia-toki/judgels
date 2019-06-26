@@ -25,6 +25,7 @@
       image: "judgels/raphael:{{ judgels_version | default('latest', true) }}"
       restart: yes
       restart_policy: always
-      network_mode: host
+      ports:
+        - "{{ raphael_port | default('5000', true) }}:5000"
       volumes:
         - "/judgels/raphael/var:/judgels/raphael/var"
