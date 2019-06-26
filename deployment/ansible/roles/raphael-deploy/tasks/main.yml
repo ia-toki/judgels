@@ -29,3 +29,10 @@
         - "{{ raphael_port | default('5000', true) }}:5000"
       volumes:
         - "/judgels/raphael/var:/judgels/raphael/var"
+
+  - name: Allow Raphael traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: "{{ raphael_port }}"
+      proto: tcp
+      comment: Judgels Raphael

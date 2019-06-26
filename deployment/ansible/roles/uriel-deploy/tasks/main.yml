@@ -34,3 +34,10 @@
       network_mode: host
       volumes:
         - "/judgels/uriel/var:/judgels/uriel/var"
+
+  - name: Allow Uriel traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 9004
+      proto: tcp
+      comment: Judgels Uriel
