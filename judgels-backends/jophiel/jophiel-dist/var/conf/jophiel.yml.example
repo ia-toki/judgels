@@ -88,3 +88,9 @@ jophiel:
       body: |
         <p>Dear {{username}},</p>
         <p>Your password has been reset.</p>
+
+  superadminCreator:
+    enabled: true
+    username: superadmin
+    initialPassword: superadmin
+    initialEmail: superadmin@jophiel.judgels

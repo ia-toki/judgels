@@ -9,18 +9,21 @@ import judgels.jophiel.user.UserStore;
 
 @Module
 public class SuperadminModule {
-    private SuperadminModule() {}
+    private SuperadminCreatorConfiguration config;
+
+    public SuperadminModule(SuperadminCreatorConfiguration config) {
+        this.config = config;
+    }
 
     @Provides
     @Singleton
-    static SuperadminCreator superadminCreator(
+    SuperadminCreator superadminCreator(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             UserStore userStore,
             SuperadminRoleStore superadminRoleStore) {
-
         return unitOfWorkAwareProxyFactory.create(
                 SuperadminCreator.class,
-                new Class<?>[]{UserStore.class, SuperadminRoleStore.class},
-                new Object[]{userStore, superadminRoleStore});
+                new Class<?>[]{UserStore.class, SuperadminRoleStore.class, SuperadminCreatorConfiguration.class},
+                new Object[]{userStore, superadminRoleStore, config});
     }
 }

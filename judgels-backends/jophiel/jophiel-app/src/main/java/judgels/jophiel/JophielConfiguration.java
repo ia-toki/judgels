@@ -9,6 +9,7 @@ import judgels.jophiel.mailer.MailerConfiguration;
 import judgels.jophiel.user.account.UserRegistrationConfiguration;
 import judgels.jophiel.user.account.UserResetPasswordConfiguration;
 import judgels.jophiel.user.avatar.UserAvatarConfiguration;
+import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.recaptcha.RecaptchaConfiguration;
 import org.immutables.value.Value;
 
@@ -34,6 +35,9 @@ public interface JophielConfiguration {
 
     @JsonProperty("userResetPassword")
     UserResetPasswordConfiguration getUserResetPasswordConfig();
+
+    @JsonProperty("superadminCreator")
+    SuperadminCreatorConfiguration getSuperadminCreatorConfig();
 
     @Value.Check
     default void check() {

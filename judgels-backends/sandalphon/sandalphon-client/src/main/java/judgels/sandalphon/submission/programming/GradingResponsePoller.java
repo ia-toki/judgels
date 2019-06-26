@@ -1,6 +1,5 @@
 package judgels.sandalphon.submission.programming;
 
-import java.time.Clock;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
