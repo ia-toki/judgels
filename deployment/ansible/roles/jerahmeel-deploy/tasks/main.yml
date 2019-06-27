@@ -31,3 +31,10 @@
       env:
         JAVA_OPTS: "-Xmx{{ jerahmeel_xmx }}"
         PLAY_BINARY_OPTS: "-Dhttp.port=9006 -Dconfig.file=/judgels/jerahmeel/var/conf/jerahmeel.conf -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/jerahmeel/var/log"
+
+  - name: Allow Jerahmeel traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 9006
+      proto: tcp
+      comment: Judgels Jerahmeel

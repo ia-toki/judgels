@@ -44,3 +44,17 @@
         - /judgels/sites:/etc/nginx/conf.d
       env:
         CERTBOT_EMAIL: "{{ letsencrypt_email }}"
+
+  - name: Allow Nginx HTTP traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 80
+      proto: tcp
+      comment: Judgels Nginx HTTP
+
+  - name: Allow Nginx HTTPS traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 443
+      proto: tcp
+      comment: Judgels Nginx HTTPS

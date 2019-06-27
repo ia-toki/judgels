@@ -34,3 +34,10 @@
       network_mode: host
       volumes:
         - "/judgels/jophiel/var:/judgels/jophiel/var"
+
+  - name: Allow Jophiel traffic through the firewall
+    ufw:
+      rule: allow
+      to_port: 9001
+      proto: tcp
+      comment: Judgels Jophiel
