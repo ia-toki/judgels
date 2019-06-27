@@ -11,30 +11,37 @@ import org.slf4j.LoggerFactory;
 
 public class SuperadminCreator {
     private static final Logger LOGGER = LoggerFactory.getLogger(SuperadminCreator.class);
-
-    public static final String USERNAME = "superadmin";
-    public static final String PASSWORD = "superadmin";
+    private static final String SUPERADMIN_USERNAME = "superadmin";
+    private static final String SUPERADMIN_INITIAL_EMAIL = SUPERADMIN_USERNAME + "@jophiel.judgels";
 
     private final UserStore userStore;
     private final SuperadminRoleStore superadminRoleStore;
+    private final Optional<SuperadminCreatorConfiguration> config;
 
-    public SuperadminCreator(UserStore userStore, SuperadminRoleStore superadminRoleStore) {
+    public SuperadminCreator(
+            UserStore userStore,
+            SuperadminRoleStore superadminRoleStore,
+            Optional<SuperadminCreatorConfiguration> config) {
+
         this.userStore = userStore;
         this.superadminRoleStore = superadminRoleStore;
+        this.config = config;
     }
 
     @UnitOfWork
-    public void create() {
-        Optional<User> maybeUser = userStore.getUserByUsername(USERNAME);
+    public void ensureSuperadminExists() {
+        String initialPassword = config.orElse(SuperadminCreatorConfiguration.DEFAULT).getInitialPassword();
+
+        Optional<User> maybeUser = userStore.getUserByUsername(SUPERADMIN_USERNAME);
         User user;
         if (maybeUser.isPresent()) {
             user = maybeUser.get();
-            LOGGER.info("superadmin user already exists");
+            LOGGER.info("Superadmin user already exists");
         } else {
             user = userStore.createUser(new UserData.Builder()
-                    .username(USERNAME)
-                    .password(PASSWORD)
-                    .email(USERNAME + "@jophiel.judgels")
+                    .username(SUPERADMIN_USERNAME)
+                    .password(initialPassword)
+                    .email(SUPERADMIN_INITIAL_EMAIL)
                     .build());
             LOGGER.info("Created superadmin user");
         }

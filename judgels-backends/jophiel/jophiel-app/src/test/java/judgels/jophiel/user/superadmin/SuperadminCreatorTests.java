@@ -24,8 +24,6 @@ class SuperadminCreatorTests {
     @BeforeEach
     void before() {
         initMocks(this);
-
-        creator = new SuperadminCreator(userStore, superadminRoleStore);
     }
 
     @Test
@@ -37,7 +35,9 @@ class SuperadminCreatorTests {
                         .email("superadmin@jophiel.judgels")
                         .build()));
 
-        creator.create();
+        creator = new SuperadminCreator(userStore, superadminRoleStore, Optional.empty());
+
+        creator.ensureSuperadminExists();
 
         verify(userStore, times(0)).createUser(any());
         verify(superadminRoleStore).setSuperadmin("superadminUserJid");
@@ -51,11 +51,37 @@ class SuperadminCreatorTests {
                 .email("superadmin@jophiel.judgels")
                 .build());
 
-        creator.create();
+        creator = new SuperadminCreator(userStore, superadminRoleStore, Optional.empty());
+
+        creator.ensureSuperadminExists();
 
         verify(userStore).createUser(new UserData.Builder()
                 .username("superadmin")
                 .password("superadmin")
+                .email("superadmin@jophiel.judgels")
+                .build());
+        verify(userStore, times(1)).createUser(any());
+        verify(superadminRoleStore).setSuperadmin("superadminUserJid");
+    }
+
+    @Test
+    void creates_missing_superadmin_with_custom_initial_password() {
+        when(userStore.createUser(any())).thenReturn(new User.Builder()
+                .jid("superadminUserJid")
+                .username("superadmin")
+                .email("superadmin@jophiel.judgels")
+                .build());
+
+        SuperadminCreatorConfiguration config = new SuperadminCreatorConfiguration.Builder()
+                .initialPassword("custompassword")
+                .build();
+        creator = new SuperadminCreator(userStore, superadminRoleStore, Optional.of(config));
+
+        creator.ensureSuperadminExists();
+
+        verify(userStore).createUser(new UserData.Builder()
+                .username("superadmin")
+                .password("custompassword")
                 .email("superadmin@jophiel.judgels")
                 .build());
         verify(userStore, times(1)).createUser(any());
