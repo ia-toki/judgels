@@ -35,12 +35,9 @@ class SuperadminCreatorTests {
                         .email("superadmin@jophiel.judgels")
                         .build()));
 
-        SuperadminCreatorConfiguration config = new SuperadminCreatorConfiguration.Builder()
-                .enabled(true)
-                .build();
-        creator = new SuperadminCreator(userStore, superadminRoleStore, config);
+        creator = new SuperadminCreator(userStore, superadminRoleStore, Optional.empty());
 
-        creator.createIfEnabled();
+        creator.ensureSuperadminExists();
 
         verify(userStore, times(0)).createUser(any());
         verify(superadminRoleStore).setSuperadmin("superadminUserJid");
@@ -54,12 +51,9 @@ class SuperadminCreatorTests {
                 .email("superadmin@jophiel.judgels")
                 .build());
 
-        SuperadminCreatorConfiguration config = new SuperadminCreatorConfiguration.Builder()
-                .enabled(true)
-                .build();
-        creator = new SuperadminCreator(userStore, superadminRoleStore, config);
+        creator = new SuperadminCreator(userStore, superadminRoleStore, Optional.empty());
 
-        creator.createIfEnabled();
+        creator.ensureSuperadminExists();
 
         verify(userStore).createUser(new UserData.Builder()
                 .username("superadmin")
@@ -71,34 +65,7 @@ class SuperadminCreatorTests {
     }
 
     @Test
-    void creates_missing_superadmin_with_custom_params() {
-        when(userStore.createUser(any())).thenReturn(new User.Builder()
-                .jid("superadminUserJid")
-                .username("customusername")
-                .email("customemail@customdomain.com")
-                .build());
-
-        SuperadminCreatorConfiguration config = new SuperadminCreatorConfiguration.Builder()
-                .enabled(true)
-                .username("customusername")
-                .initialPassword("custompassword")
-                .initialEmail("customemail@customdomain.com")
-                .build();
-        creator = new SuperadminCreator(userStore, superadminRoleStore, config);
-
-        creator.createIfEnabled();
-
-        verify(userStore).createUser(new UserData.Builder()
-                .username("customusername")
-                .password("custompassword")
-                .email("customemail@customdomain.com")
-                .build());
-        verify(userStore, times(1)).createUser(any());
-        verify(superadminRoleStore).setSuperadmin("superadminUserJid");
-    }
-
-    @Test
-    void does_not_run_if_disabled() {
+    void creates_missing_superadmin_with_custom_initial_password() {
         when(userStore.createUser(any())).thenReturn(new User.Builder()
                 .jid("superadminUserJid")
                 .username("superadmin")
@@ -106,13 +73,18 @@ class SuperadminCreatorTests {
                 .build());
 
         SuperadminCreatorConfiguration config = new SuperadminCreatorConfiguration.Builder()
-                .enabled(false)
+                .initialPassword("custompassword")
                 .build();
-        creator = new SuperadminCreator(userStore, superadminRoleStore, config);
+        creator = new SuperadminCreator(userStore, superadminRoleStore, Optional.of(config));
 
-        creator.createIfEnabled();
+        creator.ensureSuperadminExists();
 
-        verify(userStore, times(0)).createUser(any());
-        verify(superadminRoleStore, times(0)).setSuperadmin(any());
+        verify(userStore).createUser(new UserData.Builder()
+                .username("superadmin")
+                .password("custompassword")
+                .email("superadmin@jophiel.judgels")
+                .build());
+        verify(userStore, times(1)).createUser(any());
+        verify(superadminRoleStore).setSuperadmin("superadminUserJid");
     }
 }

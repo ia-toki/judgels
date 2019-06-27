@@ -56,7 +56,7 @@ public class JophielApplication extends Application<JophielApplicationConfigurat
                 .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
                 .build();
 
-        component.superadminCreator().createIfEnabled();
+        component.superadminCreator().ensureSuperadminExists();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
 

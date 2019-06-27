@@ -37,7 +37,7 @@ public interface JophielConfiguration {
     UserResetPasswordConfiguration getUserResetPasswordConfig();
 
     @JsonProperty("superadminCreator")
-    SuperadminCreatorConfiguration getSuperadminCreatorConfig();
+    Optional<SuperadminCreatorConfiguration> getSuperadminCreatorConfig();
 
     @Value.Check
     default void check() {
