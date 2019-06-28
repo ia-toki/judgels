@@ -39,12 +39,12 @@ public abstract class AbstractBoxGradingEngineAdapter implements GradingEngineAd
 
     @Override
     public Html renderViewSubmission(ProgrammingSubmission submission, SubmissionSource submissionSource, String authorName, String problemAlias, String problemName, String gradingLanguageName, String contestName) {
-        String errorMessage;
-        GradingResultDetails details;
+        String errorMessage = null;
+        GradingResultDetails details = null;
         if (submission.getLatestVerdict().getCode().equals("!!!")) {
             errorMessage = submission.getLatestDetails();
             details = null;
-        } else {
+        } else if (submission.getLatestDetails() != null){
             errorMessage = null;
             try {
                 details = MAPPER.readValue(submission.getLatestDetails(), GradingResultDetails.class);
