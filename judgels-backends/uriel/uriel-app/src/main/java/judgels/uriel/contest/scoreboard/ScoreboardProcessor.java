@@ -11,12 +11,14 @@ import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.contestant.ContestContestant;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 
 public interface ScoreboardProcessor {
     Scoreboard parse(ObjectMapper mapper, String json);
     Scoreboard create(ScoreboardState state, List<? extends ScoreboardEntry> entries);
+    ScoreboardContent combineContents(StyleModuleConfig styleModuleConfig, List<Scoreboard> scoreboards);
 
     boolean requiresGradingDetails(StyleModuleConfig styleModuleConfig);
 

@@ -10,7 +10,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
-import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
@@ -18,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
@@ -30,13 +27,11 @@ import judgels.uriel.api.contest.module.ContestModulesConfig;
 import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
-import judgels.uriel.api.contest.scoreboard.ExternalScoreboardData;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
-import org.glassfish.jersey.client.JerseyClientBuilder;
 
 public class ContestScoreboardUpdater {
     private final ObjectMapper objectMapper;
@@ -48,7 +43,7 @@ public class ContestScoreboardUpdater {
     private final ItemSubmissionStore bundleItemSubmissionStore;
     private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
-    private final Clock clock;
+    private final ContestScoreboardPusher scoreboardPusher;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -60,7 +55,7 @@ public class ContestScoreboardUpdater {
             ItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
-            Clock clock) {
+            ContestScoreboardPusher scoreboardPusher) {
 
         this.objectMapper = objectMapper;
         this.scoreboardStore = scoreboardStore;
@@ -71,13 +66,11 @@ public class ContestScoreboardUpdater {
         this.bundleItemSubmissionStore = bundleItemSubmissionStore;
         this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
-        this.clock = clock;
+        this.scoreboardPusher = scoreboardPusher;
     }
 
     @UnitOfWork
     public void update(Contest contest) {
-        Instant now = clock.instant();
-
         ScoreboardProcessor processor = scoreboardProcessorRegistry.get(contest.getStyle());
 
         ContestModulesConfig contestModulesConfig = moduleStore.getConfig(contest.getJid(), contest.getStyle());
@@ -173,26 +166,14 @@ public class ContestScoreboardUpdater {
                 incrementalMark.getTimestamp(),
                 incrementalContents);
 
-        if (contestModulesConfig.getExternalScoreboard().isPresent()) {
-            ExternalScoreboardData data = new ExternalScoreboardData.Builder()
-                    .receiverSecret(contestModulesConfig.getExternalScoreboard().get().getReceiverSecret())
-                    .contestJid(contest.getJid())
-                    .contestStyle(contest.getStyle())
-                    .updatedTime(now)
-                    .scoreboards(scoreboards)
-                    .build();
-
-            byte[] dataBytes;
-            try {
-                dataBytes = objectMapper.writeValueAsBytes(data);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            JerseyClientBuilder.createClient()
-                    .target(contestModulesConfig.getExternalScoreboard().get().getReceiverUrl())
-                    .request()
-                    .post(Entity.entity(dataBytes, MediaType.APPLICATION_JSON));
-        }
+        contestModulesConfig.getExternalScoreboard().ifPresent(config -> {
+            scoreboardPusher.pushScoreboard(
+                    config.getReceiverUrl(),
+                    config.getReceiverSecret(),
+                    contest.getJid(),
+                    contest.getStyle(),
+                    scoreboards);
+        });
     }
 
     private void updateScoreboard(

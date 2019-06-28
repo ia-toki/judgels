@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +31,8 @@ import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
+import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardContent;
 import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
 import judgels.uriel.contest.scoreboard.ScoreboardIncrementalContent;
@@ -53,6 +56,54 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                 .content(new IoiScoreboardContent.Builder()
                         .entries(Lists.transform(entries, e -> (IoiScoreboardEntry) e))
                         .build())
+                .build();
+    }
+
+    @Override
+    public ScoreboardContent combineContents(StyleModuleConfig styleModuleConfig, List<Scoreboard> scoreboards) {
+        IoiStyleModuleConfig config = (IoiStyleModuleConfig) styleModuleConfig;
+
+        Set<String> contestantJids = new HashSet<>();
+        List<Map<String, IoiScoreboardEntry>> entriesMapByContestantJidList = new ArrayList<>();
+
+        for (Scoreboard scoreboard : scoreboards) {
+            Map<String, IoiScoreboardEntry> entriesMapByContestantJid = new HashMap<>();
+            for (ScoreboardEntry entry : scoreboard.getContent().getEntries()) {
+                contestantJids.add(entry.getContestantJid());
+                entriesMapByContestantJid.put(entry.getContestantJid(), (IoiScoreboardEntry) entry);
+            }
+            entriesMapByContestantJidList.add(entriesMapByContestantJid);
+        }
+
+        List<IoiScoreboardEntry> entries = new ArrayList<>();
+        for (String contestantJid : contestantJids) {
+            List<Optional<Integer>> scores = new ArrayList<>();
+            int totalScores = 0;
+            long lastAffectingPenalty = 0;
+
+            for (int i = 0; i < scoreboards.size(); i++) {
+                IoiScoreboardEntry entry =  entriesMapByContestantJidList.get(i).get(contestantJid);
+                if (entry != null) {
+                    scores.addAll(entry.getScores());
+                    totalScores += entry.getTotalScores();
+                    lastAffectingPenalty = Math.max(lastAffectingPenalty, entry.getLastAffectingPenalty());
+                } else {
+                    scoreboards.get(i).getState().getProblemJids().forEach($ -> scores.add(Optional.empty()));
+                }
+            }
+
+            entries.add(new IoiScoreboardEntry.Builder()
+                    .rank(0)
+                    .contestantJid(contestantJid)
+                    .scores(scores)
+                    .totalScores(totalScores)
+                    .lastAffectingPenalty(lastAffectingPenalty)
+                    .build());
+        }
+
+        entries = sortEntriesAndAssignRanks(getComparator(config), entries);
+        return new IoiScoreboardContent.Builder()
+                .entries(entries)
                 .build();
     }
 
@@ -183,14 +234,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                     .build());
         }
 
-        IoiScoreboardEntryComparator comparator;
-        if (ioiStyleModuleConfig.getUsingLastAffectingPenalty()) {
-            comparator = new UsingLastAffectingPenaltyIoiScoreboardEntryComparator();
-        } else {
-            comparator = new StandardIoiScoreboardEntryComparator();
-        }
-
-        entries = sortEntriesAndAssignRanks(comparator, entries);
+        entries = sortEntriesAndAssignRanks(getComparator(ioiStyleModuleConfig), entries);
 
         return new ScoreboardProcessResult.Builder()
                .entries(entries)
@@ -215,13 +259,6 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             IoiScoreboard scoreboard,
             Set<String> problemJids,
             IoiStyleModuleConfig config) {
-
-        IoiScoreboardEntryComparator comparator;
-        if (config.getUsingLastAffectingPenalty()) {
-            comparator = new UsingLastAffectingPenaltyIoiScoreboardEntryComparator();
-        } else {
-            comparator = new StandardIoiScoreboardEntryComparator();
-        }
 
         ScoreboardState state = scoreboard.getState();
         IoiScoreboardContent content = scoreboard.getContent();
@@ -260,7 +297,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             newEntries.add(newEntry);
         }
 
-        newEntries = sortEntriesAndAssignRanks(comparator, newEntries);
+        newEntries = sortEntriesAndAssignRanks(getComparator(config), newEntries);
 
         return new IoiScoreboard.Builder()
                 .state(newState)
@@ -298,11 +335,19 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
         return newEntries.build();
     }
 
-    private Long computeLastAffectingPenalty(
+    private static Long computeLastAffectingPenalty(
             Instant submissionTime,
             Optional<Instant> contestantStartTime,
             Instant contestBeginTime) {
 
         return submissionTime.toEpochMilli() - contestantStartTime.orElse(contestBeginTime).toEpochMilli();
+    }
+
+    private static IoiScoreboardEntryComparator getComparator(IoiStyleModuleConfig config) {
+        if (config.getUsingLastAffectingPenalty()) {
+            return new UsingLastAffectingPenaltyIoiScoreboardEntryComparator();
+        } else {
+            return new StandardIoiScoreboardEntryComparator();
+        }
     }
 }

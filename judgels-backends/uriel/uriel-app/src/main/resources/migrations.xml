@@ -11,4 +11,5 @@
     <include file="migrations/002_add-bundle-item-submission.xml"/>
     <include file="migrations/003_add-grading-to-bundle-item-submission.xml"/>
     <include file="migrations/004_change-bundle-item-score-type-to-double.xml"/>
+    <include file="migrations/005_add-contest-groups.xml"/>
 </databaseChangeLog>

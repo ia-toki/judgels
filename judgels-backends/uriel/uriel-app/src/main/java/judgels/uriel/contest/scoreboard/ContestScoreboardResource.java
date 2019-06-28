@@ -100,6 +100,6 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         checkAllowed(scoreboardRoleChecker.canManage(actorJid, contest));
 
         scoreboardIncrementalMarker.invalidateMark(contestJid);
-        scoreboardUpdaterDispatcher.updateAsync(contest);
+        scoreboardUpdaterDispatcher.updateContestAsync(contest);
     }
 }
