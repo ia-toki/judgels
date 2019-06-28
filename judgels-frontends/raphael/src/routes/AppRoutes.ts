@@ -3,7 +3,7 @@ import { JophielRole } from 'modules/api/jophiel/role';
 
 import JophielRoutes from './jophiel/JophielRoutes';
 import JophielAccountsRoutes from './jophiel/JophielAccountsRoutes';
-import UrielRoutes from './uriel/UrielRoutes';
+import UrielRoutes, { LoadableUrielRoutes } from './uriel/UrielRoutes';
 import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
 import JudgelsRankingRoutes from './ranking/JudgelsRankingRoutes';
 
@@ -59,6 +59,12 @@ const homeRoute = {
     component: JophielRoutes,
   },
 };
+
+export function preloadRoutes() {
+  if (APP_CONFIG.mode === Mode.PRIVATE_CONTESTS) {
+    LoadableUrielRoutes.preload();
+  }
+}
 
 export function getAppRoutes() {
   return appRoutes;

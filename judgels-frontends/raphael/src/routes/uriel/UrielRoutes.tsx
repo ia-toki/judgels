@@ -3,8 +3,8 @@ import * as Loadable from 'react-loadable';
 
 import { LoadingState } from 'components/LoadingState/LoadingState';
 
-const LoadableUrielRoutes = Loadable({
-  loader: () => import('./UrielMainRoutes'),
+export const LoadableUrielRoutes = Loadable({
+  loader: () => import('./MainContestRoutes'),
   loading: () => <LoadingState large />,
 });
 

@@ -13,7 +13,7 @@ import { JophielRole } from 'modules/api/jophiel/role';
 import { AppState } from 'modules/store';
 import { selectDocumentTitle } from 'modules/breadcrumbs/breadcrumbsSelectors';
 
-import { getAppRoutes, getHomeRoute, getVisibleAppRoutes } from './AppRoutes';
+import { getAppRoutes, getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
 import LegacyCompetitionRoute from './legacyUriel/LegacyCompetitionRoute';
 import { selectRole } from './jophiel/modules/userWebSelectors';
@@ -28,6 +28,7 @@ interface AppProps {
 class App extends React.PureComponent<AppProps> {
   componentDidMount() {
     this.props.onGetUserWebConfig();
+    preloadRoutes();
   }
 
   render() {
