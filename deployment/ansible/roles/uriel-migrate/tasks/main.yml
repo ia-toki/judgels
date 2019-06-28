@@ -22,7 +22,7 @@
   - name: Run a uriel container to do db migration
     docker_container:
       name: uriel-migrate
-      image: "judgels/uriel:{{ uriel_version | default('latest', true) }}"
+      image: "judgels/uriel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:

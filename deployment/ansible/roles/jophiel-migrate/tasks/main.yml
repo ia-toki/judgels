@@ -22,7 +22,7 @@
   - name: Run a jophiel container to do db migration
     docker_container:
       name: jophiel-migrate
-      image: "judgels/jophiel:{{ jophiel_version | default('latest', true) }}"
+      image: "judgels/jophiel:{{ judgels_version | default('latest', true) }}"
       restart: yes
       network_mode: host
       volumes:
