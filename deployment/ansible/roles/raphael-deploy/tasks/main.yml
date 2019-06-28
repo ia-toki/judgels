@@ -33,6 +33,6 @@
   - name: Allow Raphael traffic through the firewall
     ufw:
       rule: allow
-      to_port: "{{ raphael_port }}"
+      to_port: "{{ raphael_port | default('5000', true) }}"
       proto: tcp
       comment: Judgels Raphael
