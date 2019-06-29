@@ -24,3 +24,4 @@
         - "/judgels/scoreboard-receiver/var:/judgels/scoreboard-receiver/var"
       env:
         RECEIVER_SECRET: "{{ scoreboard_receiver_secret }}"
+        SERVER_SECRET: "{{ scoreboard_server_secret }}"
