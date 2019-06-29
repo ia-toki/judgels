@@ -10,6 +10,7 @@ import (
 )
 
 var receiverSecret string
+var serverSecret string
 
 type Data struct {
 	ReceiverSecret string                 `json:"receiverSecret"`
@@ -30,6 +31,10 @@ func main() {
 	receiverSecret = os.Getenv("RECEIVER_SECRET")
 	if receiverSecret == "" {
 		panic("RECEIVER_SECRET is not set")
+	}
+	serverSecret = os.Getenv("SERVER_SECRET")
+	if receiverSecret == "" {
+		panic("SERVER_SECRET is not set")
 	}
 
 	log.Println("Started scoreboard receiver")
@@ -83,8 +88,17 @@ func serve(w http.ResponseWriter, r *http.Request) {
 	}
 
 	typ := r.URL.Query().Get("type")
+	if typ != "" {
+		secret := r.URL.Query().Get("secret")
+		if secret != serverSecret {
+			log.Println("Received scoreboard request with wrong secret")
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
+	}
+
 	if typ != "OFFICIAL" && typ != "FROZEN" {
-		typ = "OFFICIAL"
+		typ = "FROZEN"
 	}
 
 	filename := getFilename(contestJID, "OFFICIAL")
