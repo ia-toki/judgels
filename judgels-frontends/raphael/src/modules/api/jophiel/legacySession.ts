@@ -15,7 +15,9 @@ export const legacySessionAPI = {
   },
 
   preparePostLogin: (authCode: string, redirectUri: string) => {
-    window.location.replace(`${baseUrl}/prepare-post-login/${authCode}/${redirectUri}`);
+    setTimeout(() => {
+      window.location.replace(`${baseUrl}/prepare-post-login/${authCode}/${redirectUri}`);
+    }, 500);
   },
 
   propagateLogin: (token: string) => {
@@ -23,6 +25,8 @@ export const legacySessionAPI = {
   },
 
   postLogout: (redirectUri: string) => {
-    window.location.replace(`${baseUrl}/post-logout/${redirectUri}`);
+    setTimeout(() => {
+      window.location.replace(`${baseUrl}/post-logout/${redirectUri}`);
+    }, 500);
   },
 };
