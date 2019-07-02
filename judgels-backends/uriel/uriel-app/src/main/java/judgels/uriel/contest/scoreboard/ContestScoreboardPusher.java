@@ -1,7 +1,6 @@
 package judgels.uriel.contest.scoreboard;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.time.Clock;
 import java.util.Map;
 import javax.inject.Inject;
@@ -12,8 +11,12 @@ import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.ExternalScoreboardData;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ContestScoreboardPusher {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContestScoreboardPusher.class);
+
     private final Clock clock;
     private final ObjectMapper mapper;
 
@@ -38,16 +41,14 @@ public class ContestScoreboardPusher {
                 .scoreboards(scoreboards)
                 .build();
 
-        byte[] dataBytes;
         try {
-            dataBytes =  mapper.writeValueAsBytes(data);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            byte[] dataBytes = mapper.writeValueAsBytes(data);
+            JerseyClientBuilder.createClient()
+                    .target(receiverUrl)
+                    .request()
+                    .post(Entity.entity(dataBytes, MediaType.APPLICATION_JSON));
+        } catch (Throwable e) {
+            LOGGER.error("Failed to push scoreboard of contest JID " + contestJid, e);
         }
-
-        JerseyClientBuilder.createClient()
-                .target(receiverUrl)
-                .request()
-                .post(Entity.entity(dataBytes, MediaType.APPLICATION_JSON));
     }
 }
