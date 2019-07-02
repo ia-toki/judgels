@@ -153,7 +153,7 @@ public class Communicator {
 
         TestCaseVerdict verdict;
 
-        Optional<TestCaseVerdict> maybeVerdict = verdictParser.parseExecutionResult(solutionResult);
+        Optional<TestCaseVerdict> maybeVerdict = verdictParser.parseExecutionResult(ignoreSignal13(solutionResult));
         if (maybeVerdict.isPresent()) {
             verdict = maybeVerdict.get();
         } else {
@@ -173,5 +173,18 @@ public class Communicator {
                 .verdict(verdict)
                 .executionResult(solutionResult)
                 .build();
+    }
+
+    // Ignore errors caused by SIGPIPE (broken pipe); treat is as Wrong Answer / Accepted.
+    private static SandboxExecutionResult ignoreSignal13(SandboxExecutionResult result) {
+        if (result.getStatus() == SandboxExecutionStatus.KILLED_ON_SIGNAL
+                && result.getMessage().contains("Caught fatal signal 13")) {
+            return new SandboxExecutionResult.Builder()
+                    .from(result)
+                    .status(SandboxExecutionStatus.ZERO_EXIT_CODE)
+                    .message("")
+                    .build();
+        }
+        return result;
     }
 }
