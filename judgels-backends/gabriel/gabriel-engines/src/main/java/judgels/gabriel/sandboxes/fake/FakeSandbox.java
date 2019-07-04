@@ -54,9 +54,6 @@ public class FakeSandbox implements Sandbox {
     public void setMemoryLimitInKilobytes(int memoryLimit) {}
 
     @Override
-    public void setStackSizeInKilobytes(int stackSizeInKilobytes) {}
-
-    @Override
     public void resetRedirections() {
         standardInput = null;
         standardOutput = null;

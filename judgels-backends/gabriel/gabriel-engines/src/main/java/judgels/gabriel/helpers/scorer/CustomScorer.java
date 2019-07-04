@@ -52,12 +52,11 @@ public class CustomScorer implements Scorer {
 
         if (!result.isSuccessful()) {
             throw new PreparationException("Compilation of custom scorer resulted in compilation error:\n "
-                    + new String(result.getOutputs().get("scorer")));
+                    + result.getOutputs().get("scorer"));
         }
 
         sandbox.setTimeLimitInMilliseconds(10 * 1000);
         sandbox.setMemoryLimitInKilobytes(1024 * 1024);
-        sandbox.setStackSizeInKilobytes(1024 * 1024);
 
         this.sandbox = sandbox;
         this.executableFilename = language.getExecutableFilename(scorerFile.getName());

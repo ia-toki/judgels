@@ -51,11 +51,9 @@ public class BatchEvaluator implements Evaluator {
 
         sandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
         sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
-        sandbox.setStackSizeInKilobytes(memoryLimitInKilobytes);
 
         if (language instanceof JavaGradingLanguage) {
             sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes + 8000);
-            sandbox.setStackSizeInKilobytes(memoryLimitInKilobytes + 8000);
         }
 
         this.verdictParser = new TestCaseVerdictParser();

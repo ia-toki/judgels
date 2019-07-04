@@ -11,7 +11,6 @@ public interface Sandbox {
     void addAllowedDirectory(File directory);
     void setTimeLimitInMilliseconds(int timeLimit);
     void setMemoryLimitInKilobytes(int memoryLimit);
-    void setStackSizeInKilobytes(int stackSizeInKilobytes);
     void resetRedirections();
     void redirectStandardInput(String filenameInsideThisSandbox);
     void redirectStandardOutput(String filenameInsideThisSandbox);

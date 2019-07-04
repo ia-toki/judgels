@@ -89,11 +89,6 @@ public class IsolateSandbox implements Sandbox {
     }
 
     @Override
-    public void setStackSizeInKilobytes(int stackSizeInKilobytes) {
-        this.stackSize = stackSizeInKilobytes;
-    }
-
-    @Override
     public void resetRedirections() {
         standardInput = null;
         standardOutput = null;

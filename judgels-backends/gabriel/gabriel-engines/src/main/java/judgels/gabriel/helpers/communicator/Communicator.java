@@ -75,7 +75,7 @@ public class Communicator {
 
         if (!result.isSuccessful()) {
             throw new PreparationException("Compilation of communicator resulted in compilation error:\n "
-                    + new String(result.getOutputs().get("communicator")));
+                    + result.getOutputs().get("communicator"));
         }
 
         this.solutionExecutableFilename =
@@ -85,7 +85,6 @@ public class Communicator {
 
         solutionSandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
         solutionSandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
-        solutionSandbox.setStackSizeInKilobytes(memoryLimitInKilobytes);
 
         communicatorSandbox.addFile(new File(communicationDir, communicatorExecutableFilename));
         File communicatorExecutableFile = communicatorSandbox.getFile(communicatorExecutableFilename);
@@ -96,7 +95,6 @@ public class Communicator {
 
         communicatorSandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
         communicatorSandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
-        communicatorSandbox.setStackSizeInKilobytes(memoryLimitInKilobytes);
 
         solutionSandbox.addAllowedDirectory(communicationDir);
         communicatorSandbox.addAllowedDirectory(communicationDir);

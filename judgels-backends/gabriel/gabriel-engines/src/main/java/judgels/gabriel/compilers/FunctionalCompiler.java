@@ -41,7 +41,6 @@ public class FunctionalCompiler implements Compiler {
 
         sandbox.setTimeLimitInMilliseconds(10 * 1000);
         sandbox.setMemoryLimitInKilobytes(1024 * 1024);
-        sandbox.setStackSizeInKilobytes(1024 * 1024);
 
         sandbox.resetRedirections();
         sandbox.redirectStandardOutput(COMPILATION_OUTPUT_FILENAME);

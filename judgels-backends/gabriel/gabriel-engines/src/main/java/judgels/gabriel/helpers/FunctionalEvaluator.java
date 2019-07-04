@@ -46,7 +46,6 @@ public class FunctionalEvaluator implements Evaluator {
 
         sandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
         sandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
-        sandbox.setStackSizeInKilobytes(memoryLimitInKilobytes);
 
         this.verdictParser = new TestCaseVerdictParser();
         this.scorer = scorer;
