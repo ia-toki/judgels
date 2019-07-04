@@ -2,6 +2,7 @@ import { Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
+import { isOutputOnly } from 'modules/api/gabriel/engine';
 import { FormTableFileInput } from 'components/forms/FormTableFileInput/FormTableFileInput';
 import { FormTableSelect2 } from 'components/forms/FormTableSelect2/FormTableSelect2';
 import {
@@ -10,7 +11,7 @@ import {
   MaxFileSize10MB,
   Required,
 } from 'components/forms/validations';
-import { OutputOnlyOverrides, gradingLanguageNamesMap } from 'modules/api/gabriel/language';
+import { gradingLanguageNamesMap } from 'modules/api/gabriel/language';
 
 import './ProblemSubmissionForm.css';
 
@@ -59,7 +60,7 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
   private renderSourceFields = () => {
     const { gradingEngine, sourceKeys } = this.props;
     let maxFileSize;
-    if (gradingEngine.startsWith(OutputOnlyOverrides.KEY)) {
+    if (isOutputOnly(gradingEngine)) {
       maxFileSize = MaxFileSize10MB;
     } else {
       maxFileSize = MaxFileSize300KB;
@@ -79,7 +80,7 @@ class ProblemSubmissionForm extends React.PureComponent<ProblemSubmissionFormPro
 
   private renderGradingLanguageFields = () => {
     const { gradingEngine, gradingLanguages } = this.props;
-    if (gradingEngine.startsWith(OutputOnlyOverrides.KEY)) {
+    if (isOutputOnly(gradingEngine)) {
       return null;
     }
 

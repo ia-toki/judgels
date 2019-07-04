@@ -10,11 +10,8 @@ import { ContentCard } from 'components/ContentCard/ContentCard';
 import { VerdictTag } from 'components/VerdictTag/VerdictTag';
 import { constructProblemName } from 'modules/api/sandalphon/problem';
 import { Submission } from 'modules/api/sandalphon/submissionProgramming';
-import {
-  OutputOnlyOverrides,
-  getGradingLanguageName,
-  getGradingLanguageSyntaxHighlighterValue,
-} from 'modules/api/gabriel/language';
+import { getGradingLanguageName, getGradingLanguageSyntaxHighlighterValue } from 'modules/api/gabriel/language';
+import { isInteractive, isOutputOnly } from 'modules/api/gabriel/engine';
 import { TestCaseResult } from 'modules/api/gabriel/grading';
 import { SubmissionSource } from 'modules/api/gabriel/submission';
 import { VerdictCode } from 'modules/api/gabriel/verdict';
@@ -266,7 +263,12 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
       return '?';
     }
     if (result.verdict.code === VerdictCode.TLE) {
-      return '> ' + result.executionResult.time + ' ms';
+      if (isInteractive(this.props.submission.gradingEngine)) {
+        return 'N/A';
+      }
+      if (result.executionResult.isKilled) {
+        return '> ' + result.executionResult.time + ' ms';
+      }
     }
     return result.executionResult.time + ' ms';
   };
@@ -280,7 +282,7 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
 
   private renderSourceFiles = () => {
     const { submission, source } = this.props;
-    if (submission.gradingEngine.startsWith(OutputOnlyOverrides.KEY)) {
+    if (isOutputOnly(submission.gradingEngine)) {
       return null;
     }
 
@@ -344,9 +346,6 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
 
   private hasSubtasks = () => {
     const { submission } = this.props;
-    if (submission.gradingLanguage.indexOf('Subtasks') !== -1) {
-      return false;
-    }
     const grading = submission.latestGrading;
     if (!grading || !grading.details) {
       return false;

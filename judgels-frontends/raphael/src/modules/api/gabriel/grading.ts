@@ -14,8 +14,10 @@ export enum SandboxExecutionStatus {
 export interface SandboxExecutionResult {
   status: SandboxExecutionStatus;
   time: number;
+  wallTime: number;
   memory: number;
-  message: string;
+  isKilled: boolean;
+  message?: string;
 }
 
 export interface TestCaseResult {
