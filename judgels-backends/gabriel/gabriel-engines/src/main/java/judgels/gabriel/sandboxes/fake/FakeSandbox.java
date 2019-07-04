@@ -51,6 +51,9 @@ public class FakeSandbox implements Sandbox {
     public void setTimeLimitInMilliseconds(int timeLimit) {}
 
     @Override
+    public void setWallTimeLimitInMilliseconds(int timeLimit) {}
+
+    @Override
     public void setMemoryLimitInKilobytes(int memoryLimit) {}
 
     @Override

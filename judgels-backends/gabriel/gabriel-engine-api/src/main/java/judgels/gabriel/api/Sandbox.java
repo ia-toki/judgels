@@ -10,6 +10,7 @@ public interface Sandbox {
     File getFile(String filename);
     void addAllowedDirectory(File directory);
     void setTimeLimitInMilliseconds(int timeLimit);
+    void setWallTimeLimitInMilliseconds(int timeLimit);
     void setMemoryLimitInKilobytes(int memoryLimit);
     void resetRedirections();
     void redirectStandardInput(String filenameInsideThisSandbox);

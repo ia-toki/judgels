@@ -83,7 +83,10 @@ public class Communicator {
         this.communicatorExecutableFilename =
                 communicatorLanguage.getExecutableFilename(communicatorSourceFile.getName());
 
+        int wallTimeLimitInMilliseconds = timeLimitInMilliseconds + 2000;
+
         solutionSandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
+        solutionSandbox.setWallTimeLimitInMilliseconds(wallTimeLimitInMilliseconds);
         solutionSandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
 
         communicatorSandbox.addFile(new File(communicationDir, communicatorExecutableFilename));
@@ -94,6 +97,7 @@ public class Communicator {
         }
 
         communicatorSandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
+        solutionSandbox.setWallTimeLimitInMilliseconds(wallTimeLimitInMilliseconds);
         communicatorSandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
 
         solutionSandbox.addAllowedDirectory(communicationDir);

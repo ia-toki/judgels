@@ -35,6 +35,7 @@ public class IsolateSandbox implements Sandbox {
     private File standardError;
 
     private int timeLimit;
+    private int wallTimeLimit;
     private int memoryLimit;
     private int stackSize;
     private int fileSizeLimit;
@@ -81,6 +82,12 @@ public class IsolateSandbox implements Sandbox {
     @Override
     public void setTimeLimitInMilliseconds(int timeLimitInMilliseconds) {
         this.timeLimit = timeLimitInMilliseconds;
+        this.wallTimeLimit = timeLimitInMilliseconds + 8000;
+    }
+
+    @Override
+    public void setWallTimeLimitInMilliseconds(int timeLimitInMilliseconds) {
+        this.wallTimeLimit = timeLimitInMilliseconds;
     }
 
     @Override
@@ -170,7 +177,11 @@ public class IsolateSandbox implements Sandbox {
         if (timeLimit > 0) {
             double timeLimitInSeconds = timeLimit / 1000.0;
             sandboxedCommand.add("-t" + timeLimitInSeconds);
-            sandboxedCommand.add("-w" + (timeLimitInSeconds + Math.max(8.0, timeLimitInSeconds)));
+        }
+
+        if (wallTimeLimit > 0) {
+            double wallTimeLimitInSeconds = wallTimeLimit / 1000.0;
+            sandboxedCommand.add("-w" + wallTimeLimitInSeconds);
         }
 
         if (memoryLimit > 0) {
@@ -212,7 +223,7 @@ public class IsolateSandbox implements Sandbox {
     @Override
     public SandboxExecutionResult getResult(int exitCode) {
         if (exitCode != 0 && exitCode != 1) {
-            return SandboxExecutionResult.internalError("Isolate returns nonzero and non-one exit code: " + exitCode);
+            return SandboxExecutionResult.internalError("Isolate returned nonzero and non-one exit code: " + exitCode);
         }
 
         String meta;
