@@ -47,7 +47,6 @@ export enum ContestState {
   Begun = 'BEGUN',
   Started = 'STARTED',
   Finished = 'FINISHED',
-  Paused = 'PAUSED',
 }
 
 const baseURL = `${APP_CONFIG.apiUrls.uriel}/contest-web`;

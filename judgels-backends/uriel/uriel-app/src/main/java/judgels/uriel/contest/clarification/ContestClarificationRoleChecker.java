@@ -38,7 +38,6 @@ public class ContestClarificationRoleChecker {
     public boolean canCreate(String userJid, Contest contest) {
         boolean can = contestRoleDao.isContestant(userJid, contest.getJid())
                 && moduleStore.hasClarificationModule(contest.getJid())
-                && !moduleStore.hasPausedModule(contest.getJid())
                 && contestTimer.hasStarted(contest, userJid)
                 && !contestTimer.hasFinished(contest, userJid);
 
@@ -58,7 +57,6 @@ public class ContestClarificationRoleChecker {
         }
         return contestRoleDao.isContestant(userJid, contest.getJid())
                 && moduleStore.hasClarificationModule(contest.getJid())
-                && !moduleStore.hasPausedModule(contest.getJid())
                 && contestTimer.hasStarted(contest, userJid);
     }
 

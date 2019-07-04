@@ -44,7 +44,6 @@ public class ContestSubmissionRoleChecker {
             return true;
         }
         return contestRoleDao.isContestant(userJid, contest.getJid())
-                && !moduleStore.hasPausedModule(contest.getJid())
                 && contestTimer.hasStarted(contest, userJid);
     }
 

@@ -23,19 +23,13 @@ class ContestSubmissionRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
 
         assertThat(checker.canView(CONTESTANT, contestB, CONTESTANT)).isFalse();
         assertThat(checker.canView(CONTESTANT, contestBStarted, CONTESTANT)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canView(CONTESTANT, contestBStarted, CONTESTANT)).isFalse();
         assertThat(checker.canView(CONTESTANT, contestB, ANOTHER_CONTESTANT)).isFalse();
         assertThat(checker.canView(CONTESTANT, contestBStarted, ANOTHER_CONTESTANT)).isFalse();
 
         assertThat(checker.canView(SUPERVISOR, contestB, CONTESTANT)).isTrue();
         assertThat(checker.canView(SUPERVISOR, contestBStarted, CONTESTANT)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canView(SUPERVISOR, contestBStarted, CONTESTANT)).isTrue();
 
         assertThat(checker.canView(MANAGER, contestB, CONTESTANT)).isTrue();
-        assertThat(checker.canView(MANAGER, contestBStarted, CONTESTANT)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
         assertThat(checker.canView(MANAGER, contestBStarted, CONTESTANT)).isTrue();
     }
 
@@ -57,21 +51,15 @@ class ContestSubmissionRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
         assertThat(checker.canViewOwn(CONTESTANT, contestAStarted)).isFalse();
         assertThat(checker.canViewOwn(CONTESTANT, contestB)).isFalse();
         assertThat(checker.canViewOwn(CONTESTANT, contestBStarted)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canViewOwn(CONTESTANT, contestBStarted)).isFalse();
         assertThat(checker.canViewOwn(CONTESTANT, contestC)).isFalse();
 
         assertThat(checker.canViewOwn(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canViewOwn(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canViewOwn(SUPERVISOR, contestBStarted)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canViewOwn(SUPERVISOR, contestBStarted)).isTrue();
         assertThat(checker.canViewOwn(SUPERVISOR, contestC)).isFalse();
 
         assertThat(checker.canViewOwn(MANAGER, contestA)).isFalse();
         assertThat(checker.canViewOwn(MANAGER, contestB)).isTrue();
-        assertThat(checker.canViewOwn(MANAGER, contestBStarted)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
         assertThat(checker.canViewOwn(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canViewOwn(MANAGER, contestC)).isFalse();
     }
@@ -93,14 +81,10 @@ class ContestSubmissionRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
         assertThat(checker.canSupervise(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canSupervise(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canSupervise(SUPERVISOR, contestBStarted)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canSupervise(SUPERVISOR, contestBStarted)).isTrue();
         assertThat(checker.canSupervise(SUPERVISOR, contestC)).isFalse();
 
         assertThat(checker.canSupervise(MANAGER, contestA)).isFalse();
         assertThat(checker.canSupervise(MANAGER, contestB)).isTrue();
-        assertThat(checker.canSupervise(MANAGER, contestBStarted)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
         assertThat(checker.canSupervise(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canSupervise(MANAGER, contestC)).isFalse();
     }
@@ -127,8 +111,6 @@ class ContestSubmissionRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
 
         assertThat(checker.canManage(MANAGER, contestA)).isFalse();
         assertThat(checker.canManage(MANAGER, contestB)).isTrue();
-        assertThat(checker.canManage(MANAGER, contestBStarted)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
         assertThat(checker.canManage(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canManage(MANAGER, contestC)).isFalse();
     }
