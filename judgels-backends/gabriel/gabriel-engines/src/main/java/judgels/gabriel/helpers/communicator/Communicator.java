@@ -97,7 +97,7 @@ public class Communicator {
         }
 
         communicatorSandbox.setTimeLimitInMilliseconds(timeLimitInMilliseconds);
-        solutionSandbox.setWallTimeLimitInMilliseconds(wallTimeLimitInMilliseconds);
+        communicatorSandbox.setWallTimeLimitInMilliseconds(wallTimeLimitInMilliseconds);
         communicatorSandbox.setMemoryLimitInKilobytes(memoryLimitInKilobytes);
 
         solutionSandbox.addAllowedDirectory(communicationDir);
@@ -142,11 +142,8 @@ public class Communicator {
         SandboxExecutionResult[] results =
                 sandboxInteractor.interact(solutionSandbox, solutionCommand, communicatorSandbox, command);
 
-        SandboxExecutionResult solutionResult = results[0];
+        SandboxExecutionResult solutionResult = ignoreSignal13(results[0]);
         SandboxExecutionResult communicatorResult = results[1];
-
-        // If communicator resulted in TLE, it is impossible to tell whether it is communicator's fault or contestant's.
-        // Just return TLE anyway.
 
         if (communicatorResult.getStatus() != SandboxExecutionStatus.ZERO_EXIT_CODE
                 && communicatorResult.getStatus() != SandboxExecutionStatus.TIMED_OUT) {
@@ -155,7 +152,7 @@ public class Communicator {
 
         TestCaseVerdict verdict;
 
-        Optional<TestCaseVerdict> maybeVerdict = verdictParser.parseExecutionResult(ignoreSignal13(solutionResult));
+        Optional<TestCaseVerdict> maybeVerdict = verdictParser.parseExecutionResult(solutionResult);
         if (maybeVerdict.isPresent()) {
             verdict = maybeVerdict.get();
         } else {
