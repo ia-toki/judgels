@@ -178,11 +178,11 @@ public class Communicator {
     // Ignore errors caused by SIGPIPE (broken pipe); treat is as Wrong Answer / Accepted.
     private static SandboxExecutionResult ignoreSignal13(SandboxExecutionResult result) {
         if (result.getStatus() == SandboxExecutionStatus.KILLED_ON_SIGNAL
-                && result.getMessage().contains("Caught fatal signal 13")) {
+                && result.getMessage().orElse("").contains("Caught fatal signal 13")) {
             return new SandboxExecutionResult.Builder()
                     .from(result)
                     .status(SandboxExecutionStatus.ZERO_EXIT_CODE)
-                    .message("")
+                    .message(Optional.empty())
                     .build();
         }
         return result;

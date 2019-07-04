@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import judgels.gabriel.api.ProcessExecutionResult;
 import judgels.gabriel.api.Sandbox;
@@ -236,6 +237,7 @@ public class IsolateSandbox implements Sandbox {
         }
 
         int time = (int) (Double.parseDouble(items.get("time")) * 1000);
+        int wallTime = (int) (Double.parseDouble(items.get("time-wall")) * 1000);
         int memory = (int) (Double.parseDouble(items.get("cg-mem")));
         String status = items.get("status");
 
@@ -252,11 +254,16 @@ public class IsolateSandbox implements Sandbox {
             executionStatus = SandboxExecutionStatus.INTERNAL_ERROR;
         }
 
+        boolean isKilled = items.getOrDefault("killed", "0").equals("1");
+        Optional<String> message = Optional.ofNullable(items.get("message"));
+
         return new SandboxExecutionResult.Builder()
                 .time(time)
+                .wallTime(wallTime)
                 .memory(memory)
                 .status(executionStatus)
-                .message(meta)
+                .isKilled(isKilled)
+                .message(message)
                 .build();
     }
 
