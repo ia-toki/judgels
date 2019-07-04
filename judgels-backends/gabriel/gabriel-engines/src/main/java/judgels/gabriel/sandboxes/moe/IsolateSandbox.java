@@ -37,7 +37,6 @@ public class IsolateSandbox implements Sandbox {
     private int timeLimit;
     private int wallTimeLimit;
     private int memoryLimit;
-    private int stackSize;
     private int fileSizeLimit;
     private int maxProcesses;
 
@@ -190,14 +189,11 @@ public class IsolateSandbox implements Sandbox {
             } else {
                 sandboxedCommand.add("-m" + memoryLimit);
             }
+            sandboxedCommand.add("-k" + memoryLimit);
         }
 
         if (fileSizeLimit > 0) {
             sandboxedCommand.add("-f" + fileSizeLimit);
-        }
-
-        if (stackSize > 0) {
-            sandboxedCommand.add("-k" + stackSize);
         }
 
         if (standardInput != null) {
