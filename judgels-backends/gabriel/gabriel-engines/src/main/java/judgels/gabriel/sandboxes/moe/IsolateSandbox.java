@@ -176,6 +176,7 @@ public class IsolateSandbox implements Sandbox {
         if (timeLimit > 0) {
             double timeLimitInSeconds = timeLimit / 1000.0;
             sandboxedCommand.add("-t" + timeLimitInSeconds);
+            sandboxedCommand.add("-x0.5");
         }
 
         if (wallTimeLimit > 0) {
