@@ -47,6 +47,7 @@ import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.module.VirtualModuleConfig;
 import judgels.uriel.persistence.ContestModuleDao;
 import judgels.uriel.persistence.ContestModuleModel;
+import judgels.uriel.persistence.ContestRoleDao;
 import judgels.uriel.persistence.ContestStyleDao;
 import judgels.uriel.persistence.ContestStyleModel;
 
@@ -65,14 +66,21 @@ public class ContestModuleStore {
 
     private final ContestStyleDao styleDao; // TODO(fushar): put style config in module store as well
     private final ContestModuleDao moduleDao;
+    private final ContestRoleDao roleDao;
     private final ObjectMapper mapper;
 
     private final Cache<String, Optional<?>> moduleCache;
 
     @Inject
-    public ContestModuleStore(ContestStyleDao styleDao, ContestModuleDao moduleDao, ObjectMapper mapper) {
+    public ContestModuleStore(
+            ContestStyleDao styleDao,
+            ContestModuleDao moduleDao,
+            ContestRoleDao roleDao,
+            ObjectMapper mapper) {
+
         this.styleDao = styleDao;
         this.moduleDao = moduleDao;
+        this.roleDao = roleDao;
         this.mapper = mapper;
 
         this.moduleCache = Caffeine.newBuilder()
@@ -96,7 +104,9 @@ public class ContestModuleStore {
             ContestModuleModel model = maybeModel.get();
             model.enabled = true;
             moduleDao.update(model);
+
             moduleCache.invalidate(contestJid + SEPARATOR + type.name());
+            roleDao.invalidateCaches();
         } else {
             upsertModule(contestJid, type, DEFAULT_CONFIGS.getOrDefault(type, Collections.emptyMap()));
         }
@@ -108,7 +118,9 @@ public class ContestModuleStore {
             ContestModuleModel model = maybeModel.get();
             model.enabled = false;
             moduleDao.update(model);
+
             moduleCache.invalidate(contestJid + SEPARATOR + type.name());
+            roleDao.invalidateCaches();
         }
     }
 
@@ -405,6 +417,7 @@ public class ContestModuleStore {
         }
 
         moduleCache.invalidate(contestJid + SEPARATOR + type.name());
+        roleDao.invalidateCaches();
     }
 
     private void toModel(String contestJid, ContestModuleType type, Object config, ContestModuleModel model) {

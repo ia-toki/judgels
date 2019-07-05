@@ -116,6 +116,14 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
         managerCache.invalidate(userJid + SEPARATOR + contestJid);
     }
 
+    @Override
+    public void invalidateCaches() {
+        viewerOrAboveCache.invalidateAll();
+        contestantCache.invalidateAll();
+        supervisorOrAboveCache.invalidateAll();
+        managerCache.invalidateAll();
+    }
+
     static CustomPredicateFilter<ContestModel> isVisible(String userJid) {
         return or(
                 isVisibleAsViewer(),

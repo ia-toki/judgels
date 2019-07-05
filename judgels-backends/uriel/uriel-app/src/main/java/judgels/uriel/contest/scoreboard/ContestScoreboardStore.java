@@ -1,7 +1,7 @@
 package judgels.uriel.contest.scoreboard;
 
 import static judgels.uriel.UrielCacheUtils.SEPARATOR;
-import static judgels.uriel.UrielCacheUtils.getMediumDuration;
+import static judgels.uriel.UrielCacheUtils.getShortDuration;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -22,7 +22,7 @@ public class ContestScoreboardStore {
 
         this.scoreboardCache = Caffeine.newBuilder()
                 .maximumSize(10)
-                .expireAfterWrite(getMediumDuration())
+                .expireAfterWrite(getShortDuration())
                 .build();
     }
 
@@ -40,15 +40,19 @@ public class ContestScoreboardStore {
         Optional<ContestScoreboardModel> maybeModel =
                 scoreboardDao.selectByContestJidAndType(contestJid, data.getType());
 
+        RawContestScoreboard scoreboard;
         if (maybeModel.isPresent()) {
             ContestScoreboardModel model = maybeModel.get();
             toModel(contestJid, data, model);
-            return fromModel(scoreboardDao.update(model));
+            scoreboard = fromModel(scoreboardDao.update(model));
         } else {
             ContestScoreboardModel model = new ContestScoreboardModel();
             toModel(contestJid, data, model);
-            return fromModel(scoreboardDao.insert(model));
+            scoreboard = fromModel(scoreboardDao.insert(model));
         }
+
+        scoreboardCache.invalidate(contestJid + SEPARATOR + data.getType().name());
+        return scoreboard;
     }
 
     private RawContestScoreboard fromModel(ContestScoreboardModel model) {

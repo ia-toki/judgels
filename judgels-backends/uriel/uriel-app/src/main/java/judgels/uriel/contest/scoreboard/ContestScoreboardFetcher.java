@@ -52,6 +52,7 @@ public class ContestScoreboardFetcher {
                     .scoreboard(scoreboardPage)
                     .totalEntries(totalEntries)
                     .type(raw.getType())
+                    .style(contest.getStyle())
                     .updatedTime(raw.getUpdatedTime())
                     .build();
         });

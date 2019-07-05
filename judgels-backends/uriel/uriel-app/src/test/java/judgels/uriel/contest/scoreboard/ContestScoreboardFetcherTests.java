@@ -74,12 +74,14 @@ class ContestScoreboardFetcherTests {
 
         officialScoreboard = new ContestScoreboard.Builder()
                 .type(ContestScoreboardType.OFFICIAL)
+                .style(ContestStyle.ICPC)
                 .scoreboard(icpcScoreboard)
                 .totalEntries(2)
                 .updatedTime(Instant.ofEpochMilli(42))
                 .build();
         frozenScoreboard = new ContestScoreboard.Builder()
                 .type(ContestScoreboardType.FROZEN)
+                .style(ContestStyle.ICPC)
                 .scoreboard(icpcScoreboard)
                 .totalEntries(2)
                 .updatedTime(Instant.ofEpochMilli(42))

@@ -1,11 +1,14 @@
 package judgels.uriel.api.contest.scoreboard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import org.immutables.value.Value;
 
+@JsonTypeName("ICPC")
+@Value.Style(passAnnotations = JsonTypeName.class)
 @Value.Immutable
 @JsonDeserialize(as = ImmutableIcpcScoreboard.class)
 @SuppressWarnings("immutables:from")
