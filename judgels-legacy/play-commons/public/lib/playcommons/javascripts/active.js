@@ -1,7 +1,6 @@
 require(["jquery", "bootstrap"], function() {
     $($(".breadcrumb-link").get().reverse()).each(function() {
         var href = $(this).attr("href");
-        console.log("A ", href);
         $("a[href='" + href +"']").each(function() {
             var parent = $(this).parent();
             if (!$(this).hasClass("breadcrumb-link") && parent.siblings(".active").size() === 0) {
