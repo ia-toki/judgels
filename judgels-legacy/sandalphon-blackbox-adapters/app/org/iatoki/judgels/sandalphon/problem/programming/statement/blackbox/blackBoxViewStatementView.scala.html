@@ -1,6 +1,7 @@
 @import judgels.gabriel.api.GradingConfig
 @import judgels.gabriel.api.OutputOnlyOverrides
 @import judgels.gabriel.engines.outputonly.OutputOnlyGradingConfig
+@import judgels.gabriel.engines.outputonly.OutputOnlyWithSubtasksGradingConfig
 @import judgels.gabriel.languages.GradingLanguageRegistry
 @import judgels.sandalphon.api.problem.ProblemStatement
 @import play.i18n.Messages
@@ -61,7 +62,7 @@
             </div>
         }
 
-        @if(blackBoxGradingConfig.isInstanceOf[OutputOnlyGradingConfig]) {
+        @if(blackBoxGradingConfig.isInstanceOf[OutputOnlyGradingConfig] || blackBoxGradingConfig.isInstanceOf[OutputOnlyWithSubtasksGradingConfig]) {
             <input type="hidden" name="language" value="@OutputOnlyOverrides.KEY"/>
         }else {
             <div class="form-group">
