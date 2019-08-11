@@ -5,6 +5,10 @@ export interface Session {
   token: string;
 }
 
+export enum SessionErrors {
+  UserNotActivated = 'Jophiel:UserNotActivated',
+}
+
 const baseUrl = `${APP_CONFIG.apiUrls.jophiel}/session`;
 
 export const sessionAPI = {

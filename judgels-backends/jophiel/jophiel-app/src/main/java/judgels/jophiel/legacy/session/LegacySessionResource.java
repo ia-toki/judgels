@@ -2,7 +2,6 @@ package judgels.jophiel.legacy.session;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.service.ServiceUtils.checkAllowed;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -28,6 +27,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import judgels.jophiel.api.session.Credentials;
 import judgels.jophiel.api.session.Session;
+import judgels.jophiel.api.session.SessionErrors;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.session.SessionStore;
 import judgels.jophiel.session.SessionTokenGenerator;
@@ -65,7 +65,9 @@ public class LegacySessionResource {
                     userStore.getUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
                     .orElseThrow(ForbiddenException::new));
 
-        checkAllowed(userRegistrationEmailStore.isUserActivated(user.getJid()));
+        if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
+            throw SessionErrors.userNotActivated(user.getEmail());
+        }
 
         Session session = sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
         String authCode = RandomCodeGenerator.newCode();
