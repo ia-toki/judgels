@@ -26,11 +26,4 @@ export const registerActions = {
       await userAccountAPI.registerUser(data);
     };
   },
-
-  resendActivationEmail: (email: string) => {
-    return async (dispatch, getState, { userAccountAPI, toastActions }) => {
-      await userAccountAPI.resendActivationEmail(email);
-      toastActions.showToast(`Email has been sent`);
-    };
-  },
 };

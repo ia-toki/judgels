@@ -1,4 +1,3 @@
-import { Intent, Button } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
@@ -6,6 +5,7 @@ import { Card } from 'components/Card/Card';
 import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
 import { UserRegistrationData } from 'modules/api/jophiel/userAccount';
 import { UserRegistrationWebConfig } from 'modules/api/jophiel/userRegistration';
+import ResendActivationEmailButton from 'routes/jophiel/components/ResendActivationEmailButton/ResendActivationEmailButton';
 
 import RegisterForm, { RegisterFormData } from '../RegisterForm/RegisterForm';
 import { registerActions as injectedRegisterActions } from '../modules/registerActions';
@@ -15,7 +15,6 @@ import './RegisterPage.css';
 export interface RegisterPageProps {
   onGetWebConfig: () => Promise<UserRegistrationWebConfig>;
   onRegisterUser: (data: RegisterFormData) => Promise<void>;
-  onResendActivationEmail: (email: string) => Promise<void>;
 }
 
 interface RegisterPageState {
@@ -24,27 +23,18 @@ interface RegisterPageState {
     username: string;
     email: string;
   };
-  timeRemainingResendEmail: number;
 }
 
 class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageState> {
-  timer?: any;
-  state: RegisterPageState = { timeRemainingResendEmail: 5 };
+  state: RegisterPageState = {};
 
   async componentDidMount() {
     const config = await this.props.onGetWebConfig();
     this.setState({ config });
   }
 
-  componentWillUnmount() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = 0;
-    }
-  }
-
   render() {
-    const { config, timeRemainingResendEmail } = this.state;
+    const { config } = this.state;
     if (!config) {
       return null;
     }
@@ -61,13 +51,7 @@ class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageSt
             <strong>{this.state.registeredUser.email}</strong> with instruction to activate your account.
           </p>
           <p>Please check your inbox/spam.</p>
-          <Button
-            type="submit"
-            text={`Resend activation email${timeRemainingResendEmail > 0 ? ` (${timeRemainingResendEmail})` : ''}`}
-            intent={Intent.PRIMARY}
-            onClick={this.onResendEmail}
-            disabled={timeRemainingResendEmail > 0}
-          />
+          <ResendActivationEmailButton email={this.state.registeredUser.email} />
         </Card>
       );
     } else {
@@ -85,23 +69,6 @@ class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageSt
     return <SingleColumnLayout>{content}</SingleColumnLayout>;
   }
 
-  private onResendEmail = async () => {
-    if (this.state.registeredUser) {
-      await this.props.onResendActivationEmail(this.state.registeredUser.email);
-      this.setState({ timeRemainingResendEmail: 5 });
-      this.timer = setInterval(this.countDown, 1000);
-    }
-  };
-
-  private countDown = () => {
-    const seconds = this.state.timeRemainingResendEmail - 1;
-    this.setState({ timeRemainingResendEmail: seconds });
-
-    if (seconds === 0 && this.timer) {
-      clearInterval(this.timer);
-    }
-  };
-
   private onRegisterUser = async (data: RegisterFormData) => {
     await this.props.onRegisterUser(data);
     this.setState({
@@ -110,14 +77,12 @@ class RegisterPage extends React.PureComponent<RegisterPageProps, RegisterPageSt
         email: data.email,
       },
     });
-    this.timer = setInterval(this.countDown, 1000);
   };
 }
 
 export function createRegisterPage(registerActions) {
   const mapDispatchToProps = {
     onGetWebConfig: registerActions.getWebConfig,
-    onResendActivationEmail: registerActions.resendActivationEmail,
     onRegisterUser: (data: RegisterFormData) => {
       const userRegistrationData: UserRegistrationData = {
         username: data.username,

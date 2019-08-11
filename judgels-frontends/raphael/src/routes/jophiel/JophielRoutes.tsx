@@ -7,6 +7,7 @@ import UserRoute from 'components/UserRoute/UserRoute';
 import HomePage from '../home/HomePage/HomePage';
 import LoginPage from './login/LoginPage/LoginPage';
 import LogoutPage from './logout/LogoutPage/LogoutPage';
+import NeedActivationPage from './needActivation/NeedActivationPage/NeedActivationPage';
 import RegisterPage from './register/RegisterPage/RegisterPage';
 import ActivatePage from './activate/ActivatePage/ActivatePage';
 import ForgotPasswordPage from './forgotPassword/ForgotPasswordPage/ForgotPasswordPage';
@@ -23,6 +24,7 @@ const JophielRoutes = () => (
       <GuestRoute exact path="/register" component={RegisterPage} />
       <GuestRoute exact path="/activate/:emailCode" component={ActivatePage} />
       <GuestRoute exact path="/forgot-password" component={ForgotPasswordPage} />
+      <GuestRoute exact path="/need-activation" component={NeedActivationPage} />
       <GuestRoute exact path="/reset-password/:emailCode" component={ResetPasswordPage} />
       <UserRoute path="/account" component={JophielAccountRoutes} />
       <Route path="/profiles" component={JophielProfilesRoutes} />

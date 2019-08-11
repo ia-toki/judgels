@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import judgels.jophiel.api.AbstractServiceIntegrationTests;
 import judgels.jophiel.api.session.Credentials;
+import judgels.jophiel.api.session.SessionErrors;
 import judgels.jophiel.api.session.SessionService;
 import judgels.jophiel.api.user.UserData;
 import judgels.jophiel.api.user.UserService;
@@ -39,7 +40,7 @@ class UserAccountServiceIntegrationTests extends AbstractServiceIntegrationTests
         String email = readEmail(wiser, 0);
 
         assertThatRemoteExceptionThrownBy(() -> sessionService.logIn(credentials))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+                .isGeneratedFromErrorType(SessionErrors.USER_NOT_ACTIVATED);
 
         String emailCode = extractEmailCode(email);
 
