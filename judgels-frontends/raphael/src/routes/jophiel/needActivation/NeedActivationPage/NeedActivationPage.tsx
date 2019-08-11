@@ -16,7 +16,7 @@ export default class NeedActivationPage extends React.PureComponent<RouteCompone
     return (
       <SingleColumnLayout>
         <Card title="Activation required" className="card-need-activation">
-          <p>Your account has not been activated</p>
+          <p>Your account has not been activated.</p>
           <p data-key="instruction">
             A confirmation email has been sent to&nbsp;
             <strong>{email}</strong> with instruction to activate your account.

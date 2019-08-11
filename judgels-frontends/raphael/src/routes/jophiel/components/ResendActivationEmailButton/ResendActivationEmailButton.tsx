@@ -20,7 +20,7 @@ class ResendActivationEmailButton extends React.PureComponent<
   timer?: any;
   state: ResendActivationEmailButtonState = { timeRemainingResendEmail: 5 };
 
-  componentWillMount() {
+  componentDidMount() {
     this.timer = setInterval(this.countDown, 1000);
   }
 
