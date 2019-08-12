@@ -14,6 +14,7 @@ describe('ProblemSubmissionCard', () => {
   let onSubmit: jest.Mock<any>;
   let reasonNotAllowedToSubmit: string | undefined;
   let submissionWarning: string | undefined;
+  let preferredGradingLanguage: string;
 
   let wrapper: ReactWrapper<any, any>;
 
@@ -30,6 +31,7 @@ describe('ProblemSubmissionCard', () => {
       onSubmit,
       reasonNotAllowedToSubmit,
       submissionWarning,
+      preferredGradingLanguage,
     };
 
     const store = createStore(combineReducers({ form: formReducer }));
@@ -45,6 +47,7 @@ describe('ProblemSubmissionCard', () => {
 
   beforeEach(() => {
     gradingEngine = 'Batch';
+    preferredGradingLanguage = 'Cpp11';
     gradingLanguageRestriction = { allowedLanguageNames: [] };
     onSubmit = jest.fn();
     reasonNotAllowedToSubmit = undefined;

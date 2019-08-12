@@ -34,8 +34,6 @@ export const gradingLanguageSyntaxHighlighterValueMap = {
   OutputOnly: '',
 };
 
-export const preferredGradingLanguage = 'Cpp11';
-
 export const gradingLanguages = Object.keys(gradingLanguageNamesMap)
   .filter(l => l !== OutputOnlyOverrides.KEY)
   .sort();

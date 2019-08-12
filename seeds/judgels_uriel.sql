@@ -26,9 +26,9 @@ SET time_zone = "+00:00";
 -- Dumping data for table `uriel_contest`
 --
 
-INSERT INTO `uriel_contest` (`jid`, `slug`, `name`, `style`, `description`, `beginTime`, `duration`, `locked`, `createdAt`, `createdBy`, `createdIp`, `updatedAt`, `updatedBy`, `updatedIp`) VALUES
-('JIDCONTYsWkzwPy8wCF3maJfxqN', 'joc-1', 'Judgels Open Contest #1', 'ICPC', '<p>Welcome to the first Judgels open contest!</p>\r\n', '2018-08-01 12:00:00.000', 18000000000, b'0', '2018-08-05 17:30:35.297', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', NULL, '2018-08-20 15:15:28.710', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', NULL),
-('JIDCONT89YMatMq7GqaPQCyyUHU', 'joc-old', 'Judgels Old Contest', 'IOI', '<p>This is an old contest.</p>\r\n', '2018-01-01 00:00:00.000', 18000000, b'0', '2018-08-05 18:11:40.024', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', NULL, '2018-08-20 15:35:50.263', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', NULL);
+INSERT INTO `uriel_contest` (`jid`, `slug`, `name`, `style`, `description`, `beginTime`, `duration`, `createdAt`, `createdBy`, `createdIp`, `updatedAt`, `updatedBy`, `updatedIp`) VALUES
+('JIDCONTYsWkzwPy8wCF3maJfxqN', 'joc-1', 'Judgels Open Contest #1', 'ICPC', '<p>Welcome to the first Judgels open contest!</p>\r\n', '2018-08-01 12:00:00.000', 18000000000, '2018-08-05 17:30:35.297', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', NULL, '2018-08-20 15:15:28.710', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', NULL),
+('JIDCONT89YMatMq7GqaPQCyyUHU', 'joc-old', 'Judgels Old Contest', 'IOI', '<p>This is an old contest.</p>\r\n', '2018-01-01 00:00:00.000', 18000000, '2018-08-05 18:11:40.024', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', NULL, '2018-08-20 15:35:50.263', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', NULL);
 
 --
 -- Dumping data for table `uriel_contest_announcement`

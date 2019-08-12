@@ -2,7 +2,7 @@ import { Callout } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { ContentCard } from 'components/ContentCard/ContentCard';
-import { getAllowedGradingLanguages, preferredGradingLanguage } from 'modules/api/gabriel/language';
+import { getAllowedGradingLanguages } from 'modules/api/gabriel/language';
 import { ProblemSubmissionConfig } from 'modules/api/sandalphon/problemProgramming';
 import ProblemSubmissionForm, { ProblemSubmissionFormData } from '../ProblemSubmissionForm/ProblemSubmissionForm';
 
@@ -11,6 +11,7 @@ export interface ProblemSubmissionCardProps {
   onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
   reasonNotAllowedToSubmit?: string;
   submissionWarning?: string;
+  preferredGradingLanguage: string;
 }
 
 export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmissionCardProps> {
@@ -36,7 +37,7 @@ export class ProblemSubmissionCard extends React.PureComponent<ProblemSubmission
 
     const gradingLanguages = getAllowedGradingLanguages(config.gradingEngine, config.gradingLanguageRestriction);
 
-    let defaultGradingLanguage: string | undefined = preferredGradingLanguage;
+    let defaultGradingLanguage: string | undefined = this.props.preferredGradingLanguage;
     if (gradingLanguages.indexOf(defaultGradingLanguage) === -1) {
       defaultGradingLanguage = gradingLanguages.length === 0 ? undefined : gradingLanguages[0];
     }
