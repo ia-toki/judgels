@@ -41,6 +41,10 @@ public class ContestRoleChecker {
                 && !contestTimer.hasStarted(contest, userJid);
     }
 
+    public boolean canResetVirtual(String userJid, Contest contest) {
+        return adminRoleDao.isAdmin(userJid) || contestRoleDao.isManager(userJid, contest.getJid());
+    }
+
     public ContestRole getRole(String userJid, Contest contest) {
         if (adminRoleDao.isAdmin(userJid)) {
             return ContestRole.ADMIN;

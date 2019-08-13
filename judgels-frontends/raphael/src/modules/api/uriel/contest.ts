@@ -1,7 +1,7 @@
 import { stringify } from 'query-string';
 
 import { APP_CONFIG } from 'conf';
-import { get, post } from 'modules/api/http';
+import { get, post, put } from 'modules/api/http';
 import { Page } from 'modules/api/pagination';
 
 import { ContestRole } from './contestWeb';
@@ -91,6 +91,10 @@ export const contestAPI = {
 
   startVirtualContest: (token: string, contestJid: string): Promise<Contest> => {
     return post(`${baseContestURL(contestJid)}/virtual`, token);
+  },
+
+  resetVirtualContest: (token: string, contestJid: string): Promise<void> => {
+    return put(`${baseContestURL(contestJid)}/virtual/reset`, token);
   },
 
   getContestDescription: (token: string, contestJid: string): Promise<ContestDescription> => {

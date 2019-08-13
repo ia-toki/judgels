@@ -28,6 +28,7 @@ describe('contestActions', () => {
       startVirtualContest: jest.fn(),
       getContestDescription: jest.fn(),
       updateContestDescription: jest.fn(),
+      resetVirtualContest: jest.fn(),
     };
 
     toastActions = {
@@ -205,6 +206,26 @@ describe('contestActions', () => {
 
     it('calls API to start virtual contest', () => {
       expect(contestAPI.startVirtualContest).toHaveBeenCalledWith(token, contestId);
+    });
+  });
+
+  describe('resetVirtualContest()', () => {
+    const { resetVirtualContest } = contestActions;
+    const doResetVirtualContest = async () =>
+      resetVirtualContest(contestId)(dispatch, getState, { contestAPI, toastActions });
+
+    beforeEach(async () => {
+      contestAPI.resetVirtualContest.mockReturnValue(Promise.resolve({}));
+
+      await doResetVirtualContest();
+    });
+
+    it('calls API to reset virtual contest', () => {
+      expect(contestAPI.resetVirtualContest).toHaveBeenCalledWith(token, contestId);
+    });
+
+    it('shows the success toast', () => {
+      expect(toastActions.showSuccessToast).toHaveBeenCalledWith('All contestant virtual start time has been reset.');
     });
   });
 

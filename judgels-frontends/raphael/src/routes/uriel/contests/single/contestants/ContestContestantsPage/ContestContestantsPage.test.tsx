@@ -16,6 +16,7 @@ import { contestReducer, PutContest } from '../../../modules/contestReducer';
 describe('ContestContestantsPage', () => {
   let wrapper: ReactWrapper<any, any>;
   let contestContestantActions: jest.Mocked<any>;
+  let contestActions: jest.Mocked<any>;
 
   const response: ContestContestantsResponse = {
     data: { page: [], totalCount: 0 },
@@ -35,7 +36,7 @@ describe('ContestContestantsPage', () => {
     );
     store.dispatch(PutContest.create(contest));
 
-    const ContestContestantsPage = createContestContestantsPage(contestContestantActions);
+    const ContestContestantsPage = createContestContestantsPage(contestContestantActions, contestActions);
 
     wrapper = mount(
       <IntlProvider locale={navigator.language}>
@@ -51,6 +52,9 @@ describe('ContestContestantsPage', () => {
   beforeEach(() => {
     contestContestantActions = {
       getContestants: jest.fn().mockReturnValue(() => Promise.resolve(response)),
+    };
+    contestActions = {
+      resetVirtualContest: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
   });
 
