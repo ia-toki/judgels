@@ -8,7 +8,6 @@ import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
 import { webPrefsReducer } from 'modules/webPrefs/webPrefsReducer';
-import { preferredGradingLanguage } from 'modules/api/gabriel/language';
 import { ContestProblemStatus } from 'modules/api/uriel/contestProblem';
 import { contest, contestJid, problemJid } from 'fixtures/state';
 
@@ -21,6 +20,7 @@ describe('ProgrammingContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
   let contestSubmissionActions: jest.Mocked<any>;
   let breadcrumbsActions: jest.Mocked<any>;
+  let webPrefsActions: jest.Mocked<any>;
   let wrapper: ReactWrapper<any, any>;
   let history: MemoryHistory;
 
@@ -47,11 +47,14 @@ describe('ProgrammingContestProblemPage', () => {
             submissionConfig: {
               sourceKeys: { encoder: 'Encoder', decoder: 'Decoder' },
               gradingEngine: 'Batch',
-              gradingLanguageRestriction: { allowedLanguageNames: [] },
+              gradingLanguageRestriction: { allowedLanguageNames: ['Cpp11', 'Pascal'] },
             },
           },
         })
       ),
+    };
+    webPrefsActions = {
+      updateGradingLanguage: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
     contestSubmissionActions = {
       createSubmission: jest.fn(),
@@ -74,7 +77,8 @@ describe('ProgrammingContestProblemPage', () => {
     const ContestProblemPage = createContestProblemPage(
       contestProblemActions,
       contestSubmissionActions,
-      breadcrumbsActions
+      breadcrumbsActions,
+      webPrefsActions
     );
 
     history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/C`] });
@@ -116,8 +120,9 @@ describe('ProgrammingContestProblemPage', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
+    expect(webPrefsActions.updateGradingLanguage).toHaveBeenCalledWith('Cpp11');
     expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith(contestJid, 'contest-a', problemJid, {
-      gradingLanguage: preferredGradingLanguage,
+      gradingLanguage: 'Cpp11',
       sourceFiles: {
         encoder: { name: 'encoder.cpp', size: 1000 } as File,
         decoder: { name: 'decoder.cpp', size: 2000 } as File,

@@ -12,6 +12,7 @@ export interface ProblemWorksheetCardProps {
   worksheet: ProblemWorksheet;
   onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
   submissionWarning?: string;
+  gradingLanguage: string;
 }
 
 export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCardProps> {
@@ -36,6 +37,7 @@ export class ProblemWorksheetCard extends React.PureComponent<ProblemWorksheetCa
         onSubmit={this.props.onSubmit}
         reasonNotAllowedToSubmit={this.props.worksheet.reasonNotAllowedToSubmit}
         submissionWarning={this.props.submissionWarning}
+        preferredGradingLanguage={this.props.gradingLanguage}
       />
     );
   };

@@ -16,6 +16,8 @@ import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Progr
 import { ProblemWorksheet } from 'modules/api/sandalphon/problemProgramming';
 import { contestProblemActions as injectedContestProblemActions } from '../../../modules/contestProblemActions';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../../submissions/Programming/modules/contestSubmissionActions';
+import { webPrefsActions as injectedWebPrefsActions } from 'modules/webPrefs/webPrefsActions';
+import { selectGradingLanguage } from 'modules/webPrefs/webPrefsSelectors';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
 import { ProblemWorksheetCard } from 'components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
@@ -25,6 +27,7 @@ import './ContestProblemPage.css';
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
   statementLanguage: string;
+  gradingLanguage: string;
   onGetProblemWorksheet: (
     contestJid: string,
     problemAlias: string,
@@ -38,6 +41,7 @@ export interface ContestProblemPageProps extends RouteComponentProps<{ problemAl
   ) => Promise<void>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
+  onUpdateGradingLanguage: (language: string) => void;
 }
 
 interface ContestProblemPageState {
@@ -92,6 +96,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
 
   private onCreateSubmission = async (data: ProblemSubmissionFormData) => {
     const problem = this.state.problem!;
+    this.props.onUpdateGradingLanguage(data.gradingLanguage);
     return await this.props.onCreateSubmission(
       this.props.contest.jid,
       this.props.contest.slug,
@@ -134,15 +139,22 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
         worksheet={worksheet as ProblemWorksheet}
         onSubmit={this.onCreateSubmission}
         submissionWarning={submissionWarning}
+        gradingLanguage={this.props.gradingLanguage}
       />
     );
   };
 }
 
-export function createContestProblemPage(contestProblemActions, contestSubmissionActions, breadcrumbsActions) {
+export function createContestProblemPage(
+  contestProblemActions,
+  contestSubmissionActions,
+  breadcrumbsActions,
+  webPrefsActions
+) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
     statementLanguage: selectStatementLanguage(state),
+    gradingLanguage: selectGradingLanguage(state),
   });
 
   const mapDispatchToProps = {
@@ -150,6 +162,7 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
     onCreateSubmission: contestSubmissionActions.createSubmission,
     onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+    onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));
@@ -158,5 +171,6 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
 export default createContestProblemPage(
   injectedContestProblemActions,
   injectedContestSubmissionActions,
-  injectedBreadcrumbsActions
+  injectedBreadcrumbsActions,
+  injectedWebPrefsActions
 );
