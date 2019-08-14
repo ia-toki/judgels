@@ -92,6 +92,16 @@ public class ContestResource implements ContestService {
     }
 
     @Override
+    @UnitOfWork
+    public void resetVirtualContest(AuthHeader authHeader, String contestJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(contestRoleChecker.canResetVirtual(actorJid, contest));
+
+        contestantStore.resetVirtualContest(contestJid);
+    }
+
+    @Override
     @UnitOfWork(readOnly = true)
     public ContestsResponse getContests(
             Optional<AuthHeader> authHeader,

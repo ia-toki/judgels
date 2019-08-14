@@ -74,6 +74,14 @@ export const contestActions = {
     };
   },
 
+  resetVirtualContest: (contestId: string) => {
+    return async (dispatch, getState, { contestAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await contestAPI.resetVirtualContest(token, contestId);
+      toastActions.showSuccessToast('All contestant virtual start time has been reset.');
+    };
+  },
+
   getContestDescription: (contestJid: string) => {
     return async (dispatch, getState, { contestAPI }) => {
       const token = selectToken(getState());

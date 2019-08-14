@@ -96,6 +96,16 @@ public class ContestContestantStore {
         });
     }
 
+    public void resetVirtualContest(String contestJid) {
+        contestantDao.selectAllByContestJid(contestJid, SelectionOptions.DEFAULT_ALL).forEach(model -> {
+            model.contestStartTime = null;
+            contestantDao.update(model);
+
+            contestantCache.invalidate(contestJid + SEPARATOR + model.userJid);
+            roleDao.invalidateCaches(model.userJid, contestJid);
+        });
+    }
+
     public Page<ContestContestant> getContestants(String contestJid, Optional<Integer> page) {
         SelectionOptions.Builder options = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_PAGED)

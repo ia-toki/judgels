@@ -1,3 +1,4 @@
+import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -18,6 +19,7 @@ import { ContestContestantAddDialog } from '../ContestContestantAddDialog/Contes
 import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/ContestContestantRemoveDialog';
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';
+import { contestActions as injectedContestActions } from '../../../modules/contestActions';
 
 import './ContestContestantsPage.css';
 
@@ -26,6 +28,7 @@ export interface ContestContestantsPageProps {
   onGetContestants: (contestJid: string, page?: number) => Promise<ContestContestantsResponse>;
   onUpsertContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantUpsertResponse>;
   onDeleteContestants: (contestJid: string, usernames: string[]) => Promise<ContestContestantsDeleteResponse>;
+  onResetVirtualContest: (contestJid: string) => Promise<void>;
 }
 
 interface ContestContestantsPageState {
@@ -102,13 +105,32 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
     if (!response.config.canManage) {
       return null;
     }
+    const { data: contestants } = response;
+    const isVirtualContest = contestants.page.some(contestant => contestant.contestStartTime !== null);
     return (
       <>
         <ContestContestantAddDialog contest={this.props.contest} onUpsertContestants={this.upsertContestants} />
         <ContestContestantRemoveDialog contest={this.props.contest} onDeleteContestants={this.deleteContestants} />
+        {isVirtualContest && (
+          <Button
+            className="contest-contestant-dialog-button"
+            intent={Intent.DANGER}
+            icon="refresh"
+            onClick={this.onResetVirtualContest}
+          >
+            Reset all contestant virtual start times
+          </Button>
+        )}
         <div className="clearfix" />
       </>
     );
+  };
+
+  private onResetVirtualContest = async () => {
+    if (window.confirm('Are you sure to reset all contestant virtual start times?')) {
+      await this.props.onResetVirtualContest(this.props.contest.jid);
+      this.setState({ lastRefreshContestantsTime: new Date().getTime() });
+    }
   };
 
   private upsertContestants = async (contestJid, data) => {
@@ -124,7 +146,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
   };
 }
 
-export function createContestContestantsPage(contestContestantActions) {
+export function createContestContestantsPage(contestContestantActions, contestActions) {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
   });
@@ -133,9 +155,10 @@ export function createContestContestantsPage(contestContestantActions) {
     onGetContestants: contestContestantActions.getContestants,
     onUpsertContestants: contestContestantActions.upsertContestants,
     onDeleteContestants: contestContestantActions.deleteContestants,
+    onResetVirtualContest: contestActions.resetVirtualContest,
   };
 
   return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));
 }
 
-export default createContestContestantsPage(injectedContestContestantActions);
+export default createContestContestantsPage(injectedContestContestantActions, injectedContestActions);

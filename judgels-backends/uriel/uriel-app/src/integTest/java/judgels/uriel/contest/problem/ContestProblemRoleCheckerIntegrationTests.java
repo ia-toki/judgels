@@ -123,6 +123,9 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
         assertThat(checker.canView(MANAGER, contestB)).isTrue();
         assertThat(checker.canView(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canView(MANAGER, contestBFinished)).isTrue();
+
+        contestantStore.resetVirtualContest(contestBStarted.getJid());
+        assertThat(checker.canView(CONTESTANT, contestBStarted)).isFalse();
     }
 
     @Test
