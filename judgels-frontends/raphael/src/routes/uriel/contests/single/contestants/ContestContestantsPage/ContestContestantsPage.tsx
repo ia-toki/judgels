@@ -118,7 +118,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
             icon="refresh"
             onClick={this.onResetVirtualContest}
           >
-            Reset all contestant virtual start time
+            Reset all contestant virtual start times
           </Button>
         )}
         <div className="clearfix" />
@@ -127,7 +127,7 @@ class ContestContestantsPage extends React.Component<ContestContestantsPageProps
   };
 
   private onResetVirtualContest = async () => {
-    if (window.confirm('Are you sure to reset all contestant virtual start time?')) {
+    if (window.confirm('Are you sure to reset all contestant virtual start times?')) {
       await this.props.onResetVirtualContest(this.props.contest.jid);
       this.setState({ lastRefreshContestantsTime: new Date().getTime() });
     }
