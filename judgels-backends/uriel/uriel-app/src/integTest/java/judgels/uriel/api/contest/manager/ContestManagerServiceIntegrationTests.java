@@ -12,7 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
 import com.palantir.conjure.java.api.errors.ErrorType;
-import java.util.Optional;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import org.junit.jupiter.api.Test;
@@ -43,6 +42,7 @@ class ContestManagerServiceIntegrationTests extends AbstractContestServiceIntegr
                 new ContestManager.Builder().userJid(USER_A_JID).build(),
                 new ContestManager.Builder().userJid(USER_B_JID).build());
         assertThat(response.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
+        assertThat(response.getConfig().getCanManage()).isTrue();
 
         ContestManagersDeleteResponse deleteResponse =
                 managerService.deleteManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A, "userC"));
@@ -55,9 +55,10 @@ class ContestManagerServiceIntegrationTests extends AbstractContestServiceIntegr
 
         // as manager
 
-        assertThatRemoteExceptionThrownBy(() -> managerService
-                .getManagers(USER_B_HEADER, contest.getJid(), Optional.empty()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+        response = managerService.getManagers(USER_B_HEADER, contest.getJid(), empty());
+        assertThat(response.getData().getPage()).containsOnly(
+                new ContestManager.Builder().userJid(USER_B_JID).build());
+        assertThat(response.getConfig().getCanManage()).isFalse();
 
         assertThatRemoteExceptionThrownBy(() -> managerService
                 .upsertManagers(USER_B_HEADER, contest.getJid(), ImmutableSet.of("userC")))

@@ -26,6 +26,7 @@ import judgels.uriel.contest.announcement.ContestAnnouncementRoleChecker;
 import judgels.uriel.contest.clarification.ContestClarificationRoleChecker;
 import judgels.uriel.contest.contestant.ContestContestantRoleChecker;
 import judgels.uriel.contest.file.ContestFileRoleChecker;
+import judgels.uriel.contest.manager.ContestManagerRoleChecker;
 import judgels.uriel.contest.problem.ContestProblemRoleChecker;
 import judgels.uriel.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.uriel.contest.submission.ContestSubmissionRoleChecker;
@@ -40,6 +41,7 @@ public class ContestWebConfigFetcher {
     private final ContestClarificationRoleChecker clarificationRoleChecker;
     private final ContestScoreboardRoleChecker scoreboardRoleChecker;
     private final ContestContestantRoleChecker contestantRoleChecker;
+    private final ContestManagerRoleChecker managerRoleChecker;
     private final ContestFileRoleChecker fileRoleChecker;
     private final ContestAnnouncementDao announcementDao;
     private final ContestClarificationDao clarificationDao;
@@ -54,6 +56,7 @@ public class ContestWebConfigFetcher {
             ContestClarificationRoleChecker clarificationRoleChecker,
             ContestScoreboardRoleChecker scoreboardRoleChecker,
             ContestContestantRoleChecker contestantRoleChecker,
+            ContestManagerRoleChecker managerRoleChecker,
             ContestFileRoleChecker fileRoleChecker,
             ContestAnnouncementDao announcementDao,
             ContestClarificationDao clarificationDao,
@@ -66,6 +69,7 @@ public class ContestWebConfigFetcher {
         this.clarificationRoleChecker = clarificationRoleChecker;
         this.scoreboardRoleChecker = scoreboardRoleChecker;
         this.contestantRoleChecker = contestantRoleChecker;
+        this.managerRoleChecker = managerRoleChecker;
         this.fileRoleChecker = fileRoleChecker;
         this.announcementDao = announcementDao;
         this.clarificationDao = clarificationDao;
@@ -89,7 +93,7 @@ public class ContestWebConfigFetcher {
         if (contestantRoleChecker.canManage(userJid, contest)) {
             visibleTabs.add(SUPERVISORS);
         }
-        if (roleChecker.canAdminister(userJid)) {
+        if (managerRoleChecker.canView(userJid, contest)) {
             visibleTabs.add(MANAGERS);
         }
         if (submissionRoleChecker.canViewOwn(userJid, contest)) {

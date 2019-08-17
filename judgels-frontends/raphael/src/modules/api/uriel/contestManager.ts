@@ -10,9 +10,14 @@ export interface ContestManager {
   userJid: string;
 }
 
+export interface ContestManagerConfig {
+  canManage: boolean;
+}
+
 export interface ContestManagersResponse {
   data: Page<ContestManager>;
   profilesMap: ProfilesMap;
+  config: ContestManagerConfig;
 }
 
 export interface ContestManagersUpsertResponse {
