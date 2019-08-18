@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import judgels.uriel.api.contest.Contest;
-import judgels.uriel.api.contest.ContestGroup;
+import judgels.uriel.api.contest.group.ContestGroup;
 import judgels.uriel.contest.ContestGroupStore;
 import judgels.uriel.contest.ContestStore;
 import org.slf4j.Logger;

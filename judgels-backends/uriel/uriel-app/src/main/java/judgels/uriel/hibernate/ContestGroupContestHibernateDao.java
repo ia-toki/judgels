@@ -1,6 +1,7 @@
 package judgels.uriel.hibernate;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -20,6 +21,17 @@ public class ContestGroupContestHibernateDao extends HibernateDao<ContestGroupCo
     @Inject
     public ContestGroupContestHibernateDao(HibernateDaoData data) {
         super(data);
+    }
+
+    @Override
+    public Optional<ContestGroupContestModel> selectByContestGroupJidAndContestJid(
+            String contestGroupJid,
+            String contestJid) {
+
+        return selectByFilter(new FilterOptions.Builder<ContestGroupContestModel>()
+                .putColumnsEq(ContestGroupContestModel_.contestGroupJid, contestGroupJid)
+                .putColumnsEq(ContestGroupContestModel_.contestJid, contestJid)
+                .build());
     }
 
     @Override

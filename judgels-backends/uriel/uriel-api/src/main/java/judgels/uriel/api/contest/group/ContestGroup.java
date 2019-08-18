@@ -1,4 +1,4 @@
-package judgels.uriel.api.contest;
+package judgels.uriel.api.contest.group;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
