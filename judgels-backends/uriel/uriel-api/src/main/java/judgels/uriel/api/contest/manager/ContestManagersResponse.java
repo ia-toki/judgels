@@ -11,6 +11,7 @@ import org.immutables.value.Value;
 public interface ContestManagersResponse {
     Page<ContestManager> getData();
     Map<String, Profile> getProfilesMap();
+    ContestManagerConfig getConfig();
 
     class Builder extends ImmutableContestManagersResponse.Builder {}
 }

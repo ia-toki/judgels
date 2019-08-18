@@ -94,6 +94,9 @@ class ContestManagersPage extends React.Component<ContestManagersPageProps, Cont
     if (!response) {
       return null;
     }
+    if (!response.config.canManage) {
+      return null;
+    }
     return (
       <>
         <ContestManagerAddDialog contest={this.props.contest} onUpsertManagers={this.upsertManagers} />

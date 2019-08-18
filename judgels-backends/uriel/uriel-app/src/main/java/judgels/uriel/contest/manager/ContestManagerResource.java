@@ -21,17 +21,17 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.manager.ContestManager;
+import judgels.uriel.api.contest.manager.ContestManagerConfig;
 import judgels.uriel.api.contest.manager.ContestManagerService;
 import judgels.uriel.api.contest.manager.ContestManagersDeleteResponse;
 import judgels.uriel.api.contest.manager.ContestManagersResponse;
 import judgels.uriel.api.contest.manager.ContestManagersUpsertResponse;
-import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 
 public class ContestManagerResource implements ContestManagerService {
     private final ActorChecker actorChecker;
     private final ContestStore contestStore;
-    private final ContestRoleChecker roleChecker;
+    private final ContestManagerRoleChecker managerRoleChecker;
     private final ContestManagerStore managerStore;
     private final UserSearchService userSearchService;
     private final ProfileService profileService;
@@ -40,14 +40,14 @@ public class ContestManagerResource implements ContestManagerService {
     public ContestManagerResource(
             ActorChecker actorChecker,
             ContestStore contestStore,
-            ContestRoleChecker roleChecker,
+            ContestManagerRoleChecker managerRoleChecker,
             ContestManagerStore managerStore,
             UserSearchService userSearchService,
             ProfileService profileService) {
 
         this.actorChecker = actorChecker;
         this.contestStore = contestStore;
-        this.roleChecker = roleChecker;
+        this.managerRoleChecker = managerRoleChecker;
         this.managerStore = managerStore;
         this.userSearchService = userSearchService;
         this.profileService = profileService;
@@ -58,7 +58,7 @@ public class ContestManagerResource implements ContestManagerService {
     public ContestManagersResponse getManagers(AuthHeader authHeader, String contestJid, Optional<Integer> page) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(roleChecker.canAdminister(actorJid));
+        checkAllowed(managerRoleChecker.canView(actorJid, contest));
 
         Page<ContestManager> managers = managerStore.getManagers(contestJid, page);
         Set<String> userJids =
@@ -66,10 +66,15 @@ public class ContestManagerResource implements ContestManagerService {
         Map<String, Profile> profilesMap = userJids.isEmpty()
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids, contest.getBeginTime());
+        boolean canManage = managerRoleChecker.canManage(actorJid);
+        ContestManagerConfig config = new ContestManagerConfig.Builder()
+                .canManage(canManage)
+                .build();
 
         return new ContestManagersResponse.Builder()
                 .data(managers)
                 .profilesMap(profilesMap)
+                .config(config)
                 .build();
     }
 
@@ -82,7 +87,7 @@ public class ContestManagerResource implements ContestManagerService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(roleChecker.canAdminister(actorJid));
+        checkAllowed(managerRoleChecker.canManage(actorJid));
 
         checkArgument(usernames.size() <= 100, "Cannot add more than 100 users.");
 
@@ -122,7 +127,7 @@ public class ContestManagerResource implements ContestManagerService {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(roleChecker.canAdminister(actorJid));
+        checkAllowed(managerRoleChecker.canManage(actorJid));
 
         checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
 

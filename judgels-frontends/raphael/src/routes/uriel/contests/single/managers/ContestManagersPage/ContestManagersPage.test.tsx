@@ -23,6 +23,7 @@ describe('ContestManagersPage', () => {
       userJid1: { username: 'user1' },
       userJid2: { username: 'user2' },
     },
+    config: { canManage: true },
   };
 
   const render = () => {
