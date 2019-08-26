@@ -31,6 +31,8 @@ export interface ContestEditConfigsFormData {
 
   clarificationTimeLimitDuration?: string;
 
+  divisionDivision?: number;
+
   externalScoreboardReceiverUrl?: string;
   externalScoreboardReceiverSecret?: string;
 
@@ -72,6 +74,7 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
         {config.ioiStyle && this.renderIoiStyleForm()}
         {config.gcjStyle && this.renderGcjStyleForm()}
         {config.clarificationTimeLimit && this.renderClarificationTimeLimitForm()}
+        {config.division && this.renderDivisionForm()}
         {this.renderScoreboardForm()}
         {config.frozenScoreboard && this.renderFrozenScoreboardForm()}
         {config.externalScoreboard && this.renderExternalScoreboardForm()}
@@ -240,6 +243,26 @@ class ContestEditConfigsForm extends React.Component<ContestEditConfigsFormProps
         <HTMLTable striped>
           <tbody>
             <Field component={FormTableTextInput} {...clarificationTimeLimitDurationField} />
+          </tbody>
+        </HTMLTable>
+      </div>
+    );
+  };
+
+  private renderDivisionForm = () => {
+    const divisionDivisionField: any = {
+      name: 'divisionDivision',
+      label: 'Division',
+      validate: [Required],
+      keyClassName: 'contest-edit-configs-form__key',
+    };
+
+    return (
+      <div className="contest-edit-configs-form__config">
+        <h4>Division config</h4>
+        <HTMLTable striped>
+          <tbody>
+            <Field component={FormTableTextInput} {...divisionDivisionField} />
           </tbody>
         </HTMLTable>
       </div>

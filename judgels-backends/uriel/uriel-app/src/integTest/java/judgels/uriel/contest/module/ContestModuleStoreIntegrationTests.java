@@ -1,6 +1,7 @@
 package judgels.uriel.contest.module;
 
 import static judgels.uriel.api.contest.module.ContestModuleType.CLARIFICATION_TIME_LIMIT;
+import static judgels.uriel.api.contest.module.ContestModuleType.DIVISION;
 import static judgels.uriel.api.contest.module.ContestModuleType.EXTERNAL_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.HIDDEN;
@@ -14,6 +15,7 @@ import judgels.uriel.UrielIntegrationTestComponent;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.module.ClarificationTimeLimitModuleConfig;
+import judgels.uriel.api.contest.module.DivisionModuleConfig;
 import judgels.uriel.api.contest.module.ExternalScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.FrozenScoreboardModuleConfig;
 import judgels.uriel.api.contest.module.IoiStyleModuleConfig;
@@ -67,6 +69,7 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
                 .clarificationDuration(Duration.ofHours(1))
                 .build();
         store.upsertClarificationTimeLimitModule(contest.getJid(), config3);
+        store.upsertDivisionModule(contest.getJid(), new DivisionModuleConfig.Builder().division(2).build());
         ExternalScoreboardModuleConfig config4 = new ExternalScoreboardModuleConfig.Builder()
                 .receiverUrl("http://scoreboard")
                 .receiverSecret("secret")
@@ -75,6 +78,6 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
         store.upsertHiddenModule(contest.getJid());
 
         assertThat(store.getEnabledModules(contest.getJid()))
-                .containsOnly(FROZEN_SCOREBOARD, CLARIFICATION_TIME_LIMIT, EXTERNAL_SCOREBOARD, HIDDEN);
+                .containsOnly(FROZEN_SCOREBOARD, CLARIFICATION_TIME_LIMIT, DIVISION, EXTERNAL_SCOREBOARD, HIDDEN);
     }
 }

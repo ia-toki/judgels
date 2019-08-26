@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 @Value.Style(passAnnotations = JsonTypeName.class)
 @Value.Immutable
 @JsonDeserialize(as = ImmutableExternalScoreboardModuleConfig.class)
-public interface ExternalScoreboardModuleConfig {
+public interface ExternalScoreboardModuleConfig extends ModuleConfig {
     ExternalScoreboardModuleConfig DEFAULT = new Builder()
             .receiverUrl("http://localhost:9144/receive")
             .receiverSecret("secret")

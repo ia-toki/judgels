@@ -72,6 +72,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
         gcjStyle,
         scoreboard,
         clarificationTimeLimit,
+        division,
         frozenScoreboard,
         externalScoreboard,
         virtual,
@@ -111,6 +112,12 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
           clarificationTimeLimitDuration: formatDuration(clarificationTimeLimit.clarificationDuration),
         };
       }
+      if (division) {
+        initialValues = {
+          ...initialValues,
+          divisionDivision: division.division,
+        };
+      }
       if (frozenScoreboard) {
         initialValues = {
           ...initialValues,
@@ -144,6 +151,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
       ioiStyle,
       gcjStyle,
       clarificationTimeLimit,
+      division,
       frozenScoreboard,
       externalScoreboard,
       virtual,
@@ -189,6 +197,12 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
       config = {
         ...config,
         clarificationTimeLimit: { clarificationDuration: parseDuration(data.clarificationTimeLimitDuration!) },
+      };
+    }
+    if (division) {
+      config = {
+        ...config,
+        division: { division: data.divisionDivision! },
       };
     }
     if (frozenScoreboard) {

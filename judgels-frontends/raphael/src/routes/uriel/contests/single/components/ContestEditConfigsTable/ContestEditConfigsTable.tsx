@@ -6,6 +6,7 @@ import { FormTable, FormTableRow } from 'components/forms/FormTable/FormTable';
 import {
   ClarificationTimeLimitModuleConfig,
   ContestModulesConfig,
+  DivisionModuleConfig,
   FrozenScoreboardModuleConfig,
   ExternalScoreboardModuleConfig,
   IcpcStyleModuleConfig,
@@ -31,6 +32,7 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
         {config.ioiStyle && this.renderIoiStyleConfig(config.ioiStyle)}
         {config.gcjStyle && this.renderGcjStyleConfig(config.gcjStyle)}
         {config.clarificationTimeLimit && this.renderClarificationTimeLimitConfig(config.clarificationTimeLimit)}
+        {config.division && this.renderDivisionConfig(config.division)}
         {config.scoreboard && this.renderScoreboardConfig(config.scoreboard)}
         {config.frozenScoreboard && this.renderFrozenScoreboardConfig(config.frozenScoreboard)}
         {config.externalScoreboard && this.renderExternalScoreboardConfig(config.externalScoreboard)}
@@ -117,6 +119,23 @@ export class ContestEditConfigsTable extends React.Component<ContestEditConfigsT
     return (
       <div className="contest-edit-configs-table__config">
         <h4>Clarification time limit config</h4>
+        <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
+        <hr />
+      </div>
+    );
+  };
+
+  private renderDivisionConfig = (config: DivisionModuleConfig) => {
+    const rows: FormTableRow[] = [
+      {
+        key: 'divisionDivision',
+        title: 'Division',
+        value: <>{config.division}</>,
+      },
+    ];
+    return (
+      <div className="contest-edit-configs-table__config">
+        <h4>Division config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
       </div>
