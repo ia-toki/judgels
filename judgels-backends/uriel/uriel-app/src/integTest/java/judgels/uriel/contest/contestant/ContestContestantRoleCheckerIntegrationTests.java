@@ -1,12 +1,15 @@
 package judgels.uriel.contest.contestant;
 
 import static java.time.temporal.ChronoUnit.HOURS;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static judgels.persistence.TestClock.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestUpdateData;
+import judgels.uriel.api.contest.module.DivisionModuleConfig;
 import judgels.uriel.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.uriel.contest.role.AbstractRoleCheckerIntegrationTests;
 import org.hibernate.SessionFactory;
@@ -30,42 +33,51 @@ class ContestContestantRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
                 contestAFinished.getJid(),
                 new ContestUpdateData.Builder().beginTime(NOW.minus(10, HOURS)).build()).get();
 
+        Contest contestADiv1 = contestStore.createContest(
+                new ContestCreateData.Builder().slug("contest-a-div-1").build());
+
         moduleStore.upsertRegistrationModule(contestAFinished.getJid());
+        moduleStore.upsertRegistrationModule(contestADiv1.getJid());
+        moduleStore.upsertDivisionModule(contestADiv1.getJid(), new DivisionModuleConfig.Builder().division(1).build());
 
-        assertThat(checker.canRegister(ADMIN, contestA)).isFalse();
-        assertThat(checker.canRegister(ADMIN, contestAStarted)).isFalse();
-        assertThat(checker.canRegister(ADMIN, contestAFinished)).isFalse();
-        assertThat(checker.canRegister(ADMIN, contestB)).isFalse();
-        assertThat(checker.canRegister(ADMIN, contestBStarted)).isFalse();
-        assertThat(checker.canRegister(ADMIN, contestC)).isFalse();
+        assertThat(checker.canRegister(ADMIN, empty(), contestA)).isFalse();
+        assertThat(checker.canRegister(ADMIN, empty(), contestAStarted)).isFalse();
+        assertThat(checker.canRegister(ADMIN, empty(), contestAFinished)).isFalse();
+        assertThat(checker.canRegister(ADMIN, empty(), contestB)).isFalse();
+        assertThat(checker.canRegister(ADMIN, empty(), contestBStarted)).isFalse();
+        assertThat(checker.canRegister(ADMIN, empty(), contestC)).isFalse();
 
-        assertThat(checker.canRegister(USER, contestA)).isTrue();
-        assertThat(checker.canRegister(USER, contestAStarted)).isTrue();
-        assertThat(checker.canRegister(USER, contestAFinished)).isFalse();
-        assertThat(checker.canRegister(USER, contestB)).isFalse();
-        assertThat(checker.canRegister(USER, contestBStarted)).isFalse();
-        assertThat(checker.canRegister(USER, contestC)).isFalse();
+        assertThat(checker.canRegister(USER, empty(), contestA)).isTrue();
+        assertThat(checker.canRegister(USER, empty(), contestAStarted)).isTrue();
+        assertThat(checker.canRegister(USER, empty(), contestAFinished)).isFalse();
+        assertThat(checker.canRegister(USER, empty(), contestADiv1)).isFalse();
+        assertThat(checker.canRegister(USER, of(1500), contestADiv1)).isFalse();
+        assertThat(checker.canRegister(USER, of(2000), contestADiv1)).isTrue();
+        assertThat(checker.canRegister(USER, of(2100), contestADiv1)).isTrue();
+        assertThat(checker.canRegister(USER, empty(), contestB)).isFalse();
+        assertThat(checker.canRegister(USER, empty(), contestBStarted)).isFalse();
+        assertThat(checker.canRegister(USER, empty(), contestC)).isFalse();
 
-        assertThat(checker.canRegister(CONTESTANT, contestA)).isTrue();
-        assertThat(checker.canRegister(CONTESTANT, contestAStarted)).isTrue();
-        assertThat(checker.canRegister(CONTESTANT, contestAFinished)).isFalse();
-        assertThat(checker.canRegister(CONTESTANT, contestB)).isFalse();
-        assertThat(checker.canRegister(CONTESTANT, contestBStarted)).isFalse();
-        assertThat(checker.canRegister(CONTESTANT, contestC)).isFalse();
+        assertThat(checker.canRegister(CONTESTANT, empty(), contestA)).isTrue();
+        assertThat(checker.canRegister(CONTESTANT, empty(), contestAStarted)).isTrue();
+        assertThat(checker.canRegister(CONTESTANT, empty(), contestAFinished)).isFalse();
+        assertThat(checker.canRegister(CONTESTANT, empty(), contestB)).isFalse();
+        assertThat(checker.canRegister(CONTESTANT, empty(), contestBStarted)).isFalse();
+        assertThat(checker.canRegister(CONTESTANT, empty(), contestC)).isFalse();
 
-        assertThat(checker.canRegister(SUPERVISOR, contestA)).isTrue();
-        assertThat(checker.canRegister(SUPERVISOR, contestAStarted)).isTrue();
-        assertThat(checker.canRegister(SUPERVISOR, contestAFinished)).isFalse();
-        assertThat(checker.canRegister(SUPERVISOR, contestB)).isFalse();
-        assertThat(checker.canRegister(SUPERVISOR, contestBStarted)).isFalse();
-        assertThat(checker.canRegister(SUPERVISOR, contestC)).isFalse();
+        assertThat(checker.canRegister(SUPERVISOR, empty(), contestA)).isTrue();
+        assertThat(checker.canRegister(SUPERVISOR, empty(), contestAStarted)).isTrue();
+        assertThat(checker.canRegister(SUPERVISOR, empty(), contestAFinished)).isFalse();
+        assertThat(checker.canRegister(SUPERVISOR, empty(), contestB)).isFalse();
+        assertThat(checker.canRegister(SUPERVISOR, empty(), contestBStarted)).isFalse();
+        assertThat(checker.canRegister(SUPERVISOR, empty(), contestC)).isFalse();
 
-        assertThat(checker.canRegister(MANAGER, contestA)).isTrue();
-        assertThat(checker.canRegister(MANAGER, contestAStarted)).isTrue();
-        assertThat(checker.canRegister(MANAGER, contestAFinished)).isFalse();
-        assertThat(checker.canRegister(MANAGER, contestB)).isFalse();
-        assertThat(checker.canRegister(MANAGER, contestBStarted)).isFalse();
-        assertThat(checker.canRegister(MANAGER, contestC)).isFalse();
+        assertThat(checker.canRegister(MANAGER, empty(), contestA)).isTrue();
+        assertThat(checker.canRegister(MANAGER, empty(), contestAStarted)).isTrue();
+        assertThat(checker.canRegister(MANAGER, empty(), contestAFinished)).isFalse();
+        assertThat(checker.canRegister(MANAGER, empty(), contestB)).isFalse();
+        assertThat(checker.canRegister(MANAGER, empty(), contestBStarted)).isFalse();
+        assertThat(checker.canRegister(MANAGER, empty(), contestC)).isFalse();
     }
 
     @Test

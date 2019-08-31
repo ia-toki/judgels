@@ -2,9 +2,12 @@ package judgels.uriel.contest.contestant;
 
 import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermission.CONTESTANT;
 
+import java.util.Optional;
 import javax.inject.Inject;
 import judgels.uriel.api.contest.Contest;
+import judgels.uriel.api.contest.ContestDivisions;
 import judgels.uriel.api.contest.contestant.ContestContestantState;
+import judgels.uriel.api.contest.module.DivisionModuleConfig;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.module.ContestModuleStore;
@@ -37,11 +40,8 @@ public class ContestContestantRoleChecker {
         return contestRoleChecker.canView(userJid, contest);
     }
 
-    public boolean canRegister(String userJid, Contest contest) {
-        return !contestRoleDao.isContestant(userJid, contest.getJid())
-                && !canSupervise(userJid, contest)
-                && moduleStore.hasRegistrationModule(contest.getJid())
-                && !contestTimer.hasEnded(contest);
+    public boolean canRegister(String userJid, Optional<Integer> rating, Contest contest) {
+        return canRegisterIgnoringDivision(userJid, contest) && canRegisterInDivision(rating, contest);
     }
 
     public boolean canUnregister(String userJid, Contest contest) {
@@ -50,9 +50,12 @@ public class ContestContestantRoleChecker {
                 && !contestTimer.hasBegun(contest);
     }
 
-    public ContestContestantState getContestantState(String userJid, Contest contest) {
-        if (canRegister(userJid, contest)) {
-            return ContestContestantState.REGISTRABLE;
+    public ContestContestantState getContestantState(String userJid, Optional<Integer> rating, Contest contest) {
+        if (canRegisterIgnoringDivision(userJid, contest)) {
+            if (canRegisterInDivision(rating, contest)) {
+                return ContestContestantState.REGISTRABLE;
+            }
+            return ContestContestantState.REGISTRABLE_WRONG_DIVISION;
         } else if (canUnregister(userJid, contest)) {
             return ContestContestantState.REGISTRANT;
         } else if (contestRoleDao.isContestant(userJid, contest.getJid())) {
@@ -68,5 +71,20 @@ public class ContestContestantRoleChecker {
     public boolean canManage(String userJid, Contest contest) {
         return contestRoleChecker.canManage(userJid, contest)
                 || supervisorStore.isSupervisorWithManagementPermission(contest.getJid(), userJid, CONTESTANT);
+    }
+
+    private boolean canRegisterIgnoringDivision(String userJid, Contest contest) {
+        return !contestRoleDao.isContestant(userJid, contest.getJid())
+                && !canSupervise(userJid, contest)
+                && moduleStore.hasRegistrationModule(contest.getJid())
+                && !contestTimer.hasEnded(contest);
+    }
+
+    private boolean canRegisterInDivision(Optional<Integer> rating, Contest contest) {
+        Optional<DivisionModuleConfig> config = moduleStore.getDivisionModuleConfig(contest.getJid());
+        if (!config.isPresent()) {
+            return true;
+        }
+        return ContestDivisions.isRatingInDivision(rating, config.get().getDivision());
     }
 }

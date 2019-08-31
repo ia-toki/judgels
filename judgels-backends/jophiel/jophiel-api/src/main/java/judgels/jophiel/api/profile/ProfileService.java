@@ -3,6 +3,7 @@ package judgels.jophiel.api.profile;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -22,6 +23,12 @@ public interface ProfileService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     Map<String, Profile> getProfiles(Set<String> userJids, @QueryParam("beforeTime") Optional<Long> time);
+
+    default Profile getProfile(String userJid) {
+        Set<String> userJids = new HashSet<>();
+        userJids.add(userJid);
+        return getProfiles(userJids, Optional.empty()).get(userJid);
+    }
 
     default Map<String, Profile> getProfiles(Set<String> userJids) {
         return getProfiles(userJids, Optional.empty());

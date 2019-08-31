@@ -1,6 +1,5 @@
 package judgels.jophiel.user.web;
 
-import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import javax.inject.Inject;
 import judgels.jophiel.api.user.web.UserWebConfig;
@@ -28,7 +27,7 @@ public class UserWebResource implements UserWebService {
         String actorJid = actorChecker.check(authHeader);
         return new UserWebConfig.Builder()
                 .role(myResource.getMyRole(authHeader))
-                .profile(profileResource.getProfiles(ImmutableSet.of(actorJid)).get(actorJid))
+                .profile(profileResource.getProfile(actorJid))
                 .build();
     }
 }

@@ -38,6 +38,7 @@ export interface ContestContestantsDeleteResponse {
 export enum ContestContestantState {
   None = 'NONE',
   Registrable = 'REGISTRABLE',
+  RegistrableWrongDivision = 'REGISTRABLE_WRONG_DIVISION',
   Registrant = 'REGISTRANT',
   Contestant = 'CONTESTANT',
 }

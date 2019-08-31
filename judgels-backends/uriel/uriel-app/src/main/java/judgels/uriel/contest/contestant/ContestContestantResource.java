@@ -114,7 +114,8 @@ public class ContestContestantResource implements ContestContestantService {
     public void registerMyselfAsContestant(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(contestantRoleChecker.canRegister(actorJid, contest));
+        Profile profile = profileService.getProfiles(ImmutableSet.of(actorJid)).get(actorJid);
+        checkAllowed(contestantRoleChecker.canRegister(actorJid, profile.getRating(), contest));
 
         contestantStore.upsertContestant(contestJid, actorJid);
     }
@@ -134,8 +135,9 @@ public class ContestContestantResource implements ContestContestantService {
     public ContestContestantState getMyContestantState(AuthHeader authHeader, String contestJid) {
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        Profile profile = profileService.getProfiles(ImmutableSet.of(actorJid)).get(actorJid);
 
-        return contestantRoleChecker.getContestantState(actorJid, contest);
+        return contestantRoleChecker.getContestantState(actorJid, profile.getRating(), contest);
     }
 
     @Override

@@ -96,6 +96,16 @@ class ContestRegistrationCard extends React.PureComponent<ContestRegistrationCar
   };
 
   private renderActionButton = (contestantState: ContestContestantState) => {
+    if (contestantState === ContestContestantState.RegistrableWrongDivision) {
+      return (
+        <Button
+          className="contest-registration-card__item"
+          intent={Intent.WARNING}
+          text="Your rating is not allowed for this contest division"
+          disabled
+        />
+      );
+    }
     if (contestantState === ContestContestantState.Registrable) {
       return (
         <Button
