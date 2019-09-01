@@ -1,9 +1,9 @@
 import { stringify } from 'query-string';
 
-import { get, postMultipart, post } from 'modules/api/http';
-import { Page } from 'modules/api/pagination';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { Submission, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submissionProgramming';
+import { get, postMultipart, post } from '../../../modules/api/http';
+import { Page } from '../../../modules/api/pagination';
+import { ProfilesMap } from '../../../modules/api/jophiel/profile';
+import { Submission, SubmissionWithSourceResponse } from '../../../modules/api/sandalphon/submissionProgramming';
 
 import { baseContestsURL } from './contest';
 import { ContestSubmissionConfig } from './contestSubmission';

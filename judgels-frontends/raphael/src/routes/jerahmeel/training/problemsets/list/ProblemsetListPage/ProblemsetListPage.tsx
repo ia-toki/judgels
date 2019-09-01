@@ -1,8 +1,8 @@
 import { Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { APP_CONFIG } from 'conf';
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { APP_CONFIG } from '../../../../../../conf';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 const ProblemsetListPage = () => (
   <Callout intent={Intent.WARNING} icon="info-sign">

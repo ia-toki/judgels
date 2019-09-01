@@ -1,6 +1,6 @@
-import { contestJid, sessionState, token } from 'fixtures/state';
-import { ContestScoreboardResponse } from 'modules/api/uriel/contestScoreboard';
-import { AppState } from 'modules/store';
+import { contestJid, sessionState, token } from '../../../../../../fixtures/state';
+import { ContestScoreboardResponse } from '../../../../../../modules/api/uriel/contestScoreboard';
+import { AppState } from '../../../../../../modules/store';
 
 import { contestScoreboardActions } from './contestScoreboardActions';
 

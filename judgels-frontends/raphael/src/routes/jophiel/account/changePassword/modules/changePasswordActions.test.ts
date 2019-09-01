@@ -1,8 +1,8 @@
 import { push } from 'react-router-redux';
 
-import { BadRequestError } from 'modules/api/error';
-import { AppState } from 'modules/store';
-import { sessionState, token } from 'fixtures/state';
+import { BadRequestError } from '../../../../../modules/api/error';
+import { AppState } from '../../../../../modules/store';
+import { sessionState, token } from '../../../../../fixtures/state';
 
 import { changePasswordActions } from './changePasswordActions';
 

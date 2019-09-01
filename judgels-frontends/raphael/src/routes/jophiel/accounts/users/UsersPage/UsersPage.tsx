@@ -5,19 +5,19 @@ import { push } from 'react-router-redux';
 import { parse, stringify } from 'query-string';
 import { HTMLTable, Icon } from '@blueprintjs/core';
 
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { Card } from 'components/Card/Card';
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import Pagination from 'components/Pagination/Pagination';
-import { UserRef } from 'components/UserRef/UserRef';
-import { Page, OrderDir } from 'modules/api/pagination';
-import { User } from 'modules/api/jophiel/user';
+import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { Card } from '../../../../../components/Card/Card';
+import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../components/Pagination/Pagination';
+import { UserRef } from '../../../../../components/UserRef/UserRef';
+import { Page, OrderDir } from '../../../../../modules/api/pagination';
+import { User } from '../../../../../modules/api/jophiel/user';
 
 import { userActions as injectedUserActions } from '../../../modules/userActions';
 
 import './UsersPage.css';
 
-export interface UsersPageProps extends RouteComponentProps<{ page: number; orderDir: OrderDir; orderBy: string }> {
+export interface UsersPageProps extends RouteComponentProps<{ page: string; orderDir: OrderDir; orderBy: string }> {
   onGetUsers: (page?: number, orderBy?: string, orderDir?: OrderDir) => Promise<Page<User>>;
   onAppendRoute: (queries: any) => any;
 }

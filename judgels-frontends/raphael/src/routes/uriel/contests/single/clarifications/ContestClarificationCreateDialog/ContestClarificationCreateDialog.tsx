@@ -4,8 +4,8 @@ import * as React from 'react';
 import ContestClarificationCreateForm, {
   ContestClarificationCreateFormData,
 } from '../ContestClarificationCreateForm/ContestClarificationCreateForm';
-import { ContestClarificationData } from 'modules/api/uriel/contestClarification';
-import { Contest } from 'modules/api/uriel/contest';
+import { ContestClarificationData } from '../../../../../../modules/api/uriel/contestClarification';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 
 export interface ContestClarificationCreateDialogProps {
   contest: Contest;

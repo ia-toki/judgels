@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, Switch, withRouter } from 'react-router';
 
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import MainSingleContestRoutes from './contests/single/MainSingleContestRoutes';
 import ContestsRoutes from './UrielContestsRoutes';

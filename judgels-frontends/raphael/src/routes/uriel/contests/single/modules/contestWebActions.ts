@@ -1,4 +1,4 @@
-import { selectToken } from 'modules/session/sessionSelectors';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
 
 import { PutContest } from '../../modules/contestReducer';
 import { DelWebConfig, PutWebConfig } from '../../modules/contestWebConfigReducer';

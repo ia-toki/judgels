@@ -1,9 +1,9 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { ContestAnnouncementData } from 'modules/api/uriel/contestAnnouncement';
-import { Contest } from 'modules/api/uriel/contest';
+import { ContestAnnouncementData } from '../../../../../../modules/api/uriel/contestAnnouncement';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 
 import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/ContestAnnouncementCreateForm';
 

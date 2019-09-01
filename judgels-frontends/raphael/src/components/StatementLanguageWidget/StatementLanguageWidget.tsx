@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from 'modules/store';
-import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { sortLanguagesByName } from 'modules/api/sandalphon/language';
-import { webPrefsActions as injectedWebPrefsActions } from 'modules/webPrefs/webPrefsActions';
+import { AppState } from '../../modules/store';
+import { selectStatementLanguage } from '../../modules/webPrefs/webPrefsSelectors';
+import { sortLanguagesByName } from '../../modules/api/sandalphon/language';
+import { webPrefsActions as injectedWebPrefsActions } from '../../modules/webPrefs/webPrefsActions';
 
 import StatementLanguageForm, { StatementLanguageFormData } from './StatementLanguageForm/StatementLanguageForm';
 

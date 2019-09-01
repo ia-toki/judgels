@@ -1,4 +1,4 @@
-import { ContestProblemData } from 'modules/api/uriel/contestProblem';
+import { ContestProblemData } from '../../../../../../../modules/api/uriel/contestProblem';
 
 export interface ContestProblemEditor {
   validator: (value: any) => string | undefined;

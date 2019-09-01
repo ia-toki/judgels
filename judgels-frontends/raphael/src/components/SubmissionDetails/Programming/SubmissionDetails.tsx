@@ -3,19 +3,22 @@ import * as base64 from 'base-64';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { SourceCode } from 'components/SourceCode/SourceCode';
-import { FormattedDate } from 'components/FormattedDate/FormattedDate';
-import { UserRef } from 'components/UserRef/UserRef';
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { VerdictTag } from 'components/VerdictTag/VerdictTag';
-import { constructProblemName } from 'modules/api/sandalphon/problem';
-import { Submission } from 'modules/api/sandalphon/submissionProgramming';
-import { getGradingLanguageName, getGradingLanguageSyntaxHighlighterValue } from 'modules/api/gabriel/language';
-import { isInteractive, isOutputOnly } from 'modules/api/gabriel/engine';
-import { TestCaseResult } from 'modules/api/gabriel/grading';
-import { SubmissionSource } from 'modules/api/gabriel/submission';
-import { VerdictCode } from 'modules/api/gabriel/verdict';
-import { Profile } from 'modules/api/jophiel/profile';
+import { SourceCode } from '../../../components/SourceCode/SourceCode';
+import { FormattedDate } from '../../../components/FormattedDate/FormattedDate';
+import { UserRef } from '../../../components/UserRef/UserRef';
+import { ContentCard } from '../../../components/ContentCard/ContentCard';
+import { VerdictTag } from '../../../components/VerdictTag/VerdictTag';
+import { constructProblemName } from '../../../modules/api/sandalphon/problem';
+import { Submission } from '../../../modules/api/sandalphon/submissionProgramming';
+import {
+  getGradingLanguageName,
+  getGradingLanguageSyntaxHighlighterValue,
+} from '../../../modules/api/gabriel/language';
+import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
+import { TestCaseResult } from '../../../modules/api/gabriel/grading';
+import { SubmissionSource } from '../../../modules/api/gabriel/submission';
+import { VerdictCode } from '../../../modules/api/gabriel/verdict';
+import { Profile } from '../../../modules/api/jophiel/profile';
 
 import './SubmissionDetails.css';
 

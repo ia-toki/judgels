@@ -2,17 +2,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import Pagination from 'components/Pagination/Pagination';
-import { AppState } from 'modules/store';
-import { Contest } from 'modules/api/uriel/contest';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../../components/Pagination/Pagination';
+import { AppState } from '../../../../../../modules/store';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
   ContestSupervisorsResponse,
   ContestSupervisorsDeleteResponse,
   ContestSupervisorsUpsertResponse,
   ContestSupervisorUpsertData,
-} from 'modules/api/uriel/contestSupervisor';
+} from '../../../../../../modules/api/uriel/contestSupervisor';
 
 import { ContestSupervisorsTable } from '../ContestSupervisorsTable/ContestSupervisorsTable';
 import { ContestSupervisorAddDialog } from '../ContestSupervisorAddDialog/ContestSupervisorAddDialog';

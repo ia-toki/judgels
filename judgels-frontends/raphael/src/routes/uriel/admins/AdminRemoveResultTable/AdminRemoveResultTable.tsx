@@ -1,8 +1,8 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { UserRef } from 'components/UserRef/UserRef';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
+import { UserRef } from '../../../../components/UserRef/UserRef';
+import { ProfilesMap } from '../../../../modules/api/jophiel/profile';
 
 export interface AdminRemoveResultTableProps {
   usernames: string[];

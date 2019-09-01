@@ -1,8 +1,10 @@
-import ItemShortAnswerForm, { ItemShortAnswerFormProps, ItemShortAnswerFormState } from './ItemShortAnswerForm';
 import { ReactWrapper, mount } from 'enzyme';
-import { ItemShortAnswerConfig, ItemType } from 'modules/api/sandalphon/problemBundle';
-import { AnswerState } from 'components/ProblemWorksheetCard/Bundle/itemStatement';
 import * as React from 'react';
+
+import { ItemShortAnswerConfig, ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
+import { AnswerState } from '../../../../../../components/ProblemWorksheetCard/Bundle/itemStatement';
+import ItemShortAnswerForm, { ItemShortAnswerFormProps, ItemShortAnswerFormState } from './ItemShortAnswerForm';
+
 describe('ItemShortAnswerForm', () => {
   let wrapper: ReactWrapper<ItemShortAnswerFormProps, ItemShortAnswerFormState>;
   const onSubmitFn: jest.Mocked<any> = jest.fn();

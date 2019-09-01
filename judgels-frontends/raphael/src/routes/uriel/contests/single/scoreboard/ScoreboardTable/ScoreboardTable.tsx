@@ -1,8 +1,8 @@
 import { HTMLTable } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { ScoreboardState } from 'modules/api/uriel/scoreboard';
+import { ScoreboardState } from '../../../../../../modules/api/uriel/scoreboard';
 
 import './ScoreboardTable.css';
 

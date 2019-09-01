@@ -1,4 +1,4 @@
-import { selectToken } from 'modules/session/sessionSelectors';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 
 export const contestManagerActions = {
   getManagers: (contestJid: string, page?: number) => {

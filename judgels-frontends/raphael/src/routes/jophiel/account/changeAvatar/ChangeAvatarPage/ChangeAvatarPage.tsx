@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { AppState } from 'modules/store';
-import { selectUserJid } from 'modules/session/sessionSelectors';
+import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { AppState } from '../../../../../modules/store';
+import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
 
 import { ChangeAvatarPanel } from '../../../panels/avatar/ChangeAvatarPanel/ChangeAvatarPanel';
 import { avatarActions as injectedAvatarActions } from '../../../modules/avatarActions';

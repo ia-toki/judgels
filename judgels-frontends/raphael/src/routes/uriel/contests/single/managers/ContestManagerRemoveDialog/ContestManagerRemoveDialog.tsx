@@ -1,9 +1,9 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestManagersDeleteResponse } from 'modules/api/uriel/contestManager';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { ContestManagersDeleteResponse } from '../../../../../../modules/api/uriel/contestManager';
 
 import ContestManagerRemoveForm, {
   ContestManagerRemoveFormData,

@@ -1,5 +1,5 @@
-import { selectToken } from 'modules/session/sessionSelectors';
-import { ContestAnnouncementData } from 'modules/api/uriel/contestAnnouncement';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { ContestAnnouncementData } from '../../../../../../modules/api/uriel/contestAnnouncement';
 
 export const contestAnnouncementActions = {
   getAnnouncements: (contestJid: string, page?: number) => {

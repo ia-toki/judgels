@@ -7,7 +7,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { Admin, AdminsResponse } from 'modules/api/uriel/admin';
+import { Admin, AdminsResponse } from '../../../../modules/api/uriel/admin';
 
 import { createAdminsPage } from './AdminsPage';
 
@@ -24,7 +24,7 @@ describe('AdminsPage', () => {
   };
 
   const render = () => {
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     const AdminsPage = createAdminsPage(adminActions);
 

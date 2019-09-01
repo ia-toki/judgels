@@ -1,9 +1,9 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from 'conf';
-import { get, post } from 'modules/api/http';
-import { Page } from 'modules/api/pagination';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
+import { APP_CONFIG } from '../../../conf';
+import { get, post } from '../../../modules/api/http';
+import { Page } from '../../../modules/api/pagination';
+import { ProfilesMap } from '../../../modules/api/jophiel/profile';
 
 export interface Admin {
   userJid: string;

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { AppState } from 'modules/store';
-import { Contest } from 'modules/api/uriel/contest';
-import { HtmlText } from 'components/HtmlText/HtmlText';
-import { ContentCard } from 'components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { AppState } from '../../../../../../modules/store';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
 
 import { selectContest } from '../../../modules/contestSelectors';

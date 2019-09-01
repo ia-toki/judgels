@@ -2,8 +2,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { ActionButtons } from 'components/ActionButtons/ActionButtons';
-import { FormRichTextArea } from 'components/forms/FormRichTextArea/FormRichTextArea';
+import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
+import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
 
 export interface ContestEditDescriptionFormData {
   description: string;

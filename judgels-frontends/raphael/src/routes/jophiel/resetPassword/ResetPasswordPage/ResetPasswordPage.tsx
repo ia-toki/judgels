@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { Card } from 'components/Card/Card';
-import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
+import { Card } from '../../../../components/Card/Card';
+import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 
 import ResetPasswordForm, { ResetPasswordFormData } from '../ResetPasswordForm/ResetPasswordForm';
 import { resetPasswordActions as injectedResetPasswordActions } from '../modules/resetPasswordActions';

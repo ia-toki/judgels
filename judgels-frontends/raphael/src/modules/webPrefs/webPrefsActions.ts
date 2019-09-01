@@ -1,4 +1,4 @@
-import { statementLanguageDisplayNamesMap } from 'modules/api/sandalphon/language';
+import { statementLanguageDisplayNamesMap } from '../../modules/api/sandalphon/language';
 
 import { PutStatementLanguage, PutGradingLanguage } from './webPrefsReducer';
 

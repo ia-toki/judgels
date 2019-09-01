@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
-import { ScoreboardState } from 'modules/api/uriel/scoreboard';
+import { ScoreboardState } from '../../../../../../modules/api/uriel/scoreboard';
 
 import { ScoreboardTable, ScoreboardTableProps } from './ScoreboardTable';
 

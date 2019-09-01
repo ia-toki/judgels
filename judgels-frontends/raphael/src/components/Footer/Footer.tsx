@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { JUDGELS_VERSION } from 'version';
+import { JUDGELS_VERSION } from '../../version';
 
 import './Footer.css';
 

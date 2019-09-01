@@ -4,12 +4,12 @@ import FlagIcon from 'react-flag-kit/lib/FlagIcon';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { Card } from 'components/Card/Card';
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { AppState } from 'modules/store';
-import { BasicProfile } from 'modules/api/jophiel/profile';
-import { getRatingClass } from 'modules/api/jophiel/userRating';
-import { getCountryName } from 'assets/data/countries';
+import { Card } from '../../../../../../components/Card/Card';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { AppState } from '../../../../../../modules/store';
+import { BasicProfile } from '../../../../../../modules/api/jophiel/profile';
+import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating';
+import { getCountryName } from '../../../../../../assets/data/countries';
 
 import { selectUserJid } from '../../../../modules/profileSelectors';
 import { avatarActions as injectedAvatarActions } from '../../../../modules/avatarActions';
@@ -75,7 +75,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
     return (
       <div className="basic-profile-card__main">
         <div className="basic-profile-card__avatar-wrapper">
-          <img className="basic-profile-card__avatar" src={avatarUrl} />
+          <img className="basic-profile-card__avatar" src={avatarUrl} alt="avatar" />
         </div>
         <p className={getRatingClass(profile.rating)}>{profile.username}</p>
         {this.renderCountry(profile)}

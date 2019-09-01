@@ -1,5 +1,8 @@
-import { selectToken } from 'modules/session/sessionSelectors';
-import { ContestClarificationData, ContestClarificationStatus } from 'modules/api/uriel/contestClarification';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import {
+  ContestClarificationData,
+  ContestClarificationStatus,
+} from '../../../../../../modules/api/uriel/contestClarification';
 
 export const contestClarificationActions = {
   createClarification: (contestJid: string, data: ContestClarificationData) => {

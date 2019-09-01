@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Route } from 'react-router';
 
-import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
+import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
-} from 'components/ContentWithSidebar/ContentWithSidebar';
+} from '../../../components/ContentWithSidebar/ContentWithSidebar';
 
 import ProblemsetListPage from './problemsets/list/ProblemsetListPage/ProblemsetListPage';
 

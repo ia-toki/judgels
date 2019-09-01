@@ -1,13 +1,14 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import './BundleScoreboardPage.css';
-import { BundleScoreboard } from 'modules/api/uriel/scoreboard';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
+import { BundleScoreboard } from '../../../../../../modules/api/uriel/scoreboard';
+import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
-import { BundleScoreboardContent } from 'modules/api/uriel/scoreboard';
-import { BundleScoreboardEntry } from 'modules/api/uriel/scoreboard';
-import { UserRef } from 'components/UserRef/UserRef';
+import { BundleScoreboardContent } from '../../../../../../modules/api/uriel/scoreboard';
+import { BundleScoreboardEntry } from '../../../../../../modules/api/uriel/scoreboard';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+
+import './BundleScoreboardPage.css';
 
 export class BundleScoreboardTableProps {
   userJid?: string;

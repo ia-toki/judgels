@@ -11,4 +11,4 @@ export function createToastMiddleware(toastActions) {
   };
 }
 
-export const toastMiddleware = createToastMiddleware(injectedToastActions);
+export const toastMiddleware: any = createToastMiddleware(injectedToastActions);

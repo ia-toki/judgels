@@ -2,10 +2,10 @@ import { Alert, Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { FormattedDuration } from 'components/FormattedDuration/FormattedDuration';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestState } from 'modules/api/uriel/contestWeb';
-import { AppState } from 'modules/store';
+import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
+import { AppState } from '../../../../../../modules/store';
 
 import { selectContest } from '../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';

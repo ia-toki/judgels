@@ -2,8 +2,8 @@ import { Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from 'modules/store';
-import { ContestClarificationStatus } from 'modules/api/uriel/contestClarification';
+import { AppState } from '../../../../../../modules/store';
+import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import { contestClarificationActions as injectedContestClarificationsActions } from '../../clarifications/modules/contestClarificationActions';

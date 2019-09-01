@@ -3,11 +3,11 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { APP_CONFIG, Mode } from 'conf';
+import { APP_CONFIG, Mode } from '../../../../conf';
 
-import { FormTextInput } from 'components/forms/FormTextInput/FormTextInput';
-import { Required } from 'components/forms/validations';
-import { HorizontalDivider } from 'components/HorizontalDivider/HorizontalDivider';
+import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { Required } from '../../../../components/forms/validations';
+import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 
 import './LoginForm.css';
 

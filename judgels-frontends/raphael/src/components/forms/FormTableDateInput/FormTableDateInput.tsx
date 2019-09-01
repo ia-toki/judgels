@@ -1,9 +1,9 @@
 import { Tag } from '@blueprintjs/core';
 import { DateInput, TimePrecision } from '@blueprintjs/datetime';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { formatDateTime, formatDateTimezoneOffset, parseDateTime } from 'utils/datetime';
+import { formatDateTime, formatDateTimezoneOffset, parseDateTime } from '../../../utils/datetime';
 
 import { getIntentClassName } from '../meta';
 import { FormInputProps } from '../props';

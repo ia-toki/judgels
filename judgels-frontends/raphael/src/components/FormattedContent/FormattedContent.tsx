@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { contestFileAPI } from 'modules/api/uriel/contestFile';
+import { contestFileAPI } from '../../modules/api/uriel/contestFile';
 
 import { HtmlText } from '../HtmlText/HtmlText';
 

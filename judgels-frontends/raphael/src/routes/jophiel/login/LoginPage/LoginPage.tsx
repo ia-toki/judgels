@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
-import { Card } from 'components/Card/Card';
+import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
+import { Card } from '../../../../components/Card/Card';
 
 import LoginForm, { LoginFormData } from '../LoginForm/LoginForm';
 import { loginActions as injectedLoginActions } from '../modules/loginActions';

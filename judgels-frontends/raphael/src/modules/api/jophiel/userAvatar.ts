@@ -1,4 +1,4 @@
-import { delete_, get, postMultipart } from 'modules/api/http';
+import { delete_, get, postMultipart } from '../../../modules/api/http';
 
 import { baseUserURL } from './user';
 

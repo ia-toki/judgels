@@ -2,11 +2,11 @@ import { Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { APP_CONFIG, Mode } from 'conf';
-import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
-import { ButtonLink } from 'components/ButtonLink/ButtonLink';
-import { AppState } from 'modules/store';
-import { selectIsLoggedIn } from 'modules/session/sessionSelectors';
+import { APP_CONFIG, Mode } from '../../../conf';
+import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
+import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
+import { AppState } from '../../../modules/store';
+import { selectIsLoggedIn } from '../../../modules/session/sessionSelectors';
 
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
 import HallOfFameWidget from '../widgets/hallOfFame/HallOfFameWidget/HallOfFameWidget';
@@ -32,16 +32,16 @@ class HomePage extends React.Component<HomePageProps> {
       return null;
     }
 
-    const bannerImage = require('assets/images/welcome-banner.jpg');
-    const overlayImage = require('assets/images/welcome-overlay.png');
+    const bannerImage = require('../../../assets/images/welcome-banner.jpg');
+    const overlayImage = require('../../../assets/images/welcome-overlay.png');
 
     return (
       <div className="home-banner">
         <div>
-          <img src={bannerImage} className="home-banner__image" />
+          <img src={bannerImage} alt="banner" className="home-banner__image" />
         </div>
         <div>
-          <img src={overlayImage} className="home-banner__overlay" />
+          <img src={overlayImage} alt="banner-overlay" className="home-banner__overlay" />
         </div>
         <div className="home-banner__contents">
           <div>

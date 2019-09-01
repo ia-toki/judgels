@@ -1,5 +1,5 @@
-import { APP_CONFIG } from 'conf';
-import { get } from 'modules/api/http';
+import { APP_CONFIG } from '../../../conf';
+import { get } from '../../../modules/api/http';
 
 import { Contest } from './contest';
 import { ContestClarificationStatus } from './contestClarification';

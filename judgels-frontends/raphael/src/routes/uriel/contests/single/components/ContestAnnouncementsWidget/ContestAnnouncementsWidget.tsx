@@ -2,7 +2,7 @@ import { Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from 'modules/store';
+import { AppState } from '../../../../../../modules/store';
 
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../../announcements/modules/contestAnnouncementActions';

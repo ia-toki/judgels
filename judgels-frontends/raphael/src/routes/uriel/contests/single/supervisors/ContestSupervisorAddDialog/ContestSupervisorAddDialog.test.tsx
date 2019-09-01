@@ -5,9 +5,9 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from 'fixtures/state';
-import { ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
-import { SupervisorManagementPermission } from 'modules/api/uriel/contestSupervisor';
+import { contest, contestJid } from '../../../../../../fixtures/state';
+import { ContestSupervisorUpsertData } from '../../../../../../modules/api/uriel/contestSupervisor';
+import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
 
 import { ContestSupervisorAddDialog, ContestSupervisorAddDialogProps } from './ContestSupervisorAddDialog';
 
@@ -18,7 +18,7 @@ describe('ContestSupervisorAddDialog', () => {
   beforeEach(() => {
     onUpsertSupervisors = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store: any = createStore(combineReducers({ form: formReducer }));
 
     const props: ContestSupervisorAddDialogProps = {
       contest,

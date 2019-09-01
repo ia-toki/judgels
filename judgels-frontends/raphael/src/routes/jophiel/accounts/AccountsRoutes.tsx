@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Route } from 'react-router';
 
-import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from 'components/ScrollToTopOnMount/ScrollToTopOnMount';
+import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
+import { ScrollToTopOnMount } from '../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
-} from 'components/ContentWithSidebar/ContentWithSidebar';
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
+} from '../../../components/ContentWithSidebar/ContentWithSidebar';
+import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import UsersPage from './users/UsersPage/UsersPage';
 

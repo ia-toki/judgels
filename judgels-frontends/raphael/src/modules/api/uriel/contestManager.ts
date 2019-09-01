@@ -1,8 +1,8 @@
 import { stringify } from 'query-string';
 
-import { get, post } from 'modules/api/http';
-import { Page } from 'modules/api/pagination';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
+import { get, post } from '../../../modules/api/http';
+import { Page } from '../../../modules/api/pagination';
+import { ProfilesMap } from '../../../modules/api/jophiel/profile';
 
 import { baseContestURL } from './contest';
 

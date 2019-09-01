@@ -1,4 +1,4 @@
-import { get, put } from 'modules/api/http';
+import { get, put } from '../../../modules/api/http';
 
 import { baseUserURL } from './user';
 
@@ -15,8 +15,8 @@ export interface UserInfo {
 }
 
 export const userInfoGender = {
-  ['MALE']: 'Male',
-  ['FEMALE']: 'Female',
+  MALE: 'Male',
+  FEMALE: 'Female',
 };
 
 const baseURL = (userJid: string) => `${baseUserURL(userJid)}/info`;

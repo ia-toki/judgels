@@ -1,7 +1,7 @@
 import { replace } from 'react-router-redux';
 
-import { BadRequestError, ForbiddenError } from 'modules/api/error';
-import { PutToken, PutUser } from 'modules/session/sessionReducer';
+import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
+import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 
 import { PutWebConfig } from '../../modules/userWebReducer';
 import { SessionErrors } from '../../../../modules/api/jophiel/session';

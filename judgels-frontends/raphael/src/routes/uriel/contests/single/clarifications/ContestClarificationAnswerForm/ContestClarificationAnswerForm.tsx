@@ -2,9 +2,9 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { Required } from 'components/forms/validations';
-import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
-import { ActionButtons } from 'components/ActionButtons/ActionButtons';
+import { Required } from '../../../../../../components/forms/validations';
+import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 
 export interface ContestClarificationAnswerFormData {
   answer: string;

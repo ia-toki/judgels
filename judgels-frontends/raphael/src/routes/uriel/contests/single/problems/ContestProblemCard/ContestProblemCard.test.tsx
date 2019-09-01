@@ -1,9 +1,9 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
-import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
-import { contest } from 'fixtures/state';
-import { ContestProblem, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
+import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
+import { contest } from '../../../../../../fixtures/state';
+import { ContestProblem, ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 
 import { ContestProblemCard, ContestProblemCardProps } from './ContestProblemCard';
 

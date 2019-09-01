@@ -2,12 +2,12 @@ import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { ContestStyle } from 'modules/api/uriel/contest';
-import { ActionButtons } from 'components/ActionButtons/ActionButtons';
-import { Required, Slug } from 'components/forms/validations';
-import { FormTableTextInput } from 'components/forms/FormTableTextInput/FormTableTextInput';
-import { FormTableSelect2 } from 'components/forms/FormTableSelect2/FormTableSelect2';
-import { FormTableDateInput } from 'components/forms/FormTableDateInput/FormTableDateInput';
+import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
+import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
+import { Required, Slug } from '../../../../../../components/forms/validations';
+import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormTableSelect2 } from '../../../../../../components/forms/FormTableSelect2/FormTableSelect2';
+import { FormTableDateInput } from '../../../../../../components/forms/FormTableDateInput/FormTableDateInput';
 
 export interface ContestEditGeneralFormData {
   slug: string;

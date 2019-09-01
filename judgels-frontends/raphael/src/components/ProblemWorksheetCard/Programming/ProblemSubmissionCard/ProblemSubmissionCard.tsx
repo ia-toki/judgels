@@ -1,9 +1,9 @@
 import { Callout } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { getAllowedGradingLanguages } from 'modules/api/gabriel/language';
-import { ProblemSubmissionConfig } from 'modules/api/sandalphon/problemProgramming';
+import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { getAllowedGradingLanguages } from '../../../../modules/api/gabriel/language';
+import { ProblemSubmissionConfig } from '../../../../modules/api/sandalphon/problemProgramming';
 import ProblemSubmissionForm, { ProblemSubmissionFormData } from '../ProblemSubmissionForm/ProblemSubmissionForm';
 
 export interface ProblemSubmissionCardProps {

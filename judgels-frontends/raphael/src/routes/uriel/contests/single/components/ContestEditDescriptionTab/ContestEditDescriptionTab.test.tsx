@@ -7,7 +7,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, contestJid } from 'fixtures/state';
+import { contest, contestJid } from '../../../../../../fixtures/state';
 
 import { createContestEditDescriptionTab } from './ContestEditDescriptionTab';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
@@ -23,7 +23,7 @@ describe('ContestEditDescriptionTab', () => {
     };
     const ContestEditDescriptionTab = createContestEditDescriptionTab(contestActions);
 
-    const store = createStore(
+    const store: any = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );

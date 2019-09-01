@@ -1,9 +1,9 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestProblem, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
+import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { ContestProblem, ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 
 import './ContestProblemCard.css';
 

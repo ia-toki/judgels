@@ -1,6 +1,6 @@
 import { push } from 'react-router-redux';
 
-import { BadRequestError } from 'modules/api/error';
+import { BadRequestError } from '../../../../modules/api/error';
 
 import { resetPasswordActions } from './resetPasswordActions';
 

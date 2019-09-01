@@ -1,8 +1,8 @@
 import { Icon } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { FormattedDuration } from 'components/FormattedDuration/FormattedDuration';
-import { FormTable, FormTableRow } from 'components/forms/FormTable/FormTable';
+import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
+import { FormTable, FormTableRow } from '../../../../../../components/forms/FormTable/FormTable';
 import {
   ClarificationTimeLimitModuleConfig,
   ContestModulesConfig,
@@ -14,8 +14,8 @@ import {
   GcjStyleModuleConfig,
   ScoreboardModuleConfig,
   VirtualModuleConfig,
-} from 'modules/api/uriel/contestModule';
-import { getGradingLanguageName, LanguageRestriction } from 'modules/api/gabriel/language';
+} from '../../../../../../modules/api/uriel/contestModule';
+import { getGradingLanguageName, LanguageRestriction } from '../../../../../../modules/api/gabriel/language';
 
 import './ContestEditConfigsTable.css';
 

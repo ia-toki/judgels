@@ -2,10 +2,10 @@ import { Callout, Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
-import { UserRef } from 'components/UserRef/UserRef';
-import { Profile } from 'modules/api/jophiel/profile';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestClarification } from 'modules/api/uriel/contestClarification';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { Profile } from '../../../../../../modules/api/jophiel/profile';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { ContestClarification } from '../../../../../../modules/api/uriel/contestClarification';
 
 import { ContestClarificationAnswerBox } from '../ContestClarificationAnswerBox/ContestClarificationAnswerBox';
 

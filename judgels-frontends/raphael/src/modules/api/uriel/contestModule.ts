@@ -1,5 +1,5 @@
-import { delete_, get, put } from 'modules/api/http';
-import { LanguageRestriction } from 'modules/api/gabriel/language';
+import { delete_, get, put } from '../../../modules/api/http';
+import { LanguageRestriction } from '../../../modules/api/gabriel/language';
 
 import { baseContestURL } from './contest';
 

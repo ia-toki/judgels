@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { formatDateTime } from 'utils/datetime';
+import { formatDateTime } from '../../../../../../utils/datetime';
 
-import { FormTable, FormTableRow } from 'components/forms/FormTable/FormTable';
-import { FormattedDuration } from 'components/FormattedDuration/FormattedDuration';
-import { Contest } from 'modules/api/uriel/contest';
+import { FormTable, FormTableRow } from '../../../../../../components/forms/FormTable/FormTable';
+import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 
 export interface ContestEditGeneralTableProps {
   contest: Contest;

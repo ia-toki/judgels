@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
-import { TimeanddateLink } from 'components/TimeanddateLink/TimeanddateLink';
-import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestRole } from 'modules/api/uriel/contestWeb';
-import { ContestRoleTag } from 'components/ContestRole/ContestRoleTag';
+import { TimeanddateLink } from '../../../../../components/TimeanddateLink/TimeanddateLink';
+import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
+import { Contest } from '../../../../../modules/api/uriel/contest';
+import { ContestRole } from '../../../../../modules/api/uriel/contestWeb';
+import { ContestRoleTag } from '../../../../../components/ContestRole/ContestRoleTag';
 
 import './ActiveContestCard.css';
 

@@ -7,8 +7,8 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest } from 'fixtures/state';
-import { ContestSupervisor, ContestSupervisorsResponse } from 'modules/api/uriel/contestSupervisor';
+import { contest } from '../../../../../../fixtures/state';
+import { ContestSupervisor, ContestSupervisorsResponse } from '../../../../../../modules/api/uriel/contestSupervisor';
 
 import { createContestSupervisorsPage } from './ContestSupervisorsPage';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
@@ -26,7 +26,7 @@ describe('ContestSupervisorsPage', () => {
   };
 
   const render = () => {
-    const store = createStore(
+    const store: any = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );

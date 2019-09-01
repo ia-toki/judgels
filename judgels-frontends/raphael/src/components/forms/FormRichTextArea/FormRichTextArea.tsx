@@ -1,6 +1,6 @@
 import { FormGroup } from '@blueprintjs/core';
 import * as React from 'react';
-import * as Loadable from 'react-loadable';
+import Loadable from 'react-loadable';
 
 import { getIntent } from '../meta';
 import { FormInputProps } from '../props';

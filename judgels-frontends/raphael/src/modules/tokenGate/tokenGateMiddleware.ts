@@ -1,4 +1,4 @@
-import { UnauthorizedError } from 'modules/api/error';
+import { UnauthorizedError } from '../../modules/api/error';
 
 import { tokenGateActions as injectedTokenGateActions } from './tokenGateActions';
 
@@ -17,4 +17,4 @@ export function createTokenGateMiddleware(tokenGateActions) {
   };
 }
 
-export const tokenGateMiddleware = createTokenGateMiddleware(injectedTokenGateActions);
+export const tokenGateMiddleware: any = createTokenGateMiddleware(injectedTokenGateActions);

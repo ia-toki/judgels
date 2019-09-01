@@ -1,13 +1,13 @@
 import { SubmissionError } from 'redux-form';
 
-import { contestJid, sessionState, token } from 'fixtures/state';
-import { ForbiddenError } from 'modules/api/error';
-import { ContestErrors } from 'modules/api/uriel/contest';
-import { ContestProblemData, ContestProblemsResponse } from 'modules/api/uriel/contestProblem';
-import { AppState } from 'modules/store';
+import { contestJid, sessionState, token } from '../../../../../../fixtures/state';
+import { ForbiddenError } from '../../../../../../modules/api/error';
+import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
+import { ContestProblemData, ContestProblemsResponse } from '../../../../../../modules/api/uriel/contestProblem';
+import { AppState } from '../../../../../../modules/store';
 import { contestProblemActions } from './contestProblemActions';
-import { ContestProblemWorksheet as ContestProgrammingProblemWorksheet } from 'modules/api/uriel/contestProblemProgramming';
-import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from 'modules/api/uriel/contestProblemBundle';
+import { ContestProblemWorksheet as ContestProgrammingProblemWorksheet } from '../../../../../../modules/api/uriel/contestProblemProgramming';
+import { ContestProblemWorksheet as ContestBundleProblemWorksheet } from '../../../../../../modules/api/uriel/contestProblemBundle';
 
 describe('contestProblemActions', () => {
   let dispatch: jest.Mock<any>;

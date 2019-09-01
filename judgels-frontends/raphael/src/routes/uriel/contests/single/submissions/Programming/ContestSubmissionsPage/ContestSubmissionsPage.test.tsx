@@ -7,9 +7,9 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, contestJid } from 'fixtures/state';
-import { Submission } from 'modules/api/sandalphon/submissionProgramming';
-import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionProgramming';
+import { contest, contestJid } from '../../../../../../../fixtures/state';
+import { Submission } from '../../../../../../../modules/api/sandalphon/submissionProgramming';
+import { ContestSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
 
 import { createContestSubmissionsPage } from './ContestSubmissionsPage';
 import { contestReducer, PutContest } from '../../../../modules/contestReducer';
@@ -37,7 +37,7 @@ describe('ContestSubmissionsPage', () => {
   };
 
   const render = () => {
-    const store = createStore(
+    const store: any = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );

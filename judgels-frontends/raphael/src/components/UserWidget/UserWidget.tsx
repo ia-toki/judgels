@@ -3,14 +3,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { APP_CONFIG, Mode } from 'conf';
+import { APP_CONFIG, Mode } from '../../conf';
 
-import { User } from 'modules/api/jophiel/user';
-import { getRatingClass } from 'modules/api/jophiel/userRating';
-import { Profile } from 'modules/api/jophiel/profile';
-import { AppState } from 'modules/store';
-import { avatarActions as injectedAvatarActions } from 'routes/jophiel/modules/avatarActions';
-import { selectUserProfile, selectIsUserWebConfigLoaded } from 'routes/jophiel/modules/userWebSelectors';
+import { User } from '../../modules/api/jophiel/user';
+import { getRatingClass } from '../../modules/api/jophiel/userRating';
+import { Profile } from '../../modules/api/jophiel/profile';
+import { AppState } from '../../modules/store';
+import { avatarActions as injectedAvatarActions } from '../../routes/jophiel/modules/avatarActions';
+import { selectUserProfile, selectIsUserWebConfigLoaded } from '../../routes/jophiel/modules/userWebSelectors';
 
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 
@@ -92,7 +92,7 @@ export class UserWidget extends React.PureComponent<UserWidgetProps, UserWidgetS
     return (
       <Navbar.Group align={Alignment.RIGHT}>
         <div className="widget-user__avatar-wrapper">
-          <img src={avatarUrl} className="widget-user__avatar" />
+          <img src={avatarUrl} alt="avatar" className="widget-user__avatar" />
         </div>
         {popover}
         {responsivePopover}

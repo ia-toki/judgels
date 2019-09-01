@@ -2,10 +2,10 @@ import { Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from 'modules/store';
-import { Contest } from 'modules/api/uriel/contest';
-import { allModules, ContestModuleType } from 'modules/api/uriel/contestModule';
-import { LoadingState } from 'components/LoadingState/LoadingState';
+import { AppState } from '../../../../../../modules/store';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { allModules, ContestModuleType } from '../../../../../../modules/api/uriel/contestModule';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestWebActions as injectedContestWebActions } from '../../modules/contestWebActions';

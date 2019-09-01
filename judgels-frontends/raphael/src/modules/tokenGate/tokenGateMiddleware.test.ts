@@ -1,4 +1,4 @@
-import { UnauthorizedError } from 'modules/api/error';
+import { UnauthorizedError } from '../../modules/api/error';
 
 import { createTokenGateMiddleware } from './tokenGateMiddleware';
 

@@ -1,10 +1,10 @@
-import { contestJid, sessionState, token, announcementJid } from 'fixtures/state';
+import { contestJid, sessionState, token, announcementJid } from '../../../../../../fixtures/state';
 import {
   ContestAnnouncementData,
   ContestAnnouncementStatus,
   ContestAnnouncementsResponse,
-} from 'modules/api/uriel/contestAnnouncement';
-import { AppState } from 'modules/store';
+} from '../../../../../../modules/api/uriel/contestAnnouncement';
+import { AppState } from '../../../../../../modules/store';
 
 import { contestAnnouncementActions } from './contestAnnouncementActions';
 

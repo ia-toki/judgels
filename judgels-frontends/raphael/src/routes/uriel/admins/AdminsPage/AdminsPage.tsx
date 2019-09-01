@@ -2,10 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { Card } from 'components/Card/Card';
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import Pagination from 'components/Pagination/Pagination';
-import { AdminsDeleteResponse, AdminsResponse, AdminsUpsertResponse } from 'modules/api/uriel/admin';
+import { Card } from '../../../../components/Card/Card';
+import { LoadingState } from '../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../components/Pagination/Pagination';
+import { AdminsDeleteResponse, AdminsResponse, AdminsUpsertResponse } from '../../../../modules/api/uriel/admin';
 
 import { AdminsTable } from '../AdminsTable/AdminsTable';
 import { AdminAddDialog } from '../AdminAddDialog/AdminAddDialog';

@@ -8,7 +8,7 @@ import { reducer as formReducer } from 'redux-form';
 import createMockStore, { MockStore } from 'redux-mock-store';
 import { stringify } from 'query-string';
 
-import { AppState } from 'modules/store';
+import { AppState } from '../../modules/store';
 
 import SearchBox, { SearchBoxProps } from './SearchBox';
 
@@ -19,7 +19,7 @@ describe('SearchBox', () => {
 
   const realStore = createStore(combineReducers({ form: formReducer }));
 
-  const render = (store: MockStore<Partial<AppState>> | Store<{}>, key: string, initialValue: string) => {
+  const render = (store: any, key: string, initialValue: string) => {
     const props: SearchBoxProps = {
       initialValue,
       onRouteChange,

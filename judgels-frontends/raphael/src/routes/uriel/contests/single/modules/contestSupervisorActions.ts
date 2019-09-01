@@ -1,5 +1,5 @@
-import { selectToken } from 'modules/session/sessionSelectors';
-import { ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
+import { ContestSupervisorUpsertData } from '../../../../../modules/api/uriel/contestSupervisor';
 
 export const contestSupervisorActions = {
   getSupervisors: (contestJid: string, page?: number) => {

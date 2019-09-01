@@ -16,7 +16,7 @@ describe('ResetPasswordPage', () => {
       resetPassword: jest.fn().mockReturnValue({ type: 'mock-reset', then: fn => fn() }),
     };
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store: any = createStore(combineReducers({ form: formReducer }));
     const ResetPasswordPage = createResetPasswordPage(resetPasswordActions);
 
     wrapper = mount(

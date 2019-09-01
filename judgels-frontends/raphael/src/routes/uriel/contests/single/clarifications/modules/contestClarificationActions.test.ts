@@ -1,6 +1,9 @@
-import { contestJid, sessionState, token } from 'fixtures/state';
-import { ContestClarificationData, ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
-import { AppState } from 'modules/store';
+import { contestJid, sessionState, token } from '../../../../../../fixtures/state';
+import {
+  ContestClarificationData,
+  ContestClarificationsResponse,
+} from '../../../../../../modules/api/uriel/contestClarification';
+import { AppState } from '../../../../../../modules/store';
 
 import { contestClarificationActions } from './contestClarificationActions';
 

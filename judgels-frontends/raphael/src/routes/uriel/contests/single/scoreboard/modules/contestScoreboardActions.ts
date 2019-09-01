@@ -1,4 +1,4 @@
-import { selectToken } from 'modules/session/sessionSelectors';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 
 export const contestScoreboardActions = {
   getScoreboard: (contestJid: string, frozen?: boolean, showClosedProblems?: boolean, page?: number) => {

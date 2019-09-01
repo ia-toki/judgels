@@ -1,8 +1,8 @@
 import { Card, Divider, RadioGroup, Radio, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { HtmlText } from 'components/HtmlText/HtmlText';
-import { Item, ItemMultipleChoiceConfig } from 'modules/api/sandalphon/problemBundle';
+import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
+import { Item, ItemMultipleChoiceConfig } from '../../../../../modules/api/sandalphon/problemBundle';
 
 import './ItemMultipleChoiceCard.css';
 

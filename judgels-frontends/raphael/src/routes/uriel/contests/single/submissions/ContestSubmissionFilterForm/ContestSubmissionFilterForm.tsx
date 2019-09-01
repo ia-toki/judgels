@@ -2,8 +2,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { Required } from 'components/forms/validations';
-import { FormSelect2 } from 'components/forms/FormSelect2/FormSelect2';
+import { Required } from '../../../../../../components/forms/validations';
+import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
 
 import './ContestSubmissionFilterForm.css';
 

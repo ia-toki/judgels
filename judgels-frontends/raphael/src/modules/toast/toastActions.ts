@@ -1,6 +1,6 @@
 import { Intent, Position, Toaster } from '@blueprintjs/core';
 
-import { ForbiddenError, NotFoundError, RemoteError } from 'modules/api/error';
+import { ForbiddenError, NotFoundError, RemoteError } from '../../modules/api/error';
 
 export function createToastActions(toaster) {
   return {

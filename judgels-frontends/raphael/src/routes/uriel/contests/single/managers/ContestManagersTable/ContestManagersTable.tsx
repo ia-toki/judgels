@@ -1,9 +1,9 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { UserRef } from 'components/UserRef/UserRef';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { ContestManager } from 'modules/api/uriel/contestManager';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
+import { ContestManager } from '../../../../../../modules/api/uriel/contestManager';
 
 export interface ContestManagersTableProps {
   managers: ContestManager[];

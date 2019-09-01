@@ -2,11 +2,14 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { Required } from 'components/forms/validations';
-import { FormTextInput } from 'components/forms/FormTextInput/FormTextInput';
-import { FormSelect2 } from 'components/forms/FormSelect2/FormSelect2';
-import { FormRichTextArea } from 'components/forms/FormRichTextArea/FormRichTextArea';
-import { ContestAnnouncementStatus, ContestAnnouncement } from 'modules/api/uriel/contestAnnouncement';
+import { Required } from '../../../../../../components/forms/validations';
+import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
+import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
+import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
+import {
+  ContestAnnouncementStatus,
+  ContestAnnouncement,
+} from '../../../../../../modules/api/uriel/contestAnnouncement';
 
 export interface ContestAnnouncementEditFormData {
   status: string;

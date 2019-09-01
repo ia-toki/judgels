@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { ConnectedRouter } from 'react-router-redux';
 
-import 'styles/index.css';
+import './styles/index.css';
 
-import App from 'routes/App';
-import { history, persistor, store } from 'modules/store';
+import App from './routes/App';
+import { history, persistor, store } from './modules/store';
 
 require('typeface-open-sans');
 require('typeface-roboto');

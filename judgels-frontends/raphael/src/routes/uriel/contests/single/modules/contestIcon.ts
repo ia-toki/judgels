@@ -1,6 +1,6 @@
 import { IconName } from '@blueprintjs/core';
 
-import { ContestTab } from 'modules/api/uriel/contestWeb';
+import { ContestTab } from '../../../../../modules/api/uriel/contestWeb';
 
 export const contestIcon = {
   [ContestTab.Overview]: 'properties',

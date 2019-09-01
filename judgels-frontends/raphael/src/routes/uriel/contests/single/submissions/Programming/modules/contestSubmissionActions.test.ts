@@ -1,13 +1,12 @@
 import { push } from 'react-router-redux';
 
-import { contestJid, problemJid, sessionState, token } from 'fixtures/state';
-import { NotFoundError } from 'modules/api/error';
-import { SubmissionWithSourceResponse } from 'modules/api/sandalphon/submissionProgramming';
-import { ContestSubmissionsResponse } from 'modules/api/uriel/contestSubmissionProgramming';
-import { AppState } from 'modules/store';
-
+import { contestJid, problemJid, sessionState, token } from '../../../../../../../fixtures/state';
+import { NotFoundError } from '../../../../../../../modules/api/error';
+import { SubmissionWithSourceResponse } from '../../../../../../../modules/api/sandalphon/submissionProgramming';
+import { ContestSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
+import { AppState } from '../../../../../../../modules/store';
+import { ProblemSubmissionFormData } from '../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 import { contestSubmissionActions } from './contestSubmissionActions';
-import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 
 describe('contestSubmissionActions', () => {
   let dispatch: jest.Mock<any>;

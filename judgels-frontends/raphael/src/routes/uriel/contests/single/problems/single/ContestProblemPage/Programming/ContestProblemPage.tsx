@@ -2,25 +2,25 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ContentCard } from 'components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
-} from 'components/StatementLanguageWidget/StatementLanguageWidget';
-import { AppState } from 'modules/store';
-import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestProblem } from 'modules/api/uriel/contestProblem';
-import { ContestProblemWorksheet } from 'modules/api/uriel/contestProblemProgramming';
-import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
-import { ProblemWorksheet } from 'modules/api/sandalphon/problemProgramming';
+} from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { AppState } from '../../../../../../../../modules/store';
+import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { Contest } from '../../../../../../../../modules/api/uriel/contest';
+import { ContestProblem } from '../../../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemWorksheet } from '../../../../../../../../modules/api/uriel/contestProblemProgramming';
+import { ProblemSubmissionFormData } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
+import { ProblemWorksheet } from '../../../../../../../../modules/api/sandalphon/problemProgramming';
 import { contestProblemActions as injectedContestProblemActions } from '../../../modules/contestProblemActions';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../../submissions/Programming/modules/contestSubmissionActions';
-import { webPrefsActions as injectedWebPrefsActions } from 'modules/webPrefs/webPrefsActions';
-import { selectGradingLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
-import { ProblemWorksheetCard } from 'components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
+import { webPrefsActions as injectedWebPrefsActions } from '../../../../../../../../modules/webPrefs/webPrefsActions';
+import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
+import { selectContest } from '../../../../../../../../routes/uriel/contests/modules/contestSelectors';
 
 import './ContestProblemPage.css';
 

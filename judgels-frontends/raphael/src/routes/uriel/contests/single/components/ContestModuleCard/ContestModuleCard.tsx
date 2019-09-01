@@ -1,7 +1,11 @@
 import { Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContestModuleType, moduleDescriptionsMap, moduleTitlesMap } from 'modules/api/uriel/contestModule';
+import {
+  ContestModuleType,
+  moduleDescriptionsMap,
+  moduleTitlesMap,
+} from '../../../../../../modules/api/uriel/contestModule';
 
 import './ContestModuleCard.css';
 

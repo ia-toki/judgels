@@ -1,5 +1,5 @@
-import { selectToken } from 'modules/session/sessionSelectors';
-import { OrderDir } from 'modules/api/pagination';
+import { selectToken } from '../../../modules/session/sessionSelectors';
+import { OrderDir } from '../../../modules/api/pagination';
 
 export const userActions = {
   getUser: (userJid: string) => {

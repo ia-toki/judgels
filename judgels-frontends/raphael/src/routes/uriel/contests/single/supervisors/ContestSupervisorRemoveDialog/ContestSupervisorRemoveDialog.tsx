@@ -1,14 +1,14 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { Contest } from 'modules/api/uriel/contest';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { ContestSupervisorsDeleteResponse } from '../../../../../../modules/api/uriel/contestSupervisor';
 
 import ContestSupervisorRemoveForm, {
   ContestSupervisorRemoveFormData,
 } from '../ContestSupervisorRemoveForm/ContestSupervisorRemoveForm';
 import { ContestSupervisorRemoveResultTable } from '../ContestSupervisorRemoveResultTable/ContestSupervisorRemoveResultTable';
-import { ContestSupervisorsDeleteResponse } from 'modules/api/uriel/contestSupervisor';
 
 export interface ContestSupervisorRemoveDialogProps {
   contest: Contest;
@@ -85,7 +85,7 @@ export class ContestSupervisorRemoveDialog extends React.Component<
 
   private renderDialogRemoveResultTable = () => {
     const { usernames, response } = this.state.submitted!;
-    const { deletedSupervisorProfilesMap: deletedSupervisorProfilesMap } = response;
+    const { deletedSupervisorProfilesMap } = response;
     return (
       <>
         <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-result-body')}>

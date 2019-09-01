@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { APP_CONFIG, Mode } from 'conf';
+import { APP_CONFIG, Mode } from '../../conf';
 
 import './TimeanddateLink.css';
 

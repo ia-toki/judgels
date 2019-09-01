@@ -1,10 +1,10 @@
 import { stringify } from 'query-string';
-import { get, post } from 'modules/api/http';
 
-import { Page } from 'modules/api/pagination';
-import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
+import { get, post } from '../../../modules/api/http';
+import { Page } from '../../../modules/api/pagination';
+import { ItemSubmission } from '../../../modules/api/sandalphon/submissionBundle';
 import { ContestSubmissionConfig } from './contestSubmission';
-import { Profile } from 'modules/api/jophiel/profile';
+import { Profile } from '../../../modules/api/jophiel/profile';
 import { baseContestsURL } from './contest';
 import { ItemType } from '../sandalphon/problemBundle';
 

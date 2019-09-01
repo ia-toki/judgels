@@ -1,8 +1,8 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { AdminsDeleteResponse } from 'modules/api/uriel/admin';
+import { AdminsDeleteResponse } from '../../../../modules/api/uriel/admin';
 
 import AdminRemoveForm, { AdminRemoveFormData } from '../AdminRemoveForm/AdminRemoveForm';
 import { AdminRemoveResultTable } from '../AdminRemoveResultTable/AdminRemoveResultTable';

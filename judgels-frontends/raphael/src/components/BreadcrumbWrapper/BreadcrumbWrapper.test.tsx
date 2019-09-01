@@ -4,8 +4,8 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
-import { AppState } from 'modules/store';
-import { PushBreadcrumb, PopBreadcrumb } from 'modules/breadcrumbs/breadcrumbsReducer';
+import { AppState } from '../../modules/store';
+import { PushBreadcrumb, PopBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 
 import { withBreadcrumb } from './BreadcrumbWrapper';
 

@@ -2,8 +2,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { Required } from 'components/forms/validations';
-import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
+import { Required } from '../../../../../../components/forms/validations';
+import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 
 export interface ContestManagerRemoveFormData {
   usernames: string;

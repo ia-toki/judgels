@@ -1,8 +1,8 @@
 import { stringify } from 'query-string';
 
-import { APP_CONFIG } from 'conf';
-import { get, post, put } from 'modules/api/http';
-import { Page } from 'modules/api/pagination';
+import { APP_CONFIG } from '../../../conf';
+import { get, post, put } from '../../../modules/api/http';
+import { Page } from '../../../modules/api/pagination';
 
 import { ContestRole } from './contestWeb';
 

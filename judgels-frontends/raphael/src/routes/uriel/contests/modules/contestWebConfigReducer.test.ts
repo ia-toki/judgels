@@ -1,4 +1,4 @@
-import { ContestTab, ContestWebConfig } from 'modules/api/uriel/contestWeb';
+import { ContestTab, ContestWebConfig } from '../../../../modules/api/uriel/contestWeb';
 
 import {
   contestWebConfigReducer,

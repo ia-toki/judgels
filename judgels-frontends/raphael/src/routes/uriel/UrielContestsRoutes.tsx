@@ -2,13 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
-import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
+import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
-} from 'components/ContentWithSidebar/ContentWithSidebar';
-import { AppState } from 'modules/store';
-import { JophielRole } from 'modules/api/jophiel/role';
+} from '../../components/ContentWithSidebar/ContentWithSidebar';
+import { AppState } from '../../modules/store';
+import { JophielRole } from '../../modules/api/jophiel/role';
 
 import ContestsPage from './contests/ContestsPage/ContestsPage';
 import MainAdminsRoutes from './admins/MainAdminsRoutes';

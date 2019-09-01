@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router';
 import DocumentTitle from 'react-document-title';
 
-import Header from 'components/Header/Header';
-import { AppContent } from 'components/AppContent/AppContent';
-import Menubar from 'components/Menubar/Menubar';
-import Breadcrumbs from 'components/Breadcrumbs/Breadcrumbs';
-import { Footer } from 'components/Footer/Footer';
-import { JophielRole } from 'modules/api/jophiel/role';
-import { AppState } from 'modules/store';
-import { selectDocumentTitle } from 'modules/breadcrumbs/breadcrumbsSelectors';
+import Header from '../components/Header/Header';
+import { AppContent } from '../components/AppContent/AppContent';
+import Menubar from '../components/Menubar/Menubar';
+import Breadcrumbs from '../components/Breadcrumbs/Breadcrumbs';
+import { Footer } from '../components/Footer/Footer';
+import { JophielRole } from '../modules/api/jophiel/role';
+import { AppState } from '../modules/store';
+import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
 
 import { getAppRoutes, getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';

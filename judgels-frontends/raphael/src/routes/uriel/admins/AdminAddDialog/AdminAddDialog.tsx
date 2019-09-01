@@ -1,8 +1,8 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { AdminsUpsertResponse } from 'modules/api/uriel/admin';
+import { AdminsUpsertResponse } from '../../../../modules/api/uriel/admin';
 
 import AdminAddForm, { AdminAddFormData } from '../AdminAddForm/AdminAddForm';
 import { AdminAddResultTable } from '../AdminAddResultTable/AdminAddResultTable';

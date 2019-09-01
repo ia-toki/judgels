@@ -2,14 +2,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router';
 
-import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from 'components/ScrollToTopOnMount/ScrollToTopOnMount';
-import { LoadingState } from 'components/LoadingState/LoadingState';
+import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
+import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
+import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
-} from 'components/ContentWithSidebar/ContentWithSidebar';
-import { AppState } from 'modules/store';
+} from '../../../../components/ContentWithSidebar/ContentWithSidebar';
+import { AppState } from '../../../../modules/store';
 
 import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
 import { selectUserJid } from '../../modules/profileSelectors';

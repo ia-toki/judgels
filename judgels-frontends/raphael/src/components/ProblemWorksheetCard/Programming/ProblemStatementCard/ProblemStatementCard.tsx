@@ -1,10 +1,10 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { HtmlText } from 'components/HtmlText/HtmlText';
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { ProblemStatement } from 'modules/api/sandalphon/problem';
-import { ProblemLimits } from 'modules/api/sandalphon/problemProgramming';
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
+import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { ProblemStatement } from '../../../../modules/api/sandalphon/problem';
+import { ProblemLimits } from '../../../../modules/api/sandalphon/problemProgramming';
 
 import './ProblemStatementCard.css';
 

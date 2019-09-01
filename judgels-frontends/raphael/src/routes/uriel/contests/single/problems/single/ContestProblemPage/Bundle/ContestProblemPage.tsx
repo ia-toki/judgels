@@ -2,23 +2,23 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ContentCard } from 'components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
-} from 'components/StatementLanguageWidget/StatementLanguageWidget';
-import { AppState } from 'modules/store';
-import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestProblem } from 'modules/api/uriel/contestProblem';
-import { ContestProblemWorksheet } from 'modules/api/uriel/contestProblemBundle';
-import { ProblemWorksheet as BundleProblemWorksheet } from 'modules/api/sandalphon/problemBundle';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
+} from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { AppState } from '../../../../../../../../modules/store';
+import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { Contest } from '../../../../../../../../modules/api/uriel/contest';
+import { ContestProblem } from '../../../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemWorksheet } from '../../../../../../../../modules/api/uriel/contestProblemBundle';
+import { ProblemWorksheet as BundleProblemWorksheet } from '../../../../../../../../modules/api/sandalphon/problemBundle';
+import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import { contestProblemActions as injectedContestProblemActions } from '../../../modules/contestProblemActions';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../../submissions/Bundle/modules/contestSubmissionActions';
-import { ProblemWorksheetCard as BundleProblemWorksheetCard } from 'components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
-import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
-import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
+import { ProblemWorksheetCard as BundleProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
+import { ItemSubmission } from '../../../../../../../../modules/api/sandalphon/submissionBundle';
+import { selectContest } from '../../../../../../../../routes/uriel/contests/modules/contestSelectors';
 
 import './ContestProblemPage.css';
 

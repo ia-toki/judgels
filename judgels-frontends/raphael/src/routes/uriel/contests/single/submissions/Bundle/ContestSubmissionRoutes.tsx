@@ -2,9 +2,9 @@ import * as React from 'react';
 import { withRouter, Route } from 'react-router';
 import ContestSubmissionsPage from './ContestSubmissionsPage/ContestSubmissionsPage';
 import SubmissionSummaryPage from './SubmissionSummaryPage/SubmissionSummaryPage';
-import { selectContestWebConfig } from 'routes/uriel/contests/modules/contestWebConfigSelectors';
+import { selectContestWebConfig } from '../../../../../../routes/uriel/contests/modules/contestWebConfigSelectors';
 import { connect } from 'react-redux';
-import { ContestWebConfig, ContestRole } from 'modules/api/uriel/contestWeb';
+import { ContestWebConfig, ContestRole } from '../../../../../../modules/api/uriel/contestWeb';
 
 export interface ContestSubmissionRoutesProps {
   webConfig?: ContestWebConfig;
@@ -29,7 +29,7 @@ export const createContestSubmissionRoutes = () => {
   const mapStateToProps = state => ({
     webConfig: selectContestWebConfig(state),
   });
-  return withRouter(connect(mapStateToProps)(ContestSubmissionRoutes));
+  return withRouter<any>(connect(mapStateToProps)(ContestSubmissionRoutes));
 };
 
 export default createContestSubmissionRoutes();

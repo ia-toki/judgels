@@ -1,14 +1,14 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { UserRef } from 'components/UserRef/UserRef';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import {
   IcpcScoreboardProblemState,
   IcpcScoreboard,
   IcpcScoreboardContent,
   IcpcScoreboardEntry,
-} from 'modules/api/uriel/scoreboard';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
+} from '../../../../../../modules/api/uriel/scoreboard';
+import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
 
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 

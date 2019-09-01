@@ -1,15 +1,15 @@
 import { Classes, Button, Dialog, HTMLTable } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { UserRef } from 'components/UserRef/UserRef';
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ApprovedContestContestantsResponse } from 'modules/api/uriel/contestContestant';
-import { Contest } from 'modules/api/uriel/contest';
-import { AppState } from 'modules/store';
-import { getCountryName } from 'assets/data/countries';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { ApprovedContestContestantsResponse } from '../../../../../../modules/api/uriel/contestContestant';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { AppState } from '../../../../../../modules/store';
+import { getCountryName } from '../../../../../../assets/data/countries';
 
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestContestantActions as injectedContestContestantActions } from '../../modules/contestContestantActions';

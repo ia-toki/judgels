@@ -1,8 +1,8 @@
 import { push } from 'react-router-redux';
 
-import { selectToken } from 'modules/session/sessionSelectors';
-import { NotFoundError } from 'modules/api/error';
-import { ProblemSubmissionFormData } from 'components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
+import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
+import { NotFoundError } from '../../../../../../../modules/api/error';
+import { ProblemSubmissionFormData } from '../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 
 export const contestSubmissionActions = {
   getSubmissions: (contestJid: string, userJid?: string, problemJid?: string, page?: number) => {

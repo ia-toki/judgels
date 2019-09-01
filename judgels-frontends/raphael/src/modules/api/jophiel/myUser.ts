@@ -1,4 +1,4 @@
-import { get, post } from 'modules/api/http';
+import { get, post } from '../../../modules/api/http';
 
 import { baseUserURL, User } from './user';
 

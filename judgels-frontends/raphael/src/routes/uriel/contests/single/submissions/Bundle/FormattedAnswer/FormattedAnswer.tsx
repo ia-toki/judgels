@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text } from '@blueprintjs/core';
-import { ItemType } from 'modules/api/sandalphon/problemBundle';
+import { ItemType } from '../../../../../../../modules/api/sandalphon/problemBundle';
 
 export interface FormattedAnswerProps {
   answer?: string;

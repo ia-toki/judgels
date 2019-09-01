@@ -1,6 +1,6 @@
 import { SubmissionError } from 'redux-form';
 
-import { UserRegistrationData } from 'modules/api/jophiel/userAccount';
+import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
 
 import { registerActions } from './registerActions';
 

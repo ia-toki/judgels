@@ -1,8 +1,8 @@
-import { ForbiddenError } from 'modules/api/error';
-import { JophielRole } from 'modules/api/jophiel/role';
-import { UserWebConfig } from 'modules/api/jophiel/userWeb';
-import { PutToken, PutUser } from 'modules/session/sessionReducer';
-import { token, user, userJid } from 'fixtures/state';
+import { ForbiddenError } from '../../../../modules/api/error';
+import { JophielRole } from '../../../../modules/api/jophiel/role';
+import { UserWebConfig } from '../../../../modules/api/jophiel/userWeb';
+import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
+import { token, user, userJid } from '../../../../fixtures/state';
 
 import { loginActions } from './loginActions';
 import { PutWebConfig } from '../../modules/userWebReducer';

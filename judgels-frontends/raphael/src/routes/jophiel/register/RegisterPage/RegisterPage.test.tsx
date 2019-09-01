@@ -6,7 +6,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { AppState } from 'modules/store';
+import { AppState } from '../../../../modules/store';
 
 import { createRegisterPage } from './RegisterPage';
 import RegisterForm from '../RegisterForm/RegisterForm';
@@ -22,7 +22,7 @@ describe('RegisterPage', () => {
       registerUser: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
 
-    const store = createStore<Partial<AppState>>(
+    const store: any = createStore<Partial<AppState>>(
       combineReducers({
         form: formReducer,
         jophiel: jophielReducer,

@@ -1,9 +1,9 @@
 import { IconName } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { Redirect, RouteComponentProps, Switch, withRouter } from 'react-router';
 
-import { Sidebar, SidebarItem } from 'components/Sidebar/Sidebar';
+import { Sidebar, SidebarItem } from '../../components/Sidebar/Sidebar';
 
 import './ContentWithSidebar.css';
 

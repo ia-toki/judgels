@@ -2,8 +2,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import Dropzone from 'react-dropzone';
 
-import { Card } from 'components/Card/Card';
-import { LoadingState } from 'components/LoadingState/LoadingState';
+import { Card } from '../../../../../components/Card/Card';
+import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 
 import { MAX_AVATAR_FILE_SIZE } from '../../../modules/avatarActions';
 
@@ -39,7 +39,7 @@ export class ChangeAvatarPanel extends React.PureComponent<ChangeAvatarPanelProp
     const currentAvatar = avatarExists && (
       <div className="card-change-avatar__panel">
         <h4>Current avatar</h4>
-        <img src={avatarUrl} />
+        <img src={avatarUrl} alt="avatar" />
         <div>
           <Button intent={Intent.DANGER} onClick={this.deleteAvatar}>
             Remove avatar

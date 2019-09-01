@@ -1,9 +1,9 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { UserRef } from 'components/UserRef/UserRef';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { Admin } from 'modules/api/uriel/admin';
+import { UserRef } from '../../../../components/UserRef/UserRef';
+import { ProfilesMap } from '../../../../modules/api/jophiel/profile';
+import { Admin } from '../../../../modules/api/uriel/admin';
 
 export interface AdminsTableProps {
   admins: Admin[];

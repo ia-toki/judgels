@@ -2,10 +2,10 @@ import { Button, FormGroup, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { Required, Max100Lines } from 'components/forms/validations';
-import { FormTextArea } from 'components/forms/FormTextArea/FormTextArea';
-import { FormCheckbox } from 'components/forms/FormCheckbox/FormCheckbox';
-import { supervisorManagementPermissions } from 'modules/api/uriel/contestSupervisor';
+import { Required, Max100Lines } from '../../../../../../components/forms/validations';
+import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
+import { supervisorManagementPermissions } from '../../../../../../modules/api/uriel/contestSupervisor';
 
 export interface ContestSupervisorAddFormData {
   usernames: string;

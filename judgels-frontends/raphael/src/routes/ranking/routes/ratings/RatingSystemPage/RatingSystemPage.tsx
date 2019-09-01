@@ -1,9 +1,9 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Card } from 'components/Card/Card';
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { getRatingClass } from 'modules/api/jophiel/userRating';
+import { Card } from '../../../../../components/Card/Card';
+import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { getRatingClass } from '../../../../../modules/api/jophiel/userRating';
 
 import './RatingSystemPage.css';
 

@@ -1,4 +1,4 @@
-import { user } from 'fixtures/state';
+import { user } from '../../fixtures/state';
 
 import { DelSession, INITIAL_STATE, sessionReducer, SessionState, PutToken, PutUser } from './sessionReducer';
 

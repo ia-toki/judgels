@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { AppState } from 'modules/store';
-import { Contest, ContestStyle } from 'modules/api/uriel/contest';
+import { AppState } from '../../../../../../../modules/store';
+import { Contest, ContestStyle } from '../../../../../../../modules/api/uriel/contest';
 import { selectContest } from '../../../../modules/contestSelectors';
 import ContestProgrammingProblemPage from './Programming/ContestProblemPage';
 import ContestBundleProblemPage from './Bundle/ContestProblemPage';

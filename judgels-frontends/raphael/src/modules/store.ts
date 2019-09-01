@@ -64,7 +64,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 
 export const history = createBrowserHistory();
 
-export const store = createStore<AppState>(
+export const store: any = createStore<AppState>(
   rootReducer,
   composeEnhancers(
     applyMiddleware(

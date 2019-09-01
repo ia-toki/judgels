@@ -2,11 +2,14 @@ import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 
-import { FormattedContent } from 'components/FormattedContent/FormattedContent';
-import { UserRef } from 'components/UserRef/UserRef';
-import { ContestAnnouncement, ContestAnnouncementStatus } from 'modules/api/uriel/contestAnnouncement';
-import { Profile } from 'modules/api/jophiel/profile';
-import { Contest } from 'modules/api/uriel/contest';
+import { FormattedContent } from '../../../../../../components/FormattedContent/FormattedContent';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import {
+  ContestAnnouncement,
+  ContestAnnouncementStatus,
+} from '../../../../../../modules/api/uriel/contestAnnouncement';
+import { Profile } from '../../../../../../modules/api/jophiel/profile';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 
 import './ContestAnnouncementCard.css';
 

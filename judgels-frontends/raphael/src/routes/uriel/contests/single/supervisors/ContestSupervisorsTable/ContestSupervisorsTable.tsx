@@ -1,14 +1,14 @@
 import { HTMLTable, Tag, IconName } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { UserRef } from 'components/UserRef/UserRef';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { ContestSupervisor } from 'modules/api/uriel/contestSupervisor';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
+import { ContestSupervisor } from '../../../../../../modules/api/uriel/contestSupervisor';
 import {
   SupervisorManagementPermission,
   supervisorManagementPermissionShortNamesMap,
-} from 'modules/api/uriel/contestSupervisor';
-import { ContestTab } from 'modules/api/uriel/contestWeb';
+} from '../../../../../../modules/api/uriel/contestSupervisor';
+import { ContestTab } from '../../../../../../modules/api/uriel/contestWeb';
 
 import { contestIcon } from '../../modules/contestIcon';
 
@@ -52,7 +52,7 @@ export class ContestSupervisorsTable extends React.PureComponent<ContestSupervis
   };
 
   private renderRows = () => {
-    const { supervisors: supervisors, profilesMap } = this.props;
+    const { supervisors, profilesMap } = this.props;
 
     const sortedSupervisors = supervisors.slice().sort((c1, c2) => {
       const username1 = (profilesMap[c1.userJid] && profilesMap[c1.userJid].username) || 'ZZ';

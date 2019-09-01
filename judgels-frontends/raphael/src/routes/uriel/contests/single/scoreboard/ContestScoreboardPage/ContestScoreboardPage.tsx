@@ -6,14 +6,22 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import Pagination from 'components/Pagination/Pagination';
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { Contest, ContestStyle } from 'modules/api/uriel/contest';
-import { ContestScoreboardResponse, ContestScoreboardType } from 'modules/api/uriel/contestScoreboard';
-import { IcpcScoreboard, IoiScoreboard, GcjScoreboard, BundleScoreboard } from 'modules/api/uriel/scoreboard';
-import { AppState } from 'modules/store';
-import { selectMaybeUserJid } from 'modules/session/sessionSelectors';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../../components/Pagination/Pagination';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { Contest, ContestStyle } from '../../../../../../modules/api/uriel/contest';
+import {
+  ContestScoreboardResponse,
+  ContestScoreboardType,
+} from '../../../../../../modules/api/uriel/contestScoreboard';
+import {
+  IcpcScoreboard,
+  IoiScoreboard,
+  GcjScoreboard,
+  BundleScoreboard,
+} from '../../../../../../modules/api/uriel/scoreboard';
+import { AppState } from '../../../../../../modules/store';
+import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 
 import { selectContest } from '../../../modules/contestSelectors';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
@@ -25,7 +33,7 @@ import { contestScoreboardActions as injectedContestScoreboardActions } from '..
 import './ContestScoreboardPage.css';
 
 export interface ContestScoreboardPageProps
-  extends RouteComponentProps<{ frozen: boolean; showClosedProblems: boolean }> {
+  extends RouteComponentProps<{ frozen: string; showClosedProblems: string }> {
   userJid?: string;
   contest: Contest;
   onGetScoreboard: (

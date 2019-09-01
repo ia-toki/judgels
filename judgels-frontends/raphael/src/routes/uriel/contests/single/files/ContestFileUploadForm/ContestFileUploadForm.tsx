@@ -2,8 +2,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { FormTableFileInput } from 'components/forms/FormTableFileInput/FormTableFileInput';
-import { MaxFileSize20MB, Required } from 'components/forms/validations';
+import { FormTableFileInput } from '../../../../../../components/forms/FormTableFileInput/FormTableFileInput';
+import { MaxFileSize20MB, Required } from '../../../../../../components/forms/validations';
 
 import './ContestFileUploadForm.css';
 

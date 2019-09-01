@@ -5,8 +5,8 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { contest, contestJid } from 'fixtures/state';
-import { ContestAnnouncementStatus } from 'modules/api/uriel/contestAnnouncement';
+import { contest, contestJid } from '../../../../../../fixtures/state';
+import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 
 import {
   ContestAnnouncementCreateDialog,
@@ -20,7 +20,7 @@ describe('ContestAnnouncementCreateDialog', () => {
   beforeEach(() => {
     onCreateAnnouncement = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store: any = createStore(combineReducers({ form: formReducer }));
 
     const props: ContestAnnouncementCreateDialogProps = {
       contest,

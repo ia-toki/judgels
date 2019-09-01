@@ -1,4 +1,4 @@
-import { Contest } from 'modules/api/uriel/contest';
+import { Contest } from '../../../../modules/api/uriel/contest';
 
 import { contestReducer, ContestState, DelContest, INITIAL_STATE, PutContest } from './contestReducer';
 

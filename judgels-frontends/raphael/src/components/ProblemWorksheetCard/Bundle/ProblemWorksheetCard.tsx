@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { ProblemStatementCard } from './ProblemStatementCard/ProblemStatementCard';
-import { ProblemWorksheet } from 'modules/api/sandalphon/problemBundle';
+import { ProblemWorksheet } from '../../../modules/api/sandalphon/problemBundle';
+import { ItemSubmission } from '../../../modules/api/sandalphon/submissionBundle';
 
 import './ProblemWorksheetCard.css';
-import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
 
 export interface ProblemWorksheetCardProps {
   alias: string;

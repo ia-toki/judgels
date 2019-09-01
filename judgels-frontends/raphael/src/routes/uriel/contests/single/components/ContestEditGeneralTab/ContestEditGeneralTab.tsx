@@ -2,9 +2,9 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from 'modules/store';
-import { Contest, ContestStyle, ContestUpdateData } from 'modules/api/uriel/contest';
-import { formatDuration, parseDuration } from 'utils/duration';
+import { AppState } from '../../../../../../modules/store';
+import { Contest, ContestStyle, ContestUpdateData } from '../../../../../../modules/api/uriel/contest';
+import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
 import ContestEditGeneralForm, { ContestEditGeneralFormData } from '../ContestEditGeneralForm/ContestEditGeneralForm';

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { ReactWrapper, mount } from 'enzyme';
-import { BundleScoreboardTableProps, BundleScoreboardTable } from './BundleScoreboardPage';
-import { BundleScoreboard } from 'modules/api/uriel/scoreboard';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
 import { MemoryRouter } from 'react-router';
+import { ReactWrapper, mount } from 'enzyme';
+
+import { BundleScoreboardTableProps, BundleScoreboardTable } from './BundleScoreboardPage';
+import { BundleScoreboard } from '../../../../../../modules/api/uriel/scoreboard';
+import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
 
 describe('BundleScoreboardTable', () => {
   let wrapper: ReactWrapper<BundleScoreboardTableProps>;

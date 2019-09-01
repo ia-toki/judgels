@@ -5,10 +5,10 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import thunk from 'redux-thunk';
 
-import { contest, user } from 'fixtures/state';
-import { PutUser, sessionReducer } from 'modules/session/sessionReducer';
-import { ContestScoreboardResponse } from 'modules/api/uriel/contestScoreboard';
-import { ContestScoreboardType } from 'modules/api/uriel/contestScoreboard';
+import { contest, user } from '../../../../../../fixtures/state';
+import { PutUser, sessionReducer } from '../../../../../../modules/session/sessionReducer';
+import { ContestScoreboardResponse } from '../../../../../../modules/api/uriel/contestScoreboard';
+import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 
 import { createContestScoreboardPage } from './ContestScoreboardPage';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
@@ -20,7 +20,7 @@ describe('ContestScoreboardPage', () => {
   let contestScoreboardActions: jest.Mocked<any>;
 
   const render = () => {
-    const store = createStore(
+    const store: any = createStore(
       combineReducers({ session: sessionReducer, uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
@@ -71,7 +71,6 @@ describe('ContestScoreboardPage', () => {
               contestantJids: [],
               problemJids: [],
               problemAliases: [],
-              points: [],
             },
             content: {
               entries: [],
@@ -107,7 +106,6 @@ describe('ContestScoreboardPage', () => {
               contestantJids: [],
               problemJids: [],
               problemAliases: [],
-              points: [],
             },
             content: {
               entries: [],

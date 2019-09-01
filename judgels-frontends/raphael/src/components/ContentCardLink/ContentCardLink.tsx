@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { ContentCard } from 'components/ContentCard/ContentCard';
+import { ContentCard } from '../../components/ContentCard/ContentCard';
 
 import './ContentCardLink.css';
 

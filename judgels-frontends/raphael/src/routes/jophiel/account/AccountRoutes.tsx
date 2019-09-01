@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from 'components/ScrollToTopOnMount/ScrollToTopOnMount';
-import UserRoute from 'components/UserRoute/UserRoute';
+import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
+import { ScrollToTopOnMount } from '../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
+import UserRoute from '../../../components/UserRoute/UserRoute';
 import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
-} from 'components/ContentWithSidebar/ContentWithSidebar';
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
+} from '../../../components/ContentWithSidebar/ContentWithSidebar';
+import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import InfoPage from './info/InfoPage/InfoPage';
 import ChangePasswordPage from './changePassword/ChangePasswordPage/ChangePasswordPage';

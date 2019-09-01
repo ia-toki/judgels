@@ -2,7 +2,7 @@ import { Icon, IconName, Popover, Position, Tab, Tabs } from '@blueprintjs/core'
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Card } from 'components/Card/Card';
+import { Card } from '../../components/Card/Card';
 
 import './Sidebar.css';
 

@@ -1,11 +1,11 @@
 import { Divider } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { HtmlText } from 'components/HtmlText/HtmlText';
-import { Item, ItemType } from 'modules/api/sandalphon/problemBundle';
-import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
-import { ProblemStatement } from 'modules/api/sandalphon/problem';
+import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
+import { Item, ItemType } from '../../../../modules/api/sandalphon/problemBundle';
+import { ItemSubmission } from '../../../../modules/api/sandalphon/submissionBundle';
+import { ProblemStatement } from '../../../../modules/api/sandalphon/problem';
 
 import { ItemStatementCard } from './ItemStatementCard/ItemStatementCard';
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard/ItemMultipleChoiceCard';

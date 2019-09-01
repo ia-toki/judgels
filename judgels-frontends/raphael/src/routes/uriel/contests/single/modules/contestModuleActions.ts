@@ -1,5 +1,5 @@
-import { selectToken } from 'modules/session/sessionSelectors';
-import { ContestModulesConfig, ContestModuleType } from 'modules/api/uriel/contestModule';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
+import { ContestModulesConfig, ContestModuleType } from '../../../../../modules/api/uriel/contestModule';
 
 export const contestModuleActions = {
   getModules: (contestJid: string) => {

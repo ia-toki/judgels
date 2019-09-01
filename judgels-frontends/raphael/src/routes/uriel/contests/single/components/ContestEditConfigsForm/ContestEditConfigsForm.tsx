@@ -2,14 +2,18 @@ import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { allLanguagesAllowed, getGradingLanguageName, gradingLanguages } from 'modules/api/gabriel/language';
-import { ContestModulesConfig } from 'modules/api/uriel/contestModule';
-import { ActionButtons } from 'components/ActionButtons/ActionButtons';
-import { FormTableInput } from 'components/forms/FormTableInput/FormTableInput';
-import { FormCheckbox } from 'components/forms/FormCheckbox/FormCheckbox';
-import { FormTableCheckbox } from 'components/forms/FormTableCheckbox/FormTableCheckbox';
-import { FormTableTextInput } from 'components/forms/FormTableTextInput/FormTableTextInput';
-import { NonnegativeNumber, Required } from 'components/forms/validations';
+import {
+  allLanguagesAllowed,
+  getGradingLanguageName,
+  gradingLanguages,
+} from '../../../../../../modules/api/gabriel/language';
+import { ContestModulesConfig } from '../../../../../../modules/api/uriel/contestModule';
+import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
+import { FormTableInput } from '../../../../../../components/forms/FormTableInput/FormTableInput';
+import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
+import { FormTableCheckbox } from '../../../../../../components/forms/FormTableCheckbox/FormTableCheckbox';
+import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { NonnegativeNumber, Required } from '../../../../../../components/forms/validations';
 
 import './ContestEditConfigsForm.css';
 

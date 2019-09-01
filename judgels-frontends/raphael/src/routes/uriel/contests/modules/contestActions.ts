@@ -1,9 +1,9 @@
 import { push } from 'react-router-redux';
 import { SubmissionError } from 'redux-form';
 
-import { BadRequestError } from 'modules/api/error';
-import { ContestCreateData, ContestUpdateData, ContestErrors } from 'modules/api/uriel/contest';
-import { selectToken } from 'modules/session/sessionSelectors';
+import { BadRequestError } from '../../../../modules/api/error';
+import { ContestCreateData, ContestUpdateData, ContestErrors } from '../../../../modules/api/uriel/contest';
+import { selectToken } from '../../../../modules/session/sessionSelectors';
 
 import { DelContest, EditContest, PutContest } from './contestReducer';
 

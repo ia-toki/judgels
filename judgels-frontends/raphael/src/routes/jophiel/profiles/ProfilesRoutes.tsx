@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, withRouter } from 'react-router';
 
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import SingleProfileDataRoute from './single/SingleProfileDataRoute';
 import SingleProfileRoutes from './single/SingleProfileRoutes';

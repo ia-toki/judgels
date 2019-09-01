@@ -2,16 +2,16 @@ import { Button, Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { isOutputOnly } from 'modules/api/gabriel/engine';
-import { FormTableFileInput } from 'components/forms/FormTableFileInput/FormTableFileInput';
-import { FormTableSelect2 } from 'components/forms/FormTableSelect2/FormTableSelect2';
+import { isOutputOnly } from '../../../../modules/api/gabriel/engine';
+import { FormTableFileInput } from '../../../../components/forms/FormTableFileInput/FormTableFileInput';
+import { FormTableSelect2 } from '../../../../components/forms/FormTableSelect2/FormTableSelect2';
 import {
   CompatibleFilenameExtensionForGradingLanguage,
   MaxFileSize300KB,
   MaxFileSize10MB,
   Required,
-} from 'components/forms/validations';
-import { gradingLanguageNamesMap } from 'modules/api/gabriel/language';
+} from '../../../../components/forms/validations';
+import { gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language';
 
 import './ProblemSubmissionForm.css';
 

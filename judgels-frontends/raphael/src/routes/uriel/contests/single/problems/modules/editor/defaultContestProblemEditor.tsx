@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { ContestProblemData, ContestProblemStatus } from 'modules/api/uriel/contestProblem';
-import { Alias, Slug, NonnegativeNumber } from 'components/forms/validations';
+import { ContestProblemData, ContestProblemStatus } from '../../../../../../../modules/api/uriel/contestProblem';
+import { Alias, Slug, NonnegativeNumber } from '../../../../../../../components/forms/validations';
 
 import { ContestProblemEditor } from './contestProblemEditor';
 

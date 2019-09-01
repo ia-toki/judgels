@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { parse } from 'query-string';
 
-import Pagination from 'components/Pagination/Pagination';
-import { Card } from 'components/Card/Card';
-import SearchBox from 'components/SearchBox/SearchBox';
-import { Contest, ContestCreateData, ContestsResponse } from 'modules/api/uriel/contest';
+import Pagination from '../../../../components/Pagination/Pagination';
+import { Card } from '../../../../components/Card/Card';
+import SearchBox from '../../../../components/SearchBox/SearchBox';
+import { Contest, ContestCreateData, ContestsResponse } from '../../../../modules/api/uriel/contest';
 
 import { LoadingContestCard } from '../ContestCard/LoadingContestCard';
 import { ContestCard } from '../ContestCard/ContestCard';
@@ -35,7 +35,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
 
   state: ContestsPageState = {};
 
-  componentWillMount() {
+  componentDidMount() {
     const queries = parse(this.props.location.search);
     const name = queries.name as string;
 

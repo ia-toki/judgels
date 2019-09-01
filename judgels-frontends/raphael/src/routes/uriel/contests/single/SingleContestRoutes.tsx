@@ -2,17 +2,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, RouteComponentProps, withRouter } from 'react-router';
 
-import { FullPageLayout } from 'components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from 'components/ScrollToTopOnMount/ScrollToTopOnMount';
+import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
+import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import ContentWithSidebar, {
   ContentWithSidebarItem,
   ContentWithSidebarProps,
-} from 'components/ContentWithSidebar/ContentWithSidebar';
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ContestRoleTag } from 'components/ContestRole/ContestRoleTag';
-import { Contest, ContestStyle } from 'modules/api/uriel/contest';
-import { ContestTab, ContestWebConfig } from 'modules/api/uriel/contestWeb';
-import { AppState } from 'modules/store';
+} from '../../../../components/ContentWithSidebar/ContentWithSidebar';
+import { LoadingState } from '../../../../components/LoadingState/LoadingState';
+import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
+import { Contest, ContestStyle } from '../../../../modules/api/uriel/contest';
+import { ContestTab, ContestWebConfig } from '../../../../modules/api/uriel/contestWeb';
+import { AppState } from '../../../../modules/store';
 
 import { ContestEditDialog } from './components/ContestEditDialog/ContestEditDialog';
 import ContestStateWidget from './components/ContestStateWidget/ContestStateWidget';

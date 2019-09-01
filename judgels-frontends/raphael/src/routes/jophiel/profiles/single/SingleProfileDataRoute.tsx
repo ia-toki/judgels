@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
+import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
 import { profileActions as injectedProfileActions } from '../../modules/profileActions';
 

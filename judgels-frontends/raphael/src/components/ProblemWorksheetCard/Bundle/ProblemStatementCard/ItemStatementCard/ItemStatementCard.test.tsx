@@ -1,7 +1,8 @@
 import { ReactWrapper, mount } from 'enzyme';
+import * as React from 'react';
+
 import { ItemStatementCardProps, ItemStatementCard } from './ItemStatementCard';
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
-import * as React from 'react';
 
 describe('ItemStatementCard', () => {
   let wrapper: ReactWrapper<ItemStatementCardProps>;

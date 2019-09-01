@@ -6,14 +6,14 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter, Link } from 'react-router-dom';
 import { push } from 'react-router-redux';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { UserRef } from 'components/UserRef/UserRef';
-import Pagination from 'components/Pagination/Pagination';
-import { ContestItemSubmissionsResponse } from 'modules/api/uriel/contestSubmissionBundle';
-import { AppState } from 'modules/store';
-import { Contest } from 'modules/api/uriel/contest';
-import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
+import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
+import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
+import { UserRef } from '../../../../../../../components/UserRef/UserRef';
+import Pagination from '../../../../../../../components/Pagination/Pagination';
+import { ContestItemSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionBundle';
+import { AppState } from '../../../../../../../modules/store';
+import { Contest } from '../../../../../../../modules/api/uriel/contest';
+import { selectContest } from '../../../../../../../routes/uriel/contests/modules/contestSelectors';
 
 import { ContestSubmissionFilterWidget } from '../../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
@@ -261,7 +261,7 @@ export function createContestSubmissionsPage(contestSubmissionActions) {
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
 }
 
 export default createContestSubmissionsPage(injectedContestSubmissionActions);

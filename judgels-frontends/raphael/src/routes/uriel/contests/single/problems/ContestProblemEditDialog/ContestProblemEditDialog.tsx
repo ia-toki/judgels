@@ -1,9 +1,9 @@
 import { Callout, Classes, Button, Dialog, Intent } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestProblemData } from 'modules/api/uriel/contestProblem';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { ContestProblemData } from '../../../../../../modules/api/uriel/contestProblem';
 
 import ContestProblemEditForm, { ContestProblemEditFormData } from '../ContestProblemEditForm/ContestProblemEditForm';
 import { getContestProblemEditor } from '../modules/editor/contestProblemEditorRegistry';

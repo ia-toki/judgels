@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from 'components/Card/Card';
-import { SingleColumnLayout } from 'components/SingleColumnLayout/SingleColumnLayout';
-import { UserRegistrationData } from 'modules/api/jophiel/userAccount';
-import { UserRegistrationWebConfig } from 'modules/api/jophiel/userRegistration';
-import ResendActivationEmailButton from 'routes/jophiel/components/ResendActivationEmailButton/ResendActivationEmailButton';
+import { Card } from '../../../../components/Card/Card';
+import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
+import { UserRegistrationData } from '../../../../modules/api/jophiel/userAccount';
+import { UserRegistrationWebConfig } from '../../../../modules/api/jophiel/userRegistration';
+import ResendActivationEmailButton from '../../../../routes/jophiel/components/ResendActivationEmailButton/ResendActivationEmailButton';
 
 import RegisterForm, { RegisterFormData } from '../RegisterForm/RegisterForm';
 import { registerActions as injectedRegisterActions } from '../modules/registerActions';

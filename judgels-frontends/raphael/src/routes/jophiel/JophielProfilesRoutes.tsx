@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as Loadable from 'react-loadable';
+import Loadable from 'react-loadable';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
+import { LoadingState } from '../../components/LoadingState/LoadingState';
 
 const LoadableProfilesRoutes = Loadable({
   loader: () => import('./profiles/ProfilesRoutes'),

@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm, Form } from 'redux-form';
 
-import { FormTextInput } from 'components/forms/FormTextInput/FormTextInput';
+import { FormTextInput } from '../../components/forms/FormTextInput/FormTextInput';
 
 import './SearchBox.css';
 

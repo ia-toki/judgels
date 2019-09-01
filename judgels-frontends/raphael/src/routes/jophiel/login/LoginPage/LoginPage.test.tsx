@@ -17,7 +17,7 @@ describe('LoginPage', () => {
       logIn: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
     const LoginPage = createLoginPage(loginActions);
 
     wrapper = mount(

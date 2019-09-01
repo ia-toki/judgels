@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
-import { User } from 'modules/api/jophiel/user';
-import { UserInfo } from 'modules/api/jophiel/userInfo';
-import { AppState } from 'modules/store';
-import { selectUserJid } from 'modules/session/sessionSelectors';
+import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
+import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { User } from '../../../../../modules/api/jophiel/user';
+import { UserInfo } from '../../../../../modules/api/jophiel/userInfo';
+import { AppState } from '../../../../../modules/store';
+import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
 
 import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
 import { infoActions as injectedInfoActions } from '../../../modules/infoActions';

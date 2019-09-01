@@ -2,17 +2,20 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { SubmissionDetails } from 'components/SubmissionDetails/Programming/SubmissionDetails';
-import { AppState } from 'modules/store';
-import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { Contest } from 'modules/api/uriel/contest';
-import { SubmissionWithSource, SubmissionWithSourceResponse } from 'modules/api/sandalphon/submissionProgramming';
-import { Profile } from 'modules/api/jophiel/profile';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { AppState } from '../../../../../../../../modules/store';
+import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { Contest } from '../../../../../../../../modules/api/uriel/contest';
+import {
+  SubmissionWithSource,
+  SubmissionWithSourceResponse,
+} from '../../../../../../../../modules/api/sandalphon/submissionProgramming';
+import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
+import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
-import { selectContest } from 'routes/uriel/contests/modules/contestSelectors';
+import { selectContest } from '../../../../../../../../routes/uriel/contests/modules/contestSelectors';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../modules/contestSubmissionActions';
 
 export interface ContestSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {

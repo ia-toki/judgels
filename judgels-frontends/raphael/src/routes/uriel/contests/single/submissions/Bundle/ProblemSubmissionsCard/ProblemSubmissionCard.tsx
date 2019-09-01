@@ -1,11 +1,12 @@
-import * as React from 'react';
 import { Button, HTMLTable } from '@blueprintjs/core';
-import { ItemSubmission } from 'modules/api/sandalphon/submissionBundle';
-import { VerdictTag } from '../VerdictTag/VerdictTag';
+import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
-import { ContentCard } from 'components/ContentCard/ContentCard';
+
+import { ItemSubmission } from '../../../../../../../modules/api/sandalphon/submissionBundle';
+import { ItemType } from '../../../../../../../modules/api/sandalphon/problemBundle';
+import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
-import { ItemType } from 'modules/api/sandalphon/problemBundle';
+import { VerdictTag } from '../VerdictTag/VerdictTag';
 
 import './ProblemSubmissionCard.css';
 

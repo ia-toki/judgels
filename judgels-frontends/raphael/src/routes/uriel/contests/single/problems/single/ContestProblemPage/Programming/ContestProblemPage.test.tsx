@@ -7,9 +7,9 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { webPrefsReducer } from 'modules/webPrefs/webPrefsReducer';
-import { ContestProblemStatus } from 'modules/api/uriel/contestProblem';
-import { contest, contestJid, problemJid } from 'fixtures/state';
+import { webPrefsReducer } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
+import { contest, contestJid, problemJid } from '../../../../../../../../fixtures/state';
 
 import { createContestProblemPage } from './ContestProblemPage';
 import { contestReducer, PutContest } from '../../../../../modules/contestReducer';
@@ -64,7 +64,7 @@ describe('ProgrammingContestProblemPage', () => {
       popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
     };
 
-    const store = createStore(
+    const store: any = createStore(
       combineReducers({
         form: formReducer,
         webPrefs: webPrefsReducer,

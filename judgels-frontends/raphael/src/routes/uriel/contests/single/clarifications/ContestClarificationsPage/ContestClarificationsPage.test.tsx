@@ -7,10 +7,13 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, userJid, user } from 'fixtures/state';
-import { ContestClarification, ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
-import { PutUser, sessionReducer } from 'modules/session/sessionReducer';
-import { PutStatementLanguage, webPrefsReducer } from 'modules/webPrefs/webPrefsReducer';
+import { contest, userJid, user } from '../../../../../../fixtures/state';
+import {
+  ContestClarification,
+  ContestClarificationsResponse,
+} from '../../../../../../modules/api/uriel/contestClarification';
+import { PutUser, sessionReducer } from '../../../../../../modules/session/sessionReducer';
+import { PutStatementLanguage, webPrefsReducer } from '../../../../../../modules/webPrefs/webPrefsReducer';
 
 import { createContestClarificationsPage } from './ContestClarificationsPage';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
@@ -34,7 +37,7 @@ describe('ContestClarificationsPage', () => {
   };
 
   const render = () => {
-    const store = createStore(
+    const store: any = createStore(
       combineReducers({
         session: sessionReducer,
         uriel: combineReducers({ contest: contestReducer }),

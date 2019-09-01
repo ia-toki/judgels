@@ -1,5 +1,5 @@
-import { APP_CONFIG, Mode } from 'conf';
-import { JophielRole } from 'modules/api/jophiel/role';
+import { APP_CONFIG, Mode } from '../conf';
+import { JophielRole } from '../modules/api/jophiel/role';
 
 import JophielRoutes from './jophiel/JophielRoutes';
 import JophielAccountsRoutes from './jophiel/JophielAccountsRoutes';

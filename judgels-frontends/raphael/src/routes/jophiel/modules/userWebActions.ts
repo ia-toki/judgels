@@ -1,5 +1,5 @@
-import { selectToken } from 'modules/session/sessionSelectors';
-import { JophielRole } from 'modules/api/jophiel/role';
+import { selectToken } from '../../../modules/session/sessionSelectors';
+import { JophielRole } from '../../../modules/api/jophiel/role';
 
 import { PutWebConfig } from './userWebReducer';
 

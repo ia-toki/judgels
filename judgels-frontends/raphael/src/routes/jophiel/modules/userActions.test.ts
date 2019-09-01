@@ -1,8 +1,8 @@
-import { AppState } from 'modules/store';
-import { Page, OrderDir } from 'modules/api/pagination';
-import { User } from 'modules/api/jophiel/user';
-import { user } from 'fixtures/state';
-import { sessionState, token } from 'fixtures/state';
+import { AppState } from '../../../modules/store';
+import { Page, OrderDir } from '../../../modules/api/pagination';
+import { User } from '../../../modules/api/jophiel/user';
+import { user } from '../../../fixtures/state';
+import { sessionState, token } from '../../../fixtures/state';
 
 import { userActions } from './userActions';
 

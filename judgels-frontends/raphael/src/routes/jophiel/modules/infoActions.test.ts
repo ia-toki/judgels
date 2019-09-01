@@ -1,6 +1,6 @@
-import { UserInfo } from 'modules/api/jophiel/userInfo';
-import { AppState } from 'modules/store';
-import { sessionState, token, userJid } from 'fixtures/state';
+import { UserInfo } from '../../../modules/api/jophiel/userInfo';
+import { AppState } from '../../../modules/store';
+import { sessionState, token, userJid } from '../../../fixtures/state';
 
 import { infoActions } from './infoActions';
 

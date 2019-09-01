@@ -2,15 +2,18 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import Pagination from 'components/Pagination/Pagination';
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestClarification, ContestClarificationData } from 'modules/api/uriel/contestClarification';
-import { ContestClarificationsResponse } from 'modules/api/uriel/contestClarification';
-import { AppState } from 'modules/store';
-import { selectMaybeUserJid } from 'modules/session/sessionSelectors';
-import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
+import Pagination from '../../../../../../components/Pagination/Pagination';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import {
+  ContestClarification,
+  ContestClarificationData,
+} from '../../../../../../modules/api/uriel/contestClarification';
+import { ContestClarificationsResponse } from '../../../../../../modules/api/uriel/contestClarification';
+import { AppState } from '../../../../../../modules/store';
+import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
+import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
 import { ContestClarificationCreateDialog } from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';

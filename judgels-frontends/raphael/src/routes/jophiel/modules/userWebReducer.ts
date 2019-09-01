@@ -1,7 +1,7 @@
 import { TypedAction, TypedReducer } from 'redoodle';
 
-import { JophielRole } from 'modules/api/jophiel/role';
-import { UserWebConfig } from 'modules/api/jophiel/userWeb';
+import { JophielRole } from '../../../modules/api/jophiel/role';
+import { UserWebConfig } from '../../../modules/api/jophiel/userWeb';
 
 export interface UserWebState {
   config: UserWebConfig;

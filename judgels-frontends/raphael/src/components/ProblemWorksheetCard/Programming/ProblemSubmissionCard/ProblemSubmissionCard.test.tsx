@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { LanguageRestriction } from 'modules/api/gabriel/language';
+import { LanguageRestriction } from '../../../../modules/api/gabriel/language';
 import { ProblemSubmissionCardProps, ProblemSubmissionCard } from './ProblemSubmissionCard';
 
 describe('ProblemSubmissionCard', () => {
@@ -34,7 +34,7 @@ describe('ProblemSubmissionCard', () => {
       preferredGradingLanguage,
     };
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store: any = createStore(combineReducers({ form: formReducer }));
 
     wrapper = mount(
       <Provider store={store}>

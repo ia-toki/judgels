@@ -16,7 +16,7 @@ describe('ChangePasswordPage', () => {
       updateMyPassword: jest.fn().mockReturnValue({ type: 'mock-changePassword' }),
     };
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store: any = createStore(combineReducers({ form: formReducer }));
     const ChangePasswordPage = createChangePasswordPage(changePasswordActions);
 
     wrapper = mount(

@@ -3,12 +3,12 @@ import * as React from 'react';
 import { FormattedRelative } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { UserRef } from 'components/UserRef/UserRef';
-import { VerdictTag } from 'components/VerdictTag/VerdictTag';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { getGradingLanguageName } from 'modules/api/gabriel/language';
-import { Contest } from 'modules/api/uriel/contest';
-import { Submission as ProgrammingSubmission } from 'modules/api/sandalphon/submissionProgramming';
+import { UserRef } from '../../../../../../../components/UserRef/UserRef';
+import { VerdictTag } from '../../../../../../../components/VerdictTag/VerdictTag';
+import { ProfilesMap } from '../../../../../../../modules/api/jophiel/profile';
+import { getGradingLanguageName } from '../../../../../../../modules/api/gabriel/language';
+import { Contest } from '../../../../../../../modules/api/uriel/contest';
+import { Submission as ProgrammingSubmission } from '../../../../../../../modules/api/sandalphon/submissionProgramming';
 
 import './ContestSubmissionsTable.css';
 

@@ -1,11 +1,12 @@
+import { ReactWrapper, mount } from 'enzyme';
+import * as React from 'react';
+
 import {
   ItemMultipleChoiceCardProps,
   ItemMultipleChoiceCard,
   ItemMultipleChoiceCardState,
 } from './ItemMultipleChoiceCard';
-import { ReactWrapper, mount } from 'enzyme';
-import { ItemType, ItemMultipleChoiceConfig } from 'modules/api/sandalphon/problemBundle';
-import * as React from 'react';
+import { ItemType, ItemMultipleChoiceConfig } from '../../../../../modules/api/sandalphon/problemBundle';
 
 describe('ItemMultipleChoiceCard', () => {
   let wrapper: ReactWrapper<ItemMultipleChoiceCardProps, ItemMultipleChoiceCardState>;

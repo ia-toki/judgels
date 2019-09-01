@@ -1,5 +1,5 @@
-import { APP_CONFIG } from 'conf';
-import { get, post } from 'modules/api/http';
+import { APP_CONFIG } from '../../../conf';
+import { get, post } from '../../../modules/api/http';
 
 export interface UsernamesMap {
   [username: string]: string;

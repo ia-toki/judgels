@@ -1,5 +1,5 @@
-import { AppState } from 'modules/store';
-import { sessionState, contestJid, token } from 'fixtures/state';
+import { AppState } from '../../../../../../../modules/store';
+import { sessionState, contestJid, token } from '../../../../../../../fixtures/state';
 import { contestSubmissionActions } from './contestSubmissionActions';
 
 describe('bundle contestSubmissionActions', () => {

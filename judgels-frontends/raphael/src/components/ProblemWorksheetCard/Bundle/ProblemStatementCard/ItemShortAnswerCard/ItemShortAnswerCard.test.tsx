@@ -1,7 +1,8 @@
 import { ReactWrapper, mount } from 'enzyme';
-import { ItemShortAnswerCard, ItemShortAnswerCardProps } from './ItemShortAnswerCard';
-import { ItemShortAnswerConfig, ItemType } from 'modules/api/sandalphon/problemBundle';
 import * as React from 'react';
+
+import { ItemShortAnswerCard, ItemShortAnswerCardProps } from './ItemShortAnswerCard';
+import { ItemShortAnswerConfig, ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 
 describe('ItemShortAnswerCard', () => {
   let wrapper: ReactWrapper<ItemShortAnswerCard>;

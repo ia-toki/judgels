@@ -1,10 +1,10 @@
 import { push } from 'react-router-redux';
 import { SubmissionError } from 'redux-form';
 
-import { BadRequestError } from 'modules/api/error';
-import { ContestErrors, ContestPage } from 'modules/api/uriel/contest';
-import { AppState } from 'modules/store';
-import { contest, contestId, sessionState, token, contestJid } from 'fixtures/state';
+import { BadRequestError } from '../../../../modules/api/error';
+import { ContestErrors, ContestPage } from '../../../../modules/api/uriel/contest';
+import { AppState } from '../../../../modules/store';
+import { contest, contestId, sessionState, token, contestJid } from '../../../../fixtures/state';
 
 import { contestActions } from './contestActions';
 import { EditContest, PutContest } from './contestReducer';

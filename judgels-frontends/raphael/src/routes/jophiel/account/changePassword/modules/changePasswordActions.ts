@@ -1,7 +1,7 @@
 import { push } from 'react-router-redux';
 
-import { selectToken } from 'modules/session/sessionSelectors';
-import { BadRequestError } from 'modules/api/error';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
+import { BadRequestError } from '../../../../../modules/api/error';
 
 export const changePasswordActions = {
   updateMyPassword: (oldPassword: string, newPassword: string) => {

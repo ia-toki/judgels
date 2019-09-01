@@ -2,14 +2,14 @@ import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { FormTableTextInput } from 'components/forms/FormTableTextInput/FormTableTextInput';
-import { HorizontalDivider } from 'components/HorizontalDivider/HorizontalDivider';
-import { HorizontalInnerDivider } from 'components/HorizontalInnerDivider/HorizontalInnerDivider';
-import { ActionButtons } from 'components/ActionButtons/ActionButtons';
-import { FormTableTextArea } from 'components/forms/FormTableTextArea/FormTableTextArea';
-import { FormTableSelect } from 'components/forms/FormTableSelect/FormTableSelect';
-import { countriesData } from 'assets/data/countries';
-import { UserInfo } from 'modules/api/jophiel/userInfo';
+import { FormTableTextInput } from '../../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { HorizontalDivider } from '../../../../../components/HorizontalDivider/HorizontalDivider';
+import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
+import { ActionButtons } from '../../../../../components/ActionButtons/ActionButtons';
+import { FormTableTextArea } from '../../../../../components/forms/FormTableTextArea/FormTableTextArea';
+import { FormTableSelect } from '../../../../../components/forms/FormTableSelect/FormTableSelect';
+import { countriesData } from '../../../../../assets/data/countries';
+import { UserInfo } from '../../../../../modules/api/jophiel/userInfo';
 
 const nameField: any = {
   name: 'name',

@@ -2,11 +2,11 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from 'modules/store';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { HtmlText } from 'components/HtmlText/HtmlText';
+import { AppState } from '../../../../../../modules/store';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 
 import ContestEditDescriptionForm, {
   ContestEditDescriptionFormData,

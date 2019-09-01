@@ -7,9 +7,9 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { contest, contestJid, contestSlug, contestStyle } from 'fixtures/state';
-import { parseDateTime } from 'utils/datetime';
-import { parseDuration } from 'utils/duration';
+import { contest, contestJid, contestSlug, contestStyle } from '../../../../../../fixtures/state';
+import { parseDateTime } from '../../../../../../utils/datetime';
+import { parseDuration } from '../../../../../../utils/duration';
 
 import { createContestEditGeneralTab } from './ContestEditGeneralTab';
 import { contestReducer, PutContest } from '../../../modules/contestReducer';
@@ -28,7 +28,7 @@ describe('ContestEditGeneralTab', () => {
     };
     const ContestEditGeneralTab = createContestEditGeneralTab(contestWebActions, contestActions);
 
-    const store = createStore(
+    const store: any = createStore(
       combineReducers({ uriel: combineReducers({ contest: contestReducer }), form: formReducer }),
       applyMiddleware(thunk)
     );

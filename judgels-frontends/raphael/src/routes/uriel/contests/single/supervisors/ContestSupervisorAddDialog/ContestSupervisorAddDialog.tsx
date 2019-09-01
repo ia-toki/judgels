@@ -1,10 +1,13 @@
 import { Classes, Button, Dialog, Intent } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { Contest } from 'modules/api/uriel/contest';
-import { SupervisorManagementPermission } from 'modules/api/uriel/contestSupervisor';
-import { ContestSupervisorsUpsertResponse, ContestSupervisorUpsertData } from 'modules/api/uriel/contestSupervisor';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
+import {
+  ContestSupervisorsUpsertResponse,
+  ContestSupervisorUpsertData,
+} from '../../../../../../modules/api/uriel/contestSupervisor';
 
 import ContestSupervisorAddForm, {
   ContestSupervisorAddFormData,

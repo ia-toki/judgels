@@ -2,8 +2,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { Required, Slug } from 'components/forms/validations';
-import { FormTextInput } from 'components/forms/FormTextInput/FormTextInput';
+import { Required, Slug } from '../../../../components/forms/validations';
+import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 
 export interface ContestCreateFormData {
   slug: string;

@@ -1,4 +1,4 @@
-import * as HTMLReactParser from 'html-react-parser';
+import HTMLReactParser from 'html-react-parser';
 import * as React from 'react';
 
 import './HtmlText.css';

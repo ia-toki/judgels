@@ -1,10 +1,10 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { FormattedDate } from 'components/FormattedDate/FormattedDate';
-import { UserRef } from 'components/UserRef/UserRef';
-import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { ContestContestant } from 'modules/api/uriel/contestContestant';
+import { FormattedDate } from '../../../../../../components/FormattedDate/FormattedDate';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
+import { ContestContestant } from '../../../../../../modules/api/uriel/contestContestant';
 
 import './ContestContestantsTable.css';
 

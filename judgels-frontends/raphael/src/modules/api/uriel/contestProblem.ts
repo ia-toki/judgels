@@ -1,7 +1,7 @@
 import { stringify } from 'query-string';
 
-import { get, put } from 'modules/api/http';
-import { ProblemInfo } from 'modules/api/sandalphon/problem';
+import { get, put } from '../../../modules/api/http';
+import { ProblemInfo } from '../../../modules/api/sandalphon/problem';
 
 import { baseContestURL } from './contest';
 import { ContestProblemWorksheet as ContestProgrammingProblemWorksheet } from './contestProblemProgramming';

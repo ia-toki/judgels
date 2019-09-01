@@ -1,4 +1,4 @@
-import { selectToken } from 'modules/session/sessionSelectors';
+import { selectToken } from '../../../modules/session/sessionSelectors';
 
 export const MAX_AVATAR_FILE_SIZE = 100 * 1024;
 

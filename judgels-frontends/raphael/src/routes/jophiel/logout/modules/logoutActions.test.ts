@@ -1,8 +1,8 @@
-import { UnauthorizedError } from 'modules/api/error';
-import { JophielRole } from 'modules/api/jophiel/role';
-import { DelSession } from 'modules/session/sessionReducer';
-import { AppState } from 'modules/store';
-import { sessionState, token } from 'fixtures/state';
+import { UnauthorizedError } from '../../../../modules/api/error';
+import { JophielRole } from '../../../../modules/api/jophiel/role';
+import { DelSession } from '../../../../modules/session/sessionReducer';
+import { AppState } from '../../../../modules/store';
+import { sessionState, token } from '../../../../fixtures/state';
 
 import { logoutActions } from './logoutActions';
 import { PutWebConfig } from '../../modules/userWebReducer';

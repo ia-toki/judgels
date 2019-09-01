@@ -1,8 +1,8 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContestClarification } from 'modules/api/uriel/contestClarification';
-import { Contest } from 'modules/api/uriel/contest';
+import { ContestClarification } from '../../../../../../modules/api/uriel/contestClarification';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
   default as ContestClarificationAnswerForm,
   ContestClarificationAnswerFormData,

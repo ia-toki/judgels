@@ -1,4 +1,6 @@
 import { mount, ReactWrapper } from 'enzyme';
+import createMemoryHistory from 'history/createMemoryHistory';
+import { MemoryHistory } from 'history';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -7,16 +9,14 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 
-import { webPrefsReducer } from 'modules/webPrefs/webPrefsReducer';
-import { ContestProblemStatus } from 'modules/api/uriel/contestProblem';
-import { contest, contestJid, problemJid, problemAlias } from 'fixtures/state';
+import { webPrefsReducer } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
+import { contest, contestJid, problemJid, problemAlias } from '../../../../../../../../fixtures/state';
 
 import { createContestProblemPage } from './ContestProblemPage';
 import { contestReducer, PutContest } from '../../../../../modules/contestReducer';
-import createMemoryHistory from 'history/createMemoryHistory';
-import { MemoryHistory } from 'history';
-import { ContestStyle } from 'modules/api/uriel/contest';
-import { ItemType } from 'modules/api/sandalphon/problemBundle';
+import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
+import { ItemType } from '../../../../../../../../modules/api/sandalphon/problemBundle';
 
 describe('BundleContestProblemPage', () => {
   let contestProblemActions: jest.Mocked<any>;
@@ -75,7 +75,7 @@ describe('BundleContestProblemPage', () => {
       popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
     };
 
-    const store = createStore(
+    const store: any = createStore(
       combineReducers({
         form: formReducer,
         webPrefs: webPrefsReducer,

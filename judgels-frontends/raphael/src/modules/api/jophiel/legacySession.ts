@@ -1,5 +1,5 @@
-import { APP_CONFIG } from 'conf';
-import { post } from 'modules/api/http';
+import { APP_CONFIG } from '../../../conf';
+import { post } from '../../../modules/api/http';
 
 export interface LegacySession {
   authCode: string;

@@ -1,22 +1,22 @@
 import { Classes } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
-import * as ReactPaginate from 'react-paginate';
+import ReactPaginate from 'react-paginate';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import './Pagination.css';
 
-interface PaginationProps {
+interface PaginationPropsImpl {
   currentPage: number;
   pageSize: number;
   totalCount: number;
   onChangePage: (nextPage: number) => void;
 }
 
-class Pagination extends React.PureComponent<PaginationProps, {}> {
+class Pagination extends React.PureComponent<PaginationPropsImpl, {}> {
   render() {
     const { totalCount } = this.props;
 
@@ -86,7 +86,7 @@ class Pagination extends React.PureComponent<PaginationProps, {}> {
   };
 }
 
-interface PaginationContainerProps {
+export interface PaginationProps {
   pageSize: number;
   onChangePage: (nextPage: number) => Promise<number>;
 }
@@ -100,7 +100,7 @@ interface PaginationContainerState {
 }
 
 class PaginationContainer extends React.PureComponent<
-  PaginationContainerProps & PaginationContainerConnectedProps,
+  PaginationProps & PaginationContainerConnectedProps,
   PaginationContainerState
 > {
   state: PaginationContainerState = { totalCount: 0 };
@@ -114,7 +114,7 @@ class PaginationContainer extends React.PureComponent<
       currentPage = parsedCurrentPage;
     }
 
-    const props: PaginationProps = {
+    const props: PaginationPropsImpl = {
       currentPage,
       pageSize: this.props.pageSize,
       totalCount: this.state.totalCount,
@@ -147,4 +147,3 @@ function createPagination() {
 }
 
 export default createPagination();
-export { PaginationContainerProps as PaginationProps };

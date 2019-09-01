@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from 'components/Card/Card';
-import { withBreadcrumb } from 'components/BreadcrumbWrapper/BreadcrumbWrapper';
+import { Card } from '../../../../../components/Card/Card';
+import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
 import ChangePasswordForm, { ChangePasswordFormData } from '../ChangePasswordForm/ChangePasswordForm';
 import { changePasswordActions as injectedChangePasswordActions } from '../modules/changePasswordActions';

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { AppState } from 'modules/store';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestWithWebConfig } from 'modules/api/uriel/contestWeb';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from 'modules/breadcrumbs/breadcrumbsActions';
+import { AppState } from '../../../../modules/store';
+import { Contest } from '../../../../modules/api/uriel/contest';
+import { ContestWithWebConfig } from '../../../../modules/api/uriel/contestWeb';
+import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
 import { selectContest } from '../modules/contestSelectors';
 import { contestActions as injectedContestActions } from '../modules/contestActions';

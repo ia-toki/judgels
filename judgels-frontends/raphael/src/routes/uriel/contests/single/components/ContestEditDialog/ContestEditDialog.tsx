@@ -1,7 +1,7 @@
 import { Classes, Button, Dialog, Icon, Intent, Tab, Tabs } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Contest } from 'modules/api/uriel/contest';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 
 import ContestEditGeneralTab from '../ContestEditGeneralTab/ContestEditGeneralTab';
 import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditDescriptionTab';

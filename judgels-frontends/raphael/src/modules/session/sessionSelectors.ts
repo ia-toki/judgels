@@ -1,4 +1,4 @@
-import { AppState } from 'modules/store';
+import { AppState } from '../../modules/store';
 
 export function selectIsLoggedIn(state: AppState) {
   return state.session.isLoggedIn;

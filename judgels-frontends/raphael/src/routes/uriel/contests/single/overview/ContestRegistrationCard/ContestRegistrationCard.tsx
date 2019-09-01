@@ -3,11 +3,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ContestContestantState } from 'modules/api/uriel/contestContestant';
-import { Contest } from 'modules/api/uriel/contest';
-import { AppState } from 'modules/store';
-import { selectIsLoggedIn } from 'modules/session/sessionSelectors';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { AppState } from '../../../../../../modules/store';
+import { selectIsLoggedIn } from '../../../../../../modules/session/sessionSelectors';
 
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 import { selectContest } from '../../../modules/contestSelectors';

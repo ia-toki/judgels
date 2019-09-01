@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { FormTable, FormTableRow } from 'components/forms/FormTable/FormTable';
-import { HorizontalInnerDivider } from 'components/HorizontalInnerDivider/HorizontalInnerDivider';
-import { UserInfo, userInfoGender } from 'modules/api/jophiel/userInfo';
-import { getCountryName } from 'assets/data/countries';
+import { FormTable, FormTableRow } from '../../../../../components/forms/FormTable/FormTable';
+import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
+import { UserInfo, userInfoGender } from '../../../../../modules/api/jophiel/userInfo';
+import { getCountryName } from '../../../../../assets/data/countries';
 
 export interface InfoTableProps {
   email: string;

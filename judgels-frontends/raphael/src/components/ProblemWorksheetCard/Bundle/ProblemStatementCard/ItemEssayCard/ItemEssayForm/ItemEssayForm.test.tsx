@@ -1,9 +1,10 @@
 import { ReactWrapper, mount } from 'enzyme';
-import { ItemEssayFormProps, ItemEssayFormState } from './ItemEssayForm';
-import { ItemType, ItemEssayConfig } from 'modules/api/sandalphon/problemBundle';
-import { AnswerState } from 'components/ProblemWorksheetCard/Bundle/itemStatement';
-import ItemEssayForm from './ItemEssayForm';
 import * as React from 'react';
+
+import { ItemEssayFormProps, ItemEssayFormState } from './ItemEssayForm';
+import { ItemType, ItemEssayConfig } from '../../../../../../modules/api/sandalphon/problemBundle';
+import { AnswerState } from '../../../../../../components/ProblemWorksheetCard/Bundle/itemStatement';
+import ItemEssayForm from './ItemEssayForm';
 
 describe('ItemEssayForm', () => {
   let wrapper: ReactWrapper<ItemEssayFormProps, ItemEssayFormState>;

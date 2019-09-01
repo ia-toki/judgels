@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { PushBreadcrumb, PopBreadcrumb } from 'modules/breadcrumbs/breadcrumbsReducer';
+import { PushBreadcrumb, PopBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 
 export function withBreadcrumb(breadcrumbTitle: string) {
   return InnerComponent => {

@@ -1,8 +1,8 @@
 import { Card } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Item } from 'modules/api/sandalphon/problemBundle';
-import { HtmlText } from 'components/HtmlText/HtmlText';
+import { Item } from '../../../../../modules/api/sandalphon/problemBundle';
+import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
 
 import { AnswerState } from '../../itemStatement';
 import ItemEssayForm from './ItemEssayForm/ItemEssayForm';

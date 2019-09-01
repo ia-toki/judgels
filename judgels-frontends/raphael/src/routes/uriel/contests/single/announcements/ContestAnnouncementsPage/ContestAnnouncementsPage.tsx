@@ -2,16 +2,16 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import Pagination from 'components/Pagination/Pagination';
-import { AppState } from 'modules/store';
-import { Contest } from 'modules/api/uriel/contest';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import Pagination from '../../../../../../components/Pagination/Pagination';
+import { AppState } from '../../../../../../modules/store';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
   ContestAnnouncement,
   ContestAnnouncementData,
   ContestAnnouncementsResponse,
-} from 'modules/api/uriel/contestAnnouncement';
+} from '../../../../../../modules/api/uriel/contestAnnouncement';
 
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../modules/contestAnnouncementActions';

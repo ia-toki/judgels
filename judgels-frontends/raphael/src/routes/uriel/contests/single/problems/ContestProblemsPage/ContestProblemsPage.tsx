@@ -2,22 +2,22 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { ContentCard } from 'components/ContentCard/ContentCard';
-import { LoadingState } from 'components/LoadingState/LoadingState';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
-} from 'components/StatementLanguageWidget/StatementLanguageWidget';
-import { Contest } from 'modules/api/uriel/contest';
+} from '../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
   ContestProblem,
   ContestProblemData,
   ContestProblemsResponse,
   ContestProblemStatus,
-} from 'modules/api/uriel/contestProblem';
-import { selectStatementLanguage } from 'modules/webPrefs/webPrefsSelectors';
-import { consolidateLanguages } from 'modules/api/sandalphon/language';
-import { getProblemName } from 'modules/api/sandalphon/problem';
-import { AppState } from 'modules/store';
+} from '../../../../../../modules/api/uriel/contestProblem';
+import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
+import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
+import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
+import { AppState } from '../../../../../../modules/store';
 
 import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
 import { ContestProblemCard, ContestProblemCardProps } from '../ContestProblemCard/ContestProblemCard';

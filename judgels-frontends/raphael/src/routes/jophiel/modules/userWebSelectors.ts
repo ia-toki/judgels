@@ -1,4 +1,4 @@
-import { AppState } from 'modules/store';
+import { AppState } from '../../../modules/store';
 
 export function selectIsUserWebConfigLoaded(state: AppState) {
   return state.jophiel.userWeb.isConfigLoaded;

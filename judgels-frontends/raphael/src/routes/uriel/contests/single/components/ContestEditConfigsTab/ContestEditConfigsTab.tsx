@@ -2,12 +2,12 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { AppState } from 'modules/store';
-import { Contest } from 'modules/api/uriel/contest';
-import { ContestModulesConfig } from 'modules/api/uriel/contestModule';
-import { allLanguagesAllowed, LanguageRestriction } from 'modules/api/gabriel/language';
-import { LoadingState } from 'components/LoadingState/LoadingState';
-import { formatDuration, parseDuration } from 'utils/duration';
+import { AppState } from '../../../../../../modules/store';
+import { Contest } from '../../../../../../modules/api/uriel/contest';
+import { ContestModulesConfig } from '../../../../../../modules/api/uriel/contestModule';
+import { allLanguagesAllowed, LanguageRestriction } from '../../../../../../modules/api/gabriel/language';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 
 import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
 import ContestEditConfigsForm, { ContestEditConfigsFormData } from '../ContestEditConfigsForm/ContestEditConfigsForm';

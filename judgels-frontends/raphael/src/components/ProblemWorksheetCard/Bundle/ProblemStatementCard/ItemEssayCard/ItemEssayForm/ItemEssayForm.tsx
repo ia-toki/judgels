@@ -1,9 +1,12 @@
 import { ControlGroup, Classes, Button, Intent, Callout } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
-import { AnswerState, StatementButtonText } from 'components/ProblemWorksheetCard/Bundle/itemStatement';
-import { Item } from 'modules/api/sandalphon/problemBundle';
+import {
+  AnswerState,
+  StatementButtonText,
+} from '../../../../../../components/ProblemWorksheetCard/Bundle/itemStatement';
+import { Item } from '../../../../../../modules/api/sandalphon/problemBundle';
 
 import './ItemEssayForm.css';
 

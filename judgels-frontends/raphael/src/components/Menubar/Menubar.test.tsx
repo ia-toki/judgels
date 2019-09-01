@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
-import { AppState } from 'modules/store';
+import { AppState } from '../../modules/store';
 
 import Menubar, { MenubarProps } from './Menubar';
 

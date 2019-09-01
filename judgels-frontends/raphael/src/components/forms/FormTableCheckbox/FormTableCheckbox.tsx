@@ -1,5 +1,5 @@
 import { Checkbox } from '@blueprintjs/core';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 
 import { getIntentClassName } from '../meta';

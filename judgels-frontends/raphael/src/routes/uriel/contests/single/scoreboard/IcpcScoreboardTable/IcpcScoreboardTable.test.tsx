@@ -2,8 +2,8 @@ import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 
-import { ProfilesMap } from 'modules/api/jophiel/profile';
-import { IcpcScoreboardProblemState, IcpcScoreboard } from 'modules/api/uriel/scoreboard';
+import { ProfilesMap } from '../../../../../../modules/api/jophiel/profile';
+import { IcpcScoreboardProblemState, IcpcScoreboard } from '../../../../../../modules/api/uriel/scoreboard';
 
 import { IcpcScoreboardTable, IcpcScoreboardTableProps } from './IcpcScoreboardTable';
 

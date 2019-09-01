@@ -49,7 +49,7 @@ describe('ForgotPasswordPage', () => {
       requestToResetPassword: jest.fn().mockReturnValue({ type: 'mock-requestToReset' }),
     };
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store: any = createStore(combineReducers({ form: formReducer }));
     const ForgotPasswordPageLocal = createForgotPasswordPage(forgotPasswordActions);
 
     wrapper = mount(

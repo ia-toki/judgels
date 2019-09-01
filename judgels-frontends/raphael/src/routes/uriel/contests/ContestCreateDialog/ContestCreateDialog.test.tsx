@@ -17,7 +17,7 @@ describe('ContestCreateDialog', () => {
     onGetContestConfig = jest.fn().mockReturnValue(Promise.resolve({ canAdminister: true }));
     onCreateContest = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
+    const store: any = createStore(combineReducers({ form: formReducer }), applyMiddleware(thunk));
 
     const props = {
       onGetContestConfig,

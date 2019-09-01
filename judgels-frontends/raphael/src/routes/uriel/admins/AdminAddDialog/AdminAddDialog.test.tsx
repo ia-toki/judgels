@@ -14,7 +14,7 @@ describe('AdminAddDialog', () => {
   beforeEach(() => {
     onUpsertAdmins = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(combineReducers({ form: formReducer }));
+    const store: any = createStore(combineReducers({ form: formReducer }));
 
     const props: AdminAddDialogProps = {
       onUpsertAdmins,
