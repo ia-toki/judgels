@@ -182,6 +182,7 @@ map $sent_http_content_type $expires {
     text/css                   max;
     application/javascript     max;
     ~image/                    max;
+    ~font/                     max;
 }
 
 server {
