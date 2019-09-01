@@ -36,16 +36,13 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
 
   private currentTimeout;
 
-  static getDerivedStateFromProps(props: ContestStateWidgetProps): ContestStateWidgetState | null {
-    const { remainingStateDuration } = props;
-    if (!remainingStateDuration) {
-      return null;
+  componentDidUpdate(prevProps: ContestStateWidgetProps) {
+    if (prevProps.remainingStateDuration !== this.props.remainingStateDuration) {
+      this.setState({
+        baseRemainingDuration: this.props.remainingStateDuration,
+        baseTimeForRemainingDuration: new Date().getTime(),
+      });
     }
-
-    return {
-      baseRemainingDuration: remainingStateDuration,
-      baseTimeForRemainingDuration: new Date().getTime(),
-    };
   }
 
   componentDidMount() {
