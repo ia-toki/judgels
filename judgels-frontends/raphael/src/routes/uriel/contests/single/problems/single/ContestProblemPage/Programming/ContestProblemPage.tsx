@@ -165,7 +165,7 @@ export function createContestProblemPage(
     onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));
 }
 
 export default createContestProblemPage(

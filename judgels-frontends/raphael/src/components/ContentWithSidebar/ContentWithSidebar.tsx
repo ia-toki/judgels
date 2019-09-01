@@ -43,9 +43,7 @@ export interface ContentWithSidebarProps {
   contentHeader?: JSX.Element;
 }
 
-interface ContentWithSidebarConnectedProps extends RouteComponentProps<{}> {
-  onItemClick: (parentPath: string, itemId: string) => any;
-}
+interface ContentWithSidebarConnectedProps extends RouteComponentProps<{}> {}
 
 function resolveUrl(parentPath: string, childPath: string) {
   const actualChildPath = childPath === '@' ? '' : childPath;
@@ -125,4 +123,4 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
   };
 }
 
-export default withRouter<any>(ContentWithSidebar);
+export default withRouter<any, any>(ContentWithSidebar);

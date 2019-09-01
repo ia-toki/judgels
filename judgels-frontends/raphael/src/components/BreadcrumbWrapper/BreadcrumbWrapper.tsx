@@ -31,6 +31,6 @@ export function withBreadcrumb(breadcrumbTitle: string) {
       onPopBreadcrumb: (link: string) => PopBreadcrumb.create({ link }),
     };
 
-    return withRouter<any>(connect(undefined, mapDispatchToProps)(WrappedComponent));
+    return withRouter<any, any>(connect(undefined, mapDispatchToProps)(WrappedComponent));
   };
 }

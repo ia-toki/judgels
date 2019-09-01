@@ -1,7 +1,7 @@
 import { Button, HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
-import { FormattedRelative } from 'react-intl';
 
+import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
 import { ItemSubmission } from '../../../../../../../modules/api/sandalphon/submissionBundle';
 import { ItemType } from '../../../../../../../modules/api/sandalphon/problemBundle';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';

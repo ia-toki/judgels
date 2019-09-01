@@ -1,8 +1,8 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
 import prettyBytes from 'pretty-bytes';
 import * as React from 'react';
-import { FormattedRelative } from 'react-intl';
 
+import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import { ContestFile, contestFileAPI } from '../../../../../../modules/api/uriel/contestFile';
 

@@ -11,4 +11,4 @@ const MainSingleContestRoutes = () => (
   </div>
 );
 
-export default withRouter<any>(MainSingleContestRoutes);
+export default withRouter<any, any>(MainSingleContestRoutes);

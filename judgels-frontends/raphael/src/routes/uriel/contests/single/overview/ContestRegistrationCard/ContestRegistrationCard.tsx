@@ -182,7 +182,7 @@ function createContestRegistrationCard(contestWebActions, contestContestantActio
     onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
     onUnregisterMyselfAsContestant: contestContestantActions.unregisterMyselfAsContestant,
   };
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard));
 }
 
 export default createContestRegistrationCard(injectedContestWebActions, injectedContestContestantActions);

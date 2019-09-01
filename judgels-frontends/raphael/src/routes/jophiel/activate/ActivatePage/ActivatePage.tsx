@@ -60,7 +60,7 @@ export function createActivatePage(activateActions) {
     onActivateUser: activateActions.activateUser,
   };
 
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(ActivatePageContainer));
+  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(ActivatePageContainer));
 }
 
 export default createActivatePage(injectedActivateActions);

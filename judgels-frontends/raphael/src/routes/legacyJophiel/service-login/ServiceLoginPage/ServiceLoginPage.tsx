@@ -54,7 +54,7 @@ export function createServiceLoginPage(serviceLoginActions) {
     onPropagateLogin: serviceLoginActions.propagateLogin,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ServiceLoginPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ServiceLoginPage));
 }
 
 export default createServiceLoginPage(injectedServiceLoginActions);

@@ -11,4 +11,4 @@ const ContestSubmissionRoutes = () => (
   </div>
 );
 
-export default withRouter<any>(ContestSubmissionRoutes);
+export default withRouter<any, any>(ContestSubmissionRoutes);

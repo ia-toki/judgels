@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 import { Contest } from '../../modules/api/uriel/contest';
 
@@ -31,4 +31,4 @@ function createLegacyCompetitionRoute(contestActions) {
   return connect(undefined, mapDispatchToProps)(LegacyCompetitionRoute);
 }
 
-export default withRouter<any>(createLegacyCompetitionRoute(injectedContestActions));
+export default withRouter<any, any>(createLegacyCompetitionRoute(injectedContestActions));

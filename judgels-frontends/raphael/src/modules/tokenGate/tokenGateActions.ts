@@ -1,4 +1,4 @@
-import { replace } from 'react-router-redux';
+import { replace } from 'connected-react-router';
 
 export function createTokenGateActions() {
   return {

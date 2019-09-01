@@ -44,4 +44,4 @@ const RankingRoutes = () => {
   );
 };
 
-export default withRouter<any>(withBreadcrumb('Ranking')(RankingRoutes));
+export default withRouter<any, any>(withBreadcrumb('Ranking')(RankingRoutes));

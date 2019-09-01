@@ -52,7 +52,7 @@ function createSingleProfileRoutes() {
   const mapStateToProps = (state: AppState) => ({
     userJid: selectUserJid(state),
   });
-  return withRouter<any>(connect(mapStateToProps)(SingleProfileRoutes));
+  return withRouter<any, any>(connect(mapStateToProps)(SingleProfileRoutes));
 }
 
 export default createSingleProfileRoutes();

@@ -47,8 +47,7 @@ describe('UserWidget', () => {
       render();
     });
 
-    // TODO(fushar): fix
-    it.skip('shows the user widget', () => {
+    it('shows the user widget', () => {
       expect(wrapper.find('[data-key="username"]').text()).toContain('user');
     });
   });

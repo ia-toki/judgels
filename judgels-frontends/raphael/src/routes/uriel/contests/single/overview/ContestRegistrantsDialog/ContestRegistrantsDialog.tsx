@@ -113,7 +113,7 @@ function createContestRegistrantsDialog(contestContestantActions) {
   const mapDispatchToProps = {
     onGetApprovedContestants: contestContestantActions.getApprovedContestants,
   };
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog));
 }
 
 export default createContestRegistrantsDialog(injectedContestContestantActions);

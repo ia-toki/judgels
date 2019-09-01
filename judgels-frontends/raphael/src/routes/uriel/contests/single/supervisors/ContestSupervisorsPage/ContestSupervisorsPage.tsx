@@ -136,7 +136,7 @@ export function createContestSupervisorsPage(contestSupervisorActions) {
     onDeleteSupervisors: contestSupervisorActions.deleteSupervisors,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSupervisorsPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestSupervisorsPage));
 }
 
 export default createContestSupervisorsPage(injectedContestSupervisorActions);

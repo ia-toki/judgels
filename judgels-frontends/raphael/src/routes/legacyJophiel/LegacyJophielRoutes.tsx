@@ -14,4 +14,4 @@ const LegacyJophielRoutes = () => (
   </div>
 );
 
-export default withRouter<any>(LegacyJophielRoutes);
+export default withRouter<any, any>(LegacyJophielRoutes);

@@ -158,7 +158,7 @@ export function createContestContestantsPage(contestContestantActions, contestAc
     onResetVirtualContest: contestActions.resetVirtualContest,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));
 }
 
 export default createContestContestantsPage(injectedContestContestantActions, injectedContestActions);

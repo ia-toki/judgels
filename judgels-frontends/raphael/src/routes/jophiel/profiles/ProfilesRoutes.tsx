@@ -13,4 +13,4 @@ const ProfileRoutes = () => (
   </div>
 );
 
-export default withBreadcrumb('Profiles')(withRouter<any>(ProfileRoutes));
+export default withBreadcrumb('Profiles')(withRouter<any, any>(ProfileRoutes));

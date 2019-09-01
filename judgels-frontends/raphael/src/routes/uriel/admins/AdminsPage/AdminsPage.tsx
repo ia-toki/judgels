@@ -112,7 +112,7 @@ export function createAdminsPage(adminActions) {
     onDeleteAdmins: adminActions.deleteAdmins,
   };
 
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(AdminsPage));
+  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(AdminsPage));
 }
 
 export default createAdminsPage(injectedAdminActions);

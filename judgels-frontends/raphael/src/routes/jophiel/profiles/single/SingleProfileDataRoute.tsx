@@ -50,7 +50,7 @@ export function createSingleProfileDataRoute(profileActions, breadcrumbsActions)
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
 
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(SingleProfileDataRoute));
+  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(SingleProfileDataRoute));
 }
 
 export default createSingleProfileDataRoute(injectedProfileActions, injectedBreadcrumbsActions);

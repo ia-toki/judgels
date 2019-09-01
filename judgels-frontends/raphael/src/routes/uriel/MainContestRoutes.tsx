@@ -15,4 +15,4 @@ const MainContestRoutes = () => (
   </div>
 );
 
-export default withRouter<any>(withBreadcrumb('Contests')(MainContestRoutes));
+export default withRouter<any, any>(withBreadcrumb('Contests')(MainContestRoutes));

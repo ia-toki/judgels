@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
 import { HTMLTable, Icon } from '@blueprintjs/core';
 
@@ -143,7 +143,7 @@ function createUsersPage(userActions) {
     },
   };
 
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(UsersPage));
+  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(UsersPage));
 }
 
 export default withBreadcrumb('Users')(createUsersPage(injectedUserActions));

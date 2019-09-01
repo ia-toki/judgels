@@ -174,7 +174,7 @@ export function createContestClarificationsPage(contestClarificationActions) {
     onAnswerClarification: contestClarificationActions.answerClarification,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage));
 }
 
 export default createContestClarificationsPage(injectedContestClarificationActions);

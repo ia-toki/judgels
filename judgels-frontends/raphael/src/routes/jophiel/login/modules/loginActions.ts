@@ -1,4 +1,4 @@
-import { replace } from 'react-router-redux';
+import { replace } from 'connected-react-router';
 
 import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';

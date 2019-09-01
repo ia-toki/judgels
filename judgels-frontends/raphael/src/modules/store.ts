@@ -1,5 +1,5 @@
-import createBrowserHistory from 'history/createBrowserHistory';
-import { routerMiddleware, routerReducer, RouterState } from 'react-router-redux';
+import { createBrowserHistory } from 'history';
+import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router';
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import { FormState, reducer as formReducer } from 'redux-form';
 import { persistStore, persistReducer } from 'redux-persist';
@@ -50,19 +50,19 @@ export interface AppState {
   breadcrumbs: BreadcrumbsState;
 }
 
+export const history = createBrowserHistory();
+
 const rootReducer = combineReducers<AppState>({
   session: persistReducer({ key: 'session', storage }, sessionReducer),
   webPrefs: persistReducer({ key: 'webPrefs', storage }, webPrefsReducer),
   jophiel: jophielReducer,
   uriel: urielReducer,
-  router: routerReducer,
+  router: connectRouter(history),
   form: formReducer,
   breadcrumbs: breadcrumbsReducer,
 });
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-export const history = createBrowserHistory();
 
 export const store: any = createStore<AppState>(
   rootReducer,

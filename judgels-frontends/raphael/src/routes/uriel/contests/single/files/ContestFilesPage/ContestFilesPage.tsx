@@ -93,7 +93,7 @@ export function createContestFilesPage(contestFileActions) {
     onUploadFile: contestFileActions.uploadFile,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestFilesPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestFilesPage));
 }
 
 export default createContestFilesPage(injectedContestFileActions);

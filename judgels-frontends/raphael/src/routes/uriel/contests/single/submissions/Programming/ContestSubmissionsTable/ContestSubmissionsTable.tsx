@@ -1,8 +1,8 @@
 import { HTMLTable, Icon } from '@blueprintjs/core';
 import * as React from 'react';
-import { FormattedRelative } from 'react-intl';
 import { Link } from 'react-router-dom';
 
+import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { VerdictTag } from '../../../../../../../components/VerdictTag/VerdictTag';
 import { ProfilesMap } from '../../../../../../../modules/api/jophiel/profile';

@@ -25,7 +25,7 @@ export function createContestProblemPage() {
   const mapStateToProps = (state: AppState) => ({
     contest: selectContest(state)!,
   });
-  return withRouter<any>(connect(mapStateToProps)(ContestProblemPage));
+  return withRouter<any, any>(connect(mapStateToProps)(ContestProblemPage));
 }
 
 export default createContestProblemPage();

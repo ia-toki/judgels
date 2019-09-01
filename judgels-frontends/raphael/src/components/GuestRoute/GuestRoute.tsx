@@ -15,4 +15,4 @@ const mapStateToProps = (state: AppState) => ({
   isLoggedIn: selectIsLoggedIn(state),
 });
 
-export default withRouter<any>(connect(mapStateToProps)(GuestRoute));
+export default withRouter<any, any>(connect(mapStateToProps)(GuestRoute));

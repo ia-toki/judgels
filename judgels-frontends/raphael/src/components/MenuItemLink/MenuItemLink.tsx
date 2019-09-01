@@ -1,6 +1,6 @@
 import { MenuItem } from '@blueprintjs/core';
 import * as React from 'react';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 
 export interface MenuItemLinkProps {

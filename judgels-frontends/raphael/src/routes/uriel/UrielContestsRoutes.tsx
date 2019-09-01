@@ -53,7 +53,7 @@ function createUrielContestsRoutes() {
   const mapStateToProps = (state: AppState) => ({
     role: selectRole(state),
   });
-  return withRouter<any>(connect(mapStateToProps)(UrielContestsRoutes));
+  return withRouter<any, any>(connect(mapStateToProps)(UrielContestsRoutes));
 }
 
 export default createUrielContestsRoutes();

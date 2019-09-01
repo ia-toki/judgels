@@ -1,4 +1,4 @@
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { BadRequestError } from '../../../../../modules/api/error';

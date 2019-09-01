@@ -142,7 +142,7 @@ export function createContestProblemPage(contestProblemActions, contestSubmissio
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));
 }
 
 export default createContestProblemPage(

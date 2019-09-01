@@ -1,10 +1,9 @@
 import { mount, ReactWrapper } from 'enzyme';
-import createMemoryHistory from 'history/createMemoryHistory';
-import { MemoryHistory } from 'history';
+import { createMemoryHistory, MemoryHistory } from 'history';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
-import { ConnectedRouter } from 'react-router-redux';
+import { connectRouter, ConnectedRouter, routerMiddleware } from 'connected-react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
@@ -75,13 +74,16 @@ describe('BundleContestProblemPage', () => {
       popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
     };
 
+    history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/${problemAlias}`] });
+
     const store: any = createStore(
       combineReducers({
         form: formReducer,
         webPrefs: webPrefsReducer,
         uriel: combineReducers({ contest: contestReducer }),
+        router: connectRouter(history),
       }),
-      applyMiddleware(thunk)
+      applyMiddleware(thunk, routerMiddleware(history))
     );
     store.dispatch(PutContest.create({ ...contest, style: ContestStyle.Bundle }));
 
@@ -91,7 +93,6 @@ describe('BundleContestProblemPage', () => {
       breadcrumbsActions
     );
 
-    history = createMemoryHistory({ initialEntries: [`/contests/${contestJid}/problems/${problemAlias}`] });
     wrapper = mount(
       <Provider store={store}>
         <ConnectedRouter history={history}>

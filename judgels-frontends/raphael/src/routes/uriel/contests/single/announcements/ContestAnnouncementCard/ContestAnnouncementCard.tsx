@@ -1,7 +1,7 @@
 import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 import * as React from 'react';
-import { FormattedRelative } from 'react-intl';
 
+import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { FormattedContent } from '../../../../../../components/FormattedContent/FormattedContent';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import {

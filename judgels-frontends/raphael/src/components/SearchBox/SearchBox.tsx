@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { stringify, parse } from 'query-string';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 
@@ -39,7 +39,7 @@ function createSearchBox() {
   const mapDispatchToProps = {
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(SearchBoxContainer));
+  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(SearchBoxContainer));
 }
 
 export default createSearchBox();

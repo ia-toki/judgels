@@ -101,7 +101,7 @@ export function createSubmissionSummaryPage(contestSubmissionActions) {
     onRegradeAll: contestSubmissionActions.regradeSubmissions,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));
 }
 
 export default createSubmissionSummaryPage(injectedContestSubmissionActions);

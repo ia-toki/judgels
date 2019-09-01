@@ -187,7 +187,7 @@ export function createContestProblemsPage(contestProblemActions) {
     onSetProblems: contestProblemActions.setProblems,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemsPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemsPage));
 }
 
 export default createContestProblemsPage(injectedContestProblemActions);

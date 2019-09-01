@@ -35,7 +35,7 @@ export function createResetPasswordPage(resetPasswordActions) {
       resetPasswordActions.resetPassword(emailCode, data.password),
   };
 
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(ResetPasswordPageContainer));
+  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(ResetPasswordPageContainer));
 }
 
 export default createResetPasswordPage(injectedResetPasswordActions);

@@ -1,4 +1,4 @@
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { SubmissionError } from 'redux-form';
 
 import { BadRequestError } from '../../../../modules/api/error';

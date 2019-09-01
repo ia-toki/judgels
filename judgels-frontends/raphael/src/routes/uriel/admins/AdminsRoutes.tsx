@@ -11,4 +11,4 @@ const AdminsRoutes = () => (
   </div>
 );
 
-export default withRouter<any>(withBreadcrumb('Admins')(AdminsRoutes));
+export default withRouter<any, any>(withBreadcrumb('Admins')(AdminsRoutes));

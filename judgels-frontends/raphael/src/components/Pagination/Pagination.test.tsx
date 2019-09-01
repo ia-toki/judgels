@@ -5,7 +5,7 @@ import ReactPaginate from 'react-paginate';
 import createMockStore, { MockStore } from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 import { AppState } from '../../modules/store';
 

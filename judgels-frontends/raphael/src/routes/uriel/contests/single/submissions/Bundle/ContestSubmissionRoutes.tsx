@@ -29,7 +29,7 @@ export const createContestSubmissionRoutes = () => {
   const mapStateToProps = state => ({
     webConfig: selectContestWebConfig(state),
   });
-  return withRouter<any>(connect(mapStateToProps)(ContestSubmissionRoutes));
+  return withRouter<any, any>(connect(mapStateToProps)(ContestSubmissionRoutes));
 };
 
 export default createContestSubmissionRoutes();

@@ -124,7 +124,7 @@ function createProfileSummaryPage(avatarActions, profileActions) {
     onGetBasicProfile: profileActions.getBasicProfile,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ProfileSummaryPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProfileSummaryPage));
 }
 
 export default createProfileSummaryPage(injectedAvatarActions, injectedProfileActions);

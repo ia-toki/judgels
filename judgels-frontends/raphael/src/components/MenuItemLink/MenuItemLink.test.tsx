@@ -1,7 +1,7 @@
 import { mount, ReactWrapper } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import createMockStore, { MockStore } from 'redux-mock-store';
 
 import MenuItemLink from './MenuItemLink';

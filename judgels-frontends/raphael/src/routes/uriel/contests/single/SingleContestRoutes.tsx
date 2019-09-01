@@ -194,7 +194,7 @@ function createSingleContestRoutes() {
   const mapDispatchToProps = {
     onSetNotEditingContest: () => EditContest.create(false),
   };
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestRoutes));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestRoutes));
 }
 
 export default createSingleContestRoutes();

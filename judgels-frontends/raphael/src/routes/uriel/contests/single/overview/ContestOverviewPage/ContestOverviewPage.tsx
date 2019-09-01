@@ -73,7 +73,7 @@ function createContestOverviewPage(contestActions) {
     onGetContestDescription: contestActions.getContestDescription,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage));
 }
 
 export default createContestOverviewPage(injectedContestActions);

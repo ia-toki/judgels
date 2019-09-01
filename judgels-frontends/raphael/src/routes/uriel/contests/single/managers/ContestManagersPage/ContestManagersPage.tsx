@@ -130,7 +130,7 @@ export function createContestManagersPage(contestManagerActions) {
     onDeleteManagers: contestManagerActions.deleteManagers,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestManagersPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestManagersPage));
 }
 
 export default createContestManagersPage(injectedContestManagerActions);

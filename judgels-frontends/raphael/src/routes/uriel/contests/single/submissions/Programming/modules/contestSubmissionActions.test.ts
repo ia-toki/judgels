@@ -1,4 +1,4 @@
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 import { contestJid, problemJid, sessionState, token } from '../../../../../../../fixtures/state';
 import { NotFoundError } from '../../../../../../../modules/api/error';

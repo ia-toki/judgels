@@ -3,7 +3,7 @@ import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
@@ -229,7 +229,7 @@ export function createContestSubmissionsPage(contestProgrammingSubmissionActions
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
 }
 
 export default createContestSubmissionsPage(injectedContestSubmissionActions);

@@ -106,7 +106,7 @@ function createContestSubmissionPage(contestProgrammingSubmissionActions, breadc
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionPage));
 }
 
 export default createContestSubmissionPage(injectedContestSubmissionActions, injectedBreadcrumbsActions);

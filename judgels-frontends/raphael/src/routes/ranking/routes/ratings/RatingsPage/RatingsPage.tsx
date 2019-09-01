@@ -83,4 +83,4 @@ function createRatingsPage(profileActions) {
   return connect(undefined, mapDispatchToProps)(RatingsPage);
 }
 
-export default withRouter<any>(createRatingsPage(injectedProfileActions));
+export default withRouter<any, any>(createRatingsPage(injectedProfileActions));

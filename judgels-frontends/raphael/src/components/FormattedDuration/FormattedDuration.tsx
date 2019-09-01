@@ -5,9 +5,6 @@ export interface FormattedDateProps {
   value: number;
 }
 
-const Value = ({ children }) => <>{children}</>;
-const Text = () => null;
-
 export const FormattedDuration = (props: FormattedDateProps) => {
   const seconds = Math.floor(props.value / 1000);
 
@@ -15,6 +12,5 @@ export const FormattedDuration = (props: FormattedDateProps) => {
   if (seconds >= 86400) {
     format = `{days} ${format}`;
   }
-
-  return <ReactFormattedDuration seconds={seconds} format={format} valueComponent={Value} textComponent={Text} />;
+  return <ReactFormattedDuration seconds={seconds} format={format} />;
 };

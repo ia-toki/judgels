@@ -11,4 +11,4 @@ const ContestProblemRoutes = () => (
   </div>
 );
 
-export default withRouter<any>(ContestProblemRoutes);
+export default withRouter<any, any>(ContestProblemRoutes);

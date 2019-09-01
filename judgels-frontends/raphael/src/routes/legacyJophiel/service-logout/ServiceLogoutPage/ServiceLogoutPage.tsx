@@ -22,7 +22,7 @@ export function createServiceLogoutPage(serviceLogoutActions) {
   const mapDispatchToProps = {
     onLogOut: serviceLogoutActions.logOut,
   };
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(ServiceLogoutPage));
+  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(ServiceLogoutPage));
 }
 
 export default createServiceLogoutPage(injectedServiceLogoutActions);

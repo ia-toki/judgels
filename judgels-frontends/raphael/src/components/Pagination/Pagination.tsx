@@ -4,7 +4,7 @@ import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import ReactPaginate from 'react-paginate';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import './Pagination.css';
@@ -87,6 +87,7 @@ class Pagination extends React.PureComponent<PaginationPropsImpl, {}> {
 }
 
 export interface PaginationProps {
+  currentPage: number;
   pageSize: number;
   onChangePage: (nextPage: number) => Promise<number>;
 }
@@ -143,7 +144,7 @@ function createPagination() {
       return push({ search: query });
     },
   };
-  return withRouter<any>(connect(undefined, mapDispatchToProps)(PaginationContainer));
+  return withRouter<any, any>(connect(undefined, mapDispatchToProps)(PaginationContainer));
 }
 
 export default createPagination();

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { FormattedRelative } from 'react-intl';
 
+import { FormattedRelative } from '../../../../../components/FormattedRelative/FormattedRelative';
 import { TimeanddateLink } from '../../../../../components/TimeanddateLink/TimeanddateLink';
 import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
 import { Contest } from '../../../../../modules/api/uriel/contest';

@@ -170,7 +170,7 @@ export function createContestAnnouncementsPage(contestAnnouncementActions) {
     onUpdateAnnouncement: contestAnnouncementActions.updateAnnouncement,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));
 }
 
 export default createContestAnnouncementsPage(injectedContestAnnouncementActions);

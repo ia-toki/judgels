@@ -89,7 +89,7 @@ export function createSingleContestDataRoute(contestActions, contestWebActions, 
     onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestDataRoute));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleContestDataRoute));
 }
 
 export default createSingleContestDataRoute(

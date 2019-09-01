@@ -71,4 +71,4 @@ class Menubar extends React.Component<MenubarProps & RouteComponentProps<{}>> {
   };
 }
 
-export default withRouter<any>(Menubar);
+export default withRouter<any, any>(Menubar);

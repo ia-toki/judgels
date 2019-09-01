@@ -1,13 +1,13 @@
 import { mount } from 'enzyme';
-import { MemoryHistory } from 'history';
-import createMemoryHistory from 'history/createMemoryHistory';
+import { createMemoryHistory, MemoryHistory } from 'history';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
-import { ConnectedRouter } from 'react-router-redux';
-import createMockStore from 'redux-mock-store';
+import { applyMiddleware, createStore, combineReducers } from 'redux';
+import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
 import thunk from 'redux-thunk';
 
+import { contestReducer } from '../modules/contestReducer';
 import { createSingleContestDataRoute } from './SingleContestDataRoute';
 
 describe('SingleContestDataRoute', () => {
@@ -16,14 +16,16 @@ describe('SingleContestDataRoute', () => {
   let contestWebActions: jest.Mocked<any>;
   let breadcrumbsActions: jest.Mocked<any>;
 
-  const store = createMockStore([thunk])({
-    uriel: {
-      contest: {},
-    },
-  });
-
   const render = (currentPath: string) => {
     history = createMemoryHistory({ initialEntries: [currentPath] });
+
+    const store: any = createStore(
+      combineReducers({
+        uriel: combineReducers({ contest: contestReducer }),
+        router: connectRouter(history),
+      }),
+      applyMiddleware(thunk, routerMiddleware(history))
+    );
 
     const SingleContestDataRoute = createSingleContestDataRoute(contestActions, contestWebActions, breadcrumbsActions);
     mount(

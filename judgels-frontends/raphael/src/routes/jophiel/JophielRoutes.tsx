@@ -32,4 +32,4 @@ const JophielRoutes = () => (
   </div>
 );
 
-export default withRouter<any>(JophielRoutes);
+export default withRouter<any, any>(JophielRoutes);

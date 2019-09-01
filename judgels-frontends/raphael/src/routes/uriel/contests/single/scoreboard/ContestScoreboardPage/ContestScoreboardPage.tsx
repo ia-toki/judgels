@@ -1,11 +1,11 @@
 import { Callout, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
-import { FormattedRelative } from 'react-intl';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
+import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -254,7 +254,7 @@ export function createContestScoreboardPage(contestScoreboardActions) {
     onAppendRoute: (queries: any) => push({ search: stringify(queries) }),
   };
 
-  return withRouter<any>(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));
 }
 
 export default createContestScoreboardPage(injectedContestScoreboardActions);
