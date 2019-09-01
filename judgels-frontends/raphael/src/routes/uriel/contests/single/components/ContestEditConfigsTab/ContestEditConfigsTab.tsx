@@ -202,7 +202,7 @@ class ContestEditConfigsTab extends React.Component<ContestEditConfigsTabProps, 
     if (division) {
       config = {
         ...config,
-        division: { division: data.divisionDivision! },
+        division: { division: +data.divisionDivision! },
       };
     }
     if (frozenScoreboard) {

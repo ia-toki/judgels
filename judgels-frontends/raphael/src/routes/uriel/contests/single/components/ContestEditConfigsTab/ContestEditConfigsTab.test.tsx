@@ -58,6 +58,9 @@ describe('ContestEditConfigsTab', () => {
           clarificationTimeLimit: {
             clarificationDuration: parseDuration('2h'),
           },
+          division: {
+            division: 1,
+          },
           frozenScoreboard: {
             scoreboardFreezeTime: parseDuration('1h'),
             isOfficialScoreboardAllowed: false,
@@ -88,6 +91,9 @@ describe('ContestEditConfigsTab', () => {
         const clarificationTimeLimitDuration = wrapper.find('input[name="clarificationTimeLimitDuration"]');
         clarificationTimeLimitDuration.simulate('change', { target: { value: '2h 5m' } });
 
+        const divisionDivision = wrapper.find('input[name="divisionDivision"]');
+        divisionDivision.simulate('change', { target: { value: '2' } });
+
         const frozenScoreboardFreezeTime = wrapper.find('input[name="frozenScoreboardFreezeTime"]');
         frozenScoreboardFreezeTime.simulate('change', { target: { value: '1h 5m' } });
 
@@ -116,6 +122,9 @@ describe('ContestEditConfigsTab', () => {
           },
           clarificationTimeLimit: {
             clarificationDuration: 7500000,
+          },
+          division: {
+            division: 2,
           },
           frozenScoreboard: {
             isOfficialScoreboardAllowed: true,

@@ -24,18 +24,18 @@ public interface ProfileService {
     @Produces(APPLICATION_JSON)
     Map<String, Profile> getProfiles(Set<String> userJids, @QueryParam("beforeTime") Optional<Long> time);
 
-    default Profile getProfile(String userJid) {
-        Set<String> userJids = new HashSet<>();
-        userJids.add(userJid);
-        return getProfiles(userJids, Optional.empty()).get(userJid);
-    }
-
     default Map<String, Profile> getProfiles(Set<String> userJids) {
         return getProfiles(userJids, Optional.empty());
     }
 
     default Map<String, Profile> getProfiles(Set<String> userJids, Instant time) {
         return getProfiles(userJids, Optional.of(time.toEpochMilli()));
+    }
+
+    default Profile getProfile(String userJid) {
+        Set<String> userJids = new HashSet<>();
+        userJids.add(userJid);
+        return getProfiles(userJids, Optional.empty()).get(userJid);
     }
 
     @GET

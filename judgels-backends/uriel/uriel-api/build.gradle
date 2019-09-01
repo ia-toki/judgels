@@ -5,5 +5,7 @@ dependencies {
 
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }
