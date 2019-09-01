@@ -175,11 +175,21 @@ server {
 {% endif %}
 
 {% if raphael_url is defined %}
+
+map $sent_http_content_type $expires {
+    default                    off;
+    text/html                  epoch;
+    text/css                   max;
+    application/javascript     max;
+    ~image/                    max;
+}
+
 server {
     server_name {{ raphael_url }};
 
     access_log off;
     proxy_buffering off;
+    expires $expires;
 
     location ~ /\. {
         deny all;
