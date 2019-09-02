@@ -1,15 +1,13 @@
 import * as React from 'react';
-import Loadable from 'react-loadable';
 
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 
-const LoadableAdminsRoutes = Loadable({
-  loader: () => import('./AdminsRoutes'),
-  loading: () => <LoadingState large />,
-});
+const LazyAdminRoutes = React.lazy(() => import('./AdminsRoutes'));
 
-export default class MainAdminsRoutes extends React.PureComponent {
-  render() {
-    return <LoadableAdminsRoutes />;
-  }
-}
+const MainAdminRoutes = props => (
+  <React.Suspense fallback={<LoadingState large />}>
+    <LazyAdminRoutes {...props} />
+  </React.Suspense>
+);
+
+export default MainAdminRoutes;

@@ -1,15 +1,15 @@
 import * as React from 'react';
-import Loadable from 'react-loadable';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-export const LoadableUrielRoutes = Loadable({
-  loader: () => import('./MainContestRoutes'),
-  loading: () => <LoadingState large />,
-});
+export const UrielRoutesPromise = () => import('./MainContestRoutes');
 
-export default class UrielRoutes extends React.PureComponent {
-  render() {
-    return <LoadableUrielRoutes />;
-  }
-}
+const LazyUrielRoutes = React.lazy(UrielRoutesPromise);
+
+const UrielRoutes = props => (
+  <React.Suspense fallback={<LoadingState large />}>
+    <LazyUrielRoutes {...props} />
+  </React.Suspense>
+);
+
+export default UrielRoutes;

@@ -1,15 +1,13 @@
 import * as React from 'react';
-import Loadable from 'react-loadable';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const LoadableProfilesRoutes = Loadable({
-  loader: () => import('./profiles/ProfilesRoutes'),
-  loading: () => <LoadingState large />,
-});
+const LazyProfilesRoutes = React.lazy(() => import('./profiles/ProfilesRoutes'));
 
-export default class JophielProfilesRoutes extends React.PureComponent {
-  render() {
-    return <LoadableProfilesRoutes />;
-  }
-}
+const JophielProfilesRoutes = props => (
+  <React.Suspense fallback={<LoadingState large />}>
+    <LazyProfilesRoutes {...props} />
+  </React.Suspense>
+);
+
+export default JophielProfilesRoutes;

@@ -1,15 +1,13 @@
 import * as React from 'react';
-import Loadable from 'react-loadable';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const LoadableTrainingRoutes = Loadable({
-  loader: () => import('./training/TrainingRoutes'),
-  loading: () => <LoadingState large />,
-});
+const LazyTrainingRoutes = React.lazy(() => import('./training/TrainingRoutes'));
 
-export default class JerahmeelRoutes extends React.PureComponent {
-  render() {
-    return <LoadableTrainingRoutes />;
-  }
-}
+const JerahmeelRoutes = props => (
+  <React.Suspense fallback={<LoadingState large />}>
+    <LazyTrainingRoutes {...props} />
+  </React.Suspense>
+);
+
+export default JerahmeelRoutes;

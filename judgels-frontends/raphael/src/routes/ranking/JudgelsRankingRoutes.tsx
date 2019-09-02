@@ -1,15 +1,13 @@
 import * as React from 'react';
-import Loadable from 'react-loadable';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const LoadableRankingRoutes = Loadable({
-  loader: () => import('./routes/RankingRoutes'),
-  loading: () => <LoadingState large />,
-});
+const LazyRankingRoutes = React.lazy(() => import('./routes/RankingRoutes'));
 
-export default class JudgelsRankingRoutes extends React.PureComponent {
-  render() {
-    return <LoadableRankingRoutes />;
-  }
-}
+const JudgelsRankingRoutes = props => (
+  <React.Suspense fallback={<LoadingState large />}>
+    <LazyRankingRoutes {...props} />
+  </React.Suspense>
+);
+
+export default JudgelsRankingRoutes;

@@ -1,15 +1,13 @@
 import * as React from 'react';
-import Loadable from 'react-loadable';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const LoadableAccountRoutes = Loadable({
-  loader: () => import('./account/AccountRoutes'),
-  loading: () => <LoadingState large />,
-});
+const LazyAccountRoutes = React.lazy(() => import('./account/AccountRoutes'));
 
-export default class JophielAccountRoutes extends React.PureComponent {
-  render() {
-    return <LoadableAccountRoutes />;
-  }
-}
+const JophielAccountRoutes = props => (
+  <React.Suspense fallback={<LoadingState large />}>
+    <LazyAccountRoutes {...props} />
+  </React.Suspense>
+);
+
+export default JophielAccountRoutes;
