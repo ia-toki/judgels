@@ -101,7 +101,7 @@ public class ContestRatingResource implements ContestRatingService {
             String contestantJid = entry.getKey();
             Optional<UserRating> rating = entry.getValue().getRating();
             int publicRating = rating.map(UserRating::getPublicRating).orElse(UserRating.INITIAL_RATING);
-            int hiddenRating = rating.map(UserRating::getPublicRating).orElse(UserRating.INITIAL_RATING);
+            int hiddenRating = rating.map(UserRating::getHiddenRating).orElse(UserRating.INITIAL_RATING);
 
             publicRatingsMap.put(contestantJid, publicRating);
             hiddenRatingsMap.put(contestantJid, hiddenRating);
