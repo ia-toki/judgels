@@ -106,7 +106,9 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
             </tr>
             <tr>
               <td className="basic-profile-card__details-keys">Rating</td>
-              <td className={getRatingClass(profile.rating)}>{profile.rating || '-'}</td>
+              <td className={getRatingClass(profile.rating)}>
+                {(profile.rating && profile.rating.publicRating) || '-'}
+              </td>
             </tr>
           </tbody>
         </HTMLTable>

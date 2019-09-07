@@ -3,16 +3,17 @@ import { stringify } from 'query-string';
 import { APP_CONFIG } from '../../../conf';
 import { get, post } from '../../../modules/api/http';
 import { Page } from '../../../modules/api/pagination';
+import { UserRating } from './userRating';
 
 export interface Profile {
   username: string;
-  rating?: number;
+  rating?: UserRating;
   country?: string;
 }
 
 export interface BasicProfile {
   username: string;
-  rating?: number;
+  rating?: UserRating;
   name?: string;
   country?: string;
 }

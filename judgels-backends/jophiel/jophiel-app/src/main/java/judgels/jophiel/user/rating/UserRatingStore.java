@@ -28,15 +28,15 @@ public class UserRatingStore {
         this.ratingEventDao = ratingEventDao;
     }
 
-    public Map<String, Integer> getRatings(Instant time, Set<String> userJids) {
+    public Map<String, UserRating> getRatings(Instant time, Set<String> userJids) {
         return ratingDao.selectAllByTimeAndUserJids(time, userJids).entrySet()
                 .stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().publicRating));
+                .collect(Collectors.toMap(e -> e.getKey(), e -> fromModel(e.getValue())));
     }
 
     public Page<UserWithRating> getTopRatings(Instant time, SelectionOptions options) {
         return ratingDao.selectTopPagedByTime(time, options).mapPage(
-                p -> Lists.transform(p, m -> UserWithRating.of(m.userJid, m.publicRating)));
+                p -> Lists.transform(p, m -> UserWithRating.of(m.userJid, fromModel(m))));
     }
 
     public void updateRatings(Instant time, String eventJid, Map<String, UserRating> ratingsMap) {
@@ -70,5 +70,12 @@ public class UserRatingStore {
                         .rating(e.publicRating)
                         .build()
                 ).collect(Collectors.toList());
+    }
+
+    private static UserRating fromModel(UserRatingModel model) {
+        return new UserRating.Builder()
+                .publicRating(model.publicRating)
+                .hiddenRating(model.hiddenRating)
+                .build();
     }
 }

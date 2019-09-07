@@ -6,6 +6,7 @@ import static java.util.Optional.of;
 import static judgels.persistence.TestClock.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import judgels.jophiel.api.user.rating.UserRating;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestCreateData;
 import judgels.uriel.api.contest.ContestUpdateData;
@@ -47,13 +48,17 @@ class ContestContestantRoleCheckerIntegrationTests extends AbstractRoleCheckerIn
         assertThat(checker.canRegister(ADMIN, empty(), contestBStarted)).isFalse();
         assertThat(checker.canRegister(ADMIN, empty(), contestC)).isFalse();
 
+        UserRating rating1500 = new UserRating.Builder().publicRating(1500).hiddenRating(1500).build();
+        UserRating rating2000 = new UserRating.Builder().publicRating(2000).hiddenRating(2000).build();
+        UserRating rating2100 = new UserRating.Builder().publicRating(2100).hiddenRating(2100).build();
+
         assertThat(checker.canRegister(USER, empty(), contestA)).isTrue();
         assertThat(checker.canRegister(USER, empty(), contestAStarted)).isTrue();
         assertThat(checker.canRegister(USER, empty(), contestAFinished)).isFalse();
         assertThat(checker.canRegister(USER, empty(), contestADiv1)).isFalse();
-        assertThat(checker.canRegister(USER, of(1500), contestADiv1)).isFalse();
-        assertThat(checker.canRegister(USER, of(2000), contestADiv1)).isTrue();
-        assertThat(checker.canRegister(USER, of(2100), contestADiv1)).isTrue();
+        assertThat(checker.canRegister(USER, of(rating1500), contestADiv1)).isFalse();
+        assertThat(checker.canRegister(USER, of(rating2000), contestADiv1)).isTrue();
+        assertThat(checker.canRegister(USER, of(rating2100), contestADiv1)).isTrue();
         assertThat(checker.canRegister(USER, empty(), contestB)).isFalse();
         assertThat(checker.canRegister(USER, empty(), contestBStarted)).isFalse();
         assertThat(checker.canRegister(USER, empty(), contestC)).isFalse();

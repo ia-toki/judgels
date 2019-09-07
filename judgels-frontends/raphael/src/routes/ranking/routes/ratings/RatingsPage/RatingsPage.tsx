@@ -51,7 +51,7 @@ class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
         <td>
           <UserRef profile={profile} showFlag />
         </td>
-        <td>{profile.rating}</td>
+        <td>{profile.rating && profile.rating.publicRating}</td>
       </tr>
     ));
 

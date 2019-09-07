@@ -1,5 +1,6 @@
 package judgels.uriel.api.contest.scoreboard;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Instant;
@@ -33,6 +34,12 @@ public interface BundleScoreboard extends Scoreboard {
         List<Integer> getAnsweredItems();
         int getTotalAnsweredItems();
         Optional<Instant> getLastAnsweredTime();
+
+        @JsonIgnore
+        @Override
+        default boolean hasSubmission() {
+            return getTotalAnsweredItems() > 0;
+        }
 
         class Builder extends ImmutableBundleScoreboardEntry.Builder {}
     }

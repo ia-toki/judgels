@@ -55,7 +55,7 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
         <td>
           <UserRef profile={profile} showFlag />
         </td>
-        <td className="col-rating">{profile.rating}</td>
+        <td className="col-rating">{profile.rating && profile.rating.publicRating}</td>
       </tr>
     ));
 

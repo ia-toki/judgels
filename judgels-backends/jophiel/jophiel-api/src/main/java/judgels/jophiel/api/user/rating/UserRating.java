@@ -6,6 +6,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUserRating.class)
 public interface UserRating {
+    int INITIAL_RATING = 1800;
+
     int getPublicRating();
     int getHiddenRating();
 

@@ -1,5 +1,6 @@
 package judgels.uriel.api.contest.scoreboard;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
@@ -32,6 +33,12 @@ public interface IoiScoreboard extends Scoreboard {
         List<Optional<Integer>> getScores();
         int getTotalScores();
         long getLastAffectingPenalty();
+
+        @JsonIgnore
+        @Override
+        default boolean hasSubmission() {
+            return getScores().stream().anyMatch(Optional::isPresent);
+        }
 
         class Builder extends ImmutableIoiScoreboardEntry.Builder {}
     }

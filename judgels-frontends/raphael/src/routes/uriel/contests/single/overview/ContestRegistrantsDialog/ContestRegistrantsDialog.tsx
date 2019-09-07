@@ -66,8 +66,8 @@ class ContestRegistrantsDialog extends React.PureComponent<
 
     const { data: contestants, profilesMap } = response;
     const sortedContestants = contestants.slice().sort((jid1, jid2) => {
-      const rating1 = (profilesMap[jid1] && profilesMap[jid1].rating) || 0;
-      const rating2 = (profilesMap[jid2] && profilesMap[jid2].rating) || 0;
+      const rating1 = (profilesMap[jid1] && profilesMap[jid1].rating && profilesMap[jid1].rating.publicRating) || 0;
+      const rating2 = (profilesMap[jid2] && profilesMap[jid2].rating && profilesMap[jid2].rating.publicRating) || 0;
       if (rating1 !== rating2) {
         return rating2 - rating1;
       }

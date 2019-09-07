@@ -4,6 +4,7 @@ import static judgels.uriel.api.contest.supervisor.SupervisorManagementPermissio
 
 import java.util.Optional;
 import javax.inject.Inject;
+import judgels.jophiel.api.user.rating.UserRating;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.ContestDivisions;
 import judgels.uriel.api.contest.contestant.ContestContestantState;
@@ -40,7 +41,7 @@ public class ContestContestantRoleChecker {
         return contestRoleChecker.canView(userJid, contest);
     }
 
-    public boolean canRegister(String userJid, Optional<Integer> rating, Contest contest) {
+    public boolean canRegister(String userJid, Optional<UserRating> rating, Contest contest) {
         return canRegisterIgnoringDivision(userJid, contest) && canRegisterInDivision(rating, contest);
     }
 
@@ -50,7 +51,7 @@ public class ContestContestantRoleChecker {
                 && !contestTimer.hasBegun(contest);
     }
 
-    public ContestContestantState getContestantState(String userJid, Optional<Integer> rating, Contest contest) {
+    public ContestContestantState getContestantState(String userJid, Optional<UserRating> rating, Contest contest) {
         if (canRegisterIgnoringDivision(userJid, contest)) {
             if (canRegisterInDivision(rating, contest)) {
                 return ContestContestantState.REGISTRABLE;
@@ -80,7 +81,7 @@ public class ContestContestantRoleChecker {
                 && !contestTimer.hasEnded(contest);
     }
 
-    private boolean canRegisterInDivision(Optional<Integer> rating, Contest contest) {
+    private boolean canRegisterInDivision(Optional<UserRating> rating, Contest contest) {
         Optional<DivisionModuleConfig> config = moduleStore.getDivisionModuleConfig(contest.getJid());
         if (!config.isPresent()) {
             return true;

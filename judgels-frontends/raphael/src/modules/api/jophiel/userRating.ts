@@ -1,28 +1,34 @@
-export function getRatingName(rating?: number) {
+export interface UserRating {
+  publicRating: number;
+  hiddenRating: number;
+}
+
+export function getRatingName(rating?: UserRating) {
   if (rating === null || rating === undefined) {
     return 'unrated';
   }
-  if (rating < 1650) {
+  const publicRating = rating.publicRating;
+  if (publicRating < 1650) {
     return 'gray';
   }
-  if (rating < 1750) {
+  if (publicRating < 1750) {
     return 'green';
   }
-  if (rating < 2000) {
+  if (publicRating < 2000) {
     return 'blue';
   }
-  if (rating < 2200) {
+  if (publicRating < 2200) {
     return 'purple';
   }
-  if (rating < 2500) {
+  if (publicRating < 2500) {
     return 'orange';
   }
-  if (rating < 3000) {
+  if (publicRating < 3000) {
     return 'red';
   }
   return 'legend';
 }
 
-export function getRatingClass(rating?: number) {
+export function getRatingClass(rating?: UserRating) {
   return 'rating-' + getRatingName(rating);
 }

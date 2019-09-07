@@ -12,6 +12,7 @@ import judgels.jophiel.api.profile.BasicProfile;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.user.User;
 import judgels.jophiel.api.user.info.UserInfo;
+import judgels.jophiel.api.user.rating.UserRating;
 import judgels.jophiel.user.UserStore;
 import judgels.jophiel.user.info.UserInfoStore;
 import judgels.jophiel.user.rating.UserRatingStore;
@@ -34,7 +35,7 @@ public class ProfileStore {
 
     public Map<String, Profile> getProfiles(Instant time, Set<String> userJids) {
         Map<String, UserInfo> infos = infoStore.getInfos(userJids);
-        Map<String, Integer> ratings = ratingStore.getRatings(time, userJids);
+        Map<String, UserRating> ratings = ratingStore.getRatings(time, userJids);
 
         return userStore.getUsersByJids(userJids).entrySet()
                 .stream()
@@ -68,7 +69,7 @@ public class ProfileStore {
 
     public Optional<BasicProfile> getBasicProfile(Instant time, String userJid) {
         return userStore.getUserByJid(userJid).map(user -> {
-            Map<String, Integer> ratings = ratingStore.getRatings(time, ImmutableSet.of(userJid));
+            Map<String, UserRating> ratings = ratingStore.getRatings(time, ImmutableSet.of(userJid));
             UserInfo info = infoStore.getInfo(userJid);
 
             return new BasicProfile.Builder()

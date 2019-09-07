@@ -1,5 +1,6 @@
 package judgels.uriel.api.contest.scoreboard;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -33,6 +34,12 @@ public interface GcjScoreboard extends Scoreboard {
         List<Integer> getAttemptsList();
         List<Long> getPenaltyList();
         List<GcjScoreboardProblemState> getProblemStateList();
+
+        @JsonIgnore
+        @Override
+        default boolean hasSubmission() {
+            return getAttemptsList().stream().anyMatch(a -> a > 0);
+        }
 
         class Builder extends ImmutableGcjScoreboardEntry.Builder {}
     }
