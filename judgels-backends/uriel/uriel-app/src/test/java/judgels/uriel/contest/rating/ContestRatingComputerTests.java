@@ -39,9 +39,9 @@ class ContestRatingComputerTests {
 
         assertThat(computer.compute(contestJids, ranksMap, publicRatingsMap, hiddenRatingsMap))
                 .isEqualTo(ImmutableMap.of(
-                    "a", new UserRating.Builder().publicRating(1657).hiddenRating(1657).build(),
+                    "a", new UserRating.Builder().publicRating(1656).hiddenRating(1656).build(),
                     "b", new UserRating.Builder().publicRating(2041).hiddenRating(1982).build(),
                     "c", new UserRating.Builder().publicRating(1712).hiddenRating(1712).build(),
-                    "d", new UserRating.Builder().publicRating(2124).hiddenRating(2049).build()));
+                    "d", new UserRating.Builder().publicRating(2124).hiddenRating(2048).build()));
     }
 }

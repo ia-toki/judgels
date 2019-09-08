@@ -157,10 +157,10 @@ const RatingSystemPage = () => (
         hidden<sub>A</sub> = public<sub>A</sub> + <strong>debt</strong>
       </li>
       <li>
-        public<sub>A</sub> = round(public<sub>A</sub>)
+        public<sub>A</sub> = floor(public<sub>A</sub>)
       </li>
       <li>
-        hidden<sub>A</sub> = round(hidden<sub>A</sub>)
+        hidden<sub>A</sub> = floor(hidden<sub>A</sub>)
       </li>
     </ol>
   </Card>

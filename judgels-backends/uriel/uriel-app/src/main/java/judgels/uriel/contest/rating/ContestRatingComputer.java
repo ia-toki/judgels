@@ -58,8 +58,8 @@ public class ContestRatingComputer {
             hiddenA = publicA + debt;
 
             result.put(cA, new UserRating.Builder()
-                    .hiddenRating((int) Math.round(hiddenA))
-                    .publicRating((int) Math.round(publicA))
+                    .hiddenRating((int) hiddenA)
+                    .publicRating((int) publicA)
                     .build());
         }
         return result.build();
