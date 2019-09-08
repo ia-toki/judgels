@@ -41,7 +41,7 @@ public class ContestRatingComputer {
             }
             delta /= N;
 
-            double debt = publicA - hiddenA;
+            double debt = hiddenA - publicA;
             if (delta >= 0) {
                 publicA += .2 * delta;
                 debt += .8 * delta;

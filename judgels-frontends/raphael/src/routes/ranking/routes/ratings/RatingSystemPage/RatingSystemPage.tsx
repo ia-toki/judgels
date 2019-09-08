@@ -115,7 +115,7 @@ const RatingSystemPage = () => (
         <strong>delta</strong> /= <strong>N</strong>
       </li>
       <li>
-        <strong>debt</strong> = public<sub>A</sub> - hidden<sub>A</sub>
+        <strong>debt</strong> = hiddenA<sub>A</sub> - public<sub>A</sub>
       </li>
       <li>
         if <strong>delta</strong> &ge; 0:
