@@ -105,7 +105,7 @@ const RatingSystemPage = () => (
             if rank<sub>A</sub> &lt; rank<sub>B</sub>, <strong>delta</strong> += <strong>score(A, B)</strong>
           </li>
           <li>
-            if rank<sub>A</sub> &gt; rank<sub>B</sub>, <strong>delta</strong> -= <strong>score(A, B)</strong>
+            if rank<sub>A</sub> &gt; rank<sub>B</sub>, <strong>delta</strong> -= <strong>score(B, A)</strong>
           </li>
         </ul>
         where <strong>score(A, B)</strong> = max(10, (sigmoid(sqrt(hidden<sub>B</sub> / hidden<sub>A</sub>)) - 0.7)

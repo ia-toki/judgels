@@ -36,7 +36,7 @@ public class ContestRatingComputer {
                 if (rankA < rankB) {
                     delta += getScore(N, hiddenA, hiddenB);
                 } else if (rankA > rankB) {
-                    delta -= getScore(N, hiddenA, hiddenB);
+                    delta -= getScore(N, hiddenB, hiddenA);
                 }
             }
             delta /= N;
