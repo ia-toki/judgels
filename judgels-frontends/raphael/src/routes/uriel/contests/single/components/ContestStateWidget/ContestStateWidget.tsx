@@ -38,14 +38,12 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
 
   componentDidUpdate(prevProps: ContestStateWidgetProps) {
     if (prevProps.remainingStateDuration !== this.props.remainingStateDuration) {
-      this.setState({
-        baseRemainingDuration: this.props.remainingStateDuration,
-        baseTimeForRemainingDuration: new Date().getTime(),
-      });
+      this.setUpBaseRemainingDuration();
     }
   }
 
   componentDidMount() {
+    this.setUpBaseRemainingDuration();
     this.refreshRemainingDuration();
   }
 
@@ -87,7 +85,7 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
     if (state === ContestState.NotBegun) {
       return {
         leftComponent: <span>Contest hasn't started yet.</span>,
-        rightComponent: <span>Starts in {this.getRemainingDuration()}</span>,
+        rightComponent: !!this.state.remainingDuration && <span>Starts in {this.getRemainingDuration()}</span>,
       };
     }
     if (state === ContestState.Begun) {
@@ -102,13 +100,13 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
             Click here to start your participation
           </Button>
         ),
-        rightComponent: <span>Ends in {this.getRemainingDuration()}</span>,
+        rightComponent: !!this.state.remainingDuration && <span>Ends in {this.getRemainingDuration()}</span>,
       };
     }
     if (state === ContestState.Started) {
       return {
         leftComponent: <span>Contest is running.</span>,
-        rightComponent: <span>Ends in {this.getRemainingDuration()}</span>,
+        rightComponent: !!this.state.remainingDuration && <span>Ends in {this.getRemainingDuration()}</span>,
       };
     }
     if (state === ContestState.Finished) {
@@ -136,6 +134,13 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
     }
 
     this.currentTimeout = setTimeout(() => this.refreshRemainingDuration(), 500);
+  };
+
+  private setUpBaseRemainingDuration = () => {
+    this.setState({
+      baseRemainingDuration: this.props.remainingStateDuration,
+      baseTimeForRemainingDuration: new Date().getTime(),
+    });
   };
 
   private alertVirtualContest = () => {
