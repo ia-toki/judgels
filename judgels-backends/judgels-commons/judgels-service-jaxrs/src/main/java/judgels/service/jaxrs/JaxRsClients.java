@@ -55,7 +55,10 @@ public class JaxRsClients {
 
     public static <T> T create(Class<T> serviceClass, String uri, UserAgent userAgent) {
         List<String> uris = ImmutableList.of(uri);
-        ClientConfiguration clientConfig = ClientConfigurations.of(uris, defaultSslSocketFactory, defaultTrustManager);
+        ClientConfiguration clientConfig = ClientConfiguration.builder()
+                .from(ClientConfigurations.of(uris, defaultSslSocketFactory, defaultTrustManager))
+                .enableGcmCipherSuites(true)
+                .build();
         ObjectMapper objectMapper = JudgelsObjectMappers.configure(ObjectMappers.newClientObjectMapper());
         HostEventsSink eventsSink = new HostMetricsRegistry();
 
