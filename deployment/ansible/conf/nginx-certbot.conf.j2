@@ -4,9 +4,6 @@ server_tokens off;
 # Enable HSTS (prevents malicious users from redirecting site traffic to HTTP after first open, for 1 year)
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
-# Disable iframes except if from the same origin
-add_header X-Frame-Options "SAMEORIGIN" always;
-
 # Prevent browsers from guessing the content type of files
 add_header X-Content-Type-Options "nosniff" always;
 
