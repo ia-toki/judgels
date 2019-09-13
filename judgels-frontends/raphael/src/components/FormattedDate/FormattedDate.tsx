@@ -16,6 +16,5 @@ export const FormattedDate = (props: FormattedDateProps) => (
     hour12={false}
     minute="numeric"
     second={props.showSeconds ? 'numeric' : undefined}
-    timeZoneName="short"
   />
 );

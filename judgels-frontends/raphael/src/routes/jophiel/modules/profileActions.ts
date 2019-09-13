@@ -1,20 +1,20 @@
 import { NotFoundError } from '../../../modules/api/error';
 
-import { DelUserJid, PutUserJid } from './profileReducer';
+import { PutUser, DelUser } from './profileReducer';
 
 export const profileActions = {
-  getUserJid: (username: string) => {
+  getUser: (username: string) => {
     return async (dispatch, getState, { userSearchAPI }) => {
       const userJidsByUsername = await userSearchAPI.translateUsernamesToJids([username]);
       if (userJidsByUsername[username] === undefined) {
         throw new NotFoundError();
       }
       const userJid = userJidsByUsername[username];
-      dispatch(PutUserJid.create(userJid));
+      dispatch(PutUser.create({ userJid, username }));
     };
   },
 
-  clearUserJid: DelUserJid.create,
+  clearUser: DelUser.create,
 
   getProfile: (userJid: string) => {
     return async (dispatch, getState, { profileAPI }) => {

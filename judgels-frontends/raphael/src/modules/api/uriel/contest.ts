@@ -16,6 +16,12 @@ export interface Contest {
   duration: number;
 }
 
+export interface ContestInfo {
+  slug: string;
+  name: string;
+  beginTime: number;
+}
+
 export interface ContestConfig {
   canAdminister: boolean;
 }

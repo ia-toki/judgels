@@ -4,7 +4,7 @@ import { NotFoundError } from '../../../modules/api/error';
 import { UsernamesMap } from '../../../modules/api/jophiel/user';
 
 import { profileActions } from './profileActions';
-import { PutUserJid } from './profileReducer';
+import { PutUser } from './profileReducer';
 
 describe('profileActions', () => {
   let dispatch: jest.Mock<any>;
@@ -19,16 +19,16 @@ describe('profileActions', () => {
     };
   });
 
-  describe('getUserJid()', () => {
-    const { getUserJid } = profileActions;
-    const doGetUserJid = async () => getUserJid(user.username)(dispatch, getState, { userSearchAPI });
+  describe('getUser()', () => {
+    const { getUser } = profileActions;
+    const doGetUser = async () => getUser(user.username)(dispatch, getState, { userSearchAPI });
 
     describe('when user found', () => {
       beforeEach(async () => {
         const userJidsByUsername: UsernamesMap = { [user.username]: user.jid };
         userSearchAPI.translateUsernamesToJids.mockReturnValue(userJidsByUsername);
 
-        await doGetUserJid();
+        await doGetUser();
       });
 
       it('calls API to get user', () => {
@@ -36,7 +36,7 @@ describe('profileActions', () => {
       });
 
       it('puts the user jid', () => {
-        expect(dispatch).toHaveBeenCalledWith(PutUserJid.create(user.jid));
+        expect(dispatch).toHaveBeenCalledWith(PutUser.create({ userJid: user.jid, username: user.username }));
       });
     });
 
@@ -47,7 +47,7 @@ describe('profileActions', () => {
       });
 
       it('throws NotFoundError', async () => {
-        await expect(doGetUserJid()).rejects.toBeInstanceOf(NotFoundError);
+        await expect(doGetUser()).rejects.toBeInstanceOf(NotFoundError);
       });
     });
   });
