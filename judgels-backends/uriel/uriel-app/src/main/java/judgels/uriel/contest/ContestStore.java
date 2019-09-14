@@ -159,7 +159,7 @@ public class ContestStore {
         SelectionOptions options = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_ALL)
                 .orderBy("beginTime")
-                .orderDir(OrderDir.DESC)
+                .orderDir(OrderDir.ASC)
                 .build();
 
         return Lists.transform(contestDao.selectAllPublicPastByUserJid(userJid, options), ContestStore::fromModel);

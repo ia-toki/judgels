@@ -60,8 +60,9 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
     const rows = [];
     let lastRating: UserRating | null = null;
 
+    const N = data.length;
     data.forEach((event, idx) => {
-      let ratingChange: JSX.Element | string = '-';
+      let ratingChange: JSX.Element | string = '';
       let ratingDiff: JSX.Element | string = '';
 
       if (event.rating) {
@@ -81,7 +82,7 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
 
       rows.push(
         <tr key={event.contestJid}>
-          <td>{idx + 1}</td>
+          <td>{N - idx}</td>
           <td>
             <ContestLink contest={contestsMap[event.contestJid]} />
           </td>
@@ -91,7 +92,7 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
       );
     });
 
-    return rows;
+    return rows.reverse();
   };
 
   private renderRatingDiff = diff => {
