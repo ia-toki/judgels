@@ -12,6 +12,7 @@ import ContentWithSidebar, {
 import { AppState } from '../../../../modules/store';
 
 import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
+import ContestHistoryPage from './contestHistory/ContestHistoryPage/ContestHistoryPage';
 import { selectUserJid } from '../../modules/profileSelectors';
 
 interface SingleProfileRoutesProps {
@@ -31,6 +32,13 @@ const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
       title: 'Summary',
       routeComponent: Route,
       component: ProfileSummaryPage,
+    },
+    {
+      id: 'contest-history',
+      titleIcon: 'timeline-events',
+      title: 'Contest history',
+      routeComponent: Route,
+      component: ContestHistoryPage,
     },
   ];
 

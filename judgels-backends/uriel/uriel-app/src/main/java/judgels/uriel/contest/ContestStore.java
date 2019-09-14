@@ -155,6 +155,16 @@ public class ContestStore {
         return Lists.transform(contestDao.selectAllRunning(options), ContestStore::fromModel);
     }
 
+    public List<Contest> getPublicPastContests(String userJid) {
+        SelectionOptions options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_ALL)
+                .orderBy("beginTime")
+                .orderDir(OrderDir.DESC)
+                .build();
+
+        return Lists.transform(contestDao.selectAllPublicPastByUserJid(userJid, options), ContestStore::fromModel);
+    }
+
     public Contest createContest(ContestCreateData contestCreateData) {
         if (contestDao.selectBySlug(contestCreateData.getSlug()).isPresent()) {
             throw ContestErrors.slugAlreadyExists(contestCreateData.getSlug());

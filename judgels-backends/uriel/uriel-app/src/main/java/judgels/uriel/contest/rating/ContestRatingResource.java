@@ -5,6 +5,7 @@ import static judgels.service.ServiceUtils.checkFound;
 import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -13,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import judgels.jophiel.api.profile.Profile;
@@ -118,14 +118,12 @@ public class ContestRatingResource implements ContestRatingService {
     @Override
     @UnitOfWork(readOnly = true)
     public ContestRatingHistoryResponse getRatingHistory(String username) {
-        Set<String> usernameSet = Stream.of(username).collect(Collectors.toSet());
-        Map<String, String> userJidMap = userSearchService.translateUsernamesToJids(usernameSet);
-
+        Map<String, String> userJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
         if (!userJidMap.containsKey(username)) {
             throw new NotFoundException();
         }
-
         String userJid = userJidMap.get(username);
+
         List<UserRatingEvent> userRatingEvents = userRatingService.getRatingHistory(userJid);
 
         Set<String> contestJids = userRatingEvents.stream()

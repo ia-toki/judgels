@@ -66,7 +66,6 @@ public class UserRatingStore {
                 .map(e -> new UserRatingEvent.Builder()
                         .time(e.time)
                         .eventJid(ratingEventsMap.get(e.time).eventJid)
-                        .userJid(e.userJid)
                         .rating(fromModel(e))
                         .build()
                 ).collect(Collectors.toList());

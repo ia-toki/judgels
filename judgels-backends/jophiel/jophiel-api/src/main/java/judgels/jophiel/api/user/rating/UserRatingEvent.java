@@ -9,7 +9,6 @@ import org.immutables.value.Value;
 public interface UserRatingEvent {
     Instant getTime();
     String getEventJid();
-    String getUserJid();
     UserRating getRating();
 
     class Builder extends ImmutableUserRatingEvent.Builder {}

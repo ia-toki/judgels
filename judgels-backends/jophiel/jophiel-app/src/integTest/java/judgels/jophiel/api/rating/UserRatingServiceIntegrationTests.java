@@ -57,13 +57,11 @@ public class UserRatingServiceIntegrationTests extends AbstractServiceIntegratio
                 new UserRatingEvent.Builder()
                         .time(firstTime)
                         .eventJid("open-contest-1-jid")
-                        .userJid(andi.getJid())
                         .rating(new UserRating.Builder().publicRating(2000).hiddenRating(1000).build())
                         .build(),
                 new UserRatingEvent.Builder()
                         .time(secondTime)
                         .eventJid("open-contest-2-jid")
-                        .userJid(andi.getJid())
                         .rating(new UserRating.Builder().publicRating(3000).hiddenRating(1500).build())
                         .build());
 
@@ -71,7 +69,6 @@ public class UserRatingServiceIntegrationTests extends AbstractServiceIntegratio
                 new UserRatingEvent.Builder()
                         .time(firstTime)
                         .eventJid("open-contest-1-jid")
-                        .userJid(budi.getJid())
                         .rating(new UserRating.Builder().publicRating(10).hiddenRating(20).build())
                         .build());
     }

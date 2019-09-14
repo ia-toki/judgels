@@ -23,6 +23,7 @@ import { contestWebAPI } from './api/uriel/contestWeb';
 import { contestAnnouncementAPI } from './api/uriel/contestAnnouncement';
 import { contestClarificationAPI } from './api/uriel/contestClarification';
 import { contestContestantAPI } from './api/uriel/contestContestant';
+import { contestHistoryAPI } from './api/uriel/contestHistory';
 import { contestSupervisorAPI } from './api/uriel/contestSupervisor';
 import { contestManagerAPI } from './api/uriel/contestManager';
 import { contestModuleAPI } from './api/uriel/contestModule';
@@ -89,6 +90,7 @@ export const store: any = createStore<AppState>(
         contestAnnouncementAPI,
         contestClarificationAPI,
         contestContestantAPI,
+        contestHistoryAPI,
         contestSupervisorAPI,
         contestManagerAPI,
         contestModuleAPI,

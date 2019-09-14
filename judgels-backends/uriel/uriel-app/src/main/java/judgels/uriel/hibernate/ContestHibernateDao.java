@@ -1,6 +1,8 @@
 package judgels.uriel.hibernate;
 
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.isVisible;
+import static judgels.uriel.hibernate.ContestRoleHibernateDao.isVisibleAsContestant;
+import static judgels.uriel.hibernate.ContestRoleHibernateDao.isVisibleAsViewer;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -80,6 +82,15 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
                 .build(), options);
     }
 
+    @Override
+    public List<ContestModel> selectAllPublicPastByUserJid(String userJid, SelectionOptions options) {
+        return selectAll(new FilterOptions.Builder<ContestModel>()
+                .addCustomPredicates(isVisibleAsViewer())
+                .addCustomPredicates(isVisibleAsContestant(userJid))
+                .addCustomPredicates(isEnded(clock))
+                .build(), options);
+    }
+
     static CustomPredicateFilter<ContestModel> hasContestJid(String contestJid) {
         return (cb, cq, root) -> cb.equal(root.get(ContestModel_.jid), contestJid);
     }
@@ -94,6 +105,19 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
             Expression<Long> endTime = cb.sum(beginTime, root.get(ContestModel_.duration));
 
             return cb.greaterThanOrEqualTo(endTime, cb.literal(currentInstantEpoch));
+        };
+    }
+
+    // The following predicate is currently not testable because H2 does not have 'unix_timestamp' function.
+    static CustomPredicateFilter<ContestModel> isEnded(Clock clock) {
+        return (cb, cq, root) -> {
+            long currentInstantEpoch = clock.instant().toEpochMilli();
+            Expression<Long> beginTime = cb.prod(
+                    cb.function("unix_timestamp", Double.class, root.get(ContestModel_.beginTime)),
+                    cb.literal(1000.0)).as(Long.class);
+            Expression<Long> endTime = cb.sum(beginTime, root.get(ContestModel_.duration));
+
+            return cb.lessThan(endTime, cb.literal(currentInstantEpoch));
         };
     }
 
