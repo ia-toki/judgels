@@ -122,14 +122,18 @@ class ContestStateWidget extends React.PureComponent<ContestStateWidgetProps, Co
   };
 
   private refreshRemainingDuration = () => {
-    const { baseRemainingDuration, baseTimeForRemainingDuration } = this.state;
+    const {
+      remainingDuration: prevRemainingDuration,
+      baseRemainingDuration,
+      baseTimeForRemainingDuration,
+    } = this.state;
     const remainingDuration = Math.max(
       0,
       baseRemainingDuration! + baseTimeForRemainingDuration! - new Date().getTime()
     );
     this.setState({ remainingDuration });
 
-    if (remainingDuration === 0) {
+    if (remainingDuration === 0 && prevRemainingDuration !== 0) {
       this.props.onGetContestWebConfig(this.props.contest.jid);
     }
 
