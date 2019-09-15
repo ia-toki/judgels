@@ -167,6 +167,16 @@ public class ContestStore {
                 ContestStore::fromModel);
     }
 
+    public List<Contest> getPublicContests() {
+        SelectionOptions options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_ALL)
+                .orderBy("beginTime")
+                .orderDir(OrderDir.ASC)
+                .build();
+
+        return Lists.transform(contestDao.selectAllPublic(options), ContestStore::fromModel);
+    }
+
     public Contest createContest(ContestCreateData contestCreateData) {
         if (contestDao.selectBySlug(contestCreateData.getSlug()).isPresent()) {
             throw ContestErrors.slugAlreadyExists(contestCreateData.getSlug());

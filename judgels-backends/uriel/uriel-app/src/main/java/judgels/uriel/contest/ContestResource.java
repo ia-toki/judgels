@@ -2,6 +2,7 @@ package judgels.uriel.contest;
 
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
+import static judgels.uriel.api.contest.scoreboard.ContestScoreboardType.OFFICIAL;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
@@ -26,15 +27,27 @@ import judgels.uriel.api.contest.dump.ExportContestsDumpData;
 import judgels.uriel.api.contest.dump.ImportContestsDumpResponse;
 import judgels.uriel.api.contest.module.IcpcStyleModuleConfig;
 import judgels.uriel.api.contest.role.ContestRole;
+import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
+import judgels.uriel.contest.scoreboard.ContestScoreboardBuilder;
+import judgels.uriel.contest.scoreboard.ContestScoreboardStore;
+import judgels.uriel.contest.scoreboard.RawContestScoreboard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ContestResource implements ContestService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContestResource.class);
+
     private final ActorChecker actorChecker;
     private final ContestRoleChecker contestRoleChecker;
     private final ContestStore contestStore;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
+
+    private final ContestScoreboardStore scoreboardStore;
+    private final ContestScoreboardBuilder scoreboardBuilder;
 
     @Inject
     public ContestResource(
@@ -42,13 +55,17 @@ public class ContestResource implements ContestService {
             ContestRoleChecker contestRoleChecker,
             ContestStore contestStore,
             ContestModuleStore moduleStore,
-            ContestContestantStore contestantStore) {
+            ContestContestantStore contestantStore,
+            ContestScoreboardStore scoreboardStore,
+            ContestScoreboardBuilder scoreboardBuilder) {
 
         this.actorChecker = actorChecker;
         this.contestRoleChecker = contestRoleChecker;
         this.contestStore = contestStore;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
+        this.scoreboardStore = scoreboardStore;
+        this.scoreboardBuilder = scoreboardBuilder;
     }
 
     @Override
@@ -206,5 +223,29 @@ public class ContestResource implements ContestService {
         return new ImportContestsDumpResponse.Builder()
                 .addAllCreatedContestJids(createdContestJids)
                 .build();
+    }
+
+    @Override
+    @UnitOfWork
+    public void populateFinalRanks(AuthHeader authHeader) {
+        String actorJid = actorChecker.check(authHeader);
+
+        checkAllowed(contestRoleChecker.canAdminister(actorJid));
+
+        for (Contest contest : contestStore.getPublicContests()) {
+            Optional<RawContestScoreboard> raw = scoreboardStore.getScoreboard(contest.getJid(), OFFICIAL);
+            if (!raw.isPresent()) {
+                continue;
+            }
+
+            LOGGER.info("Processing contest {}", contest.getName());
+            Scoreboard scoreboard = scoreboardBuilder.buildScoreboard(raw.get(), contest, "", true, true);
+            for (ScoreboardEntry entry : scoreboard.getContent().getEntries()) {
+                if (!entry.hasSubmission()) {
+                    continue;
+                }
+                contestantStore.updateContestantFinalRank(contest.getJid(), entry.getContestantJid(), entry.getRank());
+            }
+        }
     }
 }

@@ -101,4 +101,8 @@ public interface ContestService {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     ImportContestsDumpResponse importDump(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestsDump contestsDump);
+
+    @POST
+    @Path("/populate-final-ranks")
+    void populateFinalRanks(@HeaderParam(AUTHORIZATION) AuthHeader authHeader);
 }
