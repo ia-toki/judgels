@@ -13,6 +13,7 @@ public interface ContestContestantDump extends Dump {
     String getUserJid();
     Optional<ContestContestantStatus> getStatus();
     Optional<Instant> getContestStartTime();
+    Optional<Integer> getFinalRank();
 
     class Builder extends ImmutableContestContestantDump.Builder {}
 }

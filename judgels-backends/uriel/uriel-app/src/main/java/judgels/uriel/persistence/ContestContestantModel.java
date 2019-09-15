@@ -21,4 +21,6 @@ public class ContestContestantModel extends Model {
     public String status;
 
     public Instant contestStartTime;
+
+    public Integer finalRank;
 }

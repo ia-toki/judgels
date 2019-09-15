@@ -12,4 +12,5 @@ public interface ContestContestantDao extends Dao<ContestContestantModel> {
     Page<ContestContestantModel> selectPagedByContestJid(String contestJid, SelectionOptions options);
     Set<ContestContestantModel> selectAllByContestJid(String contestJid, SelectionOptions options);
     Set<ContestContestantModel> selectAllApprovedByContestJid(String contestJid);
+    Set<ContestContestantModel> selectAllParticipated(String userJid);
 }

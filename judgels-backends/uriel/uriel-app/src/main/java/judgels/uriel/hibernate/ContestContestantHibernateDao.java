@@ -69,6 +69,15 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
                 .build()));
     }
 
+    @Override
+    public Set<ContestContestantModel> selectAllParticipated(String userJid) {
+        return ImmutableSet.copyOf(selectAll(new FilterOptions.Builder<ContestContestantModel>()
+                .putColumnsEq(ContestContestantModel_.userJid, userJid)
+                .putColumnsEq(ContestContestantModel_.status, APPROVED.name())
+                .addCustomPredicates((cb, cq, root) -> cb.isNotNull(root.get(ContestContestantModel_.finalRank)))
+                .build()));
+    }
+
     static CustomPredicateFilter<ContestModel> hasContestant(String userJid) {
         return (cb, cq, root) -> {
             Subquery<ContestContestantModel> sq = cq.subquery(ContestContestantModel.class);
@@ -78,6 +87,22 @@ public class ContestContestantHibernateDao extends HibernateDao<ContestContestan
                     cb.equal(subRoot.get(ContestContestantModel_.contestJid), root.get(ContestModel_.jid)),
                     cb.equal(subRoot.get(ContestContestantModel_.userJid), userJid),
                     cb.equal(subRoot.get(ContestContestantModel_.status), APPROVED.name()));
+            sq.select(subRoot);
+
+            return cb.exists(sq);
+        };
+    }
+
+    static CustomPredicateFilter<ContestModel> hasParticipatingContestant(String userJid) {
+        return (cb, cq, root) -> {
+            Subquery<ContestContestantModel> sq = cq.subquery(ContestContestantModel.class);
+            Root<ContestContestantModel> subRoot = sq.from(ContestContestantModel.class);
+
+            sq.where(
+                    cb.equal(subRoot.get(ContestContestantModel_.contestJid), root.get(ContestModel_.jid)),
+                    cb.equal(subRoot.get(ContestContestantModel_.userJid), userJid),
+                    cb.equal(subRoot.get(ContestContestantModel_.status), APPROVED.name()),
+                    cb.isNotNull(subRoot.get(ContestContestantModel_.finalRank)));
             sq.select(subRoot);
 
             return cb.exists(sq);

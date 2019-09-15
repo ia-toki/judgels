@@ -6,6 +6,7 @@ import static judgels.persistence.CustomPredicateFilter.or;
 import static judgels.uriel.UrielCacheUtils.SEPARATOR;
 import static judgels.uriel.UrielCacheUtils.getShortDuration;
 import static judgels.uriel.hibernate.ContestContestantHibernateDao.hasContestant;
+import static judgels.uriel.hibernate.ContestContestantHibernateDao.hasParticipatingContestant;
 import static judgels.uriel.hibernate.ContestHibernateDao.hasContestJid;
 import static judgels.uriel.hibernate.ContestManagerHibernateDao.hasManager;
 import static judgels.uriel.hibernate.ContestModuleHibernateDao.hasModule;
@@ -137,6 +138,13 @@ public class ContestRoleHibernateDao extends JudgelsHibernateDao<ContestModel> i
 
     static CustomPredicateFilter<ContestModel> isVisibleAsContestant(String userJid) {
         return and(hasContestant(userJid), not(hasModule(ContestModuleType.HIDDEN)));
+    }
+
+    static CustomPredicateFilter<ContestModel> isContestantParticipationVisibleAsViewer(String userJid) {
+        return and(
+                hasParticipatingContestant(userJid),
+                hasModule(ContestModuleType.REGISTRATION),
+                not(hasModule(ContestModuleType.HIDDEN)));
     }
 
     static CustomPredicateFilter<ContestModel> isVisibleAsSupervisor(String userJid) {

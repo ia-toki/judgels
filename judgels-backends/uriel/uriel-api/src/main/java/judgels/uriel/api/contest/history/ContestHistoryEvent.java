@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableContestHistoryEvent.class)
 public interface ContestHistoryEvent {
     String getContestJid();
+    int getRank();
     Optional<UserRating> getRating();
 
     class Builder extends ImmutableContestHistoryEvent.Builder {}

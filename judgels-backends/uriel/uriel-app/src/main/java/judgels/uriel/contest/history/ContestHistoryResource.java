@@ -18,42 +18,48 @@ import judgels.uriel.api.contest.history.ContestHistoryEvent;
 import judgels.uriel.api.contest.history.ContestHistoryResponse;
 import judgels.uriel.api.contest.history.ContestHistoryService;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.contestant.ContestContestantStore;
 
 public class ContestHistoryResource implements ContestHistoryService {
     private final UserSearchService userSearchService;
     private final UserRatingService userRatingService;
     private final ContestStore contestStore;
+    private final ContestContestantStore contestantStore;
 
     @Inject
     public ContestHistoryResource(
             UserSearchService userSearchService,
             UserRatingService userRatingService,
-            ContestStore contestStore) {
+            ContestStore contestStore,
+            ContestContestantStore contestantStore) {
 
         this.userSearchService = userSearchService;
         this.userRatingService = userRatingService;
         this.contestStore = contestStore;
+        this.contestantStore = contestantStore;
     }
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestHistoryResponse getHistory(String username) {
+    public ContestHistoryResponse getPublicHistory(String username) {
         Map<String, String> userJidMap = userSearchService.translateUsernamesToJids(ImmutableSet.of(username));
         if (!userJidMap.containsKey(username)) {
             throw new NotFoundException();
         }
         String userJid = userJidMap.get(username);
 
-        List<Contest> contests = contestStore.getPublicPastContests(userJid);
+        List<Contest> contests = contestStore.getPubliclyParticipatedContests(userJid);
         Map<String, UserRating> ratingsMap = userRatingService.getRatingHistory(userJid)
                 .stream()
                 .collect(Collectors.toMap(UserRatingEvent::getEventJid, UserRatingEvent::getRating));
+        Map<String, Integer> ranksMap = contestantStore.getContestantFinalRanks(userJid);
 
         List<ContestHistoryEvent> events = contests
                 .stream()
                 .map(contest -> new ContestHistoryEvent.Builder()
                         .contestJid(contest.getJid())
                         .rating(Optional.ofNullable(ratingsMap.get(contest.getJid())))
+                        .rank(ranksMap.get(contest.getJid()))
                         .build())
                 .collect(Collectors.toList());
 

@@ -8,6 +8,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.Lists;
 import java.time.Clock;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -63,6 +64,15 @@ public class ContestContestantStore {
         return !maybeModel.isPresent();
     }
 
+    public void updateContestantFinalRank(String contestJid, String userJid, int finalRank) {
+        Optional<ContestContestantModel> maybeModel = contestantDao.selectByContestJidAndUserJid(contestJid, userJid);
+        if (maybeModel.isPresent()) {
+            ContestContestantModel model = maybeModel.get();
+            model.finalRank = finalRank;
+            contestantDao.update(model);
+        }
+    }
+
     public boolean deleteContestant(String contestJid, String userJid) {
         Optional<ContestContestantModel> maybeModel = contestantDao.selectByContestJidAndUserJid(contestJid, userJid);
         if (maybeModel.isPresent()) {
@@ -78,6 +88,12 @@ public class ContestContestantStore {
         return Optional.ofNullable(contestantCache.get(
                 contestJid + SEPARATOR + userJid,
                 $ -> getContestantUncached(contestJid, userJid)));
+    }
+
+    public Map<String, Integer> getContestantFinalRanks(String userJid) {
+        return contestantDao.selectAllParticipated(userJid)
+                .stream()
+                .collect(Collectors.toMap(m -> m.contestJid, m -> m.finalRank));
     }
 
     private ContestContestant getContestantUncached(String contestJid, String userJid) {
@@ -141,6 +157,7 @@ public class ContestContestantStore {
         model.userJid = dump.getUserJid();
         model.status = status;
         model.contestStartTime = dump.getContestStartTime().orElse(null);
+        model.finalRank = dump.getFinalRank().orElse(null);
         contestantDao.setModelMetadataFromDump(model, dump);
         contestantDao.persist(model);
         contestantCache.invalidate(contestJid + SEPARATOR + model.userJid);
@@ -152,7 +169,8 @@ public class ContestContestantStore {
                     .mode(mode)
                     .userJid(model.userJid)
                     .status(ContestContestantStatus.valueOf(model.status))
-                    .contestStartTime(Optional.ofNullable(model.contestStartTime));
+                    .contestStartTime(Optional.ofNullable(model.contestStartTime))
+                    .finalRank(Optional.ofNullable(model.finalRank));
 
             if (mode == DumpImportMode.RESTORE) {
                 builder

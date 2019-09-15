@@ -2,6 +2,7 @@ package judgels.uriel.contest.contestant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import java.util.Set;
 import judgels.persistence.api.Page;
@@ -53,5 +54,27 @@ class ContestContestantStoreIntegrationTests extends AbstractIntegrationTests {
 
         contestantJids = store.getApprovedContestantJids(contest.getJid());
         assertThat(contestantJids).containsOnly("userJidB");
+    }
+
+    @Test
+    void final_ranks_flow() {
+        Contest contestA = contestStore.createContest(new ContestCreateData.Builder().slug("contestA").build());
+        Contest contestB = contestStore.createContest(new ContestCreateData.Builder().slug("contestB").build());
+        Contest contestC = contestStore.createContest(new ContestCreateData.Builder().slug("contestC").build());
+
+        store.upsertContestant(contestA.getJid(), "userJidA");
+        store.upsertContestant(contestB.getJid(), "userJidA");
+        store.upsertContestant(contestC.getJid(), "userJidB");
+
+        store.updateContestantFinalRank(contestA.getJid(), "userJidA", 2);
+        store.updateContestantFinalRank(contestB.getJid(), "userJidA", 5);
+        store.updateContestantFinalRank(contestC.getJid(), "userJidB", 1);
+
+        assertThat(store.getContestantFinalRanks("userJidA")).isEqualTo(ImmutableMap.of(
+                contestA.getJid(), 2,
+                contestB.getJid(), 5));
+
+        assertThat(store.getContestantFinalRanks("userJidB")).isEqualTo(ImmutableMap.of(
+                contestC.getJid(), 1));
     }
 }

@@ -155,14 +155,16 @@ public class ContestStore {
         return Lists.transform(contestDao.selectAllRunning(options), ContestStore::fromModel);
     }
 
-    public List<Contest> getPublicPastContests(String userJid) {
+    public List<Contest> getPubliclyParticipatedContests(String userJid) {
         SelectionOptions options = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_ALL)
                 .orderBy("beginTime")
                 .orderDir(OrderDir.ASC)
                 .build();
 
-        return Lists.transform(contestDao.selectAllPublicPastByUserJid(userJid, options), ContestStore::fromModel);
+        return Lists.transform(
+                contestDao.selectAllPubliclyParticipatedByUserJid(userJid, options),
+                ContestStore::fromModel);
     }
 
     public Contest createContest(ContestCreateData contestCreateData) {

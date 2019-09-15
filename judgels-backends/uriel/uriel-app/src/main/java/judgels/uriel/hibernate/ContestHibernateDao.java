@@ -1,8 +1,7 @@
 package judgels.uriel.hibernate;
 
+import static judgels.uriel.hibernate.ContestRoleHibernateDao.isContestantParticipationVisibleAsViewer;
 import static judgels.uriel.hibernate.ContestRoleHibernateDao.isVisible;
-import static judgels.uriel.hibernate.ContestRoleHibernateDao.isVisibleAsContestant;
-import static judgels.uriel.hibernate.ContestRoleHibernateDao.isVisibleAsViewer;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -83,10 +82,9 @@ public class ContestHibernateDao extends JudgelsHibernateDao<ContestModel> imple
     }
 
     @Override
-    public List<ContestModel> selectAllPublicPastByUserJid(String userJid, SelectionOptions options) {
+    public List<ContestModel> selectAllPubliclyParticipatedByUserJid(String userJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<ContestModel>()
-                .addCustomPredicates(isVisibleAsViewer())
-                .addCustomPredicates(isVisibleAsContestant(userJid))
+                .addCustomPredicates(isContestantParticipationVisibleAsViewer(userJid))
                 .addCustomPredicates(isEnded(clock))
                 .build(), options);
     }

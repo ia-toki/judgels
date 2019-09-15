@@ -10,7 +10,7 @@ import javax.ws.rs.QueryParam;
 @Path("/api/v2/contest-history")
 public interface ContestHistoryService {
     @GET
-    @Path("/")
+    @Path("/public")
     @Produces(APPLICATION_JSON)
-    ContestHistoryResponse getHistory(@QueryParam("username") String username);
+    ContestHistoryResponse getPublicHistory(@QueryParam("username") String username);
 }
