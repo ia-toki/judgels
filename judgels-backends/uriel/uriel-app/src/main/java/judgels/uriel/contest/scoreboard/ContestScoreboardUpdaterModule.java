@@ -11,6 +11,7 @@ import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.uriel.contest.ContestGroupStore;
 import judgels.uriel.contest.ContestStore;
+import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.group.ContestGroupContestStore;
 import judgels.uriel.contest.group.ContestGroupScoreboardStore;
@@ -58,6 +59,7 @@ public class ContestScoreboardUpdaterModule {
     static ContestScoreboardUpdater contestScoreboardUpdater(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper objectMapper,
+            ContestTimer contestTimer,
             ContestScoreboardStore scoreboardStore,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
@@ -72,6 +74,7 @@ public class ContestScoreboardUpdaterModule {
                 ContestScoreboardUpdater.class,
                 new Class<?>[] {
                         ObjectMapper.class,
+                        ContestTimer.class,
                         ContestScoreboardStore.class,
                         ContestModuleStore.class,
                         ContestContestantStore.class,
@@ -83,6 +86,7 @@ public class ContestScoreboardUpdaterModule {
                         ContestScoreboardPusher.class},
                 new Object[] {
                         objectMapper,
+                        contestTimer,
                         scoreboardStore,
                         moduleStore,
                         contestantStore,

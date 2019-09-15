@@ -17,7 +17,7 @@ import './ContestHistoryPage.css';
 interface ContestHistoryPageProps {
   userJid: string;
   username: string;
-  onGetContestHistory: (username: string) => Promise<ContestHistoryResponse>;
+  onGetContestPublicHistory: (username: string) => Promise<ContestHistoryResponse>;
 }
 
 interface ContestHistoryPageState {
@@ -28,7 +28,7 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
   state: ContestHistoryPageState = {};
 
   async componentDidMount() {
-    const response = await this.props.onGetContestHistory(this.props.username);
+    const response = await this.props.onGetContestPublicHistory(this.props.username);
     this.setState({ response });
   }
 
@@ -38,22 +38,33 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
       return <LoadingState />;
     }
 
-    return (
-      <Card title="Contest history">
-        <HTMLTable striped condensed className="contest-history-table">
-          <thead>
-            <tr>
-              <th className="col-row">#</th>
-              <th>Contest</th>
-              <th>Rating change</th>
-              <th>Diff</th>
-            </tr>
-          </thead>
-          <tbody>{this.renderRows()}</tbody>
-        </HTMLTable>
-      </Card>
-    );
+    return <Card title="Contest history">{this.renderTable()}</Card>;
   }
+
+  private renderTable = () => {
+    const { data } = this.state.response!;
+    if (data.length === 0) {
+      return (
+        <p>
+          <small>No contests.</small>
+        </p>
+      );
+    }
+    return (
+      <HTMLTable striped condensed className="contest-history-table">
+        <thead>
+          <tr>
+            <th className="col-row">#</th>
+            <th>Contest</th>
+            <th>Rank</th>
+            <th>Rating change</th>
+            <th>Diff</th>
+          </tr>
+        </thead>
+        <tbody>{this.renderRows()}</tbody>
+      </HTMLTable>
+    );
+  };
 
   private renderRows = () => {
     const { data, contestsMap } = this.state.response!;
@@ -86,6 +97,7 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
           <td>
             <ContestLink contest={contestsMap[event.contestJid]} />
           </td>
+          <td>{event.rank}</td>
           <td>{ratingChange}</td>
           <td>{ratingDiff}</td>
         </tr>
@@ -112,7 +124,7 @@ function createContestHistoryPage(contestHistoryActions) {
     username: selectUsername(state),
   });
   const mapDispatchToProps = {
-    onGetContestHistory: contestHistoryActions.getHistory,
+    onGetContestPublicHistory: contestHistoryActions.getPublicHistory,
   };
 
   return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestHistoryPage));

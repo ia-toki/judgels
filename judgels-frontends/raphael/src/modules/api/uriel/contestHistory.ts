@@ -7,6 +7,7 @@ import { ContestInfo } from './contest';
 
 export interface ContestHistoryEvent {
   contestJid: string;
+  rank: number;
   rating?: UserRating;
 }
 
@@ -18,8 +19,8 @@ export interface ContestHistoryResponse {
 const baseURL = `${APP_CONFIG.apiUrls.uriel}/contest-history`;
 
 export const contestHistoryAPI = {
-  getHistory: (username: string): Promise<ContestHistoryResponse> => {
+  getPublicHistory: (username: string): Promise<ContestHistoryResponse> => {
     const params = stringify({ username });
-    return get(`${baseURL}?${params}`);
+    return get(`${baseURL}/public?${params}`);
   },
 };

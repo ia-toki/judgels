@@ -28,13 +28,16 @@ import judgels.uriel.api.contest.module.StyleModuleConfig;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.scoreboard.ContestScoreboardType;
 import judgels.uriel.api.contest.scoreboard.Scoreboard;
+import judgels.uriel.api.contest.scoreboard.ScoreboardEntry;
 import judgels.uriel.api.contest.scoreboard.ScoreboardState;
+import judgels.uriel.contest.ContestTimer;
 import judgels.uriel.contest.contestant.ContestContestantStore;
 import judgels.uriel.contest.module.ContestModuleStore;
 import judgels.uriel.contest.problem.ContestProblemStore;
 
 public class ContestScoreboardUpdater {
     private final ObjectMapper objectMapper;
+    private final ContestTimer contestTimer;
     private final ContestScoreboardStore scoreboardStore;
     private final ContestModuleStore moduleStore;
     private final ContestContestantStore contestantStore;
@@ -47,6 +50,7 @@ public class ContestScoreboardUpdater {
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
+            ContestTimer contestTimer,
             ContestScoreboardStore scoreboardStore,
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
@@ -58,6 +62,7 @@ public class ContestScoreboardUpdater {
             ContestScoreboardPusher scoreboardPusher) {
 
         this.objectMapper = objectMapper;
+        this.contestTimer = contestTimer;
         this.scoreboardStore = scoreboardStore;
         this.moduleStore = moduleStore;
         this.contestantStore = contestantStore;
@@ -160,6 +165,10 @@ public class ContestScoreboardUpdater {
                     incrementalContents);
         }
 
+        if (contestTimer.hasEnded(contest)) {
+            updateContestantFinalRanks(contest.getJid(), scoreboards.get(OFFICIAL));
+        }
+
         scoreboardIncrementalMarker.setMark(
                 contest.getJid(),
                 incrementalMarkKey,
@@ -215,5 +224,13 @@ public class ContestScoreboardUpdater {
 
         scoreboards.put(type, scoreboard);
         incrementalContents.put(type, result.getIncrementalContent());
+    }
+
+    private void updateContestantFinalRanks(String contestJid, Scoreboard scoreboard) {
+        for (ScoreboardEntry entry : scoreboard.getContent().getEntries()) {
+            if (entry.hasSubmission()) {
+                contestantStore.updateContestantFinalRank(contestJid, entry.getContestantJid(), entry.getRank());
+            }
+        }
     }
 }

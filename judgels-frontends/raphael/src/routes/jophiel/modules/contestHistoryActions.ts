@@ -1,7 +1,7 @@
 export const contestHistoryActions = {
-  getHistory: (username: string) => {
+  getPublicHistory: (username: string) => {
     return async (dispatch, getState, { contestHistoryAPI }) => {
-      return await contestHistoryAPI.getHistory(username);
+      return await contestHistoryAPI.getPublicHistory(username);
     };
   },
 };
