@@ -38,7 +38,7 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
       return <LoadingState />;
     }
 
-    return <Card title="Contest history">{this.renderTable()}</Card>;
+    return <Card title={`${this.props.username} | Contest history`}>{this.renderTable()}</Card>;
   }
 
   private renderTable = () => {
