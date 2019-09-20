@@ -150,9 +150,16 @@ public class Communicator {
             throw new EvaluationException(String.join(" ", command) + " resulted in " + communicatorResult);
         }
 
+        SandboxExecutionResult finalResult;
+        if (communicatorResult.getStatus() == SandboxExecutionStatus.TIMED_OUT) {
+            finalResult = communicatorResult;
+        } else {
+            finalResult = solutionResult;
+        }
+
         TestCaseVerdict verdict;
 
-        Optional<TestCaseVerdict> maybeVerdict = verdictParser.parseExecutionResult(solutionResult);
+        Optional<TestCaseVerdict> maybeVerdict = verdictParser.parseExecutionResult(finalResult);
         if (maybeVerdict.isPresent()) {
             verdict = maybeVerdict.get();
         } else {
@@ -170,7 +177,7 @@ public class Communicator {
 
         return new EvaluationResult.Builder()
                 .verdict(verdict)
-                .executionResult(solutionResult)
+                .executionResult(finalResult)
                 .build();
     }
 
