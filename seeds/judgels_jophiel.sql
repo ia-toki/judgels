@@ -26,6 +26,8 @@ SET time_zone = "+00:00";
 -- Dumping data for table `jophiel_user`
 --
 
+DELETE FROM `jophiel_user` WHERE `username`='superadmin';
+
 INSERT INTO `jophiel_user` (`jid`, `username`, `email`, `password`, `avatarFilename`, `createdAt`, `createdBy`, `createdIp`, `updatedAt`, `updatedBy`, `updatedIp`) VALUES
 ('JIDUSERGBsbuD2EJ9jYMlGclISJ', 'superadmin', 'superadmin@jophiel.judgels', '1000:ffe7adbe30cf950f3dfaf7036ec80cd30dc19f034a8301bb:51452bbf71298b8090fbf07dbfc945386bcc508f83a29b99', NULL, '2018-08-05 16:37:57.305', NULL, NULL, '2018-08-05 16:37:57.305', NULL, NULL),
 ('JIDUSER7uMucIkm1exJTu7sJvxR', 'andi', 'andi@jophiel.judgels', '1000:060ce62731682f2a43de103418b1afad8af98bd6f399b569:cbe47b1335de632a21c7a4b56e04214b7c3a349d120867b3', NULL, '2018-08-05 17:03:33.504', NULL, NULL, '2018-08-05 17:11:29.127', NULL, NULL),
