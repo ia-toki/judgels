@@ -38,6 +38,7 @@
       image: judgels/nginx-certbot
       command: nginx
       restart: yes
+      restart_policy: always
       network_mode: host
       volumes:
         - /judgels/letsencrypt:/etc/letsencrypt
