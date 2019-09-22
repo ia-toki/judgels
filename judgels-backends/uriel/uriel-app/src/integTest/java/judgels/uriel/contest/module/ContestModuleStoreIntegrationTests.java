@@ -65,6 +65,11 @@ class ContestModuleStoreIntegrationTests extends AbstractIntegrationTests {
                 .build();
         store.upsertFrozenScoreboardModule(contest.getJid(), config2);
 
+        store.upsertPausedModule(contest.getJid());
+        store.disablePausedModule(contest.getJid());
+        store.upsertPausedModule(contest.getJid());
+        store.disablePausedModule(contest.getJid());
+
         ClarificationTimeLimitModuleConfig config3 = new ClarificationTimeLimitModuleConfig.Builder()
                 .clarificationDuration(Duration.ofHours(1))
                 .build();

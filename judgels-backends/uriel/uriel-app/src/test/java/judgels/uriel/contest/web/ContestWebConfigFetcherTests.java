@@ -4,6 +4,7 @@ import static java.time.temporal.ChronoUnit.HOURS;
 import static judgels.uriel.api.contest.web.ContestState.BEGUN;
 import static judgels.uriel.api.contest.web.ContestState.FINISHED;
 import static judgels.uriel.api.contest.web.ContestState.NOT_BEGUN;
+import static judgels.uriel.api.contest.web.ContestState.PAUSED;
 import static judgels.uriel.api.contest.web.ContestState.STARTED;
 import static judgels.uriel.api.contest.web.ContestTab.ANNOUNCEMENTS;
 import static judgels.uriel.api.contest.web.ContestTab.CLARIFICATIONS;
@@ -186,6 +187,13 @@ class ContestWebConfigFetcherTests {
         assertStatesAndDurations(true, false, false, BEGUN, TO_END);
         assertStatesAndDurations(true, true, false, STARTED, TO_FINISH);
         assertStatesAndDurations(true, true, true, FINISHED, null);
+
+        when(contestTimer.isPaused(contest)).thenReturn(true);
+
+        assertStatesAndDurations(false, false, false, PAUSED, null);
+        assertStatesAndDurations(true, false, false, PAUSED, null);
+        assertStatesAndDurations(true, true, false, PAUSED, null);
+        assertStatesAndDurations(true, true, true, PAUSED, null);
     }
 
     private void assertStatesAndDurations(

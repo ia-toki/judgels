@@ -9,6 +9,7 @@ import static judgels.uriel.api.contest.module.ContestModuleType.EXTERNAL_SCOREB
 import static judgels.uriel.api.contest.module.ContestModuleType.FILE;
 import static judgels.uriel.api.contest.module.ContestModuleType.FROZEN_SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.HIDDEN;
+import static judgels.uriel.api.contest.module.ContestModuleType.PAUSE;
 import static judgels.uriel.api.contest.module.ContestModuleType.REGISTRATION;
 import static judgels.uriel.api.contest.module.ContestModuleType.SCOREBOARD;
 import static judgels.uriel.api.contest.module.ContestModuleType.VIRTUAL;
@@ -244,6 +245,14 @@ public class ContestModuleStore {
         upsertModule(contestJid, HIDDEN, Collections.emptyMap());
     }
 
+    public void upsertPausedModule(String contestJid) {
+        upsertModule(contestJid, PAUSE, Collections.emptyMap());
+    }
+
+    public void disablePausedModule(String contestJid) {
+        disableModule(contestJid, PAUSE);
+    }
+
     public void upsertRegistrationModule(String contestJid) {
         upsertModule(contestJid, REGISTRATION, Collections.emptyMap());
     }
@@ -282,6 +291,10 @@ public class ContestModuleStore {
 
     public boolean hasHiddenModule(String contestJid) {
         return moduleDao.selectEnabledByContestJidAndType(contestJid, HIDDEN).isPresent();
+    }
+
+    public boolean hasPausedModule(String contestJid) {
+        return moduleDao.selectEnabledByContestJidAndType(contestJid, PAUSE).isPresent();
     }
 
     public boolean hasRegistrationModule(String contestJid) {

@@ -11,6 +11,7 @@ export enum ContestModuleType {
   ExternalScoreboard = 'EXTERNAL_SCOREBOARD',
   FrozenScoreboard = 'FROZEN_SCOREBOARD',
   Hidden = 'HIDDEN',
+  Paused = 'PAUSE',
   Registration = 'REGISTRATION',
   Scoreboard = 'SCOREBOARD',
   Virtual = 'VIRTUAL',
@@ -25,6 +26,7 @@ export const moduleTitlesMap = {
   [ContestModuleType.ExternalScoreboard]: 'External scoreboard',
   [ContestModuleType.Virtual]: 'Virtual contest',
   [ContestModuleType.File]: 'File',
+  [ContestModuleType.Paused]: 'Paused',
   [ContestModuleType.Hidden]: 'Hidden',
 };
 
@@ -37,6 +39,7 @@ export const moduleDescriptionsMap = {
   [ContestModuleType.ExternalScoreboard]: 'Sends scoreboard updates to an external endpoint.',
   [ContestModuleType.Virtual]: 'Allows contestants to start the contest at their preferred time.',
   [ContestModuleType.File]: 'Allows public files to be uploaded to the contest.',
+  [ContestModuleType.Paused]: 'Pauses the contest; contestants cannot submit or make clarifications.',
   [ContestModuleType.Hidden]: 'Hides the contest from contestants and supervisors.',
 };
 
@@ -49,6 +52,7 @@ export const allModules: ContestModuleType[] = [
   ContestModuleType.ExternalScoreboard,
   ContestModuleType.Virtual,
   ContestModuleType.File,
+  ContestModuleType.Paused,
   ContestModuleType.Hidden,
 ];
 

@@ -8,6 +8,7 @@ public enum ContestModuleType {
     FILE,
     FROZEN_SCOREBOARD,
     HIDDEN,
+    PAUSE,
     REGISTRATION,
     SCOREBOARD,
     VIRTUAL,
