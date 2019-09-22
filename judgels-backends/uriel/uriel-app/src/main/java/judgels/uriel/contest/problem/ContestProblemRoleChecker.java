@@ -75,6 +75,9 @@ public class ContestProblemRoleChecker {
         if (!contestTimer.hasStarted(contest, userJid)) {
             return Optional.of("Contest has not started yet.");
         }
+        if (moduleStore.hasPausedModule(contest.getJid())) {
+            return Optional.of("Contest is paused.");
+        }
         if (problem.getStatus() == ContestProblemStatus.CLOSED) {
             return Optional.of("Problem is closed.");
         }

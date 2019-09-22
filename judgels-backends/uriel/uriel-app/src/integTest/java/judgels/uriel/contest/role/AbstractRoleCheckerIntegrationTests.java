@@ -51,6 +51,7 @@ public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegr
     protected Contest contestAStarted;
     protected Contest contestB;
     protected Contest contestBStarted;
+    protected Contest contestBStartedPaused;
     protected Contest contestBFinished;
     protected Contest contestC;
 
@@ -112,23 +113,38 @@ public abstract class AbstractRoleCheckerIntegrationTests extends AbstractIntegr
                         .duration(Duration.ofHours(5))
                         .build()).get();
 
+        contestBStartedPaused =
+                contestStore.createContest(new ContestCreateData.Builder().slug("contest-b-started-paused").build());
+        contestBStartedPaused = contestStore.updateContest(
+                contestBStartedPaused.getJid(),
+                new ContestUpdateData.Builder()
+                        .beginTime(NOW.minus(2, HOURS))
+                        .duration(Duration.ofHours(5))
+                        .build()).get();
+
         contestBFinished = contestStore.createContest(
                 new ContestCreateData.Builder().slug("contest-b-finished").build());
         contestBFinished = contestStore.updateContest(
                 contestBFinished.getJid(),
                 new ContestUpdateData.Builder().beginTime(NOW.minus(10, HOURS)).build()).get();
 
+        moduleStore.upsertPausedModule(contestBStartedPaused.getJid());
+
         contestantStore.upsertContestant(contestB.getJid(), CONTESTANT);
         contestantStore.upsertContestant(contestBStarted.getJid(), CONTESTANT);
         contestantStore.upsertContestant(contestBStarted.getJid(), ANOTHER_CONTESTANT);
+        contestantStore.upsertContestant(contestBStartedPaused.getJid(), CONTESTANT);
+        contestantStore.upsertContestant(contestBStartedPaused.getJid(), ANOTHER_CONTESTANT);
         contestantStore.upsertContestant(contestBFinished.getJid(), CONTESTANT);
 
         supervisorStore.upsertSupervisor(contestB.getJid(), SUPERVISOR, ImmutableSet.of());
         supervisorStore.upsertSupervisor(contestBStarted.getJid(), SUPERVISOR, ImmutableSet.of());
+        supervisorStore.upsertSupervisor(contestBStartedPaused.getJid(), SUPERVISOR, ImmutableSet.of());
         supervisorStore.upsertSupervisor(contestBFinished.getJid(), SUPERVISOR, ImmutableSet.of());
 
         managerStore.upsertManager(contestB.getJid(), MANAGER);
         managerStore.upsertManager(contestBStarted.getJid(), MANAGER);
+        managerStore.upsertManager(contestBStartedPaused.getJid(), MANAGER);
         managerStore.upsertManager(contestBFinished.getJid(), MANAGER);
     }
 

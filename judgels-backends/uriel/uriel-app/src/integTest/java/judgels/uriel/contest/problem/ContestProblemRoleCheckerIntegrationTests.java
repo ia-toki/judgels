@@ -189,6 +189,7 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
         assertThat(checker.canSubmit(ADMIN, contestAStarted, problem, 10)).isEmpty();
         assertThat(checker.canSubmit(ADMIN, contestB, problem, 10)).isEmpty();
         assertThat(checker.canSubmit(ADMIN, contestBStarted, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(ADMIN, contestBStartedPaused, problem, 10)).isEmpty();
         assertThat(checker.canSubmit(ADMIN, contestBFinished, problem, 10)).isPresent();
         assertThat(checker.canSubmit(ADMIN, contestC, problem, 10)).isEmpty();
 
@@ -203,6 +204,7 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
         assertThat(checker.canSubmit(CONTESTANT, contestAStarted, problem, 10)).isPresent();
         assertThat(checker.canSubmit(CONTESTANT, contestB, problem, 10)).isPresent();
         assertThat(checker.canSubmit(CONTESTANT, contestBStarted, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(CONTESTANT, contestBStartedPaused, problem, 10)).isPresent();
         assertThat(checker.canSubmit(CONTESTANT, contestBFinished, problem, 10)).isPresent();
         assertThat(checker.canSubmit(CONTESTANT, contestC, problem, 10)).isPresent();
 
@@ -210,6 +212,7 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
         assertThat(checker.canSubmit(SUPERVISOR, contestAStarted, problem, 10)).isPresent();
         assertThat(checker.canSubmit(SUPERVISOR, contestB, problem, 10)).isPresent();
         assertThat(checker.canSubmit(SUPERVISOR, contestBStarted, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(SUPERVISOR, contestBStartedPaused, problem, 10)).isEmpty();
         assertThat(checker.canSubmit(SUPERVISOR, contestBFinished, problem, 10)).isPresent();
         assertThat(checker.canSubmit(SUPERVISOR, contestC, problem, 10)).isPresent();
 
@@ -217,6 +220,7 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
         assertThat(checker.canSubmit(MANAGER, contestAStarted, problem, 10)).isPresent();
         assertThat(checker.canSubmit(MANAGER, contestB, problem, 10)).isEmpty();
         assertThat(checker.canSubmit(MANAGER, contestBStarted, problem, 10)).isEmpty();
+        assertThat(checker.canSubmit(MANAGER, contestBStartedPaused, problem, 10)).isEmpty();
         assertThat(checker.canSubmit(MANAGER, contestC, problem, 10)).isPresent();
 
         ContestProblem problemClosed = new ContestProblem.Builder()
@@ -237,6 +241,8 @@ class ContestProblemRoleCheckerIntegrationTests extends AbstractRoleCheckerInteg
                 .contains("You are not a contestant.");
         assertThat(checker.canSubmit(CONTESTANT, contestB, problem, 10))
                 .contains("Contest has not started yet.");
+        assertThat(checker.canSubmit(CONTESTANT, contestBStartedPaused, problem, 10))
+                .contains("Contest is paused.");
         assertThat(checker.canSubmit(CONTESTANT, contestBFinished, problem, 10))
                 .contains("Contest is over.");
         assertThat(checker.canSubmit(CONTESTANT, contestBStarted, problemClosed, 10))

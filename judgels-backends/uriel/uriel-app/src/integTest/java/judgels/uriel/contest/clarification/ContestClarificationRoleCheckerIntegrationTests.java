@@ -23,6 +23,7 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
 
         moduleStore.upsertClarificationModule(contestB.getJid());
         moduleStore.upsertClarificationModule(contestBStarted.getJid());
+        moduleStore.upsertClarificationModule(contestBStartedPaused.getJid());
         moduleStore.upsertClarificationModule(contestBFinished.getJid());
     }
 
@@ -55,8 +56,7 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
                         .clarificationDuration(Duration.ofHours(3))
                         .build());
         assertThat(checker.canCreate(CONTESTANT, contestBStarted)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canCreate(CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canCreate(CONTESTANT, contestBStartedPaused)).isFalse();
 
         assertThat(checker.canCreate(CONTESTANT, contestBFinished)).isFalse();
         assertThat(checker.canCreate(CONTESTANT, contestC)).isFalse();
@@ -93,29 +93,23 @@ class ContestClarificationRoleCheckerIntegrationTests extends AbstractRoleChecke
         assertThat(checker.canViewOwn(CONTESTANT, contestA)).isFalse();
         assertThat(checker.canViewOwn(CONTESTANT, contestB)).isFalse();
         assertThat(checker.canViewOwn(CONTESTANT, contestBStarted)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
-        assertThat(checker.canViewOwn(CONTESTANT, contestBStarted)).isFalse();
+        assertThat(checker.canViewOwn(CONTESTANT, contestBStartedPaused)).isFalse();
         assertThat(checker.canViewOwn(CONTESTANT, contestC)).isFalse();
-        moduleStore.disablePausedModule(contestBStarted.getJid());
 
         assertThat(checker.canViewOwn(SUPERVISOR, contestA)).isFalse();
         assertThat(checker.canViewOwn(SUPERVISOR, contestB)).isTrue();
         assertThat(checker.canViewOwn(SUPERVISOR, contestBStarted)).isTrue();
+        assertThat(checker.canViewOwn(SUPERVISOR, contestBStartedPaused)).isTrue();
         assertThat(checker.canViewOwn(SUPERVISOR, contestC)).isFalse();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
         assertThat(checker.canViewOwn(SUPERVISOR, contestB)).isTrue();
-        assertThat(checker.canViewOwn(SUPERVISOR, contestBStarted)).isTrue();
         assertThat(checker.canViewOwn(SUPERVISOR, contestC)).isFalse();
-        moduleStore.disablePausedModule(contestBStarted.getJid());
 
         assertThat(checker.canViewOwn(MANAGER, contestA)).isFalse();
         assertThat(checker.canViewOwn(MANAGER, contestB)).isTrue();
         assertThat(checker.canViewOwn(MANAGER, contestBStarted)).isTrue();
-        moduleStore.upsertPausedModule(contestBStarted.getJid());
+        assertThat(checker.canViewOwn(MANAGER, contestBStartedPaused)).isTrue();
         assertThat(checker.canViewOwn(MANAGER, contestB)).isTrue();
-        assertThat(checker.canViewOwn(MANAGER, contestBStarted)).isTrue();
         assertThat(checker.canViewOwn(MANAGER, contestC)).isFalse();
-        moduleStore.disablePausedModule(contestBStarted.getJid());
     }
 
     @Test
