@@ -1,5 +1,6 @@
 import * as React from 'react';
 import ReactFormattedDuration from 'react-intl-formatted-duration';
+import '@formatjs/intl-pluralrules/polyfill-locales';
 
 export interface FormattedDateProps {
   value: number;
