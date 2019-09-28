@@ -1,3 +1,17 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9005
+  adminConnectors:
+    - type: http
+      port: 9015
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/jerahmeel-request.log
+      archivedLogFilenamePattern: var/log/jerahmeel-request-%d.log.gz
+      archivedFileCount: 14
+
 database:
   driverClass: com.mysql.jdbc.Driver
   url: jdbc:mysql://localhost/judgels_jerahmeel?useSSL=false
@@ -7,13 +21,8 @@ database:
     charSet: UTF-8
     hibernate.dialect: org.hibernate.dialect.MySQL57Dialect
     hibernate.generate_statistics: false
-
-webSecurity:
-  cors:
-    allowedOrigins: "*"
-
-jerahmeel:
-  baseDataDir: var/data
+    hibernate.query.plan_cache_max_size: 64
+    hibernate.query.plan_parameter_metadata_max_size: 32
 
 logging:
   appenders:
@@ -28,16 +37,12 @@ logging:
     org.hibernate.type.BasicTypeRegistry:
       level: OFF
 
-server:
-  applicationConnectors:
-    - type: http
-      port: 9005
-  adminConnectors:
-    - type: http
-      port: 9015
-  requestLog:
-    appenders:
-    - type: file
-      currentLogFilename: var/log/jerahmeel-request.log
-      archivedLogFilenamePattern: var/log/jerahmeel-request-%d.log.gz
-      archivedFileCount: 14
+webSecurity:
+  cors:
+    allowedOrigins: "*"
+
+jerahmeel:
+  baseDataDir: var/data
+
+  jophiel:
+    baseUrl: http://localhost:9001
