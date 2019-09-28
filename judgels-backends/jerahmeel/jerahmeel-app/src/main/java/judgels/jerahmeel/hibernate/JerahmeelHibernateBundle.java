@@ -9,18 +9,6 @@ public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicati
     public JerahmeelHibernateBundle() {
         super(
                 AdminRoleModel.class
-                // ContestModel.class,
-                // ContestAnnouncementModel.class,
-                // ContestClarificationModel.class,
-                // ContestContestantModel.class,
-                // ContestGradingModel.class,
-                // ContestManagerModel.class,
-                // ContestModuleModel.class,
-                // ContestProblemModel.class,
-                // ContestScoreboardModel.class,
-                // ContestStyleModel.class,
-                // ContestSubmissionModel.class,
-                // ContestSupervisorModel.class
         );
     }
 
