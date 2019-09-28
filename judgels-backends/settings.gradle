@@ -27,6 +27,10 @@ include ':uriel:uriel-api'
 include ':uriel:uriel-app'
 include ':uriel:uriel-dist'
 
+include ':jerahmeel:jerahmeel-api'
+include ':jerahmeel:jerahmeel-app'
+include ':jerahmeel:jerahmeel-dist'
+
 include ':gabriel:gabriel-api'
 include ':gabriel:gabriel-app'
 include ':gabriel:gabriel-dist'

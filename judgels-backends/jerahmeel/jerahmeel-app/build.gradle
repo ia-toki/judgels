@@ -1,0 +1,40 @@
+apply from: '../../gradle/java.gradle'
+apply from: '../../gradle/integTest.gradle'
+
+dependencies {
+    implementation project(':jerahmeel:jerahmeel-api')
+    implementation project(':jophiel:jophiel-client')
+    implementation project(':sandalphon:sandalphon-client')
+    implementation project(':sealtiel:sealtiel-api')
+
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+    implementation "com.palantir.websecurity:dropwizard-web-security:$dropwizardWebSecurityVersion"
+    implementation "io.dropwizard:dropwizard-core:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-forms:$dropwizardVersion"
+    implementation "io.dropwizard:dropwizard-migrations:$dropwizardVersion"
+
+    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
+    compileOnly "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    compileOnly "org.immutables:value-annotations:$immutablesVersion"
+
+    runtime "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"
+
+    testImplementation project(':judgels-commons:judgels-persistence-testing')
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.awaitility:awaitility:$awaitilityVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "com.github.tomakehurst:wiremock:$wiremockVersion"
+
+    integTestImplementation "io.dropwizard:dropwizard-testing:$dropwizardVersion"
+    integTestImplementation "com.palantir.conjure.java.api:test-utils:$conjureJavaRuntimeApiVersion"
+    integTestImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+
+    integTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen:$hibernateVersion"
+    annotationProcessor "org.immutables:value:$immutablesVersion"
+}

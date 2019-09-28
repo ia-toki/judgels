@@ -55,7 +55,10 @@ MODULES = OrderedDict([
     (':uriel:uriel-dist', set()),
     (':uriel', {':uriel:uriel-app', ':uriel:uriel-api', ':uriel:uriel-dist'}),
 
-    (':jerahmeel', {':sandalphon-commons', ':jophiel-commons', ':sandalphon-blackbox-adapters'}),
+    (':jerahmeel:jerahmeel-api', {':sandalphon:sandalphon-api'}),
+    (':jerahmeel:jerahmeel-app', {':jerahmeel:jerahmeel-api', ':jophiel:jophiel-client', ':sandalphon:sandalphon-client', ':sealtiel:sealtiel-api'}),
+    (':jerahmeel:jerahmeel-dist', set()),
+    (':jerahmeel', {':jerahmeel:jerahmeel-app', ':jerahmeel:jerahmeel-api', ':jerahmeel:jerahmeel-dist'}),
 
     (':raphael:package.json', set()),
     (':raphael', {':raphael:package.json'})
@@ -140,8 +143,11 @@ def check(branch_to_compare):
             if project == ':raphael':
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
                 print('yarn --cwd=`pwd`/judgels-frontends/raphael ci')
-            elif project in [':sandalphon', ':jerahmeel']:
+            elif project == ':sandalphon':
                 print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
+            elif project == ':jerahmeel':
+                print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
+                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/'))) 
             else:
                 print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
 
