@@ -11,6 +11,8 @@
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.query.plan_cache_max_size" value="64"></property>
+            <property name="hibernate.query.plan_parameter_metadata_max_size" value="32"></property>
             <property name="hibernate.show_sql" value="false"></property>
             <property name="hibernate.format_sql" value="true"></property>
         </properties>
