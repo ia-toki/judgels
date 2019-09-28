@@ -10,6 +10,7 @@ import judgels.persistence.UnmodifiableModel;
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jophiel_user_rating")
 @Table(indexes = {
+        @Index(columnList = "userJid"),
         @Index(columnList = "time,userJid", unique = true),
         @Index(columnList = "time,publicRating")})
 public class UserRatingModel extends UnmodifiableModel {

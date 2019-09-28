@@ -9,6 +9,8 @@ import judgels.persistence.Model;
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jophiel_user_info")
 @Table(indexes = {
+        @Index(columnList = "name"),
+        @Index(columnList = "gender"),
         @Index(columnList = "country"),
         @Index(columnList = "institutionName"),
         @Index(columnList = "institutionCountry"),

@@ -7,11 +7,4 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="migrations/000.xml"/>
-    <include file="migrations/001_add-points-to-contest-problem.xml"/>
-    <include file="migrations/002_add-bundle-item-submission.xml"/>
-    <include file="migrations/003_add-grading-to-bundle-item-submission.xml"/>
-    <include file="migrations/004_change-bundle-item-score-type-to-double.xml"/>
-    <include file="migrations/005_add-contest-groups.xml"/>
-    <include file="migrations/006_drop-locked-from-contest.xml"/>
-    <include file="migrations/007_add-final-rank-to-contest-contestant.xml"/>
 </databaseChangeLog>

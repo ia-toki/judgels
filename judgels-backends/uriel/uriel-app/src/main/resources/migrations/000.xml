@@ -1,18 +1,20 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet author="fushar" id="initial-1">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="jid" type="VARCHAR(255)">
+            <column name="jid" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="slug" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="VARCHAR(150)">
                 <constraints nullable="false"/>
             </column>
-            <column name="slug" type="VARCHAR(255)"/>
-            <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="style" type="VARCHAR(255)">
+            <column name="style" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="TEXT">
@@ -24,19 +26,16 @@
             <column name="duration" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="locked" type="BIT(1)">
-                <constraints nullable="false"/>
-            </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-2">
@@ -44,128 +43,158 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="jid" type="VARCHAR(255)">
+            <column name="jid" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="contestJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="contestJid" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="title" type="VARCHAR(255)">
+            <column name="title" type="VARCHAR(150)">
                 <constraints nullable="false"/>
             </column>
             <column name="content" type="TEXT">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(255)">
+            <column name="status" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
     <changeSet author="fushar" id="initial-3">
+        <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_bundle_item_submission">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="jid" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="containerJid" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="problemJid" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="itemJid" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="answer" type="TEXT"/>
+            <column name="createdAt" type="datetime(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
+            <column name="updatedAt" type="datetime(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="fushar" id="initial-4">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_clarification">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="jid" type="VARCHAR(255)">
+            <column name="jid" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="contestJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="contestJid" type="VARCHAR(255)">
+            <column name="topicJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="topicJid" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="title" type="VARCHAR(255)">
+            <column name="title" type="VARCHAR(150)">
                 <constraints nullable="false"/>
             </column>
             <column name="question" type="TEXT">
                 <constraints nullable="false"/>
             </column>
             <column name="answer" type="TEXT"/>
-            <column name="status" type="VARCHAR(255)">
+            <column name="status" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-4">
+    <changeSet author="fushar" id="initial-5">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_contestant">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="contestJid" type="VARCHAR(255)">
+            <column name="contestJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="userJid" type="VARCHAR(255)">
+            <column name="userJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
             <column name="contestStartTime" type="datetime(3)"/>
-            <column name="status" type="VARCHAR(255)">
+            <column name="status" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-5">
+    <changeSet author="fushar" id="initial-6">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_manager">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="contestJid" type="VARCHAR(255)">
+            <column name="contestJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="userJid" type="VARCHAR(255)">
+            <column name="userJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-6">
+    <changeSet author="fushar" id="initial-7">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_module">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="contestJid" type="VARCHAR(255)">
+            <column name="contestJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="VARCHAR(255)">
+            <column name="name" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
             <column name="config" type="TEXT">
@@ -177,62 +206,65 @@
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-7">
+    <changeSet author="fushar" id="initial-8">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_problem">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="contestJid" type="VARCHAR(255)">
+            <column name="contestJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="problemJid" type="VARCHAR(255)">
+            <column name="problemJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="alias" type="VARCHAR(255)">
+            <column name="alias" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
             <column name="submissionsLimit" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(255)">
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="points" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-8">
+    <changeSet author="fushar" id="initial-9">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_programming_grading">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="jid" type="VARCHAR(255)">
+            <column name="jid" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="submissionJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="submissionJid" type="VARCHAR(255)">
+            <column name="verdictCode" type="VARCHAR(10)">
                 <constraints nullable="false"/>
             </column>
-            <column name="verdictCode" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="verdictName" type="VARCHAR(255)">
+            <column name="verdictName" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="score" type="INT">
@@ -242,80 +274,80 @@
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-9">
+    <changeSet author="fushar" id="initial-10">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="jid" type="VARCHAR(255)">
+            <column name="jid" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="containerJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="containerJid" type="VARCHAR(255)">
+            <column name="problemJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="problemJid" type="VARCHAR(255)">
+            <column name="gradingEngine" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="gradingEngine" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="gradingLanguage" type="VARCHAR(255)">
+            <column name="gradingLanguage" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-10">
+    <changeSet author="fushar" id="initial-11">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_scoreboard">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="scoreboard" type="TEXT">
+            <column name="contestJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="VARCHAR(255)">
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scoreboard" type="TEXT">
                 <constraints nullable="false"/>
             </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
-            <column name="contestJid" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-11">
+    <changeSet author="fushar" id="initial-12">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_style">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="contestJid" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+            <column name="contestJid" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="config" type="TEXT">
                 <constraints nullable="false"/>
@@ -323,24 +355,24 @@
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-12">
+    <changeSet author="fushar" id="initial-13">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_contest_supervisor">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="contestJid" type="VARCHAR(255)">
+            <column name="contestJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="userJid" type="VARCHAR(255)">
+            <column name="userJid" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
             <column name="permission" type="TEXT">
@@ -349,96 +381,117 @@
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
             <column name="updatedAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatedBy" type="VARCHAR(255)"/>
-            <column name="updatedIp" type="VARCHAR(255)"/>
+            <column name="updatedBy" type="VARCHAR(32)"/>
+            <column name="updatedIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-13">
+    <changeSet author="fushar" id="initial-14">
         <createTable catalogName="judgels_uriel" schemaName="judgels_uriel" tableName="uriel_role_admin">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="userJid" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+            <column name="userJid" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
-            <column name="createdBy" type="VARCHAR(255)"/>
-            <column name="createdIp" type="VARCHAR(255)"/>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
-    <changeSet author="fushar" id="initial-14">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, userJid" constraintName="UK45hxnne8od4pdhybnd930w07l" schemaName="judgels_uriel" tableName="uriel_contest_contestant"/>
-    </changeSet>
     <changeSet author="fushar" id="initial-15">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_31bukg10v6vb0g1geqw3cjkkv" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission"/>
+        <addUniqueConstraint catalogName="judgels_uriel" columnNames="containerJid, createdBy, problemJid, itemJid" constraintName="containerJid_createdBy_problemJid_itemJid" schemaName="judgels_uriel" tableName="uriel_contest_bundle_item_submission"/>
     </changeSet>
     <changeSet author="fushar" id="initial-16">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="userJid" constraintName="UK_37si4aj9gp3e55v8jeb8lx9kb" schemaName="judgels_uriel" tableName="uriel_role_admin"/>
+        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, alias" constraintName="contestJid_alias" schemaName="judgels_uriel" tableName="uriel_contest_problem"/>
     </changeSet>
     <changeSet author="fushar" id="initial-17">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid" constraintName="UK_56rjtorowjdwtdn8mom662fp2" schemaName="judgels_uriel" tableName="uriel_contest_style"/>
+        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, name" constraintName="contestJid_name" schemaName="judgels_uriel" tableName="uriel_contest_module"/>
     </changeSet>
     <changeSet author="fushar" id="initial-18">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_adeallsvutm9c4m36au217pvg" schemaName="judgels_uriel" tableName="uriel_contest_announcement"/>
+        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, problemJid" constraintName="contestJid_problemJid" schemaName="judgels_uriel" tableName="uriel_contest_problem"/>
     </changeSet>
     <changeSet author="fushar" id="initial-19">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="slug" constraintName="UK_gp1qdsas0orwg5u56h7pnh4n" schemaName="judgels_uriel" tableName="uriel_contest"/>
+        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, type" constraintName="contestJid_type" schemaName="judgels_uriel" tableName="uriel_contest_scoreboard"/>
     </changeSet>
     <changeSet author="fushar" id="initial-20">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_gqcnex00ovnt8d5rq6d76bass" schemaName="judgels_uriel" tableName="uriel_contest"/>
+        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, userJid" constraintName="contestJid_userJid" schemaName="judgels_uriel" tableName="uriel_contest_contestant"/>
     </changeSet>
     <changeSet author="fushar" id="initial-21">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_jwyicp3b1scwm3vvv8sivxdw9" schemaName="judgels_uriel" tableName="uriel_contest_clarification"/>
+        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, userJid" constraintName="contestJid_userJid" schemaName="judgels_uriel" tableName="uriel_contest_manager"/>
     </changeSet>
     <changeSet author="fushar" id="initial-22">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="jid" constraintName="UK_sy161g33y36hehn5sko51i1jn" schemaName="judgels_uriel" tableName="uriel_contest_programming_grading"/>
+        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, userJid" constraintName="contestJid_userJid" schemaName="judgels_uriel" tableName="uriel_contest_supervisor"/>
     </changeSet>
     <changeSet author="fushar" id="initial-23">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, type" constraintName="UKbggs4uifbgwkkxihw9y7vifhc" schemaName="judgels_uriel" tableName="uriel_contest_scoreboard"/>
+        <createIndex catalogName="judgels_uriel" indexName="beginTime" schemaName="judgels_uriel" tableName="uriel_contest">
+            <column name="beginTime"/>
+        </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-24">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, userJid" constraintName="UKdaiefm51hj5vwi2vdtdk4ikea" schemaName="judgels_uriel" tableName="uriel_contest_manager"/>
+        <createIndex catalogName="judgels_uriel" indexName="containerJid_createdAt" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission">
+            <column name="containerJid"/>
+            <column name="createdAt"/>
+        </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-25">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, problemJid" constraintName="UKgttlrf4iibxhm3d2y8rdn5esp" schemaName="judgels_uriel" tableName="uriel_contest_problem"/>
-    </changeSet>
-    <changeSet author="fushar" id="initial-26">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, alias" constraintName="UKh7g3p966bhbslkp2ibsgaly30" schemaName="judgels_uriel" tableName="uriel_contest_problem"/>
-    </changeSet>
-    <changeSet author="fushar" id="initial-27">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, userJid" constraintName="UKk8r7m30pnkrtv1y4v5kyut0kb" schemaName="judgels_uriel" tableName="uriel_contest_supervisor"/>
-    </changeSet>
-    <changeSet author="fushar" id="initial-28">
-        <addUniqueConstraint catalogName="judgels_uriel" columnNames="contestJid, name" constraintName="UKo6l5h43wdnqei1t83hjr931vx" schemaName="judgels_uriel" tableName="uriel_contest_module"/>
-    </changeSet>
-    <changeSet author="fushar" id="initial-29">
-        <createIndex catalogName="judgels_uriel" indexName="IDX1cyb0r6cdun72v1ub6qwnnd9h" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission">
+        <createIndex catalogName="judgels_uriel" indexName="containerJid_createdBy" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission">
             <column name="containerJid"/>
             <column name="createdBy"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fushar" id="initial-26">
+        <createIndex catalogName="judgels_uriel" indexName="containerJid_gradingLanguage" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission">
+            <column name="containerJid"/>
+            <column name="gradingLanguage"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fushar" id="initial-27">
+        <createIndex catalogName="judgels_uriel" indexName="containerJid_problemJid" schemaName="judgels_uriel" tableName="uriel_contest_programming_submission">
+            <column name="containerJid"/>
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
+    <changeSet author="fushar" id="initial-28">
+        <createIndex catalogName="judgels_uriel" indexName="contestJid" schemaName="judgels_uriel" tableName="uriel_contest_announcement">
+            <column name="contestJid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fushar" id="initial-29">
+        <createIndex catalogName="judgels_uriel" indexName="contestJid_createdBy" schemaName="judgels_uriel" tableName="uriel_contest_clarification">
+            <column name="contestJid"/>
+            <column name="createdBy"/>
+        </createIndex>
+    </changeSet>
     <changeSet author="fushar" id="initial-30">
-        <createIndex catalogName="judgels_uriel" indexName="IDX8t0ysvra0nsleb55g0afe3gc1" schemaName="judgels_uriel" tableName="uriel_contest_programming_grading">
-            <column name="submissionJid"/>
+        <createIndex catalogName="judgels_uriel" indexName="createdAt" schemaName="judgels_uriel" tableName="uriel_contest">
+            <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-31">
-        <createIndex catalogName="judgels_uriel" indexName="IDXkrgx965c55gfya3hkrtvodj34" schemaName="judgels_uriel" tableName="uriel_contest_announcement">
-            <column name="contestJid"/>
+        <createIndex catalogName="judgels_uriel" indexName="name" schemaName="judgels_uriel" tableName="uriel_contest">
+            <column name="name"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-32">
-        <createIndex catalogName="judgels_uriel" indexName="IDXrjpnpgk6hq4ri9wqpcfxcsql0" schemaName="judgels_uriel" tableName="uriel_contest_clarification">
-            <column name="contestJid"/>
-            <column name="createdBy"/>
+        <createIndex catalogName="judgels_uriel" indexName="submissionJid" schemaName="judgels_uriel" tableName="uriel_contest_programming_grading">
+            <column name="submissionJid"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fushar" id="initial-33">
+        <createIndex catalogName="judgels_uriel" indexName="updatedAt" schemaName="judgels_uriel" tableName="uriel_contest">
+            <column name="updatedAt"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fushar" id="initial-34">
+        <createIndex catalogName="judgels_uriel" indexName="verdictCode" schemaName="judgels_uriel" tableName="uriel_contest_programming_grading">
+            <column name="verdictCode"/>
         </createIndex>
     </changeSet>
 </databaseChangeLog>

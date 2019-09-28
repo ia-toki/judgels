@@ -7,7 +7,9 @@ import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "uriel_contest_programming_grading")
-@Table(indexes = {@Index(columnList = "submissionJid")})
+@Table(indexes = {
+        @Index(columnList = "submissionJid"),
+        @Index(columnList = "verdictCode")})
 public class ContestProgrammingGradingModel extends AbstractProgrammingGradingModel {
     public ContestProgrammingGradingModel() {}
 
