@@ -88,6 +88,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="answer" type="TEXT"/>
+            <column name="verdict" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="score" type="DOUBLE"/>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
