@@ -155,6 +155,7 @@
             <column name="status" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="finalRank" type="INT"/>
             <column name="createdAt" type="datetime(3)">
                 <constraints nullable="false"/>
             </column>
