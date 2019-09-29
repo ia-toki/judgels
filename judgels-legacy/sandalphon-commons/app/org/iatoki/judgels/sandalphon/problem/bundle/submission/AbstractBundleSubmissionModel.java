@@ -1,15 +1,16 @@
 package org.iatoki.judgels.sandalphon.problem.bundle.submission;
 
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import judgels.persistence.JidPrefix;
 import judgels.persistence.JudgelsModel;
-
-import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @JidPrefix("SUBM")
 public abstract class AbstractBundleSubmissionModel extends JudgelsModel {
-
+    @Column(nullable = false)
     public String problemJid;
 
+    @Column(nullable = false)
     public String containerJid;
 }

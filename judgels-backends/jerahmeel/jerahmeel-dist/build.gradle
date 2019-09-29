@@ -37,6 +37,6 @@ task dbDump(type: JavaExec, dependsOn: jar) {
     description 'Dumps current database schema.'
 
     classpath = sourceSets.main.runtimeClasspath
-    main = 'judgels.jerahmeel.JerhameelApplication'
+    main = 'judgels.jerahmeel.JerahmeelApplication'
     args = [ 'db', 'dump', 'var/conf/jerahmeel.yml' ]
 }
