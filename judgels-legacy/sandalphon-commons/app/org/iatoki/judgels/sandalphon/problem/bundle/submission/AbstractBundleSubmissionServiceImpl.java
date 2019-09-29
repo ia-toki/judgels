@@ -192,7 +192,7 @@ public abstract class AbstractBundleSubmissionServiceImpl<SM extends AbstractBun
                 GM gradingModel = bundleGradingDao.createGradingModel();
 
                 gradingModel.submissionJid = submissionModel.jid;
-                gradingModel.score = bundleGradingResult.getScore();
+                gradingModel.score = (int) bundleGradingResult.getScore();
                 gradingModel.details = bundleGradingResult.getDetailsAsJson();
 
                 bundleGradingDao.persist(gradingModel, userJid, userIpAddress);
