@@ -71,7 +71,6 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
     const rows = [];
     let lastRating: UserRating | null = null;
 
-    const N = data.length;
     data.forEach((event, idx) => {
       let ratingChange: JSX.Element | string = '';
       let ratingDiff: JSX.Element | string = '';
