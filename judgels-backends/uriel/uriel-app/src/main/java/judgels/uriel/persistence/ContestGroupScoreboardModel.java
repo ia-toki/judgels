@@ -16,6 +16,6 @@ public class ContestGroupScoreboardModel extends Model {
     @Column(nullable = false)
     public String type;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     public String scoreboard;
 }
