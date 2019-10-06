@@ -10,6 +10,7 @@ import judgels.persistence.JudgelsModel;
 @Entity(name = "jerahmeel_chapter")
 @Table(indexes = {
         @Index(columnList = "name"),
+        @Index(columnList = "createdAt"),
         @Index(columnList = "updatedAt")})
 @JidPrefix("SESS")
 public final class ChapterModel extends JudgelsModel {

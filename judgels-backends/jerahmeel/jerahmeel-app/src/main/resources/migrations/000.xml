@@ -554,111 +554,116 @@
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-40">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum">
+        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_course">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-41">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set">
+        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-42">
-        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set">
             <column name="createdAt"/>
         </createIndex>
     </changeSet>
     <changeSet author="fushar" id="initial-43">
+        <createIndex catalogName="judgels_jerahmeel" indexName="createdAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
+            <column name="createdAt"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="fushar" id="initial-44">
         <createIndex catalogName="judgels_jerahmeel" indexName="createdBy" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_submission">
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-44">
+    <changeSet author="fushar" id="initial-45">
         <createIndex catalogName="judgels_jerahmeel" indexName="createdBy" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
             <column name="createdBy"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-45">
+    <changeSet author="fushar" id="initial-46">
         <createIndex catalogName="judgels_jerahmeel" indexName="gradingLanguage" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
             <column name="gradingLanguage"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-46">
+    <changeSet author="fushar" id="initial-47">
         <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_archive">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-47">
+    <changeSet author="fushar" id="initial-48">
         <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-48">
+    <changeSet author="fushar" id="initial-49">
         <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_course">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-49">
+    <changeSet author="fushar" id="initial-50">
         <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-50">
+    <changeSet author="fushar" id="initial-51">
         <createIndex catalogName="judgels_jerahmeel" indexName="name" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set">
             <column name="name"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-51">
+    <changeSet author="fushar" id="initial-52">
         <createIndex catalogName="judgels_jerahmeel" indexName="parentJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_archive">
             <column name="parentJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-52">
+    <changeSet author="fushar" id="initial-53">
         <createIndex catalogName="judgels_jerahmeel" indexName="problemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_submission">
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-53">
+    <changeSet author="fushar" id="initial-54">
         <createIndex catalogName="judgels_jerahmeel" indexName="problemJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_submission">
             <column name="problemJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-54">
+    <changeSet author="fushar" id="initial-55">
         <createIndex catalogName="judgels_jerahmeel" indexName="submissionJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_bundle_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-55">
+    <changeSet author="fushar" id="initial-56">
         <createIndex catalogName="judgels_jerahmeel" indexName="submissionJid" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_grading">
             <column name="submissionJid"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-56">
+    <changeSet author="fushar" id="initial-57">
         <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_archive">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-57">
+    <changeSet author="fushar" id="initial-58">
         <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_chapter">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-58">
+    <changeSet author="fushar" id="initial-59">
         <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_course">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-59">
+    <changeSet author="fushar" id="initial-60">
         <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_curriculum">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-60">
+    <changeSet author="fushar" id="initial-61">
         <createIndex catalogName="judgels_jerahmeel" indexName="updatedAt" schemaName="judgels_jerahmeel" tableName="jerahmeel_problem_set">
             <column name="updatedAt"/>
         </createIndex>
     </changeSet>
-    <changeSet author="fushar" id="initial-61">
+    <changeSet author="fushar" id="initial-62">
         <createIndex catalogName="judgels_jerahmeel" indexName="verdictCode" schemaName="judgels_jerahmeel" tableName="jerahmeel_programming_grading">
             <column name="verdictCode"/>
         </createIndex>
