@@ -93,7 +93,7 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
 
       rows.push(
         <tr key={event.contestJid}>
-          <td>{N - idx}</td>
+          <td>{idx + 1}</td>
           <td>
             <ContestLink contest={contestsMap[event.contestJid]} />
           </td>
