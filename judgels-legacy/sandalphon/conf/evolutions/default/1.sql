@@ -129,7 +129,7 @@ CREATE TABLE `sandalphon_programming_grading` (
   `verdictCode` varchar(10) NOT NULL,
   `verdictName` varchar(50) NOT NULL,
   `score` int(11) NOT NULL,
-  `details` longtext NOT NULL,
+  `details` longtext DEFAULT NULL,
   `createdAt` datetime(3) NOT NULL,
   `createdBy` varchar(32) DEFAULT NULL,
   `createdIp` varchar(100) DEFAULT NULL,
