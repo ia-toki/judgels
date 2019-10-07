@@ -1,3 +1,6 @@
+import { SubmissionError } from 'redux-form';
+
+import { NotFoundError } from '../api/error';
 import { createToastMiddleware } from './toastMiddleware';
 
 describe('toastMiddleware', () => {
@@ -14,7 +17,7 @@ describe('toastMiddleware', () => {
     store = jest.fn();
   });
 
-  describe('when the action throws error', () => {
+  describe('when the action throws Error', () => {
     const error = new Error('error');
     const next = async action => {
       throw error;
@@ -22,6 +25,32 @@ describe('toastMiddleware', () => {
     const applyMiddleware = action => createToastMiddleware(toastAction)(store)(next)(action);
 
     it('shows the error toast', async () => {
+      await applyMiddleware(myAction);
+      expect(toastAction.showErrorToast).toHaveBeenCalledWith(error);
+    });
+  });
+
+  describe('when the action throws SubmissionError', () => {
+    const error = new SubmissionError({ field: 'error' });
+    const next = async action => {
+      throw error;
+    };
+    const applyMiddleware = action => createToastMiddleware(toastAction)(store)(next)(action);
+
+    it('rethrows the error and shows the error toast', async () => {
+      await expect(applyMiddleware(myAction)).rejects.toMatchObject(error);
+      expect(toastAction.showErrorToast).toHaveBeenCalledWith(error);
+    });
+  });
+
+  describe('when the action throws other error', () => {
+    const error = new NotFoundError({ errorName: 'error' });
+    const next = async action => {
+      throw error;
+    };
+    const applyMiddleware = action => createToastMiddleware(toastAction)(store)(next)(action);
+
+    it('rethrows the error and shows the error toast', async () => {
       await expect(applyMiddleware(myAction)).rejects.toMatchObject(error);
       expect(toastAction.showErrorToast).toHaveBeenCalledWith(error);
     });

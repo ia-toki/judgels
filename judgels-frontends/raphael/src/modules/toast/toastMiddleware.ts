@@ -1,3 +1,5 @@
+import { SubmissionError } from 'redux-form';
+
 import { toastActions as injectedToastActions } from './toastActions';
 
 export function createToastMiddleware(toastActions) {
@@ -6,7 +8,10 @@ export function createToastMiddleware(toastActions) {
       return await next(action);
     } catch (error) {
       toastActions.showErrorToast(error);
-      throw error;
+
+      if (!(error instanceof Error) || error instanceof SubmissionError) {
+        throw error;
+      }
     }
   };
 }
