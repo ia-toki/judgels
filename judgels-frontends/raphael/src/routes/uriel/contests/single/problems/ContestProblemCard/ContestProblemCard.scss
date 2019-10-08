@@ -8,11 +8,3 @@
   color: $text-color !important;
   float: right;
 }
-
-.clearfix {
-  &::after {
-    display: block;
-    content: '';
-    clear: both;
-  }
-}
