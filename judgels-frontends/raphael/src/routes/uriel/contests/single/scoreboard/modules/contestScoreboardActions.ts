@@ -7,4 +7,12 @@ export const contestScoreboardActions = {
       return await contestScoreboardAPI.getScoreboard(token, contestJid, frozen, showClosedProblems, page);
     };
   },
+
+  refreshScoreboard: (contestJid: string) => {
+    return async (dispatch, getState, { contestScoreboardAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await contestScoreboardAPI.refreshScoreboard(token, contestJid);
+      toastActions.showSuccessToast('Scoreboard refresh requested.');
+    };
+  },
 };

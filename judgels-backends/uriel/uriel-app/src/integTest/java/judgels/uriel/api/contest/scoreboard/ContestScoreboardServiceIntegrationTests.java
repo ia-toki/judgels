@@ -58,6 +58,7 @@ class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceInt
         ContestScoreboardConfig config = response.getConfig();
         assertThat(config.getCanViewOfficialAndFrozen()).isFalse();
         assertThat(config.getCanViewClosedProblems()).isFalse();
+        assertThat(config.getCanRefresh()).isTrue();
 
 
         contestService.updateContest(ADMIN_HEADER, contest.getJid(), new ContestUpdateData.Builder()
@@ -84,6 +85,7 @@ class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceInt
         config = response.getConfig();
         assertThat(config.getCanViewOfficialAndFrozen()).isTrue();
         assertThat(config.getCanViewClosedProblems()).isTrue();
+        assertThat(config.getCanRefresh()).isTrue();
 
 
         // as supervisor
@@ -91,6 +93,7 @@ class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceInt
         response =
                 scoreboardService.getScoreboard(of(SUPERVISOR_HEADER), contest.getJid(), false, false, empty()).get();
         assertThat(response.getConfig().getCanViewOfficialAndFrozen()).isTrue();
+        assertThat(response.getConfig().getCanRefresh()).isFalse();
 
 
         // as contestant
@@ -98,6 +101,7 @@ class ContestScoreboardServiceIntegrationTests extends AbstractContestServiceInt
         response =
                 scoreboardService.getScoreboard(of(CONTESTANT_HEADER), contest.getJid(), false, false, empty()).get();
         assertThat(response.getConfig().getCanViewOfficialAndFrozen()).isFalse();
+        assertThat(response.getConfig().getCanRefresh()).isFalse();
 
 
         // as user

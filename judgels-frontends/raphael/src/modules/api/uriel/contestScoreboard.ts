@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 
-import { get } from '../../../modules/api/http';
+import { get, post } from '../../../modules/api/http';
 import { ProfilesMap } from '../../../modules/api/jophiel/profile';
 
 import { Scoreboard } from './scoreboard';
@@ -21,6 +21,7 @@ export enum ContestScoreboardType {
 export interface ContestScoreboardConfig {
   canViewOfficialAndFrozen: boolean;
   canViewClosedProblems: boolean;
+  canRefresh: boolean;
   pageSize: number;
 }
 
@@ -42,5 +43,9 @@ export const contestScoreboardAPI = {
   ): Promise<ContestScoreboardResponse | null> => {
     const params = stringify({ frozen, showClosedProblems, page });
     return get(`${baseURL(contestJid)}?${params}`, token);
+  },
+
+  refreshScoreboard: (token: string, contestJid: string): Promise<void> => {
+    return post(`${baseURL(contestJid)}/refresh`, token);
   },
 };

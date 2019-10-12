@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 public interface ContestScoreboardConfig {
     boolean getCanViewOfficialAndFrozen();
     boolean getCanViewClosedProblems();
+    boolean getCanRefresh();
 
     class Builder extends ImmutableContestScoreboardConfig.Builder {}
 }

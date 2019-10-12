@@ -1,4 +1,4 @@
-import { Callout, Intent, Switch } from '@blueprintjs/core';
+import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -42,6 +42,7 @@ export interface ContestScoreboardPageProps
     showClosedProblems?: boolean,
     page?: number
   ) => Promise<ContestScoreboardResponse | null>;
+  onRefreshScoreboard: (contestJid: string) => Promise<void>;
   onAppendRoute: (queries: any) => any;
 }
 
@@ -50,6 +51,7 @@ interface ContestScoreboardPageState {
   frozen?: boolean;
   showClosedProblems?: boolean;
   lastRefreshScoreboardTime?: number;
+  isForceRefreshButtonLoading?: boolean;
 }
 
 export class ContestScoreboardPage extends React.PureComponent<ContestScoreboardPageProps, ContestScoreboardPageState> {
@@ -76,6 +78,8 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
         <div className="clearfix" />
         <hr />
         {this.renderFilter()}
+        {this.renderForceRefreshButton()}
+        <div className="clearfix" />
         {this.renderFrozenScoreboardNotice()}
         {this.renderScoreboard()}
         <Pagination
@@ -162,7 +166,7 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
             className="contest-scoreboard-page__filter"
             label="Show closed problems"
             checked={this.state.showClosedProblems}
-            onChange={this.onChangeshowClosedProblems}
+            onChange={this.onChangeShowClosedProblems}
           />
         )}
         <div className="clearfix " />
@@ -170,9 +174,39 @@ export class ContestScoreboardPage extends React.PureComponent<ContestScoreboard
     );
   };
 
+  renderForceRefreshButton = () => {
+    const { response } = this.state;
+    if (!response || response.length === 0) {
+      return null;
+    }
+
+    const { canRefresh } = response[0].config;
+    if (!canRefresh) {
+      return null;
+    }
+
+    return (
+      <Button
+        className="contest-scoreboard-page__refresh-button"
+        intent="primary"
+        icon="refresh"
+        onClick={this.forceRefreshScoreboard}
+        loading={!!this.state.isForceRefreshButtonLoading}
+      >
+        Force refresh
+      </Button>
+    );
+  };
+
+  private forceRefreshScoreboard = async () => {
+    this.setState({ isForceRefreshButtonLoading: true });
+    await this.props.onRefreshScoreboard(this.props.contest.jid);
+    this.setState({ isForceRefreshButtonLoading: false });
+  };
+
   private onChangeFrozen = ({ target }) => this.onChange(target.checked, this.state.showClosedProblems);
 
-  private onChangeshowClosedProblems = ({ target }) => this.onChange(this.state.frozen, target.checked);
+  private onChangeShowClosedProblems = ({ target }) => this.onChange(this.state.frozen, target.checked);
 
   private onChange = (frozen?: boolean, showClosedProblems?: boolean) => {
     this.setState({ frozen, showClosedProblems });
@@ -251,6 +285,7 @@ export function createContestScoreboardPage(contestScoreboardActions) {
 
   const mapDispatchToProps = {
     onGetScoreboard: contestScoreboardActions.getScoreboard,
+    onRefreshScoreboard: contestScoreboardActions.refreshScoreboard,
     onAppendRoute: (queries: any) => push({ search: stringify(queries) }),
   };
 
