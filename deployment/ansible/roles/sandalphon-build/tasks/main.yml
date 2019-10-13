@@ -5,13 +5,5 @@
       name: judgels/sandalphon
       force: yes
       push: yes
-
-  - name: Tag sandalphon latest version
-    docker_image:
-      name: judgels/sandalphon:latest
-      repository: "judgels/sandalphon:{{ judgels_version }}"
-      force: yes
-      pull: no
-      push: yes
-      state: present
-    when: judgels_version is defined
+      buildargs:
+        VCS_REF: "{{ lookup('env', 'TRAVIS_COMMIT') }}"

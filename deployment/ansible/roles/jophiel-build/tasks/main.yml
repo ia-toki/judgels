@@ -1,17 +1,9 @@
 - block:
-  - name: Build jophiel image and push it to DockerHub
-    docker_image:
-      path: "{{ playbook_dir }}/../../../judgels-backends/jophiel/jophiel-dist"
-      name: judgels/jophiel
-      force: yes
-      push: yes
-
-  - name: Tag jophiel latest version
-    docker_image:
-      name: judgels/jophiel:latest
-      repository: "judgels/jophiel:{{ judgels_version }}"
-      force: yes
-      pull: no
-      push: yes
-      state: present
-    when: judgels_version is defined
+    - name: Build jophiel image and push it to DockerHub
+      docker_image:
+        path: "{{ playbook_dir }}/../../../judgels-backends/jophiel/jophiel-dist"
+        name: judgels/jophiel
+        force: yes
+        push: yes
+        buildargs:
+          VCS_REF: "{{ lookup('env', 'TRAVIS_COMMIT') }}"

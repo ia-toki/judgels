@@ -20,7 +20,7 @@ public class SealtielApplication extends Application<SealtielApplicationConfigur
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
 
-        env.jersey().register(component.versionResource());
+        env.jersey().register(component.pingResource());
         env.jersey().register(component.messageResource());
 
         env.healthChecks().register("rabbitmq", component.rabbitmqHealthCheck());

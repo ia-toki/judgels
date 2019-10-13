@@ -15,5 +15,5 @@ import judgels.service.JudgelsModule;
 public interface SealtielComponent {
     MessageResource messageResource();
     RabbitMQHealthCheck rabbitmqHealthCheck();
-    VersionResource versionResource();
+    PingResource pingResource();
 }

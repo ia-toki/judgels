@@ -4,10 +4,10 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.google.inject.AbstractModule;
 import com.google.inject.util.Providers;
+import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import judgels.persistence.ActorProvider;
-import judgels.service.JudgelsVersion;
 import org.hibernate.SessionFactory;
 import org.iatoki.judgels.AWSFileSystemProvider;
 import org.iatoki.judgels.FileSystemProvider;
@@ -40,7 +40,7 @@ public final class JerahmeelModule extends AbstractModule {
     @Override
     public void configure() {
         bindConstant().annotatedWith(GeneralName.class).to("Jerahmeel");
-        bindConstant().annotatedWith(GeneralVersion.class).to(JudgelsVersion.INSTANCE);
+        bindConstant().annotatedWith(GeneralVersion.class).to(UserAgent.Agent.DEFAULT_VERSION);
 
         // <DEPRECATED>
         Config config = ConfigFactory.load();

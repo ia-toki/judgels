@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.time.Clock;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import judgels.service.JudgelsVersion;
 
 @Module
 public class GabrielModule {
@@ -38,7 +37,7 @@ public class GabrielModule {
     @Provides
     @Singleton
     static UserAgent userAgent() {
-        return UserAgent.of(UserAgent.Agent.of("gabriel", JudgelsVersion.INSTANCE));
+        return UserAgent.of(UserAgent.Agent.of("gabriel", UserAgent.Agent.DEFAULT_VERSION));
     }
 
     @Provides

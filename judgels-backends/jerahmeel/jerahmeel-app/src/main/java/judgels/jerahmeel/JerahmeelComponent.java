@@ -18,5 +18,5 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 @Singleton
 public interface JerahmeelComponent {
     AdminResource adminResource();
-    VersionResource versionResource();
+    PingResource pingResource();
 }

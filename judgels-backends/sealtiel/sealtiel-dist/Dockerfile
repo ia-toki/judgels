@@ -9,6 +9,13 @@ WORKDIR /judgels/sealtiel
 
 EXPOSE 9003 9103
 
+ARG VCS_REF
+
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.name="judgels/sealtiel"
+LABEL org.label-schema.vcs-url="https://github.com/ia-toki/judgels"
+LABEL org.label-schema.vcs-ref=$VCS_REF
+
 COPY build/distributions .
 
 ENTRYPOINT ["./service/bin/init.sh"]
