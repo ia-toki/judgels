@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from 'components/Card/Card';
-import { CoursesResponse } from 'modules/api/jerahmeel/course';
+import { Card } from '../../../../../components/Card/Card';
+import { CoursesResponse } from '../../../../../modules/api/jerahmeel/course';
 
 import { courseActions as injectedCourseActions } from '../modules/courseActions';
 import { CourseCard } from '../CourseCard/CourseCard';

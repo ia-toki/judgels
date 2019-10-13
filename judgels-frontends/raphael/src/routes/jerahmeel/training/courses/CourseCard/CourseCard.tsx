@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
-import { Course } from 'modules/api/jerahmeel/course';
+import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
+import { Course } from '../../../../../modules/api/jerahmeel/course';
 
 import './CourseCard.css';
 

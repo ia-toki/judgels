@@ -1,5 +1,5 @@
-import { Page } from 'modules/api/pagination';
-import { get } from 'modules/api/http';
+import { Page } from '../../api/pagination';
+import { get } from '../../api/http';
 // import { APP_CONFIG } from 'conf';
 
 export interface Chapter {

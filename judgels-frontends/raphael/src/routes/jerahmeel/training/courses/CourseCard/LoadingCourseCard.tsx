@@ -1,7 +1,7 @@
 import { Classes } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { ContentCard } from 'components/ContentCard/ContentCard';
+import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 
 export const LoadingCourseCard = () => (
   <ContentCard>

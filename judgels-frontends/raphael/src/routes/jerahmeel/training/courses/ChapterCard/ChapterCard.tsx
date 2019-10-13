@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { ContentCardLink } from 'components/ContentCardLink/ContentCardLink';
-import { Chapter } from 'modules/api/jerahmeel/chapter';
-import { Course } from 'modules/api/jerahmeel/course';
+import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
+import { Chapter } from '../../../../../modules/api/jerahmeel/chapter';
+import { Course } from '../../../../../modules/api/jerahmeel/course';
 
 import './ChapterCard.css';
 
