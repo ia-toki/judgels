@@ -20,7 +20,7 @@ const MainTrainingRoutes = () => {
       component: ProblemsetListPage,
     },
     {
-      id: 'course',
+      id: 'courses',
       titleIcon: 'predictive-analysis',
       title: 'Courses',
       routeComponent: Route,

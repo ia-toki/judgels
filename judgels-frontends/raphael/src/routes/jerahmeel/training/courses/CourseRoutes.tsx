@@ -8,8 +8,8 @@ import ChaptersPage from './ChaptersPage/ChaptersPage';
 
 const CourseRoutes = () => (
   <div>
-    <Route exact path="/training/course" component={CoursesPage} />
-    <Route path="/training/course/:courseId" component={ChaptersPage} />
+    <Route exact path="/training/courses" component={CoursesPage} />
+    <Route path="/training/courses/:courseId" component={ChaptersPage} />
   </div>
 );
 

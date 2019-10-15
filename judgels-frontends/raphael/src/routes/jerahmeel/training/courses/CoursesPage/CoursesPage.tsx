@@ -1,13 +1,11 @@
-// import { Callout, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from '../../../../../components/Card/Card';
 import { CoursesResponse } from '../../../../../modules/api/jerahmeel/course';
-
-import { courseActions as injectedCourseActions } from '../modules/courseActions';
 import { CourseCard } from '../CourseCard/CourseCard';
 import { LoadingCourseCard } from '../CourseCard/LoadingCourseCard';
+import { courseActions as injectedCourseActions } from '../modules/courseActions';
 
 export interface CoursePageProps {
   onGetCourses: () => Promise<CoursesResponse>;
@@ -40,7 +38,7 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
       return <LoadingCourseCard />;
     }
 
-    return courses.page.map(course => <CourseCard key={course.jid} course={course} />);
+    return courses.map(course => <CourseCard key={course.jid} course={course} />);
   };
 }
 

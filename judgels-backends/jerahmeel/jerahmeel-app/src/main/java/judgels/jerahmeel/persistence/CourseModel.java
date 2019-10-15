@@ -1,4 +1,4 @@
-package org.iatoki.judgels.jerahmeel.course;
+package judgels.jerahmeel.persistence;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,13 +7,14 @@ import javax.persistence.Table;
 import judgels.persistence.JidPrefix;
 import judgels.persistence.JudgelsModel;
 
+@SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jerahmeel_course")
 @Table(indexes = {
         @Index(columnList = "name"),
         @Index(columnList = "createdAt"),
         @Index(columnList = "updatedAt")})
 @JidPrefix("COUR")
-public final class CourseModel extends JudgelsModel {
+public class CourseModel extends JudgelsModel {
     @Column(nullable = false)
     public String name;
 

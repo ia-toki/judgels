@@ -12,6 +12,7 @@ model {
 }
 
 dependencies {
+    play project(':jerahmeel:jerahmeel-app')
     play project(':sandalphon-commons')
     play project(':jophiel-commons')
     play project(':sandalphon-blackbox-adapters')
