@@ -167,12 +167,10 @@ table {
   white-space: pre-wrap;
 }
 
-.clearfix {
-  &::after {
-    display: block;
-    content: '';
-    clear: both;
-  }
+.clearfix::after {
+  content: '';
+  clear: both;
+  display: table;
 }
 
 .normal-weight {

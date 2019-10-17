@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.inject.Singleton;
 import judgels.jophiel.api.user.me.MyUserService;
-import judgels.service.JudgelsVersion;
 import judgels.service.actor.ActorChecker;
 import judgels.service.actor.CachingActorExtractor;
 
@@ -28,7 +27,7 @@ public class JerahmeelModule {
     @Provides
     @Singleton
     static UserAgent userAgent() {
-        return UserAgent.of(UserAgent.Agent.of("jerahmeel", JudgelsVersion.INSTANCE));
+        return UserAgent.of(UserAgent.Agent.of("jerahmeel", UserAgent.Agent.DEFAULT_VERSION));
     }
 
     @Provides

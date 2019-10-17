@@ -63,12 +63,14 @@ public class ContestScoreboardResource implements ContestScoreboardService {
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(scoreboardRoleChecker.canViewDefault(actorJid, contest));
 
+        boolean canManage = scoreboardRoleChecker.canManage(actorJid, contest);
         boolean canSupervise = scoreboardRoleChecker.canSupervise(actorJid, contest);
         boolean canViewOfficialAndFrozen = scoreboardRoleChecker.canViewOfficialAndFrozen(actorJid, contest);
         boolean canViewClosedProblems = scoreboardRoleChecker.canViewClosedProblems(actorJid, contest);
         ContestScoreboardConfig config = new ContestScoreboardConfig.Builder()
                 .canViewOfficialAndFrozen(canViewOfficialAndFrozen)
                 .canViewClosedProblems(canViewClosedProblems)
+                .canRefresh(canManage)
                 .build();
 
         if (showClosedProblems) {

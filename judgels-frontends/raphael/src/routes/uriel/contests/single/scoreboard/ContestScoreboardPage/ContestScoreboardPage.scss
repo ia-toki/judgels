@@ -3,14 +3,6 @@
     float: left;
   }
 
-  .clearfix {
-    &::after {
-      display: block;
-      content: '';
-      clear: both;
-    }
-  }
-
   hr {
     margin-top: 10px !important;
   }
@@ -34,9 +26,15 @@
 
 .contest-scoreboard-page__filters {
   margin-bottom: 5px;
+  float: left;
 }
 
 .contest-scoreboard-page__filter {
   float: left;
   margin-right: 25px;
+}
+
+.contest-scoreboard-page__refresh-button {
+  float: right;
+  margin-bottom: 10px;
 }

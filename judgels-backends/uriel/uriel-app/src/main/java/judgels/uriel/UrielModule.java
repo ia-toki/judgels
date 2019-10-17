@@ -12,7 +12,6 @@ import judgels.sandalphon.submission.bundle.BaseItemSubmissionStore;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.sandalphon.submission.programming.BaseSubmissionStore;
 import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.service.JudgelsVersion;
 import judgels.service.actor.ActorChecker;
 import judgels.service.actor.CachingActorExtractor;
 import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
@@ -36,7 +35,7 @@ public class UrielModule {
     @Provides
     @Singleton
     static UserAgent userAgent() {
-        return UserAgent.of(UserAgent.Agent.of("uriel", JudgelsVersion.INSTANCE));
+        return UserAgent.of(UserAgent.Agent.of("uriel", UserAgent.Agent.DEFAULT_VERSION));
     }
 
     @Provides

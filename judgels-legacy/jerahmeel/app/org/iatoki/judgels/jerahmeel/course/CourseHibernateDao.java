@@ -1,6 +1,8 @@
 package org.iatoki.judgels.jerahmeel.course;
 
 import com.google.common.collect.ImmutableList;
+import judgels.jerahmeel.persistence.CourseModel;
+import judgels.jerahmeel.persistence.CourseModel_;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 

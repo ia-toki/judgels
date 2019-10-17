@@ -23,6 +23,13 @@ ENV PATH $JAVA_HOME/bin:$PATH
 
 WORKDIR /judgels/gabriel
 
+ARG VCS_REF
+
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.name="judgels/gabriel"
+LABEL org.label-schema.vcs-url="https://github.com/ia-toki/judgels"
+LABEL org.label-schema.vcs-ref=$VCS_REF
+
 COPY --from=0 /isolate/isolate /judgels/moe/
 COPY --from=0 /isolate/isolate-check-environment /judgels/moe/
 COPY --from=0 /usr/local/etc/isolate /usr/local/etc/

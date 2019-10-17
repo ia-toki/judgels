@@ -1,11 +1,11 @@
 package org.iatoki.judgels.sandalphon;
 
 import com.google.inject.AbstractModule;
+import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import judgels.persistence.ActorProvider;
 import judgels.sandalphon.SandalphonConfiguration;
-import judgels.service.JudgelsVersion;
 import judgels.service.client.ClientChecker;
 import org.hibernate.SessionFactory;
 import org.iatoki.judgels.FileSystemProvider;
@@ -42,7 +42,7 @@ public final class SandalphonModule extends AbstractModule {
     @Override
     public void configure() {
         bindConstant().annotatedWith(GeneralName.class).to("Sandalphon");
-        bindConstant().annotatedWith(GeneralVersion.class).to(JudgelsVersion.INSTANCE);
+        bindConstant().annotatedWith(GeneralVersion.class).to(UserAgent.Agent.DEFAULT_VERSION);
 
         // <DEPRECATED>
         Config config = ConfigFactory.load();

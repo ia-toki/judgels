@@ -5,13 +5,5 @@
       name: judgels/raphael
       force: yes
       push: yes
-
-  - name: Tag raphael latest version
-    docker_image:
-      name: judgels/raphael:latest
-      repository: "judgels/raphael:{{ judgels_version }}"
-      force: yes
-      pull: no
-      push: yes
-      state: present
-    when: judgels_version is defined
+      buildargs:
+        VCS_REF: "{{ lookup('env', 'TRAVIS_COMMIT') }}"

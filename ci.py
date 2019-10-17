@@ -141,16 +141,16 @@ def check(branch_to_compare):
     for project in PROJECTS:
         if MODULES[project].intersection(changed_modules):
             if project == ':raphael':
-                print('yarn --cwd=`pwd`/judgels-frontends/raphael install')
-                print('yarn --cwd=`pwd`/judgels-frontends/raphael ci')
+                print('yarn --cwd=`pwd`/judgels-frontends/raphael install && \\')
+                print('yarn --cwd=`pwd`/judgels-frontends/raphael ci && \\')
             elif project == ':sandalphon':
-                print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
+                print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check && \\'.format(project.replace(':', '/'))) 
             elif project == ':jerahmeel':
-                print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check'.format(project.replace(':', '/'))) 
-                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/'))) 
+                print('./judgels-legacy/gradlew --console=plain -p judgels-legacy{} check && \\'.format(project.replace(':', '/'))) 
+                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check && \\'.format(project.replace(':', '/'))) 
             else:
-                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check'.format(project.replace(':', '/')))
-
+                print('./judgels-backends/gradlew --console=plain -p judgels-backends{} check && \\'.format(project.replace(':', '/')))
+    print('true')
 
 def deploy(branch_to_compare):
     tag_env = get_tag_env()
@@ -159,7 +159,8 @@ def deploy(branch_to_compare):
     print('set -ex')
     for service in SERVICES:
         if MODULES[service].intersection(changed_modules):
-            print('{}./deployment/scripts/deploy_{}.sh'.format(tag_env, service.replace(':', '')))
+            print('{}./deployment/scripts/deploy_{}.sh && \\'.format(tag_env, service.replace(':', '')))
+    print('true')
 
 
 flatten_dependencies()

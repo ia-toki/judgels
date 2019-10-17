@@ -3,6 +3,8 @@ package org.iatoki.judgels.jerahmeel.course;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import judgels.jerahmeel.persistence.CourseModel;
+import judgels.jerahmeel.persistence.CourseModel_;
 import org.iatoki.judgels.play.Page;
 
 import javax.inject.Inject;

@@ -59,5 +59,5 @@ public interface JophielComponent {
     UserRatingResource userRatingResource();
     UserSearchResource userSearchResource();
     UserWebResource userWebResource();
-    VersionResource versionResource();
+    PingResource pingResource();
 }

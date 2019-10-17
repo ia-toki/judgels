@@ -6,6 +6,7 @@ export interface ApiUrlsConfig {
   jophiel: string;
   legacyJophiel: string;
   uriel: string;
+  jerahmeel: string;
 }
 
 export interface TempHomeConfig {
