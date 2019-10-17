@@ -7,6 +7,7 @@ import { ProblemStatement } from '../../../../modules/api/sandalphon/problem';
 import { ProblemLimits } from '../../../../modules/api/sandalphon/problemProgramming';
 
 import './ProblemStatementCard.css';
+import { MathjaxWrapper } from '../../../MathjaxWrapper/MathjaxWrapper';
 
 export interface ProblemStatementCardProps {
   alias: string;
@@ -19,24 +20,26 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
     const { alias, statement, limits } = this.props;
     return (
       <ContentCard>
-        <h2 className="programming-problem-statement__name">
-          {alias}. {statement.title}
-        </h2>
-        <HTMLTable condensed className="programming-problem-statement__limits">
-          <tbody>
-            <tr>
-              <td>Time limit</td>
-              <td>{this.renderTimeLimit(limits.timeLimit)}</td>
-            </tr>
-            <tr>
-              <td>Memory limit</td>
-              <td>{this.renderMemoryLimit(limits.memoryLimit)}</td>
-            </tr>
-          </tbody>
-        </HTMLTable>
-        <div className="programming-problem-statement__text">
-          <HtmlText>{statement.text}</HtmlText>
-        </div>
+        <MathjaxWrapper>
+          <h2 className="programming-problem-statement__name">
+            {alias}. {statement.title}
+          </h2>
+          <HTMLTable condensed className="programming-problem-statement__limits">
+            <tbody>
+              <tr>
+                <td>Time limit</td>
+                <td>{this.renderTimeLimit(limits.timeLimit)}</td>
+              </tr>
+              <tr>
+                <td>Memory limit</td>
+                <td>{this.renderMemoryLimit(limits.memoryLimit)}</td>
+              </tr>
+            </tbody>
+          </HTMLTable>
+          <div className="programming-problem-statement__text">
+            <HtmlText>{statement.text}</HtmlText>
+          </div>
+        </MathjaxWrapper>
       </ContentCard>
     );
   }
