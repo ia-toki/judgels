@@ -2,6 +2,7 @@
 
 build/
 node_modules/
+public/mathjax/
 
 raphael.js
 
