@@ -11,8 +11,13 @@
 
   - name: Generate jerahmeel config
     template:
-      src: "{{ playbook_dir }}/../conf/jerahmeel.conf.j2"
-      dest: /judgels/jerahmeel/var/conf/jerahmeel.conf
+      src: "{{ playbook_dir }}/../conf/jerahmeel.yml.j2"
+      dest: /judgels/jerahmeel/var/conf/jerahmeel.yml
+
+  - name: Generate jerahmeel launcher config
+    template:
+      src: "{{ playbook_dir }}/../conf/jerahmeel-launcher.yml.j2"
+      dest: /judgels/jerahmeel/var/conf/launcher-custom.yml
 
   - name: Pull jerahmeel image
     docker_image:
@@ -25,16 +30,14 @@
       name: jerahmeel
       image: "judgels/jerahmeel:{{ judgels_version | default('latest', true) }}"
       restart: yes
+      restart_policy: always
       network_mode: host
       volumes:
         - "/judgels/jerahmeel/var:/judgels/jerahmeel/var"
-      env:
-        JAVA_OPTS: "-Xmx{{ jerahmeel_xmx }}"
-        PLAY_BINARY_OPTS: "-Dhttp.port=9006 -Dconfig.file=/judgels/jerahmeel/var/conf/jerahmeel.conf -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/judgels/jerahmeel/var/log"
 
-  - name: Allow Jerahmeel traffic through the firewall
+  - name: Allow jerahmeel traffic through the firewall
     ufw:
       rule: allow
-      to_port: 9006
+      to_port: 9005
       proto: tcp
       comment: Judgels Jerahmeel
