@@ -7,21 +7,25 @@ declare global {
   }
 }
 
-interface MathjaxProps {
-  text: string;
+interface MathjaxTextProps {
+  children: string;
 }
-export class MathjaxWrapper extends React.Component<MathjaxProps> {
-  isContainMathJax = false;
 
+interface MathjaxTextState {
+  containsMathJax: boolean;
+}
+
+export class MathjaxText extends React.Component<MathjaxTextProps, MathjaxTextState> {
   constructor(props) {
     super(props);
-    const { text } = this.props;
-
-    this.isContainMathJax = this.isContainMathJaxSyntax(text);
+    this.state = {
+      containsMathJax: this.containsMathjaxSyntax(props.children),
+    };
+    console.log(props.children);
   }
 
   componentDidMount() {
-    if (this.isContainMathJax) {
+    if (this.state.containsMathJax) {
       const publicUrl = process.env.PUBLIC_URL;
       this.insertScript('MathJax-config', publicUrl + '/var/conf/mathjax-config.js');
       this.insertScript('MathJax-script', publicUrl + '/mathjax/tex-svg.js');
@@ -29,7 +33,7 @@ export class MathjaxWrapper extends React.Component<MathjaxProps> {
   }
 
   componentDidUpdate() {
-    if (this.isContainMathJax) {
+    if (this.state.containsMathJax) {
       window.MathJax.typeset();
     }
   }
@@ -44,7 +48,7 @@ export class MathjaxWrapper extends React.Component<MathjaxProps> {
     document.body.appendChild(script);
   }
 
-  private isContainMathJaxSyntax(text: string) {
+  private containsMathjaxSyntax(text: string) {
     const mathjaxDelimitters = ['$', '\\(', '\\)', '\\[', '\\]'];
     for (let delimitter of mathjaxDelimitters) {
       if (text.includes(delimitter)) {
@@ -57,7 +61,7 @@ export class MathjaxWrapper extends React.Component<MathjaxProps> {
   render() {
     return (
       <div className="mathjax-wrapper">
-        <HtmlText>{this.props.text}</HtmlText>
+        <HtmlText>{this.props.children}</HtmlText>
       </div>
     );
   }
