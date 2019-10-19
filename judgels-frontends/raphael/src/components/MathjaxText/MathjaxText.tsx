@@ -21,7 +21,6 @@ export class MathjaxText extends React.Component<MathjaxTextProps, MathjaxTextSt
     this.state = {
       containsMathJax: this.containsMathjaxSyntax(props.children),
     };
-    console.log(props.children);
   }
 
   componentDidMount() {
