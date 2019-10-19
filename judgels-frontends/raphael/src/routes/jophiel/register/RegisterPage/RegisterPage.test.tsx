@@ -10,7 +10,7 @@ import { AppState } from '../../../../modules/store';
 
 import { createRegisterPage } from './RegisterPage';
 import RegisterForm from '../RegisterForm/RegisterForm';
-import { jophielReducer } from '../../modules/jophielReducer';
+import { jophielReducer } from '../../../../modules/jophiel/jophielReducer';
 
 describe('RegisterPage', () => {
   let registerActions: jest.Mocked<any>;

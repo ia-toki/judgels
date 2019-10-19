@@ -1,5 +1,9 @@
 package judgels.jerahmeel.course;
 
+import static judgels.jerahmeel.JerahmeelCacheUtils.getShortDuration;
+
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +19,24 @@ import judgels.persistence.api.SelectionOptions;
 public class CourseStore {
     private final CourseDao courseDao;
 
+    private final LoadingCache<String, Course> courseBySlugCache;
+
     @Inject
     public CourseStore(CourseDao courseDao) {
         this.courseDao = courseDao;
+
+        this.courseBySlugCache = Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterWrite(getShortDuration())
+                .build(this::getCourseBySlugUncached);
+    }
+
+    public Optional<Course> getCourseBySlug(String courseSlug) {
+        return Optional.ofNullable(courseBySlugCache.get(courseSlug));
+    }
+
+    private Course getCourseBySlugUncached(String CourseSlug) {
+        return courseDao.selectBySlug(CourseSlug).map(CourseStore::fromModel).orElse(null);
     }
 
     public List<Course> getCourses() {

@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import judgels.service.api.actor.AuthHeader;
 
@@ -17,4 +18,11 @@ public interface CourseService {
     @Produces(APPLICATION_JSON)
     CoursesResponse getCourses(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader);
+
+    @GET
+    @Path("/slug/{courseSlug}")
+    @Produces(APPLICATION_JSON)
+    Course getCourseBySlug(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("courseSlug") String courseSlug);
 }

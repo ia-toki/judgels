@@ -1,5 +1,7 @@
 package judgels.jerahmeel.course;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.List;
 import java.util.Optional;
@@ -27,5 +29,11 @@ public class CourseResource implements CourseService {
         return new CoursesResponse.Builder()
                 .data(courses)
                 .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Course getCourseBySlug(Optional<AuthHeader> authHeader, String courseSlug) {
+        return checkFound(courseStore.getCourseBySlug(courseSlug));
     }
 }

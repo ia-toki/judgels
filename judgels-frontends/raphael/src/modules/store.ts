@@ -40,8 +40,9 @@ import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
 import { toastActions } from './toast/toastActions';
 import { toastMiddleware } from './toast/toastMiddleware';
 import { tokenGateMiddleware } from './tokenGate/tokenGateMiddleware';
-import { jophielReducer, JophielState } from '../routes/jophiel/modules/jophielReducer';
-import { urielReducer, UrielState } from '../routes/contests/modules/urielReducer';
+import { jophielReducer, JophielState } from './jophiel/jophielReducer';
+import { urielReducer, UrielState } from './uriel/urielReducer';
+import { jerahmeelReducer, JerahmeelState } from './jerahmeel/jerahmeelReducer';
 import { breadcrumbsReducer, BreadcrumbsState } from './breadcrumbs/breadcrumbsReducer';
 
 export interface AppState {
@@ -49,6 +50,7 @@ export interface AppState {
   webPrefs: WebPrefsState;
   jophiel: JophielState;
   uriel: UrielState;
+  jerahmeel: JerahmeelState;
   router: RouterState;
   form: FormState;
   breadcrumbs: BreadcrumbsState;
@@ -61,6 +63,7 @@ const rootReducer = combineReducers<AppState>({
   webPrefs: persistReducer({ key: 'webPrefs', storage }, webPrefsReducer),
   jophiel: jophielReducer,
   uriel: urielReducer,
+  jerahmeel: jerahmeelReducer,
   router: connectRouter(history),
   form: formReducer,
   breadcrumbs: breadcrumbsReducer,

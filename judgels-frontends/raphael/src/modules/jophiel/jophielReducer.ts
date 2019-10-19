@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import { userWebReducer, UserWebState } from './userWebReducer';
-import { profileReducer, ProfileState } from './profileReducer';
+import { userWebReducer, UserWebState } from '../../routes/jophiel/modules/userWebReducer';
+import { profileReducer, ProfileState } from '../../routes/jophiel/modules/profileReducer';
 
 export interface JophielState {
   userWeb: UserWebState;
