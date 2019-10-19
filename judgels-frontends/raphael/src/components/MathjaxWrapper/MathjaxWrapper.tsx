@@ -8,8 +8,9 @@ declare global {
 
 export class MathjaxWrapper extends React.Component {
   componentDidMount() {
-    this.insertScript('MathJax-config', '/var/conf/mathjax-config.js');
-    this.insertScript('MathJax-script', '/mathjax/tex-svg.js');
+    const publicUrl = process.env.PUBLIC_URL;
+    this.insertScript('MathJax-config', publicUrl + '/var/conf/mathjax-config.js');
+    this.insertScript('MathJax-script', publicUrl + '/mathjax/tex-svg.js');
   }
 
   componentDidUpdate() {
@@ -20,7 +21,7 @@ export class MathjaxWrapper extends React.Component {
     const script = document.createElement('script');
 
     script.id = id;
-    script.src = process.env.PUBLIC_URL + url;
+    script.src = url;
     script.defer = true;
 
     document.body.appendChild(script);
