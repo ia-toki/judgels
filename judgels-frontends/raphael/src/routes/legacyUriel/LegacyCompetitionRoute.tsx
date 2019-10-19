@@ -5,7 +5,7 @@ import { push } from 'connected-react-router';
 
 import { Contest } from '../../modules/api/uriel/contest';
 
-import { contestActions as injectedContestActions } from '../uriel/contests/modules/contestActions';
+import { contestActions as injectedContestActions } from '../contests/contests/modules/contestActions';
 
 interface LegacyCompetitionRouteProps extends RouteComponentProps<{ contestSlug: string }> {
   onGetContest: (contestSlug: string) => Promise<Contest>;

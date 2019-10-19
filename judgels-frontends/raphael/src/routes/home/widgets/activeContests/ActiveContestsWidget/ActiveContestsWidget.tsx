@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { Card } from '../../../../../components/Card/Card';
 import { ActiveContestsResponse } from '../../../../../modules/api/uriel/contest';
-import { contestActions as injectedContestActions } from '../../../../../routes/uriel/contests/modules/contestActions';
+import { contestActions as injectedContestActions } from '../../../../contests/contests/modules/contestActions';
 
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
 import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';

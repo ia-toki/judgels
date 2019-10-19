@@ -2,10 +2,11 @@ import { APP_CONFIG, Mode } from '../conf';
 import { JophielRole } from '../modules/api/jophiel/role';
 
 import JophielRoutes from './jophiel/JophielRoutes';
-import JophielAccountsRoutes from './jophiel/JophielAccountsRoutes';
-import UrielRoutes, { UrielRoutesPromise } from './uriel/UrielRoutes';
-import JerahmeelRoutes from './jerahmeel/JerahmeelRoutes';
-import JudgelsRankingRoutes from './ranking/JudgelsRankingRoutes';
+import LazyAccountsRoutes from './accounts/LazyAccountsRoutes';
+import LazyContestsRoutes, { ContestsRoutesPromise } from './contests/LazyContestsRoutes';
+import LazyCoursesRoutes from './courses/LazyCoursesRoutes';
+import LazyProblemsetsRoutes from './problemsets/LazyProblemsetsRoutes';
+import LazyRankingRoutes from './ranking/LazyRankingRoutes';
 
 function shouldShowRoute(id: string, role: JophielRole) {
   if (id === 'account') {
@@ -23,7 +24,7 @@ const appRoutes = [
     title: 'Accounts',
     route: {
       path: '/accounts',
-      component: JophielAccountsRoutes,
+      component: LazyAccountsRoutes,
     },
   },
   {
@@ -31,15 +32,23 @@ const appRoutes = [
     title: 'Contests',
     route: {
       path: '/contests',
-      component: UrielRoutes,
+      component: LazyContestsRoutes,
     },
   },
   {
-    id: 'training',
-    title: 'Training',
+    id: 'courses',
+    title: 'Courses',
     route: {
-      path: '/training',
-      component: JerahmeelRoutes,
+      path: '/courses',
+      component: LazyCoursesRoutes,
+    },
+  },
+  {
+    id: 'problemsets',
+    title: 'Problemsets',
+    route: {
+      path: '/problemsets',
+      component: LazyProblemsetsRoutes,
     },
   },
   {
@@ -47,7 +56,7 @@ const appRoutes = [
     title: 'Ranking',
     route: {
       path: '/ranking',
-      component: JudgelsRankingRoutes,
+      component: LazyRankingRoutes,
     },
   },
 ];
@@ -62,7 +71,7 @@ const homeRoute = {
 
 export function preloadRoutes() {
   if (APP_CONFIG.mode === Mode.PRIVATE_CONTESTS) {
-    UrielRoutesPromise();
+    ContestsRoutesPromise();
   }
 }
 
