@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
 import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
 import { Course } from '../../../../../modules/api/jerahmeel/course';
 
@@ -14,8 +15,10 @@ export class CourseCard extends React.PureComponent<CourseCardProps> {
     const { course } = this.props;
 
     return (
-      <ContentCardLink to={`/training/course/${course.id}`}>
-        <h4 className="course-card-name">{`${course.id}. ${course.name}`}</h4>
+      <ContentCardLink to={`/training/course/${course.id}`} className="course-card">
+        <h4>{`${course.id}. ${course.name}`}</h4>
+        <hr />
+        <HtmlText>{course.description}</HtmlText>
       </ContentCardLink>
     );
   }

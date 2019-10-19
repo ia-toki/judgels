@@ -9,6 +9,7 @@ import judgels.jerahmeel.persistence.CourseDao;
 import judgels.jerahmeel.persistence.CourseModel;
 import judgels.jerahmeel.persistence.CourseModel_;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
 
 public class CourseStore {
@@ -24,6 +25,7 @@ public class CourseStore {
                 .addCustomPredicates((cb, cq, root) -> cb.isNotNull(root.get(CourseModel_.slug)))
                 .build(), new SelectionOptions.Builder()
                 .orderBy("slug")
+                .orderDir(OrderDir.ASC)
                 .build()), CourseStore::fromModel);
     }
 

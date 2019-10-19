@@ -1,5 +1,7 @@
 @import '../../../../../styles/base';
 
-.course-card-name {
-  margin-right: 10px;
+.course-card {
+  p {
+    color: $text-color !important;
+  }
 }
