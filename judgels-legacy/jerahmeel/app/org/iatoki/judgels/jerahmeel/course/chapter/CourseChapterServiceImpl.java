@@ -4,16 +4,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import judgels.jerahmeel.persistence.CourseChapterModel;
+import judgels.jerahmeel.persistence.CourseChapterModel_;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterScoreCacheUtils;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemStatus;
-import org.iatoki.judgels.jerahmeel.chapter.dependency.ChapterDependencyDao;
 import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemDao;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemDao;
-import org.iatoki.judgels.jerahmeel.chapter.dependency.ChapterDependencyModel;
 import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemModel;
 import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemModel_;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemModel;
-import org.iatoki.judgels.play.IdentityUtils;
 import org.iatoki.judgels.play.Page;
 
 import javax.inject.Inject;

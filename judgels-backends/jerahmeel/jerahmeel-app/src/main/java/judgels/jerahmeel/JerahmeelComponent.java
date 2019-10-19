@@ -4,6 +4,7 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.jerahmeel.admin.AdminResource;
 import judgels.jerahmeel.course.CourseResource;
+import judgels.jerahmeel.course.chapter.CourseChapterResource;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
 import judgels.jerahmeel.jophiel.JophielModule;
 import judgels.service.JudgelsPersistenceModule;
@@ -20,5 +21,6 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 public interface JerahmeelComponent {
     AdminResource adminResource();
     CourseResource courseResource();
+    CourseChapterResource courseChapterResource();
     PingResource pingResource();
 }

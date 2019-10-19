@@ -1,6 +1,8 @@
 package org.iatoki.judgels.jerahmeel.chapter;
 
 import com.google.common.collect.ImmutableList;
+import judgels.jerahmeel.persistence.ChapterModel;
+import judgels.jerahmeel.persistence.ChapterModel_;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 

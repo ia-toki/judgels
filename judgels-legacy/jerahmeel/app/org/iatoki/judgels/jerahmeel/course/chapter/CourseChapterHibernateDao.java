@@ -1,5 +1,7 @@
 package org.iatoki.judgels.jerahmeel.course.chapter;
 
+import judgels.jerahmeel.persistence.CourseChapterModel;
+import judgels.jerahmeel.persistence.CourseChapterModel_;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 

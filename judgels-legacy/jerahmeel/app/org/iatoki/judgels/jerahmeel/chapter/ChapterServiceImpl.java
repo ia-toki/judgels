@@ -3,6 +3,8 @@ package org.iatoki.judgels.jerahmeel.chapter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import judgels.jerahmeel.persistence.ChapterModel;
+import judgels.jerahmeel.persistence.ChapterModel_;
 import org.iatoki.judgels.play.Page;
 
 import javax.inject.Inject;

@@ -19,24 +19,37 @@ import judgels.persistence.api.SelectionOptions;
 public class CourseStore {
     private final CourseDao courseDao;
 
+    private final LoadingCache<String, Course> courseByJidCache;
     private final LoadingCache<String, Course> courseBySlugCache;
 
     @Inject
     public CourseStore(CourseDao courseDao) {
         this.courseDao = courseDao;
 
+        this.courseByJidCache = Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterWrite(getShortDuration())
+                .build(this::getCourseByJidUncached);
         this.courseBySlugCache = Caffeine.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(getShortDuration())
                 .build(this::getCourseBySlugUncached);
     }
 
+    public Optional<Course> getCourseByJid(String courseJid) {
+        return Optional.ofNullable(courseByJidCache.get(courseJid));
+    }
+
+    private Course getCourseByJidUncached(String courseJid) {
+        return courseDao.selectByJid(courseJid).map(CourseStore::fromModel).orElse(null);
+    }
+
     public Optional<Course> getCourseBySlug(String courseSlug) {
         return Optional.ofNullable(courseBySlugCache.get(courseSlug));
     }
 
-    private Course getCourseBySlugUncached(String CourseSlug) {
-        return courseDao.selectBySlug(CourseSlug).map(CourseStore::fromModel).orElse(null);
+    private Course getCourseBySlugUncached(String courseSlug) {
+        return courseDao.selectBySlug(courseSlug).map(CourseStore::fromModel).orElse(null);
     }
 
     public List<Course> getCourses() {

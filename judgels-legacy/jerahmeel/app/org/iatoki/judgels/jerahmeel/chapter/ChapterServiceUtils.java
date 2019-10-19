@@ -1,5 +1,7 @@
 package org.iatoki.judgels.jerahmeel.chapter;
 
+import judgels.jerahmeel.persistence.ChapterModel;
+
 final class ChapterServiceUtils {
 
     private ChapterServiceUtils() {

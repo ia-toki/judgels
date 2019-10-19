@@ -13,14 +13,18 @@ export interface CoursesResponse {
   data: Course[];
 }
 
-export const baseCourseURL = `${APP_CONFIG.apiUrls.jerahmeel}/courses`;
+export const baseCoursesURL = `${APP_CONFIG.apiUrls.jerahmeel}/courses`;
+
+export function baseCourseURL(courseJid: string) {
+  return `${baseCoursesURL}/${courseJid}`;
+}
 
 export const courseAPI = {
   getCourses: (): Promise<CoursesResponse> => {
-    return get(`${baseCourseURL}`);
+    return get(`${baseCoursesURL}`);
   },
 
   getCourseBySlug: (courseSlug: string): Promise<Course> => {
-    return get(`${baseCourseURL}/slug/${courseSlug}`);
+    return get(`${baseCoursesURL}/slug/${courseSlug}`);
   },
 };

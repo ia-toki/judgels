@@ -35,6 +35,7 @@ import { contestSubmissionProgrammingAPI } from './api/uriel/contestSubmissionPr
 import { contestSubmissionBundleAPI } from './api/uriel/contestSubmissionBundle';
 import { contestFileAPI } from './api/uriel/contestFile';
 import { courseAPI } from './api/jerahmeel/course';
+import { courseChapterAPI } from './api/jerahmeel/courseChapter';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
 import { toastActions } from './toast/toastActions';
@@ -107,6 +108,7 @@ export const store: any = createStore<AppState>(
         contestSubmissionProgrammingAPI,
         contestFileAPI,
         courseAPI,
+        courseChapterAPI,
         toastActions,
       }),
       routerMiddleware(history)

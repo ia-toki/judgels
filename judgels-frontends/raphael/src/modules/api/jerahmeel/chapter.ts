@@ -8,6 +8,10 @@ export interface Chapter {
   name: string;
 }
 
+export interface ChapterInfo {
+  name: string;
+}
+
 export interface ChaptersResponse {
   data: Page<Chapter>;
 }

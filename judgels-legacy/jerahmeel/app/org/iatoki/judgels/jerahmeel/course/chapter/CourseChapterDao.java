@@ -1,6 +1,7 @@
 package org.iatoki.judgels.jerahmeel.course.chapter;
 
 import com.google.inject.ImplementedBy;
+import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.persistence.Dao;
 
 @ImplementedBy(CourseChapterHibernateDao.class)
