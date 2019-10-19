@@ -5,9 +5,9 @@ import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { ProblemStatement } from '../../../../modules/api/sandalphon/problem';
 import { ProblemLimits } from '../../../../modules/api/sandalphon/problemProgramming';
+import { MathjaxWrapper } from '../../../MathjaxWrapper/MathjaxWrapper';
 
 import './ProblemStatementCard.css';
-import { MathjaxWrapper } from '../../../MathjaxWrapper/MathjaxWrapper';
 
 export interface ProblemStatementCardProps {
   alias: string;
