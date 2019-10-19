@@ -1,0 +1,30 @@
+- block:
+  - name: Create jerahmeel container mount volume
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: "0777"
+    with_items:
+      - /judgels/jerahmeel/var
+      - /judgels/jerahmeel/var/conf
+
+  - name: Generate jerahmeel config
+    template:
+      src: "{{ playbook_dir }}/../conf/jerahmeel.yml.j2"
+      dest: /judgels/jerahmeel/var/conf/jerahmeel.yml
+
+  - name: Pull jerahmeel image
+    docker_image:
+      name: judgels/jerahmeel
+      tag: "{{ judgels_version | default('latest', true) }}"
+      force: yes
+
+  - name: Run a jerahmeel container to do db migration
+    docker_container:
+      name: jerahmeel-migrate
+      image: "judgels/jerahmeel:{{ judgels_version | default('latest', true) }}"
+      restart: yes
+      network_mode: host
+      volumes:
+        - "/judgels/jerahmeel/var:/judgels/jerahmeel/var"
+      command: dbMigrate
