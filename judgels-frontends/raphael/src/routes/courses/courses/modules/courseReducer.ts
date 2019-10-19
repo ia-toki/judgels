@@ -8,8 +8,8 @@ export interface CourseState {
 
 export const INITIAL_STATE: CourseState = {};
 
-export const PutCourse = TypedAction.define('jerahmeel/Course/PUT')<Course>();
-export const DelCourse = TypedAction.defineWithoutPayload('jerahmeel/Course/DEL')();
+export const PutCourse = TypedAction.define('jerahmeel/course/PUT')<Course>();
+export const DelCourse = TypedAction.defineWithoutPayload('jerahmeel/course/DEL')();
 
 function createCourseReducer() {
   const builder = TypedReducer.builder<CourseState>();

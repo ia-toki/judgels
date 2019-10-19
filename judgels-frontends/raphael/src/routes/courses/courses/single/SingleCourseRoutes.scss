@@ -1,0 +1,35 @@
+.single-course-routes__header {
+  margin-top: -2px;
+  padding-bottom: 8px;
+}
+
+.single-course-routes__title {
+  float: left;
+}
+
+.single-course-routes__button {
+  float: right;
+}
+
+.tab-item-with-widget {
+  position: absolute;
+  display: inline-block;
+  width: 190px;
+}
+
+.tab-item-with-widget__name {
+  float: left;
+}
+
+.tab-item-with-widget__widget {
+  float: right;
+}
+
+@media only screen and (max-width: 750px) {
+  .single-course-routes__header {
+    h2 {
+      font-size: 20px !important;
+      line-height: 22px !important;
+    }
+  }
+}
