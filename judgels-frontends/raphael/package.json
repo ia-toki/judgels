@@ -58,7 +58,7 @@
     "format:prettier": "prettier --write 'src/**/*.ts' 'src/**/*.tsx'",
     "test:ts": "TZ=Asia/Jakarta react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "postinstall": "npm-run-all prepare:mathjax",
+    "postinstall": "npm run prepare:mathjax",
     "prepare:mathjax": "cp  -r node_modules/mathjax/es5 public/mathjax"
   },
   "devDependencies": {
