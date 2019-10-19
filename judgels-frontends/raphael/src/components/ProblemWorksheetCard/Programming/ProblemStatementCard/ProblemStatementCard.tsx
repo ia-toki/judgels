@@ -1,11 +1,10 @@
 import { HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { ProblemStatement } from '../../../../modules/api/sandalphon/problem';
 import { ProblemLimits } from '../../../../modules/api/sandalphon/problemProgramming';
-import { MathjaxWrapper } from '../../../MathjaxWrapper/MathjaxWrapper';
+import { MathjaxText } from '../../../MathjaxText/MathjaxText';
 
 import './ProblemStatementCard.css';
 
@@ -20,26 +19,24 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
     const { alias, statement, limits } = this.props;
     return (
       <ContentCard>
-        <MathjaxWrapper>
-          <h2 className="programming-problem-statement__name">
-            {alias}. {statement.title}
-          </h2>
-          <HTMLTable condensed className="programming-problem-statement__limits">
-            <tbody>
-              <tr>
-                <td>Time limit</td>
-                <td>{this.renderTimeLimit(limits.timeLimit)}</td>
-              </tr>
-              <tr>
-                <td>Memory limit</td>
-                <td>{this.renderMemoryLimit(limits.memoryLimit)}</td>
-              </tr>
-            </tbody>
-          </HTMLTable>
-          <div className="programming-problem-statement__text">
-            <HtmlText>{statement.text}</HtmlText>
-          </div>
-        </MathjaxWrapper>
+        <h2 className="programming-problem-statement__name">
+          {alias}. {statement.title}
+        </h2>
+        <HTMLTable condensed className="programming-problem-statement__limits">
+          <tbody>
+            <tr>
+              <td>Time limit</td>
+              <td>{this.renderTimeLimit(limits.timeLimit)}</td>
+            </tr>
+            <tr>
+              <td>Memory limit</td>
+              <td>{this.renderMemoryLimit(limits.memoryLimit)}</td>
+            </tr>
+          </tbody>
+        </HTMLTable>
+        <div className="programming-problem-statement__text">
+          <MathjaxText>{statement.text}</MathjaxText>
+        </div>
       </ContentCard>
     );
   }
