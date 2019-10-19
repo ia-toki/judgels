@@ -11,7 +11,7 @@ import { AppState } from '../../modules/store';
 import { JophielRole } from '../../modules/api/jophiel/role';
 
 import ContestsPage from './contests/ContestsPage/ContestsPage';
-import MainAdminsRoutes from './admins/MainAdminsRoutes';
+import LazyAdminsRoutes from './admins/LazyAdminsRoutes';
 import { selectRole } from '../jophiel/modules/userWebSelectors';
 
 interface ContestRoutesProps {
@@ -32,7 +32,7 @@ const ContestsRoutes = (props: ContestRoutesProps) => {
       titleIcon: 'id-number',
       title: 'Admins',
       routeComponent: Route,
-      component: MainAdminsRoutes,
+      component: LazyAdminsRoutes,
       disabled: props.role !== JophielRole.Superadmin,
     },
   ];
