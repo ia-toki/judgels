@@ -5,7 +5,7 @@ export interface Course {
   id: number;
   jid: string;
   name: string;
-  description?: string
+  description?: string;
 }
 
 export interface CoursesResponse {
