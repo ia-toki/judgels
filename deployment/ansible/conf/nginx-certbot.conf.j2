@@ -157,7 +157,7 @@ server {
     }
 
     location / {
-        proxy_pass              http://localhost:9006;
+        proxy_pass              http://localhost:9005;
         proxy_set_header        Host $host;
         proxy_set_header        X-Real-IP $remote_addr;
         proxy_set_header        X-Forwarded-Proto https;
