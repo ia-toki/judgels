@@ -9,6 +9,7 @@ import org.immutables.value.Value;
 public interface Course {
     long getId();
     String getJid();
+    String getSlug();
     String getName();
     Optional<String> getDescription();
 

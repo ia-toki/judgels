@@ -15,6 +15,9 @@ import judgels.persistence.JudgelsModel;
         @Index(columnList = "updatedAt")})
 @JidPrefix("COUR")
 public class CourseModel extends JudgelsModel {
+    @Column(unique = true)
+    public String slug;
+
     @Column(nullable = false)
     public String name;
 
