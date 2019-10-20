@@ -19,4 +19,8 @@ export const courseChapterAPI = {
   getChapters: (token: string, courseJid: string): Promise<CourseChaptersResponse> => {
     return get(baseURL(courseJid), token);
   },
+
+  getChapter: (token: string, courseJid: string, chapterAlias: string): Promise<CourseChaptersResponse> => {
+    return get(`${baseURL(courseJid)}/${chapterAlias}`, token);
+  },
 };

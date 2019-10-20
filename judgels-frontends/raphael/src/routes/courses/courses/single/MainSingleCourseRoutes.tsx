@@ -1,13 +1,17 @@
 import * as React from 'react';
-import { Route, withRouter } from 'react-router';
+import { Route, withRouter, Switch } from 'react-router';
 
 import SingleCourseDataRoute from './SingleCourseDataRoute';
 import SingleCourseRoutes from './SingleCourseRoutes';
+import MainSingleCourseChapterRoutes from './chapters/single/MainSingleCourseChapterRoutes';
 
 const MainSingleCourseRoutes = () => (
   <div>
     <Route path="/courses/:courseSlug" component={SingleCourseDataRoute} />
-    <Route path="/courses/:courseSlug" component={SingleCourseRoutes} />
+    <Switch>
+      <Route path="/courses/:courseSlug/chapters/:chapterAlias" component={MainSingleCourseChapterRoutes} />
+      <Route path="/courses/:courseSlug" component={SingleCourseRoutes} />
+    </Switch>
   </div>
 );
 

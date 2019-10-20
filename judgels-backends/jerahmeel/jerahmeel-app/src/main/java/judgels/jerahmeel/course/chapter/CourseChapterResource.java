@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.ChapterInfo;
 import judgels.jerahmeel.api.course.chapter.CourseChapter;
 import judgels.jerahmeel.api.course.chapter.CourseChapterService;
@@ -51,5 +52,15 @@ public class CourseChapterResource implements CourseChapterService {
                 .data(chapters)
                 .chaptersMap(chaptersMap)
                 .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public Chapter getChapter(Optional<AuthHeader> authHeader, String courseJid, String chapterAlias) {
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(courseStore.getCourseByJid(courseJid));
+
+        CourseChapter courseChapter = checkFound(courseChapterStore.getChapterByAlias(courseJid, chapterAlias));
+        return checkFound(chapterStore.getChapterByJid(courseChapter.getChapterJid()));
     }
 }

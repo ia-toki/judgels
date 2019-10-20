@@ -2,6 +2,7 @@ package judgels.jerahmeel.course.chapter;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.course.chapter.CourseChapter;
 import judgels.jerahmeel.persistence.CourseChapterDao;
@@ -21,6 +22,11 @@ public class CourseChapterStore {
         return Lists.transform(
                 chapterDao.selectAllByCourseJid(courseJid, createOptions()),
                 CourseChapterStore::fromModel);
+    }
+
+    public Optional<CourseChapter> getChapterByAlias(String courseJid, String chapterAlias) {
+        return chapterDao.selectByCourseJidAndChapterAlias(courseJid, chapterAlias)
+                .map(CourseChapterStore::fromModel);
     }
 
     private static SelectionOptions createOptions() {
