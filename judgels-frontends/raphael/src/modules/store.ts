@@ -18,7 +18,6 @@ import { userRegistrationWebAPI } from './api/jophiel/userRegistration';
 import { userSearchAPI } from './api/jophiel/userSearch';
 import { userWebAPI } from './api/jophiel/userWeb';
 import { urielAdminAPI } from './api/uriel/admin';
-import { chapterAPI } from './api/jerahmeel/chapter';
 import { contestAPI } from './api/uriel/contest';
 import { contestWebAPI } from './api/uriel/contestWeb';
 import { contestAnnouncementAPI } from './api/uriel/contestAnnouncement';
@@ -36,6 +35,8 @@ import { contestSubmissionBundleAPI } from './api/uriel/contestSubmissionBundle'
 import { contestFileAPI } from './api/uriel/contestFile';
 import { courseAPI } from './api/jerahmeel/course';
 import { courseChapterAPI } from './api/jerahmeel/courseChapter';
+import { chapterAPI } from './api/jerahmeel/chapter';
+import { chapterLessonAPI } from './api/jerahmeel/chapterLesson';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
 import { toastActions } from './toast/toastActions';
@@ -91,7 +92,6 @@ export const store: any = createStore<AppState>(
         userSearchAPI,
         userWebAPI,
         urielAdminAPI,
-        chapterAPI,
         contestAPI,
         contestWebAPI,
         contestAnnouncementAPI,
@@ -109,6 +109,8 @@ export const store: any = createStore<AppState>(
         contestFileAPI,
         courseAPI,
         courseChapterAPI,
+        chapterAPI,
+        chapterLessonAPI,
         toastActions,
       }),
       routerMiddleware(history)

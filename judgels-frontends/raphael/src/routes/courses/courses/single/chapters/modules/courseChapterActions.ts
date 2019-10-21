@@ -2,10 +2,10 @@ import { selectToken } from '../../../../../../modules/session/sessionSelectors'
 import { PutCourseChapter, DelCourseChapter } from './courseChapterReducer';
 
 export const courseChapterActions = {
-  getChapters: (chapterJid: string) => {
+  getChapters: (courseJid: string) => {
     return async (dispatch, getState, { courseChapterAPI }) => {
       const token = selectToken(getState());
-      return await courseChapterAPI.getChapters(token, chapterJid);
+      return await courseChapterAPI.getChapters(token, courseJid);
     };
   },
 

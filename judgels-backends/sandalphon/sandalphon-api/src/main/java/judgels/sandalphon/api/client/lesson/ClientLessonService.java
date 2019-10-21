@@ -19,11 +19,19 @@ import judgels.service.api.client.BasicAuthHeader;
 @Path("/api/v2/client/lessons")
 public interface ClientLessonService {
     @GET
-    @Path("/{problemJid}")
+    @Path("/{lessonJid}")
     @Produces(APPLICATION_JSON)
     LessonInfo getLesson(
             @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
             @PathParam("lessonJid") String lessonJid);
+
+    @POST
+    @Path("/jids")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    Map<String, LessonInfo> getLessons(
+            @HeaderParam(AUTHORIZATION) BasicAuthHeader authHeader,
+            Set<String> jids);
 
     @POST
     @Path("/allowed-slug-to-jid")

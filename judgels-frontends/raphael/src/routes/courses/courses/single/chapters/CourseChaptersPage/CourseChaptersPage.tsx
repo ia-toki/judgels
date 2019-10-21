@@ -13,7 +13,6 @@ import { courseChapterActions as injectedCourseChapterActions } from '../modules
 
 export interface CourseChaptersPageProps {
   course: Course;
-  statementLanguage: string;
   onGetChapters: (courseJid: string) => Promise<CourseChaptersResponse>;
 }
 
@@ -26,9 +25,7 @@ export class CourseChaptersPage extends React.PureComponent<CourseChaptersPagePr
 
   async componentDidMount() {
     const response = await this.props.onGetChapters(this.props.course.jid);
-    this.setState({
-      response,
-    });
+    this.setState({ response });
   }
 
   render() {

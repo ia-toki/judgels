@@ -199,6 +199,8 @@ GET         /api/v2/client/problems/:problemJid/bundle/worksheet                
 POST        /api/v2/client/problems/jids                                            org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.findProblemsByJids()
 POST        /api/v2/client/problems/allowed-slug-to-jid                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientProblemAPIControllerV2.translateAllowedSlugToJids()
 
+GET         /api/v2/client/lessons/:lessonJid                                      org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.getLesson(lessonJid)
+POST        /api/v2/client/lessons/jids                                            org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.findLessonsByJids()
 POST        /api/v2/client/lessons/allowed-slug-to-jid                             org.iatoki.judgels.sandalphon.controllers.api.client.v2.ClientLessonAPIControllerV2.translateAllowedSlugToJids()
 
 # Public API v2

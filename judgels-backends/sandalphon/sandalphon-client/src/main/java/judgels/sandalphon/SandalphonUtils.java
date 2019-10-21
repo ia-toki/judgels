@@ -1,6 +1,7 @@
 package judgels.sandalphon;
 
 import java.util.Optional;
+import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.sandalphon.api.problem.ProblemInfo;
 
 public class SandalphonUtils {
@@ -12,6 +13,14 @@ public class SandalphonUtils {
             finalLanguage = language.get();
         }
         return problem.getTitlesByLanguage().get(finalLanguage);
+    }
+
+    public static String getLessonName(LessonInfo lesson, Optional<String> language) {
+        String finalLanguage = lesson.getDefaultLanguage();
+        if (language.isPresent() && lesson.getTitlesByLanguage().containsKey(language.get())) {
+            finalLanguage = language.get();
+        }
+        return lesson.getTitlesByLanguage().get(finalLanguage);
     }
 
     public static String replaceRenderUrls(String text, String baseUrl, String problemJid) {

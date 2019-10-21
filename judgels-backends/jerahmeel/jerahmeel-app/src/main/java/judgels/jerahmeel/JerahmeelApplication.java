@@ -8,6 +8,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateBundle;
 import judgels.jerahmeel.jophiel.JophielModule;
+import judgels.jerahmeel.sandalphon.SandalphonModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jaxrs.JudgelsObjectMappers;
 import judgels.service.jersey.JudgelsJerseyFeature;
@@ -35,6 +36,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
         JerahmeelComponent component = DaggerJerahmeelComponent.builder()
                 .jophielModule(new JophielModule(jerahmeelConfig.getJophielConfig()))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
+                .sandalphonModule(new SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
                 .build();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);
@@ -42,6 +44,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
         env.jersey().register(component.adminResource());
         env.jersey().register(component.courseResource());
         env.jersey().register(component.courseChapterResource());
+        env.jersey().register(component.chapterLessonResource());
         env.jersey().register(component.pingResource());
     }
 }

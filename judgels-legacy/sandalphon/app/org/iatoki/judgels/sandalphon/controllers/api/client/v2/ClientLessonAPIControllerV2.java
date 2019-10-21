@@ -1,7 +1,10 @@
 package org.iatoki.judgels.sandalphon.controllers.api.client.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import judgels.sandalphon.api.lesson.LessonInfo;
 import judgels.service.client.ClientChecker;
+import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
+import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
@@ -12,8 +15,10 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Singleton
 public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIController {
@@ -26,6 +31,34 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
         this.clientChecker = clientChecker;
         this.userService = userService;
         this.lessonService = lessonService;
+    }
+
+    @Transactional(readOnly = true)
+    public Result getLesson(String lessonJid) {
+        authenticateAsJudgelsAppClient(clientChecker);
+
+        if (!lessonService.lessonExistsByJid(lessonJid)) {
+            throw new JudgelsAPINotFoundException();
+        }
+
+        return okAsJson(getLessonInfo(lessonJid));
+    }
+
+    @Transactional(readOnly = true)
+    public Result findLessonsByJids() {
+        authenticateAsJudgelsAppClient(clientChecker);
+
+        JsonNode lessonJids = request().body().asJson();
+
+        Map<String, LessonInfo> result = new HashMap<>();
+
+        for (JsonNode lessonJidNode : lessonJids) {
+            String lessonJid = lessonJidNode.asText();
+            if (lessonService.lessonExistsByJid(lessonJid)) {
+                result.put(lessonJid, getLessonInfo(lessonJid));
+            }
+        }
+        return okAsJson(result);
     }
 
     @Transactional(readOnly = true)
@@ -51,9 +84,33 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
         return okAsJson(result);
     }
 
+    private LessonInfo getLessonInfo(String lessonJid) {
+        try {
+            Lesson lesson = lessonService.findLessonByJid(lessonJid);
+
+            LessonInfo.Builder res = new LessonInfo.Builder();
+            res.slug(lesson.getSlug());
+            res.defaultLanguage(simplifyLanguageCode(lessonService.getDefaultLanguage(null, lessonJid)));
+            res.titlesByLanguage(lessonService.getTitlesByLanguage(null, lessonJid).entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())));
+            return res.build();
+        } catch (IOException e) {
+            throw new JudgelsAPIInternalServerErrorException(e);
+        }
+    }
+
     private boolean isPartnerOrAbove(String userJid, Lesson lesson) {
         return lesson.getAuthorJid().equals(userJid)
             || lessonService.isUserPartnerForLesson(lesson.getJid(), userJid)
             || userService.findUserByJid(userJid).getRoles().contains("admin");
+    }
+
+    private static String simplifyLanguageCode(String code) {
+        String[] tokens = code.split("-");
+        if (tokens.length < 2) {
+            return code;
+        }
+        return tokens[0];
     }
 }

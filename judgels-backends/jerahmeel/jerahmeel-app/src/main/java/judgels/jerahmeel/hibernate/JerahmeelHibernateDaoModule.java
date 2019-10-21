@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import judgels.jerahmeel.persistence.AdminRoleDao;
 import judgels.jerahmeel.persistence.ChapterDao;
+import judgels.jerahmeel.persistence.ChapterLessonDao;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseDao;
 
@@ -28,6 +29,11 @@ public class JerahmeelHibernateDaoModule {
 
     @Provides
     static ChapterDao chapterDao(ChapterHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ChapterLessonDao chapterLessonDao(ChapterLessonHibernateDao dao) {
         return dao;
     }
 }

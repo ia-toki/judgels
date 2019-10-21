@@ -46,3 +46,8 @@ jerahmeel:
 
   jophiel:
     baseUrl: http://localhost:9001
+
+  sandalphon:
+    baseUrl: http://localhost:9002
+    clientJid: JIDSACL-jerahmeel-local
+    clientSecret: sandalphon-local

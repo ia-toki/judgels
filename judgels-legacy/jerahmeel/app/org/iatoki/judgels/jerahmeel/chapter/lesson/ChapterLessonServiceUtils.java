@@ -1,5 +1,7 @@
 package org.iatoki.judgels.jerahmeel.chapter.lesson;
 
+import judgels.jerahmeel.persistence.ChapterLessonModel;
+
 final class ChapterLessonServiceUtils {
 
     private ChapterLessonServiceUtils() {

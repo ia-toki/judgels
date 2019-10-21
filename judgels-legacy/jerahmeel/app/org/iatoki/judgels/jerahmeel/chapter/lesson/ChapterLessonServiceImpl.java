@@ -2,6 +2,8 @@ package org.iatoki.judgels.jerahmeel.chapter.lesson;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import judgels.jerahmeel.persistence.ChapterLessonModel;
+import judgels.jerahmeel.persistence.ChapterLessonModel_;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemDao;
 import org.iatoki.judgels.play.Page;
 
