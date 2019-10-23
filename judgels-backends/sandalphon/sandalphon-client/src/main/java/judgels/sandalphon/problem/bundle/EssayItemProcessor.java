@@ -20,7 +20,7 @@ public class EssayItemProcessor implements ItemProcessor {
                 .config(new EssayItemConfig.Builder()
                         .from(item.getConfig())
                         .statement(
-                                SandalphonUtils.replaceRenderUrls(
+                                SandalphonUtils.replaceProblemRenderUrls(
                                         item.getConfig().getStatement(),
                                         baseUrl,
                                         problemJid))

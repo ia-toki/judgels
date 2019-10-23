@@ -23,7 +23,7 @@ public class MultipleChoiceItemProcessor implements ItemProcessor {
         List<MultipleChoiceItemConfig.Choice> choices = itemConfig.getChoices().stream()
                 .map(choice -> new MultipleChoiceItemConfig.Choice.Builder()
                         .from(choice)
-                        .content(SandalphonUtils.replaceRenderUrls(
+                        .content(SandalphonUtils.replaceProblemRenderUrls(
                                 choice.getContent(),
                                 baseUrl,
                                 problemJid))
@@ -35,7 +35,7 @@ public class MultipleChoiceItemProcessor implements ItemProcessor {
                 .config(new MultipleChoiceItemConfig.Builder()
                         .from(itemConfig)
                         .statement(
-                                SandalphonUtils.replaceRenderUrls(
+                                SandalphonUtils.replaceProblemRenderUrls(
                                         item.getConfig().getStatement(),
                                         baseUrl,
                                         problemJid))

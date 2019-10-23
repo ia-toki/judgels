@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLesson;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonService;
+import judgels.jerahmeel.api.chapter.lesson.ChapterLessonStatement;
 import judgels.jerahmeel.api.chapter.lesson.ChapterLessonsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.sandalphon.api.lesson.LessonInfo;
+import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.sandalphon.lesson.LessonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -50,6 +52,25 @@ public class ChapterLessonResource implements ChapterLessonService {
         return new ChapterLessonsResponse.Builder()
                 .data(lessons)
                 .lessonsMap(lessonsMap)
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ChapterLessonStatement getLessonStatement(
+            Optional<AuthHeader> authHeader,
+            String chapterJid,
+            String lessonAlias) {
+
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(chapterStore.getChapterByJid(chapterJid));
+
+        ChapterLesson lesson = checkFound(chapterLessonStore.getLessonByAlias(chapterJid, lessonAlias));
+        LessonStatement statement = lessonClient.getLessonStatement(lesson.getLessonJid());
+
+        return new ChapterLessonStatement.Builder()
+                .lesson(lesson)
+                .statement(statement)
                 .build();
     }
 }

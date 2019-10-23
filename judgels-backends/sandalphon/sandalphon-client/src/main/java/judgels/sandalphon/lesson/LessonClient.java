@@ -11,9 +11,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
+import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.lesson.ClientLessonService;
 import judgels.sandalphon.api.lesson.LessonInfo;
+import judgels.sandalphon.api.lesson.LessonStatement;
 import judgels.service.api.client.BasicAuthHeader;
 
 public class LessonClient {
@@ -41,6 +43,17 @@ public class LessonClient {
 
     public Map<String, LessonInfo> getLessons(Set<String> lessonJids) {
         return lessonCache.getAll(lessonJids);
+    }
+
+    public LessonStatement getLessonStatement(String lessonJid) {
+        LessonStatement statement = clientLessonService.getLessonStatement(sandalphonClientAuthHeader, lessonJid);
+        return new LessonStatement.Builder()
+                .from(statement)
+                .text(SandalphonUtils.replaceLessonRenderUrls(
+                        statement.getText(),
+                        sandalphonConfig.getBaseUrl(),
+                        lessonJid))
+                .build();
     }
 
     private class LessonCacheLoader implements CacheLoader<String, LessonInfo> {

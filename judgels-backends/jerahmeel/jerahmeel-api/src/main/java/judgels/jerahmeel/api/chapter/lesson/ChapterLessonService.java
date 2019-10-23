@@ -19,4 +19,12 @@ public interface ChapterLessonService {
     ChapterLessonsResponse getLessons(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("chapterJid") String chapterJid);
+
+    @GET
+    @Path("/{lessonAlias}/statement")
+    @Produces(APPLICATION_JSON)
+    ChapterLessonStatement getLessonStatement(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("chapterJid") String chapterJid,
+            @PathParam("lessonAlias") String lessonAlias);
 }

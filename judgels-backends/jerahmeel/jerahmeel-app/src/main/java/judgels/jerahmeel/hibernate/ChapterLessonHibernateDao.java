@@ -1,6 +1,7 @@
 package judgels.jerahmeel.hibernate;
 
 import java.util.List;
+import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ChapterLessonDao;
 import judgels.jerahmeel.persistence.ChapterLessonModel;
@@ -14,6 +15,15 @@ public class ChapterLessonHibernateDao extends HibernateDao<ChapterLessonModel> 
     @Inject
     public ChapterLessonHibernateDao(HibernateDaoData data) {
         super(data);
+    }
+
+    @Override
+    public Optional<ChapterLessonModel> selectByChapterJidAndLessonAlias(String chapterJid, String lessonAlias) {
+        return selectByFilter(new FilterOptions.Builder<ChapterLessonModel>()
+                .putColumnsEq(ChapterLessonModel_.chapterJid, chapterJid)
+                .putColumnsEq(ChapterLessonModel_.alias, lessonAlias)
+                .putColumnsEq(ChapterLessonModel_.status, "VISIBLE")
+                .build());
     }
 
     @Override

@@ -1,6 +1,5 @@
 import { get } from '../../../modules/api/http';
-
-import { LessonInfo } from '../sandalphon/lesson';
+import { LessonInfo, LessonStatement } from '../sandalphon/lesson';
 import { baseChapterURL } from './chapter';
 
 export interface ChapterLesson {
@@ -13,10 +12,19 @@ export interface ChapterLessonsResponse {
   lessonsMap: { [lessonJid: string]: LessonInfo };
 }
 
+export interface ChapterLessonStatement {
+  lesson: ChapterLesson;
+  statement: LessonStatement;
+}
+
 const baseURL = (chapterJid: string) => `${baseChapterURL(chapterJid)}/lessons`;
 
 export const chapterLessonAPI = {
   getLessons: (token: string, chapterJid: string): Promise<ChapterLessonsResponse> => {
     return get(baseURL(chapterJid), token);
+  },
+
+  getLessonStatement: (token: string, chapterJid: string, lessonAlias: string): Promise<ChapterLessonsResponse> => {
+    return get(`${baseURL(chapterJid)}/${lessonAlias}/statement`, token);
   },
 };

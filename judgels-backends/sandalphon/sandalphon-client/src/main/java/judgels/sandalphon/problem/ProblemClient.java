@@ -109,7 +109,7 @@ public class ProblemClient {
                 .from(worksheet)
                 .statement(new ProblemStatement.Builder()
                         .from(worksheet.getStatement())
-                        .text(SandalphonUtils.replaceRenderUrls(
+                        .text(SandalphonUtils.replaceProblemRenderUrls(
                                 worksheet.getStatement().getText(),
                                 sandalphonConfig.getBaseUrl(),
                                 problemJid))
@@ -128,7 +128,7 @@ public class ProblemClient {
                 .from(worksheet)
                 .statement(new ProblemStatement.Builder()
                         .from(worksheet.getStatement())
-                        .text(SandalphonUtils.replaceRenderUrls(
+                        .text(SandalphonUtils.replaceProblemRenderUrls(
                                 worksheet.getStatement().getText(),
                                 sandalphonConfig.getBaseUrl(),
                                 problemJid))

@@ -7,4 +7,11 @@ export const chapterLessonActions = {
       return await chapterLessonAPI.getLessons(token, chapterJid);
     };
   },
+
+  getLessonStatement: (chapterJid: string, lessonAlias: string) => {
+    return async (dispatch, getState, { chapterLessonAPI }) => {
+      const token = selectToken(getState());
+      return await chapterLessonAPI.getLessonStatement(token, chapterJid, lessonAlias);
+    };
+  },
 };

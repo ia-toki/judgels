@@ -20,7 +20,7 @@ public class StatementItemProcessor implements ItemProcessor {
                 .config(new StatementItemConfig.Builder()
                         .from(item.getConfig())
                         .statement(
-                                SandalphonUtils.replaceRenderUrls(
+                                SandalphonUtils.replaceProblemRenderUrls(
                                         item.getConfig().getStatement(),
                                         baseUrl,
                                         problemJid))

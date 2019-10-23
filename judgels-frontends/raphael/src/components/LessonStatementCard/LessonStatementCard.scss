@@ -1,0 +1,18 @@
+.lesson-statement {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.lesson-statement__name {
+  text-align: center;
+}
+
+.lesson-statement__text {
+  margin-top: 25px;
+
+  embed {
+    width: 100%;
+    min-height: 800px;
+  }
+}

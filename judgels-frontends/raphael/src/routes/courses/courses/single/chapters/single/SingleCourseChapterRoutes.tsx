@@ -13,7 +13,7 @@ import { Chapter } from '../../../../../../modules/api/jerahmeel/chapter';
 import { CourseChapter } from '../../../../../../modules/api/jerahmeel/courseChapter';
 import { AppState } from '../../../../../../modules/store';
 
-import ChapterLessonsPage from './lessons/ChapterLessonsPage/ChapterLessonsPage';
+import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
 
 import { selectCourseChapter } from '../modules/courseChapterSelectors';
 
@@ -35,11 +35,11 @@ const SingleCourseChapterRoutes = (props: SingleCourseChapterRoutesProps) => {
 
   const sidebarItems: ContentWithSidebarItem[] = [
     {
-      id: '@',
+      id: 'lessons',
       titleIcon: 'presentation',
       title: 'Lessons',
       routeComponent: Route,
-      component: ChapterLessonsPage,
+      component: ChapterLessonRoutes,
     },
   ];
 

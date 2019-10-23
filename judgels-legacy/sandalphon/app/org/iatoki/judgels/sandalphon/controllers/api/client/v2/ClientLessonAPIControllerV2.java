@@ -6,8 +6,10 @@ import judgels.service.client.ClientChecker;
 import org.iatoki.judgels.play.api.JudgelsAPIInternalServerErrorException;
 import org.iatoki.judgels.play.api.JudgelsAPINotFoundException;
 import org.iatoki.judgels.play.controllers.apis.AbstractJudgelsAPIController;
+import org.iatoki.judgels.sandalphon.StatementLanguageStatus;
 import org.iatoki.judgels.sandalphon.lesson.Lesson;
 import org.iatoki.judgels.sandalphon.lesson.LessonService;
+import org.iatoki.judgels.sandalphon.lesson.statement.LessonStatement;
 import org.iatoki.judgels.sandalphon.user.UserService;
 import play.data.DynamicForm;
 import play.db.jpa.Transactional;
@@ -42,6 +44,32 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
         }
 
         return okAsJson(getLessonInfo(lessonJid));
+    }
+
+
+    @Transactional(readOnly = true)
+    public Result getLessonStatement(String lessonJid) {
+        authenticateAsJudgelsAppClient(clientChecker);
+
+        if (!lessonService.lessonExistsByJid(lessonJid)) {
+            throw new JudgelsAPINotFoundException();
+        }
+
+        try {
+            String language = sanitizeLanguageCode(lessonJid, DynamicForm.form().bindFromRequest().get("language"));
+
+            LessonStatement statement = lessonService.getStatement(null, lessonJid, language);
+
+            judgels.sandalphon.api.lesson.LessonStatement result = new judgels.sandalphon.api.lesson.LessonStatement.Builder()
+                    .title(statement.getTitle())
+                    .text(statement.getText())
+                    .build();
+
+            return okAsJson(result);
+
+        } catch (IOException e) {
+            throw new JudgelsAPIInternalServerErrorException(e);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -104,6 +132,20 @@ public final class ClientLessonAPIControllerV2 extends AbstractJudgelsAPIControl
         return lesson.getAuthorJid().equals(userJid)
             || lessonService.isUserPartnerForLesson(lesson.getJid(), userJid)
             || userService.findUserByJid(userJid).getRoles().contains("admin");
+    }
+
+
+    private String sanitizeLanguageCode(String lessonJid, String language) throws IOException {
+        Map<String, StatementLanguageStatus> availableLanguages = lessonService.getAvailableLanguages(null, lessonJid);
+        Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
+
+        if (!simplifiedLanguages.containsKey(language) || availableLanguages.get(simplifiedLanguages.get(language)) == StatementLanguageStatus.DISABLED) {
+            language = simplifyLanguageCode(lessonService.getDefaultLanguage(null, lessonJid));
+        }
+
+        return simplifiedLanguages.get(language);
     }
 
     private static String simplifyLanguageCode(String code) {

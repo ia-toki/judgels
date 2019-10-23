@@ -23,7 +23,7 @@ public class SandalphonUtils {
         return lesson.getTitlesByLanguage().get(finalLanguage);
     }
 
-    public static String replaceRenderUrls(String text, String baseUrl, String problemJid) {
+    public static String replaceProblemRenderUrls(String text, String baseUrl, String problemJid) {
         return text
                 .replaceAll(
                         "src=\"render/",
@@ -31,5 +31,15 @@ public class SandalphonUtils {
                 .replaceAll(
                         "href=\"render/",
                         String.format("href=\"%s/api/v2/problems/%s/render/", baseUrl, problemJid));
+    }
+
+    public static String replaceLessonRenderUrls(String text, String baseUrl, String lessonJid) {
+        return text
+                .replaceAll(
+                        "src=\"render/",
+                        String.format("src=\"%s/api/v2/lessons/%s/render/", baseUrl, lessonJid))
+                .replaceAll(
+                        "href=\"render/",
+                        String.format("href=\"%s/api/v2/lessons/%s/render/", baseUrl, lessonJid));
     }
 }

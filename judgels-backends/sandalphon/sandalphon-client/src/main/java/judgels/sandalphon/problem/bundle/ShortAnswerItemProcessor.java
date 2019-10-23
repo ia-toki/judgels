@@ -21,7 +21,7 @@ public class ShortAnswerItemProcessor implements ItemProcessor {
                 .config(new ShortAnswerItemConfig.Builder()
                         .from(item.getConfig())
                         .statement(
-                                SandalphonUtils.replaceRenderUrls(
+                                SandalphonUtils.replaceProblemRenderUrls(
                                         item.getConfig().getStatement(),
                                         baseUrl,
                                         problemJid))
