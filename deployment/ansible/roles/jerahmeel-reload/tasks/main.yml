@@ -1,8 +1,8 @@
 - block:
   - name: Generate jerahmeel config
     template:
-      src: "{{ playbook_dir }}/../conf/jerahmeel.conf.j2"
-      dest: /judgels/jerahmeel/var/conf/jerahmeel.conf
+      src: "{{ playbook_dir }}/../conf/jerahmeel.yml.j2"
+      dest: /judgels/jerahmeel/var/conf/jerahmeel.yml
 
   - name: Restart jerahmeel
     docker_container:
