@@ -12,6 +12,7 @@
         <class>judgels.jerahmeel.persistence.CourseChapterModel</class>
         <class>judgels.jerahmeel.persistence.ChapterModel</class>
         <class>judgels.jerahmeel.persistence.ChapterLessonModel</class>
+        <class>judgels.jerahmeel.persistence.ChapterProblemModel</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
             <property name="hibernate.query.plan_cache_max_size" value="64"></property>

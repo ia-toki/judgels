@@ -3,6 +3,8 @@ package org.iatoki.judgels.jerahmeel.chapter.problem;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import judgels.jerahmeel.persistence.ChapterProblemModel;
+import judgels.jerahmeel.persistence.ChapterProblemModel_;
 import org.iatoki.judgels.jerahmeel.chapter.ChapterScoreCacheUtils;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemDao;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemModel;
