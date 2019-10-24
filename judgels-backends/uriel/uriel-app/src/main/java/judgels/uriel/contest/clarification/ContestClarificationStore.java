@@ -33,9 +33,20 @@ public class ContestClarificationStore {
     public Optional<ContestClarification> updateClarificationAnswer(
             String contestJid,
             String clarificationJid,
-            String answer) {
+            String answer, boolean allowDuplicates) {
 
-        return clarificationDao.selectByContestJidAndClarificationJid(contestJid, clarificationJid).map(model -> {
+        Optional<ContestClarificationModel> maybeClarification =
+                clarificationDao.selectByContestJidAndClarificationJid(contestJid, clarificationJid);
+
+        if (!allowDuplicates) {
+            maybeClarification.ifPresent(clarification -> {
+                if (clarification.status.equals(ContestClarificationStatus.ANSWERED.name())) {
+                    throw ContestErrors.clarificationAlreadyAnswered(clarification.jid);
+                }
+            });
+        }
+
+        return maybeClarification.map(model -> {
             model.answer = answer;
             model.status = ContestClarificationStatus.ANSWERED.name();
             return fromModel(clarificationDao.update(model));

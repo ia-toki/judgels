@@ -150,6 +150,7 @@ public class ContestClarificationResource implements ContestClarificationService
         checkFound(clarificationStore.updateClarificationAnswer(
                 contestJid,
                 clarificationJid,
-                data.getAnswer()));
+                data.getAnswer(),
+                false));
     }
 }
