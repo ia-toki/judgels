@@ -65,6 +65,7 @@ export interface ContestPage extends Page<Contest> {}
 export enum ContestErrors {
   SlugAlreadyExists = 'Uriel:ContestSlugAlreadyExists',
   ProblemSlugsNotAllowed = 'Uriel:ContestProblemSlugsNotAllowed',
+  ClarificationAlreadyAnswered = 'Uriel:ClarificationAlreadyAnswered',
 }
 
 export const baseContestsURL = `${APP_CONFIG.apiUrls.uriel}/contests`;
