@@ -33,12 +33,12 @@ public class ContestClarificationStore {
     public Optional<ContestClarification> updateClarificationAnswer(
             String contestJid,
             String clarificationJid,
-            String answer, boolean allowDuplicates) {
+            String answer, boolean allowEdit) {
 
         Optional<ContestClarificationModel> maybeClarification =
                 clarificationDao.selectByContestJidAndClarificationJid(contestJid, clarificationJid);
 
-        if (!allowDuplicates) {
+        if (!allowEdit) {
             maybeClarification.ifPresent(clarification -> {
                 if (clarification.status.equals(ContestClarificationStatus.ANSWERED.name())) {
                     throw ContestErrors.clarificationAlreadyAnswered(clarification.jid);

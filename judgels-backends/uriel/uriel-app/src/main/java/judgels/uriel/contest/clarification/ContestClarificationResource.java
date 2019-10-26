@@ -151,6 +151,6 @@ public class ContestClarificationResource implements ContestClarificationService
                 contestJid,
                 clarificationJid,
                 data.getAnswer(),
-                false));
+                data.getIsEdit().orElse(false)));
     }
 }
