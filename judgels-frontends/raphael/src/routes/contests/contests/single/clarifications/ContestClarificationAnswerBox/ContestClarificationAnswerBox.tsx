@@ -50,13 +50,18 @@ export class ContestClarificationAnswerBox extends React.Component<ContestClarif
       isLoading: this.props.isBoxLoading,
       isEditing: this.props.isEditing,
       initialValues: {
-        answer: this.props.isEditing ? this.props.clarification.answer : ''
-      }
+        answer: this.props.isEditing ? this.props.clarification.answer : '',
+      },
     };
     return <ContestClarificationAnswerForm {...props} />;
   };
 
   private answerClarification = (data: ContestClarificationAnswerFormData) => {
-    this.props.onAnswerClarification(this.props.contest.jid, this.props.clarification.jid, data.answer, this.props.isEditing);
+    this.props.onAnswerClarification(
+      this.props.contest.jid,
+      this.props.clarification.jid,
+      data.answer,
+      this.props.isEditing
+    );
   };
 }

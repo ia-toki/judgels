@@ -101,28 +101,33 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
 
     return (
       <>
-        {clarification.answer && !isAnswerBoxOpen && <>
-          <h4>Answer:</h4>
-          <p className="contest-clarification-card__info">
-            <small>
-              answered <FormattedRelative value={clarification.answeredTime!} />
-            </small>
-            {answerer}
-          </p>
-          <div className="clearfix" />
-          <hr />
-          <div className="multiline-text">{clarification.answer}</div>
-          <br />
-        </>}
-        {canManage && <ContestClarificationAnswerBox
-          contest={contest}
-          clarification={clarification}
-          isBoxOpen={isAnswerBoxOpen}
-          isBoxLoading={isAnswerBoxLoading}
-          onToggleBox={onToggleAnswerBox}
-          onAnswerClarification={onAnswerClarification}
-          isEditing={!!clarification.answer}
-        />}
+        {clarification.answer &&
+          !isAnswerBoxOpen && (
+            <>
+              <h4>Answer:</h4>
+              <p className="contest-clarification-card__info">
+                <small>
+                  answered <FormattedRelative value={clarification.answeredTime!} />
+                </small>
+                {answerer}
+              </p>
+              <div className="clearfix" />
+              <hr />
+              <div className="multiline-text">{clarification.answer}</div>
+              <br />
+            </>
+          )}
+        {canManage && (
+          <ContestClarificationAnswerBox
+            contest={contest}
+            clarification={clarification}
+            isBoxOpen={isAnswerBoxOpen}
+            isBoxLoading={isAnswerBoxLoading}
+            onToggleBox={onToggleAnswerBox}
+            onAnswerClarification={onAnswerClarification}
+            isEditing={!!clarification.answer}
+          />
+        )}
       </>
     );
   };

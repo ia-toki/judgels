@@ -29,7 +29,12 @@ const ContestClarificationAnswerForm = (props: ContestClarificationAnswerFormPro
     <form onSubmit={props.handleSubmit}>
       <Field component={FormTextArea} {...answerField} />
       <ActionButtons leftAlign>
-        <Button type="submit" text={props.isEditing ? 'Edit' : 'Answer'} intent={Intent.PRIMARY} loading={props.isLoading} />
+        <Button
+          type="submit"
+          text={props.isEditing ? 'Edit' : 'Answer'}
+          intent={Intent.PRIMARY}
+          loading={props.isLoading}
+        />
         <Button text="Cancel" onClick={props.onCancel} />
       </ActionButtons>
     </form>
