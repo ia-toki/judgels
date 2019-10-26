@@ -28,7 +28,7 @@ export interface ContestClarificationsPageProps {
   statementLanguage: string;
   onGetClarifications: (contestJid: string, language?: string, page?: number) => Promise<ContestClarificationsResponse>;
   onCreateClarification: (contestJid: string, data: ContestClarificationData) => void;
-  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string) => void;
+  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string, isEdit?: boolean) => void;
 }
 
 interface ContestClarificationsPageState {
@@ -94,7 +94,7 @@ class ContestClarificationsPage extends React.Component<
           }
           problemAlias={problemAliasesMap[clarification.topicJid]}
           problemName={problemNamesMap[clarification.topicJid]}
-          isAnswerBoxOpen={openAnswerBoxClarification === clarification}
+          isAnswerBoxOpen={openAnswerBoxClarification && openAnswerBoxClarification.jid === clarification.jid}
           isAnswerBoxLoading={!!this.state.isAnswerBoxLoading}
           onToggleAnswerBox={this.toggleAnswerBox}
           onAnswerClarification={this.answerClarification}
@@ -154,10 +154,17 @@ class ContestClarificationsPage extends React.Component<
     this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
   };
 
-  private answerClarification = async (contestJid, clarificationJid, data) => {
+  private answerClarification = async (contestJid, clarificationJid, data, isEdit) => {
     this.setState({ isAnswerBoxLoading: true });
-    await this.props.onAnswerClarification(contestJid, clarificationJid, data);
-    this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
+    try {
+      await this.props.onAnswerClarification(contestJid, clarificationJid, data, isEdit);
+      this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
+      this.toggleAnswerBox();
+    } catch (err) {
+      // Don't close answer box on error
+    } finally {
+      this.setState({ isAnswerBoxLoading: false });
+    }
   };
 }
 

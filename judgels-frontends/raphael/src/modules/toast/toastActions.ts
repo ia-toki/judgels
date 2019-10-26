@@ -1,5 +1,5 @@
 import { Intent, Position, Toaster } from '@blueprintjs/core';
-
+import { SubmissionError } from 'redux-form';
 import { ForbiddenError, NotFoundError, RemoteError } from '../../modules/api/error';
 
 export function createToastActions(toaster) {
@@ -38,6 +38,8 @@ export function createToastActions(toaster) {
         message = 'Operation not allowed.';
       } else if (error instanceof NotFoundError) {
         message = 'Resource not found.';
+      } else if (error instanceof SubmissionError) {
+        message = error.errors._error || error.message;
       } else {
         message = error.message;
       }

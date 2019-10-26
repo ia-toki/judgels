@@ -5,6 +5,7 @@ import {
 } from '../../../../../../modules/api/uriel/contestClarification';
 import { BadRequestError } from '../../../../../../modules/api/error';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
+import { SubmissionError } from 'redux-form';
 
 export const contestClarificationActions = {
   createClarification: (contestJid: string, data: ContestClarificationData) => {
@@ -22,14 +23,14 @@ export const contestClarificationActions = {
     };
   },
 
-  answerClarification: (contestJid: string, clarificationJid: string, answer: string) => {
+  answerClarification: (contestJid: string, clarificationJid: string, answer: string, isEdit?: boolean) => {
     return async (dispatch, getState, { contestClarificationAPI }) => {
       const token = selectToken(getState());
       try {
-        await contestClarificationAPI.answerClarification(token, contestJid, clarificationJid, { answer });
+        await contestClarificationAPI.answerClarification(token, contestJid, clarificationJid, { answer, isEdit });
       } catch (error) {
         if (error instanceof BadRequestError && error.message === ContestErrors.ClarificationAlreadyAnswered) {
-          throw new Error('This clarification already has an answer');
+          throw new SubmissionError({ _error: 'This clarification already has an answer' });
         }
         throw error;
       }

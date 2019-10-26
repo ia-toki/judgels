@@ -23,7 +23,7 @@ export interface ContestClarificationCardProps {
   isAnswerBoxOpen: boolean;
   isAnswerBoxLoading: boolean;
   onToggleAnswerBox: (clarification?: ContestClarification) => void;
-  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string) => void;
+  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string, isEdit?: boolean) => void;
 }
 
 export class ContestClarificationCard extends React.PureComponent<ContestClarificationCardProps> {
@@ -85,20 +85,7 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
       onAnswerClarification,
     } = this.props;
 
-    if (!clarification.answer) {
-      if (canManage) {
-        return (
-          <ContestClarificationAnswerBox
-            contest={contest}
-            clarification={clarification}
-            isBoxOpen={isAnswerBoxOpen}
-            isBoxLoading={isAnswerBoxLoading}
-            onToggleBox={onToggleAnswerBox}
-            onAnswerClarification={onAnswerClarification}
-          />
-        );
-      }
-
+    if (!canManage && !clarification.answer) {
       return (
         <p>
           <small>Not answered yet.</small>
@@ -114,16 +101,28 @@ export class ContestClarificationCard extends React.PureComponent<ContestClarifi
 
     return (
       <>
-        <h4>Answer:</h4>
-        <p className="contest-clarification-card__info">
-          <small>
-            answered <FormattedRelative value={clarification.answeredTime!} />
-          </small>
-          {answerer}
-        </p>
-        <div className="clearfix" />
-        <hr />
-        <div className="multiline-text">{clarification.answer}</div>
+        {clarification.answer && !isAnswerBoxOpen && <>
+          <h4>Answer:</h4>
+          <p className="contest-clarification-card__info">
+            <small>
+              answered <FormattedRelative value={clarification.answeredTime!} />
+            </small>
+            {answerer}
+          </p>
+          <div className="clearfix" />
+          <hr />
+          <div className="multiline-text">{clarification.answer}</div>
+          <br />
+        </>}
+        {canManage && <ContestClarificationAnswerBox
+          contest={contest}
+          clarification={clarification}
+          isBoxOpen={isAnswerBoxOpen}
+          isBoxLoading={isAnswerBoxLoading}
+          onToggleBox={onToggleAnswerBox}
+          onAnswerClarification={onAnswerClarification}
+          isEditing={!!clarification.answer}
+        />}
       </>
     );
   };

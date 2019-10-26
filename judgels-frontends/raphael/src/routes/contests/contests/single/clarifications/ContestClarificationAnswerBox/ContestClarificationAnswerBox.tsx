@@ -13,8 +13,9 @@ export interface ContestClarificationAnswerBoxProps {
   clarification: ContestClarification;
   isBoxOpen: boolean;
   isBoxLoading: boolean;
+  isEditing: boolean;
   onToggleBox: (clarification?: ContestClarification) => void;
-  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string) => void;
+  onAnswerClarification: (contestJid: string, clarificationJid: string, answer: string, isEdit?: boolean) => void;
 }
 
 export class ContestClarificationAnswerBox extends React.Component<ContestClarificationAnswerBoxProps> {
@@ -29,7 +30,7 @@ export class ContestClarificationAnswerBox extends React.Component<ContestClarif
   private renderButton = () => {
     return (
       <Button intent={Intent.PRIMARY} icon="comment" onClick={this.showBox}>
-        Answer
+        {this.props.isEditing ? 'Edit' : 'Answer'}
       </Button>
     );
   };
@@ -47,11 +48,15 @@ export class ContestClarificationAnswerBox extends React.Component<ContestClarif
       onSubmit: this.answerClarification,
       onCancel: this.hideBox,
       isLoading: this.props.isBoxLoading,
+      isEditing: this.props.isEditing,
+      initialValues: {
+        answer: this.props.isEditing ? this.props.clarification.answer : ''
+      }
     };
     return <ContestClarificationAnswerForm {...props} />;
   };
 
   private answerClarification = (data: ContestClarificationAnswerFormData) => {
-    this.props.onAnswerClarification(this.props.contest.jid, this.props.clarification.jid, data.answer);
+    this.props.onAnswerClarification(this.props.contest.jid, this.props.clarification.jid, data.answer, this.props.isEditing);
   };
 }
