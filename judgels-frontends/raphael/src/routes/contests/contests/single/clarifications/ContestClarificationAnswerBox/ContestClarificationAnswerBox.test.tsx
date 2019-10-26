@@ -49,6 +49,6 @@ describe('ContestClarificationAnswerBox', () => {
     const form = wrapper.find('form');
     form.simulate('submit');
 
-    expect(onAnswerClarification).toHaveBeenCalledWith(contestJid, 'clarificationJid123', 'Yes.');
+    expect(onAnswerClarification).toHaveBeenCalledWith(contestJid, 'clarificationJid123', 'Yes.', undefined);
   });
 });
