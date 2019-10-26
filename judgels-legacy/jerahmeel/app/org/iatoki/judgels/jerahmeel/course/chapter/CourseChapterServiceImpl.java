@@ -10,8 +10,8 @@ import org.iatoki.judgels.jerahmeel.chapter.ChapterScoreCacheUtils;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemStatus;
 import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemDao;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemDao;
-import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemModel;
-import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemModel_;
+import judgels.jerahmeel.persistence.ChapterProblemModel;
+import judgels.jerahmeel.persistence.ChapterProblemModel_;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemModel;
 import org.iatoki.judgels.play.Page;
 

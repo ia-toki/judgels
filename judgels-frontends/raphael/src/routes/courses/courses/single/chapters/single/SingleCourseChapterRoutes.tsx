@@ -14,6 +14,7 @@ import { CourseChapter } from '../../../../../../modules/api/jerahmeel/courseCha
 import { AppState } from '../../../../../../modules/store';
 
 import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
+import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
 
 import { selectCourseChapter } from '../modules/courseChapterSelectors';
 
@@ -40,6 +41,13 @@ const SingleCourseChapterRoutes = (props: SingleCourseChapterRoutesProps) => {
       title: 'Lessons',
       routeComponent: Route,
       component: ChapterLessonRoutes,
+    },
+    {
+      id: 'problems',
+      titleIcon: 'manual',
+      title: 'Problems',
+      routeComponent: Route,
+      component: ChapterProblemRoutes,
     },
   ];
 

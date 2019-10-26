@@ -1,10 +1,10 @@
 package org.iatoki.judgels.jerahmeel.chapter;
 
-import org.iatoki.judgels.jerahmeel.user.item.UserItemStatus;
+import judgels.jerahmeel.persistence.ChapterProblemModel;
 import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemDao;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemDao;
-import org.iatoki.judgels.jerahmeel.chapter.problem.ChapterProblemModel;
 import org.iatoki.judgels.jerahmeel.user.item.UserItemModel;
+import org.iatoki.judgels.jerahmeel.user.item.UserItemStatus;
 import org.iatoki.judgels.sandalphon.problem.bundle.submission.BundleSubmission;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.ProgrammingSubmission;
 

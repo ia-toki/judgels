@@ -1,5 +1,7 @@
 package org.iatoki.judgels.jerahmeel.chapter.problem;
 
+import judgels.jerahmeel.persistence.ChapterProblemModel;
+
 final class ChapterProblemServiceUtils {
 
     private ChapterProblemServiceUtils() {
