@@ -7,4 +7,11 @@ export const chapterProblemActions = {
       return await chapterProblemAPI.getProblems(token, chapterJid);
     };
   },
+
+  getProblemWorksheet: (chapterJid: string, problemAlias: string, language?: string) => {
+    return async (dispatch, getState, { chapterProblemAPI }) => {
+      const token = selectToken(getState());
+      return await chapterProblemAPI.getProblemWorksheet(token, chapterJid, problemAlias, language);
+    };
+  },
 };

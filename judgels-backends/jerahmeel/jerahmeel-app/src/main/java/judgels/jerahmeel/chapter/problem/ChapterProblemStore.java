@@ -9,6 +9,7 @@ import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
+import judgels.sandalphon.api.problem.ProblemType;
 
 public class ChapterProblemStore {
     private final ChapterProblemDao problemDao;
@@ -40,6 +41,7 @@ public class ChapterProblemStore {
         return new ChapterProblem.Builder()
                 .problemJid(model.problemJid)
                 .alias(model.alias)
+                .type(ProblemType.valueOf(model.type))
                 .build();
     }
 }

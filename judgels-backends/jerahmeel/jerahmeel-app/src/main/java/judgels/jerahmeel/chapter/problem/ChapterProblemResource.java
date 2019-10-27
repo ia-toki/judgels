@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemService;
+import judgels.jerahmeel.api.chapter.problem.ChapterProblemWorksheet;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.sandalphon.api.problem.ProblemInfo;
+import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -21,19 +23,19 @@ import judgels.service.api.actor.AuthHeader;
 public class ChapterProblemResource implements ChapterProblemService {
     private final ActorChecker actorChecker;
     private final ChapterStore chapterStore;
-    private final ChapterProblemStore chapterProblemStore;
+    private final ChapterProblemStore problemStore;
     private final ProblemClient problemClient;
 
     @Inject
     public ChapterProblemResource(
             ActorChecker actorChecker,
             ChapterStore chapterStore,
-            ChapterProblemStore chapterProblemStore,
+            ChapterProblemStore problemStore,
             ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
         this.chapterStore = chapterStore;
-        this.chapterProblemStore = chapterProblemStore;
+        this.problemStore = problemStore;
         this.problemClient = problemClient;
     }
 
@@ -43,7 +45,7 @@ public class ChapterProblemResource implements ChapterProblemService {
         String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
-        List<ChapterProblem> problems = chapterProblemStore.getProblems(chapterJid);
+        List<ChapterProblem> problems = problemStore.getProblems(chapterJid);
         Set<String> problemJids = problems.stream().map(ChapterProblem::getProblemJid).collect(Collectors.toSet());
         Map<String, ProblemInfo> problemsMap = problemClient.getProblems(problemJids);
 
@@ -51,5 +53,37 @@ public class ChapterProblemResource implements ChapterProblemService {
                 .data(problems)
                 .problemsMap(problemsMap)
                 .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ChapterProblemWorksheet getProblemWorksheet(
+            Optional<AuthHeader> authHeader,
+            String chapterJid,
+            String problemAlias,
+            Optional<String> language) {
+
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(chapterStore.getChapterByJid(chapterJid));
+
+        ChapterProblem problem = checkFound(problemStore.getProblemByAlias(chapterJid, problemAlias));
+        String problemJid = problem.getProblemJid();
+        ProblemInfo problemInfo = problemClient.getProblem(problemJid);
+
+        if (problemInfo.getType() == ProblemType.PROGRAMMING) {
+            return new judgels.jerahmeel.api.chapter.problem.programming.ChapterProblemWorksheet.Builder()
+                    .defaultLanguage(problemInfo.getDefaultLanguage())
+                    .languages(problemInfo.getTitlesByLanguage().keySet())
+                    .problem(problem)
+                    .worksheet(problemClient.getProgrammingProblemWorksheet(problemJid, language))
+                    .build();
+        } else {
+            return new judgels.jerahmeel.api.chapter.problem.bundle.ChapterProblemWorksheet.Builder()
+                    .defaultLanguage(problemInfo.getDefaultLanguage())
+                    .languages(problemInfo.getTitlesByLanguage().keySet())
+                    .problem(problem)
+                    .worksheet(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language))
+                    .build();
+        }
     }
 }

@@ -1,13 +1,12 @@
+import { ResourceInfo } from './resource';
+
 export enum ProblemType {
   Programming = 'PROGRAMMING',
   Bundle = 'BUNDLE',
 }
 
-export interface ProblemInfo {
-  slug: string;
+export interface ProblemInfo extends ResourceInfo {
   type: ProblemType;
-  defaultLanguage: string;
-  titlesByLanguage: { [language: string]: string };
 }
 
 export function getProblemName(problem: ProblemInfo, language: string) {

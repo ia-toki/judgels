@@ -4,7 +4,11 @@ import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import StatementLanguageWidget, {
+  StatementLanguageWidgetProps,
+} from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
 import { ChapterProblemCard, ChapterProblemCardProps } from '../ChapterProblemCard/ChapterProblemCard';
+import { consolidateLanguages } from '../../../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
 import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
@@ -23,6 +27,8 @@ export interface ChapterProblemsPageProps {
 
 interface ChapterProblemsPageState {
   response?: ChapterProblemsResponse;
+  defaultLanguage?: string;
+  uniqueLanguages?: string[];
 }
 
 export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPageProps, ChapterProblemsPageState> {
@@ -30,7 +36,31 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
 
   async componentDidMount() {
     const response = await this.props.onGetProblems(this.props.chapter.chapterJid);
-    this.setState({ response });
+    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
+      response.problemsMap,
+      this.props.statementLanguage
+    );
+
+    this.setState({
+      response,
+      defaultLanguage,
+      uniqueLanguages,
+    });
+  }
+
+  async componentDidUpdate(prevProps: ChapterProblemsPageProps) {
+    const { response } = this.state;
+    if (this.props.statementLanguage !== prevProps.statementLanguage && response) {
+      const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
+        response.problemsMap,
+        this.props.statementLanguage
+      );
+
+      this.setState({
+        defaultLanguage,
+        uniqueLanguages,
+      });
+    }
   }
 
   render() {
@@ -38,10 +68,24 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
       <ContentCard>
         <h3>Problems</h3>
         <hr />
+        {this.renderStatementLanguageWidget()}
         {this.renderProblems()}
       </ContentCard>
     );
   }
+
+  private renderStatementLanguageWidget = () => {
+    const { defaultLanguage, uniqueLanguages } = this.state;
+    if (!defaultLanguage || !uniqueLanguages) {
+      return null;
+    }
+
+    const props: StatementLanguageWidgetProps = {
+      defaultLanguage,
+      statementLanguages: uniqueLanguages,
+    };
+    return <StatementLanguageWidget {...props} />;
+  };
 
   private renderProblems = () => {
     const { response } = this.state;
@@ -64,7 +108,7 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
         course: this.props.course,
         chapter: this.props.chapter,
         problem,
-        problemName: getProblemName(this.state.response!.problemsMap[problem.problemJid], 'id'),
+        problemName: getProblemName(this.state.response!.problemsMap[problem.problemJid], this.state.defaultLanguage),
       };
       return <ChapterProblemCard key={problem.problemJid} {...props} />;
     });

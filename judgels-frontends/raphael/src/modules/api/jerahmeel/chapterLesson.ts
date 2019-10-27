@@ -1,3 +1,5 @@
+import { stringify } from 'query-string';
+
 import { get } from '../../../modules/api/http';
 import { LessonInfo, LessonStatement } from '../sandalphon/lesson';
 import { baseChapterURL } from './chapter';
@@ -13,6 +15,8 @@ export interface ChapterLessonsResponse {
 }
 
 export interface ChapterLessonStatement {
+  defaultLanguage: string;
+  languages: string[];
   lesson: ChapterLesson;
   statement: LessonStatement;
 }
@@ -24,7 +28,13 @@ export const chapterLessonAPI = {
     return get(baseURL(chapterJid), token);
   },
 
-  getLessonStatement: (token: string, chapterJid: string, lessonAlias: string): Promise<ChapterLessonsResponse> => {
-    return get(`${baseURL(chapterJid)}/${lessonAlias}/statement`, token);
+  getLessonStatement: (
+    token: string,
+    chapterJid: string,
+    lessonAlias: string,
+    language?: string
+  ): Promise<ChapterLessonsResponse> => {
+    const params = stringify({ language });
+    return get(`${baseURL(chapterJid)}/${lessonAlias}/statement?${params}`, token);
   },
 };
