@@ -11,7 +11,6 @@ import { LessonStatementCard } from '../../../../../../../../../components/Lesso
 import { AppState } from '../../../../../../../../../modules/store';
 import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { ChapterLessonStatement } from '../../../../../../../../../modules/api/jerahmeel/chapterLesson';
-import { LessonStatement } from '../../../../../../../../../modules/api/sandalphon/lesson';
 import { chapterLessonActions as injectedChapterLessonActions } from '../../modules/chapterLessonActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';

@@ -2,22 +2,18 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
+import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
 } from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { AppState } from '../../../../../../../../../modules/store';
-import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/jerahmeel/chapterProblemProgramming';
-import { ProblemSubmissionFormData } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
-import { ProblemWorksheet } from '../../../../../../../../../modules/api/sandalphon/problemProgramming';
-import { selectGradingLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
+import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/jerahmeel/chapterProblemBundle';
+import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 
 import './ChapterProblemPage.css';
 
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   worksheet: ChapterProblemWorksheet;
-  gradingLanguage: string;
 }
 
 export class ChapterProblemPage extends React.Component<ChapterProblemPageProps> {
@@ -40,7 +36,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
       statementLanguages: languages,
     };
     return (
-      <div className="chapter-lesson-page__widget">
+      <div className="chapter-bundle-problem-page__widget">
         <StatementLanguageWidget {...props} />
       </div>
     );
@@ -48,28 +44,27 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
 
   private renderStatement = () => {
     const { problem, worksheet } = this.props.worksheet;
+    if (!problem || !worksheet) {
+      return <LoadingState />;
+    }
 
     return (
       <ProblemWorksheetCard
         alias={problem.alias}
-        worksheet={worksheet as ProblemWorksheet}
-        onSubmit={this.createSubmission}
-        gradingLanguage={this.props.gradingLanguage}
+        latestSubmissions={{}}
+        onAnswerItem={this.onCreateSubmission}
+        worksheet={worksheet}
       />
     );
   };
 
-  private createSubmission = async (data: ProblemSubmissionFormData) => {
+  private onCreateSubmission = async (itemJid: string, answer: string) => {
     return await null;
   };
 }
 
 export function createChapterProblemPage() {
-  const mapStateToProps = (state: AppState) => ({
-    gradingLanguage: selectGradingLanguage(state),
-  });
-
-  return withRouter<any, any>(connect(mapStateToProps)(ChapterProblemPage));
+  return withRouter<any, any>(connect()(ChapterProblemPage));
 }
 
 export default createChapterProblemPage();

@@ -7,6 +7,7 @@ import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/p
 import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/jerahmeel/chapterProblem';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
+import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import {
@@ -70,8 +71,9 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
     const { problem } = response;
     if (problem.type === ProblemType.Programming) {
       return <ChapterProblemProgrammingPage worksheet={response} gradingLanguage={this.props.gradingLanguage} />;
+    } else {
+      return <ChapterProblemBundlePage worksheet={response} />;
     }
-    return null;
   }
 }
 
