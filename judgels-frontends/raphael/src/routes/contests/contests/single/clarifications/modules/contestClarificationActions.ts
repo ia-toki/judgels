@@ -30,7 +30,9 @@ export const contestClarificationActions = {
         await contestClarificationAPI.answerClarification(token, contestJid, clarificationJid, { answer });
       } catch (error) {
         if (error instanceof BadRequestError && error.message === ContestErrors.ClarificationAlreadyAnswered) {
-          throw new SubmissionError({ _error: 'This clarification has already been answered. Please refresh this page.' });
+          throw new SubmissionError({
+            _error: 'This clarification has already been answered. Please refresh this page.',
+          });
         }
         throw error;
       }
