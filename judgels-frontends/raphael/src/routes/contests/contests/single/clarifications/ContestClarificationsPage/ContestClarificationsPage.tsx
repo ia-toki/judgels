@@ -156,8 +156,15 @@ class ContestClarificationsPage extends React.Component<
 
   private answerClarification = async (contestJid, clarificationJid, data) => {
     this.setState({ isAnswerBoxLoading: true });
-    await this.props.onAnswerClarification(contestJid, clarificationJid, data);
-    this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
+    try {
+      await this.props.onAnswerClarification(contestJid, clarificationJid, data);
+      this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
+      this.toggleAnswerBox();
+    } catch (err) {
+      // Don't close answer box yet on error
+    } finally {
+      this.setState({ isAnswerBoxLoading: false });
+    }
   };
 }
 
