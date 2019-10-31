@@ -9,7 +9,6 @@ import './ProblemWorksheetCard.css';
 export interface ProblemWorksheetCardProps {
   alias: string;
   worksheet: ProblemWorksheet;
-  language: string;
   latestSubmissions: { [id: string]: ItemSubmission };
   onAnswerItem: (itemJid: string, answer: string) => Promise<any>;
 }

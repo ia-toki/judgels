@@ -8,10 +8,10 @@ export const chapterLessonActions = {
     };
   },
 
-  getLessonStatement: (chapterJid: string, lessonAlias: string) => {
+  getLessonStatement: (chapterJid: string, lessonAlias: string, language?: string) => {
     return async (dispatch, getState, { chapterLessonAPI }) => {
       const token = selectToken(getState());
-      return await chapterLessonAPI.getLessonStatement(token, chapterJid, lessonAlias);
+      return await chapterLessonAPI.getLessonStatement(token, chapterJid, lessonAlias, language);
     };
   },
 };

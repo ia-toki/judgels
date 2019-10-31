@@ -1,5 +1,7 @@
 package org.iatoki.judgels.jerahmeel.chapter.problem;
 
+import judgels.jerahmeel.persistence.ChapterProblemModel;
+import judgels.jerahmeel.persistence.ChapterProblemModel_;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 

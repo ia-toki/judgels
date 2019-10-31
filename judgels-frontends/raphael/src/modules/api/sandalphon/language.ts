@@ -1,5 +1,5 @@
 // extracted from https://github.com/anurbol/languages-iso-639-1-2-3-json/blob/master/data.json
-import { ProblemInfo } from './problem';
+import { ResourceInfo } from './resource';
 
 export const statementLanguageNamesMap = {
   ab: 'Abkhaz',
@@ -203,12 +203,12 @@ export function sortLanguagesByName(languages: string[]) {
   });
 }
 
-export function consolidateLanguages(problemsMap: { [jid: string]: ProblemInfo }, currentLanguage: string) {
-  const defaultLanguages = Object.keys(problemsMap).map(jid => problemsMap[jid].defaultLanguage);
+export function consolidateLanguages(resourcesMap: { [jid: string]: ResourceInfo }, currentLanguage: string) {
+  const defaultLanguages = Object.keys(resourcesMap).map(jid => resourcesMap[jid].defaultLanguage);
 
   let languages: string[] = [];
-  Object.keys(problemsMap).forEach(jid => {
-    languages = [...languages, ...Object.keys(problemsMap[jid].titlesByLanguage)];
+  Object.keys(resourcesMap).forEach(jid => {
+    languages = [...languages, ...Object.keys(resourcesMap[jid].titlesByLanguage)];
   });
   const uniqueLanguages = languages.filter((lang, idx) => languages.indexOf(lang) === idx);
 

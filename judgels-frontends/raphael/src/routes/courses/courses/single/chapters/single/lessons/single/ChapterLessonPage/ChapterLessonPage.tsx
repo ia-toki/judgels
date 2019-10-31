@@ -4,46 +4,52 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
+import StatementLanguageWidget, {
+  StatementLanguageWidgetProps,
+} from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { AppState } from '../../../../../../../../../modules/store';
 import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { ChapterLesson, ChapterLessonStatement } from '../../../../../../../../../modules/api/jerahmeel/chapterLesson';
-import { LessonStatement } from '../../../../../../../../../modules/api/sandalphon/lesson';
+import { ChapterLessonStatement } from '../../../../../../../../../modules/api/jerahmeel/chapterLesson';
 import { chapterLessonActions as injectedChapterLessonActions } from '../../modules/chapterLessonActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 
+import './ChapterLessonPage.css';
+
 export interface ChapterLessonPageProps extends RouteComponentProps<{ lessonAlias: string }> {
   chapter: CourseChapter;
-  onGetLessonStatement: (chapterJid: string, lessonAlias: string) => Promise<ChapterLessonStatement>;
+  statementLanguage: string;
+  onGetLessonStatement: (chapterJid: string, lessonAlias: string, language?: string) => Promise<ChapterLessonStatement>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
 
 interface ChapterLessonPageState {
-  lesson?: ChapterLesson;
-  statement?: LessonStatement;
+  response?: ChapterLessonStatement;
 }
 
 export class ChapterLessonPage extends React.Component<ChapterLessonPageProps, ChapterLessonPageState> {
   state: ChapterLessonPageState = {};
 
   async componentDidMount() {
-    const { lesson, statement } = await this.props.onGetLessonStatement(
+    const response = await this.props.onGetLessonStatement(
       this.props.chapter.chapterJid,
-      this.props.match.params.lessonAlias
+      this.props.match.params.lessonAlias,
+      this.props.statementLanguage
     );
 
     this.setState({
-      lesson,
-      statement,
+      response,
     });
 
-    this.props.onPushBreadcrumb(this.props.match.url, lesson.alias + '. ' + statement.title);
+    this.props.onPushBreadcrumb(this.props.match.url, 'Lesson ' + response.lesson.alias);
   }
 
   async componentDidUpdate(prevProps: ChapterLessonPageProps, prevState: ChapterLessonPageState) {
-    if (!this.state.statement && prevState.statement) {
+    if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.response) {
+      this.setState({ response: undefined });
+    } else if (!this.state.response && prevState.response) {
       await this.componentDidMount();
     }
   }
@@ -53,16 +59,38 @@ export class ChapterLessonPage extends React.Component<ChapterLessonPageProps, C
   }
 
   render() {
-    return <ContentCard>{this.renderStatement()}</ContentCard>;
+    return (
+      <ContentCard>
+        {this.renderStatementLanguageWidget()}
+        {this.renderStatement()}
+      </ContentCard>
+    );
   }
 
+  private renderStatementLanguageWidget = () => {
+    const { response } = this.state;
+    if (!response) {
+      return null;
+    }
+    const { defaultLanguage, languages } = response;
+    const props: StatementLanguageWidgetProps = {
+      defaultLanguage: defaultLanguage,
+      statementLanguages: languages,
+    };
+    return (
+      <div className="chapter-lesson-page__widget">
+        <StatementLanguageWidget {...props} />
+      </div>
+    );
+  };
+
   private renderStatement = () => {
-    const { lesson, statement } = this.state;
-    if (!lesson || !statement) {
+    const { response } = this.state;
+    if (!response) {
       return <LoadingState />;
     }
 
-    return <LessonStatementCard alias={lesson.alias} statement={statement} />;
+    return <LessonStatementCard alias={response.lesson.alias} statement={response.statement} />;
   };
 }
 

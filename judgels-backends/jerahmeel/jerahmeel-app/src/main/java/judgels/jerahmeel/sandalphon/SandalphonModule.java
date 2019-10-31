@@ -7,6 +7,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
 import judgels.sandalphon.api.client.lesson.ClientLessonService;
+import judgels.sandalphon.api.client.problem.ClientProblemService;
 import judgels.service.api.client.BasicAuthHeader;
 import judgels.service.api.client.Client;
 import judgels.service.jaxrs.JaxRsClients;
@@ -34,5 +35,11 @@ public class SandalphonModule {
     @Singleton
     ClientLessonService clientLessonService(UserAgent agent) {
         return JaxRsClients.create(ClientLessonService.class, config.getBaseUrl(), agent);
+    }
+
+    @Provides
+    @Singleton
+    ClientProblemService clientProblemService(UserAgent agent) {
+        return JaxRsClients.create(ClientProblemService.class, config.getBaseUrl(), agent);
     }
 }

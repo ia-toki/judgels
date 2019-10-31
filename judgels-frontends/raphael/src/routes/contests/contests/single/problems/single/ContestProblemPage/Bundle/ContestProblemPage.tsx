@@ -12,11 +12,11 @@ import { selectStatementLanguage } from '../../../../../../../../modules/webPref
 import { Contest } from '../../../../../../../../modules/api/uriel/contest';
 import { ContestProblem } from '../../../../../../../../modules/api/uriel/contestProblem';
 import { ContestProblemWorksheet } from '../../../../../../../../modules/api/uriel/contestProblemBundle';
-import { ProblemWorksheet as BundleProblemWorksheet } from '../../../../../../../../modules/api/sandalphon/problemBundle';
+import { ProblemWorksheet } from '../../../../../../../../modules/api/sandalphon/problemBundle';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import { contestProblemActions as injectedContestProblemActions } from '../../../modules/contestProblemActions';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../../../../submissions/Bundle/modules/contestSubmissionActions';
-import { ProblemWorksheetCard as BundleProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
+import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { ItemSubmission } from '../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectContest } from '../../../../../modules/contestSelectors';
 
@@ -41,7 +41,7 @@ interface ContestProblemPageState {
   languages?: string[];
   problem?: ContestProblem;
   latestSubmissions?: { [id: string]: ItemSubmission };
-  worksheet?: BundleProblemWorksheet;
+  worksheet?: ProblemWorksheet;
 }
 
 export class ContestProblemPage extends React.Component<ContestProblemPageProps, ContestProblemPageState> {
@@ -117,12 +117,11 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       return <LoadingState />;
     }
     return (
-      <BundleProblemWorksheetCard
+      <ProblemWorksheetCard
         alias={problem.alias}
-        language={this.props.statementLanguage}
         latestSubmissions={latestSubmissions}
         onAnswerItem={this.onCreateSubmission}
-        worksheet={worksheet as BundleProblemWorksheet}
+        worksheet={worksheet as ProblemWorksheet}
       />
     );
   };

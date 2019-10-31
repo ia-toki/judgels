@@ -66,9 +66,13 @@ public class ChapterLessonResource implements ChapterLessonService {
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         ChapterLesson lesson = checkFound(chapterLessonStore.getLessonByAlias(chapterJid, lessonAlias));
+        String lessonJid = lesson.getLessonJid();
+        LessonInfo lessonInfo = lessonClient.getLesson(lessonJid);
         LessonStatement statement = lessonClient.getLessonStatement(lesson.getLessonJid());
 
         return new ChapterLessonStatement.Builder()
+                .defaultLanguage(lessonInfo.getDefaultLanguage())
+                .languages(lessonInfo.getTitlesByLanguage().keySet())
                 .lesson(lesson)
                 .statement(statement)
                 .build();

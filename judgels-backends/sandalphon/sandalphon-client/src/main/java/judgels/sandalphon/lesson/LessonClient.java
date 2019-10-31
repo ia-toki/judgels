@@ -41,6 +41,10 @@ public class LessonClient {
                 .build(new LessonCacheLoader());
     }
 
+    public LessonInfo getLesson(String lessonJid) {
+        return lessonCache.get(lessonJid);
+    }
+
     public Map<String, LessonInfo> getLessons(Set<String> lessonJids) {
         return lessonCache.getAll(lessonJids);
     }

@@ -117,10 +117,6 @@ em {
   font-style: oblique;
 }
 
-.toast {
-  margin-top: 50px;
-}
-
 label {
   font-size: $font-size-small;
   font-weight: bold;
@@ -141,27 +137,17 @@ table {
   width: 100%;
 }
 
-.flex-column {
-  display: flex;
-  flex-direction: column;
-}
+/* Blueprint overrides */
 
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.justify-content-flex-end {
-  justify-content: flex-end;
-}
-
-.justify-content-space-between {
-  justify-content: space-between;
+.toast {
+  margin-top: 50px;
 }
 
 .bp3-button.bp3-intent-primary {
   background-color: $primary-color;
 }
+
+/* End Blueprint overrides */
 
 .multiline-text {
   white-space: pre-wrap;
@@ -175,4 +161,38 @@ table {
 
 .normal-weight {
   font-weight: normal !important;
+}
+
+.html-text {
+  line-height: 20px !important;
+
+  h2, h3, h4 {
+    margin-top: 20px;
+    margin-bottom: 10px !important;
+    line-height: 20px !important;
+  }
+
+  ol, ul {
+    margin-bottom: 10px;
+  }
+
+  table {
+    width: inherit;
+  }
+
+  td, th {
+    border: solid 1px #cccccc;
+    text-align: left;
+    padding: 5px;
+  }
+
+  th {
+    background-color: #eeeeee;
+    font-weight: bold;
+    color: $text-color;
+  }
+
+  pre {
+    margin-bottom: 10px;
+  }
 }

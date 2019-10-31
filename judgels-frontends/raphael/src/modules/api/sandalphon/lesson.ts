@@ -1,8 +1,6 @@
-export interface LessonInfo {
-  slug: string;
-  defaultLanguage: string;
-  titlesByLanguage: { [language: string]: string };
-}
+import { ResourceInfo } from './resource';
+
+export interface LessonInfo extends ResourceInfo {}
 
 export interface LessonStatement {
   title: string;
