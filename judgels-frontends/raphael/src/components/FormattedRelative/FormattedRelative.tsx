@@ -1,6 +1,8 @@
-import { selectUnit } from '@formatjs/intl-utils';
 import * as React from 'react';
 import { FormattedRelativeTime } from 'react-intl';
+
+import { selectUnit } from '@formatjs/intl-utils';
+import '@formatjs/intl-relativetimeformat/polyfill-locales';
 
 export interface FormattedRelativeProps {
   value: number;
