@@ -1,3 +1,4 @@
+import { SubmissionError } from 'redux-form';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import {
   ContestClarificationData,
@@ -5,7 +6,6 @@ import {
 } from '../../../../../../modules/api/uriel/contestClarification';
 import { BadRequestError } from '../../../../../../modules/api/error';
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
-import { SubmissionError } from 'redux-form';
 
 export const contestClarificationActions = {
   createClarification: (contestJid: string, data: ContestClarificationData) => {
