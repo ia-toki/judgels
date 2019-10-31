@@ -64,7 +64,7 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
         assertThat(clarification3.getAnswer()).isEmpty();
         assertThat(clarification3.getStatus()).isEqualTo(ContestClarificationStatus.ASKED);
 
-        store.updateClarificationAnswer(contestB.getJid(), clarification3.getJid(), "Yes!", false);
+        store.answerClarification(contestB.getJid(), clarification3.getJid(), "Yes!");
         ContestClarification answeredClarification3 =
                 store.getClarifications(contestB.getJid(), Optional.empty()).getPage().get(0);
 
@@ -72,7 +72,7 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
         assertThat(answeredClarification3.getStatus()).isEqualTo(ContestClarificationStatus.ANSWERED);
 
         try {
-            store.updateClarificationAnswer(contestB.getJid(), clarification3.getJid(), "Overwriting answer 1", false);
+            store.answerClarification(contestB.getJid(), clarification3.getJid(), "Overwriting answer 1");
         } catch (ServiceException err) {
             assertThat(err.getErrorType().name()).isEqualTo("Uriel:ClarificationAlreadyAnswered");
             assertThat(err.getParameters().get(0).getName()).isEqualTo("clarificationJid");
@@ -83,12 +83,5 @@ class ContestClarificationStoreIntegrationTests extends AbstractIntegrationTests
 
         assertThat(answeredClarification3NotUpdated.getAnswer()).contains("Yes!");
         assertThat(answeredClarification3NotUpdated.getStatus()).isEqualTo(ContestClarificationStatus.ANSWERED);
-
-        store.updateClarificationAnswer(contestB.getJid(), clarification3.getJid(), "Overwriting answer 2", true);
-        ContestClarification answeredClarification3Updated =
-                store.getClarifications(contestB.getJid(), Optional.empty()).getPage().get(0);
-
-        assertThat(answeredClarification3Updated.getAnswer()).contains("Overwriting answer 2");
-        assertThat(answeredClarification3Updated.getStatus()).isEqualTo(ContestClarificationStatus.ANSWERED);
     }
 }

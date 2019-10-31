@@ -147,10 +147,9 @@ public class ContestClarificationResource implements ContestClarificationService
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
         checkAllowed(clarificationRoleChecker.canManage(actorJid, contest));
 
-        checkFound(clarificationStore.updateClarificationAnswer(
+        checkFound(clarificationStore.answerClarification(
                 contestJid,
                 clarificationJid,
-                data.getAnswer(),
-                false));
+                data.getAnswer()));
     }
 }
