@@ -7,8 +7,8 @@ import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/p
 import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/jerahmeel/chapterProblem';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
-import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
+import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import {
   selectStatementLanguage,

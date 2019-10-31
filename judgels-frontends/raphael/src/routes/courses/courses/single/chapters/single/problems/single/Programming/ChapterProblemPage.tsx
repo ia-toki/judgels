@@ -40,7 +40,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
       statementLanguages: languages,
     };
     return (
-      <div className="chapter-lesson-page__widget">
+      <div className="chapter-problem-page__widget">
         <StatementLanguageWidget {...props} />
       </div>
     );

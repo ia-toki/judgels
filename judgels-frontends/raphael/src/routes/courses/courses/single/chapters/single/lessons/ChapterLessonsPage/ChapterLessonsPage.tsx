@@ -2,11 +2,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
 } from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
-import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ChapterLessonCard, ChapterLessonCardProps } from '../ChapterLessonCard/ChapterLessonCard';
 import { consolidateLanguages } from '../../../../../../../../modules/api/sandalphon/language';
 import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';

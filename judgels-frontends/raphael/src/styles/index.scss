@@ -176,3 +176,37 @@ table {
 .normal-weight {
   font-weight: normal !important;
 }
+
+.html-text {
+  line-height: 20px !important;
+
+  h2, h3, h4 {
+    margin-top: 20px;
+    margin-bottom: 10px !important;
+    line-height: 20px !important;
+  }
+
+  ol, ul {
+    margin-bottom: 10px;
+  }
+
+  table {
+    width: inherit;
+  }
+
+  td, th {
+    border: solid 1px #cccccc;
+    text-align: left;
+    padding: 5px;
+  }
+
+  th {
+    background-color: #eeeeee;
+    font-weight: bold;
+    color: $text-color;
+  }
+
+  pre {
+    margin-bottom: 10px;
+  }
+}
