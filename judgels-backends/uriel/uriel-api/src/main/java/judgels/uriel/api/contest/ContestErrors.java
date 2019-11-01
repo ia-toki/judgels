@@ -22,6 +22,9 @@ public class ContestErrors {
     public static final ErrorType WRONG_PROBLEM_TYPE =
             ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Uriel:WrongProblemType");
 
+    public static final ErrorType CLARIFICATION_ALREADY_ANSWERED =
+            ErrorType.create(ErrorType.Code.INVALID_ARGUMENT, "Uriel:ClarificationAlreadyAnswered");
+
     public static ServiceException jidAlreadyExists(String jid) {
         return new ServiceException(JID_ALREADY_EXISTS, SafeArg.of("jid", jid));
     }
@@ -38,5 +41,9 @@ public class ContestErrors {
 
     public static ServiceException wrongProblemType(ProblemType problemType) {
         return new ServiceException(WRONG_PROBLEM_TYPE, SafeArg.of("problemType", problemType));
+    }
+
+    public static ServiceException clarificationAlreadyAnswered(String clarificationJid) {
+        return new ServiceException(CLARIFICATION_ALREADY_ANSWERED, SafeArg.of("clarificationJid", clarificationJid));
     }
 }

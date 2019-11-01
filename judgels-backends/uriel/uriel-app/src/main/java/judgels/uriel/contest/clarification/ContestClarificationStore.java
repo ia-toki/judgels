@@ -30,12 +30,21 @@ public class ContestClarificationStore {
         return fromModel(clarificationDao.insert(model));
     }
 
-    public Optional<ContestClarification> updateClarificationAnswer(
+    public Optional<ContestClarification> answerClarification(
             String contestJid,
             String clarificationJid,
             String answer) {
 
-        return clarificationDao.selectByContestJidAndClarificationJid(contestJid, clarificationJid).map(model -> {
+        Optional<ContestClarificationModel> maybeClarification =
+                clarificationDao.selectByContestJidAndClarificationJid(contestJid, clarificationJid);
+
+        maybeClarification.ifPresent(clarification -> {
+            if (clarification.status.equals(ContestClarificationStatus.ANSWERED.name())) {
+                throw ContestErrors.clarificationAlreadyAnswered(clarification.jid);
+            }
+        });
+
+        return maybeClarification.map(model -> {
             model.answer = answer;
             model.status = ContestClarificationStatus.ANSWERED.name();
             return fromModel(clarificationDao.update(model));
