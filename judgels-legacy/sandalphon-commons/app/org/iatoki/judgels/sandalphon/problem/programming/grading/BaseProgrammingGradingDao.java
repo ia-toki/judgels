@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
+import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
 import judgels.persistence.JudgelsDao;
 
 import java.util.List;

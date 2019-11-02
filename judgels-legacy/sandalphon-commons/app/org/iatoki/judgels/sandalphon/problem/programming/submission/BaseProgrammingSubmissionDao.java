@@ -1,5 +1,6 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
+import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel;
 import judgels.persistence.JudgelsDao;
 
 import java.time.Instant;

@@ -1,5 +1,6 @@
 package org.iatoki.judgels.jerahmeel.grading.programming;
 
+import judgels.jerahmeel.persistence.ProgrammingGradingModel;
 import judgels.persistence.hibernate.HibernateDaoData;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingHibernateDao;
 

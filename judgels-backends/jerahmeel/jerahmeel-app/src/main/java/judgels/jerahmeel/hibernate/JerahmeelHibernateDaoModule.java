@@ -8,6 +8,8 @@ import judgels.jerahmeel.persistence.ChapterLessonDao;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseDao;
+import judgels.jerahmeel.persistence.ProgrammingGradingDao;
+import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 
 @Module
 public class JerahmeelHibernateDaoModule {
@@ -40,6 +42,16 @@ public class JerahmeelHibernateDaoModule {
 
     @Provides
     static ChapterProblemDao chapterProblemDao(ChapterProblemHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ProgrammingGradingDao programmingGradingDao(ProgrammingGradingHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ProgrammingSubmissionDao programmingSubmissionDao(ProgrammingSubmissionHibernateDao dao) {
         return dao;
     }
 }

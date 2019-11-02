@@ -1,0 +1,42 @@
+@import '../../../../../../../../../styles/table';
+
+.chapter-submissions-table {
+  .col-regrade {
+    width: 7px;
+  }
+  .col-id {
+    width: 100px;
+  }
+
+  .col-prob {
+    width: 80px;
+  }
+
+  .col-lang {
+    width: 90px;
+  }
+
+  .col-verdict {
+    width: 60px;
+  }
+
+  .col-pts {
+    width: 60px;
+  }
+
+  .col-actions {
+    width: 50px;
+  }
+
+  .cell-centered {
+    text-align: center;
+  }
+
+  .action {
+    cursor: pointer;
+  }
+
+  .action + .action {
+    margin-left: 2px;
+  }
+}

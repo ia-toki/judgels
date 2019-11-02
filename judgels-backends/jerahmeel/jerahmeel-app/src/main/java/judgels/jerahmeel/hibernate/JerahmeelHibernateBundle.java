@@ -9,6 +9,8 @@ import judgels.jerahmeel.persistence.ChapterModel;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.CourseModel;
+import judgels.jerahmeel.persistence.ProgrammingGradingModel;
+import judgels.jerahmeel.persistence.ProgrammingSubmissionModel;
 
 public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicationConfiguration> {
     public JerahmeelHibernateBundle() {
@@ -18,7 +20,9 @@ public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicati
                 ChapterLessonModel.class,
                 ChapterProblemModel.class,
                 CourseModel.class,
-                CourseChapterModel.class
+                CourseChapterModel.class,
+                ProgrammingGradingModel.class,
+                ProgrammingSubmissionModel.class
         );
     }
 

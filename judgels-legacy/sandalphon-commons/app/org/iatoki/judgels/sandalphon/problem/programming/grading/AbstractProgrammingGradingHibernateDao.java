@@ -3,6 +3,8 @@ package org.iatoki.judgels.sandalphon.problem.programming.grading;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
+import judgels.sandalphon.persistence.AbstractProgrammingGradingModel_;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 

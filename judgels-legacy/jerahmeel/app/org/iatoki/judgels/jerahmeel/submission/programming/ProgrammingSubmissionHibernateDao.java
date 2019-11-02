@@ -1,5 +1,6 @@
 package org.iatoki.judgels.jerahmeel.submission.programming;
 
+import judgels.jerahmeel.persistence.ProgrammingSubmissionModel;
 import judgels.persistence.hibernate.HibernateDaoData;
 import org.iatoki.judgels.sandalphon.problem.programming.submission.AbstractProgrammingSubmissionHibernateDao;
 

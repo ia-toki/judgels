@@ -1,11 +1,11 @@
-package org.iatoki.judgels.jerahmeel.submission.programming;
-
-import org.iatoki.judgels.sandalphon.problem.programming.submission.AbstractProgrammingSubmissionModel;
+package judgels.jerahmeel.persistence;
 
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel;
 
+@SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jerahmeel_programming_submission")
 @Table(indexes = {
         @Index(columnList = "createdBy"),
@@ -16,6 +16,4 @@ import javax.persistence.Table;
         @Index(columnList = "containerJid,problemJid"),
         @Index(columnList = "containerJid,gradingLanguage"),
         @Index(columnList = "containerJid,createdAt")})
-public final class ProgrammingSubmissionModel extends AbstractProgrammingSubmissionModel {
-
-}
+public class ProgrammingSubmissionModel extends AbstractProgrammingSubmissionModel {}

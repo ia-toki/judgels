@@ -52,3 +52,10 @@ jerahmeel:
     baseUrl: {{ judgels_scheme }}://{{ sandalphon_url }}
     clientJid: JIDSACL-jerahmeel
     clientSecret: {{ sandalphon_jerahmeel_secret }}
+
+  submission:
+    fs:
+      type: {{ uriel_submission_fs_type }}
+{% if uriel_submission_fs_type != 'local' %}
+      s3BucketName: {{ uriel_submission_fs_s3BucketName }}
+{% endif %}

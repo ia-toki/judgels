@@ -15,6 +15,7 @@ import { AppState } from '../../../../../../modules/store';
 
 import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
 import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
+import ChapterSubmissionRoutes from './submissions/Programming/ChapterSubmissionRoutes';
 
 import { selectCourseChapter } from '../modules/courseChapterSelectors';
 
@@ -48,6 +49,13 @@ const SingleCourseChapterRoutes = (props: SingleCourseChapterRoutesProps) => {
       title: 'Problems',
       routeComponent: Route,
       component: ChapterProblemRoutes,
+    },
+    {
+      id: 'submissions',
+      titleIcon: 'layers',
+      title: 'Submissions',
+      routeComponent: Route,
+      component: ChapterSubmissionRoutes,
     },
   ];
 

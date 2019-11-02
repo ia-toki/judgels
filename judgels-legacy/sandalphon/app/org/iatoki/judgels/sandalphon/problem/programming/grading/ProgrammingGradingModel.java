@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.grading;
 
+import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
+
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;

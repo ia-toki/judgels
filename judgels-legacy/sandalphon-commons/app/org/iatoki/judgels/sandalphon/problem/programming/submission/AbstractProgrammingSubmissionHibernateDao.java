@@ -1,5 +1,7 @@
 package org.iatoki.judgels.sandalphon.problem.programming.submission;
 
+import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel;
+import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel_;
 import judgels.persistence.JudgelsModel_;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;

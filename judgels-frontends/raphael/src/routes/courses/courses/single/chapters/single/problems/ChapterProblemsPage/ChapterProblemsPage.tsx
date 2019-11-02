@@ -16,6 +16,7 @@ import { ChapterProblemsResponse } from '../../../../../../../../modules/api/jer
 import { AppState } from '../../../../../../../../modules/store';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
+import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { chapterProblemActions as injectedChapterProblemActions } from '../modules/chapterProblemActions';
 
 export interface ChapterProblemsPageProps {
@@ -119,6 +120,7 @@ export function createChapterProblemsPage(chapterProblemActions) {
   const mapStateToProps = (state: AppState) => ({
     course: selectCourse(state),
     chapter: selectCourseChapter(state).courseChapter,
+    statementLanguage: selectStatementLanguage(state),
   });
 
   const mapDispatchToProps = {

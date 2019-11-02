@@ -2,7 +2,10 @@ package judgels.jerahmeel.chapter.problem;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
@@ -28,6 +31,16 @@ public class ChapterProblemStore {
     public Optional<ChapterProblem> getProblemByAlias(String chapterJid, String problemAlias) {
         return problemDao.selectByChapterJidAndProblemAlias(chapterJid, problemAlias)
                 .map(ChapterProblemStore::fromModel);
+    }
+
+    public Map<String, String> getProblemAliasesByJids(String chapterJid, Set<String> problemJids) {
+        Map<String, String> problemAliases = problemDao.selectAllByChapterJid(chapterJid, createOptions())
+                .stream()
+                .collect(Collectors.toMap(m -> m.problemJid, m -> m.alias));
+        return problemJids
+                .stream()
+                .filter(problemAliases::containsKey)
+                .collect(Collectors.toMap(jid -> jid, problemAliases::get));
     }
 
     private static SelectionOptions createOptions() {

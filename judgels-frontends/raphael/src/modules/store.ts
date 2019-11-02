@@ -38,6 +38,7 @@ import { courseChapterAPI } from './api/jerahmeel/courseChapter';
 import { chapterAPI } from './api/jerahmeel/chapter';
 import { chapterLessonAPI } from './api/jerahmeel/chapterLesson';
 import { chapterProblemAPI } from './api/jerahmeel/chapterProblem';
+import { chapterSubmissionProgrammingAPI } from './api/jerahmeel/chapterSubmissionProgramming';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
 import { toastActions } from './toast/toastActions';
@@ -113,6 +114,7 @@ export const store: any = createStore<AppState>(
         chapterAPI,
         chapterLessonAPI,
         chapterProblemAPI,
+        chapterSubmissionProgrammingAPI,
         toastActions,
       }),
       routerMiddleware(history)

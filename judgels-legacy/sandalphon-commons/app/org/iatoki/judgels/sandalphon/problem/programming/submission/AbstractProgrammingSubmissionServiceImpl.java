@@ -11,12 +11,14 @@ import judgels.gabriel.api.GradingRequest;
 import judgels.gabriel.api.GradingResult;
 import judgels.gabriel.api.OutputOnlyOverrides;
 import judgels.gabriel.api.SubmissionSource;
+import judgels.sandalphon.persistence.AbstractProgrammingGradingModel;
+import judgels.sandalphon.persistence.AbstractProgrammingGradingModel_;
+import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel;
+import judgels.sandalphon.persistence.AbstractProgrammingSubmissionModel_;
 import judgels.sealtiel.api.message.MessageData;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
 import org.iatoki.judgels.play.Page;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingModel;
-import org.iatoki.judgels.sandalphon.problem.programming.grading.AbstractProgrammingGradingModel_;
 import org.iatoki.judgels.sandalphon.problem.programming.grading.BaseProgrammingGradingDao;
 
 import javax.persistence.metamodel.SingularAttribute;

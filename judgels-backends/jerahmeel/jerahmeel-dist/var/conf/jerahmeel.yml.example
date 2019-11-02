@@ -51,3 +51,7 @@ jerahmeel:
     baseUrl: http://localhost:9002
     clientJid: JIDSACL-jerahmeel-local
     clientSecret: sandalphon-local
+
+  submission:
+    fs:
+      type: local
