@@ -21,7 +21,7 @@ describe('ContestEditGeneralTab', () => {
 
   beforeEach(() => {
     contestWebActions = {
-      getContestByJidWithWebConfig: jest.fn().mockReturnValue(Promise.resolve({})),
+      getContestByJidWithWebConfig: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
     contestActions = {
       updateContest: jest.fn().mockReturnValue(() => Promise.resolve({})),

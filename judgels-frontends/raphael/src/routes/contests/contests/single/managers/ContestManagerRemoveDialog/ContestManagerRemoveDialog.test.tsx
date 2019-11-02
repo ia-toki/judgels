@@ -9,12 +9,12 @@ import { contest, contestJid } from '../../../../../../fixtures/state';
 
 import { ContestManagerRemoveDialog, ContestManagerRemoveDialogProps } from './ContestManagerRemoveDialog';
 
-describe('AdminRemoveDialog', () => {
+describe('ContestManagerRemoveDialog', () => {
   let onDeleteManagers: jest.Mock<any>;
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onDeleteManagers = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onDeleteManagers = jest.fn().mockReturnValue(Promise.resolve({ deletedManagerProfilesMap: {} }));
 
     const store: any = createStore(combineReducers({ form: formReducer }));
 

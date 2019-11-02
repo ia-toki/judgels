@@ -6,7 +6,6 @@ import { combineReducers, createStore, Store } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import { UserInfo } from '../../../../../modules/api/jophiel/userInfo';
-import { AppState } from '../../../../../modules/store';
 import { InfoPanel } from './InfoPanel';
 
 describe('InfoPanel', () => {
@@ -28,7 +27,7 @@ describe('InfoPanel', () => {
       institutionCity: 'My City',
     };
 
-    const store: Store<Partial<AppState>> = createStore(combineReducers({ form: formReducer }));
+    const store: any = createStore(combineReducers({ form: formReducer }));
 
     wrapper = mount(
       <Provider store={store}>

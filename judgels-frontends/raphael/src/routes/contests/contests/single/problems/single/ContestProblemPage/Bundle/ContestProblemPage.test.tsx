@@ -65,7 +65,7 @@ describe('BundleContestProblemPage', () => {
     };
 
     contestSubmissionActions = {
-      createItemSubmission: jest.fn(),
+      createItemSubmission: jest.fn().mockReturnValue(() => Promise.resolve({})),
       getLatestSubmissions: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
 

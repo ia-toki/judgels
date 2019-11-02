@@ -16,7 +16,9 @@ describe('ContestSupervisorAddDialog', () => {
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onUpsertSupervisors = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onUpsertSupervisors = jest
+      .fn()
+      .mockReturnValue(Promise.resolve({ upsertedSupervisorProfilesMap: {}, alreadySupervisorProfilesMap: {} }));
 
     const store: any = createStore(combineReducers({ form: formReducer }));
 

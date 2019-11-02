@@ -14,7 +14,9 @@ describe('ContestManagerAddDialog', () => {
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onUpsertManagers = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onUpsertManagers = jest
+      .fn()
+      .mockReturnValue(Promise.resolve({ insertedManagerProfilesMap: {}, alreadyManagerProfilesMap: {} }));
 
     const store: any = createStore(combineReducers({ form: formReducer }));
 

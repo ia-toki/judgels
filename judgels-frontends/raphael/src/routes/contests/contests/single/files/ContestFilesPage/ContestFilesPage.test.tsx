@@ -44,7 +44,7 @@ describe('ContestFilesPage', () => {
   beforeEach(() => {
     contestFileActions = {
       getFiles: jest.fn().mockReturnValue(() => Promise.resolve(response)),
-      uploadFile: jest.fn(),
+      uploadFile: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
     render();
   });

@@ -14,7 +14,7 @@ describe('ContestContestantRemoveDialog', () => {
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onDeleteContestants = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onDeleteContestants = jest.fn().mockReturnValue(Promise.resolve({ deletedContestantProfilesMap: {} }));
 
     const store: any = createStore(combineReducers({ form: formReducer }));
 

@@ -14,7 +14,7 @@ describe('ContestSupervisorRemoveDialog', () => {
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onDeleteSupervisors = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onDeleteSupervisors = jest.fn().mockReturnValue(Promise.resolve({ deletedSupervisorProfilesMap: {} }));
 
     const store: any = createStore(combineReducers({ form: formReducer }));
 

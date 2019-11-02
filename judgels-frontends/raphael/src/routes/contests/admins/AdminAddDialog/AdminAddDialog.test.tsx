@@ -12,7 +12,9 @@ describe('AdminAddDialog', () => {
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onUpsertAdmins = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onUpsertAdmins = jest
+      .fn()
+      .mockReturnValue(Promise.resolve({ insertedAdminProfilesMap: {}, alreadyAdminProfilesMap: {} }));
 
     const store: any = createStore(combineReducers({ form: formReducer }));
 

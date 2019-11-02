@@ -12,7 +12,7 @@ describe('AdminRemoveDialog', () => {
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onDeleteAdmins = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onDeleteAdmins = jest.fn().mockReturnValue(Promise.resolve({ deletedAdminProfilesMap: {} }));
 
     const store: any = createStore(combineReducers({ form: formReducer }));
 

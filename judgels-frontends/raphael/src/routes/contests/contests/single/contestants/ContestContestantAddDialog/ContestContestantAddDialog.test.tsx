@@ -14,7 +14,9 @@ describe('ContestContestantAddDialog', () => {
   let wrapper: ReactWrapper<any, any>;
 
   beforeEach(() => {
-    onUpsertContestants = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onUpsertContestants = jest
+      .fn()
+      .mockReturnValue(Promise.resolve({ insertedContestantProfilesMap: {}, alreadyContestantProfilesMap: {} }));
 
     const store: any = createStore(combineReducers({ form: formReducer }));
 

@@ -56,7 +56,7 @@ describe('ProgrammingContestProblemPage', () => {
       updateGradingLanguage: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
     contestSubmissionActions = {
-      createSubmission: jest.fn(),
+      createSubmission: jest.fn().mockReturnValue(() => Promise.resolve({})),
     };
     breadcrumbsActions = {
       pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
