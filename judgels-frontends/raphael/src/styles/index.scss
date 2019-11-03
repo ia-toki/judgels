@@ -163,6 +163,8 @@ table {
   font-weight: normal !important;
 }
 
+// Styles for <HtmlText />. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
+
 .html-text {
   line-height: 20px !important;
 
@@ -195,4 +197,38 @@ table {
   pre {
     margin-bottom: 10px;
   }
+}
+
+// Styles for <Pagination />. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
+
+.pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.pagination__helper-text {
+  margin-bottom: 0;
+  color: $small-color;
+  font-size: $font-size-small;
+}
+
+.pagination__item {
+  padding: 0 !important;
+  text-align: center;
+}
+
+.pagination__link {
+  display: block;
+  line-height: 30px;
+  width: 100%;
+  text-decoration: none !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pagination--hide {
+  display: none;
 }

@@ -7,8 +7,8 @@ import { push } from 'connected-react-router';
 
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../components/Pagination/Pagination';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 import { Contest, ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import {
   ContestScoreboardResponse,

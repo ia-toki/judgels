@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import './Pagination.css';
+// CSS definition is in index.scss. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
 
 interface PaginationPropsImpl {
   currentPage: number;
