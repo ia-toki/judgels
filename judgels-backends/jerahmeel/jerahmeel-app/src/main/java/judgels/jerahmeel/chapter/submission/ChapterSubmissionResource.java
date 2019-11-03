@@ -1,5 +1,6 @@
 package judgels.jerahmeel.chapter.submission;
 
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
@@ -9,7 +10,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.gabriel.api.SubmissionSource;
 import judgels.jerahmeel.api.chapter.Chapter;
+import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.chapter.submission.programming.ChapterSubmissionService;
 import judgels.jerahmeel.api.chapter.submission.programming.ChapterSubmissionsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
@@ -17,7 +20,13 @@ import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
+import judgels.sandalphon.SandalphonUtils;
+import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.submission.programming.Submission;
+import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
+import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
+import judgels.sandalphon.problem.ProblemClient;
+import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -26,22 +35,31 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
     private final ActorChecker actorChecker;
     private final ChapterStore chapterStore;
     private final SubmissionStore submissionStore;
+    private final SubmissionSourceBuilder submissionSourceBuilder;
+    private final ChapterSubmissionRoleChecker submissionRoleChecker;
     private final ChapterProblemStore problemStore;
     private final ProfileService profileService;
+    private final ProblemClient problemClient;
 
     @Inject
     public ChapterSubmissionResource(
             ActorChecker actorChecker,
             ChapterStore chapterStore,
             SubmissionStore submissionStore,
+            SubmissionSourceBuilder submissionSourceBuilder,
+            ChapterSubmissionRoleChecker submissionRoleChecker,
             ChapterProblemStore problemStore,
-            ProfileService profileService) {
+            ProfileService profileService,
+            ProblemClient problemClient) {
 
         this.actorChecker = actorChecker;
         this.chapterStore = chapterStore;
         this.submissionStore = submissionStore;
+        this.submissionSourceBuilder = submissionSourceBuilder;
+        this.submissionRoleChecker = submissionRoleChecker;
         this.problemStore = problemStore;
         this.profileService = profileService;
+        this.problemClient = problemClient;
     }
 
     @Override
@@ -73,6 +91,40 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
                 .data(submissions)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public SubmissionWithSourceResponse getSubmissionWithSourceById(
+            AuthHeader authHeader,
+            long submissionId,
+            Optional<String> language) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Submission submission = checkFound(submissionStore.getSubmissionById(submissionId));
+        Chapter chapter = checkFound(chapterStore.getChapterByJid(submission.getContainerJid()));
+        checkAllowed(submissionRoleChecker.canView(actorJid, submission.getUserJid()));
+
+        ChapterProblem chapterProblem =
+                checkFound(problemStore.getProblem(chapter.getJid(), submission.getProblemJid()));
+        ProblemInfo problem = problemClient.getProblem(chapterProblem.getProblemJid());
+
+        String userJid = submission.getUserJid();
+        Profile profile = checkFound(Optional.ofNullable(profileService.getProfile(userJid)));
+
+        SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
+        SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
+                .submission(submission)
+                .source(source)
+                .build();
+
+        return new SubmissionWithSourceResponse.Builder()
+                .data(submissionWithSource)
+                .profile(profile)
+                .problemAlias(chapterProblem.getAlias())
+                .problemName(SandalphonUtils.getProblemName(problem, language))
+                .containerName(chapter.getName())
                 .build();
     }
 }

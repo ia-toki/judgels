@@ -28,6 +28,11 @@ public class ChapterProblemStore {
                 ChapterProblemStore::fromModel);
     }
 
+    public Optional<ChapterProblem> getProblem(String chapterJid, String problemJid) {
+        return problemDao.selectByChapterJidAndProblemJid(chapterJid, problemJid)
+                .map(ChapterProblemStore::fromModel);
+    }
+
     public Optional<ChapterProblem> getProblemByAlias(String chapterJid, String problemAlias) {
         return problemDao.selectByChapterJidAndProblemAlias(chapterJid, problemAlias)
                 .map(ChapterProblemStore::fromModel);

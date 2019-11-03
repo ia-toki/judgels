@@ -2,6 +2,7 @@ package judgels.jerahmeel;
 
 import dagger.Component;
 import javax.inject.Singleton;
+import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.admin.AdminResource;
 import judgels.jerahmeel.chapter.lesson.ChapterLessonResource;
 import judgels.jerahmeel.chapter.problem.ChapterProblemResource;
@@ -17,6 +18,7 @@ import judgels.service.JudgelsPersistenceModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 
 @Component(modules = {
+        AwsModule.class,
         SubmissionModule.class,
 
         JophielModule.class,

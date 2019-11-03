@@ -18,10 +18,19 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     }
 
     @Override
-    public Optional<ChapterProblemModel> selectByChapterJidAndProblemAlias(String chapterJid, String lessonAlias) {
+    public Optional<ChapterProblemModel> selectByChapterJidAndProblemJid(String chapterJid, String problemJid) {
         return selectByFilter(new FilterOptions.Builder<ChapterProblemModel>()
                 .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
-                .putColumnsEq(ChapterProblemModel_.alias, lessonAlias)
+                .putColumnsEq(ChapterProblemModel_.problemJid, problemJid)
+                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
+                .build());
+    }
+
+    @Override
+    public Optional<ChapterProblemModel> selectByChapterJidAndProblemAlias(String chapterJid, String problemAlias) {
+        return selectByFilter(new FilterOptions.Builder<ChapterProblemModel>()
+                .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
+                .putColumnsEq(ChapterProblemModel_.alias, problemAlias)
                 .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
                 .build());
     }

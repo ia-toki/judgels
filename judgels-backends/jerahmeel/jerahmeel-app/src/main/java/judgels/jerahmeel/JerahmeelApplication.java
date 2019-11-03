@@ -6,6 +6,7 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateBundle;
 import judgels.jerahmeel.jophiel.JophielModule;
 import judgels.jerahmeel.sandalphon.SandalphonModule;
@@ -35,10 +36,12 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
     public void run(JerahmeelApplicationConfiguration config, Environment env) throws Exception {
         JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
         JerahmeelComponent component = DaggerJerahmeelComponent.builder()
+                .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
                 .jophielModule(new JophielModule(jerahmeelConfig.getJophielConfig()))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
                 .submissionModule(new SubmissionModule(jerahmeelConfig.getSubmissionConfig()))
+                .jerahmeelModule(new JerahmeelModule(jerahmeelConfig))
                 .build();
 
         env.jersey().register(JudgelsJerseyFeature.INSTANCE);

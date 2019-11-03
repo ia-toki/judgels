@@ -52,6 +52,11 @@ jerahmeel:
     clientJid: JIDSACL-jerahmeel-local
     clientSecret: sandalphon-local
 
+  aws:
+    accessKey: xxx
+    secretKey: xxx
+    s3BucketRegionId: ap-southeast-1
+
   submission:
     fs:
       type: local

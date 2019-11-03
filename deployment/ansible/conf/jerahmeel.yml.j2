@@ -53,9 +53,16 @@ jerahmeel:
     clientJid: JIDSACL-jerahmeel
     clientSecret: {{ sandalphon_jerahmeel_secret }}
 
+{% if jerahmeel_aws_accessKey is defined %}
+  aws:
+    accessKey: {{ jerahmeel_aws_accessKey }}
+    secretKey: {{ jerahmeel_aws_secretKey }}
+    s3BucketRegionId: {{ jerahmeel_aws_s3BucketRegionId }}
+{% endif %}
+
   submission:
     fs:
-      type: {{ uriel_submission_fs_type }}
-{% if uriel_submission_fs_type != 'local' %}
-      s3BucketName: {{ uriel_submission_fs_s3BucketName }}
+      type: {{ jerahmeel_submission_fs_type }}
+{% if jerahmeel_submission_fs_type != 'local' %}
+      s3BucketName: {{ jerahmeel_submission_fs_s3BucketName }}
 {% endif %}
