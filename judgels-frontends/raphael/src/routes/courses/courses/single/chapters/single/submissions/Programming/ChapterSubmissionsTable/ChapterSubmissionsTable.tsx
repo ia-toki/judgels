@@ -17,6 +17,7 @@ export interface ChapterSubmissionsTableProps {
   course: Course;
   chapter: CourseChapter;
   submissions: ProgrammingSubmission[];
+  canManage: boolean;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
 }
@@ -36,7 +37,7 @@ export class ChapterSubmissionsTable extends React.PureComponent<ChapterSubmissi
       <thead>
         <tr>
           <th className="col-id">ID</th>
-          <th className="col-user">User</th>
+          {this.props.canManage && <th className="col-user">User</th>}
           <th className="col-prob">Prob</th>
           <th className="col-lang">Lang</th>
           <th className="col-verdict">Verdict</th>
@@ -49,14 +50,16 @@ export class ChapterSubmissionsTable extends React.PureComponent<ChapterSubmissi
   };
 
   private renderRows = () => {
-    const { course, chapter, submissions, profilesMap, problemAliasesMap } = this.props;
+    const { course, chapter, submissions, canManage, profilesMap, problemAliasesMap } = this.props;
 
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
         <td>{submission.id}</td>
-        <td>
-          <UserRef profile={profilesMap[submission.userJid]} />
-        </td>
+        {canManage && (
+          <td>
+            <UserRef profile={profilesMap[submission.userJid]} />
+          </td>
+        )}
 
         <td>{problemAliasesMap[submission.problemJid]}</td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>

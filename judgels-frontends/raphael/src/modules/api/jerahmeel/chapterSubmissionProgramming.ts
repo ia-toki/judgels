@@ -4,11 +4,12 @@ import { get } from '../../../modules/api/http';
 import { Page } from '../../../modules/api/pagination';
 import { ProfilesMap } from '../../../modules/api/jophiel/profile';
 import { Submission, SubmissionWithSourceResponse } from '../../../modules/api/sandalphon/submissionProgramming';
-
+import { ChapterSubmissionConfig } from './chapterSubmission';
 import { baseChaptersURL } from './chapter';
 
 export interface ChapterSubmissionsResponse {
   data: Page<Submission>;
+  config: ChapterSubmissionConfig;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
 }

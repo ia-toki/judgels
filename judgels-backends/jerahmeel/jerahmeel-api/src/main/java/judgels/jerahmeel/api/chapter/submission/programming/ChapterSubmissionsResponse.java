@@ -2,6 +2,7 @@ package judgels.jerahmeel.api.chapter.submission.programming;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
+import judgels.jerahmeel.api.chapter.submission.ChapterSubmissionConfig;
 import judgels.jophiel.api.profile.Profile;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -11,6 +12,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableChapterSubmissionsResponse.class)
 public interface ChapterSubmissionsResponse {
     Page<Submission> getData();
+    ChapterSubmissionConfig getConfig();
     Map<String, Profile> getProfilesMap();
     Map<String, String> getProblemAliasesMap();
 

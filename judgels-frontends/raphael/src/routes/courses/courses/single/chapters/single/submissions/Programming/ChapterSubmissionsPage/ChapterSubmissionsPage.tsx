@@ -58,7 +58,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
       return <LoadingState />;
     }
 
-    const { data: submissions, profilesMap, problemAliasesMap } = response;
+    const { data: submissions, config, profilesMap, problemAliasesMap } = response;
     if (submissions.totalCount === 0) {
       return (
         <p>
@@ -72,6 +72,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
         course={this.props.course}
         chapter={this.props.courseChapter}
         submissions={submissions.page}
+        canManage={config.canManage}
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
       />

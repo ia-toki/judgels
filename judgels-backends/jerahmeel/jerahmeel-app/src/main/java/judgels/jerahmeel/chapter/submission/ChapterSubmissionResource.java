@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
+import judgels.jerahmeel.api.chapter.submission.ChapterSubmissionConfig;
 import judgels.jerahmeel.api.chapter.submission.programming.ChapterSubmissionService;
 import judgels.jerahmeel.api.chapter.submission.programming.ChapterSubmissionsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
@@ -74,7 +75,11 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
         String actorJid = actorChecker.check(authHeader);
         Chapter chapter = checkFound(chapterStore.getChapterByJid(chapterJid));
 
-        Page<Submission> submissions = submissionStore.getSubmissions(chapter.getJid(), userJid, problemJid, page);
+        boolean canManage = submissionRoleChecker.canManage(actorJid);
+        Optional<String> actualUserJid = canManage ? userJid : Optional.of(actorJid);
+
+        Page<Submission> submissions =
+                submissionStore.getSubmissions(chapter.getJid(), actualUserJid, problemJid, page);
 
         Set<String> problemJids = submissions.getPage().stream()
                 .map(Submission::getProblemJid)
@@ -85,10 +90,15 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids);
 
+        ChapterSubmissionConfig config = new ChapterSubmissionConfig.Builder()
+                .canManage(canManage)
+                .build();
+
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(chapter.getJid(), problemJids);
 
         return new ChapterSubmissionsResponse.Builder()
                 .data(submissions)
+                .config(config)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
                 .build();
