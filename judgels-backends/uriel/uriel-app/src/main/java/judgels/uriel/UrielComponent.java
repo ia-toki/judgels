@@ -33,12 +33,14 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
 import judgels.uriel.jophiel.JophielModule;
 import judgels.uriel.sandalphon.SandalphonModule;
 import judgels.uriel.sealtiel.SealtielModule;
+import judgels.uriel.submission.bundle.ItemSubmissionModule;
 import judgels.uriel.submission.programming.SubmissionModule;
 
 @Component(modules = {
         AwsModule.class,
         FileModule.class,
         SubmissionModule.class,
+        ItemSubmissionModule.class,
 
         GabrielModule.class,
         JophielModule.class,

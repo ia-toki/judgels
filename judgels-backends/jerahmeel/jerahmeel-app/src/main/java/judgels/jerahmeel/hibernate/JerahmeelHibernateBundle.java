@@ -4,6 +4,7 @@ import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import judgels.jerahmeel.JerahmeelApplicationConfiguration;
 import judgels.jerahmeel.persistence.AdminRoleModel;
+import judgels.jerahmeel.persistence.BundleItemSubmissionModel;
 import judgels.jerahmeel.persistence.ChapterLessonModel;
 import judgels.jerahmeel.persistence.ChapterModel;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
@@ -22,7 +23,8 @@ public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicati
                 CourseModel.class,
                 CourseChapterModel.class,
                 ProgrammingGradingModel.class,
-                ProgrammingSubmissionModel.class
+                ProgrammingSubmissionModel.class,
+                BundleItemSubmissionModel.class
         );
     }
 

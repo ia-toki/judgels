@@ -7,13 +7,22 @@ import { ContentCard } from '../../../../../../../../../components/ContentCard/C
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
 } from '../../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { AppState } from '../../../../../../../../../modules/store';
+import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/jerahmeel/chapterProblemBundle';
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
+import { ItemSubmission } from '../../../../../../../../../modules/api/sandalphon/submissionBundle';
+import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
+import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../submissions/Bundle/modules/chapterSubmissionActions';
 
 import './ChapterProblemPage.css';
 
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
+  chapter: CourseChapter;
+  atestSubmissions?: { [id: string]: ItemSubmission };
   worksheet: ChapterProblemWorksheet;
+  onCreateSubmission: (chapterJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
+  onGetLatestSubmissions: (chapterJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
 }
 
 export class ChapterProblemPage extends React.Component<ChapterProblemPageProps> {
@@ -52,19 +61,28 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
       <ProblemWorksheetCard
         alias={problem.alias}
         latestSubmissions={{}}
-        onAnswerItem={this.onCreateSubmission}
+        onAnswerItem={this.createSubmission}
         worksheet={worksheet}
       />
     );
   };
 
-  private onCreateSubmission = async (itemJid: string, answer: string) => {
-    return await null;
+  private createSubmission = async (itemJid: string, answer: string) => {
+    const { problem } = this.props.worksheet;
+    return await this.props.onCreateSubmission(this.props.chapter.chapterJid, problem.problemJid, itemJid, answer);
   };
 }
 
-export function createChapterProblemPage() {
-  return withRouter<any, any>(connect()(ChapterProblemPage));
+export function createChapterProblemPage(chapterSubmissionActions) {
+  const mapStateToProps = (state: AppState) => ({
+    chapter: selectCourseChapter(state).courseChapter,
+  });
+  const mapDispatchToProps = {
+    onCreateSubmission: chapterSubmissionActions.createItemSubmission,
+    onGetLatestSubmissions: chapterSubmissionActions.getLatestSubmissions,
+  };
+
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));
 }
 
-export default createChapterProblemPage();
+export default createChapterProblemPage(injectedChapterSubmissionActions);
