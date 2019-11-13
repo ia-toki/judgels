@@ -2,22 +2,22 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
-import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
-import { SubmissionDetails } from '../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { AppState } from '../../../../../../../../../../modules/store';
-import { selectStatementLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { Course } from '../../../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { Chapter } from '../../../../../../../../../../modules/api/jerahmeel/chapter';
+import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
+import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
+import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { AppState } from '../../../../../../../../../modules/store';
+import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { Course } from '../../../../../../../../../modules/api/jerahmeel/course';
+import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
+import { Chapter } from '../../../../../../../../../modules/api/jerahmeel/chapter';
 import {
   SubmissionWithSource,
   SubmissionWithSourceResponse,
-} from '../../../../../../../../../../modules/api/sandalphon/submissionProgramming';
-import { Profile } from '../../../../../../../../../../modules/api/jophiel/profile';
-import { selectCourse } from '../../../../../../../modules/courseSelectors';
-import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+} from '../../../../../../../../../modules/api/sandalphon/submissionProgramming';
+import { Profile } from '../../../../../../../../../modules/api/jophiel/profile';
+import { selectCourse } from '../../../../../../modules/courseSelectors';
+import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
+import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../modules/chapterSubmissionActions';
 
 export interface ChapterSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {

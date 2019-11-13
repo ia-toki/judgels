@@ -1,10 +1,10 @@
 import { Button, HTMLTable } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
-import { ItemSubmission } from '../../../../../../../modules/api/sandalphon/submissionBundle';
-import { ItemType } from '../../../../../../../modules/api/sandalphon/problemBundle';
-import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
+import { FormattedRelative } from '../../../FormattedRelative/FormattedRelative';
+import { ItemSubmission } from '../../../../modules/api/sandalphon/submissionBundle';
+import { ItemType } from '../../../../modules/api/sandalphon/problemBundle';
+import { ContentCard } from '../../../ContentCard/ContentCard';
 import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 
@@ -16,9 +16,8 @@ export interface ProblemSubmissionCardProps {
   itemJids: string[];
   submissionsByItemJid: { [itemJid: string]: ItemSubmission };
   itemTypesMap: { [itemJid: string]: ItemType };
-  canSupervise: boolean;
   canManage: boolean;
-  onRegrade: () => Promise<void>;
+  onRegrade?: () => Promise<void>;
 }
 
 export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCardProps> = ({
@@ -61,18 +60,29 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
     }
   };
 
+  const renderTotalScore = () => {
+    let totalScore = 0;
+    Object.keys(submissionsByItemJid).forEach(itemJid => {
+      totalScore += submissionsByItemJid[itemJid].grading ? submissionsByItemJid[itemJid].grading.score || 0 : 0;
+    });
+
+    return 'Result: ' + totalScore + ' pts';
+  };
+
   return (
-    <ContentCard className="contest-bundle-problem-submission">
+    <ContentCard className="bundle-problem-submission">
       <div className="card-header">
         <h4>
           {alias}. {name}
         </h4>
-        {canManage && (
-          <Button intent="primary" icon="refresh" onClick={onRegrade}>
-            Regrade
-          </Button>
-        )}
+        {canManage &&
+          onRegrade && (
+            <Button intent="primary" icon="refresh" onClick={onRegrade}>
+              Regrade
+            </Button>
+          )}
       </div>
+      <p>{canManage && renderTotalScore()}</p>
       <HTMLTable striped className="table-list-condensed submission-table">
         <thead>
           <tr>

@@ -1,5 +1,5 @@
-import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
-import { NotFoundError } from '../../../../../../../../../modules/api/error';
+import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { NotFoundError } from '../../../../../../../../modules/api/error';
 
 export const chapterSubmissionActions = {
   getSubmissions: (chapterJid: string, userJid?: string, problemJid?: string, page?: number) => {

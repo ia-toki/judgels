@@ -24,7 +24,7 @@ export interface ChapterItemSubmissionsResponse {
   itemTypesMap: { [itemJid: string]: ItemType };
 }
 
-export interface ChapterantAnswerSummaryResponse {
+export interface AnswerSummaryResponse {
   profile: Profile;
   config: ChapterSubmissionConfig;
   itemJidsByProblemJid: { [problemJid: string]: string[] };
@@ -57,7 +57,7 @@ export const chapterSubmissionBundleAPI = {
     chapterJid: string,
     username?: string,
     language?: string
-  ): Promise<ChapterantAnswerSummaryResponse> => {
+  ): Promise<AnswerSummaryResponse> => {
     const params = stringify({ chapterJid, username, language });
     return get(`${baseURL}/summary?${params}`, token);
   },

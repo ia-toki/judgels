@@ -279,6 +279,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
 
         ChapterSubmissionConfig config = new ChapterSubmissionConfig.Builder()
                 .canManage(canManage)
+                .problemJids(bundleProblemJidsSortedByAlias)
                 .build();
 
         return new AnswerSummaryResponse.Builder()

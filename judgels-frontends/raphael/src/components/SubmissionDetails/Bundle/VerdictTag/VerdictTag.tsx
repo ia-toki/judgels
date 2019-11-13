@@ -1,7 +1,7 @@
 import { Tag, Intent, Icon } from '@blueprintjs/core';
 import * as React from 'react';
 
-import { Verdict } from '../../../../../../../modules/api/sandalphon/submissionBundle';
+import { Verdict } from '../../../../modules/api/sandalphon/submissionBundle';
 
 export interface VerdictTagProps {
   verdict: Verdict;

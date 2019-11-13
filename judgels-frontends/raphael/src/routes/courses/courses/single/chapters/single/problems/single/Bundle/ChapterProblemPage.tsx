@@ -13,7 +13,7 @@ import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { ItemSubmission } from '../../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
-import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../submissions/Bundle/modules/chapterSubmissionActions';
+import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../quiz-results/modules/chapterSubmissionActions';
 
 import './ChapterProblemPage.css';
 

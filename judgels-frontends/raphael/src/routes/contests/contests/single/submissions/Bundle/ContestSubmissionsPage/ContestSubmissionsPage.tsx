@@ -16,8 +16,8 @@ import { Contest } from '../../../../../../../modules/api/uriel/contest';
 import { selectContest } from '../../../../modules/contestSelectors';
 
 import { ContestSubmissionFilterWidget } from '../../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
-import { VerdictTag } from '../VerdictTag/VerdictTag';
-import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
+import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
+import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
 import './ContestSubmissionsPage.css';

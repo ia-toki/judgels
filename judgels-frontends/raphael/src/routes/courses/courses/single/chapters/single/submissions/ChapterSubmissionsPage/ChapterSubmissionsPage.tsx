@@ -2,17 +2,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
-import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
-import Pagination from '../../../../../../../../../components/Pagination/Pagination';
-import { AppState } from '../../../../../../../../../modules/store';
-import { Course } from '../../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { Chapter } from '../../../../../../../../../modules/api/jerahmeel/chapter';
-import { ChapterSubmissionsResponse } from '../../../../../../../../../modules/api/jerahmeel/chapterSubmissionProgramming';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import Pagination from '../../../../../../../../components/Pagination/Pagination';
+import { AppState } from '../../../../../../../../modules/store';
+import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
+import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
+import { Chapter } from '../../../../../../../../modules/api/jerahmeel/chapter';
+import { ChapterSubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/chapterSubmissionProgramming';
 import { ChapterSubmissionsTable } from '../ChapterSubmissionsTable/ChapterSubmissionsTable';
-import { selectCourse } from '../../../../../../modules/courseSelectors';
-import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
+import { selectCourse } from '../../../../../modules/courseSelectors';
+import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../modules/chapterSubmissionActions';
 
 export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {

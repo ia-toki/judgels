@@ -1,4 +1,4 @@
-import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
+import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 
 export const chapterSubmissionActions = {
   getSubmissions: (chapterJid: string, username?: string, problemAlias?: string, page?: number) => {

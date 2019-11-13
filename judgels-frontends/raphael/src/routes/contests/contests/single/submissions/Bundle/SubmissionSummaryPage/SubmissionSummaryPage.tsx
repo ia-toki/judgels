@@ -12,7 +12,10 @@ import { ContestSubmissionConfig } from '../../../../../../../modules/api/uriel/
 import { selectStatementLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectContest } from '../../../../modules/contestSelectors';
 
-import { ProblemSubmissionCard, ProblemSubmissionCardProps } from '../ProblemSubmissionsCard/ProblemSubmissionCard';
+import {
+  ProblemSubmissionCard,
+  ProblemSubmissionCardProps,
+} from '../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
 import './SubmissionSummaryPage.css';
@@ -50,7 +53,6 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
       alias: response.problemAliasesMap[problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
       submissionsByItemJid: response.submissionsByItemJid,
-      canSupervise: response.config.canSupervise,
       canManage: response.config.canManage,
       itemTypesMap: response.itemTypesMap,
       onRegrade: () => this.onRegrade(problemJid),
@@ -74,9 +76,7 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
         <ContentCard>
           Summary for <UserRef profile={this.state.profile!} />
         </ContentCard>
-        {this.state.problemSummaries.map(props => (
-          <ProblemSubmissionCard key={props.alias} onRegrade={this.onRegrade} {...props} />
-        ))}
+        {this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}
       </ContentCard>
     );
   }

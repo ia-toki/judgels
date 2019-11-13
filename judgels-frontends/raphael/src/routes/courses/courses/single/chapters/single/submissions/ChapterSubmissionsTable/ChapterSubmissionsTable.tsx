@@ -2,14 +2,14 @@ import { HTMLTable, Icon } from '@blueprintjs/core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { FormattedRelative } from '../../../../../../../../../components/FormattedRelative/FormattedRelative';
-import { UserRef } from '../../../../../../../../../components/UserRef/UserRef';
-import { VerdictTag } from '../../../../../../../../../components/VerdictTag/VerdictTag';
-import { ProfilesMap } from '../../../../../../../../../modules/api/jophiel/profile';
-import { getGradingLanguageName } from '../../../../../../../../../modules/api/gabriel/language';
-import { Course } from '../../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { Submission as ProgrammingSubmission } from '../../../../../../../../../modules/api/sandalphon/submissionProgramming';
+import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
+import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
+import { VerdictTag } from '../../../../../../../../components/VerdictTag/VerdictTag';
+import { ProfilesMap } from '../../../../../../../../modules/api/jophiel/profile';
+import { getGradingLanguageName } from '../../../../../../../../modules/api/gabriel/language';
+import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
+import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
+import { Submission as ProgrammingSubmission } from '../../../../../../../../modules/api/sandalphon/submissionProgramming';
 
 import './ChapterSubmissionsTable.css';
 
