@@ -41,15 +41,8 @@ import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
 import judgels.sandalphon.submission.bundle.ItemSubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 
 public class ChapterItemSubmissionResource implements ChapterItemSubmissionService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChapterItemSubmissionResource.class);
-    private static final Marker ITEM_SUBMISSION_MARKER = MarkerFactory.getMarker("ITEM_SUBMISSION");
-
     private final ActorChecker actorChecker;
     private final ChapterStore chapterStore;
     private final ItemSubmissionStore submissionStore;
@@ -166,12 +159,6 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
         if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
                     data.getChapterJid(), data.getProblemJid(), data.getItemJid(), actorJid);
-
-            LOGGER.info(
-                    ITEM_SUBMISSION_MARKER,
-                    "Empty answer submitted by {} for item {} in problem {} and chapter {}",
-                    actorJid, data.getItemJid(), data.getProblemJid(), data.getChapterJid()
-            );
         } else {
             Grading grading = itemSubmissionGraderRegistry
                     .get(item.get().getType())

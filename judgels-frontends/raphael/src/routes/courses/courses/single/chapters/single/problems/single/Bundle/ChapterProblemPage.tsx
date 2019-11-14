@@ -19,13 +19,29 @@ import './ChapterProblemPage.css';
 
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   chapter: CourseChapter;
-  atestSubmissions?: { [id: string]: ItemSubmission };
+  latestSubmissions?: { [id: string]: ItemSubmission };
   worksheet: ChapterProblemWorksheet;
   onCreateSubmission: (chapterJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
   onGetLatestSubmissions: (chapterJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
 }
 
-export class ChapterProblemPage extends React.Component<ChapterProblemPageProps> {
+interface ChapterProblemPageState {
+  latestSubmissions?: { [id: string]: ItemSubmission };
+}
+
+export class ChapterProblemPage extends React.Component<ChapterProblemPageProps, ChapterProblemPageState> {
+  state: ChapterProblemPageState = {};
+
+  async componentDidMount() {
+    const latestSubmissions = await this.props.onGetLatestSubmissions(
+      this.props.chapter.chapterJid,
+      this.props.worksheet.problem.alias
+    );
+    this.setState({
+      latestSubmissions,
+    });
+  }
+
   render() {
     return (
       <ContentCard>
@@ -57,10 +73,15 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
       return <LoadingState />;
     }
 
+    const { latestSubmissions } = this.state;
+    if (!latestSubmissions) {
+      return <LoadingState />;
+    }
+
     return (
       <ProblemWorksheetCard
         alias={problem.alias}
-        latestSubmissions={{}}
+        latestSubmissions={latestSubmissions}
         onAnswerItem={this.createSubmission}
         worksheet={worksheet}
       />
