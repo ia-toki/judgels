@@ -12,6 +12,7 @@ import judgels.jerahmeel.course.CourseResource;
 import judgels.jerahmeel.course.chapter.CourseChapterResource;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
 import judgels.jerahmeel.jophiel.JophielModule;
+import judgels.jerahmeel.problemset.ProblemSetResource;
 import judgels.jerahmeel.sandalphon.SandalphonModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
@@ -45,5 +46,6 @@ public interface JerahmeelComponent {
     ChapterProblemResource chapterProblemResource();
     ChapterSubmissionResource chapterSubmissionResource();
     ChapterItemSubmissionResource chapterItemSubmissionResource();
+    ProblemSetResource problemSetResource();
     PingResource pingResource();
 }

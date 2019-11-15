@@ -13,6 +13,7 @@
         <class>judgels.jerahmeel.persistence.ChapterModel</class>
         <class>judgels.jerahmeel.persistence.ChapterLessonModel</class>
         <class>judgels.jerahmeel.persistence.ChapterProblemModel</class>
+        <class>judgels.jerahmeel.persistence.ProblemSetModel</class>
         <class>judgels.jerahmeel.persistence.ProgrammingGradingModel</class>
         <class>judgels.jerahmeel.persistence.ProgrammingSubmissionModel</class>
         <properties>

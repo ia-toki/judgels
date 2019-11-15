@@ -2,6 +2,8 @@ package org.iatoki.judgels.jerahmeel.scorecache;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import judgels.jerahmeel.persistence.ProblemSetModel;
+import judgels.jerahmeel.persistence.ProblemSetModel_;
 import judgels.jerahmeel.persistence.ProgrammingGradingModel;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionModel;
 import org.iatoki.judgels.jerahmeel.ProblemScore;
@@ -13,8 +15,6 @@ import org.iatoki.judgels.jerahmeel.grading.bundle.BundleGradingDao;
 import org.iatoki.judgels.jerahmeel.grading.bundle.BundleGradingModel;
 import org.iatoki.judgels.jerahmeel.grading.programming.ProgrammingGradingDao;
 import org.iatoki.judgels.jerahmeel.problemset.ProblemSetDao;
-import org.iatoki.judgels.jerahmeel.problemset.ProblemSetModel;
-import org.iatoki.judgels.jerahmeel.problemset.ProblemSetModel_;
 import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemDao;
 import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemModel;
 import org.iatoki.judgels.jerahmeel.problemset.problem.ProblemSetProblemType;
@@ -24,7 +24,6 @@ import org.iatoki.judgels.jerahmeel.submission.programming.ProgrammingSubmission
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public final class ProblemSetScoreCacheUtils {
 

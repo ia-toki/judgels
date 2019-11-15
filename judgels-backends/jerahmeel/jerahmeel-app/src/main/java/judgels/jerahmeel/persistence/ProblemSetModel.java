@@ -1,4 +1,4 @@
-package org.iatoki.judgels.jerahmeel.problemset;
+package judgels.jerahmeel.persistence;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +7,7 @@ import javax.persistence.Table;
 import judgels.persistence.JidPrefix;
 import judgels.persistence.JudgelsModel;
 
+@SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jerahmeel_problem_set")
 @Table(indexes = {
         @Index(columnList = "archiveJid"),

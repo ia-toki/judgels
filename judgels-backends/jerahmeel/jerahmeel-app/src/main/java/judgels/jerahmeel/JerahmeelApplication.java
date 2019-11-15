@@ -55,6 +55,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
         env.jersey().register(component.chapterProblemResource());
         env.jersey().register(component.chapterSubmissionResource());
         env.jersey().register(component.chapterItemSubmissionResource());
+        env.jersey().register(component.problemSetResource());
         env.jersey().register(component.pingResource());
     }
 }

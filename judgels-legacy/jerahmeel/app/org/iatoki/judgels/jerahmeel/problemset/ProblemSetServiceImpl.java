@@ -2,6 +2,8 @@ package org.iatoki.judgels.jerahmeel.problemset;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import judgels.jerahmeel.persistence.ProblemSetModel;
+import judgels.jerahmeel.persistence.ProblemSetModel_;
 import org.iatoki.judgels.jerahmeel.archive.Archive;
 import org.iatoki.judgels.jerahmeel.archive.ArchiveDao;
 import org.iatoki.judgels.jerahmeel.archive.ArchiveModel;
