@@ -1,7 +1,6 @@
 package judgels.jerahmeel.api.course;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -11,7 +10,7 @@ public interface Course {
     String getJid();
     String getSlug();
     String getName();
-    Optional<String> getDescription();
+    String getDescription();
 
     class Builder extends ImmutableCourse.Builder {}
 }

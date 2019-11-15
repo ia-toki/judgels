@@ -67,7 +67,7 @@ public class CourseStore {
                 .jid(model.jid)
                 .slug(model.slug)
                 .name(model.name)
-                .description(Optional.ofNullable(model.description))
+                .description(model.description)
                 .build();
     }
 }

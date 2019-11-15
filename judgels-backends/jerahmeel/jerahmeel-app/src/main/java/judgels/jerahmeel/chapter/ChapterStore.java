@@ -55,7 +55,7 @@ public class ChapterStore {
                 .id(model.id)
                 .jid(model.jid)
                 .name(model.name)
-                .description(Optional.ofNullable(model.description))
+                .description(model.description)
                 .build();
     }
 }
