@@ -16,7 +16,6 @@ public class ProblemSetStore {
     @Inject
     public ProblemSetStore(ProblemSetDao problemSetDao) {
         this.problemSetDao = problemSetDao;
-
     }
 
     public Page<ProblemSet> getProblemSets(Optional<String> name, Optional<Integer> page) {
@@ -34,6 +33,7 @@ public class ProblemSetStore {
         return new ProblemSet.Builder()
                 .id(model.id)
                 .jid(model.jid)
+                .slug(Optional.ofNullable(model.slug).orElse("" + model.id))
                 .name(model.name)
                 .description(model.description)
                 .build();

@@ -16,6 +16,9 @@ import judgels.persistence.JudgelsModel;
         @Index(columnList = "updatedAt")})
 @JidPrefix("PRSE")
 public final class ProblemSetModel extends JudgelsModel {
+    @Column(unique = true)
+    public String slug;
+
     @Column(nullable = false)
     public String archiveJid;
 

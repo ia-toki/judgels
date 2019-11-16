@@ -10,4 +10,5 @@
     <include file="migrations/001-add-slug-to-course.xml"/>
     <include file="migrations/002-add-autoincrement-to-role_admin-id.xml"/>
     <include file="migrations/003-add-bundle_item_submission.xml"/>
+    <include file="migrations/004-add-slug-to-problem_set.xml"/>
 </databaseChangeLog>
