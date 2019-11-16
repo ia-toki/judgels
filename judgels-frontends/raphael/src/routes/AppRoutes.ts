@@ -5,7 +5,7 @@ import JophielRoutes from './jophiel/JophielRoutes';
 import LazyAccountsRoutes from './accounts/LazyAccountsRoutes';
 import LazyContestsRoutes, { ContestsRoutesPromise } from './contests/LazyContestsRoutes';
 import LazyCoursesRoutes from './courses/LazyCoursesRoutes';
-import LazyProblemsetsRoutes from './problemsets/LazyProblemsetsRoutes';
+import LazyProblemsRoutes from './problems/LazyProblemsRoutes';
 import LazyRankingRoutes from './ranking/LazyRankingRoutes';
 
 function shouldShowRoute(id: string, role: JophielRole) {
@@ -44,11 +44,11 @@ const appRoutes = [
     },
   },
   {
-    id: 'problemsets',
-    title: 'Problemsets',
+    id: 'problems',
+    title: 'Problems',
     route: {
-      path: '/problemsets',
-      component: LazyProblemsetsRoutes,
+      path: '/problems',
+      component: LazyProblemsRoutes,
     },
   },
   {

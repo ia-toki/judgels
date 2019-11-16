@@ -7,13 +7,13 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from '../../components/ContentWithSidebar/ContentWithSidebar';
 
-import ProblemsetsPage from './problemsets/ProblemsetsPage/ProblemsetsPage';
+import ProblemsetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 
-const ProblemsetsRoutes = () => {
+const ProblemsRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
     {
-      id: '@',
-      titleIcon: 'projects',
+      id: 'problemsets',
+      titleIcon: 'panel-stats',
       title: 'Problemsets',
       routeComponent: Route,
       component: ProblemsetsPage,
@@ -32,4 +32,4 @@ const ProblemsetsRoutes = () => {
   );
 };
 
-export default ProblemsetsRoutes;
+export default ProblemsRoutes;
