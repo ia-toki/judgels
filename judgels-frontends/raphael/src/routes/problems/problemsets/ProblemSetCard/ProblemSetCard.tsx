@@ -16,7 +16,7 @@ export class ProblemSetCard extends React.PureComponent<ProblemSetCardProps> {
 
     return (
       <ContentCardLink to={`/problems/${problemSet.slug}`} className="problemset-card">
-        <h3 className="problemset-card-name">{problemSet.name}</h3>
+        <h4 className="problemset-card-name">{problemSet.name}</h4>
         {problemSet.description && (
           <>
             <hr />

@@ -16,7 +16,7 @@ export class CourseCard extends React.PureComponent<CourseCardProps> {
 
     return (
       <ContentCardLink to={`/courses/${course.slug}`} className="course-card">
-        <h3>{`${course.name}`}</h3>
+        <h4>{`${course.name}`}</h4>
         <hr />
         <HtmlText>{course.description}</HtmlText>
       </ContentCardLink>

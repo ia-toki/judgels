@@ -20,12 +20,12 @@ export class ActiveContestCard extends React.PureComponent<ActiveContestCardProp
 
     return (
       <ContentCardLink to={`/contests/${contest.slug}`}>
-        <h3 className="active-contest-card-name">
+        <h4 className="active-contest-card-name">
           {contest.name}
           <div className="active-contest-card-role">
             <ContestRoleTag role={role} />
           </div>
-        </h3>
+        </h4>
         <p className="active-contest-card-date">
           <small>{this.renderBeginTime(contest)}</small>
         </p>
