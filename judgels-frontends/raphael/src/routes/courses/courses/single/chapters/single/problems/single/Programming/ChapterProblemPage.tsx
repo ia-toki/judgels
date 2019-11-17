@@ -17,6 +17,7 @@ import { selectCourseChapter } from '../../../../modules/courseChapterSelectors'
 import { selectGradingLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../submissions/modules/chapterSubmissionActions';
+import { webPrefsActions as injectedWebPrefsActions } from '../../../../../../../../../modules/webPrefs/webPrefsActions';
 
 import './ChapterProblemPage.css';
 
@@ -32,6 +33,7 @@ export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAl
     problemJid: string,
     data: ProblemSubmissionFormData
   ) => Promise<void>;
+  onUpdateGradingLanguage: (language: string) => void;
 }
 
 export class ChapterProblemPage extends React.Component<ChapterProblemPageProps> {
@@ -76,7 +78,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
   private createSubmission = async (data: ProblemSubmissionFormData) => {
     const { problem } = this.props.worksheet;
 
-    // this.props.onUpdateGradingLanguage(data.gradingLanguage);
+    this.props.onUpdateGradingLanguage(data.gradingLanguage);
     return await this.props.onCreateSubmission(
       this.props.course.slug,
       this.props.chapter.chapterJid,
@@ -87,7 +89,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
   };
 }
 
-export function createChapterProblemPage(chapterSubmissionActions) {
+export function createChapterProblemPage(chapterSubmissionActions, webPrefsActions) {
   const mapStateToProps = (state: AppState) => ({
     course: selectCourse(state),
     chapter: selectCourseChapter(state).courseChapter,
@@ -95,9 +97,10 @@ export function createChapterProblemPage(chapterSubmissionActions) {
   });
   const mapDispatchToProps = {
     onCreateSubmission: chapterSubmissionActions.createSubmission,
+    onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
   };
 
   return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));
 }
 
-export default createChapterProblemPage(injectedChapterSubmissionActions);
+export default createChapterProblemPage(injectedChapterSubmissionActions, injectedWebPrefsActions);
