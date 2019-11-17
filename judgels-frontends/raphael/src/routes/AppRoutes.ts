@@ -12,7 +12,10 @@ function shouldShowRoute(id: string, role: JophielRole) {
   if (id === 'account') {
     return role === JophielRole.Superadmin || role === JophielRole.Admin;
   }
-  if (id === 'training' || id === 'ranking') {
+  if (id === 'courses' || id === 'problems') {
+    return APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && role === JophielRole.Superadmin;
+  }
+  if (id === 'ranking') {
     return APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS;
   }
   return true;
