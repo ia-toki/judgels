@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { AppState } from '../../../../../../../../modules/store';
@@ -35,7 +36,7 @@ export interface SubmissionSummaryPageState {
 class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, SubmissionSummaryPageState> {
   state: SubmissionSummaryPageState = {
     config: undefined,
-    problemSummaries: [],
+    problemSummaries: undefined,
   };
 
   async refreshSubmissions() {
@@ -59,17 +60,25 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
   }
 
   render() {
-    if (!this.state.problemSummaries) {
-      return null;
-    }
     return (
       <ContentCard>
         <h3>Quiz Results</h3>
         <hr />
-        {this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}
+        {this.renderResults()}
       </ContentCard>
     );
   }
+
+  private renderResults = () => {
+    const { problemSummaries } = this.state;
+    if (!problemSummaries) {
+      return <LoadingState />;
+    }
+    if (problemSummaries.length === 0) {
+      return <small>No quizzes.</small>;
+    }
+    return this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />);
+  };
 }
 
 export function createSubmissionSummaryPage(chapterSubmissionActions) {

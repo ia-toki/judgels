@@ -66,7 +66,11 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
       totalScore += submissionsByItemJid[itemJid].grading ? submissionsByItemJid[itemJid].grading.score || 0 : 0;
     });
 
-    return 'Result: ' + totalScore + ' pts';
+    return (
+      <>
+        Score: <strong>{totalScore}</strong> points.
+      </>
+    );
   };
 
   return (
