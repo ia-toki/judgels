@@ -94,7 +94,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
     );
   }
 
-  private onCreateSubmission = async (data: ProblemSubmissionFormData) => {
+  private createSubmission = async (data: ProblemSubmissionFormData) => {
     const problem = this.state.problem!;
     this.props.onUpdateGradingLanguage(data.gradingLanguage);
     return await this.props.onCreateSubmission(
@@ -137,7 +137,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       <ProblemWorksheetCard
         alias={problem.alias}
         worksheet={worksheet as ProblemWorksheet}
-        onSubmit={this.onCreateSubmission}
+        onSubmit={this.createSubmission}
         submissionWarning={submissionWarning}
         gradingLanguage={this.props.gradingLanguage}
       />

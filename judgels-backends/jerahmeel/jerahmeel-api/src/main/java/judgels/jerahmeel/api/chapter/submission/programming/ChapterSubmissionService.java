@@ -32,4 +32,11 @@ public interface ChapterSubmissionService {
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionId") long submissionId,
             @QueryParam("language") Optional<String> language);
+
+    //    These endpoints are not representable as JAX-RS methods
+
+    //    @POST
+    //    @Path("/")
+    //    @Consumes(MULTIPART_FORM_DATA)
+    //    void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts);
 }

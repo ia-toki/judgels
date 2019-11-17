@@ -10,10 +10,7 @@ import { LoadingState } from '../../../../../../../../../components/LoadingState
 import ChapterProblemProgrammingPage from '../Programming/ChapterProblemPage';
 import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
-import {
-  selectStatementLanguage,
-  selectGradingLanguage,
-} from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { chapterProblemActions as injectedChapterProblemActions } from '../../modules/chapterProblemActions';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
@@ -70,7 +67,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
     }
     const { problem } = response;
     if (problem.type === ProblemType.Programming) {
-      return <ChapterProblemProgrammingPage worksheet={response} gradingLanguage={this.props.gradingLanguage} />;
+      return <ChapterProblemProgrammingPage worksheet={response} />;
     } else {
       return <ChapterProblemBundlePage worksheet={response} />;
     }
@@ -81,7 +78,6 @@ export function createChapterProblemPage(chapterProblemActions, breadcrumbsActio
   const mapStateToProps = (state: AppState) => ({
     chapter: selectCourseChapter(state).courseChapter,
     statementLanguage: selectStatementLanguage(state),
-    gradingLanguage: selectGradingLanguage(state),
   });
   const mapDispatchToProps = {
     onGetProblemWorksheet: chapterProblemActions.getProblemWorksheet,

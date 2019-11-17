@@ -53,7 +53,7 @@ public interface ContestSubmissionService {
 //    @POST
 //    @Path("/")
 //    @Consumes(MULTIPART_FORM_DATA)
-//    void createItemSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts);
+//    void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts);
 
 //    @GET
 //    @Path("/download")

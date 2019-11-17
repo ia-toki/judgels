@@ -10,25 +10,31 @@ import judgels.jerahmeel.chapter.submission.bundle.ChapterItemSubmissionResource
 import judgels.jerahmeel.chapter.submission.programming.ChapterSubmissionResource;
 import judgels.jerahmeel.course.CourseResource;
 import judgels.jerahmeel.course.chapter.CourseChapterResource;
+import judgels.jerahmeel.gabriel.GabrielModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
 import judgels.jerahmeel.jophiel.JophielModule;
 import judgels.jerahmeel.problemset.ProblemSetResource;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemResource;
 import judgels.jerahmeel.sandalphon.SandalphonModule;
+import judgels.jerahmeel.sealtiel.SealtielModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
+import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsPersistenceModule;
+import judgels.service.JudgelsScheduler;
 import judgels.service.hibernate.JudgelsHibernateModule;
 
 @Component(modules = {
         AwsModule.class,
         SubmissionModule.class,
+        ItemSubmissionModule.class,
 
+        GabrielModule.class,
         JophielModule.class,
         SandalphonModule.class,
-        ItemSubmissionModule.class,
+        SealtielModule.class,
 
         JudgelsModule.class,
         JudgelsApplicationModule.class,
@@ -50,4 +56,7 @@ public interface JerahmeelComponent {
     ProblemSetResource problemSetResource();
     ProblemSetProblemResource problemSetProblemResource();
     PingResource pingResource();
+
+    JudgelsScheduler scheduler();
+    GradingResponsePoller gradingResponsePoller();
 }

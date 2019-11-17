@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.fs.aws.AwsConfiguration;
+import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
 import judgels.jophiel.api.JophielClientConfiguration;
 import judgels.sandalphon.api.SandalphonClientConfiguration;
+import judgels.sealtiel.api.SealtielClientConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -19,6 +21,12 @@ public interface JerahmeelConfiguration {
 
     @JsonProperty("sandalphon")
     SandalphonClientConfiguration getSandalphonConfig();
+
+    @JsonProperty("sealtiel")
+    Optional<SealtielClientConfiguration> getSealtielConfig();
+
+    @JsonProperty("gabriel")
+    Optional<GabrielClientConfiguration> getGabrielConfig();
 
     @JsonProperty("aws")
     Optional<AwsConfiguration> getAwsConfig();

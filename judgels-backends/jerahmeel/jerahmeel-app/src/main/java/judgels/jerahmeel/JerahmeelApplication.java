@@ -7,9 +7,11 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import judgels.fs.aws.AwsModule;
+import judgels.jerahmeel.gabriel.GabrielModule;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateBundle;
 import judgels.jerahmeel.jophiel.JophielModule;
 import judgels.jerahmeel.sandalphon.SandalphonModule;
+import judgels.jerahmeel.sealtiel.SealtielModule;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
@@ -38,10 +40,12 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
         JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
         JerahmeelComponent component = DaggerJerahmeelComponent.builder()
                 .awsModule(new AwsModule(jerahmeelConfig.getAwsConfig()))
+                .gabrielModule(new GabrielModule(jerahmeelConfig.getGabrielConfig()))
                 .jophielModule(new JophielModule(jerahmeelConfig.getJophielConfig()))
                 .judgelsApplicationModule(new JudgelsApplicationModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .sandalphonModule(new SandalphonModule(jerahmeelConfig.getSandalphonConfig()))
+                .sealtielModule(new SealtielModule(jerahmeelConfig.getSealtielConfig()))
                 .submissionModule(new SubmissionModule(jerahmeelConfig.getSubmissionConfig()))
                 .jerahmeelModule(new JerahmeelModule(jerahmeelConfig))
                 .build();
@@ -58,5 +62,11 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
         env.jersey().register(component.problemSetResource());
         env.jersey().register(component.problemSetProblemResource());
         env.jersey().register(component.pingResource());
+
+        if (jerahmeelConfig.getSealtielConfig().isPresent()) {
+            component.scheduler().scheduleOnce(
+                    "grading-response-poller",
+                    component.gradingResponsePoller());
+        }
     }
 }

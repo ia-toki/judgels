@@ -52,6 +52,14 @@ jerahmeel:
     clientJid: JIDSACL-jerahmeel-local
     clientSecret: sandalphon-local
 
+  sealtiel:
+    baseUrl: http://localhost:9003
+    clientJid: JIDSECL-jerahmeel-local
+    clientSecret: sealtiel-local
+
+  gabriel:
+    clientJid: JIDSECL-gabriel-local
+
   aws:
     accessKey: xxx
     secretKey: xxx

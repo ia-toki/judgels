@@ -53,6 +53,16 @@ jerahmeel:
     clientJid: JIDSACL-jerahmeel
     clientSecret: {{ sandalphon_jerahmeel_secret }}
 
+{% if sealtiel_url_internal is defined %}
+  sealtiel:
+    baseUrl: {{ judgels_scheme_internal }}://{{ sealtiel_url_internal }}
+    clientJid: JIDSECL-jerahmeel
+    clientSecret: {{ sealtiel_jerahmeel_secret }}
+{% endif %}
+
+  gabriel:
+    clientJid: JIDSECL-gabriel
+
 {% if jerahmeel_aws_accessKey is defined %}
   aws:
     accessKey: {{ jerahmeel_aws_accessKey }}

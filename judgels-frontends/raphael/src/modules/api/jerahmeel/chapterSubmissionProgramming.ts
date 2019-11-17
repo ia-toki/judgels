@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 
-import { get } from '../../../modules/api/http';
+import { get, postMultipart } from '../../../modules/api/http';
 import { Page } from '../../../modules/api/pagination';
 import { ProfilesMap } from '../../../modules/api/jophiel/profile';
 import { Submission, SubmissionWithSourceResponse } from '../../../modules/api/sandalphon/submissionProgramming';
@@ -35,5 +35,16 @@ export const chapterSubmissionProgrammingAPI = {
   ): Promise<SubmissionWithSourceResponse> => {
     const params = stringify({ language });
     return get(`${baseURL}/id/${submissionId}?${params}`, token);
+  },
+
+  createSubmission: (
+    token: string,
+    chapterJid: string,
+    problemJid: string,
+    gradingLanguage: string,
+    sourceFiles: { [key: string]: File }
+  ): Promise<void> => {
+    const parts = { chapterJid, problemJid, gradingLanguage, ...sourceFiles };
+    return postMultipart(baseURL, token, parts);
   },
 };

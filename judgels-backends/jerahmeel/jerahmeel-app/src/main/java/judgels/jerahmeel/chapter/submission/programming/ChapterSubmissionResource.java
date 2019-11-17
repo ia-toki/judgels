@@ -1,5 +1,8 @@
 package judgels.jerahmeel.chapter.submission.programming;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -10,6 +13,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
@@ -24,20 +31,25 @@ import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.problem.ProblemInfo;
+import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
+import judgels.sandalphon.api.submission.programming.SubmissionData;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.sandalphon.problem.ProblemClient;
+import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 public class ChapterSubmissionResource implements ChapterSubmissionService {
     private final ActorChecker actorChecker;
     private final ChapterStore chapterStore;
     private final SubmissionStore submissionStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
+    private final SubmissionClient submissionClient;
     private final ChapterSubmissionRoleChecker submissionRoleChecker;
     private final ChapterProblemStore problemStore;
     private final ProfileService profileService;
@@ -49,6 +61,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
             ChapterStore chapterStore,
             SubmissionStore submissionStore,
             SubmissionSourceBuilder submissionSourceBuilder,
+            SubmissionClient submissionClient,
             ChapterSubmissionRoleChecker submissionRoleChecker,
             ChapterProblemStore problemStore,
             ProfileService profileService,
@@ -58,6 +71,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
         this.chapterStore = chapterStore;
         this.submissionStore = submissionStore;
         this.submissionSourceBuilder = submissionSourceBuilder;
+        this.submissionClient = submissionClient;
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemStore = problemStore;
         this.profileService = profileService;
@@ -137,5 +151,30 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
                 .problemName(SandalphonUtils.getProblemName(problem, language))
                 .containerName(chapter.getName())
                 .build();
+    }
+
+    @POST
+    @Path("/")
+    @Consumes(MULTIPART_FORM_DATA)
+    @UnitOfWork
+    public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
+        String actorJid = actorChecker.check(authHeader);
+        String chapterJid = checkNotNull(parts.getField("chapterJid"), "chapterJid").getValue();
+        String problemJid = checkNotNull(parts.getField("problemJid"), "problemJid").getValue();
+        String gradingLanguage = checkNotNull(parts.getField("gradingLanguage"), "gradingLanguage").getValue();
+
+        checkFound(chapterStore.getChapterByJid(chapterJid));
+        checkFound(problemStore.getProblem(chapterJid, problemJid));
+
+        SubmissionData data = new SubmissionData.Builder()
+                .problemJid(problemJid)
+                .containerJid(chapterJid)
+                .gradingLanguage(gradingLanguage)
+                .build();
+        SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
+        ProblemSubmissionConfig config = problemClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
+        Submission submission = submissionClient.submit(data, source, config);
+
+        submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
     }
 }
