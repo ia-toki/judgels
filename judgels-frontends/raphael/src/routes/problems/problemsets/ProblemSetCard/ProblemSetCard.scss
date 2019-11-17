@@ -1,5 +1,11 @@
 @import '../../../../styles/base';
 
+.problemset-card {
+  p {
+    color: $text-color !important;
+  }
+}
+
 .problemset-card-name {
   margin-right: 10px;
 }

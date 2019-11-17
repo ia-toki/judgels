@@ -12,9 +12,9 @@ import ProblemsetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 const ProblemsRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
     {
-      id: 'problemsets',
+      id: '@',
       titleIcon: 'panel-stats',
-      title: 'Problemsets',
+      title: 'Search by Problemset',
       routeComponent: Route,
       component: ProblemsetsPage,
     },

@@ -3,6 +3,8 @@ package org.iatoki.judgels.jerahmeel.problemset.problem;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import judgels.jerahmeel.persistence.ProblemSetProblemModel;
+import judgels.jerahmeel.persistence.ProblemSetProblemModel_;
 import org.iatoki.judgels.jerahmeel.scorecache.ProblemSetScoreCacheUtils;
 import org.iatoki.judgels.play.Page;
 

@@ -1,20 +1,33 @@
 package judgels.jerahmeel.hibernate;
 
+import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.jerahmeel.persistence.ProblemSetModel_;
 import judgels.persistence.FilterOptions;
+import judgels.persistence.Model_;
 import judgels.persistence.SearchOptions;
 import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class ProblemSetHibernateDao extends JudgelsHibernateDao<ProblemSetModel> implements ProblemSetDao {
     @Inject
     public ProblemSetHibernateDao(HibernateDaoData data) {
         super(data);
+    }
+
+    @Override
+    public Optional<ProblemSetModel> selectBySlug(String problemSetSlug) {
+        // if no slug matches, treat it as ID for legacy reasons
+        return selectByFilter(new FilterOptions.Builder<ProblemSetModel>()
+                .addCustomPredicates((cb, cq, root) -> cb.or(
+                        cb.equal(root.get(ProblemSetModel_.slug), problemSetSlug),
+                        cb.equal(root.get(Model_.id), NumberUtils.toInt(problemSetSlug, 0))))
+                .build());
     }
 
     @Override

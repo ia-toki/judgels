@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
 import { ProblemSet } from '../../../../modules/api/jerahmeel/problemSet';
 
@@ -14,8 +15,14 @@ export class ProblemSetCard extends React.PureComponent<ProblemSetCardProps> {
     const { problemSet } = this.props;
 
     return (
-      <ContentCardLink to="#">
+      <ContentCardLink to={`/problems/${problemSet.slug}`} className="problemset-card">
         <h4 className="problemset-card-name">{problemSet.name}</h4>
+        {problemSet.description && (
+          <>
+            <hr />
+            <HtmlText>{problemSet.description}</HtmlText>
+          </>
+        )}
       </ContentCardLink>
     );
   }

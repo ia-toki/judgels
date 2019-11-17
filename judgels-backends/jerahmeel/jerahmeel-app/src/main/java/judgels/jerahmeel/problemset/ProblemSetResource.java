@@ -1,5 +1,7 @@
 package judgels.jerahmeel.problemset;
 
+import static judgels.service.ServiceUtils.checkFound;
+
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -33,5 +35,11 @@ public class ProblemSetResource implements ProblemSetService {
         return new ProblemSetsResponse.Builder()
                 .data(problemSets)
                 .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ProblemSet getProblemSetBySlug(Optional<AuthHeader> authHeader, String problemSetSlug) {
+        return checkFound(problemSetStore.getProblemSetBySlug(problemSetSlug));
     }
 }

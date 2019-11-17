@@ -1,6 +1,7 @@
 package org.iatoki.judgels.jerahmeel.problemset.problem;
 
 import com.google.inject.ImplementedBy;
+import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.persistence.Dao;
 
 import java.util.List;

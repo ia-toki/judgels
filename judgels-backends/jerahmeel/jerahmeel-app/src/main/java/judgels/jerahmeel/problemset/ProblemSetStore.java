@@ -1,5 +1,9 @@
 package judgels.jerahmeel.problemset;
 
+import static judgels.jerahmeel.JerahmeelCacheUtils.getShortDuration;
+
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -13,9 +17,37 @@ import judgels.persistence.api.SelectionOptions;
 public class ProblemSetStore {
     private final ProblemSetDao problemSetDao;
 
+    private final LoadingCache<String, ProblemSet> problemSetByJidCache;
+    private final LoadingCache<String, ProblemSet> problemSetBySlugCache;
+
     @Inject
     public ProblemSetStore(ProblemSetDao problemSetDao) {
         this.problemSetDao = problemSetDao;
+
+        this.problemSetByJidCache = Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterWrite(getShortDuration())
+                .build(this::getProblemSetByJidUncached);
+        this.problemSetBySlugCache = Caffeine.newBuilder()
+                .maximumSize(100)
+                .expireAfterWrite(getShortDuration())
+                .build(this::getProblemSetBySlugUncached);
+    }
+
+    public Optional<ProblemSet> getProblemSetByJid(String problemSetJid) {
+        return Optional.ofNullable(problemSetByJidCache.get(problemSetJid));
+    }
+
+    private ProblemSet getProblemSetByJidUncached(String problemSetJid) {
+        return problemSetDao.selectByJid(problemSetJid).map(ProblemSetStore::fromModel).orElse(null);
+    }
+
+    public Optional<ProblemSet> getProblemSetBySlug(String problemSetSlug) {
+        return Optional.ofNullable(problemSetBySlugCache.get(problemSetSlug));
+    }
+
+    private ProblemSet getProblemSetBySlugUncached(String problemSetSlug) {
+        return problemSetDao.selectBySlug(problemSetSlug).map(ProblemSetStore::fromModel).orElse(null);
     }
 
     public Page<ProblemSet> getProblemSets(Optional<String> name, Optional<Integer> page) {

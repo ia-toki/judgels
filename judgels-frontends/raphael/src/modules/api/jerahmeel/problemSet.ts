@@ -9,6 +9,7 @@ export interface ProblemSet {
   jid: string;
   slug: string;
   name: string;
+  description: string;
 }
 
 export interface ProblemSetsResponse {
@@ -25,5 +26,9 @@ export const problemSetAPI = {
   getProblemSets: (token: string, name?: string, page?: number): Promise<ProblemSetsResponse> => {
     const params = stringify({ name, page });
     return get(`${baseProblemSetsURL}?${params}`, token);
+  },
+
+  getProblemSetBySlug: (problemSetSlug: string): Promise<ProblemSet> => {
+    return get(`${baseProblemSetsURL}/slug/${problemSetSlug}`);
   },
 };

@@ -1,5 +1,7 @@
 package org.iatoki.judgels.jerahmeel.problemset.problem;
 
+import judgels.jerahmeel.persistence.ProblemSetProblemModel;
+
 final class ProblemSetProblemServiceUtils {
 
     private ProblemSetProblemServiceUtils() {

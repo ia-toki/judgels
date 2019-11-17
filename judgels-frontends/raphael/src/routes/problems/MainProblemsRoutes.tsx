@@ -3,12 +3,15 @@ import { Route, Switch } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 
-import ProblemsRoutes from './ProblemsRoutes';
+import MainProblemsWrapperRoutes from './MainProblemsWrapperRoutes';
+import MainSingleProblemSetRoutes from './problemsets/single/MainSingleProblemSetRoutes';
 
 const MainProblemsRoutes = () => (
   <div>
     <Switch>
-      <Route path="/problems" component={ProblemsRoutes} />
+      <Route exact path="/problems" component={MainProblemsWrapperRoutes} />
+      <Route path="/problems/problemsets" component={MainProblemsWrapperRoutes} />
+      <Route path="/problems" component={MainSingleProblemSetRoutes} />
     </Switch>
   </div>
 );
