@@ -1,7 +1,9 @@
 @import '../../../../styles/base';
 
-.course-card {
-  p {
-    color: $text-color !important;
-  }
+.course-card .content-card-link {
+  padding-bottom: 5px;
+}
+
+.course-card-description {
+  color: $small-color;
 }

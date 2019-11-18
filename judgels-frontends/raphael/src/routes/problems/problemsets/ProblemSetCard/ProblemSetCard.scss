@@ -1,20 +1,13 @@
 @import '../../../../styles/base';
 
-.problemset-card {
-  p {
-    color: $text-color !important;
-  }
+.problemset-card .content-card-link {
+  padding-bottom: 5px;
 }
 
 .problemset-card-name {
   margin-right: 10px;
 }
 
-.problemset-card-date {
-  margin-top: -4px;
-  margin-bottom: 0;
-}
-
-.problemset-card-role {
-  float: right;
+.problemset-card-description {
+  color: $small-color;
 }
