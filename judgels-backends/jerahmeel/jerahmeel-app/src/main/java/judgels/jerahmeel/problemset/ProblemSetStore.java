@@ -55,6 +55,7 @@ public class ProblemSetStore {
         name.ifPresent(e -> searchOptions.putTerms("name", e));
 
         SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
+        name.ifPresent($ -> selectionOptions.orderBy("name"));
         page.ifPresent(selectionOptions::page);
 
         Page<ProblemSetModel> models = problemSetDao.selectPaged(searchOptions.build(), selectionOptions.build());
