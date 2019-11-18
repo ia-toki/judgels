@@ -72,6 +72,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     return (
       <div className="content-card__section">
         Search results for: <b>{name}</b>
+        <hr />
       </div>
     );
   };
