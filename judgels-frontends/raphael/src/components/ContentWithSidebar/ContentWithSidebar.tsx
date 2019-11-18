@@ -62,14 +62,16 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
   }
 
   private renderSidebar = () => {
-    const sidebarItems = this.props.items.filter(item => !item.disabled).map(
-      item =>
-        ({
-          id: item.id,
-          titleIcon: item.titleIcon,
-          title: item.title,
-        } as SidebarItem)
-    );
+    const sidebarItems = this.props.items
+      .filter(item => !item.disabled)
+      .map(
+        item =>
+          ({
+            id: item.id,
+            titleIcon: item.titleIcon,
+            title: item.title,
+          } as SidebarItem)
+      );
 
     return (
       <Sidebar

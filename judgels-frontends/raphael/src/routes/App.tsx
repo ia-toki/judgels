@@ -45,7 +45,9 @@ class App extends React.PureComponent<AppProps> {
             <AppContent>
               <Breadcrumbs />
               <Switch>
-                {appRoutes.map(item => <Route key={item.id} {...item.route} />)}
+                {appRoutes.map(item => (
+                  <Route key={item.id} {...item.route} />
+                ))}
                 <Route {...homeRoute.route} />
               </Switch>
               <Route component={LegacyJophielRoutes} />

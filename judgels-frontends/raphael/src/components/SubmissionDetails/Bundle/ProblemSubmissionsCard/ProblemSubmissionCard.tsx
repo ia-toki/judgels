@@ -79,12 +79,11 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
         <h4>
           {alias}. {name}
         </h4>
-        {canManage &&
-          onRegrade && (
-            <Button intent="primary" icon="refresh" onClick={onRegrade}>
-              Regrade
-            </Button>
-          )}
+        {canManage && onRegrade && (
+          <Button intent="primary" icon="refresh" onClick={onRegrade}>
+            Regrade
+          </Button>
+        )}
       </div>
       <p>{canManage && renderTotalScore()}</p>
       <HTMLTable striped className="table-list-condensed submission-table">

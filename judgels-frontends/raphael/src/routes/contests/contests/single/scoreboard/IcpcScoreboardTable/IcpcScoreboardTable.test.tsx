@@ -106,8 +106,14 @@ describe('IcpcScoreboardTable', () => {
       td === undefined
         ? ''
         : td === 'first-accepted'
-          ? 'D '
-          : td === 'accepted' ? 'G ' : td === 'not-accepted' ? 'R ' : td === 'frozen' ? 'F ' : 'X ';
+        ? 'D '
+        : td === 'accepted'
+        ? 'G '
+        : td === 'not-accepted'
+        ? 'R '
+        : td === 'frozen'
+        ? 'F '
+        : 'X ';
     const mapCell = td => getColor(td.prop('className')) + td.find('strong').text() + '/' + td.find('small').text();
     const mapRow = tr => [2, 3, 4, 5, 6].map(x => tr.childAt(x)).map(mapCell);
     const points = wrapper

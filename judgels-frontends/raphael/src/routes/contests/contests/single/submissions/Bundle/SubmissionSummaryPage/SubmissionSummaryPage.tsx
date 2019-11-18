@@ -76,7 +76,9 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
         <ContentCard>
           Summary for <UserRef profile={this.state.profile!} />
         </ContentCard>
-        {this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />)}
+        {this.state.problemSummaries.map(props => (
+          <ProblemSubmissionCard key={props.alias} {...props} />
+        ))}
       </ContentCard>
     );
   }

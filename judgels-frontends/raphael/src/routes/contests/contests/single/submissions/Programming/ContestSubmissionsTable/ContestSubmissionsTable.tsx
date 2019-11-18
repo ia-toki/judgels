@@ -58,12 +58,8 @@ export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissi
           {submission.id}
           {this.props.canManage && (
             <>
-              &nbsp;&nbsp;&nbsp;<Icon
-                className="action"
-                icon="refresh"
-                intent="primary"
-                onClick={this.onClickRegrade(submission.jid)}
-              />
+              &nbsp;&nbsp;&nbsp;
+              <Icon className="action" icon="refresh" intent="primary" onClick={this.onClickRegrade(submission.jid)} />
             </>
           )}
         </td>

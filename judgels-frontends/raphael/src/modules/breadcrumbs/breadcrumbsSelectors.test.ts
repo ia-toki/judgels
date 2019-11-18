@@ -5,7 +5,11 @@ describe('breadcrumbsSelectors', () => {
   test('selectSortedBreadcrumbs()', () => {
     const state: Partial<AppState> = {
       breadcrumbs: {
-        values: [{ link: '/a', title: 'A' }, { link: '/a/b/c', title: 'ABC' }, { link: '/a/b', title: 'AB' }],
+        values: [
+          { link: '/a', title: 'A' },
+          { link: '/a/b/c', title: 'ABC' },
+          { link: '/a/b', title: 'AB' },
+        ],
       },
     };
 
@@ -20,7 +24,10 @@ describe('breadcrumbsSelectors', () => {
   test('selectDocumentTitle()', () => {
     let state: Partial<AppState> = {
       breadcrumbs: {
-        values: [{ link: '/a', title: 'A' }, { link: '/a/b', title: 'AB' }],
+        values: [
+          { link: '/a', title: 'A' },
+          { link: '/a/b', title: 'AB' },
+        ],
       },
     };
     expect(selectDocumentTitle(state as any)).toEqual('AB | Judgels');

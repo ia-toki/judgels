@@ -78,7 +78,8 @@ export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
       >
         <div>
           <p className="card-sidebar__responsive-menu">
-            <Icon icon="menu" iconSize={Icon.SIZE_LARGE} />&nbsp;<small>{title}</small>
+            <Icon icon="menu" iconSize={Icon.SIZE_LARGE} />
+            &nbsp;<small>{title}</small>
           </p>
         </div>
       </Popover>

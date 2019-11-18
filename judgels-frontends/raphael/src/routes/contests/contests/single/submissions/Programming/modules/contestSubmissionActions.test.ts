@@ -98,7 +98,12 @@ describe('contestSubmissionActions', () => {
       sourceFiles,
     };
     const doCreateSubmission = async () =>
-      createSubmission(contestJid, 'contest-a', problemJid, data)(dispatch, getState, {
+      createSubmission(
+        contestJid,
+        'contest-a',
+        problemJid,
+        data
+      )(dispatch, getState, {
         contestSubmissionProgrammingAPI,
         toastActions,
       });

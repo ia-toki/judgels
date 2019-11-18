@@ -304,13 +304,12 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
         <SourceCode language={getGradingLanguageSyntaxHighlighterValue(submission.gradingLanguage)}>
           {base64.decode(source.submissionFiles[key].content)}
         </SourceCode>
-        {details &&
-          details.compilationOutputs && (
-            <div className="compilation-output">
-              <h5>Compilation Output</h5>
-              <pre>{details.compilationOutputs[key]}</pre>
-            </div>
-          )}
+        {details && details.compilationOutputs && (
+          <div className="compilation-output">
+            <h5>Compilation Output</h5>
+            <pre>{details.compilationOutputs[key]}</pre>
+          </div>
+        )}
       </ContentCard>
     ));
 
@@ -338,11 +337,13 @@ export class SubmissionDetails extends React.PureComponent<SubmissionDetailsProp
   private renderSubtaskTags = (subtaskIds: number[]) => {
     return (
       <span>
-        {subtaskIds.filter(id => id !== 0).map(id => (
-          <Tag className="subtask-tag" key={id} round>
-            {id}
-          </Tag>
-        ))}
+        {subtaskIds
+          .filter(id => id !== 0)
+          .map(id => (
+            <Tag className="subtask-tag" key={id} round>
+              {id}
+            </Tag>
+          ))}
       </span>
     );
   };

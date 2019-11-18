@@ -13,18 +13,28 @@ describe('breadcrumbsReducer', () => {
     };
     const action = PushBreadcrumb.create({ link: '/a/b', title: 'AB' });
     const nextState: BreadcrumbsState = {
-      values: [{ link: '/a', title: 'A' }, { link: '/a/b', title: 'AB' }],
+      values: [
+        { link: '/a', title: 'A' },
+        { link: '/a/b', title: 'AB' },
+      ],
     };
     expect(breadcrumbsReducer(state, action)).toEqual(nextState);
   });
 
   test('POP', () => {
     const state: BreadcrumbsState = {
-      values: [{ link: '/a', title: 'A' }, { link: '/a/b/c', title: 'ABC' }, { link: '/a/b', title: 'AB' }],
+      values: [
+        { link: '/a', title: 'A' },
+        { link: '/a/b/c', title: 'ABC' },
+        { link: '/a/b', title: 'AB' },
+      ],
     };
     const action = PopBreadcrumb.create({ link: '/a/b/c' });
     const nextState: BreadcrumbsState = {
-      values: [{ link: '/a', title: 'A' }, { link: '/a/b', title: 'AB' }],
+      values: [
+        { link: '/a', title: 'A' },
+        { link: '/a/b', title: 'AB' },
+      ],
     };
     expect(breadcrumbsReducer(state, action)).toEqual(nextState);
   });

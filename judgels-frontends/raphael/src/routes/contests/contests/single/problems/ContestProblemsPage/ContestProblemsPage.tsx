@@ -138,8 +138,14 @@ export class ContestProblemsPage extends React.PureComponent<ContestProblemsPage
 
     return (
       <div>
-        {this.renderOpenProblems(problems.filter(p => p.status === ContestProblemStatus.Open), totalSubmissionsMap)}
-        {this.renderClosedProblems(problems.filter(p => p.status === ContestProblemStatus.Closed), totalSubmissionsMap)}
+        {this.renderOpenProblems(
+          problems.filter(p => p.status === ContestProblemStatus.Open),
+          totalSubmissionsMap
+        )}
+        {this.renderClosedProblems(
+          problems.filter(p => p.status === ContestProblemStatus.Closed),
+          totalSubmissionsMap
+        )}
       </div>
     );
   };
