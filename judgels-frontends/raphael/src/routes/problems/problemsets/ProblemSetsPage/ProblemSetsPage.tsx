@@ -67,7 +67,8 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
 
     return (
       <div className="content-card__section">
-        Showing results for: <b>{name}</b>
+        Search results for: <b>{name}</b>
+        <hr />
       </div>
     );
   };
@@ -92,6 +93,13 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     const { data } = response;
     if (!data) {
       return <LoadingState />;
+    }
+    if (data.page.length === 0) {
+      return (
+        <p>
+          <small>No problemsets.</small>
+        </p>
+      );
     }
     return data.page.map(problemSet => <ProblemSetCard key={problemSet.jid} problemSet={problemSet} />);
   };

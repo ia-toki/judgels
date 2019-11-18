@@ -71,7 +71,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
 
     return (
       <div className="content-card__section">
-        Showing results for: <b>{name}</b>
+        Search results for: <b>{name}</b>
       </div>
     );
   };
@@ -109,6 +109,14 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
     const contests = response.data;
     if (!contests) {
       return <LoadingContestCard />;
+    }
+
+    if (contests.page.length === 0) {
+      return (
+        <p>
+          <small>No contests.</small>
+        </p>
+      );
     }
 
     return contests.page.map(contest => (
