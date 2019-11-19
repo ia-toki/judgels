@@ -25,15 +25,43 @@ export class MathjaxText extends React.Component<MathjaxTextProps, MathjaxTextSt
 
   componentDidMount() {
     if (this.state.containsMathJax) {
-      const publicUrl = process.env.PUBLIC_URL;
-      this.insertScript('MathJax-config', publicUrl + '/var/conf/mathjax-config.js');
-      this.insertScript('MathJax-script', publicUrl + '/mathjax/tex-svg.js');
+      this.typesetMathJax();
     }
   }
 
   componentDidUpdate() {
     if (this.state.containsMathJax) {
+      this.typesetMathJax();
+    }
+  }
+
+  private setupMathjaxConfig() {
+    window.MathJax = {
+      tex: {
+        inlineMath: [
+          ['$$$', '$$$'],
+          ['\\(', '\\)'],
+        ],
+        displayMath: [
+          ['$$$$', '$$$$'],
+          ['\\[', '\\]'],
+        ],
+      },
+      svg: {
+        fontCache: 'global',
+      },
+    };
+  }
+
+  private typesetMathJax() {
+    if (window.MathJax) {
+      // if the script already exists, typeset directly.
       window.MathJax.typeset();
+    } else {
+      // otherwise setup the mathjax.
+      const publicUrl = process.env.PUBLIC_URL;
+      this.setupMathjaxConfig();
+      this.insertScript('MathJax-script', publicUrl + '/mathjax/tex-svg.js');
     }
   }
 
@@ -44,11 +72,11 @@ export class MathjaxText extends React.Component<MathjaxTextProps, MathjaxTextSt
     script.src = url;
     script.defer = true;
 
-    document.body.appendChild(script);
+    document.head.appendChild(script);
   }
 
   private containsMathjaxSyntax(text: string) {
-    const mathjaxDelimitters = ['$', '\\(', '\\)', '\\[', '\\]'];
+    const mathjaxDelimitters = ['$$$', '$$$$', '\\(', '\\)', '\\[', '\\]'];
     for (let delimitter of mathjaxDelimitters) {
       if (text.includes(delimitter)) {
         return true;
