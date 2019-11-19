@@ -35,6 +35,18 @@ export class MathjaxText extends React.Component<MathjaxTextProps, MathjaxTextSt
     }
   }
 
+  private typesetMathJax() {
+    if (window.MathJax) {
+      // if the script already exists, typeset directly.
+      window.MathJax.typeset();
+    } else {
+      // otherwise setup the mathjax.
+      const publicUrl = process.env.PUBLIC_URL;
+      this.setupMathjaxConfig();
+      this.insertScript('MathJax-script', publicUrl + '/mathjax/tex-svg.js');
+    }
+  }
+
   private setupMathjaxConfig() {
     window.MathJax = {
       tex: {
@@ -51,18 +63,6 @@ export class MathjaxText extends React.Component<MathjaxTextProps, MathjaxTextSt
         fontCache: 'global',
       },
     };
-  }
-
-  private typesetMathJax() {
-    if (window.MathJax) {
-      // if the script already exists, typeset directly.
-      window.MathJax.typeset();
-    } else {
-      // otherwise setup the mathjax.
-      const publicUrl = process.env.PUBLIC_URL;
-      this.setupMathjaxConfig();
-      this.insertScript('MathJax-script', publicUrl + '/mathjax/tex-svg.js');
-    }
   }
 
   private insertScript(id: string, url: string) {
