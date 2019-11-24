@@ -1,13 +1,17 @@
 import * as React from 'react';
-import { Route } from 'react-router';
+import { Route, Switch } from 'react-router';
 
 import SingleProblemSetDataRoute from './SingleProblemSetDataRoute';
 import SingleProblemSetRoutes from './SingleProblemSetRoutes';
+import MainSingleProblemSetProblemRoutes from './problems/single/MainSingleProblemSetProblemRoutes';
 
 const MainSingleProblemSetRoutes = () => (
   <div>
     <Route path="/problems/:problemSetSlug" component={SingleProblemSetDataRoute} />
-    <Route path="/problems/:problemSetSlug" component={SingleProblemSetRoutes} />
+    <Switch>
+      <Route path="/problems/:problemSetSlug/:problemAlias" component={MainSingleProblemSetProblemRoutes} />
+      <Route path="/problems/:problemSetSlug" component={SingleProblemSetRoutes} />
+    </Switch>
   </div>
 );
 

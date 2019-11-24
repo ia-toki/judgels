@@ -8,15 +8,21 @@ import {
   CourseChapterState,
 } from '../../routes/courses/courses/single/chapters/modules/courseChapterReducer';
 import { ProblemSetState, problemSetReducer } from '../../routes/problems/problemsets/modules/problemSetReducer';
+import {
+  ProblemSetProblemState,
+  problemSetProblemReducer,
+} from '../../routes/problems/problemsets/single/problems/modules/problemSetProblemReducer';
 
 export interface JerahmeelState {
   course: CourseState;
   courseChapter: CourseChapterState;
   problemSet: ProblemSetState;
+  problemSetProblem: ProblemSetProblemState;
 }
 
 export const jerahmeelReducer = combineReducers<JerahmeelState>({
   course: persistReducer({ key: 'jerahmeelCourse', storage }, courseReducer),
   courseChapter: persistReducer({ key: 'jerahmeelCourseChapter', storage }, courseChapterReducer),
   problemSet: persistReducer({ key: 'jerahmeelProblemSet', storage }, problemSetReducer),
+  problemSetProblem: persistReducer({ key: 'jerahmeelProblemSetProblem', storage }, problemSetProblemReducer),
 });
