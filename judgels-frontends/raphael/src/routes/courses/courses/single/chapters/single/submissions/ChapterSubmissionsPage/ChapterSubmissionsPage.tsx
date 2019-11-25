@@ -8,7 +8,6 @@ import Pagination from '../../../../../../../../components/Pagination/Pagination
 import { AppState } from '../../../../../../../../modules/store';
 import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { Chapter } from '../../../../../../../../modules/api/jerahmeel/chapter';
 import { ChapterSubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/chapterSubmissionProgramming';
 import { ChapterSubmissionsTable } from '../ChapterSubmissionsTable/ChapterSubmissionsTable';
 import { selectCourse } from '../../../../../modules/courseSelectors';
@@ -17,8 +16,7 @@ import { chapterSubmissionActions as injectedChapterSubmissionActions } from '..
 
 export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
   course: Course;
-  chapter: Chapter;
-  courseChapter: CourseChapter;
+  chapter: CourseChapter;
   onGetProgrammingSubmissions: (
     chapterJid: string,
     userJid?: string,
@@ -70,7 +68,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     return (
       <ChapterSubmissionsTable
         course={this.props.course}
-        chapter={this.props.courseChapter}
+        chapter={this.props.chapter}
         submissions={submissions.page}
         canManage={config.canManage}
         profilesMap={profilesMap}
@@ -96,7 +94,12 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   };
 
   private refreshSubmissions = async (page?: number) => {
-    const response = await this.props.onGetProgrammingSubmissions(this.props.chapter.jid, undefined, undefined, page);
+    const response = await this.props.onGetProgrammingSubmissions(
+      this.props.chapter.chapterJid,
+      undefined,
+      undefined,
+      page
+    );
     this.setState({ response });
     return response.data;
   };
@@ -105,8 +108,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
 export function createChapterSubmissionsPage(chapterProgrammingSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
     course: selectCourse(state),
-    chapter: selectCourseChapter(state).chapter,
-    courseChapter: selectCourseChapter(state).courseChapter,
+    chapter: selectCourseChapter(state),
   });
 
   const mapDispatchToProps = {

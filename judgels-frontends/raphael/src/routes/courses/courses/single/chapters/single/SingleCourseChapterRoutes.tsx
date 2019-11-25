@@ -9,30 +9,27 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { Chapter } from '../../../../../../modules/api/jerahmeel/chapter';
 import { CourseChapter } from '../../../../../../modules/api/jerahmeel/courseChapter';
 import { AppState } from '../../../../../../modules/store';
-
+import { selectCourseChapter, selectCourseChapterName } from '../modules/courseChapterSelectors';
 import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
 import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
 import ChapterSubmissionRoutes from './submissions/ChapterSubmissionRoutes';
 import SubmissionSummaryPage from './quiz-results/SubmissionSummaryPage/SubmissionSummaryPage';
 
-import { selectCourseChapter } from '../modules/courseChapterSelectors';
-
 import './SingleCourseChapterRoutes.css';
 
 interface SingleCourseChapterRoutesProps extends RouteComponentProps<{ chapterAlias: string }> {
-  courseChapter?: CourseChapter;
-  chapter?: Chapter;
+  chapter?: CourseChapter;
+  chapterName?: string;
 }
 
 const SingleCourseChapterRoutes = (props: SingleCourseChapterRoutesProps) => {
-  const { courseChapter, chapter } = props;
+  const { chapter, chapterName } = props;
 
   // Optimization:
   // We wait until we get the chapter from the backend only if the current alias is different from the persisted one.
-  if (!chapter || courseChapter.alias !== props.match.params.chapterAlias) {
+  if (!chapter || chapter.alias !== props.match.params.chapterAlias) {
     return <LoadingState large />;
   }
 
@@ -73,7 +70,7 @@ const SingleCourseChapterRoutes = (props: SingleCourseChapterRoutesProps) => {
     contentHeader: (
       <div className="single-course-chapter-routes__header">
         <h2 className="single-course-chapter-routes__title">
-          {courseChapter.alias}. {chapter.name}
+          {chapter.alias}. {chapterName}
         </h2>
         <div className="clearfix" />
       </div>
@@ -89,7 +86,10 @@ const SingleCourseChapterRoutes = (props: SingleCourseChapterRoutesProps) => {
 };
 
 function createSingleCourseChapterRoutes() {
-  const mapStateToProps = (state: AppState) => selectCourseChapter(state);
+  const mapStateToProps = (state: AppState) => ({
+    chapter: selectCourseChapter(state),
+    chapterName: selectCourseChapterName(state),
+  });
 
   return withRouter<any, any>(connect(mapStateToProps)(SingleCourseChapterRoutes));
 }

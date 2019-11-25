@@ -13,7 +13,12 @@ export const courseChapterActions = {
     return async (dispatch, getState, { courseChapterAPI }) => {
       const token = selectToken(getState());
       const chapter = await courseChapterAPI.getChapter(token, courseJid, chapterAlias);
-      dispatch(PutCourseChapter.create({ courseChapter: { alias: chapterAlias, chapterJid: chapter.jid }, chapter }));
+      dispatch(
+        PutCourseChapter.create({
+          value: { alias: chapterAlias, chapterJid: chapter.jid },
+          name: chapter.name,
+        })
+      );
       return chapter;
     };
   },

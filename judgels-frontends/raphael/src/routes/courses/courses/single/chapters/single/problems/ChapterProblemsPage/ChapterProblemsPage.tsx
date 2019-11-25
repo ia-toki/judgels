@@ -119,7 +119,7 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
 export function createChapterProblemsPage(chapterProblemActions) {
   const mapStateToProps = (state: AppState) => ({
     course: selectCourse(state),
-    chapter: selectCourseChapter(state).courseChapter,
+    chapter: selectCourseChapter(state),
     statementLanguage: selectStatementLanguage(state),
   });
 

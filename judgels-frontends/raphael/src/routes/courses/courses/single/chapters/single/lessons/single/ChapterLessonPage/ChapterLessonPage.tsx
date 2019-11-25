@@ -96,7 +96,7 @@ export class ChapterLessonPage extends React.Component<ChapterLessonPageProps, C
 
 export function createChapterLessonPage(chapterLessonActions, breadcrumbsActions) {
   const mapStateToProps = (state: AppState) => ({
-    chapter: selectCourseChapter(state).courseChapter,
+    chapter: selectCourseChapter(state),
   });
 
   const mapDispatchToProps = {

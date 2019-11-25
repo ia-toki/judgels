@@ -83,7 +83,7 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
 
 export function createSubmissionSummaryPage(chapterSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
-    chapter: selectCourseChapter(state).courseChapter,
+    chapter: selectCourseChapter(state),
     language: selectStatementLanguage(state),
   });
 

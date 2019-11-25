@@ -9,7 +9,6 @@ import { AppState } from '../../../../../../../../../modules/store';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { Course } from '../../../../../../../../../modules/api/jerahmeel/course';
 import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { Chapter } from '../../../../../../../../../modules/api/jerahmeel/chapter';
 import {
   SubmissionWithSource,
   SubmissionWithSourceResponse,
@@ -22,8 +21,7 @@ import { chapterSubmissionActions as injectedChapterSubmissionActions } from '..
 
 export interface ChapterSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   course: Course;
-  chapter: Chapter;
-  courseChapter: CourseChapter;
+  chapter: CourseChapter;
   statementLanguage: string;
   onGetSubmissionWithSource: (
     chapterJid: string,
@@ -47,7 +45,7 @@ export class ChapterSubmissionPage extends React.Component<ChapterSubmissionPage
 
   async componentDidMount() {
     const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
-      this.props.chapter.jid,
+      this.props.chapter.chapterJid,
       +this.props.match.params.submissionId,
       this.props.statementLanguage
     );
@@ -77,7 +75,7 @@ export class ChapterSubmissionPage extends React.Component<ChapterSubmissionPage
 
   private renderSubmission = () => {
     const { submissionWithSource, profile, problemName, problemAlias, containerName } = this.state;
-    const { course, courseChapter } = this.props;
+    const { course, chapter } = this.props;
 
     if (!submissionWithSource) {
       return <LoadingState />;
@@ -90,7 +88,7 @@ export class ChapterSubmissionPage extends React.Component<ChapterSubmissionPage
         profile={profile!}
         problemName={problemName!}
         problemAlias={problemAlias!}
-        problemUrl={`/courses/${course.slug}/chapters/${courseChapter.alias}/problems/${problemAlias}`}
+        problemUrl={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}`}
         containerTitle="Chapter"
         containerName={containerName!}
       />
@@ -101,8 +99,7 @@ export class ChapterSubmissionPage extends React.Component<ChapterSubmissionPage
 function createChapterSubmissionPage(chapterProgrammingSubmissionActions, breadcrumbsActions) {
   const mapStateToProps = (state: AppState) => ({
     course: selectCourse(state),
-    chapter: selectCourseChapter(state).chapter,
-    courseChapter: selectCourseChapter(state).courseChapter,
+    chapter: selectCourseChapter(state),
     statementLanguage: selectStatementLanguage(state),
   });
 
