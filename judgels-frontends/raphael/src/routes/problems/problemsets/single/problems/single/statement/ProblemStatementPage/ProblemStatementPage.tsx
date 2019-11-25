@@ -10,6 +10,7 @@ import {
   ProblemSetProblem,
 } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import ProblemSetProblemProgrammingPage from '../Programming/ProblemStatementPage';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { problemSetProblemActions as injectedProblemSetProblemActions } from '../../../modules/problemSetProblemActions';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
@@ -61,7 +62,7 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     }
     const { problem } = response;
     if (problem.type === ProblemType.Programming) {
-      return 'PROGRAMMING';
+      return <ProblemSetProblemProgrammingPage worksheet={response} />;
     } else {
       return null;
     }

@@ -8,7 +8,7 @@ import { ProblemSubmissionCard } from './ProblemSubmissionCard/ProblemSubmission
 import './ProblemWorksheetCard.css';
 
 export interface ProblemWorksheetCardProps {
-  alias: string;
+  alias?: string;
   worksheet: ProblemWorksheet;
   onSubmit: (data: ProblemSubmissionFormData) => Promise<void>;
   submissionWarning?: string;

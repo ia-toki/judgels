@@ -15,8 +15,6 @@ import { chapterLessonActions as injectedChapterLessonActions } from '../../modu
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 
-import './ChapterLessonPage.css';
-
 export interface ChapterLessonPageProps extends RouteComponentProps<{ lessonAlias: string }> {
   chapter: CourseChapter;
   statementLanguage: string;
@@ -78,7 +76,7 @@ export class ChapterLessonPage extends React.Component<ChapterLessonPageProps, C
       statementLanguages: languages,
     };
     return (
-      <div className="chapter-lesson-page__widget">
+      <div className="statement-language-widget-wrapper">
         <StatementLanguageWidget {...props} />
       </div>
     );

@@ -20,8 +20,6 @@ import { ProblemWorksheetCard } from '../../../../../../../../components/Problem
 import { ItemSubmission } from '../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectContest } from '../../../../../modules/contestSelectors';
 
-import './ContestProblemPage.css';
-
 export interface ContestProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   contest: Contest;
   statementLanguage: string;
@@ -101,7 +99,7 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       statementLanguages: languages,
     };
     return (
-      <div className="contest-bundle-problem-page__widget">
+      <div className="statement-language-widget-wrapper">
         <StatementLanguageWidget {...props} />
       </div>
     );

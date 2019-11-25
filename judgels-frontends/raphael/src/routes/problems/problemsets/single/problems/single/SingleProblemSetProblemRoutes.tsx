@@ -36,7 +36,7 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
     const sidebarItems: ContentWithSidebarItem[] = [
       {
         id: '@',
-        titleIcon: 'panel-stats',
+        titleIcon: 'document',
         title: 'Statement',
         routeComponent: Route,
         component: ProblemStatementPage,

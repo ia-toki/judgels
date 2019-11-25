@@ -9,7 +9,7 @@ import { MathjaxText } from '../../../MathjaxText/MathjaxText';
 import './ProblemStatementCard.css';
 
 export interface ProblemStatementCardProps {
-  alias: string;
+  alias?: string;
   statement: ProblemStatement;
   limits: ProblemLimits;
 }
@@ -20,7 +20,8 @@ export class ProblemStatementCard extends React.PureComponent<ProblemStatementCa
     return (
       <ContentCard>
         <h2 className="programming-problem-statement__name">
-          {alias}. {statement.title}
+          {alias ? `${alias}. ` : ''}
+          {statement.title}
         </h2>
         <HTMLTable condensed className="programming-problem-statement__limits">
           <tbody>

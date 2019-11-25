@@ -15,8 +15,6 @@ import { ItemSubmission } from '../../../../../../../../../modules/api/sandalpho
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../quiz-results/modules/chapterSubmissionActions';
 
-import './ChapterProblemPage.css';
-
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   chapter: CourseChapter;
   latestSubmissions?: { [id: string]: ItemSubmission };
@@ -61,7 +59,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
       statementLanguages: languages,
     };
     return (
-      <div className="chapter-bundle-problem-page__widget">
+      <div className="statement-language-widget-wrapper">
         <StatementLanguageWidget {...props} />
       </div>
     );

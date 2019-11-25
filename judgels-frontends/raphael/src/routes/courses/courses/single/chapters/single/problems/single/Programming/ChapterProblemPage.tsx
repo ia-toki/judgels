@@ -19,8 +19,6 @@ import { ProblemWorksheetCard } from '../../../../../../../../../components/Prob
 import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../submissions/modules/chapterSubmissionActions';
 import { webPrefsActions as injectedWebPrefsActions } from '../../../../../../../../../modules/webPrefs/webPrefsActions';
 
-import './ChapterProblemPage.css';
-
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   course: Course;
   chapter: CourseChapter;
@@ -56,7 +54,7 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
       statementLanguages: languages,
     };
     return (
-      <div className="chapter-problem-page__widget">
+      <div className="statement-language-widget-wrapper">
         <StatementLanguageWidget {...props} />
       </div>
     );
