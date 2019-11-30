@@ -61,6 +61,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
         env.jersey().register(component.chapterItemSubmissionResource());
         env.jersey().register(component.problemSetResource());
         env.jersey().register(component.problemSetProblemResource());
+        env.jersey().register(component.problemSetItemSubmissionResource());
         env.jersey().register(component.pingResource());
 
         if (jerahmeelConfig.getSealtielConfig().isPresent()) {

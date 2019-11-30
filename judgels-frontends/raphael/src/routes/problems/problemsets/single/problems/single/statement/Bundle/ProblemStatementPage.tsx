@@ -8,17 +8,18 @@ import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
 } from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
 import { AppState } from '../../../../../../../../modules/store';
-import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
+import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
 import { ProblemSetProblemWorksheet } from '../../../../../../../../modules/api/jerahmeel/problemSetProblemBundle';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { ItemSubmission } from '../../../../../../../../modules/api/sandalphon/submissionBundle';
-import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
+import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
+import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../quiz-results/modules/problemSetSubmissionActions';
 
 export interface ProblemStatementPageProps extends RouteComponentProps<{ problemAlias: string }> {
-  problem: ProblemSetProblem;
+  problemSet: ProblemSet;
   worksheet: ProblemSetProblemWorksheet;
-  onCreateSubmission: (chapterJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
-  onGetLatestSubmissions: (chapterJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
+  onCreateSubmission: (problemSetJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
+  onGetLatestSubmissions: (problemSetJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
 }
 
 interface ProblemStatementPageState {
@@ -27,6 +28,16 @@ interface ProblemStatementPageState {
 
 export class ProblemStatementPage extends React.Component<ProblemStatementPageProps, ProblemStatementPageState> {
   state: ProblemStatementPageState = {};
+
+  async componentDidMount() {
+    const latestSubmissions = await this.props.onGetLatestSubmissions(
+      this.props.problemSet.jid,
+      this.props.worksheet.problem.alias
+    );
+    this.setState({
+      latestSubmissions,
+    });
+  }
 
   render() {
     return (
@@ -59,10 +70,15 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
       return <LoadingState />;
     }
 
+    const { latestSubmissions } = this.state;
+    if (!latestSubmissions) {
+      return <LoadingState />;
+    }
+
     return (
       <ProblemWorksheetCard
         alias={problem.alias}
-        latestSubmissions={{}}
+        latestSubmissions={latestSubmissions}
         onAnswerItem={this.createSubmission}
         worksheet={worksheet}
       />
@@ -70,15 +86,20 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
   };
 
   private createSubmission = async (itemJid: string, answer: string) => {
-    return await Promise.resolve();
+    const { problem } = this.props.worksheet;
+    return await this.props.onCreateSubmission(this.props.problemSet.jid, problem.problemJid, itemJid, answer);
   };
 }
 
-export function createProblemStatementPage() {
+export function createProblemStatementPage(problemSetSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
-    problem: selectProblemSetProblem(state),
+    problemSet: selectProblemSet(state),
   });
-  return withRouter<any, any>(connect(mapStateToProps)(ProblemStatementPage));
+  const mapDispatchToProps = {
+    onCreateSubmission: problemSetSubmissionActions.createItemSubmission,
+    onGetLatestSubmissions: problemSetSubmissionActions.getLatestSubmissions,
+  };
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage));
 }
 
-export default createProblemStatementPage();
+export default createProblemStatementPage(injectedProblemSetSubmissionActions);

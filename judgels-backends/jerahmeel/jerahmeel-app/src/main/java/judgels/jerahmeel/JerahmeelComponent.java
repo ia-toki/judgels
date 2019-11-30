@@ -15,6 +15,7 @@ import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
 import judgels.jerahmeel.jophiel.JophielModule;
 import judgels.jerahmeel.problemset.ProblemSetResource;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemResource;
+import judgels.jerahmeel.problemset.submission.bundle.ProblemSetItemSubmissionResource;
 import judgels.jerahmeel.sandalphon.SandalphonModule;
 import judgels.jerahmeel.sealtiel.SealtielModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
@@ -55,6 +56,7 @@ public interface JerahmeelComponent {
     ChapterItemSubmissionResource chapterItemSubmissionResource();
     ProblemSetResource problemSetResource();
     ProblemSetProblemResource problemSetProblemResource();
+    ProblemSetItemSubmissionResource problemSetItemSubmissionResource();
     PingResource pingResource();
 
     JudgelsScheduler scheduler();

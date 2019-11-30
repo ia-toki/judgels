@@ -20,6 +20,17 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
     }
 
     @Override
+    public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemJid(
+            String problemSetJid,
+            String problemJid) {
+
+        return selectByFilter(new FilterOptions.Builder<ProblemSetProblemModel>()
+                .putColumnsEq(ProblemSetProblemModel_.problemSetJid, problemSetJid)
+                .putColumnsEq(ProblemSetProblemModel_.problemJid, problemJid)
+                .build());
+    }
+
+    @Override
     public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemAlias(
             String problemSetJid,
             String problemAlias) {
