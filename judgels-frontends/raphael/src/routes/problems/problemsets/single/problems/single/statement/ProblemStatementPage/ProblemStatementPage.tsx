@@ -10,7 +10,8 @@ import {
   ProblemSetProblem,
 } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import ProblemSetProblemProgrammingPage from '../Programming/ProblemStatementPage';
+import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
+import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { problemSetProblemActions as injectedProblemSetProblemActions } from '../../../modules/problemSetProblemActions';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
@@ -62,9 +63,9 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     }
     const { problem } = response;
     if (problem.type === ProblemType.Programming) {
-      return <ProblemSetProblemProgrammingPage worksheet={response} />;
+      return <ProblemSetProblemProgrammingStatementPage worksheet={response} />;
     } else {
-      return null;
+      return <ProblemSetProblemBundleStatementPage worksheet={response} />;
     }
   }
 }

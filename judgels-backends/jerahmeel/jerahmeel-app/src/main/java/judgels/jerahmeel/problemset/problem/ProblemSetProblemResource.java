@@ -91,7 +91,12 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                     .worksheet(problemClient.getProgrammingProblemWorksheet(problemJid, language))
                     .build();
         } else {
-            return null;
+            return new judgels.jerahmeel.api.problemset.problem.bundle.ProblemSetProblemWorksheet.Builder()
+                    .defaultLanguage(problemInfo.getDefaultLanguage())
+                    .languages(problemInfo.getTitlesByLanguage().keySet())
+                    .problem(problem)
+                    .worksheet(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language))
+                    .build();
         }
     }
 }

@@ -17,7 +17,6 @@ import { chapterSubmissionActions as injectedChapterSubmissionActions } from '..
 
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   chapter: CourseChapter;
-  latestSubmissions?: { [id: string]: ItemSubmission };
   worksheet: ChapterProblemWorksheet;
   onCreateSubmission: (chapterJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
   onGetLatestSubmissions: (chapterJid: string, problemAlias: string) => Promise<{ [id: string]: ItemSubmission }>;
