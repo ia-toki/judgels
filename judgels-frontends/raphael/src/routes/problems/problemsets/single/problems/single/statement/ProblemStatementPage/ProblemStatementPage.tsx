@@ -13,13 +13,13 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
 import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { problemSetProblemActions as injectedProblemSetProblemActions } from '../../../modules/problemSetProblemActions';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
+import { problemSetProblemActions as injectedProblemSetProblemActions } from '../../../modules/problemSetProblemActions';
 
 export interface ProblemStatementPageProps extends RouteComponentProps {
   problemSet: ProblemSet;
-  problemSetProblem: ProblemSetProblem;
+  problem: ProblemSetProblem;
   statementLanguage: string;
   gradingLanguage: string;
   onGetProblemWorksheet: (
@@ -39,7 +39,7 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
   async componentDidMount() {
     const response = await this.props.onGetProblemWorksheet(
       this.props.problemSet.jid,
-      this.props.problemSetProblem.alias,
+      this.props.problem.alias,
       this.props.statementLanguage
     );
 
@@ -73,7 +73,7 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
 export function createProblemStatementPage(problemSetProblemActions) {
   const mapStateToProps = (state: AppState) => ({
     problemSet: selectProblemSet(state),
-    problemSetProblem: selectProblemSetProblem(state),
+    problem: selectProblemSetProblem(state),
     statementLanguage: selectStatementLanguage(state),
   });
   const mapDispatchToProps = {
