@@ -11,7 +11,7 @@ import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { Submission as ProgrammingSubmission } from '../../../../../../../../modules/api/sandalphon/submissionProgramming';
 
-import './ChapterSubmissionsTable.css';
+import '../../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
 
 export interface ChapterSubmissionsTableProps {
   course: Course;
@@ -25,7 +25,7 @@ export interface ChapterSubmissionsTableProps {
 export class ChapterSubmissionsTable extends React.PureComponent<ChapterSubmissionsTableProps> {
   render() {
     return (
-      <HTMLTable striped className="table-list-condensed chapter-submissions-table">
+      <HTMLTable striped className="table-list-condensed submissions-table">
         {this.renderHeader()}
         {this.renderRows()}
       </HTMLTable>

@@ -11,7 +11,7 @@ import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/proble
 import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { Submission as ProgrammingSubmission } from '../../../../../../../../modules/api/sandalphon/submissionProgramming';
 
-import './ProblemSubmissionsTable.css';
+import '../../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
 
 export interface ProblemSubmissionsTableProps {
   problemSet: ProblemSet;
@@ -25,7 +25,7 @@ export interface ProblemSubmissionsTableProps {
 export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissionsTableProps> {
   render() {
     return (
-      <HTMLTable striped className="table-list-condensed problem-submissions-table">
+      <HTMLTable striped className="table-list-condensed submissions-table">
         {this.renderHeader()}
         {this.renderRows()}
       </HTMLTable>

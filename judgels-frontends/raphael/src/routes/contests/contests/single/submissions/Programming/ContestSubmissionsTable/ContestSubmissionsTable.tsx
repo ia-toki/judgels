@@ -10,7 +10,7 @@ import { getGradingLanguageName } from '../../../../../../../modules/api/gabriel
 import { Contest } from '../../../../../../../modules/api/uriel/contest';
 import { Submission as ProgrammingSubmission } from '../../../../../../../modules/api/sandalphon/submissionProgramming';
 
-import './ContestSubmissionsTable.css';
+import '../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
 
 export interface ContestSubmissionsTableProps {
   contest: Contest;
@@ -25,7 +25,7 @@ export interface ContestSubmissionsTableProps {
 export class ContestSubmissionsTable extends React.PureComponent<ContestSubmissionsTableProps> {
   render() {
     return (
-      <HTMLTable striped className="table-list-condensed submissions">
+      <HTMLTable striped className="table-list-condensed submissions-table">
         {this.renderHeader()}
         {this.renderRows()}
       </HTMLTable>

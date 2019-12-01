@@ -1,9 +1,10 @@
-@import '../../../../../../../../styles/table';
+@import '../../../styles/table';
 
-.chapter-submissions-table {
+.submissions-table {
   .col-regrade {
     width: 7px;
   }
+
   .col-id {
     width: 100px;
   }

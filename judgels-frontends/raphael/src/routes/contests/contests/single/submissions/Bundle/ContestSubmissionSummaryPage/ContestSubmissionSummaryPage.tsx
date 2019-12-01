@@ -18,8 +18,6 @@ import {
 } from '../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
-import './ContestSubmissionSummaryPage.css';
-
 interface ContestSubmissionSummaryPageRoute {
   username?: string;
 }
