@@ -16,7 +16,7 @@ import './ProblemStatementCard.css';
 
 export interface ProblemStatementCardProps {
   items: Item[];
-  alias: string;
+  alias?: string;
   statement: ProblemStatement;
   onAnswerItem: (itemJid: string, answer: string) => Promise<any>;
   latestSubmissions: { [id: string]: ItemSubmission };
@@ -90,7 +90,8 @@ export class ProblemStatementCard extends React.Component<ProblemStatementCardPr
     return (
       <ContentCard>
         <h2 className="bundle-problem-statement__name">
-          {alias}. {statement.title}
+          {alias ? `${alias}. ` : ''}
+          {statement.title}
         </h2>
         <div className="bundle-problem-statement__text">
           <HtmlText>{statement.text}</HtmlText>

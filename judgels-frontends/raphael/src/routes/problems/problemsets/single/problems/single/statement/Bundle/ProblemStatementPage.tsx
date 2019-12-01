@@ -77,7 +77,6 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
 
     return (
       <ProblemWorksheetCard
-        alias={problem.alias}
         latestSubmissions={latestSubmissions}
         onAnswerItem={this.createSubmission}
         worksheet={worksheet}

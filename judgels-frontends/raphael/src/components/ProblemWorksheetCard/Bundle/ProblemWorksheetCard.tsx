@@ -7,7 +7,7 @@ import { ItemSubmission } from '../../../modules/api/sandalphon/submissionBundle
 import './ProblemWorksheetCard.css';
 
 export interface ProblemWorksheetCardProps {
-  alias: string;
+  alias?: string;
   worksheet: ProblemWorksheet;
   latestSubmissions: { [id: string]: ItemSubmission };
   onAnswerItem: (itemJid: string, answer: string) => Promise<any>;
