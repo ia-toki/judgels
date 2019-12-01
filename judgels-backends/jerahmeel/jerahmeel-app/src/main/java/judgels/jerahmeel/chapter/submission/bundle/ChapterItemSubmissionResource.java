@@ -17,14 +17,13 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
-import judgels.jerahmeel.api.chapter.submission.ChapterSubmissionConfig;
-import judgels.jerahmeel.api.chapter.submission.bundle.AnswerSummaryResponse;
-import judgels.jerahmeel.api.chapter.submission.bundle.ChapterItemSubmissionData;
 import judgels.jerahmeel.api.chapter.submission.bundle.ChapterItemSubmissionService;
-import judgels.jerahmeel.api.chapter.submission.bundle.ChapterItemSubmissionsResponse;
+import judgels.jerahmeel.api.submission.SubmissionConfig;
+import judgels.jerahmeel.api.submission.bundle.AnswerSummaryResponse;
+import judgels.jerahmeel.api.submission.bundle.ItemSubmissionsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
-import judgels.jerahmeel.chapter.submission.ChapterSubmissionRoleChecker;
+import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
@@ -35,6 +34,7 @@ import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
+import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
@@ -46,7 +46,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
     private final ActorChecker actorChecker;
     private final ChapterStore chapterStore;
     private final ItemSubmissionStore submissionStore;
-    private final ChapterSubmissionRoleChecker submissionRoleChecker;
+    private final SubmissionRoleChecker submissionRoleChecker;
     private final ChapterProblemStore problemStore;
     private final ProfileService profileService;
     private final UserSearchService userSearchService;
@@ -59,7 +59,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
             ActorChecker actorChecker,
             ChapterStore chapterStore,
             ItemSubmissionStore submissionStore,
-            ChapterSubmissionRoleChecker submissionRoleChecker,
+            SubmissionRoleChecker submissionRoleChecker,
             ChapterProblemStore problemStore,
             ProfileService profileService,
             UserSearchService userSearchService,
@@ -81,7 +81,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
 
     @Override
     @UnitOfWork
-    public ChapterItemSubmissionsResponse getSubmissions(
+    public ItemSubmissionsResponse getSubmissions(
             AuthHeader authHeader,
             String chapterJid,
             Optional<String> username,
@@ -137,7 +137,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
                         entry -> entry.getValue().getType())
                 );
 
-        return new ChapterItemSubmissionsResponse.Builder()
+        return new ItemSubmissionsResponse.Builder()
                 .data(submissions)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
@@ -148,24 +148,24 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
 
     @Override
     @UnitOfWork
-    public void createItemSubmission(AuthHeader authHeader, ChapterItemSubmissionData data) {
+    public void createItemSubmission(AuthHeader authHeader, ItemSubmissionData data) {
         String actorJid = actorChecker.check(authHeader);
-        checkFound(chapterStore.getChapterByJid(data.getChapterJid()));
-        checkFound(problemStore.getProblem(data.getChapterJid(), data.getProblemJid()));
+        checkFound(chapterStore.getChapterByJid(data.getContainerJid()));
+        checkFound(problemStore.getProblem(data.getContainerJid(), data.getProblemJid()));
 
         Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
         checkFound(item);
 
         if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
-                    data.getChapterJid(), data.getProblemJid(), data.getItemJid(), actorJid);
+                    data.getContainerJid(), data.getProblemJid(), data.getItemJid(), actorJid);
         } else {
             Grading grading = itemSubmissionGraderRegistry
                     .get(item.get().getType())
                     .grade(item.get(), data.getAnswer());
 
             submissionStore.upsertSubmission(
-                    data.getChapterJid(),
+                    data.getContainerJid(),
                     data.getProblemJid(),
                     data.getItemJid(),
                     data.getAnswer(),
@@ -264,7 +264,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
 
         Profile profile = profileService.getProfile(viewedUserJid);
 
-        ChapterSubmissionConfig config = new ChapterSubmissionConfig.Builder()
+        SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
                 .problemJids(bundleProblemJidsSortedByAlias)
                 .build();

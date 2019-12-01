@@ -1,6 +1,7 @@
-import { Profile } from '../../../modules/api/jophiel/profile';
-import { Grading } from '../../../modules/api/gabriel/grading';
-import { SubmissionSource } from '../../../modules/api/gabriel/submission';
+import { Page } from '../pagination';
+import { Profile, ProfilesMap } from '../jophiel/profile';
+import { Grading } from '../gabriel/grading';
+import { SubmissionSource } from '../gabriel/submission';
 
 export interface Submission {
   id: number;
@@ -25,4 +26,10 @@ export interface SubmissionWithSourceResponse {
   problemName: string;
   problemAlias: string;
   containerName: string;
+}
+
+export interface SubmissionsResponse {
+  data: Page<Submission>;
+  profilesMap: ProfilesMap;
+  problemAliasesMap: { [problemJid: string]: string };
 }

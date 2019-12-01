@@ -1,32 +1,8 @@
-import { Page } from '../pagination';
-import { Profile } from '../jophiel/profile';
-import { ItemType } from './problemBundle';
-
-export enum Verdict {
-  PENDING_REGRADE = 'PENDING_REGRADE',
-  PENDING_MANUAL_GRADING = 'PENDING_MANUAL_GRADING',
-  INTERNAL_ERROR = 'INTERNAL_ERROR',
-  OK = 'OK',
-  ACCEPTED = 'ACCEPTED',
-  WRONG_ANSWER = 'WRONG_ANSWER',
-}
-
-export interface Grading {
-  verdict: Verdict;
-  score?: number;
-}
-
-export interface ItemSubmission {
-  id: number;
-  jid: string;
-  containerJid: string;
-  problemJid: string;
-  grading?: Grading;
-  itemJid: string;
-  answer: string;
-  userJid: string;
-  time: number;
-}
+import { Page } from '../../../modules/api/pagination';
+import { ItemSubmission } from '../../../modules/api/sandalphon/submissionBundle';
+import { SubmissionConfig } from './submission';
+import { Profile } from '../../../modules/api/jophiel/profile';
+import { ItemType } from '../sandalphon/problemBundle';
 
 export interface ItemSubmissionData {
   containerJid: string;
@@ -37,6 +13,7 @@ export interface ItemSubmissionData {
 
 export interface ItemSubmissionsResponse {
   data: Page<ItemSubmission>;
+  config: SubmissionConfig;
   profilesMap: { [id: string]: Profile };
   problemAliasesMap: { [id: string]: string };
   itemNumbersMap: { [itemJid: string]: number };
@@ -45,6 +22,7 @@ export interface ItemSubmissionsResponse {
 
 export interface AnswerSummaryResponse {
   profile: Profile;
+  config: SubmissionConfig;
   itemJidsByProblemJid: { [problemJid: string]: string[] };
   submissionsByItemJid: { [itemJid: string]: ItemSubmission };
   problemAliasesMap: { [id: string]: string };

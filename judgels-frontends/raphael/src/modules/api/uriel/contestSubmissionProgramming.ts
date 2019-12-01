@@ -1,18 +1,12 @@
 import { stringify } from 'query-string';
 
-import { get, postMultipart, post } from '../../../modules/api/http';
-import { Page } from '../../../modules/api/pagination';
-import { ProfilesMap } from '../../../modules/api/jophiel/profile';
-import { Submission, SubmissionWithSourceResponse } from '../../../modules/api/sandalphon/submissionProgramming';
-
+import { get, postMultipart, post } from '../http';
+import { SubmissionsResponse, SubmissionWithSourceResponse } from '../sandalphon/submissionProgramming';
 import { baseContestsURL } from './contest';
 import { ContestSubmissionConfig } from './contestSubmission';
 
-export interface ContestSubmissionsResponse {
-  data: Page<Submission>;
+export interface ContestSubmissionsResponse extends SubmissionsResponse {
   config: ContestSubmissionConfig;
-  profilesMap: ProfilesMap;
-  problemAliasesMap: { [problemJid: string]: string };
 }
 
 const baseURL = `${baseContestsURL}/submissions/programming`;

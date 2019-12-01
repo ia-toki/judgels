@@ -7,8 +7,8 @@ import { ContentCard } from '../../../../../../../../components/ContentCard/Cont
 import { AppState } from '../../../../../../../../modules/store';
 import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { AnswerSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/chapterSubmissionBundle';
-import { ChapterSubmissionConfig } from '../../../../../../../../modules/api/jerahmeel/chapterSubmission';
+import { AnswerSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
+import { SubmissionConfig } from '../../../../../../../../modules/api/jerahmeel/submission';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import {
@@ -28,7 +28,7 @@ export interface SubmissionSummaryPageProps extends RouteComponentProps<Submissi
 }
 
 export interface SubmissionSummaryPageState {
-  config?: ChapterSubmissionConfig;
+  config?: SubmissionConfig;
   profile?: Profile;
   problemSummaries: ProblemSubmissionCardProps[];
 }

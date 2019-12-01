@@ -12,7 +12,7 @@ export const chapterSubmissionActions = {
     return async (dispatch, getState, { chapterSubmissionBundleAPI, toastActions }) => {
       const token = selectToken(getState());
       const data = {
-        chapterJid,
+        containerJid: chapterJid,
         problemJid,
         itemJid,
         answer,

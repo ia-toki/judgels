@@ -12,7 +12,7 @@ export const problemSetSubmissionActions = {
     return async (dispatch, getState, { problemSetSubmissionBundleAPI, toastActions }) => {
       const token = selectToken(getState());
       const data = {
-        problemSetJid,
+        containerJid: problemSetJid,
         problemJid,
         itemJid,
         answer,

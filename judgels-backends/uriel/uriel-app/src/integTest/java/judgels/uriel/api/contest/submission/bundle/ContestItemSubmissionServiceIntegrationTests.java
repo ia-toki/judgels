@@ -19,6 +19,7 @@ import java.util.Optional;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
+import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
 import judgels.sandalphon.api.submission.bundle.Verdict;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
@@ -46,8 +47,8 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
                         .submissionsLimit(0)
                         .build()));
 
-        submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
-                .contestJid(contest.getJid())
+        submissionService.createItemSubmission(CONTESTANT_HEADER, new ItemSubmissionData.Builder()
+                .containerJid(contest.getJid())
                 .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMtOoiXuIgPcD1oUsMzvbP")
                 .answer("b")
@@ -216,16 +217,16 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
                 new Grading.Builder().verdict(Verdict.WRONG_ANSWER).score(-1).build());
 
-        submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
-                .contestJid(contest.getJid())
+        submissionService.createItemSubmission(CONTESTANT_HEADER, new ItemSubmissionData.Builder()
+                .containerJid(contest.getJid())
                 .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMtOoiXuIgPcD1oUsMzvbP")
                 .answer("a")
                 .build()
         );
 
-        submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
-                .contestJid(contest.getJid())
+        submissionService.createItemSubmission(CONTESTANT_HEADER, new ItemSubmissionData.Builder()
+                .containerJid(contest.getJid())
                 .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMPeKuqUA0Q7zvJjTQXXVD")
                 .answer("a")
@@ -284,16 +285,16 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
                 new Grading.Builder().verdict(Verdict.ACCEPTED).score(4).build());
 
-        submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
-                .contestJid(contest.getJid())
+        submissionService.createItemSubmission(CONTESTANT_HEADER, new ItemSubmissionData.Builder()
+                .containerJid(contest.getJid())
                 .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMkhUulUkbUkYGBKYkfLHUh")
                 .answer("print('hello world!')")
                 .build()
         );
 
-        submissionService.createItemSubmission(CONTESTANT_HEADER, new ContestItemSubmissionData.Builder()
-                .contestJid(contest.getJid())
+        submissionService.createItemSubmission(CONTESTANT_HEADER, new ItemSubmissionData.Builder()
+                .containerJid(contest.getJid())
                 .problemJid(PROBLEM_3_JID)
                 .itemJid("JIDITEMcD1oSDFJLadFSsMddfsf")
                 .answer("123")

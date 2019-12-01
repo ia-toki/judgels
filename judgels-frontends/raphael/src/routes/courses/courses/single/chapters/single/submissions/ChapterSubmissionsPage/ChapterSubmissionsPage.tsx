@@ -8,7 +8,7 @@ import Pagination from '../../../../../../../../components/Pagination/Pagination
 import { AppState } from '../../../../../../../../modules/store';
 import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { ChapterSubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/chapterSubmissionProgramming';
+import { SubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { ChapterSubmissionsTable } from '../ChapterSubmissionsTable/ChapterSubmissionsTable';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
@@ -22,12 +22,12 @@ export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
     userJid?: string,
     problemJid?: string,
     page?: number
-  ) => Promise<ChapterSubmissionsResponse>;
+  ) => Promise<SubmissionsResponse>;
   onAppendRoute: (queries) => any;
 }
 
 interface ChapterSubmissionsPageState {
-  response?: ChapterSubmissionsResponse;
+  response?: SubmissionsResponse;
   isFilterLoading?: boolean;
 }
 

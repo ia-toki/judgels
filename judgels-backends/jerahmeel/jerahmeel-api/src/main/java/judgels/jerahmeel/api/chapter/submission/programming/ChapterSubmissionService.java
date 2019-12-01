@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.jerahmeel.api.submission.programming.SubmissionsResponse;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.service.api.actor.AuthHeader;
 
@@ -18,7 +19,7 @@ public interface ChapterSubmissionService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    ChapterSubmissionsResponse getSubmissions(
+    SubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("chapterJid") String chapterJid,
             @QueryParam("userJid") Optional<String> userJid,

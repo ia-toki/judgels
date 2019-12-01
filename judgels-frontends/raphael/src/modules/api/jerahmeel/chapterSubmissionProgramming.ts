@@ -1,18 +1,9 @@
 import { stringify } from 'query-string';
 
 import { get, postMultipart } from '../../../modules/api/http';
-import { Page } from '../../../modules/api/pagination';
-import { ProfilesMap } from '../../../modules/api/jophiel/profile';
-import { Submission, SubmissionWithSourceResponse } from '../../../modules/api/sandalphon/submissionProgramming';
-import { ChapterSubmissionConfig } from './chapterSubmission';
+import { SubmissionWithSourceResponse } from '../../../modules/api/sandalphon/submissionProgramming';
+import { SubmissionsResponse } from './submissionProgramming';
 import { baseChaptersURL } from './chapter';
-
-export interface ChapterSubmissionsResponse {
-  data: Page<Submission>;
-  config: ChapterSubmissionConfig;
-  profilesMap: ProfilesMap;
-  problemAliasesMap: { [problemJid: string]: string };
-}
 
 const baseURL = `${baseChaptersURL}/submissions/programming`;
 
@@ -23,7 +14,7 @@ export const chapterSubmissionProgrammingAPI = {
     userJid?: string,
     problemJid?: string,
     page?: number
-  ): Promise<ChapterSubmissionsResponse> => {
+  ): Promise<SubmissionsResponse> => {
     const params = stringify({ chapterJid, userJid, problemJid, page });
     return get(`${baseURL}?${params}`, token);
   },

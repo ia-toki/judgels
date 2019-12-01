@@ -27,6 +27,7 @@ import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
+import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
@@ -36,7 +37,6 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.uriel.api.contest.Contest;
 import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
-import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionData;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionService;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionsResponse;
 import judgels.uriel.api.contest.submission.bundle.ContestantAnswerSummaryResponse;
@@ -205,10 +205,10 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
 
     @Override
     @UnitOfWork
-    public void createItemSubmission(AuthHeader authHeader, ContestItemSubmissionData data) {
+    public void createItemSubmission(AuthHeader authHeader, ItemSubmissionData data) {
         String actorJid = actorChecker.check(authHeader);
-        Contest contest = checkFound(contestStore.getContestByJid(data.getContestJid()));
-        ContestProblem problem = checkFound(problemStore.getProblem(data.getContestJid(), data.getProblemJid()));
+        Contest contest = checkFound(contestStore.getContestByJid(data.getContainerJid()));
+        ContestProblem problem = checkFound(problemStore.getProblem(data.getContainerJid(), data.getProblemJid()));
         checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, 0));
 
         Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
@@ -216,12 +216,12 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
 
         if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
-                    data.getContestJid(), data.getProblemJid(), data.getItemJid(), actorJid);
+                    data.getContainerJid(), data.getProblemJid(), data.getItemJid(), actorJid);
 
             LOGGER.info(
                     ITEM_SUBMISSION_MARKER,
                     "Empty answer submitted by {} for item {} in problem {} and contest {}",
-                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid()
+                    actorJid, data.getItemJid(), data.getProblemJid(), data.getContainerJid()
             );
         } else {
             Grading grading = itemSubmissionGraderRegistry
@@ -229,7 +229,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                     .grade(item.get(), data.getAnswer());
 
             submissionStore.upsertSubmission(
-                    data.getContestJid(),
+                    data.getContainerJid(),
                     data.getProblemJid(),
                     data.getItemJid(),
                     data.getAnswer(),
@@ -240,7 +240,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
             LOGGER.info(
                     ITEM_SUBMISSION_MARKER,
                     "Answer '{}' submitted by {} for item {} in problem {} and contest {}, verdict {}, score {}",
-                    data.getAnswer(), actorJid, data.getItemJid(), data.getProblemJid(), data.getContestJid(),
+                    data.getAnswer(), actorJid, data.getItemJid(), data.getProblemJid(), data.getContainerJid(),
                     grading.getVerdict(), grading.getScore()
             );
         }

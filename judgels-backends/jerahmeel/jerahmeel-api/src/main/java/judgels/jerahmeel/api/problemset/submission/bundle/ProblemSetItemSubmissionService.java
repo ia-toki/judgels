@@ -13,7 +13,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import judgels.jerahmeel.api.submission.bundle.AnswerSummaryResponse;
+import judgels.jerahmeel.api.submission.bundle.ItemSubmissionsResponse;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
+import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/problemsets/submissions/bundle")
@@ -21,7 +24,7 @@ public interface ProblemSetItemSubmissionService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
-    ProblemSetItemSubmissionsResponse getSubmissions(
+    ItemSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("problemSetJid") String problemSetJid,
             @QueryParam("username") Optional<String> username,
@@ -31,7 +34,7 @@ public interface ProblemSetItemSubmissionService {
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
-    void createItemSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ProblemSetItemSubmissionData data);
+    void createItemSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ItemSubmissionData data);
 
     @GET
     @Path("/summary")

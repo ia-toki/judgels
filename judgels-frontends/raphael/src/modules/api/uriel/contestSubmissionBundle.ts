@@ -1,37 +1,21 @@
 import { stringify } from 'query-string';
 
-import { get, post } from '../../../modules/api/http';
-import { Page } from '../../../modules/api/pagination';
-import { ItemSubmission } from '../../../modules/api/sandalphon/submissionBundle';
+import { get, post } from '../http';
+import {
+  AnswerSummaryResponse,
+  ItemSubmission,
+  ItemSubmissionData,
+  ItemSubmissionsResponse,
+} from '../sandalphon/submissionBundle';
 import { ContestSubmissionConfig } from './contestSubmission';
-import { Profile } from '../../../modules/api/jophiel/profile';
 import { baseContestsURL } from './contest';
-import { ItemType } from '../sandalphon/problemBundle';
 
-export interface ContestItemSubmissionData {
-  contestJid: string;
-  problemJid: string;
-  itemJid: string;
-  answer: string;
+export interface ContestItemSubmissionsResponse extends ItemSubmissionsResponse {
+  config: ContestSubmissionConfig;
 }
 
-export interface ContestItemSubmissionsResponse {
-  data: Page<ItemSubmission>;
+export interface ContestantAnswerSummaryResponse extends AnswerSummaryResponse {
   config: ContestSubmissionConfig;
-  profilesMap: { [id: string]: Profile };
-  problemAliasesMap: { [id: string]: string };
-  itemNumbersMap: { [itemJid: string]: number };
-  itemTypesMap: { [itemJid: string]: ItemType };
-}
-
-export interface ContestantAnswerSummaryResponse {
-  profile: Profile;
-  config: ContestSubmissionConfig;
-  itemJidsByProblemJid: { [problemJid: string]: string[] };
-  submissionsByItemJid: { [itemJid: string]: ItemSubmission };
-  problemAliasesMap: { [id: string]: string };
-  problemNamesMap: { [id: string]: string };
-  itemTypesMap: { [itemJid: string]: ItemType };
 }
 
 const baseURL = `${baseContestsURL}/submissions/bundle`;
@@ -48,7 +32,7 @@ export const contestSubmissionBundleAPI = {
     return get(`${baseURL}?${params}`, token);
   },
 
-  createItemSubmission: (token: string, data: ContestItemSubmissionData): Promise<void> => {
+  createItemSubmission: (token: string, data: ItemSubmissionData): Promise<void> => {
     return post(`${baseURL}/`, token, data);
   },
 

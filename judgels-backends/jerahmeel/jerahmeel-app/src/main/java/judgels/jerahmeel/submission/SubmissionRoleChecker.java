@@ -1,13 +1,13 @@
-package judgels.jerahmeel.problemset.submission;
+package judgels.jerahmeel.submission;
 
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.AdminRoleDao;
 
-public class ProblemSetSubmissionRoleChecker {
+public class SubmissionRoleChecker {
     private final AdminRoleDao adminRoleDao;
 
     @Inject
-    public ProblemSetSubmissionRoleChecker(AdminRoleDao adminRoleDao) {
+    public SubmissionRoleChecker(AdminRoleDao adminRoleDao) {
         this.adminRoleDao = adminRoleDao;
     }
 

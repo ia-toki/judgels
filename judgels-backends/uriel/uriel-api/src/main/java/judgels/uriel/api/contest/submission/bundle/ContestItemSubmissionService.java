@@ -14,6 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
+import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/submissions/bundle")
@@ -31,7 +32,7 @@ public interface ContestItemSubmissionService {
     @POST
     @Path("/")
     @Consumes(APPLICATION_JSON)
-    void createItemSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ContestItemSubmissionData data);
+    void createItemSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, ItemSubmissionData data);
 
     @GET
     @Path("/summary")

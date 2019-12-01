@@ -1,4 +1,4 @@
-export interface ChapterSubmissionConfig {
+export interface SubmissionConfig {
   canManage: boolean;
   problemJids: string[];
 }

@@ -41,7 +41,7 @@ describe('bundle contestSubmissionActions', () => {
       contestSubmissionBundleAPI.createItemSubmission.mockResolvedValue({});
       await action(dispatch, getState, { contestSubmissionBundleAPI, toastActions });
       expect(contestSubmissionBundleAPI.createItemSubmission).toHaveBeenCalledWith(token, {
-        contestJid: 'testcontestjid',
+        containerJid: 'testcontestjid',
         problemJid: 'testprobjid',
         itemJid: 'testitemjid',
         answer: 'testans',

@@ -17,14 +17,13 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
-import judgels.jerahmeel.api.problemset.submission.ProblemSetSubmissionConfig;
-import judgels.jerahmeel.api.problemset.submission.bundle.AnswerSummaryResponse;
-import judgels.jerahmeel.api.problemset.submission.bundle.ProblemSetItemSubmissionData;
 import judgels.jerahmeel.api.problemset.submission.bundle.ProblemSetItemSubmissionService;
-import judgels.jerahmeel.api.problemset.submission.bundle.ProblemSetItemSubmissionsResponse;
+import judgels.jerahmeel.api.submission.SubmissionConfig;
+import judgels.jerahmeel.api.submission.bundle.AnswerSummaryResponse;
+import judgels.jerahmeel.api.submission.bundle.ItemSubmissionsResponse;
 import judgels.jerahmeel.problemset.ProblemSetStore;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
-import judgels.jerahmeel.problemset.submission.ProblemSetSubmissionRoleChecker;
+import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
@@ -35,6 +34,7 @@ import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
 import judgels.sandalphon.api.submission.bundle.Grading;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
+import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.sandalphon.submission.bundle.ItemSubmissionRegrader;
@@ -46,7 +46,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
     private final ActorChecker actorChecker;
     private final ProblemSetStore problemSetStore;
     private final ItemSubmissionStore submissionStore;
-    private final ProblemSetSubmissionRoleChecker submissionRoleChecker;
+    private final SubmissionRoleChecker submissionRoleChecker;
     private final ProblemSetProblemStore problemStore;
     private final ProfileService profileService;
     private final UserSearchService userSearchService;
@@ -59,7 +59,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
             ActorChecker actorChecker,
             ProblemSetStore problemSetStore,
             ItemSubmissionStore submissionStore,
-            ProblemSetSubmissionRoleChecker submissionRoleChecker,
+            SubmissionRoleChecker submissionRoleChecker,
             ProblemSetProblemStore problemStore,
             ProfileService profileService,
             UserSearchService userSearchService,
@@ -81,7 +81,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
 
     @Override
     @UnitOfWork
-    public ProblemSetItemSubmissionsResponse getSubmissions(
+    public ItemSubmissionsResponse getSubmissions(
             AuthHeader authHeader,
             String problemSetJid,
             Optional<String> username,
@@ -137,7 +137,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
                         entry -> entry.getValue().getType())
                 );
 
-        return new ProblemSetItemSubmissionsResponse.Builder()
+        return new ItemSubmissionsResponse.Builder()
                 .data(submissions)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
@@ -148,24 +148,24 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
 
     @Override
     @UnitOfWork
-    public void createItemSubmission(AuthHeader authHeader, ProblemSetItemSubmissionData data) {
+    public void createItemSubmission(AuthHeader authHeader, ItemSubmissionData data) {
         String actorJid = actorChecker.check(authHeader);
-        checkFound(problemSetStore.getProblemSetByJid(data.getProblemSetJid()));
-        checkFound(problemStore.getProblem(data.getProblemSetJid(), data.getProblemJid()));
+        checkFound(problemSetStore.getProblemSetByJid(data.getContainerJid()));
+        checkFound(problemStore.getProblem(data.getContainerJid(), data.getProblemJid()));
 
         Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
         checkFound(item);
 
         if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
-                    data.getProblemSetJid(), data.getProblemJid(), data.getItemJid(), actorJid);
+                    data.getContainerJid(), data.getProblemJid(), data.getItemJid(), actorJid);
         } else {
             Grading grading = itemSubmissionGraderRegistry
                     .get(item.get().getType())
                     .grade(item.get(), data.getAnswer());
 
             submissionStore.upsertSubmission(
-                    data.getProblemSetJid(),
+                    data.getContainerJid(),
                     data.getProblemJid(),
                     data.getItemJid(),
                     data.getAnswer(),
@@ -264,7 +264,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
 
         Profile profile = profileService.getProfile(viewedUserJid);
 
-        ProblemSetSubmissionConfig config = new ProblemSetSubmissionConfig.Builder()
+        SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
                 .problemJids(bundleProblemJidsSortedByAlias)
                 .build();

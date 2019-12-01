@@ -20,12 +20,12 @@ import javax.ws.rs.Path;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
-import judgels.jerahmeel.api.chapter.submission.ChapterSubmissionConfig;
 import judgels.jerahmeel.api.chapter.submission.programming.ChapterSubmissionService;
-import judgels.jerahmeel.api.chapter.submission.programming.ChapterSubmissionsResponse;
+import judgels.jerahmeel.api.submission.SubmissionConfig;
+import judgels.jerahmeel.api.submission.programming.SubmissionsResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
-import judgels.jerahmeel.chapter.submission.ChapterSubmissionRoleChecker;
+import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
@@ -50,7 +50,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
     private final SubmissionStore submissionStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
     private final SubmissionClient submissionClient;
-    private final ChapterSubmissionRoleChecker submissionRoleChecker;
+    private final SubmissionRoleChecker submissionRoleChecker;
     private final ChapterProblemStore problemStore;
     private final ProfileService profileService;
     private final ProblemClient problemClient;
@@ -62,7 +62,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
             SubmissionStore submissionStore,
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionClient submissionClient,
-            ChapterSubmissionRoleChecker submissionRoleChecker,
+            SubmissionRoleChecker submissionRoleChecker,
             ChapterProblemStore problemStore,
             ProfileService profileService,
             ProblemClient problemClient) {
@@ -80,7 +80,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ChapterSubmissionsResponse getSubmissions(
+    public SubmissionsResponse getSubmissions(
             Optional<AuthHeader> authHeader,
             String chapterJid,
             Optional<String> userJid,
@@ -105,13 +105,13 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids);
 
-        ChapterSubmissionConfig config = new ChapterSubmissionConfig.Builder()
+        SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
                 .build();
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(chapter.getJid(), problemJids);
 
-        return new ChapterSubmissionsResponse.Builder()
+        return new SubmissionsResponse.Builder()
                 .data(submissions)
                 .config(config)
                 .profilesMap(profilesMap)
