@@ -8,7 +8,7 @@ import { AppState } from '../../../../../../../../modules/store';
 import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
 import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
 import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
-import { AnswerSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
+import { SubmissionSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { SubmissionConfig } from '../../../../../../../../modules/api/jerahmeel/submission';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
@@ -19,37 +19,40 @@ import {
 } from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
 import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../modules/problemSetSubmissionActions';
 
-interface SubmissionSummaryPageRoute {
+interface ProblemSubmissionSummaryPageRoute {
   username?: string;
 }
 
-export interface SubmissionSummaryPageProps extends RouteComponentProps<SubmissionSummaryPageRoute> {
+export interface ProblemSubmissionSummaryPageProps extends RouteComponentProps<ProblemSubmissionSummaryPageRoute> {
   problemSet: ProblemSet;
   problem: ProblemSetProblem;
   language?: string;
-  onGetSummary: (
+  onGetSubmissionSummary: (
     problemSetJid: string,
     problemJid: string,
     username?: string,
     language?: string
-  ) => Promise<AnswerSummaryResponse>;
+  ) => Promise<SubmissionSummaryResponse>;
 }
 
-export interface SubmissionSummaryPageState {
+export interface ProblemSubmissionSummaryPageState {
   config?: SubmissionConfig;
   profile?: Profile;
   problemSummaries: ProblemSubmissionCardProps[];
 }
 
-class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, SubmissionSummaryPageState> {
-  state: SubmissionSummaryPageState = {
+class ProblemSubmissionSummaryPage extends React.Component<
+  ProblemSubmissionSummaryPageProps,
+  ProblemSubmissionSummaryPageState
+> {
+  state: ProblemSubmissionSummaryPageState = {
     config: undefined,
     problemSummaries: undefined,
   };
 
   async refreshSubmissions() {
-    const { problemSet, problem, onGetSummary } = this.props;
-    const response = await onGetSummary(
+    const { problemSet, problem, onGetSubmissionSummary } = this.props;
+    const response = await onGetSubmissionSummary(
       problemSet.jid,
       problem.problemJid,
       this.props.match.params.username,
@@ -94,7 +97,7 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
   };
 }
 
-export function createSubmissionSummaryPage(problemSetSubmissionActions) {
+export function createProblemSubmissionSummaryPage(problemSetSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
     problemSet: selectProblemSet(state),
     problem: selectProblemSetProblem(state),
@@ -102,10 +105,10 @@ export function createSubmissionSummaryPage(problemSetSubmissionActions) {
   });
 
   const mapDispatchToProps = {
-    onGetSummary: problemSetSubmissionActions.getSummary,
+    onGetSubmissionSummary: problemSetSubmissionActions.getSubmissionSummary,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionSummaryPage));
 }
 
-export default createSubmissionSummaryPage(injectedProblemSetSubmissionActions);
+export default createProblemSubmissionSummaryPage(injectedProblemSetSubmissionActions);

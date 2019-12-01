@@ -37,7 +37,7 @@ public interface ContestItemSubmissionService {
     @GET
     @Path("/summary")
     @Produces(APPLICATION_JSON)
-    ContestantAnswerSummaryResponse getAnswerSummaryForContestant(
+    ContestSubmissionSummaryResponse getSubmissionSummary(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,
@@ -46,7 +46,7 @@ public interface ContestItemSubmissionService {
     @GET
     @Path("/answers")
     @Produces(APPLICATION_JSON)
-    Map<String, ItemSubmission> getLatestSubmissionsByUserForProblemInContest(
+    Map<String, ItemSubmission> getLatestSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,

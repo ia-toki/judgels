@@ -5,7 +5,7 @@ import java.util.Map;
 import judgels.jophiel.api.profile.Profile;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 
-public interface AnswerSummaryResponse {
+public interface SubmissionSummaryResponse {
     Profile getProfile();
     Map<String, List<String>> getItemJidsByProblemJid();
     Map<String, ItemSubmission> getSubmissionsByItemJid();

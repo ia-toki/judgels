@@ -43,7 +43,7 @@ export interface ItemSubmissionsResponse {
   itemTypesMap: { [itemJid: string]: ItemType };
 }
 
-export interface AnswerSummaryResponse {
+export interface SubmissionSummaryResponse {
   profile: Profile;
   itemJidsByProblemJid: { [problemJid: string]: string[] };
   submissionsByItemJid: { [itemJid: string]: ItemSubmission };

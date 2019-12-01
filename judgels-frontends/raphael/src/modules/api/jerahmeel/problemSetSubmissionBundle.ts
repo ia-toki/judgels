@@ -2,7 +2,7 @@ import { stringify } from 'query-string';
 
 import { get, post } from '../http';
 import { ItemSubmission } from '../sandalphon/submissionBundle';
-import { AnswerSummaryResponse, ItemSubmissionData, ItemSubmissionsResponse } from './submissionBundle';
+import { SubmissionSummaryResponse, ItemSubmissionData, ItemSubmissionsResponse } from './submissionBundle';
 import { baseProblemSetsURL } from './problemSet';
 
 const baseURL = `${baseProblemSetsURL}/submissions/bundle`;
@@ -23,18 +23,18 @@ export const problemSetSubmissionBundleAPI = {
     return post(`${baseURL}/`, token, data);
   },
 
-  getAnswerSummary: (
+  getSubmissionSummary: (
     token: string,
     problemSetJid: string,
     problemJid: string,
     username?: string,
     language?: string
-  ): Promise<AnswerSummaryResponse> => {
+  ): Promise<SubmissionSummaryResponse> => {
     const params = stringify({ problemSetJid, problemJid, username, language });
     return get(`${baseURL}/summary?${params}`, token);
   },
 
-  getLatestSubmissionsByUserForProblemInProblemSet: (
+  getLatestSubmissions: (
     token: string,
     problemSetJid: string,
     problemAlias: string,

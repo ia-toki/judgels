@@ -5,9 +5,9 @@ import judgels.jerahmeel.api.submission.SubmissionConfig;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableAnswerSummaryResponse.class)
-public interface AnswerSummaryResponse extends judgels.sandalphon.api.submission.bundle.AnswerSummaryResponse {
+@JsonDeserialize(as = ImmutableSubmissionSummaryResponse.class)
+public interface SubmissionSummaryResponse extends judgels.sandalphon.api.submission.bundle.SubmissionSummaryResponse {
     SubmissionConfig getConfig();
 
-    class Builder extends ImmutableAnswerSummaryResponse.Builder {}
+    class Builder extends ImmutableSubmissionSummaryResponse.Builder {}
 }

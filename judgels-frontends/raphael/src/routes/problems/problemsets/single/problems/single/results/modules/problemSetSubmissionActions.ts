@@ -23,21 +23,17 @@ export const problemSetSubmissionActions = {
     };
   },
 
-  getSummary: (problemSetJid: string, problemJid: string, username?: string, language?: string) => {
+  getSubmissionSummary: (problemSetJid: string, problemJid: string, username?: string, language?: string) => {
     return async (dispatch, getState, { problemSetSubmissionBundleAPI }) => {
       const token = selectToken(getState());
-      return problemSetSubmissionBundleAPI.getAnswerSummary(token, problemSetJid, problemJid, username, language);
+      return problemSetSubmissionBundleAPI.getSubmissionSummary(token, problemSetJid, problemJid, username, language);
     };
   },
 
   getLatestSubmissions: (problemSetJid: string, problemAlias: string) => {
     return async (dispatch, getState, { problemSetSubmissionBundleAPI }) => {
       const token = selectToken(getState());
-      return problemSetSubmissionBundleAPI.getLatestSubmissionsByUserForProblemInProblemSet(
-        token,
-        problemSetJid,
-        problemAlias
-      );
+      return problemSetSubmissionBundleAPI.getLatestSubmissions(token, problemSetJid, problemAlias);
     };
   },
 

@@ -23,17 +23,17 @@ export const chapterSubmissionActions = {
     };
   },
 
-  getSummary: (chapterJid: string, username?: string, language?: string) => {
+  getSubmissionSummary: (chapterJid: string, username?: string, language?: string) => {
     return async (dispatch, getState, { chapterSubmissionBundleAPI }) => {
       const token = selectToken(getState());
-      return chapterSubmissionBundleAPI.getAnswerSummary(token, chapterJid, username, language);
+      return chapterSubmissionBundleAPI.getSubmissionSummary(token, chapterJid, username, language);
     };
   },
 
   getLatestSubmissions: (chapterJid: string, problemAlias: string) => {
     return async (dispatch, getState, { chapterSubmissionBundleAPI }) => {
       const token = selectToken(getState());
-      return chapterSubmissionBundleAPI.getLatestSubmissionsByUserForProblemInChapter(token, chapterJid, problemAlias);
+      return chapterSubmissionBundleAPI.getLatestSubmissions(token, chapterJid, problemAlias);
     };
   },
 

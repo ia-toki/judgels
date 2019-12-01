@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { withRouter, Route } from 'react-router';
-import ContestSubmissionsPage from './ContestSubmissionsPage/ContestSubmissionsPage';
-import SubmissionSummaryPage from './SubmissionSummaryPage/SubmissionSummaryPage';
-import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import { connect } from 'react-redux';
+import { withRouter, Route } from 'react-router';
+
+import ContestSubmissionsPage from './ContestSubmissionsPage/ContestSubmissionsPage';
+import ContestSubmissionSummaryPage from './ContestSubmissionSummaryPage/ContestSubmissionSummaryPage';
+import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import { ContestWebConfig, ContestRole } from '../../../../../../modules/api/uriel/contestWeb';
 
 export interface ContestSubmissionRoutesProps {
@@ -15,11 +16,11 @@ const ContestSubmissionRoutes: React.FunctionComponent<ContestSubmissionRoutesPr
     return null;
   }
   if (webConfig.role === ContestRole.Contestant) {
-    return <SubmissionSummaryPage />;
+    return <ContestSubmissionSummaryPage />;
   }
   return (
     <div>
-      <Route path="/contests/:contestSlug/submissions/users/:username" component={SubmissionSummaryPage} />
+      <Route path="/contests/:contestSlug/submissions/users/:username" component={ContestSubmissionSummaryPage} />
       <Route exact path="/contests/:contestSlug/submissions" component={ContestSubmissionsPage} />
     </div>
   );

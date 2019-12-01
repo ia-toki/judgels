@@ -15,8 +15,8 @@ describe('bundle contestSubmissionActions', () => {
     contestSubmissionBundleAPI = {
       getSubmissions: jest.fn(),
       createItemSubmission: jest.fn(),
-      getAnswerSummaryForContestant: jest.fn(),
-      getLatestSubmissionsByUserForProblemInContest: jest.fn(),
+      getSubmissionSummary: jest.fn(),
+      getLatestSubmissions: jest.fn(),
     };
 
     toastActions = {
@@ -50,13 +50,13 @@ describe('bundle contestSubmissionActions', () => {
     });
   });
 
-  describe('getSummary()', () => {
-    const { getSummary } = contestSubmissionActions;
+  describe('getSubmissionSummary()', () => {
+    const { getSubmissionSummary } = contestSubmissionActions;
     it('calls API to get summary', async () => {
-      const action = getSummary('contestjid', 'username', 'language');
-      contestSubmissionBundleAPI.getAnswerSummaryForContestant.mockResolvedValue({});
+      const action = getSubmissionSummary('contestjid', 'username', 'language');
+      contestSubmissionBundleAPI.getSubmissionSummary.mockResolvedValue({});
       await action(dispatch, getState, { contestSubmissionBundleAPI });
-      expect(contestSubmissionBundleAPI.getAnswerSummaryForContestant).toHaveBeenCalledWith(
+      expect(contestSubmissionBundleAPI.getSubmissionSummary).toHaveBeenCalledWith(
         token,
         'contestjid',
         'username',
@@ -69,13 +69,9 @@ describe('bundle contestSubmissionActions', () => {
     const { getLatestSubmissions } = contestSubmissionActions;
     it('calls API to get latest submissions', async () => {
       const action = getLatestSubmissions('contestjid', 'alias');
-      contestSubmissionBundleAPI.getLatestSubmissionsByUserForProblemInContest.mockResolvedValue({});
+      contestSubmissionBundleAPI.getLatestSubmissions.mockResolvedValue({});
       await action(dispatch, getState, { contestSubmissionBundleAPI });
-      expect(contestSubmissionBundleAPI.getLatestSubmissionsByUserForProblemInContest).toHaveBeenCalledWith(
-        token,
-        'contestjid',
-        'alias'
-      );
+      expect(contestSubmissionBundleAPI.getLatestSubmissions).toHaveBeenCalledWith(token, 'contestjid', 'alias');
     });
   });
 });

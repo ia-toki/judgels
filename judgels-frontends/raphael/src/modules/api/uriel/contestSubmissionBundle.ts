@@ -2,7 +2,7 @@ import { stringify } from 'query-string';
 
 import { get, post } from '../http';
 import {
-  AnswerSummaryResponse,
+  SubmissionSummaryResponse,
   ItemSubmission,
   ItemSubmissionData,
   ItemSubmissionsResponse,
@@ -14,7 +14,7 @@ export interface ContestItemSubmissionsResponse extends ItemSubmissionsResponse 
   config: ContestSubmissionConfig;
 }
 
-export interface ContestantAnswerSummaryResponse extends AnswerSummaryResponse {
+export interface ContestSubmissionSummaryResponse extends SubmissionSummaryResponse {
   config: ContestSubmissionConfig;
 }
 
@@ -36,17 +36,17 @@ export const contestSubmissionBundleAPI = {
     return post(`${baseURL}/`, token, data);
   },
 
-  getAnswerSummaryForContestant: (
+  getSubmissionSummary: (
     token: string,
     contestJid: string,
     username?: string,
     language?: string
-  ): Promise<ContestantAnswerSummaryResponse> => {
+  ): Promise<ContestSubmissionSummaryResponse> => {
     const params = stringify({ contestJid, username, language });
     return get(`${baseURL}/summary?${params}`, token);
   },
 
-  getLatestSubmissionsByUserForProblemInContest: (
+  getLatestSubmissions: (
     token: string,
     contestJid: string,
     problemAlias: string,

@@ -15,7 +15,7 @@ import { selectCourseChapter, selectCourseChapterName } from '../modules/courseC
 import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
 import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
 import ChapterSubmissionRoutes from './submissions/ChapterSubmissionRoutes';
-import SubmissionSummaryPage from './results/SubmissionSummaryPage/SubmissionSummaryPage';
+import ChapterSubmissionSummaryPage from './results/ChapterSubmissionSummaryPage/ChapterSubmissionSummaryPage';
 
 import './SingleCourseChapterRoutes.css';
 
@@ -53,7 +53,7 @@ const SingleCourseChapterRoutes = (props: SingleCourseChapterRoutesProps) => {
       titleIcon: 'manually-entered-data',
       title: 'Quiz Results',
       routeComponent: Route,
-      component: SubmissionSummaryPage,
+      component: ChapterSubmissionSummaryPage,
     },
     {
       id: 'submissions',

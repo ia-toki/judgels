@@ -7,7 +7,7 @@ import { ContentCard } from '../../../../../../../../components/ContentCard/Cont
 import { AppState } from '../../../../../../../../modules/store';
 import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
-import { AnswerSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
+import { SubmissionSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { SubmissionConfig } from '../../../../../../../../modules/api/jerahmeel/submission';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -17,31 +17,42 @@ import {
 } from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
 import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../modules/chapterSubmissionActions';
 
-interface SubmissionSummaryPageRoute {
+interface ChapterSubmissionSummaryPageRoute {
   username?: string;
 }
 
-export interface SubmissionSummaryPageProps extends RouteComponentProps<SubmissionSummaryPageRoute> {
+export interface ChapterSubmissionSummaryPageProps extends RouteComponentProps<ChapterSubmissionSummaryPageRoute> {
   chapter: CourseChapter;
   language?: string;
-  onGetSummary: (chapterJid: string, username?: string, language?: string) => Promise<AnswerSummaryResponse>;
+  onGetSubmissionSummary: (
+    chapterJid: string,
+    username?: string,
+    language?: string
+  ) => Promise<SubmissionSummaryResponse>;
 }
 
-export interface SubmissionSummaryPageState {
+export interface ChapterSubmissionSummaryPageState {
   config?: SubmissionConfig;
   profile?: Profile;
   problemSummaries: ProblemSubmissionCardProps[];
 }
 
-class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, SubmissionSummaryPageState> {
-  state: SubmissionSummaryPageState = {
+class ChapterSubmissionSummaryPage extends React.Component<
+  ChapterSubmissionSummaryPageProps,
+  ChapterSubmissionSummaryPageState
+> {
+  state: ChapterSubmissionSummaryPageState = {
     config: undefined,
     problemSummaries: undefined,
   };
 
   async refreshSubmissions() {
-    const { chapter, onGetSummary } = this.props;
-    const response = await onGetSummary(chapter.chapterJid, this.props.match.params.username, this.props.language);
+    const { chapter, onGetSubmissionSummary } = this.props;
+    const response = await onGetSubmissionSummary(
+      chapter.chapterJid,
+      this.props.match.params.username,
+      this.props.language
+    );
 
     const problemSummaries: ProblemSubmissionCardProps[] = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
@@ -81,17 +92,17 @@ class SubmissionSummaryPage extends React.Component<SubmissionSummaryPageProps, 
   };
 }
 
-export function createSubmissionSummaryPage(chapterSubmissionActions) {
+export function createChapterSubmissionSummaryPage(chapterSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
     chapter: selectCourseChapter(state),
     language: selectStatementLanguage(state),
   });
 
   const mapDispatchToProps = {
-    onGetSummary: chapterSubmissionActions.getSummary,
+    onGetSubmissionSummary: chapterSubmissionActions.getSubmissionSummary,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionSummaryPage));
 }
 
-export default createSubmissionSummaryPage(injectedChapterSubmissionActions);
+export default createChapterSubmissionSummaryPage(injectedChapterSubmissionActions);

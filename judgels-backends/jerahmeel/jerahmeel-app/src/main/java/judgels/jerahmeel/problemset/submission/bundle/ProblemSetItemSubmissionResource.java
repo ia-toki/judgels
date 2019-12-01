@@ -20,8 +20,8 @@ import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.api.problemset.submission.bundle.ProblemSetItemSubmissionService;
 import judgels.jerahmeel.api.submission.SubmissionConfig;
-import judgels.jerahmeel.api.submission.bundle.AnswerSummaryResponse;
 import judgels.jerahmeel.api.submission.bundle.ItemSubmissionsResponse;
+import judgels.jerahmeel.api.submission.bundle.SubmissionSummaryResponse;
 import judgels.jerahmeel.problemset.ProblemSetStore;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.submission.SubmissionRoleChecker;
@@ -177,7 +177,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, ItemSubmission> getLatestSubmissionsByUserForProblemInProblemSet(
+    public Map<String, ItemSubmission> getLatestSubmissions(
             AuthHeader authHeader,
             String problemSetJid,
             Optional<String> username,
@@ -211,7 +211,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
 
     @Override
     @UnitOfWork(readOnly = true)
-    public AnswerSummaryResponse getAnswerSummary(
+    public SubmissionSummaryResponse getSubmissionSummary(
             AuthHeader authHeader,
             String problemSetJid,
             String problemJid,
@@ -265,7 +265,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
                 .problemJids(problemJids)
                 .build();
 
-        return new AnswerSummaryResponse.Builder()
+        return new SubmissionSummaryResponse.Builder()
                 .profile(profile)
                 .config(config)
                 .itemJidsByProblemJid(itemJidsByProblemJid)

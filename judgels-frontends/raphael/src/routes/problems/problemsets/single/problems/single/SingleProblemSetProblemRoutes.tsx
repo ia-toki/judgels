@@ -12,7 +12,7 @@ import ContentWithSidebar, {
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import ProblemStatementPage from './statement/ProblemStatementPage/ProblemStatementPage';
 import ProblemSubmissionsPage from './submissions/ProblemSubmissionsPage/ProblemSubmissionsPage';
-import SubmissionSummaryPage from './results/SubmissionSummaryPage/SubmissionSummaryPage';
+import ProblemSubmissionSummaryPage from './results/ProblemSubmissionSummaryPage/ProblemSubmissionSummaryPage';
 import { AppState } from '../../../../../../modules/store';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import { ProblemSet } from '../../../../../../modules/api/jerahmeel/problemSet';
@@ -67,7 +67,7 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
           titleIcon: 'manually-entered-data',
           title: 'Results',
           routeComponent: Route,
-          component: SubmissionSummaryPage,
+          component: ProblemSubmissionSummaryPage,
         },
       ];
     }

@@ -19,8 +19,8 @@ import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.chapter.submission.bundle.ChapterItemSubmissionService;
 import judgels.jerahmeel.api.submission.SubmissionConfig;
-import judgels.jerahmeel.api.submission.bundle.AnswerSummaryResponse;
 import judgels.jerahmeel.api.submission.bundle.ItemSubmissionsResponse;
+import judgels.jerahmeel.api.submission.bundle.SubmissionSummaryResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
 import judgels.jerahmeel.submission.SubmissionRoleChecker;
@@ -177,7 +177,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, ItemSubmission> getLatestSubmissionsByUserForProblemInChapter(
+    public Map<String, ItemSubmission> getLatestSubmissions(
             AuthHeader authHeader,
             String chapterJid,
             Optional<String> username,
@@ -211,7 +211,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
 
     @Override
     @UnitOfWork(readOnly = true)
-    public AnswerSummaryResponse getAnswerSummary(
+    public SubmissionSummaryResponse getSubmissionSummary(
             AuthHeader authHeader,
             String chapterJid,
             Optional<String> username,
@@ -269,7 +269,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
                 .problemJids(bundleProblemJidsSortedByAlias)
                 .build();
 
-        return new AnswerSummaryResponse.Builder()
+        return new SubmissionSummaryResponse.Builder()
                 .profile(profile)
                 .config(config)
                 .itemJidsByProblemJid(itemJidsByProblemJid)

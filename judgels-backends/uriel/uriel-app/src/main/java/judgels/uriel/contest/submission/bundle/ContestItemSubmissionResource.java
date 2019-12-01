@@ -39,7 +39,7 @@ import judgels.uriel.api.contest.problem.ContestProblem;
 import judgels.uriel.api.contest.submission.ContestSubmissionConfig;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionService;
 import judgels.uriel.api.contest.submission.bundle.ContestItemSubmissionsResponse;
-import judgels.uriel.api.contest.submission.bundle.ContestantAnswerSummaryResponse;
+import judgels.uriel.api.contest.submission.bundle.ContestSubmissionSummaryResponse;
 import judgels.uriel.contest.ContestRoleChecker;
 import judgels.uriel.contest.ContestStore;
 import judgels.uriel.contest.contestant.ContestContestantStore;
@@ -248,7 +248,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
 
     @Override
     @UnitOfWork(readOnly = true)
-    public Map<String, ItemSubmission> getLatestSubmissionsByUserForProblemInContest(
+    public Map<String, ItemSubmission> getLatestSubmissions(
             AuthHeader authHeader,
             String contestJid,
             Optional<String> username,
@@ -283,7 +283,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
 
     @Override
     @UnitOfWork(readOnly = true)
-    public ContestantAnswerSummaryResponse getAnswerSummaryForContestant(
+    public ContestSubmissionSummaryResponse getSubmissionSummary(
             AuthHeader authHeader,
             String contestJid,
             Optional<String> username,
@@ -350,7 +350,7 @@ public class ContestItemSubmissionResource implements ContestItemSubmissionServi
                 .problemJids(bundleProblemJidsSortedByAlias)
                 .build();
 
-        return new ContestantAnswerSummaryResponse.Builder()
+        return new ContestSubmissionSummaryResponse.Builder()
                 .profile(profile)
                 .config(config)
                 .itemJidsByProblemJid(itemJidsByProblemJid)

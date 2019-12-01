@@ -57,7 +57,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
 
         Map<String, ItemSubmission> answersMap;
         ItemSubmission itemSubmissionResult;
-        ContestantAnswerSummaryResponse summaryResult;
+        ContestSubmissionSummaryResponse summaryResult;
         List<ItemSubmission> problemSubmissions;
         ContestItemSubmissionsResponse submissionsResponse;
 
@@ -108,7 +108,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(itemSubmissionResult.getGrading()).isEmpty();
         assertThat(itemSubmissionResult.getTime()).isAfter(Instant.EPOCH);
 
-        answersMap = submissionService.getLatestSubmissionsByUserForProblemInContest(
+        answersMap = submissionService.getLatestSubmissions(
                 CONTESTANT_HEADER,
                 contest.getJid(),
                 Optional.of(ADMIN), // Contestant should not be able to see other users' answers
@@ -126,7 +126,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(itemSubmissionResult.getGrading()).isEmpty();
         assertThat(itemSubmissionResult.getTime()).isAfter(Instant.EPOCH);
 
-        answersMap = submissionService.getLatestSubmissionsByUserForProblemInContest(
+        answersMap = submissionService.getLatestSubmissions(
                 SUPERVISOR_HEADER,
                 contest.getJid(),
                 Optional.of(CONTESTANT),
@@ -136,7 +136,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(answersMap).hasSize(1);
         assertThat(answersMap).containsKey("JIDITEMtOoiXuIgPcD1oUsMzvbP");
 
-        summaryResult = submissionService.getAnswerSummaryForContestant(
+        summaryResult = submissionService.getSubmissionSummary(
                 CONTESTANT_HEADER,
                 contest.getJid(),
                 Optional.of(ADMIN), // Contestant should not be able to see other users' answers
@@ -189,7 +189,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
                 )
         );
 
-        summaryResult = submissionService.getAnswerSummaryForContestant(
+        summaryResult = submissionService.getSubmissionSummary(
                 MANAGER_HEADER,
                 contest.getJid(),
                 Optional.of(CONTESTANT),
@@ -233,7 +233,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
                 .build()
         );
 
-        answersMap = submissionService.getLatestSubmissionsByUserForProblemInContest(
+        answersMap = submissionService.getLatestSubmissions(
                 CONTESTANT_HEADER,
                 contest.getJid(),
                 Optional.empty(),
@@ -260,7 +260,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
         assertThat(itemSubmissionResult.getGrading()).isEmpty();
         assertThat(itemSubmissionResult.getTime()).isAfter(Instant.EPOCH);
 
-        summaryResult = submissionService.getAnswerSummaryForContestant(
+        summaryResult = submissionService.getSubmissionSummary(
                 MANAGER_HEADER,
                 contest.getJid(),
                 Optional.of(CONTESTANT),
@@ -301,7 +301,7 @@ class ContestItemSubmissionServiceIntegrationTests extends AbstractContestServic
                 .build()
         );
 
-        summaryResult = submissionService.getAnswerSummaryForContestant(
+        summaryResult = submissionService.getSubmissionSummary(
                 MANAGER_HEADER,
                 contest.getJid(),
                 Optional.of(CONTESTANT),
