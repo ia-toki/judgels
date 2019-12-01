@@ -6,19 +6,19 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import { AppState } from '../../../../../../../../modules/store';
-import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
-import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
+import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
+import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { SubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
-import { ChapterSubmissionsTable } from '../ChapterSubmissionsTable/ChapterSubmissionsTable';
-import { selectCourse } from '../../../../../modules/courseSelectors';
-import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
-import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../modules/chapterSubmissionActions';
+import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';
+import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
+import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
+import { problemSetSubmissionActions as injectedProblemSubmissionActions } from '../modules/problemSetSubmissionActions';
 
-export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
-  course: Course;
-  chapter: CourseChapter;
+export interface ProblemSubmissionsPageProps extends RouteComponentProps<{}> {
+  problemSet: ProblemSet;
+  problem: ProblemSetProblem;
   onGetProgrammingSubmissions: (
-    chapterJid: string,
+    problemSetJid: string,
     userJid?: string,
     problemJid?: string,
     page?: number
@@ -26,18 +26,18 @@ export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
   onAppendRoute: (queries) => any;
 }
 
-interface ChapterSubmissionsPageState {
+interface ProblemSubmissionsPageState {
   response?: SubmissionsResponse;
   isFilterLoading?: boolean;
 }
 
-export class ChapterSubmissionsPage extends React.PureComponent<
-  ChapterSubmissionsPageProps,
-  ChapterSubmissionsPageState
+export class ProblemSubmissionsPage extends React.PureComponent<
+  ProblemSubmissionsPageProps,
+  ProblemSubmissionsPageState
 > {
   private static PAGE_SIZE = 20;
 
-  state: ChapterSubmissionsPageState = {};
+  state: ProblemSubmissionsPageState = {};
 
   render() {
     return (
@@ -66,9 +66,9 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     }
 
     return (
-      <ChapterSubmissionsTable
-        course={this.props.course}
-        chapter={this.props.chapter}
+      <ProblemSubmissionsTable
+        problemSet={this.props.problemSet}
+        problem={this.props.problem}
         submissions={submissions.page}
         canManage={config.canManage}
         profilesMap={profilesMap}
@@ -82,7 +82,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
       <Pagination
         key={1}
         currentPage={1}
-        pageSize={ChapterSubmissionsPage.PAGE_SIZE}
+        pageSize={ProblemSubmissionsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
       />
     );
@@ -95,9 +95,9 @@ export class ChapterSubmissionsPage extends React.PureComponent<
 
   private refreshSubmissions = async (page?: number) => {
     const response = await this.props.onGetProgrammingSubmissions(
-      this.props.chapter.chapterJid,
+      this.props.problemSet.jid,
       undefined,
-      undefined,
+      this.props.problem.problemJid,
       page
     );
     this.setState({ response });
@@ -105,17 +105,17 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   };
 }
 
-export function createChapterSubmissionsPage(chapterSubmissionActions) {
+export function createProblemSubmissionsPage(problemSetSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
-    course: selectCourse(state),
-    chapter: selectCourseChapter(state),
+    problemSet: selectProblemSet(state),
+    problem: selectProblemSetProblem(state),
   });
 
   const mapDispatchToProps = {
-    onGetProgrammingSubmissions: chapterSubmissionActions.getSubmissions,
+    onGetProgrammingSubmissions: problemSetSubmissionActions.getSubmissions,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionsPage));
 }
 
-export default createChapterSubmissionsPage(injectedChapterSubmissionActions);
+export default createProblemSubmissionsPage(injectedProblemSubmissionActions);

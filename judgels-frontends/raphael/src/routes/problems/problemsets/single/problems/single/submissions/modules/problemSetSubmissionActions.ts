@@ -2,8 +2,31 @@ import { push } from 'connected-react-router';
 
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { ProblemSubmissionFormData } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
+import { NotFoundError } from '../../../../../../../../modules/api/error';
 
 export const problemSetSubmissionActions = {
+  getSubmissions: (problemSetJid: string, userJid?: string, problemJid?: string, page?: number) => {
+    return async (dispatch, getState, { problemSetSubmissionProgrammingAPI }) => {
+      const token = selectToken(getState());
+      return await problemSetSubmissionProgrammingAPI.getSubmissions(token, problemSetJid, userJid, problemJid, page);
+    };
+  },
+
+  getSubmissionWithSource: (problemSetJid: string, submissionId: number, language?: string) => {
+    return async (dispatch, getState, { problemSetSubmissionProgrammingAPI }) => {
+      const token = selectToken(getState());
+      const submissionWithSource = await problemSetSubmissionProgrammingAPI.getSubmissionWithSource(
+        token,
+        submissionId,
+        language
+      );
+      if (problemSetJid !== submissionWithSource.data.submission.containerJid) {
+        throw new NotFoundError();
+      }
+      return submissionWithSource;
+    };
+  },
+
   createSubmission: (
     problemSetSlug: string,
     problemSetJid: string,

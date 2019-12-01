@@ -11,25 +11,28 @@ import ContentWithSidebar, {
 } from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import ProblemStatementPage from './statement/ProblemStatementPage/ProblemStatementPage';
+import ProblemSubmissionsPage from './submissions/ProblemSubmissionsPage/ProblemSubmissionsPage';
 import { AppState } from '../../../../../../modules/store';
 import { ProblemSet } from '../../../../../../modules/api/jerahmeel/problemSet';
 import { ProblemSetProblem } from '../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../modules/problemSetProblemSelectors';
 
+import './SingleProblemSetProblemRoutes.css';
+
 interface SingleProblemSetProblemRoutesProps extends RouteComponentProps<{ problemAlias: string }> {
   problemSet?: ProblemSet;
-  problemSetProblem?: ProblemSetProblem;
+  problem?: ProblemSetProblem;
   onClickBack: (problemSetSlug: string) => void;
 }
 
 class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProblemRoutesProps> {
   render() {
-    const { problemSetProblem } = this.props;
+    const { problemSet, problem } = this.props;
 
     // Optimization:
     // We wait until we get the problem from the backend only if the current alias is different from the persisted one.
-    if (!problemSetProblem || problemSetProblem.alias !== this.props.match.params.problemAlias) {
+    if (!problem || problem.alias !== this.props.match.params.problemAlias) {
       return <LoadingState large />;
     }
 
@@ -41,6 +44,13 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
         routeComponent: Route,
         component: ProblemStatementPage,
       },
+      {
+        id: 'submissions',
+        titleIcon: 'layers',
+        title: 'Submissions',
+        routeComponent: Route,
+        component: ProblemSubmissionsPage,
+      },
     ];
 
     const contentWithSidebarProps: ContentWithSidebarProps = {
@@ -50,6 +60,13 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
         <Button small icon="chevron-left" onClick={this.clickBack}>
           Back
         </Button>
+      ),
+      contentHeader: (
+        <h3 className="single-problemset-problem-routes__title">
+          {problemSet.name}
+          <>&nbsp;&mdash;&nbsp;</>
+          Problem {problem.alias}
+        </h3>
       ),
     };
 
@@ -68,7 +85,7 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
 function createSingleProblemSetProblemRoutes() {
   const mapStateToProps = (state: AppState) => ({
     problemSet: selectProblemSet(state),
-    problemSetProblem: selectProblemSetProblem(state),
+    problem: selectProblemSetProblem(state),
   });
 
   const mapDispatchToProps = {
