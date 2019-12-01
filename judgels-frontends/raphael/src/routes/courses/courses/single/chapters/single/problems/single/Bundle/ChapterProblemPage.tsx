@@ -13,7 +13,7 @@ import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { ItemSubmission } from '../../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
-import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../quiz-results/modules/chapterSubmissionActions';
+import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../results/modules/chapterSubmissionActions';
 
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   chapter: CourseChapter;

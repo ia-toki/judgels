@@ -23,10 +23,10 @@ export const problemSetSubmissionActions = {
     };
   },
 
-  getSummary: (problemSetJid: string, username?: string, language?: string) => {
+  getSummary: (problemSetJid: string, problemJid: string, username?: string, language?: string) => {
     return async (dispatch, getState, { problemSetSubmissionBundleAPI }) => {
       const token = selectToken(getState());
-      return problemSetSubmissionBundleAPI.getAnswerSummary(token, problemSetJid, username, language);
+      return problemSetSubmissionBundleAPI.getAnswerSummary(token, problemSetJid, problemJid, username, language);
     };
   },
 

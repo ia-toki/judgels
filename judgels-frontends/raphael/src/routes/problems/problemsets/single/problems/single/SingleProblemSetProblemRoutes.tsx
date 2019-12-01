@@ -12,7 +12,9 @@ import ContentWithSidebar, {
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import ProblemStatementPage from './statement/ProblemStatementPage/ProblemStatementPage';
 import ProblemSubmissionsPage from './submissions/ProblemSubmissionsPage/ProblemSubmissionsPage';
+import SubmissionSummaryPage from './results/SubmissionSummaryPage/SubmissionSummaryPage';
 import { AppState } from '../../../../../../modules/store';
+import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import { ProblemSet } from '../../../../../../modules/api/jerahmeel/problemSet';
 import { ProblemSetProblem } from '../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
@@ -36,7 +38,7 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
       return <LoadingState large />;
     }
 
-    const sidebarItems: ContentWithSidebarItem[] = [
+    let sidebarItems: ContentWithSidebarItem[] = [
       {
         id: '@',
         titleIcon: 'document',
@@ -44,14 +46,31 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
         routeComponent: Route,
         component: ProblemStatementPage,
       },
-      {
-        id: 'submissions',
-        titleIcon: 'layers',
-        title: 'Submissions',
-        routeComponent: Route,
-        component: ProblemSubmissionsPage,
-      },
     ];
+
+    if (problem.type === ProblemType.Programming) {
+      sidebarItems = [
+        ...sidebarItems,
+        {
+          id: 'submissions',
+          titleIcon: 'layers',
+          title: 'Submissions',
+          routeComponent: Route,
+          component: ProblemSubmissionsPage,
+        },
+      ];
+    } else {
+      sidebarItems = [
+        ...sidebarItems,
+        {
+          id: 'results',
+          titleIcon: 'manually-entered-data',
+          title: 'Results',
+          routeComponent: Route,
+          component: SubmissionSummaryPage,
+        },
+      ];
+    }
 
     const contentWithSidebarProps: ContentWithSidebarProps = {
       title: 'Problem Menu',

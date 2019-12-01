@@ -3,6 +3,7 @@ package judgels.jerahmeel.problemset.submission.bundle;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collections;
@@ -28,7 +29,6 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
@@ -214,6 +214,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
     public AnswerSummaryResponse getAnswerSummary(
             AuthHeader authHeader,
             String problemSetJid,
+            String problemJid,
             Optional<String> username,
             Optional<String> language) {
 
@@ -230,43 +231,38 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
             viewedUserJid = actorJid;
         }
 
-        List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserInContainer(
-                problemSetJid, viewedUserJid);
+        List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(
+                problemSetJid,
+                problemJid,
+                viewedUserJid);
 
         Map<String, ItemSubmission> submissionsByItemJid = submissions.stream()
                 .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
 
-        List<String> bundleProblemJidsSortedByAlias = problemStore.getProblemJids(problemSetJid).stream()
-                .filter(problemJid -> problemClient.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
-                .collect(Collectors.toList());
+        List<String> problemJids = ImmutableList.of(problemJid);
         Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
-                problemSetJid, ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
+                problemSetJid, ImmutableSet.copyOf(problemJids));
 
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
-        for (String problemJid : bundleProblemJidsSortedByAlias) {
-            ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(problemJid, language);
-            List<Item> items = worksheet.getItems().stream()
-                    .filter(item -> !item.getType().equals(ItemType.STATEMENT))
-                    .collect(Collectors.toList());
-            items.sort(Comparator.comparingInt(item -> item.getNumber().get()));
+        ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(problemJid, language);
+        List<Item> items = worksheet.getItems().stream()
+                .filter(item -> !item.getType().equals(ItemType.STATEMENT))
+                .collect(Collectors.toList());
+        items.sort(Comparator.comparingInt(item -> item.getNumber().get()));
 
-            items.stream().forEach(item -> itemTypesByItemJid.put(item.getJid(), item.getType()));
+        items.stream().forEach(item -> itemTypesByItemJid.put(item.getJid(), item.getType()));
 
-            itemJidsByProblemJid.put(
-                    problemJid,
-                    items.stream().map(Item::getJid).collect(Collectors.toList())
-            );
-        }
+        itemJidsByProblemJid.put(problemJid, items.stream().map(Item::getJid).collect(Collectors.toList()));
 
         Map<String, String> problemNamesByProblemJid = problemClient.getProblemNames(
-                ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
+                ImmutableSet.copyOf(problemJids), language);
 
         Profile profile = profileService.getProfile(viewedUserJid);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
-                .problemJids(bundleProblemJidsSortedByAlias)
+                .problemJids(problemJids)
                 .build();
 
         return new AnswerSummaryResponse.Builder()

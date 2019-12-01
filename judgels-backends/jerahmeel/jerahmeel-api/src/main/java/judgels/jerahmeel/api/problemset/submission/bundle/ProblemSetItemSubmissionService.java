@@ -42,6 +42,7 @@ public interface ProblemSetItemSubmissionService {
     AnswerSummaryResponse getAnswerSummary(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("problemSetJid") String problemSetJid,
+            @QueryParam("problemJid") String problemJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("language") Optional<String> language);
 

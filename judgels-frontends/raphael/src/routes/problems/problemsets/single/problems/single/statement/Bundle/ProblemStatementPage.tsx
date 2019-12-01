@@ -13,7 +13,7 @@ import { ProblemSetProblemWorksheet } from '../../../../../../../../modules/api/
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { ItemSubmission } from '../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
-import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../quiz-results/modules/problemSetSubmissionActions';
+import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../results/modules/problemSetSubmissionActions';
 
 export interface ProblemStatementPageProps extends RouteComponentProps<{ problemAlias: string }> {
   problemSet: ProblemSet;

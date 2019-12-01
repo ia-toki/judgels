@@ -26,10 +26,11 @@ export const problemSetSubmissionBundleAPI = {
   getAnswerSummary: (
     token: string,
     problemSetJid: string,
+    problemJid: string,
     username?: string,
     language?: string
   ): Promise<AnswerSummaryResponse> => {
-    const params = stringify({ problemSetJid, username, language });
+    const params = stringify({ problemSetJid, problemJid, username, language });
     return get(`${baseURL}/summary?${params}`, token);
   },
 
