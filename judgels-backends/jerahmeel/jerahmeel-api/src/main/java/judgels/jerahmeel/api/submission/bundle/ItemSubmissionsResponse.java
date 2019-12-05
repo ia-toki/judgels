@@ -1,10 +1,13 @@
 package judgels.jerahmeel.api.submission.bundle;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import judgels.jerahmeel.api.submission.SubmissionConfig;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableItemSubmissionsResponse.class)
 public interface ItemSubmissionsResponse extends judgels.sandalphon.api.submission.bundle.ItemSubmissionsResponse {
+    SubmissionConfig getConfig();
+
     class Builder extends ImmutableItemSubmissionsResponse.Builder {}
 }

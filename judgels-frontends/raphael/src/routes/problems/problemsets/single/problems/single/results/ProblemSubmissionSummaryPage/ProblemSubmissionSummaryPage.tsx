@@ -64,7 +64,8 @@ class ProblemSubmissionSummaryPage extends React.Component<
       alias: response.problemAliasesMap[problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
       submissionsByItemJid: response.submissionsByItemJid,
-      canManage: true,
+      canViewGrading: true,
+      canManage: response.config.canManage,
       itemTypesMap: response.itemTypesMap,
     }));
 

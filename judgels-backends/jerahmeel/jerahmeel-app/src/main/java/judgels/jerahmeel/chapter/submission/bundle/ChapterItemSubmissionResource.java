@@ -1,8 +1,10 @@
 package judgels.jerahmeel.chapter.submission.bundle;
 
+import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collections;
@@ -15,7 +17,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.chapter.submission.bundle.ChapterItemSubmissionService;
 import judgels.jerahmeel.api.submission.SubmissionConfig;
@@ -28,7 +29,6 @@ import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.api.problem.bundle.Item;
 import judgels.sandalphon.api.problem.bundle.ItemType;
 import judgels.sandalphon.api.problem.bundle.ProblemWorksheet;
@@ -82,63 +82,58 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
     @Override
     @UnitOfWork
     public ItemSubmissionsResponse getSubmissions(
-            AuthHeader authHeader,
+            Optional<AuthHeader> authHeader,
             String chapterJid,
             Optional<String> username,
             Optional<String> problemAlias,
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
-        Chapter chapter = checkFound(chapterStore.getChapterByJid(chapterJid));
+        checkFound(chapterStore.getChapterByJid(chapterJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
-        Optional<String> actualUserJid;
-        if (canManage) {
-            actualUserJid = username.map(u -> userSearchService.translateUsernamesToJids(
-                    ImmutableSet.of(u)).getOrDefault(u, ""));
-        } else {
-            actualUserJid = Optional.of(actorJid);
-        }
+        Optional<String> userJid = username.map(
+                u -> userSearchService.translateUsernamesToJids(ImmutableSet.of(u)).getOrDefault(u, ""));
 
         Optional<String> problemJid = Optional.empty();
         if (problemAlias.isPresent()) {
             Optional<ChapterProblem> problem = problemStore.getProblemByAlias(chapterJid, problemAlias.get());
-            problemJid = Optional.of(problem.isPresent() ? problem.get().getProblemJid() : "");
+            problemJid = Optional.ofNullable(problem.isPresent() ? problem.get().getProblemJid() : null);
         }
 
-        Page<ItemSubmission> submissions =
-                submissionStore.getSubmissions(chapterJid, actualUserJid, problemJid, page);
+        Page<ItemSubmission> submissions = submissionStore.getSubmissions(chapterJid, userJid, problemJid, page);
 
-        Set<String> userJids =
-                submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(Collectors.toSet());
-        Set<String> problemJids = submissions.getPage().stream()
-                .map(ItemSubmission::getProblemJid)
-                .collect(Collectors.toSet());
+        Set<String> userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(toSet());
+        Set<String> problemJids = submissions.getPage().stream().map(ItemSubmission::getProblemJid).collect(toSet());
 
         Map<String, Profile> profilesMap = userJids.isEmpty()
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids);
 
+        SubmissionConfig config = new SubmissionConfig.Builder()
+                .canManage(canManage)
+                .problemJids(problemJids)
+                .build();
+
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(chapterJid, problemJids);
 
         Set<String> itemJids = submissions.getPage().stream()
                 .map(ItemSubmission::getItemJid)
-                .collect(Collectors.toSet());
+                .collect(toSet());
 
         Map<String, Item> itemsMap = problemClient.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().getNumber().orElse(0))
-                );
+                        entry -> entry.getValue().getNumber().orElse(0)));
         Map<String, ItemType> itemTypesMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().getType())
-                );
+                        entry -> entry.getValue().getType()));
 
         return new ItemSubmissionsResponse.Builder()
                 .data(submissions)
+                .config(config)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
                 .itemNumbersMap(itemNumbersMap)
@@ -153,16 +148,14 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
         checkFound(chapterStore.getChapterByJid(data.getContainerJid()));
         checkFound(problemStore.getProblem(data.getContainerJid(), data.getProblemJid()));
 
-        Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
-        checkFound(item);
+        Item item = checkFound(problemClient.getItem(data.getProblemJid(), data.getItemJid()));
 
         if (data.getAnswer().trim().isEmpty()) {
-            submissionStore.deleteSubmission(
-                    data.getContainerJid(), data.getProblemJid(), data.getItemJid(), actorJid);
+            submissionStore.deleteSubmission(data.getContainerJid(), data.getProblemJid(), data.getItemJid(), actorJid);
         } else {
             Grading grading = itemSubmissionGraderRegistry
-                    .get(item.get().getType())
-                    .grade(item.get(), data.getAnswer());
+                    .get(item.getType())
+                    .grade(item, data.getAnswer());
 
             submissionStore.upsertSubmission(
                     data.getContainerJid(),
@@ -170,8 +163,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
                     data.getItemJid(),
                     data.getAnswer(),
                     grading,
-                    actorJid
-            );
+                    actorJid);
         }
     }
 
@@ -187,13 +179,12 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
-        String viewedUserJid;
+        String userJid;
         if (canManage && username.isPresent()) {
-            Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
-                    ImmutableSet.of(username.get()));
-            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
+            userJid = checkFound(Optional.ofNullable(
+                    userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get())).get(username.get())));
         } else {
-            viewedUserJid = actorJid;
+            userJid = actorJid;
         }
 
         ChapterProblem problem = checkFound(problemStore.getProblemByAlias(chapterJid, problemAlias));
@@ -201,8 +192,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
         List<ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(
                 chapterJid,
                 problem.getProblemJid(),
-                viewedUserJid
-        );
+                userJid);
 
         return submissions.stream()
                 .map(ItemSubmission::withoutGrading)
@@ -221,52 +211,49 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
-        String viewedUserJid;
+        String userJid;
         if (canManage && username.isPresent()) {
-            Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
-                    ImmutableSet.of(username.get()));
-            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
+            userJid = checkFound(Optional.ofNullable(
+                    userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get())).get(username.get())));
         } else {
-            viewedUserJid = actorJid;
+            userJid = actorJid;
         }
 
-        List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserInContainer(
-                chapterJid, viewedUserJid);
+        List<? extends ItemSubmission> submissions =
+                submissionStore.getLatestSubmissionsByUserInContainer(chapterJid, userJid);
 
         Map<String, ItemSubmission> submissionsByItemJid = submissions.stream()
                 .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
 
-        List<String> bundleProblemJidsSortedByAlias = problemStore.getProblemJids(chapterJid).stream()
-                .filter(problemJid -> problemClient.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
-                .collect(Collectors.toList());
-        Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
-                chapterJid, ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
+        List<String> problemJidsSortedByAlias = problemStore.getBundleProblemJids(chapterJid);
+        Map<String, String> problemAliasesByProblemJid =
+                problemStore.getProblemAliasesByJids(chapterJid, ImmutableSet.copyOf(problemJidsSortedByAlias));
 
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
-        for (String problemJid : bundleProblemJidsSortedByAlias) {
+        for (String problemJid : problemJidsSortedByAlias) {
             ProblemWorksheet worksheet = problemClient.getBundleProblemWorksheet(problemJid, language);
             List<Item> items = worksheet.getItems().stream()
                     .filter(item -> !item.getType().equals(ItemType.STATEMENT))
                     .collect(Collectors.toList());
             items.sort(Comparator.comparingInt(item -> item.getNumber().get()));
 
-            items.stream().forEach(item -> itemTypesByItemJid.put(item.getJid(), item.getType()));
+            items.forEach(item -> itemTypesByItemJid.put(item.getJid(), item.getType()));
 
             itemJidsByProblemJid.put(
                     problemJid,
-                    items.stream().map(Item::getJid).collect(Collectors.toList())
-            );
+                    items.stream().map(Item::getJid).collect(Collectors.toList()));
         }
 
-        Map<String, String> problemNamesByProblemJid = problemClient.getProblemNames(
-                ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
+        Map<String, String> problemNamesByProblemJid =
+                problemClient.getProblemNames(ImmutableSet.copyOf(problemJidsSortedByAlias), language);
 
-        Profile profile = profileService.getProfile(viewedUserJid);
+        Profile profile = profileService.getProfile(userJid);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
-                .problemJids(bundleProblemJidsSortedByAlias)
+                .userJids(ImmutableList.of(userJid))
+                .problemJids(problemJidsSortedByAlias)
                 .build();
 
         return new SubmissionSummaryResponse.Builder()
@@ -301,9 +288,6 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(submissionRoleChecker.canManage(actorJid));
-        if (chapterJid.isPresent()) {
-            checkFound(chapterStore.getChapterByJid(chapterJid.get()));
-        }
 
         itemSubmissionRegrader.regradeSubmissions(chapterJid, userJid, problemJid);
     }

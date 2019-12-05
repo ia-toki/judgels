@@ -16,6 +16,7 @@ export interface ProblemSubmissionCardProps {
   itemJids: string[];
   submissionsByItemJid: { [itemJid: string]: ItemSubmission };
   itemTypesMap: { [itemJid: string]: ItemType };
+  canViewGrading: boolean;
   canManage: boolean;
   onRegrade?: () => Promise<void>;
 }
@@ -26,6 +27,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
   itemJids,
   submissionsByItemJid,
   itemTypesMap,
+  canViewGrading,
   canManage,
   onRegrade,
 }) => {
@@ -38,7 +40,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
           <td>
             <FormattedAnswer answer={submission.answer} type={itemTypesMap[itemJid]} />
           </td>
-          {canManage && (
+          {canViewGrading && (
             <td className="col-verdict">
               {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
             </td>
@@ -53,7 +55,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
         <tr key={itemJid}>
           <td className="col-item-num">{index + 1}</td>
           <td>-</td>
-          {canManage && <td className="col-verdict">-</td>}
+          {canViewGrading && <td className="col-verdict">-</td>}
           <td className="col-time">-</td>
         </tr>
       );
@@ -91,7 +93,7 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
           <tr>
             <th className="col-item-num">No.</th>
             <th>Answer</th>
-            {canManage && <th className="col-verdict">Verdict</th>}
+            {canViewGrading && <th className="col-verdict">Verdict</th>}
             <th className="col-time">Time</th>
           </tr>
         </thead>

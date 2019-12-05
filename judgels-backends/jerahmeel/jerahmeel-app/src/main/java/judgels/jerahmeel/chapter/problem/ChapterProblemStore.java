@@ -33,9 +33,9 @@ public class ChapterProblemStore {
                 .map(ChapterProblemStore::fromModel);
     }
 
-    public List<String> getProblemJids(String contestJid) {
+    public List<String> getBundleProblemJids(String contestJid) {
         return Lists.transform(
-                problemDao.selectAllByChapterJid(contestJid, createOptions()), model -> model.problemJid);
+                problemDao.selectAllBundleByChapterJid(contestJid, createOptions()), model -> model.problemJid);
     }
 
     public Optional<ChapterProblem> getProblemByAlias(String chapterJid, String problemAlias) {

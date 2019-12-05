@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableSubmissionConfig.class)
 public interface SubmissionConfig {
     boolean getCanManage();
+    List<String> getUserJids();
     List<String> getProblemJids();
 
     class Builder extends ImmutableSubmissionConfig.Builder {}

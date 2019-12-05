@@ -25,7 +25,7 @@ public interface ChapterItemSubmissionService {
     @Path("/")
     @Produces(APPLICATION_JSON)
     ItemSubmissionsResponse getSubmissions(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("chapterJid") String chapterJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemAlias") Optional<String> problemAlias,

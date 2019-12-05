@@ -262,6 +262,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
+                .userJids(ImmutableList.of(viewedUserJid))
                 .problemJids(problemJids)
                 .build();
 

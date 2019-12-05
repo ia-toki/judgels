@@ -4,6 +4,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import { AppState } from '../../../../../../../../modules/store';
 import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
@@ -29,6 +30,7 @@ export interface ChapterSubmissionSummaryPageProps extends RouteComponentProps<C
     username?: string,
     language?: string
   ) => Promise<SubmissionSummaryResponse>;
+  onRegradeAll: (contestJid: string, userJid?: string, problemJid?: string) => Promise<void>;
 }
 
 export interface ChapterSubmissionSummaryPageState {
@@ -59,11 +61,13 @@ class ChapterSubmissionSummaryPage extends React.Component<
       alias: response.problemAliasesMap[problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
       submissionsByItemJid: response.submissionsByItemJid,
-      canManage: true,
+      canViewGrading: true,
+      canManage: response.config.canManage,
       itemTypesMap: response.itemTypesMap,
+      onRegrade: () => this.regrade(problemJid),
     }));
 
-    this.setState({ config: response.config, problemSummaries });
+    this.setState({ config: response.config, profile: response.profile, problemSummaries });
   }
 
   async componentDidMount() {
@@ -71,10 +75,16 @@ class ChapterSubmissionSummaryPage extends React.Component<
   }
 
   render() {
+    if (!this.state.profile) {
+      return null;
+    }
     return (
       <ContentCard>
         <h3>Quiz Results</h3>
         <hr />
+        <ContentCard>
+          Summary for <UserRef profile={this.state.profile} />
+        </ContentCard>
         {this.renderResults()}
       </ContentCard>
     );
@@ -90,6 +100,14 @@ class ChapterSubmissionSummaryPage extends React.Component<
     }
     return this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />);
   };
+
+  private regrade = async problemJid => {
+    const { userJids } = this.state.config;
+    const userJid = userJids[0];
+
+    await this.props.onRegradeAll(this.props.chapter.chapterJid, userJid, problemJid);
+    await this.refreshSubmissions();
+  };
 }
 
 export function createChapterSubmissionSummaryPage(chapterSubmissionActions) {
@@ -100,6 +118,7 @@ export function createChapterSubmissionSummaryPage(chapterSubmissionActions) {
 
   const mapDispatchToProps = {
     onGetSubmissionSummary: chapterSubmissionActions.getSubmissionSummary,
+    onRegradeAll: chapterSubmissionActions.regradeSubmissions,
   };
 
   return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionSummaryPage));

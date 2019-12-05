@@ -1,0 +1,35 @@
+.item-submissions-table {
+  .col-prob {
+    width: 80px;
+  }
+
+  .col-item-num {
+    width: 50px;
+  }
+
+  .col-verdict {
+    width: 70px;
+    text-align: center;
+  }
+
+  .col-action {
+    width: 50px;
+  }
+
+  .cell-centered {
+    text-align: center;
+  }
+
+  .action {
+    cursor: pointer;
+  }
+
+  .action + .action {
+    margin-left: 2px;
+  }
+}
+
+.item-submissions-table__regrade-button {
+  float: left;
+  margin-bottom: 10px;
+}

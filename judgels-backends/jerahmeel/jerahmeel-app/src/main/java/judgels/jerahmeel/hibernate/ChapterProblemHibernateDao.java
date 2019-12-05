@@ -10,6 +10,7 @@ import judgels.persistence.FilterOptions;
 import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.sandalphon.api.problem.ProblemType;
 
 public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel> implements ChapterProblemDao {
     @Inject
@@ -40,6 +41,15 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
         return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
                 .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
                 .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
+                .build(), options);
+    }
+
+    @Override
+    public List<ChapterProblemModel> selectAllBundleByChapterJid(String chapterJid, SelectionOptions options) {
+        return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
+                .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
+                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
+                .putColumnsEq(ChapterProblemModel_.type, ProblemType.BUNDLE.name())
                 .build(), options);
     }
 }

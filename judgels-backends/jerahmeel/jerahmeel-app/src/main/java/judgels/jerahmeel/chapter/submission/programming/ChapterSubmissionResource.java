@@ -88,13 +88,12 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
-        Chapter chapter = checkFound(chapterStore.getChapterByJid(chapterJid));
+        checkFound(chapterStore.getChapterByJid(chapterJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
-        Optional<String> actualUserJid = canManage ? userJid : Optional.of(actorJid);
+        Optional<String> viewedUserJid = canManage ? userJid : Optional.of(actorJid);
 
-        Page<Submission> submissions =
-                submissionStore.getSubmissions(chapter.getJid(), actualUserJid, problemJid, page);
+        Page<Submission> submissions = submissionStore.getSubmissions(chapterJid, viewedUserJid, problemJid, page);
 
         Set<String> problemJids = submissions.getPage().stream()
                 .map(Submission::getProblemJid)
@@ -109,7 +108,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
                 .canManage(canManage)
                 .build();
 
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(chapter.getJid(), problemJids);
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(chapterJid, problemJids);
 
         return new SubmissionsResponse.Builder()
                 .data(submissions)
@@ -158,7 +157,8 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
     public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
-        String actorJid = actorChecker.check(authHeader);
+        actorChecker.check(authHeader);
+
         String chapterJid = checkNotNull(parts.getField("chapterJid"), "chapterJid").getValue();
         String problemJid = checkNotNull(parts.getField("problemJid"), "problemJid").getValue();
         String gradingLanguage = checkNotNull(parts.getField("gradingLanguage"), "gradingLanguage").getValue();

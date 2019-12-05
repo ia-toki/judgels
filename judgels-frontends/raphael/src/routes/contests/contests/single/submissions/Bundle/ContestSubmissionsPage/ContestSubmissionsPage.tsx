@@ -20,7 +20,7 @@ import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bu
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
-import './ContestSubmissionsPage.css';
+import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
 
 export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
   contest: Contest;
@@ -65,7 +65,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
 
   render() {
     return (
-      <ContentCard className="contest-bundle-submissions-page">
+      <ContentCard>
         <h3>Submissions</h3>
         <hr />
         {this.renderRegradeAllButton()}
@@ -87,7 +87,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     const canManage = response.config.canManage;
 
     return (
-      <HTMLTable striped className="table-list-condensed submissions-table">
+      <HTMLTable striped className="table-list-condensed item-submissions-table">
         <thead>
           <tr>
             <th>User</th>
@@ -206,7 +206,12 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     }
 
     return (
-      <Button className="regrade-button" intent="primary" icon="refresh" onClick={this.onRegradeAll}>
+      <Button
+        className="item-submissions-table__regrade-button"
+        intent="primary"
+        icon="refresh"
+        onClick={this.onRegradeAll}
+      >
         Regrade all pages
       </Button>
     );

@@ -58,9 +58,10 @@ class SubmissionSummaryPage extends React.Component<
       alias: response.problemAliasesMap[problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
       submissionsByItemJid: response.submissionsByItemJid,
+      canViewGrading: response.config.canManage,
       canManage: response.config.canManage,
       itemTypesMap: response.itemTypesMap,
-      onRegrade: () => this.onRegrade(problemJid),
+      onRegrade: () => this.regrade(problemJid),
     }));
 
     this.setState({ config: response.config, profile: response.profile, problemSummaries });
@@ -88,7 +89,7 @@ class SubmissionSummaryPage extends React.Component<
     );
   }
 
-  private onRegrade = async problemJid => {
+  private regrade = async problemJid => {
     const { userJids } = this.state.config!;
     const userJid = userJids[0];
 
