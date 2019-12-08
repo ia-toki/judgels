@@ -10,4 +10,5 @@ public interface ChapterProblemDao extends Dao<ChapterProblemModel> {
     Optional<ChapterProblemModel> selectByChapterJidAndProblemAlias(String chapterJid, String lessonAlias);
     List<ChapterProblemModel> selectAllByChapterJid(String chapterJid, SelectionOptions options);
     List<ChapterProblemModel> selectAllBundleByChapterJid(String chapterJid, SelectionOptions options);
+    List<ChapterProblemModel> selectAllProgrammingByChapterJid(String chapterJid, SelectionOptions options);
 }

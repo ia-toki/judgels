@@ -52,4 +52,13 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
                 .putColumnsEq(ChapterProblemModel_.type, ProblemType.BUNDLE.name())
                 .build(), options);
     }
+
+    @Override
+    public List<ChapterProblemModel> selectAllProgrammingByChapterJid(String chapterJid, SelectionOptions options) {
+        return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
+                .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
+                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
+                .putColumnsEq(ChapterProblemModel_.type, ProblemType.PROGRAMMING.name())
+                .build(), options);
+    }
 }

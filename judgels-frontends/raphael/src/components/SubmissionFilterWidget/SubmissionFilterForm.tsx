@@ -2,25 +2,25 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-import { Required } from '../../../../../../components/forms/validations';
-import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
+import { Required } from '../../components/forms/validations';
+import { FormSelect2 } from '../../components/forms/FormSelect2/FormSelect2';
 
-import './ContestSubmissionFilterForm.css';
+import './SubmissionFilterForm.css';
 
-export interface ContestSubmissionFilterFormData {
+export interface SubmissionFilterFormData {
   username: string;
   problemAlias: string;
 }
 
-export interface ContestSubmissionFilterFormProps extends InjectedFormProps<ContestSubmissionFilterFormData> {
-  usernames: string[];
-  problemAliases: string[];
+export interface SubmissionFilterFormProps extends InjectedFormProps<SubmissionFilterFormData> {
+  usernames?: string[];
+  problemAliases?: string[];
   isLoading: boolean;
 }
 
-const ContestSubmissionFilterForm = (props: ContestSubmissionFilterFormProps) => {
+const SubmissionFilterForm = (props: SubmissionFilterFormProps) => {
   const { usernames, problemAliases } = props;
-  const userField: any = {
+  const userField: any = usernames && {
     className: 'form-username',
     name: 'username',
     label: 'User',
@@ -29,7 +29,7 @@ const ContestSubmissionFilterForm = (props: ContestSubmissionFilterFormProps) =>
     optionNamesMap: Object.assign({}, ...usernames.map(username => ({ [username]: username }))),
   };
 
-  const problemField: any = {
+  const problemField: any = problemAliases && {
     className: 'form-problem-alias',
     name: 'problemAlias',
     label: 'Problem',
@@ -39,15 +39,16 @@ const ContestSubmissionFilterForm = (props: ContestSubmissionFilterFormProps) =>
   };
 
   return (
-    <form onSubmit={props.handleSubmit} className="contest-submission-filter-form">
+    <form onSubmit={props.handleSubmit} className="submission-filter-form">
       <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={props.isLoading} />
-      <Field component={FormSelect2} {...problemField} />
-      <Field component={FormSelect2} {...userField} />
+      {problemAliases && <Field component={FormSelect2} {...problemField} />}
+      {usernames && <Field component={FormSelect2} {...userField} />}
     </form>
   );
 };
 
-export default reduxForm<ContestSubmissionFilterFormData>({
-  form: 'contest-submission-filter',
+export default reduxForm<SubmissionFilterFormData>({
+  form: 'submission-filter',
   touchOnBlur: false,
-})(ContestSubmissionFilterForm);
+  enableReinitialize: true,
+})(SubmissionFilterForm);

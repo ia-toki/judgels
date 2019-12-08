@@ -10,12 +10,12 @@ import { LoadingState } from '../../../../../../../components/LoadingState/Loadi
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
+import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { ContestItemSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionBundle';
 import { AppState } from '../../../../../../../modules/store';
 import { Contest } from '../../../../../../../modules/api/uriel/contest';
 import { selectContest } from '../../../../modules/contestSelectors';
 
-import { ContestSubmissionFilterWidget } from '../../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
 import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
@@ -230,7 +230,7 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
 
     const { username, problemAlias } = filter;
     return (
-      <ContestSubmissionFilterWidget
+      <SubmissionFilterWidget
         usernames={userJids.map(jid => profilesMap[jid] && profilesMap[jid].username)}
         problemAliases={problemJids.map(jid => problemAliasesMap[jid])}
         username={username}
@@ -241,8 +241,8 @@ export class ContestSubmissionsPage extends React.Component<ContestSubmissionsPa
     );
   };
 
-  private onFilter = async (username?: string, problemAlias?: string) => {
-    const filter = { username, problemAlias };
+  private onFilter = async filter => {
+    const { username, problemAlias } = filter;
     this.setState(prevState => {
       const prevFilter = prevState.filter || {};
       return {

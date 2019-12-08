@@ -38,6 +38,11 @@ public class ChapterProblemStore {
                 problemDao.selectAllBundleByChapterJid(contestJid, createOptions()), model -> model.problemJid);
     }
 
+    public List<String> getProgrammingProblemJids(String contestJid) {
+        return Lists.transform(
+                problemDao.selectAllProgrammingByChapterJid(contestJid, createOptions()), model -> model.problemJid);
+    }
+
     public Optional<ChapterProblem> getProblemByAlias(String chapterJid, String problemAlias) {
         return problemDao.selectByChapterJidAndProblemAlias(chapterJid, problemAlias)
                 .map(ChapterProblemStore::fromModel);

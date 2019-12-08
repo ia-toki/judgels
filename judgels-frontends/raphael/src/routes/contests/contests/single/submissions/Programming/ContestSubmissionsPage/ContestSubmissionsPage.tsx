@@ -8,12 +8,12 @@ import { push } from 'connected-react-router';
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
+import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { AppState } from '../../../../../../../modules/store';
 import { Contest } from '../../../../../../../modules/api/uriel/contest';
 import { ContestSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
 
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
-import { ContestSubmissionFilterWidget } from '../../ContestSubmissionFilterWidget/ContestSubmissionFilterWidget';
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
 
@@ -102,7 +102,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
 
     const { username, problemAlias } = filter;
     return (
-      <ContestSubmissionFilterWidget
+      <SubmissionFilterWidget
         usernames={userJids.map(jid => profilesMap[jid] && profilesMap[jid].username)}
         problemAliases={problemJids.map(jid => problemAliasesMap[jid])}
         username={username}
@@ -204,8 +204,8 @@ export class ContestSubmissionsPage extends React.PureComponent<
     }
   };
 
-  private onFilter = async (username?: string, problemAlias?: string) => {
-    const filter = { username, problemAlias };
+  private onFilter = async filter => {
+    const { username, problemAlias } = filter;
     this.setState(prevState => {
       const prevFilter = prevState.filter || {};
       return {

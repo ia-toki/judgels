@@ -6,8 +6,10 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -91,13 +93,11 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
-        Optional<String> viewedUserJid = canManage ? userJid : Optional.of(actorJid);
 
-        Page<Submission> submissions = submissionStore.getSubmissions(chapterJid, viewedUserJid, problemJid, page);
+        Page<Submission> submissions = submissionStore.getSubmissions(chapterJid, userJid, problemJid, page);
 
-        Set<String> problemJids = submissions.getPage().stream()
-                .map(Submission::getProblemJid)
-                .collect(Collectors.toSet());
+        List<String> problemJidsSortedByAlias = problemStore.getProgrammingProblemJids(chapterJid);
+        Set<String> problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
 
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
         Map<String, Profile> profilesMap = userJids.isEmpty()
@@ -106,6 +106,8 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
+                .userJids(userJids)
+                .problemJids(problemJidsSortedByAlias)
                 .build();
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(chapterJid, problemJids);

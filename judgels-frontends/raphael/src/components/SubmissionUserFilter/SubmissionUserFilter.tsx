@@ -25,14 +25,16 @@ class SubmissionUserFilter extends React.Component<SubmissionUserFilterProps> {
   };
 
   private clickMine = () => {
-    const idx = this.props.location.pathname.lastIndexOf('/all');
-    if (idx > -1) {
+    if (this.isAll()) {
+      const idx = this.props.location.pathname.lastIndexOf('/all');
       this.props.push(this.props.location.pathname.substr(0, idx));
     }
   };
 
   private clickAll = () => {
-    this.props.push((this.props.location.pathname + '/all').replace('//', '/'));
+    if (!this.isAll()) {
+      this.props.push((this.props.location.pathname + '/all').replace('//', '/'));
+    }
   };
 }
 
