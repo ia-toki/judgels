@@ -18,6 +18,7 @@ export interface ChapterSubmissionsTableProps {
   chapter: CourseChapter;
   submissions: ProgrammingSubmission[];
   canManage: boolean;
+  userJid: string;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
   onRegrade: (submissionJid: string) => any;
@@ -51,7 +52,7 @@ export class ChapterSubmissionsTable extends React.PureComponent<ChapterSubmissi
   };
 
   private renderRows = () => {
-    const { course, chapter, submissions, canManage, profilesMap, problemAliasesMap } = this.props;
+    const { course, chapter, submissions, userJid, canManage, profilesMap, problemAliasesMap } = this.props;
 
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
@@ -77,12 +78,14 @@ export class ChapterSubmissionsTable extends React.PureComponent<ChapterSubmissi
           <FormattedRelative value={submission.time} />{' '}
         </td>
         <td className="cell-centered">
-          <Link
-            className="action"
-            to={`/courses/${course.slug}/chapters/${chapter.alias}/submissions/${submission.id}`}
-          >
-            <Icon icon="search" />
-          </Link>
+          {(canManage || userJid === submission.userJid) && (
+            <Link
+              className="action"
+              to={`/courses/${course.slug}/chapters/${chapter.alias}/submissions/${submission.id}`}
+            >
+              <Icon icon="search" />
+            </Link>
+          )}
         </td>
       </tr>
     ));

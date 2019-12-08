@@ -122,6 +122,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
         chapter={this.props.chapter}
         submissions={submissions.page}
         canManage={config.canManage}
+        userJid={this.props.userJid}
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
         onRegrade={this.onRegrade}
