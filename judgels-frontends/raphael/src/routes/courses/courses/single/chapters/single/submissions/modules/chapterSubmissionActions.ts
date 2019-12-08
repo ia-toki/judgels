@@ -55,4 +55,22 @@ export const chapterSubmissionActions = {
       dispatch(push(`/courses/${courseSlug}/chapters/${chapterAlias}/submissions`));
     };
   },
+
+  regradeSubmission: (submissionJid: string) => {
+    return async (dispatch, getState, { chapterSubmissionProgrammingAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await chapterSubmissionProgrammingAPI.regradeSubmission(token, submissionJid);
+
+      toastActions.showSuccessToast('Regrade in progress.');
+    };
+  },
+
+  regradeSubmissions: (chapterJid: string, userJid?: string, problemJid?: string) => {
+    return async (dispatch, getState, { chapterSubmissionProgrammingAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await chapterSubmissionProgrammingAPI.regradeSubmissions(token, chapterJid, userJid, problemJid);
+
+      toastActions.showSuccessToast('Regrade in progress.');
+    };
+  },
 };

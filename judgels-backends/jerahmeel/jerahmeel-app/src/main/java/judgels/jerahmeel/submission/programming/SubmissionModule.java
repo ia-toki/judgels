@@ -17,6 +17,8 @@ import judgels.jerahmeel.JerahmeelBaseDataDir;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
 import judgels.sandalphon.submission.programming.SubmissionClient;
+import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
+import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.sealtiel.api.message.MessageService;
@@ -58,6 +60,22 @@ public class SubmissionModule {
                 messageService,
                 gabrielClientJid,
                 mapper);
+    }
+
+    @Provides
+    @Singleton
+    SubmissionRegrader submissionRegrader(
+            LifecycleEnvironment lifecycleEnvironment,
+            SubmissionStore submissionStore,
+            SubmissionRegradeProcessor processor) {
+
+        ExecutorService executorService =
+                lifecycleEnvironment.executorService("submission-regrade-processor-%d")
+                        .maxThreads(5)
+                        .minThreads(5)
+                        .build();
+
+        return new SubmissionRegrader(submissionStore, executorService, processor);
     }
 
     @Provides

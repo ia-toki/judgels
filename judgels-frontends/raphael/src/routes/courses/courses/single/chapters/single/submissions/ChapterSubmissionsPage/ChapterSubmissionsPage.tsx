@@ -6,6 +6,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import { SubmissionFilterWidget } from '../../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
@@ -29,6 +30,8 @@ export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
     problemJid?: string,
     page?: number
   ) => Promise<SubmissionsResponse>;
+  onRegrade: (submissionJid: string) => Promise<void>;
+  onRegradeAll: (chapterJid: string, userJid?: string, problemJid?: string) => Promise<void>;
   onAppendRoute: (queries) => any;
 }
 
@@ -74,6 +77,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
         <h3>Submissions</h3>
         <hr />
         {this.renderUserFilter()}
+        {this.renderRegradeAllButton()}
         {this.renderFilterWidget()}
         <div className="clearfix" />
         {this.renderSubmissions()}
@@ -88,6 +92,13 @@ export class ChapterSubmissionsPage extends React.PureComponent<
 
   private isUserFilterAll = () => {
     return (this.props.location.pathname + '/').includes('/all/');
+  };
+
+  private renderRegradeAllButton = () => {
+    if (!this.state.response || !this.state.response.config.canManage) {
+      return null;
+    }
+    return <RegradeAllButton onRegradeAll={this.onRegradeAll} />;
   };
 
   private renderSubmissions = () => {
@@ -113,6 +124,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
         canManage={config.canManage}
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
+        onRegrade={this.onRegrade}
       />
     );
   };
@@ -198,6 +210,23 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     });
     this.props.onAppendRoute(filter);
   };
+
+  private onRegrade = async (submissionJid: string) => {
+    await this.props.onRegrade(submissionJid);
+    const { problemAlias } = this.state.filter!;
+    const queries = parse(this.props.location.search);
+    await this.refreshSubmissions(problemAlias, queries.page);
+  };
+
+  private onRegradeAll = async () => {
+    if (window.confirm('Regrade all submissions in all pages for the current filter?')) {
+      const { problemAlias } = this.state.filter;
+      const { problemJid } = this.getFilterJids(problemAlias);
+      await this.props.onRegradeAll(this.props.chapter.chapterJid, undefined, problemJid);
+      const queries = parse(this.props.location.search);
+      await this.refreshSubmissions(problemAlias, queries.page);
+    }
+  };
 }
 
 export function createChapterSubmissionsPage(chapterSubmissionActions) {
@@ -209,6 +238,8 @@ export function createChapterSubmissionsPage(chapterSubmissionActions) {
 
   const mapDispatchToProps = {
     onGetProgrammingSubmissions: chapterSubmissionActions.getSubmissions,
+    onRegrade: chapterSubmissionActions.regradeSubmission,
+    onRegradeAll: chapterSubmissionActions.regradeSubmissions,
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 

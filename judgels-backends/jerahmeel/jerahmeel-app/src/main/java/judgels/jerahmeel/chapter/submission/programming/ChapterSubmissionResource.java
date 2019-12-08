@@ -40,6 +40,7 @@ import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.programming.SubmissionClient;
+import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
@@ -52,6 +53,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
     private final SubmissionStore submissionStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
     private final SubmissionClient submissionClient;
+    private final SubmissionRegrader submissionRegrader;
     private final SubmissionRoleChecker submissionRoleChecker;
     private final ChapterProblemStore problemStore;
     private final ProfileService profileService;
@@ -64,6 +66,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
             SubmissionStore submissionStore,
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionClient submissionClient,
+            SubmissionRegrader submissionRegrader,
             SubmissionRoleChecker submissionRoleChecker,
             ChapterProblemStore problemStore,
             ProfileService profileService,
@@ -74,6 +77,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
         this.submissionStore = submissionStore;
         this.submissionSourceBuilder = submissionSourceBuilder;
         this.submissionClient = submissionClient;
+        this.submissionRegrader = submissionRegrader;
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemStore = problemStore;
         this.profileService = profileService;
@@ -178,5 +182,40 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
+    }
+
+    @Override
+    @UnitOfWork
+    public void regradeSubmission(AuthHeader authHeader, String submissionJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
+        checkFound(chapterStore.getChapterByJid(submission.getContainerJid()));
+        checkAllowed(submissionRoleChecker.canManage(actorJid));
+
+        submissionRegrader.regradeSubmission(submission);
+    }
+
+    @Override
+    @UnitOfWork
+    public void regradeSubmissions(
+            AuthHeader authHeader,
+            String chapterJid,
+            Optional<String> userJid,
+            Optional<String> problemJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(chapterStore.getChapterByJid(chapterJid));
+        checkAllowed(submissionRoleChecker.canManage(actorJid));
+
+        for (int page = 1;; page++) {
+            List<Submission> submissions = submissionStore
+                    .getSubmissions(chapterJid, userJid, problemJid, Optional.of(page))
+                    .getPage();
+
+            if (submissions.isEmpty()) {
+                break;
+            }
+            submissionRegrader.regradeSubmissions(submissions);
+        }
     }
 }

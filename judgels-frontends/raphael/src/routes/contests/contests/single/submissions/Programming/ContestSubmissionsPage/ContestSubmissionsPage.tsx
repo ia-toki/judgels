@@ -1,4 +1,3 @@
-import { Button } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -7,6 +6,7 @@ import { push } from 'connected-react-router';
 
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
+import { RegradeAllButton } from '../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { AppState } from '../../../../../../../modules/store';
@@ -16,8 +16,6 @@ import { ContestSubmissionsResponse } from '../../../../../../../modules/api/uri
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
-
-import './ContestSubmissionsPage.css';
 
 export interface ContestSubmissionsPageProps extends RouteComponentProps<{}> {
   contest: Contest;
@@ -81,12 +79,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
     if (!this.state.response || !this.state.response.config.canManage) {
       return null;
     }
-
-    return (
-      <Button className="regrade-button" intent="primary" icon="refresh" onClick={this.onRegradeAll}>
-        Regrade all pages
-      </Button>
-    );
+    return <RegradeAllButton onRegradeAll={this.onRegradeAll} />;
   };
 
   private renderFilterWidget = () => {
