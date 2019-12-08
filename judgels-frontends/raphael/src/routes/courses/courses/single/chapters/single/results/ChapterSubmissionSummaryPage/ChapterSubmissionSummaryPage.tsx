@@ -5,6 +5,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
+import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import { AppState } from '../../../../../../../../modules/store';
 import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
@@ -82,6 +83,7 @@ class ChapterSubmissionSummaryPage extends React.Component<
       <ContentCard>
         <h3>Quiz Results</h3>
         <hr />
+        {this.renderUserFilter()}
         <ContentCard>
           Summary for <UserRef profile={this.state.profile} />
         </ContentCard>
@@ -89,6 +91,13 @@ class ChapterSubmissionSummaryPage extends React.Component<
       </ContentCard>
     );
   }
+
+  private renderUserFilter = () => {
+    if (this.props.location.pathname.includes('/users/')) {
+      return null;
+    }
+    return <SubmissionUserFilter />;
+  };
 
   private renderResults = () => {
     const { problemSummaries } = this.state;
