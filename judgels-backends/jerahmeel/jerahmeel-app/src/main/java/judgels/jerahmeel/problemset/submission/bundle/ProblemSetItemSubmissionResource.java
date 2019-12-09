@@ -1,5 +1,6 @@
 package judgels.jerahmeel.problemset.submission.bundle;
 
+import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -16,7 +17,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.api.problemset.submission.bundle.ProblemSetItemSubmissionService;
 import judgels.jerahmeel.api.submission.SubmissionConfig;
@@ -89,16 +89,12 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
-        ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
+        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
-        Optional<String> actualUserJid;
-        if (canManage) {
-            actualUserJid = username.map(u -> userSearchService.translateUsernamesToJids(
-                    ImmutableSet.of(u)).getOrDefault(u, ""));
-        } else {
-            actualUserJid = Optional.of(actorJid);
-        }
+        Optional<String> userJid = username.map(
+                u -> userSearchService.translateUsernamesToJids(ImmutableSet.of(u)).getOrDefault(u, ""));
+
 
         Optional<String> problemJid = Optional.empty();
         if (problemAlias.isPresent()) {
@@ -106,39 +102,39 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
             problemJid = Optional.of(problem.isPresent() ? problem.get().getProblemJid() : "");
         }
 
-        Page<ItemSubmission> submissions =
-                submissionStore.getSubmissions(problemSetJid, actualUserJid, problemJid, page);
+        Page<ItemSubmission> submissions = submissionStore.getSubmissions(problemSetJid, userJid, problemJid, page);
 
-        Set<String> userJids =
-                submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(Collectors.toSet());
-        Set<String> problemJids = submissions.getPage().stream()
-                .map(ItemSubmission::getProblemJid)
-                .collect(Collectors.toSet());
+        Set<String> userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(toSet());
+        Set<String> problemJids = submissions.getPage().stream().map(ItemSubmission::getProblemJid).collect(toSet());
 
         Map<String, Profile> profilesMap = userJids.isEmpty()
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids);
 
+        SubmissionConfig config = new SubmissionConfig.Builder()
+                .canManage(canManage)
+                .problemJids(problemJids)
+                .build();
+
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(problemSetJid, problemJids);
 
         Set<String> itemJids = submissions.getPage().stream()
                 .map(ItemSubmission::getItemJid)
-                .collect(Collectors.toSet());
+                .collect(toSet());
 
         Map<String, Item> itemsMap = problemClient.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().getNumber().orElse(0))
-                );
+                        entry -> entry.getValue().getNumber().orElse(0)));
         Map<String, ItemType> itemTypesMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().getType())
-                );
+                        entry -> entry.getValue().getType()));
 
         return new ItemSubmissionsResponse.Builder()
                 .data(submissions)
+                .config(config)
                 .profilesMap(profilesMap)
                 .problemAliasesMap(problemAliasesMap)
                 .itemNumbersMap(itemNumbersMap)
@@ -187,13 +183,12 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
-        String viewedUserJid;
+        String userJid;
         if (canManage && username.isPresent()) {
-            Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
-                    ImmutableSet.of(username.get()));
-            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
+            userJid = checkFound(Optional.ofNullable(
+                    userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get())).get(username.get())));
         } else {
-            viewedUserJid = actorJid;
+            userJid = actorJid;
         }
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
@@ -201,7 +196,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
         List<ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(
                 problemSetJid,
                 problem.getProblemJid(),
-                viewedUserJid
+                userJid
         );
 
         return submissions.stream()
@@ -222,19 +217,16 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
-        String viewedUserJid;
+        String userJid;
         if (canManage && username.isPresent()) {
-            Map<String, String> userJidsMap = userSearchService.translateUsernamesToJids(
-                    ImmutableSet.of(username.get()));
-            viewedUserJid = checkFound(Optional.ofNullable(userJidsMap.get(username.get())));
+            userJid = checkFound(Optional.ofNullable(
+                    userSearchService.translateUsernamesToJids(ImmutableSet.of(username.get())).get(username.get())));
         } else {
-            viewedUserJid = actorJid;
+            userJid = actorJid;
         }
 
-        List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(
-                problemSetJid,
-                problemJid,
-                viewedUserJid);
+        List<? extends ItemSubmission> submissions =
+                submissionStore.getLatestSubmissionsByUserForProblemInContainer(problemSetJid, problemJid, userJid);
 
         Map<String, ItemSubmission> submissionsByItemJid = submissions.stream()
                 .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
@@ -258,11 +250,11 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
         Map<String, String> problemNamesByProblemJid = problemClient.getProblemNames(
                 ImmutableSet.copyOf(problemJids), language);
 
-        Profile profile = profileService.getProfile(viewedUserJid);
+        Profile profile = profileService.getProfile(userJid);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
-                .userJids(ImmutableList.of(viewedUserJid))
+                .userJids(ImmutableList.of(userJid))
                 .problemJids(problemJids)
                 .build();
 

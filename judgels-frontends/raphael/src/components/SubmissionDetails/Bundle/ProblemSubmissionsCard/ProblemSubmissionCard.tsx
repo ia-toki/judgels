@@ -12,7 +12,7 @@ import './ProblemSubmissionCard.css';
 
 export interface ProblemSubmissionCardProps {
   name: string;
-  alias: string;
+  alias?: string;
   itemJids: string[];
   submissionsByItemJid: { [itemJid: string]: ItemSubmission };
   itemTypesMap: { [itemJid: string]: ItemType };
@@ -79,7 +79,8 @@ export const ProblemSubmissionCard: React.FunctionComponent<ProblemSubmissionCar
     <ContentCard className="bundle-problem-submission">
       <div className="card-header">
         <h4>
-          {alias}. {name}
+          {alias ? `${alias} . ` : ''}
+          {name}
         </h4>
         {canManage && onRegrade && (
           <Button intent="primary" icon="refresh" onClick={onRegrade}>

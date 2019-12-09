@@ -2,8 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
+import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import { AppState } from '../../../../../../../../modules/store';
 import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
 import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
@@ -33,22 +34,20 @@ export interface ProblemSubmissionSummaryPageProps extends RouteComponentProps<P
     username?: string,
     language?: string
   ) => Promise<SubmissionSummaryResponse>;
+  onRegradeAll: (problemSetJid: string, userJid?: string, problemJid?: string) => Promise<void>;
 }
 
 export interface ProblemSubmissionSummaryPageState {
   config?: SubmissionConfig;
   profile?: Profile;
-  problemSummaries: ProblemSubmissionCardProps[];
+  problemSummaries?: ProblemSubmissionCardProps[];
 }
 
 class ProblemSubmissionSummaryPage extends React.Component<
   ProblemSubmissionSummaryPageProps,
   ProblemSubmissionSummaryPageState
 > {
-  state: ProblemSubmissionSummaryPageState = {
-    config: undefined,
-    problemSummaries: undefined,
-  };
+  state: ProblemSubmissionSummaryPageState = {};
 
   async refreshSubmissions() {
     const { problemSet, problem, onGetSubmissionSummary } = this.props;
@@ -61,15 +60,15 @@ class ProblemSubmissionSummaryPage extends React.Component<
 
     const problemSummaries: ProblemSubmissionCardProps[] = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
-      alias: response.problemAliasesMap[problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
       submissionsByItemJid: response.submissionsByItemJid,
       canViewGrading: true,
       canManage: response.config.canManage,
       itemTypesMap: response.itemTypesMap,
+      onRegrade: () => this.regrade(problemJid),
     }));
 
-    this.setState({ config: response.config, problemSummaries });
+    this.setState({ config: response.config, profile: response.profile, problemSummaries });
   }
 
   async componentDidMount() {
@@ -81,10 +80,21 @@ class ProblemSubmissionSummaryPage extends React.Component<
       <ContentCard>
         <h3>Results</h3>
         <hr />
+        {this.renderUserFilter()}
+        <ContentCard>
+          Summary for <UserRef profile={this.state.profile} />
+        </ContentCard>
         {this.renderResults()}
       </ContentCard>
     );
   }
+
+  private renderUserFilter = () => {
+    if (this.props.location.pathname.includes('/users/')) {
+      return null;
+    }
+    return <SubmissionUserFilter />;
+  };
 
   private renderResults = () => {
     const { problemSummaries } = this.state;
@@ -92,9 +102,17 @@ class ProblemSubmissionSummaryPage extends React.Component<
       return <LoadingState />;
     }
     if (problemSummaries.length === 0) {
-      return <small>No problems.</small>;
+      return <small>No results.</small>;
     }
     return this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />);
+  };
+
+  private regrade = async problemJid => {
+    const { userJids } = this.state.config;
+    const userJid = userJids[0];
+
+    await this.props.onRegradeAll(this.props.problemSet.jid, userJid, problemJid);
+    await this.refreshSubmissions();
   };
 }
 
@@ -107,6 +125,7 @@ export function createProblemSubmissionSummaryPage(problemSetSubmissionActions) 
 
   const mapDispatchToProps = {
     onGetSubmissionSummary: problemSetSubmissionActions.getSubmissionSummary,
+    onRegradeAll: problemSetSubmissionActions.regradeSubmissions,
   };
 
   return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionSummaryPage));
