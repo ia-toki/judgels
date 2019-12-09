@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 
-import { get, postMultipart } from '../http';
+import { get, postMultipart, post } from '../http';
 import { SubmissionWithSourceResponse } from '../sandalphon/submissionProgramming';
 import { SubmissionsResponse } from './submissionProgramming';
 import { baseProblemSetsURL } from './problemSet';
@@ -37,5 +37,14 @@ export const problemSetSubmissionProgrammingAPI = {
   ): Promise<void> => {
     const parts = { problemSetJid, problemJid, gradingLanguage, ...sourceFiles };
     return postMultipart(baseURL, token, parts);
+  },
+
+  regradeSubmission: (token: string, submissionJid: string): Promise<void> => {
+    return post(`${baseURL}/${submissionJid}/regrade`, token);
+  },
+
+  regradeSubmissions: (token: string, chapterJid?: string, userJid?: string, problemJid?: string): Promise<void> => {
+    const params = stringify({ chapterJid, userJid, problemJid });
+    return post(`${baseURL}/regrade?${params}`, token);
   },
 };

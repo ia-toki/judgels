@@ -55,4 +55,22 @@ export const problemSetSubmissionActions = {
       dispatch(push(`/problems/${problemSetSlug}/${problemAlias}/submissions`));
     };
   },
+
+  regradeSubmission: (submissionJid: string) => {
+    return async (dispatch, getState, { problemSetSubmissionProgrammingAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await problemSetSubmissionProgrammingAPI.regradeSubmission(token, submissionJid);
+
+      toastActions.showSuccessToast('Regrade in progress.');
+    };
+  },
+
+  regradeSubmissions: (problemSetJid: string, userJid?: string, problemJid?: string) => {
+    return async (dispatch, getState, { problemSetSubmissionProgrammingAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await problemSetSubmissionProgrammingAPI.regradeSubmissions(token, problemSetJid, userJid, problemJid);
+
+      toastActions.showSuccessToast('Regrade in progress.');
+    };
+  },
 };

@@ -8,6 +8,7 @@ import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -38,6 +39,7 @@ import judgels.sandalphon.api.submission.programming.SubmissionWithSource;
 import judgels.sandalphon.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.sandalphon.problem.ProblemClient;
 import judgels.sandalphon.submission.programming.SubmissionClient;
+import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
 import judgels.sandalphon.submission.programming.SubmissionStore;
 import judgels.service.actor.ActorChecker;
@@ -50,6 +52,7 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
     private final SubmissionStore submissionStore;
     private final SubmissionSourceBuilder submissionSourceBuilder;
     private final SubmissionClient submissionClient;
+    private final SubmissionRegrader submissionRegrader;
     private final SubmissionRoleChecker submissionRoleChecker;
     private final ProblemSetProblemStore problemStore;
     private final ProfileService profileService;
@@ -62,6 +65,7 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
             SubmissionStore submissionStore,
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionClient submissionClient,
+            SubmissionRegrader submissionRegrader,
             SubmissionRoleChecker submissionRoleChecker,
             ProblemSetProblemStore problemStore,
             ProfileService profileService,
@@ -72,6 +76,7 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
         this.submissionStore = submissionStore;
         this.submissionSourceBuilder = submissionSourceBuilder;
         this.submissionClient = submissionClient;
+        this.submissionRegrader = submissionRegrader;
         this.submissionRoleChecker = submissionRoleChecker;
         this.problemStore = problemStore;
         this.profileService = profileService;
@@ -91,10 +96,8 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
         ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
-        Optional<String> actualUserJid = canManage ? userJid : Optional.of(actorJid);
 
-        Page<Submission> submissions =
-                submissionStore.getSubmissions(problemSet.getJid(), actualUserJid, problemJid, page);
+        Page<Submission> submissions = submissionStore.getSubmissions(problemSet.getJid(), userJid, problemJid, page);
 
         Set<String> problemJids = submissions.getPage().stream()
                 .map(Submission::getProblemJid)
@@ -176,5 +179,40 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
+    }
+
+    @Override
+    @UnitOfWork
+    public void regradeSubmission(AuthHeader authHeader, String submissionJid) {
+        String actorJid = actorChecker.check(authHeader);
+        Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
+        checkFound(problemSetStore.getProblemSetByJid(submission.getContainerJid()));
+        checkAllowed(submissionRoleChecker.canManage(actorJid));
+
+        submissionRegrader.regradeSubmission(submission);
+    }
+
+    @Override
+    @UnitOfWork
+    public void regradeSubmissions(
+            AuthHeader authHeader,
+            String problemSetJid,
+            Optional<String> userJid,
+            Optional<String> problemJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
+        checkAllowed(submissionRoleChecker.canManage(actorJid));
+
+        for (int page = 1;; page++) {
+            List<Submission> submissions = submissionStore
+                    .getSubmissions(problemSetJid, userJid, problemJid, Optional.of(page))
+                    .getPage();
+
+            if (submissions.isEmpty()) {
+                break;
+            }
+            submissionRegrader.regradeSubmissions(submissions);
+        }
     }
 }

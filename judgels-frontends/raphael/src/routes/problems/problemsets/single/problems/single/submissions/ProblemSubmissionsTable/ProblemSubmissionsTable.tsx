@@ -18,8 +18,10 @@ export interface ProblemSubmissionsTableProps {
   problem: ProblemSetProblem;
   submissions: ProgrammingSubmission[];
   canManage: boolean;
+  userJid: string;
   profilesMap: ProfilesMap;
   problemAliasesMap: { [problemJid: string]: string };
+  onRegrade: (submissionJid: string) => any;
 }
 
 export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissionsTableProps> {
@@ -37,7 +39,7 @@ export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissi
       <thead>
         <tr>
           <th className="col-id">ID</th>
-          {this.props.canManage && <th className="col-user">User</th>}
+          <th className="col-user">User</th>
           <th className="col-prob">Prob</th>
           <th className="col-lang">Lang</th>
           <th className="col-verdict">Verdict</th>
@@ -50,16 +52,22 @@ export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissi
   };
 
   private renderRows = () => {
-    const { problemSet, problem, submissions, canManage, profilesMap, problemAliasesMap } = this.props;
+    const { problemSet, problem, submissions, userJid, canManage, profilesMap, problemAliasesMap } = this.props;
 
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
-        <td>{submission.id}</td>
-        {canManage && (
-          <td>
-            <UserRef profile={profilesMap[submission.userJid]} />
-          </td>
-        )}
+        <td>
+          {submission.id}
+          {canManage && (
+            <>
+              &nbsp;&nbsp;&nbsp;
+              <Icon className="action" icon="refresh" intent="primary" onClick={this.onClickRegrade(submission.jid)} />
+            </>
+          )}
+        </td>
+        <td>
+          <UserRef profile={profilesMap[submission.userJid]} />
+        </td>
 
         <td>{problemAliasesMap[submission.problemJid]}</td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
@@ -71,13 +79,19 @@ export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissi
           <FormattedRelative value={submission.time} />{' '}
         </td>
         <td className="cell-centered">
-          <Link className="action" to={`/problems/${problemSet.slug}/${problem.alias}/submissions/${submission.id}`}>
-            <Icon icon="search" />
-          </Link>
+          {(canManage || userJid === submission.userJid) && (
+            <Link className="action" to={`/problems/${problemSet.slug}/${problem.alias}/submissions/${submission.id}`}>
+              <Icon icon="search" />
+            </Link>
+          )}
         </td>
       </tr>
     ));
 
     return <tbody>{rows}</tbody>;
+  };
+
+  private onClickRegrade = (submissionJid: string) => {
+    return () => this.props.onRegrade(submissionJid);
   };
 }

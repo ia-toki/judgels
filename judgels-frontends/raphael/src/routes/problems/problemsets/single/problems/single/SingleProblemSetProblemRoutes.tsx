@@ -11,7 +11,7 @@ import ContentWithSidebar, {
 } from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import ProblemStatementPage from './statement/ProblemStatementPage/ProblemStatementPage';
-import ProblemSubmissionsPage from './submissions/ProblemSubmissionsPage/ProblemSubmissionsPage';
+import ProblemSubmissionRoutes from './submissions/ProblemSubmissionRoutes';
 import ProblemItemSubmissionRoutes from './results/ProblemItemSubmissionRoutes';
 import { AppState } from '../../../../../../modules/store';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
@@ -56,7 +56,7 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
           titleIcon: 'layers',
           title: 'Submissions',
           routeComponent: Route,
-          component: ProblemSubmissionsPage,
+          component: ProblemSubmissionRoutes,
         },
       ];
     } else {
