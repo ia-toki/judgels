@@ -53,6 +53,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
         <hr />
         {this.renderUserFilter()}
         {this.renderRegradeAllButton()}
+        <div className="clearfix" />
         {this.renderSubmissions()}
         {this.renderPagination()}
       </ContentCard>
