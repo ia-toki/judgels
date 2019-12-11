@@ -14,7 +14,7 @@ const ProblemsRoutes = () => {
     {
       id: '@',
       titleIcon: 'panel-stats',
-      title: 'By Problemset',
+      title: 'Problemsets',
       routeComponent: Route,
       component: ProblemsetsPage,
     },
