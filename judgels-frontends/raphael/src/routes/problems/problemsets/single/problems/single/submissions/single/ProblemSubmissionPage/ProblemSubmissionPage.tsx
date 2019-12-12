@@ -85,7 +85,7 @@ export class ProblemSubmissionPage extends React.Component<ProblemSubmissionPage
         profile={profile!}
         problemName={problemName!}
         problemAlias={problemAlias!}
-        problemUrl={`/problems/${problemSet.slug}/problems/${problemAlias}`}
+        problemUrl={`/problems/${problemSet.slug}/${problemAlias}`}
         containerTitle="Problem"
         containerName={containerName!}
       />
