@@ -40,7 +40,6 @@ export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissi
         <tr>
           <th className="col-id">ID</th>
           <th className="col-user">User</th>
-          <th className="col-prob">Prob</th>
           <th className="col-lang">Lang</th>
           <th className="col-verdict">Verdict</th>
           <th className="col-pts">Pts</th>
@@ -52,7 +51,7 @@ export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissi
   };
 
   private renderRows = () => {
-    const { problemSet, problem, submissions, userJid, canManage, profilesMap, problemAliasesMap } = this.props;
+    const { problemSet, problem, submissions, userJid, canManage, profilesMap } = this.props;
 
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
@@ -69,7 +68,6 @@ export class ProblemSubmissionsTable extends React.PureComponent<ProblemSubmissi
           <UserRef profile={profilesMap[submission.userJid]} />
         </td>
 
-        <td>{problemAliasesMap[submission.problemJid]}</td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
         <td className="cell-centered">
           {submission.latestGrading && <VerdictTag verdictCode={submission.latestGrading.verdict.code} />}
