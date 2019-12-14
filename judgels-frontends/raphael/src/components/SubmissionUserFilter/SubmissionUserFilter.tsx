@@ -14,26 +14,26 @@ class SubmissionUserFilter extends React.Component<SubmissionUserFilterProps> {
   render() {
     return (
       <ButtonGroup className="submission-user-filter" fill>
-        <Button active={!this.isAll()} text="My submissions" onClick={this.clickMine} />
-        <Button active={this.isAll()} text="All submissions" onClick={this.clickAll} />
+        <Button active={!this.isMine()} text="All submissions" onClick={this.clickAll} />
+        <Button active={this.isMine()} text="My submissions" onClick={this.clickMine} />
       </ButtonGroup>
     );
   }
 
-  private isAll = () => {
-    return (this.props.location.pathname + '/').includes('/all/');
+  private isMine = () => {
+    return (this.props.location.pathname + '/').includes('/mine/');
   };
 
-  private clickMine = () => {
-    if (this.isAll()) {
-      const idx = this.props.location.pathname.lastIndexOf('/all');
+  private clickAll = () => {
+    if (this.isMine()) {
+      const idx = this.props.location.pathname.lastIndexOf('/mine');
       this.props.push(this.props.location.pathname.substr(0, idx));
     }
   };
 
-  private clickAll = () => {
-    if (!this.isAll()) {
-      this.props.push((this.props.location.pathname + '/all').replace('//', '/'));
+  private clickMine = () => {
+    if (!this.isMine()) {
+      this.props.push((this.props.location.pathname + '/mine').replace('//', '/'));
     }
   };
 }

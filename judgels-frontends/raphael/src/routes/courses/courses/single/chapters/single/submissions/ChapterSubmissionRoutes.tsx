@@ -10,7 +10,7 @@ const ChapterSubmissionRoutes = () => (
       <Route exact path="/courses/:courseSlug/chapters/:chapterAlias/submissions" component={ChapterSubmissionsPage} />
       <Route
         exact
-        path="/courses/:courseSlug/chapters/:chapterAlias/submissions/all"
+        path="/courses/:courseSlug/chapters/:chapterAlias/submissions/mine"
         component={ChapterSubmissionsPage}
       />
       <Route

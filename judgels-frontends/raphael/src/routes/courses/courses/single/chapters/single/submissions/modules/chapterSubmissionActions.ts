@@ -37,7 +37,7 @@ export const chapterSubmissionActions = {
       toastActions.showSuccessToast('Solution submitted.');
 
       window.scrollTo(0, 0);
-      dispatch(push(`/courses/${courseSlug}/chapters/${chapterAlias}/submissions`));
+      dispatch(push(`/courses/${courseSlug}/chapters/${chapterAlias}/submissions/mine`));
     };
   },
 

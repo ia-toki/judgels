@@ -10,7 +10,7 @@ const SubmissionsRoutes = () => (
   <FullPageLayout>
     <Switch>
       <Route exact path="/submissions" component={SubmissionsPage} />
-      <Route exact path="/submissions/all" component={SubmissionsPage} />
+      <Route exact path="/submissions/mine" component={SubmissionsPage} />
 
       <Route path="/submissions/:submissionId" component={SubmissionPage} />
     </Switch>

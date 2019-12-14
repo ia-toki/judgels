@@ -5,7 +5,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
-import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
+import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { AppState } from '../../../../../../../../modules/store';
 import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
@@ -96,7 +96,7 @@ class ChapterSubmissionSummaryPage extends React.Component<
     if (this.props.location.pathname.includes('/users/')) {
       return null;
     }
-    return <SubmissionUserFilter />;
+    return <ItemSubmissionUserFilter />;
   };
 
   private renderResults = () => {

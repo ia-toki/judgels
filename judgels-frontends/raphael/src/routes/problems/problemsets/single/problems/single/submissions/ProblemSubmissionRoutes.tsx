@@ -8,7 +8,7 @@ const ProblemSubmissionRoutes = () => (
   <div>
     <Switch>
       <Route exact path="/problems/:problemSetSlug/:problemAlias/submissions" component={ProblemSubmissionsPage} />
-      <Route exact path="/problems/:problemSetSlug/:problemAlias/submissions/all" component={ProblemSubmissionsPage} />
+      <Route exact path="/problems/:problemSetSlug/:problemAlias/submissions/mine" component={ProblemSubmissionsPage} />
 
       <Route
         path="/problems/:problemSetSlug/:problemAlias/submissions/:submissionId"

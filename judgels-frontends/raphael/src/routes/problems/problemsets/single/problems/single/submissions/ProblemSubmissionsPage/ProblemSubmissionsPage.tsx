@@ -64,8 +64,8 @@ export class ProblemSubmissionsPage extends React.PureComponent<
     return <SubmissionUserFilter />;
   };
 
-  private isUserFilterAll = () => {
-    return (this.props.location.pathname + '/').includes('/all/');
+  private isUserFilterMine = () => {
+    return (this.props.location.pathname + '/').includes('/mine/');
   };
 
   private renderRegradeAllButton = () => {
@@ -107,7 +107,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
   private renderPagination = () => {
     return (
       <Pagination
-        key={'' + this.isUserFilterAll()}
+        key={'' + this.isUserFilterMine()}
         currentPage={1}
         pageSize={ProblemSubmissionsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
@@ -121,7 +121,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
   };
 
   private refreshSubmissions = async (page?: number) => {
-    const userJid = this.isUserFilterAll() ? undefined : this.props.userJid;
+    const userJid = this.isUserFilterMine() ? this.props.userJid : undefined;
     const response = await this.props.onGetProgrammingSubmissions(
       this.props.problemSet.jid,
       userJid,

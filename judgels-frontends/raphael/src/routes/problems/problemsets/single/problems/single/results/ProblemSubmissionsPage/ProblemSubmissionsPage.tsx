@@ -10,7 +10,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
-import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
+import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { AppState } from '../../../../../../../../modules/store';
 import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
 import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
@@ -57,7 +57,7 @@ export class ProblemSubmissionsPage extends React.Component<ProblemSubmissionsPa
       <ContentCard>
         <h3>Results</h3>
         <hr />
-        <SubmissionUserFilter />
+        <ItemSubmissionUserFilter />
         {this.renderRegradeAllButton()}
         {this.renderSubmissions()}
         {this.renderPagination()}

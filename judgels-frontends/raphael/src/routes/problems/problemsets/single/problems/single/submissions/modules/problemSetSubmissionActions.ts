@@ -43,7 +43,7 @@ export const problemSetSubmissionActions = {
       toastActions.showSuccessToast('Solution submitted.');
 
       window.scrollTo(0, 0);
-      dispatch(push(`/problems/${problemSetSlug}/${problemAlias}/submissions`));
+      dispatch(push(`/problems/${problemSetSlug}/${problemAlias}/submissions/mine`));
     };
   },
 
