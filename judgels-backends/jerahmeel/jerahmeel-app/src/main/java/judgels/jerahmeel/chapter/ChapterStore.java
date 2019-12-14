@@ -49,6 +49,14 @@ public class ChapterStore {
                                 .build()));
     }
 
+    public Map<String, String> getChapterNamesByJids(Set<String> chapterJids) {
+        return chapterDao.selectByJids(chapterJids)
+                .values()
+                .stream()
+                .collect(Collectors.toMap(
+                        c -> c.jid,
+                        c -> c.name));
+    }
 
     private static Chapter fromModel(ChapterModel model) {
         return new Chapter.Builder()

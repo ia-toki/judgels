@@ -7,8 +7,7 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from '../../components/ContentWithSidebar/ContentWithSidebar';
 
-import ProblemsetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
-import ProblemsetSubmissionsPage from './submissions/ProblemSetSubmissionsPage/ProblemSetSubmissionsPage';
+import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 
 const ProblemsRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
@@ -17,14 +16,7 @@ const ProblemsRoutes = () => {
       titleIcon: 'panel-stats',
       title: 'Problemsets',
       routeComponent: Route,
-      component: ProblemsetsPage,
-    },
-    {
-      id: 'submissions',
-      titleIcon: 'layers',
-      title: 'Submissions',
-      routeComponent: Route,
-      component: ProblemsetSubmissionsPage,
+      component: ProblemSetsPage,
     },
   ];
 

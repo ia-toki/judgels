@@ -15,16 +15,12 @@ import {
 import { Profile } from '../../../../../../../../../modules/api/jophiel/profile';
 import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../../../../../../submissions/modules/problemSetSubmissionActions';
+import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../modules/problemSetSubmissionActions';
 
 export interface ProblemSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   problemSet: ProblemSet;
   statementLanguage: string;
-  onGetSubmissionWithSource: (
-    problemSetJid: string,
-    submissionId: number,
-    language?: string
-  ) => Promise<SubmissionWithSourceResponse>;
+  onGetSubmissionWithSource: (submissionId: number, language?: string) => Promise<SubmissionWithSourceResponse>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
@@ -42,7 +38,6 @@ export class ProblemSubmissionPage extends React.Component<ProblemSubmissionPage
 
   async componentDidMount() {
     const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
-      this.props.problemSet.jid,
       +this.props.match.params.submissionId,
       this.props.statementLanguage
     );
@@ -86,7 +81,7 @@ export class ProblemSubmissionPage extends React.Component<ProblemSubmissionPage
         problemName={problemName!}
         problemAlias={problemAlias!}
         problemUrl={`/problems/${problemSet.slug}/${problemAlias}`}
-        containerTitle="Problem"
+        containerTitle="Problemset"
         containerName={containerName!}
       />
     );

@@ -4,40 +4,36 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
-import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import Pagination from '../../../../components/Pagination/Pagination';
-import SubmissionUserFilter from '../../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import { AppState } from '../../../../modules/store';
-import { SubmissionsResponse } from '../../../../modules/api/jerahmeel/submissionProgramming';
-import { ProblemSetSubmissionsTable } from '../ProblemSetSubmissionsTable/ProblemSetSubmissionsTable';
-import { selectUserJid } from '../../../../modules/session/sessionSelectors';
-import { problemSetSubmissionActions as injectedProblemSubmissionActions } from '../modules/problemSetSubmissionActions';
+import { LoadingState } from '../../../components/LoadingState/LoadingState';
+import { ContentCard } from '../../../components/ContentCard/ContentCard';
+import Pagination from '../../../components/Pagination/Pagination';
+import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
+import { AppState } from '../../../modules/store';
+import { SubmissionsResponse } from '../../../modules/api/jerahmeel/submissionProgramming';
+import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
+import { selectUserJid } from '../../../modules/session/sessionSelectors';
+import { submissionActions as injectedSubmissionActions } from '../modules/submissionActions';
 
-export interface ProblemSetSubmissionsPageProps extends RouteComponentProps<{}> {
+export interface SubmissionsPageProps extends RouteComponentProps<{}> {
   userJid: string;
   onGetProgrammingSubmissions: (
-    problemSetJid: string,
+    containerJid?: string,
     userJid?: string,
     problemJid?: string,
     page?: number
   ) => Promise<SubmissionsResponse>;
   onRegrade: (submissionJid: string) => Promise<void>;
-  onRegradeAll: (problemSetJid: string, userJid?: string, problemJid?: string) => Promise<void>;
   onAppendRoute: (queries) => any;
 }
 
-interface ProblemSetSubmissionsPageState {
+interface SubmissionsPageState {
   response?: SubmissionsResponse;
 }
 
-export class ProblemSetSubmissionsPage extends React.PureComponent<
-  ProblemSetSubmissionsPageProps,
-  ProblemSetSubmissionsPageState
-> {
+export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, SubmissionsPageState> {
   private static PAGE_SIZE = 20;
 
-  state: ProblemSetSubmissionsPageState = {};
+  state: SubmissionsPageState = {};
 
   render() {
     return (
@@ -66,7 +62,7 @@ export class ProblemSetSubmissionsPage extends React.PureComponent<
       return <LoadingState />;
     }
 
-    const { data: submissions, config, profilesMap, problemAliasesMap } = response;
+    const { data: submissions, config, profilesMap, problemNamesMap, containerNamesMap } = response;
     if (submissions.totalCount === 0) {
       return (
         <p>
@@ -76,12 +72,13 @@ export class ProblemSetSubmissionsPage extends React.PureComponent<
     }
 
     return (
-      <ProblemSetSubmissionsTable
+      <SubmissionsTable
         submissions={submissions.page}
         userJid={this.props.userJid}
         canManage={config.canManage}
         profilesMap={profilesMap}
-        problemAliasesMap={problemAliasesMap}
+        problemNamesMap={problemNamesMap}
+        containerNamesMap={containerNamesMap}
         onRegrade={this.onRegrade}
       />
     );
@@ -92,7 +89,7 @@ export class ProblemSetSubmissionsPage extends React.PureComponent<
       <Pagination
         key={'' + this.isUserFilterAll()}
         currentPage={1}
-        pageSize={ProblemSetSubmissionsPage.PAGE_SIZE}
+        pageSize={SubmissionsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
       />
     );
@@ -117,19 +114,18 @@ export class ProblemSetSubmissionsPage extends React.PureComponent<
   };
 }
 
-export function createProblemSetSubmissionsPage(problemSetSubmissionActions) {
+export function createSubmissionsPage(submissionActions) {
   const mapStateToProps = (state: AppState) => ({
     userJid: selectUserJid(state),
   });
 
   const mapDispatchToProps = {
-    onGetProgrammingSubmissions: problemSetSubmissionActions.getSubmissions,
-    onRegrade: problemSetSubmissionActions.regradeSubmission,
-    onRegradeAll: problemSetSubmissionActions.regradeSubmissions,
+    onGetProgrammingSubmissions: submissionActions.getSubmissions,
+    onRegrade: submissionActions.regradeSubmission,
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSetSubmissionsPage));
+  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionsPage));
 }
 
-export default createProblemSetSubmissionsPage(injectedProblemSubmissionActions);
+export default createSubmissionsPage(injectedSubmissionActions);

@@ -14,7 +14,7 @@ export function getProblemName(problem: ProblemInfo, language: string) {
 }
 
 export function constructProblemName(title?: string, alias?: string) {
-  return (alias && alias + '. ') + (title || '');
+  return (alias ? alias + '. ' : '') + (title || '');
 }
 
 export interface ProblemStatement {

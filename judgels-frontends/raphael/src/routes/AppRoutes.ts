@@ -6,13 +6,14 @@ import LazyAccountsRoutes from './accounts/LazyAccountsRoutes';
 import LazyContestsRoutes, { ContestsRoutesPromise } from './contests/LazyContestsRoutes';
 import LazyCoursesRoutes from './courses/LazyCoursesRoutes';
 import LazyProblemsRoutes from './problems/LazyProblemsRoutes';
+import LazySubmissionsRoutes from './submissions/LazySubmissionsRoutes';
 import LazyRankingRoutes from './ranking/LazyRankingRoutes';
 
 function shouldShowRoute(id: string, role: JophielRole) {
   if (id === 'account') {
     return role === JophielRole.Superadmin || role === JophielRole.Admin;
   }
-  if (id === 'courses' || id === 'problems') {
+  if (id === 'courses' || id === 'problems' || id === 'submissions') {
     return APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && role === JophielRole.Superadmin;
   }
   if (id === 'ranking') {
@@ -52,6 +53,14 @@ const appRoutes = [
     route: {
       path: '/problems',
       component: LazyProblemsRoutes,
+    },
+  },
+  {
+    id: 'submissions',
+    title: 'Submissions',
+    route: {
+      path: '/submissions',
+      component: LazySubmissionsRoutes,
     },
   },
   {

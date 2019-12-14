@@ -1,13 +1,13 @@
 import { push } from 'connected-react-router';
 
-import { ProblemSubmissionFormData } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { ProblemSubmissionFormData } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 
-export const chapterSubmissionActions = {
-  getSubmissions: (chapterJid: string, userJid?: string, problemJid?: string, page?: number) => {
+export const problemSetSubmissionActions = {
+  getSubmissions: (problemSetJid: string, userJid?: string, problemJid?: string, page?: number) => {
     return async (dispatch, getState, { submissionProgrammingAPI }) => {
       const token = selectToken(getState());
-      return await submissionProgrammingAPI.getSubmissions(token, chapterJid, userJid, problemJid, page);
+      return await submissionProgrammingAPI.getSubmissions(token, problemSetJid, userJid, problemJid, page);
     };
   },
 
@@ -19,9 +19,9 @@ export const chapterSubmissionActions = {
   },
 
   createSubmission: (
-    courseSlug: string,
-    chapterJid: string,
-    chapterAlias: string,
+    problemSetSlug: string,
+    problemSetJid: string,
+    problemAlias: string,
     problemJid: string,
     data: ProblemSubmissionFormData
   ) => {
@@ -32,12 +32,18 @@ export const chapterSubmissionActions = {
         sourceFiles['sourceFiles.' + key] = data.sourceFiles[key];
       });
 
-      await submissionProgrammingAPI.createSubmission(token, chapterJid, problemJid, data.gradingLanguage, sourceFiles);
+      await submissionProgrammingAPI.createSubmission(
+        token,
+        problemSetJid,
+        problemJid,
+        data.gradingLanguage,
+        sourceFiles
+      );
 
       toastActions.showSuccessToast('Solution submitted.');
 
       window.scrollTo(0, 0);
-      dispatch(push(`/courses/${courseSlug}/chapters/${chapterAlias}/submissions`));
+      dispatch(push(`/problems/${problemSetSlug}/${problemAlias}/submissions`));
     };
   },
 
@@ -50,10 +56,10 @@ export const chapterSubmissionActions = {
     };
   },
 
-  regradeSubmissions: (chapterJid: string, userJid?: string, problemJid?: string) => {
+  regradeSubmissions: (problemSetJid: string, userJid?: string, problemJid?: string) => {
     return async (dispatch, getState, { submissionProgrammingAPI, toastActions }) => {
       const token = selectToken(getState());
-      await submissionProgrammingAPI.regradeSubmissions(token, chapterJid, userJid, problemJid);
+      await submissionProgrammingAPI.regradeSubmissions(token, problemSetJid, userJid, problemJid);
 
       toastActions.showSuccessToast('Regrade in progress.');
     };

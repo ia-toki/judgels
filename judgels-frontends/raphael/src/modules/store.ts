@@ -38,12 +38,11 @@ import { courseChapterAPI } from './api/jerahmeel/courseChapter';
 import { chapterAPI } from './api/jerahmeel/chapter';
 import { chapterLessonAPI } from './api/jerahmeel/chapterLesson';
 import { chapterProblemAPI } from './api/jerahmeel/chapterProblem';
-import { chapterSubmissionProgrammingAPI } from './api/jerahmeel/chapterSubmissionProgramming';
 import { chapterSubmissionBundleAPI } from './api/jerahmeel/chapterSubmissionBundle';
 import { problemSetAPI } from './api/jerahmeel/problemSet';
 import { problemSetProblemAPI } from './api/jerahmeel/problemSetProblem';
-import { problemSetSubmissionProgrammingAPI } from './api/jerahmeel/problemSetSubmissionProgramming';
 import { problemSetSubmissionBundleAPI } from './api/jerahmeel/problemSetSubmissionBundle';
+import { submissionProgrammingAPI } from './api/jerahmeel/submissionProgramming';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
 import { toastActions } from './toast/toastActions';
@@ -119,12 +118,11 @@ export const store: any = createStore<AppState>(
         chapterAPI,
         chapterLessonAPI,
         chapterProblemAPI,
-        chapterSubmissionProgrammingAPI,
         chapterSubmissionBundleAPI,
         problemSetAPI,
         problemSetProblemAPI,
-        problemSetSubmissionProgrammingAPI,
         problemSetSubmissionBundleAPI,
+        submissionProgrammingAPI,
         toastActions,
       }),
       routerMiddleware(history)

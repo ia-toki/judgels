@@ -5,7 +5,10 @@ import static judgels.jerahmeel.JerahmeelCacheUtils.getShortDuration;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.Lists;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.persistence.ProblemSetDao;
@@ -62,6 +65,15 @@ public class ProblemSetStore {
 
         Page<ProblemSetModel> models = problemSetDao.selectPaged(searchOptions.build(), selectionOptions.build());
         return models.mapPage(p -> Lists.transform(p, ProblemSetStore::fromModel));
+    }
+
+    public Map<String, String> getProblemSetNamesByJids(Set<String> problemSetJids) {
+        return problemSetDao.selectByJids(problemSetJids)
+                .values()
+                .stream()
+                .collect(Collectors.toMap(
+                        c -> c.jid,
+                        c -> c.name));
     }
 
     private static ProblemSet fromModel(ProblemSetModel model) {

@@ -23,11 +23,7 @@ export interface ChapterSubmissionPageProps extends RouteComponentProps<{ submis
   course: Course;
   chapter: CourseChapter;
   statementLanguage: string;
-  onGetSubmissionWithSource: (
-    chapterJid: string,
-    submissionId: number,
-    language?: string
-  ) => Promise<SubmissionWithSourceResponse>;
+  onGetSubmissionWithSource: (submissionId: number, language?: string) => Promise<SubmissionWithSourceResponse>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
@@ -45,7 +41,6 @@ export class ChapterSubmissionPage extends React.Component<ChapterSubmissionPage
 
   async componentDidMount() {
     const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
-      this.props.chapter.chapterJid,
       +this.props.match.params.submissionId,
       this.props.statementLanguage
     );

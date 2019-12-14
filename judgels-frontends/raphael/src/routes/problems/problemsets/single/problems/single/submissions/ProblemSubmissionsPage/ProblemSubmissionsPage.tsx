@@ -17,7 +17,7 @@ import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmi
 import { selectUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
-import { problemSetSubmissionActions as injectedProblemSubmissionActions } from '../../../../../../submissions/modules/problemSetSubmissionActions';
+import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../modules/problemSetSubmissionActions';
 
 export interface ProblemSubmissionsPageProps extends RouteComponentProps<{}> {
   userJid: string;
@@ -164,4 +164,4 @@ export function createProblemSubmissionsPage(problemSetSubmissionActions) {
   return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionsPage));
 }
 
-export default createProblemSubmissionsPage(injectedProblemSubmissionActions);
+export default createProblemSubmissionsPage(injectedProblemSetSubmissionActions);

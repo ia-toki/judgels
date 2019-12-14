@@ -14,7 +14,7 @@ describe('AppRoutes', () => {
   });
 
   test('superadmin', () => {
-    testAppRoutes(JophielRole.Superadmin, ['account', 'contests', 'courses', 'problems', 'ranking']);
+    testAppRoutes(JophielRole.Superadmin, ['account', 'contests', 'courses', 'problems', 'submissions', 'ranking']);
   });
 
   test('user', () => {
