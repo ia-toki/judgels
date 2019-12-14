@@ -116,7 +116,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
                 .problemJids(problemJids)
                 .build();
 
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(problemSetJid, problemJids);
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(problemJids);
 
         Set<String> itemJids = submissions.getPage().stream()
                 .map(ItemSubmission::getItemJid)
@@ -147,7 +147,7 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
     public void createItemSubmission(AuthHeader authHeader, ItemSubmissionData data) {
         String actorJid = actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(data.getContainerJid()));
-        checkFound(problemStore.getProblem(data.getContainerJid(), data.getProblemJid()));
+        checkFound(problemStore.getProblem(data.getProblemJid()));
 
         Optional<Item> item = problemClient.getItem(data.getProblemJid(), data.getItemJid());
         checkFound(item);
@@ -232,8 +232,8 @@ public class ProblemSetItemSubmissionResource implements ProblemSetItemSubmissio
                 .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
 
         List<String> problemJids = ImmutableList.of(problemJid);
-        Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
-                problemSetJid, ImmutableSet.copyOf(problemJids));
+        Map<String, String> problemAliasesByProblemJid =
+                problemStore.getProblemAliasesByJids(ImmutableSet.copyOf(problemJids));
 
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();

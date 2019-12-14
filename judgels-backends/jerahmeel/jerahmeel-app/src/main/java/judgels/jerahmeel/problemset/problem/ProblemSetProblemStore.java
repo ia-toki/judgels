@@ -28,14 +28,8 @@ public class ProblemSetProblemStore {
                 ProblemSetProblemStore::fromModel);
     }
 
-    public Optional<ProblemSetProblem> getProblem(String problemSetJid, String problemJid) {
-        return problemDao.selectByProblemSetJidAndProblemJid(problemSetJid, problemJid)
-                .map(ProblemSetProblemStore::fromModel);
-    }
-
-    public List<String> getProblemJids(String contestJid) {
-        return Lists.transform(
-                problemDao.selectAllByProblemSetJid(contestJid, createOptions()), model -> model.problemJid);
+    public Optional<ProblemSetProblem> getProblem(String problemJid) {
+        return problemDao.selectByProblemJid(problemJid).map(ProblemSetProblemStore::fromModel);
     }
 
     public Optional<ProblemSetProblem> getProblemByAlias(String problemSetJid, String problemAlias) {
@@ -43,8 +37,8 @@ public class ProblemSetProblemStore {
                 .map(ProblemSetProblemStore::fromModel);
     }
 
-    public Map<String, String> getProblemAliasesByJids(String problemSetJid, Set<String> problemJids) {
-        Map<String, String> problemAliases = problemDao.selectAllByProblemSetJid(problemSetJid, createOptions())
+    public Map<String, String> getProblemAliasesByJids(Set<String> problemJids) {
+        Map<String, String> problemAliases = problemDao.selectAllByProblemJids(problemJids)
                 .stream()
                 .collect(Collectors.toMap(m -> m.problemJid, m -> m.alias));
         return problemJids

@@ -89,22 +89,22 @@ class ContestSubmissionStoreIntegrationTests extends AbstractIntegrationTests {
                 ImmutableSet.of("problemJid1", "problemJid2", "problemJid3")))
                 .isEqualTo(ImmutableMap.of("problemJid1", 1L, "problemJid2", 1L, "problemJid3", 0L));
 
-        assertThat(store.getSubmissions(contestA.getJid(), empty(), empty(), empty()).getPage())
+        assertThat(store.getSubmissions(of(contestA.getJid()), empty(), empty(), empty()).getPage())
                 .containsExactly(submission4, submission3, submission2, submission1);
 
-        assertThat(store.getSubmissions(contestA.getJid(), of("userJid1"), empty(), empty()).getPage())
+        assertThat(store.getSubmissions(of(contestA.getJid()), of("userJid1"), empty(), empty()).getPage())
                 .containsExactly(submission2, submission1);
 
-        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), empty(), empty()).getPage())
+        assertThat(store.getSubmissions(of(contestA.getJid()), of("userJid2"), empty(), empty()).getPage())
                 .containsExactly(submission4, submission3);
 
-        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid1"), empty()).getPage())
+        assertThat(store.getSubmissions(of(contestA.getJid()), empty(), of("problemJid1"), empty()).getPage())
                 .containsExactly(submission3, submission2, submission1);
 
-        assertThat(store.getSubmissions(contestA.getJid(), empty(), of("problemJid2"), empty()).getPage())
+        assertThat(store.getSubmissions(of(contestA.getJid()), empty(), of("problemJid2"), empty()).getPage())
                 .containsExactly(submission4);
 
-        assertThat(store.getSubmissions(contestA.getJid(), of("userJid2"), of("problemJid1"), empty()).getPage())
+        assertThat(store.getSubmissions(of(contestA.getJid()), of("userJid2"), of("problemJid1"), empty()).getPage())
                 .containsExactly(submission3);
     }
 }

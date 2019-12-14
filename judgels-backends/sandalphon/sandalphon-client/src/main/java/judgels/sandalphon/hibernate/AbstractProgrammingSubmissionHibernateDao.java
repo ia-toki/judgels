@@ -39,14 +39,15 @@ public abstract class AbstractProgrammingSubmissionHibernateDao
 
     @Override
     public final Page<M> selectPaged(
-            String containerJid,
+            Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Long> lastSubmissionId,
             SelectionOptions options) {
 
         FilterOptions.Builder<M> filterOptions = new FilterOptions.Builder<>();
-        filterOptions.putColumnsEq(AbstractProgrammingSubmissionModel_.containerJid, containerJid);
+        containerJid.ifPresent(jid ->
+                filterOptions.putColumnsEq(AbstractProgrammingSubmissionModel_.containerJid, jid));
         userJid.ifPresent(jid -> filterOptions.putColumnsEq(JudgelsModel_.createdBy, jid));
         problemJid.ifPresent(jid -> filterOptions.putColumnsEq(AbstractProgrammingSubmissionModel_.problemJid, jid));
         lastSubmissionId.ifPresent(filterOptions::lastId);

@@ -11,6 +11,7 @@ const MainProblemsRoutes = () => (
     <Switch>
       <Route exact path="/problems" component={MainProblemsWrapperRoutes} />
       <Route path="/problems/problemsets" component={MainProblemsWrapperRoutes} />
+      <Route path="/problems/submissions" component={MainProblemsWrapperRoutes} />
       <Route path="/problems" component={MainSingleProblemSetRoutes} />
     </Switch>
   </div>

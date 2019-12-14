@@ -15,7 +15,7 @@ import {
 import { Profile } from '../../../../../../../../../modules/api/jophiel/profile';
 import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../modules/problemSetSubmissionActions';
+import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../../../../../../submissions/modules/problemSetSubmissionActions';
 
 export interface ProblemSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   problemSet: ProblemSet;

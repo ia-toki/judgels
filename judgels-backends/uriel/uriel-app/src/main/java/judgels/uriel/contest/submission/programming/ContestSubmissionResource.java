@@ -133,7 +133,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         Optional<String> actualUserJid = canSupervise ? userJid : Optional.of(actorJid);
 
         Page<Submission> submissions =
-                submissionStore.getSubmissions(contest.getJid(), actualUserJid, problemJid, page);
+                submissionStore.getSubmissions(Optional.of(contest.getJid()), actualUserJid, problemJid, page);
 
         List<String> userJidsSortedByUsername;
         Set<String> userJids;
@@ -276,7 +276,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
 
         for (int page = 1;; page++) {
             List<Submission> submissions = submissionStore
-                    .getSubmissions(contestJid, userJid, problemJid, Optional.of(page))
+                    .getSubmissions(Optional.of(contestJid), userJid, problemJid, Optional.of(page))
                     .getPage();
 
             if (submissions.isEmpty()) {
@@ -304,7 +304,7 @@ public class ContestSubmissionResource implements ContestSubmissionService {
         checkAllowed(submissionRoleChecker.canSupervise(actorJid, contest));
 
         List<Submission> submissions = submissionStore
-                .getSubmissionsForDownload(contestJid, userJid, problemJid, lastSubmissionId, limit)
+                .getSubmissionsForDownload(Optional.of(contestJid), userJid, problemJid, lastSubmissionId, limit)
                 .getPage();
 
         if (submissions.isEmpty()) {

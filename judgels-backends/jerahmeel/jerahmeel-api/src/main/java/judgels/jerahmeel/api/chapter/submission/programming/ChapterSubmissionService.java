@@ -22,7 +22,7 @@ public interface ChapterSubmissionService {
     @Produces(APPLICATION_JSON)
     SubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
-            @QueryParam("chapterJid") String chapterJid,
+            @QueryParam("chapterJid") Optional<String> chapterJid,
             @QueryParam("userJid") Optional<String> userJid,
             @QueryParam("problemJid") Optional<String> problemJid,
             @QueryParam("page") Optional<Integer> page);
@@ -45,7 +45,7 @@ public interface ChapterSubmissionService {
     @Path("/regrade")
     void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("chapterJid") String contestJid,
+            @QueryParam("chapterJid") Optional<String> chapterJid,
             @QueryParam("userJid") Optional<String> userJid,
             @QueryParam("problemJid") Optional<String> problemJid);
 

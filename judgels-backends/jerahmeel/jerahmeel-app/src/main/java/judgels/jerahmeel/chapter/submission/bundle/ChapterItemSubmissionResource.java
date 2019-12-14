@@ -115,7 +115,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
                 .problemJids(problemJids)
                 .build();
 
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(chapterJid, problemJids);
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(problemJids);
 
         Set<String> itemJids = submissions.getPage().stream()
                 .map(ItemSubmission::getItemJid)
@@ -146,7 +146,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
     public void createItemSubmission(AuthHeader authHeader, ItemSubmissionData data) {
         String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(data.getContainerJid()));
-        checkFound(problemStore.getProblem(data.getContainerJid(), data.getProblemJid()));
+        checkFound(problemStore.getProblem(data.getProblemJid()));
 
         Item item = checkFound(problemClient.getItem(data.getProblemJid(), data.getItemJid()));
 
@@ -227,7 +227,7 @@ public class ChapterItemSubmissionResource implements ChapterItemSubmissionServi
 
         List<String> problemJidsSortedByAlias = problemStore.getBundleProblemJids(chapterJid);
         Map<String, String> problemAliasesByProblemJid =
-                problemStore.getProblemAliasesByJids(chapterJid, ImmutableSet.copyOf(problemJidsSortedByAlias));
+                problemStore.getProblemAliasesByJids(ImmutableSet.copyOf(problemJidsSortedByAlias));
 
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();

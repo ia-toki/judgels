@@ -16,7 +16,7 @@ import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../submissions/modules/problemSetSubmissionActions';
+import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../../../../../submissions/modules/problemSetSubmissionActions';
 import { webPrefsActions as injectedWebPrefsActions } from '../../../../../../../../modules/webPrefs/webPrefsActions';
 
 export interface ProblemStatementPageProps extends RouteComponentProps<{ problemAlias: string }> {

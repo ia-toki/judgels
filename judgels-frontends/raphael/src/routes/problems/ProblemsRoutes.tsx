@@ -8,6 +8,7 @@ import ContentWithSidebar, {
 } from '../../components/ContentWithSidebar/ContentWithSidebar';
 
 import ProblemsetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
+import ProblemsetSubmissionsPage from './submissions/ProblemSetSubmissionsPage/ProblemSetSubmissionsPage';
 
 const ProblemsRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
@@ -17,6 +18,13 @@ const ProblemsRoutes = () => {
       title: 'Problemsets',
       routeComponent: Route,
       component: ProblemsetsPage,
+    },
+    {
+      id: 'submissions',
+      titleIcon: 'layers',
+      title: 'Submissions',
+      routeComponent: Route,
+      component: ProblemsetSubmissionsPage,
     },
   ];
 

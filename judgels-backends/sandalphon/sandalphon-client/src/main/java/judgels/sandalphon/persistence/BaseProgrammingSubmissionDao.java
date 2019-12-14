@@ -12,7 +12,7 @@ public interface BaseProgrammingSubmissionDao<M extends AbstractProgrammingSubmi
     M createSubmissionModel();
     List<M> selectAllByContainerJid(String containerJid, Optional<Long> lastSubmissionId);
     Page<M> selectPaged(
-            String containerJid,
+            Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Long> lastSubmissionId,

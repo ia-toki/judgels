@@ -22,7 +22,7 @@ public interface ProblemSetSubmissionService {
     @Produces(APPLICATION_JSON)
     SubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
-            @QueryParam("problemSetJid") String problemSetJid,
+            @QueryParam("problemSetJid") Optional<String> problemSetJid,
             @QueryParam("userJid") Optional<String> userJid,
             @QueryParam("problemJid") Optional<String> problemJid,
             @QueryParam("page") Optional<Integer> page);
@@ -45,7 +45,7 @@ public interface ProblemSetSubmissionService {
     @Path("/regrade")
     void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("chapterJid") String contestJid,
+            @QueryParam("problemSetJid") Optional<String> problemSetJid,
             @QueryParam("userJid") Optional<String> userJid,
             @QueryParam("problemJid") Optional<String> problemJid);
 

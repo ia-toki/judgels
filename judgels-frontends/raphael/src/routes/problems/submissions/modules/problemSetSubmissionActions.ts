@@ -1,8 +1,8 @@
 import { push } from 'connected-react-router';
 
-import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { ProblemSubmissionFormData } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
-import { NotFoundError } from '../../../../../../../../modules/api/error';
+import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { ProblemSubmissionFormData } from '../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
+import { NotFoundError } from '../../../../modules/api/error';
 
 export const problemSetSubmissionActions = {
   getSubmissions: (problemSetJid: string, userJid?: string, problemJid?: string, page?: number) => {

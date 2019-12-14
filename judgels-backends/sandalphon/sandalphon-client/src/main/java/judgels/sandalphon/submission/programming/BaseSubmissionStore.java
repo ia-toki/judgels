@@ -82,7 +82,7 @@ public class BaseSubmissionStore<
 
     @Override
     public Page<Submission> getSubmissionsForDownload(
-            String containerJid,
+            Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Long> lastSubmissionId,
@@ -99,7 +99,7 @@ public class BaseSubmissionStore<
 
     @Override
     public Page<Submission> getSubmissions(
-            String containerJid,
+            Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Integer> page) {
@@ -111,7 +111,7 @@ public class BaseSubmissionStore<
     }
 
     private Page<Submission> getSubmissions(
-            String containerJid,
+            Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Long> lastSubmissionId,

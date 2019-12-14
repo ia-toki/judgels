@@ -87,17 +87,16 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
     @UnitOfWork(readOnly = true)
     public SubmissionsResponse getSubmissions(
             Optional<AuthHeader> authHeader,
-            String problemSetJid,
+            Optional<String> problemSetJid,
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
-        ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
 
-        Page<Submission> submissions = submissionStore.getSubmissions(problemSet.getJid(), userJid, problemJid, page);
+        Page<Submission> submissions = submissionStore.getSubmissions(problemSetJid, userJid, problemJid, page);
 
         Set<String> problemJids = submissions.getPage().stream()
                 .map(Submission::getProblemJid)
@@ -112,7 +111,7 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
                 .canManage(canManage)
                 .build();
 
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(problemSet.getJid(), problemJids);
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(problemJids);
 
         return new SubmissionsResponse.Builder()
                 .data(submissions)
@@ -134,8 +133,7 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
         ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(submission.getContainerJid()));
         checkAllowed(submissionRoleChecker.canView(actorJid, submission.getUserJid()));
 
-        ProblemSetProblem problemSetProblem =
-                checkFound(problemStore.getProblem(problemSet.getJid(), submission.getProblemJid()));
+        ProblemSetProblem problemSetProblem = checkFound(problemStore.getProblem(submission.getProblemJid()));
         ProblemInfo problem = problemClient.getProblem(problemSetProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
@@ -167,7 +165,7 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
         String gradingLanguage = checkNotNull(parts.getField("gradingLanguage"), "gradingLanguage").getValue();
 
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
-        checkFound(problemStore.getProblem(problemSetJid, problemJid));
+        checkFound(problemStore.getProblem(problemJid));
 
         SubmissionData data = new SubmissionData.Builder()
                 .problemJid(problemJid)
@@ -196,12 +194,11 @@ public class ProblemSetSubmissionResource implements ProblemSetSubmissionService
     @UnitOfWork
     public void regradeSubmissions(
             AuthHeader authHeader,
-            String problemSetJid,
+            Optional<String> problemSetJid,
             Optional<String> userJid,
             Optional<String> problemJid) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
         checkAllowed(submissionRoleChecker.canManage(actorJid));
 
         for (int page = 1;; page++) {

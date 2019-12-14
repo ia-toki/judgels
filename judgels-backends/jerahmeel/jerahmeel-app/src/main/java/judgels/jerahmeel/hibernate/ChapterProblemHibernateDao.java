@@ -2,6 +2,7 @@ package judgels.jerahmeel.hibernate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
@@ -19,10 +20,17 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
     }
 
     @Override
-    public Optional<ChapterProblemModel> selectByChapterJidAndProblemJid(String chapterJid, String problemJid) {
+    public Optional<ChapterProblemModel> selectByProblemJid(String problemJid) {
         return selectByFilter(new FilterOptions.Builder<ChapterProblemModel>()
-                .putColumnsEq(ChapterProblemModel_.chapterJid, chapterJid)
                 .putColumnsEq(ChapterProblemModel_.problemJid, problemJid)
+                .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
+                .build());
+    }
+
+    @Override
+    public List<ChapterProblemModel> selectAllByProblemJids(Set<String> problemJids) {
+        return selectAll(new FilterOptions.Builder<ChapterProblemModel>()
+                .putColumnsIn(ChapterProblemModel_.problemJid, problemJids)
                 .putColumnsEq(ChapterProblemModel_.status, "VISIBLE")
                 .build());
     }

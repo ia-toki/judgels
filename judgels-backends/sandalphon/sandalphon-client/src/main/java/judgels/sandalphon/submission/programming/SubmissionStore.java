@@ -17,13 +17,13 @@ public interface SubmissionStore {
             boolean withGradingDetails,
             long lastSubmissionId);
     Page<Submission> getSubmissionsForDownload(
-            String containerJid,
+            Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Long> lastSubmissionId,
             Optional<Integer> limit);
     Page<Submission> getSubmissions(
-            String containerJid,
+            Optional<String> containerJid,
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Integer> page);

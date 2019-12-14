@@ -2,6 +2,7 @@ package judgels.jerahmeel.hibernate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
@@ -20,13 +21,16 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
     }
 
     @Override
-    public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemJid(
-            String problemSetJid,
-            String problemJid) {
-
+    public Optional<ProblemSetProblemModel> selectByProblemJid(String problemJid) {
         return selectByFilter(new FilterOptions.Builder<ProblemSetProblemModel>()
-                .putColumnsEq(ProblemSetProblemModel_.problemSetJid, problemSetJid)
                 .putColumnsEq(ProblemSetProblemModel_.problemJid, problemJid)
+                .build());
+    }
+
+    @Override
+    public List<ProblemSetProblemModel> selectAllByProblemJids(Set<String> problemJids) {
+        return selectAll(new FilterOptions.Builder<ProblemSetProblemModel>()
+                .putColumnsIn(ProblemSetProblemModel_.problemJid, problemJids)
                 .build());
     }
 

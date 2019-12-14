@@ -6,6 +6,7 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collections;
@@ -88,19 +89,20 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
     @UnitOfWork(readOnly = true)
     public SubmissionsResponse getSubmissions(
             Optional<AuthHeader> authHeader,
-            String chapterJid,
+            Optional<String> chapterJid,
             Optional<String> userJid,
             Optional<String> problemJid,
             Optional<Integer> page) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkFound(chapterStore.getChapterByJid(chapterJid));
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
 
         Page<Submission> submissions = submissionStore.getSubmissions(chapterJid, userJid, problemJid, page);
 
-        List<String> problemJidsSortedByAlias = problemStore.getProgrammingProblemJids(chapterJid);
+        List<String> problemJidsSortedByAlias = chapterJid.isPresent()
+                ? problemStore.getProgrammingProblemJids(chapterJid.get())
+                : ImmutableList.of();
         Set<String> problemJids = ImmutableSet.copyOf(problemJidsSortedByAlias);
 
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(Collectors.toSet());
@@ -114,7 +116,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
                 .problemJids(problemJidsSortedByAlias)
                 .build();
 
-        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(chapterJid, problemJids);
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(problemJids);
 
         return new SubmissionsResponse.Builder()
                 .data(submissions)
@@ -136,8 +138,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
         Chapter chapter = checkFound(chapterStore.getChapterByJid(submission.getContainerJid()));
         checkAllowed(submissionRoleChecker.canView(actorJid, submission.getUserJid()));
 
-        ChapterProblem chapterProblem =
-                checkFound(problemStore.getProblem(chapter.getJid(), submission.getProblemJid()));
+        ChapterProblem chapterProblem = checkFound(problemStore.getProblem(submission.getProblemJid()));
         ProblemInfo problem = problemClient.getProblem(chapterProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
@@ -170,7 +171,7 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
         String gradingLanguage = checkNotNull(parts.getField("gradingLanguage"), "gradingLanguage").getValue();
 
         checkFound(chapterStore.getChapterByJid(chapterJid));
-        checkFound(problemStore.getProblem(chapterJid, problemJid));
+        checkFound(problemStore.getProblem(problemJid));
 
         SubmissionData data = new SubmissionData.Builder()
                 .problemJid(problemJid)
@@ -199,12 +200,11 @@ public class ChapterSubmissionResource implements ChapterSubmissionService {
     @UnitOfWork
     public void regradeSubmissions(
             AuthHeader authHeader,
-            String chapterJid,
+            Optional<String> chapterJid,
             Optional<String> userJid,
             Optional<String> problemJid) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkFound(chapterStore.getChapterByJid(chapterJid));
         checkAllowed(submissionRoleChecker.canManage(actorJid));
 
         for (int page = 1;; page++) {
