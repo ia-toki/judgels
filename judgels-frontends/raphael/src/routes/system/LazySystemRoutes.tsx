@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import { LoadingState } from '../../components/LoadingState/LoadingState';
 
-const AccountsRoutes = React.lazy(() => import('./AccountsRoutes'));
+const SystemRoutes = React.lazy(() => import('./SystemRoutes'));
 
-const LazyAccountsRoutes = props => (
+const LazySystemRoutes = props => (
   <React.Suspense fallback={<LoadingState large />}>
-    <AccountsRoutes {...props} />
+    <SystemRoutes {...props} />
   </React.Suspense>
 );
 
-export default LazyAccountsRoutes;
+export default LazySystemRoutes;

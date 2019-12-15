@@ -11,7 +11,7 @@ import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWra
 
 import UsersPage from './users/UsersPage/UsersPage';
 
-const AccountRoutes = () => {
+const SystemRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
     {
       id: 'users',
@@ -23,7 +23,7 @@ const AccountRoutes = () => {
   ];
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
-    title: 'Accounts',
+    title: 'System',
     items: sidebarItems,
   };
 
@@ -35,4 +35,4 @@ const AccountRoutes = () => {
   );
 };
 
-export default withBreadcrumb('Accounts')(AccountRoutes);
+export default withBreadcrumb('System')(SystemRoutes);

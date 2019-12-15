@@ -2,7 +2,7 @@ import { APP_CONFIG, Mode } from '../conf';
 import { JophielRole } from '../modules/api/jophiel/role';
 
 import JophielRoutes from './jophiel/JophielRoutes';
-import LazyAccountsRoutes from './accounts/LazyAccountsRoutes';
+import LazySystemRoutes from './system/LazySystemRoutes';
 import LazyContestsRoutes, { ContestsRoutesPromise } from './contests/LazyContestsRoutes';
 import LazyCoursesRoutes from './courses/LazyCoursesRoutes';
 import LazyProblemsRoutes from './problems/LazyProblemsRoutes';
@@ -10,7 +10,7 @@ import LazySubmissionsRoutes from './submissions/LazySubmissionsRoutes';
 import LazyRankingRoutes from './ranking/LazyRankingRoutes';
 
 function shouldShowRoute(id: string, role: JophielRole) {
-  if (id === 'account') {
+  if (id === 'system') {
     return role === JophielRole.Superadmin || role === JophielRole.Admin;
   }
   if (id === 'courses' || id === 'problems' || id === 'submissions') {
@@ -24,11 +24,11 @@ function shouldShowRoute(id: string, role: JophielRole) {
 
 const appRoutes = [
   {
-    id: 'account',
-    title: 'Accounts',
+    id: 'system',
+    title: 'System',
     route: {
-      path: '/accounts',
-      component: LazyAccountsRoutes,
+      path: '/system',
+      component: LazySystemRoutes,
     },
   },
   {

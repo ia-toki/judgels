@@ -10,7 +10,7 @@ import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
 
 import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
 import { infoActions as injectedInfoActions } from '../../../modules/infoActions';
-import { userActions as injectedUserActions } from '../../../../accounts/modules/userActions';
+import { userActions as injectedUserActions } from '../../../../system/modules/userActions';
 
 interface InfoPageProps {
   onGetUser: () => Promise<User>;
