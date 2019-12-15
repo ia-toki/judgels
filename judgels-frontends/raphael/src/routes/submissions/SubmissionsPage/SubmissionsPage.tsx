@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
-import { ContentCard } from '../../../components/ContentCard/ContentCard';
 import Pagination from '../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import { AppState } from '../../../modules/store';
@@ -37,14 +36,12 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
 
   render() {
     return (
-      <ContentCard>
-        <h3>Submissions</h3>
-        <hr />
+      <>
         {this.renderUserFilter()}
         <div className="clearfix" />
         {this.renderSubmissions()}
         {this.renderPagination()}
-      </ContentCard>
+      </>
     );
   }
 
