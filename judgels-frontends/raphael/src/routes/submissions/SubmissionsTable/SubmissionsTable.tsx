@@ -10,12 +10,14 @@ import { getGradingLanguageName } from '../../../modules/api/gabriel/language';
 import { Submission as ProgrammingSubmission } from '../../../modules/api/sandalphon/submissionProgramming';
 
 import '../../../components/SubmissionsTable/Programming/SubmissionsTable.css';
+import { constructProblemName } from '../../../modules/api/sandalphon/problem';
 
 export interface SubmissionsTableProps {
   submissions: ProgrammingSubmission[];
   canManage: boolean;
   userJid: string;
   profilesMap: ProfilesMap;
+  problemAliasesMap: { [problemJid: string]: string };
   problemNamesMap: { [problemJid: string]: string };
   containerNamesMap: { [problemJid: string]: string };
   onRegrade: (submissionJid: string) => any;
@@ -50,7 +52,15 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
   };
 
   private renderRows = () => {
-    const { submissions, userJid, canManage, profilesMap, problemNamesMap, containerNamesMap } = this.props;
+    const {
+      submissions,
+      userJid,
+      canManage,
+      profilesMap,
+      problemAliasesMap,
+      problemNamesMap,
+      containerNamesMap,
+    } = this.props;
 
     const rows = submissions.map(submission => (
       <tr key={submission.jid}>
@@ -68,7 +78,9 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
         </td>
 
         <td>{containerNamesMap[submission.containerJid]}</td>
-        <td>{problemNamesMap[submission.problemJid]}</td>
+        <td>
+          {constructProblemName(problemNamesMap[submission.problemJid], problemAliasesMap[submission.problemJid])}
+        </td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
         <td className="cell-centered">
           {submission.latestGrading && <VerdictTag verdictCode={submission.latestGrading.verdict.code} />}

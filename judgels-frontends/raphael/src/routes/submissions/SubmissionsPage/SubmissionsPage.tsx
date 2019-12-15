@@ -59,7 +59,7 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
       return <LoadingState />;
     }
 
-    const { data: submissions, config, profilesMap, problemNamesMap, containerNamesMap } = response;
+    const { data: submissions, config, profilesMap, problemAliasesMap, problemNamesMap, containerNamesMap } = response;
     if (submissions.totalCount === 0) {
       return (
         <p>
@@ -74,6 +74,7 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
         userJid={this.props.userJid}
         canManage={config.canManage}
         profilesMap={profilesMap}
+        problemAliasesMap={problemAliasesMap}
         problemNamesMap={problemNamesMap}
         containerNamesMap={containerNamesMap}
         onRegrade={this.onRegrade}

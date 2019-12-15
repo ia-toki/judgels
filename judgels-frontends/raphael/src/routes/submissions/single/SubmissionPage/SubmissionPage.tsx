@@ -63,7 +63,7 @@ export class SubmissionPage extends React.Component<SubmissionPageProps, Submiss
   }
 
   private renderSubmission = () => {
-    const { submissionWithSource, profile, problemName, containerName } = this.state;
+    const { submissionWithSource, profile, problemAlias, problemName, containerName } = this.state;
 
     if (!submissionWithSource) {
       return <LoadingState />;
@@ -73,11 +73,12 @@ export class SubmissionPage extends React.Component<SubmissionPageProps, Submiss
       <SubmissionDetails
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
-        profile={profile!}
-        problemName={problemName!}
+        profile={profile}
+        problemAlias={problemAlias}
+        problemName={problemName}
         problemUrl={'#'}
         containerTitle="Archive"
-        containerName={containerName!}
+        containerName={containerName}
       />
     );
   };
