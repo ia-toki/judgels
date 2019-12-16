@@ -14,4 +14,18 @@
                               tableName="jerahmeel_problem_set_problem"
                               uniqueColumns="problemSetJid, problemJid"/>
     </changeSet>
+    <changeSet author="fushar" id="add-unique-index-to-problems-3">
+        <addUniqueConstraint catalogName="judgels_jerahmeel"
+                             schemaName="judgels_jerahmeel"
+                             tableName="jerahmeel_chapter_problem"
+                             columnNames="problemJid"
+        />
+    </changeSet>
+    <changeSet author="fushar" id="add-unique-index-to-problems-4">
+        <dropUniqueConstraint catalogName="judgels_jerahmeel"
+                              constraintName="chapterJid_problemJid"
+                              schemaName="judgels_jerahmeel"
+                              tableName="jerahmeel_chapter_problem"
+                              uniqueColumns="chapterJid, problemJid"/>
+    </changeSet>
 </databaseChangeLog>
