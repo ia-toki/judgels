@@ -20,6 +20,7 @@ export interface SubmissionsTableProps {
   problemAliasesMap: { [problemJid: string]: string };
   problemNamesMap: { [problemJid: string]: string };
   containerNamesMap: { [problemJid: string]: string };
+  containerPathsMap: { [problemJid: string]: string[] };
   onRegrade: (submissionJid: string) => any;
 }
 
@@ -60,6 +61,7 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
       problemAliasesMap,
       problemNamesMap,
       containerNamesMap,
+      containerPathsMap,
     } = this.props;
 
     const rows = submissions.map(submission => (
@@ -77,9 +79,19 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
           <UserRef profile={profilesMap[submission.userJid]} />
         </td>
 
-        <td>{containerNamesMap[submission.containerJid]}</td>
         <td>
-          {constructProblemName(problemNamesMap[submission.problemJid], problemAliasesMap[submission.problemJid])}
+          <Link to={this.constructContainerUrl(containerPathsMap[submission.containerJid])}>
+            {containerNamesMap[submission.containerJid]}
+          </Link>
+        </td>
+        <td>
+          <Link
+            to={`${this.constructContainerUrl(containerPathsMap[submission.containerJid])}/${
+              problemAliasesMap[submission.problemJid]
+            }`}
+          >
+            {constructProblemName(problemNamesMap[submission.problemJid], problemAliasesMap[submission.problemJid])}
+          </Link>
         </td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
         <td className="cell-centered">
@@ -100,6 +112,14 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
     ));
 
     return <tbody>{rows}</tbody>;
+  };
+
+  private constructContainerUrl = (subpaths: string[]) => {
+    if (subpaths.length === 2) {
+      return `/courses/${subpaths[0]}/chapters/${subpaths[1]}/problems`;
+    } else {
+      return `/problems/${subpaths[0]}`;
+    }
   };
 
   private onClickRegrade = (submissionJid: string) => {

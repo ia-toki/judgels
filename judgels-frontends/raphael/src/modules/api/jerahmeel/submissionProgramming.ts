@@ -17,6 +17,7 @@ export interface SubmissionsResponse {
   problemAliasesMap: { [problemJid: string]: string };
   problemNamesMap: { [problemJid: string]: string };
   containerNamesMap: { [problemJid: string]: string };
+  containerPathsMap: { [problemJid: string]: string[] };
 }
 
 export const submissionProgrammingAPI = {

@@ -76,7 +76,6 @@ export class SubmissionPage extends React.Component<SubmissionPageProps, Submiss
         profile={profile}
         problemAlias={problemAlias}
         problemName={problemName}
-        problemUrl={'#'}
         containerTitle="Archive"
         containerName={containerName}
       />

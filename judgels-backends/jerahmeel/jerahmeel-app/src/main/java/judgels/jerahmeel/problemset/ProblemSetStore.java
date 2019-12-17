@@ -4,7 +4,9 @@ import static judgels.jerahmeel.JerahmeelCacheUtils.getShortDuration;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -74,6 +76,15 @@ public class ProblemSetStore {
                 .collect(Collectors.toMap(
                         c -> c.jid,
                         c -> c.name));
+    }
+
+    public Map<String, List<String>> getProblemSetPathsByJids(Set<String> problemSetJids) {
+        return problemSetDao.selectByJids(problemSetJids)
+                .values()
+                .stream()
+                .collect(Collectors.toMap(
+                        c -> c.jid,
+                        c -> ImmutableList.of(Optional.ofNullable(c.slug).orElse("" + c.id))));
     }
 
     private static ProblemSet fromModel(ProblemSetModel model) {

@@ -143,6 +143,12 @@ public class SubmissionResource implements SubmissionService {
             containerNamesMap.putAll(chapterStore.getChapterNamesByJids(containerJids));
         }
 
+        Map<String, List<String>> containerPathsMap = new HashMap<>();
+        if (!containerJid.isPresent()) {
+            containerPathsMap.putAll(problemSetStore.getProblemSetPathsByJids(containerJids));
+            containerPathsMap.putAll(chapterStore.getChapterPathsByJids(containerJids));
+        }
+
         return new SubmissionsResponse.Builder()
                 .data(submissions)
                 .config(config)
@@ -150,6 +156,7 @@ public class SubmissionResource implements SubmissionService {
                 .problemAliasesMap(problemAliasesMap)
                 .problemNamesMap(problemNamesMap)
                 .containerNamesMap(containerNamesMap)
+                .containerPathsMap(containerPathsMap)
                 .build();
     }
 
