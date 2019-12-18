@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { CoursesResponse } from '../../../../modules/api/jerahmeel/course';
 import { CourseCard } from '../CourseCard/CourseCard';
 import { LoadingCourseCard } from '../CourseCard/LoadingCourseCard';
@@ -34,11 +35,17 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
     }
 
     const courses = response.data;
-    if (!courses) {
-      return <LoadingCourseCard />;
-    }
+    const description = courses.length && courses[0].description;
 
-    return courses.map(course => <CourseCard key={course.jid} course={course} />);
+    return (
+      <>
+        <HtmlText>{description}</HtmlText>
+        <hr />
+        {courses.map(course => (
+          <CourseCard key={course.jid} course={course} />
+        ))}
+      </>
+    );
   };
 }
 
