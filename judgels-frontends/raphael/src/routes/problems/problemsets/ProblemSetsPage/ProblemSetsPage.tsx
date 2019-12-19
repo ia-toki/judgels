@@ -54,7 +54,10 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
       <>
         <div className="content-card__section search-box-inline">{this.renderFilter()}</div>
         <div className="clearfix" />
-        {this.renderFilterResultsBanner()}
+        <div className="content-card__section">
+          {this.renderFilterResultsBanner()}
+          <hr />
+        </div>
       </>
     );
   };
@@ -62,14 +65,13 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
   private renderFilterResultsBanner = () => {
     const name = this.getNameFilter(this.state);
     if (!name) {
-      return null;
+      return <>Most recently added problemsets:</>;
     }
 
     return (
-      <div className="content-card__section">
+      <>
         Search results for: <b>{name}</b>
-        <hr />
-      </div>
+      </>
     );
   };
 
