@@ -7,6 +7,7 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Collections;
 import java.util.HashMap;
@@ -114,14 +115,20 @@ public class SubmissionResource implements SubmissionService {
 
         Page<Submission> submissions = submissionStore.getSubmissions(containerJid, userJid, problemJid, page);
         Set<String> containerJids = submissions.getPage().stream().map(Submission::getContainerJid).collect(toSet());
-        Set<String> problemJids = submissions.getPage().stream().map(Submission::getProblemJid).collect(toSet());
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
+
+        Set<String> problemJids = submissions.getPage().stream().map(Submission::getProblemJid).collect(toSet());
+        if (containerJid.isPresent() && isChapter(containerJid.get())) {
+            problemJids = ImmutableSet.copyOf(chapterProblemStore.getProgrammingProblemJids(containerJid.get()));
+        }
+
         Map<String, Profile> profilesMap = userJids.isEmpty()
                 ? Collections.emptyMap()
                 : profileService.getProfiles(userJids);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
+                .problemJids(problemJids)
                 .build();
 
         Map<String, String> problemAliasesMap = new HashMap<>();
