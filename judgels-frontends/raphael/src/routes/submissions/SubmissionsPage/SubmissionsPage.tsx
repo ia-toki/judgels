@@ -10,11 +10,11 @@ import SubmissionUserFilter from '../../../components/SubmissionUserFilter/Submi
 import { AppState } from '../../../modules/store';
 import { SubmissionsResponse } from '../../../modules/api/jerahmeel/submissionProgramming';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
-import { selectUserJid } from '../../../modules/session/sessionSelectors';
+import { selectMaybeUserJid } from '../../../modules/session/sessionSelectors';
 import { submissionActions as injectedSubmissionActions } from '../modules/submissionActions';
 
 export interface SubmissionsPageProps extends RouteComponentProps<{}> {
-  userJid: string;
+  userJid?: string;
   onGetProgrammingSubmissions: (
     containerJid?: string,
     userJid?: string,
@@ -123,7 +123,7 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
 
 export function createSubmissionsPage(submissionActions) {
   const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
+    userJid: selectMaybeUserJid(state),
   });
 
   const mapDispatchToProps = {

@@ -17,7 +17,7 @@ import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/cou
 import { ItemSubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
-import { selectUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../modules/chapterSubmissionActions';
@@ -25,7 +25,7 @@ import { chapterSubmissionActions as injectedChapterSubmissionActions } from '..
 import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
 
 export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
-  userJid: string;
+  userJid?: string;
   course: Course;
   chapter: CourseChapter;
   onGetSubmissions: (
@@ -189,7 +189,7 @@ export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPa
 
 export function createChapterSubmissionsPage(chapterSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
+    userJid: selectMaybeUserJid(state),
     course: selectCourse(state),
     chapter: selectCourseChapter(state),
   });

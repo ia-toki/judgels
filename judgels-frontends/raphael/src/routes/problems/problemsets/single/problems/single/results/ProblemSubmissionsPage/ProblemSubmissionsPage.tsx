@@ -17,7 +17,7 @@ import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel
 import { ItemSubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
-import { selectUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../modules/problemSetSubmissionActions';
@@ -25,7 +25,7 @@ import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } fr
 import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
 
 export interface ProblemSubmissionsPageProps extends RouteComponentProps<{}> {
-  userJid: string;
+  userJid?: string;
   problemSet: ProblemSet;
   problem: ProblemSetProblem;
   onGetSubmissions: (
@@ -189,7 +189,7 @@ export class ProblemSubmissionsPage extends React.Component<ProblemSubmissionsPa
 
 export function createProblemSubmissionsPage(problemSetSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
+    userJid: selectMaybeUserJid(state),
     problemSet: selectProblemSet(state),
     problem: selectProblemSetProblem(state),
   });

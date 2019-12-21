@@ -1,4 +1,4 @@
-package judgels.jerahmeel.api.problemset.submission.bundle;
+package judgels.jerahmeel.api.submission.bundle;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -13,20 +13,18 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import judgels.jerahmeel.api.submission.bundle.ItemSubmissionsResponse;
-import judgels.jerahmeel.api.submission.bundle.SubmissionSummaryResponse;
 import judgels.sandalphon.api.submission.bundle.ItemSubmission;
 import judgels.sandalphon.api.submission.bundle.ItemSubmissionData;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v2/problemsets/submissions/bundle")
-public interface ProblemSetItemSubmissionService {
+@Path("/api/v2/submissions/bundle")
+public interface ItemSubmissionService {
     @GET
     @Path("/")
     @Produces(APPLICATION_JSON)
     ItemSubmissionsResponse getSubmissions(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("problemSetJid") String problemSetJid,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @QueryParam("containerJid") String containerJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemAlias") Optional<String> problemAlias,
             @QueryParam("page") Optional<Integer> page);
@@ -41,8 +39,8 @@ public interface ProblemSetItemSubmissionService {
     @Produces(APPLICATION_JSON)
     SubmissionSummaryResponse getSubmissionSummary(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("problemSetJid") String problemSetJid,
-            @QueryParam("problemJid") String problemJid,
+            @QueryParam("containerJid") String containerJid,
+            @QueryParam("problemJid") Optional<String> problemJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("language") Optional<String> language);
 
@@ -50,8 +48,8 @@ public interface ProblemSetItemSubmissionService {
     @Path("/answers")
     @Produces(APPLICATION_JSON)
     Map<String, ItemSubmission> getLatestSubmissions(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("problemSetJid") String problemSetJid,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @QueryParam("containerJid") String containerJid,
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemAlias") String problemAlias);
 
@@ -65,7 +63,7 @@ public interface ProblemSetItemSubmissionService {
     @Path("/regrade")
     void regradeSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @QueryParam("problemSetJid") Optional<String> problemSetJid,
+            @QueryParam("containerJid") Optional<String> containerJid,
             @QueryParam("userJid") Optional<String> userJid,
             @QueryParam("problemJid") Optional<String> problemJid);
 }

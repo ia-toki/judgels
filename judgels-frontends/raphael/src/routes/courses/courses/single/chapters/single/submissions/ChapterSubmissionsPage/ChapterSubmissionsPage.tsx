@@ -15,13 +15,13 @@ import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { SubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { ChapterSubmissionsTable } from '../ChapterSubmissionsTable/ChapterSubmissionsTable';
-import { selectUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../modules/chapterSubmissionActions';
 
 export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
-  userJid: string;
+  userJid?: string;
   course: Course;
   chapter: CourseChapter;
   onGetProgrammingSubmissions: (
@@ -87,7 +87,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   }
 
   private renderUserFilter = () => {
-    return <SubmissionUserFilter />;
+    return this.props.userJid && <SubmissionUserFilter />;
   };
 
   private isUserFilterMine = () => {
@@ -232,7 +232,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
 
 export function createChapterSubmissionsPage(chapterSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
+    userJid: selectMaybeUserJid(state),
     course: selectCourse(state),
     chapter: selectCourseChapter(state),
   });

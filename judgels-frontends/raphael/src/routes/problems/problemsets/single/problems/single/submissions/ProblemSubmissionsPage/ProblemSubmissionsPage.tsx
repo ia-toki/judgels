@@ -14,13 +14,13 @@ import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/proble
 import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { SubmissionsResponse } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';
-import { selectUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../modules/problemSetSubmissionActions';
 
 export interface ProblemSubmissionsPageProps extends RouteComponentProps<{}> {
-  userJid: string;
+  userJid?: string;
   problemSet: ProblemSet;
   problem: ProblemSetProblem;
   onGetProgrammingSubmissions: (
@@ -61,7 +61,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
   }
 
   private renderUserFilter = () => {
-    return <SubmissionUserFilter />;
+    return this.props.userJid && <SubmissionUserFilter />;
   };
 
   private isUserFilterMine = () => {
@@ -149,7 +149,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
 
 export function createProblemSubmissionsPage(problemSetSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
-    userJid: selectUserJid(state),
+    userJid: selectMaybeUserJid(state),
     problemSet: selectProblemSet(state),
     problem: selectProblemSetProblem(state),
   });

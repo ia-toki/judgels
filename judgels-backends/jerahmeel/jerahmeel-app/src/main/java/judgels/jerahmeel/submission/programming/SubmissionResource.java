@@ -1,4 +1,4 @@
-package judgels.jerahmeel.submission;
+package judgels.jerahmeel.submission.programming;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toSet;
@@ -32,6 +32,7 @@ import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
 import judgels.jerahmeel.problemset.ProblemSetStore;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
+import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
@@ -218,15 +219,13 @@ public class SubmissionResource implements SubmissionService {
     @UnitOfWork
     public void createSubmission(@HeaderParam(AUTHORIZATION) AuthHeader authHeader, FormDataMultiPart parts) {
         String actorJid = actorChecker.check(authHeader);
-        String problemSetJid = checkNotNull(parts.getField("containerJid"), "containerJid").getValue();
+        String containerJid = checkNotNull(parts.getField("containerJid"), "containerJid").getValue();
         String problemJid = checkNotNull(parts.getField("problemJid"), "problemJid").getValue();
         String gradingLanguage = checkNotNull(parts.getField("gradingLanguage"), "gradingLanguage").getValue();
 
-        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
-
         SubmissionData data = new SubmissionData.Builder()
                 .problemJid(problemJid)
-                .containerJid(problemSetJid)
+                .containerJid(containerJid)
                 .gradingLanguage(gradingLanguage)
                 .build();
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
@@ -241,7 +240,6 @@ public class SubmissionResource implements SubmissionService {
     public void regradeSubmission(AuthHeader authHeader, String submissionJid) {
         String actorJid = actorChecker.check(authHeader);
         Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
-        checkFound(problemSetStore.getProblemSetByJid(submission.getContainerJid()));
         checkAllowed(submissionRoleChecker.canManage(actorJid));
 
         submissionRegrader.regradeSubmission(submission);

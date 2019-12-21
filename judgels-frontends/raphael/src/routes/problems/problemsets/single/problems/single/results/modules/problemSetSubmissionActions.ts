@@ -2,14 +2,14 @@ import { selectToken } from '../../../../../../../../modules/session/sessionSele
 
 export const problemSetSubmissionActions = {
   getSubmissions: (problemSetJid: string, username?: string, problemAlias?: string, page?: number) => {
-    return async (dispatch, getState, { problemSetSubmissionBundleAPI }) => {
+    return async (dispatch, getState, { submissionBundleAPI }) => {
       const token = selectToken(getState());
-      return await problemSetSubmissionBundleAPI.getSubmissions(token, problemSetJid, username, problemAlias, page);
+      return await submissionBundleAPI.getSubmissions(token, problemSetJid, username, problemAlias, page);
     };
   },
 
   createItemSubmission: (problemSetJid: string, problemJid: string, itemJid: string, answer: string) => {
-    return async (dispatch, getState, { problemSetSubmissionBundleAPI, toastActions }) => {
+    return async (dispatch, getState, { submissionBundleAPI, toastActions }) => {
       const token = selectToken(getState());
       const data = {
         containerJid: problemSetJid,
@@ -18,38 +18,38 @@ export const problemSetSubmissionActions = {
         answer,
       };
 
-      await problemSetSubmissionBundleAPI.createItemSubmission(token, data);
+      await submissionBundleAPI.createItemSubmission(token, data);
       toastActions.showToast('Answer saved.');
     };
   },
 
   getSubmissionSummary: (problemSetJid: string, problemJid: string, username?: string, language?: string) => {
-    return async (dispatch, getState, { problemSetSubmissionBundleAPI }) => {
+    return async (dispatch, getState, { submissionBundleAPI }) => {
       const token = selectToken(getState());
-      return problemSetSubmissionBundleAPI.getSubmissionSummary(token, problemSetJid, problemJid, username, language);
+      return submissionBundleAPI.getSubmissionSummary(token, problemSetJid, problemJid, username, language);
     };
   },
 
   getLatestSubmissions: (problemSetJid: string, problemAlias: string) => {
-    return async (dispatch, getState, { problemSetSubmissionBundleAPI }) => {
+    return async (dispatch, getState, { submissionBundleAPI }) => {
       const token = selectToken(getState());
-      return problemSetSubmissionBundleAPI.getLatestSubmissions(token, problemSetJid, problemAlias);
+      return submissionBundleAPI.getLatestSubmissions(token, problemSetJid, problemAlias);
     };
   },
 
   regradeSubmission: (submissionJid: string) => {
-    return async (dispatch, getState, { problemSetSubmissionBundleAPI, toastActions }) => {
+    return async (dispatch, getState, { submissionBundleAPI, toastActions }) => {
       const token = selectToken(getState());
-      await problemSetSubmissionBundleAPI.regradeSubmission(token, submissionJid);
+      await submissionBundleAPI.regradeSubmission(token, submissionJid);
 
       toastActions.showSuccessToast('Submission regraded.');
     };
   },
 
   regradeSubmissions: (problemSetJid: string, userJid?: string, problemJid?: string) => {
-    return async (dispatch, getState, { problemSetSubmissionBundleAPI, toastActions }) => {
+    return async (dispatch, getState, { submissionBundleAPI, toastActions }) => {
       const token = selectToken(getState());
-      await problemSetSubmissionBundleAPI.regradeSubmissions(token, problemSetJid, userJid, problemJid);
+      await submissionBundleAPI.regradeSubmissions(token, problemSetJid, userJid, problemJid);
 
       toastActions.showSuccessToast('Regrade in progress.');
     };

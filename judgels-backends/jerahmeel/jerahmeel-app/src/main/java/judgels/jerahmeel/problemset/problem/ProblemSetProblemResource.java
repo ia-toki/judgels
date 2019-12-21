@@ -42,7 +42,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
     @Override
     @UnitOfWork(readOnly = true)
     public ProblemSetProblemsResponse getProblems(Optional<AuthHeader> authHeader, String problemSetJid) {
-        String actorJid = actorChecker.check(authHeader);
+        actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         List<ProblemSetProblem> problems = problemStore.getProblems(problemSetJid);
@@ -62,7 +62,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
             String problemSetJid,
             String problemAlias) {
 
-        String actorJid = actorChecker.check(authHeader);
+        actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         return checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
@@ -76,26 +76,36 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
             String problemAlias,
             Optional<String> language) {
 
-        String actorJid = actorChecker.check(authHeader);
+        actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
         String problemJid = problem.getProblemJid();
         ProblemInfo problemInfo = problemClient.getProblem(problemJid);
 
+        Optional<String> reasonNotAllowedToSubmit = authHeader.isPresent()
+                ? Optional.empty()
+                : Optional.of("You must log in to submit.");
+
         if (problemInfo.getType() == ProblemType.PROGRAMMING) {
             return new judgels.jerahmeel.api.problemset.problem.programming.ProblemSetProblemWorksheet.Builder()
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
-                    .worksheet(problemClient.getProgrammingProblemWorksheet(problemJid, language))
+                    .worksheet(new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
+                            .from(problemClient.getProgrammingProblemWorksheet(problemJid, language))
+                            .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
+                            .build())
                     .build();
         } else {
             return new judgels.jerahmeel.api.problemset.problem.bundle.ProblemSetProblemWorksheet.Builder()
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
-                    .worksheet(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language))
+                    .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
+                            .from(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language))
+                            .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
+                            .build())
                     .build();
         }
     }

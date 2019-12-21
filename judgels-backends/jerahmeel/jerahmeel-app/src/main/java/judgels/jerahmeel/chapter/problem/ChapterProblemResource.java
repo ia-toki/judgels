@@ -42,7 +42,7 @@ public class ChapterProblemResource implements ChapterProblemService {
     @Override
     @UnitOfWork(readOnly = true)
     public ChapterProblemsResponse getProblems(Optional<AuthHeader> authHeader, String chapterJid) {
-        String actorJid = actorChecker.check(authHeader);
+        actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         List<ChapterProblem> problems = problemStore.getProblems(chapterJid);
@@ -63,26 +63,36 @@ public class ChapterProblemResource implements ChapterProblemService {
             String problemAlias,
             Optional<String> language) {
 
-        String actorJid = actorChecker.check(authHeader);
+        actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         ChapterProblem problem = checkFound(problemStore.getProblemByAlias(chapterJid, problemAlias));
         String problemJid = problem.getProblemJid();
         ProblemInfo problemInfo = problemClient.getProblem(problemJid);
 
+        Optional<String> reasonNotAllowedToSubmit = authHeader.isPresent()
+                ? Optional.empty()
+                : Optional.of("You must log in to submit.");
+
         if (problemInfo.getType() == ProblemType.PROGRAMMING) {
             return new judgels.jerahmeel.api.chapter.problem.programming.ChapterProblemWorksheet.Builder()
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
-                    .worksheet(problemClient.getProgrammingProblemWorksheet(problemJid, language))
+                    .worksheet(new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
+                            .from(problemClient.getProgrammingProblemWorksheet(problemJid, language))
+                            .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
+                            .build())
                     .build();
         } else {
             return new judgels.jerahmeel.api.chapter.problem.bundle.ChapterProblemWorksheet.Builder()
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
-                    .worksheet(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language))
+                    .worksheet(new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
+                            .from(problemClient.getBundleProblemWorksheetWithoutAnswerKey(problemJid, language))
+                            .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
+                            .build())
                     .build();
         }
     }

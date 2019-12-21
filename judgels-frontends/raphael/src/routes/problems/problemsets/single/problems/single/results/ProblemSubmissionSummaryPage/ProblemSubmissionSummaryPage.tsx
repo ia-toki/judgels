@@ -11,6 +11,7 @@ import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/proble
 import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { SubmissionSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { SubmissionConfig } from '../../../../../../../../modules/api/jerahmeel/submission';
+import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -25,6 +26,7 @@ interface ProblemSubmissionSummaryPageRoute {
 }
 
 export interface ProblemSubmissionSummaryPageProps extends RouteComponentProps<ProblemSubmissionSummaryPageRoute> {
+  userJid?: string;
   problemSet: ProblemSet;
   problem: ProblemSetProblem;
   language?: string;
@@ -50,7 +52,12 @@ class ProblemSubmissionSummaryPage extends React.Component<
   state: ProblemSubmissionSummaryPageState = {};
 
   async refreshSubmissions() {
-    const { problemSet, problem, onGetSubmissionSummary } = this.props;
+    const { userJid, problemSet, problem, onGetSubmissionSummary } = this.props;
+    if (!userJid) {
+      this.setState({ problemSummaries: [] });
+      return;
+    }
+
     const response = await onGetSubmissionSummary(
       problemSet.jid,
       problem.problemJid,
@@ -81,9 +88,6 @@ class ProblemSubmissionSummaryPage extends React.Component<
         <h3>Results</h3>
         <hr />
         {this.renderUserFilter()}
-        <ContentCard>
-          Summary for <UserRef profile={this.state.profile} />
-        </ContentCard>
         {this.renderResults()}
       </ContentCard>
     );
@@ -104,7 +108,16 @@ class ProblemSubmissionSummaryPage extends React.Component<
     if (problemSummaries.length === 0) {
       return <small>No results.</small>;
     }
-    return this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />);
+    return (
+      <>
+        <ContentCard>
+          Summary for <UserRef profile={this.state.profile} />
+        </ContentCard>
+        {this.state.problemSummaries.map(props => (
+          <ProblemSubmissionCard key={props.alias} {...props} />
+        ))}
+      </>
+    );
   };
 
   private regrade = async problemJid => {
@@ -118,6 +131,7 @@ class ProblemSubmissionSummaryPage extends React.Component<
 
 export function createProblemSubmissionSummaryPage(problemSetSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
+    userJid: selectMaybeUserJid(state),
     problemSet: selectProblemSet(state),
     problem: selectProblemSetProblem(state),
     language: selectStatementLanguage(state),

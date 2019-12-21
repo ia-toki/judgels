@@ -11,6 +11,7 @@ import { Profile } from '../../../../../../../../modules/api/jophiel/profile';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { SubmissionSummaryResponse } from '../../../../../../../../modules/api/jerahmeel/submissionBundle';
 import { SubmissionConfig } from '../../../../../../../../modules/api/jerahmeel/submission';
+import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import {
@@ -24,6 +25,7 @@ interface ChapterSubmissionSummaryPageRoute {
 }
 
 export interface ChapterSubmissionSummaryPageProps extends RouteComponentProps<ChapterSubmissionSummaryPageRoute> {
+  userJid?: string;
   chapter: CourseChapter;
   language?: string;
   onGetSubmissionSummary: (
@@ -50,7 +52,12 @@ class ChapterSubmissionSummaryPage extends React.Component<
   };
 
   async refreshSubmissions() {
-    const { chapter, onGetSubmissionSummary } = this.props;
+    const { userJid, chapter, onGetSubmissionSummary } = this.props;
+    if (!userJid) {
+      this.setState({ problemSummaries: [] });
+      return;
+    }
+
     const response = await onGetSubmissionSummary(
       chapter.chapterJid,
       this.props.match.params.username,
@@ -76,17 +83,11 @@ class ChapterSubmissionSummaryPage extends React.Component<
   }
 
   render() {
-    if (!this.state.profile) {
-      return null;
-    }
     return (
       <ContentCard>
         <h3>Quiz Results</h3>
         <hr />
         {this.renderUserFilter()}
-        <ContentCard>
-          Summary for <UserRef profile={this.state.profile} />
-        </ContentCard>
         {this.renderResults()}
       </ContentCard>
     );
@@ -107,7 +108,16 @@ class ChapterSubmissionSummaryPage extends React.Component<
     if (problemSummaries.length === 0) {
       return <small>No quizzes.</small>;
     }
-    return this.state.problemSummaries.map(props => <ProblemSubmissionCard key={props.alias} {...props} />);
+    return (
+      <>
+        <ContentCard>
+          Summary for <UserRef profile={this.state.profile} />
+        </ContentCard>
+        {this.state.problemSummaries.map(props => (
+          <ProblemSubmissionCard key={props.alias} {...props} />
+        ))}
+      </>
+    );
   };
 
   private regrade = async problemJid => {
@@ -121,6 +131,7 @@ class ChapterSubmissionSummaryPage extends React.Component<
 
 export function createChapterSubmissionSummaryPage(chapterSubmissionActions) {
   const mapStateToProps = (state: AppState) => ({
+    userJid: selectMaybeUserJid(state),
     chapter: selectCourseChapter(state),
     language: selectStatementLanguage(state),
   });

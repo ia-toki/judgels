@@ -2,14 +2,14 @@ import { selectToken } from '../../../../../../../../modules/session/sessionSele
 
 export const chapterSubmissionActions = {
   getSubmissions: (chapterJid: string, username?: string, problemAlias?: string, page?: number) => {
-    return async (dispatch, getState, { chapterSubmissionBundleAPI }) => {
+    return async (dispatch, getState, { submissionBundleAPI }) => {
       const token = selectToken(getState());
-      return await chapterSubmissionBundleAPI.getSubmissions(token, chapterJid, username, problemAlias, page);
+      return await submissionBundleAPI.getSubmissions(token, chapterJid, username, problemAlias, page);
     };
   },
 
   createItemSubmission: (chapterJid: string, problemJid: string, itemJid: string, answer: string) => {
-    return async (dispatch, getState, { chapterSubmissionBundleAPI, toastActions }) => {
+    return async (dispatch, getState, { submissionBundleAPI, toastActions }) => {
       const token = selectToken(getState());
       const data = {
         containerJid: chapterJid,
@@ -18,38 +18,38 @@ export const chapterSubmissionActions = {
         answer,
       };
 
-      await chapterSubmissionBundleAPI.createItemSubmission(token, data);
+      await submissionBundleAPI.createItemSubmission(token, data);
       toastActions.showToast('Answer saved.');
     };
   },
 
   getSubmissionSummary: (chapterJid: string, username?: string, language?: string) => {
-    return async (dispatch, getState, { chapterSubmissionBundleAPI }) => {
+    return async (dispatch, getState, { submissionBundleAPI }) => {
       const token = selectToken(getState());
-      return chapterSubmissionBundleAPI.getSubmissionSummary(token, chapterJid, username, language);
+      return submissionBundleAPI.getSubmissionSummary(token, chapterJid, undefined, username, language);
     };
   },
 
   getLatestSubmissions: (chapterJid: string, problemAlias: string) => {
-    return async (dispatch, getState, { chapterSubmissionBundleAPI }) => {
+    return async (dispatch, getState, { submissionBundleAPI }) => {
       const token = selectToken(getState());
-      return chapterSubmissionBundleAPI.getLatestSubmissions(token, chapterJid, problemAlias);
+      return submissionBundleAPI.getLatestSubmissions(token, chapterJid, problemAlias);
     };
   },
 
   regradeSubmission: (submissionJid: string) => {
-    return async (dispatch, getState, { chapterSubmissionBundleAPI, toastActions }) => {
+    return async (dispatch, getState, { submissionBundleAPI, toastActions }) => {
       const token = selectToken(getState());
-      await chapterSubmissionBundleAPI.regradeSubmission(token, submissionJid);
+      await submissionBundleAPI.regradeSubmission(token, submissionJid);
 
       toastActions.showSuccessToast('Submission regraded.');
     };
   },
 
   regradeSubmissions: (chapterJid: string, userJid?: string, problemJid?: string) => {
-    return async (dispatch, getState, { chapterSubmissionBundleAPI, toastActions }) => {
+    return async (dispatch, getState, { submissionBundleAPI, toastActions }) => {
       const token = selectToken(getState());
-      await chapterSubmissionBundleAPI.regradeSubmissions(token, chapterJid, userJid, problemJid);
+      await submissionBundleAPI.regradeSubmissions(token, chapterJid, userJid, problemJid);
 
       toastActions.showSuccessToast('Regrade in progress.');
     };
