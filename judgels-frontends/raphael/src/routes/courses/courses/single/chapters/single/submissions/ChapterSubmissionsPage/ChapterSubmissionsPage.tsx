@@ -49,7 +49,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   ChapterSubmissionsPageProps,
   ChapterSubmissionsPageState
 > {
-  private static PAGE_SIZE = 20;
+  private static PAGE_SIZE = 50;
 
   state: ChapterSubmissionsPageState = {};
 

@@ -42,7 +42,7 @@ export class ProblemSubmissionsPage extends React.PureComponent<
   ProblemSubmissionsPageProps,
   ProblemSubmissionsPageState
 > {
-  private static PAGE_SIZE = 20;
+  private static PAGE_SIZE = 50;
 
   state: ProblemSubmissionsPageState = {};
 

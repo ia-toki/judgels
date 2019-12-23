@@ -30,7 +30,7 @@ interface SubmissionsPageState {
 }
 
 export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, SubmissionsPageState> {
-  private static PAGE_SIZE = 20;
+  private static PAGE_SIZE = 50;
 
   state: SubmissionsPageState = {};
 
@@ -46,7 +46,7 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
   }
 
   private renderUserFilter = () => {
-    return <SubmissionUserFilter />;
+    return this.props.userJid && <SubmissionUserFilter />;
   };
 
   private isUserFilterMine = () => {
