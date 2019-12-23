@@ -13,15 +13,17 @@ public final class BundleSubmission {
     private final String containerJid;
     private final String authorJid;
     private final Date time;
+    private final String ipAddress;
     private final List<BundleGrading> gradings;
 
-    public BundleSubmission(long id, String jid, String problemJid, String containerJid, String authorJid, Date time, List<BundleGrading> gradings) {
+    public BundleSubmission(long id, String jid, String problemJid, String containerJid, String authorJid, Date time, String ipAddress, List<BundleGrading> gradings) {
         this.id = id;
         this.jid = jid;
         this.problemJid = problemJid;
         this.containerJid = containerJid;
         this.authorJid = authorJid;
         this.time = time;
+        this.ipAddress = ipAddress;
         this.gradings = gradings;
     }
 
@@ -43,6 +45,10 @@ public final class BundleSubmission {
 
     public String getAuthorJid() {
         return authorJid;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
     }
 
     public Date getTime() {

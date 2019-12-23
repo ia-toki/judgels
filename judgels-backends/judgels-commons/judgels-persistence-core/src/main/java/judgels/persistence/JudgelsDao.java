@@ -1,5 +1,6 @@
 package judgels.persistence;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ public interface JudgelsDao<M extends JudgelsModel> extends Dao<M> {
     void setModelMetadataFromDump(M model, JudgelsDump dump);
 
     @Deprecated void persist(M model, int childIndex, String actor, String ipAddress);
+    @Deprecated void persist(M model, String user, Instant time, String ipAddress);
     @Deprecated M findByJid(String jid);
     @Deprecated List<M> getByJids(Collection<String> jids);
 }

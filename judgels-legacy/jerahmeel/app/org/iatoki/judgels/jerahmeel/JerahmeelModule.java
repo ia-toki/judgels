@@ -7,6 +7,8 @@ import com.google.inject.util.Providers;
 import com.palantir.conjure.java.api.config.service.UserAgent;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import judgels.jerahmeel.hibernate.BundleItemSubmissionHibernateDao;
+import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.persistence.ActorProvider;
 import org.hibernate.SessionFactory;
 import org.iatoki.judgels.AWSFileSystemProvider;
@@ -50,6 +52,7 @@ public final class JerahmeelModule extends AbstractModule {
 
         bind(JudgelsDataMigrator.class).to(JerahmeelDataMigrator.class);
 
+        bind(BundleItemSubmissionDao.class).to(BundleItemSubmissionHibernateDao.class);
         bind(BundleSubmissionService.class).to(BundleSubmissionServiceImpl.class);
         bind(ProgrammingSubmissionService.class).to(ProgrammingSubmissionServiceImpl.class);
 

@@ -226,3 +226,5 @@ POST        /api/chapters/view                                                  
 POST        /api/lessons/view                                                                                                               org.iatoki.judgels.jerahmeel.controllers.api.internal.InternalLessonAPIController.updateLessonViewStatus(chapterLessonId: Long)
 
 POST        /api/problems/view                                                                                                              org.iatoki.judgels.jerahmeel.controllers.api.internal.InternalProblemAPIController.updateProblemViewStatus(chapterProblemId: Long)
+
+POST        /api/bundle/migrate                                                                                                             org.iatoki.judgels.jerahmeel.controllers.api.internal.InternalBundleAPIController.migrate()

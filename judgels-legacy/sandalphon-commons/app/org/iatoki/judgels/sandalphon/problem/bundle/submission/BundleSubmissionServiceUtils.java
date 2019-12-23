@@ -19,7 +19,7 @@ public final class BundleSubmissionServiceUtils {
     }
 
     public static BundleSubmission createSubmissionFromModels(AbstractBundleSubmissionModel submissionModel, List<? extends AbstractBundleGradingModel> gradingModels) {
-        return new BundleSubmission(submissionModel.id, submissionModel.jid, submissionModel.problemJid, submissionModel.containerJid, submissionModel.createdBy, new Date(submissionModel.createdAt.toEpochMilli()),
+        return new BundleSubmission(submissionModel.id, submissionModel.jid, submissionModel.problemJid, submissionModel.containerJid, submissionModel.createdBy, new Date(submissionModel.createdAt.toEpochMilli()), submissionModel.createdIp,
                 Lists.transform(gradingModels, m -> createGradingFromModel(m))
         );
     }
