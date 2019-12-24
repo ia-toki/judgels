@@ -126,6 +126,9 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
   };
 
   private renderPagination = () => {
+    if (!this.state.filter) {
+      return null;
+    }
     return (
       <Pagination
         pageSize={ContestsPage.PAGE_SIZE}

@@ -65,7 +65,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
   private renderFilterResultsBanner = () => {
     const name = this.getNameFilter(this.state);
     if (!name) {
-      return <>Most recently added problemsets:</>;
+      return <small>Most recently added problemsets:</small>;
     }
 
     return (
@@ -107,6 +107,9 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
   };
 
   private renderPagination = () => {
+    if (!this.state.filter) {
+      return null;
+    }
     return (
       <Pagination
         pageSize={ProblemSetsPage.PAGE_SIZE}

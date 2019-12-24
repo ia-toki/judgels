@@ -45,4 +45,5 @@ const SearchBoxForm = (props: SearchBoxFormProps) => {
 export default reduxForm<SearchBoxFormData>({
   form: 'search-box',
   touchOnBlur: false,
+  enableReinitialize: true,
 })(SearchBoxForm);
