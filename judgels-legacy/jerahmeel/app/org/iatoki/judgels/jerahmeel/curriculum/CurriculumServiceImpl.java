@@ -1,6 +1,7 @@
 package org.iatoki.judgels.jerahmeel.curriculum;
 
 import com.google.common.collect.Lists;
+import judgels.jerahmeel.persistence.CurriculumModel;
 import org.iatoki.judgels.play.Page;
 
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ public final class CurriculumServiceImpl implements CurriculumService {
 
     @Override
     public List<Curriculum> getAllCurriculums() {
-        List<CurriculumModel> curriculumModels = curriculumDao.getAll();
+        List<judgels.jerahmeel.persistence.CurriculumModel> curriculumModels = curriculumDao.getAll();
 
         return curriculumModels.stream().map(m -> CurriculumServiceUtils.createCurriculumFromModel(m)).collect(Collectors.toList());
     }
@@ -28,7 +29,7 @@ public final class CurriculumServiceImpl implements CurriculumService {
     @Override
     public Page<Curriculum> getPageOfCurriculums(long pageIndex, long pageSize, String orderBy, String orderDir, String filterString) {
         long totalPages = curriculumDao.countByFilters(filterString);
-        List<CurriculumModel> curriculumModels = curriculumDao.findSortedByFilters(orderBy, orderDir, filterString, pageIndex * pageSize, pageSize);
+        List<judgels.jerahmeel.persistence.CurriculumModel> curriculumModels = curriculumDao.findSortedByFilters(orderBy, orderDir, filterString, pageIndex * pageSize, pageSize);
 
         List<Curriculum> curriculums = Lists.transform(curriculumModels, m -> CurriculumServiceUtils.createCurriculumFromModel(m));
 
@@ -37,7 +38,7 @@ public final class CurriculumServiceImpl implements CurriculumService {
 
     @Override
     public Curriculum findCurriculumById(long curriculumId) throws CurriculumNotFoundException {
-        CurriculumModel curriculumModel = curriculumDao.findById(curriculumId);
+        judgels.jerahmeel.persistence.CurriculumModel curriculumModel = curriculumDao.findById(curriculumId);
         if (curriculumModel != null) {
             return CurriculumServiceUtils.createCurriculumFromModel(curriculumModel);
         } else {
@@ -47,7 +48,7 @@ public final class CurriculumServiceImpl implements CurriculumService {
 
     @Override
     public Curriculum createCurriculum(String name, String description, String userJid, String userIpAddress) {
-        CurriculumModel curriculumModel = new CurriculumModel();
+        judgels.jerahmeel.persistence.CurriculumModel curriculumModel = new judgels.jerahmeel.persistence.CurriculumModel();
         curriculumModel.name = name;
         curriculumModel.description = description;
 

@@ -11,6 +11,7 @@ export interface Course {
 
 export interface CoursesResponse {
   data: Course[];
+  curriculumDescription?: string;
 }
 
 export const baseCoursesURL = `${APP_CONFIG.apiUrls.jerahmeel}/courses`;

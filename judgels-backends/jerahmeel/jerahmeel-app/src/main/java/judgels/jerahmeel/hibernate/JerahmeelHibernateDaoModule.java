@@ -10,6 +10,7 @@ import judgels.jerahmeel.persistence.ChapterLessonDao;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseDao;
+import judgels.jerahmeel.persistence.CurriculumDao;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.ProgrammingGradingDao;
@@ -26,6 +27,11 @@ public class JerahmeelHibernateDaoModule {
 
     @Provides
     static ArchiveDao archiveDao(ArchiveHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static CurriculumDao curriculumDao(CurriculumHibernateDao dao) {
         return dao;
     }
 

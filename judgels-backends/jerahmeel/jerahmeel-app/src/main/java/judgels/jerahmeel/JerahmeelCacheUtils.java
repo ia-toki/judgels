@@ -6,7 +6,7 @@ public class JerahmeelCacheUtils {
     public static final String SEPARATOR = "#";
 
     private static Duration shortDuration = Duration.ofSeconds(5);
-    private static Duration mediumDuration = Duration.ofSeconds(10);
+    private static Duration longDuration = Duration.ofMinutes(10);
 
     private JerahmeelCacheUtils() {}
 
@@ -14,13 +14,13 @@ public class JerahmeelCacheUtils {
         return shortDuration;
     }
 
-    public static Duration getMediumDuration() {
-        return mediumDuration;
+    public static Duration getLongDuration() {
+        return longDuration;
     }
 
     // Visible for testing
     public static void removeDurations() {
         shortDuration = Duration.ZERO;
-        mediumDuration = Duration.ZERO;
+        longDuration = Duration.ZERO;
     }
 }

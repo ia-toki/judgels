@@ -34,12 +34,11 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
       return <LoadingCourseCard />;
     }
 
-    const courses = response.data;
-    const description = courses.length && courses[0].description;
+    const { data: courses, curriculumDescription } = response;
 
     return (
       <>
-        <HtmlText>{description}</HtmlText>
+        <HtmlText>{curriculumDescription}</HtmlText>
         <hr />
         {courses.map(course => (
           <CourseCard key={course.jid} course={course} />

@@ -1,5 +1,7 @@
 package org.iatoki.judgels.jerahmeel.curriculum;
 
+import judgels.jerahmeel.persistence.CurriculumModel;
+
 final class CurriculumServiceUtils {
 
     private CurriculumServiceUtils() {

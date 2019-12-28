@@ -11,6 +11,7 @@ import judgels.jerahmeel.persistence.ChapterModel;
 import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.CourseModel;
+import judgels.jerahmeel.persistence.CurriculumModel;
 import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.ProgrammingGradingModel;
@@ -21,6 +22,7 @@ public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicati
         super(
                 AdminRoleModel.class,
                 ArchiveModel.class,
+                CurriculumModel.class,
                 ChapterModel.class,
                 ChapterLessonModel.class,
                 ChapterProblemModel.class,

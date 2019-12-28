@@ -1,15 +1,12 @@
-package org.iatoki.judgels.jerahmeel.curriculum;
+package judgels.jerahmeel.hibernate;
 
+import javax.inject.Inject;
+import judgels.jerahmeel.persistence.CurriculumDao;
 import judgels.jerahmeel.persistence.CurriculumModel;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-@Singleton
-public final class CurriculumHibernateDao extends JudgelsHibernateDao<CurriculumModel> implements CurriculumDao {
-
+public class CurriculumHibernateDao extends JudgelsHibernateDao<CurriculumModel> implements CurriculumDao {
     @Inject
     public CurriculumHibernateDao(HibernateDaoData data) {
         super(data);
