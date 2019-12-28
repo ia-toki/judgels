@@ -2,6 +2,8 @@ package org.iatoki.judgels.jerahmeel.archive;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import judgels.jerahmeel.persistence.ArchiveModel;
+import judgels.jerahmeel.persistence.ArchiveModel_;
 import org.iatoki.judgels.jerahmeel.scorecache.ProblemSetScoreCacheUtils;
 
 import javax.inject.Inject;

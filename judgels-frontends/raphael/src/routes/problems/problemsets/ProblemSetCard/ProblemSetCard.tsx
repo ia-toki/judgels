@@ -8,18 +8,20 @@ import './ProblemSetCard.css';
 
 export interface ProblemSetCardProps {
   problemSet: ProblemSet;
+  archiveDescription?: string;
 }
 
 export class ProblemSetCard extends React.PureComponent<ProblemSetCardProps> {
   render() {
-    const { problemSet } = this.props;
+    const { problemSet, archiveDescription } = this.props;
+    const description = (archiveDescription || '') + (problemSet.description || '');
 
     return (
       <ContentCardLink to={`/problems/${problemSet.slug}`} className="problemset-card">
         <h4 className="problemset-card-name">{problemSet.name}</h4>
-        {problemSet.description && (
+        {description && (
           <div className="problemset-card-description">
-            <HtmlText>{problemSet.description}</HtmlText>
+            <HtmlText>{description}</HtmlText>
           </div>
         )}
       </ContentCardLink>

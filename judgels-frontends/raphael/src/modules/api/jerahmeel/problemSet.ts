@@ -7,6 +7,7 @@ import { Page } from '../pagination';
 export interface ProblemSet {
   id: number;
   jid: string;
+  archiveJid: string;
   slug: string;
   name: string;
   description: string;
@@ -14,6 +15,7 @@ export interface ProblemSet {
 
 export interface ProblemSetsResponse {
   data: Page<ProblemSet>;
+  archiveDescriptionsMap: { [archiveJid: string]: string };
 }
 
 export const baseProblemSetsURL = `${APP_CONFIG.apiUrls.jerahmeel}/problemsets`;

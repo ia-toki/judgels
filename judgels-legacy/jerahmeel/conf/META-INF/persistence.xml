@@ -8,6 +8,7 @@
     <persistence-unit name="defaultPersistenceUnit" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <non-jta-data-source>DefaultDS</non-jta-data-source>
+        <class>judgels.jerahmeel.persistence.ArchiveModel</class>
         <class>judgels.jerahmeel.persistence.CourseModel</class>
         <class>judgels.jerahmeel.persistence.CourseChapterModel</class>
         <class>judgels.jerahmeel.persistence.ChapterModel</class>

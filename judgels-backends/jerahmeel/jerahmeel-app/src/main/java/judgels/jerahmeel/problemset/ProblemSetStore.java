@@ -91,6 +91,7 @@ public class ProblemSetStore {
         return new ProblemSet.Builder()
                 .id(model.id)
                 .jid(model.jid)
+                .archiveJid(model.archiveJid)
                 .slug(Optional.ofNullable(model.slug).orElse("" + model.id))
                 .name(model.name)
                 .description(model.description)

@@ -92,7 +92,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
       return <LoadingState />;
     }
 
-    const { data } = response;
+    const { data, archiveDescriptionsMap } = response;
     if (!data) {
       return <LoadingState />;
     }
@@ -103,7 +103,13 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
         </p>
       );
     }
-    return data.page.map(problemSet => <ProblemSetCard key={problemSet.jid} problemSet={problemSet} />);
+    return data.page.map(problemSet => (
+      <ProblemSetCard
+        key={problemSet.jid}
+        problemSet={problemSet}
+        archiveDescription={archiveDescriptionsMap[problemSet.archiveJid]}
+      />
+    ));
   };
 
   private renderPagination = () => {

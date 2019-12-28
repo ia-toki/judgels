@@ -3,6 +3,7 @@ package judgels.jerahmeel.hibernate;
 import dagger.Module;
 import dagger.Provides;
 import judgels.jerahmeel.persistence.AdminRoleDao;
+import judgels.jerahmeel.persistence.ArchiveDao;
 import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
 import judgels.jerahmeel.persistence.ChapterDao;
 import judgels.jerahmeel.persistence.ChapterLessonDao;
@@ -20,6 +21,11 @@ public class JerahmeelHibernateDaoModule {
 
     @Provides
     static AdminRoleDao adminRoleDao(AdminRoleHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static ArchiveDao archiveDao(ArchiveHibernateDao dao) {
         return dao;
     }
 

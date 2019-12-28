@@ -10,7 +10,7 @@ import judgels.jerahmeel.persistence.ProgrammingSubmissionModel;
 import org.iatoki.judgels.jerahmeel.ProblemScore;
 import org.iatoki.judgels.jerahmeel.archive.Archive;
 import org.iatoki.judgels.jerahmeel.archive.ArchiveDao;
-import org.iatoki.judgels.jerahmeel.archive.ArchiveModel;
+import judgels.jerahmeel.persistence.ArchiveModel;
 import org.iatoki.judgels.jerahmeel.archive.ArchiveServiceUtils;
 import org.iatoki.judgels.jerahmeel.grading.bundle.BundleGradingDao;
 import org.iatoki.judgels.jerahmeel.grading.bundle.BundleGradingModel;

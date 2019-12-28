@@ -2,6 +2,8 @@ package org.iatoki.judgels.jerahmeel.archive;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import judgels.jerahmeel.persistence.ArchiveModel;
+import judgels.jerahmeel.persistence.ArchiveModel_;
 
 import java.util.List;
 import java.util.Stack;
