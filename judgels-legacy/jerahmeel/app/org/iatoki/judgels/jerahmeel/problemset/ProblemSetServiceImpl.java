@@ -58,7 +58,7 @@ public final class ProblemSetServiceImpl implements ProblemSetService {
     @Override
     public Page<ProblemSet> getPageOfProblemSets(Archive archive, long pageIndex, long pageSize, String orderBy, String orderDir, String filterString) {
         long totalRowsCount = problemSetDao.countByFiltersEq(filterString, ImmutableMap.of(ProblemSetModel_.archiveJid, archive.getJid()));
-        List<ProblemSetModel> problemSetModels = problemSetDao.findSortedByFiltersEq(orderBy, orderDir, filterString, ImmutableMap.of(ProblemSetModel_.archiveJid, archive.getJid()), pageIndex, pageSize);
+        List<ProblemSetModel> problemSetModels = problemSetDao.findSortedByFiltersEq(orderBy, orderDir, filterString, ImmutableMap.of(ProblemSetModel_.archiveJid, archive.getJid()), pageIndex * pageSize, pageSize);
 
         List<ProblemSet> problemSets = problemSetModels.stream().map(m -> ProblemSetServiceUtils.createProblemSetFromModelAndArchive(m, archive)).collect(Collectors.toList());
 
@@ -68,7 +68,7 @@ public final class ProblemSetServiceImpl implements ProblemSetService {
     @Override
     public Page<ProblemSetWithScore> getPageOfProblemSetsWithScore(Archive archive, String userJid, long pageIndex, long pageSize, String orderBy, String orderDir, String filterString) {
         long totalRowsCount = problemSetDao.countByFiltersEq(filterString, ImmutableMap.of(ProblemSetModel_.archiveJid, archive.getJid()));
-        List<ProblemSetModel> problemSetModels = problemSetDao.findSortedByFiltersEq(orderBy, orderDir, filterString, ImmutableMap.of(ProblemSetModel_.archiveJid, archive.getJid()), pageIndex, pageSize);
+        List<ProblemSetModel> problemSetModels = problemSetDao.findSortedByFiltersEq(orderBy, orderDir, filterString, ImmutableMap.of(ProblemSetModel_.archiveJid, archive.getJid()), pageIndex * pageSize, pageSize);
 
         ImmutableList.Builder<ProblemSetWithScore> problemSetWithScoreBuilder = ImmutableList.builder();
         for (ProblemSetModel problemSetModel : problemSetModels) {
