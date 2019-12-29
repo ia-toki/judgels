@@ -33,7 +33,7 @@ export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
 
     const tabs = items.map(item => {
       const titleIcon = item.titleIcon && <Icon icon={item.titleIcon} />;
-      const itemIcon = widget ? 'chevron-down' : 'chevron-down';
+      const itemIcon = widget ? 'chevron-down' : 'chevron-right';
 
       const icon = item.id === activeItemId && (
         <Icon icon={itemIcon} iconSize={Icon.SIZE_LARGE} className="card-sidebar__arrow" />
