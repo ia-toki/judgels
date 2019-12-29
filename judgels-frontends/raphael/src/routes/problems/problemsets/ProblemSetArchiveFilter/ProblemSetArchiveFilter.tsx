@@ -46,7 +46,7 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
     }
     return (
       <ContentCard>
-        <h4>Select archive</h4>
+        <h4>Select problemset archive</h4>
         <hr />
         {this.renderArchiveCategories()}
       </ContentCard>

@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import judgels.jerahmeel.api.archive.Archive;
 import judgels.jerahmeel.persistence.ArchiveDao;
 import judgels.jerahmeel.persistence.ArchiveModel;
+import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.SelectionOptions;
 
 public class ArchiveStore {
@@ -22,6 +23,7 @@ public class ArchiveStore {
     public List<Archive> getArchives() {
         SelectionOptions options = new SelectionOptions.Builder()
                 .orderBy("name")
+                .orderDir(OrderDir.ASC)
                 .build();
         return archiveDao.selectAll(options).stream()
                 .filter(m -> m.parentJid != null)
