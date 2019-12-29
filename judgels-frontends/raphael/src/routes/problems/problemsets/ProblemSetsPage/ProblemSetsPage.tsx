@@ -43,9 +43,18 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     this.state = { filter: { archiveSlug, name }, isFilterLoading: false };
   }
 
+  componentDidUpdate() {
+    const queries = parse(this.props.location.search);
+    const archiveSlug = queries.archiveSlug as string;
+
+    if (archiveSlug !== this.state.filter.archiveSlug) {
+      this.setState({ filter: { archiveSlug }, isFilterLoading: false });
+    }
+  }
+
   render() {
     return (
-      <Card title="Problemsets">
+      <Card title="Filter by archive">
         {this.renderHeader()}
         {this.renderProblemSets()}
         {this.renderPagination()}
@@ -69,7 +78,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
   private renderFilterResultsBanner = () => {
     const { archiveSlug, name } = this.state.filter;
     if (!archiveSlug && !name) {
-      return <small>Most recently added problemsets:</small>;
+      return <>Most recently added problemsets:</>;
     }
 
     const { response } = this.state;
@@ -78,7 +87,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     if (archiveName && !name) {
       return (
         <>
-          Archive <b>{archiveName}</b>:
+          Problemsets in archive <b>{archiveName}</b>:
         </>
       );
     }
@@ -89,7 +98,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     const archiveNameResult = archiveName ? (
       <>
         {' '}
-        in archive <b>{archiveName}</b>
+        in archive <b>{archiveName}:</b>
       </>
     ) : (
       ''

@@ -4,6 +4,7 @@ import dagger.Component;
 import javax.inject.Singleton;
 import judgels.fs.aws.AwsModule;
 import judgels.jerahmeel.admin.AdminResource;
+import judgels.jerahmeel.archive.ArchiveResource;
 import judgels.jerahmeel.chapter.lesson.ChapterLessonResource;
 import judgels.jerahmeel.chapter.problem.ChapterProblemResource;
 import judgels.jerahmeel.course.CourseResource;
@@ -47,6 +48,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 @Singleton
 public interface JerahmeelComponent {
     AdminResource adminResource();
+    ArchiveResource archiveResource();
     CourseResource courseResource();
     CourseChapterResource courseChapterResource();
     ChapterLessonResource chapterLessonResource();

@@ -8,20 +8,22 @@ import ContentWithSidebar, {
 } from '../../components/ContentWithSidebar/ContentWithSidebar';
 
 import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
+import ProblemSetArchiveFilter from './problemsets/ProblemSetArchiveFilter/ProblemSetArchiveFilter';
 
 const ProblemsRoutes = () => {
   const sidebarItems: ContentWithSidebarItem[] = [
     {
       id: '@',
       titleIcon: 'panel-stats',
-      title: 'Problemsets',
+      title: 'Filter by archive',
       routeComponent: Route,
       component: ProblemSetsPage,
+      widgetComponent: ProblemSetArchiveFilter,
     },
   ];
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
-    title: 'Menu',
+    title: 'Problems Menu',
     items: sidebarItems,
   };
 

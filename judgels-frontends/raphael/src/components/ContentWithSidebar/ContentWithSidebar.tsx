@@ -31,6 +31,7 @@ export interface ContentWithSidebarItem {
   titleIcon?: IconName;
   title: string | JSX.Element;
   routeComponent: any;
+  widgetComponent?: any;
   component: any;
   disabled?: boolean;
 }
@@ -72,6 +73,7 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
             title: item.title,
           } as SidebarItem)
       );
+    const sidebarWidget = this.renderSidebarWidget();
 
     return (
       <Sidebar
@@ -79,8 +81,34 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
         action={this.props.action}
         activeItemId={this.getActiveItemId()}
         items={sidebarItems}
+        widget={sidebarWidget}
         onResolveItemUrl={this.onResolveItemUrl}
       />
+    );
+  };
+
+  private renderSidebarWidget = () => {
+    const components = this.props.items
+      .filter(item => !!item.widgetComponent)
+      .map(item => {
+        const RouteC = item.routeComponent;
+        const props = {
+          exact: item.id === '@',
+          path: resolveUrl(this.props.match.url, item.id),
+          component: item.widgetComponent,
+        };
+        return <RouteC key={item.id} {...props} />;
+      });
+
+    if (components.length === 0) {
+      return null;
+    }
+
+    return (
+      <div>
+        <hr />
+        <Switch>{components}</Switch>
+      </div>
     );
   };
 
