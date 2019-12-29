@@ -14,10 +14,11 @@ import { problemSetActions as injectedProblemSetActions } from '../modules/probl
 import './ProblemSetsPage.css';
 
 export interface ProblemSetsPageProps extends RouteComponentProps<{ name: string }> {
-  onGetProblemSets: (name?: string, page?: number) => Promise<ProblemSetsResponse>;
+  onGetProblemSets: (archiveSlug?: string, name?: string, page?: number) => Promise<ProblemSetsResponse>;
 }
 
 interface ProblemSetsFilter {
+  archiveSlug?: string;
   name?: string;
 }
 
@@ -32,11 +33,14 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
 
   state: ProblemSetsPageState = {};
 
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+
     const queries = parse(this.props.location.search);
+    const archiveSlug = queries.archiveSlug as string;
     const name = queries.name as string;
 
-    this.setState({ filter: { name }, isFilterLoading: false });
+    this.state = { filter: { archiveSlug, name }, isFilterLoading: false };
   }
 
   render() {
@@ -63,20 +67,44 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
   };
 
   private renderFilterResultsBanner = () => {
-    const name = this.getNameFilter(this.state);
-    if (!name) {
+    const { archiveSlug, name } = this.state.filter;
+    if (!archiveSlug && !name) {
       return <small>Most recently added problemsets:</small>;
     }
+
+    const { response } = this.state;
+    const archiveName = response && response.archiveName;
+
+    if (archiveName && !name) {
+      return (
+        <>
+          Archive <b>{archiveName}</b>:
+        </>
+      );
+    }
+    if (!name) {
+      return null;
+    }
+
+    const archiveNameResult = archiveName ? (
+      <>
+        {' '}
+        in archive <b>{archiveName}</b>
+      </>
+    ) : (
+      ''
+    );
 
     return (
       <>
         Search results for: <b>{name}</b>
+        {archiveNameResult}
       </>
     );
   };
 
   private renderFilter = () => {
-    const name = this.getNameFilter(this.state);
+    const { name } = this.state.filter;
     return (
       <SearchBox
         onRouteChange={this.searchBoxUpdateQueries}
@@ -113,14 +141,12 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
   };
 
   private renderPagination = () => {
-    if (!this.state.filter) {
-      return null;
-    }
+    const { filter } = this.state;
     return (
       <Pagination
         pageSize={ProblemSetsPage.PAGE_SIZE}
         onChangePage={this.onChangePage}
-        key={this.getNameFilter(this.state) || ''}
+        key={'' + filter.archiveSlug + filter.name}
       />
     );
   };
@@ -129,30 +155,24 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     if (this.state.response) {
       this.setState({ response: { ...this.state.response, data: undefined } });
     }
-    const response = await this.props.onGetProblemSets(this.getNameFilter(this.state), nextPage);
+    const { archiveSlug, name } = this.state.filter;
+    const response = await this.props.onGetProblemSets(archiveSlug, name, nextPage);
     this.setState({ response, isFilterLoading: false });
     return response.data.totalCount;
   };
 
   private searchBoxUpdateQueries = (name: string, queries: any) => {
     this.setState(prevState => {
-      const isFilterLoading = this.getNameFilter(prevState) !== name;
+      const prevFilter = prevState.filter || {};
       return {
         filter: {
+          ...prevFilter,
           name,
         },
-        isFilterLoading,
-        isProblemSetsListLoading: isFilterLoading,
+        isFilterLoading: prevFilter.name !== name,
       };
     });
     return { ...queries, page: undefined, name };
-  };
-
-  private getNameFilter = (state: ProblemSetsPageState) => {
-    if (!state.filter || !state.filter.name) {
-      return '';
-    }
-    return state.filter.name;
   };
 }
 

@@ -19,6 +19,7 @@ public interface ProblemSetService {
     @Produces(APPLICATION_JSON)
     ProblemSetsResponse getProblemSets(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @QueryParam("archiveSlug") Optional<String> archiveSlug,
             @QueryParam("name") Optional<String> name,
             @QueryParam("page") Optional<Integer> page);
 

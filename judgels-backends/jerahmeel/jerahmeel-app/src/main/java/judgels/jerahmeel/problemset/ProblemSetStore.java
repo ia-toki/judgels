@@ -55,7 +55,7 @@ public class ProblemSetStore {
         return problemSetDao.selectBySlug(problemSetSlug).map(ProblemSetStore::fromModel).orElse(null);
     }
 
-    public Page<ProblemSet> getProblemSets(Optional<String> name, Optional<Integer> page) {
+    public Page<ProblemSet> getProblemSets(Optional<String> archiveJid, Optional<String> name, Optional<Integer> page) {
         SearchOptions.Builder searchOptions = new SearchOptions.Builder();
         name.ifPresent(e -> searchOptions.putTerms("name", e));
 
@@ -65,7 +65,8 @@ public class ProblemSetStore {
             selectionOptions.orderBy("name");
         }
 
-        Page<ProblemSetModel> models = problemSetDao.selectPaged(searchOptions.build(), selectionOptions.build());
+        Page<ProblemSetModel> models =
+                problemSetDao.selectPaged(archiveJid, searchOptions.build(), selectionOptions.build());
         return models.mapPage(p -> Lists.transform(p, ProblemSetStore::fromModel));
     }
 

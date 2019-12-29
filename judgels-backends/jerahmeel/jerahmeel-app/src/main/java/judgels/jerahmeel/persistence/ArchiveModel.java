@@ -16,6 +16,9 @@ import judgels.persistence.JudgelsModel;
         @Index(columnList = "updatedAt")})
 @JidPrefix("ARCH")
 public final class ArchiveModel extends JudgelsModel {
+    @Column(unique = true)
+    public String slug;
+
     public String parentJid;
 
     @Column(nullable = false)

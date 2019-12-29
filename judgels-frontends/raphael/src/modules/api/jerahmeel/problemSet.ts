@@ -16,6 +16,7 @@ export interface ProblemSet {
 export interface ProblemSetsResponse {
   data: Page<ProblemSet>;
   archiveDescriptionsMap: { [archiveJid: string]: string };
+  archiveName?: string;
 }
 
 export const baseProblemSetsURL = `${APP_CONFIG.apiUrls.jerahmeel}/problemsets`;
@@ -25,8 +26,8 @@ export function baseProblemSetURL(problemSetJid: string) {
 }
 
 export const problemSetAPI = {
-  getProblemSets: (token: string, name?: string, page?: number): Promise<ProblemSetsResponse> => {
-    const params = stringify({ name, page });
+  getProblemSets: (token: string, archiveSlug?: string, name?: string, page?: number): Promise<ProblemSetsResponse> => {
+    const params = stringify({ archiveSlug, name, page });
     return get(`${baseProblemSetsURL}?${params}`, token);
   },
 

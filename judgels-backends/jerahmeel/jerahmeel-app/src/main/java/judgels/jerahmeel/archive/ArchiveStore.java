@@ -1,6 +1,7 @@
 package judgels.jerahmeel.archive;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -16,6 +17,10 @@ public class ArchiveStore {
         this.archiveDao = archiveDao;
     }
 
+    public Optional<Archive> getArchiveBySlug(String archiveSlug) {
+        return archiveDao.selectBySlug(archiveSlug).map(ArchiveStore::fromModel);
+    }
+
     public Map<String, Archive> getArchivesByJids(Set<String> archiveJids) {
         return archiveDao.selectByJids(archiveJids).values().stream()
                 .collect(Collectors.toMap(m -> m.jid, ArchiveStore::fromModel));
@@ -25,6 +30,7 @@ public class ArchiveStore {
         return new Archive.Builder()
                 .id(model.id)
                 .jid(model.jid)
+                .slug(model.slug)
                 .name(model.name)
                 .description(model.description)
                 .build();

@@ -31,13 +31,21 @@ public class ProblemSetHibernateDao extends JudgelsHibernateDao<ProblemSetModel>
     }
 
     @Override
-    public Page<ProblemSetModel> selectPaged(SearchOptions searchOptions, SelectionOptions options) {
-        return selectPaged(createFilterOptions(searchOptions).build(), options);
+    public Page<ProblemSetModel> selectPaged(
+            Optional<String> archiveJid,
+            SearchOptions searchOptions,
+            SelectionOptions options) {
+
+        return selectPaged(createFilterOptions(archiveJid, searchOptions).build(), options);
     }
 
-    private static FilterOptions.Builder<ProblemSetModel> createFilterOptions(SearchOptions searchOptions) {
+    private static FilterOptions.Builder<ProblemSetModel> createFilterOptions(
+            Optional<String> archiveJid,
+            SearchOptions searchOptions) {
+
         FilterOptions.Builder<ProblemSetModel> filterOptions = new FilterOptions.Builder<>();
 
+        archiveJid.ifPresent(jid -> filterOptions.putColumnsEq(ProblemSetModel_.archiveJid, jid));
         if (searchOptions.getTerms().containsKey("name")) {
             filterOptions.putColumnsLike(ProblemSetModel_.name, searchOptions.getTerms().get("name"));
         }

@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 public interface Archive {
     long getId();
     String getJid();
+    String getSlug();
     String getName();
     String getDescription();
 

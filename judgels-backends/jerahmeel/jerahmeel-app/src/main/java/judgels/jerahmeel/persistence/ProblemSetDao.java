@@ -8,5 +8,8 @@ import judgels.persistence.api.SelectionOptions;
 
 public interface ProblemSetDao extends JudgelsDao<ProblemSetModel> {
     Optional<ProblemSetModel> selectBySlug(String problemSetSlug);
-    Page<ProblemSetModel> selectPaged(SearchOptions searchOptions, SelectionOptions options);
+    Page<ProblemSetModel> selectPaged(
+            Optional<String> archiveJid,
+            SearchOptions searchOptions,
+            SelectionOptions options);
 }
