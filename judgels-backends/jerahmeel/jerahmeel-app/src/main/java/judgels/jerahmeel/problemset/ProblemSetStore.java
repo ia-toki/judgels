@@ -61,7 +61,7 @@ public class ProblemSetStore {
 
         SelectionOptions.Builder selectionOptions = new SelectionOptions.Builder().from(SelectionOptions.DEFAULT_PAGED);
         page.ifPresent(selectionOptions::page);
-        if (!name.orElse("").isEmpty()) {
+        if (!name.orElse("").isEmpty() || archiveJid.isPresent()) {
             selectionOptions.orderBy("name");
         }
 
