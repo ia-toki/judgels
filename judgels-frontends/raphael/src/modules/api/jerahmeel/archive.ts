@@ -4,6 +4,7 @@ import { get } from '../http';
 export interface Archive {
   slug: string;
   name: string;
+  category: string;
 }
 
 export interface ArchivesResponse {

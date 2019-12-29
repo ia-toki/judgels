@@ -20,8 +20,12 @@ public class ArchiveStore {
     }
 
     public List<Archive> getArchives() {
-        return archiveDao.selectAll(SelectionOptions.DEFAULT_ALL).stream()
+        SelectionOptions options = new SelectionOptions.Builder()
+                .orderBy("name")
+                .build();
+        return archiveDao.selectAll(options).stream()
                 .filter(m -> m.parentJid != null)
+                .filter(m -> !m.parentJid.equals(""))
                 .map(ArchiveStore::fromModel)
                 .collect(Collectors.toList());
     }
@@ -42,6 +46,7 @@ public class ArchiveStore {
                 .slug(model.slug)
                 .name(model.name)
                 .description(model.description)
+                .category(model.category)
                 .build();
     }
 }

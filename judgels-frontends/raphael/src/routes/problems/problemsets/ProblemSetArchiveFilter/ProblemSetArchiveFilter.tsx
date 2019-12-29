@@ -48,19 +48,41 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
       <ContentCard>
         <h4>Select archive</h4>
         <hr />
-        {this.renderArchives()}
+        {this.renderArchiveCategories()}
       </ContentCard>
     );
   }
 
-  private renderArchives = () => {
-    const archives = [{ slug: '', name: '(all)' }, ...this.state.response.data];
+  private renderArchiveCategories = () => {
+    const archives = [{ slug: '', name: '(All problemsets)', category: '' }, ...this.state.response.data];
+    const archivesByCategory = {};
+    archives.forEach(archive => {
+      if (archivesByCategory[archive.category]) {
+        archivesByCategory[archive.category] = [...archivesByCategory[archive.category], archive];
+      } else {
+        archivesByCategory[archive.category] = [archive];
+      }
+    });
+
+    const categories = Object.keys(archivesByCategory).sort();
+    return categories.map(category => this.renderArchives(category, archivesByCategory[category]));
+  };
+
+  private renderArchives = (category: string, archives: Archive[]) => {
     return (
-      <RadioGroup onChange={this.changeArchive} selectedValue={this.state.archiveSlug}>
-        {archives.map(archive => (
-          <Radio key={archive.slug} labelElement={this.renderArchiveOption(archive)} value={archive.slug} />
-        ))}
-      </RadioGroup>
+      <div key={category}>
+        {category && <p className="archive-filter__category">{category}</p>}
+        <RadioGroup
+          key={category}
+          name="archiveSlug"
+          onChange={this.changeArchive}
+          selectedValue={this.state.archiveSlug}
+        >
+          {archives.map(archive => (
+            <Radio key={archive.slug} labelElement={this.renderArchiveOption(archive)} value={archive.slug} />
+          ))}
+        </RadioGroup>
+      </div>
     );
   };
 

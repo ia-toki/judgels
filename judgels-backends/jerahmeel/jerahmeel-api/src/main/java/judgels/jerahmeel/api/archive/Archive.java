@@ -11,6 +11,7 @@ public interface Archive {
     String getSlug();
     String getName();
     String getDescription();
+    String getCategory();
 
     class Builder extends ImmutableArchive.Builder {}
 }

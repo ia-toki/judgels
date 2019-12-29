@@ -13,4 +13,5 @@
     <include file="migrations/004-add-slug-to-problem_set.xml"/>
     <include file="migrations/005-add-unique-index-to-problems.xml"/>
     <include file="migrations/006-add-slug-to-archive.xml"/>
+    <include file="migrations/007-add-category-to-archive.xml"/>
 </databaseChangeLog>

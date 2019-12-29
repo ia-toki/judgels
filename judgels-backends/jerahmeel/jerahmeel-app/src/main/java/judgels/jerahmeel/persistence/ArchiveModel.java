@@ -26,4 +26,7 @@ public final class ArchiveModel extends JudgelsModel {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     public String description;
+
+    @Column
+    public String category;
 }

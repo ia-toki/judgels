@@ -15,7 +15,7 @@ const ProblemsRoutes = () => {
     {
       id: '@',
       titleIcon: 'panel-stats',
-      title: 'Filter by archive',
+      title: 'Filter by problemset',
       routeComponent: Route,
       component: ProblemSetsPage,
       widgetComponent: ProblemSetArchiveFilter,

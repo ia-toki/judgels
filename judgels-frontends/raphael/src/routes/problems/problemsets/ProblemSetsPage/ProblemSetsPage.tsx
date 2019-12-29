@@ -54,7 +54,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
 
   render() {
     return (
-      <Card title="Filter by archive">
+      <Card title="Filter by problemset">
         {this.renderHeader()}
         {this.renderProblemSets()}
         {this.renderPagination()}
