@@ -49,16 +49,21 @@ export class ContestSubmissionsPage extends React.PureComponent<
 
   state: ContestSubmissionsPageState = {};
 
-  async componentDidMount() {
+  constructor(props) {
+    super(props);
+
     const queries = parse(this.props.location.search);
     const username = queries.username as string;
     const problemAlias = queries.problemAlias as string;
 
-    if (username || problemAlias) {
+    this.state = { filter: { username, problemAlias } };
+  }
+
+  async componentDidMount() {
+    const { filter } = this.state;
+    if (filter.username || filter.problemAlias) {
       await this.refreshSubmissions();
     }
-
-    this.setState({ filter: { username, problemAlias } });
   }
 
   render() {
@@ -84,7 +89,7 @@ export class ContestSubmissionsPage extends React.PureComponent<
 
   private renderFilterWidget = () => {
     const { response, filter, isFilterLoading } = this.state;
-    if (!response || !filter) {
+    if (!response) {
       return null;
     }
     const { config, profilesMap, problemAliasesMap } = response;
@@ -136,9 +141,6 @@ export class ContestSubmissionsPage extends React.PureComponent<
 
   private renderPagination = () => {
     const { filter } = this.state;
-    if (!filter) {
-      return null;
-    }
 
     // updates pagination when the filter is updated
     const key = '' + filter.username + filter.problemAlias;

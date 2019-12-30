@@ -35,11 +35,13 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
 
   state: ContestsPageState = {};
 
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+
     const queries = parse(this.props.location.search);
     const name = queries.name as string;
 
-    this.setState({ filter: { name }, isFilterLoading: false });
+    this.state = { filter: { name }, isFilterLoading: false };
   }
 
   render() {
@@ -126,9 +128,6 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
   };
 
   private renderPagination = () => {
-    if (!this.state.filter) {
-      return null;
-    }
     return (
       <Pagination
         pageSize={ContestsPage.PAGE_SIZE}
@@ -162,7 +161,7 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
   };
 
   private getNameFilter = (state: ContestsPageState) => {
-    if (!state.filter || !state.filter.name) {
+    if (!state.filter.name) {
       return '';
     }
     return state.filter.name;
