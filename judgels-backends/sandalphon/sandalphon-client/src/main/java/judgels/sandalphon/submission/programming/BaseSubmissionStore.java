@@ -149,9 +149,9 @@ public class BaseSubmissionStore<
     public String createGrading(Submission submission) {
         GM model = gradingDao.createGradingModel();
         model.submissionJid = submission.getJid();
-        model.verdictCode = Verdict.WRONG_ANSWER.getCode();
+        model.verdictCode = Verdict.PENDING.getCode();
         model.verdictName = "";
-        model.score = 70;
+        model.score = 0;
 
         return gradingDao.insert(model).jid;
     }
