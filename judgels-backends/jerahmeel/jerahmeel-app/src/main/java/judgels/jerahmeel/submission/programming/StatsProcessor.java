@@ -10,6 +10,7 @@ import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseChapterModel;
+import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.StatsUserChapterDao;
 import judgels.jerahmeel.persistence.StatsUserChapterModel;
 import judgels.jerahmeel.persistence.StatsUserCourseDao;
@@ -28,6 +29,7 @@ import judgels.sandalphon.submission.programming.SubmissionConsumer;
 public class StatsProcessor implements SubmissionConsumer {
     private final CourseChapterDao courseChapterDao;
     private final ChapterProblemDao chapterProblemDao;
+    private final ProblemSetProblemDao problemSetProblemDao;
 
     private final StatsUserDao statsUserDao;
     private final StatsUserChapterDao statsUserChapterDao;
@@ -45,6 +47,7 @@ public class StatsProcessor implements SubmissionConsumer {
     public StatsProcessor(
             CourseChapterDao courseChapterDao,
             ChapterProblemDao chapterProblemDao,
+            ProblemSetProblemDao problemSetProblemDao,
             StatsUserDao statsUserDao,
             StatsUserChapterDao statsUserChapterDao,
             StatsUserCourseDao statsUserCourseDao,
@@ -53,6 +56,7 @@ public class StatsProcessor implements SubmissionConsumer {
 
         this.courseChapterDao = courseChapterDao;
         this.chapterProblemDao = chapterProblemDao;
+        this.problemSetProblemDao = problemSetProblemDao;
         this.statsUserDao = statsUserDao;
         this.statsUserChapterDao = statsUserChapterDao;
         this.statsUserCourseDao = statsUserCourseDao;
@@ -66,14 +70,15 @@ public class StatsProcessor implements SubmissionConsumer {
         if (res == null) {
             return;
         }
-        processUserStats(submission, res.scoreDiff);
 
         if (SubmissionUtils.isChapter(submission.getContainerJid())) {
             if (processChapterStats(submission, res.becomesAccepted)) {
                 processCourseStats(submission);
             }
         } else {
-            processProblemSetStats(submission, res.scoreDiff);
+            if (processProblemSetStats(submission, res.scoreDiff)) {
+                processUserStats(submission, res.scoreDiff);
+            }
         }
     }
 
@@ -153,6 +158,7 @@ public class StatsProcessor implements SubmissionConsumer {
             statsUserDao.update(model);
         } else {
             StatsUserModel model = new StatsUserModel();
+            model.userJid = s.getUserJid();
             model.score = scoreDiff;
             statsUserDao.insert(model);
         }
@@ -206,9 +212,12 @@ public class StatsProcessor implements SubmissionConsumer {
         }
     }
 
-    private void processProblemSetStats(Submission s, int scoreDiff) {
+    private boolean processProblemSetStats(Submission s, int scoreDiff) {
         if (scoreDiff <= 0) {
-            return;
+            return false;
+        }
+        if (!problemSetProblemDao.selectByProblemJid(s.getProblemJid()).isPresent()) {
+            return false;
         }
 
         Optional<StatsUserProblemSetModel> maybeModel =
@@ -220,9 +229,12 @@ public class StatsProcessor implements SubmissionConsumer {
             statsUserProblemSetDao.update(model);
         } else {
             StatsUserProblemSetModel model = new StatsUserProblemSetModel();
+            model.userJid = s.getUserJid();
             model.score = scoreDiff;
             statsUserProblemSetDao.insert(model);
         }
+
+        return true;
     }
 
     private static boolean isAccepted(Verdict verdict, int score) {
