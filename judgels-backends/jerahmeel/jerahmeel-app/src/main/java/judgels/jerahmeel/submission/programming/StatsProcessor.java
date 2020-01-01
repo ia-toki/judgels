@@ -7,6 +7,7 @@ import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.TestCaseResult;
 import judgels.gabriel.api.TestGroupResult;
 import judgels.gabriel.api.Verdict;
+import judgels.gabriel.api.Verdicts;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseChapterModel;
@@ -114,7 +115,11 @@ public class StatsProcessor implements SubmissionConsumer {
 
         if (maybeModel.isPresent()) {
             StatsUserProblemModel model = maybeModel.get();
-            isAlreadyAccepted = isAccepted(Verdict.valueOf(model.verdict), model.score);
+            if (model.updatedAt.isAfter(s.getTime())) {
+                return null;
+            }
+
+            isAlreadyAccepted = isAccepted(Verdicts.fromCode(model.verdict), model.score);
 
             if (!isAlreadyAccepted || grading.getScore() >= model.score) {
                 model.verdict = grading.getVerdict().getCode();
