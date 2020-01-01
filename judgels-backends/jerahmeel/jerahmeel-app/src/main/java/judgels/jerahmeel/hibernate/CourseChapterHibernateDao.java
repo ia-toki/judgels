@@ -27,6 +27,11 @@ public class CourseChapterHibernateDao extends HibernateDao<CourseChapterModel> 
     }
 
     @Override
+    public Optional<CourseChapterModel> selectByChapterJid(String chapterJid) {
+        return selectByUniqueColumn(CourseChapterModel_.chapterJid, chapterJid);
+    }
+
+    @Override
     public List<CourseChapterModel> selectAllByCourseJid(String courseJid, SelectionOptions options) {
         return selectAll(new FilterOptions.Builder<CourseChapterModel>()
                 .putColumnsEq(CourseChapterModel_.courseJid, courseJid)

@@ -69,4 +69,9 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
                 .putColumnsEq(ChapterProblemModel_.type, ProblemType.PROGRAMMING.name())
                 .build(), options);
     }
+
+    @Override
+    public int selectCountProgrammingByChapterJid(String chapterJid) {
+        return selectAllProgrammingByChapterJid(chapterJid, SelectionOptions.DEFAULT_ALL).size();
+    }
 }

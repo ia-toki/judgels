@@ -26,6 +26,7 @@ import judgels.jerahmeel.api.submission.bundle.SubmissionSummaryResponse;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.submission.SubmissionRoleChecker;
+import judgels.jerahmeel.submission.SubmissionUtils;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
@@ -292,7 +293,7 @@ public class ItemSubmissionResource implements ItemSubmissionService {
     }
 
     private Optional<String> getProblemJidByAlias(String containerJid, String problemAlias) {
-        if (isProblemSet(containerJid)) {
+        if (SubmissionUtils.isProblemSet(containerJid)) {
             return problemSetProblemStore.getProblemByAlias(containerJid, problemAlias)
                     .map(ProblemSetProblem::getProblemJid);
         } else {
@@ -302,18 +303,10 @@ public class ItemSubmissionResource implements ItemSubmissionService {
     }
 
     private Map<String, String> getProblemAliasesMap(String containerJid, Set<String> problemJids) {
-        if (isProblemSet(containerJid)) {
+        if (SubmissionUtils.isProblemSet(containerJid)) {
             return problemSetProblemStore.getProblemAliasesByJids(problemJids);
         } else {
             return chapterProblemStore.getProblemAliasesByJids(problemJids);
         }
-    }
-
-    private static boolean isProblemSet(String jid) {
-        return jid.startsWith("JIDPRSE");
-    }
-
-    private static boolean isChapter(String jid) {
-        return jid.startsWith("JIDSESS");
     }
 }

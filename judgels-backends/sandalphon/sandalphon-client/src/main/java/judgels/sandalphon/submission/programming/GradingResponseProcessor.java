@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Optional;
 import judgels.gabriel.api.GradingResponse;
+import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sealtiel.api.message.Message;
 import judgels.sealtiel.api.message.MessageService;
 import judgels.service.api.client.BasicAuthHeader;
@@ -21,17 +23,20 @@ public class GradingResponseProcessor {
     private final SubmissionStore submissionStore;
     private final BasicAuthHeader sealtielClientAuthHeader;
     private final MessageService messageService;
+    private final SubmissionConsumer submissionConsumer;
 
     public GradingResponseProcessor(
             ObjectMapper mapper,
             SubmissionStore submissionStore,
             BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService) {
+            MessageService messageService,
+            SubmissionConsumer submissionConsumer) {
 
         this.mapper = mapper;
         this.submissionStore = submissionStore;
         this.sealtielClientAuthHeader = sealtielClientAuthHeader;
         this.messageService = messageService;
+        this.submissionConsumer = submissionConsumer;
     }
 
     @UnitOfWork
@@ -48,8 +53,11 @@ public class GradingResponseProcessor {
 
         // it is possible that the grading model is not immediately found, because it is not flushed yet.
         for (int i = 0; i < MAX_RETRIES; i++) {
-            if (submissionStore.updateGrading(response.getGradingJid(), response.getResult())) {
+            Optional<Submission> submission =
+                    submissionStore.updateGrading(response.getGradingJid(), response.getResult(), submissionConsumer);
+            if (submission.isPresent()) {
                 gradingExists = true;
+                submissionConsumer.accept(submission.get());
                 messageService.confirmMessage(sealtielClientAuthHeader, message.getId());
                 break;
             }

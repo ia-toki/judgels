@@ -33,6 +33,7 @@ import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
 import judgels.jerahmeel.problemset.ProblemSetStore;
 import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
 import judgels.jerahmeel.submission.SubmissionRoleChecker;
+import judgels.jerahmeel.submission.SubmissionUtils;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.persistence.api.Page;
@@ -119,7 +120,7 @@ public class SubmissionResource implements SubmissionService {
         Set<String> userJids = submissions.getPage().stream().map(Submission::getUserJid).collect(toSet());
 
         Set<String> problemJids = submissions.getPage().stream().map(Submission::getProblemJid).collect(toSet());
-        if (containerJid.isPresent() && isChapter(containerJid.get())) {
+        if (containerJid.isPresent() && SubmissionUtils.isChapter(containerJid.get())) {
             problemJids = ImmutableSet.copyOf(chapterProblemStore.getProgrammingProblemJids(containerJid.get()));
         }
 
@@ -133,10 +134,10 @@ public class SubmissionResource implements SubmissionService {
                 .build();
 
         Map<String, String> problemAliasesMap = new HashMap<>();
-        if (!containerJid.isPresent() || isProblemSet(containerJid.get())) {
+        if (!containerJid.isPresent() || SubmissionUtils.isProblemSet(containerJid.get())) {
             problemAliasesMap.putAll(problemSetProblemStore.getProblemAliasesByJids(problemJids));
         }
-        if (!containerJid.isPresent() || isChapter(containerJid.get())) {
+        if (!containerJid.isPresent() || SubmissionUtils.isChapter(containerJid.get())) {
             problemAliasesMap.putAll(chapterProblemStore.getProblemAliasesByJids(problemJids));
         }
 
@@ -181,7 +182,7 @@ public class SubmissionResource implements SubmissionService {
 
         String containerName;
         String problemAlias;
-        if (isProblemSet(submission.getContainerJid())) {
+        if (SubmissionUtils.isProblemSet(submission.getContainerJid())) {
             ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(submission.getContainerJid()));
             ProblemSetProblem problem = checkFound(problemSetProblemStore.getProblem(submission.getProblemJid()));
             containerName = problemSet.getName();
@@ -266,13 +267,5 @@ public class SubmissionResource implements SubmissionService {
             }
             submissionRegrader.regradeSubmissions(submissions);
         }
-    }
-
-    private static boolean isProblemSet(String jid) {
-        return jid.startsWith("JIDPRSE");
-    }
-
-    private static boolean isChapter(String jid) {
-        return jid.startsWith("JIDSESS");
     }
 }

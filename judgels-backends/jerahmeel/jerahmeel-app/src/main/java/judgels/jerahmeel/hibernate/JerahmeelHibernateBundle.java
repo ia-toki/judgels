@@ -16,6 +16,11 @@ import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.ProgrammingGradingModel;
 import judgels.jerahmeel.persistence.ProgrammingSubmissionModel;
+import judgels.jerahmeel.persistence.StatsUserChapterModel;
+import judgels.jerahmeel.persistence.StatsUserCourseModel;
+import judgels.jerahmeel.persistence.StatsUserModel;
+import judgels.jerahmeel.persistence.StatsUserProblemModel;
+import judgels.jerahmeel.persistence.StatsUserProblemSetModel;
 
 public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicationConfiguration> {
     public JerahmeelHibernateBundle() {
@@ -32,7 +37,12 @@ public class JerahmeelHibernateBundle extends HibernateBundle<JerahmeelApplicati
                 ProgrammingSubmissionModel.class,
                 BundleItemSubmissionModel.class,
                 ProblemSetModel.class,
-                ProblemSetProblemModel.class
+                ProblemSetProblemModel.class,
+                StatsUserModel.class,
+                StatsUserChapterModel.class,
+                StatsUserCourseModel.class,
+                StatsUserProblemModel.class,
+                StatsUserProblemSetModel.class
         );
     }
 

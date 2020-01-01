@@ -149,28 +149,39 @@ public class BaseSubmissionStore<
     public String createGrading(Submission submission) {
         GM model = gradingDao.createGradingModel();
         model.submissionJid = submission.getJid();
-        model.verdictCode = Verdict.PENDING.getCode();
+        model.verdictCode = Verdict.WRONG_ANSWER.getCode();
         model.verdictName = "";
-        model.score = 0;
+        model.score = 70;
 
         return gradingDao.insert(model).jid;
     }
 
     @Override
-    public boolean updateGrading(String gradingJid, GradingResult result) {
+    public Optional<Submission> updateGrading(String gradingJid, GradingResult result, SubmissionConsumer consumer) {
         Optional<GM> maybeModel = gradingDao.selectByJid(gradingJid);
         if (!maybeModel.isPresent()) {
-            return false;
+            return Optional.empty();
         }
 
         GM model = maybeModel.get();
+        Optional<SM> submissionModel = submissionDao.selectByJid(model.submissionJid);
+        if (!submissionModel.isPresent()) {
+            return Optional.empty();
+        }
+
         model.verdictCode = result.getVerdict().getCode();
         model.verdictName = "";
         model.score = result.getScore();
         model.details = result.getDetails();
 
         gradingDao.update(model);
-        return true;
+
+        Submission s = submissionFromModels(submissionModel.get(), model);
+        if (consumer != null) {
+            consumer.accept(s);
+        }
+
+        return Optional.of(s);
     }
 
     private Submission submissionFromModels(SM model, GM gradingModel) {

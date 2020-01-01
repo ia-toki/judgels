@@ -17,6 +17,7 @@ import judgels.jerahmeel.JerahmeelBaseDataDir;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
 import judgels.sandalphon.submission.programming.SubmissionClient;
+import judgels.sandalphon.submission.programming.SubmissionConsumer;
 import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
 import judgels.sandalphon.submission.programming.SubmissionRegrader;
 import judgels.sandalphon.submission.programming.SubmissionSourceBuilder;
@@ -102,7 +103,8 @@ public class SubmissionModule {
             ObjectMapper mapper,
             SubmissionStore submissionStore,
             @Named("sealtiel") BasicAuthHeader sealtielClientAuthHeader,
-            MessageService messageService) {
+            MessageService messageService,
+            StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
                 GradingResponseProcessor.class,
@@ -110,11 +112,13 @@ public class SubmissionModule {
                         ObjectMapper.class,
                         SubmissionStore.class,
                         BasicAuthHeader.class,
-                        MessageService.class},
+                        MessageService.class,
+                        SubmissionConsumer.class},
                 new Object[] {
                         mapper,
                         submissionStore,
                         sealtielClientAuthHeader,
-                        messageService});
+                        messageService,
+                        statsProcessor});
     }
 }
