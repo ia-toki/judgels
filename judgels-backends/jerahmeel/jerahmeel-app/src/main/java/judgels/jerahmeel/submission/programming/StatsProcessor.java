@@ -212,7 +212,7 @@ public class StatsProcessor implements SubmissionConsumer {
             model.userJid = s.getUserJid();
             model.courseJid = courseJid;
             model.progress = 1;
-            statsUserCourseDao.update(model);
+            statsUserCourseDao.insert(model);
         }
     }
 
