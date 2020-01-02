@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.ProblemSet;
+import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
 import judgels.jerahmeel.persistence.ProblemSetDao;
 import judgels.jerahmeel.persistence.ProblemSetModel;
 import judgels.persistence.SearchOptions;
@@ -86,6 +87,15 @@ public class ProblemSetStore {
                 .collect(Collectors.toMap(
                         c -> c.jid,
                         c -> ImmutableList.of(Optional.ofNullable(c.slug).orElse("" + c.id))));
+    }
+
+    public ProblemSet createProblemSet(ProblemSetCreateData data) {
+        ProblemSetModel model = new ProblemSetModel();
+        model.archiveJid = "";
+        model.slug = data.getSlug();
+        model.name = data.getSlug();
+        model.description = "";
+        return fromModel(problemSetDao.insert(model));
     }
 
     private static ProblemSet fromModel(ProblemSetModel model) {

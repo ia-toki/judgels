@@ -1,6 +1,7 @@
 package judgels.jerahmeel.persistence;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import judgels.persistence.Dao;
@@ -14,4 +15,5 @@ public interface ChapterProblemDao extends Dao<ChapterProblemModel> {
     List<ChapterProblemModel> selectAllBundleByChapterJid(String chapterJid, SelectionOptions options);
     List<ChapterProblemModel> selectAllProgrammingByChapterJid(String chapterJid, SelectionOptions options);
     int selectCountProgrammingByChapterJid(String chapterJid);
+    Map<String, Long> selectCountProgrammingByChapterJids(Set<String> chapterJids);
 }

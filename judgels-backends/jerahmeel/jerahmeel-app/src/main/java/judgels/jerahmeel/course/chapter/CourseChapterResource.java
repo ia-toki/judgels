@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.Chapter;
 import judgels.jerahmeel.api.chapter.ChapterInfo;
+import judgels.jerahmeel.api.chapter.ChapterProgress;
 import judgels.jerahmeel.api.course.chapter.CourseChapter;
 import judgels.jerahmeel.api.course.chapter.CourseChapterService;
 import judgels.jerahmeel.api.course.chapter.CourseChaptersResponse;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.course.CourseStore;
+import judgels.jerahmeel.stats.StatsStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -24,18 +26,21 @@ public class CourseChapterResource implements CourseChapterService {
     private final CourseStore courseStore;
     private final CourseChapterStore courseChapterStore;
     private final ChapterStore chapterStore;
+    private final StatsStore statsStore;
 
     @Inject
     public CourseChapterResource(
             ActorChecker actorChecker,
             CourseStore courseStore,
             CourseChapterStore courseChapterStore,
-            ChapterStore chapterStore) {
+            ChapterStore chapterStore,
+            StatsStore statsStore) {
 
         this.actorChecker = actorChecker;
         this.courseStore = courseStore;
         this.courseChapterStore = courseChapterStore;
         this.chapterStore = chapterStore;
+        this.statsStore = statsStore;
     }
 
     @Override
@@ -47,10 +52,12 @@ public class CourseChapterResource implements CourseChapterService {
         List<CourseChapter> chapters = courseChapterStore.getChapters(courseJid);
         Set<String> chapterJids = chapters.stream().map(CourseChapter::getChapterJid).collect(Collectors.toSet());
         Map<String, ChapterInfo> chaptersMap = chapterStore.getChapterInfosByJids(chapterJids);
+        Map<String, ChapterProgress> chapterProgressesMap = statsStore.getChapterProgressesMap(actorJid, chapterJids);
 
         return new CourseChaptersResponse.Builder()
                 .data(chapters)
                 .chaptersMap(chaptersMap)
+                .chapterProgressesMap(chapterProgressesMap)
                 .build();
     }
 

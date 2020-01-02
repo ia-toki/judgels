@@ -1,10 +1,12 @@
 package judgels.jerahmeel.problemset.problem;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
@@ -45,6 +47,44 @@ public class ProblemSetProblemStore {
                 .stream()
                 .filter(problemAliases::containsKey)
                 .collect(Collectors.toMap(jid -> jid, problemAliases::get));
+    }
+
+    public Set<ProblemSetProblem> setProblems(String problemSetJid, List<ProblemSetProblem> data) {
+        Map<String, ProblemSetProblem> setProblems = data.stream().collect(
+                Collectors.toMap(ProblemSetProblem::getProblemJid, Function.identity()));
+        for (ProblemSetProblemModel model : problemDao.selectAllByProblemSetJid(problemSetJid, createOptions())) {
+            ProblemSetProblem existingProblem = setProblems.get(model.problemJid);
+            if (existingProblem == null || !existingProblem.getAlias().equals(model.alias)) {
+                problemDao.delete(model);
+            }
+        }
+
+        ImmutableSet.Builder<ProblemSetProblem> problems = ImmutableSet.builder();
+        for (ProblemSetProblem problem : data) {
+            problems.add(upsertProblem(
+                    problemSetJid,
+                    problem.getAlias(),
+                    problem.getProblemJid(),
+                    problem.getType()));
+        }
+        return problems.build();
+    }
+
+    public ProblemSetProblem upsertProblem(String problemSetJid, String alias, String problemJid, ProblemType type) {
+        Optional<ProblemSetProblemModel> maybeModel = problemDao.selectByProblemJid(problemJid);
+        if (maybeModel.isPresent()) {
+            ProblemSetProblemModel model = maybeModel.get();
+            model.alias = alias;
+            return fromModel(problemDao.update(model));
+        } else {
+            ProblemSetProblemModel model = new ProblemSetProblemModel();
+            model.problemSetJid = problemSetJid;
+            model.alias = alias;
+            model.problemJid = problemJid;
+            model.type = type.name();
+            model.status = "VISIBLE";
+            return fromModel(problemDao.insert(model));
+        }
     }
 
     private static SelectionOptions createOptions() {

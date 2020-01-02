@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.course.Course;
+import judgels.jerahmeel.api.course.CourseCreateData;
 import judgels.jerahmeel.persistence.CourseDao;
 import judgels.jerahmeel.persistence.CourseModel;
 import judgels.jerahmeel.persistence.CourseModel_;
@@ -59,6 +60,14 @@ public class CourseStore {
                 .orderBy("slug")
                 .orderDir(OrderDir.ASC)
                 .build()), CourseStore::fromModel);
+    }
+
+    public Course createCourse(CourseCreateData data) {
+        CourseModel model = new CourseModel();
+        model.slug = data.getSlug();
+        model.name = data.getSlug();
+        model.description = "";
+        return fromModel(courseDao.insert(model));
     }
 
     private static Course fromModel(CourseModel model) {

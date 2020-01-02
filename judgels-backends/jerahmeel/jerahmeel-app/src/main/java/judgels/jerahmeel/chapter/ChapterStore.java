@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.Chapter;
+import judgels.jerahmeel.api.chapter.ChapterCreateData;
 import judgels.jerahmeel.api.chapter.ChapterInfo;
 import judgels.jerahmeel.persistence.ChapterDao;
 import judgels.jerahmeel.persistence.ChapterModel;
@@ -48,7 +49,6 @@ public class ChapterStore {
     private Chapter getChapterByJidUncached(String chapterJid) {
         return chapterDao.selectByJid(chapterJid).map(ChapterStore::fromModel).orElse(null);
     }
-
 
     public Map<String, ChapterInfo> getChapterInfosByJids(Set<String> chapterJids) {
         return chapterDao.selectByJids(chapterJids)
@@ -89,6 +89,13 @@ public class ChapterStore {
             }
         }
         return paths.build();
+    }
+
+    public Chapter createChapter(ChapterCreateData data) {
+        ChapterModel model = new ChapterModel();
+        model.name = data.getName();
+        model.description = "";
+        return fromModel(chapterDao.insert(model));
     }
 
     private static Chapter fromModel(ChapterModel model) {

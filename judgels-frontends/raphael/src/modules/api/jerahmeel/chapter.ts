@@ -11,6 +11,11 @@ export interface ChapterInfo {
   name: string;
 }
 
+export interface ChapterProgress {
+  solvedProblems: number;
+  totalProblems: number;
+}
+
 export const baseChaptersURL = `${APP_CONFIG.apiUrls.jerahmeel}/chapters`;
 
 export function baseChapterURL(chapterJid: string) {

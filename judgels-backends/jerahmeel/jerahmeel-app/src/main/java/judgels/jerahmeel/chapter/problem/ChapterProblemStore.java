@@ -1,10 +1,12 @@
 package judgels.jerahmeel.chapter.problem;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
@@ -32,14 +34,14 @@ public class ChapterProblemStore {
         return problemDao.selectByProblemJid(problemJid).map(ChapterProblemStore::fromModel);
     }
 
-    public List<String> getBundleProblemJids(String contestJid) {
+    public List<String> getBundleProblemJids(String chapterJid) {
         return Lists.transform(
-                problemDao.selectAllBundleByChapterJid(contestJid, createOptions()), model -> model.problemJid);
+                problemDao.selectAllBundleByChapterJid(chapterJid, createOptions()), model -> model.problemJid);
     }
 
-    public List<String> getProgrammingProblemJids(String contestJid) {
+    public List<String> getProgrammingProblemJids(String chapterJid) {
         return Lists.transform(
-                problemDao.selectAllProgrammingByChapterJid(contestJid, createOptions()), model -> model.problemJid);
+                problemDao.selectAllProgrammingByChapterJid(chapterJid, createOptions()), model -> model.problemJid);
     }
 
     public Optional<ChapterProblem> getProblemByAlias(String chapterJid, String problemAlias) {
@@ -55,6 +57,44 @@ public class ChapterProblemStore {
                 .stream()
                 .filter(problemAliases::containsKey)
                 .collect(Collectors.toMap(jid -> jid, problemAliases::get));
+    }
+
+    public Set<ChapterProblem> setProblems(String chapterJid, List<ChapterProblem> data) {
+        Map<String, ChapterProblem> setProblems = data.stream().collect(
+                Collectors.toMap(ChapterProblem::getProblemJid, Function.identity()));
+        for (ChapterProblemModel model : problemDao.selectAllByChapterJid(chapterJid, createOptions())) {
+            ChapterProblem existingProblem = setProblems.get(model.problemJid);
+            if (existingProblem == null || !existingProblem.getAlias().equals(model.alias)) {
+                problemDao.delete(model);
+            }
+        }
+
+        ImmutableSet.Builder<ChapterProblem> problems = ImmutableSet.builder();
+        for (ChapterProblem problem : data) {
+            problems.add(upsertProblem(
+                    chapterJid,
+                    problem.getAlias(),
+                    problem.getProblemJid(),
+                    problem.getType()));
+        }
+        return problems.build();
+    }
+
+    public ChapterProblem upsertProblem(String chapterJid, String alias, String problemJid, ProblemType type) {
+        Optional<ChapterProblemModel> maybeModel = problemDao.selectByProblemJid(problemJid);
+        if (maybeModel.isPresent()) {
+            ChapterProblemModel model = maybeModel.get();
+            model.alias = alias;
+            return fromModel(problemDao.update(model));
+        } else {
+            ChapterProblemModel model = new ChapterProblemModel();
+            model.chapterJid = chapterJid;
+            model.alias = alias;
+            model.problemJid = problemJid;
+            model.status = "VISIBLE";
+            model.type = type.name();
+            return fromModel(problemDao.insert(model));
+        }
     }
 
     private static SelectionOptions createOptions() {
