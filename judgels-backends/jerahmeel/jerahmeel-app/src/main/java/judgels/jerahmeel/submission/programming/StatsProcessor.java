@@ -139,8 +139,11 @@ public class StatsProcessor implements SubmissionConsumer {
             model.problemJid = s.getProblemJid();
             model.verdict = grading.getVerdict().getCode();
             model.score = grading.getScore();
-            model.time = time;
-            model.memory = memory;
+
+            if (isNowAccepted) {
+                model.time = time;
+                model.memory = memory;
+            }
 
             statsUserProblemDao.insert(model);
         }
