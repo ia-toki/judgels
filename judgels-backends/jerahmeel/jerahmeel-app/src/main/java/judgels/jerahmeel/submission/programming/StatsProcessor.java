@@ -152,10 +152,6 @@ public class StatsProcessor implements SubmissionConsumer {
     }
 
     private void processUserStats(Submission s, int scoreDiff) {
-        if (scoreDiff <= 0) {
-            return;
-        }
-
         Optional<StatsUserModel> maybeModel = statsUserDao.selectByUserJid(s.getUserJid());
         if (maybeModel.isPresent()) {
             StatsUserModel model = maybeModel.get();
@@ -218,9 +214,6 @@ public class StatsProcessor implements SubmissionConsumer {
     }
 
     private boolean processProblemSetStats(Submission s, int scoreDiff) {
-        if (scoreDiff <= 0) {
-            return false;
-        }
         if (!problemSetProblemDao.selectByProblemJid(s.getProblemJid()).isPresent()) {
             return false;
         }
