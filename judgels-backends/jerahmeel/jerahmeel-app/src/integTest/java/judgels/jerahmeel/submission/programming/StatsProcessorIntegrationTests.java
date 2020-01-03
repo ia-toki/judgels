@@ -1,5 +1,7 @@
 package judgels.jerahmeel.submission.programming;
 
+import static judgels.gabriel.api.Verdict.ACCEPTED;
+import static judgels.gabriel.api.Verdict.WRONG_ANSWER;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,6 +23,7 @@ import judgels.jerahmeel.api.chapter.ChapterProgress;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.course.Course;
 import judgels.jerahmeel.api.course.CourseCreateData;
+import judgels.jerahmeel.api.course.CourseProgress;
 import judgels.jerahmeel.api.course.chapter.CourseChapter;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
@@ -93,7 +96,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
-    void test() {
+    void chapter_flow() {
         Course course = courseStore.createCourse(new CourseCreateData.Builder().slug("course").build());
 
         Chapter chapter1 = chapterStore.createChapter(new ChapterCreateData.Builder().name("chapter1").build());
@@ -115,22 +118,27 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         problemSetProblemStore.setProblems(problemSet.getJid(), ImmutableList.of(
                 new ProblemSetProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_4).build()));
 
+        assertCourseProgress(course.getJid(), 0, 2);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
-        submit(chapter1.getJid(), PROBLEM_JID_1, Verdict.WRONG_ANSWER, 20, 100, 32000);
+        submit(chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 20, 100, 32000);
 
+        assertCourseProgress(course.getJid(), 0, 2);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
-        submit(chapter1.getJid(), PROBLEM_JID_1, Verdict.WRONG_ANSWER, 70, 100, 32000);
+        submit(chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 70, 100, 32000);
 
+        assertCourseProgress(course.getJid(), 0, 2);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
-        submit(chapter1.getJid(), PROBLEM_JID_1, Verdict.ACCEPTED, 100, 100, 32000);
+        submit(chapter1.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 100, 32000);
 
+        assertCourseProgress(course.getJid(), 1, 2);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 2);
 
-        submit(chapter1.getJid(), PROBLEM_JID_1, Verdict.WRONG_ANSWER, 50, 100, 32000);
+        submit(chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 50, 100, 32000);
 
+        assertCourseProgress(course.getJid(), 1, 2);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 2);
     }
 
@@ -165,6 +173,15 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                                 .build())
                         .build())
                 .build());
+    }
+
+    private void assertCourseProgress(String courseJid, int solved, int total) {
+        assertThat(statsStore.getCourseProgressesMap(USER_JID, ImmutableSet.of(courseJid)))
+                .isEqualTo(ImmutableMap.of(
+                        courseJid, new CourseProgress.Builder()
+                                .solvedChapters(solved)
+                                .totalChapters(total)
+                                .build()));
     }
 
     private void assertChapterProgresses(

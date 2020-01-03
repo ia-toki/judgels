@@ -9,9 +9,15 @@ export interface Course {
   description?: string;
 }
 
+export interface CourseProgress {
+  solvedChapters: number;
+  totalChapters: number;
+}
+
 export interface CoursesResponse {
   data: Course[];
   curriculumDescription?: string;
+  courseProgressesMap: { [courseJid: string]: CourseProgress };
 }
 
 export const baseCoursesURL = `${APP_CONFIG.apiUrls.jerahmeel}/courses`;

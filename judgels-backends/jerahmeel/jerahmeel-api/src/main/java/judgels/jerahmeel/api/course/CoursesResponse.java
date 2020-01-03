@@ -2,6 +2,7 @@ package judgels.jerahmeel.api.course;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.immutables.value.Value;
 
@@ -10,6 +11,7 @@ import org.immutables.value.Value;
 public interface CoursesResponse {
     List<Course> getData();
     Optional<String> getCurriculumDescription();
+    Map<String, CourseProgress> getCourseProgressesMap();
 
     class Builder extends ImmutableCoursesResponse.Builder {}
 }
