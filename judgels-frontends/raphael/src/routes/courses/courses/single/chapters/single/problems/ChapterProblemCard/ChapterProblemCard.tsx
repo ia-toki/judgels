@@ -8,7 +8,6 @@ import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { ChapterProblem } from '../../../../../../../../modules/api/jerahmeel/chapterProblem';
 import { ProblemProgress } from '../../../../../../../../modules/api/jerahmeel/problem';
-import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 
 import './ChapterProblemCard.css';
 
@@ -26,10 +25,10 @@ export class ChapterProblemCard extends React.PureComponent<ChapterProblemCardPr
 
     return (
       <ContentCardLink to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}`}>
-        <div data-key="name" className="chapter-problem-card__name">
+        <h4 data-key="name">
           {problem.alias}. {problemName}
           {this.renderProgress()}
-        </div>
+        </h4>
         {this.renderProgressBar()}
       </ContentCardLink>
     );
@@ -37,7 +36,7 @@ export class ChapterProblemCard extends React.PureComponent<ChapterProblemCardPr
 
   private renderProgress = () => {
     const { problem, progress } = this.props;
-    if (problem.type === ProblemType.Bundle || !progress || progress.verdict === VerdictCode.PND) {
+    if (problem.type === ProblemType.Bundle || !progress) {
       return null;
     }
 

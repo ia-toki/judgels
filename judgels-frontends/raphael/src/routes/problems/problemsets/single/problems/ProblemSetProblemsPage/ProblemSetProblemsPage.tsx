@@ -94,7 +94,7 @@ export class ProblemSetProblemsPage extends React.PureComponent<
       return <LoadingState />;
     }
 
-    const { data: problems } = response;
+    const { data: problems, problemProgressesMap, problemStatsMap } = response;
 
     if (problems.length === 0) {
       return (
@@ -109,6 +109,8 @@ export class ProblemSetProblemsPage extends React.PureComponent<
         problemSet: this.props.problemSet,
         problem,
         problemName: getProblemName(this.state.response!.problemsMap[problem.problemJid], this.state.defaultLanguage),
+        progress: problemProgressesMap[problem.problemJid],
+        stats: problemStatsMap[problem.problemJid],
       };
       return <ProblemSetProblemCard key={problem.problemJid} {...props} />;
     });

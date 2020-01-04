@@ -4,6 +4,7 @@ import { get } from '../../../modules/api/http';
 
 import { ProblemInfo, ProblemType } from '../sandalphon/problem';
 import { baseProblemSetURL } from './problemSet';
+import { ProblemProgress, ProblemStats } from './problem';
 
 export interface ProblemSetProblem {
   alias: string;
@@ -14,6 +15,8 @@ export interface ProblemSetProblem {
 export interface ProblemSetProblemsResponse {
   data: ProblemSetProblem[];
   problemsMap: { [problemJid: string]: ProblemInfo };
+  problemProgressesMap: { [problemJid: string]: ProblemProgress };
+  problemStatsMap: { [problemJid: string]: ProblemStats };
 }
 
 export interface ProblemSetProblemWorksheet {

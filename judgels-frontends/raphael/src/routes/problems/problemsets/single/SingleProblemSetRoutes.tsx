@@ -53,8 +53,8 @@ const SingleProblemSetRoutes = (props: SingleProblemSetRoutesProps) => {
       </Button>
     ),
     contentHeader: (
-      <div className="single-problemSet-routes__header">
-        <h2 className="single-problemSet-routes__title">{problemSet.name}</h2>
+      <div className="single-problemset-routes__header">
+        <h2 className="single-problemset-routes__title">{problemSet.name}</h2>
         <div className="clearfix" />
       </div>
     ),
