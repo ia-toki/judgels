@@ -1,7 +1,8 @@
-import { Intent, Tag, ProgressBar } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
+import { ProgressTag } from '../../../../../../components/ProgressTag/ProgressTag';
+import { ProgressBar } from '../../../../../../components/ProgressBar/ProgressBar';
 import { Course } from '../../../../../../modules/api/jerahmeel/course';
 import { ChapterProgress } from '../../../../../../modules/api/jerahmeel/chapter';
 import { CourseChapter } from '../../../../../../modules/api/jerahmeel/courseChapter';
@@ -39,47 +40,18 @@ export class CourseChapterCard extends React.PureComponent<CourseChapterCardProp
     }
 
     const { solvedProblems, totalProblems } = progress;
-
-    let intent: Intent;
-    if (solvedProblems === totalProblems) {
-      intent = Intent.SUCCESS;
-    } else if (solvedProblems > 0) {
-      intent = Intent.WARNING;
-    } else {
-      intent = Intent.NONE;
-    }
     return (
-      <div className="course-chapter-card__progress">
-        <Tag intent={intent}>
-          {solvedProblems} / {totalProblems} problems solved
-        </Tag>
-      </div>
+      <ProgressTag className="course-chapter-card__progress" num={solvedProblems} denom={totalProblems}>
+        {solvedProblems} / {totalProblems} problems solved
+      </ProgressTag>
     );
   };
 
   private renderProgressBar = () => {
     const { progress } = this.props;
-    if (!progress || progress.totalProblems === 0) {
+    if (!progress) {
       return null;
     }
-
-    const { solvedProblems, totalProblems } = progress;
-
-    let intent: Intent;
-    if (solvedProblems === totalProblems) {
-      intent = Intent.SUCCESS;
-    } else if (solvedProblems > 0) {
-      intent = Intent.WARNING;
-    } else {
-      intent = Intent.NONE;
-    }
-    return (
-      <ProgressBar
-        animate={false}
-        stripes={solvedProblems < totalProblems}
-        intent={intent}
-        value={solvedProblems / totalProblems}
-      />
-    );
+    return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
   };
 }

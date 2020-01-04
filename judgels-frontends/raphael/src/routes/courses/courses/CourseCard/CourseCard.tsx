@@ -1,7 +1,8 @@
-import { Tag, Intent, ProgressBar } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
+import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
+import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';
 import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
 import { Course, CourseProgress } from '../../../../modules/api/jerahmeel/course';
 
@@ -39,47 +40,20 @@ export class CourseCard extends React.PureComponent<CourseCardProps> {
     }
 
     const { solvedChapters, totalChapters } = progress;
-
-    let intent: Intent;
-    if (solvedChapters === totalChapters) {
-      intent = Intent.SUCCESS;
-    } else if (solvedChapters > 0) {
-      intent = Intent.WARNING;
-    } else {
-      intent = Intent.NONE;
-    }
     return (
       <div className="course-card__progress">
-        <Tag intent={intent}>
+        <ProgressTag num={solvedChapters} denom={totalChapters}>
           {solvedChapters} / {totalChapters} chapters completed
-        </Tag>
+        </ProgressTag>
       </div>
     );
   };
 
   private renderProgressBar = () => {
     const { progress } = this.props;
-    if (!progress || progress.totalChapters === 0) {
+    if (!progress) {
       return null;
     }
-
-    const { solvedChapters, totalChapters } = progress;
-
-    let intent: Intent;
-    if (solvedChapters === totalChapters) {
-      intent = Intent.SUCCESS;
-    } else if (solvedChapters > 0) {
-      intent = Intent.WARNING;
-    } else {
-      intent = Intent.NONE;
-    }
-    return (
-      <ProgressBar
-        animate={false}
-        stripes={solvedChapters < totalChapters}
-        intent={intent}
-        value={solvedChapters / totalChapters}
-      />
-    );
+    return <ProgressBar num={progress.solvedChapters} denom={progress.totalChapters} />;
   };
 }

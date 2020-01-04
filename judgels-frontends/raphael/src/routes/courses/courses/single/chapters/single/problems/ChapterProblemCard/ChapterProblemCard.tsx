@@ -1,12 +1,14 @@
-import { Tag } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
+import { VerdictProgressTag } from '../../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
+import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
+import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
 import { Course } from '../../../../../../../../modules/api/jerahmeel/course';
 import { CourseChapter } from '../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { ChapterProblem } from '../../../../../../../../modules/api/jerahmeel/chapterProblem';
 import { ProblemProgress } from '../../../../../../../../modules/api/jerahmeel/problem';
-import { VerdictCode, getVerdictIntent } from '../../../../../../../../modules/api/gabriel/verdict';
+import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 
 import './ChapterProblemCard.css';
 
@@ -24,26 +26,30 @@ export class ChapterProblemCard extends React.PureComponent<ChapterProblemCardPr
 
     return (
       <ContentCardLink to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}`}>
-        <div data-key="name">
+        <div data-key="name" className="chapter-problem-card__name">
           {problem.alias}. {problemName}
           {this.renderProgress()}
         </div>
+        {this.renderProgressBar()}
       </ContentCardLink>
     );
   }
 
   private renderProgress = () => {
-    const { progress } = this.props;
-    if (!progress || progress.verdict === VerdictCode.PND) {
+    const { problem, progress } = this.props;
+    if (problem.type === ProblemType.Bundle || !progress || progress.verdict === VerdictCode.PND) {
       return null;
     }
 
-    const { verdict } = progress;
-    const intent = getVerdictIntent(verdict);
-    return (
-      <div className="chapter-problem-card__progress">
-        <Tag intent={intent}>{verdict}</Tag>
-      </div>
-    );
+    const { verdict, score } = progress;
+    return <VerdictProgressTag className="chapter-problem-card__progress" verdict={verdict} score={score} />;
+  };
+
+  private renderProgressBar = () => {
+    const { problem, progress } = this.props;
+    if (problem.type === ProblemType.Bundle || !progress) {
+      return null;
+    }
+    return <ProgressBar num={progress.score} denom={100} />;
   };
 }
