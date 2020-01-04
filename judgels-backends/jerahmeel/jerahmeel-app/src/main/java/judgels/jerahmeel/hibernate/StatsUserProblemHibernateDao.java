@@ -12,7 +12,6 @@ import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
 import judgels.jerahmeel.persistence.StatsUserProblemModel_;
@@ -52,7 +51,7 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
     }
 
     @Override
-    public Map<String, Long> selectCountsAcceptedByProblemJids(Set<String> problemJids) {
+    public Map<String, Long> selectTotalScoresByProblemJids(Set<String> problemJids) {
         if (problemJids.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -63,10 +62,9 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
 
         cq.select(cb.tuple(
                 root.get(StatsUserProblemModel_.problemJid),
-                cb.count(root)));
+                cb.sum(root.get(StatsUserProblemModel_.score))));
 
         cq.where(
-                cb.equal(root.get(StatsUserProblemModel_.verdict), Verdict.ACCEPTED.getCode()),
                 root.get(StatsUserProblemModel_.problemJid).in(problemJids));
 
         cq.groupBy(

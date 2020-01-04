@@ -11,6 +11,6 @@ public interface StatsUserProblemDao extends Dao<StatsUserProblemModel> {
     Optional<StatsUserProblemModel> selectByUserJidAndProblemJid(String userJid, String problemJid);
     List<StatsUserProblemModel> selectAllByUserJidAndProblemJids(String userJid, Set<String> problemJids);
     List<StatsUserProblemModel> selectAllByProblemJid(String problemJid, SelectionOptions options);
-    Map<String, Long> selectCountsAcceptedByProblemJids(Set<String> problemJids);
+    Map<String, Long> selectTotalScoresByProblemJids(Set<String> problemJids);
     Map<String, Long> selectCountsTriedByProblemJids(Set<String> problemJids);
 }
