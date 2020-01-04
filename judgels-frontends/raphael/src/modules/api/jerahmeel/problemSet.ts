@@ -13,10 +13,16 @@ export interface ProblemSet {
   description: string;
 }
 
+export interface ProblemSetProgress {
+  score: number;
+  totalProblems: number;
+}
+
 export interface ProblemSetsResponse {
   data: Page<ProblemSet>;
   archiveDescriptionsMap: { [archiveJid: string]: string };
   archiveName?: string;
+  problemSetProgressesMap: { [problemSetJid: string]: ProblemSetProgress };
 }
 
 export const baseProblemSetsURL = `${APP_CONFIG.apiUrls.jerahmeel}/problemsets`;

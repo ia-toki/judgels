@@ -3,13 +3,14 @@ import * as React from 'react';
 
 export interface ProgressTagProps {
   className?: string;
+  large?: boolean;
   num: number;
   denom: number;
   children: any;
 }
 
 export const ProgressTag = (props: ProgressTagProps) => {
-  const { className, num, denom, children } = props;
+  const { className, large, num, denom, children } = props;
   if (denom === 0) {
     return null;
   }
@@ -25,7 +26,7 @@ export const ProgressTag = (props: ProgressTagProps) => {
     intent = Intent.WARNING;
   }
   return (
-    <Tag className={className} intent={intent}>
+    <Tag large={!!large} className={className} intent={intent}>
       {children}
     </Tag>
   );

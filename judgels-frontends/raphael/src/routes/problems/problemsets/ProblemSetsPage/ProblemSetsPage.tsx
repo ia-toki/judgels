@@ -129,7 +129,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
       return <LoadingState />;
     }
 
-    const { data, archiveDescriptionsMap } = response;
+    const { data, archiveDescriptionsMap, problemSetProgressesMap } = response;
     if (!data) {
       return <LoadingState />;
     }
@@ -145,6 +145,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
         key={problemSet.jid}
         problemSet={problemSet}
         archiveDescription={archiveDescriptionsMap[problemSet.archiveJid]}
+        progress={problemSetProgressesMap[problemSet.jid]}
       />
     ));
   };

@@ -1,14 +1,18 @@
 @import '../../../../styles/base';
 
 .problemset-card .content-card-link {
-  padding-bottom: 5px;
+  padding-bottom: 15px;
 }
 
-.problemset-card-name {
+.problemset-card__name {
   margin-right: 10px;
 }
 
-.problemset-card-description {
+.problemset-card__description {
   color: $small-color;
   font-size: $font-size-small;
+}
+
+.problemset-card__progress {
+  float: right;
 }

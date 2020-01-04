@@ -3,6 +3,8 @@ import * as React from 'react';
 
 import { getVerdictIntent } from '../../modules/api/gabriel/verdict';
 
+import './ProgressBar.css';
+
 export interface ProgressBarProps {
   num: number;
   denom: number;
