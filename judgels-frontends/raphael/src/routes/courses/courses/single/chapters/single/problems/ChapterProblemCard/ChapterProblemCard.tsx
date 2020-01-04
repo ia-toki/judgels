@@ -38,7 +38,7 @@ export class ChapterProblemCard extends React.PureComponent<ChapterProblemCardPr
       return null;
     }
 
-    const { verdict, score } = progress;
+    const { verdict } = progress;
     const intent = getVerdictIntent(verdict);
     return (
       <div className="chapter-problem-card__progress">

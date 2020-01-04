@@ -1,4 +1,4 @@
-import { Intent, Tag } from '@blueprintjs/core';
+import { Intent, Tag, ProgressBar } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
@@ -20,11 +20,14 @@ export class CourseChapterCard extends React.PureComponent<CourseChapterCardProp
     const { course, chapter, chapterName } = this.props;
 
     return (
-      <ContentCardLink to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
+      <ContentCardLink to={`/courses/${course.slug}/chapters/${chapter.alias}`} className="couse-chapter-card">
         <div data-key="name">
-          {chapter.alias}. {chapterName}
-          {this.renderProgress()}
+          <h4>
+            {chapter.alias}. {chapterName}
+            {this.renderProgress()}
+          </h4>
         </div>
+        {this.renderProgressBar()}
       </ContentCardLink>
     );
   }
@@ -51,6 +54,32 @@ export class CourseChapterCard extends React.PureComponent<CourseChapterCardProp
           {solvedProblems} / {totalProblems} problems solved
         </Tag>
       </div>
+    );
+  };
+
+  private renderProgressBar = () => {
+    const { progress } = this.props;
+    if (!progress || progress.totalProblems === 0) {
+      return null;
+    }
+
+    const { solvedProblems, totalProblems } = progress;
+
+    let intent: Intent;
+    if (solvedProblems === totalProblems) {
+      intent = Intent.SUCCESS;
+    } else if (solvedProblems > 0) {
+      intent = Intent.WARNING;
+    } else {
+      intent = Intent.NONE;
+    }
+    return (
+      <ProgressBar
+        animate={false}
+        stripes={solvedProblems < totalProblems}
+        intent={intent}
+        value={solvedProblems / totalProblems}
+      />
     );
   };
 }
