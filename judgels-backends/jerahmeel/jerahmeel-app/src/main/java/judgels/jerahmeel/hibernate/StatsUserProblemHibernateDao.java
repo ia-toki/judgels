@@ -99,4 +99,32 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
                 .stream()
                 .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
     }
+
+    @Override
+    public long selectCountTriedByUserJid(String userJid) {
+        return selectCount(new FilterOptions.Builder<StatsUserProblemModel>()
+                .putColumnsEq(StatsUserProblemModel_.userJid, userJid)
+                .build());
+    }
+
+    @Override
+    public Map<String, Long> selectCountsVerdictByUserJid(String userJid) {
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<StatsUserProblemModel> root = cq.from(getEntityClass());
+
+        cq.select(cb.tuple(
+                root.get(StatsUserProblemModel_.verdict),
+                cb.count(root)));
+
+        cq.where(
+                cb.equal(root.get(StatsUserProblemModel_.userJid), userJid));
+
+        cq.groupBy(
+                root.get(StatsUserProblemModel_.verdict));
+
+        return currentSession().createQuery(cq).getResultList()
+                .stream()
+                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
+    }
 }

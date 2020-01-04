@@ -20,6 +20,7 @@ import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionResource;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
+import judgels.jerahmeel.user.UserStatsResource;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsApplicationModule;
 import judgels.service.JudgelsModule;
@@ -57,6 +58,7 @@ public interface JerahmeelComponent {
     ProblemSetProblemResource problemSetProblemResource();
     ItemSubmissionResource itemSubmissionResource();
     SubmissionResource submissionResource();
+    UserStatsResource userStatsResource();
     PingResource pingResource();
 
     JudgelsScheduler scheduler();

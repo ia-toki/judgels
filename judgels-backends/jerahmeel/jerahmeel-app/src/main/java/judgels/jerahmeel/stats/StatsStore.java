@@ -16,11 +16,15 @@ import judgels.jerahmeel.api.problem.ProblemStats;
 import judgels.jerahmeel.api.problem.ProblemTopStats;
 import judgels.jerahmeel.api.problem.ProblemTopStatsEntry;
 import judgels.jerahmeel.api.problemset.ProblemSetProgress;
+import judgels.jerahmeel.api.user.UserStats;
+import judgels.jerahmeel.api.user.UserTopStats;
+import judgels.jerahmeel.api.user.UserTopStatsEntry;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
 import judgels.jerahmeel.persistence.StatsUserChapterDao;
 import judgels.jerahmeel.persistence.StatsUserCourseDao;
+import judgels.jerahmeel.persistence.StatsUserDao;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
 import judgels.jerahmeel.persistence.StatsUserProblemSetDao;
@@ -36,6 +40,7 @@ public class StatsStore {
     private final StatsUserChapterDao statsUserChapterDao;
     private final StatsUserProblemDao statsUserProblemDao;
     private final StatsUserProblemSetDao statsUserProblemSetDao;
+    private final StatsUserDao statsUserDao;
 
     @Inject
     public StatsStore(
@@ -45,7 +50,8 @@ public class StatsStore {
             StatsUserCourseDao statsUserCourseDao,
             StatsUserChapterDao statsUserChapterDao,
             StatsUserProblemDao statsUserProblemDao,
-            StatsUserProblemSetDao statsUserProblemSetDao) {
+            StatsUserProblemSetDao statsUserProblemSetDao,
+            StatsUserDao statsUserDao) {
 
         this.courseChapterDao = courseChapterDao;
         this.chapterProblemDao = chapterProblemDao;
@@ -54,6 +60,7 @@ public class StatsStore {
         this.statsUserChapterDao = statsUserChapterDao;
         this.statsUserProblemDao = statsUserProblemDao;
         this.statsUserProblemSetDao = statsUserProblemSetDao;
+        this.statsUserDao = statsUserDao;
     }
 
     public Map<String, CourseProgress> getCourseProgressesMap(String userJid, Set<String> courseJids) {
@@ -154,5 +161,34 @@ public class StatsStore {
                         .score(Optional.ofNullable(modelsMap.get(jid)).map(m -> m.score).orElse(0))
                         .totalProblems(totalProblemsMap.getOrDefault(jid, 0L).intValue())
                         .build()));
+    }
+
+    public UserStats getUserStats(String userJid) {
+        int totalScores = statsUserDao.selectByUserJid(userJid).map(m -> m.score).orElse(0);
+        int totalProblemsTried = (int) statsUserProblemDao.selectCountTriedByUserJid(userJid);
+        Map<String, Long> totalProblemVerdictsMap = statsUserProblemDao.selectCountsVerdictByUserJid(userJid);
+
+        return new UserStats.Builder()
+                .totalScores(totalScores)
+                .totalProblemsTried(totalProblemsTried)
+                .totalProblemVerdictsMap(totalProblemVerdictsMap)
+                .build();
+    }
+
+    public UserTopStats getTopUserStats(Optional<Integer> page, Optional<Integer> pageSize) {
+        SelectionOptions.Builder options = new SelectionOptions.Builder()
+                .from(SelectionOptions.DEFAULT_PAGED)
+                .orderBy("score")
+                .orderDir(OrderDir.DESC)
+                .orderBy2("updatedAt")
+                .orderDir2(OrderDir.ASC);
+
+        page.ifPresent(options::page);
+        pageSize.ifPresent(options::pageSize);
+
+        List<UserTopStatsEntry> entries = statsUserDao.selectPaged(options.build()).getPage().stream()
+                .map(m -> new UserTopStatsEntry.Builder().userJid(m.userJid).totalScores(m.score).build())
+                .collect(Collectors.toList());
+        return new UserTopStats.Builder().topUsers(entries).build();
     }
 }

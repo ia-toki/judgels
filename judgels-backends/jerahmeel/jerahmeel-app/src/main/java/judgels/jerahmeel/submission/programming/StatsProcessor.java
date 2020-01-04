@@ -75,6 +75,7 @@ public class StatsProcessor implements SubmissionConsumer {
         if (SubmissionUtils.isChapter(submission.getContainerJid())) {
             if (processChapterStats(submission, res.becomesAccepted)) {
                 processCourseStats(submission);
+                processUserStats(submission, res.scoreDiff);
             }
         } else {
             if (processProblemSetStats(submission, res.scoreDiff)) {

@@ -3,6 +3,7 @@ package judgels.jerahmeel.submission.programming;
 import static judgels.gabriel.api.Verdict.ACCEPTED;
 import static judgels.gabriel.api.Verdict.OK;
 import static judgels.gabriel.api.Verdict.PENDING;
+import static judgels.gabriel.api.Verdict.RUNTIME_ERROR;
 import static judgels.gabriel.api.Verdict.WRONG_ANSWER;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,6 +13,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.SandboxExecutionResult;
 import judgels.gabriel.api.SandboxExecutionStatus;
@@ -36,6 +39,8 @@ import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
 import judgels.jerahmeel.api.problemset.ProblemSetProgress;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
+import judgels.jerahmeel.api.user.UserStats;
+import judgels.jerahmeel.api.user.UserTopStatsEntry;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
 import judgels.jerahmeel.course.CourseStore;
@@ -243,6 +248,21 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(30000).build(),
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
         assertProblemSetProgresses(problemSet.getJid(), 100, 100, 2);
+
+        submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_2, RUNTIME_ERROR, 40, 100, 32000);
+
+        assertUserStats(USER_JID_1, 140, 2, ImmutableMap.of(
+                ACCEPTED.getCode(), 1L,
+                RUNTIME_ERROR.getCode(), 1L));
+
+        assertUserStats(USER_JID_2, 100, 1, ImmutableMap.of(
+                ACCEPTED.getCode(), 1L));
+
+        assertUserTopStats(USER_JID_1, 140, USER_JID_2, 100);
+
+        submit(USER_JID_2, problemSet.getJid(), PROBLEM_JID_2, RUNTIME_ERROR, 40, 100, 32000);
+
+        assertUserTopStats(USER_JID_1, 140, USER_JID_2, 140);
     }
 
     private void submit(
@@ -345,5 +365,21 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                         .score(score2)
                         .totalProblems(total)
                         .build());
+    }
+
+    private void assertUserStats(String userJid, int total, int tried, Map<String, Long> verdicts) {
+        assertThat(statsStore.getUserStats(userJid))
+                .isEqualTo(new UserStats.Builder()
+                        .totalScores(total)
+                        .totalProblemsTried(tried)
+                        .totalProblemVerdictsMap(verdicts)
+                        .build());
+    }
+
+    private void assertUserTopStats(String userJid1, int total1, String userJid2, int total2) {
+        assertThat(statsStore.getTopUserStats(Optional.of(1), Optional.of(20)).getTopUsers())
+                .containsExactly(
+                        new UserTopStatsEntry.Builder().userJid(userJid1).totalScores(total1).build(),
+                        new UserTopStatsEntry.Builder().userJid(userJid2).totalScores(total2).build());
     }
 }
