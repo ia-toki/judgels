@@ -1,5 +1,6 @@
 package judgels.jerahmeel.hibernate;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -83,6 +84,10 @@ public class ChapterProblemHibernateDao extends HibernateDao<ChapterProblemModel
 
     @Override
     public Map<String, Long> selectCountProgrammingByChapterJids(Set<String> chapterJids) {
+        if (chapterJids.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<ChapterProblemModel> root = cq.from(getEntityClass());

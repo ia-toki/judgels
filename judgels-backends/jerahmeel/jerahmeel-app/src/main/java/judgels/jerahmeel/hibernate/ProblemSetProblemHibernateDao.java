@@ -1,5 +1,6 @@
 package judgels.jerahmeel.hibernate;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,6 +62,10 @@ public class ProblemSetProblemHibernateDao extends HibernateDao<ProblemSetProble
 
     @Override
     public Map<String, Long> selectCountsByProblemSetJids(Set<String> problemSetJids) {
+        if (problemSetJids.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
         CriteriaBuilder cb = currentSession().getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<ProblemSetProblemModel> root = cq.from(getEntityClass());
