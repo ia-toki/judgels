@@ -3,6 +3,7 @@ package judgels.jerahmeel.problemset;
 import static java.util.stream.Collectors.toSet;
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Map;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import judgels.jerahmeel.api.archive.Archive;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetProgress;
 import judgels.jerahmeel.api.problemset.ProblemSetService;
+import judgels.jerahmeel.api.problemset.ProblemSetStatsResponse;
 import judgels.jerahmeel.api.problemset.ProblemSetsResponse;
 import judgels.jerahmeel.archive.ArchiveStore;
 import judgels.jerahmeel.stats.StatsStore;
@@ -66,6 +68,18 @@ public class ProblemSetResource implements ProblemSetService {
                 .archiveDescriptionsMap(archiveDescriptionsMap)
                 .archiveName(archive.map(Archive::getName))
                 .problemSetProgressesMap(problemSetProgressesMap)
+                .build();
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ProblemSetStatsResponse getProblemSetStats(Optional<AuthHeader> authHeader, String problemSetJid) {
+        String actorJid = actorChecker.check(authHeader);
+        ProblemSetProgress progress = statsStore
+                .getProblemSetProgressesMap(actorJid, ImmutableSet.of(problemSetJid))
+                .get(problemSetJid);
+        return new ProblemSetStatsResponse.Builder()
+                .progress(progress)
                 .build();
     }
 

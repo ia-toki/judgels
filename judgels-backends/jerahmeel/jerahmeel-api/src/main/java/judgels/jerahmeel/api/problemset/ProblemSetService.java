@@ -24,6 +24,13 @@ public interface ProblemSetService {
             @QueryParam("page") Optional<Integer> page);
 
     @GET
+    @Path("/{problemSetJid}/stats")
+    @Produces(APPLICATION_JSON)
+    ProblemSetStatsResponse getProblemSetStats(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("problemSetJid") String problemSetJid);
+
+    @GET
     @Path("/slug/{problemSetSlug}")
     @Produces(APPLICATION_JSON)
     ProblemSet getProblemSetBySlug(
