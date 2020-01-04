@@ -33,6 +33,7 @@ import judgels.jerahmeel.api.problem.ProblemTopStats;
 import judgels.jerahmeel.api.problem.ProblemTopStatsEntry;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
+import judgels.jerahmeel.api.problemset.ProblemSetProgress;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.chapter.ChapterStore;
 import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
@@ -157,17 +158,27 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         ProblemSet problemSet = problemSetStore.createProblemSet(new ProblemSetCreateData.Builder().slug("ps").build());
 
         problemSetProblemStore.setProblems(problemSet.getJid(), ImmutableList.of(
-                new ProblemSetProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_1).build()));
+                new ProblemSetProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_1).build(),
+                new ProblemSetProblem.Builder().alias("B").type(PROGRAMMING).problemJid(PROBLEM_JID_2).build()));
 
         assertProblemProgresses(PENDING, 0, PENDING, 0);
         assertProblemStats(0, 0);
         assertProblemTopStats(ImmutableList.of(), ImmutableList.of());
+        assertProblemSetProgresses(problemSet.getJid(), 0, 0, 2);
+
+        submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 70, 100, 32000);
+
+        assertProblemProgresses(WRONG_ANSWER, 70, PENDING, 0);
+        assertProblemStats(0, 1);
+        assertProblemTopStats(ImmutableList.of(), ImmutableList.of());
+        assertProblemSetProgresses(problemSet.getJid(), 70, 0, 2);
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 50, 100, 32000);
 
         assertProblemProgresses(WRONG_ANSWER, 50, PENDING, 0);
         assertProblemStats(0, 1);
         assertProblemTopStats(ImmutableList.of(), ImmutableList.of());
+        assertProblemSetProgresses(problemSet.getJid(), 50, 0, 2);
 
         submit(USER_JID_2, problemSet.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 200, 40000);
 
@@ -178,6 +189,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build()),
                 ImmutableList.of(
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
+        assertProblemSetProgresses(problemSet.getJid(), 50, 100, 2);
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 50, 50000);
 
@@ -190,6 +202,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                 ImmutableList.of(
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build(),
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(50000).build()));
+        assertProblemSetProgresses(problemSet.getJid(), 100, 100, 2);
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 300, 30000);
 
@@ -202,6 +215,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                 ImmutableList.of(
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(30000).build(),
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
+        assertProblemSetProgresses(problemSet.getJid(), 100, 100, 2);
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 30, 1000, 60000);
 
@@ -214,6 +228,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                 ImmutableList.of(
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(30000).build(),
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
+        assertProblemSetProgresses(problemSet.getJid(), 100, 100, 2);
     }
 
     private void submit(
@@ -302,6 +317,19 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                 .isEqualTo(new ProblemTopStats.Builder()
                         .topUsersByTime(topTime)
                         .topUsersByMemory(topMemory)
+                        .build());
+    }
+
+    private void assertProblemSetProgresses(String problemSetJid, int score1, int score2, int total) {
+        assertThat(statsStore.getProblemSetProgressesMap(USER_JID_1, ImmutableSet.of(problemSetJid)).get(problemSetJid))
+                .isEqualTo(new ProblemSetProgress.Builder()
+                        .score(score1)
+                        .totalProblems(total)
+                        .build());
+        assertThat(statsStore.getProblemSetProgressesMap(USER_JID_2, ImmutableSet.of(problemSetJid)).get(problemSetJid))
+                .isEqualTo(new ProblemSetProgress.Builder()
+                        .score(score2)
+                        .totalProblems(total)
                         .build());
     }
 }

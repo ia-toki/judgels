@@ -12,6 +12,7 @@ public interface ProblemSetsResponse {
     Page<ProblemSet> getData();
     Map<String, String> getArchiveDescriptionsMap();
     Optional<String> getArchiveName();
+    Map<String, ProblemSetProgress> getProblemSetProgressesMap();
 
     class Builder extends ImmutableProblemSetsResponse.Builder {}
 }

@@ -118,15 +118,17 @@ public class StatsProcessor implements SubmissionConsumer {
             if (model.updatedAt.isAfter(s.getTime())) {
                 return null;
             }
-
             model.submissionJid = s.getJid();
 
+            scoreDiff = grading.getScore() - model.score;
             isAlreadyAccepted = isAccepted(Verdicts.fromCode(model.verdict), model.score);
+            if (isAlreadyAccepted) {
+                scoreDiff = Math.max(0, scoreDiff);
+            }
 
             if (!isAlreadyAccepted || grading.getScore() >= model.score) {
                 model.verdict = grading.getVerdict().getCode();
                 model.score = grading.getScore();
-                scoreDiff = grading.getScore() - model.score;
             }
             if (isNowAccepted) {
                 model.time = time;
