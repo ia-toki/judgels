@@ -229,6 +229,19 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(30000).build(),
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
         assertProblemSetProgresses(problemSet.getJid(), 100, 100, 2);
+
+        submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 200, 30000);
+
+        assertProblemProgresses(ACCEPTED, 100, ACCEPTED, 100);
+        assertProblemStats(200, 2);
+        assertProblemTopStats(
+                ImmutableList.of(
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(200).build()),
+                ImmutableList.of(
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(30000).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
+        assertProblemSetProgresses(problemSet.getJid(), 100, 100, 2);
     }
 
     private void submit(

@@ -1,6 +1,7 @@
 package judgels.persistence.api;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -13,6 +14,8 @@ public interface SelectionOptions {
     int getPageSize();
     String getOrderBy();
     OrderDir getOrderDir();
+    String getOrderBy2();
+    Optional<OrderDir> getOrderDir2();
 
     class Builder extends ImmutableSelectionOptions.Builder {
         public Builder() {
@@ -20,6 +23,7 @@ public interface SelectionOptions {
             pageSize(0);
             orderBy("id");
             orderDir(OrderDir.DESC);
+            orderBy2("id");
         }
     }
 }

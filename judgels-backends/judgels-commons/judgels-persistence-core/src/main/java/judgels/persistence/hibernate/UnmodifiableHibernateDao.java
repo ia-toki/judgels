@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
@@ -153,11 +154,19 @@ public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> exte
 
         applyFilters(cb, cq, root, filterOptions);
 
+        List<Order> orders = Lists.newArrayList();
+
         if (selectionOptions.getOrderDir() == OrderDir.ASC) {
-            cq.orderBy(cb.asc(root.get(selectionOptions.getOrderBy())), cb.asc(root.get(Model_.id)));
+            orders.add(cb.asc(root.get(selectionOptions.getOrderBy())));
         } else {
-            cq.orderBy(cb.desc(root.get(selectionOptions.getOrderBy())), cb.desc(root.get(Model_.id)));
+            orders.add(cb.desc(root.get(selectionOptions.getOrderBy())));
         }
+        if (selectionOptions.getOrderDir2().orElse(selectionOptions.getOrderDir()) == OrderDir.ASC) {
+            orders.add(cb.asc(root.get(selectionOptions.getOrderBy2())));
+        } else {
+            orders.add(cb.desc(root.get(selectionOptions.getOrderBy2())));
+        }
+        cq.orderBy(orders);
 
         Query<M> query = currentSession().createQuery(cq);
 
