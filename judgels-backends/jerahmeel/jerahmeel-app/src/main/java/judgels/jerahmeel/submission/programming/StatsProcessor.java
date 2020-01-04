@@ -67,18 +67,26 @@ public class StatsProcessor implements SubmissionConsumer {
 
     @Override
     public void accept(Submission submission) {
-        ProblemStatsResult res = processProblemStats(submission);
-        if (res == null) {
-            return;
-        }
-
         if (SubmissionUtils.isChapter(submission.getContainerJid())) {
-            if (processChapterStats(submission, res.becomesAccepted)) {
-                processCourseStats(submission);
+            ProblemStatsResult res = processProblemStats(submission);
+            if (res == null) {
+                return;
+            }
+
+            if (chapterProblemDao.selectByProblemJid(submission.getProblemJid()).isPresent()) {
+                if (processChapterStats(submission, res.becomesAccepted)) {
+                    processCourseStats(submission);
+                }
                 processUserStats(submission, res.scoreDiff);
             }
         } else {
-            if (processProblemSetStats(submission, res.scoreDiff)) {
+            ProblemStatsResult res = processProblemStats(submission);
+            if (res == null) {
+                return;
+            }
+
+            if (problemSetProblemDao.selectByProblemJid(submission.getProblemJid()).isPresent()) {
+                processProblemSetStats(submission, res.scoreDiff);
                 processUserStats(submission, res.scoreDiff);
             }
         }
@@ -224,11 +232,7 @@ public class StatsProcessor implements SubmissionConsumer {
         }
     }
 
-    private boolean processProblemSetStats(Submission s, int scoreDiff) {
-        if (!problemSetProblemDao.selectByProblemJid(s.getProblemJid()).isPresent()) {
-            return false;
-        }
-
+    private void processProblemSetStats(Submission s, int scoreDiff) {
         Optional<StatsUserProblemSetModel> maybeModel =
                 statsUserProblemSetDao.selectByUserJidAndProblemSetJid(s.getUserJid(), s.getContainerJid());
 
@@ -243,8 +247,6 @@ public class StatsProcessor implements SubmissionConsumer {
             model.score = scoreDiff;
             statsUserProblemSetDao.insert(model);
         }
-
-        return true;
     }
 
     private static boolean isAccepted(Verdict verdict, int score) {
