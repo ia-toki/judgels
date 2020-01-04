@@ -2,6 +2,7 @@ import { stringify } from 'query-string';
 
 import { get } from '../http';
 import { ProblemInfo, ProblemType } from '../sandalphon/problem';
+import { ProblemProgress } from './problem';
 import { baseChapterURL } from './chapter';
 
 export interface ChapterProblem {
@@ -13,6 +14,7 @@ export interface ChapterProblem {
 export interface ChapterProblemsResponse {
   data: ChapterProblem[];
   problemsMap: { [problemJid: string]: ProblemInfo };
+  problemProgressesMap: { [problemJid: string]: ProblemProgress };
 }
 
 export interface ChapterProblemWorksheet {

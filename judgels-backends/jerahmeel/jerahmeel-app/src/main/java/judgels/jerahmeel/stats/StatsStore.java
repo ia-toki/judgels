@@ -8,7 +8,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.gabriel.api.Verdict;
-import judgels.gabriel.api.Verdicts;
 import judgels.jerahmeel.api.chapter.ChapterProgress;
 import judgels.jerahmeel.api.course.CourseProgress;
 import judgels.jerahmeel.api.problem.ProblemProgress;
@@ -101,7 +100,7 @@ public class StatsStore {
                 Function.identity(),
                 jid -> new ProblemProgress.Builder()
                         .verdict(Optional.ofNullable(modelsMap.get(jid))
-                                .map(m -> Verdicts.fromCode(m.verdict)).orElse(Verdict.PENDING))
+                                .map(m -> m.verdict).orElse(Verdict.PENDING.getCode()))
                         .score(Optional.ofNullable(modelsMap.get(jid))
                                 .map(m -> m.score).orElse(0))
                         .build()));

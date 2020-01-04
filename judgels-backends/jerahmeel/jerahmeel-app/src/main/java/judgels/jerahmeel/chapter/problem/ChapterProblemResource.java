@@ -13,7 +13,9 @@ import judgels.jerahmeel.api.chapter.problem.ChapterProblem;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemService;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemWorksheet;
 import judgels.jerahmeel.api.chapter.problem.ChapterProblemsResponse;
+import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.chapter.ChapterStore;
+import judgels.jerahmeel.stats.StatsStore;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.ProblemClient;
@@ -25,33 +27,38 @@ public class ChapterProblemResource implements ChapterProblemService {
     private final ChapterStore chapterStore;
     private final ChapterProblemStore problemStore;
     private final ProblemClient problemClient;
+    private final StatsStore statsStore;
 
     @Inject
     public ChapterProblemResource(
             ActorChecker actorChecker,
             ChapterStore chapterStore,
             ChapterProblemStore problemStore,
-            ProblemClient problemClient) {
+            ProblemClient problemClient,
+            StatsStore statsStore) {
 
         this.actorChecker = actorChecker;
         this.chapterStore = chapterStore;
         this.problemStore = problemStore;
         this.problemClient = problemClient;
+        this.statsStore = statsStore;
     }
 
     @Override
     @UnitOfWork(readOnly = true)
     public ChapterProblemsResponse getProblems(Optional<AuthHeader> authHeader, String chapterJid) {
-        actorChecker.check(authHeader);
+        String actorJid = actorChecker.check(authHeader);
         checkFound(chapterStore.getChapterByJid(chapterJid));
 
         List<ChapterProblem> problems = problemStore.getProblems(chapterJid);
         Set<String> problemJids = problems.stream().map(ChapterProblem::getProblemJid).collect(Collectors.toSet());
         Map<String, ProblemInfo> problemsMap = problemClient.getProblems(problemJids);
+        Map<String, ProblemProgress> problemProgressesMap = statsStore.getProblemProgressesMap(actorJid, problemJids);
 
         return new ChapterProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemsMap)
+                .problemProgressesMap(problemProgressesMap)
                 .build();
     }
 

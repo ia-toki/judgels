@@ -328,12 +328,12 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
     private void assertProblemProgresses(Verdict verdict1, int score1, Verdict verdict2, int score2) {
         assertThat(statsStore.getProblemProgressesMap(USER_JID_1, ImmutableSet.of(PROBLEM_JID_1)).get(PROBLEM_JID_1))
                 .isEqualTo(new ProblemProgress.Builder()
-                        .verdict(verdict1)
+                        .verdict(verdict1.getCode())
                         .score(score1)
                         .build());
         assertThat(statsStore.getProblemProgressesMap(USER_JID_2, ImmutableSet.of(PROBLEM_JID_1)).get(PROBLEM_JID_1))
                 .isEqualTo(new ProblemProgress.Builder()
-                        .verdict(verdict2)
+                        .verdict(verdict2.getCode())
                         .score(score2)
                         .build());
     }
