@@ -13,7 +13,7 @@ export interface CoursePageProps {
 }
 
 export interface CoursesPageState {
-  response?: Partial<CoursesResponse>;
+  response?: CoursesResponse;
 }
 
 class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
@@ -34,14 +34,14 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
       return <LoadingCourseCard />;
     }
 
-    const { data: courses, curriculumDescription } = response;
+    const { data: courses, curriculumDescription, courseProgressesMap } = response;
 
     return (
       <>
         <HtmlText>{curriculumDescription}</HtmlText>
         <hr />
         {courses.map(course => (
-          <CourseCard key={course.jid} course={course} />
+          <CourseCard key={course.jid} course={course} progress={courseProgressesMap[course.jid]} />
         ))}
       </>
     );
