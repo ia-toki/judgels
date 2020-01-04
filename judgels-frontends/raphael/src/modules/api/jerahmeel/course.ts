@@ -27,11 +27,11 @@ export function baseCourseURL(courseJid: string) {
 }
 
 export const courseAPI = {
-  getCourses: (): Promise<CoursesResponse> => {
-    return get(`${baseCoursesURL}`);
+  getCourses: (token: string): Promise<CoursesResponse> => {
+    return get(`${baseCoursesURL}`, token);
   },
 
-  getCourseBySlug: (courseSlug: string): Promise<Course> => {
-    return get(`${baseCoursesURL}/slug/${courseSlug}`);
+  getCourseBySlug: (token: string, courseSlug: string): Promise<Course> => {
+    return get(`${baseCoursesURL}/slug/${courseSlug}`, token);
   },
 };

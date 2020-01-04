@@ -44,7 +44,7 @@ export class CourseChaptersPage extends React.PureComponent<CourseChaptersPagePr
       return <LoadingState />;
     }
 
-    const { data: chapters } = response;
+    const { data: chapters, chaptersMap, chapterProgressesMap } = response;
 
     if (chapters.length === 0) {
       return (
@@ -58,7 +58,8 @@ export class CourseChaptersPage extends React.PureComponent<CourseChaptersPagePr
       const props: CourseChapterCardProps = {
         course: this.props.course,
         chapter,
-        chapterName: this.state.response!.chaptersMap[chapter.chapterJid].name,
+        chapterName: chaptersMap[chapter.chapterJid].name,
+        progress: chapterProgressesMap[chapter.chapterJid],
       };
       return <CourseChapterCard key={chapter.chapterJid} {...props} />;
     });
