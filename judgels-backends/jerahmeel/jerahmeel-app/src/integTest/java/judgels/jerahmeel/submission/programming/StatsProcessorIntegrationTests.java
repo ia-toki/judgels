@@ -1,6 +1,7 @@
 package judgels.jerahmeel.submission.programming;
 
 import static judgels.gabriel.api.Verdict.ACCEPTED;
+import static judgels.gabriel.api.Verdict.OK;
 import static judgels.gabriel.api.Verdict.PENDING;
 import static judgels.gabriel.api.Verdict.WRONG_ANSWER;
 import static judgels.sandalphon.api.problem.ProblemType.PROGRAMMING;
@@ -147,7 +148,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         assertCourseProgress(course.getJid(), 1, 2);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 1, 2);
 
-        submit(USER_JID_1, chapter2.getJid(), PROBLEM_JID_3, ACCEPTED, 100, 100, 32000);
+        submit(USER_JID_1, chapter2.getJid(), PROBLEM_JID_3, OK, 100, 100, 32000);
 
         assertCourseProgress(course.getJid(), 2, 2);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 2, 2);
@@ -191,7 +192,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
         assertProblemSetProgresses(problemSet.getJid(), 50, 100, 2);
 
-        submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 50, 50000);
+        submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, OK, 100, 50, 50000);
 
         assertProblemProgresses(ACCEPTED, 100, ACCEPTED, 100);
         assertProblemStats(200, 2);

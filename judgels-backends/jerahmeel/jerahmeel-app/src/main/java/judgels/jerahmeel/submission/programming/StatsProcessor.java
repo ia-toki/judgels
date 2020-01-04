@@ -108,6 +108,8 @@ public class StatsProcessor implements SubmissionConsumer {
 
         boolean isAlreadyAccepted = false;
         boolean isNowAccepted = isAccepted(grading.getVerdict(), grading.getScore());
+
+        Verdict verdict = isNowAccepted ? Verdict.ACCEPTED : grading.getVerdict();
         int scoreDiff = grading.getScore();
 
         Optional<StatsUserProblemModel> maybeModel =
@@ -127,7 +129,7 @@ public class StatsProcessor implements SubmissionConsumer {
             }
 
             if (!isAlreadyAccepted || grading.getScore() >= model.score) {
-                model.verdict = grading.getVerdict().getCode();
+                model.verdict = verdict.getCode();
                 model.score = grading.getScore();
             }
             if (isNowAccepted) {
@@ -142,7 +144,7 @@ public class StatsProcessor implements SubmissionConsumer {
             model.userJid = s.getUserJid();
             model.problemJid = s.getProblemJid();
             model.submissionJid = s.getJid();
-            model.verdict = grading.getVerdict().getCode();
+            model.verdict = verdict.getCode();
             model.score = grading.getScore();
 
             if (isNowAccepted) {
