@@ -2,18 +2,26 @@ package judgels.jerahmeel.problemset.problem;
 
 import static judgels.service.ServiceUtils.checkFound;
 
+import com.google.common.collect.ImmutableSet;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.jerahmeel.api.problem.ProblemProgress;
+import judgels.jerahmeel.api.problem.ProblemStats;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemService;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemWorksheet;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemsResponse;
+import judgels.jerahmeel.api.problemset.problem.ProblemStatsResponse;
 import judgels.jerahmeel.problemset.ProblemSetStore;
+import judgels.jerahmeel.stats.StatsStore;
+import judgels.jophiel.api.profile.Profile;
+import judgels.jophiel.api.profile.ProfileService;
 import judgels.sandalphon.api.problem.ProblemInfo;
 import judgels.sandalphon.api.problem.ProblemType;
 import judgels.sandalphon.problem.ProblemClient;
@@ -25,18 +33,24 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
     private final ProblemSetStore problemSetStore;
     private final ProblemSetProblemStore problemStore;
     private final ProblemClient problemClient;
+    private final StatsStore statsStore;
+    private final ProfileService profileService;
 
     @Inject
     public ProblemSetProblemResource(
             ActorChecker actorChecker,
             ProblemSetStore problemSetStore,
             ProblemSetProblemStore problemStore,
-            ProblemClient problemClient) {
+            ProblemClient problemClient,
+            StatsStore statsStore,
+            ProfileService profileService) {
 
         this.actorChecker = actorChecker;
         this.problemSetStore = problemSetStore;
         this.problemStore = problemStore;
         this.problemClient = problemClient;
+        this.statsStore = statsStore;
+        this.profileService = profileService;
     }
 
     @Override
@@ -108,5 +122,33 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
                             .build())
                     .build();
         }
+    }
+
+    @Override
+    @UnitOfWork(readOnly = true)
+    public ProblemStatsResponse getProblemStats(
+            Optional<AuthHeader> authHeader,
+            String problemSetJid,
+            String problemAlias) {
+
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
+
+        ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
+        ProblemProgress progress = statsStore
+                .getProblemProgressesMap(actorJid, ImmutableSet.of(problem.getProblemJid()))
+                .get(problem.getProblemJid());
+        ProblemStats stats = statsStore.getProblemStats(problem.getProblemJid());
+
+        Set<String> userJids = new HashSet<>();
+        stats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
+        stats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
+        Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
+
+        return new ProblemStatsResponse.Builder()
+                .stats(stats)
+                .progress(progress)
+                .profilesMap(profilesMap)
+                .build();
     }
 }

@@ -119,6 +119,8 @@ public class StatsProcessor implements SubmissionConsumer {
                 return null;
             }
 
+            model.submissionJid = s.getJid();
+
             isAlreadyAccepted = isAccepted(Verdicts.fromCode(model.verdict), model.score);
 
             if (!isAlreadyAccepted || grading.getScore() >= model.score) {
@@ -137,6 +139,7 @@ public class StatsProcessor implements SubmissionConsumer {
 
             model.userJid = s.getUserJid();
             model.problemJid = s.getProblemJid();
+            model.submissionJid = s.getJid();
             model.verdict = grading.getVerdict().getCode();
             model.score = grading.getScore();
 
@@ -231,6 +234,7 @@ public class StatsProcessor implements SubmissionConsumer {
         } else {
             StatsUserProblemSetModel model = new StatsUserProblemSetModel();
             model.userJid = s.getUserJid();
+            model.problemSetJid = s.getContainerJid();
             model.score = scoreDiff;
             statsUserProblemSetDao.insert(model);
         }

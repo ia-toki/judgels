@@ -15,4 +15,5 @@
     <include file="migrations/006-add-slug-to-archive.xml"/>
     <include file="migrations/007-add-category-to-archive.xml"/>
     <include file="migrations/008-add-stats.xml"/>
+    <include file="migrations/009-add-submission_jid-to-stats_user_problem.xml"/>
 </databaseChangeLog>

@@ -22,6 +22,9 @@ public class StatsUserProblemModel extends Model {
     public String problemJid;
 
     @Column(nullable = false)
+    public String submissionJid;
+
+    @Column(nullable = false)
     public String verdict;
 
     @Column(nullable = false)

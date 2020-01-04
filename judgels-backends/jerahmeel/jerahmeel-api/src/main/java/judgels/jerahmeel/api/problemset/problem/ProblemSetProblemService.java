@@ -37,4 +37,13 @@ public interface ProblemSetProblemService {
             @PathParam("problemSetJid") String problemSetJid,
             @PathParam("problemAlias") String problemAlias,
             @QueryParam("language") Optional<String> language);
+
+    @GET
+    @Path("/{problemAlias}/stats")
+    @Produces(APPLICATION_JSON)
+    ProblemStatsResponse getProblemStats(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("problemSetJid") String problemSetJid,
+            @PathParam("problemAlias") String problemAlias);
+
 }

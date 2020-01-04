@@ -1,11 +1,23 @@
 package judgels.jerahmeel.hibernate;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import judgels.gabriel.api.Verdict;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
 import judgels.jerahmeel.persistence.StatsUserProblemModel_;
+import judgels.persistence.FilterOptions;
+import judgels.persistence.api.SelectionOptions;
 import judgels.persistence.hibernate.HibernateDao;
 import judgels.persistence.hibernate.HibernateDaoData;
 
@@ -20,5 +32,73 @@ public class StatsUserProblemHibernateDao extends HibernateDao<StatsUserProblemM
         return selectByUniqueColumns(ImmutableMap.of(
                 StatsUserProblemModel_.userJid, userJid,
                 StatsUserProblemModel_.problemJid, problemJid));
+    }
+
+    @Override
+    public List<StatsUserProblemModel> selectAllByUserJidAndProblemJids(String userJid, Set<String> problemJids) {
+        return selectAll(new FilterOptions.Builder<StatsUserProblemModel>()
+                .putColumnsEq(StatsUserProblemModel_.userJid, userJid)
+                .putColumnsIn(StatsUserProblemModel_.problemJid, problemJids)
+                .build());
+    }
+
+    @Override
+    public List<StatsUserProblemModel> selectAllByProblemJid(String problemJid, SelectionOptions options) {
+        return selectAll(new FilterOptions.Builder<StatsUserProblemModel>()
+                .putColumnsEq(StatsUserProblemModel_.problemJid, problemJid)
+                .addCustomPredicates((cb, cq, root) -> cb.notEqual(root.get(StatsUserProblemModel_.time), 0))
+                .addCustomPredicates((cb, cq, root) -> cb.notEqual(root.get(StatsUserProblemModel_.memory), 0))
+                .build(), options);
+    }
+
+    @Override
+    public Map<String, Long> selectCountsAcceptedByProblemJids(Set<String> problemJids) {
+        if (problemJids.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<StatsUserProblemModel> root = cq.from(getEntityClass());
+
+        cq.select(cb.tuple(
+                root.get(StatsUserProblemModel_.problemJid),
+                cb.count(root)));
+
+        cq.where(
+                cb.equal(root.get(StatsUserProblemModel_.verdict), Verdict.ACCEPTED.getCode()),
+                root.get(StatsUserProblemModel_.problemJid).in(problemJids));
+
+        cq.groupBy(
+                root.get(StatsUserProblemModel_.problemJid));
+
+        return currentSession().createQuery(cq).getResultList()
+                .stream()
+                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
+    }
+
+    @Override
+    public Map<String, Long> selectCountsTriedByProblemJids(Set<String> problemJids) {
+        if (problemJids.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        CriteriaBuilder cb = currentSession().getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<StatsUserProblemModel> root = cq.from(getEntityClass());
+
+        cq.select(cb.tuple(
+                root.get(StatsUserProblemModel_.problemJid),
+                cb.count(root)));
+
+        cq.where(
+                root.get(StatsUserProblemModel_.problemJid).in(problemJids));
+
+        cq.groupBy(
+                root.get(StatsUserProblemModel_.problemJid));
+
+        return currentSession().createQuery(cq).getResultList()
+                .stream()
+                .collect(Collectors.toMap(tuple -> tuple.get(0, String.class), tuple -> tuple.get(1, Long.class)));
     }
 }
