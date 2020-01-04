@@ -29,7 +29,8 @@ import judgels.jerahmeel.api.course.CourseProgress;
 import judgels.jerahmeel.api.course.chapter.CourseChapter;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.api.problem.ProblemStats;
-import judgels.jerahmeel.api.problem.ProblemStatsEntry;
+import judgels.jerahmeel.api.problem.ProblemTopStats;
+import judgels.jerahmeel.api.problem.ProblemTopStatsEntry;
 import judgels.jerahmeel.api.problemset.ProblemSet;
 import judgels.jerahmeel.api.problemset.ProblemSetCreateData;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
@@ -159,54 +160,60 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                 new ProblemSetProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_1).build()));
 
         assertProblemProgresses(PENDING, 0, PENDING, 0);
-        assertProblemStats(0, 0, ImmutableList.of(), ImmutableList.of());
+        assertProblemStats(0, 0);
+        assertProblemTopStats(ImmutableList.of(), ImmutableList.of());
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 50, 100, 32000);
 
         assertProblemProgresses(WRONG_ANSWER, 50, PENDING, 0);
-        assertProblemStats(0, 1, ImmutableList.of(), ImmutableList.of());
+        assertProblemStats(0, 1);
+        assertProblemTopStats(ImmutableList.of(), ImmutableList.of());
 
         submit(USER_JID_2, problemSet.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 200, 40000);
 
         assertProblemProgresses(WRONG_ANSWER, 50, ACCEPTED, 100);
-        assertProblemStats(1, 2,
+        assertProblemStats(1, 2);
+        assertProblemTopStats(
                 ImmutableList.of(
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_2).stats(200).build()),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build()),
                 ImmutableList.of(
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 50, 50000);
 
         assertProblemProgresses(ACCEPTED, 100, ACCEPTED, 100);
-        assertProblemStats(2, 2,
+        assertProblemStats(2, 2);
+        assertProblemTopStats(
                 ImmutableList.of(
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_1).stats(50).build(),
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_2).stats(200).build()),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(50).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build()),
                 ImmutableList.of(
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build(),
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_1).stats(50000).build()));
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(50000).build()));
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 300, 30000);
 
         assertProblemProgresses(ACCEPTED, 100, ACCEPTED, 100);
-        assertProblemStats(2, 2,
+        assertProblemStats(2, 2);
+        assertProblemTopStats(
                 ImmutableList.of(
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_2).stats(200).build(),
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_1).stats(300).build()),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(300).build()),
                 ImmutableList.of(
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_1).stats(30000).build(),
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(30000).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 30, 1000, 60000);
 
         assertProblemProgresses(ACCEPTED, 100, ACCEPTED, 100);
-        assertProblemStats(2, 2,
+        assertProblemStats(2, 2);
+        assertProblemTopStats(
                 ImmutableList.of(
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_2).stats(200).build(),
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_1).stats(300).build()),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(300).build()),
                 ImmutableList.of(
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_1).stats(30000).build(),
-                        new ProblemStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(30000).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(40000).build()));
     }
 
     private void submit(
@@ -282,13 +289,17 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                         .build());
     }
 
-    private void assertProblemStats(
-            int accepted, int tried, List<ProblemStatsEntry> topTime, List<ProblemStatsEntry> topMemory) {
-
-        assertThat(statsStore.getProblemStats(PROBLEM_JID_1))
+    private void assertProblemStats(int accepted, int tried) {
+        assertThat(statsStore.getProblemStatsMap(ImmutableSet.of(PROBLEM_JID_1)).get(PROBLEM_JID_1))
                 .isEqualTo(new ProblemStats.Builder()
                         .totalUsersAccepted(accepted)
                         .totalUsersTried(tried)
+                        .build());
+    }
+
+    private void assertProblemTopStats(List<ProblemTopStatsEntry> topTime, List<ProblemTopStatsEntry> topMemory) {
+        assertThat(statsStore.getProblemTopStats(PROBLEM_JID_1))
+                .isEqualTo(new ProblemTopStats.Builder()
                         .topUsersByTime(topTime)
                         .topUsersByMemory(topMemory)
                         .build());

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.api.problem.ProblemStats;
+import judgels.jerahmeel.api.problem.ProblemTopStats;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblem;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemService;
 import judgels.jerahmeel.api.problemset.problem.ProblemSetProblemWorksheet;
@@ -56,16 +57,20 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
     @Override
     @UnitOfWork(readOnly = true)
     public ProblemSetProblemsResponse getProblems(Optional<AuthHeader> authHeader, String problemSetJid) {
-        actorChecker.check(authHeader);
+        String actorJid = actorChecker.check(authHeader);
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         List<ProblemSetProblem> problems = problemStore.getProblems(problemSetJid);
         Set<String> problemJids = problems.stream().map(ProblemSetProblem::getProblemJid).collect(Collectors.toSet());
         Map<String, ProblemInfo> problemsMap = problemClient.getProblems(problemJids);
+        Map<String, ProblemProgress> problemProgressesMap = statsStore.getProblemProgressesMap(actorJid, problemJids);
+        Map<String, ProblemStats> problemStatsMap = statsStore.getProblemStatsMap(problemJids);
 
         return new ProblemSetProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemsMap)
+                .problemProgressesMap(problemProgressesMap)
+                .problemStatsMap(problemStatsMap)
                 .build();
     }
 
@@ -135,18 +140,21 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
+        String problemJid = problem.getProblemJid();
+
         ProblemProgress progress = statsStore
-                .getProblemProgressesMap(actorJid, ImmutableSet.of(problem.getProblemJid()))
-                .get(problem.getProblemJid());
-        ProblemStats stats = statsStore.getProblemStats(problem.getProblemJid());
+                .getProblemProgressesMap(actorJid, ImmutableSet.of(problemJid)).get(problemJid);
+        ProblemStats stats = statsStore.getProblemStatsMap(ImmutableSet.of(problemJid)).get(problemJid);
+        ProblemTopStats topStats = statsStore.getProblemTopStats(problemJid);
 
         Set<String> userJids = new HashSet<>();
-        stats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
-        stats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
+        topStats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
+        topStats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);
 
         return new ProblemStatsResponse.Builder()
                 .stats(stats)
+                .topStats(topStats)
                 .progress(progress)
                 .profilesMap(profilesMap)
                 .build();

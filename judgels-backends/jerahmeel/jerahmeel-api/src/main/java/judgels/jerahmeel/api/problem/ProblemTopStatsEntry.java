@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableProblemStatsEntry.class)
-public interface ProblemStatsEntry {
+@JsonDeserialize(as = ImmutableProblemTopStatsEntry.class)
+public interface ProblemTopStatsEntry {
     String getUserJid();
     int getStats();
 
-    class Builder extends ImmutableProblemStatsEntry.Builder {}
+    class Builder extends ImmutableProblemTopStatsEntry.Builder {}
 }

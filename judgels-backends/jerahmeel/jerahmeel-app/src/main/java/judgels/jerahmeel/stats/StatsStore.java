@@ -1,6 +1,5 @@
 package judgels.jerahmeel.stats;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,7 +13,8 @@ import judgels.jerahmeel.api.chapter.ChapterProgress;
 import judgels.jerahmeel.api.course.CourseProgress;
 import judgels.jerahmeel.api.problem.ProblemProgress;
 import judgels.jerahmeel.api.problem.ProblemStats;
-import judgels.jerahmeel.api.problem.ProblemStatsEntry;
+import judgels.jerahmeel.api.problem.ProblemTopStats;
+import judgels.jerahmeel.api.problem.ProblemTopStatsEntry;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.StatsUserChapterDao;
@@ -90,37 +90,40 @@ public class StatsStore {
                         .build()));
     }
 
-    public ProblemStats getProblemStats(String problemJid) {
-        long totalUsersAccepted = statsUserProblemDao
-                .selectCountsAcceptedByProblemJids(ImmutableSet.of(problemJid))
-                .getOrDefault(problemJid, 0L);
-        long totalUsersTried = statsUserProblemDao
-                .selectCountsTriedByProblemJids(ImmutableSet.of(problemJid))
-                .getOrDefault(problemJid, 0L);
+    public Map<String, ProblemStats> getProblemStatsMap(Set<String> problemJids) {
+        Map<String, Long> totalUsersAcceptedMap = statsUserProblemDao.selectCountsAcceptedByProblemJids(problemJids);
+        Map<String, Long> totalUsersTried = statsUserProblemDao.selectCountsTriedByProblemJids(problemJids);
 
-        List<ProblemStatsEntry> topUsersByTime =
+        return problemJids.stream().collect(Collectors.toMap(
+                Function.identity(),
+                jid -> new ProblemStats.Builder()
+                        .totalUsersAccepted(totalUsersAcceptedMap.getOrDefault(jid, 0L))
+                        .totalUsersTried(totalUsersTried.getOrDefault(jid, 0L))
+                        .build()));
+    }
+
+    public ProblemTopStats getProblemTopStats(String problemJid) {
+        List<ProblemTopStatsEntry> topUsersByTime =
                 statsUserProblemDao.selectAllByProblemJid(problemJid, new SelectionOptions.Builder()
                         .orderBy("time")
                         .orderDir(OrderDir.ASC)
                         .pageSize(5)
-                        .build()).stream().map(m -> new ProblemStatsEntry.Builder()
+                        .build()).stream().map(m -> new ProblemTopStatsEntry.Builder()
                         .userJid(m.userJid)
                         .stats(m.time)
                         .build()).collect(Collectors.toList());
 
-        List<ProblemStatsEntry> topUsersByMemory =
+        List<ProblemTopStatsEntry> topUsersByMemory =
                 statsUserProblemDao.selectAllByProblemJid(problemJid, new SelectionOptions.Builder()
                         .orderBy("memory")
                         .orderDir(OrderDir.ASC)
                         .pageSize(5)
-                        .build()).stream().map(m -> new ProblemStatsEntry.Builder()
+                        .build()).stream().map(m -> new ProblemTopStatsEntry.Builder()
                         .userJid(m.userJid)
                         .stats(m.memory)
                         .build()).collect(Collectors.toList());
 
-        return new ProblemStats.Builder()
-                .totalUsersAccepted(totalUsersAccepted)
-                .totalUsersTried(totalUsersTried)
+        return new ProblemTopStats.Builder()
                 .topUsersByTime(topUsersByTime)
                 .topUsersByMemory(topUsersByMemory)
                 .build();
