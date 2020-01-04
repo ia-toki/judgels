@@ -109,12 +109,14 @@ public class StatsStore {
 
     public Map<String, ProblemStats> getProblemStatsMap(Set<String> problemJids) {
         Map<String, Long> totalScoresMap = statsUserProblemDao.selectTotalScoresByProblemJids(problemJids);
+        Map<String, Long> totalUsersAccepted = statsUserProblemDao.selectCountsAcceptedByProblemJids(problemJids);
         Map<String, Long> totalUsersTried = statsUserProblemDao.selectCountsTriedByProblemJids(problemJids);
 
         return problemJids.stream().collect(Collectors.toMap(
                 Function.identity(),
                 jid -> new ProblemStats.Builder()
                         .totalScores(totalScoresMap.getOrDefault(jid, 0L).intValue())
+                        .totalUsersAccepted(totalUsersAccepted.getOrDefault(jid, 0L).intValue())
                         .totalUsersTried(totalUsersTried.getOrDefault(jid, 0L).intValue())
                         .build()));
     }

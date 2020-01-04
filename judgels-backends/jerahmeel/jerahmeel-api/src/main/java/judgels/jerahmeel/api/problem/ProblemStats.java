@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableProblemStats.class)
 public interface ProblemStats {
     int getTotalScores();
+    int getTotalUsersAccepted();
     int getTotalUsersTried();
 
     class Builder extends ImmutableProblemStats.Builder {}
