@@ -20,10 +20,8 @@ export const ProgressTag = (props: ProgressTagProps) => {
     intent = Intent.SUCCESS;
   } else if (num === 0) {
     intent = Intent.NONE;
-  } else if (num * 3 <= denom) {
-    intent = Intent.DANGER;
   } else {
-    intent = Intent.WARNING;
+    intent = Intent.PRIMARY;
   }
   return (
     <Tag large={!!large} className={className} intent={intent}>

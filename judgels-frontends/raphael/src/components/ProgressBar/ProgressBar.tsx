@@ -22,10 +22,8 @@ export const ProgressBar = (props: ProgressBarProps) => {
     intent = getVerdictIntent(verdict);
   } else if (num === denom) {
     intent = Intent.SUCCESS;
-  } else if (num * 3 <= denom) {
-    intent = Intent.DANGER;
   } else {
-    intent = Intent.WARNING;
+    intent = Intent.PRIMARY;
   }
   return <BlueprintProgressBar animate={false} stripes={false} intent={intent} value={num / denom} />;
 };

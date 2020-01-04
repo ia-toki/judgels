@@ -43,7 +43,7 @@ export class ProblemSetCard extends React.PureComponent<ProblemSetCardProps> {
     const { score, totalProblems } = progress;
     return (
       <ProgressTag className="problemset-card__progress" large num={score} denom={100 * totalProblems}>
-        {score} pts / {totalProblems} problems
+        {score} pts / {totalProblems}
       </ProgressTag>
     );
   };
