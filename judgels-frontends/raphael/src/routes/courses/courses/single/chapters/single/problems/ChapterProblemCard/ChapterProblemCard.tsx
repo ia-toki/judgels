@@ -50,6 +50,6 @@ export class ChapterProblemCard extends React.PureComponent<ChapterProblemCardPr
     if (problem.type === ProblemType.Bundle || !progress) {
       return null;
     }
-    return <ProgressBar num={progress.score} denom={100} />;
+    return <ProgressBar verdict={progress.verdict} num={progress.score} denom={100} />;
   };
 }

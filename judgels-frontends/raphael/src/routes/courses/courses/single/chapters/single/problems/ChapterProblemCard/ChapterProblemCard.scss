@@ -1,4 +1,8 @@
+@import '../../../../../../../../styles/base';
+
 .chapter-problem-card__name {
+  color: $text-color;
+  font-weight: 600;
   padding-bottom: 10px;
 }
 
