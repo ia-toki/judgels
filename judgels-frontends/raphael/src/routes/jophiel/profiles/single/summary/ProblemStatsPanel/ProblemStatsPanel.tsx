@@ -3,18 +3,18 @@ import * as React from 'react';
 import { Card } from '../../../../../../components/Card/Card';
 import { UserStats } from '../../../../../../modules/api/jerahmeel/user';
 
-export interface UserStatsPanelProps {
+export interface ProblemStatsPanelProps {
   userStats: UserStats;
 }
 
-export class UserStatsPanel extends React.Component<UserStatsPanelProps> {
+export class ProblemStatsPanel extends React.Component<ProblemStatsPanelProps> {
   render() {
     const { userStats } = this.props;
     return (
       <Card title="Problem stats">
         <ul>
           <li>
-            Total score: <b>{userStats.totalScores}</b>
+            Total problem scores: <b>{userStats.totalScores} pts</b>
           </li>
           <li>
             Total problems attempted: <b>{userStats.totalProblemsTried}</b>

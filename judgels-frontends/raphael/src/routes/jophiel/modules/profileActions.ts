@@ -31,4 +31,10 @@ export const profileActions = {
       return await profileAPI.getBasicProfile(userJid);
     };
   },
+
+  getTopRatedProfiles: (page?: number, pageSize?: number) => {
+    return async (dispatch, getState, { profileAPI }) => {
+      return await profileAPI.getTopRatedProfiles(page, pageSize);
+    };
+  },
 };

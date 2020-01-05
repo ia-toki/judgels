@@ -9,18 +9,18 @@ import { Page } from '../../../../../modules/api/pagination';
 import { Profile } from '../../../../../modules/api/jophiel/profile';
 import { widgetActions as injectedWidgetActions } from '../../modules/widgetActions';
 
-import './TopRatedWidget.css';
+import './TopRatingsWidget.css';
 
-interface TopRatedWidgetProps {
+interface TopRatingsWidgetProps {
   onGetTopRatedProfiles: (page?: number, pageSize?: number) => Promise<Page<Profile>>;
 }
 
-interface TopRatedWidgetState {
+interface TopRatingsWidgetState {
   profiles?: Page<Profile>;
 }
 
-class TopRatedWidget extends React.PureComponent<TopRatedWidgetProps, TopRatedWidgetState> {
-  state: TopRatedWidgetState = {};
+class TopRatingsWidget extends React.PureComponent<TopRatingsWidgetProps, TopRatingsWidgetState> {
+  state: TopRatingsWidgetState = {};
 
   async componentDidMount() {
     const profiles = await this.props.onGetTopRatedProfiles(1, 5);
@@ -34,7 +34,7 @@ class TopRatedWidget extends React.PureComponent<TopRatedWidgetProps, TopRatedWi
     }
 
     return (
-      <Card className="top-rated-widget" title="Top rated">
+      <Card className="top-ratings-widget" title="Top ratings">
         {this.renderTable(profiles.page)}
       </Card>
     );
@@ -43,7 +43,7 @@ class TopRatedWidget extends React.PureComponent<TopRatedWidgetProps, TopRatedWi
   private renderTable = (profiles: Profile[]) => {
     if (profiles.length === 0) {
       return (
-        <div className="top-rated-widget__empty">
+        <div className="top-ratings-widget__empty">
           <small>No data yet.</small>
         </div>
       );
@@ -60,7 +60,7 @@ class TopRatedWidget extends React.PureComponent<TopRatedWidgetProps, TopRatedWi
     ));
 
     return (
-      <HTMLTable striped className="table-list top-rated-widget__table">
+      <HTMLTable striped className="table-list top-ratings-widget__table">
         <thead>
           <tr>
             <th className="col-rank">#</th>
@@ -74,11 +74,11 @@ class TopRatedWidget extends React.PureComponent<TopRatedWidgetProps, TopRatedWi
   };
 }
 
-function createTopRatedWidget(widgetActions) {
+function createTopRatingsWidget(widgetActions) {
   const mapDispatchToProps = {
     onGetTopRatedProfiles: widgetActions.getTopRatedProfiles,
   };
-  return connect(undefined, mapDispatchToProps)(TopRatedWidget);
+  return connect(undefined, mapDispatchToProps)(TopRatingsWidget);
 }
 
-export default createTopRatedWidget(injectedWidgetActions);
+export default createTopRatingsWidget(injectedWidgetActions);

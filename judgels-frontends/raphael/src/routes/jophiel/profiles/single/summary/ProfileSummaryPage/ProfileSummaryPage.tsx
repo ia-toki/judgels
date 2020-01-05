@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
-import { UserStatsPanel } from '../UserStatsPanel/UserStatsPanel';
+import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
 import { AppState } from '../../../../../../modules/store';
 import { BasicProfile } from '../../../../../../modules/api/jophiel/profile';
 import { UserStats } from '../../../../../../modules/api/jerahmeel/user';
@@ -45,7 +45,7 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
     return (
       <>
         {this.renderBasicProfile()}
-        {this.renderUserStats()}
+        {this.renderProblemStats()}
       </>
     );
   }
@@ -68,13 +68,13 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
     return <BasicProfilePanel basicProfile={basicProfile} avatarUrl={avatarUrl} />;
   };
 
-  private renderUserStats = () => {
+  private renderProblemStats = () => {
     const { userStats } = this.state;
     if (!userStats) {
       return <LoadingState />;
     }
 
-    return <UserStatsPanel userStats={userStats} />;
+    return <ProblemStatsPanel userStats={userStats} />;
   };
 }
 
