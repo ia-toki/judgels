@@ -51,7 +51,7 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
     return (
       <div className="problemset-problem-card__stats">
         <Tag round>
-          avg: {avgScore} pts / {totalUsersTried} users
+          avg: {avgScore} pts / {totalUsersTried}
         </Tag>
         {this.renderACStats(totalUsersAccepted, totalUsersTried)}
       </div>
@@ -60,7 +60,7 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
 
   private renderACStats = (totalUsersAccepted: number, totalUsersTried: number) => {
     if (totalUsersAccepted > 0) {
-      return <Tag round>{totalUsersAccepted} users solved</Tag>;
+      return <Tag round>{totalUsersAccepted} solved</Tag>;
     }
     return null;
   };
