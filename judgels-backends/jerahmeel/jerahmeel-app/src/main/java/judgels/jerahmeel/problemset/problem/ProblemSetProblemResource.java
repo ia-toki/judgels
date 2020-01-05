@@ -148,6 +148,7 @@ public class ProblemSetProblemResource implements ProblemSetProblemService {
         ProblemTopStats topStats = statsStore.getProblemTopStats(problemJid);
 
         Set<String> userJids = new HashSet<>();
+        topStats.getTopUsersByScore().forEach(e -> userJids.add(e.getUserJid()));
         topStats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
         topStats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
         Map<String, Profile> profilesMap = profileService.getProfiles(userJids);

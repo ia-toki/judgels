@@ -71,7 +71,7 @@ class ProblemStatsWidget extends React.Component<ProblemStatsWidgetProps, Proble
           </li>
           <li>
             Avg score:
-            <b className="stats-value">{Math.ceil(stats.totalScores / (stats.totalUsersAccepted || 1))} pts</b>
+            <b className="stats-value">{Math.ceil(stats.totalScores / (stats.totalUsersTried || 1))}</b> pts
           </li>
           <li>
             Your score: <VerdictProgressTag {...progress} />

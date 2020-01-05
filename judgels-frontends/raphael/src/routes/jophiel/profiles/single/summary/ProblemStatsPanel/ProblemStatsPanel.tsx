@@ -14,7 +14,7 @@ export class ProblemStatsPanel extends React.Component<ProblemStatsPanelProps> {
       <Card title="Problem stats">
         <ul>
           <li>
-            Total problem scores: <b>{userStats.totalScores} pts</b>
+            Total problem scores: <b>{userStats.totalScores}</b> pts
           </li>
           <li>
             Total problems attempted: <b>{userStats.totalProblemsTried}</b>

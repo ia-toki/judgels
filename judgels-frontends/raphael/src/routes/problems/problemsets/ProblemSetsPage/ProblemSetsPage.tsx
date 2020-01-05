@@ -130,6 +130,10 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     }
 
     const { data, archiveDescriptionsMap, problemSetProgressesMap } = response;
+    if (!data) {
+      return <LoadingContentCard />;
+    }
+
     if (data.page.length === 0) {
       return (
         <p>
