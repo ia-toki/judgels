@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import { Card } from '../../../../../components/Card/Card';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
-import { Page } from '../../../../../modules/api/pagination';
-import { Profile } from '../../../../../modules/api/jophiel/profile';
 import { UserTopStatsResponse } from '../../../../../modules/api/jerahmeel/user';
 import { widgetActions as injectedWidgetActions } from '../../modules/widgetActions';
 
