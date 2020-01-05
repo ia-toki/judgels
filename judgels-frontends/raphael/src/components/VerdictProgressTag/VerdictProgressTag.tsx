@@ -19,7 +19,7 @@ export const VerdictProgressTag = (props: VerdictProgressTagProps) => {
   if (verdict === VerdictCode.PND) {
     return (
       <Tag className={classNames('verdict-progress-tag', className)} intent={intent}>
-        not tried
+        not attempted
       </Tag>
     );
   }

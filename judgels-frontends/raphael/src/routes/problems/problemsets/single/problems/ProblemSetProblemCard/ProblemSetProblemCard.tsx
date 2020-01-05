@@ -27,12 +27,10 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
       <ContentCardLink to={`/problems/${problemSet.slug}/${problem.alias}`} className="problemset-problem-card">
         <h4 data-key="name">
           {problem.alias}. {problemName}
-          <div className="problemset-problem-card__stats">
-            {this.renderProgress()}
-            {this.renderStats()}
-          </div>
+          {this.renderProgress()}
         </h4>
         {this.renderProgressBar()}
+        {this.renderStats()}
       </ContentCardLink>
     );
   }
@@ -44,18 +42,27 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
     }
 
     const { totalScores, totalUsersAccepted, totalUsersTried } = stats;
-    const avgScore = totalScores / (totalUsersTried || 1);
+    const avgScore = Math.ceil(totalScores / (totalUsersTried || 1));
 
     return (
-      <>
+      <div className="problemset-problem-card__stats">
         <Tag round intent={Intent.PRIMARY}>
-          avg: {avgScore} pts
+          avg: {avgScore} pts / {totalUsersTried} users
         </Tag>
-        <Tag round intent={Intent.PRIMARY}>
-          AC: {totalUsersAccepted} / {totalUsersTried} users
-        </Tag>
-      </>
+        {this.renderACStats(totalUsersAccepted, totalUsersTried)}
+      </div>
     );
+  };
+
+  private renderACStats = (totalUsersAccepted: number, totalUsersTried: number) => {
+    if (totalUsersAccepted > 0) {
+      return (
+        <Tag round intent={Intent.PRIMARY}>
+          {totalUsersAccepted} users solved
+        </Tag>
+      );
+    }
+    return null;
   };
 
   private renderProgress = () => {
