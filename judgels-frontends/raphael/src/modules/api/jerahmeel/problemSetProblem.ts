@@ -2,9 +2,10 @@ import { stringify } from 'query-string';
 
 import { get } from '../../../modules/api/http';
 
+import { Profile } from '../jophiel/profile';
 import { ProblemInfo, ProblemType } from '../sandalphon/problem';
 import { baseProblemSetURL } from './problemSet';
-import { ProblemProgress, ProblemStats } from './problem';
+import { ProblemProgress, ProblemStats, ProblemTopStats } from './problem';
 
 export interface ProblemSetProblem {
   alias: string;
@@ -23,6 +24,13 @@ export interface ProblemSetProblemWorksheet {
   defaultLanguage: string;
   languages: string[];
   problem: ProblemSetProblem;
+}
+
+export interface ProblemStatsResponse {
+  progress: ProblemProgress;
+  stats: ProblemStats;
+  topStats: ProblemTopStats;
+  profilesMap: { [userJid: string]: Profile };
 }
 
 const baseURL = (problemSetJid: string) => `${baseProblemSetURL(problemSetJid)}/problems`;
@@ -44,5 +52,9 @@ export const problemSetProblemAPI = {
   ): Promise<ProblemSetProblemWorksheet> => {
     const params = stringify({ language });
     return get(`${baseURL(problemSetJid)}/${problemAlias}/worksheet?${params}`, token);
+  },
+
+  getProblemStats: (token: string, problemSetJid: string, problemAlias: string): Promise<ProblemStatsResponse> => {
+    return get(`${baseURL(problemSetJid)}/${problemAlias}/stats`, token);
   },
 };

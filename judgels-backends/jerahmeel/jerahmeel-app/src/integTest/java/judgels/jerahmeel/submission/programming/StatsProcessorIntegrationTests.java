@@ -169,21 +169,29 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
 
         assertProblemProgresses(PENDING, 0, PENDING, 0);
         assertProblemStats(0, 0, 0);
-        assertProblemTopStats(ImmutableList.of(), ImmutableList.of());
+        assertProblemTopStats(ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
         assertProblemSetProgresses(problemSet.getJid(), 0, 0, 2);
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 70, 100, 32000);
 
         assertProblemProgresses(WRONG_ANSWER, 70, PENDING, 0);
         assertProblemStats(70, 0, 1);
-        assertProblemTopStats(ImmutableList.of(), ImmutableList.of());
+        assertProblemTopStats(
+                ImmutableList.of(
+                    new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(70).build()),
+                ImmutableList.of(),
+                ImmutableList.of());
         assertProblemSetProgresses(problemSet.getJid(), 70, 0, 2);
 
         submit(USER_JID_1, problemSet.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 50, 100, 32000);
 
         assertProblemProgresses(WRONG_ANSWER, 50, PENDING, 0);
         assertProblemStats(50, 0, 1);
-        assertProblemTopStats(ImmutableList.of(), ImmutableList.of());
+        assertProblemTopStats(
+                ImmutableList.of(
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(50).build()),
+                ImmutableList.of(),
+                ImmutableList.of());
         assertProblemSetProgresses(problemSet.getJid(), 50, 0, 2);
 
         submit(USER_JID_2, problemSet.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 200, 40000);
@@ -191,6 +199,9 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         assertProblemProgresses(WRONG_ANSWER, 50, ACCEPTED, 100);
         assertProblemStats(150, 1, 2);
         assertProblemTopStats(
+                ImmutableList.of(
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(100).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(50).build()),
                 ImmutableList.of(
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build()),
                 ImmutableList.of(
@@ -202,6 +213,9 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         assertProblemProgresses(ACCEPTED, 100, ACCEPTED, 100);
         assertProblemStats(200, 2, 2);
         assertProblemTopStats(
+                ImmutableList.of(
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(100).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(100).build()),
                 ImmutableList.of(
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(50).build(),
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build()),
@@ -216,6 +230,9 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         assertProblemStats(200, 2, 2);
         assertProblemTopStats(
                 ImmutableList.of(
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(100).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(100).build()),
+                ImmutableList.of(
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build(),
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(300).build()),
                 ImmutableList.of(
@@ -229,6 +246,9 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         assertProblemStats(200, 2, 2);
         assertProblemTopStats(
                 ImmutableList.of(
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(100).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(100).build()),
+                ImmutableList.of(
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build(),
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(300).build()),
                 ImmutableList.of(
@@ -241,6 +261,9 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
         assertProblemProgresses(ACCEPTED, 100, ACCEPTED, 100);
         assertProblemStats(200, 2, 2);
         assertProblemTopStats(
+                ImmutableList.of(
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(100).build(),
+                        new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(100).build()),
                 ImmutableList.of(
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_2).stats(200).build(),
                         new ProblemTopStatsEntry.Builder().userJid(USER_JID_1).stats(200).build()),
@@ -347,9 +370,14 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                         .build());
     }
 
-    private void assertProblemTopStats(List<ProblemTopStatsEntry> topTime, List<ProblemTopStatsEntry> topMemory) {
+    private void assertProblemTopStats(
+            List<ProblemTopStatsEntry> topScore,
+            List<ProblemTopStatsEntry> topTime,
+            List<ProblemTopStatsEntry> topMemory) {
+
         assertThat(statsStore.getProblemTopStats(PROBLEM_JID_1))
                 .isEqualTo(new ProblemTopStats.Builder()
+                        .topUsersByScore(topScore)
                         .topUsersByTime(topTime)
                         .topUsersByMemory(topMemory)
                         .build());

@@ -26,4 +26,11 @@ export const problemSetProblemActions = {
       return await problemSetProblemAPI.getProblemWorksheet(token, problemSetJid, problemAlias, language);
     };
   },
+
+  getProblemStats: (problemSetJid: string, problemAlias: string) => {
+    return async (dispatch, getState, { problemSetProblemAPI }) => {
+      const token = selectToken(getState());
+      return await problemSetProblemAPI.getProblemStats(token, problemSetJid, problemAlias);
+    };
+  },
 };

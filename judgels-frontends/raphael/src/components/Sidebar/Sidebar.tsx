@@ -18,6 +18,7 @@ export interface SidebarProps {
   activeItemId: string;
   items: SidebarItem[];
   widget?: JSX.Element;
+  stickyWidget?: boolean;
   onResolveItemUrl: (itemId: string) => string;
 }
 
@@ -29,11 +30,11 @@ export class Sidebar extends React.PureComponent<SidebarProps, SidebarState> {
   state: SidebarState = { isResponsivePopoverOpen: false };
 
   render() {
-    const { title, action, activeItemId, items, widget, onResolveItemUrl } = this.props;
+    const { title, action, activeItemId, items, widget, stickyWidget, onResolveItemUrl } = this.props;
 
     const tabs = items.map(item => {
       const titleIcon = item.titleIcon && <Icon icon={item.titleIcon} />;
-      const itemIcon = widget ? 'chevron-down' : 'chevron-right';
+      const itemIcon = widget && !stickyWidget ? 'chevron-down' : 'chevron-right';
 
       const icon = item.id === activeItemId && (
         <Icon icon={itemIcon} iconSize={Icon.SIZE_LARGE} className="card-sidebar__arrow" />

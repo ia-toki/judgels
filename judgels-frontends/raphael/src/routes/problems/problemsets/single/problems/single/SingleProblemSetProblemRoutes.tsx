@@ -10,6 +10,7 @@ import ContentWithSidebar, {
   ContentWithSidebarProps,
 } from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import ProblemStatsWidget from './ProblemStatsWidget/ProblemStatsWidget';
 import ProblemStatementPage from './statement/ProblemStatementPage/ProblemStatementPage';
 import ProblemSubmissionRoutes from './submissions/ProblemSubmissionRoutes';
 import ProblemItemSubmissionRoutes from './results/ProblemItemSubmissionRoutes';
@@ -87,6 +88,7 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
           Problem {problem.alias}
         </h3>
       ),
+      widget: problem.type === ProblemType.Programming ? ProblemStatsWidget : undefined,
     };
 
     return (

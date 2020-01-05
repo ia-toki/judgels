@@ -121,8 +121,20 @@ public class StatsStore {
     }
 
     public ProblemTopStats getProblemTopStats(String problemJid) {
-        List<ProblemTopStatsEntry> topUsersByTime =
+        List<ProblemTopStatsEntry> topUsersByScore =
                 statsUserProblemDao.selectAllByProblemJid(problemJid, new SelectionOptions.Builder()
+                        .orderBy("score")
+                        .orderDir(OrderDir.DESC)
+                        .orderBy2("updatedAt")
+                        .orderDir2(OrderDir.ASC)
+                        .pageSize(5)
+                        .build()).stream().map(m -> new ProblemTopStatsEntry.Builder()
+                        .userJid(m.userJid)
+                        .stats(m.score)
+                        .build()).collect(Collectors.toList());
+
+        List<ProblemTopStatsEntry> topUsersByTime =
+                statsUserProblemDao.selectAllAcceptedByProblemJid(problemJid, new SelectionOptions.Builder()
                         .orderBy("time")
                         .orderDir(OrderDir.ASC)
                         .orderBy2("updatedAt")
@@ -133,7 +145,7 @@ public class StatsStore {
                         .build()).collect(Collectors.toList());
 
         List<ProblemTopStatsEntry> topUsersByMemory =
-                statsUserProblemDao.selectAllByProblemJid(problemJid, new SelectionOptions.Builder()
+                statsUserProblemDao.selectAllAcceptedByProblemJid(problemJid, new SelectionOptions.Builder()
                         .orderBy("memory")
                         .orderDir(OrderDir.ASC)
                         .orderBy2("updatedAt")
@@ -144,6 +156,7 @@ public class StatsStore {
                         .build()).collect(Collectors.toList());
 
         return new ProblemTopStats.Builder()
+                .topUsersByScore(topUsersByScore)
                 .topUsersByTime(topUsersByTime)
                 .topUsersByMemory(topUsersByMemory)
                 .build();

@@ -42,6 +42,7 @@ export interface ContentWithSidebarProps {
   smallContent?: boolean;
   items: ContentWithSidebarItem[];
   contentHeader?: JSX.Element;
+  widget?: any;
 }
 
 interface ContentWithSidebarConnectedProps extends RouteComponentProps<{}> {}
@@ -82,12 +83,23 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
         activeItemId={this.getActiveItemId()}
         items={sidebarItems}
         widget={sidebarWidget}
+        stickyWidget={!!this.props.widget}
         onResolveItemUrl={this.onResolveItemUrl}
       />
     );
   };
 
   private renderSidebarWidget = () => {
+    if (this.props.widget) {
+      const Widget = this.props.widget;
+      return (
+        <div>
+          <hr />
+          <Widget />
+        </div>
+      );
+    }
+
     const components = this.props.items
       .filter(item => !!item.widgetComponent)
       .map(item => {
