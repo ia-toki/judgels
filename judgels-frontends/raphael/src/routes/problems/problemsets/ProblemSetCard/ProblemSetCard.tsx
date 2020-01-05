@@ -20,7 +20,7 @@ export class ProblemSetCard extends React.PureComponent<ProblemSetCardProps> {
     const description = (archiveDescription || '') + (problemSet.description || '');
 
     return (
-      <ContentCardLink to={`/problems/${problemSet.slug}`} className="problemset-card">
+      <ContentCardLink to={`/problems/${problemSet.slug}`} className="problemset-card" elevation={1}>
         <h4 className="problemset-card__name">
           {problemSet.name}
           {this.renderProgress()}
@@ -42,7 +42,7 @@ export class ProblemSetCard extends React.PureComponent<ProblemSetCardProps> {
     }
     const { score, totalProblems } = progress;
     return (
-      <ProgressTag large num={score} denom={100 * totalProblems}>
+      <ProgressTag num={score} denom={100 * totalProblems}>
         {score} pts / {totalProblems}
       </ProgressTag>
     );

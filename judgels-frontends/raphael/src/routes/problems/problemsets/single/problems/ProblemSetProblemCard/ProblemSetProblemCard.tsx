@@ -1,4 +1,4 @@
-import { Tag, Intent } from '@blueprintjs/core';
+import { Tag } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
@@ -24,7 +24,11 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
     const { problemSet, problem, problemName } = this.props;
 
     return (
-      <ContentCardLink to={`/problems/${problemSet.slug}/${problem.alias}`} className="problemset-problem-card">
+      <ContentCardLink
+        to={`/problems/${problemSet.slug}/${problem.alias}`}
+        className="problemset-problem-card"
+        elevation={1}
+      >
         <h4 data-key="name">
           {problem.alias}. {problemName}
           {this.renderProgress()}
@@ -46,7 +50,7 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
 
     return (
       <div className="problemset-problem-card__stats">
-        <Tag round intent={Intent.PRIMARY}>
+        <Tag round>
           avg: {avgScore} pts / {totalUsersTried} users
         </Tag>
         {this.renderACStats(totalUsersAccepted, totalUsersTried)}
@@ -56,11 +60,7 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
 
   private renderACStats = (totalUsersAccepted: number, totalUsersTried: number) => {
     if (totalUsersAccepted > 0) {
-      return (
-        <Tag round intent={Intent.PRIMARY}>
-          {totalUsersAccepted} users solved
-        </Tag>
-      );
+      return <Tag round>{totalUsersAccepted} users solved</Tag>;
     }
     return null;
   };

@@ -21,7 +21,11 @@ export class CourseChapterCard extends React.PureComponent<CourseChapterCardProp
     const { course, chapter, chapterName } = this.props;
 
     return (
-      <ContentCardLink to={`/courses/${course.slug}/chapters/${chapter.alias}`} className="couse-chapter-card">
+      <ContentCardLink
+        to={`/courses/${course.slug}/chapters/${chapter.alias}`}
+        className="couse-chapter-card"
+        elevation={1}
+      >
         <div data-key="name">
           <h4>
             {chapter.alias}. {chapterName}

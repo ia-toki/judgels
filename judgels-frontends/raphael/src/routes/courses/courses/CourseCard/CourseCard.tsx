@@ -18,7 +18,7 @@ export class CourseCard extends React.PureComponent<CourseCardProps> {
     const { slug, name, description } = this.props.course;
 
     return (
-      <ContentCardLink to={`/courses/${slug}`} className="course-card">
+      <ContentCardLink to={`/courses/${slug}`} className="course-card" elevation={1}>
         <h4>
           {`${name}`}
           {this.renderProgress()}
@@ -41,7 +41,7 @@ export class CourseCard extends React.PureComponent<CourseCardProps> {
 
     const { solvedChapters, totalChapters } = progress;
     return (
-      <ProgressTag large num={solvedChapters} denom={totalChapters}>
+      <ProgressTag num={solvedChapters} denom={totalChapters}>
         {solvedChapters} / {totalChapters} completed
       </ProgressTag>
     );

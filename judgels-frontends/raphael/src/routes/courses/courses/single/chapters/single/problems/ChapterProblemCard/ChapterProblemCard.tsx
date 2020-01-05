@@ -24,7 +24,7 @@ export class ChapterProblemCard extends React.PureComponent<ChapterProblemCardPr
     const { course, chapter, problem, problemName } = this.props;
 
     return (
-      <ContentCardLink to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}`}>
+      <ContentCardLink to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}`} elevation={1}>
         <h4 data-key="name">
           {problem.alias}. {problemName}
           {this.renderProgress()}
