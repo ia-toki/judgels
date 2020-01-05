@@ -11,7 +11,7 @@ export class UserStatsPanel extends React.Component<UserStatsPanelProps> {
   render() {
     const { userStats } = this.props;
     return (
-      <Card title="User stats">
+      <Card title="Problem stats">
         <ul>
           <li>
             Total score: <b>{userStats.totalScores}</b>

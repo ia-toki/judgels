@@ -55,7 +55,6 @@ const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
     title: 'Profile Menu',
     items: sidebarItems,
     contentHeader: <h2>Profile of {username}</h2>,
-    smallContent: true,
   };
 
   return (
