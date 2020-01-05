@@ -63,7 +63,7 @@ class ProblemStatsWidget extends React.Component<ProblemStatsWidgetProps, Proble
         <ul>
           {stats.totalUsersAccepted > 0 && (
             <li>
-              Users accepted: <b className="stats-value">{stats.totalUsersAccepted}</b>
+              Users solved: <b className="stats-value">{stats.totalUsersAccepted}</b>
             </li>
           )}
           <li>
