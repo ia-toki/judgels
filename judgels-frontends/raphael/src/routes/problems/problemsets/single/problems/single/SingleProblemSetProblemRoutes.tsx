@@ -88,7 +88,7 @@ class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProb
           Problem {problem.alias}
         </h3>
       ),
-      widget: problem.type === ProblemType.Programming ? ProblemStatsWidget : undefined,
+      stickyWidget: problem.type === ProblemType.Programming ? ProblemStatsWidget : undefined,
     };
 
     return (

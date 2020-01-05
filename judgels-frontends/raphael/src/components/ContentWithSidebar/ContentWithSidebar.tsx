@@ -10,21 +10,29 @@ import './ContentWithSidebar.css';
 export interface ContentAndSidebarProps {
   sidebarElement: JSX.Element;
   contentElement: JSX.Element;
+  stickyWidget?: any;
   smallContent?: boolean;
 }
 
-const ContentAndSidebar = (props: ContentAndSidebarProps) => (
-  <div className="content-with-sidebar">
-    <div className="content-with-sidebar__sidebar">{props.sidebarElement}</div>
-    <div
-      className={classNames('content-with-sidebar__content', {
-        'content-with-sidebar__content--small': props.smallContent,
-      })}
-    >
-      {props.contentElement}
+const ContentAndSidebar = (props: ContentAndSidebarProps) => {
+  const responsive = window.matchMedia && window.matchMedia('(max-width: 750px)').matches;
+  return (
+    <div className="content-with-sidebar">
+      <div className="content-with-sidebar__sidebar">
+        {props.sidebarElement}
+        {!responsive && props.stickyWidget}
+      </div>
+      <div
+        className={classNames('content-with-sidebar__content', {
+          'content-with-sidebar__content--small': props.smallContent,
+        })}
+      >
+        {props.contentElement}
+        {responsive && props.stickyWidget}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export interface ContentWithSidebarItem {
   id: string;
@@ -42,7 +50,7 @@ export interface ContentWithSidebarProps {
   smallContent?: boolean;
   items: ContentWithSidebarItem[];
   contentHeader?: JSX.Element;
-  widget?: any;
+  stickyWidget?: any;
 }
 
 interface ContentWithSidebarConnectedProps extends RouteComponentProps<{}> {}
@@ -58,6 +66,7 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
       <ContentAndSidebar
         sidebarElement={this.renderSidebar()}
         contentElement={this.renderContent()}
+        stickyWidget={this.renderStickyWidget()}
         smallContent={this.props.smallContent}
       />
     );
@@ -83,15 +92,14 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
         activeItemId={this.getActiveItemId()}
         items={sidebarItems}
         widget={sidebarWidget}
-        stickyWidget={!!this.props.widget}
         onResolveItemUrl={this.onResolveItemUrl}
       />
     );
   };
 
-  private renderSidebarWidget = () => {
-    if (this.props.widget) {
-      const Widget = this.props.widget;
+  private renderStickyWidget = () => {
+    if (this.props.stickyWidget) {
+      const Widget = this.props.stickyWidget;
       return (
         <div>
           <hr />
@@ -99,7 +107,10 @@ class ContentWithSidebar extends React.PureComponent<ContentWithSidebarProps & C
         </div>
       );
     }
+    return null;
+  };
 
+  private renderSidebarWidget = () => {
     const components = this.props.items
       .filter(item => !!item.widgetComponent)
       .map(item => {
