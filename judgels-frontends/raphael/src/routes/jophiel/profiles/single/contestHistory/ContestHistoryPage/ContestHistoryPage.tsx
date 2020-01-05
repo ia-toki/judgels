@@ -10,7 +10,7 @@ import { AppState } from '../../../../../../modules/store';
 import { getRatingClass, UserRating } from '../../../../../../modules/api/jophiel/userRating';
 import { ContestHistoryResponse } from '../../../../../../modules/api/uriel/contestHistory';
 import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
-import { contestHistoryActions as injectedContestHistoryActions } from '../../../../modules/contestHistoryActions';
+import { profileActions as injectedProfileActions } from '../../modules/profileActions';
 
 import './ContestHistoryPage.css';
 
@@ -38,7 +38,7 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
       return <LoadingState />;
     }
 
-    return <Card title={`${this.props.username} | Contest history`}>{this.renderTable()}</Card>;
+    return <Card title="Contest history">{this.renderTable()}</Card>;
   }
 
   private renderTable = () => {
@@ -117,16 +117,16 @@ class ContestHistoryPage extends React.Component<ContestHistoryPageProps, Contes
   };
 }
 
-function createContestHistoryPage(contestHistoryActions) {
+function createContestHistoryPage(profileActions) {
   const mapStateToProps = (state: AppState) => ({
     userJid: selectUserJid(state),
     username: selectUsername(state),
   });
   const mapDispatchToProps = {
-    onGetContestPublicHistory: contestHistoryActions.getPublicHistory,
+    onGetContestPublicHistory: profileActions.getContestPublicHistory,
   };
 
   return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestHistoryPage));
 }
 
-export default createContestHistoryPage(injectedContestHistoryActions);
+export default createContestHistoryPage(injectedProfileActions);

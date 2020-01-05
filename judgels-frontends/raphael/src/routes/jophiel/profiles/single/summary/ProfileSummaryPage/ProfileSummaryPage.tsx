@@ -4,14 +4,13 @@ import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
-import { ContestRatingHistoryPanel } from '../ContestRatingHistoryPanel/ContestRatingHistoryPanel';
+import { UserStatsPanel } from '../UserStatsPanel/UserStatsPanel';
 import { AppState } from '../../../../../../modules/store';
 import { BasicProfile } from '../../../../../../modules/api/jophiel/profile';
-import { ContestRatingHistoryResponse } from '../../../../../../modules/api/uriel/contestRating';
+import { UserStats } from '../../../../../../modules/api/jerahmeel/user';
 import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
 import { avatarActions as injectedAvatarActions } from '../../../../modules/avatarActions';
-import { profileActions as injectedProfileActions } from '../../../../modules/profileActions';
-import { contestRatingActions as injectedContestRatingActions } from '../../../../modules/contestRatingActions';
+import { profileActions as injectedProfileActions } from '../../modules/profileActions';
 
 import './ProfileSummaryPage.css';
 
@@ -20,13 +19,13 @@ interface ProfileSummaryPageProps {
   username: string;
   onRenderAvatar: (userJid?: string) => Promise<string>;
   onGetBasicProfile: (userJid: string) => Promise<BasicProfile>;
-  onGetContestRatingHistory: (username: string) => Promise<ContestRatingHistoryResponse>;
+  onGetUserStats: (username: string) => Promise<UserStats>;
 }
 
 interface ProfileSummaryPageState {
   avatarUrl?: string;
   basicProfile?: BasicProfile;
-  contestRatingHistory?: ContestRatingHistoryResponse;
+  userStats?: UserStats;
 }
 
 class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, ProfileSummaryPageState> {
@@ -46,18 +45,18 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
     return (
       <>
         {this.renderBasicProfile()}
-        {this.renderContestRatingHistory()}
+        {this.renderUserStats()}
       </>
     );
   }
 
   private refreshSummary = async () => {
-    const [avatarUrl, basicProfile, contestRatingHistory] = await Promise.all([
+    const [avatarUrl, basicProfile, userStats] = await Promise.all([
       this.props.onRenderAvatar(this.props.userJid),
       this.props.onGetBasicProfile(this.props.userJid),
-      this.props.onGetContestRatingHistory(this.props.username),
+      this.props.onGetUserStats(this.props.username),
     ]);
-    this.setState({ avatarUrl, basicProfile, contestRatingHistory });
+    this.setState({ avatarUrl, basicProfile, userStats });
   };
 
   private renderBasicProfile = () => {
@@ -69,17 +68,17 @@ class ProfileSummaryPage extends React.PureComponent<ProfileSummaryPageProps, Pr
     return <BasicProfilePanel basicProfile={basicProfile} avatarUrl={avatarUrl} />;
   };
 
-  private renderContestRatingHistory = () => {
-    const { contestRatingHistory } = this.state;
-    if (!contestRatingHistory) {
+  private renderUserStats = () => {
+    const { userStats } = this.state;
+    if (!userStats) {
       return <LoadingState />;
     }
 
-    return <ContestRatingHistoryPanel history={contestRatingHistory} />;
+    return <UserStatsPanel userStats={userStats} />;
   };
 }
 
-function createProfileSummaryPage(avatarActions, profileActions, contestRatingActions) {
+function createProfileSummaryPage(avatarActions, profileActions) {
   const mapStateToProps = (state: AppState) => ({
     userJid: selectUserJid(state),
     username: selectUsername(state),
@@ -87,10 +86,10 @@ function createProfileSummaryPage(avatarActions, profileActions, contestRatingAc
   const mapDispatchToProps = {
     onRenderAvatar: avatarActions.renderAvatar,
     onGetBasicProfile: profileActions.getBasicProfile,
-    onGetContestRatingHistory: contestRatingActions.getRatingHistory,
+    onGetUserStats: profileActions.getUserStats,
   };
 
   return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProfileSummaryPage));
 }
 
-export default createProfileSummaryPage(injectedAvatarActions, injectedProfileActions, injectedContestRatingActions);
+export default createProfileSummaryPage(injectedAvatarActions, injectedProfileActions);

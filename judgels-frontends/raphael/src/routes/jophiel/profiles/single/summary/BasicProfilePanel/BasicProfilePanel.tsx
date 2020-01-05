@@ -19,7 +19,7 @@ export class BasicProfilePanel extends React.PureComponent<BasicProfilePanelProp
     const { avatarUrl, basicProfile } = this.props;
 
     return (
-      <Card title={`${basicProfile.username} | Basic profile`} className="profile-summary-card basic-profile-card">
+      <Card title="Basic profile" className="profile-summary-card basic-profile-card">
         <div className="basic-profile-card__wrapper">
           {this.renderMain(basicProfile, avatarUrl)}
           <div className="basic-profile-card__divider" />

@@ -13,14 +13,16 @@ import { AppState } from '../../../../modules/store';
 
 import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
 import ContestHistoryPage from './contestHistory/ContestHistoryPage/ContestHistoryPage';
-import { selectUserJid } from '../../modules/profileSelectors';
+import SubmissionHistoryPage from './submissionHistory/SubmissionHistoryPage.tsx/SubmissionHistoryPage';
+import { selectUserJid, selectUsername } from '../../modules/profileSelectors';
 
 interface SingleProfileRoutesProps {
   userJid?: string;
+  username?: string;
 }
 
 const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
-  const { userJid } = props;
+  const { userJid, username } = props;
   if (!userJid) {
     return <LoadingState large />;
   }
@@ -40,11 +42,19 @@ const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
       routeComponent: Route,
       component: ContestHistoryPage,
     },
+    {
+      id: 'submission-history',
+      titleIcon: 'layers',
+      title: 'Submission history',
+      routeComponent: Route,
+      component: SubmissionHistoryPage,
+    },
   ];
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
     title: 'Profile Menu',
     items: sidebarItems,
+    contentHeader: <h2>Profile of {username}</h2>,
     smallContent: true,
   };
 
@@ -59,6 +69,7 @@ const SingleProfileRoutes = (props: SingleProfileRoutesProps) => {
 function createSingleProfileRoutes() {
   const mapStateToProps = (state: AppState) => ({
     userJid: selectUserJid(state),
+    username: selectUsername(state),
   });
   return withRouter<any, any>(connect(mapStateToProps)(SingleProfileRoutes));
 }
