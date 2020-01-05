@@ -70,5 +70,7 @@ public class JerahmeelApplication extends Application<JerahmeelApplicationConfig
                     "grading-response-poller",
                     component.gradingResponsePoller());
         }
+
+        env.admin().addTask(component.statsTask());
     }
 }

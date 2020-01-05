@@ -18,6 +18,8 @@ import judgels.jerahmeel.sandalphon.SandalphonModule;
 import judgels.jerahmeel.sealtiel.SealtielModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jerahmeel.submission.bundle.ItemSubmissionResource;
+import judgels.jerahmeel.submission.programming.StatsModule;
+import judgels.jerahmeel.submission.programming.StatsTask;
 import judgels.jerahmeel.submission.programming.SubmissionModule;
 import judgels.jerahmeel.submission.programming.SubmissionResource;
 import judgels.jerahmeel.user.UserStatsResource;
@@ -44,7 +46,9 @@ import judgels.service.hibernate.JudgelsHibernateModule;
         JudgelsPersistenceModule.class,
 
         JerahmeelModule.class,
-        JerahmeelHibernateDaoModule.class
+        JerahmeelHibernateDaoModule.class,
+
+        StatsModule.class
 })
 @Singleton
 public interface JerahmeelComponent {
@@ -63,4 +67,5 @@ public interface JerahmeelComponent {
 
     JudgelsScheduler scheduler();
     GradingResponsePoller gradingResponsePoller();
+    StatsTask statsTask();
 }
