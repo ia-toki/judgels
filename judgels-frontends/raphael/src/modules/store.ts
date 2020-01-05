@@ -43,6 +43,7 @@ import { problemSetAPI } from './api/jerahmeel/problemSet';
 import { problemSetProblemAPI } from './api/jerahmeel/problemSetProblem';
 import { submissionBundleAPI } from './api/jerahmeel/submissionBundle';
 import { submissionProgrammingAPI } from './api/jerahmeel/submissionProgramming';
+import { userStatsAPI } from './api/jerahmeel/user';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
 import { toastActions } from './toast/toastActions';
@@ -123,6 +124,7 @@ export const store: any = createStore<AppState>(
         problemSetProblemAPI,
         submissionBundleAPI,
         submissionProgrammingAPI,
+        userStatsAPI,
         toastActions,
       }),
       routerMiddleware(history)

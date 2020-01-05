@@ -9,7 +9,8 @@ import { AppState } from '../../../modules/store';
 import { selectIsLoggedIn } from '../../../modules/session/sessionSelectors';
 
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
-import HallOfFameWidget from '../widgets/hallOfFame/HallOfFameWidget/HallOfFameWidget';
+import TopRatedWidget from '../widgets/topRated/TopRatedWidget/TopRatedWidget';
+import TopScorersWidget from '../widgets/topScorers/TopScorersWidget/TopScorersWidget';
 
 import './HomePage.css';
 
@@ -69,11 +70,10 @@ class HomePage extends React.Component<HomePageProps> {
         <div className="home-widget-row__two-thirds">
           <ActiveContestsWidget />
         </div>
-        {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && (
-          <div className="home-widget-row__one-third">
-            <HallOfFameWidget />
-          </div>
-        )}
+        <div className="home-widget-row__one-third">
+          {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && <TopRatedWidget />}
+          {APP_CONFIG.mode !== Mode.PRIVATE_CONTESTS && APP_CONFIG.apiUrls.jerahmeel && <TopScorersWidget />}
+        </div>
         <div className="clearfix" />
       </div>
     );

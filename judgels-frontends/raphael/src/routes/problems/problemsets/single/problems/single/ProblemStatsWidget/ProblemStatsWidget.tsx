@@ -140,7 +140,7 @@ class ProblemStatsWidget extends React.Component<ProblemStatsWidgetProps, Proble
             <tr>
               <th className="col-rank">#</th>
               <th>User</th>
-              <th>{header}</th>
+              <th className="col-value">{header}</th>
             </tr>
           </thead>
           <tbody>{rows}</tbody>

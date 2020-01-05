@@ -1,0 +1,36 @@
+.top-scorers-widget {
+  .card__content {
+    padding: 0;
+  }
+}
+
+.top-scorers-widget__empty {
+  padding: 20px;
+}
+
+.top-scorers-widget__table {
+  td, th {
+    border-bottom: none !important;
+  }
+
+  th {
+    border-top: none !important;
+  }
+
+  tr:nth-child(1) {
+    td {
+      border-top: none !important;
+    }
+  }
+
+  .col-rank {
+    border-left: none !important;
+    width: 35px;
+    text-align: center;
+  }
+
+  .col-score {
+    width: 120px;
+    border-right: none !important;
+  }
+}

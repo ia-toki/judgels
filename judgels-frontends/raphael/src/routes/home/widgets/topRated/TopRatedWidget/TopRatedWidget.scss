@@ -1,14 +1,14 @@
-.hall-of-fame-widget {
+.top-rated-widget {
   .card__content {
     padding: 0;
   }
 }
 
-.hall-of-fame-widget__empty {
+.top-rated-widget__empty {
   padding: 20px;
 }
 
-.hall-of-fame-widget__table {
+.top-rated-widget__table {
   td, th {
     border-bottom: none !important;
   }
@@ -19,17 +19,18 @@
 
   tr:nth-child(1) {
     td {
-      border-top: none !important;;
+      border-top: none !important;
     }
   }
 
   .col-rank {
-    border-left: none !important;;
+    border-left: none !important;
     width: 35px;
     text-align: center;
   }
 
   .col-rating {
-    border-right: none !important;;
+    width: 120px;
+    border-right: none !important;
   }
 }

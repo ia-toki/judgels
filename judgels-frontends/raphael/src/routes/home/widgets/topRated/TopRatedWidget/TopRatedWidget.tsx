@@ -7,23 +7,23 @@ import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { Page } from '../../../../../modules/api/pagination';
 import { Profile } from '../../../../../modules/api/jophiel/profile';
-import { profileActions as injectedProfileActions } from '../../../../../routes/jophiel/modules/profileActions';
+import { widgetActions as injectedWidgetActions } from '../../modules/widgetActions';
 
-import './HallOfFameWidget.css';
+import './TopRatedWidget.css';
 
-interface HallOfFameWidgetProps {
+interface TopRatedWidgetProps {
   onGetTopRatedProfiles: (page?: number, pageSize?: number) => Promise<Page<Profile>>;
 }
 
-interface HallOfFameWidgetState {
+interface TopRatedWidgetState {
   profiles?: Page<Profile>;
 }
 
-class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOfFameWidgetState> {
-  state: HallOfFameWidgetState = {};
+class TopRatedWidget extends React.PureComponent<TopRatedWidgetProps, TopRatedWidgetState> {
+  state: TopRatedWidgetState = {};
 
   async componentDidMount() {
-    const profiles = await this.props.onGetTopRatedProfiles(1, 10);
+    const profiles = await this.props.onGetTopRatedProfiles(1, 5);
     this.setState({ profiles });
   }
 
@@ -34,7 +34,7 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
     }
 
     return (
-      <Card className="hall-of-fame-widget" title="Hall of fame">
+      <Card className="top-rated-widget" title="Top rated">
         {this.renderTable(profiles.page)}
       </Card>
     );
@@ -43,7 +43,7 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
   private renderTable = (profiles: Profile[]) => {
     if (profiles.length === 0) {
       return (
-        <div className="hall-of-fame-widget__empty">
+        <div className="top-rated-widget__empty">
           <small>No data yet.</small>
         </div>
       );
@@ -60,7 +60,7 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
     ));
 
     return (
-      <HTMLTable striped className="table-list hall-of-fame-widget__table">
+      <HTMLTable striped className="table-list top-rated-widget__table">
         <thead>
           <tr>
             <th className="col-rank">#</th>
@@ -74,11 +74,11 @@ class HallOfFameWidget extends React.PureComponent<HallOfFameWidgetProps, HallOf
   };
 }
 
-function createHallOfFameWidget(profileActions) {
+function createTopRatedWidget(widgetActions) {
   const mapDispatchToProps = {
-    onGetTopRatedProfiles: profileActions.getTopRatedProfiles,
+    onGetTopRatedProfiles: widgetActions.getTopRatedProfiles,
   };
-  return connect(undefined, mapDispatchToProps)(HallOfFameWidget);
+  return connect(undefined, mapDispatchToProps)(TopRatedWidget);
 }
 
-export default createHallOfFameWidget(injectedProfileActions);
+export default createTopRatedWidget(injectedWidgetActions);
