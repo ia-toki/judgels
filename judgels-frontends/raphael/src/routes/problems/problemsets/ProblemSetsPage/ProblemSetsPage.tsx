@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { parse } from 'query-string';
 
-import { LoadingState } from '../../../../components/LoadingState/LoadingState';
+import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { Card } from '../../../../components/Card/Card';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
@@ -126,13 +126,10 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
   private renderProblemSets = () => {
     const { response } = this.state;
     if (!response) {
-      return <LoadingState />;
+      return <LoadingContentCard />;
     }
 
     const { data, archiveDescriptionsMap, problemSetProgressesMap } = response;
-    if (!data) {
-      return <LoadingState />;
-    }
     if (data.page.length === 0) {
       return (
         <p>

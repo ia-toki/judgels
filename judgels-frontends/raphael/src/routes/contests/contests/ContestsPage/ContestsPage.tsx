@@ -5,10 +5,10 @@ import { parse } from 'query-string';
 
 import Pagination from '../../../../components/Pagination/Pagination';
 import { Card } from '../../../../components/Card/Card';
+import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { Contest, ContestCreateData, ContestsResponse } from '../../../../modules/api/uriel/contest';
 
-import { LoadingContestCard } from '../ContestCard/LoadingContestCard';
 import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
 import { contestActions as injectedContestActions } from '../modules/contestActions';
@@ -105,13 +105,13 @@ class ContestsPage extends React.Component<ContestsPageProps, ContestsPageState>
   private renderContests = () => {
     const { response } = this.state;
     if (!response) {
-      return <LoadingContestCard />;
+      return <LoadingContentCard />;
     }
 
     const rolesMap = response.rolesMap!;
     const contests = response.data;
     if (!contests) {
-      return <LoadingContestCard />;
+      return <LoadingContentCard />;
     }
 
     if (contests.page.length === 0) {

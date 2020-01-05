@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
+import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { CoursesResponse } from '../../../../modules/api/jerahmeel/course';
 import { CourseCard } from '../CourseCard/CourseCard';
-import { LoadingCourseCard } from '../CourseCard/LoadingCourseCard';
 import { courseActions as injectedCourseActions } from '../modules/courseActions';
 
 export interface CoursePageProps {
@@ -31,7 +31,7 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
   private renderCourses = () => {
     const { response } = this.state;
     if (!response) {
-      return <LoadingCourseCard />;
+      return <LoadingContentCard />;
     }
 
     const { data: courses, curriculumDescription, courseProgressesMap } = response;

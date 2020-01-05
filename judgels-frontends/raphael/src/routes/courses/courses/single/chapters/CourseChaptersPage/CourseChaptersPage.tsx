@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
-import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { CourseChapterCard, CourseChapterCardProps } from '../CourseChapterCard/CourseChapterCard';
 import { Course } from '../../../../../../modules/api/jerahmeel/course';
 import { CourseChaptersResponse } from '../../../../../../modules/api/jerahmeel/courseChapter';
@@ -41,7 +41,7 @@ export class CourseChaptersPage extends React.PureComponent<CourseChaptersPagePr
   private renderChapters = () => {
     const { response } = this.state;
     if (!response) {
-      return <LoadingState />;
+      return <LoadingContentCard />;
     }
 
     const { data: chapters, chaptersMap, chapterProgressesMap } = response;

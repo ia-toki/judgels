@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
 } from '../../../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
@@ -91,7 +91,7 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
   private renderProblems = () => {
     const { response } = this.state;
     if (!response) {
-      return <LoadingState />;
+      return <LoadingContentCard />;
     }
 
     const { data: problems, problemsMap, problemProgressesMap } = response;
