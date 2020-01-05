@@ -30,7 +30,7 @@ interface SubmissionsPageState {
 }
 
 export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, SubmissionsPageState> {
-  private static PAGE_SIZE = 50;
+  private static PAGE_SIZE = 20;
 
   state: SubmissionsPageState = {};
 

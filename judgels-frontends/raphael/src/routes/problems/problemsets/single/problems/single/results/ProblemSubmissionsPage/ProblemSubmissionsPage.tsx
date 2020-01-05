@@ -44,7 +44,7 @@ interface ProblemSubmissionsPageState {
 }
 
 export class ProblemSubmissionsPage extends React.Component<ProblemSubmissionsPageProps, ProblemSubmissionsPageState> {
-  private static PAGE_SIZE = 50;
+  private static PAGE_SIZE = 20;
 
   state: ProblemSubmissionsPageState = {};
 
