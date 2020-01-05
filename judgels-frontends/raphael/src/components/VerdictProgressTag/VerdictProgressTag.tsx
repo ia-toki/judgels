@@ -1,7 +1,10 @@
 import { Tag } from '@blueprintjs/core';
+import classNames from 'classnames';
 import * as React from 'react';
 
 import { getVerdictIntent, VerdictCode } from '../../modules/api/gabriel/verdict';
+
+import './VerdictProgressTag.css';
 
 export interface VerdictProgressTagProps {
   className?: string;
@@ -15,14 +18,14 @@ export const VerdictProgressTag = (props: VerdictProgressTagProps) => {
 
   if (verdict === VerdictCode.PND) {
     return (
-      <Tag className={className} intent={intent}>
-        not tried yet
+      <Tag className={classNames('verdict-progress-tag', className)} intent={intent}>
+        not tried
       </Tag>
     );
   }
 
   return (
-    <Tag className={className} intent={intent}>
+    <Tag className={classNames('verdict-progress-tag', className)} intent={intent}>
       {verdict} {score}
     </Tag>
   );

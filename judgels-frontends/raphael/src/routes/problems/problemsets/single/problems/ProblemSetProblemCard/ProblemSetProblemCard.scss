@@ -1,10 +1,8 @@
 .problemset-problem-card__stats {
   float: right;
   margin-bottom: 5px;
-  margin-right: 5px;
-}
 
-.problemset-problem-card__progress {
-  float: right;
-  margin-bottom: 5px;
+  > span {
+    margin-left: 5px;
+  }
 }

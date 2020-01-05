@@ -41,7 +41,7 @@ export class CourseChapterCard extends React.PureComponent<CourseChapterCardProp
 
     const { solvedProblems, totalProblems } = progress;
     return (
-      <ProgressTag className="course-chapter-card__progress" num={solvedProblems} denom={totalProblems}>
+      <ProgressTag num={solvedProblems} denom={totalProblems}>
         {solvedProblems} / {totalProblems} solved
       </ProgressTag>
     );

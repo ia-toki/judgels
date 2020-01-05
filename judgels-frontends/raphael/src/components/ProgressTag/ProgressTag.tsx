@@ -1,5 +1,8 @@
 import { Intent, Tag } from '@blueprintjs/core';
+import classNames from 'classnames';
 import * as React from 'react';
+
+import './ProgressTag.css';
 
 export interface ProgressTagProps {
   className?: string;
@@ -24,7 +27,7 @@ export const ProgressTag = (props: ProgressTagProps) => {
     intent = Intent.PRIMARY;
   }
   return (
-    <Tag large={!!large} className={className} intent={intent}>
+    <Tag large={!!large} className={classNames('progress-tag', className)} intent={intent}>
       {children}
     </Tag>
   );

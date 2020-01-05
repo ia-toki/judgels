@@ -27,8 +27,10 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
       <ContentCardLink to={`/problems/${problemSet.slug}/${problem.alias}`} className="problemset-problem-card">
         <h4 data-key="name">
           {problem.alias}. {problemName}
-          {this.renderProgress()}
-          {this.renderStats()}
+          <div className="problemset-problem-card__stats">
+            {this.renderProgress()}
+            {this.renderStats()}
+          </div>
         </h4>
         {this.renderProgressBar()}
       </ContentCardLink>
@@ -46,11 +48,11 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
 
     return (
       <>
-        <Tag className="problemset-problem-card__stats" round intent={Intent.PRIMARY}>
-          {totalUsersAccepted} / {totalUsersTried} users solved
+        <Tag round intent={Intent.PRIMARY}>
+          avg: {avgScore} pts
         </Tag>
-        <Tag className="problemset-problem-card__stats" round intent={Intent.PRIMARY}>
-          {avgScore} avg pts
+        <Tag round intent={Intent.PRIMARY}>
+          AC: {totalUsersAccepted} / {totalUsersTried} users
         </Tag>
       </>
     );
@@ -63,7 +65,7 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
     }
 
     const { verdict, score } = progress;
-    return <VerdictProgressTag className="problemset-problem-card__progress" verdict={verdict} score={score} />;
+    return <VerdictProgressTag verdict={verdict} score={score} />;
   };
 
   private renderProgressBar = () => {
