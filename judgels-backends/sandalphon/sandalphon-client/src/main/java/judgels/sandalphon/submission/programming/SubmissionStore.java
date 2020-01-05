@@ -22,6 +22,9 @@ public interface SubmissionStore {
             Optional<String> problemJid,
             Optional<Long> lastSubmissionId,
             Optional<Integer> limit);
+    Page<Submission> getSubmissionsForStats(
+            Optional<Long> lastSubmissionId,
+            int limit);
     Page<Submission> getSubmissions(
             Optional<String> containerJid,
             Optional<String> userJid,

@@ -1,7 +1,6 @@
 package judgels.jerahmeel.submission.programming;
 
 import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 import com.google.common.collect.ImmutableMultimap;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -25,8 +24,7 @@ public class StatsTask extends Task {
     @Override
     @UnitOfWork
     public void execute(ImmutableMultimap<String, String> parameters, PrintWriter output) throws Exception {
-        Page<Submission> submissions =
-                submissionStore.getSubmissionsForDownload(empty(), empty(), empty(), empty(), of(1000));
+        Page<Submission> submissions = submissionStore.getSubmissionsForStats(empty(), 1000);
 
         for (Submission s : submissions.getPage()) {
             output.write(s.getJid() + "\n");
