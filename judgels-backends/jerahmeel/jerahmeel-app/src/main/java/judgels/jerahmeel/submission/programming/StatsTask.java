@@ -24,7 +24,7 @@ public class StatsTask extends Task {
     @Override
     @UnitOfWork
     public void execute(ImmutableMultimap<String, String> parameters, PrintWriter output) throws Exception {
-        Page<Submission> submissions = submissionStore.getSubmissionsForStats(empty(), 1000);
+        Page<Submission> submissions = submissionStore.getSubmissionsForStats(empty(), 100);
 
         for (Submission s : submissions.getPage()) {
             output.write(s.getJid() + "\n");
