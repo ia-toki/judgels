@@ -37,7 +37,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
     super(props);
 
     const queries = parse(this.props.location.search);
-    const archiveSlug = queries.archiveSlug as string;
+    const archiveSlug = queries.archive as string;
     const name = queries.name as string;
 
     this.state = { filter: { archiveSlug, name }, isFilterLoading: false };
@@ -45,7 +45,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
 
   componentDidUpdate() {
     const queries = parse(this.props.location.search);
-    const archiveSlug = queries.archiveSlug as string;
+    const archiveSlug = queries.archive as string;
 
     if (archiveSlug !== this.state.filter.archiveSlug) {
       this.setState({ filter: { archiveSlug }, isFilterLoading: false });

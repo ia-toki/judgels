@@ -29,7 +29,7 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
     super(props);
 
     const queries = parse(this.props.location.search);
-    const archiveSlug = (queries.archiveSlug as string) || '';
+    const archiveSlug = (queries.archive as string) || '';
 
     this.state = { archiveSlug };
   }
@@ -98,7 +98,7 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
     const archiveSlug = e.target.value;
     const queries = parse(this.props.location.search);
     this.props.onPush({
-      search: stringify({ ...queries, name: undefined, archiveSlug: archiveSlug === '' ? undefined : archiveSlug }),
+      search: stringify({ ...queries, name: undefined, archive: archiveSlug === '' ? undefined : archiveSlug }),
     });
     this.setState({ archiveSlug });
   };
