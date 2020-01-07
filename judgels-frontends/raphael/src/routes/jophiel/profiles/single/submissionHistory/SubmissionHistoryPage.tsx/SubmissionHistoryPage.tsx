@@ -69,7 +69,7 @@ class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, 
   };
 
   private renderPagination = () => {
-    return <Pagination key={1} currentPage={1} pageSize={50} onChangePage={this.onChangePage} />;
+    return <Pagination key={1} currentPage={1} pageSize={20} onChangePage={this.onChangePage} />;
   };
 
   private onChangePage = async (nextPage: number) => {
