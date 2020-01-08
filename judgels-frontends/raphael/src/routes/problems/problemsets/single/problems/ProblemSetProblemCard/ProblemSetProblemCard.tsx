@@ -1,4 +1,4 @@
-import { Tag } from '@blueprintjs/core';
+import { Tag, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
@@ -50,17 +50,27 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
 
     return (
       <div className="problemset-problem-card__stats">
-        <Tag round>
-          avg: {avgScore} pts / {totalUsersTried}
-        </Tag>
+        {this.renderAvgScoreStats(avgScore, totalUsersTried)}
         {this.renderACStats(totalUsersAccepted, totalUsersTried)}
       </div>
     );
   };
 
+  private renderAvgScoreStats = (avgScore: number, totalUsersTried: number) => {
+    return (
+      <Tag round intent={Intent.PRIMARY}>
+        <span className="problemset-problem-card__stats--large">{78}</span> avg score / {totalUsersTried} users
+      </Tag>
+    );
+  };
+
   private renderACStats = (totalUsersAccepted: number, totalUsersTried: number) => {
     if (totalUsersAccepted > 0) {
-      return <Tag round>{totalUsersAccepted} solved</Tag>;
+      return (
+        <Tag round intent={Intent.PRIMARY}>
+          <span className="problemset-problem-card__stats--large">{totalUsersAccepted}</span>solved
+        </Tag>
+      );
     }
     return null;
   };
