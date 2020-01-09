@@ -25,5 +25,13 @@ export const ProgressBar = (props: ProgressBarProps) => {
   } else {
     intent = Intent.PRIMARY;
   }
-  return <BlueprintProgressBar animate={false} stripes={false} intent={intent} value={num / denom} />;
+  return (
+    <BlueprintProgressBar
+      className="progress-bar"
+      animate={false}
+      stripes={false}
+      intent={intent}
+      value={num / denom}
+    />
+  );
 };
