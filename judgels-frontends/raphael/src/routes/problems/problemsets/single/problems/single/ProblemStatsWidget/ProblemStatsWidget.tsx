@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
+import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
+import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
 import { ProblemSet } from '../../../../../../../modules/api/jerahmeel/problemSet';
 import {
   ProblemProgress,
@@ -17,7 +19,6 @@ import { selectProblemSet } from '../../../../modules/problemSetSelectors';
 import { problemSetProblemActions as injectedProblemSetProblemActions } from '../../modules/problemSetProblemActions';
 
 import './ProblemStatsWidget.css';
-import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
 
 export interface ProblemStatsWidgetProps extends RouteComponentProps<{ problemAlias: string }> {
   problemSet: ProblemSet;
@@ -67,13 +68,15 @@ class ProblemStatsWidget extends React.Component<ProblemStatsWidgetProps, Proble
             </li>
           )}
           <li>
-            Users attempted: <b className="stats-value">{stats.totalUsersTried}</b>
-          </li>
-          <li>
-            Avg score: <b className="stats-value">{Math.ceil(stats.totalScores / (stats.totalUsersTried || 1))}</b>
+            Avg score:{' '}
+            <span className="stats-value">
+              <b>{Math.ceil(stats.totalScores / (stats.totalUsersTried || 1))}</b> / {stats.totalUsersTried} users
+            </span>
           </li>
           <li>
             Your score: <VerdictProgressTag {...progress} />
+            <br />
+            <ProgressBar num={progress.score} denom={100} verdict={progress.verdict} />
           </li>
         </ul>
       </ContentCard>
