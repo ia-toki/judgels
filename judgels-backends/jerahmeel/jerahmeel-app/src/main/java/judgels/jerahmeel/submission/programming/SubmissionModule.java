@@ -119,6 +119,6 @@ public class SubmissionModule {
                         submissionStore,
                         sealtielClientAuthHeader,
                         messageService,
-                        statsProcessor});
+                        null});
     }
 }
