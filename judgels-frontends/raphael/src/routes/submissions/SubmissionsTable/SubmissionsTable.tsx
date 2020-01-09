@@ -90,7 +90,10 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
               submission.problemJid
             ] || '#'}`}
           >
-            {constructProblemName(problemNamesMap[submission.problemJid], problemAliasesMap[submission.problemJid])}
+            {constructProblemName(
+              problemNamesMap[submission.problemJid],
+              problemAliasesMap[submission.containerJid + '-' + submission.problemJid]
+            )}
           </Link>
         </td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>

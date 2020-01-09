@@ -51,7 +51,7 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
     return (
       <div className="problemset-problem-card__stats">
         {this.renderAvgScoreStats(avgScore, totalUsersTried)}
-        {this.renderACStats(totalUsersAccepted, totalUsersTried)}
+        {this.renderACStats(totalUsersAccepted)}
       </div>
     );
   };
@@ -64,7 +64,7 @@ export class ProblemSetProblemCard extends React.PureComponent<ProblemSetProblem
     );
   };
 
-  private renderACStats = (totalUsersAccepted: number, totalUsersTried: number) => {
+  private renderACStats = (totalUsersAccepted: number) => {
     if (totalUsersAccepted > 0) {
       return (
         <Tag round intent={Intent.PRIMARY}>

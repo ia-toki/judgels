@@ -50,13 +50,10 @@ public class ChapterProblemStore {
     }
 
     public Map<String, String> getProblemAliasesByJids(Set<String> problemJids) {
-        Map<String, String> problemAliases = problemDao.selectAllByProblemJids(problemJids)
+        return problemDao.selectAllByProblemJids(problemJids)
                 .stream()
-                .collect(Collectors.toMap(m -> m.problemJid, m -> m.alias));
-        return problemJids
-                .stream()
-                .filter(problemAliases::containsKey)
-                .collect(Collectors.toMap(jid -> jid, problemAliases::get));
+                .filter(m -> problemJids.contains(m.problemJid))
+                .collect(Collectors.toMap(m -> m.chapterJid + "-" + m.problemJid, m -> m.alias));
     }
 
     public Set<ChapterProblem> setProblems(String chapterJid, List<ChapterProblem> data) {
