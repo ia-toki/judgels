@@ -36,9 +36,14 @@ public class StatsTask extends Task {
 
         Page<Submission> submissions = submissionStore.getSubmissionsForStats(lastSubmissionId, limit.orElse(1000));
 
+        Submission lastSubmission = null;
         for (Submission s : submissions.getPage()) {
-            output.write(s.getJid() + "\n");
             statsProcessor.accept(s);
+            lastSubmission = s;
+        }
+
+        if (lastSubmission != null) {
+            output.write(lastSubmission.getId() + "\n");
         }
     }
 }
