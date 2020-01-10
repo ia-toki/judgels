@@ -15,6 +15,7 @@ import judgels.fs.FileSystems;
 import judgels.fs.aws.AwsConfiguration;
 import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.sandalphon.submission.programming.GradingResponseProcessor;
+import judgels.sandalphon.submission.programming.NoOpSubmissionConsumer;
 import judgels.sandalphon.submission.programming.SubmissionClient;
 import judgels.sandalphon.submission.programming.SubmissionConsumer;
 import judgels.sandalphon.submission.programming.SubmissionRegradeProcessor;
@@ -118,6 +119,6 @@ public class SubmissionModule {
                         submissionStore,
                         sealtielClientAuthHeader,
                         messageService,
-                        null});
+                        new NoOpSubmissionConsumer()});
     }
 }

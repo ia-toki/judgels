@@ -57,9 +57,7 @@ public class GradingResponseProcessor {
                     submissionStore.updateGrading(response.getGradingJid(), response.getResult(), submissionConsumer);
             if (submission.isPresent()) {
                 gradingExists = true;
-                if (submissionConsumer != null) {
-                    submissionConsumer.accept(submission.get());
-                }
+                submissionConsumer.accept(submission.get());
                 messageService.confirmMessage(sealtielClientAuthHeader, message.getId());
                 break;
             }
