@@ -26,8 +26,12 @@ import judgels.jerahmeel.submission.SubmissionUtils;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StatsProcessor implements SubmissionConsumer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatsProcessor.class);
+
     private final CourseChapterDao courseChapterDao;
     private final ChapterProblemDao chapterProblemDao;
     private final ProblemSetProblemDao problemSetProblemDao;
@@ -67,7 +71,9 @@ public class StatsProcessor implements SubmissionConsumer {
 
     @Override
     public void accept(Submission submission) {
+        LOGGER.info("Accepting {}", submission.getJid());
         if (SubmissionUtils.isChapter(submission.getContainerJid())) {
+            LOGGER.info("A");
             ProblemStatsResult res = processProblemStats(submission);
             if (res == null) {
                 return;
@@ -80,8 +86,11 @@ public class StatsProcessor implements SubmissionConsumer {
                 processUserStats(submission, res.scoreDiff);
             }
         } else {
+            LOGGER.info("B");
             ProblemStatsResult res = processProblemStats(submission);
+            LOGGER.info("C");
             if (res == null) {
+                LOGGER.info("D");
                 return;
             }
 
@@ -93,13 +102,16 @@ public class StatsProcessor implements SubmissionConsumer {
     }
 
     private ProblemStatsResult processProblemStats(Submission s) {
+        LOGGER.info("1");
         if (!s.getLatestGrading().isPresent()) {
             return null;
         }
+        LOGGER.info("2");
         Grading grading = s.getLatestGrading().get();
         if (!grading.getDetails().isPresent()) {
             return null;
         }
+        LOGGER.info("3");
         GradingResultDetails details = grading.getDetails().get();
 
         int time = 0;
@@ -124,7 +136,9 @@ public class StatsProcessor implements SubmissionConsumer {
         Optional<StatsUserProblemModel> maybeModel =
                 statsUserProblemDao.selectByUserJidAndProblemJid(s.getUserJid(), s.getProblemJid());
 
+        LOGGER.info("4");
         if (maybeModel.isPresent()) {
+            LOGGER.info("5");
             StatsUserProblemModel model = maybeModel.get();
             model.submissionJid = s.getJid();
 
@@ -145,6 +159,7 @@ public class StatsProcessor implements SubmissionConsumer {
 
             statsUserProblemDao.update(model);
         } else {
+            LOGGER.info("6");
             StatsUserProblemModel model = new StatsUserProblemModel();
 
             model.userJid = s.getUserJid();
@@ -161,6 +176,7 @@ public class StatsProcessor implements SubmissionConsumer {
             statsUserProblemDao.insert(model);
         }
 
+        LOGGER.info("7");
         ProblemStatsResult result = new ProblemStatsResult();
         result.scoreDiff = scoreDiff;
         result.becomesAccepted = !isAlreadyAccepted && isNowAccepted;
