@@ -51,13 +51,10 @@ public class GradingResponseProcessor {
 
         boolean gradingExists = false;
 
-        LOGGER.info("Processing message {}", response.getGradingJid());
-
         // it is possible that the grading model is not immediately found, because it is not flushed yet.
         for (int i = 0; i < MAX_RETRIES; i++) {
             Optional<Submission> submission =
                     submissionStore.updateGrading(response.getGradingJid(), response.getResult());
-            LOGGER.info(submission.toString());
             if (submission.isPresent()) {
                 gradingExists = true;
                 submissionConsumer.accept(submission.get());
