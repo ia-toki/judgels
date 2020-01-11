@@ -174,7 +174,7 @@ public class BaseSubmissionStore<
     }
 
     @Override
-    public Optional<Submission> updateGrading(String gradingJid, GradingResult result, SubmissionConsumer consumer) {
+    public Optional<Submission> updateGrading(String gradingJid, GradingResult result) {
         Optional<GM> maybeModel = gradingDao.selectByJid(gradingJid);
         if (!maybeModel.isPresent()) {
             return Optional.empty();
@@ -191,14 +191,11 @@ public class BaseSubmissionStore<
         model.score = result.getScore();
         model.details = result.getDetails();
 
+        Optional<Submission> res = Optional.of(submissionFromModels(submissionModel.get(), model));
+
         gradingDao.update(model);
 
-        Submission s = submissionFromModels(submissionModel.get(), model);
-        if (consumer != null) {
-            consumer.accept(s);
-        }
-
-        return Optional.of(s);
+        return res;
     }
 
     private Submission submissionFromModels(SM model, GM gradingModel) {

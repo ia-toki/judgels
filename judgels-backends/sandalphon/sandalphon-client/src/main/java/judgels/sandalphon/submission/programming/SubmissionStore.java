@@ -36,5 +36,5 @@ public interface SubmissionStore {
 
     Submission createSubmission(SubmissionData data, String gradingEngine);
     String createGrading(Submission submission);
-    Optional<Submission> updateGrading(String gradingJid, GradingResult result, SubmissionConsumer consumer);
+    Optional<Submission> updateGrading(String gradingJid, GradingResult result);
 }

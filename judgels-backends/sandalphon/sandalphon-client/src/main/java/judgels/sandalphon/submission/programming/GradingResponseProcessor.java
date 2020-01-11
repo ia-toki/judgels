@@ -54,7 +54,7 @@ public class GradingResponseProcessor {
         // it is possible that the grading model is not immediately found, because it is not flushed yet.
         for (int i = 0; i < MAX_RETRIES; i++) {
             Optional<Submission> submission =
-                    submissionStore.updateGrading(response.getGradingJid(), response.getResult(), submissionConsumer);
+                    submissionStore.updateGrading(response.getGradingJid(), response.getResult());
             if (submission.isPresent()) {
                 gradingExists = true;
                 submissionConsumer.accept(submission.get());
