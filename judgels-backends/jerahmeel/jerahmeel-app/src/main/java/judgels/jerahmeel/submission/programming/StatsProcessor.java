@@ -126,9 +126,6 @@ public class StatsProcessor implements SubmissionConsumer {
 
         if (maybeModel.isPresent()) {
             StatsUserProblemModel model = maybeModel.get();
-            if (model.updatedAt.isAfter(s.getTime())) {
-                return null;
-            }
             model.submissionJid = s.getJid();
 
             scoreDiff = grading.getScore() - model.score;
