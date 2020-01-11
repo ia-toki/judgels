@@ -406,7 +406,7 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
     }
 
     private void assertUserTopStats(String userJid1, int total1, String userJid2, int total2) {
-        assertThat(statsStore.getTopUserStats(Optional.of(1), Optional.of(20)).getTopUsers())
+        assertThat(statsStore.getTopUserStats(Optional.of(1), Optional.of(20)).getPage())
                 .containsExactly(
                         new UserTopStatsEntry.Builder().userJid(userJid1).totalScores(total1).build(),
                         new UserTopStatsEntry.Builder().userJid(userJid2).totalScores(total2).build());

@@ -11,13 +11,13 @@ import java.util.Set;
 import javax.inject.Inject;
 import judgels.jerahmeel.api.user.UserStats;
 import judgels.jerahmeel.api.user.UserStatsService;
-import judgels.jerahmeel.api.user.UserTopStats;
 import judgels.jerahmeel.api.user.UserTopStatsEntry;
 import judgels.jerahmeel.api.user.UserTopStatsResponse;
 import judgels.jerahmeel.stats.StatsStore;
 import judgels.jophiel.api.profile.Profile;
 import judgels.jophiel.api.profile.ProfileService;
 import judgels.jophiel.api.user.search.UserSearchService;
+import judgels.persistence.api.Page;
 
 public class UserStatsResource implements UserStatsService {
     private final StatsStore statsStore;
@@ -38,8 +38,8 @@ public class UserStatsResource implements UserStatsService {
     @Override
     @UnitOfWork(readOnly = true)
     public UserTopStatsResponse getTopUserStats(Optional<Integer> page, Optional<Integer> pageSize) {
-        UserTopStats stats = statsStore.getTopUserStats(page, pageSize);
-        Set<String> userJids = stats.getTopUsers().stream().map(UserTopStatsEntry::getUserJid).collect(toSet());
+        Page<UserTopStatsEntry> stats = statsStore.getTopUserStats(page, pageSize);
+        Set<String> userJids = stats.getPage().stream().map(UserTopStatsEntry::getUserJid).collect(toSet());
         Map<String, Profile> profileMap = profileService.getProfiles(userJids);
 
         return new UserTopStatsResponse.Builder()

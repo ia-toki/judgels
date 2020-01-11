@@ -1,5 +1,6 @@
 package judgels.jerahmeel.stats;
 
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +17,6 @@ import judgels.jerahmeel.api.problem.ProblemTopStats;
 import judgels.jerahmeel.api.problem.ProblemTopStatsEntry;
 import judgels.jerahmeel.api.problemset.ProblemSetProgress;
 import judgels.jerahmeel.api.user.UserStats;
-import judgels.jerahmeel.api.user.UserTopStats;
 import judgels.jerahmeel.api.user.UserTopStatsEntry;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
 import judgels.jerahmeel.persistence.CourseChapterDao;
@@ -29,6 +29,7 @@ import judgels.jerahmeel.persistence.StatsUserProblemModel;
 import judgels.jerahmeel.persistence.StatsUserProblemSetDao;
 import judgels.jerahmeel.persistence.StatsUserProblemSetModel;
 import judgels.persistence.api.OrderDir;
+import judgels.persistence.api.Page;
 import judgels.persistence.api.SelectionOptions;
 
 public class StatsStore {
@@ -189,7 +190,7 @@ public class StatsStore {
                 .build();
     }
 
-    public UserTopStats getTopUserStats(Optional<Integer> page, Optional<Integer> pageSize) {
+    public Page<UserTopStatsEntry> getTopUserStats(Optional<Integer> page, Optional<Integer> pageSize) {
         SelectionOptions.Builder options = new SelectionOptions.Builder()
                 .from(SelectionOptions.DEFAULT_PAGED)
                 .orderBy("score")
@@ -200,9 +201,8 @@ public class StatsStore {
         page.ifPresent(options::page);
         pageSize.ifPresent(options::pageSize);
 
-        List<UserTopStatsEntry> entries = statsUserDao.selectPaged(options.build()).getPage().stream()
-                .map(m -> new UserTopStatsEntry.Builder().userJid(m.userJid).totalScores(m.score).build())
-                .collect(Collectors.toList());
-        return new UserTopStats.Builder().topUsers(entries).build();
+        return statsUserDao.selectPaged(options.build())
+                .mapPage(models -> Lists.transform(models, m ->
+                        new UserTopStatsEntry.Builder().userJid(m.userJid).totalScores(m.score).build()));
     }
 }

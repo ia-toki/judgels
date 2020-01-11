@@ -3,6 +3,7 @@ import { stringify } from 'query-string';
 import { APP_CONFIG } from '../../../conf';
 import { get } from '../http';
 import { Profile } from '../jophiel/profile';
+import { Page } from '../pagination';
 
 export interface UserStats {
   totalScores: number;
@@ -15,12 +16,8 @@ export interface UserTopStatsEntry {
   totalScores: number;
 }
 
-export interface UserTopStats {
-  topUsers: UserTopStatsEntry[];
-}
-
 export interface UserTopStatsResponse {
-  data: UserTopStats;
+  data: Page<UserTopStatsEntry>;
   profilesMap: { [userJid: string]: Profile };
 }
 

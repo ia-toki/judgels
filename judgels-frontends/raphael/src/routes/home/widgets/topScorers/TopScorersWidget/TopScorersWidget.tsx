@@ -41,7 +41,7 @@ class TopScorersWidget extends React.PureComponent<TopScorersWidgetProps, TopSco
 
   private renderTable = () => {
     const { data, profilesMap } = this.state.response;
-    if (data.topUsers.length === 0) {
+    if (data.page.length === 0) {
       return (
         <div className="top-scorers-widget__empty">
           <small>No data yet.</small>
@@ -49,7 +49,7 @@ class TopScorersWidget extends React.PureComponent<TopScorersWidgetProps, TopSco
       );
     }
 
-    const rows = data.topUsers.map((e, idx) => (
+    const rows = data.page.map((e, idx) => (
       <tr key={e.userJid}>
         <td className="col-rank">{idx + 1}</td>
         <td>
