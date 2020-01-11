@@ -25,7 +25,7 @@ export class CourseCard extends React.PureComponent<CourseCardProps> {
         </h4>
         {description && (
           <div className="course-card__description">
-            <HtmlText>{description}</HtmlText>
+            <HtmlText> </HtmlText>
           </div>
         )}
         {this.renderProgressBar()}
