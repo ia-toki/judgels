@@ -41,6 +41,7 @@ import play.filters.csrf.RequireCSRFCheck;
 import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.Results;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -114,6 +115,10 @@ public final class ProblemSetProblemController extends AbstractProblemSetControl
 
         if ((!JerahmeelUtils.hasRole("admin") && (problemSetProblem.getStatus() != ProblemSetProblemStatus.VISIBLE) || !problemSetProblem.getProblemSetJid().equals(problemSet.getJid()))) {
             return notFound();
+        }
+
+        if (!isAdmin()) {
+            return Results.movedPermanently("https://tlx.toki.id/problems/" + problemSet.getSlug() + "/" + problemSetProblem.getAlias());
         }
 
         String reasonNotAllowedToSubmit = null;

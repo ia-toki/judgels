@@ -77,6 +77,10 @@ public final class ProblemSetProgrammingSubmissionController extends AbstractPro
     @Authenticated(value = {LoggedIn.class, HasRole.class})
     @Transactional
     public Result postSubmitProblem(long problemSetId, String problemJid) throws ProblemSetNotFoundException {
+        if (!isAdmin()) {
+            return notFound();
+        }
+
         ProblemSet problemSet = problemSetService.findProblemSetById(problemSetId);
 
         ProblemSetProblem problemSetProblem = problemSetProblemService.findProblemSetProblemByProblemSetJidAndProblemJid(problemSet.getJid(), problemJid);

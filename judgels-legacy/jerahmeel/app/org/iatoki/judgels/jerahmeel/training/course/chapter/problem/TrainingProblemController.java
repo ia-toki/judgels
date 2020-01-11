@@ -43,6 +43,7 @@ import play.data.DynamicForm;
 import play.db.jpa.Transactional;
 import play.i18n.Messages;
 import play.mvc.Result;
+import play.mvc.Results;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -132,6 +133,10 @@ public final class TrainingProblemController extends AbstractTrainingChapterCont
 
         Course course = courseService.findCourseByJid(curriculumCourse.getCourseJid());
         Chapter chapter = chapterService.findChapterByJid(courseChapter.getChapterJid());
+
+        if (!isAdmin()) {
+            return Results.movedPermanently("https://tlx.toki.id/courses/" + course.getSlug() + "/chapters/" + courseChapter.getAlias() + "/problems/" + chapterProblem.getAlias());
+        }
 
         String reasonNotAllowedToSubmit = null;
         if (JerahmeelUtils.isGuest()) {

@@ -7,12 +7,14 @@ public final class ProblemSet {
     private final long id;
     private final String jid;
     private final Archive parentArchive;
+    private final String slug;
     private final String name;
     private final String description;
 
-    public ProblemSet(long id, String jid, Archive parentArchive, String name, String description) {
+    public ProblemSet(long id, String jid, String slug, Archive parentArchive, String name, String description) {
         this.id = id;
         this.jid = jid;
+        this.slug = slug;
         this.parentArchive = parentArchive;
         this.name = name;
         this.description = description;
@@ -24,6 +26,10 @@ public final class ProblemSet {
 
     public String getJid() {
         return jid;
+    }
+
+    public String getSlug() {
+        return slug;
     }
 
     public Archive getParentArchive() {

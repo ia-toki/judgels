@@ -10,6 +10,6 @@ public final class ProblemSetServiceUtils {
     }
 
     static ProblemSet createProblemSetFromModelAndArchive(ProblemSetModel problemSetModel, Archive archive) {
-        return new ProblemSet(problemSetModel.id, problemSetModel.jid, archive, problemSetModel.name, problemSetModel.description);
+        return new ProblemSet(problemSetModel.id, problemSetModel.jid, problemSetModel.slug, archive, problemSetModel.name, problemSetModel.description);
     }
 }

@@ -4,12 +4,14 @@ public final class Course {
 
     private final long id;
     private final String jid;
+    private final String slug;
     private final String name;
     private final String description;
 
-    public Course(long id, String jid, String name, String description) {
+    public Course(long id, String jid, String slug, String name, String description) {
         this.id = id;
         this.jid = jid;
+        this.slug = slug;
         this.name = name;
         this.description = description;
     }
@@ -20,6 +22,10 @@ public final class Course {
 
     public String getJid() {
         return jid;
+    }
+
+    public String getSlug() {
+        return slug;
     }
 
     public String getName() {

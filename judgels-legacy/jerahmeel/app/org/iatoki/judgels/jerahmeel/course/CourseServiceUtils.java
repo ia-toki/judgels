@@ -9,6 +9,6 @@ final class CourseServiceUtils {
     }
 
     static Course createCourseFromModel(CourseModel courseModel) {
-        return new Course(courseModel.id, courseModel.jid, courseModel.name, courseModel.description);
+        return new Course(courseModel.id, courseModel.jid, courseModel.slug, courseModel.name, courseModel.description);
     }
 }

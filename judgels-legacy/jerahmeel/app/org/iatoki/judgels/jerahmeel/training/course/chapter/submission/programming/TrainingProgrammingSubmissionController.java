@@ -97,6 +97,10 @@ public final class TrainingProgrammingSubmissionController extends AbstractTrain
     @Authenticated(value = {LoggedIn.class, HasRole.class})
     @Transactional
     public Result postSubmitProblem(long curriculumId, long curriculumCourseId, long courseChapterId, String problemJid) throws CurriculumNotFoundException, CurriculumCourseNotFoundException, CourseChapterNotFoundException {
+        if (!isAdmin()) {
+            return notFound();
+        }
+
         Curriculum curriculum = curriculumService.findCurriculumById(curriculumId);
         CurriculumCourse curriculumCourse = curriculumCourseService.findCurriculumCourseByCurriculumCourseId(curriculumCourseId);
         CourseChapter courseChapter = courseChapterService.findCourseChapterById(courseChapterId);
