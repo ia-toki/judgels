@@ -1,5 +1,6 @@
 import { Alignment, Navbar } from '@blueprintjs/core';
 import * as React from 'react';
+import FlagIcon from 'react-flag-kit/lib/FlagIcon';
 import { Link } from 'react-router-dom';
 
 import { APP_CONFIG } from '../../conf';
@@ -28,7 +29,10 @@ class Header extends React.PureComponent<HeaderProps> {
             </div>
             <Navbar.Heading className="header__title">{APP_CONFIG.name}</Navbar.Heading>
             <Navbar.Divider />
-            <div className="header__subtitle">{APP_CONFIG.slogan}</div>
+            <div className="header__subtitle">
+              <FlagIcon code="ID" size={22} className="header__flag" />
+              Competitive Programming Platform
+            </div>
           </Navbar.Group>
 
           {<UW />}
