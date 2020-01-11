@@ -34,12 +34,19 @@ export class CourseCard extends React.PureComponent<CourseCardProps> {
   }
 
   private renderProgress = () => {
-    const { progress } = this.props;
+    const { progress, course } = this.props;
     if (!progress || progress.totalChapters === 0) {
       return null;
     }
 
-    const { solvedChapters, totalChapters } = progress;
+    const { solvedChapters } = progress;
+
+    // TODO: Properly do not count chapters without programming problems
+    let totalChapters = progress.totalChapters;
+    if (course.description) {
+      totalChapters -= +course.description;
+    }
+
     return (
       <ProgressTag num={solvedChapters} denom={totalChapters}>
         {solvedChapters} / {totalChapters} completed
