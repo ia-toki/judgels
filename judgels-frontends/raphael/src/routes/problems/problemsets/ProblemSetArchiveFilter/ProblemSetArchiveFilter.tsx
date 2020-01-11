@@ -98,7 +98,12 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
     const archiveSlug = e.target.value;
     const queries = parse(this.props.location.search);
     this.props.onPush({
-      search: stringify({ ...queries, name: undefined, archive: archiveSlug === '' ? undefined : archiveSlug }),
+      search: stringify({
+        ...queries,
+        name: undefined,
+        page: undefined,
+        archive: archiveSlug === '' ? undefined : archiveSlug,
+      }),
     });
     this.setState({ archiveSlug });
   };
