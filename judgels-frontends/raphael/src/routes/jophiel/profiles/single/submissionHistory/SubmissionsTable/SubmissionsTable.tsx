@@ -70,7 +70,7 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
         <td>
           <Link
             to={`${this.constructContainerUrl(containerPathsMap[submission.containerJid])}/${problemAliasesMap[
-              submission.problemJid
+              submission.containerJid + '-' + submission.problemJid
             ] || '#'}`}
           >
             {constructProblemName(

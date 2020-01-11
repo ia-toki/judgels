@@ -68,7 +68,7 @@ export class ChapterSubmissionsTable extends React.PureComponent<ChapterSubmissi
         <td>
           <UserRef profile={profilesMap[submission.userJid]} />
         </td>
-        <td>{problemAliasesMap[submission.problemJid]}</td>
+        <td>{problemAliasesMap[submission.containerJid + '-' + submission.problemJid]}</td>
         <td>{getGradingLanguageName(submission.gradingLanguage)}</td>
         <td className="cell-centered">
           {submission.latestGrading && <VerdictTag verdictCode={submission.latestGrading.verdict.code} />}
