@@ -13,7 +13,7 @@ import { AppState } from '../../../../modules/store';
 
 import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
 import ContestHistoryPage from './contestHistory/ContestHistoryPage/ContestHistoryPage';
-import SubmissionHistoryPage from './submissionHistory/SubmissionHistoryPage.tsx/SubmissionHistoryPage';
+import SubmissionHistoryPage from './submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage';
 import { selectUserJid, selectUsername } from '../../modules/profileSelectors';
 
 interface SingleProfileRoutesProps {
