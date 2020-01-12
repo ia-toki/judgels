@@ -36,9 +36,17 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
 
     const { data: courses, curriculumDescription, courseProgressesMap } = response;
 
+    if (courses.length === 0) {
+      return (
+        <p>
+          <small>No courses.</small>
+        </p>
+      );
+    }
+
     return (
       <>
-        <HtmlText>{curriculumDescription}</HtmlText>
+        <HtmlText>{curriculumDescription || ''}</HtmlText>
         <hr />
         {courses.map(course => (
           <CourseCard key={course.jid} course={course} progress={courseProgressesMap[course.jid]} />
