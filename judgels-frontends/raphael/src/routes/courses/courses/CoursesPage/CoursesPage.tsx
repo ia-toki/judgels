@@ -46,7 +46,7 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
 
     return (
       <>
-        <HtmlText>{curriculumDescription}</HtmlText>
+        <HtmlText>{curriculumDescription || ''}</HtmlText>
         <hr />
         {courses.map(course => (
           <CourseCard key={course.jid} course={course} progress={courseProgressesMap[course.jid]} />
