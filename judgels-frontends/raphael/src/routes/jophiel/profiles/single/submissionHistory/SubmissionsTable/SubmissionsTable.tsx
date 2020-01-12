@@ -14,6 +14,7 @@ export interface SubmissionsTableProps {
   submissions: ProgrammingSubmission[];
   canManage: boolean;
   userJid: string;
+  sessionUserJid: string;
   problemAliasesMap: { [problemJid: string]: string };
   problemNamesMap: { [problemJid: string]: string };
   containerNamesMap: { [problemJid: string]: string };
@@ -51,6 +52,7 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
     const {
       submissions,
       userJid,
+      sessionUserJid,
       canManage,
       problemAliasesMap,
       problemNamesMap,
@@ -88,7 +90,7 @@ export class SubmissionsTable extends React.PureComponent<SubmissionsTableProps>
           <FormattedRelative value={submission.time} />{' '}
         </td>
         <td className="cell-centered">
-          {(canManage || userJid === submission.userJid) && (
+          {(canManage || sessionUserJid === submission.userJid) && (
             <Link className="action" to={`/submissions/${submission.id}`}>
               <Icon icon="search" />
             </Link>

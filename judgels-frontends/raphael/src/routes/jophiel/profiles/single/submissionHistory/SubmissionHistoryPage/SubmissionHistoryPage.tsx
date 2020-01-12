@@ -10,10 +10,12 @@ import { AppState } from '../../../../../../modules/store';
 import { SubmissionsResponse } from '../../../../../../modules/api/jerahmeel/submissionProgramming';
 import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
 import { profileActions as injectedProfileActions } from '../../modules/profileActions';
+import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 
 interface SubmissionHistoryPageProps extends RouteComponentProps<{}> {
   userJid: string;
+  sessionUserJid?: string;
   onGetSubmissions: (userJid: string, page: number) => Promise<SubmissionsResponse>;
 }
 
@@ -59,6 +61,7 @@ class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, 
       <SubmissionsTable
         submissions={submissions.page}
         userJid={this.props.userJid}
+        sessionUserJid={this.props.sessionUserJid}
         canManage={config.canManage}
         problemAliasesMap={problemAliasesMap}
         problemNamesMap={problemNamesMap}
@@ -87,7 +90,7 @@ class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, 
 function createSubmissionHistoryPage(profileActions) {
   const mapStateToProps = (state: AppState) => ({
     userJid: selectUserJid(state),
-    username: selectUsername(state),
+    sessionUserJid: selectMaybeUserJid(state),
   });
   const mapDispatchToProps = {
     onGetSubmissions: profileActions.getSubmissions,
