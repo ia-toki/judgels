@@ -36,6 +36,14 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
 
     const { data: courses, curriculumDescription, courseProgressesMap } = response;
 
+    if (courses.length === 0) {
+      return (
+        <p>
+          <small>No courses.</small>
+        </p>
+      );
+    }
+
     return (
       <>
         <HtmlText>{curriculumDescription}</HtmlText>
