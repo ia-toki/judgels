@@ -60,8 +60,7 @@ class SubmissionHistoryPage extends React.Component<SubmissionHistoryPageProps, 
     return (
       <SubmissionsTable
         submissions={submissions.page}
-        userJid={this.props.userJid}
-        sessionUserJid={this.props.sessionUserJid}
+        userJid={this.props.sessionUserJid}
         canManage={config.canManage}
         problemAliasesMap={problemAliasesMap}
         problemNamesMap={problemNamesMap}
