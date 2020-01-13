@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 public interface CourseProgress {
     int getSolvedChapters();
     int getTotalChapters();
+    int getTotalSolvableChapters();
 
     class Builder extends ImmutableCourseProgress.Builder {}
 }

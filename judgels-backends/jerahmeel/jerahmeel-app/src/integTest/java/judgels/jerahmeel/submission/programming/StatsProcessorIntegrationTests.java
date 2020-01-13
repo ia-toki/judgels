@@ -114,10 +114,12 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
 
         Chapter chapter1 = chapterStore.createChapter(new ChapterCreateData.Builder().name("chapter1").build());
         Chapter chapter2 = chapterStore.createChapter(new ChapterCreateData.Builder().name("chapter2").build());
+        Chapter chapter3 = chapterStore.createChapter(new ChapterCreateData.Builder().name("chapter3").build());
 
         courseChapterStore.setChapters(course.getJid(), ImmutableList.of(
                 new CourseChapter.Builder().alias("01").chapterJid(chapter1.getJid()).build(),
-                new CourseChapter.Builder().alias("02").chapterJid(chapter2.getJid()).build()));
+                new CourseChapter.Builder().alias("02").chapterJid(chapter2.getJid()).build(),
+                new CourseChapter.Builder().alias("03").chapterJid(chapter3.getJid()).build()));
 
         chapterProblemStore.setProblems(chapter1.getJid(), ImmutableList.of(
                 new ChapterProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_1).build()));
@@ -125,37 +127,37 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                 new ChapterProblem.Builder().alias("A").type(PROGRAMMING).problemJid(PROBLEM_JID_2).build(),
                 new ChapterProblem.Builder().alias("B").type(PROGRAMMING).problemJid(PROBLEM_JID_3).build()));
 
-        assertCourseProgress(course.getJid(), 0, 2);
+        assertCourseProgress(course.getJid(), 0, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 20, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 0, 2);
+        assertCourseProgress(course.getJid(), 0, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 70, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 0, 2);
+        assertCourseProgress(course.getJid(), 0, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 0, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, ACCEPTED, 100, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 1, 2);
+        assertCourseProgress(course.getJid(), 1, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter1.getJid(), PROBLEM_JID_1, WRONG_ANSWER, 50, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 1, 2);
+        assertCourseProgress(course.getJid(), 1, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 0, 2);
 
         submit(USER_JID_1, chapter2.getJid(), PROBLEM_JID_2, ACCEPTED, 100, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 1, 2);
+        assertCourseProgress(course.getJid(), 1, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 1, 2);
 
         submit(USER_JID_1, chapter2.getJid(), PROBLEM_JID_3, OK, 100, 100, 32000);
 
-        assertCourseProgress(course.getJid(), 2, 2);
+        assertCourseProgress(course.getJid(), 2, 3, 2);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 2, 2);
     }
 
@@ -323,12 +325,13 @@ class StatsProcessorIntegrationTests extends AbstractIntegrationTests {
                 .build());
     }
 
-    private void assertCourseProgress(String courseJid, int solved, int total) {
+    private void assertCourseProgress(String courseJid, int solved, int total, int totalSolvable) {
         assertThat(statsStore.getCourseProgressesMap(USER_JID_1, ImmutableSet.of(courseJid)))
                 .isEqualTo(ImmutableMap.of(
                         courseJid, new CourseProgress.Builder()
                                 .solvedChapters(solved)
                                 .totalChapters(total)
+                                .totalSolvableChapters(totalSolvable)
                                 .build()));
     }
 
