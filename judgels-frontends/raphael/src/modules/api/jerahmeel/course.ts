@@ -12,6 +12,7 @@ export interface Course {
 export interface CourseProgress {
   solvedChapters: number;
   totalChapters: number;
+  totalSolvableChapters: number;
 }
 
 export interface CoursesResponse {

@@ -8,7 +8,7 @@ import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { AppState } from '../../../../../../modules/store';
 import { SubmissionsResponse } from '../../../../../../modules/api/jerahmeel/submissionProgramming';
-import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
+import { selectUserJid } from '../../../../modules/profileSelectors';
 import { profileActions as injectedProfileActions } from '../../modules/profileActions';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import Pagination from '../../../../../../components/Pagination/Pagination';

@@ -63,9 +63,23 @@ public class StatsStore {
         this.statsUserDao = statsUserDao;
     }
 
+    private long totalSolvableChapter(String courseJid) {
+        Set<String> chapterJids = courseChapterDao.selectAllByCourseJid(courseJid, SelectionOptions.DEFAULT_ALL)
+                .stream()
+                .map(courseChapter -> courseChapter.chapterJid)
+                .collect(Collectors.toSet());
+        Map<String, Long> countProgrammingChaptersMap =
+                chapterProblemDao.selectCountProgrammingByChapterJids(chapterJids);
+        return courseChapterDao.selectAllByCourseJid(courseJid, SelectionOptions.DEFAULT_ALL).stream()
+                .filter(courseChapter -> countProgrammingChaptersMap.getOrDefault(courseChapter.chapterJid, 0L) > 0)
+                .count();
+    }
+
     public Map<String, CourseProgress> getCourseProgressesMap(String userJid, Set<String> courseJids) {
         Map<String, Integer> totalChaptersMap = courseJids.stream().collect(
                 Collectors.toMap(Function.identity(), jid -> (int) courseChapterDao.selectCountByCourseJid(jid)));
+        Map<String, Integer> totalSolvableChaptersMap = courseJids.stream().collect(
+                Collectors.toMap(Function.identity(), jid -> (int) totalSolvableChapter(jid)));
         Map<String, Integer> solvedChaptersMap =
                 statsUserCourseDao.selectAllByUserJidAndCourseJids(userJid, courseJids).stream()
                         .collect(Collectors.toMap(m -> m.courseJid, m -> m.progress));
@@ -75,6 +89,7 @@ public class StatsStore {
                 jid -> new CourseProgress.Builder()
                         .solvedChapters(solvedChaptersMap.getOrDefault(jid, 0))
                         .totalChapters(totalChaptersMap.getOrDefault(jid, 0))
+                        .totalSolvableChapters(totalSolvableChaptersMap.getOrDefault(jid, 0))
                         .build()));
     }
 
