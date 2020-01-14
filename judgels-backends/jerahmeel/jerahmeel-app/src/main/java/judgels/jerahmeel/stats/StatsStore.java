@@ -63,13 +63,15 @@ public class StatsStore {
         this.statsUserDao = statsUserDao;
     }
 
-    private boolean isSolvableChapter(String chapterJid) {
-        return chapterProblemDao.selectCountProgrammingByChapterJid(chapterJid) > 0;
-    }
-
     private long totalSolvableChapter(String courseJid) {
+        Set<String> chapterJids = courseChapterDao.selectAllByCourseJid(courseJid, SelectionOptions.DEFAULT_ALL)
+                .stream()
+                .map(courseChapter -> courseChapter.chapterJid)
+                .collect(Collectors.toSet());
+        Map<String, Long> countProgrammingChaptersMap =
+                chapterProblemDao.selectCountProgrammingByChapterJids(chapterJids);
         return courseChapterDao.selectAllByCourseJid(courseJid, SelectionOptions.DEFAULT_ALL).stream()
-                .filter(courseChapter -> isSolvableChapter(courseChapter.chapterJid))
+                .filter(courseChapter -> countProgrammingChaptersMap.getOrDefault(courseChapter.chapterJid, 0L) > 0)
                 .count();
     }
 
