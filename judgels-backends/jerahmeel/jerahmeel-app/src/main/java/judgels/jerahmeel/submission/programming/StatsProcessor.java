@@ -9,9 +9,11 @@ import judgels.gabriel.api.TestGroupResult;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
 import judgels.jerahmeel.persistence.ChapterProblemDao;
+import judgels.jerahmeel.persistence.ChapterProblemModel;
 import judgels.jerahmeel.persistence.CourseChapterDao;
 import judgels.jerahmeel.persistence.CourseChapterModel;
 import judgels.jerahmeel.persistence.ProblemSetProblemDao;
+import judgels.jerahmeel.persistence.ProblemSetProblemModel;
 import judgels.jerahmeel.persistence.StatsUserChapterDao;
 import judgels.jerahmeel.persistence.StatsUserChapterModel;
 import judgels.jerahmeel.persistence.StatsUserCourseDao;
@@ -22,7 +24,6 @@ import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
 import judgels.jerahmeel.persistence.StatsUserProblemSetDao;
 import judgels.jerahmeel.persistence.StatsUserProblemSetModel;
-import judgels.jerahmeel.submission.SubmissionUtils;
 import judgels.sandalphon.api.submission.programming.Grading;
 import judgels.sandalphon.api.submission.programming.Submission;
 import judgels.sandalphon.submission.programming.SubmissionConsumer;
@@ -67,28 +68,25 @@ public class StatsProcessor implements SubmissionConsumer {
 
     @Override
     public void accept(Submission submission) {
-        if (SubmissionUtils.isChapter(submission.getContainerJid())) {
-            ProblemStatsResult res = processProblemStats(submission);
-            if (res == null) {
-                return;
-            }
+        ProblemStatsResult res = processProblemStats(submission);
+        if (res == null) {
+            return;
+        }
 
-            if (chapterProblemDao.selectByProblemJid(submission.getProblemJid()).isPresent()) {
-                if (processChapterStats(submission, res.becomesAccepted)) {
-                    processCourseStats(submission);
-                }
-                processUserStats(submission, res.scoreDiff);
+        Optional<ChapterProblemModel> cm = chapterProblemDao.selectByProblemJid(submission.getProblemJid());
+        if (cm.isPresent()) {
+            if (processChapterStats(submission, cm.get().chapterJid, res.becomesAccepted)) {
+                processCourseStats(submission, cm.get().chapterJid);
             }
-        } else {
-            ProblemStatsResult res = processProblemStats(submission);
-            if (res == null) {
-                return;
-            }
+        }
 
-            if (problemSetProblemDao.selectByProblemJid(submission.getProblemJid()).isPresent()) {
-                processProblemSetStats(submission, res.scoreDiff);
-                processUserStats(submission, res.scoreDiff);
-            }
+        Optional<ProblemSetProblemModel> pm = problemSetProblemDao.selectByProblemJid(submission.getProblemJid());
+        if (pm.isPresent()) {
+            processProblemSetStats(submission,  pm.get().problemSetJid, res.scoreDiff);
+        }
+
+        if (cm.isPresent() || pm.isPresent()) {
+            processUserStats(submission, res.scoreDiff);
         }
     }
 
@@ -181,13 +179,13 @@ public class StatsProcessor implements SubmissionConsumer {
         }
     }
 
-    private boolean processChapterStats(Submission s, boolean becomesAccepted) {
+    private boolean processChapterStats(Submission s, String chapterJid, boolean becomesAccepted) {
         if (!becomesAccepted) {
             return false;
         }
 
         Optional<StatsUserChapterModel> maybeModel =
-                statsUserChapterDao.selectByUserJidAndChapterJid(s.getUserJid(), s.getContainerJid());
+                statsUserChapterDao.selectByUserJidAndChapterJid(s.getUserJid(), chapterJid);
 
         int previousProgress = 0;
         if (maybeModel.isPresent()) {
@@ -198,17 +196,17 @@ public class StatsProcessor implements SubmissionConsumer {
         } else {
             StatsUserChapterModel model = new StatsUserChapterModel();
             model.userJid = s.getUserJid();
-            model.chapterJid = s.getContainerJid();
+            model.chapterJid = chapterJid;
             model.progress = 1;
             statsUserChapterDao.insert(model);
         }
 
-        int problemCount = chapterProblemDao.selectCountProgrammingByChapterJid(s.getContainerJid());
+        int problemCount = chapterProblemDao.selectCountProgrammingByChapterJid(chapterJid);
         return previousProgress + 1 == problemCount;
     }
 
-    private void processCourseStats(Submission s) {
-        Optional<CourseChapterModel> maybeCourseChapterModel = courseChapterDao.selectByChapterJid(s.getContainerJid());
+    private void processCourseStats(Submission s, String chapterJid) {
+        Optional<CourseChapterModel> maybeCourseChapterModel = courseChapterDao.selectByChapterJid(chapterJid);
         if (!maybeCourseChapterModel.isPresent()) {
             return;
         }
@@ -229,9 +227,9 @@ public class StatsProcessor implements SubmissionConsumer {
         }
     }
 
-    private void processProblemSetStats(Submission s, int scoreDiff) {
+    private void processProblemSetStats(Submission s, String problemSetJid, int scoreDiff) {
         Optional<StatsUserProblemSetModel> maybeModel =
-                statsUserProblemSetDao.selectByUserJidAndProblemSetJid(s.getUserJid(), s.getContainerJid());
+                statsUserProblemSetDao.selectByUserJidAndProblemSetJid(s.getUserJid(), problemSetJid);
 
         if (maybeModel.isPresent()) {
             StatsUserProblemSetModel model = maybeModel.get();
@@ -240,7 +238,7 @@ public class StatsProcessor implements SubmissionConsumer {
         } else {
             StatsUserProblemSetModel model = new StatsUserProblemSetModel();
             model.userJid = s.getUserJid();
-            model.problemSetJid = s.getContainerJid();
+            model.problemSetJid = problemSetJid;
             model.score = scoreDiff;
             statsUserProblemSetDao.insert(model);
         }
