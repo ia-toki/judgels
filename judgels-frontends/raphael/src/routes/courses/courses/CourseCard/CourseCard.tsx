@@ -25,7 +25,7 @@ export class CourseCard extends React.PureComponent<CourseCardProps> {
         </h4>
         {description && (
           <div className="course-card__description">
-            <HtmlText> </HtmlText>
+            <HtmlText>{description}</HtmlText>
           </div>
         )}
         {this.renderProgressBar()}
@@ -53,6 +53,6 @@ export class CourseCard extends React.PureComponent<CourseCardProps> {
     if (!progress) {
       return null;
     }
-    return <ProgressBar num={progress.solvedChapters} denom={progress.totalChapters} />;
+    return <ProgressBar num={progress.solvedChapters} denom={progress.totalSolvableChapters} />;
   };
 }
