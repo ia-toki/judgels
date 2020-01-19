@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Route, withRouter, Switch } from 'react-router';
+import { Route, Switch } from 'react-router';
 
+import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ProblemSubmissionsPage from './ProblemSubmissionsPage/ProblemSubmissionsPage';
 import ProblemSubmissionPage from './single/ProblemSubmissionPage/ProblemSubmissionPage';
 
@@ -18,4 +19,4 @@ const ProblemSubmissionRoutes = () => (
   </div>
 );
 
-export default withRouter<any, any>(ProblemSubmissionRoutes);
+export default withBreadcrumb('Submissions')(ProblemSubmissionRoutes);

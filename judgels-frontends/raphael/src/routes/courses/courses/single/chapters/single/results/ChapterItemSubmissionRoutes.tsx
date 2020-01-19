@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { withRouter, Route, Switch } from 'react-router';
+import { Route, Switch } from 'react-router';
 
+import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ChapterSubmissionsPage from './ChapterSubmissionsPage/ChapterSubmissionsPage';
 import ChapterSubmissionSummaryPage from './ChapterSubmissionSummaryPage/ChapterSubmissionSummaryPage';
 
@@ -17,4 +18,4 @@ const ChapterItemSubmissionRoutes = () => (
   </div>
 );
 
-export default withRouter(ChapterItemSubmissionRoutes);
+export default withBreadcrumb('Quiz results')(ChapterItemSubmissionRoutes);
