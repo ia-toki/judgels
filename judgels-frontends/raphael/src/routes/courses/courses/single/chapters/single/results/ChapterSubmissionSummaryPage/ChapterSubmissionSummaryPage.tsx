@@ -33,7 +33,7 @@ export interface ChapterSubmissionSummaryPageProps extends RouteComponentProps<C
     username?: string,
     language?: string
   ) => Promise<SubmissionSummaryResponse>;
-  onRegradeAll: (contestJid: string, userJid?: string, problemJid?: string) => Promise<void>;
+  onRegradeAll: (chapterJid: string, userJid?: string, problemJid?: string) => Promise<void>;
 }
 
 export interface ChapterSubmissionSummaryPageState {
@@ -66,7 +66,7 @@ class ChapterSubmissionSummaryPage extends React.Component<
 
     const problemSummaries: ProblemSubmissionCardProps[] = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
-      alias: response.problemAliasesMap[problemJid] || '-',
+      alias: response.problemAliasesMap[chapter.chapterJid + '-' + problemJid] || '-',
       itemJids: response.itemJidsByProblemJid[problemJid],
       submissionsByItemJid: response.submissionsByItemJid,
       canViewGrading: true,

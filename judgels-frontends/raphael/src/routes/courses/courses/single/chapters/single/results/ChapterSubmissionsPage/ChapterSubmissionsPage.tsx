@@ -94,7 +94,9 @@ export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPa
               <td>
                 <UserRef profile={profilesMap[item.userJid]} />
               </td>
-              <td className="col-prob">{problemAliasesMap[item.problemJid] || '-'}</td>
+              <td className="col-prob">
+                {problemAliasesMap[this.props.chapter.chapterJid + '-' + item.problemJid] || '-'}
+              </td>
               <td className="col-item-num">{itemNumbersMap[item.itemJid] || '-'}</td>
               <td>
                 <FormattedAnswer answer={item.answer} type={itemTypesMap[item.itemJid]} />
