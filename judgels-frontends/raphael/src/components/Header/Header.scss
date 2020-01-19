@@ -37,5 +37,12 @@
 .header__flag {
   vertical-align: middle;
   margin-right: 5px;
+  margin-top: -3px;
   display: inline-block;
+}
+
+@media only screen and (max-width: 750px) {
+  .header__subtitle {
+    display: none;
+  }
 }
