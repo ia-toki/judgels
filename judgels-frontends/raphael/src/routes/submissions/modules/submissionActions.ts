@@ -20,6 +20,15 @@ export const submissionActions = {
     };
   },
 
+  regradeSubmission: (submissionJid: string) => {
+    return async (dispatch, getState, { submissionProgrammingAPI, toastActions }) => {
+      const token = selectToken(getState());
+      await submissionProgrammingAPI.regradeSubmission(token, submissionJid);
+
+      toastActions.showSuccessToast('Submission regraded.');
+    };
+  },
+
   regradeSubmissions: (containerJid: string, userJid?: string, problemJid?: string) => {
     return async (dispatch, getState, { submissionProgrammingAPI, toastActions }) => {
       const token = selectToken(getState());
