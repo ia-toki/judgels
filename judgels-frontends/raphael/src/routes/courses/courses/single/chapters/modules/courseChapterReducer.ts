@@ -4,6 +4,7 @@ import { CourseChapter } from '../../../../../../modules/api/jerahmeel/courseCha
 
 export interface CourseChapterState {
   value?: CourseChapter;
+  courseSlug?: string;
   name?: string;
 }
 
@@ -11,6 +12,7 @@ export const INITIAL_STATE: CourseChapterState = {};
 
 export const PutCourseChapter = TypedAction.define('jerahmeel/courseChapter/PUT')<{
   value: CourseChapter;
+  courseSlug: string;
   name: string;
 }>();
 export const DelCourseChapter = TypedAction.defineWithoutPayload('jerahmeel/courseChapter/DEL')();

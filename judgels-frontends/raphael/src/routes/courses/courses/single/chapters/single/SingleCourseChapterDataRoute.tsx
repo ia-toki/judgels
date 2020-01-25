@@ -10,11 +10,12 @@ import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../..
 import { selectCourse } from '../../../modules/courseSelectors';
 import { courseChapterActions as injectedCourseChapterActions } from '../modules/courseChapterActions';
 
-export interface SingleCourseChapterDataRouteProps extends RouteComponentProps<{ chapterAlias: string }> {
+export interface SingleCourseChapterDataRouteProps
+  extends RouteComponentProps<{ courseSlug: string; chapterAlias: string }> {
   course?: Course;
 
   onClearChapter: () => void;
-  onGetChapter: (courseJid: string, chapterAlias: string) => Promise<Chapter>;
+  onGetChapter: (courseJid: string, courseSlug: string, chapterAlias: string) => Promise<Chapter>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
@@ -26,6 +27,7 @@ class SingleCourseChapterDataRoute extends React.Component<SingleCourseChapterDa
 
   async componentDidUpdate(prevProps: SingleCourseChapterDataRouteProps) {
     if ((prevProps.course && prevProps.course.jid) !== (this.props.course && this.props.course.jid)) {
+      this.props.onPopBreadcrumb(this.props.match.url);
       await this.refresh();
     }
   }
@@ -40,10 +42,11 @@ class SingleCourseChapterDataRoute extends React.Component<SingleCourseChapterDa
   }
 
   refresh = async () => {
-    if (!this.props.course) {
+    const { course, match } = this.props;
+    if (!course || course.slug !== match.params.courseSlug) {
       return;
     }
-    const chapter = await this.props.onGetChapter(this.props.course.jid, this.props.match.params.chapterAlias);
+    const chapter = await this.props.onGetChapter(course.jid, course.slug, match.params.chapterAlias);
     this.props.onPushBreadcrumb(this.props.match.url, `${this.props.match.params.chapterAlias}. ${chapter.name}`);
   };
 }

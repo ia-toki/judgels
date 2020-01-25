@@ -11,7 +11,7 @@ import ContentWithSidebar, {
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { CourseChapter } from '../../../../../../modules/api/jerahmeel/courseChapter';
 import { AppState } from '../../../../../../modules/store';
-import { selectCourseChapter, selectCourseChapterName } from '../modules/courseChapterSelectors';
+import { selectCourseChapter, selectCourseChapterName, selectCourseSlug } from '../modules/courseChapterSelectors';
 import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
 import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
 import ChapterSubmissionRoutes from './submissions/ChapterSubmissionRoutes';
@@ -19,17 +19,18 @@ import ChapterItemSubmissionRoutes from './results/ChapterItemSubmissionRoutes';
 
 import './SingleCourseChapterRoutes.css';
 
-interface SingleCourseChapterRoutesProps extends RouteComponentProps<{ chapterAlias: string }> {
+interface SingleCourseChapterRoutesProps extends RouteComponentProps<{ courseSlug: string; chapterAlias: string }> {
   chapter?: CourseChapter;
   chapterName?: string;
+  courseSlug?: string;
 }
 
 const SingleCourseChapterRoutes = (props: SingleCourseChapterRoutesProps) => {
-  const { chapter, chapterName } = props;
+  const { chapter, chapterName, courseSlug, match } = props;
 
   // Optimization:
-  // We wait until we get the chapter from the backend only if the current alias is different from the persisted one.
-  if (!chapter || chapter.alias !== props.match.params.chapterAlias) {
+  // We wait until we get the chapter from the backend only if the current chapter is different from the persisted one.
+  if (!chapter || courseSlug !== match.params.courseSlug || chapter.alias !== match.params.chapterAlias) {
     return <LoadingState large />;
   }
 
@@ -89,6 +90,7 @@ function createSingleCourseChapterRoutes() {
   const mapStateToProps = (state: AppState) => ({
     chapter: selectCourseChapter(state),
     chapterName: selectCourseChapterName(state),
+    courseSlug: selectCourseSlug(state),
   });
 
   return withRouter<any, any>(connect(mapStateToProps)(SingleCourseChapterRoutes));

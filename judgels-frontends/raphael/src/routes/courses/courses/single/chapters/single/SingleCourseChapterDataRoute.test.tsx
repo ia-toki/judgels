@@ -54,7 +54,7 @@ describe('SingleCourseChapterDataRoute', () => {
   test('navigation', async () => {
     render('/courses/basic/chapters/A');
     await new Promise(resolve => setImmediate(resolve));
-    expect(courseChapterActions.getChapter).toHaveBeenCalledWith('jid123', 'A');
+    expect(courseChapterActions.getChapter).toHaveBeenCalledWith('jid123', 'basic', 'A');
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/A', 'A. Chapter 123');
 
     history.push('/courses/basic/chapters/A/');

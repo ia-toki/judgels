@@ -1,3 +1,4 @@
+import { Button } from '@blueprintjs/core';
 import { push } from 'connected-react-router';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -18,7 +19,6 @@ import ProblemSetProblemsPage from './problems/ProblemSetProblemsPage/ProblemSet
 import { selectProblemSet } from '../modules/problemSetSelectors';
 
 import './SingleProblemSetRoutes.css';
-import { Button } from '@blueprintjs/core';
 
 interface SingleProblemSetRoutesProps extends RouteComponentProps<{ problemSetSlug: string }> {
   problemSet?: ProblemSet;

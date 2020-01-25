@@ -9,7 +9,8 @@ import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import { problemSetProblemActions as injectedProblemSetProblemActions } from '../modules/problemSetProblemActions';
 
-export interface SingleProblemSetProblemDataRouteProps extends RouteComponentProps<{ problemAlias: string }> {
+export interface SingleProblemSetProblemDataRouteProps
+  extends RouteComponentProps<{ problemSetSlug: string; problemAlias: string }> {
   problemSet?: ProblemSet;
 
   onClearProblem: () => void;
@@ -25,6 +26,7 @@ class SingleProblemSetProblemDataRoute extends React.Component<SingleProblemSetP
 
   async componentDidUpdate(prevProps: SingleProblemSetProblemDataRouteProps) {
     if ((prevProps.problemSet && prevProps.problemSet.jid) !== (this.props.problemSet && this.props.problemSet.jid)) {
+      this.props.onPopBreadcrumb(this.props.match.url);
       await this.refresh();
     }
   }
@@ -39,11 +41,12 @@ class SingleProblemSetProblemDataRoute extends React.Component<SingleProblemSetP
   }
 
   refresh = async () => {
-    if (!this.props.problemSet) {
+    const { problemSet, match } = this.props;
+    if (!problemSet || problemSet.slug !== match.params.problemSetSlug) {
       return;
     }
-    await this.props.onGetProblem(this.props.problemSet.jid, this.props.match.params.problemAlias);
-    this.props.onPushBreadcrumb(this.props.match.url, this.props.match.params.problemAlias);
+    await this.props.onGetProblem(problemSet.jid, match.params.problemAlias);
+    this.props.onPushBreadcrumb(match.url, match.params.problemAlias);
   };
 }
 

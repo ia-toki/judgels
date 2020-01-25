@@ -23,7 +23,8 @@ import { selectProblemSetProblem } from '../modules/problemSetProblemSelectors';
 
 import './SingleProblemSetProblemRoutes.css';
 
-interface SingleProblemSetProblemRoutesProps extends RouteComponentProps<{ problemAlias: string }> {
+interface SingleProblemSetProblemRoutesProps
+  extends RouteComponentProps<{ problemSetSlug: string; problemAlias: string }> {
   problemSet?: ProblemSet;
   problem?: ProblemSetProblem;
   onClickBack: (problemSetSlug: string) => void;
@@ -31,11 +32,16 @@ interface SingleProblemSetProblemRoutesProps extends RouteComponentProps<{ probl
 
 class SingleProblemSetProblemRoutes extends React.Component<SingleProblemSetProblemRoutesProps> {
   render() {
-    const { problemSet, problem } = this.props;
+    const { problemSet, problem, match } = this.props;
 
     // Optimization:
-    // We wait until we get the problem from the backend only if the current alias is different from the persisted one.
-    if (!problem || problem.alias !== this.props.match.params.problemAlias) {
+    // We wait until we get the problem from the backend only if the current problem is different from the persisted one.
+    if (
+      !problemSet ||
+      !problem ||
+      problemSet.slug !== match.params.problemSetSlug ||
+      problem.alias !== match.params.problemAlias
+    ) {
       return <LoadingState large />;
     }
 

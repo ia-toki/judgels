@@ -7,3 +7,7 @@ export function selectCourseChapter(state: AppState) {
 export function selectCourseChapterName(state: AppState) {
   return state.jerahmeel.courseChapter.name;
 }
+
+export function selectCourseSlug(state: AppState) {
+  return state.jerahmeel.courseChapter.courseSlug;
+}
