@@ -23,7 +23,7 @@ interface ScoresPageState {
 }
 
 class ScoresPage extends React.Component<ScoresPageProps, ScoresPageState> {
-  private static PAGE_SIZE = 100;
+  private static PAGE_SIZE = 50;
 
   state: ScoresPageState = {};
 

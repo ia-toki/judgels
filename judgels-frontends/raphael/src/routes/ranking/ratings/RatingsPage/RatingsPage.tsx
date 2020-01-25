@@ -24,7 +24,7 @@ interface RatingsPageState {
 }
 
 class RatingsPage extends React.Component<RatingsPageProps, RatingsPageState> {
-  private static PAGE_SIZE = 100;
+  private static PAGE_SIZE = 50;
 
   state: RatingsPageState = {};
 
