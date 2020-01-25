@@ -177,7 +177,9 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     const { config, problemAliasesMap } = response;
     const { problemJids } = config;
 
-    const problemJid = problemJids.find(jid => problemAliasesMap[jid] === problemAlias);
+    const problemJid = problemJids.find(
+      jid => problemAliasesMap[this.props.chapter.chapterJid + '-' + jid] === problemAlias
+    );
     return { problemJid };
   };
 
@@ -192,7 +194,7 @@ export class ChapterSubmissionsPage extends React.PureComponent<
     const { problemAlias } = filter;
     return (
       <SubmissionFilterWidget
-        problemAliases={problemJids.map(jid => problemAliasesMap[jid])}
+        problemAliases={problemJids.map(jid => problemAliasesMap[this.props.chapter.chapterJid + '-' + jid])}
         problemAlias={problemAlias}
         onFilter={this.onFilter}
         isLoading={!!isFilterLoading}
