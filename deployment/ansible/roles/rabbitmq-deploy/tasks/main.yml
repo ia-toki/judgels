@@ -12,7 +12,7 @@
       log_driver: json-file
       log_options:
         max-size: 256m
-        max-file: 2
+        max-file: "2"
       network_mode: host
       env:
         RABBITMQ_DEFAULT_USER: "{{ rabbitmq_mgmt_username }}"

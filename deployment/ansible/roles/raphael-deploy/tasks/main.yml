@@ -28,7 +28,7 @@
       log_driver: json-file
       log_options:
         max-size: 256m
-        max-file: 2
+        max-file: "2"
       ports:
         - "{{ raphael_port | default('5000', true) }}:5000"
       volumes:

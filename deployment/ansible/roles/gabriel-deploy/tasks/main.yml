@@ -34,7 +34,7 @@
       log_driver: json-file
       log_options:
         max-size: 256m
-        max-file: 2
+        max-file: "2"
       network_mode: host
       volumes:
         - "/judgels/gabriel/var:/judgels/gabriel/var"
