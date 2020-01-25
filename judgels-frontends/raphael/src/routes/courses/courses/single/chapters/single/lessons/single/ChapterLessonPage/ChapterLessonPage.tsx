@@ -41,7 +41,7 @@ export class ChapterLessonPage extends React.Component<ChapterLessonPageProps, C
       response,
     });
 
-    this.props.onPushBreadcrumb(this.props.match.url, 'Lesson ' + response.lesson.alias);
+    this.props.onPushBreadcrumb(this.props.match.url, response.lesson.alias);
   }
 
   async componentDidUpdate(prevProps: ChapterLessonPageProps, prevState: ChapterLessonPageState) {

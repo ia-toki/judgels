@@ -41,7 +41,7 @@ export class ProblemSubmissionPage extends React.Component<ProblemSubmissionPage
       +this.props.match.params.submissionId,
       this.props.statementLanguage
     );
-    this.props.onPushBreadcrumb(this.props.match.url, 'Submission #' + data.submission.id);
+    this.props.onPushBreadcrumb(this.props.match.url, '#' + data.submission.id);
     this.setState({
       submissionWithSource: data,
       profile,
