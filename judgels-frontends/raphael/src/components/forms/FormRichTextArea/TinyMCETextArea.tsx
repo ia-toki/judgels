@@ -30,6 +30,9 @@ export class TinyMCETextArea extends React.PureComponent<TinyMCETextAreaProps> {
           'image link table | ' +
           'styleselect formatselect | ' +
           'code',
+        relative_urls: false,
+        convert_urls: false,
+        remove_script_host: false,
         setup: editor => {
           editor.on('change', () => {
             this.props.onChange(editor.getContent());
