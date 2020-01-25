@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { AppState } from '../../../../../../modules/store';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
@@ -13,7 +13,6 @@ import {
   ContestSupervisorsUpsertResponse,
   ContestSupervisorUpsertData,
 } from '../../../../../../modules/api/uriel/contestSupervisor';
-
 import { ContestSupervisorsTable } from '../ContestSupervisorsTable/ContestSupervisorsTable';
 import { ContestSupervisorAddDialog } from '../ContestSupervisorAddDialog/ContestSupervisorAddDialog';
 import { ContestSupervisorRemoveDialog } from '../ContestSupervisorRemoveDialog/ContestSupervisorRemoveDialog';
@@ -136,7 +135,7 @@ export function createContestSupervisorsPage(contestSupervisorActions) {
     onDeleteSupervisors: contestSupervisorActions.deleteSupervisors,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestSupervisorsPage));
+  return withBreadcrumb('Supervisors')(connect(mapStateToProps, mapDispatchToProps)(ContestSupervisorsPage));
 }
 
 export default createContestSupervisorsPage(injectedContestSupervisorActions);

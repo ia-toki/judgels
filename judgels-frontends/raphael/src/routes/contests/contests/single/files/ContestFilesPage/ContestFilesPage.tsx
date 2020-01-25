@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { AppState } from '../../../../../../modules/store';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import { ContestFilesResponse } from '../../../../../../modules/api/uriel/contestFile';
 import { ContestFileUploadCard } from '../ContestFileUploadCard/ContestFileUploadCard';
 import { ContestFileUploadFormData } from '../ContestFileUploadForm/ContestFileUploadForm';
 import { ContestFilesTable } from '../ContestFilesTable/ContestFilesTable';
-
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestFileActions as injectedContestFileActions } from '../modules/contestFileActions';
 
@@ -93,7 +92,7 @@ export function createContestFilesPage(contestFileActions) {
     onUploadFile: contestFileActions.uploadFile,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestFilesPage));
+  return withBreadcrumb('Files')(connect(mapStateToProps, mapDispatchToProps)(ContestFilesPage));
 }
 
 export default createContestFilesPage(injectedContestFileActions);

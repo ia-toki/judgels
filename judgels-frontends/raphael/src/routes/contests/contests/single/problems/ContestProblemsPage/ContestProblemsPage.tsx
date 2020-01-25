@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
 } from '../../../../../../components/StatementLanguageWidget/StatementLanguageWidget';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
   ContestProblem,
@@ -18,7 +18,6 @@ import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webP
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
 import { AppState } from '../../../../../../modules/store';
-
 import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
 import { ContestProblemCard, ContestProblemCardProps } from '../ContestProblemCard/ContestProblemCard';
 import { selectContest } from '../../../modules/contestSelectors';
@@ -193,7 +192,7 @@ export function createContestProblemsPage(contestProblemActions) {
     onSetProblems: contestProblemActions.setProblems,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestProblemsPage));
+  return withBreadcrumb('Problems')(connect(mapStateToProps, mapDispatchToProps)(ContestProblemsPage));
 }
 
 export default createContestProblemsPage(injectedContestProblemActions);

@@ -2,7 +2,7 @@ import { Button, HTMLTable, Intent, ButtonGroup } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter, Link } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
@@ -11,11 +11,11 @@ import { ContentCard } from '../../../../../../../components/ContentCard/Content
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
+import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContestItemSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionBundle';
 import { AppState } from '../../../../../../../modules/store';
 import { Contest } from '../../../../../../../modules/api/uriel/contest';
 import { selectContest } from '../../../../modules/contestSelectors';
-
 import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
@@ -266,7 +266,7 @@ export function createContestSubmissionsPage(contestSubmissionActions) {
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
+  return withBreadcrumb('Submissions')(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
 }
 
 export default createContestSubmissionsPage(injectedContestSubmissionActions);

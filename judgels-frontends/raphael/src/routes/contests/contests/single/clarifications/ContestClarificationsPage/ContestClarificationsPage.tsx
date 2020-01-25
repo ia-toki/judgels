@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
   ContestClarification,
@@ -14,7 +14,6 @@ import { ContestClarificationsResponse } from '../../../../../../modules/api/uri
 import { AppState } from '../../../../../../modules/store';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
-
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
 import { ContestClarificationCreateDialog } from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 import { selectContest } from '../../../modules/contestSelectors';
@@ -181,7 +180,7 @@ export function createContestClarificationsPage(contestClarificationActions) {
     onAnswerClarification: contestClarificationActions.answerClarification,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage));
+  return withBreadcrumb('Clarifications')(connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage));
 }
 
 export default createContestClarificationsPage(injectedContestClarificationActions);

@@ -2,9 +2,10 @@ import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 import { push } from 'connected-react-router';
 
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -22,7 +23,6 @@ import {
 } from '../../../../../../modules/api/uriel/scoreboard';
 import { AppState } from '../../../../../../modules/store';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
-
 import { selectContest } from '../../../modules/contestSelectors';
 import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
 import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
@@ -289,7 +289,7 @@ export function createContestScoreboardPage(contestScoreboardActions) {
     onAppendRoute: (queries: any) => push({ search: stringify(queries) }),
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));
+  return withBreadcrumb('Scoreboard')(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));
 }
 
 export default createContestScoreboardPage(injectedContestScoreboardActions);

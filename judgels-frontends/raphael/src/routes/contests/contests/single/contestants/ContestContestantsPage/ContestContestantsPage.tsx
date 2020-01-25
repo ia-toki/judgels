@@ -1,11 +1,11 @@
 import { Button, Intent } from '@blueprintjs/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { AppState } from '../../../../../../modules/store';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
@@ -13,7 +13,6 @@ import {
   ContestContestantsResponse,
   ContestContestantUpsertResponse,
 } from '../../../../../../modules/api/uriel/contestContestant';
-
 import { ContestContestantsTable } from '../ContestContestantsTable/ContestContestantsTable';
 import { ContestContestantAddDialog } from '../ContestContestantAddDialog/ContestContestantAddDialog';
 import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/ContestContestantRemoveDialog';
@@ -158,7 +157,7 @@ export function createContestContestantsPage(contestContestantActions, contestAc
     onResetVirtualContest: contestActions.resetVirtualContest,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));
+  return withBreadcrumb('Contestants')(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));
 }
 
 export default createContestContestantsPage(injectedContestContestantActions, injectedContestActions);

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { AppState } from '../../../../../../modules/store';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
@@ -12,7 +12,6 @@ import {
   ContestManagersResponse,
   ContestManagersUpsertResponse,
 } from '../../../../../../modules/api/uriel/contestManager';
-
 import { ContestManagersTable } from '../ContestManagersTable/ContestManagersTable';
 import { ContestManagerAddDialog } from '../ContestManagerAddDialog/ContestManagerAddDialog';
 import { ContestManagerRemoveDialog } from '../ContestManagerRemoveDialog/ContestManagerRemoveDialog';
@@ -130,7 +129,7 @@ export function createContestManagersPage(contestManagerActions) {
     onDeleteManagers: contestManagerActions.deleteManagers,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestManagersPage));
+  return withBreadcrumb('Managers')(connect(mapStateToProps, mapDispatchToProps)(ContestManagersPage));
 }
 
 export default createContestManagersPage(injectedContestManagerActions);

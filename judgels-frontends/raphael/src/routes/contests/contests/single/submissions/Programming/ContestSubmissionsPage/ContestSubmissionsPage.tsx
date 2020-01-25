@@ -1,7 +1,7 @@
 import { parse, stringify } from 'query-string';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 import { push } from 'connected-react-router';
 
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
@@ -9,10 +9,10 @@ import { ContentCard } from '../../../../../../../components/ContentCard/Content
 import { RegradeAllButton } from '../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
+import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { AppState } from '../../../../../../../modules/store';
 import { Contest } from '../../../../../../../modules/api/uriel/contest';
 import { ContestSubmissionsResponse } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
-
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 import { selectContest } from '../../../../modules/contestSelectors';
 import { contestSubmissionActions as injectedContestSubmissionActions } from '../modules/contestSubmissionActions';
@@ -224,7 +224,7 @@ export function createContestSubmissionsPage(contestProgrammingSubmissionActions
     onAppendRoute: queries => push({ search: stringify(queries) }),
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
+  return withBreadcrumb('Submissions')(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
 }
 
 export default createContestSubmissionsPage(injectedContestSubmissionActions);

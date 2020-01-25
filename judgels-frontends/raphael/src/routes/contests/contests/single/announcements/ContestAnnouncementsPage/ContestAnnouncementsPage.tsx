@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { AppState } from '../../../../../../modules/store';
 import { Contest } from '../../../../../../modules/api/uriel/contest';
 import {
@@ -12,7 +12,6 @@ import {
   ContestAnnouncementData,
   ContestAnnouncementsResponse,
 } from '../../../../../../modules/api/uriel/contestAnnouncement';
-
 import { selectContest } from '../../../modules/contestSelectors';
 import { contestAnnouncementActions as injectedContestAnnouncementActions } from '../modules/contestAnnouncementActions';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
@@ -170,7 +169,7 @@ export function createContestAnnouncementsPage(contestAnnouncementActions) {
     onUpdateAnnouncement: contestAnnouncementActions.updateAnnouncement,
   };
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));
+  return withBreadcrumb('Announcements')(connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage));
 }
 
 export default createContestAnnouncementsPage(injectedContestAnnouncementActions);
