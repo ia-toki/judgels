@@ -3,4 +3,35 @@ import * as React from 'react';
 
 // CSS definition is in index.scss. See https://github.com/webpack-contrib/mini-css-extract-plugin/issues/250
 
-export const HtmlText = props => <div className="html-text">{HTMLReactParser(props.children)}</div>;
+export class HtmlText extends React.Component {
+  ref = null;
+
+  componentDidMount() {
+    this.setUpSpoilers();
+  }
+
+  render() {
+    return (
+      <div className="html-text" ref={this.createRef}>
+        {HTMLReactParser(this.props.children)}
+      </div>
+    );
+  }
+
+  private createRef = e => {
+    this.ref = e;
+  };
+
+  private setUpSpoilers() {
+    const spoilers = this.ref.getElementsByClassName('spoiler');
+    for (let i = 0; i < spoilers.length; i++) {
+      const spoiler = spoilers[i];
+      spoiler.onclick = function() {
+        const content = this.getElementsByTagName('div');
+        if (content.length > 0) {
+          content[0].style.display = content[0].style.display === 'block' ? 'none' : 'block';
+        }
+      };
+    }
+  }
+}
