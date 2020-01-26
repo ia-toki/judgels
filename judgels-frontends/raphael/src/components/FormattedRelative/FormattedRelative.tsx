@@ -9,6 +9,11 @@ export interface FormattedRelativeProps {
 }
 
 export const FormattedRelative = (props: FormattedRelativeProps) => {
-  const { value, unit } = selectUnit(props.value);
+  const { value, unit } = selectUnit(props.value, Date.now(), {
+    second: 59,
+    minute: 59,
+    hour: 23,
+    day: 30,
+  });
   return <FormattedRelativeTime value={value} unit={unit} />;
 };
