@@ -70,7 +70,13 @@ public class SubmissionSourceBuilder {
 
             FileInfo file = files.get(0);
             String name = file.getName();
-            byte[] content = submissionFs.readByteArrayFromFile(Paths.get(submissionJid, key.getName(), name));
+            byte[] content;
+
+            if (name.toLowerCase().endsWith(".zip")) {
+                content = new byte[0];
+            } else {
+                content = submissionFs.readByteArrayFromFile(Paths.get(submissionJid, key.getName(), name));
+            }
 
             sourceFiles.put(key.getName(), new SourceFile.Builder()
                     .name(name)
