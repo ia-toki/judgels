@@ -6,7 +6,11 @@ export function initGA(history) {
   if (APP_CONFIG.googleAnalytics) {
     ReactGA.initialize(APP_CONFIG.googleAnalytics.trackingId);
     history.listen(location => {
-      const page = (location.pathname + location.search).replace(/\/+$/, '');
+      let page = (location.pathname + location.search).replace(/\/+$/, '');
+      if (page == '') {
+        page = '/';
+      }
+
       ReactGA.set({ page });
       ReactGA.pageview(page);
     });
