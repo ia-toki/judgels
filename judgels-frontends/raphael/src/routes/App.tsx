@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as ReactGA from 'react-ga';
 import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router';
 import DocumentTitle from 'react-document-title';
 
-import { APP_CONFIG } from '../conf';
+import { setGAUser } from '../ga';
 import Header from '../components/Header/Header';
 import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
@@ -33,12 +32,7 @@ class App extends React.PureComponent<AppProps> {
   componentDidMount() {
     this.props.onGetUserWebConfig();
     preloadRoutes();
-
-    if (APP_CONFIG.googleAnalytics) {
-      if (this.props.userJid) {
-        ReactGA.set({ userId: this.props.userJid });
-      }
-    }
+    setGAUser(this.props.userJid);
   }
 
   render() {

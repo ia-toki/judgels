@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
+import { sendGAEvent } from '../../../../../../../../ga';
 import { AppState } from '../../../../../../../../modules/store';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
 import { ProblemSet } from '../../../../../../../../modules/api/jerahmeel/problemSet';
@@ -45,6 +46,13 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
 
     this.setState({
       response,
+    });
+
+    sendGAEvent({ category: 'Problems', action: 'View problemset problem', label: this.props.problemSet.name });
+    sendGAEvent({
+      category: 'Problems',
+      action: 'View problem',
+      label: this.props.problemSet.name + ': ' + this.props.problem.alias,
     });
   }
 

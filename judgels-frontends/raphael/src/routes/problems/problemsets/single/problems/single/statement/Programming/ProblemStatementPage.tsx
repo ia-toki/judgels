@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
+import { sendGAEvent } from '../../../../../../../../ga';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
@@ -76,6 +77,14 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     const { problem } = this.props.worksheet;
 
     this.props.onUpdateGradingLanguage(data.gradingLanguage);
+
+    sendGAEvent({ category: 'Problems', action: 'Submit problemset problem', label: this.props.problemSet.name });
+    sendGAEvent({
+      category: 'Problems',
+      action: 'Submit problem',
+      label: this.props.problemSet.name + ': ' + this.props.problem.alias,
+    });
+
     return await this.props.onCreateSubmission(
       this.props.problemSet.slug,
       this.props.problemSet.jid,

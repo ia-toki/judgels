@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
+import { sendGAEvent } from '../../../../../../../../../ga';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget, {
   StatementLanguageWidgetProps,
@@ -13,7 +14,7 @@ import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/
 import { ProblemSubmissionFormData } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 import { ProblemWorksheet } from '../../../../../../../../../modules/api/sandalphon/problemProgramming';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
-import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
+import { selectCourseChapter, selectCourseChapterName } from '../../../../modules/courseChapterSelectors';
 import { selectGradingLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../submissions/modules/chapterSubmissionActions';
@@ -22,6 +23,7 @@ import { webPrefsActions as injectedWebPrefsActions } from '../../../../../../..
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   course: Course;
   chapter: CourseChapter;
+  chapterName: string;
   worksheet: ChapterProblemWorksheet;
   gradingLanguage: string;
   onCreateSubmission: (
@@ -77,6 +79,15 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
     const { problem } = this.props.worksheet;
 
     this.props.onUpdateGradingLanguage(data.gradingLanguage);
+
+    sendGAEvent({ category: 'Courses', action: 'Submit course problem', label: this.props.course.name });
+    sendGAEvent({ category: 'Courses', action: 'Submit chapter problem', label: this.props.chapterName });
+    sendGAEvent({
+      category: 'Courses',
+      action: 'Submit problem',
+      label: this.props.chapterName + ': ' + this.props.match.params.problemAlias,
+    });
+
     return await this.props.onCreateSubmission(
       this.props.course.slug,
       this.props.chapter.chapterJid,
@@ -91,6 +102,7 @@ export function createChapterProblemPage(chapterSubmissionActions, webPrefsActio
   const mapStateToProps = (state: AppState) => ({
     course: selectCourse(state),
     chapter: selectCourseChapter(state),
+    chapterName: selectCourseChapterName(state),
     gradingLanguage: selectGradingLanguage(state),
   });
   const mapDispatchToProps = {
