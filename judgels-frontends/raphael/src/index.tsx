@@ -26,8 +26,8 @@ console.error = (message, ...args) => {
 if (APP_CONFIG.googleAnalytics) {
   ReactGA.initialize(APP_CONFIG.googleAnalytics.trackingId);
   history.listen(location => {
-    ReactGA.set({ page: location.pathname });
-    ReactGA.pageview(location.pathname);
+    ReactGA.set({ page: location.pathname + location.search });
+    ReactGA.pageview(location.pathname + location.search);
   });
 }
 

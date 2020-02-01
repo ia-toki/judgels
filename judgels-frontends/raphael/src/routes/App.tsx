@@ -1,9 +1,11 @@
 import * as React from 'react';
+import * as ReactGA from 'react-ga';
 import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router';
 import DocumentTitle from 'react-document-title';
 
+import { APP_CONFIG } from '../conf';
 import Header from '../components/Header/Header';
 import { AppContent } from '../components/AppContent/AppContent';
 import Menubar from '../components/Menubar/Menubar';
@@ -12,6 +14,7 @@ import { Footer } from '../components/Footer/Footer';
 import { JophielRole } from '../modules/api/jophiel/role';
 import { AppState } from '../modules/store';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
+import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
 
 import { getAppRoutes, getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
 import LegacyJophielRoutes from './legacyJophiel/LegacyJophielRoutes';
@@ -21,6 +24,7 @@ import { userWebActions as injectedUserWebActions } from './jophiel/modules/user
 
 interface AppProps {
   title: string;
+  userJid?: string;
   role: JophielRole;
   onGetUserWebConfig: () => void;
 }
@@ -29,6 +33,12 @@ class App extends React.PureComponent<AppProps> {
   componentDidMount() {
     this.props.onGetUserWebConfig();
     preloadRoutes();
+
+    if (APP_CONFIG.googleAnalytics) {
+      if (this.props.userJid) {
+        ReactGA.set({ userId: this.props.userJid });
+      }
+    }
   }
 
   render() {
@@ -63,6 +73,7 @@ class App extends React.PureComponent<AppProps> {
 
 export function createApp(userWebActions) {
   const mapStateToProps = (state: AppState) => ({
+    userJid: selectMaybeUserJid(state),
     title: selectDocumentTitle(state),
     role: selectRole(state),
   });
