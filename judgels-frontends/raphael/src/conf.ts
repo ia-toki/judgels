@@ -9,10 +9,6 @@ export interface ApiUrlsConfig {
   jerahmeel: string;
 }
 
-export interface TempHomeConfig {
-  jerahmeelUrl: string;
-}
-
 export interface WelcomeBannerConfig {
   title: string;
   description: string;
@@ -23,7 +19,6 @@ export interface AppConfig {
   name: string;
   slogan: string;
   apiUrls: ApiUrlsConfig;
-  tempHome: TempHomeConfig;
   welcomeBanner: WelcomeBannerConfig;
 }
 

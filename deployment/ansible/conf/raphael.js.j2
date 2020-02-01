@@ -10,11 +10,6 @@ window.conf = {
     jerahmeel: '{{ judgels_scheme }}://{{ jerahmeel_url }}/api/v2',
 {% endif %}
   },
-  tempHome: {
-{% if jerahmeel_url is defined %}
-    jerahmeelUrl: '{{ judgels_scheme }}://{{ jerahmeel_url }}',
-{% endif %}
-  },
   welcomeBanner: {
     title: '{{ judgels_title }}',
     description: '{{ judgels_description }}',

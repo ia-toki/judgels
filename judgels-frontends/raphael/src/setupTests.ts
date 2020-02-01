@@ -11,9 +11,6 @@ configure({ adapter: new Adapter() });
     legacyJophiel: 'http://localhost:9001/api/legacy',
     uriel: 'http://localhost:9004/api/v2',
   },
-  tempHome: {
-    jerahmeelUrl: 'http://jerahmeel',
-  },
   welcomeBanner: {
     title: 'Welcome to Judgels',
     description:
