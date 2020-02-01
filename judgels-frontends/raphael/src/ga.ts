@@ -7,7 +7,7 @@ export function initGA(history) {
     ReactGA.initialize(APP_CONFIG.googleAnalytics.trackingId);
     history.listen(location => {
       let page = location.pathname.replace(/\/+$/, '');
-      if (page == '') {
+      if (page === '') {
         page = '/';
       }
       page += location.search;
