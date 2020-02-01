@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import * as ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { ConnectedRouter } from 'connected-react-router';
@@ -8,6 +9,7 @@ import './styles/index.css';
 
 import App from './routes/App';
 import { history, persistor, store } from './modules/store';
+import { APP_CONFIG } from './conf';
 
 require('typeface-open-sans');
 require('typeface-roboto');
@@ -20,6 +22,14 @@ console.error = (message, ...args) => {
   }
   consoleError(message, ...args);
 };
+
+if (APP_CONFIG.googleAnalytics) {
+  ReactGA.initialize(APP_CONFIG.googleAnalytics.trackingId);
+  history.listen(location => {
+    ReactGA.set({ page: location.pathname });
+    ReactGA.pageview(location.pathname);
+  });
+}
 
 ReactDOM.render(
   <Provider store={store}>

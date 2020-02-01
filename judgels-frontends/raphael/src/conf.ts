@@ -14,12 +14,17 @@ export interface WelcomeBannerConfig {
   description: string;
 }
 
+export interface GoogleAnalyticsConfig {
+  trackingId: string;
+}
+
 export interface AppConfig {
   mode?: Mode;
   name: string;
   slogan: string;
   apiUrls: ApiUrlsConfig;
   welcomeBanner: WelcomeBannerConfig;
+  googleAnalytics?: GoogleAnalyticsConfig;
 }
 
 export const APP_CONFIG = (window as any).conf as AppConfig;
