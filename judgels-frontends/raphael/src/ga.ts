@@ -21,7 +21,7 @@ export function initGA(history) {
 export function setGAUser(userJid?: string) {
   if (APP_CONFIG.googleAnalytics) {
     if (userJid) {
-      ReactGA.set({ userId: this.props.userJid });
+      ReactGA.set({ userId: userJid });
     }
   }
 }
