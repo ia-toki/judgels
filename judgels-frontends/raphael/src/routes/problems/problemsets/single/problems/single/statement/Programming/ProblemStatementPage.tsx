@@ -13,6 +13,7 @@ import { ProblemSetProblem } from '../../../../../../../../modules/api/jerahmeel
 import { ProblemSetProblemWorksheet } from '../../../../../../../../modules/api/jerahmeel/problemSetProblemProgramming';
 import { ProblemSubmissionFormData } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 import { ProblemWorksheet } from '../../../../../../../../modules/api/sandalphon/problemProgramming';
+import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gabriel/language';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -84,6 +85,13 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
       action: 'Submit problem',
       label: this.props.problemSet.name + ': ' + this.props.problem.alias,
     });
+    if (getGradingLanguageFamily(data.gradingLanguage)) {
+      sendGAEvent({
+        category: 'Problems',
+        action: 'Submit language',
+        label: getGradingLanguageFamily(data.gradingLanguage),
+      });
+    }
 
     return await this.props.onCreateSubmission(
       this.props.problemSet.slug,

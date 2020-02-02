@@ -13,6 +13,7 @@ import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/
 import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/jerahmeel/chapterProblemProgramming';
 import { ProblemSubmissionFormData } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
 import { ProblemWorksheet } from '../../../../../../../../../modules/api/sandalphon/problemProgramming';
+import { getGradingLanguageFamily } from '../../../../../../../../../modules/api/gabriel/language';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter, selectCourseChapterName } from '../../../../modules/courseChapterSelectors';
 import { selectGradingLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -87,6 +88,13 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
       action: 'Submit problem',
       label: this.props.chapterName + ': ' + this.props.match.params.problemAlias,
     });
+    if (getGradingLanguageFamily(data.gradingLanguage)) {
+      sendGAEvent({
+        category: 'Courses',
+        action: 'Submit language',
+        label: getGradingLanguageFamily(data.gradingLanguage),
+      });
+    }
 
     return await this.props.onCreateSubmission(
       this.props.course.slug,

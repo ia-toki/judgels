@@ -16,6 +16,14 @@ export const gradingLanguageNamesMap = {
   OutputOnly: '-',
 };
 
+export const gradingLanguageFamiliesMap = {
+  C: 'C',
+  Cpp11: 'C++',
+  Java: 'Java',
+  Pascal: 'Pascal',
+  Python3: 'Python',
+};
+
 export const gradingLanguageFilenameExtensionsMap = {
   C: ['c'],
   Cpp11: ['cc', 'cpp'],
@@ -40,6 +48,10 @@ export const gradingLanguages = Object.keys(gradingLanguageNamesMap)
 
 export function getGradingLanguageName(code: string): string {
   return gradingLanguageNamesMap[code] || code;
+}
+
+export function getGradingLanguageFamily(code: string): string {
+  return gradingLanguageFamiliesMap[code];
 }
 
 export function getGradingLanguageFilenameExtensions(code: string): string[] {
