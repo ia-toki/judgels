@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { parse, stringify } from 'query-string';
 
+import { sendGAEvent } from '../../../../ga';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { ArchivesResponse, Archive } from '../../../../modules/api/jerahmeel/archive';
 import { archiveActions as injectedArchiveActions } from '../modules/archiveActions';
@@ -106,6 +107,12 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
       }),
     });
     this.setState({ archiveSlug });
+
+    sendGAEvent({
+      category: 'Problems',
+      action: 'Filter archive',
+      label: archiveSlug,
+    });
   };
 }
 
