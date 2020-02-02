@@ -23,7 +23,7 @@ const ProblemsRoutes = () => {
   ];
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
-    title: 'Problems Menu',
+    title: 'Menu',
     items: sidebarItems,
   };
 

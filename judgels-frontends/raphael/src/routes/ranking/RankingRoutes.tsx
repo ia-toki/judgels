@@ -39,7 +39,7 @@ const RankingRoutes = () => {
   ];
 
   const contentWithSidebarProps: ContentWithSidebarProps = {
-    title: 'Ranking Menu',
+    title: 'Menu',
     items: sidebarItems,
     smallContent: true,
   };
