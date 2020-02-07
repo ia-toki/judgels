@@ -33,17 +33,6 @@ import { contestScoreboardAPI } from './api/uriel/contestScoreboard';
 import { contestSubmissionProgrammingAPI } from './api/uriel/contestSubmissionProgramming';
 import { contestSubmissionBundleAPI } from './api/uriel/contestSubmissionBundle';
 import { contestFileAPI } from './api/uriel/contestFile';
-import { archiveAPI } from './api/jerahmeel/archive';
-import { courseAPI } from './api/jerahmeel/course';
-import { courseChapterAPI } from './api/jerahmeel/courseChapter';
-import { chapterAPI } from './api/jerahmeel/chapter';
-import { chapterLessonAPI } from './api/jerahmeel/chapterLesson';
-import { chapterProblemAPI } from './api/jerahmeel/chapterProblem';
-import { problemSetAPI } from './api/jerahmeel/problemSet';
-import { problemSetProblemAPI } from './api/jerahmeel/problemSetProblem';
-import { submissionBundleAPI } from './api/jerahmeel/submissionBundle';
-import { submissionProgrammingAPI } from './api/jerahmeel/submissionProgramming';
-import { userStatsAPI } from './api/jerahmeel/user';
 import { sessionReducer, SessionState } from './session/sessionReducer';
 import { webPrefsReducer, WebPrefsState } from './webPrefs/webPrefsReducer';
 import { toastActions } from './toast/toastActions';
@@ -114,17 +103,6 @@ export const store: any = createStore<AppState>(
         contestSubmissionBundleAPI,
         contestSubmissionProgrammingAPI,
         contestFileAPI,
-        archiveAPI,
-        courseAPI,
-        courseChapterAPI,
-        chapterAPI,
-        chapterLessonAPI,
-        chapterProblemAPI,
-        problemSetAPI,
-        problemSetProblemAPI,
-        submissionBundleAPI,
-        submissionProgrammingAPI,
-        userStatsAPI,
         toastActions,
       }),
       routerMiddleware(history)

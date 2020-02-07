@@ -29,7 +29,7 @@ export const profileAPI = {
     return post(`${baseURL}`, undefined, userJids);
   },
 
-  getTopRatedProfiles: (page?: number, pageSize?: string): Promise<Page<Profile>> => {
+  getTopRatedProfiles: (page?: number, pageSize?: number): Promise<Page<Profile>> => {
     const params = stringify({ page, pageSize });
     return get(`${baseURL}/top/?${params}`);
   },

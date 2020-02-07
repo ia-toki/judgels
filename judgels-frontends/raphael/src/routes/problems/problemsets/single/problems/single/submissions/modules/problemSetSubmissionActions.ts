@@ -2,17 +2,19 @@ import { push } from 'connected-react-router';
 
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { ProblemSubmissionFormData } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionForm/ProblemSubmissionForm';
+import { submissionProgrammingAPI } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
+import { toastActions } from '../../../../../../../../modules/toast/toastActions';
 
 export const problemSetSubmissionActions = {
   getSubmissions: (problemSetJid: string, userJid?: string, problemJid?: string, page?: number) => {
-    return async (dispatch, getState, { submissionProgrammingAPI }) => {
+    return async (dispatch, getState) => {
       const token = selectToken(getState());
       return await submissionProgrammingAPI.getSubmissions(token, problemSetJid, userJid, problemJid, page);
     };
   },
 
   getSubmissionWithSource: (submissionId: number, language?: string) => {
-    return async (dispatch, getState, { submissionProgrammingAPI }) => {
+    return async (dispatch, getState) => {
       const token = selectToken(getState());
       return await submissionProgrammingAPI.getSubmissionWithSource(token, submissionId, language);
     };
@@ -25,7 +27,7 @@ export const problemSetSubmissionActions = {
     problemJid: string,
     data: ProblemSubmissionFormData
   ) => {
-    return async (dispatch, getState, { submissionProgrammingAPI, toastActions }) => {
+    return async (dispatch, getState) => {
       const token = selectToken(getState());
       let sourceFiles = {};
       Object.keys(data.sourceFiles).forEach(key => {
@@ -48,7 +50,7 @@ export const problemSetSubmissionActions = {
   },
 
   regradeSubmission: (submissionJid: string) => {
-    return async (dispatch, getState, { submissionProgrammingAPI, toastActions }) => {
+    return async (dispatch, getState) => {
       const token = selectToken(getState());
       await submissionProgrammingAPI.regradeSubmission(token, submissionJid);
 
@@ -57,7 +59,7 @@ export const problemSetSubmissionActions = {
   },
 
   regradeSubmissions: (problemSetJid: string, userJid?: string, problemJid?: string) => {
-    return async (dispatch, getState, { submissionProgrammingAPI, toastActions }) => {
+    return async (dispatch, getState) => {
       const token = selectToken(getState());
       await submissionProgrammingAPI.regradeSubmissions(token, problemSetJid, userJid, problemJid);
 
