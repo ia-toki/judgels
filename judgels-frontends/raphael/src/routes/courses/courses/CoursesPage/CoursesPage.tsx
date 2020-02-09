@@ -6,7 +6,7 @@ import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { CoursesResponse } from '../../../../modules/api/jerahmeel/course';
 import { CourseCard } from '../CourseCard/CourseCard';
-import { courseActions as injectedCourseActions } from '../modules/courseActions';
+import * as courseActions from '../modules/courseActions';
 
 export interface CoursePageProps {
   onGetCourses: () => Promise<CoursesResponse>;
@@ -56,11 +56,7 @@ class CoursesPage extends React.Component<CoursePageProps, CoursesPageState> {
   };
 }
 
-export function createCoursesPage(courseActions) {
-  const mapDispatchToProps = {
-    onGetCourses: courseActions.getCourses,
-  };
-  return connect(undefined, mapDispatchToProps)(CoursesPage);
-}
-
-export default createCoursesPage(injectedCourseActions);
+const mapDispatchToProps = {
+  onGetCourses: courseActions.getCourses,
+};
+export default connect(undefined, mapDispatchToProps)(CoursesPage);

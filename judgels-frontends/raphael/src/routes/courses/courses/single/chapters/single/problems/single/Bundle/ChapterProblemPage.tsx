@@ -13,7 +13,7 @@ import { ChapterProblemWorksheet } from '../../../../../../../../../modules/api/
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { ItemSubmission } from '../../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
-import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../results/modules/chapterSubmissionActions';
+import * as chapterSubmissionActions from '../../../results/modules/chapterSubmissionActions';
 
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   chapter: CourseChapter;
@@ -91,16 +91,12 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
   };
 }
 
-export function createChapterProblemPage(chapterSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    chapter: selectCourseChapter(state),
-  });
-  const mapDispatchToProps = {
-    onCreateSubmission: chapterSubmissionActions.createItemSubmission,
-    onGetLatestSubmissions: chapterSubmissionActions.getLatestSubmissions,
-  };
+const mapStateToProps = (state: AppState) => ({
+  chapter: selectCourseChapter(state),
+});
+const mapDispatchToProps = {
+  onCreateSubmission: chapterSubmissionActions.createItemSubmission,
+  onGetLatestSubmissions: chapterSubmissionActions.getLatestSubmissions,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));
-}
-
-export default createChapterProblemPage(injectedChapterSubmissionActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));

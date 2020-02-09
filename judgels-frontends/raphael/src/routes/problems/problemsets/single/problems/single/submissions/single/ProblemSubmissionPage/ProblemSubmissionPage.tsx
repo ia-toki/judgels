@@ -14,8 +14,8 @@ import {
 } from '../../../../../../../../../modules/api/sandalphon/submissionProgramming';
 import { Profile } from '../../../../../../../../../modules/api/jophiel/profile';
 import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../modules/problemSetSubmissionActions';
+import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
 
 export interface ProblemSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   problemSet: ProblemSet;
@@ -88,19 +88,15 @@ export class ProblemSubmissionPage extends React.Component<ProblemSubmissionPage
   };
 }
 
-function createProblemSubmissionPage(problemSetSubmissionActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    problemSet: selectProblemSet(state),
-    statementLanguage: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  problemSet: selectProblemSet(state),
+  statementLanguage: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetSubmissionWithSource: problemSetSubmissionActions.getSubmissionWithSource,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetSubmissionWithSource: problemSetSubmissionActions.getSubmissionWithSource,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionPage));
-}
-
-export default createProblemSubmissionPage(injectedProblemSetSubmissionActions, injectedBreadcrumbsActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionPage));

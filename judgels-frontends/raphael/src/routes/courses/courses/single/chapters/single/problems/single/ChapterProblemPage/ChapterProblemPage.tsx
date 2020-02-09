@@ -14,8 +14,8 @@ import ChapterProblemBundlePage from '../Bundle/ChapterProblemPage';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter, selectCourseChapterName } from '../../../../modules/courseChapterSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { chapterProblemActions as injectedChapterProblemActions } from '../../modules/chapterProblemActions';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as chapterProblemActions from '../../modules/chapterProblemActions';
+import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   course: Course;
@@ -87,19 +87,15 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps,
   }
 }
 
-export function createChapterProblemPage(chapterProblemActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    course: selectCourse(state),
-    chapter: selectCourseChapter(state),
-    chapterName: selectCourseChapterName(state),
-    statementLanguage: selectStatementLanguage(state),
-  });
-  const mapDispatchToProps = {
-    onGetProblemWorksheet: chapterProblemActions.getProblemWorksheet,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));
-}
-
-export default createChapterProblemPage(injectedChapterProblemActions, injectedBreadcrumbsActions);
+const mapStateToProps = (state: AppState) => ({
+  course: selectCourse(state),
+  chapter: selectCourseChapter(state),
+  chapterName: selectCourseChapterName(state),
+  statementLanguage: selectStatementLanguage(state),
+});
+const mapDispatchToProps = {
+  onGetProblemWorksheet: chapterProblemActions.getProblemWorksheet,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));

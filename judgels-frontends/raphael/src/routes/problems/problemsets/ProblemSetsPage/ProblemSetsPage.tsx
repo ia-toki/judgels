@@ -9,7 +9,7 @@ import { Card } from '../../../../components/Card/Card';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { ProblemSetsResponse } from '../../../../modules/api/jerahmeel/problemSet';
 import { ProblemSetCard } from '../ProblemSetCard/ProblemSetCard';
-import { problemSetActions as injectedProblemSetActions } from '../modules/problemSetActions';
+import * as problemSetActions from '../modules/problemSetActions';
 
 import './ProblemSetsPage.css';
 
@@ -187,11 +187,7 @@ class ProblemSetsPage extends React.Component<ProblemSetsPageProps, ProblemSetsP
   };
 }
 
-export function createProblemSetsPage(problemSetActions) {
-  const mapDispatchToProps = {
-    onGetProblemSets: problemSetActions.getProblemSets,
-  };
-  return connect(undefined, mapDispatchToProps)(ProblemSetsPage);
-}
-
-export default createProblemSetsPage(injectedProblemSetActions);
+const mapDispatchToProps = {
+  onGetProblemSets: problemSetActions.getProblemSets,
+};
+export default connect(undefined, mapDispatchToProps)(ProblemSetsPage);

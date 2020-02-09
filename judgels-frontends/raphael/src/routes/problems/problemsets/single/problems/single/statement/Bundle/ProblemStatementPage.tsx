@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
@@ -13,9 +12,9 @@ import { ProblemSetProblemWorksheet } from '../../../../../../../../modules/api/
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { ItemSubmission } from '../../../../../../../../modules/api/sandalphon/submissionBundle';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
-import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../results/modules/problemSetSubmissionActions';
+import * as problemSetSubmissionActions from '../../results/modules/problemSetSubmissionActions';
 
-export interface ProblemStatementPageProps extends RouteComponentProps<{ problemAlias: string }> {
+export interface ProblemStatementPageProps {
   problemSet: ProblemSet;
   worksheet: ProblemSetProblemWorksheet;
   onCreateSubmission: (problemSetJid: string, problemJid: string, itemJid: string, answer: string) => Promise<void>;
@@ -90,15 +89,11 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
   };
 }
 
-export function createProblemStatementPage(problemSetSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    problemSet: selectProblemSet(state),
-  });
-  const mapDispatchToProps = {
-    onCreateSubmission: problemSetSubmissionActions.createItemSubmission,
-    onGetLatestSubmissions: problemSetSubmissionActions.getLatestSubmissions,
-  };
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage));
-}
-
-export default createProblemStatementPage(injectedProblemSetSubmissionActions);
+const mapStateToProps = (state: AppState) => ({
+  problemSet: selectProblemSet(state),
+});
+const mapDispatchToProps = {
+  onCreateSubmission: problemSetSubmissionActions.createItemSubmission,
+  onGetLatestSubmissions: problemSetSubmissionActions.getLatestSubmissions,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage);

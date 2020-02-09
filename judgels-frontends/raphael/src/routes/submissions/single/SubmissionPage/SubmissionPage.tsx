@@ -12,8 +12,8 @@ import {
   SubmissionWithSourceResponse,
 } from '../../../../modules/api/sandalphon/submissionProgramming';
 import { Profile } from '../../../../modules/api/jophiel/profile';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../modules/breadcrumbs/breadcrumbsActions';
-import { submissionActions as injectedSubmissionActions } from '../../modules/submissionActions';
+import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as submissionActions from '../../modules/submissionActions';
 
 export interface SubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   statementLanguage: string;
@@ -83,18 +83,14 @@ export class SubmissionPage extends React.Component<SubmissionPageProps, Submiss
   };
 }
 
-function createSubmissionPage(submissionActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    statementLanguage: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  statementLanguage: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetSubmissionWithSource: submissionActions.getSubmissionWithSource,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetSubmissionWithSource: submissionActions.getSubmissionWithSource,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionPage));
-}
-
-export default createSubmissionPage(injectedSubmissionActions, injectedBreadcrumbsActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionPage));

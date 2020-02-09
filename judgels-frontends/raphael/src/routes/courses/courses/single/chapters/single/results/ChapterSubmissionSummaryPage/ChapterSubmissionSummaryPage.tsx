@@ -18,7 +18,7 @@ import {
   ProblemSubmissionCard,
   ProblemSubmissionCardProps,
 } from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
-import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../modules/chapterSubmissionActions';
+import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
 interface ChapterSubmissionSummaryPageRoute {
   username?: string;
@@ -129,19 +129,15 @@ class ChapterSubmissionSummaryPage extends React.Component<
   };
 }
 
-export function createChapterSubmissionSummaryPage(chapterSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectMaybeUserJid(state),
-    chapter: selectCourseChapter(state),
-    language: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectMaybeUserJid(state),
+  chapter: selectCourseChapter(state),
+  language: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetSubmissionSummary: chapterSubmissionActions.getSubmissionSummary,
-    onRegradeAll: chapterSubmissionActions.regradeSubmissions,
-  };
+const mapDispatchToProps = {
+  onGetSubmissionSummary: chapterSubmissionActions.getSubmissionSummary,
+  onRegradeAll: chapterSubmissionActions.regradeSubmissions,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionSummaryPage));
-}
-
-export default createChapterSubmissionSummaryPage(injectedChapterSubmissionActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionSummaryPage));

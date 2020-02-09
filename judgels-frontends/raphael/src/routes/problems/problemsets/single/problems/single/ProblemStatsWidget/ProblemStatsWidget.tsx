@@ -16,7 +16,7 @@ import {
 } from '../../../../../../../modules/api/jerahmeel/problem';
 import { ProblemStatsResponse } from '../../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { selectProblemSet } from '../../../../modules/problemSetSelectors';
-import { problemSetProblemActions as injectedProblemSetProblemActions } from '../../modules/problemSetProblemActions';
+import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
 import './ProblemStatsWidget.css';
 
@@ -152,14 +152,10 @@ class ProblemStatsWidget extends React.Component<ProblemStatsWidgetProps, Proble
   };
 }
 
-export function createProblemStatsWidget(problemSetProblemActions) {
-  const mapStateToProps = state => ({
-    problemSet: selectProblemSet(state),
-  });
-  const mapDispatchToProps = {
-    onGetProblemStats: problemSetProblemActions.getProblemStats,
-  };
-  return withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemStatsWidget));
-}
-
-export default createProblemStatsWidget(injectedProblemSetProblemActions);
+const mapStateToProps = state => ({
+  problemSet: selectProblemSet(state),
+});
+const mapDispatchToProps = {
+  onGetProblemStats: problemSetProblemActions.getProblemStats,
+};
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemStatsWidget));

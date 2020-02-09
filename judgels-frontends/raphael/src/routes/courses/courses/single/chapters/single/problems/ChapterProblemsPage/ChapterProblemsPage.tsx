@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
@@ -17,7 +16,7 @@ import { AppState } from '../../../../../../../../modules/store';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { chapterProblemActions as injectedChapterProblemActions } from '../modules/chapterProblemActions';
+import * as chapterProblemActions from '../modules/chapterProblemActions';
 
 export interface ChapterProblemsPageProps {
   course: Course;
@@ -117,18 +116,14 @@ export class ChapterProblemsPage extends React.PureComponent<ChapterProblemsPage
   };
 }
 
-export function createChapterProblemsPage(chapterProblemActions) {
-  const mapStateToProps = (state: AppState) => ({
-    course: selectCourse(state),
-    chapter: selectCourseChapter(state),
-    statementLanguage: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  course: selectCourse(state),
+  chapter: selectCourseChapter(state),
+  statementLanguage: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProblems: chapterProblemActions.getProblems,
-  };
+const mapDispatchToProps = {
+  onGetProblems: chapterProblemActions.getProblems,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemsPage));
-}
-
-export default createChapterProblemsPage(injectedChapterProblemActions);
+export default connect(mapStateToProps, mapDispatchToProps)(ChapterProblemsPage);

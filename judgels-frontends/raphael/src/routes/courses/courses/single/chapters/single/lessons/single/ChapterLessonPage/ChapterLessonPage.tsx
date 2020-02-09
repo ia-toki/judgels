@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
@@ -11,9 +11,9 @@ import { LessonStatementCard } from '../../../../../../../../../components/Lesso
 import { AppState } from '../../../../../../../../../modules/store';
 import { CourseChapter } from '../../../../../../../../../modules/api/jerahmeel/courseChapter';
 import { ChapterLessonStatement } from '../../../../../../../../../modules/api/jerahmeel/chapterLesson';
-import { chapterLessonActions as injectedChapterLessonActions } from '../../modules/chapterLessonActions';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
+import * as chapterLessonActions from '../../modules/chapterLessonActions';
+import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
 export interface ChapterLessonPageProps extends RouteComponentProps<{ lessonAlias: string }> {
   chapter: CourseChapter;
@@ -92,18 +92,14 @@ export class ChapterLessonPage extends React.Component<ChapterLessonPageProps, C
   };
 }
 
-export function createChapterLessonPage(chapterLessonActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    chapter: selectCourseChapter(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  chapter: selectCourseChapter(state),
+});
 
-  const mapDispatchToProps = {
-    onGetLessonStatement: chapterLessonActions.getLessonStatement,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetLessonStatement: chapterLessonActions.getLessonStatement,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterLessonPage));
-}
-
-export default createChapterLessonPage(injectedChapterLessonActions, injectedBreadcrumbsActions);
+export default connect(mapStateToProps, mapDispatchToProps)(ChapterLessonPage);

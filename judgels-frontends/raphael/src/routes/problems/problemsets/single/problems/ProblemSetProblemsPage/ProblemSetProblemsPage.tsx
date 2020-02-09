@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
@@ -15,7 +14,7 @@ import { ProblemSetProblemsResponse } from '../../../../../../modules/api/jerahm
 import { AppState } from '../../../../../../modules/store';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
-import { problemSetProblemActions as injectedProblemSetProblemActions } from '../modules/problemSetProblemActions';
+import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
 export interface ProblemSetProblemsPageProps {
   problemSet: ProblemSet;
@@ -117,17 +116,13 @@ export class ProblemSetProblemsPage extends React.PureComponent<
   };
 }
 
-export function createProblemSetProblemsPage(problemSetProblemActions) {
-  const mapStateToProps = (state: AppState) => ({
-    problemSet: selectProblemSet(state),
-    statementLanguage: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  problemSet: selectProblemSet(state),
+  statementLanguage: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProblems: problemSetProblemActions.getProblems,
-  };
+const mapDispatchToProps = {
+  onGetProblems: problemSetProblemActions.getProblems,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSetProblemsPage));
-}
-
-export default createProblemSetProblemsPage(injectedProblemSetProblemActions);
+export default connect(mapStateToProps, mapDispatchToProps)(ProblemSetProblemsPage);

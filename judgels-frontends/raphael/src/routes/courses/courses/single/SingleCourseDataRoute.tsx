@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 
 import { AppState } from '../../../../modules/store';
 import { Course } from '../../../../modules/api/jerahmeel/course';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../modules/breadcrumbs/breadcrumbsActions';
-
 import { selectCourse } from '../modules/courseSelectors';
-import { courseActions as injectedCourseActions } from '../modules/courseActions';
+import * as courseActions from '../modules/courseActions';
+import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
 export interface SingleCourseDataRouteProps extends RouteComponentProps<{ courseSlug: string }> {
   course?: Course;
@@ -34,20 +33,15 @@ class SingleCourseDataRoute extends React.Component<SingleCourseDataRouteProps> 
   }
 }
 
-export function createSingleCourseDataRoute(courseActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      course: selectCourse(state),
-    } as Partial<SingleCourseDataRouteProps>);
+const mapStateToProps = (state: AppState) => ({
+  course: selectCourse(state),
+});
 
-  const mapDispatchToProps = {
-    onGetCourseBySlug: courseActions.getCourseBySlug,
-    onClearCourse: courseActions.clearCourse,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetCourseBySlug: courseActions.getCourseBySlug,
+  onClearCourse: courseActions.clearCourse,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleCourseDataRoute));
-}
-
-export default createSingleCourseDataRoute(injectedCourseActions, injectedBreadcrumbsActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleCourseDataRoute));

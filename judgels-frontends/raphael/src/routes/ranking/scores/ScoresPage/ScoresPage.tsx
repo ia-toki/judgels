@@ -9,7 +9,7 @@ import Pagination from '../../../../components/Pagination/Pagination';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { UserTopStatsResponse } from '../../../../modules/api/jerahmeel/user';
-import { rankingActions } from '../../modules/rankingActions';
+import * as rankingActions from '../../modules/rankingActions';
 
 import './ScoresPage.css';
 

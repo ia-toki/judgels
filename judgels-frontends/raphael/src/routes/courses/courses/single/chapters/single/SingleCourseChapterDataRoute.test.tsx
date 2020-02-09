@@ -1,3 +1,6 @@
+jest.mock('../modules/courseChapterActions');
+jest.mock('../../../../../../modules/breadcrumbs/breadcrumbsActions');
+
 import { mount } from 'enzyme';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import * as React from 'react';
@@ -9,12 +12,12 @@ import thunk from 'redux-thunk';
 
 import { courseReducer, PutCourse } from '../../../modules/courseReducer';
 import { courseChapterReducer } from '../modules/courseChapterReducer';
-import { createSingleCourseChapterDataRoute } from './SingleCourseChapterDataRoute';
+import SingleCourseChapterDataRoute from './SingleCourseChapterDataRoute';
+import * as courseChapterActions from '../modules/courseChapterActions';
+import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
 describe('SingleCourseChapterDataRoute', () => {
   let history: MemoryHistory;
-  let courseChapterActions: jest.Mocked<any>;
-  let breadcrumbsActions: jest.Mocked<any>;
 
   const render = (currentPath: string) => {
     history = createMemoryHistory({ initialEntries: [currentPath] });
@@ -29,7 +32,6 @@ describe('SingleCourseChapterDataRoute', () => {
 
     store.dispatch(PutCourse.create({ id: 1, jid: 'jid123', slug: 'basic', name: 'Basic' }));
 
-    const SingleCourseChapterDataRoute = createSingleCourseChapterDataRoute(courseChapterActions, breadcrumbsActions);
     mount(
       <Provider store={store}>
         <ConnectedRouter history={history}>
@@ -40,15 +42,13 @@ describe('SingleCourseChapterDataRoute', () => {
   };
 
   beforeEach(() => {
-    courseChapterActions = {
-      getChapter: jest.fn().mockReturnValue(() => Promise.resolve({ jid: 'jid456', name: 'Chapter 123' })),
-      clearChapter: jest.fn().mockReturnValue({ type: 'clear' }),
-    };
+    (courseChapterActions.getChapter as jest.Mock).mockReturnValue(() =>
+      Promise.resolve({ jid: 'jid456', name: 'Chapter 123' })
+    );
+    (courseChapterActions.clearChapter as jest.Mock).mockReturnValue({ type: 'clear' });
 
-    breadcrumbsActions = {
-      pushBreadcrumb: jest.fn().mockReturnValue({ type: 'push' }),
-      popBreadcrumb: jest.fn().mockReturnValue({ type: 'pop' }),
-    };
+    (breadcrumbsActions.pushBreadcrumb as jest.Mock).mockReturnValue({ type: 'push' });
+    (breadcrumbsActions.popBreadcrumb as jest.Mock).mockReturnValue({ type: 'pop' });
   });
 
   test('navigation', async () => {

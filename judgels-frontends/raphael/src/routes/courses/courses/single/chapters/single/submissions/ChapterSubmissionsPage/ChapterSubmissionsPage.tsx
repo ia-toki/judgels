@@ -18,7 +18,7 @@ import { ChapterSubmissionsTable } from '../ChapterSubmissionsTable/ChapterSubmi
 import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
-import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../modules/chapterSubmissionActions';
+import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
 export interface ChapterSubmissionsPageProps extends RouteComponentProps<{}> {
   userJid?: string;
@@ -232,21 +232,17 @@ export class ChapterSubmissionsPage extends React.PureComponent<
   };
 }
 
-export function createChapterSubmissionsPage(chapterSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectMaybeUserJid(state),
-    course: selectCourse(state),
-    chapter: selectCourseChapter(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectMaybeUserJid(state),
+  course: selectCourse(state),
+  chapter: selectCourseChapter(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProgrammingSubmissions: chapterSubmissionActions.getSubmissions,
-    onRegrade: chapterSubmissionActions.regradeSubmission,
-    onRegradeAll: chapterSubmissionActions.regradeSubmissions,
-    onAppendRoute: queries => push({ search: stringify(queries) }),
-  };
+const mapDispatchToProps = {
+  onGetProgrammingSubmissions: chapterSubmissionActions.getSubmissions,
+  onRegrade: chapterSubmissionActions.regradeSubmission,
+  onRegradeAll: chapterSubmissionActions.regradeSubmissions,
+  onAppendRoute: queries => push({ search: stringify(queries) }),
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));
-}
-
-export default createChapterSubmissionsPage(injectedChapterSubmissionActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));

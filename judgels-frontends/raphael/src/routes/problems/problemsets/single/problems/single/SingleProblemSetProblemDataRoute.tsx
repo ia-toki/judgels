@@ -3,18 +3,18 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import { AppState } from '../../../../../../modules/store';
-import { ProblemInfo } from '../../../../../../modules/api/sandalphon/problem';
 import { ProblemSet } from '../../../../../../modules/api/jerahmeel/problemSet';
+import { ProblemSetProblem } from '../../../../../../modules/api/jerahmeel/problemSetProblem';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import { problemSetProblemActions as injectedProblemSetProblemActions } from '../modules/problemSetProblemActions';
+import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
 export interface SingleProblemSetProblemDataRouteProps
   extends RouteComponentProps<{ problemSetSlug: string; problemAlias: string }> {
   problemSet?: ProblemSet;
 
   onClearProblem: () => void;
-  onGetProblem: (problemSetJid: string, problemAlias: string) => Promise<ProblemInfo>;
+  onGetProblem: (problemSetJid: string, problemAlias: string) => Promise<ProblemSetProblem>;
   onPushBreadcrumb: (link: string, title: string) => void;
   onPopBreadcrumb: (link: string) => void;
 }
@@ -50,20 +50,15 @@ class SingleProblemSetProblemDataRoute extends React.Component<SingleProblemSetP
   };
 }
 
-export function createSingleProblemSetProblemDataRoute(problemSetProblemActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      problemSet: selectProblemSet(state),
-    } as Partial<SingleProblemSetProblemDataRouteProps>);
+const mapStateToProps = (state: AppState) => ({
+  problemSet: selectProblemSet(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProblem: problemSetProblemActions.getProblem,
-    onClearProblem: problemSetProblemActions.clearProblem,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetProblem: problemSetProblemActions.getProblem,
+  onClearProblem: problemSetProblemActions.clearProblem,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetProblemDataRoute));
-}
-
-export default createSingleProblemSetProblemDataRoute(injectedProblemSetProblemActions, injectedBreadcrumbsActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetProblemDataRoute));

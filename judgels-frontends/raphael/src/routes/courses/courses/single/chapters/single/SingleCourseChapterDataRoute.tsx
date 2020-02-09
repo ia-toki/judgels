@@ -5,10 +5,9 @@ import { connect } from 'react-redux';
 import { AppState } from '../../../../../../modules/store';
 import { Course } from '../../../../../../modules/api/jerahmeel/course';
 import { Chapter } from '../../../../../../modules/api/jerahmeel/chapter';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
-
 import { selectCourse } from '../../../modules/courseSelectors';
-import { courseChapterActions as injectedCourseChapterActions } from '../modules/courseChapterActions';
+import * as courseChapterActions from '../modules/courseChapterActions';
+import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 
 export interface SingleCourseChapterDataRouteProps
   extends RouteComponentProps<{ courseSlug: string; chapterAlias: string }> {
@@ -51,19 +50,15 @@ class SingleCourseChapterDataRoute extends React.Component<SingleCourseChapterDa
   };
 }
 
-export function createSingleCourseChapterDataRoute(courseChapterActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    course: selectCourse(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  course: selectCourse(state),
+});
 
-  const mapDispatchToProps = {
-    onGetChapter: courseChapterActions.getChapter,
-    onClearChapter: courseChapterActions.clearChapter,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetChapter: courseChapterActions.getChapter,
+  onClearChapter: courseChapterActions.clearChapter,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleCourseChapterDataRoute));
-}
-
-export default createSingleCourseChapterDataRoute(injectedCourseChapterActions, injectedBreadcrumbsActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleCourseChapterDataRoute));

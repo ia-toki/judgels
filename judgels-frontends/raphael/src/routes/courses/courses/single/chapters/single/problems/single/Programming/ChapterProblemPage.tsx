@@ -18,8 +18,8 @@ import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter, selectCourseChapterName } from '../../../../modules/courseChapterSelectors';
 import { selectGradingLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../../submissions/modules/chapterSubmissionActions';
-import { webPrefsActions as injectedWebPrefsActions } from '../../../../../../../../../modules/webPrefs/webPrefsActions';
+import * as chapterSubmissionActions from '../../../submissions/modules/chapterSubmissionActions';
+import * as webPrefsActions from '../../../../../../../../../modules/webPrefs/webPrefsActions';
 
 export interface ChapterProblemPageProps extends RouteComponentProps<{ problemAlias: string }> {
   course: Course;
@@ -106,19 +106,15 @@ export class ChapterProblemPage extends React.Component<ChapterProblemPageProps>
   };
 }
 
-export function createChapterProblemPage(chapterSubmissionActions, webPrefsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    course: selectCourse(state),
-    chapter: selectCourseChapter(state),
-    chapterName: selectCourseChapterName(state),
-    gradingLanguage: selectGradingLanguage(state),
-  });
-  const mapDispatchToProps = {
-    onCreateSubmission: chapterSubmissionActions.createSubmission,
-    onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
-  };
+const mapStateToProps = (state: AppState) => ({
+  course: selectCourse(state),
+  chapter: selectCourseChapter(state),
+  chapterName: selectCourseChapterName(state),
+  gradingLanguage: selectGradingLanguage(state),
+});
+const mapDispatchToProps = {
+  onCreateSubmission: chapterSubmissionActions.createSubmission,
+  onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));
-}
-
-export default createChapterProblemPage(injectedChapterSubmissionActions, injectedWebPrefsActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));

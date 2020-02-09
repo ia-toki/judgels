@@ -60,13 +60,8 @@ const SingleCourseRoutes = (props: SingleCourseRoutesProps) => {
   );
 };
 
-function createSingleCourseRoutes() {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      course: selectCourse(state),
-    } as Partial<SingleCourseRoutesProps>);
+const mapStateToProps = (state: AppState) => ({
+  course: selectCourse(state),
+});
 
-  return withRouter<any, any>(connect(mapStateToProps)(SingleCourseRoutes));
-}
-
-export default createSingleCourseRoutes();
+export default withRouter<any, any>(connect(mapStateToProps)(SingleCourseRoutes));

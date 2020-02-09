@@ -16,8 +16,8 @@ import {
 import { Profile } from '../../../../../../../../../modules/api/jophiel/profile';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
-import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../../modules/chapterSubmissionActions';
+import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
+import * as chapterSubmissionActions from '../../modules/chapterSubmissionActions';
 
 export interface ChapterSubmissionPageProps extends RouteComponentProps<{ submissionId: string }> {
   course: Course;
@@ -91,20 +91,16 @@ export class ChapterSubmissionPage extends React.Component<ChapterSubmissionPage
   };
 }
 
-function createChapterSubmissionPage(chapterProgrammingSubmissionActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    course: selectCourse(state),
-    chapter: selectCourseChapter(state),
-    statementLanguage: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  course: selectCourse(state),
+  chapter: selectCourseChapter(state),
+  statementLanguage: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetSubmissionWithSource: chapterProgrammingSubmissionActions.getSubmissionWithSource,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetSubmissionWithSource: chapterSubmissionActions.getSubmissionWithSource,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionPage));
-}
-
-export default createChapterSubmissionPage(injectedChapterSubmissionActions, injectedBreadcrumbsActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionPage));

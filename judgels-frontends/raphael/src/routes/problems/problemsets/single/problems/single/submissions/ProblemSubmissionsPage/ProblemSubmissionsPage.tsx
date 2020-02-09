@@ -17,7 +17,7 @@ import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmi
 import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
-import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../modules/problemSetSubmissionActions';
+import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
 export interface ProblemSubmissionsPageProps extends RouteComponentProps<{}> {
   userJid?: string;
@@ -147,21 +147,17 @@ export class ProblemSubmissionsPage extends React.PureComponent<
   };
 }
 
-export function createProblemSubmissionsPage(problemSetSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectMaybeUserJid(state),
-    problemSet: selectProblemSet(state),
-    problem: selectProblemSetProblem(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectMaybeUserJid(state),
+  problemSet: selectProblemSet(state),
+  problem: selectProblemSetProblem(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProgrammingSubmissions: problemSetSubmissionActions.getSubmissions,
-    onRegrade: problemSetSubmissionActions.regradeSubmission,
-    onRegradeAll: problemSetSubmissionActions.regradeSubmissions,
-    onAppendRoute: queries => push({ search: stringify(queries) }),
-  };
+const mapDispatchToProps = {
+  onGetProgrammingSubmissions: problemSetSubmissionActions.getSubmissions,
+  onRegrade: problemSetSubmissionActions.regradeSubmission,
+  onRegradeAll: problemSetSubmissionActions.regradeSubmissions,
+  onAppendRoute: queries => push({ search: stringify(queries) }),
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionsPage));
-}
-
-export default createProblemSubmissionsPage(injectedProblemSetSubmissionActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionsPage));

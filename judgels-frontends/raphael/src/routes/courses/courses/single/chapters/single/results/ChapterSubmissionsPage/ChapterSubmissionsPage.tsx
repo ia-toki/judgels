@@ -20,7 +20,7 @@ import { FormattedAnswer } from '../../../../../../../../components/SubmissionDe
 import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
-import { chapterSubmissionActions as injectedChapterSubmissionActions } from '../modules/chapterSubmissionActions';
+import * as chapterSubmissionActions from '../modules/chapterSubmissionActions';
 
 import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.css';
 
@@ -189,21 +189,17 @@ export class ChapterSubmissionsPage extends React.Component<ChapterSubmissionsPa
   };
 }
 
-export function createChapterSubmissionsPage(chapterSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectMaybeUserJid(state),
-    course: selectCourse(state),
-    chapter: selectCourseChapter(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectMaybeUserJid(state),
+  course: selectCourse(state),
+  chapter: selectCourseChapter(state),
+});
 
-  const mapDispatchToProps = {
-    onGetSubmissions: chapterSubmissionActions.getSubmissions,
-    onRegrade: chapterSubmissionActions.regradeSubmission,
-    onRegradeAll: chapterSubmissionActions.regradeSubmissions,
-    onAppendRoute: queries => push({ search: stringify(queries) }),
-  };
+const mapDispatchToProps = {
+  onGetSubmissions: chapterSubmissionActions.getSubmissions,
+  onRegrade: chapterSubmissionActions.regradeSubmission,
+  onRegradeAll: chapterSubmissionActions.regradeSubmissions,
+  onAppendRoute: queries => push({ search: stringify(queries) }),
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));
-}
-
-export default createChapterSubmissionsPage(injectedChapterSubmissionActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ChapterSubmissionsPage));

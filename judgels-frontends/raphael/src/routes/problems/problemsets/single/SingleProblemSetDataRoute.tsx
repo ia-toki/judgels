@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 
 import { AppState } from '../../../../modules/store';
 import { ProblemSet } from '../../../../modules/api/jerahmeel/problemSet';
-import { breadcrumbsActions as injectedBreadcrumbsActions } from '../../../../modules/breadcrumbs/breadcrumbsActions';
-
 import { selectProblemSet } from '../modules/problemSetSelectors';
-import { problemSetActions as injectedProblemSetActions } from '../modules/problemSetActions';
+import * as problemSetActions from '../modules/problemSetActions';
+import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 
 export interface SingleProblemSetDataRouteProps extends RouteComponentProps<{ problemSetSlug: string }> {
   problemSet?: ProblemSet;
@@ -34,20 +33,15 @@ class SingleProblemSetDataRoute extends React.Component<SingleProblemSetDataRout
   }
 }
 
-export function createSingleProblemSetDataRoute(problemSetActions, breadcrumbsActions) {
-  const mapStateToProps = (state: AppState) =>
-    ({
-      problemSet: selectProblemSet(state),
-    } as Partial<SingleProblemSetDataRouteProps>);
+const mapStateToProps = (state: AppState) => ({
+  problemSet: selectProblemSet(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProblemSetBySlug: problemSetActions.getProblemSetBySlug,
-    onClearProblemSet: problemSetActions.clearProblemSet,
-    onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-    onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  };
+const mapDispatchToProps = {
+  onGetProblemSetBySlug: problemSetActions.getProblemSetBySlug,
+  onClearProblemSet: problemSetActions.clearProblemSet,
+  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
+  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetDataRoute));
-}
-
-export default createSingleProblemSetDataRoute(injectedProblemSetActions, injectedBreadcrumbsActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetDataRoute));

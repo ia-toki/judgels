@@ -9,7 +9,7 @@ import { parse, stringify } from 'query-string';
 import { sendGAEvent } from '../../../../ga';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { ArchivesResponse, Archive } from '../../../../modules/api/jerahmeel/archive';
-import { archiveActions as injectedArchiveActions } from '../modules/archiveActions';
+import * as archiveActions from '../modules/archiveActions';
 
 import './ProblemSetArchiveFilter.css';
 
@@ -116,12 +116,8 @@ class ProblemSetArchiveFilter extends React.Component<ProblemSetArchiveFilterPro
   };
 }
 
-function createProblemSetArchiveFilter(archiveActions) {
-  const mapDispatchToProps = {
-    onGetArchives: archiveActions.getArchives,
-    onPush: push,
-  };
-  return withRouter(connect(undefined, mapDispatchToProps)(ProblemSetArchiveFilter));
-}
-
-export default createProblemSetArchiveFilter(injectedArchiveActions);
+const mapDispatchToProps = {
+  onGetArchives: archiveActions.getArchives,
+  onPush: push,
+};
+export default withRouter(connect(undefined, mapDispatchToProps)(ProblemSetArchiveFilter));

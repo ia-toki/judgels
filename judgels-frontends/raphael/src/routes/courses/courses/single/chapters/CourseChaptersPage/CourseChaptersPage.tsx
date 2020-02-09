@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
@@ -9,7 +8,7 @@ import { Course } from '../../../../../../modules/api/jerahmeel/course';
 import { CourseChaptersResponse } from '../../../../../../modules/api/jerahmeel/courseChapter';
 import { AppState } from '../../../../../../modules/store';
 import { selectCourse } from '../../../modules/courseSelectors';
-import { courseChapterActions as injectedCourseChapterActions } from '../modules/courseChapterActions';
+import * as courseChapterActions from '../modules/courseChapterActions';
 
 export interface CourseChaptersPageProps {
   course: Course;
@@ -66,16 +65,12 @@ export class CourseChaptersPage extends React.PureComponent<CourseChaptersPagePr
   };
 }
 
-export function createCourseChaptersPage(courseChapterActions) {
-  const mapStateToProps = (state: AppState) => ({
-    course: selectCourse(state)!,
-  });
+const mapStateToProps = (state: AppState) => ({
+  course: selectCourse(state),
+});
 
-  const mapDispatchToProps = {
-    onGetChapters: courseChapterActions.getChapters,
-  };
+const mapDispatchToProps = {
+  onGetChapters: courseChapterActions.getChapters,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(CourseChaptersPage));
-}
-
-export default createCourseChaptersPage(injectedCourseChapterActions);
+export default connect(mapStateToProps, mapDispatchToProps)(CourseChaptersPage);

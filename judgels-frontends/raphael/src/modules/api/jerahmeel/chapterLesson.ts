@@ -33,7 +33,7 @@ export const chapterLessonAPI = {
     chapterJid: string,
     lessonAlias: string,
     language?: string
-  ): Promise<ChapterLessonsResponse> => {
+  ): Promise<ChapterLessonStatement> => {
     const params = stringify({ language });
     return get(`${baseURL(chapterJid)}/${lessonAlias}/statement?${params}`, token);
   },

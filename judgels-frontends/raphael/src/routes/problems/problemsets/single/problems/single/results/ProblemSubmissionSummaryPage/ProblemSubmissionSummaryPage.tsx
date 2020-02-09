@@ -19,7 +19,7 @@ import {
   ProblemSubmissionCard,
   ProblemSubmissionCardProps,
 } from '../../../../../../../../components/SubmissionDetails/Bundle/ProblemSubmissionsCard/ProblemSubmissionCard';
-import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../modules/problemSetSubmissionActions';
+import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
 interface ProblemSubmissionSummaryPageRoute {
   username?: string;
@@ -129,20 +129,16 @@ class ProblemSubmissionSummaryPage extends React.Component<
   };
 }
 
-export function createProblemSubmissionSummaryPage(problemSetSubmissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectMaybeUserJid(state),
-    problemSet: selectProblemSet(state),
-    problem: selectProblemSetProblem(state),
-    language: selectStatementLanguage(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectMaybeUserJid(state),
+  problemSet: selectProblemSet(state),
+  problem: selectProblemSetProblem(state),
+  language: selectStatementLanguage(state),
+});
 
-  const mapDispatchToProps = {
-    onGetSubmissionSummary: problemSetSubmissionActions.getSubmissionSummary,
-    onRegradeAll: problemSetSubmissionActions.regradeSubmissions,
-  };
+const mapDispatchToProps = {
+  onGetSubmissionSummary: problemSetSubmissionActions.getSubmissionSummary,
+  onRegradeAll: problemSetSubmissionActions.regradeSubmissions,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionSummaryPage));
-}
-
-export default createProblemSubmissionSummaryPage(injectedProblemSetSubmissionActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionSummaryPage));

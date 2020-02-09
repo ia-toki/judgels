@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
 
 import { sendGAEvent } from '../../../../../../../../ga';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
@@ -18,10 +17,10 @@ import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { problemSetSubmissionActions as injectedProblemSetSubmissionActions } from '../../submissions/modules/problemSetSubmissionActions';
-import { webPrefsActions as injectedWebPrefsActions } from '../../../../../../../../modules/webPrefs/webPrefsActions';
+import * as problemSetSubmissionActions from '../../submissions/modules/problemSetSubmissionActions';
+import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
 
-export interface ProblemStatementPageProps extends RouteComponentProps<{ problemAlias: string }> {
+export interface ProblemStatementPageProps {
   problemSet: ProblemSet;
   problem: ProblemSetProblem;
   worksheet: ProblemSetProblemWorksheet;
@@ -103,18 +102,14 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
   };
 }
 
-export function createProblemStatementPage(problemSetSubmissionActions, webPrefsActions) {
-  const mapStateToProps = (state: AppState) => ({
-    problemSet: selectProblemSet(state),
-    problem: selectProblemSetProblem(state),
-    gradingLanguage: selectGradingLanguage(state),
-  });
-  const mapDispatchToProps = {
-    onCreateSubmission: problemSetSubmissionActions.createSubmission,
-    onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
-  };
+const mapStateToProps = (state: AppState) => ({
+  problemSet: selectProblemSet(state),
+  problem: selectProblemSetProblem(state),
+  gradingLanguage: selectGradingLanguage(state),
+});
+const mapDispatchToProps = {
+  onCreateSubmission: problemSetSubmissionActions.createSubmission,
+  onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage));
-}
-
-export default createProblemStatementPage(injectedProblemSetSubmissionActions, injectedWebPrefsActions);
+export default connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage);

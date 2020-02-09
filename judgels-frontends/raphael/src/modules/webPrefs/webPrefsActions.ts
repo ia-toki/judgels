@@ -1,20 +1,23 @@
 import { statementLanguageDisplayNamesMap } from '../../modules/api/sandalphon/language';
-
 import { PutStatementLanguage, PutGradingLanguage } from './webPrefsReducer';
 
-export const webPrefsActions = {
-  switchStatementLanguage: (language: string) => {
-    return async (dispatch, getState, { toastActions }) => {
-      dispatch(PutStatementLanguage.create(language));
-      toastActions.showSuccessToast(
-        'Switched default statement language to ' + statementLanguageDisplayNamesMap[language] + '.'
-      );
-    };
-  },
+export function switchStatementLanguage(language: string) {
+  return async (dispatch, getState, { toastActions }) => {
+    dispatch(PutStatementLanguage.create(language));
+    toastActions.showSuccessToast(
+      'Switched default statement language to ' + statementLanguageDisplayNamesMap[language] + '.'
+    );
+  };
+}
 
-  updateGradingLanguage: (language: string) => {
-    return async (dispatch, getState, { toastActions }) => {
-      dispatch(PutGradingLanguage.create(language));
-    };
-  },
+export function updateGradingLanguage(language: string) {
+  return async dispatch => {
+    dispatch(PutGradingLanguage.create(language));
+  };
+}
+
+export const webPrefsActions = {
+  switchStatementLanguage,
+
+  updateGradingLanguage,
 };

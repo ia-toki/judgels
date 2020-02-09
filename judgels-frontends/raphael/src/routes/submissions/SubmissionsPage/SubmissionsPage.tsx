@@ -11,7 +11,7 @@ import { AppState } from '../../../modules/store';
 import { SubmissionsResponse } from '../../../modules/api/jerahmeel/submissionProgramming';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 import { selectMaybeUserJid } from '../../../modules/session/sessionSelectors';
-import { submissionActions as injectedSubmissionActions } from '../modules/submissionActions';
+import * as submissionActions from '../modules/submissionActions';
 
 export interface SubmissionsPageProps extends RouteComponentProps<{}> {
   userJid?: string;
@@ -121,18 +121,14 @@ export class SubmissionsPage extends React.PureComponent<SubmissionsPageProps, S
   };
 }
 
-export function createSubmissionsPage(submissionActions) {
-  const mapStateToProps = (state: AppState) => ({
-    userJid: selectMaybeUserJid(state),
-  });
+const mapStateToProps = (state: AppState) => ({
+  userJid: selectMaybeUserJid(state),
+});
 
-  const mapDispatchToProps = {
-    onGetProgrammingSubmissions: submissionActions.getSubmissions,
-    onRegrade: submissionActions.regradeSubmission,
-    onAppendRoute: queries => push({ search: stringify(queries) }),
-  };
+const mapDispatchToProps = {
+  onGetProgrammingSubmissions: submissionActions.getSubmissions,
+  onRegrade: submissionActions.regradeSubmission,
+  onAppendRoute: queries => push({ search: stringify(queries) }),
+};
 
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionsPage));
-}
-
-export default createSubmissionsPage(injectedSubmissionActions);
+export default withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(SubmissionsPage));

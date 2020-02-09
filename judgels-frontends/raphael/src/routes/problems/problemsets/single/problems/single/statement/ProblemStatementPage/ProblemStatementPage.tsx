@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
 
 import { sendGAEvent } from '../../../../../../../../ga';
 import { AppState } from '../../../../../../../../modules/store';
@@ -10,15 +9,17 @@ import {
   ProblemSetProblemWorksheet,
   ProblemSetProblem,
 } from '../../../../../../../../modules/api/jerahmeel/problemSetProblem';
+import { ProblemSetProblemWorksheet as ProblemSetBundleProblemWorksheet } from '../../../../../../../../modules/api/jerahmeel/problemSetProblemBundle';
+import { ProblemSetProblemWorksheet as ProblemSetProgrammingProblemWorksheet } from '../../../../../../../../modules/api/jerahmeel/problemSetProblemProgramming';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
 import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
-import { problemSetProblemActions as injectedProblemSetProblemActions } from '../../../modules/problemSetProblemActions';
+import * as problemSetProblemActions from '../../../modules/problemSetProblemActions';
 
-export interface ProblemStatementPageProps extends RouteComponentProps {
+export interface ProblemStatementPageProps {
   problemSet: ProblemSet;
   problem: ProblemSetProblem;
   statementLanguage: string;
@@ -71,23 +72,21 @@ export class ProblemStatementPage extends React.Component<ProblemStatementPagePr
     }
     const { problem } = response;
     if (problem.type === ProblemType.Programming) {
-      return <ProblemSetProblemProgrammingStatementPage worksheet={response} />;
+      return (
+        <ProblemSetProblemProgrammingStatementPage worksheet={response as ProblemSetProgrammingProblemWorksheet} />
+      );
     } else {
-      return <ProblemSetProblemBundleStatementPage worksheet={response} />;
+      return <ProblemSetProblemBundleStatementPage worksheet={response as ProblemSetBundleProblemWorksheet} />;
     }
   }
 }
 
-export function createProblemStatementPage(problemSetProblemActions) {
-  const mapStateToProps = (state: AppState) => ({
-    problemSet: selectProblemSet(state),
-    problem: selectProblemSetProblem(state),
-    statementLanguage: selectStatementLanguage(state),
-  });
-  const mapDispatchToProps = {
-    onGetProblemWorksheet: problemSetProblemActions.getProblemWorksheet,
-  };
-  return withRouter<any, any>(connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage));
-}
-
-export default createProblemStatementPage(injectedProblemSetProblemActions);
+const mapStateToProps = (state: AppState) => ({
+  problemSet: selectProblemSet(state),
+  problem: selectProblemSetProblem(state),
+  statementLanguage: selectStatementLanguage(state),
+});
+const mapDispatchToProps = {
+  onGetProblemWorksheet: problemSetProblemActions.getProblemWorksheet,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage);
