@@ -50,9 +50,9 @@ INSERT INTO `jerahmeel_bundle_submission` (`jid`, `containerJid`, `problemJid`, 
 
 INSERT INTO `jerahmeel_chapter` (`jid`, `name`, `description`, `createdAt`, `createdBy`, `updatedAt`, `updatedBy`) VALUES
 ('JIDSESSjboijeXaXam4wM7zwIkA', 'Input/Output', '<p>This is input/output</p>\r\n', '2019-10-19 18:52:44.931', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2019-10-19 18:52:44.931', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-'JIDSESSpB4nAdte4tUwgSiihTFq', 'Branching', '', '2020-01-18 17:02:07.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:02:07.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-'JIDSESSx2sksHzyQNHvMn0yBzLr', 'Review', '', '2020-01-18 17:02:53.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:02:53.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
-'JIDSESSnDc5JXrqXDUdPgqhrZXQ', 'Pre-Quiz', '', '2020-01-18 17:04:05.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:04:05.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
+('JIDSESSpB4nAdte4tUwgSiihTFq', 'Branching', '', '2020-01-18 17:02:07.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:02:07.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
+('JIDSESSx2sksHzyQNHvMn0yBzLr', 'Review', '', '2020-01-18 17:02:53.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:02:53.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ'),
+('JIDSESSnDc5JXrqXDUdPgqhrZXQ', 'Pre-Quiz', '', '2020-01-18 17:04:05.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ', '2020-01-18 17:04:05.000', 'JIDUSERGBsbuD2EJ9jYMlGclISJ');
 
 --
 -- Dumping data for table `jerahmeel_chapter_lesson`
