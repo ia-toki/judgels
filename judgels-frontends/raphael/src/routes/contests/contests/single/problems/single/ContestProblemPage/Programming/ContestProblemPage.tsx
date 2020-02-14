@@ -56,6 +56,19 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
   state: ContestProblemPageState = {};
 
   async componentDidMount() {
+    await this.fetchProblemWorksheet();
+    this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + this.state.problem.alias);
+  }
+
+  async componentDidUpdate(prevProps: ContestProblemPageProps, prevState: ContestProblemPageState) {
+    if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.worksheet) {
+      this.setState({ worksheet: undefined });
+    } else if (!this.state.worksheet && prevState.worksheet) {
+      await this.fetchProblemWorksheet();
+    }
+  }
+
+  async fetchProblemWorksheet() {
     const { defaultLanguage, languages, problem, totalSubmissions, worksheet } = await this.props.onGetProblemWorksheet(
       this.props.contest.jid,
       this.props.match.params.problemAlias,
@@ -69,16 +82,6 @@ export class ContestProblemPage extends React.Component<ContestProblemPageProps,
       totalSubmissions,
       worksheet,
     });
-
-    this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + problem.alias);
-  }
-
-  async componentDidUpdate(prevProps: ContestProblemPageProps, prevState: ContestProblemPageState) {
-    if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.worksheet) {
-      this.setState({ worksheet: undefined });
-    } else if (!this.state.worksheet && prevState.worksheet) {
-      await this.componentDidMount();
-    }
   }
 
   async componentWillUnmount() {
