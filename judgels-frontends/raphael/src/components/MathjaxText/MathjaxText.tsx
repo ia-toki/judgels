@@ -1,5 +1,6 @@
 import React from 'react';
 import { HtmlText } from '../HtmlText/HtmlText';
+import './MathjaxText.scss';
 
 declare global {
   interface Window {
