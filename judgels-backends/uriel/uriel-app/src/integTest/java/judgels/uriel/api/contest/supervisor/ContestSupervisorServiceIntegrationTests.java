@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableSet;
 import com.palantir.conjure.java.api.errors.ErrorType;
-import java.util.Optional;
 import judgels.uriel.api.contest.AbstractContestServiceIntegrationTests;
 import judgels.uriel.api.contest.Contest;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,7 @@ class ContestSupervisorServiceIntegrationTests extends AbstractContestServiceInt
         Contest contest = createContest("contest");
         managerService.upsertManagers(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(MANAGER));
 
-        // as supervisor
+        // as manager
 
         ContestSupervisorsUpsertResponse upsertResponse = supervisorService.upsertSupervisors(
                 ADMIN_HEADER,
@@ -44,27 +43,29 @@ class ContestSupervisorServiceIntegrationTests extends AbstractContestServiceInt
         assertThat(upsertResponse.getUpsertedSupervisorProfilesMap().get(USER_A).getUsername()).isEqualTo(USER_A);
         assertThat(upsertResponse.getUpsertedSupervisorProfilesMap().get(USER_B).getUsername()).isEqualTo(USER_B);
 
-        ContestSupervisorsResponse response =
+        ContestSupervisorsResponse managerGetSupervisorsResponse =
                 supervisorService.getSupervisors(ADMIN_HEADER, contest.getJid(), empty());
-        assertThat(response.getData().getPage()).containsOnly(
+        assertThat(managerGetSupervisorsResponse.getData().getPage()).containsOnly(
                 new ContestSupervisor.Builder().userJid(USER_A_JID).addManagementPermissions(FILE).build(),
                 new ContestSupervisor.Builder().userJid(USER_B_JID).addManagementPermissions(FILE).build());
-        assertThat(response.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
+        assertThat(managerGetSupervisorsResponse.getProfilesMap().get(USER_A_JID).getUsername()).isEqualTo(USER_A);
 
         ContestSupervisorsDeleteResponse deleteResponse =
                 supervisorService.deleteSupervisors(ADMIN_HEADER, contest.getJid(), ImmutableSet.of(USER_A, "userC"));
         assertThat(deleteResponse.getDeletedSupervisorProfilesMap()).containsOnlyKeys(USER_A);
         assertThat(deleteResponse.getDeletedSupervisorProfilesMap().get(USER_A).getUsername()).isEqualTo(USER_A);
 
-        response = supervisorService.getSupervisors(ADMIN_HEADER, contest.getJid(), empty());
-        assertThat(response.getData().getPage()).containsOnly(
+        managerGetSupervisorsResponse = supervisorService.getSupervisors(ADMIN_HEADER, contest.getJid(), empty());
+        assertThat(managerGetSupervisorsResponse.getData().getPage()).containsOnly(
                 new ContestSupervisor.Builder().userJid(USER_B_JID).addManagementPermissions(FILE).build());
 
         // as supervisor
 
-        assertThatRemoteExceptionThrownBy(() -> supervisorService
-                .getSupervisors(USER_B_HEADER, contest.getJid(), Optional.empty()))
-                .isGeneratedFromErrorType(ErrorType.PERMISSION_DENIED);
+        ContestSupervisorsResponse supervisorGetSupervisorsResponse =
+                supervisorService.getSupervisors(USER_B_HEADER, contest.getJid(), empty());
+        assertThat(supervisorGetSupervisorsResponse.getData().getPage()).containsOnly(
+                new ContestSupervisor.Builder().userJid(USER_B_JID).addManagementPermissions(FILE).build());
+        assertThat(supervisorGetSupervisorsResponse.getProfilesMap().get(USER_B_JID).getUsername()).isEqualTo(USER_B);
 
         assertThatRemoteExceptionThrownBy(() -> supervisorService
                 .upsertSupervisors(
